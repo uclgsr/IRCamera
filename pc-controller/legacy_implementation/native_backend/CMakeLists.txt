@@ -10,12 +10,12 @@ find_package(Python3 COMPONENTS Interpreter Development REQUIRED)
 
 # Find OpenCV (make it optional for now)
 find_package(OpenCV QUIET)
-if(OpenCV_FOUND)
+if (OpenCV_FOUND)
     message(STATUS "OpenCV found: ${OpenCV_VERSION}")
     add_definitions(-DHAVE_OPENCV)
-else()
+else ()
     message(WARNING "OpenCV not found - webcam functionality will be limited")
-endif()
+endif ()
 
 # Add pybind11 - handle both system installation and bundled version
 find_package(pybind11 QUIET)
@@ -28,9 +28,9 @@ endif ()
 
 # Include directories
 include_directories(include)
-if(OpenCV_FOUND)
+if (OpenCV_FOUND)
     include_directories(${OpenCV_INCLUDE_DIRS})
-endif()
+endif ()
 
 # Source files
 set(SOURCES
@@ -42,9 +42,9 @@ set(SOURCES
 pybind11_add_module(native_backend ${SOURCES})
 
 # Link libraries
-if(OpenCV_FOUND)
+if (OpenCV_FOUND)
     target_link_libraries(native_backend PRIVATE ${OpenCV_LIBS})
-endif()
+endif ()
 
 # Set properties
 set_target_properties(native_backend PROPERTIES

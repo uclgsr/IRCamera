@@ -40,7 +40,8 @@ class SensorSelectionDialog(
 
             try {
                 // Use Shimmer's official Bluetooth manager to detect GSR devices
-                val shimmerManager = ShimmerBluetoothManagerAndroid(context, Handler(Looper.getMainLooper()))
+                val shimmerManager =
+                    ShimmerBluetoothManagerAndroid(context, Handler(Looper.getMainLooper()))
 
                 val hasConnectedShimmerDevices = try {
                     // Use Shimmer manager to check for connected GSR-capable devices
@@ -57,7 +58,10 @@ class SensorSelectionDialog(
                 } else {
                     // EasyBLE not initialized, assume GSR available with simulation
                     available.add(SensorType.GSR)
-                    Log.d(TAG, "GSR available (will attempt connection or use simulation mode at runtime)")
+                    Log.d(
+                        TAG,
+                        "GSR available (will attempt connection or use simulation mode at runtime)"
+                    )
                 }
             } catch (e: Exception) {
                 // GSR sensor available even without hardware (simulation mode)

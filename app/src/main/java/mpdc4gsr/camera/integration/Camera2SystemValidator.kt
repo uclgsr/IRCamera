@@ -182,7 +182,8 @@ class Camera2SystemValidator(private val context: Context) {
                 false
             }
 
-            val allWorking = rawEngineWorks && camera2SystemWorks && dngCreatorAvailable && deviceCompatibilityWorks
+            val allWorking =
+                rawEngineWorks && camera2SystemWorks && dngCreatorAvailable && deviceCompatibilityWorks
 
             Log.i(
                 TAG,

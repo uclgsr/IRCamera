@@ -47,7 +47,8 @@ class SimpleCommandHandler(
 
         } catch (e: Exception) {
             Log.e(TAG, "Error handling command: $commandLine", e)
-            val errorResponse = "ERROR cmd=UNKNOWN code=HANDLER_ERROR msg=\"Command handler error: ${e.message}\""
+            val errorResponse =
+                "ERROR cmd=UNKNOWN code=HANDLER_ERROR msg=\"Command handler error: ${e.message}\""
             networkManager.sendResponse(errorResponse)
         }
     }
@@ -99,26 +100,30 @@ class SimpleCommandHandler(
         }
     }
 
-    private suspend fun handleSyncCommand(commandLine: String): String = withContext(Dispatchers.IO) {
-        try {
-            Log.i(TAG, "Executing SYNC command")
-            val phoneTimestamp = System.currentTimeMillis()
+    private suspend fun handleSyncCommand(commandLine: String): String =
+        withContext(Dispatchers.IO) {
+            try {
+                Log.i(TAG, "Executing SYNC command")
+                val phoneTimestamp = System.currentTimeMillis()
 
-            // Extract PC timestamp if provided in the command
-            val pcTimestamp = extractTimestampFromCommand(commandLine)
+                // Extract PC timestamp if provided in the command
+                val pcTimestamp = extractTimestampFromCommand(commandLine)
 
-            if (pcTimestamp != null) {
-                Log.d(TAG, "Clock sync - PC timestamp: $pcTimestamp, Phone timestamp: $phoneTimestamp")
-                "SYNC-RESP t_pc=$pcTimestamp t_ph=$phoneTimestamp"
-            } else {
-                Log.d(TAG, "Clock sync - Phone timestamp: $phoneTimestamp")
-                "SYNC-RESP t_ph=$phoneTimestamp"
+                if (pcTimestamp != null) {
+                    Log.d(
+                        TAG,
+                        "Clock sync - PC timestamp: $pcTimestamp, Phone timestamp: $phoneTimestamp"
+                    )
+                    "SYNC-RESP t_pc=$pcTimestamp t_ph=$phoneTimestamp"
+                } else {
+                    Log.d(TAG, "Clock sync - Phone timestamp: $phoneTimestamp")
+                    "SYNC-RESP t_ph=$phoneTimestamp"
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Exception during SYNC command", e)
+                "ERROR cmd=SYNC code=SYNC_EXCEPTION msg=\"Sync error: ${e.message}\""
             }
-        } catch (e: Exception) {
-            Log.e(TAG, "Exception during SYNC command", e)
-            "ERROR cmd=SYNC code=SYNC_EXCEPTION msg=\"Sync error: ${e.message}\""
         }
-    }
 
     private fun handlePingCommand(): String {
         Log.d(TAG, "Responding to PING")
@@ -128,7 +133,7 @@ class SimpleCommandHandler(
     private suspend fun handleGetStatusCommand(): String = withContext(Dispatchers.IO) {
         try {
             val statusMap = recordingController.getStatus()
-            
+
             // Create JSON response for rich status info
             val statusJson = JSONObject().apply {
                 statusMap.forEach { (key, value) ->
@@ -144,28 +149,30 @@ class SimpleCommandHandler(
         }
     }
 
-    private suspend fun handleJsonCommand(jsonString: String): String = withContext(Dispatchers.IO) {
-        try {
-            val jsonObj = JSONObject(jsonString)
-            val command = jsonObj.optString("cmd", "")
+    private suspend fun handleJsonCommand(jsonString: String): String =
+        withContext(Dispatchers.IO) {
+            try {
+                val jsonObj = JSONObject(jsonString)
+                val command = jsonObj.optString("cmd", "")
 
-            return@withContext when (command) {
-                "START" -> handleStartCommand()
-                "STOP" -> handleStopCommand()
-                "SYNC" -> {
-                    val pcTimestamp = jsonObj.optLong("t_pc", -1L)
-                    val syncCmd = if (pcTimestamp > 0) "SYNC t_pc=$pcTimestamp" else "SYNC"
-                    handleSyncCommand(syncCmd)
+                return@withContext when (command) {
+                    "START" -> handleStartCommand()
+                    "STOP" -> handleStopCommand()
+                    "SYNC" -> {
+                        val pcTimestamp = jsonObj.optLong("t_pc", -1L)
+                        val syncCmd = if (pcTimestamp > 0) "SYNC t_pc=$pcTimestamp" else "SYNC"
+                        handleSyncCommand(syncCmd)
+                    }
+
+                    "PING" -> handlePingCommand()
+                    "GET_STATUS" -> handleGetStatusCommand()
+                    else -> "ERROR cmd=$command code=UNKNOWN_JSON_COMMAND msg=\"Unknown JSON command: $command\""
                 }
-                "PING" -> handlePingCommand()
-                "GET_STATUS" -> handleGetStatusCommand()
-                else -> "ERROR cmd=$command code=UNKNOWN_JSON_COMMAND msg=\"Unknown JSON command: $command\""
+            } catch (e: Exception) {
+                Log.e(TAG, "Error processing JSON command: $jsonString", e)
+                "ERROR cmd=JSON code=JSON_PARSE_ERROR msg=\"Invalid JSON command: ${e.message}\""
             }
-        } catch (e: Exception) {
-            Log.e(TAG, "Error processing JSON command: $jsonString", e)
-            "ERROR cmd=JSON code=JSON_PARSE_ERROR msg=\"Invalid JSON command: ${e.message}\""
         }
-    }
 
     private fun extractTimestampFromCommand(commandLine: String): Long? {
         return try {
@@ -204,7 +211,8 @@ class SimpleCommandHandler(
         handlerScope.launch {
             try {
                 val timestamp = System.currentTimeMillis()
-                val message = "STATUS Recording started at $timestamp, session: $sessionId, sensors: [RGB,Thermal,GSR]"
+                val message =
+                    "STATUS Recording started at $timestamp, session: $sessionId, sensors: [RGB,Thermal,GSR]"
                 networkManager.sendTelemetry(message)
             } catch (e: Exception) {
                 Log.e(TAG, "Error sending session started notification", e)
@@ -216,7 +224,8 @@ class SimpleCommandHandler(
         handlerScope.launch {
             try {
                 val timestamp = System.currentTimeMillis()
-                val message = "STATUS Recording stopped at $timestamp, duration: ${duration}ms, files saved"
+                val message =
+                    "STATUS Recording stopped at $timestamp, duration: ${duration}ms, files saved"
                 networkManager.sendTelemetry(message)
             } catch (e: Exception) {
                 Log.e(TAG, "Error sending session stopped notification", e)

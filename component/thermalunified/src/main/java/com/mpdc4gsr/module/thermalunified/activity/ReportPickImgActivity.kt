@@ -119,7 +119,10 @@ class ReportPickImgActivity : BaseActivity(), View.OnClickListener {
         adapter.isEditMode = isEditMode
         groupBottom.isVisible = isEditMode
         titleView.setTitleText(
-            if (isEditMode) getString(LibR.string.chosen_item, adapter.selectList.size) else getString(
+            if (isEditMode) getString(
+                LibR.string.chosen_item,
+                adapter.selectList.size
+            ) else getString(
                 LibR.string.app_gallery
             ),
         )
@@ -197,30 +200,42 @@ class ReportPickImgActivity : BaseActivity(), View.OnClickListener {
                         .withBoolean(IS_REPORT_FIRST, false)
                         .withString(ExtraKeyConfig.FILE_ABSOLUTE_PATH, irPath)
 
-                val reportInfo = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
-                    intent.getParcelableExtra(ExtraKeyConfig.REPORT_INFO, ReportInfoBean::class.java)
-                } else {
-                    @Suppress("DEPRECATION")
-                    intent.getParcelableExtra<ReportInfoBean>(ExtraKeyConfig.REPORT_INFO)
-                }
+                val reportInfo =
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                        intent.getParcelableExtra(
+                            ExtraKeyConfig.REPORT_INFO,
+                            ReportInfoBean::class.java
+                        )
+                    } else {
+                        @Suppress("DEPRECATION")
+                        intent.getParcelableExtra<ReportInfoBean>(ExtraKeyConfig.REPORT_INFO)
+                    }
                 reportInfo?.let {
                     navigation.withParcelable(ExtraKeyConfig.REPORT_INFO, it)
                 }
-                val reportCondition = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
-                    intent.getParcelableExtra(ExtraKeyConfig.REPORT_CONDITION, ReportConditionBean::class.java)
-                } else {
-                    @Suppress("DEPRECATION")
-                    intent.getParcelableExtra<ReportConditionBean>(ExtraKeyConfig.REPORT_CONDITION)
-                }
+                val reportCondition =
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                        intent.getParcelableExtra(
+                            ExtraKeyConfig.REPORT_CONDITION,
+                            ReportConditionBean::class.java
+                        )
+                    } else {
+                        @Suppress("DEPRECATION")
+                        intent.getParcelableExtra<ReportConditionBean>(ExtraKeyConfig.REPORT_CONDITION)
+                    }
                 reportCondition?.let {
                     navigation.withParcelable(ExtraKeyConfig.REPORT_CONDITION, it)
                 }
-                val reportIrList = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
-                    intent.getParcelableArrayListExtra(ExtraKeyConfig.REPORT_IR_LIST, ReportIRBean::class.java)
-                } else {
-                    @Suppress("DEPRECATION")
-                    intent.getParcelableArrayListExtra<ReportIRBean>(ExtraKeyConfig.REPORT_IR_LIST)
-                }
+                val reportIrList =
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                        intent.getParcelableArrayListExtra(
+                            ExtraKeyConfig.REPORT_IR_LIST,
+                            ReportIRBean::class.java
+                        )
+                    } else {
+                        @Suppress("DEPRECATION")
+                        intent.getParcelableArrayListExtra<ReportIRBean>(ExtraKeyConfig.REPORT_IR_LIST)
+                    }
                 reportIrList?.let {
                     navigation.withParcelableArrayList(ExtraKeyConfig.REPORT_IR_LIST, it)
                 }

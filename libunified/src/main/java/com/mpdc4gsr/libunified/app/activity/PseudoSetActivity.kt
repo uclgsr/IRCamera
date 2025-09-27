@@ -18,7 +18,10 @@ class PseudoSetActivity : Activity() {
 
         // Get the input CustomPseudoBean
         val customPseudoBean = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            intent.getParcelableExtra(ExtraKeyConfig.CUSTOM_PSEUDO_BEAN, CustomPseudoBean::class.java)
+            intent.getParcelableExtra(
+                ExtraKeyConfig.CUSTOM_PSEUDO_BEAN,
+                CustomPseudoBean::class.java
+            )
         } else {
             @Suppress("DEPRECATION")
             intent.getParcelableExtra<CustomPseudoBean>(ExtraKeyConfig.CUSTOM_PSEUDO_BEAN)

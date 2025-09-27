@@ -670,6 +670,9 @@ public class EasyBLE {
         try {
             BluetoothDevice remoteDevice = bluetoothAdapter.getRemoteDevice(address);
             return remoteDevice.getBondState() != BluetoothDevice.BOND_NONE || remoteDevice.createBond();
+        } catch (SecurityException e) {
+            logger.log(android.util.Log.ERROR, Logger.TYPE_CONNECTION_STATE, "Missing Bluetooth permission for bonding: " + e.getMessage());
+            return false;
         } catch (Exception ignore) {
             return false;
         }

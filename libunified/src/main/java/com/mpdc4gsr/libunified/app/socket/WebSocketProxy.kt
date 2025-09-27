@@ -153,7 +153,8 @@ class WebSocketProxy {
             }
             this.network = network
         } else {
-            XLog.tag("WebSocket").d("[ph][ph][ph] $currentSSID [ph][ph][ph] $ssid，[ph][ph][ph][ph][ph]")
+            XLog.tag("WebSocket")
+                .d("[ph][ph][ph] $currentSSID [ph][ph][ph] $ssid，[ph][ph][ph][ph][ph]")
             if (reconnectHandler.isReconnecting) {
                 EventBus.getDefault()
                     .post(SocketStateEvent(false, false)) // TS004 functionality removed
@@ -236,7 +237,10 @@ class WebSocketProxy {
             text: String,
         ) {
             if (SocketCmdUtil.getCmdResponse(text) == WsCmdConstants.APP_EVENT_HEART_BEATS) {
-                Log.v("WebSocket", "<-- [ph][ph][ph][ph][ph][ph] ${text.replace("\n", "").replace(" ", "")}")
+                Log.v(
+                    "WebSocket",
+                    "<-- [ph][ph][ph][ph][ph][ph] ${text.replace("\n", "").replace(" ", "")}"
+                )
             } else {
                 XLog.tag("WebSocket").d("$ssid [ph][ph]TEXT[ph][ph]:$text")
             }
@@ -249,7 +253,8 @@ class WebSocketProxy {
             webSocket: WebSocket,
             bytes: ByteString,
         ) {
-            XLog.tag("WebSocket").w("[ph][ph][ph][ph][ph][ph][ph]，[ph][ph][ph] bytes [ph][ph]，[ph][ph] ${bytes.size}")
+            XLog.tag("WebSocket")
+                .w("[ph][ph][ph][ph][ph][ph][ph]，[ph][ph][ph] bytes [ph][ph]，[ph][ph] ${bytes.size}")
         }
 
         override fun onClosing(
@@ -266,7 +271,8 @@ class WebSocketProxy {
             reason: String,
         ) {
             if (handler.isReconnecting) {
-                XLog.tag("WebSocket").d("$ssid [ph][ph][ph][ph][ph]，[ph][ph][ph][ph][ph][ph]，[ph][ph]：$reason")
+                XLog.tag("WebSocket")
+                    .d("$ssid [ph][ph][ph][ph][ph]，[ph][ph][ph][ph][ph][ph]，[ph][ph]：$reason")
             } else {
                 XLog.tag("WebSocket").d("$ssid [ph][ph][ph][ph][ph]，[ph][ph]：$reason")
                 handler.reset()
@@ -281,8 +287,10 @@ class WebSocketProxy {
             t: Throwable,
             response: Response?,
         ) {
-            XLog.tag("WebSocket").d("$ssid [ph][ph][ph][ph][ph][ph][ph]，response: ${response?.message}")
-            XLog.tag("WebSocket").d("$ssid [ph][ph][ph][ph][ph][ph][ph]，[ph][ph][ph][ph]: ${t.message}")
+            XLog.tag("WebSocket")
+                .d("$ssid [ph][ph][ph][ph][ph][ph][ph]，response: ${response?.message}")
+            XLog.tag("WebSocket")
+                .d("$ssid [ph][ph][ph][ph][ph][ph][ph]，[ph][ph][ph][ph]: ${t.message}")
             if (checkNeedReconnect()) {
                 handler.handleFail(ssid)
                 if (!handler.isReconnecting) {
@@ -370,14 +378,16 @@ class WebSocketProxy {
                         getInstance().startWebSocket(currentSSID)
                     }
                 } else {
-                    XLog.tag("WebSocket").w("[ph][ph][ph][ph][ph][ph][ph][ph]，[ph][ph] [ph][ph][ph][ph][ph] [ph][ph]")
+                    XLog.tag("WebSocket")
+                        .w("[ph][ph][ph][ph][ph][ph][ph][ph]，[ph][ph] [ph][ph][ph][ph][ph] [ph][ph]")
                     reconnectCount = 0
                     isReconnecting = false
                     removeCallbacksAndMessages(null)
                     getInstance().stopWebSocket()
                 }
             } else {
-                XLog.tag("WebSocket").d("[ph][ph][ph][ph][ph][ph][ph][ph][ph][ph]，[ph][ph][ph][ph][ph][ph][ph][ph]")
+                XLog.tag("WebSocket")
+                    .d("[ph][ph][ph][ph][ph][ph][ph][ph][ph][ph]，[ph][ph][ph][ph][ph][ph][ph][ph]")
                 reconnectCount = 0
                 isReconnecting = true
 

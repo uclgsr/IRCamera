@@ -48,79 +48,86 @@ class CommandHandler(
 
         } catch (e: Exception) {
             Log.e(TAG, "Error handling command: $commandLine", e)
-            val errorResponse = "ERROR cmd=UNKNOWN code=HANDLER_ERROR msg=\"Command handler error: ${e.message}\""
+            val errorResponse =
+                "ERROR cmd=UNKNOWN code=HANDLER_ERROR msg=\"Command handler error: ${e.message}\""
             networkManager.sendResponse(errorResponse)
         }
     }
 
-    private suspend fun handleStartCommand(commandLine: String): String = withContext(Dispatchers.IO) {
-        try {
-            if (recordingController.isRecording) {
-                Log.w(TAG, "START command received but already recording")
-                return@withContext "ERROR cmd=START code=ALREADY_RECORDING msg=\"Recording session already active\""
-            }
+    private suspend fun handleStartCommand(commandLine: String): String =
+        withContext(Dispatchers.IO) {
+            try {
+                if (recordingController.isRecording) {
+                    Log.w(TAG, "START command received but already recording")
+                    return@withContext "ERROR cmd=START code=ALREADY_RECORDING msg=\"Recording session already active\""
+                }
 
-            Log.i(TAG, "Executing START command")
-            val success = recordingController.startRecording()
+                Log.i(TAG, "Executing START command")
+                val success = recordingController.startRecording()
 
-            if (success) {
-                Log.i(TAG, "Recording started successfully via remote command")
-                // Send acknowledgment with session info
-                val sessionInfo = "session_started"
-                "START-ACK session_id=${sessionInfo}"
-            } else {
-                Log.e(TAG, "Failed to start recording via remote command")
-                "ERROR cmd=START code=START_FAILED msg=\"Failed to start recording session\""
+                if (success) {
+                    Log.i(TAG, "Recording started successfully via remote command")
+                    // Send acknowledgment with session info
+                    val sessionInfo = "session_started"
+                    "START-ACK session_id=${sessionInfo}"
+                } else {
+                    Log.e(TAG, "Failed to start recording via remote command")
+                    "ERROR cmd=START code=START_FAILED msg=\"Failed to start recording session\""
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Exception during START command", e)
+                "ERROR cmd=START code=START_EXCEPTION msg=\"Start error: ${e.message}\""
             }
-        } catch (e: Exception) {
-            Log.e(TAG, "Exception during START command", e)
-            "ERROR cmd=START code=START_EXCEPTION msg=\"Start error: ${e.message}\""
         }
-    }
 
-    private suspend fun handleStopCommand(commandLine: String): String = withContext(Dispatchers.IO) {
-        try {
-            if (!recordingController.isRecording) {
-                Log.i(TAG, "STOP command received but not currently recording")
-                return@withContext "STOP-ACK msg=\"No active recording session\""
+    private suspend fun handleStopCommand(commandLine: String): String =
+        withContext(Dispatchers.IO) {
+            try {
+                if (!recordingController.isRecording) {
+                    Log.i(TAG, "STOP command received but not currently recording")
+                    return@withContext "STOP-ACK msg=\"No active recording session\""
+                }
+
+                Log.i(TAG, "Executing STOP command")
+                val success = recordingController.stopRecording()
+
+                if (success) {
+                    Log.i(TAG, "Recording stopped successfully via remote command")
+                    "STOP-ACK msg=\"Recording session stopped\""
+                } else {
+                    Log.e(TAG, "Failed to stop recording via remote command")
+                    "ERROR cmd=STOP code=STOP_FAILED msg=\"Failed to stop recording session\""
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Exception during STOP command", e)
+                "ERROR cmd=STOP code=STOP_EXCEPTION msg=\"Stop error: ${e.message}\""
             }
-
-            Log.i(TAG, "Executing STOP command")
-            val success = recordingController.stopRecording()
-
-            if (success) {
-                Log.i(TAG, "Recording stopped successfully via remote command")
-                "STOP-ACK msg=\"Recording session stopped\""
-            } else {
-                Log.e(TAG, "Failed to stop recording via remote command")
-                "ERROR cmd=STOP code=STOP_FAILED msg=\"Failed to stop recording session\""
-            }
-        } catch (e: Exception) {
-            Log.e(TAG, "Exception during STOP command", e)
-            "ERROR cmd=STOP code=STOP_EXCEPTION msg=\"Stop error: ${e.message}\""
         }
-    }
 
-    private suspend fun handleSyncCommand(commandLine: String): String = withContext(Dispatchers.IO) {
-        try {
-            Log.i(TAG, "Executing SYNC command")
-            val phoneTimestamp = System.currentTimeMillis()
+    private suspend fun handleSyncCommand(commandLine: String): String =
+        withContext(Dispatchers.IO) {
+            try {
+                Log.i(TAG, "Executing SYNC command")
+                val phoneTimestamp = System.currentTimeMillis()
 
-            // Extract PC timestamp if provided in the command
-            val pcTimestamp = extractTimestampFromCommand(commandLine)
+                // Extract PC timestamp if provided in the command
+                val pcTimestamp = extractTimestampFromCommand(commandLine)
 
-            if (pcTimestamp != null) {
-                Log.d(TAG, "Clock sync - PC timestamp: $pcTimestamp, Phone timestamp: $phoneTimestamp")
-                "SYNC-RESP t_pc=$pcTimestamp t_ph=$phoneTimestamp"
-            } else {
-                Log.d(TAG, "Clock sync - Phone timestamp: $phoneTimestamp")
-                "SYNC-RESP t_ph=$phoneTimestamp"
+                if (pcTimestamp != null) {
+                    Log.d(
+                        TAG,
+                        "Clock sync - PC timestamp: $pcTimestamp, Phone timestamp: $phoneTimestamp"
+                    )
+                    "SYNC-RESP t_pc=$pcTimestamp t_ph=$phoneTimestamp"
+                } else {
+                    Log.d(TAG, "Clock sync - Phone timestamp: $phoneTimestamp")
+                    "SYNC-RESP t_ph=$phoneTimestamp"
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Exception during SYNC command", e)
+                "ERROR cmd=SYNC code=SYNC_EXCEPTION msg=\"Sync error: ${e.message}\""
             }
-        } catch (e: Exception) {
-            Log.e(TAG, "Exception during SYNC command", e)
-            "ERROR cmd=SYNC code=SYNC_EXCEPTION msg=\"Sync error: ${e.message}\""
         }
-    }
 
     private fun handlePingCommand(): String {
         Log.d(TAG, "Responding to PING")
@@ -154,29 +161,30 @@ class CommandHandler(
         }
     }
 
-    private suspend fun handleJsonCommand(jsonString: String): String = withContext(Dispatchers.IO) {
-        try {
-            val jsonObj = JSONObject(jsonString)
-            val command = jsonObj.optString("cmd", "")
+    private suspend fun handleJsonCommand(jsonString: String): String =
+        withContext(Dispatchers.IO) {
+            try {
+                val jsonObj = JSONObject(jsonString)
+                val command = jsonObj.optString("cmd", "")
 
-            return@withContext when (command) {
-                "START" -> handleStartCommand("START")
-                "STOP" -> handleStopCommand("STOP")
-                "SYNC" -> {
-                    val pcTimestamp = jsonObj.optLong("t_pc", -1L)
-                    val syncCmd = if (pcTimestamp > 0) "SYNC t_pc=$pcTimestamp" else "SYNC"
-                    handleSyncCommand(syncCmd)
+                return@withContext when (command) {
+                    "START" -> handleStartCommand("START")
+                    "STOP" -> handleStopCommand("STOP")
+                    "SYNC" -> {
+                        val pcTimestamp = jsonObj.optLong("t_pc", -1L)
+                        val syncCmd = if (pcTimestamp > 0) "SYNC t_pc=$pcTimestamp" else "SYNC"
+                        handleSyncCommand(syncCmd)
+                    }
+
+                    "PING" -> handlePingCommand()
+                    "GET_STATUS" -> handleGetStatusCommand()
+                    else -> "ERROR cmd=$command code=UNKNOWN_JSON_COMMAND msg=\"Unknown JSON command: $command\""
                 }
-
-                "PING" -> handlePingCommand()
-                "GET_STATUS" -> handleGetStatusCommand()
-                else -> "ERROR cmd=$command code=UNKNOWN_JSON_COMMAND msg=\"Unknown JSON command: $command\""
+            } catch (e: Exception) {
+                Log.e(TAG, "Error processing JSON command: $jsonString", e)
+                "ERROR cmd=JSON code=JSON_PARSE_ERROR msg=\"Invalid JSON command: ${e.message}\""
             }
-        } catch (e: Exception) {
-            Log.e(TAG, "Error processing JSON command: $jsonString", e)
-            "ERROR cmd=JSON code=JSON_PARSE_ERROR msg=\"Invalid JSON command: ${e.message}\""
         }
-    }
 
     private fun extractTimestampFromCommand(commandLine: String): Long? {
         return try {
@@ -215,7 +223,8 @@ class CommandHandler(
         handlerScope.launch {
             try {
                 val timestamp = System.currentTimeMillis()
-                val message = "STATUS Recording started at $timestamp, session: $sessionId, sensors: [RGB,Thermal,GSR]"
+                val message =
+                    "STATUS Recording started at $timestamp, session: $sessionId, sensors: [RGB,Thermal,GSR]"
                 networkManager.sendTelemetry(message)
             } catch (e: Exception) {
                 Log.e(TAG, "Error sending session started notification", e)
@@ -227,7 +236,8 @@ class CommandHandler(
         handlerScope.launch {
             try {
                 val timestamp = System.currentTimeMillis()
-                val message = "STATUS Recording stopped at $timestamp, duration: ${duration}ms, files saved"
+                val message =
+                    "STATUS Recording stopped at $timestamp, duration: ${duration}ms, files saved"
                 networkManager.sendTelemetry(message)
             } catch (e: Exception) {
                 Log.e(TAG, "Error sending session stopped notification", e)

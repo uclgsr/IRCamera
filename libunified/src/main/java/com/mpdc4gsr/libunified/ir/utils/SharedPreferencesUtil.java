@@ -4,10 +4,23 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Base64;
 
-public class SharedPreferencesUtil {
+import java.nio.charset.StandardCharsets;
+
+/**
+ * Created by fengjibo on 2023/4/12.
+ */
+public enum SharedPreferencesUtil {
+    ;
 
     private static final String FILE_NAME = "usb_ir";
 
+    /**
+     * 保存数据到文件
+     *
+     * @param context
+     * @param key
+     * @param data
+     */
     public static void saveData(Context context, String key, Object data) {
         String type = data.getClass().getSimpleName();
         SharedPreferences sharedPreferences = context
@@ -28,6 +41,14 @@ public class SharedPreferencesUtil {
         editor.commit();
     }
 
+    /**
+     * 从文件里读取数据
+     *
+     * @param context
+     * @param key
+     * @param defValue
+     * @return
+     */
     public static Object getData(Context context, String key, Object defValue) {
         String type = defValue.getClass().getSimpleName();
         SharedPreferences sharedPreferences = context.getSharedPreferences
@@ -47,24 +68,36 @@ public class SharedPreferencesUtil {
         return null;
     }
 
+    /**
+     *
+     * @param context
+     * @param key
+     * @param data
+     */
     public static void saveByteData(Context context, String key, byte[] data) {
         String type = data.getClass().getSimpleName();
         SharedPreferences sharedPreferences = context
                 .getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
-        String imageString = new String(Base64.encode(data, Base64.DEFAULT));
+        String imageString = new String(Base64.encode(data, Base64.DEFAULT), StandardCharsets.UTF_8);
         editor.putString(key, imageString);
 
         editor.commit();
     }
 
+    /**
+     *
+     * @param context
+     * @param key
+     * @return
+     */
     public static byte[] getByteData(Context context, String key) {
         SharedPreferences sharedPreferences = context.getSharedPreferences
                 (FILE_NAME, Context.MODE_PRIVATE);
 
         String string = sharedPreferences.getString(key, "");
-        byte[] b = Base64.decode(string.getBytes(), Base64.DEFAULT);
+        byte[] b = Base64.decode(string.getBytes(StandardCharsets.UTF_8), Base64.DEFAULT);
         return b;
     }
 }

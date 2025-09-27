@@ -28,7 +28,8 @@ class CrashRecoveryManager(private val context: Context) {
         private const val RECOVERY_SCAN_TIMEOUT_MS = 30000L
     }
 
-    private val preferences: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+    private val preferences: SharedPreferences =
+        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
 
     suspend fun checkForCrashedSessions(): CrashRecoveryResult = withContext(Dispatchers.IO) {
@@ -466,7 +467,10 @@ class CrashRecoveryManager(private val context: Context) {
             val report = JSONObject().apply {
                 put("session_id", recoveredSession.sessionId)
                 put("recovery_timestamp", System.currentTimeMillis())
-                put("recovery_date", SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date()))
+                put(
+                    "recovery_date",
+                    SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date())
+                )
                 put("original_session_start", recoveredSession.sessionStartTime)
                 put("session_age_at_crash", recoveredSession.sessionAge)
                 put("active_sensors", JSONArray(recoveredSession.activeSensors))

@@ -25,7 +25,8 @@ object LmsRepository {
             try {
                 val responseBean = Gson().fromJson(response, ResponseBean::class.java)
                 if (responseBean.code == "2000") {
-                    result = Gson().fromJson(responseBean.data.toString(), CheckVersionJson::class.java)
+                    result =
+                        Gson().fromJson(responseBean.data.toString(), CheckVersionJson::class.java)
                 }
             } catch (e: Exception) {
                 XLog.e("version json[ph][ph][ph][ph]: ${e.message}")

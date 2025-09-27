@@ -65,7 +65,7 @@ abstract class AbstractScanner implements Scanner {
         scanListeners.remove(listener);
     }
 
-    //位置服务是否开户
+    // Check if location service is enabled
     private boolean isLocationEnabled(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
@@ -296,7 +296,7 @@ abstract class AbstractScanner implements Scanner {
             isScanning = false;
         }
         handleScanCallback(false, null, false, -1, "");
-    }    private final Runnable stopScanRunnable = () -> stopScan(false);
+    }
 
     @Override
     public void release() {
@@ -312,7 +312,7 @@ abstract class AbstractScanner implements Scanner {
     /**
      * 执行搜索
      */
-    protected abstract void performStartScan();
+    protected abstract void performStartScan();    private final Runnable stopScanRunnable = () -> stopScan(false);
 
     /**
      * 执行停止搜索

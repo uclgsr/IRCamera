@@ -40,7 +40,8 @@ class SettingNightView @JvmOverloads constructor(
                 }
 
                 // Set show icon visibility
-                val showIcon = getBoolean(R.styleable.SettingNightView_setting_icon_show_night, true)
+                val showIcon =
+                    getBoolean(R.styleable.SettingNightView_setting_icon_show_night, true)
                 binding.itemSettingImage.isVisible = showIcon
 
                 // Set more arrow visibility

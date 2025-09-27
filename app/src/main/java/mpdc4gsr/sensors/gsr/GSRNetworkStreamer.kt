@@ -211,7 +211,12 @@ class GSRNetworkStreamer(
                     Log.w(TAG, "Failed to send GSR batch via network", e)
                 }
             } ?: run {
-                Log.d(TAG, "NetworkClient not available, simulating send: ${batchMessage.toString().take(100)}...")
+                Log.d(
+                    TAG,
+                    "NetworkClient not available, simulating send: ${
+                        batchMessage.toString().take(100)
+                    }..."
+                )
             }
 
             samplesSent.addAndGet(batch.size.toLong())
@@ -447,7 +452,10 @@ class GSRNetworkStreamer(
                     }
                 }
             } ?: run {
-                Log.d(TAG, "NetworkClient not available, simulating end notification: ${endNotification}")
+                Log.d(
+                    TAG,
+                    "NetworkClient not available, simulating end notification: ${endNotification}"
+                )
                 Log.i(TAG, "GSR stream end notification simulated")
             }
         } catch (e: Exception) {

@@ -86,7 +86,11 @@ class CameraPerformanceManager(private val context: Context) {
     /**
      * Process frame with backpressure handling
      */
-    fun processFrame(frameData: ByteArray, timestamp: Long, onComplete: (Boolean) -> Unit): Boolean {
+    fun processFrame(
+        frameData: ByteArray,
+        timestamp: Long,
+        onComplete: (Boolean) -> Unit
+    ): Boolean {
         if (!isMonitoring) {
             onComplete(false)
             return false

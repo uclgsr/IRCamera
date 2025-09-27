@@ -13,7 +13,7 @@ val buildTimeStr = SimpleDateFormat("HHmm", Locale.getDefault()).format(Date())
 
 android {
     namespace = "com.csl.irCamera"
-    compileSdk = libs.versions.compileSdk.get().toInt()
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.csl.irCamera"
@@ -26,10 +26,6 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled = true
 
-        ndk {
-            abiFilters += listOf("arm64-v8a")
-        }
-
         buildConfigField("String", "VERSION_DATE", "\"$buildDayStr\"")
         buildConfigField("String", "SOFT_CODE", "\"TC001_DisplaySW_IRCamera_Adr\"")
         buildConfigField("String", "APP_KEY", "\"5B2F6F1FD80844FCB6E50BCA19222E76\"")
@@ -39,11 +35,28 @@ android {
         manifestPlaceholders["JPUSH_APPKEY"] = "cbd4eafc9049d751fc5a8c58"
         manifestPlaceholders["JPUSH_CHANNEL"] = "developer-default"
         manifestPlaceholders["app_name"] = "IRCamera"
+
+        // Configure native library architecture support
+        ndk {
+            abiFilters += listOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
+        }
     }
 
     bundle {
         language {
             enableSplit = false
+        }
+        abi {
+            enableSplit = true
+        }
+    }
+
+    splits {
+        abi {
+            isEnable = true
+            reset()
+            include("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
+            isUniversalApk = true
         }
     }
 
@@ -82,57 +95,9 @@ android {
     }
 
     androidResources {
-
         ignoreAssetsPattern = "!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~"
         additionalParameters += listOf("--allow-reserved-package-id", "--auto-add-overlay")
-    }
-
-    packaging {
-        resources {
-            excludes += listOf(
-                "META-INF/DEPENDENCIES",
-                "META-INF/LICENSE",
-                "META-INF/LICENSE.txt",
-                "META-INF/NOTICE",
-                "META-INF/NOTICE.txt"
-            )
-        }
-    }
-
-    androidComponents {
-        beforeVariants { variant ->
-
-            variant.enable = variant.buildType == "release" || variant.buildType == "debug"
-        }
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-        isCoreLibraryDesugaringEnabled = true
-    }
-
-    kotlin {
-        compilerOptions {
-            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
-
-            apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0)
-            languageVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0)
-            freeCompilerArgs.addAll(
-                listOf(
-                    "-opt-in=kotlin.RequiresOptIn",
-                    "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
-                    "-opt-in=kotlinx.coroutines.FlowPreview",
-                    "-Xjvm-default=all",
-                )
-            )
-        }
-    }
-
-    java {
-        toolchain {
-            languageVersion.set(JavaLanguageVersion.of(17))
-        }
+        generateLocaleConfig = false
     }
 
     packaging {
@@ -149,29 +114,29 @@ android {
                     "META-INF/LICENSE.md",
                     "META-INF/LICENSE-notice.md",
                 )
-            excludes +=
-                listOf(
-                    "META-INF/DEPENDENCIES",
-                    "META-INF/LICENSE",
-                    "META-INF/LICENSE.txt",
-                    "META-INF/license.txt",
-                    "META-INF/NOTICE",
-                    "META-INF/NOTICE.txt",
-                    "META-INF/notice.txt",
-                    "META-INF/ASL2.0",
+            excludes += listOf(
+                "META-INF/DEPENDENCIES",
+                "META-INF/LICENSE",
+                "META-INF/LICENSE.txt",
+                "META-INF/license.txt",
+                "META-INF/NOTICE",
+                "META-INF/NOTICE.txt",
+                "META-INF/notice.txt",
+                "META-INF/ASL2.0",
+                "META-INF/versions/9/OSGI-INF/MANIFEST.MF",
 
-                    "META-INF/com.android.art/baseline.prof",
-                    "META-INF/com.android.art/baseline.profm",
+                "META-INF/com.android.art/baseline.prof",
+                "META-INF/com.android.art/baseline.profm",
 
-                    "**/it/gerdavax/easybluetooth/**",
+                "**/it/gerdavax/easybluetooth/**",
 
-                    "**/android/bluetooth/IBluetoothDeviceCallback*",
+                "**/android/bluetooth/IBluetoothDeviceCallback*",
 
-                    "**/com/androidplot/**",
+                "**/com/androidplot/**",
 
-                    "**/com/shimmerresearch/biophysicalprocessing/**",
-                    "**/com/shimmerresearch/utilityfunctions/**",
-                )
+                "**/com/shimmerresearch/biophysicalprocessing/**",
+                "**/com/shimmerresearch/utilityfunctions/**",
+            )
         }
         jniLibs {
             useLegacyPackaging = true
@@ -189,6 +154,8 @@ android {
                     "lib/arm64-v8a/libopencv_java4.so",
                     "lib/armeabi-v7a/libomp.so",
                     "lib/arm64-v8a/libomp.so",
+                    "lib/x86/libomp.so",
+                    "lib/x86_64/libomp.so",
                     "lib/arm64-v8a/liblog.so",
                     "lib/armeabi-v7a/liblog.so",
                     "lib/arm64-v8a/libijkffmpeg.so",
@@ -206,6 +173,30 @@ android {
                     "lib/x86_64/libijkffmpeg.so",
                     "lib/x86_64/libijkplayer.so",
                     "lib/x86_64/libijksdl.so",
+                    "lib/arm64-v8a/libUSBUVCCamera.so",
+                    "lib/armeabi-v7a/libUSBUVCCamera.so",
+                    "lib/x86/libUSBUVCCamera.so",
+                    "lib/x86_64/libUSBUVCCamera.so",
+                    "lib/arm64-v8a/libencrypt.so",
+                    "lib/armeabi-v7a/libencrypt.so",
+                    "lib/x86/libencrypt.so",
+                    "lib/x86_64/libencrypt.so",
+                    "lib/arm64-v8a/libircmd.so",
+                    "lib/armeabi-v7a/libircmd.so",
+                    "lib/x86/libircmd.so",
+                    "lib/x86_64/libircmd.so",
+                    "lib/arm64-v8a/libirparse.so",
+                    "lib/armeabi-v7a/libirparse.so",
+                    "lib/x86/libirparse.so",
+                    "lib/x86_64/libirparse.so",
+                    "lib/arm64-v8a/libirprocess.so",
+                    "lib/armeabi-v7a/libirprocess.so",
+                    "lib/x86/libirprocess.so",
+                    "lib/x86_64/libirprocess.so",
+                    "lib/arm64-v8a/libirtemp.so",
+                    "lib/armeabi-v7a/libirtemp.so",
+                    "lib/x86/libirtemp.so",
+                    "lib/x86_64/libirtemp.so",
                 )
 
             keepDebugSymbols +=
@@ -218,19 +209,50 @@ android {
                     "**/libSRImage.so",
                 )
         }
-        jniLibs {
-            pickFirsts += listOf(
-                "**/libc++_shared.so",
-                "**/libomp.so"
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+        isCoreLibraryDesugaringEnabled = true
+    }
+
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+            apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0)
+            languageVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0)
+            freeCompilerArgs.addAll(
+                listOf(
+                    "-opt-in=kotlin.RequiresOptIn",
+                    "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
+                    "-opt-in=kotlinx.coroutines.FlowPreview",
+                    "-Xjvm-default=all",
+                    "-Xnested-type-aliases",
+                )
             )
         }
     }
+
+    java {
+        toolchain {
+            languageVersion.set(JavaLanguageVersion.of(17))
+        }
+    }
+
+
 
     buildFeatures {
         buildConfig = true
         dataBinding = true
         viewBinding = true
     }
+
+    dependenciesInfo {
+        includeInApk = false
+        includeInBundle = false
+    }
+    buildToolsVersion = "35.0.0"
 
 
 }
@@ -274,6 +296,7 @@ dependencies {
     implementation(files("libs/auth-number-2.13.2.1.aar"))
     implementation(files("libs/logger-2.2.1-release.aar"))
     implementation(files("libs/main-2.2.1-release.aar"))
+    implementation(files("libs/topdon.aar"))
 
     implementation(
         fileTree(

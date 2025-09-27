@@ -42,7 +42,7 @@ class SessionLifecycleTestActivity : FragmentActivity() {
         // Initialize components
         permissionController = PermissionController(this)
         permissionManager = PermissionManager(this, permissionController)
-        recordingController = ComprehensiveRecordingController(this, this)
+        recordingController = ComprehensiveRecordingController(this)
 
         // Add test sensors
         setupTestSensors()
@@ -68,7 +68,10 @@ class SessionLifecycleTestActivity : FragmentActivity() {
             try {
                 val hasCrashedSession = recordingController.checkForCrashedSessions()
                 if (hasCrashedSession) {
-                    showAlert("Crash Recovery", "Detected and recovered from crashed session. Check logs for details.")
+                    showAlert(
+                        "Crash Recovery",
+                        "Detected and recovered from crashed session. Check logs for details."
+                    )
                 } else {
                     Log.i(TAG, "No crashed sessions detected on startup")
                 }
@@ -220,7 +223,10 @@ class SessionLifecycleTestActivity : FragmentActivity() {
                     Log.i(TAG, "✅ Test 3 PASSED: Recording correctly failed when all sensors fail")
                 } else {
                     showToast("❌ Recording should have failed but succeeded")
-                    Log.e(TAG, "❌ Test 3 FAILED: Recording should have failed when all sensors fail")
+                    Log.e(
+                        TAG,
+                        "❌ Test 3 FAILED: Recording should have failed when all sensors fail"
+                    )
                 }
 
             } catch (e: Exception) {
@@ -253,7 +259,10 @@ class SessionLifecycleTestActivity : FragmentActivity() {
                     Log.i(TAG, "✅ Test 4 PASSED: Recording continued despite GSR sensor exception")
                 } else {
                     showToast("❌ Recording failed due to sensor exception")
-                    Log.e(TAG, "❌ Test 4 FAILED: Recording should continue despite isolated sensor exception")
+                    Log.e(
+                        TAG,
+                        "❌ Test 4 FAILED: Recording should continue despite isolated sensor exception"
+                    )
                 }
 
             } catch (e: Exception) {
@@ -283,10 +292,16 @@ class SessionLifecycleTestActivity : FragmentActivity() {
 
                 if (!result) {
                     showToast("✅ Recording correctly failed (insufficient storage)")
-                    Log.i(TAG, "✅ Test 5 PASSED: Recording correctly failed due to storage requirements")
+                    Log.i(
+                        TAG,
+                        "✅ Test 5 PASSED: Recording correctly failed due to storage requirements"
+                    )
                 } else {
                     showToast("⚠️ Storage check may have passed (device has lots of space)")
-                    Log.w(TAG, "⚠️ Test 5 WARNING: Storage check passed - device may have sufficient space")
+                    Log.w(
+                        TAG,
+                        "⚠️ Test 5 WARNING: Storage check passed - device may have sufficient space"
+                    )
                 }
 
             } catch (e: Exception) {
@@ -355,7 +370,10 @@ class SessionLifecycleTestActivity : FragmentActivity() {
             return shouldSucceed
         }
 
-        override suspend fun startRecording(sessionDirectory: String, sessionMetadata: SessionMetadata): Boolean {
+        override suspend fun startRecording(
+            sessionDirectory: String,
+            sessionMetadata: SessionMetadata
+        ): Boolean {
             Log.d(TAG, "MockRgbSensor.startRecording() called - returning $shouldSucceed")
             return shouldSucceed
         }
@@ -365,7 +383,11 @@ class SessionLifecycleTestActivity : FragmentActivity() {
             return true
         }
 
-        override suspend fun addSyncMarker(markerType: String, timestampNs: Long, metadata: Map<String, String>) {
+        override suspend fun addSyncMarker(
+            markerType: String,
+            timestampNs: Long,
+            metadata: Map<String, String>
+        ) {
             Log.d(TAG, "MockRgbSensor.addSyncMarker() called")
         }
 
@@ -410,7 +432,10 @@ class SessionLifecycleTestActivity : FragmentActivity() {
             return shouldSucceed
         }
 
-        override suspend fun startRecording(sessionDirectory: String, sessionMetadata: SessionMetadata): Boolean {
+        override suspend fun startRecording(
+            sessionDirectory: String,
+            sessionMetadata: SessionMetadata
+        ): Boolean {
             Log.d(TAG, "MockThermalSensor.startRecording() called - returning $shouldSucceed")
             return shouldSucceed
         }
@@ -420,7 +445,11 @@ class SessionLifecycleTestActivity : FragmentActivity() {
             return true
         }
 
-        override suspend fun addSyncMarker(markerType: String, timestampNs: Long, metadata: Map<String, String>) {
+        override suspend fun addSyncMarker(
+            markerType: String,
+            timestampNs: Long,
+            metadata: Map<String, String>
+        ) {
             Log.d(TAG, "MockThermalSensor.addSyncMarker() called")
         }
 
@@ -470,7 +499,10 @@ class SessionLifecycleTestActivity : FragmentActivity() {
             return shouldSucceed
         }
 
-        override suspend fun startRecording(sessionDirectory: String, sessionMetadata: SessionMetadata): Boolean {
+        override suspend fun startRecording(
+            sessionDirectory: String,
+            sessionMetadata: SessionMetadata
+        ): Boolean {
             if (shouldThrowException) {
                 Log.d(TAG, "MockGSRSensor.startRecording() throwing exception")
                 throw RuntimeException("Mock GSR sensor connection failed")
@@ -484,7 +516,11 @@ class SessionLifecycleTestActivity : FragmentActivity() {
             return true
         }
 
-        override suspend fun addSyncMarker(markerType: String, timestampNs: Long, metadata: Map<String, String>) {
+        override suspend fun addSyncMarker(
+            markerType: String,
+            timestampNs: Long,
+            metadata: Map<String, String>
+        ) {
             Log.d(TAG, "MockGSRSensor.addSyncMarker() called")
         }
 

@@ -38,7 +38,7 @@ import com.mpdc4gsr.libunified.ir.event.IRMsgEvent
 import com.mpdc4gsr.libunified.ir.event.PreviewComplete
 import com.mpdc4gsr.libunified.ir.thread.ImageThreadTC
 import com.mpdc4gsr.libunified.ir.utils.USBMonitorCallback
-import com.mpdc4gsr.libunified.ir.view.CameraView
+import com.infisense.usbir.view.CameraView
 import com.mpdc4gsr.libunified.ir.view.ITsTempListener
 import com.mpdc4gsr.libunified.ir.view.TemperatureView
 import com.mpdc4gsr.libunified.ir.view.TemperatureView.REGION_MODE_LINE
@@ -95,12 +95,13 @@ class IRMonitorChartActivity : BaseActivity(), ITsTempListener {
         }
         ts_data_H = CommonUtils.getTauData(this@IRMonitorChartActivity, "ts/TS001_H.bin")
         ts_data_L = CommonUtils.getTauData(this@IRMonitorChartActivity, "ts/TS001_L.bin")
-        selectBean = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
-            intent.getParcelableExtra("select", SelectPositionBean::class.java)!!
-        } else {
-            @Suppress("DEPRECATION")
-            intent.getParcelableExtra<SelectPositionBean>("select")!!
-        }
+        selectBean =
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                intent.getParcelableExtra("select", SelectPositionBean::class.java)!!
+            } else {
+                @Suppress("DEPRECATION")
+                intent.getParcelableExtra<SelectPositionBean>("select")!!
+            }
 
         findViewById<TextView>(R.id.monitor_current_vol).text =
             getString(if (selectBean.type == 1) LibR.string.chart_temperature else LibR.string.chart_temperature_high)

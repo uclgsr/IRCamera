@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "com.mpdc4gsr.ble"
-    compileSdk = libs.versions.compileSdk.get().toInt()
+    compileSdk = 35
 
     defaultConfig {
         minSdk = libs.versions.minSdk.get().toInt()
@@ -31,10 +31,12 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
         isCoreLibraryDesugaringEnabled = true
     }
+    buildToolsVersion = "35.0.0"
 }
 
 dependencies {
 
+    implementation(libs.identity.jvm)
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     api("androidx.appcompat:appcompat:1.2.0")
     api("org.greenrobot:eventbus:3.2.0")
@@ -44,4 +46,5 @@ dependencies {
     api("no.nordicsemi.android:ble:2.11.0")
     api(libs.nordic.ble.ktx)
     implementation(files("libs/ini4j-0.5.5.jar"))
+    implementation(project(":libunified"))
 }

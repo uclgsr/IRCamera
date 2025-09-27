@@ -32,7 +32,8 @@ class TimeSyncManagerEnhancedTest {
         timeSyncManager = TimeSyncManager(mockContext)
 
         // Create a temporary test directory
-        testSessionDirectory = System.getProperty("java.io.tmpdir") + "/enhanced_test_" + System.nanoTime()
+        testSessionDirectory =
+            System.getProperty("java.io.tmpdir") + "/enhanced_test_" + System.nanoTime()
         File(testSessionDirectory).mkdirs()
     }
 
@@ -76,7 +77,11 @@ class TimeSyncManagerEnhancedTest {
         timeSyncManager.updateSyncConfiguration(customConfig)
 
         val retrievedConfig = timeSyncManager.getSyncConfiguration()
-        assertEquals("Periodic interval should be updated", 60_000L, retrievedConfig.periodicSyncIntervalMs)
+        assertEquals(
+            "Periodic interval should be updated",
+            60_000L,
+            retrievedConfig.periodicSyncIntervalMs
+        )
         assertEquals("Max retries should be updated", 5, retrievedConfig.maxSyncRetries)
         assertEquals("Timeout should be updated", 10_000L, retrievedConfig.syncTimeoutMs)
         assertFalse("JSON logging should be disabled", retrievedConfig.enableJsonLogging)
@@ -102,7 +107,10 @@ class TimeSyncManagerEnhancedTest {
 
         val qualityMetrics = timeSyncManager.getSyncQualityMetrics()
         assertTrue("Should have recorded syncs", (qualityMetrics["total_syncs"] as Int) > 0)
-        assertTrue("Should have excellent quality count", (qualityMetrics["excellent_count"] as Int) > 0)
+        assertTrue(
+            "Should have excellent quality count",
+            (qualityMetrics["excellent_count"] as Int) > 0
+        )
 
         timeSyncManager.finalizeSession()
     }
@@ -137,7 +145,10 @@ class TimeSyncManagerEnhancedTest {
         val logContent = syncLogFile.readText()
         assertTrue("Log should contain JSON entry", logContent.contains("// JSON:"))
         assertTrue("Log should contain CSV entry", logContent.contains("1,"))
-        assertTrue("Log should contain sync quality", logContent.contains("FAIR") || logContent.contains("POOR"))
+        assertTrue(
+            "Log should contain sync quality",
+            logContent.contains("FAIR") || logContent.contains("POOR")
+        )
 
         timeSyncManager.finalizeSession()
     }
@@ -148,11 +159,17 @@ class TimeSyncManagerEnhancedTest {
 
         val stats = timeSyncManager.getSyncStats()
 
-        assertTrue("Stats should contain quality metrics", stats.containsKey("sync_quality_metrics"))
+        assertTrue(
+            "Stats should contain quality metrics",
+            stats.containsKey("sync_quality_metrics")
+        )
         assertTrue("Stats should contain configuration", stats.containsKey("configuration"))
 
         val config = stats["configuration"] as Map<String, Any>
-        assertTrue("Config should contain periodic interval", config.containsKey("periodic_interval_ms"))
+        assertTrue(
+            "Config should contain periodic interval",
+            config.containsKey("periodic_interval_ms")
+        )
         assertTrue("Config should contain max retries", config.containsKey("max_retries"))
         assertTrue("Config should contain timeout", config.containsKey("timeout_ms"))
 

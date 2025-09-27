@@ -43,7 +43,10 @@ class CameraErrorMessageProviderTest {
 
         assertTrue("Should mention storage", message.contains("storage"))
         assertTrue("Should mention GB", message.contains("GB"))
-        assertTrue("Should mention free up space", message.contains("free up") || message.contains("Free up"))
+        assertTrue(
+            "Should mention free up space",
+            message.contains("free up") || message.contains("Free up")
+        )
     }
 
     @Test
@@ -55,7 +58,10 @@ class CameraErrorMessageProviderTest {
 
         assertTrue("Should mention 4K", message.contains("4K"))
         assertTrue("Should mention 1080p alternative", message.contains("1080p"))
-        assertTrue("Should mention device specifications", message.contains("device specifications"))
+        assertTrue(
+            "Should mention device specifications",
+            message.contains("device specifications")
+        )
     }
 
     @Test
@@ -72,9 +78,12 @@ class CameraErrorMessageProviderTest {
 
     @Test
     fun `test short error messages`() {
-        val permissionMessage = CameraErrorMessageProvider.getShortErrorMessage(ErrorType.PERMISSION_DENIED)
-        val hardwareMessage = CameraErrorMessageProvider.getShortErrorMessage(ErrorType.HARDWARE_UNAVAILABLE)
-        val recordingMessage = CameraErrorMessageProvider.getShortErrorMessage(ErrorType.RECORDING_FAILED)
+        val permissionMessage =
+            CameraErrorMessageProvider.getShortErrorMessage(ErrorType.PERMISSION_DENIED)
+        val hardwareMessage =
+            CameraErrorMessageProvider.getShortErrorMessage(ErrorType.HARDWARE_UNAVAILABLE)
+        val recordingMessage =
+            CameraErrorMessageProvider.getShortErrorMessage(ErrorType.RECORDING_FAILED)
 
         assertTrue("Permission message should be concise", permissionMessage.length < 100)
         assertTrue("Hardware message should be concise", hardwareMessage.length < 100)

@@ -46,7 +46,10 @@ class RealShimmerDeviceFactoryTest {
         assertNotNull("disconnect method should be present", device::disconnect)
         assertNotNull("isConnected method should be present", device::isConnected)
         assertNotNull("setDataCallback method should be present", device::setDataCallback)
-        assertNotNull("setConnectionCallback method should be present", device::setConnectionCallback)
+        assertNotNull(
+            "setConnectionCallback method should be present",
+            device::setConnectionCallback
+        )
     }
 
     @Test

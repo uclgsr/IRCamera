@@ -114,7 +114,9 @@ class ReportPreviewActivity : BaseActivity(), View.OnClickListener {
         rlyInspectorSignature.isEnabled = !isReport
         rlyHouseOwnerSignature.isEnabled = !isReport
         tvSave.text =
-            if (isReport) getString(com.mpdc4gsr.libunified.R.string.battery_share) else getString(com.mpdc4gsr.libunified.R.string.finalize_and_save)
+            if (isReport) getString(com.mpdc4gsr.libunified.R.string.battery_share) else getString(
+                com.mpdc4gsr.libunified.R.string.finalize_and_save
+            )
         toolbarBackImg.setOnClickListener(this)
         tvSave.setOnClickListener(this)
         rlyInspectorSignature.setOnClickListener(this)
@@ -164,7 +166,12 @@ class ReportPreviewActivity : BaseActivity(), View.OnClickListener {
         layAppbar.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
 
             val percent = abs(verticalOffset * 1.0f) / appBarLayout.totalScrollRange
-            layToolbar.setBackgroundColor(changeAlpha(getColor(com.mpdc4gsr.libunified.R.color.color_23202E), percent))
+            layToolbar.setBackgroundColor(
+                changeAlpha(
+                    getColor(com.mpdc4gsr.libunified.R.color.color_23202E),
+                    percent
+                )
+            )
         }
     }
 
@@ -275,7 +282,11 @@ class ReportPreviewActivity : BaseActivity(), View.OnClickListener {
         houseRepPreviewBean.houseAddress = houseReport.address
         houseRepPreviewBean.houseName = houseReport.name
         houseRepPreviewBean.detectTime =
-            "${getString(com.mpdc4gsr.libunified.R.string.detect_time)}${": "}${TimeTool.formatDetectTime(houseReport.detectTime)}"
+            "${getString(com.mpdc4gsr.libunified.R.string.detect_time)}${": "}${
+                TimeTool.formatDetectTime(
+                    houseReport.detectTime
+                )
+            }"
         houseRepPreviewBean.inspectorName = houseReport.inspectorName
         houseRepPreviewBean.houseYear =
             if (houseReport.year == null) "--" else "${houseReport.year?.toString()}${getString(com.mpdc4gsr.libunified.R.string.year)}"

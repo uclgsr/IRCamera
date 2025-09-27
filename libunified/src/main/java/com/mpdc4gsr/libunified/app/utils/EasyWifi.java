@@ -1,8 +1,7 @@
 package com.mpdc4gsr.libunified.app.utils;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.pm.PackageManager;
+import android.util.Log;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
@@ -10,15 +9,14 @@ import android.net.NetworkRequest;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.net.wifi.WifiNetworkSpecifier;
-import android.os.Build;
-import android.util.Log;
-
-import androidx.annotation.RequiresApi;
-import androidx.core.app.ActivityCompat;
 
 import com.mpdc4gsr.libunified.app.BaseApplication;
 
-
+/**
+ * des:
+ * author: CaiSongL
+ * date: 2024/5/23 17:39
+ **/
 public class EasyWifi {
     private static volatile EasyWifi mInstance;
     private final WifiManager wifiManager = (WifiManager) BaseApplication.instance.getSystemService(Context.WIFI_SERVICE);
@@ -27,9 +25,9 @@ public class EasyWifi {
     private WifiConnectCallback wifiConnectCallback;
 
     public static EasyWifi getInstance() {
-        if (mInstance == null) {
+        if (null == EasyWifi.mInstance) {
             synchronized (EasyWifi.class) {
-                if (mInstance == null) {
+                if (null == EasyWifi.mInstance) {
                     mInstance = new EasyWifi();
                 }
             }
@@ -38,12 +36,12 @@ public class EasyWifi {
     }
 
     public static boolean isNetConnected(ConnectivityManager connectivityManager) {
-        return connectivityManager.getActiveNetwork() != null;
+        return null != connectivityManager.getActiveNetwork();
     }
 
     public static boolean isWifi(ConnectivityManager connectivityManager) {
         NetworkCapabilities networkCapabilities;
-        if (connectivityManager.getActiveNetwork() != null && (networkCapabilities = connectivityManager.getNetworkCapabilities(connectivityManager.getActiveNetwork())) != null) {
+        if (null != connectivityManager.getActiveNetwork() && null != (networkCapabilities = connectivityManager.getNetworkCapabilities(connectivityManager.getActiveNetwork()))) {
             return networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI);
         }
         return false;
@@ -70,43 +68,27 @@ public class EasyWifi {
     }
 
     public void connectByNew(String str, String str2) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            connectByNew(str, str2, WiFiEncryptionStandard.WPA2);
-        } else {
-
-            connectByOld(str, str2, WifiCapability.WIFI_CIPHER_WPA);
-        }
+        connectByNew(str, str2, WiFiEncryptionStandard.WPA2);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.Q)
     public void connectByNew(String str, String str2, WiFiEncryptionStandard wiFiEncryptionStandard) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-
-            connectByOld(str, str2, WifiCapability.WIFI_CIPHER_WPA);
-            return;
-        }
-
         WifiNetworkSpecifier build = new WifiNetworkSpecifier.Builder().setSsid(str).setWpa2Passphrase(str2).build();
-        if (wiFiEncryptionStandard == WiFiEncryptionStandard.WPA3) {
+        if (WiFiEncryptionStandard.WPA3 == wiFiEncryptionStandard) {
             build = new WifiNetworkSpecifier.Builder().setSsid(str).setWpa3Passphrase(str2).build();
         }
-        this.connectivityManager.requestNetwork(new NetworkRequest.Builder()
-                .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
-                .addCapability(NetworkCapabilities.NET_CAPABILITY_NOT_METERED)
-                .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-                .setNetworkSpecifier(build).build(), new ConnectivityManager.NetworkCallback() {
-            @Override
+        this.connectivityManager.requestNetwork(new NetworkRequest.Builder().addTransportType(1).addCapability(13).addCapability(14).setNetworkSpecifier(build).build(), new ConnectivityManager.NetworkCallback() { // from class: com.ir.networklib.EasyWifi.1
+            @Override // android.net.ConnectivityManager.NetworkCallback
             public void onAvailable(Network network) {
                 super.onAvailable(network);
-                if (EasyWifi.this.wifiConnectCallback != null) {
+                if (null != wifiConnectCallback) {
                     EasyWifi.this.wifiConnectCallback.onSuccess(network);
                 }
             }
 
-            @Override
+            @Override // android.net.ConnectivityManager.NetworkCallback
             public void onUnavailable() {
                 super.onUnavailable();
-                if (EasyWifi.this.wifiConnectCallback != null) {
+                if (null != wifiConnectCallback) {
                     EasyWifi.this.wifiConnectCallback.onFailure();
                 }
             }
@@ -115,30 +97,19 @@ public class EasyWifi {
 
     public boolean connectByOld(String str, String str2, WifiCapability wifiCapability) {
         int addNetwork = this.wifiManager.addNetwork(createWifiConfig(str, str2, wifiCapability));
-        if (addNetwork == -1) {
-            Log.e(this.TAG, "[CHINESE_TEXT]Failed,[CHINESE_TEXT]wifilist[CHINESE_TEXT]Cancel[CHINESE_TEXT]Connect[CHINESE_TEXT]saved");
+        if (-1 == addNetwork) {
+            Log.e(this.TAG, "操作失败,需要您到手机wifi列表中取消对设备连接的保存");
         }
         boolean enableNetwork = this.wifiManager.enableNetwork(addNetwork, true);
-        Log.d(this.TAG, "connectByOld: " + (enableNetwork ? "Success" : "Failed"));
+        Log.d(this.TAG, "connectByOld: " + (enableNetwork ? "成功" : "失败"));
         return enableNetwork;
     }
 
     private WifiConfiguration isExist(String str) {
-
-        if (ActivityCompat.checkSelfPermission(BaseApplication.instance, Manifest.permission.ACCESS_WIFI_STATE) != PackageManager.PERMISSION_GRANTED ||
-                ActivityCompat.checkSelfPermission(BaseApplication.instance, Manifest.permission.ACCESS_NETWORK_STATE) != PackageManager.PERMISSION_GRANTED) {
-            Log.w(TAG, "Missing WiFi permissions");
-            return null;
-        }
-
-        try {
-            for (WifiConfiguration wifiConfiguration : this.wifiManager.getConfiguredNetworks()) {
-                if (wifiConfiguration.SSID.equals("\"" + str + "\"")) {
-                    return wifiConfiguration;
-                }
+        for (WifiConfiguration wifiConfiguration : this.wifiManager.getConfiguredNetworks()) {
+            if (wifiConfiguration.SSID.equals("\"" + str + "\"")) {
+                return wifiConfiguration;
             }
-        } catch (SecurityException e) {
-            Log.e(TAG, "SecurityException accessing configured networks: " + e.getMessage());
         }
         return null;
     }
@@ -152,20 +123,20 @@ public class EasyWifi {
         wifiConfiguration.allowedProtocols.clear();
         wifiConfiguration.SSID = "\"" + str + "\"";
         WifiConfiguration isExist = isExist(str);
-        if (isExist != null) {
-            Log.d(this.TAG, "createWifiConfig: [CHINESE_TEXT]（true:Success，false:Failed），[CHINESE_TEXT]=" + this.wifiManager.removeNetwork(isExist.networkId) + "[CHINESE_TEXT]saved" + this.wifiManager.saveConfiguration());
+        if (null != isExist) {
+            Log.d(this.TAG, "createWifiConfig: 移除网路（true:成功，false:失败），结果=" + this.wifiManager.removeNetwork(isExist.networkId) + "移除后保存" + this.wifiManager.saveConfiguration());
         }
-        Log.d(this.TAG, "createWifiConfig: currentssid=" + str);
-        if (wifiCapability == WifiCapability.WIFI_CIPHER_NO_PASS) {
+        Log.d(this.TAG, "createWifiConfig: 当前ssid=" + str);
+        if (WifiCapability.WIFI_CIPHER_NO_PASS == wifiCapability) {
             wifiConfiguration.allowedKeyManagement.set(0);
-        } else if (wifiCapability == WifiCapability.WIFI_CIPHER_WEP) {
+        } else if (WifiCapability.WIFI_CIPHER_WEP == wifiCapability) {
             wifiConfiguration.hiddenSSID = true;
             wifiConfiguration.wepKeys[0] = "\"" + str2 + "\"";
             wifiConfiguration.allowedAuthAlgorithms.set(0);
             wifiConfiguration.allowedAuthAlgorithms.set(1);
             wifiConfiguration.allowedKeyManagement.set(0);
             wifiConfiguration.wepTxKeyIndex = 0;
-        } else if (wifiCapability == WifiCapability.WIFI_CIPHER_WPA) {
+        } else if (WifiCapability.WIFI_CIPHER_WPA == wifiCapability) {
             wifiConfiguration.preSharedKey = "\"" + str2 + "\"";
             wifiConfiguration.hiddenSSID = true;
             wifiConfiguration.allowedAuthAlgorithms.set(0);
@@ -181,18 +152,18 @@ public class EasyWifi {
     }
 
     public void setNetworkType(NetType netType) {
-        Log.d(this.TAG, "selectNetworkType: [CHINESE_TEXT]wifiNetwork[CHINESE_TEXT]DataNetwork");
+        Log.d(this.TAG, "selectNetworkType: 强制使用wifi网络或者移动数据网络");
         NetworkRequest.Builder builder = new NetworkRequest.Builder();
-        if (netType == NetType.WIFI) {
-            builder.addTransportType(NetworkCapabilities.TRANSPORT_WIFI);
+        if (NetType.WIFI == netType) {
+            builder.addTransportType(1);
         } else {
-            builder.addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR);
+            builder.addTransportType(0);
         }
-        getConnectivityManager().requestNetwork(builder.build(), new ConnectivityManager.NetworkCallback() {
-            @Override
+        connectivityManager.requestNetwork(builder.build(), new ConnectivityManager.NetworkCallback() { // from class: com.ir.networklib.EasyWifi.2
+            @Override // android.net.ConnectivityManager.NetworkCallback
             public void onAvailable(Network network) {
                 try {
-                    Log.d(EasyWifi.this.TAG, "settingsNetwork[CHINESE_TEXT]HouronAvailable: ");
+                    Log.d(EasyWifi.this.TAG, "设置网络类型时onAvailable: ");
                     EasyWifi.this.getConnectivityManager().bindProcessToNetwork(network);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -205,7 +176,7 @@ public class EasyWifi {
         return this.wifiManager.getConnectionInfo().getSSID();
     }
 
-
+    /* loaded from: classes2.dex */
     public enum WiFiEncryptionStandard {
         WEP,
         WPA_EAP,
@@ -214,14 +185,14 @@ public class EasyWifi {
         WPA3
     }
 
-
+    /* loaded from: classes2.dex */
     public enum WifiCapability {
         WIFI_CIPHER_WEP,
         WIFI_CIPHER_WPA,
         WIFI_CIPHER_NO_PASS
     }
 
-
+    /* loaded from: classes2.dex */
     public interface WifiConnectCallback {
         void onFailure();
 

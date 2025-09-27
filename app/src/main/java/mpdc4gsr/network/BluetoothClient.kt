@@ -2,7 +2,9 @@ package mpdc4gsr.network
 
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
+import android.bluetooth.BluetoothManager
 import android.bluetooth.BluetoothSocket
+import android.content.Context
 import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -27,6 +29,7 @@ import java.util.UUID
  * Android app acts as client connecting to PC server via Bluetooth Classic SPP.
  */
 class BluetoothClient(
+    private val context: Context,
     private val bluetoothDevice: BluetoothDevice,
     private val serviceUuid: UUID = DEFAULT_SPP_UUID
 ) : CommandConnection {
@@ -46,7 +49,8 @@ class BluetoothClient(
     private var readerJob: Job? = null
 
     private val _connectionState = MutableStateFlow(CommandConnection.ConnectionState.DISCONNECTED)
-    override val connectionState: StateFlow<CommandConnection.ConnectionState> = _connectionState.asStateFlow()
+    override val connectionState: StateFlow<CommandConnection.ConnectionState> =
+        _connectionState.asStateFlow()
 
     private var messageCallback: ((String) -> Unit)? = null
     private var connectionCallback: ((CommandConnection.ConnectionState) -> Unit)? = null
@@ -54,18 +58,25 @@ class BluetoothClient(
     override suspend fun connect(): Boolean = withContext(Dispatchers.IO) {
         try {
             if (isConnected()) {
-                Log.i(TAG, "Already connected to ${bluetoothDevice.name} (${bluetoothDevice.address})")
+                Log.i(
+                    TAG,
+                    "Already connected to ${bluetoothDevice.name} (${bluetoothDevice.address})"
+                )
                 return@withContext true
             }
 
-            val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
-            if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled) {
-                Log.e(TAG, "Bluetooth adapter is null or disabled")
+            val bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
+            val bluetoothAdapter = bluetoothManager?.adapter
+            if (bluetoothManager == null || bluetoothAdapter == null || !bluetoothAdapter.isEnabled) {
+                Log.e(TAG, "Bluetooth not available or disabled")
                 handleConnectionError("Bluetooth not available")
                 return@withContext false
             }
 
-            Log.i(TAG, "Connecting to PC via Bluetooth: ${bluetoothDevice.name} (${bluetoothDevice.address})")
+            Log.i(
+                TAG,
+                "Connecting to PC via Bluetooth: ${bluetoothDevice.name} (${bluetoothDevice.address})"
+            )
             _connectionState.value = CommandConnection.ConnectionState.CONNECTING
             connectionCallback?.invoke(CommandConnection.ConnectionState.CONNECTING)
 

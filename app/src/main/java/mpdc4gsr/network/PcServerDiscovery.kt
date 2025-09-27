@@ -181,81 +181,87 @@ class PcServerDiscovery(private val context: Context) {
     /**
      * Network range scanning method
      */
-    private suspend fun networkRangeScanning(): List<DiscoveredServer> = withContext(Dispatchers.IO) {
-        val servers = mutableListOf<DiscoveredServer>()
+    private suspend fun networkRangeScanning(): List<DiscoveredServer> =
+        withContext(Dispatchers.IO) {
+            val servers = mutableListOf<DiscoveredServer>()
 
-        try {
-            val localIp = getLocalIpAddress()
-            if (localIp != null) {
-                val ipParts = localIp.split(".")
-                if (ipParts.size == 4) {
-                    val baseIp = "${ipParts[0]}.${ipParts[1]}.${ipParts[2]}"
+            try {
+                val localIp = getLocalIpAddress()
+                if (localIp != null) {
+                    val ipParts = localIp.split(".")
+                    if (ipParts.size == 4) {
+                        val baseIp = "${ipParts[0]}.${ipParts[1]}.${ipParts[2]}"
 
-                    // Scan common IP range (1-254)
-                    for (i in 1..254) {
-                        if (!isActive) break
+                        // Scan common IP range (1-254)
+                        for (i in 1..254) {
+                            if (!isActive) break
 
-                        val targetIp = "$baseIp.$i"
-                        if (targetIp != localIp) {
-                            val server = testServerConnection(targetIp)
-                            server?.let { servers.add(it) }
+                            val targetIp = "$baseIp.$i"
+                            if (targetIp != localIp) {
+                                val server = testServerConnection(targetIp)
+                                server?.let { servers.add(it) }
+                            }
                         }
                     }
                 }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error in network range scanning", e)
             }
-        } catch (e: Exception) {
-            Log.e(TAG, "Error in network range scanning", e)
-        }
 
-        servers
-    }
+            servers
+        }
 
     /**
      * Test if a specific IP has a PC server running
      */
-    private suspend fun testServerConnection(ipAddress: String): DiscoveredServer? = withContext(Dispatchers.IO) {
-        try {
-            val startTime = System.currentTimeMillis()
-            val socket = Socket()
-            socket.connect(InetSocketAddress(ipAddress, PC_SERVER_PORT), 2000)
-            val responseTime = System.currentTimeMillis() - startTime
+    private suspend fun testServerConnection(ipAddress: String): DiscoveredServer? =
+        withContext(Dispatchers.IO) {
+            try {
+                val startTime = System.currentTimeMillis()
+                val socket = Socket()
+                socket.connect(InetSocketAddress(ipAddress, PC_SERVER_PORT), 2000)
+                val responseTime = System.currentTimeMillis() - startTime
 
-            // Send a quick info query
-            val output = socket.getOutputStream()
-            val input = socket.getInputStream()
+                // Send a quick info query
+                val output = socket.getOutputStream()
+                val input = socket.getInputStream()
 
-            val query = "INFO_QUERY\n".toByteArray()
-            output.write(query)
-            output.flush()
+                val query = "INFO_QUERY\n".toByteArray()
+                output.write(query)
+                output.flush()
 
-            val buffer = ByteArray(1024)
-            val bytesRead = input.read(buffer)
+                val buffer = ByteArray(1024)
+                val bytesRead = input.read(buffer)
 
-            socket.close()
+                socket.close()
 
-            if (bytesRead > 0) {
-                val response = String(buffer, 0, bytesRead)
-                if (response.contains("IRCamera") || response.contains("PC_Controller")) {
-                    return@withContext DiscoveredServer(
-                        ipAddress = ipAddress,
-                        port = PC_SERVER_PORT,
-                        deviceName = "PC Controller",
-                        capabilities = listOf("recording", "control"),
-                        responseTime = responseTime
-                    )
+                if (bytesRead > 0) {
+                    val response = String(buffer, 0, bytesRead)
+                    if (response.contains("IRCamera") || response.contains("PC_Controller")) {
+                        return@withContext DiscoveredServer(
+                            ipAddress = ipAddress,
+                            port = PC_SERVER_PORT,
+                            deviceName = "PC Controller",
+                            capabilities = listOf("recording", "control"),
+                            responseTime = responseTime
+                        )
+                    }
                 }
+            } catch (e: Exception) {
+                // Server not responding or not a PC server
             }
-        } catch (e: Exception) {
-            // Server not responding or not a PC server
-        }
 
-        null
-    }
+            null
+        }
 
     /**
      * Parse discovery response message
      */
-    private fun parseDiscoveryResponse(ipAddress: String, response: String, responseTime: Long): DiscoveredServer? {
+    private fun parseDiscoveryResponse(
+        ipAddress: String,
+        response: String,
+        responseTime: Long
+    ): DiscoveredServer? {
         try {
             val parts = response.split(";")
             var deviceName = "PC Controller"
@@ -297,7 +303,7 @@ class PcServerDiscovery(private val context: Context) {
                 for (interfaceAddress in networkInterface.interfaceAddresses) {
                     val broadcast = interfaceAddress.broadcast
                     if (broadcast != null) {
-                        addresses.add(broadcast.hostAddress)
+                        broadcast.hostAddress?.let { addresses.add(it) }
                     }
                 }
             }
@@ -318,7 +324,8 @@ class PcServerDiscovery(private val context: Context) {
      */
     private fun getLocalIpAddress(): String? {
         try {
-            val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val connectivityManager =
+                context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             val network = connectivityManager.activeNetwork
             val networkCapabilities = connectivityManager.getNetworkCapabilities(network)
 

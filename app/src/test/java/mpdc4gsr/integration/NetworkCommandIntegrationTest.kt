@@ -85,7 +85,8 @@ class NetworkCommandIntegrationTest {
         val rttMs = 100L
         val syncResult = Protocol.createSyncResultMessage(t1, t2, t3, offsetMs, rttMs)
 
-        val expected = "SYNC_RESULT t1=1640995200000 t2=1640995200050 t3=1640995200100 offset=25 rtt=100"
+        val expected =
+            "SYNC_RESULT t1=1640995200000 t2=1640995200050 t3=1640995200100 offset=25 rtt=100"
         assertEquals(expected, syncResult)
         assertTrue("Should contain offset calculation", syncResult.contains("offset=$offsetMs"))
         assertTrue("Should contain RTT measurement", syncResult.contains("rtt=$rttMs"))
@@ -102,11 +103,17 @@ class NetworkCommandIntegrationTest {
         val sensors = listOf("RGB", "THERMAL", "GSR")
         val helloMessage = Protocol.createHelloMessage(deviceId, sensors)
 
-        assertEquals("HELLO device_name=android_pixel_6_thermal sensors=[RGB,THERMAL,GSR]", helloMessage)
+        assertEquals(
+            "HELLO device_name=android_pixel_6_thermal sensors=[RGB,THERMAL,GSR]",
+            helloMessage
+        )
         assertTrue("Should announce RGB capability", helloMessage.contains("RGB"))
         assertTrue("Should announce THERMAL capability", helloMessage.contains("THERMAL"))
         assertTrue("Should announce GSR capability", helloMessage.contains("GSR"))
-        assertTrue("Should contain device identifier", helloMessage.contains("device_name=$deviceId"))
+        assertTrue(
+            "Should contain device identifier",
+            helloMessage.contains("device_name=$deviceId")
+        )
     }
 
     /**
@@ -120,15 +127,29 @@ class NetworkCommandIntegrationTest {
         val thermalErrorCode = Protocol.ERR_THERMAL_NOT_FOUND
         val thermalErrorMsg = "TC001 thermal camera not detected or permission denied"
 
-        val thermalError = Protocol.createErrorMessage(thermalErrorCommand, thermalErrorCode, thermalErrorMsg)
+        val thermalError =
+            Protocol.createErrorMessage(thermalErrorCommand, thermalErrorCode, thermalErrorMsg)
 
-        assertTrue("Should contain error command", thermalError.contains("cmd=$thermalErrorCommand"))
-        assertTrue("Should contain thermal error code", thermalError.contains("code=$thermalErrorCode"))
-        assertTrue("Should contain error message", thermalError.contains("msg=\"$thermalErrorMsg\""))
+        assertTrue(
+            "Should contain error command",
+            thermalError.contains("cmd=$thermalErrorCommand")
+        )
+        assertTrue(
+            "Should contain thermal error code",
+            thermalError.contains("code=$thermalErrorCode")
+        )
+        assertTrue(
+            "Should contain error message",
+            thermalError.contains("msg=\"$thermalErrorMsg\"")
+        )
 
         // Test general sensor failure error
         val sensorFailError =
-            Protocol.createErrorMessage("START_RECORD", Protocol.ERR_SENSOR_FAIL, "Multiple sensors unavailable")
+            Protocol.createErrorMessage(
+                "START_RECORD",
+                Protocol.ERR_SENSOR_FAIL,
+                "Multiple sensors unavailable"
+            )
         assertTrue("Should handle sensor failure", sensorFailError.contains("SENSOR_FAIL"))
     }
 
@@ -211,7 +232,10 @@ class NetworkCommandIntegrationTest {
         // Verify protocol configuration
         assertEquals("1.0", Protocol.PROTOCOL_VERSION)
         assertEquals(8080, Protocol.DEFAULT_PORT)
-        assertTrue("Max message size should support frames", Protocol.MAX_MESSAGE_SIZE >= 1024 * 1024)
+        assertTrue(
+            "Max message size should support frames",
+            Protocol.MAX_MESSAGE_SIZE >= 1024 * 1024
+        )
     }
 
     /**

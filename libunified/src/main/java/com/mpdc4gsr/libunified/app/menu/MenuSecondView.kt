@@ -241,18 +241,18 @@ class MenuSecondView : FrameLayout {
         CoroutineScope(Dispatchers.IO).launch {
             val path = GalleryRepository.readLatest(type)
             launch(Dispatchers.Main) {
-                binding.cameraMenuView.refreshGallery(path)
+                binding.cameraMenuView.refreshGallery(false)
             }
         }
     }
 
     fun setToRecord(isDelay: Boolean) {
         binding.cameraMenuView.canSwitchMode = false
-        binding.cameraMenuView.setToRecord(isDelay)
+        binding.cameraMenuView.setToRecord()
     }
 
     fun setToCamera() {
-        binding.cameraMenuView.setToRecord(false)
+        binding.cameraMenuView.setToRecord()
     }
 
 

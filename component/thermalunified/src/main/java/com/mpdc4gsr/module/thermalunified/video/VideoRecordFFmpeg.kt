@@ -40,11 +40,11 @@ import com.mpdc4gsr.libunified.app.dialog.TipDialog
 import com.mpdc4gsr.libunified.app.tools.TimeTool
 import com.mpdc4gsr.libunified.app.utils.BitmapUtils
 import com.mpdc4gsr.libunified.ir.usbdual.camera.DualViewWithExternalCameraCommonApi
-import com.mpdc4gsr.libunified.ir.view.CameraView
+import com.infisense.usbir.view.CameraView
 import com.mpdc4gsr.libunified.ir.view.TemperatureView
 import com.mpdc4gsr.libunified.ui.widget.BitmapConstraintLayout
 import com.mpdc4gsr.libunified.ui.widget.LiteSurfaceView
-import com.mpdc4gsr.module.thermalunified.stubs.CameraPreView
+import com.mpdc4gsr.libunified.ui.camera.CameraPreView
 import com.mpdc4gsr.module.thermalunified.view.HikSurfaceView
 import com.mpdc4gsr.module.thermalunified.view.TemperatureHikView
 import com.mpdc4gsr.module.thermalunified.view.compass.LinearCompassView
@@ -213,7 +213,12 @@ class VideoRecordFFmpeg(
         paint.textSize = SizeUtils.sp2px(6f).toFloat()
         paint.isDither = true
         paint.isFilterBitmap = true
-        paint.getTextBounds("[ph][ph][ph][ph][ph][ph]", 0, "[ph][ph][ph][ph][ph][ph]".length, rectText)
+        paint.getTextBounds(
+            "[ph][ph][ph][ph][ph][ph]",
+            0,
+            "[ph][ph][ph][ph][ph][ph]".length,
+            rectText
+        )
     }
 
     var startTime: Long = 0L
@@ -544,7 +549,13 @@ class VideoRecordFFmpeg(
 
         when (cameraView) {
             is CameraView -> cameraViewBitmap =
-                if (dualView == null) cameraView.scaledBitmap else dualView.scaledBitmap
+                if (dualView == null) {
+                    cameraView.getScaledBitmap()
+                        ?: Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
+                } else {
+                    dualView.scaledBitmap
+                        ?: Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
+                }
 
             is TextureView -> {
                 cameraViewBitmap = Bitmap.createBitmap(
@@ -555,11 +566,12 @@ class VideoRecordFFmpeg(
                 cameraView.getBitmap(cameraViewBitmap)
             }
 
-            is LiteSurfaceView -> cameraViewBitmap = cameraView.scaleBitmap() ?: Bitmap.createBitmap(
-                cameraView.width,
-                cameraView.height,
-                Bitmap.Config.ARGB_8888
-            )
+            is LiteSurfaceView -> cameraViewBitmap =
+                cameraView.scaleBitmap() ?: Bitmap.createBitmap(
+                    cameraView.width,
+                    cameraView.height,
+                    Bitmap.Config.ARGB_8888
+                )
 
             is HikSurfaceView -> cameraViewBitmap = cameraView.getScaleBitmap()
             else -> cameraViewBitmap =
@@ -705,7 +717,12 @@ class VideoRecordFFmpeg(
         canvas.save()
         val beginX = pix10.toDouble()
         var beginY = (bmp.height - pix10).toDouble()
-        paint.getTextBounds("[ph][ph][ph][ph][ph][ph]", 0, "[ph][ph][ph][ph][ph][ph]".length, rectText)
+        paint.getTextBounds(
+            "[ph][ph][ph][ph][ph][ph]",
+            0,
+            "[ph][ph][ph][ph][ph][ph]".length,
+            rectText
+        )
         if (!TextUtils.isEmpty(time)) {
             beginY = beginY - (rectText.bottom - rectText.top)
             canvas.drawText(time!!, beginX.toInt().toFloat(), beginY.toInt().toFloat(), paint)

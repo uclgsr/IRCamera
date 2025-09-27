@@ -38,7 +38,7 @@ import com.mpdc4gsr.module.thermalunified.bean.DataBean
 import com.mpdc4gsr.module.thermalunified.bean.SelectPositionBean
 import com.mpdc4gsr.module.thermalunified.event.ThermalActionEvent
 import com.mpdc4gsr.module.thermalunified.lite.activity.IRMonitorLiteActivity
-import com.mpdc4gsr.module.thermalunified.lite.camera.CameraPreviewManager
+import com.mpdc4gsr.libunified.ui.camera.CameraPreviewManager
 import com.mpdc4gsr.module.thermalunified.lite.camera.DeviceControlManager
 import com.mpdc4gsr.module.thermalunified.lite.camera.DeviceIrcmdControlManager
 import com.mpdc4gsr.module.thermalunified.lite.camera.OnUSBConnectListener
@@ -115,7 +115,8 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
 
         temperatureView =
             requireView().findViewById<com.mpdc4gsr.libunified.ir.view.TemperatureView>(R.id.temperatureView)
-        cameraView = requireView().findViewById<com.mpdc4gsr.libunified.ui.widget.LiteSurfaceView>(R.id.cameraView)
+        cameraView =
+            requireView().findViewById<com.mpdc4gsr.libunified.ui.widget.LiteSurfaceView>(R.id.cameraView)
 
         lifecycleScope.launch {
             showLoadingDialog()
@@ -151,8 +152,7 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
 
                     IRTool.basicImageDetailEnhanceLevelSet(50)
                     CameraPreviewManager.getInstance()?.setLimit(
-                        Float.MAX_VALUE, Float.MIN_VALUE,
-                        0, 0,
+                        Float.MAX_VALUE, Float.MIN_VALUE
                     )
                     shutterHandler = Handler(Looper.getMainLooper())
 
@@ -377,7 +377,7 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
 
         config = ConfigRepository.readConfig(false)
         CameraPreviewManager.getInstance().init(cameraView, mLiteHandler)
-        CameraPreviewManager.getInstance().imageRotate = RotateDegree.DEGREE_270
+        CameraPreviewManager.getInstance().imageRotate = RotateDegree.DEGREE_270.getValue()
         CameraPreviewManager.getInstance().setOnTempDataChangeCallback { data ->
             if (data != null) {
                 System.arraycopy(data, 0, temperatureBytes, 0, temperatureBytes.size)
@@ -620,12 +620,21 @@ class IRMonitorLiteFragment : BaseFragment(), ITsTempListener {
     }
 
     fun getBitmap(): Bitmap {
-        return Bitmap.createScaledBitmap(
-            CameraPreviewManager.getInstance().scaledBitmap(true),
-            cameraView.width,
-            cameraView.height,
-            true,
-        )
+        val scaledBitmap = CameraPreviewManager.getInstance().scaledBitmap(true)
+        return if (scaledBitmap != null) {
+            Bitmap.createScaledBitmap(
+                scaledBitmap,
+                cameraView.width,
+                cameraView.height,
+                true,
+            )
+        } else {
+            Bitmap.createBitmap(
+                cameraView.width.coerceAtLeast(1),
+                cameraView.height.coerceAtLeast(1),
+                Bitmap.Config.ARGB_8888
+            )
+        }
     }
 
     // Temperature measurement wrapper methods for compatibility with IRMonitorLiteActivity

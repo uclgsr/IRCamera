@@ -49,7 +49,10 @@ object TS004Repository {
         .create(TS004Service::class.java)
 
 
-    suspend fun downloadList(dataMap: Map<String, File>, listener: ((path: String, isSuccess: Boolean) -> Unit)): Int {
+    suspend fun downloadList(
+        dataMap: Map<String, File>,
+        listener: ((path: String, isSuccess: Boolean) -> Unit)
+    ): Int {
         return withContext(Dispatchers.IO) {
             var successCount = 0
             dataMap.forEach {
@@ -159,7 +162,8 @@ object TS004Repository {
             paramMap["pageNum"] = 1
             paramMap["pageCount"] = 1
             paramMap["fileType"] = fileType
-            getTS004Service().getFileList(paramMap.toBody()).data?.filelist ?: return@withContext ArrayList()
+            getTS004Service().getFileList(paramMap.toBody()).data?.filelist
+                ?: return@withContext ArrayList()
         } catch (_: Exception) {
             null
         }
@@ -277,7 +281,8 @@ object TS004Repository {
                     hasReadCount = 0
                     byteArray = ByteArray(1024 * 1024 * 5)
                 }
-                readCount = fileInputStream.read(byteArray, hasReadCount, byteArray.size - hasReadCount)
+                readCount =
+                    fileInputStream.read(byteArray, hasReadCount, byteArray.size - hasReadCount)
             }
 
             if (hasReadCount > 0) {

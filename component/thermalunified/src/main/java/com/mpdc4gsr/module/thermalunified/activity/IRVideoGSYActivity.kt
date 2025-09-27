@@ -55,10 +55,12 @@ class IRVideoGSYActivity : BaseActivity() {
 
         isRemote = intent.getBooleanExtra("isRemote", false)
         data = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
-            intent.getParcelableExtra("data", GalleryBean::class.java) ?: throw NullPointerException("传递 data")
+            intent.getParcelableExtra("data", GalleryBean::class.java)
+                ?: throw NullPointerException("传递 data")
         } else {
             @Suppress("DEPRECATION")
-            intent.getParcelableExtra<GalleryBean>("data") ?: throw NullPointerException("传递 data")
+            intent.getParcelableExtra<GalleryBean>("data")
+                ?: throw NullPointerException("传递 data")
         }
 
         clBottom.isVisible = isRemote

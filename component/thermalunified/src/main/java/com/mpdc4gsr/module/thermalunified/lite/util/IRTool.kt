@@ -7,7 +7,7 @@ import com.energy.ac020library.bean.IrcmdError
 import com.energy.irutilslibrary.LibIRTempAC020
 import com.energy.irutilslibrary.bean.GainStatus
 import com.mpdc4gsr.libunified.app.bean.CameraItemBean
-import com.mpdc4gsr.module.thermalunified.lite.camera.CameraPreviewManager
+import com.mpdc4gsr.libunified.ui.camera.CameraPreviewManager
 import com.mpdc4gsr.module.thermalunified.lite.camera.DeviceIrcmdControlManager
 import kotlinx.coroutines.delay
 

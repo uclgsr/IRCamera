@@ -237,7 +237,8 @@ class UnifiedSensorActivity : AppCompatActivity() {
                 // Update camera type display
                 try {
                     val cameraInfo = rgbCameraRecorder.getCurrentCameraInfo()
-                    cameraTypeText.text = if (cameraInfo.isUsingFrontCamera) "Front Camera" else "Back Camera"
+                    cameraTypeText.text =
+                        if (cameraInfo.isUsingFrontCamera) "Front Camera" else "Back Camera"
                     switchCameraButton.isEnabled = cameraInfo.canSwitch
                 } catch (e: Exception) {
                     Log.w(TAG, "Could not get camera info", e)
@@ -561,7 +562,8 @@ class UnifiedSensorActivity : AppCompatActivity() {
 
                 if (success) {
                     val newInfo = rgbCameraRecorder.getCurrentCameraInfo()
-                    cameraTypeText.text = if (newInfo.isUsingFrontCamera) "Front Camera" else "Back Camera"
+                    cameraTypeText.text =
+                        if (newInfo.isUsingFrontCamera) "Front Camera" else "Back Camera"
                     cameraStatusText.text = "Camera: Switched successfully"
                 } else {
                     cameraStatusText.text = "Camera: Switch failed"

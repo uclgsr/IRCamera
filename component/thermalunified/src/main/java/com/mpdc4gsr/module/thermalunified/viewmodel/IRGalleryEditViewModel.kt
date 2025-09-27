@@ -5,6 +5,7 @@ import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import com.mpdc4gsr.libunified.app.utils.ByteUtils.bytesToInt
 import com.mpdc4gsr.libunified.app.utils.SingleLiveEvent
+import com.mpdc4gsr.libunified.app.utils.UnifiedByteUtils.bytesToInt
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File
@@ -37,5 +38,23 @@ class IRGalleryEditViewModel : BaseViewModel() {
     fun getTailData(bytes: ByteArray) {
     }
 
-    data class FrameBean(val capital: ByteArray, val frame: ByteArray)
+    data class FrameBean(val capital: ByteArray, val frame: ByteArray) {
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (javaClass != other?.javaClass) return false
+
+            other as FrameBean
+
+            if (!capital.contentEquals(other.capital)) return false
+            if (!frame.contentEquals(other.frame)) return false
+
+            return true
+        }
+
+        override fun hashCode(): Int {
+            var result = capital.contentHashCode()
+            result = 31 * result + frame.contentHashCode()
+            return result
+        }
+    }
 }

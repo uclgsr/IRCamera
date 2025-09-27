@@ -66,7 +66,8 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
 
 
         lifecycleScope.launch {
-            val success = true // ComprehensiveRecordingController handles sensor initialization internally
+            val success =
+                true // ComprehensiveRecordingController handles sensor initialization internally
             runOnUiThread {
                 if (success) {
                     binding.statusText.text = "Enhanced recording system ready"
@@ -121,14 +122,13 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
             recordingController.sensorStatusFlow.collect { statusList ->
                 runOnUiThread {
                     val gsrStatus =
-                        statusList.find { it.name.contains("GSR", ignoreCase = true) }
+                        statusList.find { it.sensorId.contains("GSR", ignoreCase = true) }
                     if (gsrStatus != null) {
                         binding.sensorDataText.text =
                             buildString {
                                 append("GSR Sensor Status:\n")
                                 append("Samples: ${gsrStatus.samplesRecorded}\n")
-                                append("Recording: ${if (gsrStatus.isRecording) "Active" else "Inactive"}\n")
-                                append("Storage: ${"%.2f".format(gsrStatus.storageUsedMB)} MB\n")
+                                append("Recording: ${if (gsrStatus.isActive) "Active" else "Inactive"}\n")
                                 append("Healthy: ${if (gsrStatus.isHealthy) "Yes" else "No"}\n")
                             }
                     }
@@ -156,9 +156,10 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
                 val intent = Intent(this, SessionManagerActivity::class.java)
                 startActivity(intent)
             } catch (e: Exception) {
-
-                val intent = Intent(this, GSRDemoActivity::class.java)
-                startActivity(intent)
+                // Demo activity removed - commented out to avoid compilation errors
+                // val intent = Intent(this, GSRDemoActivity::class.java)
+                // startActivity(intent)
+                Log.e(TAG, "Could not start SessionManagerActivity", e)
             }
         }
 
@@ -176,17 +177,26 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
     }
 
     private fun checkPermissions() {
+        if (!permissionController.hasAllRequiredPermissions()) {
+            Log.i(TAG, "Missing permissions detected")
 
-        val missingPermissions =
-            REQUIRED_PERMISSIONS.filter {
-                ContextCompat.checkSelfPermission(
-                    this,
-                    it
-                ) != android.content.pm.PackageManager.PERMISSION_GRANTED
+            permissionController.ensureAll { allGranted, deniedPermissions ->
+                if (allGranted) {
+                    Log.i(TAG, "All permissions granted for GSR recording")
+                } else {
+                    Log.w(TAG, "Some permissions denied: ${deniedPermissions.joinToString(", ")}")
+                    val permissionNames = permissionController.getPermissionNames(deniedPermissions)
+                    showPermissionError("Missing permissions: ${permissionNames.joinToString(", ")}")
+                }
             }
+        }
+    }
 
-        if (missingPermissions.isNotEmpty()) {
-            requestPermissions(missingPermissions.toTypedArray(), REQUEST_PERMISSIONS)
+    private fun showPermissionError(message: String) {
+        runOnUiThread {
+            binding.statusText.text = message
+            binding.startRecordingButton.isEnabled = false
+            Toast.makeText(this, message, Toast.LENGTH_LONG).show()
         }
     }
 
@@ -219,9 +229,11 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
                         ).show()
 
                         currentSessionDirectory?.let { sessionDir ->
-                            binding.sessionInfoText.text = "Recording: ${sessionDir.substringAfterLast("/")}"
+                            binding.sessionInfoText.text =
+                                "Recording: ${sessionDir.substringAfterLast("/")}"
                         } ?: run {
-                            binding.sessionInfoText.text = "Recording in progress with advanced fault tolerance..."
+                            binding.sessionInfoText.text =
+                                "Recording in progress with advanced fault tolerance..."
                         }
                     } else {
                         Toast.makeText(
@@ -311,15 +323,15 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
+        // Use PermissionController's result handling for consistent behavior
+        permissionController.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        // Legacy handling for direct permission requests (if any remain)
         if (requestCode == REQUEST_PERMISSIONS) {
             val allGranted =
                 grantResults.all { it == android.content.pm.PackageManager.PERMISSION_GRANTED }
             if (!allGranted) {
-                Toast.makeText(
-                    this,
-                    "Some permissions were denied. GSR functionality may be limited.",
-                    Toast.LENGTH_LONG
-                ).show()
+                showPermissionError("Some permissions were denied. GSR functionality may be limited.")
             }
         }
     }

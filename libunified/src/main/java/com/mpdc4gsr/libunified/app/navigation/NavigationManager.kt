@@ -98,12 +98,12 @@ object NavigationManager {
         val activityClass =
             when (route) {
 
-                RouterConfig.MAIN -> getClassByName("mpdc4gsr.MainActivity")
-                RouterConfig.CLAUSE -> getClassByName("mpdc4gsr.ClauseActivity")
-                RouterConfig.POLICY -> getClassByName("mpdc4gsr.PolicyActivity")
-                RouterConfig.VERSION -> getClassByName("mpdc4gsr.VersionActivity")
-                RouterConfig.IR_GALLERY_EDIT -> getClassByName("mpdc4gsr.IRGalleryEditActivity")
-                RouterConfig.WEB_VIEW -> getClassByName("mpdc4gsr.WebViewActivity")
+                RouterConfig.MAIN -> getClassByName("mpdc4gsr.activities.MainActivity")
+                RouterConfig.CLAUSE -> getClassByName("mpdc4gsr.activities.ClauseActivity")
+                RouterConfig.POLICY -> getClassByName("mpdc4gsr.activities.PolicyActivity")
+                RouterConfig.VERSION -> getClassByName("mpdc4gsr.activities.VersionActivity")
+                RouterConfig.IR_GALLERY_EDIT -> getClassByName("mpdc4gsr.activities.IRGalleryEditActivity")
+                RouterConfig.WEB_VIEW -> getClassByName("mpdc4gsr.activities.WebViewActivity")
 
                 RouterConfig.IR_MAIN -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.IRMainActivity")
                 RouterConfig.IR_SETTING -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.IRConfigActivity")

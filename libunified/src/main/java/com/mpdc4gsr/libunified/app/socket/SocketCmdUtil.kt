@@ -5,6 +5,10 @@ import com.google.gson.Gson
 import org.json.JSONException
 import org.json.JSONObject
 
+/**
+ * SocketCmdUtil based on reference repository implementation
+ * Adapted from libapp/src/main/java/com/topdon/lib/core/socket/SocketCmdUtil.kt
+ */
 object SocketCmdUtil {
     fun getSocketCmd(cmd: Int): String? {
         var cmdJson: String? = null
@@ -42,5 +46,17 @@ object SocketCmdUtil {
             e.printStackTrace()
         }
         return ip
+    }
+
+    fun getDataResponse(response: String?): String? {
+        var data: String? = null
+        if (TextUtils.isEmpty(response)) return null
+        try {
+            val jsonObject = JSONObject(response!!)
+            data = jsonObject.getString("data")
+        } catch (e: JSONException) {
+            e.printStackTrace()
+        }
+        return data
     }
 }

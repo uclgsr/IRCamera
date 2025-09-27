@@ -10,6 +10,8 @@ import com.csl.irCamera.R
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import mpdc4gsr.controller.RecordingController
+import mpdc4gsr.sensors.gsr.GSRCalculationUtils
+import mpdc4gsr.sensors.gsr.GSRConstants
 import mpdc4gsr.sensors.gsr.GSRSensorRecorder
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -23,7 +25,6 @@ class GSRBenchTestActivity : AppCompatActivity() {
     companion object {
         private const val TAG = "GSRBenchTest"
         private const val TEST_DURATION_SECONDS = 10
-        private const val EXPECTED_SAMPLE_RATE = 128.0
         private const val SAMPLE_TOLERANCE = 50  // Allow 50 sample variance
     }
 
@@ -119,7 +120,8 @@ class GSRBenchTestActivity : AppCompatActivity() {
         testResults.append("4. Calibration Test: ${if (calibrationResult) "PASS" else "FAIL"}\n")
 
         // Summary
-        val overallResult = connectionResult && streamingResult && samplingResult && calibrationResult
+        val overallResult =
+            connectionResult && streamingResult && samplingResult && calibrationResult
         testResults.append("\n=== OVERALL RESULT: ${if (overallResult) "PASS" else "FAIL"} ===\n")
 
         if (overallResult) {
@@ -178,17 +180,17 @@ class GSRBenchTestActivity : AppCompatActivity() {
     }
 
     private suspend fun testSamplingRate(): Boolean {
-        updateResults("Testing sampling rate (${EXPECTED_SAMPLE_RATE}Hz expected)...\n")
+        updateResults("Testing sampling rate (${GSRConstants.GSR_SAMPLING_RATE}Hz expected)...\n")
 
         return try {
             val recorder = gsrRecorder ?: return false
 
             // Verify recorder is configured for correct sampling rate
-            if (recorder.samplingRate == EXPECTED_SAMPLE_RATE) {
+            if (recorder.samplingRate == GSRConstants.GSR_SAMPLING_RATE) {
                 updateResults("✓ Sampling rate configured correctly: ${recorder.samplingRate}Hz\n")
                 return true
             } else {
-                updateResults("✗ Sampling rate mismatch: expected ${EXPECTED_SAMPLE_RATE}Hz, got ${recorder.samplingRate}Hz\n")
+                updateResults("✗ Sampling rate mismatch: expected ${GSRConstants.GSR_SAMPLING_RATE}Hz, got ${recorder.samplingRate}Hz\n")
                 return false
             }
 
@@ -205,15 +207,22 @@ class GSRBenchTestActivity : AppCompatActivity() {
         return try {
             // Test calibration constants and conversion
             updateResults("Calibration constants:\n")
-            updateResults("- ADC Max Value: 4095\n")
-            updateResults("- Reference Voltage: 3.0V\n")
-            updateResults("- Reference Resistance: 40.2kΩ\n")
+            updateResults("- ADC Max Value: ${GSRConstants.ADC_MAX_VALUE.toInt()}\n")
+            updateResults("- Reference Voltage: ${GSRConstants.REFERENCE_VOLTAGE}V\n")
+            updateResults("- Reference Resistance: ${GSRConstants.REFERENCE_RESISTANCE_OHMS / 1000}kΩ\n")
 
             // Simulate calibration test
             val testAdcValue = 2048  // Mid-range ADC value
-            val expectedConductance = calculateConductance(testAdcValue)
+            val expectedConductance = GSRCalculationUtils.calculateGSRMicrosiemens(testAdcValue)
 
-            updateResults("Test conversion: ADC=$testAdcValue → ${String.format("%.2f", expectedConductance)}µS\n")
+            updateResults(
+                "Test conversion: ADC=$testAdcValue → ${
+                    String.format(
+                        "%.2f",
+                        expectedConductance
+                    )
+                }µS\n"
+            )
             updateResults("✓ Calibration formulas verified\n")
 
             true
@@ -223,19 +232,6 @@ class GSRBenchTestActivity : AppCompatActivity() {
             Log.e(TAG, "Calibration test failed", e)
             false
         }
-    }
-
-    private fun calculateConductance(adcValue: Int): Double {
-        // GSR calibration formula as per Shimmer documentation
-        val referenceVoltage = 3.0
-        val referenceResistance = 40200.0  // 40.2kΩ
-        val adcMaxValue = 4095.0
-
-        val voltage = (adcValue / adcMaxValue) * referenceVoltage
-        val resistance = referenceResistance / ((referenceVoltage / voltage) - 1)
-        val conductance = 1000000.0 / resistance  // Convert to microsiemens
-
-        return conductance
     }
 
     private suspend fun testConnectionOnly() {

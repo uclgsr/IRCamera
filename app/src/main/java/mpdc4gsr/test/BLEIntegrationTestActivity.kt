@@ -90,7 +90,10 @@ class BLEIntegrationTestActivity : AppCompatActivity() {
 
                 addLog("Test 1: Initializing UnifiedGSRRecorder with enhanced BLE scanning...")
 
-                gsrRecorder = UnifiedGSRRecorder(this@BLEIntegrationTestActivity, this@BLEIntegrationTestActivity)
+                gsrRecorder = UnifiedGSRRecorder(
+                    this@BLEIntegrationTestActivity,
+                    this@BLEIntegrationTestActivity
+                )
                 val initSuccess = gsrRecorder?.initialize() ?: false
 
                 if (initSuccess) {
@@ -119,7 +122,10 @@ class BLEIntegrationTestActivity : AppCompatActivity() {
 
                 addLog("Test 3: Testing ShimmerDeviceManager directly...")
 
-                deviceManager = ShimmerDeviceManager(this@BLEIntegrationTestActivity, this@BLEIntegrationTestActivity)
+                deviceManager = ShimmerDeviceManager(
+                    this@BLEIntegrationTestActivity,
+                    this@BLEIntegrationTestActivity
+                )
                 val dmInitSuccess = deviceManager?.initialize() ?: false
 
                 if (dmInitSuccess) {
@@ -154,7 +160,8 @@ class BLEIntegrationTestActivity : AppCompatActivity() {
 
                 addLog("Test 4: Validating BLE permissions...")
 
-                val hasPermissions = UnifiedGSRRecorder.hasRequiredPermissions(this@BLEIntegrationTestActivity)
+                val hasPermissions =
+                    UnifiedGSRRecorder.hasRequiredPermissions(this@BLEIntegrationTestActivity)
                 if (hasPermissions) {
                     addLog("✅ All required BLE permissions are granted")
                 } else {
@@ -187,7 +194,8 @@ class BLEIntegrationTestActivity : AppCompatActivity() {
     private fun addLog(message: String) {
         runOnUiThread {
             val timestamp =
-                java.text.SimpleDateFormat("HH:mm:ss", java.util.Locale.getDefault()).format(java.util.Date())
+                java.text.SimpleDateFormat("HH:mm:ss", java.util.Locale.getDefault())
+                    .format(java.util.Date())
             logText.append("[$timestamp] $message\n")
 
 

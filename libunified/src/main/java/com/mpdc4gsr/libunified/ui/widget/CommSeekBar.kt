@@ -1,4 +1,4 @@
-package com.topdon.lib.ui.widget
+package com.mpdc4gsr.libunified.ui.widget
 
 import android.content.Context
 import android.graphics.Canvas
@@ -30,13 +30,22 @@ class CommSeekBar : AppCompatSeekBar {
 
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
-        val typedArray = context.obtainStyledAttributes(attrs, R.styleable.CommSeekBar, defStyleAttr, 0)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
+        context,
+        attrs,
+        defStyleAttr
+    ) {
+        val typedArray =
+            context.obtainStyledAttributes(attrs, R.styleable.CommSeekBar, defStyleAttr, 0)
         orientation = typedArray.getInt(R.styleable.CommSeekBar_android_orientation, 0)
-        mMaxWidth = typedArray.getDimensionPixelSize(R.styleable.CommSeekBar_android_maxWidth, mMaxWidth)
-        mMaxHeight = typedArray.getDimensionPixelSize(R.styleable.CommSeekBar_android_maxHeight, mMaxHeight)
-        mMinWidth = typedArray.getDimensionPixelSize(R.styleable.CommSeekBar_android_minWidth, mMinWidth)
-        mMinHeight = typedArray.getDimensionPixelSize(R.styleable.CommSeekBar_android_minHeight, mMinHeight)
+        mMaxWidth =
+            typedArray.getDimensionPixelSize(R.styleable.CommSeekBar_android_maxWidth, mMaxWidth)
+        mMaxHeight =
+            typedArray.getDimensionPixelSize(R.styleable.CommSeekBar_android_maxHeight, mMaxHeight)
+        mMinWidth =
+            typedArray.getDimensionPixelSize(R.styleable.CommSeekBar_android_minWidth, mMinWidth)
+        mMinHeight =
+            typedArray.getDimensionPixelSize(R.styleable.CommSeekBar_android_minHeight, mMinHeight)
 
         typedArray.recycle()
     }
@@ -130,7 +139,12 @@ class CommSeekBar : AppCompatSeekBar {
             val left = progress / max.toFloat() * available + 0.5f
             val reviseLeft = left.coerceAtLeast(thumbHeight / 2 + 0.5f)
                 .coerceAtMost(paddingHeight - thumbHeight / 2 - 0.5f).toInt()
-            thumb.setBounds(reviseLeft, thumbTopOffset, reviseLeft + thumbHeight, thumbTopOffset + thumbWidth)
+            thumb.setBounds(
+                reviseLeft,
+                thumbTopOffset,
+                reviseLeft + thumbHeight,
+                thumbTopOffset + thumbWidth
+            )
         }
     }
 

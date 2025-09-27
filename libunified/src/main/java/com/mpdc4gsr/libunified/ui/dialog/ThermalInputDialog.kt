@@ -18,7 +18,10 @@ class ThermalInputDialog private constructor(private val builder: Builder) {
             return this
         }
 
-        fun setPositiveListener(textResId: Int, listener: (Float, Float, Float, Float) -> Unit): Builder {
+        fun setPositiveListener(
+            textResId: Int,
+            listener: (Float, Float, Float, Float) -> Unit
+        ): Builder {
             this.positiveListener = listener
             return this
         }

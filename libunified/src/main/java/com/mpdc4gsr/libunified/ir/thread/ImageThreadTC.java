@@ -17,7 +17,7 @@ import com.mpdc4gsr.libunified.ir.bean.ColorRGB;
 import com.mpdc4gsr.libunified.ir.utils.IRImageHelp;
 import com.mpdc4gsr.libunified.ir.utils.JNITool;
 import com.mpdc4gsr.libunified.ir.utils.OpencvTools;
-import com.mpdc4gsr.libunified.ir.utils.PseudocodeUtils;
+import com.mpdc4gsr.libunified.app.utils.UnifiedColorUtils;
 
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
@@ -157,7 +157,7 @@ public class ImageThreadTC extends Thread {
                     if (irImageHelp.getColorList() != null) {
                         LibIRProcess.convertYuyvMapToARGBPseudocolor(imageSrc, imageHeight * imageWidth, CommonParams.PseudoColorType.PSEUDO_1, imageARGB);
                     } else {
-                        LibIRProcess.convertYuyvMapToARGBPseudocolor(imageSrc, imageHeight * imageWidth, PseudocodeUtils.INSTANCE.changePseudocodeModeByOld(pseudocolorMode), imageARGB);
+                        LibIRProcess.convertYuyvMapToARGBPseudocolor(imageSrc, imageHeight * imageWidth, UnifiedColorUtils.changePseudocodeModeByOld(pseudocolorMode), imageARGB);
                     }
 
                     if (rotateInt == 270) {

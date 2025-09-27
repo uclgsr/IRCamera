@@ -171,7 +171,14 @@ class CompleteSessionTrialActivity : AppCompatActivity() {
             updateResults("- Total configured: ${diagnostics.totalSensorsConfigured}\n")
             updateResults("- Successfully initialized: ${diagnostics.totalSensorsInitialized}\n")
             updateResults("- Active sensors: ${diagnostics.activeSensorNames.joinToString(", ")}\n")
-            updateResults("- Health score: ${String.format("%.2f", diagnostics.sessionHealthScore)}\n\n")
+            updateResults(
+                "- Health score: ${
+                    String.format(
+                        "%.2f",
+                        diagnostics.sessionHealthScore
+                    )
+                }\n\n"
+            )
 
             // Require at least 2 sensors for meaningful trial
             diagnostics.totalSensorsActive >= 2
@@ -239,8 +246,22 @@ class CompleteSessionTrialActivity : AppCompatActivity() {
                 testResults.append("\n--- Progress Update (${elapsed}s/${EXTENDED_DURATION_SECONDS}s) ---\n")
                 testResults.append("Active sensors: ${stats.activeSensors}\n")
                 testResults.append("Total samples: ${stats.totalSamplesRecorded}\n")
-                testResults.append("Storage used: ${String.format("%.1f", stats.totalStorageUsedMB)}MB\n")
-                testResults.append("Health score: ${String.format("%.2f", diagnostics.sessionHealthScore)}\n")
+                testResults.append(
+                    "Storage used: ${
+                        String.format(
+                            "%.1f",
+                            stats.totalStorageUsedMB
+                        )
+                    }MB\n"
+                )
+                testResults.append(
+                    "Health score: ${
+                        String.format(
+                            "%.2f",
+                            diagnostics.sessionHealthScore
+                        )
+                    }\n"
+                )
                 testResults.append("Session status: ${if (stats.isRecording) "ACTIVE" else "INACTIVE"}\n")
 
                 updateResults(testResults.toString())
@@ -418,10 +439,18 @@ class CompleteSessionTrialActivity : AppCompatActivity() {
                 if (trialStartTime > 0 && trialEndTime > 0) {
                     val expectedDuration = (trialEndTime - trialStartTime) / 1000
                     val expectedSamples = expectedDuration * 128 // 128Hz sampling rate
-                    val sampleRatio = if (expectedSamples > 0) dataLines.size.toDouble() / expectedSamples else 0.0
+                    val sampleRatio =
+                        if (expectedSamples > 0) dataLines.size.toDouble() / expectedSamples else 0.0
 
                     verification.append("- Expected samples (~): ${expectedSamples.toInt()}\n")
-                    verification.append("- Sample completeness: ${String.format("%.1f", sampleRatio * 100)}%\n")
+                    verification.append(
+                        "- Sample completeness: ${
+                            String.format(
+                                "%.1f",
+                                sampleRatio * 100
+                            )
+                        }%\n"
+                    )
                 }
 
                 // Quick data quality check
@@ -520,17 +549,26 @@ class CompleteSessionTrialActivity : AppCompatActivity() {
             val sessionDir = trialSessionDir
             if (sessionDir != null) {
                 val totalFiles = sessionDir.listFiles()?.size ?: 0
-                val totalSize = sessionDir.walkTopDown().filter { it.isFile }.map { it.length() }.sum()
+                val totalSize =
+                    sessionDir.walkTopDown().filter { it.isFile }.map { it.length() }.sum()
 
                 testResults.append("\nSession Output:\n")
                 testResults.append("- Directory: ${sessionDir.name}\n")
                 testResults.append("- Total files: $totalFiles\n")
-                testResults.append("- Total size: ${String.format("%.2f", totalSize / 1024.0 / 1024.0)}MB\n")
+                testResults.append(
+                    "- Total size: ${
+                        String.format(
+                            "%.2f",
+                            totalSize / 1024.0 / 1024.0
+                        )
+                    }MB\n"
+                )
             }
 
             // Overall assessment
             val trialComplete = duration > 0 && sessionDir != null
-            val durationAccurate = Math.abs(duration - EXTENDED_DURATION_SECONDS) <= 30 // 30s tolerance
+            val durationAccurate =
+                Math.abs(duration - EXTENDED_DURATION_SECONDS) <= 30 // 30s tolerance
             val outputExists = sessionDir?.exists() == true
 
             testResults.append("\n=== OVERALL ASSESSMENT ===\n")

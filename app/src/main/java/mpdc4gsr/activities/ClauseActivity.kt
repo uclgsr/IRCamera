@@ -112,17 +112,33 @@ class ClauseActivity : BaseBindingActivity<ActivityClauseBinding>() {
 
     private fun confirmInitApp() {
         lifecycleScope.launch {
-            showLoading()
+            try {
+                showLoading()
 
-            App.delayInit()
-            async(Dispatchers.IO) {
+                App.delayInit()
+                async(Dispatchers.IO) {
+                    // Simulating initialization delay
+                    delay(1000)
+                    return@async
+                }.await().let {
+                    // Mark that clause has been shown before navigation
+                    SharedManager.setHasShowClause(true)
 
-                delay(1000)
-                return@async
-            }.await().let {
-                NavigationManager.build(RouterConfig.MAIN).navigation(this@ClauseActivity)
-                SharedManager.setHasShowClause(true)
+                    // Navigate to main activity
+                    NavigationManager.build(RouterConfig.MAIN).navigation(this@ClauseActivity)
+                    dismissLoading()
+                    finish()
+                }
+            } catch (e: Exception) {
                 dismissLoading()
+                // Log error but continue to main activity
+                if (SharedManager.getHasShowClause()) {
+                    com.elvishew.xlog.XLog.e("ClauseActivity: Error during initialization: ${e.message}")
+                }
+
+                // Ensure user can still access the app even if initialization fails
+                SharedManager.setHasShowClause(true)
+                NavigationManager.build(RouterConfig.MAIN).navigation(this@ClauseActivity)
                 finish()
             }
         }

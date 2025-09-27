@@ -145,7 +145,11 @@ constructor(
                     val icon =
                         when {
                             sensorStatus.sensorType.contains("RGB", ignoreCase = true) -> "[CAM]"
-                            sensorStatus.sensorType.contains("Thermal", ignoreCase = true) -> "[THM]"
+                            sensorStatus.sensorType.contains(
+                                "Thermal",
+                                ignoreCase = true
+                            ) -> "[THM]"
+
                             sensorStatus.sensorType.contains("GSR", ignoreCase = true) -> "[GSR]"
                             else -> "[SEN]"
                         }

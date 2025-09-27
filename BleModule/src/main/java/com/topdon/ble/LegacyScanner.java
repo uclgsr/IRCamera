@@ -5,6 +5,8 @@ import android.bluetooth.BluetoothDevice;
 
 import androidx.annotation.NonNull;
 
+import com.topdon.ble.util.Logger;
+
 
 /**
  * date: 2019/10/1 15:13
@@ -23,12 +25,20 @@ class LegacyScanner extends AbstractScanner implements BluetoothAdapter.LeScanCa
 
     @Override
     protected void performStartScan() {
-        bluetoothAdapter.startLeScan(this);
+        try {
+            bluetoothAdapter.startLeScan(this);
+        } catch (SecurityException e) {
+            logger.log(android.util.Log.ERROR, Logger.TYPE_SCAN_STATE, "Missing Bluetooth permission for legacy scan: " + e.getMessage());
+        }
     }
 
     @Override
     protected void performStopScan() {
-        bluetoothAdapter.stopLeScan(this);
+        try {
+            bluetoothAdapter.stopLeScan(this);
+        } catch (SecurityException e) {
+            logger.log(android.util.Log.ERROR, Logger.TYPE_SCAN_STATE, "Missing Bluetooth permission to stop legacy scan: " + e.getMessage());
+        }
     }
 
     @Override

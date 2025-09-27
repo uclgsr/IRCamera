@@ -135,7 +135,7 @@ public class LMS {
     public void checkAppUpdate(IResponseCallback callback) {
         if (callback != null) {
             // Return no update available
-            callback.onResponse("{\"code\":2000,\"data\":{\"hasNewVersion\":false}}");
+            callback.onResponse("{\"code\":\"2000\",\"data\":{\"hasNewVersion\":false}}");
         }
     }
 

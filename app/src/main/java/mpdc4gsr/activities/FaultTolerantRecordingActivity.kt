@@ -13,6 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import com.csl.irCamera.R
 import kotlinx.coroutines.launch
 import mpdc4gsr.controller.ComprehensiveRecordingController
+import mpdc4gsr.controller.RecordingState
 import mpdc4gsr.permissions.PermissionManager
 
 class FaultTolerantRecordingActivity : AppCompatActivity() {
@@ -59,7 +60,7 @@ class FaultTolerantRecordingActivity : AppCompatActivity() {
         try {
             val permissionController = mpdc4gsr.permissions.PermissionController(this)
             permissionManager = PermissionManager(this, permissionController)
-            recordingController = ComprehensiveRecordingController(this, this, permissionManager)
+            recordingController = ComprehensiveRecordingController(this)
 
             lifecycleScope.launch {
                 // Check for any crashed sessions first
@@ -73,7 +74,8 @@ class FaultTolerantRecordingActivity : AppCompatActivity() {
                 // Initialize sensors and update UI
                 runOnUiThread {
                     statusText.text = "Enhanced fault-tolerant recording ready"
-                    sensorStatusText.text = "Sensors: RGB Camera + GSR + Thermal (with fault isolation)"
+                    sensorStatusText.text =
+                        "Sensors: RGB Camera + GSR + Thermal (with fault isolation)"
                     startButton.isEnabled = true
                 }
             }
@@ -83,40 +85,40 @@ class FaultTolerantRecordingActivity : AppCompatActivity() {
                 recordingController.recordingStateFlow.collect { state ->
                     runOnUiThread {
                         when (state) {
-                            mpdc4gsr.controller.RecordingState.STARTING -> {
+                            RecordingState.STARTING -> {
                                 statusText.text = "Starting sensors with fault tolerance..."
                                 startButton.isEnabled = false
                                 progressBar.visibility = View.VISIBLE
                             }
 
-                            mpdc4gsr.controller.RecordingState.RECORDING -> {
+                            RecordingState.RECORDING -> {
                                 statusText.text = "Recording in progress with health monitoring"
                                 startButton.isEnabled = false
                                 stopButton.isEnabled = true
                                 progressBar.visibility = View.GONE
                             }
 
-                            mpdc4gsr.controller.RecordingState.STOPPING -> {
+                            RecordingState.STOPPING -> {
                                 statusText.text = "Stopping recording and finalizing session..."
                                 stopButton.isEnabled = false
                                 progressBar.visibility = View.VISIBLE
                             }
 
-                            mpdc4gsr.controller.RecordingState.IDLE -> {
+                            RecordingState.IDLE -> {
                                 statusText.text = "Ready for enhanced fault-tolerant recording"
                                 startButton.isEnabled = true
                                 stopButton.isEnabled = false
                                 progressBar.visibility = View.GONE
                             }
 
-                            mpdc4gsr.controller.RecordingState.ERROR -> {
+                            RecordingState.ERROR -> {
                                 statusText.text = "Recording error handled gracefully"
                                 startButton.isEnabled = true
                                 stopButton.isEnabled = false
                                 progressBar.visibility = View.GONE
                             }
 
-                            mpdc4gsr.controller.RecordingState.STOPPED -> {
+                            RecordingState.STOPPED -> {
                                 statusText.text = "Recording stopped successfully"
                                 startButton.isEnabled = true
                                 stopButton.isEnabled = false

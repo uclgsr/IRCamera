@@ -2,89 +2,103 @@ package com.mpdc4gsr.libunified.ui.camera
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
-import androidx.core.view.drawToBitmap
-import com.mpdc4gsr.libunified.app.listener.BitmapViewListener
+import android.view.ViewGroup
+import com.elvishew.xlog.XLog
 
-class CameraPreView : View, BitmapViewListener {
-    // This listener was defined outside the conflict and is kept
-    var cameraPreViewCloseListener: (() -> Unit)? = null
-
-    // Properties from the 'copilot' branch to manage UI state
-    private var isOpen = false
-    private var cameraAlpha = 1.0f
-
-    constructor(context: Context) : super(context)
-    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
-
-    // Use the modern KTX extension function from the 'dev' branch for conciseness
-    fun getBitmap(): Bitmap? {
-        return try {
-            drawToBitmap()
-        } catch (e: Exception) {
-            null
+/**
+ * Camera preview view for lite thermal camera integration
+ * Based on IRCamera groundtruth implementation patterns
+ */
+class CameraPreView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : View(context, attrs, defStyleAttr) {
+    
+    private val TAG = "CameraPreView"
+    
+    private var cameraAlpha: Float = 1.0f
+    private var isRotationSet: Boolean = false
+    
+    interface CameraPreViewCloseListener {
+        fun onClose()
+    }
+    
+    private var closeListener: CameraPreViewCloseListener? = null
+    
+    var cameraPreViewCloseListener: CameraPreViewCloseListener? = null
+        set(value) {
+            field = value
+            closeListener = value
         }
+    
+    override fun setRotation(rotation: Float) {
+        super.setRotation(rotation)
+        isRotationSet = true
+        XLog.d(TAG, "Camera rotation set to: $rotation")
     }
-
-    // Use the implemented logic from the 'copilot' branch
-    fun openCamera() {
-        isOpen = true
-        invalidate() // Trigger a redraw
-    }
-
-    // Use the implemented logic from the 'copilot' branch
-    fun closeCamera() {
-        isOpen = false
-        cameraPreViewCloseListener?.invoke()
-        invalidate() // Trigger a redraw
-    }
-
-    // Use the safer implementation from 'copilot' with value coercion
-    fun setCameraAlpha(alpha: Float) {
-        cameraAlpha = alpha.coerceIn(0f, 1f)
-        this.alpha = cameraAlpha
-    }
-
-    // Combine logic: create a clear method for boolean-based rotation
-    // Use 90f from 'copilot' as it's more common for camera orientation
+    
     fun setRotation(enabled: Boolean) {
-        rotation = if (enabled) 90f else 0f
+        isRotationSet = enabled
+        if (!enabled) {
+            super.setRotation(0f)
+        }
+        XLog.d(TAG, "Camera rotation enabled: $enabled")
     }
-
-    // Keep the onDraw method from 'copilot' as it handles the visual state
-    override fun onDraw(canvas: Canvas) {
-        super.onDraw(canvas)
-
-        if (isOpen) {
-            // Draw a simple camera preview indicator
-            val paint = Paint().apply {
-                color = Color.DKGRAY
-                alpha = (255 * cameraAlpha).toInt()
-            }
-
-            canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
-
-            // Draw a simple camera icon in the center
-            paint.color = Color.WHITE
-            val centerX = width / 2f
-            val centerY = height / 2f
-            canvas.drawCircle(centerX, centerY, 20f, paint)
-
-            paint.color = Color.GRAY
-            canvas.drawCircle(centerX, centerY, 15f, paint)
+    
+    fun setCameraAlpha(alpha: Float) {
+        this.cameraAlpha = alpha
+        this.alpha = alpha
+        XLog.d(TAG, "Camera alpha set to: $alpha")
+    }
+    
+    fun getCameraAlpha(): Float = cameraAlpha
+    
+    fun openCamera() {
+        visibility = VISIBLE
+        XLog.d(TAG, "Camera opened")
+    }
+    
+    fun closeCamera() {
+        visibility = GONE
+        closeListener?.onClose()
+        XLog.d(TAG, "Camera closed")
+    }
+    
+    fun getBitmap(): Bitmap? {
+        // This would typically capture the current frame
+        // For now, return null as placeholder
+        XLog.d(TAG, "Bitmap requested")
+        return null
+    }
+    
+    fun getBitmap(width: Int, height: Int): Bitmap? {
+        // This would typically capture and scale the current frame
+        XLog.d(TAG, "Scaled bitmap requested: ${width}x${height}")
+        return null
+    }
+    
+    fun setOnCloseListener(listener: CameraPreViewCloseListener) {
+        this.closeListener = listener
+    }
+    
+    override fun post(action: Runnable): Boolean {
+        return super.post(action)
+    }
+    
+    override fun setLayoutParams(params: ViewGroup.LayoutParams?) {
+        super.setLayoutParams(params)
+        XLog.d(TAG, "Layout params updated")
+    }
+    
+    override fun setVisibility(visibility: Int) {
+        super.setVisibility(visibility)
+        when (visibility) {
+            VISIBLE -> XLog.d(TAG, "Camera preview visible")
+            GONE -> XLog.d(TAG, "Camera preview gone")
+            INVISIBLE -> XLog.d(TAG, "Camera preview invisible")
         }
     }
-
-    // Keep the BitmapViewListener implementation from the 'dev' branch
-    override val viewX: Float get() = x
-    override val viewY: Float get() = y
-    override val viewAlpha: Float get() = alpha
-    override val viewWidth: Float get() = width.toFloat()
-    override val viewHeight: Float get() = height.toFloat()
-    override val viewScale: Float get() = scaleX
 }

@@ -10,6 +10,7 @@
 #include <string>
 
 #include "native_shimmer.h"
+
 #ifdef HAVE_OPENCV
 #include "native_webcam.h"
 #endif
@@ -120,7 +121,7 @@ if (frame.channels == 1) {
 shape = {static_cast<size_t>(frame.height), static_cast<size_t>(frame.width)};
 } else {
 shape = {static_cast<size_t>(frame.height), static_cast<size_t>(frame.width),
-        static_cast<size_t>(frame.channels)};
+         static_cast<size_t>(frame.channels)};
 }
 
 return

@@ -44,7 +44,8 @@ class NetworkSettings(private val context: Context) {
         WIFI_TCP, BLUETOOTH_RFCOMM
     }
 
-    private val prefs: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+    private val prefs: SharedPreferences =
+        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
     // Thread-safe property accessors with background thread operations for complex tasks
 
@@ -85,7 +86,8 @@ class NetworkSettings(private val context: Context) {
     // Connection Settings
     var preferredConnectionType: ConnectionType
         get() {
-            val ordinal = prefs.getInt(KEY_PREFERRED_CONNECTION_TYPE, ConnectionType.WIFI_TCP.ordinal)
+            val ordinal =
+                prefs.getInt(KEY_PREFERRED_CONNECTION_TYPE, ConnectionType.WIFI_TCP.ordinal)
             return ConnectionType.values().getOrNull(ordinal) ?: ConnectionType.WIFI_TCP
         }
         set(value) = prefs.edit().putInt(KEY_PREFERRED_CONNECTION_TYPE, value.ordinal).apply()
@@ -143,16 +145,17 @@ class NetworkSettings(private val context: Context) {
     /**
      * Get saved Bluetooth device info - thread-safe
      */
-    suspend fun getSavedBluetoothDeviceInfo(): Pair<String?, String?> = withContext(Dispatchers.IO) {
-        try {
-            val address = prefs.getString(KEY_BLUETOOTH_DEVICE_ADDRESS, null)
-            val name = prefs.getString(KEY_BLUETOOTH_DEVICE_NAME, null)
-            Pair(address, name)
-        } catch (e: Exception) {
-            Log.e(TAG, "Error getting Bluetooth device info", e)
-            Pair(null, null)
+    suspend fun getSavedBluetoothDeviceInfo(): Pair<String?, String?> =
+        withContext(Dispatchers.IO) {
+            try {
+                val address = prefs.getString(KEY_BLUETOOTH_DEVICE_ADDRESS, null)
+                val name = prefs.getString(KEY_BLUETOOTH_DEVICE_NAME, null)
+                Pair(address, name)
+            } catch (e: Exception) {
+                Log.e(TAG, "Error getting Bluetooth device info", e)
+                Pair(null, null)
+            }
         }
-    }
 
     /**
      * Clear all saved settings - thread-safe

@@ -51,7 +51,8 @@ class ComprehensiveRecordingControllerTest {
         mockThermalSensor = createMockSensor("Thermal", "thermal")
         mockGsrSensor = createMockSensor("GSR", "gsr")
 
-        recordingController = ComprehensiveRecordingController(context, lifecycleOwner, permissionManager)
+        recordingController =
+            ComprehensiveRecordingController(context, lifecycleOwner, permissionManager)
     }
 
     @After
@@ -72,29 +73,30 @@ class ComprehensiveRecordingControllerTest {
     }
 
     @Test
-    fun `test recording orchestration sequence starts all sensors with fault tolerance`() = testScope.runTest {
-        // Setup
-        every { permissionManager.hasAllPermissions(any()) } returns true
-        recordingController.addSensorRecorder("RGB", mockRgbSensor)
-        recordingController.addSensorRecorder("Thermal", mockThermalSensor)
-        recordingController.addSensorRecorder("GSR", mockGsrSensor)
+    fun `test recording orchestration sequence starts all sensors with fault tolerance`() =
+        testScope.runTest {
+            // Setup
+            every { permissionManager.hasAllPermissions(any()) } returns true
+            recordingController.addSensorRecorder("RGB", mockRgbSensor)
+            recordingController.addSensorRecorder("Thermal", mockThermalSensor)
+            recordingController.addSensorRecorder("GSR", mockGsrSensor)
 
-        // Act
-        val result = recordingController.startRecording(
-            sessionId = "test_session_001",
-            enabledSensors = listOf("RGB", "Thermal", "GSR"),
-            estimatedDurationMinutes = 30
-        )
+            // Act
+            val result = recordingController.startRecording(
+                sessionId = "test_session_001",
+                enabledSensors = listOf("RGB", "Thermal", "GSR"),
+                estimatedDurationMinutes = 30
+            )
 
-        // Assert
-        assertTrue("Recording should start successfully", result)
-        assertTrue("Recording state should be active", recordingController.isRecording)
+            // Assert
+            assertTrue("Recording should start successfully", result)
+            assertTrue("Recording state should be active", recordingController.isRecording)
 
-        // Verify all sensors were started
-        coVerify { mockRgbSensor.startRecording(any(), any()) }
-        coVerify { mockThermalSensor.startRecording(any(), any()) }
-        coVerify { mockGsrSensor.startRecording(any(), any()) }
-    }
+            // Verify all sensors were started
+            coVerify { mockRgbSensor.startRecording(any(), any()) }
+            coVerify { mockThermalSensor.startRecording(any(), any()) }
+            coVerify { mockGsrSensor.startRecording(any(), any()) }
+        }
 
     @Test
     fun `test partial recording continues when one sensor fails to start`() = testScope.runTest {
@@ -141,25 +143,31 @@ class ComprehensiveRecordingControllerTest {
     }
 
     @Test
-    fun `test sensor exception isolation - one sensor crash doesn't abort session`() = testScope.runTest {
-        // Setup - GSR sensor throws exception on start
-        every { permissionManager.hasAllPermissions(any()) } returns true
-        coEvery { mockGsrSensor.startRecording(any(), any()) } throws RuntimeException("GSR sensor connection failed")
+    fun `test sensor exception isolation - one sensor crash doesn't abort session`() =
+        testScope.runTest {
+            // Setup - GSR sensor throws exception on start
+            every { permissionManager.hasAllPermissions(any()) } returns true
+            coEvery {
+                mockGsrSensor.startRecording(
+                    any(),
+                    any()
+                )
+            } throws RuntimeException("GSR sensor connection failed")
 
-        recordingController.addSensorRecorder("RGB", mockRgbSensor)
-        recordingController.addSensorRecorder("Thermal", mockThermalSensor)
-        recordingController.addSensorRecorder("GSR", mockGsrSensor)
+            recordingController.addSensorRecorder("RGB", mockRgbSensor)
+            recordingController.addSensorRecorder("Thermal", mockThermalSensor)
+            recordingController.addSensorRecorder("GSR", mockGsrSensor)
 
-        // Act
-        val result = recordingController.startRecording(
-            sessionId = "test_exception_isolation",
-            enabledSensors = listOf("RGB", "Thermal", "GSR")
-        )
+            // Act
+            val result = recordingController.startRecording(
+                sessionId = "test_exception_isolation",
+                enabledSensors = listOf("RGB", "Thermal", "GSR")
+            )
 
-        // Assert - should continue with other sensors
-        assertTrue("Recording should continue despite one sensor exception", result)
-        assertTrue("Recording state should be active", recordingController.isRecording)
-    }
+            // Assert - should continue with other sensors
+            assertTrue("Recording should continue despite one sensor exception", result)
+            assertTrue("Recording state should be active", recordingController.isRecording)
+        }
 
     @Test
     fun `test graceful teardown stops all sensors individually`() = testScope.runTest {
