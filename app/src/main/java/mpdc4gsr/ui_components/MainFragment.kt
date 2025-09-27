@@ -189,7 +189,7 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
         }
     }
 
-    private class MyAdapter : RecyclerView.Adapter<MyAdapter.ViewHolder>() {
+    private inner class MyAdapter : RecyclerView.Adapter<MyAdapter.ViewHolder>() {
 
         var hasConnectLine: Boolean = false
             set(value) {
