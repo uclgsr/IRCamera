@@ -225,7 +225,7 @@ class DeviceTypeComposeActivity : BaseComposeActivity() {
             }
 
             IRDeviceType.PC_CONTROLLER -> {
-                mpdc4gsr.network.DevicePairingActivity.start(this)
+                DevicePairingComposeActivity.start(this)
             }
 
             else -> {
