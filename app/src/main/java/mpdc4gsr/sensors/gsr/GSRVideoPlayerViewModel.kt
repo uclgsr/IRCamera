@@ -47,10 +47,12 @@ class GSRVideoPlayerViewModel : BaseViewModel() {
         val uri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             val authority = "$packageName.fileprovider"
             try {
-                // Use context if provided, otherwise create URI differently
-                context?.let { ctx ->
-                    FileProvider.getUriForFile(ctx, authority, videoFile)
-                } ?: Uri.fromFile(videoFile) // Fallback for older versions
+                if (context != null) {
+                    FileProvider.getUriForFile(context, authority, videoFile)
+                } else {
+                    _errorState.value = "Context is required to generate a content URI on API 24+"
+                    return
+                }
             } catch (e: Exception) {
                 _errorState.value = "Failed to create file URI: ${e.message}"
                 return
