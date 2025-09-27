@@ -19,7 +19,8 @@ import androidx.fragment.app.FragmentActivity
 
 class PermissionController(private val activity: FragmentActivity) {
 
-    private val usbManager: UsbManager = activity.getSystemService(Context.USB_SERVICE) as UsbManager
+    private val usbManager: UsbManager =
+        activity.getSystemService(Context.USB_SERVICE) as UsbManager
     private var onPermissionsResult: ((isGranted: Boolean, denied: List<String>) -> Unit)? = null
 
     private val permissionLauncher: ActivityResultLauncher<Array<String>> =
@@ -60,7 +61,10 @@ class PermissionController(private val activity: FragmentActivity) {
         }
     }
 
-    fun requestUsbPermission(device: UsbDevice, callback: (isGranted: Boolean, device: UsbDevice?) -> Unit) {
+    fun requestUsbPermission(
+        device: UsbDevice,
+        callback: (isGranted: Boolean, device: UsbDevice?) -> Unit
+    ) {
         if (usbManager.hasPermission(device)) {
             Log.i(TAG, "USB permission already granted for device ${device.productName}")
             callback(true, device)
@@ -101,9 +105,10 @@ class PermissionController(private val activity: FragmentActivity) {
         showBatteryOptimizationRationaleDialog { userAccepted ->
             if (userAccepted) {
                 try {
-                    val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS).apply {
-                        data = Uri.parse("package:${activity.packageName}")
-                    }
+                    val intent =
+                        Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS).apply {
+                            data = Uri.parse("package:${activity.packageName}")
+                        }
                     batteryOptimizationLauncher.launch(intent)
                 } catch (e: Exception) {
                     Log.e(TAG, "Failed to launch battery optimization settings.", e)
@@ -130,7 +135,8 @@ class PermissionController(private val activity: FragmentActivity) {
 
     fun isBatteryOptimizationDisabled(): Boolean {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val powerManager = activity.getSystemService(Context.POWER_SERVICE) as android.os.PowerManager
+            val powerManager =
+                activity.getSystemService(Context.POWER_SERVICE) as android.os.PowerManager
             powerManager.isIgnoringBatteryOptimizations(activity.packageName)
         } else {
             true
@@ -239,7 +245,11 @@ class PermissionController(private val activity: FragmentActivity) {
         Log.i(TAG, "PermissionController initialized")
     }
 
-    fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         // Handle legacy permission results if needed
         // Modern implementation uses ActivityResultLauncher
         Log.i(TAG, "Legacy onRequestPermissionsResult called with requestCode: $requestCode")
@@ -248,7 +258,10 @@ class PermissionController(private val activity: FragmentActivity) {
     fun onActivityResult(requestCode: Int, resultCode: Int) {
         // Handle legacy activity results if needed 
         // Modern implementation uses ActivityResultLauncher
-        Log.i(TAG, "Legacy onActivityResult called with requestCode: $requestCode, resultCode: $resultCode")
+        Log.i(
+            TAG,
+            "Legacy onActivityResult called with requestCode: $requestCode, resultCode: $resultCode"
+        )
     }
 
     fun requestBatteryOptimizationExemption(callback: (Boolean) -> Unit) {
@@ -260,9 +273,10 @@ class PermissionController(private val activity: FragmentActivity) {
         showBatteryOptimizationRationaleDialog { userAccepted ->
             if (userAccepted) {
                 try {
-                    val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS).apply {
-                        data = Uri.parse("package:${activity.packageName}")
-                    }
+                    val intent =
+                        Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS).apply {
+                            data = Uri.parse("package:${activity.packageName}")
+                        }
                     batteryOptimizationLauncher.launch(intent)
                     callback(true)
                 } catch (e: Exception) {
@@ -281,16 +295,23 @@ class PermissionController(private val activity: FragmentActivity) {
         const val ACTION_USB_PERMISSION = "mpdc4gsr.USB_PERMISSION"
 
         private fun Context.isPermissionGranted(permission: String): Boolean {
-            return ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
+            return ContextCompat.checkSelfPermission(
+                this,
+                permission
+            ) == PackageManager.PERMISSION_GRANTED
         }
 
         private val CAMERA_PERMISSIONS =
             arrayOf(Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO)
-        private val STORAGE_PERMISSIONS = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            arrayOf(Manifest.permission.READ_MEDIA_VIDEO, Manifest.permission.READ_MEDIA_IMAGES)
-        } else {
-            arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
-        }
+        private val STORAGE_PERMISSIONS =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                arrayOf(Manifest.permission.READ_MEDIA_VIDEO, Manifest.permission.READ_MEDIA_IMAGES)
+            } else {
+                arrayOf(
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+                )
+            }
         private val BLUETOOTH_PERMISSIONS = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             arrayOf(Manifest.permission.BLUETOOTH_SCAN, Manifest.permission.BLUETOOTH_CONNECT)
         } else {
@@ -300,11 +321,12 @@ class PermissionController(private val activity: FragmentActivity) {
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION
         )
-        private val NOTIFICATION_PERMISSIONS = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            arrayOf(Manifest.permission.POST_NOTIFICATIONS)
-        } else {
-            emptyArray()
-        }
+        private val NOTIFICATION_PERMISSIONS =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                arrayOf(Manifest.permission.POST_NOTIFICATIONS)
+            } else {
+                emptyArray()
+            }
         private val ALL_PERMISSIONS = listOfNotNull(
             *CAMERA_PERMISSIONS,
             *STORAGE_PERMISSIONS,
