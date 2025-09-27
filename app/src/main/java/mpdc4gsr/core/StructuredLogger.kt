@@ -291,7 +291,7 @@ class StructuredLogger private constructor(private val context: Context) {
                 val writer = currentLogWriter
                 if (writer == null) {
                     Log.w(TAG, "Log writer is null, skipping log entry")
-                    continue
+                    return@synchronized
                 }
 
                 try {
