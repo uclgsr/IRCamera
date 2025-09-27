@@ -2,6 +2,7 @@ package mpdc4gsr.activities
 
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
+import android.bluetooth.BluetoothManager
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -46,7 +47,8 @@ class NetworkConfigActivity : AppCompatActivity() {
 
         networkSettings = NetworkSettings(this)
         permissionManager = PermissionManager(this, PermissionController(this))
-        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+        val bluetoothManager = getSystemService(BLUETOOTH_SERVICE) as? BluetoothManager
+        bluetoothAdapter = bluetoothManager?.adapter
 
         setupUI()
     }

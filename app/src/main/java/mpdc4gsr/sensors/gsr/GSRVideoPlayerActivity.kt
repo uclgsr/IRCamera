@@ -106,7 +106,12 @@ class GSRVideoPlayerActivity : BaseViewModelActivity<GSRVideoPlayerViewModel>() 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
-                onBackPressed()
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    onBackPressedDispatcher.onBackPressed()
+                } else {
+                    @Suppress("DEPRECATION")
+                    onBackPressed()
+                }
                 true
             }
 

@@ -7,7 +7,7 @@ import java.net.ServerSocket
  * Utility class for network port operations
  */
 object NetworkUtils {
-    
+
     /**
      * Check if a port is available for binding
      */

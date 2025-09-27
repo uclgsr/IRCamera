@@ -1,6 +1,7 @@
 package mpdc4gsr.sensors.gsr
 
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.view.MenuItem
 import com.csl.irCamera.R
@@ -32,7 +33,12 @@ class GSRPlotActivity : BaseBindingActivity<ActivityGsrPlotBinding>() {
     }
 
     private fun loadPlotData() {
-        plotData = intent.getSerializableExtra("plot_data") as GSRDataViewActivity.GSRPlotData
+        plotData = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            intent.getSerializableExtra("plot_data", GSRDataViewActivity.GSRPlotData::class.java)
+        } else {
+            @Suppress("DEPRECATION")
+            intent.getSerializableExtra("plot_data")
+        } as GSRDataViewActivity.GSRPlotData
     }
 
     private fun setupCharts() {

@@ -135,10 +135,10 @@ class App : BaseApplication() {
     override fun initWebSocket() {
         try {
             XLog.i("App: initWebSocket() - Initializing WebSocket connection")
-            
+
             // Call parent implementation to set up network monitoring and WebSocket infrastructure
             super.initWebSocket()
-            
+
             XLog.i("App: WebSocket initialization completed successfully")
         } catch (e: Exception) {
             XLog.e("App: Error during WebSocket initialization: ${e.message}")
