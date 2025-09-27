@@ -194,7 +194,7 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
     private fun showPermissionError(message: String) {
         runOnUiThread {
             binding.statusText.text = message
-            binding.recordButton.isEnabled = false
+            binding.startRecordingButton.isEnabled = false
             Toast.makeText(this, message, Toast.LENGTH_LONG).show()
         }
     }
@@ -333,7 +333,6 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
                 showPermissionError("Some permissions were denied. GSR functionality may be limited.")
             }
         }
-    }
     }
 
     override fun onDestroy() {
