@@ -9,7 +9,7 @@ import android.widget.Toast
 import com.energy.ac020library.IrcamEngine
 import com.energy.ac020library.bean.IIrFrameCallback
 import com.energy.ac020library.bean.UvcHandleParam
-import com.energy.iruvc.uvc.UVCCamera
+import com.infisense.iruvc.uvc.UVCCamera
 import com.mpdc4gsr.libunified.app.bean.event.device.DeviceConnectEvent
 import com.mpdc4gsr.libunified.app.bean.event.device.DevicePermissionEvent
 import com.mpdc4gsr.libunified.app.config.DeviceConfig.isTcTsDevice
@@ -876,7 +876,7 @@ class ThermalCameraRecorder(
 
 
                 val connectCallback = object : com.infisense.iruvc.uvc.ConnectCallback {
-                    override fun onCameraOpened(camera: UVCCamera?) {
+                    override fun onCameraOpened(p0: UVCCamera!) {
                         Log.i(TAG, "Thermal camera opened successfully")
                         isIRCameraConnected = true
 
@@ -893,15 +893,15 @@ class ThermalCameraRecorder(
                             try {
                                 // Reset mirror/flip settings to no mirror flip (equivalent to reference)
                                 ircmdInstance.setPropImageParams(
-                                    com.energy.iruvc.utils.CommonParams.PropImageParams.IMAGE_PROP_SEL_MIRROR_FLIP,
-                                    com.energy.iruvc.utils.CommonParams.PropImageParamsValue.MirrorFlipType.NO_MIRROR_FLIP
+                                    com.infisense.iruvc.utils.CommonParams.PropImageParams.IMAGE_PROP_SEL_MIRROR_FLIP,
+                                    com.infisense.iruvc.utils.CommonParams.PropImageParamsValue.MirrorFlipType.NO_MIRROR_FLIP
                                 )
                                 Log.d(TAG, "Image mirror/flip properties configured")
 
                                 // Get device firmware version information (equivalent to reference)
                                 val fwBuildVersionInfoBytes = ByteArray(50)
                                 ircmdInstance.getDeviceInfo(
-                                    com.energy.iruvc.utils.CommonParams.DeviceInfoType.DEV_INFO_FW_BUILD_VERSION_INFO,
+                                    com.infisense.iruvc.utils.CommonParams.DeviceInfoType.DEV_INFO_FW_BUILD_VERSION_INFO,
                                     fwBuildVersionInfoBytes
                                 )
 
@@ -917,7 +917,7 @@ class ThermalCameraRecorder(
                                 // Get current gain settings (equivalent to reference)
                                 val gainValue = IntArray(1)
                                 ircmdInstance.getPropTPDParams(
-                                    com.energy.iruvc.utils.CommonParams.PropTPDParams.TPD_PROP_GAIN_SEL,
+                                    com.infisense.iruvc.utils.CommonParams.PropTPDParams.TPD_PROP_GAIN_SEL,
                                     gainValue
                                 )
 
