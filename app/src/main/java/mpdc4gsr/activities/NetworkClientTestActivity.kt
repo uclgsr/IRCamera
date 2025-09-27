@@ -2,6 +2,7 @@ package mpdc4gsr.activities
 
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
+import android.bluetooth.BluetoothManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -298,7 +299,8 @@ class NetworkClientTestActivity : AppCompatActivity() {
             return
         }
 
-        val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+        val bluetoothManager = getSystemService(BLUETOOTH_SERVICE) as? BluetoothManager
+        val bluetoothAdapter = bluetoothManager?.adapter
         if (bluetoothAdapter == null) {
             Log.w(TAG, "Bluetooth not available on this device")
             Toast.makeText(this, "Bluetooth not available on this device", Toast.LENGTH_SHORT)

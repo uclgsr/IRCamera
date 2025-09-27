@@ -862,7 +862,7 @@ class NetworkClient(private val context: Context) {
                     socket.close()
                     return@withContext null
                 }
-                
+
                 val responseData = ByteArray(responseLength)
                 input.readFully(responseData)
 

@@ -80,7 +80,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         requestAllPermissions()
         bindRecordingService()
     }
-    
+
     private fun setupUI() {
         binding.viewPage.adapter = ViewPagerAdapter(this)
         binding.viewPage.offscreenPageLimit = 3
@@ -91,7 +91,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         binding.clIconMine.setOnClickListener(this)
 
         binding.networkStatusBar.setOnClickListener { /* Logic handled by ViewModel */ }
-        binding.thermalQuickAccess.setOnClickListener { 
+        binding.thermalQuickAccess.setOnClickListener {
             // Demo functionality removed - commented out to avoid compilation errors
             // launchThermalCamera() 
         }
@@ -104,7 +104,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         // Initialize custom UI components
         initializeEnhancedUIComponents()
     }
-    
+
     private fun observeViewModel() {
         // Observe navigation changes
         lifecycleScope.launch {
@@ -119,10 +119,14 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.events.collect { event ->
-                    when(event) {
+                    when (event) {
                         is MainActivityViewModel.Event.ShowExitDialog -> showExitDialog()
                         is MainActivityViewModel.Event.ShowToast ->
-                            Toast.makeText(this@MainActivity, event.message, if(event.isLong) Toast.LENGTH_LONG else Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                this@MainActivity,
+                                event.message,
+                                if (event.isLong) Toast.LENGTH_LONG else Toast.LENGTH_SHORT
+                            ).show()
                     }
                 }
             }
@@ -169,7 +173,11 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 viewModel.onPermissionsGranted()
             } else {
                 Log.w(TAG, "Permissions denied: ${denied.joinToString()}")
-                Toast.makeText(this, "Some features may be limited without permissions.", Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    this,
+                    "Some features may be limited without permissions.",
+                    Toast.LENGTH_LONG
+                ).show()
             }
         }
     }
@@ -179,7 +187,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
         }
     }
-    
+
     private fun refreshTabSelect(index: Int) {
         if (binding.viewPage.currentItem != index) {
             binding.viewPage.setCurrentItem(index, false)
@@ -193,7 +201,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             if (index == 1) R.drawable.ic_main_bg_select else R.drawable.ic_main_bg_not_select
         )
     }
-    
+
     private fun showExitDialog() {
         TipDialog.Builder(this)
             .setMessage(getString(R.string.main_exit, "App")) // Replace with dynamic name if needed
@@ -206,10 +214,14 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
 
     private fun initializeEnhancedUIComponents() {
         val sensorStatusWidget = ComprehensiveSensorStatusWidget(this)
-        findViewById<android.widget.FrameLayout>(R.id.sensor_status_container)?.addView(sensorStatusWidget)
+        findViewById<android.widget.FrameLayout>(R.id.sensor_status_container)?.addView(
+            sensorStatusWidget
+        )
 
         val recordingControlsWidget = RecordingControlsWidget(this)
-        findViewById<android.widget.FrameLayout>(R.id.recording_controls_container)?.addView(recordingControlsWidget)
+        findViewById<android.widget.FrameLayout>(R.id.recording_controls_container)?.addView(
+            recordingControlsWidget
+        )
 
         // The logic for updating these widgets now resides in observeViewModel,
         // collecting state flows like `viewModel.rgbCameraState`, `viewModel.sessionState`, etc.
@@ -227,7 +239,9 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
 
     // Demo functionality removed - commented out to avoid compilation errors
     // private fun launchThermalCamera() = startActivity(Intent(this, ThermalCameraDemo::class.java))
-    private fun launchFaultTolerantRecording() = startActivity(Intent(this, FaultTolerantRecordingActivity::class.java))
+    private fun launchFaultTolerantRecording() =
+        startActivity(Intent(this, FaultTolerantRecordingActivity::class.java))
+
     private fun launchShimmerMvp() {
         AlertDialog.Builder(this)
             .setTitle("Developer Sensor Access")
@@ -242,14 +256,21 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun getDevicePermission(event: DevicePermissionEvent) { /* ... */ }
+    fun getDevicePermission(event: DevicePermissionEvent) { /* ... */
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onWinterClick(event: WinterClickEvent) { binding.viewMinePoint.isVisible = false }
+    fun onWinterClick(event: WinterClickEvent) {
+        binding.viewMinePoint.isVisible = false
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onTS004ResetEvent(event: TS004ResetEvent) { /* Show Dialog */ }
-    
+    fun onTS004ResetEvent(event: TS004ResetEvent) { /* Show Dialog */
+    }
+
     override fun onDestroy() {
         super.onDestroy()
+        permissionController.cleanup()
         if (isServiceBound) {
             unbindService(serviceConnection)
         }
@@ -265,9 +286,13 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             }
         }
     }
-    
+
     // It is recommended to replace these with the modern Activity Result APIs.
-    override fun onRequestPermissionsResult(reqCode: Int, perms: Array<out String>, results: IntArray) {
+    override fun onRequestPermissionsResult(
+        reqCode: Int,
+        perms: Array<out String>,
+        results: IntArray
+    ) {
         super.onRequestPermissionsResult(reqCode, perms, results)
         permissionController.onRequestPermissionsResult(reqCode, perms, results)
     }
