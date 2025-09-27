@@ -516,7 +516,7 @@ cd pc-controller && python3 demo_mvp_components.py
 
 # Run specific test suites
 ./gradlew test --tests "*GSR*"
-./gradlew test --tests "*RGB*"  
+./gradlew test --tests "*RGB*"
 ./gradlew test --tests "*Thermal*"
 ./gradlew test --tests "*Network*"
 ```
