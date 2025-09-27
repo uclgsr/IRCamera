@@ -187,7 +187,7 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
     }
 
     private fun setupDeviceControls() {
-        binding.scanDevicesButton?.setOnClickListener {
+        binding.scanDevicesButton.setOnClickListener {
             discoverDevices()
         }
     }
