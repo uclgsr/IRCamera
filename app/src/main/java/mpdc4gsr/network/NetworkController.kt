@@ -17,6 +17,7 @@ import java.io.PrintWriter
 import java.net.InetSocketAddress
 import java.net.ServerSocket
 import java.net.Socket
+import java.net.SocketException
 import java.net.SocketTimeoutException
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
@@ -78,15 +79,30 @@ class NetworkController(private val context: Context) {
         }
 
         try {
+            // First check if the port is available
+            val actualPort = if (NetworkUtils.isPortAvailable(port)) {
+                port
+            } else {
+                Log.w(TAG, "Port $port is not available, searching for alternative port")
+                try {
+                    val availablePort = NetworkUtils.findAvailablePort(port)
+                    Log.i(TAG, "Using alternative port: $availablePort")
+                    availablePort
+                } catch (e: IllegalStateException) {
+                    Log.e(TAG, "Could not find available port starting from $port")
+                    eventListener?.onError("start_server", "Port $port is already in use and no alternative ports available. Please ensure no other services are using ports ${port} to ${port + 9}.")
+                    return@withContext false
+                }
+            }
+
             serverSocket = ServerSocket().apply {
                 reuseAddress = true
-                bind(InetSocketAddress(port))
+                bind(InetSocketAddress(actualPort))
                 soTimeout = SOCKET_TIMEOUT
             }
             isRunning.set(true)
 
-            Log.i(TAG, "NetworkController started on port $port")
-
+            Log.i(TAG, "NetworkController started on port $actualPort")
 
             controllerScope.launch {
                 acceptConnections()
@@ -106,30 +122,44 @@ class NetworkController(private val context: Context) {
 
 
     suspend fun stop() = withContext(Dispatchers.IO) {
+        if (!isRunning.get()) {
+            Log.w(TAG, "NetworkController is not running")
+            return@withContext
+        }
+
         isRunning.set(false)
 
         try {
-
-            clientConnections.values.forEach { connection ->
+            // Close all client connections first
+            val connectionsToClose = clientConnections.values.toList()
+            connectionsToClose.forEach { connection ->
                 try {
+                    connection.outputStream.close()
+                    connection.inputStream.close()
                     connection.socket.close()
                 } catch (e: Exception) {
-                    Log.w(TAG, "Error closing client connection: ${e.message}")
+                    Log.w(TAG, "Error closing client connection ${connection.clientId}: ${e.message}")
                 }
             }
             clientConnections.clear()
 
-
-            serverSocket?.close()
+            // Close server socket
+            serverSocket?.let { socket ->
+                try {
+                    if (!socket.isClosed) {
+                        socket.close()
+                    }
+                } catch (e: Exception) {
+                    Log.w(TAG, "Error closing server socket: ${e.message}")
+                }
+            }
             serverSocket = null
 
-
+            // Cancel coroutine scope
             controllerScope.cancel()
 
-
-            runBlocking {
-                delay(100)
-            }
+            // Small delay to allow cleanup to complete
+            delay(100)
 
             Log.i(TAG, "NetworkController stopped")
         } catch (e: Exception) {
@@ -201,17 +231,31 @@ class NetworkController(private val context: Context) {
                 while (isRunning.get() && !connection.socket.isClosed) {
                     val message = connection.inputStream.readLine()
                     if (message == null) {
-
+                        // Client disconnected gracefully
+                        Log.d(TAG, "Client ${connection.clientId} disconnected gracefully")
                         break
                     }
 
                     Log.d(TAG, "Received message from ${connection.clientId}: $message")
                     handleCommand(connection, message)
                 }
+            } catch (e: SocketException) {
+                // Handle connection reset and other socket exceptions gracefully
+                when {
+                    e.message?.contains("Connection reset") == true -> {
+                        Log.d(TAG, "Client ${connection.clientId} connection reset")
+                    }
+                    e.message?.contains("Socket closed") == true -> {
+                        Log.d(TAG, "Client ${connection.clientId} socket closed")
+                    }
+                    else -> {
+                        Log.w(TAG, "Socket exception for client ${connection.clientId}: ${e.message}")
+                    }
+                }
             } catch (e: Exception) {
-                Log.e(TAG, "Error handling client messages", e)
+                Log.e(TAG, "Error handling client messages (${e.javaClass.simpleName})", e)
             } finally {
-
+                // Always disconnect the client to clean up resources
                 disconnectClient(connection.clientId, "Connection closed")
             }
         }
@@ -399,6 +443,10 @@ class NetworkController(private val context: Context) {
 
     fun getConnectedClientsCount(): Int = clientConnections.size
 
-
     fun isRunning(): Boolean = isRunning.get()
+
+    /**
+     * Get the actual port the server is listening on
+     */
+    fun getServerPort(): Int? = serverSocket?.localPort
 }
