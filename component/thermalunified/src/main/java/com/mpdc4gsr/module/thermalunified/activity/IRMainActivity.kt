@@ -297,18 +297,25 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
 
         if (!XXPermissions.isGranted(this, permissionList)) {
             if (BaseApplication.instance.isDomestic()) {
-                TipDialog.Builder(this)
-                    .setMessage(
-                        getString(
-                            LibR.string.permission_request_storage_app,
-                            CommUtils.getAppName()
+                // Show tooltip only once per session to avoid spam
+                if (!SharedManager.hasShownStoragePermissionTip) {
+                    TipDialog.Builder(this)
+                        .setMessage(
+                            getString(
+                                LibR.string.permission_request_storage_app,
+                                CommUtils.getAppName()
+                            )
                         )
-                    )
-                    .setCancelListener(LibR.string.app_cancel)
-                    .setPositiveListener(LibR.string.app_confirm) {
-                        initStoragePermission(permissionList)
-                    }
-                    .create().show()
+                        .setCancelListener(LibR.string.app_cancel)
+                        .setPositiveListener(LibR.string.app_confirm) {
+                            initStoragePermission(permissionList)
+                        }
+                        .create().show()
+                    SharedManager.hasShownStoragePermissionTip = true
+                } else {
+                    // Skip dialog if already shown
+                    initStoragePermission(permissionList)
+                }
             } else {
                 initStoragePermission(permissionList)
             }
