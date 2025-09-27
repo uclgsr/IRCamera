@@ -270,6 +270,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
 
     override fun onDestroy() {
         super.onDestroy()
+        permissionController.cleanup()
         if (isServiceBound) {
             unbindService(serviceConnection)
         }
