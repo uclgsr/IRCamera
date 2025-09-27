@@ -74,7 +74,7 @@ class SimpleBenchmarkManager {
         } else 0.0
         
         val rateError = abs(actualRate - GSR_TARGET_RATE) / GSR_TARGET_RATE
-        val success = rateError <= 0.05 // 5% tolerance
+        val success = rateError <= GSR_RATE_TOLERANCE // 5% tolerance
         
         val summary = if (success) {
             "✅ GSR: ${String.format("%.2f", actualRate)} Hz - PASSED"
