@@ -62,7 +62,7 @@ echo "-------------------------------------"
 echo "Comprehensive Test Script: run_comprehensive_tests.sh"
 echo "Validation Script: validate_test_results.sh" 
 echo "CI/CD Pipeline: .github/workflows/comprehensive-test.yml"
-echo "Testing Documentation: TESTING_PROCEDURES.md (18,000+ lines)"
+echo "Testing Documentation: TESTING_PROCEDURES.md ($(wc -l < TESTING_PROCEDURES.md) lines)"
 echo "Coverage Analysis: TEST_COVERAGE_ANALYSIS.md (App & PC focused)"
 echo ""
 
