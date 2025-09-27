@@ -25,9 +25,8 @@ class PermissionController(
         private const val REQUEST_USB_PERMISSION = 101
         private const val REQUEST_BATTERY_OPTIMIZATION = 102
         
-        // Permission request throttling
-        private const val MIN_REQUEST_INTERVAL_MS = 5000L // 5 seconds minimum between requests
-        private const val MAX_REQUEST_ATTEMPTS = 3 // Maximum attempts per session
+        // Simple permission request cooldown for MVP
+        private const val PERMISSION_REQUEST_COOLDOWN_MS = 10000L // 10 seconds between requests
 
         private val CAMERA_PERMISSIONS = arrayOf(
             Manifest.permission.CAMERA,
@@ -89,11 +88,8 @@ class PermissionController(
     private var permissionCallback: ((Boolean, List<String>) -> Unit)? = null
     private var usbPermissionCallback: ((Boolean, UsbDevice?) -> Unit)? = null
 
-    // Permission request state management
+    // Simple permission request state for MVP
     private var lastPermissionRequestTime: Long = 0
-    private var permissionRequestAttempts: Int = 0
-    private var lastDeniedPermissions: Set<String> = emptySet()
-    private var hasUserExplicitlyDenied: Boolean = false
 
 
     private var remainingPermissionGroups: MutableList<List<String>> = mutableListOf()
@@ -173,7 +169,6 @@ class PermissionController(
         permissionCallback = callback
 
         val missingPermissions = getMissingPermissions()
-        Log.d(TAG, "Missing permissions check complete: ${missingPermissions.size} missing")
         Log.d(TAG, "Missing permissions: ${missingPermissions.joinToString(", ")}")
         
         if (missingPermissions.isEmpty()) {
@@ -182,50 +177,24 @@ class PermissionController(
             return
         }
 
-        // Check if we should throttle permission requests
+        // Simple cooldown check - only request if enough time has passed
         val currentTime = System.currentTimeMillis()
         val timeSinceLastRequest = currentTime - lastPermissionRequestTime
         
-        if (timeSinceLastRequest < MIN_REQUEST_INTERVAL_MS) {
-            Log.w(TAG, "Permission request throttled - too soon since last request (${timeSinceLastRequest}ms)")
-            callback(false, missingPermissions)
-            return
-        }
-        
-        // Check if we've exceeded maximum attempts
-        if (permissionRequestAttempts >= MAX_REQUEST_ATTEMPTS) {
-            Log.w(TAG, "Permission request limit exceeded - attempted $permissionRequestAttempts times")
-            callback(false, missingPermissions)
-            return
-        }
-        
-        // Check if user has explicitly denied and nothing has changed
-        if (hasUserExplicitlyDenied && missingPermissions.toSet() == lastDeniedPermissions) {
-            Log.w(TAG, "User has previously denied these permissions - skipping duplicate request")
+        if (timeSinceLastRequest < PERMISSION_REQUEST_COOLDOWN_MS) {
+            Log.w(TAG, "Permission request on cooldown - ${timeSinceLastRequest}ms since last request")
             callback(false, missingPermissions)
             return
         }
 
-        Log.i(
-            TAG,
-            "Requesting ${missingPermissions.size} missing permissions: ${
-                missingPermissions.joinToString(", ")
-            }"
-        )
-
-        // Update request tracking
+        // Update timestamp and request permissions
         lastPermissionRequestTime = currentTime
-        permissionRequestAttempts++
 
-        Log.d(TAG, "About to show permission rationale dialog")
+        Log.d(TAG, "Requesting permissions")
         showPermissionRationaleDialog(missingPermissions) { userAccepted ->
-            Log.d(TAG, "Permission rationale dialog result: userAccepted=$userAccepted")
             if (userAccepted) {
                 requestPermissionsSequentially(missingPermissions)
             } else {
-                Log.w(TAG, "User declined permission rationale")
-                hasUserExplicitlyDenied = true
-                lastDeniedPermissions = missingPermissions.toSet()
                 callback(false, missingPermissions)
             }
         }
@@ -273,17 +242,12 @@ class PermissionController(
                         allRequestedPermissions.filter { !isPermissionGranted(it) }
                     if (stillMissingPermissions.isEmpty()) {
                         Log.i(TAG, "All permissions successfully granted")
-                        // Reset permission request state on success
-                        resetPermissionRequestState()
                         permissionCallback?.invoke(true, emptyList())
                     } else {
                         Log.w(
                             TAG,
                             "Some permissions still denied: ${stillMissingPermissions.joinToString(", ")}"
                         )
-                        // Update denied permissions state
-                        lastDeniedPermissions = stillMissingPermissions.toSet()
-                        hasUserExplicitlyDenied = true
                         handleDeniedPermissions(stillMissingPermissions)
                         permissionCallback?.invoke(false, stillMissingPermissions)
                     }
@@ -680,14 +644,6 @@ class PermissionController(
         return FOREGROUND_SERVICE_PERMISSIONS.all { isPermissionGranted(it) }
     }
 
-    private fun resetPermissionRequestState() {
-        Log.d(TAG, "Resetting permission request state")
-        permissionRequestAttempts = 0
-        hasUserExplicitlyDenied = false
-        lastDeniedPermissions = emptySet()
-        lastPermissionRequestTime = 0
-    }
-
     private fun requestPermissionsSequentially(missingPermissions: List<String>) {
 
         val permissionGroups = groupPermissionsLogically(missingPermissions)
@@ -1013,29 +969,26 @@ class PermissionController(
     }
 
     /**
-     * Reset permission request state to allow fresh permission requests
-     * Call this when app settings are opened or user explicitly wants to retry permissions
+     * Reset permission request cooldown (simplified for MVP)
      */
     fun resetPermissionState() {
-        Log.i(TAG, "Manually resetting permission state")
-        resetPermissionRequestState()
+        Log.i(TAG, "Resetting permission cooldown")
+        lastPermissionRequestTime = 0
     }
 
     /**
-     * Check if permissions are sufficient for basic functionality without requesting them
+     * Check if basic permissions are available for core functionality
      */
     fun hasMinimumPermissions(): Boolean {
         return hasBasicPermissions() && hasStoragePermissions()
     }
 
     /**
-     * Check if we should skip permission requests due to recent denials
+     * Simple cooldown check - are we still in cooldown period?
      */
     fun shouldSkipPermissionRequest(): Boolean {
         val timeSinceLastRequest = System.currentTimeMillis() - lastPermissionRequestTime
-        return hasUserExplicitlyDenied && 
-               timeSinceLastRequest < MIN_REQUEST_INTERVAL_MS &&
-               permissionRequestAttempts >= MAX_REQUEST_ATTEMPTS
+        return timeSinceLastRequest < PERMISSION_REQUEST_COOLDOWN_MS
     }
 
     fun isLocationPermissionPermanentlyDenied(): Boolean {

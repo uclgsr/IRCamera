@@ -176,16 +176,8 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
     }
 
     private fun checkPermissions() {
-        // Use the PermissionController's built-in checking and throttling
         if (!permissionController.hasAllRequiredPermissions()) {
             Log.i(TAG, "Missing permissions detected")
-            
-            // Check if we should skip permission requests due to throttling
-            if (permissionController.shouldSkipPermissionRequest()) {
-                Log.w(TAG, "Skipping permission request due to recent denials or throttling")
-                showPermissionError("Permissions required. Please check app settings.")
-                return
-            }
             
             permissionController.ensureAll { allGranted, deniedPermissions ->
                 if (allGranted) {
