@@ -4,10 +4,10 @@ import android.Manifest
 import android.app.Application
 import android.content.pm.PackageManager
 import androidx.core.app.ActivityCompat
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -15,7 +15,9 @@ import kotlinx.coroutines.launch
 import mpdc4gsr.sensors.unified.ShimmerDeviceManager
 import mpdc4gsr.sensors.unified.model.DeviceInfo
 
-class ShimmerConfigViewModel(application: Application) : AndroidViewModel(application) {
+class ShimmerConfigViewModel : BaseViewModel() {
+
+    private val application: Application? = null
 
     companion object {
         private val REQUIRED_PERMISSIONS =
@@ -57,6 +59,7 @@ class ShimmerConfigViewModel(application: Application) : AndroidViewModel(applic
     private var shimmerDeviceManager: ShimmerDeviceManager? = null
     private var isScanning = false
     private var connectedDevice: DeviceInfo? = null
+    private var connectedDeviceAddress: String? = null
 
     // Data classes for state management
     data class ShimmerConfigUiState(
@@ -197,6 +200,7 @@ class ShimmerConfigViewModel(application: Application) : AndroidViewModel(applic
                         val device = getDeviceByAddress(event.deviceAddress)
                         device?.let {
                             connectedDevice = it
+                            connectedDeviceAddress = event.deviceAddress
                             _connectionState.value = ConnectionState.Connected(it)
                             _uiState.value = _uiState.value.copy(
                                 statusMessage = "Successfully connected to ${it.name ?: event.deviceAddress}",
@@ -385,11 +389,15 @@ class ShimmerConfigViewModel(application: Application) : AndroidViewModel(applic
 
     fun disconnectDevice() {
         val manager = shimmerDeviceManager ?: return
+        val deviceAddress = connectedDeviceAddress
 
         viewModelScope.launch {
             try {
-                // manager.disconnectDevice()
+                if (deviceAddress != null) {
+                    manager.disconnectDevice(deviceAddress)
+                }
                 connectedDevice = null
+                connectedDeviceAddress = null
                 _connectionState.value = ConnectionState.Disconnected
                 _uiState.value = _uiState.value.copy(
                     statusMessage = "Device disconnected"
@@ -416,7 +424,9 @@ class ShimmerConfigViewModel(application: Application) : AndroidViewModel(applic
         viewModelScope.launch {
             try {
                 shimmerDeviceManager?.stopDeviceScanning()
-                shimmerDeviceManager?.disconnectDevice()
+                connectedDeviceAddress?.let { address ->
+                    shimmerDeviceManager?.disconnectDevice(address)
+                }
             } catch (e: Exception) {
                 // Log error but don't propagate
             }

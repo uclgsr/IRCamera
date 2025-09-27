@@ -19,6 +19,7 @@ import com.csl.irCamera.R
 import com.csl.irCamera.databinding.FragmentMainBinding
 import com.mpdc4gsr.libunified.app.bean.event.SocketMsgEvent
 import com.mpdc4gsr.libunified.app.comm.navigation.NavigationManager
+import com.mpdc4gsr.libunified.app.common.SharedManager
 import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
 import com.mpdc4gsr.libunified.app.config.RouterConfig
 import com.mpdc4gsr.libunified.app.dialog.TipDialog
@@ -31,6 +32,7 @@ import com.mpdc4gsr.libunified.app.utils.NetWorkUtils
 import com.mpdc4gsr.libunified.app.utils.WsCmdConstants
 import com.mpdc4gsr.libunified.ui.widget.BatteryView
 import mpdc4gsr.activities.DeviceTypeActivity
+import mpdc4gsr.ui_components.MainFragmentViewModel.ConnectType
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.json.JSONObject

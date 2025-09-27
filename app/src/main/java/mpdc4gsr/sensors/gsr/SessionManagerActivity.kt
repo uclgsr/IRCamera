@@ -185,7 +185,7 @@ class SessionManagerActivity : BaseViewModelActivity<SessionManagerViewModel>() 
     }
 
     private fun showLoading(show: Boolean) {
-        binding.progressBar?.isVisible = show
+        binding.loadingView.isVisible = show
     }
 
     private fun showError(message: String) {
