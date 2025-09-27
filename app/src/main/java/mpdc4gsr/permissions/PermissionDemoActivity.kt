@@ -5,207 +5,93 @@ import android.content.Intent
 import android.hardware.usb.UsbManager
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-
 
 class PermissionDemoActivity : AppCompatActivity() {
 
     companion object {
         private const val TAG = "PermissionDemo"
-
         fun start(context: Context) {
-            val intent = Intent(context, PermissionDemoActivity::class.java)
-            context.startActivity(intent)
+            context.startActivity(Intent(context, PermissionDemoActivity::class.java))
         }
     }
 
     private lateinit var permissionController: PermissionController
     private lateinit var statusText: TextView
-    private lateinit var checkPermissionsBtn: Button
-    private lateinit var requestAllBtn: Button
-    private lateinit var requestCameraBtn: Button
-    private lateinit var requestBluetoothBtn: Button
-    private lateinit var requestBatteryBtn: Button
-    private lateinit var requestUsbBtn: Button
     private lateinit var startRecordingBtn: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-
         setContentView(createDemoLayout())
-
-
         permissionController = PermissionController(this)
-        permissionController.initialize()
-
         setupClickListeners()
         updatePermissionStatus()
     }
 
-    private fun createDemoLayout(): android.view.View {
-        val layout = android.widget.LinearLayout(this).apply {
-            orientation = android.widget.LinearLayout.VERTICAL
-            setPadding(32, 32, 32, 32)
-        }
-
-        statusText = TextView(this).apply {
-            text = "Permission Status: Checking..."
-            textSize = 16f
-            setPadding(0, 0, 0, 24)
-        }
-        layout.addView(statusText)
-
-        checkPermissionsBtn = Button(this).apply { text = "Check All Permissions" }
-        requestAllBtn = Button(this).apply { text = "Request All Permissions" }
-        requestCameraBtn = Button(this).apply { text = "Request Camera Only" }
-        requestBluetoothBtn = Button(this).apply { text = "Request Bluetooth Only" }
-        requestBatteryBtn = Button(this).apply { text = "Request Battery Exemption" }
-        requestUsbBtn = Button(this).apply { text = "Request USB Permission" }
-        startRecordingBtn = Button(this).apply {
-            text = "Start Recording (Check Permissions)"
-            isEnabled = false
-        }
-
-        layout.addView(checkPermissionsBtn)
-        layout.addView(requestAllBtn)
-        layout.addView(requestCameraBtn)
-        layout.addView(requestBluetoothBtn)
-        layout.addView(requestBatteryBtn)
-        layout.addView(requestUsbBtn)
-        layout.addView(startRecordingBtn)
-
-        return layout
+    override fun onResume() {
+        super.onResume()
+        updatePermissionStatus()
     }
 
     private fun setupClickListeners() {
-        checkPermissionsBtn.setOnClickListener {
-            updatePermissionStatus()
-        }
-
-        requestAllBtn.setOnClickListener {
-            requestAllPermissions()
-        }
-
-        requestCameraBtn.setOnClickListener {
-
-            if (!permissionController.hasCameraPermission()) {
-                showToast("Requesting camera permission...")
-                permissionController.ensureAll { granted, denied ->
-                    if (granted) {
-                        showToast("All permissions granted!")
-                    } else {
-                        showToast("Some permissions denied: ${denied.joinToString(", ")}")
-                    }
-                    updatePermissionStatus()
-                }
-            } else {
-                showToast("Camera permission already granted")
-            }
-        }
-
-        requestBluetoothBtn.setOnClickListener {
-            if (!permissionController.canConnectToShimmer()) {
-                showToast("Requesting Bluetooth and Location permissions...")
-                permissionController.ensureAll { granted, denied ->
-                    updatePermissionStatus()
-                    if (permissionController.canConnectToShimmer()) {
-                        showToast("Shimmer GSR connection now available")
-                    } else {
-                        showToast("Shimmer GSR still unavailable - missing permissions")
-                    }
-                }
-            } else {
-                showToast("Bluetooth permissions already granted - Shimmer ready")
-            }
-        }
-
-        requestBatteryBtn.setOnClickListener {
-            if (permissionController.isBatteryOptimizationDisabled()) {
-                showToast("Battery optimization already disabled")
-            } else {
-                showToast("Requesting battery optimization exemption...")
-                permissionController.requestBatteryOptimizationExemption { granted ->
-                    if (granted) {
-                        showToast("Battery optimization exemption granted")
-                    } else {
-                        showToast("Battery optimization exemption denied")
-                    }
-                    updatePermissionStatus()
-                }
-            }
-        }
-
-        requestUsbBtn.setOnClickListener {
-            requestUsbPermissionDemo()
-        }
-
-        startRecordingBtn.setOnClickListener {
-            attemptToStartRecording()
-        }
+        findViewById<Button>(ID_CHECK_PERMISSIONS).setOnClickListener { updatePermissionStatus() }
+        findViewById<Button>(ID_REQUEST_ALL).setOnClickListener { requestAllPermissions() }
+        findViewById<Button>(ID_REQUEST_BATTERY).setOnClickListener { requestBatteryExemption() }
+        findViewById<Button>(ID_REQUEST_USB).setOnClickListener { requestUsbPermissionDemo() }
+        startRecordingBtn.setOnClickListener { attemptToStartRecording() }
     }
 
     private fun requestAllPermissions() {
         Log.i(TAG, "Requesting all permissions using ensureAll()")
-
         permissionController.ensureAll { allGranted, deniedPermissions ->
             if (allGranted) {
                 showToast("All permissions granted! Multi-sensor recording ready.")
-                Log.i(TAG, "All permissions successfully granted")
             } else {
                 val permissionNames = permissionController.getPermissionNames(deniedPermissions)
                 showToast("Some permissions denied: ${permissionNames.joinToString(", ")}")
-                Log.w(TAG, "Denied permissions: ${deniedPermissions.joinToString(", ")}")
             }
             updatePermissionStatus()
         }
     }
 
-    private fun requestUsbPermissionDemo() {
-        val usbManager = getSystemService(Context.USB_SERVICE) as UsbManager
-        val devices = usbManager.deviceList.values
+    private fun requestBatteryExemption() {
+        if (permissionController.isBatteryOptimizationDisabled()) {
+            showToast("Battery optimization already disabled.")
+        } else {
+            showToast("Requesting battery optimization exemption...")
+            permissionController.requestBatteryOptimizationExemption()
+        }
+    }
 
-        if (devices.isEmpty()) {
+    private fun requestUsbPermissionDemo() {
+        val usbManager = getSystemService(USB_SERVICE) as UsbManager
+        val device = usbManager.deviceList.values.firstOrNull()
+        if (device == null) {
             showToast("No USB devices connected")
             return
         }
-
-
-        val device = devices.first()
-
         showToast("Requesting USB permission for: ${device.productName}")
         permissionController.requestUsbPermission(device) { granted, grantedDevice ->
-            if (granted && grantedDevice != null) {
-                showToast("USB permission granted for: ${grantedDevice.productName}")
-                Log.i(TAG, "USB permission granted for device: ${grantedDevice.productName}")
+            if (granted) {
+                showToast("USB permission granted for: ${grantedDevice?.productName}")
             } else {
                 showToast("USB permission denied")
-                Log.w(TAG, "USB permission denied for device: ${device.productName}")
             }
         }
     }
 
     private fun attemptToStartRecording() {
-        when {
-            !permissionController.canStartRecording() -> {
-                showToast("Cannot start recording - missing camera or storage permissions")
-                requestAllPermissions()
-            }
-
-            !permissionController.canShowNotifications() -> {
-                showToast("Recording can start but notifications may not work")
-
-                showToast("Starting recording with limited notification support...")
-            }
-
-            else -> {
-                showToast("All permissions ready - starting multi-sensor recording!")
-
-                Log.i(TAG, "Recording would start now with all permissions granted")
-            }
+        if (permissionController.canStartRecording()) {
+            showToast("All permissions ready - starting multi-sensor recording!")
+            Log.i(TAG, "Recording would start now.")
+        } else {
+            showToast("Cannot start recording - missing camera or storage permissions.")
+            requestAllPermissions()
         }
     }
 
@@ -213,50 +99,45 @@ class PermissionDemoActivity : AppCompatActivity() {
         val statusMessage = permissionController.getPermissionStatusMessage()
         statusText.text = "Permission Status:\n$statusMessage"
 
-
         val canRecord = permissionController.canStartRecording()
         startRecordingBtn.isEnabled = canRecord
-        startRecordingBtn.text = if (canRecord) {
-            "Start Recording (Ready)"
-        } else {
-            "Start Recording (Permissions Needed)"
-        }
+        startRecordingBtn.text =
+            if (canRecord) "Start Recording (Ready)" else "Start Recording (Permissions Needed)"
 
-        Log.i(TAG, "Permission status updated: $statusMessage")
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
-
-        permissionController.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
-
-        updatePermissionStatus()
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-
-        permissionController.onActivityResult(requestCode, resultCode)
-
-
-        updatePermissionStatus()
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        updatePermissionStatus()
+        Log.i(TAG, "Permission status updated.")
     }
 
     private fun showToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
         Log.i(TAG, "Toast: $message")
+    }
+
+    // --- Programmatic UI Setup ---
+    private val ID_CHECK_PERMISSIONS = View.generateViewId()
+    private val ID_REQUEST_ALL = View.generateViewId()
+    private val ID_REQUEST_BATTERY = View.generateViewId()
+    private val ID_REQUEST_USB = View.generateViewId()
+
+    private fun createDemoLayout(): View {
+        val layout = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(32, 32, 32, 32)
+        }
+        statusText = TextView(this).apply {
+            text = "Permission Status: Checking..."; textSize = 16f; setPadding(0, 0, 0, 24)
+        }
+        startRecordingBtn = Button(this).apply { text = "Start Recording"; isEnabled = false }
+
+        layout.addView(statusText)
+        layout.addView(Button(this).apply {
+            text = "Check All Permissions"; id = ID_CHECK_PERMISSIONS
+        })
+        layout.addView(Button(this).apply { text = "Request All Permissions"; id = ID_REQUEST_ALL })
+        layout.addView(Button(this).apply {
+            text = "Request Battery Exemption"; id = ID_REQUEST_BATTERY
+        })
+        layout.addView(Button(this).apply { text = "Request USB Permission"; id = ID_REQUEST_USB })
+        layout.addView(startRecordingBtn)
+        return layout
     }
 }
