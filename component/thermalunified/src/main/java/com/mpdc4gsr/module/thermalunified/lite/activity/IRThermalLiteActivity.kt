@@ -736,7 +736,7 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
         customMinTemp: Float,
     ) {
         CameraPreviewManager.getInstance()
-            ?.setColorList(null, null, isUseGray, customMaxTemp, customMinTemp)
+            ?.setColorList(intArrayOf(), floatArrayOf(), isUseGray, customMaxTemp, customMinTemp)
     }
 
 
