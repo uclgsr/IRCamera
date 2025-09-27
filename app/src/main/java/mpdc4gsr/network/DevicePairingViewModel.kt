@@ -52,7 +52,7 @@ class DevicePairingViewModel : BaseViewModel(), NetworkClient.NetworkEventListen
         val sessionInfo: SessionInfo? = null
     )
 
-    fun initialize(context: NetworkClient.NetworkEventListener) {
+    fun initialize(context: android.content.Context) {
         networkClient = NetworkClient(context)
         networkClient.setEventListener(this)
         
@@ -144,7 +144,13 @@ class DevicePairingViewModel : BaseViewModel(), NetworkClient.NetworkEventListen
 
         viewModelScope.launch {
             try {
-                val sessionInfo = networkClient.startRecordingSession()
+                // Create a SessionInfo for starting recording
+                val sessionInfo = com.mpdc4gsr.gsr.model.SessionInfo(
+                    sessionId = "remote_session_${System.currentTimeMillis()}",
+                    studyName = "Remote Recording Session",
+                    participantId = controller.deviceName,
+                    startTime = System.currentTimeMillis()
+                )
                 _navigationEvent.value = NavigationEvent(
                     action = "START_RECORDING",
                     sessionInfo = sessionInfo
@@ -156,37 +162,48 @@ class DevicePairingViewModel : BaseViewModel(), NetworkClient.NetworkEventListen
     }
 
     // NetworkClient.NetworkEventListener implementation
-    override fun onControllerConnected(controller: NetworkClient.ControllerInfo) {
+    override fun onControllerDiscovered(controller: NetworkClient.ControllerInfo) {
+        // This is handled by the discovery process in startControllerScan()
+    }
+
+    override fun onConnected(controller: NetworkClient.ControllerInfo) {
         _connectedController.value = controller
         _connectionState.value = ConnectionState.CONNECTED
         _statusMessage.value = "Connected to ${controller.deviceName}"
     }
 
-    override fun onControllerDisconnected() {
+    override fun onDisconnected(reason: String) {
         _connectedController.value = null
         _connectionState.value = ConnectionState.DISCONNECTED
-        _statusMessage.value = "Controller disconnected"
+        _statusMessage.value = "Controller disconnected: $reason"
     }
 
-    override fun onConnectionError(error: String) {
-        _connectionState.value = ConnectionState.CONNECTION_FAILED
-        _error.value = "Connection error: $error"
-    }
-
-    override fun onRecordingSessionStarted(sessionInfo: SessionInfo) {
+    override fun onRemoteMeasurementRequest(sessionInfo: SessionInfo) {
         _navigationEvent.value = NavigationEvent(
             action = "RECORDING_STARTED",
             sessionInfo = sessionInfo
         )
     }
 
-    override fun onRecordingSessionStopped() {
-        _statusMessage.value = "Recording session stopped"
+    override fun onSyncFlash(durationMs: Int) {
+        _statusMessage.value = "Sync flash triggered (${durationMs}ms)"
     }
 
-    override fun onDataReceived(data: String) {
-        // Handle data received from controller
-        _statusMessage.value = "Data received from controller"
+    override fun onTimeSynchronized(offsetNanoseconds: Long) {
+        _statusMessage.value = "Time synchronized (offset: ${offsetNanoseconds / 1_000_000}ms)"
+    }
+
+    override fun onDataStreamingStarted() {
+        _statusMessage.value = "Data streaming started"
+    }
+
+    override fun onDataStreamingStopped() {
+        _statusMessage.value = "Data streaming stopped"
+    }
+
+    override fun onError(operation: String, error: String) {
+        _connectionState.value = ConnectionState.CONNECTION_FAILED
+        _error.value = "Error in $operation: $error"
     }
 
     fun clearError() {

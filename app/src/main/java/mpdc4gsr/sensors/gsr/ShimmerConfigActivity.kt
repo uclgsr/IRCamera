@@ -28,19 +28,23 @@ class ShimmerConfigActivity : BaseViewModelActivity<ShimmerConfigViewModel>() {
 
     override fun providerVMClass(): Class<ShimmerConfigViewModel> = ShimmerConfigViewModel::class.java
 
+    override fun initContentView(): Int = R.layout.activity_shimmer_config
+
+    override fun initView() {
+        setupUI()
+        setupObservers()
+        viewModel.checkPermissions()
+    }
+
+    override fun initData() {
+        // Initialize any data needed for the activity
+        // This method is called by BaseActivity after initView()
+    }
+
     private val permissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
         viewModel.onPermissionResult(permissions)
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_shimmer_config)
-
-        setupUI()
-        setupObservers()
-        viewModel.checkPermissions()
     }
 
     private fun setupUI() {
