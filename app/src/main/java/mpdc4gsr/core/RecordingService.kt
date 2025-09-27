@@ -46,6 +46,7 @@ import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.io.EOFException
 import java.io.File
+import java.net.InetSocketAddress
 import java.net.ServerSocket
 import java.net.Socket
 import java.net.SocketException
@@ -1201,7 +1202,13 @@ class RecordingService : LifecycleService() {
 
     private suspend fun runServerSocketSupervised(stopToken: CrashSafeSupervisor.StopToken) {
         try {
-            serverSocket = ServerSocket(SERVER_PORT)
+            // Ensure any previous socket is fully released
+            delay(100)
+            
+            serverSocket = ServerSocket().apply {
+                reuseAddress = true
+                bind(InetSocketAddress(SERVER_PORT))
+            }
             isServerRunning.set(true)
             structuredLogger.logServerEvent(
                 "server_socket_started",
@@ -1288,7 +1295,11 @@ class RecordingService : LifecycleService() {
         activeConnections.clear()
 
         try {
-            serverSocket?.close()
+            serverSocket?.let { socket ->
+                if (!socket.isClosed) {
+                    socket.close()
+                }
+            }
         } catch (e: Exception) {
             structuredLogger.logServerEvent(
                 "server_socket_close_error",
