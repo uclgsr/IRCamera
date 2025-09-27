@@ -94,6 +94,7 @@ class StructuredLogger private constructor(private val context: Context) {
     private var currentLogFile: File? = null
     private var currentLogWriter: BufferedWriter? = null
     private var currentLogSize = 0L
+    private val writerLock = Any()
     private val dateFormatter =
         SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US).apply {
             timeZone = TimeZone.getTimeZone("UTC")
@@ -134,14 +135,21 @@ class StructuredLogger private constructor(private val context: Context) {
     }
 
     private fun createNewLogFile(logDir: File) {
-        val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(Date())
-        currentLogFile = File(logDir, "pc_to_phone_$timestamp.jsonl")
+        synchronized(writerLock) {
+            val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(Date())
+            currentLogFile = File(logDir, "pc_to_phone_$timestamp.jsonl")
 
-        currentLogWriter?.close()
-        currentLogWriter = BufferedWriter(FileWriter(currentLogFile, true))
-        currentLogSize = currentLogFile?.length() ?: 0L
+            try {
+                currentLogWriter?.close()
+            } catch (e: Exception) {
+                Log.w(TAG, "Error closing previous log writer", e)
+            }
+            
+            currentLogWriter = BufferedWriter(FileWriter(currentLogFile, true))
+            currentLogSize = currentLogFile?.length() ?: 0L
 
-        Log.i(TAG, "Created new log file: ${currentLogFile?.name}")
+            Log.i(TAG, "Created new log file: ${currentLogFile?.name}")
+        }
     }
 
     private fun cleanupOldLogs(logDir: File) {
@@ -276,52 +284,89 @@ class StructuredLogger private constructor(private val context: Context) {
     }
 
     private fun processLogQueue() {
-        val writer = currentLogWriter ?: return
-
         while (true) {
             val logEntry = logQueue.poll() ?: break
 
-            try {
-                writer.write(logEntry.toString())
-                writer.newLine()
-                currentLogSize += logEntry.toString().length + 1
-
-                if (currentLogSize > MAX_LOG_SIZE_MB * 1024 * 1024) {
-                    rotateLogFile()
+            synchronized(writerLock) {
+                val writer = currentLogWriter
+                if (writer == null) {
+                    Log.w(TAG, "Log writer is null, skipping log entry")
+                    continue
                 }
+
+                try {
+                    writer.write(logEntry.toString())
+                    writer.newLine()
+                    currentLogSize += logEntry.toString().length + 1
+
+                    if (currentLogSize > MAX_LOG_SIZE_MB * 1024 * 1024) {
+                        rotateLogFile()
+                    }
+                } catch (e: Exception) {
+                    Log.e(TAG, "Error writing log entry", e)
+                    // If write fails, try to recreate the writer
+                    if (e.message?.contains("Stream closed") == true) {
+                        try {
+                            recreateLogWriter()
+                        } catch (recreateException: Exception) {
+                            Log.e(TAG, "Failed to recreate log writer", recreateException)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun recreateLogWriter() {
+        synchronized(writerLock) {
+            try {
+                currentLogWriter?.close()
             } catch (e: Exception) {
-                Log.e(TAG, "Error writing log entry", e)
+                Log.w(TAG, "Error closing corrupted log writer", e)
+            }
+            
+            val logFile = currentLogFile
+            if (logFile != null) {
+                currentLogWriter = BufferedWriter(FileWriter(logFile, true))
+                Log.i(TAG, "Recreated log writer for: ${logFile.name}")
+            } else {
+                val logDir = File(context.getExternalFilesDir(null), LOG_DIRECTORY)
+                createNewLogFile(logDir)
             }
         }
     }
 
     private fun flushLogs() {
-        try {
-            currentLogWriter?.flush()
-        } catch (e: Exception) {
-            Log.e(TAG, "Error flushing logs", e)
+        synchronized(writerLock) {
+            try {
+                currentLogWriter?.flush()
+            } catch (e: Exception) {
+                Log.e(TAG, "Error flushing logs", e)
+            }
         }
     }
 
     private fun rotateLogFile() {
-        try {
-            currentLogWriter?.close()
+        synchronized(writerLock) {
+            try {
+                currentLogWriter?.close()
 
-            val logDir = File(context.getExternalFilesDir(null), LOG_DIRECTORY)
-            createNewLogFile(logDir)
-            cleanupOldLogs(logDir)
+                val logDir = File(context.getExternalFilesDir(null), LOG_DIRECTORY)
+                createNewLogFile(logDir)
+                cleanupOldLogs(logDir)
 
-            log(
-                LogLevel.INFO,
-                "StructuredLogger",
-                "log_file_rotated",
-                mapOf(
-                    "new_file" to (currentLogFile?.name ?: "unknown"),
-                    "previous_size_mb" to (currentLogSize / (1024 * 1024)),
-                ),
-            )
-        } catch (e: Exception) {
-            Log.e(TAG, "Error rotating log file", e)
+                log(
+                    LogLevel.INFO,
+                    "StructuredLogger",
+                    "log_file_rotated",
+                    mapOf(
+                        "new_file" to (currentLogFile?.name ?: "unknown"),
+                        "previous_size_mb" to (currentLogSize / (1024 * 1024)),
+                    ),
+                )
+            } catch (e: Exception) {
+                Log.e(TAG, "Error rotating log file", e)
+            }
         }
     }
 
@@ -362,7 +407,12 @@ class StructuredLogger private constructor(private val context: Context) {
         try {
             logScope.cancel()
             flushLogs()
-            currentLogWriter?.close()
+            
+            synchronized(writerLock) {
+                currentLogWriter?.close()
+                currentLogWriter = null
+            }
+            
             logExecutor.shutdown()
             logExecutor.awaitTermination(5, TimeUnit.SECONDS)
 
