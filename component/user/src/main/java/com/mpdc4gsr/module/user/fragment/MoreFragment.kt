@@ -1,5 +1,10 @@
 package com.mpdc4gsr.module.user.fragment
 
+// TS004ResetEvent removed
+// import com.mpdc4gsr.libunified.app.bean.event.TS004ResetEvent
+// ProductBean functionality removed
+// import com.mpdc4gsr.libunified.app.repository.ProductBean
+
 import android.os.Build
 import android.view.View
 import android.widget.TextView
@@ -8,36 +13,32 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.ToastUtils
 import com.elvishew.xlog.XLog
-import com.mpdc4gsr.lib.core.BaseApplication
-import com.mpdc4gsr.lib.core.bean.event.TS004ResetEvent
-import com.mpdc4gsr.lib.core.common.SaveSettingUtil
-import com.mpdc4gsr.lib.core.common.SharedManager
-import com.mpdc4gsr.lib.core.common.WifiSaveSettingUtil
-import com.mpdc4gsr.lib.core.config.ExtraKeyConfig
-import com.mpdc4gsr.lib.core.config.FileConfig
-import com.mpdc4gsr.lib.core.config.RouterConfig
-import com.mpdc4gsr.lib.core.dialog.ConfirmSelectDialog
-import com.mpdc4gsr.lib.core.dialog.FirmwareUpDialog
-import com.mpdc4gsr.lib.core.dialog.TipDialog
-import com.mpdc4gsr.lib.core.http.tool.DownloadTool
-import com.mpdc4gsr.lib.core.ktbase.BaseFragment
-import com.mpdc4gsr.lib.core.navigation.NavigationManager
-import com.mpdc4gsr.lib.core.repository.ProductBean
-import com.mpdc4gsr.lib.core.repository.TC007Repository
-import com.mpdc4gsr.lib.core.socket.WebSocketProxy
-import com.mpdc4gsr.lib.core.tools.DeviceTools
-import com.mpdc4gsr.lib.core.viewmodel.FirmwareViewModel
-import com.mpdc4gsr.lib.ui.SettingNightView
-import com.mpdc4gsr.lms.sdk.weiget.TToast
+import com.mpdc4gsr.libunified.app.BaseApplication
+import com.mpdc4gsr.libunified.app.common.SaveSettingUtil
+import com.mpdc4gsr.libunified.app.common.SharedManager
+import com.mpdc4gsr.libunified.app.common.WifiSaveSettingUtil
+import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
+import com.mpdc4gsr.libunified.app.config.FileConfig
+import com.mpdc4gsr.libunified.app.config.RouterConfig
+import com.mpdc4gsr.libunified.app.dialog.ConfirmSelectDialog
+import com.mpdc4gsr.libunified.app.dialog.FirmwareUpDialog
+import com.mpdc4gsr.libunified.app.dialog.TipDialog
+import com.mpdc4gsr.libunified.app.http.tool.DownloadTool
+import com.mpdc4gsr.libunified.app.ktbase.BaseFragment
+import com.mpdc4gsr.libunified.app.lms.weiget.TToast
+import com.mpdc4gsr.libunified.app.navigation.NavigationManager
+import com.mpdc4gsr.libunified.app.socket.WebSocketProxy
+import com.mpdc4gsr.libunified.app.tools.DeviceTools
+import com.mpdc4gsr.libunified.app.viewmodel.FirmwareViewModel
+import com.mpdc4gsr.libunified.ui.SettingNightView
 import com.mpdc4gsr.module.user.R
 import com.mpdc4gsr.module.user.dialog.DownloadProDialog
 import com.mpdc4gsr.module.user.dialog.FirmwareInstallDialog
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.greenrobot.eventbus.EventBus
 import java.io.File
 import java.text.DecimalFormat
-import com.mpdc4gsr.lib.core.R as RCore
+import com.mpdc4gsr.libunified.R as RCore
 
 
 class MoreFragment : BaseFragment(), View.OnClickListener {
@@ -207,7 +208,7 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
                 if (firmwareData != null) {
                     showFirmwareUpDialog(firmwareData)
                 } else {
-                    XLog.i("TC007 固件升级 - 点击查询")
+                    XLog.i("TC007 [ph][ph][ph][ph] - [ph][ph][ph][ph]")
                     showLoadingDialog()
                     firmwareViewModel.queryFirmware(false)
                 }
@@ -241,13 +242,8 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
 
         if (isConnect) {
             lifecycleScope.launch {
-                val productBean: ProductBean? = TC007Repository.getProductInfo()
-                if (productBean == null) {
-                    TToast.shortToast(requireContext(), RCore.string.operation_failed_tips)
-                } else {
-                    itemSettingBottomText.text =
-                        getString(RCore.string.setting_firmware_update_version) + "V" + productBean.getVersionStr()
-                }
+                // TC007Repository functionality removed
+                TToast.shortToast(requireContext(), RCore.string.operation_failed_tips)
             }
         } else {
             itemSettingBottomText.setText(RCore.string.setting_firmware_update_version)
@@ -304,14 +300,15 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
 
     private fun installFirmware(file: File) {
         lifecycleScope.launch {
-            XLog.d("TC007 固件升级 - 开始安装固件升级包")
+            XLog.d("TC007 [ph][ph][ph][ph] - [ph][ph][ph][ph][ph][ph][ph][ph][ph]")
             val installDialog = FirmwareInstallDialog(requireContext())
             installDialog.show()
 
-            val isSuccess = TC007Repository.updateFirmware(file)
+            // TC007Repository functionality removed
+            val isSuccess = false
             installDialog.dismiss()
             if (isSuccess) {
-                XLog.d("TC007 固件升级 - 固件升级包发送往 TC007 成功，即将断开连接")
+                XLog.d("TC007 [ph][ph][ph][ph] - [ph][ph][ph][ph][ph][ph][ph][ph] TC007 [ph][ph]，[ph][ph][ph][ph][ph][ph]")
                 (requireActivity().application as BaseApplication).disconnectWebSocket()
                 TipDialog.Builder(requireContext())
                     .setTitleMessage(getString(RCore.string.app_tip))
@@ -325,7 +322,7 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
                     }
                     .create().show()
             } else {
-                XLog.w("TC007 固件升级 - 固件升级包发送往 TC007 失败!")
+                XLog.w("TC007 [ph][ph][ph][ph] - [ph][ph][ph][ph][ph][ph][ph][ph] TC007 [ph][ph]!")
                 showReInstallDialog(file)
             }
         }
@@ -371,12 +368,13 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
     private fun resetAll() {
         showLoadingDialog(RCore.string.ts004_reset_tip3)
         lifecycleScope.launch {
-            val isSuccess = TC007Repository.resetToFactory()
+            // TC007Repository functionality removed
+            val isSuccess = false
             if (isSuccess) {
-                XLog.d("TC007 恢复出厂设置成功，即将断开连接")
+                XLog.d("TC007 [ph][ph][ph][ph][ph][ph][ph][ph]，[ph][ph][ph][ph][ph][ph]")
                 TToast.shortToast(requireContext(), RCore.string.ts004_reset_tip4)
                 (requireActivity().application as BaseApplication).disconnectWebSocket()
-                EventBus.getDefault().post(TS004ResetEvent())
+                // EventBus.getDefault().post(TS004ResetEvent()) // TS004ResetEvent removed
                 NavigationManager.getInstance().build(RouterConfig.MAIN)
                     .navigation(requireContext())
                 requireActivity().finish()

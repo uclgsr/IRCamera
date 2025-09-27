@@ -1,4 +1,4 @@
-package mpdc4gsr
+package mpdc4gsr.activities
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -10,11 +10,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityDeviceTypeBinding
-import com.mpdc4gsr.lib.core.config.ExtraKeyConfig
-import com.mpdc4gsr.lib.core.config.RouterConfig
-import com.mpdc4gsr.lib.core.ktbase.BaseBindingActivity
-import com.mpdc4gsr.lib.core.navigation.NavigationManager
-import com.mpdc4gsr.lib.core.tools.DeviceTools
+import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
+import com.mpdc4gsr.libunified.app.config.RouterConfig
+import com.mpdc4gsr.libunified.app.ktbase.BaseBindingActivity
+import com.mpdc4gsr.libunified.app.navigation.NavigationManager
+import com.mpdc4gsr.libunified.app.tools.DeviceTools
 
 class DeviceTypeActivity : BaseBindingActivity<ActivityDeviceTypeBinding>() {
 

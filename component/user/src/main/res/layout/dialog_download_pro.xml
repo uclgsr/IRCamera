@@ -33,7 +33,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_title"
-        tools:text="大小: 12.9MB/239.6MB" />
+        tools:text="[ph][ph]: 12.9MB/239.6MB" />
 
     <ProgressBar
         android:id="@+id/progress_bar"

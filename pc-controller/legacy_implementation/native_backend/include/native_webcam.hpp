@@ -14,13 +14,13 @@ namespace ircamera {
     namespace sensors {
 
         struct WebcamFrame {
-            uint64_t timestamp_ns;  
-            int width;              
-            int height;             
-            int channels;           
-            std::vector <uint8_t> data; 
-            int frame_number;       
-            bool valid;             
+            uint64_t timestamp_ns;
+            int width;
+            int height;
+            int channels;
+            std::vector <uint8_t> data;
+            int frame_number;
+            bool valid;
         };
 
         class NativeWebcam {
@@ -134,5 +134,5 @@ namespace ircamera {
             WebcamFrame mat_to_frame(const cv::Mat &mat);
         };
 
-    } 
+    }
 } 

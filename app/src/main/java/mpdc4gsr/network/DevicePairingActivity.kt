@@ -13,9 +13,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityDevicePairingBinding
 import com.mpdc4gsr.gsr.model.SessionInfo
-import com.mpdc4gsr.lib.core.ktbase.BaseBindingActivity
-import mpdc4gsr.sensors.gsr.MultiModalRecordingActivity
+import com.mpdc4gsr.libunified.app.ktbase.BaseBindingActivity
 import kotlinx.coroutines.launch
+import mpdc4gsr.sensors.gsr.MultiModalRecordingActivity
 
 class DevicePairingActivity : BaseBindingActivity<ActivityDevicePairingBinding>(),
     NetworkClient.NetworkEventListener {

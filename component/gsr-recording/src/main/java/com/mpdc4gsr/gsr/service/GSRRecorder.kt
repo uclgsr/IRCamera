@@ -3,11 +3,11 @@ package com.mpdc4gsr.gsr.service
 import android.content.Context
 import android.os.Environment
 import android.util.Log
-import com.opencsv.CSVWriter
 import com.mpdc4gsr.gsr.model.GSRSample
 import com.mpdc4gsr.gsr.model.SessionInfo
 import com.mpdc4gsr.gsr.model.SyncMark
 import com.mpdc4gsr.gsr.util.TimeUtil
+import com.opencsv.CSVWriter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job

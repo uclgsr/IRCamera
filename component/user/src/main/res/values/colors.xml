@@ -6,4 +6,9 @@
     <color name="color_06AAFF">#FF06AAFF</color>
     <color name="color_font_five">#FF666666</color>
     <color name="color_8A898E">#FF8A898E</color>
+
+    <!-- Missing primary colors -->
+    <color name="colorPrimary">#FF1976D2</color>
+    <color name="colorPrimaryDark">#FF1565C0</color>
+    <color name="color_16131E">#FF16131E</color>
 </resources>

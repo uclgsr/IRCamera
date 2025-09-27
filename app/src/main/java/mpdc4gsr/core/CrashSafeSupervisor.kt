@@ -1,8 +1,7 @@
-package mpdc4gsr.supervisor
+package mpdc4gsr.core
 
 import android.content.Context
 import android.util.Log
-import mpdc4gsr.core.StructuredLogger
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope

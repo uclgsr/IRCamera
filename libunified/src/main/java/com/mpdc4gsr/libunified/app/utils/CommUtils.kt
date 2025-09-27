@@ -1,0 +1,83 @@
+package com.mpdc4gsr.libunified.app.utils
+
+import android.content.Context
+import android.content.pm.ApplicationInfo
+import android.content.pm.PackageManager
+import android.os.Environment
+import com.blankj.utilcode.util.Utils
+import com.elvishew.xlog.XLog
+import java.io.File
+import java.text.SimpleDateFormat
+import java.util.*
+
+/**
+ * CommUtils based on reference repository implementation
+ * Adapted from libapp/src/main/java/com/topdon/lib/core/utils/CommUtils.kt
+ */
+object CommUtils {
+
+    fun getAppName(): String {
+        var msg = ""
+        var appInfo: ApplicationInfo? = null
+        appInfo = Utils.getApp().packageManager
+            .getApplicationInfo(
+                Utils.getApp().packageName,
+                PackageManager.GET_META_DATA
+            )
+        try {
+            msg = appInfo.metaData.getString("app_name")?.toString() ?: ""
+        } catch (e: Exception) {
+            XLog.w("获取app名称异常： ${e.message}")
+        }
+        return msg
+    }
+
+    // Additional compatibility methods
+    private const val DATE_FORMAT_DEFAULT = "yyyy-MM-dd HH:mm:ss"
+
+    fun getCurrentTimeString(): String {
+        val formatter = SimpleDateFormat(DATE_FORMAT_DEFAULT, Locale.getDefault())
+        return formatter.format(Date())
+    }
+
+    fun getAppStorageDir(context: Context): File {
+        return context.getExternalFilesDir(Environment.DIRECTORY_PICTURES) ?: context.filesDir
+    }
+
+    fun createDirectory(dirPath: String): Boolean {
+        val dir = File(dirPath)
+        return if (!dir.exists()) {
+            dir.mkdirs()
+        } else {
+            true
+        }
+    }
+
+    fun formatFileSize(size: Long): String {
+        if (size <= 0) return "0 B"
+        val units = arrayOf("B", "KB", "MB", "GB", "TB")
+        val digitGroups = (Math.log10(size.toDouble()) / Math.log10(1024.0)).toInt()
+        return String.format(
+            "%.1f %s",
+            size / Math.pow(1024.0, digitGroups.toDouble()),
+            units[digitGroups]
+        )
+    }
+
+    fun isValidString(str: String?): Boolean {
+        return !str.isNullOrEmpty() && str.trim().isNotEmpty()
+    }
+
+    fun getFileExtension(fileName: String): String {
+        return if (fileName.contains(".")) {
+            fileName.substring(fileName.lastIndexOf(".") + 1)
+        } else {
+            ""
+        }
+    }
+
+    fun generateUniqueFileName(prefix: String, extension: String): String {
+        val timestamp = System.currentTimeMillis()
+        return "${prefix}_${timestamp}.${extension}"
+    }
+}

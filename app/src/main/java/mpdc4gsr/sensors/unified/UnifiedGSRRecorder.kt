@@ -14,40 +14,32 @@ import androidx.lifecycle.lifecycleScope
 import com.shimmerresearch.android.Shimmer
 import com.shimmerresearch.android.manager.ShimmerBluetoothManagerAndroid
 import com.shimmerresearch.driver.ObjectCluster
-import com.shimmerresearch.driver.ShimmerDevice
-import com.shimmerresearch.bluetooth.ShimmerBluetooth.BT_STATE
-import com.shimmerresearch.driver.ShimmerDevice.SENSING_STATE
-import mpdc4gsr.sensors.SensorRecorder
-import mpdc4gsr.sensors.RecordingStatus
-import mpdc4gsr.sensors.SensorError
-import mpdc4gsr.sensors.RecordingStats
-import mpdc4gsr.sensors.unified.model.DeviceInfo
-import mpdc4gsr.sensors.unified.model.GSRSample
-import mpdc4gsr.data.SessionMetadata
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import kotlinx.coroutines.withTimeoutOrNull
-import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.withTimeoutOrNull
+import mpdc4gsr.data.SessionMetadata
+import mpdc4gsr.sensors.RecordingStats
+import mpdc4gsr.sensors.RecordingStatus
+import mpdc4gsr.sensors.SensorError
+import mpdc4gsr.sensors.SensorRecorder
+import mpdc4gsr.sensors.unified.model.DeviceInfo
+import mpdc4gsr.sensors.unified.model.GSRSample
 import java.io.File
 import java.io.FileWriter
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 
@@ -225,7 +217,10 @@ class UnifiedGSRRecorder(
 
                     deviceManager.stopDeviceScanning()
 
-                    Log.i(TAG, "Enhanced BLE scan completed: found ${discoveredDevices.size} devices")
+                    Log.i(
+                        TAG,
+                        "Enhanced BLE scan completed: found ${discoveredDevices.size} devices"
+                    )
 
                     if (discoveredDevices.isNotEmpty()) {
                         _deviceStatus.value = "Found ${discoveredDevices.size} Shimmer devices"
@@ -241,12 +236,14 @@ class UnifiedGSRRecorder(
                 _deviceStatus.value = "Found ${discoveredDevices.size} real Shimmer devices"
                 return@withContext true
             } else {
-                _deviceStatus.value = "No Shimmer devices found - ensure device is powered on and in range"
+                _deviceStatus.value =
+                    "No Shimmer devices found - ensure device is powered on and in range"
                 return@withContext false
             }
 
         } catch (e: Exception) {
             Log.e(TAG, "Error during enhanced device discovery", e)
+            incrementErrorCount()
             _deviceStatus.value = "Discovery Failed"
             return@withContext false
         }
@@ -285,6 +282,7 @@ class UnifiedGSRRecorder(
 
         } catch (e: Exception) {
             Log.e(TAG, "Error connecting to device", e)
+            incrementErrorCount()
             _deviceStatus.value = "Connection Error"
             return@withContext false
         }
@@ -576,7 +574,10 @@ class UnifiedGSRRecorder(
                 csvWriter?.write("\n")
                 csvWriter?.flush()
 
-                Log.i(TAG, "Added sync marker: $markerType at $timestampNs with ${metadata.size} metadata entries")
+                Log.i(
+                    TAG,
+                    "Added sync marker: $markerType at $timestampNs with ${metadata.size} metadata entries"
+                )
             } else {
                 Log.i(TAG, "Sync marker added to tracking: $markerType (recording not active)")
             }
@@ -605,7 +606,7 @@ class UnifiedGSRRecorder(
             storageUsedMB = sessionDirectory?.let { dir ->
                 dir.walkTopDown().filter { it.isFile }.sumOf { it.length() } / (1024.0 * 1024.0)
             } ?: 0.0,
-            syncMarkersCount = syncMarkers.size.toLong(),
+            syncMarkersCount = syncMarkers.size,
             lastSampleTimestampNs = System.nanoTime()
         )
     }
@@ -627,6 +628,49 @@ class UnifiedGSRRecorder(
     fun getDiscoveredDevices(): List<DeviceInfo> = discoveredDevices.toList()
 
     fun getDataStream(): Flow<GSRSample> = gsrDataFlow.asSharedFlow()
+
+    // Additional statistics methods required by UnifiedSessionManager
+    fun getSampleCount(): Long = recordedSamples.get()
+
+    fun getOutputFileSize(): Long = sessionDirectory?.let { dir ->
+        dir.walkTopDown().filter { it.isFile }.sumOf { it.length() }
+    } ?: 0L
+
+    fun getAverageDataRate(): Double {
+        val sessionDuration = if (recordingStartTime > 0) {
+            (System.nanoTime() - recordingStartTime) / 1_000_000_000.0
+        } else 0.0
+        return if (sessionDuration > 0) {
+            recordedSamples.get().toDouble() / sessionDuration
+        } else 0.0
+    }
+
+    fun getDroppedSampleCount(): Long = droppedSamples.get()
+
+    fun getAverageSignalQuality(): Double = _connectionQuality.value
+
+    // Error tracking implementation
+    private val errorCount = AtomicLong(0)
+
+    fun getErrorCount(): Long {
+        return errorCount.get()
+    }
+
+    private fun incrementErrorCount() {
+        errorCount.incrementAndGet()
+        Log.w(TAG, "GSR error count increased to: ${errorCount.get()}")
+    }
+
+    suspend fun flushAndCloseFiles() = withContext(Dispatchers.IO) {
+        try {
+            csvWriter?.flush()
+            csvWriter?.close()
+            csvWriter = null
+            Log.i(TAG, "GSR data files flushed and closed")
+        } catch (e: Exception) {
+            Log.e(TAG, "Error flushing and closing GSR files", e)
+        }
+    }
 
     suspend fun disconnectDevice(): Boolean = withContext(Dispatchers.IO) {
         Log.i(TAG, "Disconnecting from Shimmer device")
@@ -695,7 +739,8 @@ class UnifiedGSRRecorder(
                 val actualInterval = wallClockMs - lastExpectedSampleTime
 
                 if (actualInterval > expectedInterval * 1.5) {
-                    val estimatedDroppedSamples = ((actualInterval - expectedInterval) / expectedInterval).toLong()
+                    val estimatedDroppedSamples =
+                        ((actualInterval - expectedInterval) / expectedInterval).toLong()
                     droppedSamples.addAndGet(estimatedDroppedSamples)
 
                     Log.w(

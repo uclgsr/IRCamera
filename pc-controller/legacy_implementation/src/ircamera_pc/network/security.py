@@ -125,10 +125,7 @@ class SecurityManager:
                 if common_name:
                     if "tc001" in common_name.lower():
                         return True, "TC001"
-                    elif "ts004" in common_name.lower():
-                        return True, "TS004"
-                    elif "tc007" in common_name.lower():
-                        return True, "TC007"
+                    # TS004/TC007 device support removed
 
             logger.warning(
                 f"Unknown device certificate: {common_name} from {organization}"

@@ -15,7 +15,7 @@ import androidx.core.content.FileProvider
 import androidx.exifinterface.media.ExifInterface
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityGsrRawImageViewBinding
-import com.mpdc4gsr.lib.core.ktbase.BaseBindingActivity
+import com.mpdc4gsr.libunified.app.ktbase.BaseBindingActivity
 import java.io.File
 
 class GSRRawImageViewActivity : BaseBindingActivity<ActivityGsrRawImageViewBinding>() {
@@ -140,7 +140,8 @@ class GSRRawImageViewActivity : BaseBindingActivity<ActivityGsrRawImageViewBindi
 
         // Detect Samsung Stage3/Level3 processing from filename
         val isStage3Processing = filename.contains("stage3", ignoreCase = true)
-        val processingLevel = if (isStage3Processing) "Samsung Stage3/Level3" else "Standard Level 3"
+        val processingLevel =
+            if (isStage3Processing) "Samsung Stage3/Level3" else "Standard Level 3"
         val processingNote = if (isStage3Processing) {
             """
             Samsung Stage3/Level3 RAW capture containing unprocessed sensor data

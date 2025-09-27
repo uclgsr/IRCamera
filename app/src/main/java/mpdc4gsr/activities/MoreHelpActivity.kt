@@ -1,4 +1,4 @@
-package mpdc4gsr
+package mpdc4gsr.activities
 
 import android.content.Context
 import android.content.Intent
@@ -12,9 +12,9 @@ import android.text.style.UnderlineSpan
 import android.view.View
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityMoreHelpBinding
-import com.mpdc4gsr.lib.core.dialog.TipDialog
-import com.mpdc4gsr.lib.core.ktbase.BaseBindingActivity
-import com.mpdc4gsr.lib.core.utils.Constants
+import com.mpdc4gsr.libunified.app.dialog.TipDialog
+import com.mpdc4gsr.libunified.app.ktbase.BaseBindingActivity
+import com.mpdc4gsr.libunified.app.utils.Constants
 
 class MoreHelpActivity : BaseBindingActivity<ActivityMoreHelpBinding>() {
     private var connectionType: Int = 0

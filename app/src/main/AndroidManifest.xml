@@ -2,23 +2,38 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <!-- Legacy Bluetooth permissions for API < 31 -->
+    <uses-permission
+        android:name="android.permission.BLUETOOTH"
+        android:maxSdkVersion="30" />
+    <uses-permission
+        android:name="android.permission.BLUETOOTH_ADMIN"
+        android:maxSdkVersion="30" />
 
-
+    <!-- New Bluetooth permissions for API >= 31 -->
     <uses-permission
         android:name="android.permission.BLUETOOTH_SCAN"
-        android:usesPermissionFlags="neverForLocation" />
-    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
+        android:usesPermissionFlags="neverForLocation"
+        tools:targetApi="31" />
+    <uses-permission
+        android:name="android.permission.BLUETOOTH_CONNECT"
+        tools:targetApi="31" />
+    <uses-permission
+        android:name="android.permission.BLUETOOTH_ADVERTISE"
+        tools:targetApi="31" />
 
 
+    <!-- Location permissions needed for Bluetooth scanning on older APIs and address detection -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
-
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <!-- Storage permissions for legacy external storage -->
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
 
@@ -32,9 +47,13 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CAMERA" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PROJECTION" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE" />
 
 
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- Notification permission for API >= 33 -->
+    <uses-permission
+        android:name="android.permission.POST_NOTIFICATIONS"
+        tools:targetApi="33" />
 
 
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
@@ -42,9 +61,6 @@
 
     <uses-permission android:name="android.permission.CAMERA" />
 
-
-    <uses-permission android:name="android.permission.USB_PERMISSION" />
-    <uses-permission android:name="android.permission.ACCESS_USB_ACCESSORY" />
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -58,10 +74,23 @@
     <uses-feature
         android:name="android.hardware.camera.flash"
         android:required="false" />
+    <uses-feature
+        android:name="android.hardware.bluetooth"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.bluetooth_le"
+        android:required="false" />
 
-    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
-    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
-    <uses-permission android:name="android.permission.READ_MEDIA_VISUAL_USER_SELECTED" />
+    <!-- Media permissions for API >= 33 -->
+    <uses-permission
+        android:name="android.permission.READ_MEDIA_VIDEO"
+        tools:targetApi="33" />
+    <uses-permission
+        android:name="android.permission.READ_MEDIA_IMAGES"
+        tools:targetApi="33" />
+    <uses-permission
+        android:name="android.permission.READ_MEDIA_VISUAL_USER_SELECTED"
+        tools:targetApi="34" />
 
     <uses-feature
         android:name="android.hardware.usb.host"
@@ -83,7 +112,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
-        tools:replace="android:label">
+        tools:replace="android:hardwareAccelerated,android:label">
 
         <uses-native-library
             android:name="libOpenCL.so"
@@ -137,21 +166,17 @@
         <activity
             android:name="mpdc4gsr.activities.MainActivity"
             android:exported="true"
-            android:launchMode="singleTask"
-            android:screenOrientation="userPortrait">
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
-
 
         <activity
             android:name="mpdc4gsr.activities.ShimmerMvpActivity"
             android:exported="true"
             android:label="Shimmer GSR MVP"
-            android:screenOrientation="userPortrait"
             android:theme="@style/AppTheme" />
 
 
@@ -159,147 +184,185 @@
             android:name="mpdc4gsr.activities.UnifiedSensorActivity"
             android:exported="true"
             android:label="Unified Sensor Platform"
-            android:screenOrientation="userPortrait"
             android:theme="@style/AppTheme" />
 
+        <activity android:name="mpdc4gsr.activities.ClauseActivity" />
 
         <activity
-            android:name="mpdc4gsr.activities.Phase2ValidationActivity"
+            android:name="mpdc4gsr.activities.NetworkClientTestActivity"
             android:exported="false"
-            android:label="Phase 2 Hardware Validation"
-            android:screenOrientation="userPortrait"
+            android:label="Network Client Test"
             android:theme="@style/AppTheme" />
 
+        <activity
+            android:name="mpdc4gsr.activities.SimpleNetworkTestActivity"
+            android:exported="false"
+            android:label="Simple Network Test"
+            android:theme="@style/AppTheme" />
+
+        <activity android:name="mpdc4gsr.activities.PdfActivity" />
+        <activity android:name="mpdc4gsr.activities.PolicyActivity" />
+        <activity android:name="mpdc4gsr.activities.VersionActivity" />
+        <activity android:name="mpdc4gsr.activities.DeviceTypeActivity" />
+        <activity android:name="mpdc4gsr.activities.MoreHelpActivity" />
+        <activity android:name="mpdc4gsr.activities.WebViewActivity" />
 
         <activity
-            android:name="mpdc4gsr.core.ComprehensiveSystemDemo"
-            android:exported="true"
-            android:label="Comprehensive System Demo"
+            android:name="mpdc4gsr.activities.NetworkConfigActivity"
+            android:exported="false"
+            android:label="Network Configuration"
             android:screenOrientation="userPortrait"
-            android:theme="@style/AppTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-
-
-        <activity
-            android:name="mpdc4gsr.test.EnhancedRecordingSessionTestActivity"
-            android:exported="true"
-            android:label="Enhanced Recording Session Test"
-            android:screenOrientation="userPortrait"
-            android:theme="@style/AppTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-
-        <activity
-            android:name="mpdc4gsr.activities.ClauseActivity"
-            android:screenOrientation="userPortrait" />
-        <activity
-            android:name="mpdc4gsr.activities.PdfActivity"
-            android:screenOrientation="userPortrait" />
-        <activity
-            android:name="mpdc4gsr.activities.PolicyActivity"
-            android:screenOrientation="userPortrait" />
-        <activity
-            android:name="mpdc4gsr.activities.VersionActivity"
-            android:screenOrientation="userPortrait" />
-        <activity
-            android:name="mpdc4gsr.activities.DeviceTypeActivity"
-            android:screenOrientation="userPortrait" />
-        <activity
-            android:name="mpdc4gsr.activities.MoreHelpActivity"
-            android:screenOrientation="userPortrait" />
-        <activity
-            android:name="mpdc4gsr.activities.WebViewActivity"
-            android:screenOrientation="userPortrait" />
-
+            android:theme="@style/AppTheme" />
 
         <activity
             android:name="mpdc4gsr.sensors.gsr.MultiModalRecordingActivity"
-            android:exported="false"
-            android:screenOrientation="userPortrait" />
-        <activity
-            android:name="mpdc4gsr.sensors.gsr.GSRDemoActivity"
-            android:exported="false"
-            android:screenOrientation="userPortrait" />
+            android:exported="false" />
+
         <activity
             android:name="mpdc4gsr.sensors.gsr.GSRQuickRecordingActivity"
             android:exported="false"
-            android:label="@string/gsr_quick_access"
-            android:screenOrientation="userPortrait" />
+            android:label="@string/gsr_quick_access" />
 
+        <activity
+            android:name="mpdc4gsr.activities.FaultTolerantRecordingActivity"
+            android:exported="false"
+            android:label="@string/enhanced_recording_label" />
 
         <activity
             android:name="mpdc4gsr.sensors.gsr.SessionManagerActivity"
             android:exported="false"
-            android:label="Session Manager"
-            android:screenOrientation="userPortrait" />
+            android:label="Session Manager" />
         <activity
             android:name="mpdc4gsr.sensors.gsr.ResearchTemplateActivity"
             android:exported="false"
-            android:label="Research Templates"
-            android:screenOrientation="userPortrait" />
+            android:label="Research Templates" />
         <activity
             android:name="mpdc4gsr.sensors.gsr.SessionDetailActivity"
             android:exported="false"
-            android:label="Session Details"
-            android:screenOrientation="userPortrait" />
+            android:label="Session Details" />
         <activity
             android:name="mpdc4gsr.sensors.gsr.SessionExportActivity"
             android:exported="false"
-            android:label="Export Session"
-            android:screenOrientation="userPortrait" />
-
+            android:label="Export Session" />
 
         <activity
             android:name="mpdc4gsr.sensors.HubSpokeIntegrationActivity"
             android:exported="false"
-            android:label="Hub-Spoke Recording"
-            android:screenOrientation="userPortrait" />
+            android:label="Hub-Spoke Recording" />
+
         <activity
             android:name="mpdc4gsr.network.DevicePairingActivity"
             android:exported="false"
-            android:label="Device Pairing"
-            android:screenOrientation="userPortrait" />
+            android:label="Device Pairing" />
 
-
-        <activity
-            android:name="mpdc4gsr.test.SynchronizationTestActivity"
-            android:exported="false"
-            android:label="Synchronization Test"
-            android:screenOrientation="userPortrait"
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" />
-        <activity
-            android:name="mpdc4gsr.test.ParallelRecordingTestActivity"
-            android:exported="false"
-            android:label="Parallel Recording Test"
-            android:screenOrientation="userPortrait" />
-        <activity
-            android:name="mpdc4gsr.test.RAWCaptureTestActivity"
-            android:exported="false"
-            android:label="RAW Capture Test"
-            android:screenOrientation="userPortrait" />
-        <activity
-            android:name="mpdc4gsr.test.BLEIntegrationTestActivity"
-            android:exported="false"
-            android:label="BLE Integration Test"
-            android:screenOrientation="userPortrait" />
-        <activity
-            android:name="mpdc4gsr.test.RGBCameraEnhancedTestActivity"
-            android:exported="false"
-            android:label="RGB Camera Enhanced Test"
-            android:screenOrientation="userPortrait" />
         <activity
             android:name="mpdc4gsr.permissions.PermissionRequestActivity"
             android:exported="false"
-            android:label="Enhanced Permission System Test"
-            android:screenOrientation="userPortrait" />
+            android:label="Enhanced Permission System Test" />
 
+        <!-- Additional GSR Activities -->
+        <activity
+            android:name="mpdc4gsr.sensors.gsr.GSRVideoPlayerActivity"
+            android:exported="false"
+            android:label="GSR Video Player" />
+        <activity
+            android:name="mpdc4gsr.sensors.gsr.GSRPlotActivity"
+            android:exported="false"
+            android:label="GSR Plot Viewer" />
+        <activity
+            android:name="mpdc4gsr.sensors.gsr.GSRDataViewActivity"
+            android:exported="false"
+            android:label="GSR Data Viewer" />
+        <activity
+            android:name="mpdc4gsr.sensors.gsr.GSRSettingsActivity"
+            android:exported="false"
+            android:label="GSR Settings" />
+        <activity
+            android:name="mpdc4gsr.sensors.gsr.GSRRawImageViewActivity"
+            android:exported="false"
+            android:label="GSR Raw Image Viewer" />
+        <activity
+            android:name="mpdc4gsr.sensors.gsr.GSRGalleryActivity"
+            android:exported="false"
+            android:label="GSR Gallery" />
+        <activity
+            android:name="mpdc4gsr.sensors.gsr.GSRDeviceManagementActivity"
+            android:exported="false"
+            android:label="GSR Device Management" />
+        <activity
+            android:name="mpdc4gsr.sensors.gsr.ShimmerConfigActivity"
+            android:exported="false"
+            android:label="Shimmer Configuration" />
+
+
+        <!-- Test Activities -->
+        <activity
+            android:name="mpdc4gsr.sensors.gsr.GSRBenchTestActivity"
+            android:exported="false"
+            android:label="GSR Benchmark Test" />
+        <activity
+            android:name="mpdc4gsr.sensors.gsr.GSRDataIntegrityTestActivity"
+            android:exported="false"
+            android:label="GSR Data Integrity Test" />
+        <activity
+            android:name="mpdc4gsr.sensors.gsr.GSRReconnectionTestActivity"
+            android:exported="false"
+            android:label="GSR Reconnection Test" />
+        <activity
+            android:name="mpdc4gsr.sensors.gsr.ParallelRecordingTestActivity"
+            android:exported="false"
+            android:label="Parallel Recording Test" />
+        <activity
+            android:name="mpdc4gsr.sensors.gsr.SessionLifecycleTestActivity"
+            android:exported="false"
+            android:label="Session Lifecycle Test" />
+
+        <!-- Camera Activities -->
+        <activity
+            android:name="mpdc4gsr.camera.integration.DualModeCameraActivity"
+            android:exported="false"
+            android:label="Dual Mode Camera" />
+
+        <activity
+            android:name="mpdc4gsr.sensors.gsr.RawCaptureTestActivity"
+            android:exported="false"
+            android:label="Raw Capture Test" />
+        <activity
+            android:name="mpdc4gsr.sensors.gsr.RgbCameraTestActivity"
+            android:exported="false"
+            android:label="RGB Camera Test" />
+
+        <!-- Session and Synchronization Activities -->
+        <activity
+            android:name="mpdc4gsr.sensors.gsr.CompleteSessionTrialActivity"
+            android:exported="false"
+            android:label="Complete Session Trial" />
+
+        <activity
+            android:name="mpdc4gsr.sensors.gsr.CrossModalSyncTestActivity"
+            android:exported="false"
+            android:label="Cross Modal Sync Test" />
+        <activity
+            android:name="mpdc4gsr.sensors.gsr.SynchronizationTestActivity"
+            android:exported="false"
+            android:label="Synchronization Test" />
+        <activity
+            android:name="mpdc4gsr.sensors.gsr.TimeSynchronizationTestActivity"
+            android:exported="false"
+            android:label="Time Synchronization Test" />
+
+        <!-- BLE and Permission Activities -->
+        <activity
+            android:name="mpdc4gsr.sensors.gsr.BLEIntegrationTestActivity"
+            android:exported="false"
+            android:label="BLE Integration Test" />
+
+
+        <!-- Simplified Main Activity -->
+        <activity
+            android:name="mpdc4gsr.activities.SimplifiedMainActivity"
+            android:exported="false"
+            android:label="Simplified Main" />
 
         <service
             android:name="mpdc4gsr.core.RecordingService"
@@ -307,6 +370,11 @@
             android:exported="false"
             android:foregroundServiceType="camera|microphone|mediaProjection" />
 
+        <service
+            android:name="mpdc4gsr.core.BackgroundDeviceScanningService"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="connectedDevice" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -316,7 +384,7 @@
             tools:replace="android:authorities">
 
             <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:name="androidx.core.content.FileProvider.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths"
                 tools:replace="android:resource" />
         </provider>

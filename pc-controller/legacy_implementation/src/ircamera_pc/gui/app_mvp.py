@@ -1,19 +1,18 @@
 import asyncio
 import signal
 import sys
+from PyQt6.QtCore import QTimer
+from PyQt6.QtWidgets import QApplication
+from loguru import logger
 from pathlib import Path
 from typing import Optional
 
-from loguru import logger
-from PyQt6.QtCore import QTimer
-from PyQt6.QtWidgets import QApplication
-
+from .main_window_mvp import MVPMainWindow
 from ..core.config import config
 from ..core.device_manager import DeviceManager
 from ..core.session_manager import AdvancedSessionManager
 from ..network.websocket_server import WebSocketServer
 from ..sync import AdvancedTimeSyncServer
-from .main_window_mvp import MVPMainWindow
 
 
 class IRCameraHubApplication:

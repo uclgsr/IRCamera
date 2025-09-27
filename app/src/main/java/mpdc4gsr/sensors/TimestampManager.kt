@@ -35,6 +35,21 @@ object TimestampManager {
         return SystemClock.elapsedRealtimeNanos()
     }
 
+    /**
+     * Formats a nanosecond timestamp to ISO 8601 string format
+     */
+    private val iso8601Format by lazy {
+        java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", java.util.Locale.US).apply {
+            timeZone = java.util.TimeZone.getTimeZone("UTC")
+        }
+    }
+
+    fun formatTimestampIso(timestampNanos: Long): String {
+        val timestampMillis = timestampNanos / 1_000_000
+        val date = java.util.Date(timestampMillis)
+        return iso8601Format.format(date)
+    }
+
 
     fun getCurrentSystemTimeMs(): Long {
         return System.currentTimeMillis()
@@ -74,7 +89,10 @@ object TimestampManager {
             bootTimeReferenceMs = bootTimeReference.get()
         )
 
-        Log.i(TAG, "Session started with reference: system=${systemStart}ms, monotonic=${monotonicStart}ns")
+        Log.i(
+            TAG,
+            "Session started with reference: system=${systemStart}ms, monotonic=${monotonicStart}ns"
+        )
         return reference
     }
 
@@ -117,18 +135,26 @@ object TimestampManager {
     }
 
 
-    fun convertMonotonicToSystemTime(monotonicNs: Long): Long {
+    fun convertMonotonicToWallClock(monotonicNs: Long): Long {
         val sessionStartMono = sessionStartMonotonicNs.get()
         val sessionStartSys = sessionStartSystemMs.get()
 
         if (sessionStartMono == 0L) {
-            Log.w(TAG, "No session reference available for timestamp conversion")
+            Log.w(TAG, "No session reference available for monotonic to wall-clock conversion")
             return getCurrentSystemTimeMs()
         }
 
         val offsetNs = monotonicNs - sessionStartMono
         val offsetMs = offsetNs / 1_000_000
         return sessionStartSys + offsetMs
+    }
+
+    @Deprecated(
+        "Use convertMonotonicToWallClock for clarity.",
+        ReplaceWith("convertMonotonicToWallClock(monotonicNs)")
+    )
+    fun convertMonotonicToSystemTime(monotonicNs: Long): Long {
+        return convertMonotonicToWallClock(monotonicNs)
     }
 
 

@@ -1,14 +1,9 @@
 package mpdc4gsr.permissions
 
-import android.Manifest
-import android.content.pm.PackageManager
-import android.os.Build
 import android.util.Log
-import androidx.core.app.ActivityCompat
 import androidx.fragment.app.FragmentActivity
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
-
 
 class PermissionManager(
     private val activity: FragmentActivity,
@@ -16,80 +11,55 @@ class PermissionManager(
 ) {
     companion object {
         private const val TAG = "PermissionManager"
-        private const val REQUEST_CAMERA_PERMISSIONS = 100
-        private const val REQUEST_BLUETOOTH_PERMISSIONS = 101
-        private const val REQUEST_STORAGE_PERMISSIONS = 102
-        private const val REQUEST_ALL_PERMISSIONS = 200
     }
 
+    /**
+     * Requests all permissions defined as critical by the controller.
+     * This function suspends until the user responds and returns true if all were granted.
+     */
+    suspend fun requestAllCriticalPermissions(): Boolean {
+        Log.i(TAG, "Requesting all critical permissions")
+        return requestPermissionsWithController()
+    }
 
-    suspend fun requestCameraPermissions(): Boolean = suspendCancellableCoroutine { continuation ->
-        val cameraPermissions = arrayOf(
-            Manifest.permission.CAMERA,
-            Manifest.permission.RECORD_AUDIO
-        )
-
-        val missingPermissions = cameraPermissions.filter { permission ->
-            ActivityCompat.checkSelfPermission(activity, permission) != PackageManager.PERMISSION_GRANTED
-        }
-
-        if (missingPermissions.isEmpty()) {
+    /**
+     * Specifically requests camera and audio permissions.
+     */
+    suspend fun requestCameraPermissions(): Boolean {
+        if (permissionController.hasCameraPermissions()) {
             Log.i(TAG, "Camera permissions already granted")
-            continuation.resume(true)
-            return@suspendCancellableCoroutine
+            return true
         }
-
         Log.i(TAG, "Requesting camera permissions")
-
-
-        permissionController.setPermissionCallback(REQUEST_CAMERA_PERMISSIONS) { granted ->
-            Log.i(TAG, "Camera permissions result: $granted")
-            continuation.resume(granted)
-        }
-
-        ActivityCompat.requestPermissions(activity, missingPermissions.toTypedArray(), REQUEST_CAMERA_PERMISSIONS)
+        return requestPermissionsWithController()
     }
 
-
-    suspend fun requestBluetoothPermissions(): Boolean = suspendCancellableCoroutine { continuation ->
-        val bluetoothPermissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            arrayOf(
-                Manifest.permission.BLUETOOTH_SCAN,
-                Manifest.permission.BLUETOOTH_CONNECT,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            )
-        } else {
-            arrayOf(
-                Manifest.permission.BLUETOOTH,
-                Manifest.permission.BLUETOOTH_ADMIN,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            )
-        }
-
-        val missingPermissions = bluetoothPermissions.filter { permission ->
-            ActivityCompat.checkSelfPermission(activity, permission) != PackageManager.PERMISSION_GRANTED
-        }
-
-        if (missingPermissions.isEmpty()) {
+    /**
+     * Specifically requests all necessary Bluetooth and Location permissions.
+     */
+    suspend fun requestBluetoothPermissions(): Boolean {
+        if (permissionController.canConnectToShimmer()) {
             Log.i(TAG, "Bluetooth permissions already granted")
-            continuation.resume(true)
-            return@suspendCancellableCoroutine
+            return true
         }
-
-        Log.i(TAG, "Requesting bluetooth permissions")
-
-
-        permissionController.setPermissionCallback(REQUEST_BLUETOOTH_PERMISSIONS) { granted ->
-            Log.i(TAG, "Bluetooth permissions result: $granted")
-            continuation.resume(granted)
-        }
-
-        ActivityCompat.requestPermissions(activity, missingPermissions.toTypedArray(), REQUEST_BLUETOOTH_PERMISSIONS)
+        Log.i(TAG, "Requesting bluetooth permissions for GSR sensor access")
+        return requestPermissionsWithController()
     }
 
-
-    suspend fun requestStoragePermissions(): Boolean {
-
-        return true
+    /**
+     * Bridges the callback-based `permissionController.ensureAll` method
+     * to a suspend function using a standard coroutine pattern.
+     */
+    private suspend fun requestPermissionsWithController(): Boolean {
+        return suspendCancellableCoroutine { continuation ->
+            permissionController.ensureAll { isGranted, denied ->
+                if (continuation.isActive) {
+                    if (!isGranted) {
+                        Log.w(TAG, "Permissions denied: ${denied.joinToString()}")
+                    }
+                    continuation.resume(isGranted)
+                }
+            }
+        }
     }
 }

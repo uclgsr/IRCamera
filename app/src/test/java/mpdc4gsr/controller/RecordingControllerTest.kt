@@ -2,16 +2,16 @@ package mpdc4gsr.controller
 
 import android.content.Context
 import androidx.lifecycle.LifecycleOwner
-import mpdc4gsr.sensors.SensorRecorder
-import mpdc4gsr.sensors.RecordingStats
 import io.mockk.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.test.*
+import mpdc4gsr.sensors.RecordingStats
+import mpdc4gsr.sensors.SensorRecorder
 import org.junit.After
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
-import org.junit.Assert.*
 import java.io.File
 
 

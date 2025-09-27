@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "com.mpdc4gsr.gsr"
-    compileSdk = libs.versions.compileSdk.get().toInt()
+    compileSdk = 35
 
     defaultConfig {
         minSdk = libs.versions.minSdk.get().toInt()
@@ -53,9 +53,10 @@ android {
     }
 
     buildFeatures {
-        dataBinding = false
+        dataBinding = true
         viewBinding = true
     }
+    buildToolsVersion = "35.0.0"
 }
 
 dependencies {
@@ -67,11 +68,11 @@ dependencies {
     implementation(libs.work.runtime.ktx)
     implementation(libs.gson)
     implementation(project(":BleModule"))
-    implementation(libs.coroutines.core.legacy)
-    implementation(libs.coroutines.android.legacy)
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.coroutines.android)
     implementation(libs.bundles.camerax)
     implementation(libs.opencsv)
-    implementation(libs.guava.legacy)
+    implementation(libs.guava)
     implementation(libs.vecmath)
     implementation(libs.commons.lang3)
     implementation(libs.fastble)
@@ -79,7 +80,7 @@ dependencies {
     testImplementation(libs.robolectric)
     testImplementation(libs.test.core)
     testImplementation(libs.test.ext.junit)
-    testImplementation(libs.coroutines.test.legacy)
+    testImplementation(libs.kotlinx.coroutines.test)
     androidTestImplementation(libs.test.ext.junit)
     androidTestImplementation(libs.test.espresso.core)
 }

@@ -3,11 +3,17 @@ package mpdc4gsr.controller
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LifecycleOwner
-import mpdc4gsr.sensors.SensorRecorder
-import mpdc4gsr.util.SessionDirectoryManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.withContext
 import mpdc4gsr.data.SessionMetadata
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
+import mpdc4gsr.sensors.SensorRecorder
+import mpdc4gsr.utils.SessionDirectoryManager
+import mpdc4gsr.controller.RecordingConstants
 import java.io.File
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
@@ -19,10 +25,6 @@ class MainRecordingController(
 ) {
     companion object {
         private const val TAG = "MainRecordingController"
-        private const val FALLBACK_AVAILABLE_SPACE_GB = 10.0
-        private const val RGB_STORAGE_MB_PER_MIN = 50.0
-        private const val THERMAL_STORAGE_MB_PER_MIN = 5.0
-        private const val SHIMMER_STORAGE_MB_PER_MIN = 1.0
     }
 
 
@@ -172,20 +174,7 @@ class MainRecordingController(
             val sessionDir = File(context.filesDir, "sessions")
             sessionDir.freeSpace / (1024.0 * 1024.0 * 1024.0)
         } catch (e: Exception) {
-            FALLBACK_AVAILABLE_SPACE_GB
+            RecordingConstants.FALLBACK_AVAILABLE_SPACE_GB
         }
     }
-}
-
-
-data class SimpleRecordingStatus(
-    val isRecording: Boolean,
-    val activeSensors: Int,
-    val totalSensors: Int,
-    val state: MainRecordingState
-)
-
-
-enum class MainRecordingState {
-    IDLE, STARTING, RECORDING, STOPPING, ERROR
 }

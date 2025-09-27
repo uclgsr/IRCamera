@@ -3,7 +3,7 @@ package mpdc4gsr.network
 import android.content.Context
 import android.graphics.Bitmap
 import android.util.Log
-import mpdc4gsr.service.RecordingService
+import mpdc4gsr.core.RecordingService
 
 
 object PreviewIntegration {
@@ -115,7 +115,7 @@ object PreviewIntegration {
 }
 
 
-fun com.example.thermal_lite.camera.CameraPreviewManager.updatePreview(context: Context) {
+fun com.mpdc4gsr.module.thermalunified.lite.camera.CameraPreviewManager.updatePreview(context: Context) {
     try {
         val bitmap = this.scaledBitmap()
         if (bitmap != null && !bitmap.isRecycled) {

@@ -50,11 +50,11 @@ namespace ircamera {
 
             std::atomic<Node *> head_;
             std::atomic<Node *> tail_;
-            std::atomic<size_t> size_;
+            std::atomic <size_t> size_;
             const size_t capacity_;
 
-            std::vector<std::unique_ptr<Node>> node_pool_;
-            std::atomic<size_t> pool_index_;
+            std::vector <std::unique_ptr<Node>> node_pool_;
+            std::atomic <size_t> pool_index_;
         };
 
         template<typename T>
@@ -73,7 +73,7 @@ namespace ircamera {
         template<typename T>
         bool ThreadSafeQueue<T>::push(const T &item) {
             if (size_.load() >= capacity_) {
-                return false; 
+                return false;
             }
 
             size_t pool_idx = pool_index_.fetch_add(1) % node_pool_.size();
@@ -92,7 +92,7 @@ namespace ircamera {
         template<typename T>
         bool ThreadSafeQueue<T>::push(T &&item) {
             if (size_.load() >= capacity_) {
-                return false; 
+                return false;
             }
 
             size_t pool_idx = pool_index_.fetch_add(1) % node_pool_.size();
@@ -114,12 +114,12 @@ namespace ircamera {
             Node *next = head->next.load();
 
             if (next == nullptr) {
-                return false; 
+                return false;
             }
 
             T *data = next->data.load();
             if (data == nullptr) {
-                return false; 
+                return false;
             }
 
             item = *data;
@@ -155,5 +155,5 @@ namespace ircamera {
             }
         }
 
-    } 
+    }
 } 

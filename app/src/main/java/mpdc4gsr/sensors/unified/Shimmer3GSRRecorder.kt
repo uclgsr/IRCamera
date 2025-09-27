@@ -8,22 +8,12 @@ import androidx.core.app.ActivityCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import com.shimmerresearch.android.Shimmer
+import com.shimmerresearch.bluetooth.ShimmerBluetooth.BT_STATE
 import com.shimmerresearch.driver.ObjectCluster
-import com.shimmerresearch.driver.Configuration
-import mpdc4gsr.sensors.SensorRecorder
-import mpdc4gsr.sensors.RecordingStatus
-import mpdc4gsr.sensors.SensorError
-import mpdc4gsr.sensors.ErrorType
-import mpdc4gsr.sensors.RecordingStats
-import mpdc4gsr.sensors.unified.model.DeviceInfo
-import mpdc4gsr.sensors.unified.model.GSRSample
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,19 +21,24 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlinx.coroutines.channels.BufferOverflow
+import mpdc4gsr.sensors.RecordingStats
+import mpdc4gsr.sensors.RecordingStatus
+import mpdc4gsr.sensors.SensorError
+import mpdc4gsr.sensors.SensorRecorder
+import mpdc4gsr.sensors.gsr.GSRCalculationUtils
+import mpdc4gsr.sensors.gsr.GSRConstants
+import mpdc4gsr.sensors.unified.model.DeviceInfo
+import mpdc4gsr.sensors.unified.model.GSRSample
 import java.io.File
 import java.io.FileWriter
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-import java.util.UUID
-import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
-import java.util.concurrent.atomic.AtomicReference
 
 
 class Shimmer3GSRRecorder(
@@ -56,20 +51,12 @@ class Shimmer3GSRRecorder(
     companion object {
         private const val TAG = "Shimmer3GSRRecorder"
 
-
         private const val GSR_RANGE_AUTO = 4
-        private const val ADC_RESOLUTION_12BIT = 4095.0
         private const val DEFAULT_SAMPLING_RATE = 128.0
-
 
         private const val MIN_CONNECTION_STRENGTH = -70
         private const val MAX_DATA_GAP_MS = 50
         private const val MIN_QUALITY_SCORE = 0.8
-
-
-        private const val GSR_REF_RESISTOR = 40200.0
-        private const val GSR_UNCAL_LIMIT_LOW = 0x01
-        private const val GSR_UNCAL_LIMIT_HIGH = 4095
 
         fun hasRequiredPermissions(context: Context): Boolean {
             val requiredPermissions =
@@ -197,7 +184,8 @@ class Shimmer3GSRRecorder(
     }
 
     suspend fun stopDeviceDiscovery(): Boolean {
-        return deviceManager?.stopDeviceScanning() ?: false
+        deviceManager?.stopDeviceScanning()
+        return true
     }
 
     fun getDiscoveredDevices(): SharedFlow<List<DeviceInfo>> {
@@ -302,7 +290,7 @@ class Shimmer3GSRRecorder(
                 csvWriter?.write("# Shimmer3 GSR+ Recording Session\n")
                 csvWriter?.write("# Device: ${selectedDevice?.name ?: "Auto-discovered"} (${selectedDevice?.address ?: "Unknown"})\n")
                 csvWriter?.write("# Sampling Rate: ${samplingRate}Hz\n")
-                csvWriter?.write("# ADC Resolution: 12-bit (0-${ADC_RESOLUTION_12BIT.toInt()})\n")
+                csvWriter?.write("# ADC Resolution: 12-bit (0-${GSRConstants.ADC_MAX_VALUE.toInt()})\n")
                 csvWriter?.write("# GSR Range: Auto (${GSR_RANGE_AUTO})\n")
                 csvWriter?.write("# Started: ${dateFormat.format(Date())}\n")
                 csvWriter?.write("START_RECORD @ ${System.currentTimeMillis()}\n")
@@ -557,7 +545,7 @@ class Shimmer3GSRRecorder(
 
             val isStreaming = shimmer.isStreaming() ?: false
             val isConnected =
-                shimmer.isConnected() && shimmer.getBluetoothRadioState() == 2
+                shimmer.isConnected() && shimmer.getBluetoothRadioState() == BT_STATE.CONNECTED
 
             Log.d(TAG, "Shimmer state check - Streaming: $isStreaming, Connected: $isConnected")
             isStreaming && isConnected
@@ -660,30 +648,8 @@ class Shimmer3GSRRecorder(
     }
 
     private fun calculateGSRMicrosiemens(gsrRaw: Int): Double {
-        if (gsrRaw < GSR_UNCAL_LIMIT_LOW || gsrRaw > GSR_UNCAL_LIMIT_HIGH) {
-            return 0.0
-        }
-
-        try {
-
-            val voltage = (gsrRaw / ADC_RESOLUTION_12BIT) * 3.0
-
-
-            val gsrResistance = GSR_REF_RESISTOR * ((3.0 / voltage) - 1.0)
-
-
-            val conductance = if (gsrResistance > 0) {
-                (1.0 / gsrResistance) * 1_000_000
-            } else {
-                0.0
-            }
-
-            return conductance.coerceIn(0.0, 100.0)
-
-        } catch (e: Exception) {
-            Log.w(TAG, "Error calculating GSR microsiemens for raw value: $gsrRaw", e)
-            return 0.0
-        }
+        // Use centralized GSR calculation utility
+        return GSRCalculationUtils.calculateGSRMicrosiemens(gsrRaw)
     }
 
     private var lastSampleTime: Long = 0
@@ -691,9 +657,10 @@ class Shimmer3GSRRecorder(
 
     private fun calculateQualityScore(gsrRaw: Int, timestamp: Long): Double {
         try {
-            var qualityScore = 1.0
+            // Use centralized quality calculation as base
+            var qualityScore = GSRCalculationUtils.calculateQualityScore(gsrRaw)
 
-
+            // Add timing-based quality adjustments specific to this recorder
             if (lastSampleTime > 0) {
                 val gapMs = (timestamp - lastSampleTime) / 1_000_000
                 if (gapMs > MAX_DATA_GAP_MS) {
@@ -701,7 +668,7 @@ class Shimmer3GSRRecorder(
                 }
             }
 
-
+            // Add value stability check
             if (lastGsrValue > 0) {
                 val valueDiff = kotlin.math.abs(gsrRaw - lastGsrValue)
                 val changePercent = valueDiff.toDouble() / lastGsrValue
@@ -710,8 +677,8 @@ class Shimmer3GSRRecorder(
                 }
             }
 
-
-            if (gsrRaw < GSR_UNCAL_LIMIT_LOW || gsrRaw > GSR_UNCAL_LIMIT_HIGH) {
+            // Range check using centralized constants
+            if (gsrRaw < GSRConstants.GSR_UNCAL_LIMIT_LOW || gsrRaw > GSRConstants.GSR_UNCAL_LIMIT_HIGH) {
                 qualityScore = 0.0
             }
 

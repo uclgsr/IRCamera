@@ -3,6 +3,7 @@ package mpdc4gsr.sensors.gsr
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.preference.PreferenceManager
@@ -10,22 +11,18 @@ import android.provider.Settings
 import android.util.Log
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityGsrSettingsBinding
-import com.mpdc4gsr.ble.util.BluetoothPermissionUtils
-import com.mpdc4gsr.lib.core.ktbase.BaseBindingActivity
-import mpdc4gsr.sensors.gsr.GSRSensorRecorder
+import com.mpdc4gsr.libunified.app.ktbase.BaseBindingActivity
 import kotlinx.coroutines.launch
+import mpdc4gsr.permissions.PermissionController
 
 class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
     companion object {
@@ -34,12 +31,73 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
         fun startActivity(context: Context) {
             context.startActivity(Intent(context, GSRSettingsActivity::class.java))
         }
+
+        private fun hasBleScanningPermissions(context: Context): Boolean {
+            return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                ContextCompat.checkSelfPermission(
+                    context,
+                    android.Manifest.permission.BLUETOOTH_SCAN
+                ) == PackageManager.PERMISSION_GRANTED &&
+                        ContextCompat.checkSelfPermission(
+                            context,
+                            android.Manifest.permission.BLUETOOTH_CONNECT
+                        ) == PackageManager.PERMISSION_GRANTED
+            } else {
+                ContextCompat.checkSelfPermission(
+                    context,
+                    android.Manifest.permission.ACCESS_FINE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED
+            }
+        }
+
+        private fun hasBluetoothPermissions(context: Context): Boolean {
+            return hasBleScanningPermissions(context)
+        }
+
+        private fun getMissingPermissions(context: Context): List<String> {
+            val missing = mutableListOf<String>()
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                if (ContextCompat.checkSelfPermission(
+                        context,
+                        android.Manifest.permission.BLUETOOTH_SCAN
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    missing.add(android.Manifest.permission.BLUETOOTH_SCAN)
+                }
+                if (ContextCompat.checkSelfPermission(
+                        context,
+                        android.Manifest.permission.BLUETOOTH_CONNECT
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    missing.add(android.Manifest.permission.BLUETOOTH_CONNECT)
+                }
+            } else {
+                if (ContextCompat.checkSelfPermission(
+                        context,
+                        android.Manifest.permission.ACCESS_FINE_LOCATION
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    missing.add(android.Manifest.permission.ACCESS_FINE_LOCATION)
+                }
+            }
+            return missing
+        }
+
+        private fun getPermissionRationale(permission: String): String {
+            return when (permission) {
+                android.Manifest.permission.BLUETOOTH_SCAN -> "Scan for Bluetooth devices"
+                android.Manifest.permission.BLUETOOTH_CONNECT -> "Connect to Bluetooth devices"
+                android.Manifest.permission.ACCESS_FINE_LOCATION -> "Access device location for Bluetooth scanning"
+                else -> "Required for Bluetooth functionality"
+            }
+        }
     }
 
     private lateinit var prefs: SharedPreferences
     private var gsrSensorRecorder: GSRSensorRecorder? = null
     private val availableDevices = mutableListOf<String>()
     private lateinit var deviceAdapter: ArrayAdapter<String>
+    private lateinit var permissionController: PermissionController
 
     private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
     private var pendingOperation: (() -> Unit)? = null
@@ -53,11 +111,13 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
 
         setupPermissionHandling()
 
+        permissionController = PermissionController(this)
+
         gsrSensorRecorder = GSRSensorRecorder(
             this,
             "gsr_settings_1",
             128,
-            com.topdon.tc001.controller.RecordingController(this, this)
+            mpdc4gsr.controller.RecordingController(this, this)
         )
 
         setupUI()
@@ -119,7 +179,7 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
     private fun showPermissionDialog(missingPermissions: List<String>) {
         val permissionDescriptions =
             missingPermissions.map { permission ->
-                "• ${BluetoothPermissionUtils.getPermissionRationale(permission)}"
+                "• ${getPermissionRationale(permission)}"
             }.joinToString("\n")
 
         AlertDialog.Builder(this)
@@ -144,7 +204,7 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
     private fun showPermissionDeniedDialog(deniedPermissions: List<String>) {
         val permissionDescriptions =
             deniedPermissions.map { permission ->
-                "• ${BluetoothPermissionUtils.getPermissionRationale(permission)}"
+                "• ${getPermissionRationale(permission)}"
             }.joinToString("\n")
 
         AlertDialog.Builder(this)
@@ -168,7 +228,7 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
     private fun showPermissionPermanentlyDeniedDialog(deniedPermissions: List<String>) {
         val permissionDescriptions =
             deniedPermissions.map { permission ->
-                "• ${BluetoothPermissionUtils.getPermissionRationale(permission)}"
+                "• ${getPermissionRationale(permission)}"
             }.joinToString("\n")
 
         AlertDialog.Builder(this)
@@ -207,7 +267,7 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
     }
 
     private fun requestMissingPermissions() {
-        val missingPermissions = BluetoothPermissionUtils.getMissingPermissions(this)
+        val missingPermissions = getMissingPermissions(this)
 
         if (missingPermissions.isEmpty()) {
             Log.i(TAG, "All permissions already granted")
@@ -224,7 +284,7 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
     }
 
     private fun checkAndRequestPermissions(onPermissionsGranted: (() -> Unit)? = null) {
-        val missingPermissions = BluetoothPermissionUtils.getMissingPermissions(this)
+        val missingPermissions = getMissingPermissions(this)
 
         if (missingPermissions.isEmpty()) {
             Log.i(TAG, "All required permissions already granted")
@@ -438,7 +498,7 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
         }
 
         binding.scanDevicesButton.setOnClickListener {
-            if (BluetoothPermissionUtils.hasBleScanningPermissions(this)) {
+            if (hasBleScanningPermissions(this)) {
                 scanForDevices()
             } else {
                 checkAndRequestPermissions {
@@ -448,7 +508,7 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
         }
 
         binding.connectDeviceButton.setOnClickListener {
-            if (BluetoothPermissionUtils.hasBluetoothPermissions(this)) {
+            if (hasBluetoothPermissions(this)) {
                 connectToSelectedDevice()
             } else {
                 checkAndRequestPermissions {
@@ -476,7 +536,7 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
 
     private fun scanForDevices() {
 
-        if (!BluetoothPermissionUtils.hasBleScanningPermissions(this)) {
+        if (!hasBleScanningPermissions(this)) {
             Log.w(TAG, "Missing BLE scanning permissions")
             binding.deviceInfoText.text = "Bluetooth permissions required for device scanning"
             checkAndRequestPermissions {
@@ -541,7 +601,7 @@ class GSRSettingsActivity : BaseBindingActivity<ActivityGsrSettingsBinding>() {
             return
         }
 
-        if (!BluetoothPermissionUtils.hasBluetoothPermissions(this)) {
+        if (!hasBluetoothPermissions(this)) {
             Log.w(TAG, "Missing Bluetooth permissions for device connection")
             binding.deviceInfoText.text = "Bluetooth permissions required for device connection"
             checkAndRequestPermissions {

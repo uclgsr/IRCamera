@@ -13,8 +13,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityGsrDataViewBinding
 import com.google.gson.Gson
+import com.mpdc4gsr.libunified.app.ktbase.BaseBindingActivity
 import com.opencsv.CSVWriter
-import com.mpdc4gsr.lib.core.ktbase.BaseBindingActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

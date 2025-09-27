@@ -1,9 +1,12 @@
 package mpdc4gsr.sensors.gsr
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -12,13 +15,12 @@ import androidx.core.app.ActivityCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import mpdc4gsr.R
-
-import android.view.LayoutInflater
-import mpdc4gsr.sensors.unified.ShimmerDeviceManager
-import mpdc4gsr.sensors.unified.model.DeviceInfo
+import com.csl.irCamera.R
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import mpdc4gsr.core.BackgroundScanHelper
+import mpdc4gsr.sensors.unified.ShimmerDeviceManager
+import mpdc4gsr.sensors.unified.model.DeviceInfo
 
 
 class ShimmerConfigActivity : AppCompatActivity() {
@@ -291,21 +293,17 @@ class ShimmerConfigActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             try {
-                val scanStopped = manager.stopDeviceScanning()
-                if (scanStopped) {
-                    isScanning = false
-                    updateScanButton(false)
+                manager.stopDeviceScanning()
+                isScanning = false
+                updateScanButton(false)
 
-                    val deviceCount = deviceAdapter.itemCount
-                    if (deviceCount > 0) {
-                        updateUI("Scan completed - found $deviceCount Shimmer device(s)")
-                    } else {
-                        updateUI("Scan completed - no Shimmer devices found")
-                    }
-                    Log.i(TAG, "Stopped Shimmer device scanning")
+                val deviceCount = deviceAdapter.itemCount
+                if (deviceCount > 0) {
+                    updateUI("Scan completed - found $deviceCount Shimmer device(s)")
                 } else {
-                    Log.w(TAG, "Failed to stop device scanning")
+                    updateUI("Scan completed - no Shimmer devices found")
                 }
+                Log.i(TAG, "Stopped Shimmer device scanning")
             } catch (e: Exception) {
                 Log.e(TAG, "Error stopping device scan", e)
             }
@@ -480,5 +478,30 @@ class ShimmerConfigActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(com.csl.irCamera.R.menu.shimmer_config_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            com.csl.irCamera.R.id.menu_start_background_scanning -> {
+                // Start background scanning using helper
+                BackgroundScanHelper.startBackgroundScanning(this)
+                Toast.makeText(this, "Background scanning started", Toast.LENGTH_SHORT).show()
+                true
+            }
+
+            com.csl.irCamera.R.id.menu_stop_background_scanning -> {
+                // Stop background scanning using helper
+                BackgroundScanHelper.stopBackgroundScanning(this)
+                Toast.makeText(this, "Background scanning stopped", Toast.LENGTH_SHORT).show()
+                true
+            }
+
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 }

@@ -3,12 +3,20 @@ package mpdc4gsr.sensors.thermal
 import android.content.Context
 import android.graphics.Bitmap
 import android.util.Log
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import mpdc4gsr.data.SessionMetadata
-import kotlinx.coroutines.*
-import java.io.*
+import mpdc4gsr.sensors.TimestampManager
+import java.io.File
+import java.io.FileOutputStream
+import java.io.FileWriter
 import java.nio.ByteBuffer
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 import kotlin.math.max
@@ -99,9 +107,19 @@ class ThermalRecorder(private val context: Context) {
 
                 frameSequence.set(0)
 
+                sessionMetadata.addSyncEvent(
+                    "THERMAL_RECORDING_START", mapOf(
+                        "sensor_type" to "thermal_topdon",
+                        "sensor_id" to "thermal_topdon_tc001",
+                        "save_images" to saveImages.toString(),
+                        "sync_verification" to "enabled"
+                    )
+                )
+
                 isRecording.set(true)
                 Log.i(TAG, "Thermal recording started with session timing: ${csvFile.absolutePath}")
                 Log.i(TAG, "Session start: ${sessionMetadata.sessionStartIso}")
+                Log.i(TAG, "Thermal recording SessionSync event logged for alignment verification")
 
                 if (saveImages) {
                     Log.i(
@@ -198,7 +216,7 @@ class ThermalRecorder(private val context: Context) {
         frameData: ByteArray,
         width: Int,
         height: Int,
-        timestampNs: Long = System.nanoTime()
+        timestampNs: Long = TimestampManager.getCurrentTimestampNanos()
     ) {
         if (!isRecording.get()) {
             return
@@ -229,7 +247,7 @@ class ThermalRecorder(private val context: Context) {
         height: Int,
         minTempRange: Float = -20f,
         maxTempRange: Float = 400f,
-        timestampNs: Long = System.nanoTime()
+        timestampNs: Long = TimestampManager.getCurrentTimestampNanos()
     ) {
         if (!isRecording.get()) {
             return
@@ -411,7 +429,11 @@ class ThermalRecorder(private val context: Context) {
     ) = withContext(Dispatchers.IO) {
         try {
             sessionDirectory?.let { dir ->
-                val imageFile = File(dir, "thermal_frame_${frameSequence}_${System.nanoTime()}.raw")
+                val imageFile =
+                    File(
+                        dir,
+                        "thermal_frame_${frameSequence}_${TimestampManager.getCurrentTimestampNanos()}.raw"
+                    )
 
                 FileOutputStream(imageFile).use { output ->
                     output.write(frameData)
@@ -447,7 +469,11 @@ class ThermalRecorder(private val context: Context) {
 
                 bitmap.setPixels(pixels, 0, width, 0, 0, width, height)
 
-                val imageFile = File(dir, "thermal_frame_${frameSequence}_${System.nanoTime()}.png")
+                val imageFile =
+                    File(
+                        dir,
+                        "thermal_frame_${frameSequence}_${TimestampManager.getCurrentTimestampNanos()}.png"
+                    )
                 FileOutputStream(imageFile).use { output ->
                     bitmap.compress(Bitmap.CompressFormat.PNG, 100, output)
                 }

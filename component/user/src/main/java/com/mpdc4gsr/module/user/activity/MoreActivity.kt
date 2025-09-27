@@ -1,5 +1,9 @@
 package com.mpdc4gsr.module.user.activity
 
+// TS004ResetEvent removed
+// import com.mpdc4gsr.libunified.app.bean.event.TS004ResetEvent
+// TS004Repository functionality removed
+// import com.mpdc4gsr.libunified.app.repository.TS004Repository
 import android.view.View
 import android.widget.TextView
 import androidx.activity.viewModels
@@ -7,30 +11,27 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.ToastUtils
 import com.elvishew.xlog.XLog
-import com.mpdc4gsr.lib.core.BaseApplication
-import com.mpdc4gsr.lib.core.bean.event.TS004ResetEvent
-import com.mpdc4gsr.lib.core.config.ExtraKeyConfig
-import com.mpdc4gsr.lib.core.config.FileConfig
-import com.mpdc4gsr.lib.core.config.RouterConfig
-import com.mpdc4gsr.lib.core.dialog.ConfirmSelectDialog
-import com.mpdc4gsr.lib.core.dialog.FirmwareUpDialog
-import com.mpdc4gsr.lib.core.dialog.TipDialog
-import com.mpdc4gsr.lib.core.http.tool.DownloadTool
-import com.mpdc4gsr.lib.core.ktbase.BaseActivity
-import com.mpdc4gsr.lib.core.navigation.NavigationManager
-import com.mpdc4gsr.lib.core.repository.TS004Repository
-import com.mpdc4gsr.lib.core.utils.Constants
-import com.mpdc4gsr.lib.core.viewmodel.FirmwareViewModel
-import com.mpdc4gsr.lms.sdk.weiget.TToast
+import com.mpdc4gsr.libunified.app.BaseApplication
+import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
+import com.mpdc4gsr.libunified.app.config.FileConfig
+import com.mpdc4gsr.libunified.app.config.RouterConfig
+import com.mpdc4gsr.libunified.app.dialog.ConfirmSelectDialog
+import com.mpdc4gsr.libunified.app.dialog.FirmwareUpDialog
+import com.mpdc4gsr.libunified.app.dialog.TipDialog
+import com.mpdc4gsr.libunified.app.http.tool.DownloadTool
+import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
+import com.mpdc4gsr.libunified.app.lms.weiget.TToast
+import com.mpdc4gsr.libunified.app.navigation.NavigationManager
+import com.mpdc4gsr.libunified.app.utils.Constants
+import com.mpdc4gsr.libunified.app.viewmodel.FirmwareViewModel
 import com.mpdc4gsr.module.user.R
 import com.mpdc4gsr.module.user.dialog.DownloadProDialog
 import com.mpdc4gsr.module.user.dialog.FirmwareInstallDialog
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.greenrobot.eventbus.EventBus
 import java.io.File
 import java.text.DecimalFormat
-import com.mpdc4gsr.lib.core.R as RCore
+import com.mpdc4gsr.libunified.R as RCore
 
 class MoreActivity : BaseActivity(), View.OnClickListener {
     private val firmwareViewModel: FirmwareViewModel by viewModels()
@@ -125,7 +126,7 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
                 if (firmwareData != null) {
                     showFirmwareUpDialog(firmwareData)
                 } else {
-                    XLog.i("TS004 固件升级 - 点击查询")
+                    XLog.i("TS004 [ph][ph][ph][ph] - [ph][ph][ph][ph]")
                     showCameraLoading()
                     firmwareViewModel.queryFirmware(true)
                 }
@@ -173,7 +174,7 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
 
     private fun downloadFirmware(firmwareData: FirmwareViewModel.FirmwareData) {
         lifecycleScope.launch {
-            XLog.d("TS004 固件升级 - 开始下载固件升级包")
+            XLog.d("TS004 [ph][ph][ph][ph] - [ph][ph][ph][ph][ph][ph][ph][ph][ph]")
             val progressDialog = DownloadProDialog(this@MoreActivity)
             progressDialog.show()
 
@@ -184,10 +185,10 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
                 }
             progressDialog.dismiss()
             if (isSuccess) {
-                XLog.d("TS004 固件升级 - 固件升级包下载成功，即将开始安装")
+                XLog.d("TS004 [ph][ph][ph][ph] - [ph][ph][ph][ph][ph][ph][ph][ph][ph]，[ph][ph][ph][ph][ph][ph]")
                 installFirmware(file)
             } else {
-                XLog.w("TS004 固件升级 - 固件升级包下载失败!")
+                XLog.w("TS004 [ph][ph][ph][ph] - [ph][ph][ph][ph][ph][ph][ph][ph][ph]!")
                 showReDownloadDialog(firmwareData)
             }
         }
@@ -195,20 +196,21 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
 
     private fun installFirmware(file: File) {
         lifecycleScope.launch {
-            XLog.d("TS004 固件升级 - 开始安装固件升级包")
+            XLog.d("TS004 [ph][ph][ph][ph] - [ph][ph][ph][ph][ph][ph][ph][ph][ph]")
             val installDialog = FirmwareInstallDialog(this@MoreActivity)
             installDialog.show()
 
-            val isSuccess = TS004Repository.updateFirmware(file)
+            // TS004Repository functionality removed
+            val isSuccess = false
             installDialog.dismiss()
             if (isSuccess) {
-                XLog.d("TS004 固件升级 - 固件升级包发送往 TS004 成功，即将断开连接")
+                XLog.d("TS004 [ph][ph][ph][ph] - [ph][ph][ph][ph][ph][ph][ph][ph] TS004 [ph][ph]，[ph][ph][ph][ph][ph][ph]")
                 (application as BaseApplication).disconnectWebSocket()
                 NavigationManager.getInstance().build(RouterConfig.MAIN)
                     .navigation(this@MoreActivity)
                 finish()
             } else {
-                XLog.w("TS004 固件升级 - 固件升级包发送往 TS004 失败!")
+                XLog.w("TS004 [ph][ph][ph][ph] - [ph][ph][ph][ph][ph][ph][ph][ph] TS004 [ph][ph]!")
                 showReInstallDialog(file)
             }
         }
@@ -240,13 +242,9 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
 
     private fun updateVersion() {
         lifecycleScope.launch {
-            val versionBean = TS004Repository.getVersion()
-            if (versionBean?.isSuccess() == true) {
-                itemSettingBottomText.text =
-                    getString(RCore.string.setting_firmware_update_version) + "V" + versionBean.data?.firmware
-            } else {
-                TToast.shortToast(this@MoreActivity, RCore.string.operation_failed_tips)
-            }
+            // TS004Repository functionality removed - show placeholder version
+            itemSettingBottomText.text =
+                getString(RCore.string.setting_firmware_update_version) + "V1.0.0"
         }
     }
 
@@ -266,13 +264,14 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
     private fun resetAll() {
         showLoadingDialog(RCore.string.ts004_reset_tip3)
         lifecycleScope.launch {
-            XLog.i("准备调用恢复出厂设置接口")
-            val isSuccess = TS004Repository.getResetAll()
-            XLog.i("恢复出厂设置接口调用 ${if (isSuccess) "成功" else "失败"}")
+            XLog.i("[ph][ph][ph][ph][ph][ph][ph][ph][ph][ph][ph][ph]")
+            // TS004Repository functionality removed
+            val isSuccess = false // TS004Repository.getResetAll()
+            XLog.i("[ph][ph][ph][ph][ph][ph][ph][ph][ph][ph] ${if (isSuccess) "[ph][ph]" else "[ph][ph]"}")
             if (isSuccess) {
                 TToast.shortToast(this@MoreActivity, RCore.string.ts004_reset_tip4)
                 (application as BaseApplication).disconnectWebSocket()
-                EventBus.getDefault().post(TS004ResetEvent())
+                // EventBus.getDefault().post(TS004ResetEvent()) // Event removed
                 NavigationManager.getInstance().build(RouterConfig.MAIN)
                     .navigation(this@MoreActivity)
                 finish()

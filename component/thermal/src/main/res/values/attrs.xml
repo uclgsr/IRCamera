@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <declare-styleable name="TemperatureBaseView">
-        <attr name="maxCount" format="integer" />
-        <attr name="markerColor" format="color" />
-    </declare-styleable>
-</resources>

@@ -1,28 +1,28 @@
-package mpdc4gsr
+package mpdc4gsr.activities
 
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
 import androidx.lifecycle.lifecycleScope
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityClauseBinding
-import com.mpdc4gsr.lib.core.BaseApplication
-import com.mpdc4gsr.lib.core.common.SharedManager
-import com.mpdc4gsr.lib.core.config.RouterConfig
-import com.mpdc4gsr.lib.core.dialog.TipDialog
-import com.mpdc4gsr.lib.core.dialog.TipProgressDialog
-import com.mpdc4gsr.lib.core.ktbase.BaseBindingActivity
-import com.mpdc4gsr.lib.core.navigation.NavigationManager
-import com.mpdc4gsr.lib.core.utils.CommUtils
-import com.mpdc4gsr.lms.sdk.utils.NetworkUtil
-import com.mpdc4gsr.lms.sdk.weiget.TToast
-import mpdc4gsr.app.App
-import mpdc4gsr.utils.VersionUtils
+import com.mpdc4gsr.libunified.app.BaseApplication
+import com.mpdc4gsr.libunified.app.common.SharedManager
+import com.mpdc4gsr.libunified.app.config.RouterConfig
+import com.mpdc4gsr.libunified.app.dialog.TipDialog
+import com.mpdc4gsr.libunified.app.dialog.TipProgressDialog
+import com.mpdc4gsr.libunified.app.ktbase.BaseBindingActivity
+import com.mpdc4gsr.libunified.app.lms.utils.NetworkUtil
+import com.mpdc4gsr.libunified.app.lms.weiget.TToast
+import com.mpdc4gsr.libunified.app.navigation.NavigationManager
+import com.mpdc4gsr.libunified.app.utils.CommUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import mpdc4gsr.core.App
+import mpdc4gsr.utils.VersionUtils
 import java.util.Calendar
-import com.mpdc4gsr.lib.core.R as LibCoreR
+import com.mpdc4gsr.libunified.R as LibCoreR
 
 class ClauseActivity : BaseBindingActivity<ActivityClauseBinding>() {
     private lateinit var dialog: TipProgressDialog
@@ -112,17 +112,33 @@ class ClauseActivity : BaseBindingActivity<ActivityClauseBinding>() {
 
     private fun confirmInitApp() {
         lifecycleScope.launch {
-            showLoading()
+            try {
+                showLoading()
 
-            App.delayInit()
-            async(Dispatchers.IO) {
+                App.delayInit()
+                async(Dispatchers.IO) {
+                    // Simulating initialization delay
+                    delay(1000)
+                    return@async
+                }.await().let {
+                    // Mark that clause has been shown before navigation
+                    SharedManager.setHasShowClause(true)
 
-                delay(1000)
-                return@async
-            }.await().let {
-                NavigationManager.build(RouterConfig.MAIN).navigation(this@ClauseActivity)
-                SharedManager.setHasShowClause(true)
+                    // Navigate to main activity
+                    NavigationManager.build(RouterConfig.MAIN).navigation(this@ClauseActivity)
+                    dismissLoading()
+                    finish()
+                }
+            } catch (e: Exception) {
                 dismissLoading()
+                // Log error but continue to main activity
+                if (SharedManager.getHasShowClause()) {
+                    com.elvishew.xlog.XLog.e("ClauseActivity: Error during initialization: ${e.message}")
+                }
+
+                // Ensure user can still access the app even if initialization fails
+                SharedManager.setHasShowClause(true)
+                NavigationManager.build(RouterConfig.MAIN).navigation(this@ClauseActivity)
                 finish()
             }
         }

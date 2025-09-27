@@ -76,8 +76,14 @@ class TimeManager(
     ): Boolean {
         return withContext(Dispatchers.IO) {
             try {
-                Log.i(TAG, "Starting enhanced time synchronization with PC Controller: $pcControllerAddress:$port")
-
+                Log.i(
+                    TAG,
+                    "Starting enhanced NTP-like time synchronization with PC Controller: $pcControllerAddress:$port"
+                )
+                Log.i(
+                    TAG,
+                    "Assumption: Both devices are synchronized to internet time servers for baseline accuracy"
+                )
 
                 setPCConnectionInfo(pcControllerAddress, port)
 
@@ -86,14 +92,17 @@ class TimeManager(
                     return@withContext false
                 }
 
-
                 val success = performEnhancedTimeSync(pcControllerAddress, port, SYNC_RETRY_COUNT)
 
                 if (success) {
                     isTimeSynced = true
-
+                    logSyncQualityInfo()
                     startDriftMonitoring()
-                    Log.i(TAG, "Enhanced time synchronization successful with automatic drift monitoring")
+                    Log.i(
+                        TAG,
+                        "Enhanced NTP-like time synchronization successful with automatic drift monitoring"
+                    )
+                    Log.i(TAG, "Cross-device synchronization established for timestamp alignment")
                 }
 
                 return@withContext success
@@ -339,12 +348,18 @@ class TimeManager(
 
                         when {
                             timeSinceSync > AUTO_RESYNC_THRESHOLD_MS -> {
-                                Log.i(TAG, "Auto-resync triggered: ${timeSinceSync}ms since last sync")
+                                Log.i(
+                                    TAG,
+                                    "Auto-resync triggered: ${timeSinceSync}ms since last sync"
+                                )
                                 attemptAutoResync("time_threshold")
                             }
 
                             currentQuality > CRITICAL_DRIFT_THRESHOLD_MS -> {
-                                Log.w(TAG, "Auto-resync triggered: quality degraded to ${currentQuality}ms")
+                                Log.w(
+                                    TAG,
+                                    "Auto-resync triggered: quality degraded to ${currentQuality}ms"
+                                )
                                 attemptAutoResync("quality_degradation")
                             }
 
@@ -379,7 +394,8 @@ class TimeManager(
                 val originalRetryCount = SYNC_RETRY_COUNT
 
 
-                val success = performEnhancedTimeSync(getCurrentPCAddress(), getCurrentPCPort(), retryCount)
+                val success =
+                    performEnhancedTimeSync(getCurrentPCAddress(), getCurrentPCPort(), retryCount)
 
                 if (success) {
                     Log.i(TAG, "Auto-resync successful (reason: $reason)")
@@ -394,7 +410,11 @@ class TimeManager(
     }
 
 
-    private suspend fun performEnhancedTimeSync(pcAddress: String?, pcPort: Int?, retryCount: Int): Boolean {
+    private suspend fun performEnhancedTimeSync(
+        pcAddress: String?,
+        pcPort: Int?,
+        retryCount: Int
+    ): Boolean {
         if (pcAddress == null || pcPort == null) return false
 
         return withContext(Dispatchers.IO) {
@@ -425,7 +445,7 @@ class TimeManager(
 
 
                     val avgLatency = if (measurements.isNotEmpty()) measurements.average() else 0.0
-                    val delayMs = if (avgLatency > HIGH_LATENCY_THRESHOLD_MS) 500 else 100
+                    val delayMs = if (avgLatency > HIGH_LATENCY_THRESHOLD_MS) 500L else 100L
 
                     delay(delayMs)
                 } catch (e: Exception) {
@@ -540,6 +560,49 @@ class TimeManager(
         isTimeSynced = false
         Log.i(TAG, "TimeManager cleaned up")
     }
+
+    private fun logSyncQualityInfo() {
+        val quality = getSyncQuality()
+        val qualityLevel = when (quality.level) {
+            SyncQualityLevel.EXCELLENT -> "EXCELLENT (<= ${SYNC_QUALITY_THRESHOLD_MS}ms)"
+            SyncQualityLevel.GOOD -> "GOOD (<= ${SYNC_QUALITY_THRESHOLD_MS * 2}ms)"
+            SyncQualityLevel.FAIR -> "FAIR (<= ${SYNC_QUALITY_THRESHOLD_MS * 4}ms)"
+            SyncQualityLevel.POOR -> "POOR (> ${SYNC_QUALITY_THRESHOLD_MS * 4}ms)"
+            SyncQualityLevel.NOT_SYNCED -> "NOT_SYNCED"
+        }
+
+        Log.i(TAG, "Cross-device sync quality: $qualityLevel")
+        quality.qualityMs?.let {
+            Log.i(TAG, "Network latency quality: ${it}ms")
+        }
+        Log.i(TAG, "Clock offset: ${quality.offsetNs}ns (${quality.offsetNs / 1_000_000}ms)")
+    }
+
+    /**
+     * Set clock offset directly from protocol-based time sync
+     * This method allows setting the offset without making a separate connection
+     */
+    fun setClockOffsetFromProtocolSync(offsetNs: Long, estimatedLatencyMs: Long = 0) {
+        clockOffsetNs.set(offsetNs)
+        lastSyncTimestamp.set(getCurrentTimestampNs())
+        syncQualityMs.set(estimatedLatencyMs)
+        isTimeSynced = true
+
+        Log.i(
+            TAG,
+            "Clock offset set from protocol sync: ${offsetNs}ns (quality: ${estimatedLatencyMs}ms)"
+        )
+
+        // Start drift monitoring if not already active
+        if (driftMonitoringJob?.isActive != true) {
+            startDriftMonitoring()
+        }
+    }
+
+    /**
+     * Get the current clock offset in nanoseconds
+     */
+    fun getClockOffsetNs(): Long = clockOffsetNs.get()
 }
 
 private data class TimeSyncResult(

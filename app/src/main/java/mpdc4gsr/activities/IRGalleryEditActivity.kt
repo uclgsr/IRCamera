@@ -1,4 +1,4 @@
-package mpdc4gsr
+package mpdc4gsr.activities
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -19,51 +19,51 @@ import com.elvishew.xlog.XLog
 import com.energy.iruvc.ircmd.IRCMDType
 import com.energy.iruvc.ircmd.IRUtils
 import com.energy.iruvc.utils.CommonParams
-import com.example.thermal_lite.IrConst
-import com.example.thermal_lite.util.CommonUtil
-import com.example.thermal_lite.util.IRTool
-import com.infisense.usbir.utils.OpencvTools
-import com.infisense.usbir.utils.PseudocodeUtils.changePseudocodeModeByOld
-import com.infisense.usbir.view.ITsTempListener
-import com.mpdc4gsr.lib.core.BaseApplication
-import com.mpdc4gsr.lib.core.bean.event.ReportCreateEvent
-import com.mpdc4gsr.lib.core.common.ProductType.PRODUCT_NAME_TC001LITE
-import com.mpdc4gsr.lib.core.common.ProductType.PRODUCT_NAME_TS
-import com.mpdc4gsr.lib.core.common.SharedManager
-import com.mpdc4gsr.lib.core.config.ExtraKeyConfig
-import com.mpdc4gsr.lib.core.config.FileConfig
-import com.mpdc4gsr.lib.core.config.RouterConfig
-import com.mpdc4gsr.lib.core.dialog.TipDialog
-import com.mpdc4gsr.lib.core.dialog.TipWaterMarkDialog
-import com.mpdc4gsr.lib.core.ktbase.BaseBindingActivity
-import com.mpdc4gsr.lib.core.navigation.NavigationManager
-import com.mpdc4gsr.lib.core.tools.ScreenTool
-import com.mpdc4gsr.lib.core.tools.TimeTool
-import com.mpdc4gsr.lib.core.tools.ToastTools
-import com.mpdc4gsr.lib.core.tools.UnitTools
-import com.mpdc4gsr.lib.core.tools.UnitTools.showToCValue
-import com.mpdc4gsr.lib.core.tools.UnitTools.showUnitValue
-import com.mpdc4gsr.lib.core.utils.BitmapUtils
-import com.mpdc4gsr.lib.core.utils.Constants.IS_REPORT_FIRST
-import com.mpdc4gsr.lib.core.utils.ImageUtils
-import com.mpdc4gsr.lib.core.utils.ScreenUtil
-import com.mpdc4gsr.lib.ui.widget.seekbar.OnRangeChangedListener
-import com.mpdc4gsr.lib.ui.widget.seekbar.RangeSeekBar
-import com.mpdc4gsr.lib.core.comm.dialog.ColorPickDialog
-import com.mpdc4gsr.lib.core.comm.dialog.TempAlarmSetDialog
-import com.mpdc4gsr.lms.sdk.LMS.mContext
-import com.mpdc4gsr.lib.core.menu.constant.FenceType
-import com.mpdc4gsr.lib.core.menu.constant.SettingType
-import com.mpdc4gsr.module.thermal.ir.event.GalleryAddEvent
-import com.mpdc4gsr.module.thermal.ir.event.ImageGalleryEvent
-import com.mpdc4gsr.module.thermal.ir.frame.FrameStruct
-import com.mpdc4gsr.module.thermal.ir.frame.FrameTool
-import com.mpdc4gsr.module.thermal.ir.frame.ImageParams
-import com.mpdc4gsr.module.thermal.ir.report.bean.ImageTempBean
-import com.mpdc4gsr.module.thermal.ir.view.TemperatureBaseView.Mode
-import com.mpdc4gsr.module.thermal.ir.viewmodel.IRGalleryEditViewModel
-import com.mpdc4gsr.lib.core.activity.PseudoSetActivity
-import com.mpdc4gsr.lib.core.bean.CustomPseudoBean
+import com.mpdc4gsr.libunified.app.BaseApplication
+import com.mpdc4gsr.libunified.app.activity.PseudoSetActivity
+import com.mpdc4gsr.libunified.app.bean.CustomPseudoBean
+import com.mpdc4gsr.libunified.app.bean.event.ReportCreateEvent
+import com.mpdc4gsr.libunified.app.comm.dialog.ColorPickDialog
+import com.mpdc4gsr.libunified.app.comm.dialog.TempAlarmSetDialog
+import com.mpdc4gsr.libunified.app.common.ProductType.PRODUCT_NAME_TC001LITE
+import com.mpdc4gsr.libunified.app.common.ProductType.PRODUCT_NAME_TS
+import com.mpdc4gsr.libunified.app.common.SharedManager
+import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
+import com.mpdc4gsr.libunified.app.config.FileConfig
+import com.mpdc4gsr.libunified.app.config.RouterConfig
+import com.mpdc4gsr.libunified.app.dialog.TipDialog
+import com.mpdc4gsr.libunified.app.dialog.TipWaterMarkDialog
+import com.mpdc4gsr.libunified.app.ktbase.BaseBindingActivity
+import com.mpdc4gsr.libunified.app.lms.LMS.mContext
+import com.mpdc4gsr.libunified.app.menu.constant.FenceType
+import com.mpdc4gsr.libunified.app.menu.constant.SettingType
+import com.mpdc4gsr.libunified.app.navigation.NavigationManager
+import com.mpdc4gsr.libunified.app.tools.ScreenTool
+import com.mpdc4gsr.libunified.app.tools.TimeTool
+import com.mpdc4gsr.libunified.app.tools.ToastTools
+import com.mpdc4gsr.libunified.app.tools.UnitTools
+import com.mpdc4gsr.libunified.app.tools.UnitTools.showToCValue
+import com.mpdc4gsr.libunified.app.tools.UnitTools.showUnitValue
+import com.mpdc4gsr.libunified.app.utils.BitmapUtils
+import com.mpdc4gsr.libunified.app.utils.Constants.IS_REPORT_FIRST
+import com.mpdc4gsr.libunified.app.utils.ImageUtils
+import com.mpdc4gsr.libunified.app.utils.ScreenUtil
+import com.mpdc4gsr.libunified.ir.utils.OpencvTools
+import com.mpdc4gsr.libunified.ir.utils.PseudocodeUtils.changePseudocodeModeByOld
+import com.mpdc4gsr.libunified.ir.view.ITsTempListener
+import com.mpdc4gsr.libunified.ui.widget.seekbar.OnRangeChangedListener
+import com.mpdc4gsr.libunified.ui.widget.seekbar.RangeSeekBar
+import com.mpdc4gsr.module.thermalunified.event.GalleryAddEvent
+import com.mpdc4gsr.module.thermalunified.event.ImageGalleryEvent
+import com.mpdc4gsr.module.thermalunified.frame.FrameStruct
+import com.mpdc4gsr.module.thermalunified.frame.FrameTool
+import com.mpdc4gsr.module.thermalunified.frame.ImageParams
+import com.mpdc4gsr.module.thermalunified.lite.IrConst
+import com.mpdc4gsr.module.thermalunified.lite.util.CommonUtil
+import com.mpdc4gsr.module.thermalunified.lite.util.IRTool
+import com.mpdc4gsr.module.thermalunified.report.bean.ImageTempBean
+import com.mpdc4gsr.module.thermalunified.view.TemperatureBaseView.Mode
+import com.mpdc4gsr.module.thermalunified.viewmodel.IRGalleryEditViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -71,8 +71,8 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.Locale
-import com.example.thermal_lite.R as ThermalLiteR
-import com.mpdc4gsr.module.thermal.ir.R as ThermalIrR
+import com.mpdc4gsr.module.thermalunified.R as ThermalIrR
+import com.mpdc4gsr.module.thermalunified.R as ThermalLiteR
 
 class IRGalleryEditActivity : BaseBindingActivity<ActivityIrGalleryEditBinding>(),
     View.OnClickListener, ITsTempListener {
@@ -240,7 +240,7 @@ class IRGalleryEditActivity : BaseBindingActivity<ActivityIrGalleryEditBinding>(
             temperatureSeekbar.setOnRangeChangedListener(
                 object : OnRangeChangedListener {
                     override fun onRangeChanged(
-                        view: RangeSeekBar?,
+                        view: RangeSeekBar,
                         leftValue: Float,
                         rightValue: Float,
                         isFromUser: Boolean,
@@ -270,14 +270,14 @@ class IRGalleryEditActivity : BaseBindingActivity<ActivityIrGalleryEditBinding>(
                     }
 
                     override fun onStartTrackingTouch(
-                        view: RangeSeekBar?,
+                        view: RangeSeekBar,
                         isLeft: Boolean,
                     ) {
 
                     }
 
                     override fun onStopTrackingTouch(
-                        view: RangeSeekBar?,
+                        view: RangeSeekBar,
                         isLeft: Boolean,
                     ) {
 
@@ -777,7 +777,7 @@ class IRGalleryEditActivity : BaseBindingActivity<ActivityIrGalleryEditBinding>(
 
             var name: String
             irBitmap.let {
-                name = ImageUtils.save(bitmap = it, isTC007)
+                name = ImageUtils.save(bitmap = it)
             }
             ImageUtils.saveFrame(bs = mFrame, capital = getCapital(), name = name)
             ToastTools.showShort(R.string.tip_photo_saved)
@@ -834,7 +834,7 @@ class IRGalleryEditActivity : BaseBindingActivity<ActivityIrGalleryEditBinding>(
         try {
             tmp = tempCorrect(temp!!)
         } catch (e: Exception) {
-            XLog.i("温度校正失败: ${e.message}")
+            XLog.i("[ph][ph][ph][ph][ph][ph]: ${e.message}")
         }
         return tmp!!
     }

@@ -16,9 +16,12 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.json.JSONObject
-import java.io.DataInputStream
+import java.io.BufferedReader
+import java.io.BufferedWriter
 import java.io.DataOutputStream
+import java.io.InputStreamReader
+import java.io.OutputStreamWriter
+import java.net.InetSocketAddress
 import java.net.ServerSocket
 import java.net.Socket
 import java.net.SocketException
@@ -26,30 +29,34 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 class NetworkServer(
     private val context: Context,
-    private val port: Int = 8080,
+    private val port: Int = Protocol.DEFAULT_SERVER_PORT,
 ) {
     companion object {
         private const val TAG = "NetworkServer"
-        private const val MAX_MESSAGE_SIZE = 10 * 1024 * 1024
     }
 
     private var serverSocket: ServerSocket? = null
     private var clientSocket: Socket? = null
-    private var outputStream: DataOutputStream? = null
-    private var inputStream: DataInputStream? = null
+    private var outputWriter: BufferedWriter? = null
+    private var inputReader: BufferedReader? = null
+    private var binaryOutputStream: DataOutputStream? = null
 
     private val isRunning = AtomicBoolean(false)
     private val isClientConnected = AtomicBoolean(false)
     private val serverScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
-    private val _messageFlow = MutableSharedFlow<JSONObject>()
-    val messageFlow: SharedFlow<JSONObject> = _messageFlow.asSharedFlow()
+    private val _messageFlow = MutableSharedFlow<Protocol.ProtocolMessage>()
+    val messageFlow: SharedFlow<Protocol.ProtocolMessage> = _messageFlow.asSharedFlow()
 
     private val _connectionStateFlow = MutableStateFlow(false)
     val connectionStateFlow: StateFlow<Boolean> = _connectionStateFlow.asStateFlow()
 
     private var serverJob: Job? = null
     private var messageListenerJob: Job? = null
+
+    // Device information for HELLO message
+    private val deviceId = "android_${android.os.Build.MODEL.replace(" ", "_")}"
+    private val supportedSensors = listOf("RGB", "THERMAL", "GSR")
 
     suspend fun start(): Boolean {
         return withContext(Dispatchers.IO) {
@@ -61,7 +68,10 @@ class NetworkServer(
 
                 Log.i(TAG, "Starting TCP server on port $port")
 
-                serverSocket = ServerSocket(port)
+                serverSocket = ServerSocket().apply {
+                    reuseAddress = true
+                    bind(InetSocketAddress(port))
+                }
                 isRunning.set(true)
 
                 serverJob =
@@ -71,6 +81,10 @@ class NetworkServer(
 
                 Log.i(TAG, "TCP server started successfully on port $port")
                 return@withContext true
+            } catch (e: java.net.BindException) {
+                Log.e(TAG, "Failed to start TCP server - port $port already in use", e)
+                isRunning.set(false)
+                return@withContext false
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to start TCP server", e)
                 isRunning.set(false)
@@ -91,14 +105,16 @@ class NetworkServer(
                 serverJob?.cancel()
                 messageListenerJob?.cancel()
 
-                outputStream?.close()
-                inputStream?.close()
+                outputWriter?.close()
+                inputReader?.close()
+                binaryOutputStream?.close()
                 clientSocket?.close()
 
                 serverSocket?.close()
 
-                outputStream = null
-                inputStream = null
+                outputWriter = null
+                inputReader = null
+                binaryOutputStream = null
                 clientSocket = null
                 serverSocket = null
 
@@ -109,25 +125,48 @@ class NetworkServer(
         }
     }
 
-    suspend fun sendMessage(message: JSONObject): Boolean {
+    suspend fun sendMessage(message: String): Boolean {
         return withContext(Dispatchers.IO) {
             try {
-                if (!isClientConnected.get() || outputStream == null) {
+                if (!isClientConnected.get() || outputWriter == null) {
                     Log.w(TAG, "No client connected, cannot send message")
                     return@withContext false
                 }
 
-                val messageData = message.toString().toByteArray(Charsets.UTF_8)
-
-                outputStream!!.writeInt(messageData.size)
-                outputStream!!.write(messageData)
-                outputStream!!.flush()
+                outputWriter!!.write(message + "\n")
+                outputWriter!!.flush()
 
                 Log.d(TAG, "Sent message to PC: $message")
                 return@withContext true
             } catch (e: Exception) {
                 Log.e(TAG, "Error sending message to PC", e)
+                disconnectClient()
+                return@withContext false
+            }
+        }
+    }
 
+    suspend fun sendBinaryData(header: String, data: ByteArray): Boolean {
+        return withContext(Dispatchers.IO) {
+            try {
+                if (!isClientConnected.get() || outputWriter == null || binaryOutputStream == null) {
+                    Log.w(TAG, "No client connected, cannot send binary data")
+                    return@withContext false
+                }
+
+                // Send text header first
+                outputWriter!!.write(header + "\n")
+                outputWriter!!.flush()
+
+                // Send binary data with length prefix
+                binaryOutputStream!!.writeInt(data.size)
+                binaryOutputStream!!.write(data)
+                binaryOutputStream!!.flush()
+
+                Log.d(TAG, "Sent binary data to PC: ${data.size} bytes")
+                return@withContext true
+            } catch (e: Exception) {
+                Log.e(TAG, "Error sending binary data to PC", e)
                 disconnectClient()
                 return@withContext false
             }
@@ -135,7 +174,7 @@ class NetworkServer(
     }
 
     private suspend fun acceptConnections() {
-        while (isRunning.get() && !serverJob?.isCancelled!!) {
+        while (isRunning.get() && serverJob?.isCancelled != true) {
             try {
                 Log.i(TAG, "Waiting for PC Controller connection...")
 
@@ -146,11 +185,17 @@ class NetworkServer(
                     disconnectClient()
 
                     clientSocket = socket
-                    outputStream = DataOutputStream(socket.getOutputStream())
-                    inputStream = DataInputStream(socket.getInputStream())
+                    outputWriter =
+                        BufferedWriter(OutputStreamWriter(socket.getOutputStream(), Charsets.UTF_8))
+                    inputReader =
+                        BufferedReader(InputStreamReader(socket.getInputStream(), Charsets.UTF_8))
+                    binaryOutputStream = DataOutputStream(socket.getOutputStream())
 
                     isClientConnected.set(true)
                     _connectionStateFlow.value = true
+
+                    // Send HELLO message immediately upon connection
+                    sendMessage(Protocol.createHelloMessage(deviceId, supportedSensors))
 
                     messageListenerJob =
                         serverScope.launch {
@@ -172,13 +217,17 @@ class NetworkServer(
     }
 
     private suspend fun listenForMessages() {
-        while (isClientConnected.get() && isRunning.get() && !messageListenerJob?.isCancelled!!) {
+        while (isClientConnected.get() && isRunning.get() && messageListenerJob?.isCancelled != true) {
             try {
-                val message = receiveMessage()
-                if (message != null) {
-                    _messageFlow.emit(message)
+                val messageText = receiveMessage()
+                if (messageText != null) {
+                    val protocolMessage = Protocol.parseMessage(messageText)
+                    if (protocolMessage != null) {
+                        _messageFlow.emit(protocolMessage)
+                    } else {
+                        Log.w(TAG, "Failed to parse protocol message: $messageText")
+                    }
                 } else {
-
                     break
                 }
             } catch (e: SocketException) {
@@ -193,26 +242,17 @@ class NetworkServer(
         disconnectClient()
     }
 
-    private suspend fun receiveMessage(): JSONObject? {
+    private suspend fun receiveMessage(): String? {
         return withContext(Dispatchers.IO) {
             try {
-                val input = inputStream ?: return@withContext null
+                val reader = inputReader ?: return@withContext null
+                val line = reader.readLine()
 
-                val messageLength = input.readInt()
-
-                if (messageLength <= 0 || messageLength > MAX_MESSAGE_SIZE) {
-                    Log.e(TAG, "Invalid message length: $messageLength")
-                    return@withContext null
+                if (line != null) {
+                    Log.d(TAG, "Received message from PC: $line")
                 }
 
-                val messageData = ByteArray(messageLength)
-                input.readFully(messageData)
-
-                val messageJson = String(messageData, Charsets.UTF_8)
-                val message = JSONObject(messageJson)
-
-                Log.d(TAG, "Received message from PC: $messageJson")
-                return@withContext message
+                return@withContext line
             } catch (e: Exception) {
                 Log.e(TAG, "Error receiving message", e)
                 return@withContext null
@@ -230,15 +270,17 @@ class NetworkServer(
             messageListenerJob?.cancel()
 
             try {
-                outputStream?.close()
-                inputStream?.close()
+                outputWriter?.close()
+                inputReader?.close()
+                binaryOutputStream?.close()
                 clientSocket?.close()
             } catch (e: Exception) {
                 Log.w(TAG, "Error closing client connection", e)
             }
 
-            outputStream = null
-            inputStream = null
+            outputWriter = null
+            inputReader = null
+            binaryOutputStream = null
             clientSocket = null
         }
     }

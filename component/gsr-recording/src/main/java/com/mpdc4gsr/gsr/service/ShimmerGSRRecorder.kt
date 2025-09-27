@@ -1,5 +1,6 @@
 package com.mpdc4gsr.gsr.service
 
+
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.content.Context
@@ -9,13 +10,11 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import androidx.core.app.ActivityCompat
-import com.opencsv.CSVWriter
-
-
 import com.mpdc4gsr.gsr.model.GSRSample
 import com.mpdc4gsr.gsr.model.SessionInfo
 import com.mpdc4gsr.gsr.model.SyncMark
 import com.mpdc4gsr.gsr.util.TimeUtil
+import com.opencsv.CSVWriter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
@@ -91,7 +90,7 @@ class ShimmerGSRRecorder(
 
     private val mainHandler = Handler(Looper.getMainLooper())
     private val listeners = mutableListOf<GSRRecordingListener>()
-    private val shimmerAPIBridge = ShimmerAPIBridge.getInstance()
+    private val shimmerAPIBridge = ShimmerApiBridge.getInstance()
 
     interface GSRRecordingListener {
         fun onRecordingStarted(session: SessionInfo)

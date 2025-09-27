@@ -1,13 +1,12 @@
-import time
-from collections import deque
-from typing import Any, Dict, List, Optional
-
 import numpy as np
 import pyqtgraph as pg
-from loguru import logger
+import time
 from PyQt6.QtCore import QTimer, pyqtSignal
 from PyQt6.QtGui import QPixmap
 from PyQt6.QtWidgets import QGridLayout, QLabel, QVBoxLayout, QWidget
+from collections import deque
+from loguru import logger
+from typing import Any, Dict, List, Optional
 
 
 class GSRPlotWidget(pg.PlotWidget):

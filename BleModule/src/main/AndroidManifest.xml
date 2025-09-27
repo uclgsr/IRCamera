@@ -1,22 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Bluetooth LE hardware feature -->
     <uses-feature
         android:name="android.hardware.bluetooth_le"
-        android:required="true" />
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.bluetooth"
+        android:required="false" />
 
-    <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-    <uses-permission
+    <!-- Legacy Bluetooth permissions for API < 31 -->
+    <uses-permission 
+        android:name="android.permission.BLUETOOTH"
+        android:maxSdkVersion="30" />
+    <uses-permission 
+        android:name="android.permission.BLUETOOTH_ADMIN"
+        android:maxSdkVersion="30" />
+    <uses-permission 
         android:name="android.permission.ACCESS_COARSE_LOCATION"
         android:maxSdkVersion="30" />
-    <uses-permission
+    <uses-permission 
         android:name="android.permission.ACCESS_FINE_LOCATION"
         android:maxSdkVersion="30" />
-    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
-    <uses-permission
+    
+    <!-- New Bluetooth permissions for API >= 31 -->
+    <uses-permission 
+        android:name="android.permission.BLUETOOTH_CONNECT"
+        tools:targetApi="31" />
+    <uses-permission 
         android:name="android.permission.BLUETOOTH_SCAN"
-        android:usesPermissionFlags="neverForLocation" />
+        android:usesPermissionFlags="neverForLocation"
+        tools:targetApi="31" />
 
-    <application android:largeHeap="true"></application>
+    <application
+        android:hardwareAccelerated="false"
+        android:largeHeap="true"></application>
 </manifest>

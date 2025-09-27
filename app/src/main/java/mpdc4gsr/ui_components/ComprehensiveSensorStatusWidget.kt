@@ -4,17 +4,16 @@ import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
 import android.view.Gravity
-import android.view.LayoutInflater
-import android.widget.*
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
-import com.csl.irCamera.R
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.*
 
 /**
  * Enhanced Comprehensive Sensor Status Dashboard
@@ -360,12 +359,15 @@ class ComprehensiveSensorStatusWidget @JvmOverloads constructor(
 
         fun updateMultiDeviceInfo(connectedCount: Int, streamingCount: Int, maxDevices: Int) {
             if (sensorType == SensorType.GSR) {
-                detailsText.text = "Multi-device: $connectedCount/$maxDevices connected, $streamingCount streaming"
+                detailsText.text =
+                    "Multi-device: $connectedCount/$maxDevices connected, $streamingCount streaming"
                 detailsText.visibility = VISIBLE
             }
         }
 
-        fun isConnected(): Boolean = currentStatus in listOf(SensorStatus.CONNECTED, SensorStatus.STREAMING)
+        fun isConnected(): Boolean =
+            currentStatus in listOf(SensorStatus.CONNECTED, SensorStatus.STREAMING)
+
         fun hasError(): Boolean = hasErrorState
     }
 }

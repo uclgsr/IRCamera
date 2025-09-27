@@ -33,11 +33,21 @@
             android:textSize="16sp"
             android:textStyle="bold" />
 
-        <TextureView
-            android:id="@+id/cameraPreview"
+        <androidx.camera.view.PreviewView
+            android:id="@+id/previewView"
             android:layout_width="match_parent"
-            android:layout_height="400dp"
+            android:layout_height="200dp"
             android:background="@android:color/darker_gray" />
+
+        <TextView
+            android:id="@+id/cameraStatusText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:text="Camera: Initializing..."
+            android:textColor="@android:color/black"
+            android:textSize="14sp" />
 
     </LinearLayout>
 

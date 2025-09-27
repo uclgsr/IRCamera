@@ -2,9 +2,7 @@ package com.mpdc4gsr.gsr.network
 
 import android.content.Context
 import android.net.ConnectivityManager
-import android.net.Network
 import android.net.NetworkCapabilities
-import android.net.wifi.WifiManager
 import android.util.Log
 import com.mpdc4gsr.gsr.model.SessionInfo
 import kotlinx.coroutines.CoroutineScope
@@ -723,6 +721,9 @@ class NetworkClient(private val context: Context) {
 
 
                 val responseLength = input.readInt()
+                if (responseLength > 1024 * 1024) {
+                    throw IOException("Response too large: $responseLength bytes")
+                }
                 val responseData = ByteArray(responseLength)
                 input.readFully(responseData)
 

@@ -3,7 +3,8 @@ package mpdc4gsr.data
 import android.util.Log
 import java.io.File
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 /**
  * File Schema Manager
@@ -283,7 +284,11 @@ class FileSchemaManager {
     }
 
 
-    fun validateAndStandardizeFileName(filePath: String, sensorType: String, sessionId: String): StandardFileName? {
+    fun validateAndStandardizeFileName(
+        filePath: String,
+        sensorType: String,
+        sessionId: String
+    ): StandardFileName? {
         val file = File(filePath)
         if (!file.exists()) {
             Log.w(TAG, "File does not exist: $filePath")
@@ -405,11 +410,17 @@ class FileSchemaManager {
         val warnings = mutableListOf<String>()
 
         if (!sessionDir.exists()) {
-            return ValidationResult(false, listOf("Session directory does not exist: ${sessionDir.absolutePath}"))
+            return ValidationResult(
+                false,
+                listOf("Session directory does not exist: ${sessionDir.absolutePath}")
+            )
         }
 
         if (!sessionDir.isDirectory) {
-            return ValidationResult(false, listOf("Path is not a directory: ${sessionDir.absolutePath}"))
+            return ValidationResult(
+                false,
+                listOf("Path is not a directory: ${sessionDir.absolutePath}")
+            )
         }
 
 

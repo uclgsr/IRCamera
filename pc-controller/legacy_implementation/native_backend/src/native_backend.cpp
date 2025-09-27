@@ -117,7 +117,8 @@ sizeof(uint8_t)},
 frame.data.
 
 data(),
-        py::cast(frame)  
+        py::cast(frame)
+
 );
 }, "Get frame data as NumPy array (zero-copy)")
 .def("__repr__", [](

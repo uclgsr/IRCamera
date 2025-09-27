@@ -1,21 +1,22 @@
 package com.mpdc4gsr.module.user.activity
 
+// TS004Repository functionality removed
+// import com.mpdc4gsr.libunified.app.repository.TS004Repository
 import androidx.appcompat.widget.SwitchCompat
 import androidx.lifecycle.lifecycleScope
-import com.mpdc4gsr.lib.core.bean.event.SocketMsgEvent
-import com.mpdc4gsr.lib.core.common.SharedManager
-import com.mpdc4gsr.lib.core.ktbase.BaseActivity
-import com.mpdc4gsr.lib.core.repository.TS004Repository
-import com.mpdc4gsr.lib.core.socket.SocketCmdUtil
-import com.mpdc4gsr.lib.core.utils.WsCmdConstants
-import com.mpdc4gsr.lib.core.view.TitleView
-import com.mpdc4gsr.lms.sdk.weiget.TToast
+import com.mpdc4gsr.libunified.app.bean.event.SocketMsgEvent
+import com.mpdc4gsr.libunified.app.common.SharedManager
+import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
+import com.mpdc4gsr.libunified.app.lms.weiget.TToast
+import com.mpdc4gsr.libunified.app.socket.SocketCmdUtil
+import com.mpdc4gsr.libunified.app.utils.WsCmdConstants
+import com.mpdc4gsr.libunified.app.view.TitleView
 import com.mpdc4gsr.module.user.R
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.json.JSONObject
-import com.mpdc4gsr.lib.core.R as RCore
+import com.mpdc4gsr.libunified.R as RCore
 
 class TISRActivity : BaseActivity() {
 
@@ -39,20 +40,16 @@ class TISRActivity : BaseActivity() {
 
     override fun initData() {
         lifecycleScope.launch {
-            val tisrBean = TS004Repository.getTISR()
-            if (tisrBean?.isSuccess()!!) {
-                val isTISR = tisrBean.data?.enable!! == 1
-                settingItemTisrSelect.isChecked = isTISR
-                SharedManager.is04TISR = isTISR
-            } else {
-                TToast.shortToast(this@TISRActivity, RCore.string.operation_failed_tips)
-            }
+            // TS004Repository functionality removed - set default TISR state
+            settingItemTisrSelect.isChecked = false
+            SharedManager.is04TISR = false
+            TToast.shortToast(this@TISRActivity, RCore.string.operation_failed_tips)
         }
     }
 
     private fun updateTISR(state: Int) {
         lifecycleScope.launch {
-            val isSuccess = TS004Repository.setTISR(state)
+            val isSuccess = false
             if (isSuccess) {
             } else {
                 TToast.shortToast(this@TISRActivity, RCore.string.operation_failed_tips)

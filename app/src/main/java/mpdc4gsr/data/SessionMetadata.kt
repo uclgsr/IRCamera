@@ -1,12 +1,14 @@
 package mpdc4gsr.data
 
 import android.os.SystemClock
-import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import mpdc4gsr.sensors.RecordingStats
+import mpdc4gsr.sensors.TimestampManager
 import java.io.File
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
 
 data class SessionMetadata(
@@ -308,8 +310,12 @@ data class SessionMetadata(
 
 
     fun monotonicToWallClock(monotonicNs: Long): Long {
-        val offsetFromStartNs = monotonicNs - sessionStartMonotonicNs
-        return sessionStartTimestampMs + (offsetFromStartNs / 1_000_000L)
+        return try {
+            TimestampManager.convertMonotonicToWallClock(monotonicNs)
+        } catch (e: IllegalStateException) {
+            val offsetFromStartNs = monotonicNs - sessionStartMonotonicNs
+            sessionStartTimestampMs + (offsetFromStartNs / 1_000_000L)
+        }
     }
 
 
@@ -343,7 +349,10 @@ data class SessionMetadata(
 
             metadataFile.writeText(jsonContent)
 
-            android.util.Log.i(TAG, "Comprehensive session metadata exported to: ${metadataFile.absolutePath}")
+            android.util.Log.i(
+                TAG,
+                "Comprehensive session metadata exported to: ${metadataFile.absolutePath}"
+            )
             true
 
         } catch (e: Exception) {
@@ -434,8 +443,10 @@ data class SessionMetadata(
                 "file_schema" to mapOf(
                     "thermal_data_csv" to mpdc4gsr.data.FileSchemaManager()
                         .generateCsvHeader("thermal", includeUnits = false),
-                    "rgb_data_csv" to mpdc4gsr.data.FileSchemaManager().generateCsvHeader("rgb", includeUnits = false),
-                    "gsr_data_csv" to mpdc4gsr.data.FileSchemaManager().generateCsvHeader("gsr", includeUnits = false),
+                    "rgb_data_csv" to mpdc4gsr.data.FileSchemaManager()
+                        .generateCsvHeader("rgb", includeUnits = false),
+                    "gsr_data_csv" to mpdc4gsr.data.FileSchemaManager()
+                        .generateCsvHeader("gsr", includeUnits = false),
                     "audio_data_csv" to mpdc4gsr.data.FileSchemaManager()
                         .generateCsvHeader("audio", includeUnits = false)
                 )
@@ -545,9 +556,23 @@ data class SessionMetadata(
             appendLine()
 
             appendLine("Quality Metrics:")
-            appendLine("  Overall Score: ${String.format("%.2f", qualityMetrics.overallQualityScore)}")
+            appendLine(
+                "  Overall Score: ${
+                    String.format(
+                        "%.2f",
+                        qualityMetrics.overallQualityScore
+                    )
+                }"
+            )
             appendLine("  Sync Accuracy: ${qualityMetrics.syncAccuracyMs}ms")
-            appendLine("  Data Completeness: ${String.format("%.1f%%", qualityMetrics.dataCompletenessPercent)}")
+            appendLine(
+                "  Data Completeness: ${
+                    String.format(
+                        "%.1f%%",
+                        qualityMetrics.dataCompletenessPercent
+                    )
+                }"
+            )
             appendLine("  Errors: ${qualityMetrics.errorCount}")
             appendLine("  Warnings: ${qualityMetrics.warningCount}")
             appendLine()

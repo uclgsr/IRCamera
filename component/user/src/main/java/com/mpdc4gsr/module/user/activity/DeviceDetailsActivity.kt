@@ -6,16 +6,15 @@ import android.view.View
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.lifecycleScope
-import com.mpdc4gsr.lib.core.config.ExtraKeyConfig
-import com.mpdc4gsr.lib.core.ktbase.BaseActivity
-import com.mpdc4gsr.lib.core.repository.ProductBean
-import com.mpdc4gsr.lib.core.repository.TC007Repository
-import com.mpdc4gsr.lib.core.repository.TS004Repository
-import com.mpdc4gsr.lms.sdk.utils.TLog
-import com.mpdc4gsr.lms.sdk.weiget.TToast
+import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
+import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
+
+// TS004Repository functionality removed
+// import com.mpdc4gsr.libunified.app.repository.TS004Repository
+import com.mpdc4gsr.libunified.app.lms.weiget.TToast
 import com.mpdc4gsr.module.user.R
 import kotlinx.coroutines.launch
-import com.mpdc4gsr.lib.core.R as RCore
+import com.mpdc4gsr.libunified.R as RCore
 
 
 class DeviceDetailsActivity : BaseActivity(), View.OnClickListener {
@@ -50,28 +49,17 @@ class DeviceDetailsActivity : BaseActivity(), View.OnClickListener {
     private fun getDeviceDetails() {
         lifecycleScope.launch {
             if (isTC007) {
-                val productBean: ProductBean? = TC007Repository.getProductInfo()
-                if (productBean == null) {
-                    TToast.shortToast(
-                        this@DeviceDetailsActivity,
-                        RCore.string.operation_failed_tips
-                    )
-                } else {
-                    tvSnValue.text = productBean.ProductSN
-                    tvDeviceModelValue.text = productBean.ProductName
-                }
+                // TC007Repository functionality removed
+                TToast.shortToast(
+                    this@DeviceDetailsActivity,
+                    RCore.string.operation_failed_tips
+                )
             } else {
-                val deviceDetailsBean = TS004Repository.getDeviceInfo()
-                if (deviceDetailsBean?.isSuccess()!!) {
-                    TLog.d("ts004-->response", "${deviceDetailsBean.data}")
-                    tvSnValue.text = deviceDetailsBean.data!!.sn
-                    tvDeviceModelValue.text = deviceDetailsBean.data!!.model
-                } else {
-                    TToast.shortToast(
-                        this@DeviceDetailsActivity,
-                        RCore.string.operation_failed_tips
-                    )
-                }
+                // TS004Repository functionality removed
+                TToast.shortToast(
+                    this@DeviceDetailsActivity,
+                    RCore.string.operation_failed_tips
+                )
             }
         }
     }

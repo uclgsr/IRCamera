@@ -435,7 +435,10 @@ class NetworkErrorRecoveryManager(
 
 
                     if (pcControllerLastSeen > 0 && (currentTime - pcControllerLastSeen) > pcControllerTimeoutMs) {
-                        Log.w(TAG, "PC controller connection timeout detected - triggering NSD recovery")
+                        Log.w(
+                            TAG,
+                            "PC controller connection timeout detected - triggering NSD recovery"
+                        )
                         handlePCControllerDisconnection()
                     }
 

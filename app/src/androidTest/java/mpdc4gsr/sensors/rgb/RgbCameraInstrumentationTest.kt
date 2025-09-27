@@ -2,14 +2,15 @@ package mpdc4gsr.sensors.rgb
 
 import android.content.Context
 import android.util.Log
-import androidx.camera.testing.CameraUtil
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.rule.GrantPermissionRule
-import mpdc4gsr.sensors.RgbCameraRecorder
-import kotlinx.coroutines.runBlocking
-import org.junit.*
+import org.junit.After
+import org.junit.Assert
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
 import org.junit.runner.RunWith
 import java.io.File
 
@@ -174,7 +175,10 @@ class RgbCameraInstrumentationTest {
 
         val capabilities = analyzeDeviceCapabilities()
 
-        Assert.assertTrue("Device should support basic recording", capabilities.supportsBasicRecording)
+        Assert.assertTrue(
+            "Device should support basic recording",
+            capabilities.supportsBasicRecording
+        )
 
         if (capabilities.supports4K) {
             Log.i(TAG, "Device supports 4K - running enhanced tests")

@@ -2,10 +2,10 @@ package mpdc4gsr.security
 
 import android.content.Context
 import android.util.Log
-import mpdc4gsr.core.StructuredLogger
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import mpdc4gsr.core.StructuredLogger
 import java.io.File
 import java.security.KeyFactory
 import java.security.KeyPair

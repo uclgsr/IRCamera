@@ -1,4 +1,4 @@
-package mpdc4gsr.util
+package mpdc4gsr.utils
 
 import android.content.Context
 import android.os.Build
@@ -6,9 +6,10 @@ import android.os.StatFs
 import android.util.Log
 import org.json.JSONObject
 import java.io.File
-import java.io.FileWriter
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
+import java.util.UUID
 
 
 class SessionDirectoryManager(private val context: Context) {

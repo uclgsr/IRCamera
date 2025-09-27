@@ -12,34 +12,46 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.FragmentMainBinding
-import com.mpdc4gsr.lib.core.bean.event.SocketMsgEvent
-import com.mpdc4gsr.lib.core.common.SharedManager
-import com.mpdc4gsr.lib.core.config.ExtraKeyConfig
-import com.mpdc4gsr.lib.core.config.RouterConfig
-import com.mpdc4gsr.lib.core.dialog.TipDialog
-import com.mpdc4gsr.lib.core.ktbase.BaseBindingFragment
-import com.mpdc4gsr.lib.core.repository.BatteryInfo
-import com.mpdc4gsr.lib.core.repository.TC007Repository
-import com.mpdc4gsr.lib.core.socket.SocketCmdUtil
-import com.mpdc4gsr.lib.core.socket.WebSocketProxy
-import com.mpdc4gsr.lib.core.tools.AppLanguageUtils
-import com.mpdc4gsr.lib.core.tools.ConstantLanguages
-import com.mpdc4gsr.lib.core.tools.DeviceTools
-import com.mpdc4gsr.lib.core.utils.NetWorkUtils
-import com.mpdc4gsr.lib.core.utils.WsCmdConstants
-import com.mpdc4gsr.libcom.navigation.NavigationManager
-import com.mpdc4gsr.lms.sdk.weiget.TToast
+import com.mpdc4gsr.libunified.app.bean.event.SocketMsgEvent
+import com.mpdc4gsr.libunified.app.comm.navigation.NavigationManager
+import com.mpdc4gsr.libunified.app.common.SharedManager
+import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
+import com.mpdc4gsr.libunified.app.config.RouterConfig
+import com.mpdc4gsr.libunified.app.dialog.TipDialog
+import com.mpdc4gsr.libunified.app.ktbase.BaseBindingFragment
+import com.mpdc4gsr.libunified.app.lms.weiget.TToast
+import com.mpdc4gsr.libunified.app.socket.SocketCmdUtil
+import com.mpdc4gsr.libunified.app.socket.WebSocketProxy
+import com.mpdc4gsr.libunified.app.tools.AppLanguageUtils
+import com.mpdc4gsr.libunified.app.tools.ConstantLanguages
+import com.mpdc4gsr.libunified.app.tools.DeviceTools
+import com.mpdc4gsr.libunified.app.utils.NetWorkUtils
+import com.mpdc4gsr.libunified.app.utils.WsCmdConstants
+import com.mpdc4gsr.libunified.ui.widget.BatteryView
 import mpdc4gsr.activities.DeviceTypeActivity
-import mpdc4gsr.ui_components.DelPopup
-import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.json.JSONObject
+
+
+// Local data class to replace removed TC007 BatteryInfo
+data class BatteryInfo(
+    val status: String?,
+    val remaining: String?
+) {
+    fun isCharging(): Boolean = status == "Charging"
+
+    fun getBattery(): Int? =
+        try {
+            remaining?.toInt()
+        } catch (e: NumberFormatException) {
+            null
+        }
+}
 
 @SuppressLint("NotifyDataSetChanged")
 class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickListener {
@@ -110,8 +122,12 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
                     .setPositiveListener(R.string.report_delete) {
                         when (type) {
                             ConnectType.LINE -> SharedManager.hasTcLine = false
-                            ConnectType.TS004 -> SharedManager.hasTS004 = false
-                            ConnectType.TC007 -> SharedManager.hasTC007 = false
+                            // TS004/TC007 functionality removed
+                            ConnectType.TS004 -> { /* TS004 removed */
+                            }
+
+                            ConnectType.TC007 -> { /* TC007 removed */
+                            }
                         }
                         refresh()
                         TToast.shortToast(requireContext(), R.string.test_results_delete_success)
@@ -125,14 +141,6 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = adapter
 
-        if (WebSocketProxy.getInstance().isTC007Connect()) {
-            lifecycleScope.launch {
-                val batteryInfo: BatteryInfo? = TC007Repository.getBatteryInfo()
-                if (batteryInfo != null) {
-                    adapter.tc007Battery = batteryInfo
-                }
-            }
-        }
         viewLifecycleOwner.lifecycle.addObserver(
             object : DefaultLifecycleObserver {
                 override fun onResume(owner: LifecycleOwner) {
@@ -153,12 +161,12 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
 
     private fun refresh() {
         val hasAnyDevice =
-            SharedManager.hasTcLine || SharedManager.hasTS004 || SharedManager.hasTC007
+            SharedManager.hasTcLine // TS004/TC007 removed
         binding.clHasDevice.isVisible = hasAnyDevice
         binding.clNoDevice.isVisible = !hasAnyDevice
         adapter.hasConnectLine = DeviceTools.isConnect(isAutoRequest = false)
-        adapter.hasConnectTS004 = WebSocketProxy.getInstance().isTS004Connect()
-        adapter.hasConnectTC007 = WebSocketProxy.getInstance().isTC007Connect()
+        adapter.hasConnectTS004 = false // TS004 functionality removed 
+        adapter.hasConnectTC007 = false // TC007 functionality removed
         adapter.notifyDataSetChanged()
     }
 
@@ -173,19 +181,20 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
     }
 
     override fun onSocketConnected(isTS004: Boolean) {
-        if (isTS004) {
-            SharedManager.hasTS004 = true
-            adapter.hasConnectTS004 = true
-        } else {
-            SharedManager.hasTC007 = true
-            adapter.hasConnectTC007 = true
-            lifecycleScope.launch {
-                val batteryInfo: BatteryInfo? = TC007Repository.getBatteryInfo()
-                if (batteryInfo != null) {
-                    adapter.tc007Battery = batteryInfo
-                }
-            }
-        }
+        // TS004/TC007 functionality removed
+        // if (isTS004) {
+        //     SharedManager.hasTS004 = true
+        //     adapter.hasConnectTS004 = true
+        // } else {
+        //     SharedManager.hasTC007 = true
+        //     adapter.hasConnectTC007 = true
+        //     lifecycleScope.launch {
+        //         val batteryInfo: BatteryInfo? = TC007Repository.getBatteryInfo()
+        //         if (batteryInfo != null) {
+        //             adapter.tc007Battery = batteryInfo
+        //         }
+        //     }
+        // }
     }
 
     override fun onSocketDisConnected(isTS004: Boolean) {
@@ -289,12 +298,13 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
             if (SharedManager.hasTcLine) {
                 result++
             }
-            if (SharedManager.hasTS004) {
-                result++
-            }
-            if (SharedManager.hasTC007) {
-                result++
-            }
+            // TS004/TC007 functionality removed
+            // if (SharedManager.hasTS004) {
+            //     result++
+            // }
+            // if (SharedManager.hasTC007) {
+            //     result++
+            // }
             return result
         }
 
@@ -306,7 +316,7 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
             private val tvDeviceState: TextView = rootView.findViewById(R.id.tv_device_state)
             private val tvBattery: TextView = rootView.findViewById(R.id.tv_battery)
             private val ivImage: ImageView = rootView.findViewById(R.id.iv_image)
-            private val batteryView: com.mpdc4gsr.lib.ui.widget.BatteryView =
+            private val batteryView: BatteryView =
                 rootView.findViewById(R.id.battery_view)
             private val viewDeviceState: View = rootView.findViewById(R.id.view_device_state)
 
@@ -415,20 +425,20 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
                     0 ->
                         if (SharedManager.hasTcLine) {
                             ConnectType.LINE
-                        } else if (SharedManager.hasTS004) {
-                            ConnectType.TS004
                         } else {
-                            ConnectType.TC007
+                            // TS004/TC007 functionality removed - default to LINE
+                            ConnectType.LINE
                         }
 
                     1 ->
                         if (SharedManager.hasTcLine) {
-                            if (SharedManager.hasTS004) ConnectType.TS004 else ConnectType.TC007
+                            // TS004/TC007 functionality removed - default to LINE
+                            ConnectType.LINE
                         } else {
-                            ConnectType.TC007
+                            ConnectType.LINE
                         }
 
-                    else -> ConnectType.TC007
+                    else -> ConnectType.LINE // Default to LINE instead of TC007
                 }
         }
     }
@@ -503,12 +513,12 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
         TipDialog.Builder(requireContext())
             .setTitleMessage("Dual-Mode Camera Integration")
             .setMessage(
-                "Enhanced RGBCameraRecorder with:\n\n" +
+                "Enhanced RgbCameraRecorder with:\n\n" +
                         "• RAW 50MP capture at ~15fps\n" +
                         "• 4K video at 30/60fps\n" +
                         "• Fast session switching (~200ms)\n" +
                         "• Samsung S22 optimizations\n" +
-                        "• CameraModeSelector UI\n\n" +
+                        "• Unified camera controls\n\n" +
                         "Implementation ready for integration.",
             )
             .setPositiveListener("Got it") { }

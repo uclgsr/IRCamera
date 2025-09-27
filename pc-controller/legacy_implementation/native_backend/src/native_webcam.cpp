@@ -102,9 +102,9 @@ namespace ircamera {
 
                 if (actual_width != width || actual_height != height) {
                     last_error_ = "Failed to set resolution to " +
-                            std::to_string(width) + "x" + std::to_string(height) +
-                            ". Actual: " + std::to_string(actual_width) + "x" +
-                            std::to_string(actual_height);
+                                  std::to_string(width) + "x" + std::to_string(height) +
+                                  ". Actual: " + std::to_string(actual_width) + "x" +
+                                  std::to_string(actual_height);
                     return false;
                 }
             }
@@ -135,9 +135,9 @@ namespace ircamera {
 
             if (is_open_) {
                 if (config_.auto_exposure) {
-                    capture_.set(cv::CAP_PROP_AUTO_EXPOSURE, 0.75); 
+                    capture_.set(cv::CAP_PROP_AUTO_EXPOSURE, 0.75);
                 } else {
-                    capture_.set(cv::CAP_PROP_AUTO_EXPOSURE, 0.25); 
+                    capture_.set(cv::CAP_PROP_AUTO_EXPOSURE, 0.25);
                     capture_.set(cv::CAP_PROP_EXPOSURE, exposure);
                 }
             }
@@ -257,11 +257,15 @@ namespace ircamera {
             return true;
         }
 
-        
+
         bool is_open() const { return is_open_.load(); }
+
         bool is_capturing() const { return is_capturing_.load(); }
+
         void set_frame_callback(FrameCallback callback) { frame_callback_ = callback; }
+
         CameraConfig get_current_config() const { return config_; }
+
         std::string get_last_error() const { return last_error_; }
 
     private:
@@ -294,7 +298,7 @@ namespace ircamera {
 
             if (actual_width <= 0 || actual_height <= 0) {
                 last_error_ = "Invalid frame dimensions after configuration: " +
-                        std::to_string(actual_width) + "x" + std::to_string(actual_height);
+                              std::to_string(actual_width) + "x" + std::to_string(actual_height);
                 return false;
             }
 
@@ -335,7 +339,7 @@ namespace ircamera {
                     latest_frame_ = frame_data;
                     frame_queue_.push(frame_data);
 
-                    if (frame_queue_.size() > 100) {  
+                    if (frame_queue_.size() > 100) {
                         frame_queue_.pop();
                     }
                 }

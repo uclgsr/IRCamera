@@ -6,9 +6,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.mpdc4gsr.lib.core.utils.ScreenUtil
+import com.mpdc4gsr.libunified.app.utils.ScreenUtil
 import com.mpdc4gsr.module.user.R
-import com.mpdc4gsr.lib.core.R as LibAppR
+import com.mpdc4gsr.libunified.R as LibAppR
 
 
 class FirmwareInstallDialog(context: Context) : Dialog(context, LibAppR.style.TransparentDialog) {

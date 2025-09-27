@@ -1,7 +1,7 @@
 package mpdc4gsr.utils;
 
 import static android.content.Context.DOWNLOAD_SERVICE;
-import static com.mpdc4gsr.lms.sdk.LMS.SUCCESS;
+import static com.mpdc4gsr.libunified.app.lms.LMS.SUCCESS;
 
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
@@ -16,20 +16,21 @@ import com.blankj.utilcode.util.GsonUtils;
 import com.blankj.utilcode.util.ZipUtils;
 import com.csl.irCamera.R;
 import com.elvishew.xlog.XLog;
-import com.mpdc4gsr.lib.core.common.SharedManager;
-import com.mpdc4gsr.lib.core.config.HttpConfig;
-import com.mpdc4gsr.lib.core.dialog.TipDialog;
-import com.mpdc4gsr.lib.core.utils.AppUtil;
-import com.mpdc4gsr.lms.sdk.LMS;
-import com.mpdc4gsr.lms.sdk.activity.LmsUpdateDialog;
-import com.mpdc4gsr.lms.sdk.bean.AppInfoBean;
-import com.mpdc4gsr.lms.sdk.utils.NetworkUtil;
-import com.mpdc4gsr.lms.sdk.weiget.TToast;
-import com.mpdc4gsr.lms.sdk.xutils.common.Callback;
-import com.mpdc4gsr.lms.sdk.xutils.common.task.PriorityExecutor;
-import com.mpdc4gsr.lms.sdk.xutils.http.RequestParams;
-
-import mpdc4gsr.utils.VersionTools;
+import com.mpdc4gsr.libunified.app.common.SharedManager;
+import com.mpdc4gsr.libunified.app.config.HttpConfig;
+import com.mpdc4gsr.libunified.app.dialog.TipDialog;
+import com.mpdc4gsr.libunified.app.lms.LMS;
+import com.mpdc4gsr.libunified.app.lms.activity.LmsUpdateDialog;
+import com.mpdc4gsr.libunified.app.lms.bean.AppInfoBean;
+import com.mpdc4gsr.libunified.app.lms.bean.CommonBean;
+import com.mpdc4gsr.libunified.app.lms.network.ResponseBean;
+import com.mpdc4gsr.libunified.app.lms.utils.NetworkUtil;
+import com.mpdc4gsr.libunified.app.lms.weiget.TToast;
+import com.mpdc4gsr.libunified.app.lms.xutils.common.Callback;
+import com.mpdc4gsr.libunified.app.lms.xutils.common.task.PriorityExecutor;
+import com.mpdc4gsr.libunified.app.lms.xutils.http.RequestParams;
+import com.mpdc4gsr.libunified.app.lms.xutils.x;
+import com.mpdc4gsr.libunified.app.utils.AppUtil;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -61,8 +62,10 @@ public class AppVersionUtil {
             TToast.shortToast(mContext, R.string.lms_setting_http_error);
             return;
         }
-        LMS.getInstance().checkAppUpdate(commonBean -> {
-            if (commonBean.code == SUCCESS) {
+        LMS.getInstance().checkAppUpdate(response -> {
+            // Passing null as the second parameter because no additional data is required for conversion in this context.
+            CommonBean commonBean = ResponseBean.convertCommonBean(response, null);
+            if (commonBean.code.equals(SUCCESS)) {
                 AppInfoBean appInfoBean = LMS.getInstance().getUpdateAppInfoBean();
                 XLog.w("bcf", "appUpdate Information:" + GsonUtils.toJson(appInfoBean));
                 if (appInfoBean != null) {
@@ -240,7 +243,7 @@ public class AppVersionUtil {
         params.setExecutor(new PriorityExecutor(3, true));
         params.setUri(url);
 
-        com.mpdc4gsr.lms.sdk.xutils.x.http().get(params, new Callback.ProgressCallback<File>() {
+        x.http().get(params, new Callback.ProgressCallback<File>() {
             @Override
             public void onWaiting() {
                 XLog.e("bcf", "onWaiting");

@@ -55,6 +55,15 @@
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
+            <!-- Camera Preview with Tap-to-Focus -->
+            <mpdc4gsr.camera.ui.TapToFocusPreviewView
+                android:id="@+id/previewView"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:background="#000000" />
+
             <Switch
                 android:id="@+id/enable_video_switch"
                 android:layout_width="match_parent"
@@ -75,6 +84,15 @@
                 android:layout_height="wrap_content"
                 android:padding="8dp"
                 android:text="Enable Raw Frame Capture" />
+
+            <!-- Camera Settings Panel -->
+            <mpdc4gsr.camera.ui.CameraSettingsView
+                android:id="@+id/cameraSettingsView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="#F5F5F5"
+                android:padding="8dp" />
 
 
             <LinearLayout

@@ -9,17 +9,29 @@ import android.net.wifi.WifiManager
 import android.util.Log
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import mpdc4gsr.network.WebSocketClient
 import mpdc4gsr.sensors.unified.model.NetworkStatus
 import mpdc4gsr.sensors.unified.model.PCControllerInfo
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
 import org.json.JSONObject
-import java.net.*
+import java.net.InetAddress
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.jmdns.JmDNS
 import javax.jmdns.ServiceEvent
 import javax.jmdns.ServiceListener
+
+data class NetworkStatistics(
+    val averageLatency: Double,
+    val packetLoss: Double,
+    val reconnectionCount: Int
+)
 
 class UnifiedNetworkController(
     private val context: Context,
@@ -367,6 +379,61 @@ class UnifiedNetworkController(
         return activeConnections.containsKey(controllerName)
     }
 
+    // Network statistics tracking
+    private val latencyMeasurements = mutableListOf<Double>()
+    private val maxLatencyHistory = 100
+    private var totalPacketsSent = 0L
+    private var totalPacketsLost = 0L
+    private var reconnectionAttempts = 0
+
+    // Additional methods required by UnifiedSessionManager
+    fun getNetworkStatistics(): NetworkStatistics {
+        val avgLatency = if (latencyMeasurements.isNotEmpty()) {
+            latencyMeasurements.average()
+        } else {
+            0.0
+        }
+
+        val packetLossRate = if (totalPacketsSent > 0) {
+            (totalPacketsLost.toDouble() / totalPacketsSent.toDouble()) * 100.0
+        } else {
+            0.0
+        }
+
+        return NetworkStatistics(
+            averageLatency = avgLatency,
+            packetLoss = packetLossRate,
+            reconnectionCount = reconnectionAttempts
+        )
+    }
+
+    fun recordLatencyMeasurement(latencyMs: Double) {
+        synchronized(latencyMeasurements) {
+            latencyMeasurements.add(latencyMs)
+            if (latencyMeasurements.size > maxLatencyHistory) {
+                latencyMeasurements.removeAt(0)
+            }
+        }
+    }
+
+    fun recordPacketSent() {
+        totalPacketsSent++
+    }
+
+    fun recordPacketLost() {
+        totalPacketsLost++
+    }
+
+    private fun incrementReconnectionCount() {
+        reconnectionAttempts++
+        Log.i(TAG, "Reconnection attempts: $reconnectionAttempts")
+    }
+
+    fun getCurrentSyncQuality(): Double {
+        // Return connection quality as sync quality measure
+        return _connectionQuality.value
+    }
+
     suspend fun cleanup(): Boolean = withContext(Dispatchers.IO) {
         Log.i(TAG, "Cleaning up network controller")
 
@@ -581,6 +648,7 @@ class UnifiedNetworkController(
                 discoveredControllers.values.forEach { controllerInfo ->
                     if (!activeConnections.containsKey(controllerInfo.name)) {
                         Log.i(TAG, "Trying to reconnect to ${controllerInfo.name}")
+                        incrementReconnectionCount()
                         launch { connectToController(controllerInfo) }
                     }
                 }

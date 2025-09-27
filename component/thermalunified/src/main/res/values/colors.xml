@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="font_gray">#999999</color>
+    <color name="backgroundColor">#FF16131E</color>
+
+    <!-- Chart background colors for thermal module -->
+    <color name="chart_bg_bottom_max">#FF3F51B5</color>
+    <color name="chart_bg_top_max">#FF9C27B0</color>
+    <color name="chart_bg_bottom_min">#FF4CAF50</color>
+    <color name="chart_bg_top_min">#FFFF9800</color>
+    <color name="chart_bg_bottom_center">#FF607D8B</color>
+    <color name="chart_bg_top_center">#FFFF5722</color>
+
+    <!-- Missing colors -->
+    <color name="chart_bg">#FF16131E</color>
+    <color name="chart_line_max">#FFFF5722</color>
+    <color name="chart_line_min">#FF4CAF50</color>
+    <color name="chart_line_center">#FF607D8B</color>
+    <color name="chart_text">#FFFFFFFF</color>
+    <color name="black">#FF000000</color>
+    <color name="circle_white">#FFFFFFFF</color>
+
+    <!-- Missing thermal font colors causing build failures -->
+    <color name="temp_font_color">#FFFFFFFF</color>
+    <color name="temp_font_second_color">#FFCCCCCC</color>
+
+    <!-- Semi-transparent white colors -->
+    <color name="color_B3FFFFFF">#B3FFFFFF</color>
+    <color name="color_66FFFFFF">#66FFFFFF</color>
+    <color name="color_80FFFFFF">#80FFFFFF</color>
+    <color name="color_CCFFFFFF">#CCFFFFFF</color>
+
+    <!-- Additional missing colors -->
+    <color name="grey">#FF808080</color>
+    <color name="white_80">#CCFFFFFF</color>
+
+    <!-- More missing colors from error messages -->
+    <color name="color_bg_min">#FF4CAF50</color>
+    <color name="lms_red">#FFFF0000</color>
+    <color name="toastTextColor">#FFFFFFFF</color>
+
+    <!-- Missing primary colors -->
+    <color name="colorPrimary">#FF1976D2</color>
+    <color name="colorPrimaryDark">#FF1565C0</color>
+    <color name="color_16131E">#FF16131E</color>
+
+    <!-- Missing colors referenced in adapters -->
+    <color name="white">#FFFFFFFF</color>
+    <color name="font_third_color">#FFAAAAAA</color>
+
+</resources>

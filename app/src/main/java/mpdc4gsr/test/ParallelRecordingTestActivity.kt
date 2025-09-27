@@ -6,9 +6,9 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.activity.ComponentActivity
 import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 import mpdc4gsr.camera.ui.RecordingStatusIndicator
 import mpdc4gsr.controller.RecordingController
-import kotlinx.coroutines.launch
 import java.io.File
 
 class ParallelRecordingTestActivity : ComponentActivity() {

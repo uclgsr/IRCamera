@@ -18,7 +18,7 @@
             app:layout_constraintBottom_toTopOf="@+id/cl_bottom"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/network_status_bar" />
+            app:layout_constraintTop_toBottomOf="@+id/sensor_controls_container" />
 
 
         <LinearLayout
@@ -44,6 +44,16 @@
                 android:src="@android:drawable/ic_search_category_default"
                 android:tint="#FF6B35" />
 
+            <ImageButton
+                android:id="@+id/fault_tolerant_recording_access"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="8dp"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/fault_tolerant_recording_description"
+                android:src="@android:drawable/ic_media_play"
+                android:tint="@color/fault_tolerant_recording_button" />
+
             <View
                 android:layout_width="0dp"
                 android:layout_height="1dp"
@@ -64,6 +74,32 @@
                 android:text="PC: Disconnected"
                 android:textColor="#FFFFFF"
                 android:textSize="10sp" />
+
+        </LinearLayout>
+
+        <!-- Enhanced Sensor Status and Recording Controls -->
+        <LinearLayout
+            android:id="@+id/sensor_controls_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#FF1A1A1A"
+            android:orientation="vertical"
+            android:padding="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/network_status_bar">
+
+            <!-- Placeholder for ComprehensiveSensorStatusWidget -->
+            <FrameLayout
+                android:id="@+id/sensor_status_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <!-- Placeholder for RecordingControlsWidget -->
+            <FrameLayout
+                android:id="@+id/recording_controls_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
         </LinearLayout>
 

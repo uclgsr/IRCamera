@@ -7,15 +7,7 @@ import android.hardware.camera2.CaptureRequest
 import android.hardware.camera2.TotalCaptureResult
 import android.util.Log
 import android.util.Size
-import android.view.Surface
 import android.view.TextureView
-import android.view.WindowManager
-import mpdc4gsr.camera.core.CameraController
-import mpdc4gsr.camera.core.DeviceCaps
-import mpdc4gsr.camera.core.ModeManager
-import mpdc4gsr.camera.core.RawEngine
-import mpdc4gsr.camera.core.UiBridge
-import mpdc4gsr.camera.core.VideoEngine
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -23,6 +15,12 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
+import mpdc4gsr.camera.core.CameraController
+import mpdc4gsr.camera.core.DeviceCaps
+import mpdc4gsr.camera.core.ModeManager
+import mpdc4gsr.camera.core.RawEngine
+import mpdc4gsr.camera.core.UiBridge
+import mpdc4gsr.camera.core.VideoEngine
 import java.io.File
 
 class Camera2System(
@@ -492,12 +490,18 @@ class Camera2System(
                 try {
                     requestBuilder?.apply {
                         // Samsung Stage3/Level3 specific settings for maximum raw data preservation
-                        set(CaptureRequest.CONTROL_MODE, android.hardware.camera2.CameraMetadata.CONTROL_MODE_OFF)
+                        set(
+                            CaptureRequest.CONTROL_MODE,
+                            android.hardware.camera2.CameraMetadata.CONTROL_MODE_OFF
+                        )
                         set(
                             CaptureRequest.NOISE_REDUCTION_MODE,
                             android.hardware.camera2.CameraMetadata.NOISE_REDUCTION_MODE_OFF
                         )
-                        set(CaptureRequest.EDGE_MODE, android.hardware.camera2.CameraMetadata.EDGE_MODE_OFF)
+                        set(
+                            CaptureRequest.EDGE_MODE,
+                            android.hardware.camera2.CameraMetadata.EDGE_MODE_OFF
+                        )
                         set(
                             CaptureRequest.COLOR_CORRECTION_MODE,
                             android.hardware.camera2.CameraMetadata.COLOR_CORRECTION_MODE_TRANSFORM_MATRIX
@@ -509,11 +513,17 @@ class Camera2System(
 
                         // Set highest quality capture settings for Stage3/Level3
                         set(CaptureRequest.JPEG_QUALITY, 100.toByte())
-                        set(CaptureRequest.HOT_PIXEL_MODE, android.hardware.camera2.CameraMetadata.HOT_PIXEL_MODE_OFF)
+                        set(
+                            CaptureRequest.HOT_PIXEL_MODE,
+                            android.hardware.camera2.CameraMetadata.HOT_PIXEL_MODE_OFF
+                        )
                     }
                     Log.d(TAG, "Applied Samsung Stage3/Level3 processing settings")
                 } catch (e: Exception) {
-                    Log.w(TAG, "Could not apply Stage3/Level3 settings, using defaults: ${e.message}")
+                    Log.w(
+                        TAG,
+                        "Could not apply Stage3/Level3 settings, using defaults: ${e.message}"
+                    )
                 }
             }
 

@@ -2,18 +2,17 @@ package mpdc4gsr.sensors.gsr
 
 import android.content.Context
 import android.util.Log
-import mpdc4gsr.sensors.TimestampManager
-import mpdc4gsr.sensors.TimestampRecord
-import mpdc4gsr.utils.CSVBufferedWriter
-import mpdc4gsr.utils.SessionDirectoryManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import mpdc4gsr.sensors.TimestampManager
+import mpdc4gsr.sensors.TimestampRecord
+import mpdc4gsr.utils.CSVBufferedWriter
+import mpdc4gsr.utils.SessionDirectoryManager
 import java.io.File
 import java.text.SimpleDateFormat
-import java.util.Date
 import java.util.Locale
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicBoolean
@@ -315,7 +314,7 @@ data class GSRPersistenceStats(
     val csvFilePath: String,
     val sessionId: String,
     val isActive: Boolean,
-    val bufferStats: com.topdon.tc001.util.WriteStats? = null,
+    val bufferStats: mpdc4gsr.utils.WriteStats? = null,
 ) {
     val totalDataSizeBytes: Long
         get() = bufferStats?.bytesWritten ?: 0L

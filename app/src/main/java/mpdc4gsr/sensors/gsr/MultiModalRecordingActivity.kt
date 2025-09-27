@@ -1,6 +1,7 @@
 package mpdc4gsr.sensors.gsr
 
 
+// Use Shimmer's official Bluetooth API for GSR device management
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -14,19 +15,18 @@ import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityMultiModalRecordingBinding
-import com.mpdc4gsr.ble.UnifiedBleManager
-import com.mpdc4gsr.ble.UnifiedDevice
 import com.mpdc4gsr.gsr.model.GSRSample
 import com.mpdc4gsr.gsr.model.SessionInfo
 import com.mpdc4gsr.gsr.model.SyncMark
 import com.mpdc4gsr.gsr.service.GSRRecorder
-import com.mpdc4gsr.gsr.service.MockShimmerDeviceFactory
 import com.mpdc4gsr.gsr.service.SessionManager
 import com.mpdc4gsr.gsr.util.TimeUtil
-import com.mpdc4gsr.lib.core.ktbase.BaseBindingActivity
-import mpdc4gsr.sensors.RgbCameraRecorder
-import mpdc4gsr.permissions.PermissionController
+import com.mpdc4gsr.libunified.app.ktbase.BaseBindingActivity
+import com.shimmerresearch.android.Shimmer
+import com.shimmerresearch.android.manager.ShimmerBluetoothManagerAndroid
 import kotlinx.coroutines.launch
+import mpdc4gsr.permissions.PermissionController
+import mpdc4gsr.sensors.RgbCameraRecorder
 
 
 class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecordingBinding>() {
@@ -54,7 +54,7 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
     private lateinit var gsrRecorder: GSRRecorder
     private lateinit var sessionManager: SessionManager
     private var rgbCameraRecorder: RgbCameraRecorder? = null
-    private var networkClient: com.topdon.gsr.network.NetworkClient? = null
+    private var networkClient: com.mpdc4gsr.gsr.network.NetworkClient? = null
     private var isRecording = false
     private var isStartingRecording = false
     private var currentSession: SessionInfo? = null
@@ -69,15 +69,16 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
     private lateinit var permissionController: PermissionController
 
 
-    private var unifiedBleManager: UnifiedBleManager? = null
-    private var discoveredBleDevices = mutableListOf<UnifiedDevice>()
-    private var connectedBleDevices = mutableListOf<UnifiedDevice>()
+    // Use Shimmer's official Bluetooth manager for GSR devices
+    private var shimmerBluetoothManager: ShimmerBluetoothManagerAndroid? = null
+    private var discoveredShimmerDevices = mutableListOf<Shimmer>()
+    private var connectedShimmerDevices = mutableListOf<Shimmer>()
 
 
-    private var enhancedRecordingService: com.topdon.gsr.service.EnhancedRecordingService? = null
+    private var enhancedRecordingService: com.mpdc4gsr.gsr.service.EnhancedRecordingService? = null
     private var isServiceBound = false
     private var discoveredDevices =
-        mutableListOf<com.topdon.gsr.network.NetworkClient.ControllerInfo>()
+        mutableListOf<com.mpdc4gsr.gsr.network.NetworkClient.ControllerInfo>()
 
 
     private var uiUpdateJob: kotlinx.coroutines.Job? = null
@@ -92,7 +93,7 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                 service: IBinder?,
             ) {
                 val binder =
-                    service as? com.topdon.gsr.service.EnhancedRecordingService.EnhancedRecordingBinder
+                    service as? com.mpdc4gsr.gsr.service.EnhancedRecordingService.EnhancedRecordingBinder
                 enhancedRecordingService = binder?.getService()
                 isServiceBound = true
                 Log.i(TAG, "Enhanced recording service connected")
@@ -202,13 +203,39 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
         permissionController = PermissionController(this)
         permissionController.initialize()
 
-
-        gsrRecorder = GSRRecorder(this, MockShimmerDeviceFactory())
+        gsrRecorder = GSRRecorder(this, RealShimmerDeviceFactory(this))
         sessionManager = SessionManager.getInstance(this)
+
+        // Initialize RGB Camera Recorder with PreviewView
+        val previewView = binding.previewView.previewView
+        rgbCameraRecorder = RgbCameraRecorder(
+            context = this,
+            lifecycleOwner = this,
+            previewView = previewView,
+            useFrontCamera = false
+        )
+
+        // Setup tap-to-focus on the preview
+        binding.previewView.onTapToFocus = { normalizedX, normalizedY ->
+            rgbCameraRecorder?.triggerTapToFocus(normalizedX, normalizedY)
+        }
+
+        // Setup camera settings view callbacks
+        setupCameraControlsCallbacks()
+
+        // Initialize camera
+        lifecycleScope.launch {
+            val cameraInitialized = rgbCameraRecorder?.initialize() ?: false
+            if (cameraInitialized) {
+                Log.i(TAG, "RGB Camera initialized successfully")
+                observeCameraStatus()
+            } else {
+                Log.w(TAG, "RGB Camera initialization failed")
+            }
+        }
 
 
         with(binding) {
@@ -258,10 +285,10 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
 
 
         networkClient =
-            com.topdon.gsr.network.NetworkClient(this).apply {
+            com.mpdc4gsr.gsr.network.NetworkClient(this).apply {
                 setEventListener(
-                    object : com.topdon.gsr.network.NetworkClient.NetworkEventListener {
-                        override fun onControllerDiscovered(controller: com.topdon.gsr.network.NetworkClient.ControllerInfo) {
+                    object : com.mpdc4gsr.gsr.network.NetworkClient.NetworkEventListener {
+                        override fun onControllerDiscovered(controller: com.mpdc4gsr.gsr.network.NetworkClient.ControllerInfo) {
                             runOnUiThread {
                                 discoveredDevices.add(controller)
                                 updateNetworkStatusUI()
@@ -274,7 +301,7 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                             }
                         }
 
-                        override fun onConnected(controller: com.topdon.gsr.network.NetworkClient.ControllerInfo) {
+                        override fun onConnected(controller: com.mpdc4gsr.gsr.network.NetworkClient.ControllerInfo) {
                             runOnUiThread {
                                 updateNetworkStatusUI()
                                 Toast.makeText(
@@ -409,45 +436,34 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                 )
             }
 
-
-
-        rgbCameraRecorder = RgbCameraRecorder(this, this, null)
-        Log.i(TAG, "RgbCameraRecorder initialized with CameraX (no preview)")
-
-
-        lifecycleScope.launch {
-            rgbCameraRecorder?.initialize()
-        }
         gsrRecorder.addListener(gsrListener)
-
 
         checkAndRequestPermissions()
     }
 
+    private fun observeCameraStatus() {
+        lifecycleScope.launch {
+            rgbCameraRecorder?.getStatusFlow()?.collect { status ->
+                Log.d(TAG, "Camera status: ${status.displayText}")
+            }
+        }
+    }
+
     private fun checkAndRequestPermissions() {
         if (!permissionController.hasAllRequiredPermissions()) {
-            Log.i(TAG, "Not all permissions granted, requesting permissions...")
-
+            Log.i(TAG, "Not all permissions granted, requesting...")
 
             permissionController.ensureAll { allGranted, deniedPermissions ->
                 if (allGranted) {
                     binding.statusText.text =
                         "All permissions granted. Multi-sensor recording ready."
                     Log.i(TAG, "All permissions granted successfully")
-
-
                     updateUIForPermissionState(true)
-
                 } else {
                     val permissionNames = permissionController.getPermissionNames(deniedPermissions)
-                    val statusMessage = permissionController.getPermissionStatusMessage()
-
                     binding.statusText.text = "Limited functionality: Some permissions missing"
                     Log.w(TAG, "Some permissions denied: ${deniedPermissions.joinToString(", ")}")
-
-
                     updateUIForPartialPermissions(deniedPermissions)
-
                     Toast.makeText(
                         this,
                         "Missing permissions: ${permissionNames.joinToString(", ")}",
@@ -515,7 +531,6 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
     }
 
     private fun toggleRecording() {
-
         if (!permissionController.canStartRecording()) {
             Log.w(TAG, "Cannot start recording - missing camera or storage permissions")
             checkAndRequestPermissions()
@@ -615,7 +630,7 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
 
 
                     try {
-                        com.topdon.gsr.service.EnhancedRecordingService.startRecording(
+                        com.mpdc4gsr.gsr.service.EnhancedRecordingService.startRecording(
                             this@MultiModalRecordingActivity,
                             sessionId,
                             participantId,
@@ -669,17 +684,39 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                 val success = gsrRecorder.startRecording(sessionId, participantId, null)
 
                 if (success) {
+                    // Start RGB camera recording if enabled
+                    var cameraStarted = true
+                    if (binding.enableVideoSwitch.isChecked) {
+                        cameraStarted = rgbCameraRecorder?.let { camera ->
+                            try {
+                                // Create session directory and metadata for camera
+                                val sessionDir = "multimodal_$sessionId"
+                                val metadata =
+                                    mpdc4gsr.data.SessionMetadata.createSessionStart(sessionId)
+                                        .copy(
+                                            participantId = participantId ?: ""
+                                        )
+                                lifecycleScope.launch {
+                                    camera.startRecording(sessionDir, metadata)
+                                }
+                                Log.i(TAG, "Camera recording started")
+                                true
+                            } catch (e: Exception) {
+                                Log.e(TAG, "Failed to start camera recording", e)
+                                false
+                            }
+                        } ?: false
+                    }
 
                     sampleCount = 0
                     syncMarkCount = 0
-
 
                     isRecording = true
                     isStartingRecording = false
 
 
                     try {
-                        com.topdon.gsr.service.EnhancedRecordingService.startRecording(
+                        com.mpdc4gsr.gsr.service.EnhancedRecordingService.startRecording(
                             this@MultiModalRecordingActivity,
                             sessionId,
                             participantId,
@@ -755,7 +792,7 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
         lifecycleScope.launch {
 
             try {
-                com.topdon.gsr.service.EnhancedRecordingService.stopRecording(this@MultiModalRecordingActivity)
+                com.mpdc4gsr.gsr.service.EnhancedRecordingService.stopRecording(this@MultiModalRecordingActivity)
                 Log.i(TAG, "Enhanced recording service stopped")
             } catch (e: Exception) {
                 Log.w(TAG, "Failed to stop enhanced recording service", e)
@@ -773,10 +810,7 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                 if (videoStopped) {
                     recordingInfo.add("Video recording completed")
                 }
-                rgbCameraRecorder?.getRawImagesDirectory()?.let { dir ->
-                    val rawCount = rgbCameraRecorder?.getRawCaptureCount() ?: 0
-                    recordingInfo.add("RAW images: $rawCount in ${dir.name}")
-                }
+                // Raw image info removed as methods are not available in current RgbCameraRecorder
                 recordingInfo.add("GSR samples: ${it.sampleCount}")
 
                 runOnUiThread {
@@ -890,7 +924,7 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
     }
 
     private fun openSynchronizationTest() {
-        val intent = Intent(this, com.topdon.tc001.test.SynchronizationTestActivity::class.java)
+        val intent = Intent(this, mpdc4gsr.test.SynchronizationTestActivity::class.java)
         startActivity(intent)
     }
 
@@ -991,7 +1025,7 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
 
     private fun bindEnhancedRecordingService() {
         try {
-            val intent = Intent(this, com.topdon.gsr.service.EnhancedRecordingService::class.java)
+            val intent = Intent(this, com.mpdc4gsr.gsr.service.EnhancedRecordingService::class.java)
             bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
         } catch (e: Exception) {
             Log.e(TAG, "Failed to bind enhanced recording service", e)
@@ -1038,15 +1072,70 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
         uiUpdateJob = null
     }
 
+    private fun setupCameraControlsCallbacks() {
+        binding.cameraSettingsView.apply {
+            // Manual exposure controls
+            onExposureModeToggle = { isManual ->
+                rgbCameraRecorder?.setManualExposureMode(isManual)
+            }
+
+            onExposureCompensationChanged = { evValue ->
+                rgbCameraRecorder?.setExposureCompensation(evValue)
+            }
+
+            onAeLockToggle = { isLocked ->
+                rgbCameraRecorder?.setAutoExposureLock(isLocked)
+            }
+
+            // Manual focus controls
+            onFocusModeToggle = { isManual ->
+                rgbCameraRecorder?.setManualFocusMode(isManual)
+            }
+
+            onFocusDistanceChanged = { distance ->
+                rgbCameraRecorder?.setFocusDistance(distance)
+            }
+
+            onAfLockToggle = { isLocked ->
+                rgbCameraRecorder?.setAutoFocusLock(isLocked)
+            }
+
+            // Basic camera controls
+            onCameraToggle = {
+                // Could implement front/back camera switching here
+            }
+
+            onRecordingToggle = { startRecording ->
+                if (startRecording) {
+                    startRecording()
+                } else {
+                    stopRecording()
+                }
+            }
+
+            onFlashToggle = { enabled ->
+                // Flash control could be implemented here
+            }
+
+            onStage3ProcessingToggle = { enabled ->
+                // Stage3 processing toggle could be implemented here
+            }
+        }
+    }
+
     override fun onDestroy() {
-        super.onDestroy()
         stopUIUpdates()
         gsrRecorder.removeListener(gsrListener)
         if (isRecording) {
             stopRecording()
         }
-        rgbCameraRecorder?.cleanup()
+        // Launch coroutine for cleanup since it's a suspend function
+        // Do this before super.onDestroy() to ensure lifecycleScope is still active
+        lifecycleScope.launch {
+            rgbCameraRecorder?.cleanup()
+        }
         networkClient?.cleanup()
         unbindEnhancedRecordingService()
+        super.onDestroy()
     }
 }

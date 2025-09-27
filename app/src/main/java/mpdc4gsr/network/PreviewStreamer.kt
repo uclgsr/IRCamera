@@ -3,14 +3,15 @@ package mpdc4gsr.network
 import android.graphics.Bitmap
 import android.util.Base64
 import android.util.Log
-import com.mpdc4gsr.lib.core.utils.BitmapUtils
+import com.mpdc4gsr.libunified.app.utils.BitmapUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
+import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.util.concurrent.atomic.AtomicBoolean
@@ -135,7 +136,7 @@ class PreviewStreamer(
     private suspend fun streamFrames() {
         Log.i(TAG, "Frame streaming started")
 
-        while (isActive && isStreaming.get()) {
+        while (currentCoroutineContext().isActive && isStreaming.get()) {
             try {
 
                 currentRgbFrame.get()?.let { rgbBitmap ->
@@ -150,7 +151,7 @@ class PreviewStreamer(
                 delay(frameIntervalMs)
             } catch (e: Exception) {
                 Log.e(TAG, "Error in frame streaming", e)
-                if (isActive) delay(1000)
+                if (currentCoroutineContext().isActive) delay(1000)
             }
         }
 
@@ -160,7 +161,7 @@ class PreviewStreamer(
     private suspend fun streamSensorData() {
         Log.i(TAG, "Sensor data streaming started")
 
-        while (isActive && isStreaming.get()) {
+        while (currentCoroutineContext().isActive && isStreaming.get()) {
             try {
                 val gsrValue = currentGsrValue.get()
                 val recordingStatus = currentRecordingStatus.get()
@@ -177,12 +178,12 @@ class PreviewStreamer(
                     })
                 }
 
-                networkServer.sendMessage(sensorMessage)
+                networkServer.sendMessage(sensorMessage.toString())
 
                 delay(sensorIntervalMs)
             } catch (e: Exception) {
                 Log.e(TAG, "Error in sensor data streaming", e)
-                if (isActive) delay(1000)
+                if (currentCoroutineContext().isActive) delay(1000)
             }
         }
 
@@ -220,7 +221,7 @@ class PreviewStreamer(
                 put("data_size_bytes", jpegBytes.size)
             }
 
-            networkServer.sendMessage(frameMessage)
+            networkServer.sendMessage(frameMessage.toString())
 
             Log.d(
                 TAG,
@@ -245,7 +246,7 @@ class PreviewStreamer(
         scope.launch {
             stopStreaming()
         }
-        scope.cancel()
+        scope.coroutineContext.job.cancel()
         Log.i(TAG, "PreviewStreamer cleaned up")
     }
 }

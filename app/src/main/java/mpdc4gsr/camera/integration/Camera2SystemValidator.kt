@@ -65,13 +65,13 @@ class Camera2SystemValidator(private val context: Context) {
 
         return try {
 
-            Class.forName("com.topdon.tc001.camera.Camera2System")
-            Class.forName("com.topdon.tc001.camera.core.CameraController")
-            Class.forName("com.topdon.tc001.camera.core.VideoEngine")
-            Class.forName("com.topdon.tc001.camera.core.RawEngine")
-            Class.forName("com.topdon.tc001.camera.core.ModeManager")
-            Class.forName("com.topdon.tc001.camera.core.UiBridge")
-            Class.forName("com.topdon.tc001.camera.core.DeviceCaps")
+            Class.forName("com.mpdc4gsr.camera.Camera2System")
+            Class.forName("com.mpdc4gsr.camera.core.CameraController")
+            Class.forName("com.mpdc4gsr.camera.core.VideoEngine")
+            Class.forName("com.mpdc4gsr.camera.core.RawEngine")
+            Class.forName("com.mpdc4gsr.camera.core.ModeManager")
+            Class.forName("com.mpdc4gsr.camera.core.UiBridge")
+            Class.forName("com.mpdc4gsr.camera.core.DeviceCaps")
             true
         } catch (e: ClassNotFoundException) {
             Log.e(TAG, "Architecture component not found", e)
@@ -99,7 +99,7 @@ class Camera2SystemValidator(private val context: Context) {
         return try {
 
             val cameraControllerClass =
-                Class.forName("com.topdon.tc001.camera.core.CameraController")
+                Class.forName("com.mpdc4gsr.camera.core.CameraController")
             val createSessionMethod =
                 cameraControllerClass.getDeclaredMethod(
                     "createCaptureSession",
@@ -116,7 +116,7 @@ class Camera2SystemValidator(private val context: Context) {
 
     private fun validateSamsungCompatibility(): Boolean {
         return try {
-            val deviceCapsClass = Class.forName("com.topdon.tc001.camera.core.DeviceCaps")
+            val deviceCapsClass = Class.forName("com.mpdc4gsr.camera.core.DeviceCaps")
             val fields = deviceCapsClass.declaredFields
 
             val hasSupportsRaw = fields.any { it.name == "supportsRaw" }
@@ -182,7 +182,8 @@ class Camera2SystemValidator(private val context: Context) {
                 false
             }
 
-            val allWorking = rawEngineWorks && camera2SystemWorks && dngCreatorAvailable && deviceCompatibilityWorks
+            val allWorking =
+                rawEngineWorks && camera2SystemWorks && dngCreatorAvailable && deviceCompatibilityWorks
 
             Log.i(
                 TAG,

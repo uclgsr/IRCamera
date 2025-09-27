@@ -2,13 +2,13 @@ package mpdc4gsr.service
 
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
-import mpdc4gsr.controller.RecordingController
 import io.mockk.*
 import kotlinx.coroutines.test.*
+import mpdc4gsr.controller.RecordingController
 import org.junit.After
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
-import org.junit.Assert.*
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config

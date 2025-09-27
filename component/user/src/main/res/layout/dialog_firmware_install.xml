@@ -22,18 +22,15 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintWidth_percent="0.24" />
 
-    <com.mpdc4gsr.lms.sdk.weiget.LmsLoadView
+    <ProgressBar
         android:id="@+id/lms_load_view"
+        style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="@null"
-        android:src="@drawable/svg_select_right"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:lms_dot_move_rate="0.75"
-        app:lms_dot_radius="5dp"
-        app:lms_dot_spacing="6dp" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.Barrier
         android:id="@+id/barrier"
