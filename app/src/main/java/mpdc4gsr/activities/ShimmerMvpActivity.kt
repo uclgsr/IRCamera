@@ -175,8 +175,8 @@ class ShimmerMvpActivity : AppCompatActivity() {
             return
         }
 
-        val bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-        val bluetoothAdapter = bluetoothManager.adapter
+        val bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
+        val bluetoothAdapter = bluetoothManager?.adapter
         if (bluetoothAdapter == null) {
             showToast("Bluetooth not supported on this device")
             return
@@ -230,8 +230,8 @@ class ShimmerMvpActivity : AppCompatActivity() {
                 }
 
                 val bluetoothManager =
-                    getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-                val bluetoothAdapter = bluetoothManager.adapter
+                    getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
+                val bluetoothAdapter = bluetoothManager?.adapter
                 if (bluetoothAdapter == null) {
                     showBluetoothNotSupportedDialog()
                     binding.connectButton.isEnabled = true
@@ -292,8 +292,8 @@ class ShimmerMvpActivity : AppCompatActivity() {
     private suspend fun performBluetoothLeScanning(): List<BluetoothDevice> =
         withContext(Dispatchers.IO) {
             val discoveredDevices = mutableListOf<BluetoothDevice>()
-            val bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-            val bluetoothAdapter = bluetoothManager.adapter
+            val bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
+            val bluetoothAdapter = bluetoothManager?.adapter
             val bluetoothLeScanner = bluetoothAdapter?.bluetoothLeScanner
 
             if (bluetoothLeScanner == null) {
