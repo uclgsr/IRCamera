@@ -649,12 +649,27 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         // Initialize MainActivityViewModel components
         mainViewModel.initializeComponents()
 
-        requestAllPermissions()
+        // Use the new formal permission request method
+        requestAllPermissionsAtStartup()
 
         Log.i(
             "MainActivity",
             "✅ PC-to-Phone communication integration available - RecordingService supports network control"
         )
+    }
+
+    private fun requestAllPermissionsAtStartup() {
+        Log.d(TAG, "requestAllPermissionsAtStartup() called - formal comprehensive permission request")
+        permissionController.requestAllPermissionsAtStartup { allGranted, deniedPermissions ->
+            Log.d(TAG, "Startup permission callback: allGranted=$allGranted, denied=${deniedPermissions.joinToString(",")}")
+            if (allGranted) {
+                Log.i(TAG, "All permissions granted during startup - full functionality enabled")
+                onAllPermissionsGranted()
+            } else {
+                Log.w(TAG, "Some permissions denied during startup: ${deniedPermissions.joinToString(", ")}")
+                onPartialPermissions(deniedPermissions)
+            }
+        }
     }
 
     private fun requestAllPermissions() {
@@ -888,8 +903,14 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             if (missingPermissions.isNotEmpty()) {
                 Log.w(TAG, "onResume() - Found missing permissions, requesting them: ${missingPermissions.joinToString(", ")}")
                 // Use a small delay to ensure the activity is fully resumed
+                // Use the safer ensureAll method instead of the startup method to avoid dialog conflicts
                 binding.root.postDelayed({
-                    requestAllPermissions()
+                    permissionController.ensureAll { granted, denied ->
+                        Log.d(TAG, "onResume permission check result: granted=$granted, denied=${denied.joinToString(",")}")
+                        if (!granted) {
+                            onPartialPermissions(denied)
+                        }
+                    }
                 }, 500)
             }
         }
