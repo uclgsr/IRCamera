@@ -46,7 +46,7 @@ class GSRVideoPlayerActivity : BaseViewModelActivity<GSRVideoPlayerViewModel>() 
         setupObservers()
         setupVideoView()
         
-        viewModel.loadVideo(videoPath, packageName)
+        viewModel.loadVideo(videoPath, packageName, this)
     }
 
     override fun initData() {

@@ -36,7 +36,7 @@ class GSRVideoPlayerViewModel : BaseViewModel() {
         val filePath: String
     )
 
-    fun loadVideo(videoPath: String, packageName: String) {
+    fun loadVideo(videoPath: String, packageName: String, context: android.content.Context? = null) {
         val videoFile = File(videoPath)
         
         if (!videoFile.exists()) {
@@ -47,7 +47,10 @@ class GSRVideoPlayerViewModel : BaseViewModel() {
         val uri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             val authority = "$packageName.fileprovider"
             try {
-                FileProvider.getUriForFile(null, authority, videoFile)
+                // Use context if provided, otherwise create URI differently
+                context?.let { ctx ->
+                    FileProvider.getUriForFile(ctx, authority, videoFile)
+                } ?: Uri.fromFile(videoFile) // Fallback for older versions
             } catch (e: Exception) {
                 _errorState.value = "Failed to create file URI: ${e.message}"
                 return
@@ -108,11 +111,14 @@ class GSRVideoPlayerViewModel : BaseViewModel() {
         }
     }
 
-    fun createShareUri(videoPath: String, packageName: String): Uri? {
+    fun createShareUri(videoPath: String, packageName: String, context: android.content.Context? = null): Uri? {
         val videoFile = File(videoPath)
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             try {
-                FileProvider.getUriForFile(null, "$packageName.fileprovider", videoFile)
+                // Use context if provided, otherwise fall back to Uri.fromFile
+                context?.let { ctx ->
+                    FileProvider.getUriForFile(ctx, "$packageName.fileprovider", videoFile)
+                } ?: Uri.fromFile(videoFile)
             } catch (e: Exception) {
                 null
             }

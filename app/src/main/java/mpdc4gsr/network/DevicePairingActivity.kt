@@ -105,12 +105,16 @@ class DevicePairingActivity : BaseViewModelActivity<DevicePairingViewModel>(),
     private fun updateConnectionUI(controller: NetworkClient.ControllerInfo?) {
         binding.disconnectButton.isVisible = controller != null
         try {
-            val connectedDeviceText = binding.root.findViewById<android.widget.TextView>(R.id.connected_device_text)
-            connectedDeviceText?.let { textView ->
-                textView.isVisible = controller != null
-                textView.text = controller?.let { 
-                    "Connected to: ${it.deviceName} (${it.ipAddress}:${it.port})" 
-                } ?: ""
+            // Try to access the connected device text view if it exists in the layout
+            val resourceId = resources.getIdentifier("connected_device_text", "id", packageName)
+            if (resourceId != 0) {
+                val connectedDeviceText = binding.root.findViewById<android.widget.TextView>(resourceId)
+                connectedDeviceText?.let { textView ->
+                    textView.isVisible = controller != null
+                    textView.text = controller?.let { 
+                        "Connected to: ${it.deviceName} (${it.ipAddress}:${it.port})" 
+                    } ?: ""
+                }
             }
         } catch (e: Exception) {
             // Element may not exist in layout, continue gracefully

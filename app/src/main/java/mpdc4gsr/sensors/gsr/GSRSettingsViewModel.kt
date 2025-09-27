@@ -111,11 +111,13 @@ class GSRSettingsViewModel : BaseViewModel() {
         viewModelScope.launch {
             try {
                 val currentSettings = repository.gsrSettings.value
+                // Note: LifecycleOwner will be set when the activity is available
+                // For now, we initialize without the recording controller
                 gsrSensorRecorder = GSRSensorRecorder(
                     context,
                     "gsr_settings_${System.currentTimeMillis()}",
                     currentSettings.samplingRate,
-                    mpdc4gsr.controller.RecordingController(context, null)
+                    null // RecordingController will be set later when LifecycleOwner is available
                 )
                 _deviceConnectionState.value = DeviceConnectionState(
                     isConnected = false,
