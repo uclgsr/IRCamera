@@ -228,6 +228,54 @@ class PermissionController(private val activity: FragmentActivity) {
         return permissions.mapNotNull { PERMISSION_MAP[it] }.distinct()
     }
 
+    // Add missing methods for compatibility
+    fun hasAllRequiredPermissions(): Boolean {
+        return getMissingPermissions().isEmpty()
+    }
+
+    fun initialize() {
+        // This method is called for initialization purposes
+        // Currently no specific initialization required
+        Log.i(TAG, "PermissionController initialized")
+    }
+
+    fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        // Handle legacy permission results if needed
+        // Modern implementation uses ActivityResultLauncher
+        Log.i(TAG, "Legacy onRequestPermissionsResult called with requestCode: $requestCode")
+    }
+
+    fun onActivityResult(requestCode: Int, resultCode: Int) {
+        // Handle legacy activity results if needed 
+        // Modern implementation uses ActivityResultLauncher
+        Log.i(TAG, "Legacy onActivityResult called with requestCode: $requestCode, resultCode: $resultCode")
+    }
+
+    fun requestBatteryOptimizationExemption(callback: (Boolean) -> Unit) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M || isBatteryOptimizationDisabled()) {
+            Log.i(TAG, "Battery optimization exemption not needed or already granted.")
+            callback(true)
+            return
+        }
+        showBatteryOptimizationRationaleDialog { userAccepted ->
+            if (userAccepted) {
+                try {
+                    val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS).apply {
+                        data = Uri.parse("package:${activity.packageName}")
+                    }
+                    batteryOptimizationLauncher.launch(intent)
+                    callback(true)
+                } catch (e: Exception) {
+                    Log.e(TAG, "Failed to launch battery optimization settings.", e)
+                    callback(false)
+                }
+            } else {
+                Log.w(TAG, "User declined battery optimization exemption.")
+                callback(false)
+            }
+        }
+    }
+
     companion object {
         private const val TAG = "PermissionController"
         const val ACTION_USB_PERMISSION = "mpdc4gsr.USB_PERMISSION"
