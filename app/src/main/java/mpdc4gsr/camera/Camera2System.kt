@@ -5,6 +5,7 @@ import android.hardware.camera2.CameraCaptureSession
 import android.hardware.camera2.CameraDevice
 import android.hardware.camera2.CaptureRequest
 import android.hardware.camera2.TotalCaptureResult
+import android.os.Build
 import android.util.Log
 import android.util.Size
 import android.view.TextureView
@@ -235,6 +236,7 @@ class Camera2System(
         uiBridge.onProgress = { message -> onProgress?.invoke(message) }
     }
 
+    @Suppress("DEPRECATION")
     private suspend fun setupRawMode(): Boolean =
         withContext(Dispatchers.IO) {
             try {
@@ -289,6 +291,7 @@ class Camera2System(
             }
         }
 
+    @Suppress("DEPRECATION")
     private suspend fun setupVideoMode(): Boolean =
         withContext(Dispatchers.IO) {
             try {
@@ -337,6 +340,7 @@ class Camera2System(
             }
         }
 
+    @Suppress("DEPRECATION")
     private suspend fun setupPreviewMode(): Boolean =
         withContext(Dispatchers.IO) {
             try {
@@ -396,6 +400,7 @@ class Camera2System(
             }
         }
 
+    @Suppress("DEPRECATION")
     private suspend fun startVideoRecording(): Boolean =
         withContext(Dispatchers.IO) {
             try {
@@ -569,12 +574,23 @@ class Camera2System(
         return try {
             val windowManager =
                 context.getSystemService(Context.WINDOW_SERVICE) as android.view.WindowManager
-            val deviceRotation = when (windowManager.defaultDisplay.rotation) {
-                android.view.Surface.ROTATION_0 -> 0
-                android.view.Surface.ROTATION_90 -> 90
-                android.view.Surface.ROTATION_180 -> 180
-                android.view.Surface.ROTATION_270 -> 270
-                else -> 0
+            val deviceRotation = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                when (context.display?.rotation) {
+                    android.view.Surface.ROTATION_0 -> 0
+                    android.view.Surface.ROTATION_90 -> 90
+                    android.view.Surface.ROTATION_180 -> 180
+                    android.view.Surface.ROTATION_270 -> 270
+                    else -> 0
+                }
+            } else {
+                @Suppress("DEPRECATION")
+                when (windowManager.defaultDisplay.rotation) {
+                    android.view.Surface.ROTATION_0 -> 0
+                    android.view.Surface.ROTATION_90 -> 90
+                    android.view.Surface.ROTATION_180 -> 180
+                    android.view.Surface.ROTATION_270 -> 270
+                    else -> 0
+                }
             }
 
 

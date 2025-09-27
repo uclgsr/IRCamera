@@ -1908,7 +1908,8 @@ class GSRSensorRecorder(
                 val deviceList = mutableListOf<String>()
 
 
-                val bluetoothAdapter = android.bluetooth.BluetoothAdapter.getDefaultAdapter()
+                val bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+                val bluetoothAdapter = bluetoothManager.adapter
                 val bondedDevices = bluetoothAdapter?.bondedDevices
 
                 bondedDevices?.forEach { device ->

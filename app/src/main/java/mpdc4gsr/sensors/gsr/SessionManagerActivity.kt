@@ -2,6 +2,7 @@ package mpdc4gsr.sensors.gsr
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -404,7 +405,12 @@ class SessionManagerActivity : BaseBindingActivity<ActivitySessionManagerBinding
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        onBackPressed()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            onBackPressedDispatcher.onBackPressed()
+        } else {
+            @Suppress("DEPRECATION")
+            onBackPressed()
+        }
         return true
     }
 }

@@ -844,6 +844,8 @@ class IRGalleryEditActivity : BaseBindingActivity<ActivityIrGalleryEditBinding>(
         return capital
     }
 
+    @Deprecated("Deprecated in Java")
+    @Suppress("DEPRECATION")
     override fun onBackPressed() {
         lifecycleScope.launch {
             if (isReportPick) {
@@ -867,6 +869,7 @@ class IRGalleryEditActivity : BaseBindingActivity<ActivityIrGalleryEditBinding>(
     private fun tempCorrect(temp: Float): Float {
         var newTemp = temp
         try {
+            @Suppress("SENSELESS_COMPARISON")
             if (struct == null || struct.distance <= 0 || struct.radiation <= 0) {
                 return temp
             }
