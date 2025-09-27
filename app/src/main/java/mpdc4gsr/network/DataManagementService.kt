@@ -573,8 +573,8 @@ class DataManagementService(private val context: Context) {
                     startTime = startTime,
                     endTime = endTime,
                     status = status,
-                    participantId = json.optString("participant_id", null),
-                    studyId = json.optString("study_id", null),
+                    participantId = if (json.has("participant_id")) json.getString("participant_id") else null,
+                    studyId = if (json.has("study_id")) json.getString("study_id") else null,
                 )
 
             if (json.has("metadata")) {

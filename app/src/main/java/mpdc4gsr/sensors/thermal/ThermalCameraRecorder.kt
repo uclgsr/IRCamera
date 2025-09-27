@@ -105,8 +105,8 @@ class ThermalCameraRecorder(
         private fun checkForEnhancedThermalCapabilities(): Boolean {
             return try {
 
-                val modelProperty = System.getProperty("ro.product.model", "")
-                val deviceProperty = System.getProperty("ro.product.device", "")
+                val modelProperty = System.getProperty("ro.product.model", "") ?: ""
+                val deviceProperty = System.getProperty("ro.product.device", "") ?: ""
 
 
                 val isTC001Plus = modelProperty.contains("TC001", ignoreCase = true) &&
