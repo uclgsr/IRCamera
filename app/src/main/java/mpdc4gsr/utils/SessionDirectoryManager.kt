@@ -259,7 +259,7 @@ class SessionDirectoryManager(private val context: Context) {
     
     fun deleteSession(sessionId: String): Boolean {
         return try {
-            val sessionDir = File(context.getExternalFilesDir(null), "sessions/$sessionId")
+            val sessionDir = File(baseDirectory, sessionId)
             val legacyDir = File(context.getExternalFilesDir(null), "recordings/$sessionId")
             
             var deleted = false
