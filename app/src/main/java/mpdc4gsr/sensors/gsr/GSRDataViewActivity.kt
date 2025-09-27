@@ -578,7 +578,6 @@ class GSRDataViewActivity : BaseViewModelActivity<GSRDataViewViewModel>() {
             super.onOptionsItemSelected(item)
         }
     }
-    }
 
     // Data classes for plot functionality
     data class GSRPlotData(
