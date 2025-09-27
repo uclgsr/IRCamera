@@ -179,6 +179,9 @@ override fun connected() {
 - SimpleNetworkTestComposeActivity as network testing and TCP/UDP connections
 - FaultTolerantRecordingComposeActivity as recording state management and fault tolerance
 - NetworkClientTestComposeActivity as service binding and bidirectional networking
+- SimplifiedMainComposeActivity as main interface with permissions and state management
+- SettingsComposeActivity as configuration and preferences UI with multiple sections
+- DiagnosticsComposeActivity as system information and health checks with testing
 
 ### Next Steps
 1. Migrate simple activities (MoreHelp, WebView)
