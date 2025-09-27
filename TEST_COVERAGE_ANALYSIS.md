@@ -1,6 +1,6 @@
 # IRCamera Test Coverage Analysis - App & PC Controller Focus
 
-**Generated:** $(date)
+**Generated:** <GENERATION_DATE>
 **Analysis Date:** December 2024
 **Scope:** Android App (`app/`) and PC Controller (`pc-controller/`) only
 
