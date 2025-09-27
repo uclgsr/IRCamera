@@ -103,7 +103,7 @@ class SimpleBenchmarkManager {
      */
     fun recordRGBFrame() {
         if (rgbSessionStart > 0) {
-            rgbFrames.add(System.currentTimeMillis())
+            rgbFrames.add(SystemClock.elapsedRealtime())
         }
     }
     
