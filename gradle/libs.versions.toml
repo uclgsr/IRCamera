@@ -47,6 +47,11 @@ room = "2.6.1"
 
 work = "2.10.4"
 
+# Jetpack Compose BOM and related versions
+composeBom = "2024.12.01"
+composeCompilerExtension = "1.6.0"
+activityCompose = "1.9.3"
+
 
 camerax = "1.5.0"
 
@@ -201,6 +206,18 @@ androidx-activity-ktx = { group = "androidx.activity", name = "activity-ktx", ve
 androidx-preference = { group = "androidx.preference", name = "preference", version.ref = "androidxPreference" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 multidex = { group = "androidx.multidex", name = "multidex", version.ref = "multidex" }
+
+# Jetpack Compose
+compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
+compose-ui = { group = "androidx.compose.ui", name = "ui" }
+compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+compose-material3 = { group = "androidx.compose.material3", name = "material3" }
+compose-activity = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
+compose-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycle" }
+compose-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata" }
+compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 
 
 lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle" }
@@ -391,6 +408,8 @@ retrofit = ["retrofit2", "converter-gson", "adapter-rxjava2", "logging-intercept
 smart-refresh = ["smart-refresh-layout", "smart-refresh-header"]
 smart-refresh-v2 = ["refresh-layout-kernel", "refresh-header-classics", "refresh-header-material"]
 
+# Jetpack Compose bundle
+compose = ["compose-ui", "compose-ui-tooling-preview", "compose-material3", "compose-activity", "compose-viewmodel", "compose-runtime-livedata"]
 
 ui-common = ["androidx-core-ktx", "androidx-appcompat", "material", "glide"]
 
@@ -412,6 +431,7 @@ android-application = { id = "com.android.application", version.ref = "androidGr
 android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlinGradlePlugin" }
 kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlinGradlePlugin" }
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }

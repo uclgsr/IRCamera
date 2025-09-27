@@ -3,6 +3,7 @@ plugins {
     kotlin("android")
     id("kotlin-parcelize")
     id("com.google.devtools.ksp")
+    alias(libs.plugins.kotlin.compose)
 }
 
 ksp {
@@ -73,6 +74,11 @@ android {
         buildConfig = true
         dataBinding = true
         viewBinding = true
+        compose = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = libs.versions.composeCompilerExtension.get()
     }
 
     sourceSets {
@@ -142,6 +148,11 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
 
     coreLibraryDesugaring(libs.desugar.jdk.libs)
+
+    // Jetpack Compose for shared UI components
+    implementation(platform(libs.compose.bom))
+    implementation(libs.bundles.compose)
+    debugImplementation(libs.compose.ui.tooling)
 
     // Combined dependencies from all three libraries
     api(fileTree(mapOf("include" to listOf("*.jar"), "dir" to "libs")))
