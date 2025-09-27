@@ -20,11 +20,11 @@ import io.reactivex.plugins.RxJavaPlugins
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import mpdc4gsr.InitUtil.initJPush
-import mpdc4gsr.InitUtil.initLms
-import mpdc4gsr.InitUtil.initLog
-import mpdc4gsr.InitUtil.initReceiver
-import mpdc4gsr.InitUtil.initUM
+import mpdc4gsr.activities.InitUtil.initJPush
+import mpdc4gsr.activities.InitUtil.initLms
+import mpdc4gsr.activities.InitUtil.initLog
+import mpdc4gsr.activities.InitUtil.initReceiver
+import mpdc4gsr.activities.InitUtil.initUM
 
 class App : BaseApplication() {
 

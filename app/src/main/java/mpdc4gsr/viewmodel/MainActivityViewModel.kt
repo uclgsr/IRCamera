@@ -206,7 +206,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
 
                 override fun onError(error: String) {
                     Log.e(TAG, "Thermal recorder error: $error")
-                    _statusMessage.value =
+                    _statusMessage.tryEmit(
                         StatusMessage("Thermal recording error: $error", StatusMessage.Level.ERROR)
                     )
                 }
@@ -262,14 +262,14 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
 
                 override fun onClientConnected(clientId: String, clientInfo: String) {
                     Log.i(TAG, "PC client connected: $clientId ($clientInfo)")
-                    _statusMessage.value =
+                    _statusMessage.tryEmit(
                         StatusMessage("PC client connected: $clientInfo", StatusMessage.Level.INFO)
                     )
                 }
 
                 override fun onClientDisconnected(clientId: String, reason: String) {
                     Log.i(TAG, "PC client disconnected: $clientId - $reason")
-                    _statusMessage.value =
+                    _statusMessage.tryEmit(
                         StatusMessage(
                             "PC client disconnected: $reason",
                             StatusMessage.Level.WARNING
@@ -279,7 +279,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
 
                 override fun onError(operation: String, error: String) {
                     Log.e(TAG, "NetworkController error in $operation: $error")
-                    _statusMessage.value =
+                    _statusMessage.tryEmit(
                         StatusMessage("PC control error: $error", StatusMessage.Level.ERROR)
                     )
                 }
@@ -293,7 +293,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                         TAG,
                         "NetworkController server started on port ${NetworkController.DEFAULT_PORT}"
                     )
-                    _statusMessage.value =
+                    _statusMessage.tryEmit(
                         StatusMessage(
                             "PC remote control ready on port ${NetworkController.DEFAULT_PORT}",
                             StatusMessage.Level.INFO
@@ -307,14 +307,14 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
 
             networkClient?.setEventListener(object : NetworkClient.NetworkEventListener {
                 override fun onControllerDiscovered(controller: NetworkClient.ControllerInfo) {
-                    _networkConnectionState.value = NetworkConnectionState.DISCOVERING)
+                    _networkConnectionState.value = NetworkConnectionState.DISCOVERING
                     Log.d(TAG, "PC Controller discovered: ${controller.deviceName}")
                 }
 
                 override fun onConnected(controller: NetworkClient.ControllerInfo) {
-                    _networkConnectionState.value = NetworkConnectionState.CONNECTED)
-                    _connectedControllerInfo.value = controller)
-                    _statusMessage.value =
+                    _networkConnectionState.value = NetworkConnectionState.CONNECTED
+                    _connectedControllerInfo.value = controller
+                    _statusMessage.tryEmit(
                         StatusMessage(
                             "Connected to PC: ${controller.deviceName}",
                             StatusMessage.Level.INFO
@@ -324,9 +324,9 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                 }
 
                 override fun onDisconnected(reason: String) {
-                    _networkConnectionState.value = NetworkConnectionState.DISCONNECTED)
-                    _connectedControllerInfo.value = null)
-                    _statusMessage.value =
+                    _networkConnectionState.value = NetworkConnectionState.DISCONNECTED
+                    _connectedControllerInfo.value = null
+                    _statusMessage.tryEmit(
                         StatusMessage("Disconnected from PC: $reason", StatusMessage.Level.WARNING)
                     )
                     Log.w(TAG, "Disconnected from PC controller: $reason")
@@ -354,7 +354,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                 }
 
                 override fun onError(operation: String, error: String) {
-                    _statusMessage.value =
+                    _statusMessage.tryEmit(
                         StatusMessage(
                             "Network error in $operation: $error",
                             StatusMessage.Level.ERROR
@@ -364,11 +364,11 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                 }
             })
 
-            _networkConnectionState.value = NetworkConnectionState.DISCONNECTED)
+            _networkConnectionState.value = NetworkConnectionState.DISCONNECTED
             Log.d(TAG, "Network components initialized")
         } catch (e: Exception) {
             Log.e(TAG, "Failed to initialize network components", e)
-            _networkConnectionState.value = NetworkConnectionState.ERROR)
+            _networkConnectionState.value = NetworkConnectionState.ERROR
             throw e
         }
     }
@@ -380,11 +380,11 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                 mpdc4gsr.core.StructuredLogger.getInstance(getApplication())
             )
 
-            _sessionState.value = SessionState.IDLE)
+            _sessionState.value = SessionState.IDLE
             Log.d(TAG, "Session components initialized")
         } catch (e: Exception) {
             Log.e(TAG, "Failed to initialize session components", e)
-            _sessionState.value = SessionState.ERROR)
+            _sessionState.value = SessionState.ERROR
             throw e
         }
     }
@@ -394,9 +394,9 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
         viewModelScope.launch {
             try {
                 _gsrConnectionState.value = GSRConnectionState.DISCOVERING
-                _statusMessage.value =
+                _statusMessage.tryEmit(
                     StatusMessage("Searching for GSR sensor...", StatusMessage.Level.INFO)
-
+                )
 
                 withContext(Dispatchers.IO) {
 
@@ -412,8 +412,8 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                             )
 
 
-                            _gsrConnectionState.value = GSRConnectionState.CONNECTING)
-                            _statusMessage.value =
+                            _gsrConnectionState.value = GSRConnectionState.CONNECTING
+                            _statusMessage.tryEmit(
                                 StatusMessage(
                                     "Connecting to GSR sensor...",
                                     StatusMessage.Level.INFO
@@ -423,8 +423,8 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
 
                             kotlinx.coroutines.delay(2000)
 
-                            _gsrConnectionState.value = GSRConnectionState.CONNECTED)
-                            _statusMessage.value =
+                            _gsrConnectionState.value = GSRConnectionState.CONNECTED
+                            _statusMessage.tryEmit(
                                 StatusMessage(
                                     "GSR sensor connected (simulated)",
                                     StatusMessage.Level.INFO
@@ -440,8 +440,8 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
 
                         val initSuccess = recorder.initialize()
                         if (!initSuccess) {
-                            _gsrConnectionState.value = GSRConnectionState.ERROR)
-                            _statusMessage.value =
+                            _gsrConnectionState.value = GSRConnectionState.ERROR
+                            _statusMessage.tryEmit(
                                 StatusMessage(
                                     "Failed to initialize GSR recorder",
                                     StatusMessage.Level.ERROR
@@ -450,16 +450,16 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                             return@withContext
                         }
 
-                        _gsrConnectionState.value = GSRConnectionState.CONNECTING)
-                        _statusMessage.value =
+                        _gsrConnectionState.value = GSRConnectionState.CONNECTING
+                        _statusMessage.tryEmit(
                             StatusMessage("Starting device discovery...", StatusMessage.Level.INFO)
                         )
 
 
                         val discoverySuccess = recorder.startDeviceDiscovery()
                         if (!discoverySuccess) {
-                            _gsrConnectionState.value = GSRConnectionState.ERROR)
-                            _statusMessage.value =
+                            _gsrConnectionState.value = GSRConnectionState.ERROR
+                            _statusMessage.tryEmit(
                                 StatusMessage("No GSR devices found", StatusMessage.Level.ERROR)
                             )
                             return@withContext
@@ -468,8 +468,8 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
 
                         val devices = recorder.getDiscoveredDevices()
                         if (devices.isEmpty()) {
-                            _gsrConnectionState.value = GSRConnectionState.ERROR)
-                            _statusMessage.value =
+                            _gsrConnectionState.value = GSRConnectionState.ERROR
+                            _statusMessage.tryEmit(
                                 StatusMessage(
                                     "No compatible GSR devices detected",
                                     StatusMessage.Level.ERROR
@@ -480,7 +480,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
 
 
                         val targetDevice = devices.first()
-                        _statusMessage.value =
+                        _statusMessage.tryEmit(
                             StatusMessage(
                                 "Connecting to ${targetDevice.name}...",
                                 StatusMessage.Level.INFO
@@ -489,8 +489,8 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
 
                         val connectionSuccess = recorder.connectToDevice(targetDevice)
                         if (connectionSuccess) {
-                            _gsrConnectionState.value = GSRConnectionState.CONNECTED)
-                            _statusMessage.value =
+                            _gsrConnectionState.value = GSRConnectionState.CONNECTED
+                            _statusMessage.tryEmit(
                                 StatusMessage(
                                     "Connected to ${targetDevice.name}",
                                     StatusMessage.Level.INFO
@@ -500,8 +500,8 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
 
                             monitorGSRStatus(recorder)
                         } else {
-                            _gsrConnectionState.value = GSRConnectionState.ERROR)
-                            _statusMessage.value =
+                            _gsrConnectionState.value = GSRConnectionState.ERROR
+                            _statusMessage.tryEmit(
                                 StatusMessage(
                                     "Failed to connect to ${targetDevice.name}",
                                     StatusMessage.Level.ERROR
@@ -511,8 +511,8 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
 
                     } catch (e: Exception) {
                         Log.e(TAG, "Error during GSR connection", e)
-                        _gsrConnectionState.value = GSRConnectionState.ERROR)
-                        _statusMessage.value =
+                        _gsrConnectionState.value = GSRConnectionState.ERROR
+                        _statusMessage.tryEmit(
                             StatusMessage(
                                 "GSR connection error: ${e.message}",
                                 StatusMessage.Level.ERROR
@@ -523,10 +523,10 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to start GSR connection", e)
                 _gsrConnectionState.value = GSRConnectionState.ERROR
-                _statusMessage.value = StatusMessage(
+                _statusMessage.tryEmit(StatusMessage(
                     "GSR connection failed: ${e.message}",
                     StatusMessage.Level.ERROR
-                )
+                ))
             }
         }
     }
@@ -541,7 +541,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
 
 
                     if (status.contains("Connected")) {
-                        _gsrBatteryLevel.value = 85)
+                        _gsrBatteryLevel.value = 85
                     }
                 }
             } catch (e: Exception) {
@@ -557,7 +557,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
 
 
                     if (quality < 0.3) {
-                        _statusMessage.value =
+                        _statusMessage.tryEmit(
                             StatusMessage("GSR connection quality low", StatusMessage.Level.WARNING)
                         )
                     }
@@ -573,8 +573,9 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
         viewModelScope.launch {
             try {
                 _networkConnectionState.value = NetworkConnectionState.DISCOVERING
-                _statusMessage.value =
+                _statusMessage.tryEmit(
                     StatusMessage("Searching for PC controllers...", StatusMessage.Level.INFO)
+                )
 
                 withContext(Dispatchers.IO) {
                     networkClient?.let { client ->
@@ -585,12 +586,12 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                             val connected =
                                 client.connectToController(controller.ipAddress, controller.port)
                             if (connected) {
-                                _networkConnectionState.value = NetworkConnectionState.CONNECTED)
-                                _connectedControllerInfo.value = controller)
+                                _networkConnectionState.value = NetworkConnectionState.CONNECTED
+                                _connectedControllerInfo.value = controller
                             }
                         } else {
-                            _networkConnectionState.value = NetworkConnectionState.DISCONNECTED)
-                            _statusMessage.value =
+                            _networkConnectionState.value = NetworkConnectionState.DISCONNECTED
+                            _statusMessage.tryEmit(
                                 StatusMessage(
                                     "No PC controllers found",
                                     StatusMessage.Level.WARNING
@@ -602,10 +603,10 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to start network discovery", e)
                 _networkConnectionState.value = NetworkConnectionState.ERROR
-                _statusMessage.value = StatusMessage(
+                _statusMessage.tryEmit(StatusMessage(
                     "Network discovery failed: ${e.message}",
                     StatusMessage.Level.ERROR
-                )
+                ))
             }
         }
     }
@@ -620,8 +621,9 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                 }
 
                 _sessionState.value = SessionState.STARTING
-                _statusMessage.value =
+                _statusMessage.tryEmit(
                     StatusMessage("Starting recording session...", StatusMessage.Level.INFO)
+                )
 
                 withContext(Dispatchers.IO) {
 
@@ -664,9 +666,9 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                             }
                         }
 
-                        _currentSession.value = session)
-                        _sessionState.value = SessionState.RECORDING)
-                        _statusMessage.value =
+                        _currentSession.value = session
+                        _sessionState.value = SessionState.RECORDING
+                        _statusMessage.tryEmit(
                             StatusMessage(
                                 "Recording session started: ${session.sessionId}",
                                 StatusMessage.Level.INFO
@@ -679,10 +681,10 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to start recording session", e)
                 _sessionState.value = SessionState.ERROR
-                _statusMessage.value = StatusMessage(
+                _statusMessage.tryEmit(StatusMessage(
                     "Failed to start recording: ${e.message}",
                     StatusMessage.Level.ERROR
-                )
+                ))
             }
         }
     }
@@ -697,8 +699,9 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
                 }
 
                 _sessionState.value = SessionState.STOPPING
-                _statusMessage.value =
+                _statusMessage.tryEmit(
                     StatusMessage("Stopping recording session...", StatusMessage.Level.INFO)
+                )
 
                 withContext(Dispatchers.IO) {
                     _currentSession.value?.let { session ->
@@ -717,9 +720,9 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
 
                         gsrSessionManager?.completeSession(session.sessionId)
 
-                        _currentSession.value = null)
-                        _sessionState.value = SessionState.IDLE)
-                        _statusMessage.value =
+                        _currentSession.value = null
+                        _sessionState.value = SessionState.IDLE
+                        _statusMessage.tryEmit(
                             StatusMessage("Recording session stopped", StatusMessage.Level.INFO)
                         )
 
@@ -729,10 +732,10 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to stop recording session", e)
                 _sessionState.value = SessionState.ERROR
-                _statusMessage.value = StatusMessage(
+                _statusMessage.tryEmit(StatusMessage(
                     "Failed to stop recording: ${e.message}",
                     StatusMessage.Level.ERROR
-                )
+                ))
             }
         }
     }
@@ -755,7 +758,8 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
 
 
     fun clearStatusMessage() {
-        _statusMessage.value = null
+        // SharedFlow doesn't support null emission, so we skip this
+        // The UI should handle the clearing of status messages differently
     }
 
 
@@ -799,7 +803,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
         message: String? = null,
         isRecording: Boolean = false
     ) {
-        _rgbCameraState.value = SensorState(status, message, isRecording))
+        _rgbCameraState.value = SensorState(status, message, isRecording)
     }
 
     fun updateThermalCameraState(
@@ -807,7 +811,7 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
         message: String? = null,
         isRecording: Boolean = false
     ) {
-        _thermalCameraState.value = SensorState(status, message, isRecording))
+        _thermalCameraState.value = SensorState(status, message, isRecording)
     }
 
     fun updateGSRSensorState(
@@ -815,13 +819,13 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
         message: String? = null,
         isRecording: Boolean = false
     ) {
-        _gsrSensorState.value = SensorState(status, message, isRecording))
+        _gsrSensorState.value = SensorState(status, message, isRecording)
     }
 
     // Manual camera controls
     fun lockExposure(locked: Boolean) {
-        _exposureLocked.value = locked)
-        _statusMessage.value =
+        _exposureLocked.value = locked
+        _statusMessage.tryEmit(
             StatusMessage(
                 if (locked) "Exposure locked" else "Exposure auto mode enabled",
                 StatusMessage.Level.INFO
@@ -830,8 +834,8 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
     }
 
     fun lockFocus(locked: Boolean) {
-        _focusLocked.value = locked)
-        _statusMessage.value =
+        _focusLocked.value = locked
+        _statusMessage.tryEmit(
             StatusMessage(
                 if (locked) "Focus locked" else "Focus auto mode enabled",
                 StatusMessage.Level.INFO
@@ -840,8 +844,8 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
     }
 
     fun setExposureCompensation(compensation: Float) {
-        _exposureCompensation.value = compensation)
-        _statusMessage.value =
+        _exposureCompensation.value = compensation
+        _statusMessage.tryEmit(
             StatusMessage(
                 "Exposure compensation: ${if (compensation > 0) "+" else ""}$compensation EV",
                 StatusMessage.Level.INFO
@@ -851,15 +855,15 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
 
     // Recording trigger indication
     fun setRemoteTriggered(isRemote: Boolean) {
-        _isRemoteTriggered.value = isRemote)
+        _isRemoteTriggered.value = isRemote
     }
 
     // Reset manual controls to auto
     fun resetCameraControlsToAuto() {
-        _exposureLocked.value = false)
-        _focusLocked.value = false)
-        _exposureCompensation.value = 0.0f)
-        _statusMessage.value =
+        _exposureLocked.value = false
+        _focusLocked.value = false
+        _exposureCompensation.value = 0.0f
+        _statusMessage.tryEmit(
             StatusMessage("Camera controls reset to auto", StatusMessage.Level.INFO)
         )
     }

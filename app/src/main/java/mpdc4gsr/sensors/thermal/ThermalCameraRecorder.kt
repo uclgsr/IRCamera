@@ -875,8 +875,8 @@ class ThermalCameraRecorder(
                 }
 
 
-                val connectCallback = object : com.infisense.iruvc.uvc.ConnectCallback {
-                    override fun onCameraOpened(camera: UVCCamera?) {
+                val connectCallback = object : com.energy.iruvc.uvc.ConnectCallback {
+                    override fun onCameraOpened(p0: UVCCamera?) {
                         Log.i(TAG, "Thermal camera opened successfully")
                         isIRCameraConnected = true
 
@@ -885,7 +885,7 @@ class ThermalCameraRecorder(
                         }
                     }
 
-                    override fun onIRCMDCreate(ircmd: com.infisense.iruvc.ircmd.IRCMD?) {
+                    override fun onIRCMDCreate(ircmd: com.energy.iruvc.ircmd.IRCMD?) {
                         Log.d(TAG, "IRCMD created for thermal camera")
 
                         // Configure device settings equivalent to reference implementation
