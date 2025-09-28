@@ -16,7 +16,7 @@ class CommandServer {
     private var commandCallback: ProtocolHandler.CommandCallback? = null
     private var timeSyncManager: TimeSyncManager? = null
 
-    fun setCommandCallback(callback: ProtocolHandler.CommandCallback) {
+    fun setCommandCallback(callback: ProtocolHandler.CommandCallback?) {
         commandCallback = callback
     }
 
