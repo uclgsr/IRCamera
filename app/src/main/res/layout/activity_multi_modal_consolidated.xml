@@ -14,6 +14,12 @@
         <variable
             name="isRecording"
             type="Boolean" />
+        <variable
+            name="hasRgbCamera"
+            type="Boolean" />
+        <variable
+            name="hasCameraPreview"
+            type="Boolean" />
     </data>
 
     <ScrollView
@@ -40,6 +46,91 @@
                 android:textSize="24sp"
                 android:textStyle="bold"
                 tools:text="Multi-Modal Recording" />
+
+            <!-- Camera Preview Section (for RGB camera) -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:visibility="@{hasRgbCamera ? View.VISIBLE : View.GONE}"
+                app:cardBackgroundColor="#FF2A2A2A"
+                app:cardCornerRadius="8dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:text="RGB Camera Preview"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <!-- Camera Preview Container -->
+                    <FrameLayout
+                        android:id="@+id/camera_preview_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:background="@android:color/black"
+                        android:visibility="@{hasCameraPreview ? View.VISIBLE : View.GONE}">
+
+                        <!-- Placeholder for PreviewView -->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="Camera Preview"
+                            android:textColor="@color/white"
+                            android:textSize="14sp" />
+                    </FrameLayout>
+
+                    <!-- Camera Controls -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/focus_button"
+                            style="@style/Widget.Material3.Button.TextButton"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="4dp"
+                            android:layout_weight="1"
+                            android:text="Focus"
+                            android:textColor="@color/primary_color"
+                            android:textSize="12sp" />
+
+                        <Button
+                            android:id="@+id/exposure_button"
+                            style="@style/Widget.Material3.Button.TextButton"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="4dp"
+                            android:layout_weight="1"
+                            android:text="Exposure"
+                            android:textColor="@color/primary_color"
+                            android:textSize="12sp" />
+
+                        <Button
+                            android:id="@+id/quality_button"
+                            style="@style/Widget.Material3.Button.TextButton"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:layout_weight="1"
+                            android:text="Quality"
+                            android:textColor="@color/primary_color"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
             <!-- System Status Card -->
             <androidx.cardview.widget.CardView
