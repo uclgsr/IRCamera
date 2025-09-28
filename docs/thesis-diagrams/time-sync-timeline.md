@@ -47,7 +47,7 @@ flowchart TD
     subgraph "NTP Synchronization"
         A[PC Controller] -->|NTP Query| B[Android System Clock]
         B -->|Chrony Adjustment| C[Local Time Base]
-        C -->|±20ms accuracy| D[System.currentTimeMillis()]
+        C -->|+/-20ms accuracy| D[System.currentTimeMillis()]
     end
     
     subgraph "Fine Synchronization" 
@@ -57,7 +57,7 @@ flowchart TD
     end
     
     A -.->|Session Control| E
-    H -.->|±2.1ms precision| I[Multi-modal Alignment]
+    H -.->|+/-2.1ms precision| I[Multi-modal Alignment]
 ```
 
 ### Phase 2: Sensor Stream Initialization (50-70ms)
@@ -104,8 +104,8 @@ flowchart TB
         E --> F
         
         F --> G{Alignment Check}
-        G -->|Within 5ms tolerance| H[✅ Synchronization Valid]
-        G -->|Outside tolerance| I[❌ Re-synchronization Required]
+        G -->|Within 5ms tolerance| H[[DONE] Synchronization Valid]
+        G -->|Outside tolerance| I[[FAIL] Re-synchronization Required]
         
         I --> J[Clock Drift Correction]
         J --> K[Linear Interpolation Adjustment]
@@ -119,11 +119,11 @@ flowchart TB
 
 | Sensor Modality     | Nominal Rate | Actual Precision | Drift Analysis    |
 |---------------------|--------------|------------------|-------------------|
-| PC Controller       | 1000Hz       | ±0.1ms (NTP)     | <1ms/hour         |
-| Android TimeManager | 1000Hz       | ±2.1ms (median)  | ±20ppm crystal    |
-| TC001 Thermal       | 25Hz         | ±3.2ms           | Hardware limited  |
-| Shimmer3 GSR        | 128Hz        | ±2.3ms (BLE)     | ±20ppm internal   |
-| RGB Camera          | 30fps        | ±1.8ms           | CameraX optimized |
+| PC Controller       | 1000Hz       | +/-0.1ms (NTP)     | <1ms/hour         |
+| Android TimeManager | 1000Hz       | +/-2.1ms (median)  | +/-20ppm crystal    |
+| TC001 Thermal       | 25Hz         | +/-3.2ms           | Hardware limited  |
+| Shimmer3 GSR        | 128Hz        | +/-2.3ms (BLE)     | +/-20ppm internal   |
+| RGB Camera          | 30fps        | +/-1.8ms           | CameraX optimized |
 
 ### Synchronization Failure Modes
 

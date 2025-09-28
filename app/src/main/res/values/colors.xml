@@ -1,105 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Base colors from original IRCamera -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="color_CCFFFFFF">#CCFFFFFF</color>
     <color name="c_bg_white">#FF16131E</color>
 
+    <!-- Essential system colors -->
+    <color name="transparent">#00000000</color>
+    <color name="grey">#FF808080</color>
 
-    <color name="primary_color">#FF2196F3</color>
-    <color name="background_card">#FF1E1E1E</color>
-    <color name="background_secondary">#FF2E2E2E</color>
-    <color name="border_light">#FF424242</color>
-    <color name="text_primary">#FFFFFFFF</color>
-    <color name="text_secondary">#FFCCCCCC</color>
-    <color name="text_tertiary">#FF999999</color>
-    <color name="text_hint">#BDBDBD</color>
-    <color name="segmented_button_text">@color/text_primary</color>
+    <!-- Material Design colors -->
+    <color name="colorPrimary">#FF1976D2</color>
+    <color name="colorPrimaryDark">#FF1565C0</color>
+    <color name="colorAccent">#FF2B79D8</color>
 
+    <!-- UI colors - harmonized with original theme -->
+    <color name="color_16131E">#FF16131E</color>
+    <color name="color_23202E">#23202E</color>
+    <color name="toolbar_16131E">@color/color_16131E</color>
+    <color name="ir_bg_color">@color/color_16131E</color>
 
-    <color name="background_primary">#FAFAFA</color>
+    <!-- Font colors -->
+    <color name="font_color">#FFFFFFFF</color>
+    <color name="font_second_color">#CCFFFFFF</color>
+    <color name="font_third_color">#999999</color>
+    <color name="temp_font_color">@color/font_color</color>
+    <color name="temp_font_second_color">@color/font_second_color</color>
 
-
+    <!-- Status colors -->
     <color name="status_connected">#4CAF50</color>
     <color name="status_connecting">#FF9800</color>
     <color name="status_disconnected">#F44336</color>
     <color name="status_available">#2196F3</color>
 
+    <!-- Chart colors -->
+    <color name="chart_bg">@color/color_16131E</color>
+    <color name="chart_text">@color/font_color</color>
+    <color name="chart_line_max">#FFFF5722</color>
+    <color name="chart_line_min">#FF4CAF50</color>
+    <color name="chart_line_center">#FF607D8B</color>
 
-    <color name="signal_strength_color">#2196F3</color>
-    <color name="battery_level_color">#4CAF50</color>
-
-
-    <color name="header_background">#E8F5E8</color>
-    <color name="card_background">#FFFFFF</color>
-    <color name="card_background_accent">#E3F2FD</color>
-
-
-    <color name="button_primary">#1976D2</color>
-    <color name="button_secondary">#757575</color>
-    <color name="button_accent">#FF5722</color>
-
-
-    <color name="fab_gsr_background">#FF1565C0</color>
-    <color name="gsr_pulse_color">#FF00E676</color>
-    <color name="gsr_recording_active">#FFFF5722</color>
-
-
-    <color name="colorPrimary">#FF1976D2</color>
-    <color name="colorAccent">#FF03DAC5</color>
-
-    <!-- Additional missing colors -->
-    <color name="color_img_calibration_right">#FF4CAF50</color>
-    <color name="chart_line_min">#FF00C853</color>
-
-    <!-- Missing colors causing build failures -->
-    <color name="transparent">#00000000</color>
-    <color name="temp_font_color">#FFFFFFFF</color>
-    <color name="temp_font_second_color">#FFCCCCCC</color>
-
-    <!-- Additional missing colors from error messages -->
-    <color name="color_16131E">#FF16131E</color>
-    <color name="color_E74380">#FFE74380</color>
-    <color name="lms_color_999">#FF999999</color>
-    <color name="lms_color_333">#FF333333</color>
-    <color name="toolbar_5F16131E">#5F16131E</color>
-    <color name="temp_font_title_item_color">#FFFFFFFF</color>
-    <color name="tx_333">#FF333333</color>
-
-    <!-- Missing primary colors -->
-    <color name="colorPrimaryDark">#FF1565C0</color>
-
-    <!-- Additional missing colors from build -->
-    <color name="fault_tolerant_recording_button">#FF4CAF50</color>
-
-    <!-- More missing colors from thermal module -->
-    <color name="ir_bg_color">#FF16131E</color>
-    <color name="color_img_calibration_normal">#FFCCCCCC</color>
-    <color name="color_img_calibration_left">#FF4CAF50</color>
-    <color name="color_img_calibration_button">#FF2196F3</color>
-    <color name="toolbar_16131E">#FF16131E</color>
-
-    <!-- More missing colors -->
-    <color name="color_font">#FFFFFFFF</color>
-
-    <!-- Semi-transparent colors used across modules -->
-    <color name="color_B3FFFFFF">#B3FFFFFF</color>
-    <color name="color_66FFFFFF">#66FFFFFF</color>
-    <color name="color_80FFFFFF">#80FFFFFF</color>
-
-    <!-- Additional thermal-related colors -->
-    <color name="we_read_theme_color">#2B79D8</color>
+    <!-- Compatibility aliases -->
+    <color name="text_primary">@color/font_color</color>
+    <color name="text_secondary">@color/font_second_color</color>
+    <color name="text_tertiary">@color/font_third_color</color>
+    <color name="primary_color">@color/colorPrimary</color>
+    <color name="button_primary">@color/colorPrimary</color>
+    <color name="fab_gsr_background">@color/colorPrimaryDark</color>
+    <color name="fault_tolerant_recording_button">@color/status_connected</color>
+    <color name="gsr_recording_active">@color/chart_line_max</color>
+    <color name="color_img_calibration_left">@color/status_connected</color>
+    <color name="color_img_calibration_right">@color/status_connected</color>
+    <color name="color_img_calibration_normal">@color/font_second_color</color>
+    <color name="color_img_calibration_button">@color/colorPrimary</color>
+    <color name="we_read_theme_color">@color/colorAccent</color>
     <color name="wheel_unselect_text">#B2FFFFFF</color>
-    <color name="ui_main_custom_color">#8A898E</color>
-    <color name="color_green_point">#0CEB82</color>
-    <color name="color_23202E">#23202E</color>
+    <color name="toastTextColor">@color/font_color</color>
 
-    <!-- More missing colors for components -->
-    <color name="grey">#FF808080</color>
-    <color name="white_80">#CCFFFFFF</color>
-
-    <!-- Additional missing colors from error messages -->
-    <color name="color_bg_min">#FF4CAF50</color>
+    <!-- Legacy colors for compatibility -->
+    <color name="white_80">@color/color_CCFFFFFF</color>
+    <color name="lms_color_999">@color/font_third_color</color>
+    <color name="lms_color_333">#FF333333</color>
+    <color name="tx_333">#FF333333</color>
     <color name="lms_red">#FFFF0000</color>
     <color name="toastTextColor">#FFFFFFFF</color>
     <color name="red">#FFFF0000</color>
