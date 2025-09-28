@@ -86,26 +86,26 @@ python generate_thesis_deliverables.py --android_ip 192.168.1.100 --run_tests
 
 ```
 thesis_deliverables/
-|-- chapter4_design_implementation/
-|   |-- system_architecture.md          # Mermaid diagrams
-|   |-- command_sequence_flow.md        # Interaction flows
-|   |-- time_synchronization_algorithm.md
-|   |-- software_design_diagrams.md     # Class diagrams
-|   |-- component_specifications.csv    # Hardware/software specs
-|   |-- implementation_details.md       # Technical details
-|-- chapter5_testing_results/
-|   |-- test_cases_validation_table.csv # Test methodology
-|   |-- time_sync_accuracy_analysis.png # Performance figures
-|   |-- multi_sensor_sync_timeline.png  # Coordination validation
-|   |-- performance_dashboard.png       # Summary metrics
-|-- chapter6_discussion_evaluation/
-|   |-- requirements_evaluation_table.md # 10 requirements assessed
-|   |-- performance_comparison.csv      # Target vs achieved
-|   |-- system_validation_report.md     # Complete evaluation
-|   |-- discussion_points.md            # Architecture decisions
-|   |-- recommendations.md              # Future development
-|   |-- final_evaluation_report.md      # Project assessment
-|-- thesis_deliverables_summary.md      # Master index
+├── chapter4_design_implementation/
+│   ├── system_architecture.md          # Mermaid diagrams
+│   ├── command_sequence_flow.md        # Interaction flows
+│   ├── time_synchronization_algorithm.md
+│   ├── software_design_diagrams.md     # Class diagrams
+│   ├── component_specifications.csv    # Hardware/software specs
+│   └── implementation_details.md       # Technical details
+├── chapter5_testing_results/
+│   ├── test_cases_validation_table.csv # Test methodology
+│   ├── time_sync_accuracy_analysis.png # Performance figures
+│   ├── multi_sensor_sync_timeline.png  # Coordination validation
+│   └── performance_dashboard.png       # Summary metrics
+├── chapter6_discussion_evaluation/
+│   ├── requirements_evaluation_table.md # 10 requirements assessed
+│   ├── performance_comparison.csv      # Target vs achieved
+│   ├── system_validation_report.md     # Complete evaluation
+│   ├── discussion_points.md            # Architecture decisions
+│   ├── recommendations.md              # Future development
+│   └── final_evaluation_report.md      # Project assessment
+└── thesis_deliverables_summary.md      # Master index
 ```
 
 ## [GRAD] **THESIS-READY OUTPUTS**
