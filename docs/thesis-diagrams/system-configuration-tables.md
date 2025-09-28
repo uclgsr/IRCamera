@@ -2,23 +2,23 @@
 
 ## Table 4.1: System Configuration and Sensor Specification
 
-| Component                       | Specification                               | Parameters                        | Communication             | Notes                                            |
-|---------------------------------|---------------------------------------------|-----------------------------------|---------------------------|--------------------------------------------------|
-| **Topdon TC001 Thermal Camera** | Resolution: 256x192                         | Frame Rate: 25 Hz                 | USB/OTG                   | Hardware VID/PID: 0x0525/0xa4a2, 0x0525/0xa4a5   |
-|                                 | Temperature Range: -20 degrees C to +550 degrees C          | Accuracy: +/-2 degrees C                    | Data Format: CSV          | SDK Integration: IRCMD, LibIRParse, LibIRProcess |
-|                                 | Calibration: Hardware emissivity correction | Emissivity Range: 0.1-1.0         | File Size: ~0.53 GB/30min | Color Palettes: Iron, Rainbow, Grayscale         |
-| **Shimmer3 GSR+ Sensor**        | Sampling Rate: 1-1024 Hz (128 Hz default)   | Range: 0-4 microS                     | Bluetooth 2.1+EDR         | IEEE 802.15.1 compliant                          |
-|                                 | ADC Resolution: 12-bit (0-4095)             | Battery: 12+ hours                | Data Format: CSV          | ShimmerAndroidAPI integration                    |
-|                                 | Internal Clock: 32 kHz crystal              | Accuracy: +/-20 ppm                 | File Size: ~0.09 GB/30min | Scientific-grade precision                       |
-| **RGB Camera (CameraX)**        | Resolution: 1920x1080                       | Frame Rate: 30 fps                | Internal camera API       | H.264 encoding                                   |
-|                                 | Encoding: H.264/AVC                         | Quality: High profile             | File Format: MP4          | File Size: ~1.56 GB/30min                        |
-|                                 | Focus: Continuous autofocus                 | Stabilization: Available          | Storage: Local device     | CameraX Jetpack library                          |
-| **Android Device**              | Min SDK: 26 (Android 8.0)                   | Target SDK: 34 (Android 14)       | Wi-Fi 802.11n/ac          | Samsung Galaxy validated                         |
-|                                 | RAM: 6GB+ recommended                       | Storage: 64GB+                    | USB: OTG support required | Multiple device support                          |
-|                                 | Bluetooth: BLE 4.0+                         | Permissions: Camera, Storage, BLE | Network: TCP/IP local     | Thread pool management                           |
-| **PC Controller**               | Python 3.8+                                 | Qt6/PyQt6                         | TCP Server Port 8080      | Cross-platform (Windows/Linux/macOS)             |
-|                                 | RAM: 8GB+ recommended                       | Network: Gigabit Ethernet         | Protocol: JSON/TCP        | Master clock coordination                        |
-|                                 | Storage: SSD recommended                    | Sync: Chrony NTP server           | Session management        | Multi-device orchestration                       |
+| Component                       | Specification                                      | Parameters                        | Communication             | Notes                                            |
+|---------------------------------|----------------------------------------------------|-----------------------------------|---------------------------|--------------------------------------------------|
+| **Topdon TC001 Thermal Camera** | Resolution: 256x192                                | Frame Rate: 25 Hz                 | USB/OTG                   | Hardware VID/PID: 0x0525/0xa4a2, 0x0525/0xa4a5   |
+|                                 | Temperature Range: -20 degrees C to +550 degrees C | Accuracy: +/-2 degrees C          | Data Format: CSV          | SDK Integration: IRCMD, LibIRParse, LibIRProcess |
+|                                 | Calibration: Hardware emissivity correction        | Emissivity Range: 0.1-1.0         | File Size: ~0.53 GB/30min | Color Palettes: Iron, Rainbow, Grayscale         |
+| **Shimmer3 GSR+ Sensor**        | Sampling Rate: 1-1024 Hz (128 Hz default)          | Range: 0-4 microS                 | Bluetooth 2.1+EDR         | IEEE 802.15.1 compliant                          |
+|                                 | ADC Resolution: 12-bit (0-4095)                    | Battery: 12+ hours                | Data Format: CSV          | ShimmerAndroidAPI integration                    |
+|                                 | Internal Clock: 32 kHz crystal                     | Accuracy: +/-20 ppm               | File Size: ~0.09 GB/30min | Scientific-grade precision                       |
+| **RGB Camera (CameraX)**        | Resolution: 1920x1080                              | Frame Rate: 30 fps                | Internal camera API       | H.264 encoding                                   |
+|                                 | Encoding: H.264/AVC                                | Quality: High profile             | File Format: MP4          | File Size: ~1.56 GB/30min                        |
+|                                 | Focus: Continuous autofocus                        | Stabilization: Available          | Storage: Local device     | CameraX Jetpack library                          |
+| **Android Device**              | Min SDK: 26 (Android 8.0)                          | Target SDK: 34 (Android 14)       | Wi-Fi 802.11n/ac          | Samsung Galaxy validated                         |
+|                                 | RAM: 6GB+ recommended                              | Storage: 64GB+                    | USB: OTG support required | Multiple device support                          |
+|                                 | Bluetooth: BLE 4.0+                                | Permissions: Camera, Storage, BLE | Network: TCP/IP local     | Thread pool management                           |
+| **PC Controller**               | Python 3.8+                                        | Qt6/PyQt6                         | TCP Server Port 8080      | Cross-platform (Windows/Linux/macOS)             |
+|                                 | RAM: 8GB+ recommended                              | Network: Gigabit Ethernet         | Protocol: JSON/TCP        | Master clock coordination                        |
+|                                 | Storage: SSD recommended                           | Sync: Chrony NTP server           | Session management        | Multi-device orchestration                       |
 
 ## Table 4.2: Custom Protocol Command Specification
 
@@ -47,17 +47,17 @@
 
 ## Table 4.3: Hardware Integration Specifications
 
-| Integration Point        | Technology               | Implementation                  | Validation                     | Performance                  |
-|--------------------------|--------------------------|---------------------------------|--------------------------------|------------------------------|
-| **TC001 Thermal SDK**    | Native Android SDK       | `com.energy.iruvc.*` classes    | Hardware device detection      | 256x192@25Hz sustained       |
-|                          | Temperature calibration  | Hardware emissivity correction  | +/-2 degrees C accuracy validation       | Production-grade accuracy    |
-|                          | Color palette processing | Iron/Rainbow/Grayscale          | Visual thermal rendering       | Professional imaging quality |
-| **Shimmer3 Integration** | ShimmerAndroidAPI        | `com.shimmerresearch.android.*` | 12-bit ADC validation          | 128 Hz @ <3ms latency        |
-|                          | BLE protocol handling    | Nordic BLE library backend      | Connection reliability testing | >95% uptime typical          |
-|                          | GSR signal processing    | Microsiemens conversion         | Scientific accuracy validation | Research-grade precision     |
-| **CameraX Integration**  | Android Jetpack          | `androidx.camera.*` libraries   | H.264 encoding validation      | 1080p@30fps sustained        |
-|                          | Lifecycle management     | Activity/service integration    | Background recording support   | Battery-efficient operation  |
-|                          | Permission handling      | Runtime permission system       | User consent flow              | Privacy compliance           |
+| Integration Point        | Technology               | Implementation                  | Validation                         | Performance                  |
+|--------------------------|--------------------------|---------------------------------|------------------------------------|------------------------------|
+| **TC001 Thermal SDK**    | Native Android SDK       | `com.energy.iruvc.*` classes    | Hardware device detection          | 256x192@25Hz sustained       |
+|                          | Temperature calibration  | Hardware emissivity correction  | +/-2 degrees C accuracy validation | Production-grade accuracy    |
+|                          | Color palette processing | Iron/Rainbow/Grayscale          | Visual thermal rendering           | Professional imaging quality |
+| **Shimmer3 Integration** | ShimmerAndroidAPI        | `com.shimmerresearch.android.*` | 12-bit ADC validation              | 128 Hz @ <3ms latency        |
+|                          | BLE protocol handling    | Nordic BLE library backend      | Connection reliability testing     | >95% uptime typical          |
+|                          | GSR signal processing    | Microsiemens conversion         | Scientific accuracy validation     | Research-grade precision     |
+| **CameraX Integration**  | Android Jetpack          | `androidx.camera.*` libraries   | H.264 encoding validation          | 1080p@30fps sustained        |
+|                          | Lifecycle management     | Activity/service integration    | Background recording support       | Battery-efficient operation  |
+|                          | Permission handling      | Runtime permission system       | User consent flow                  | Privacy compliance           |
 
 ## Table 4.4: Network Architecture Configuration
 

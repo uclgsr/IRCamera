@@ -1,53 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
         <!-- Data binding placeholder -->
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#16131e"
-        android:fitsSystemWindows="true">
+    <androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent"
+        android:layout_height="match_parent" android:background="#16131e" android:fitsSystemWindows="true">
 
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="0dp"
-            android:layout_height="56dp"
-            android:background="@color/colorPrimary"
-            android:elevation="4dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:titleTextColor="@android:color/white" />
+        <androidx.appcompat.widget.Toolbar android:id="@+id/toolbar" android:layout_width="0dp"
+            android:layout_height="56dp" android:background="@color/colorPrimary" android:elevation="4dp"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" app:titleTextColor="@android:color/white" />
 
 
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/gsr_gallery_tab"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:background="#2a2a2a"
-            android:elevation="2dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/toolbar"
-            app:tabIndicatorColor="@color/colorAccent"
-            app:tabMode="scrollable"
-            app:tabRippleColor="@color/colorAccent"
-            app:tabSelectedTextColor="@color/colorAccent"
-            app:tabTextColor="#ccffffff" />
+        <com.google.android.material.tabs.TabLayout android:id="@+id/gsr_gallery_tab" android:layout_width="0dp"
+            android:layout_height="48dp" android:background="#2a2a2a" android:elevation="2dp"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar" app:tabIndicatorColor="@color/colorAccent"
+            app:tabMode="scrollable" app:tabRippleColor="@color/colorAccent"
+            app:tabSelectedTextColor="@color/colorAccent" app:tabTextColor="#ccffffff" />
 
 
-        <androidx.viewpager.widget.ViewPager
-            android:id="@+id/gsr_gallery_viewpager"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+        <androidx.viewpager.widget.ViewPager android:id="@+id/gsr_gallery_viewpager" android:layout_width="0dp"
+            android:layout_height="0dp" app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/gsr_gallery_tab" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

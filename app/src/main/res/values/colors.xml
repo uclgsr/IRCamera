@@ -58,6 +58,18 @@
     <color name="wheel_unselect_text">#B2FFFFFF</color>
     <color name="toastTextColor">#FFFFFFFF</color>
 
+    <!-- Missing colors for consolidated layouts -->
+    <color name="segmented_button_text">@color/font_color</color>
+    <color name="background_card">@color/color_23202E</color>
+    <color name="button_accent">@color/colorAccent</color>
+    <color name="button_secondary">@color/colorPrimaryDark</color>
+    <color name="card_background">@color/color_23202E</color>
+    <color name="text_hint">@color/font_third_color</color>
+    <color name="border_light">#FF444444</color>
+    <color name="background_secondary">@color/color_16131E</color>
+    <color name="signal_strength_color">@color/status_connected</color>
+    <color name="battery_level_color">@color/status_available</color>
+
     <!-- Legacy colors for compatibility -->
     <color name="white_80">@color/color_CCFFFFFF</color>
     <color name="lms_color_999">@color/font_third_color</color>

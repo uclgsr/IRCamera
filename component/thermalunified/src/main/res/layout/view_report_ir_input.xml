@@ -9,67 +9,67 @@
     android:scrollbars="vertical"
     tools:background="#16131e">
 
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:paddingBottom="20dp">
-
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_title"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:id="@+id/tv_title"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:background="@drawable/bg_corners_top_10_solid_20_ff"
-            android:gravity="center_vertical"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:textColor="#FFBA42"
-            android:textSize="15sp"
-            app:layout_constraintDimensionRatio="335:49"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="This is a[REPORT_FIELD]" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="20dp">
 
 
-    <View
-        android:id="@+id/view_line"
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:background="@drawable/shape_stroke_1_5b5961_dash_5"
-        android:visibility="gone" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@drawable/bg_corners_top_10_solid_20_ff"
+                android:gravity="center_vertical"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:textColor="#FFBA42"
+                android:textSize="15sp"
+                app:layout_constraintDimensionRatio="335:49"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="This is a[REPORT_FIELD]" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-    <include
-        android:id="@+id/cl_max"
-        layout="@layout/item_report_ir_input" />
+        <View
+            android:id="@+id/view_line"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/shape_stroke_1_5b5961_dash_5"
+            android:visibility="gone" />
 
 
-    <include
-        android:id="@+id/cl_min"
-        layout="@layout/item_report_ir_input"
-        android:visibility="gone" />
+        <include
+            android:id="@+id/cl_max"
+            layout="@layout/item_report_ir_input" />
 
 
-    <include
-        android:id="@+id/cl_average"
-        layout="@layout/item_report_ir_input"
-        android:visibility="gone" />
+        <include
+            android:id="@+id/cl_min"
+            layout="@layout/item_report_ir_input"
+            android:visibility="gone" />
 
 
-    <include
-        android:id="@+id/cl_explain"
-        layout="@layout/item_report_ir_input" />
+        <include
+            android:id="@+id/cl_average"
+            layout="@layout/item_report_ir_input"
+            android:visibility="gone" />
 
-</LinearLayout>
+
+        <include
+            android:id="@+id/cl_explain"
+            layout="@layout/item_report_ir_input" />
+
+    </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>
