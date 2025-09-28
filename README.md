@@ -104,7 +104,7 @@ python run_evaluation.py
 
 ### Performance Metrics
 - **Thermal Data**: 25 FPS (target: 15 FPS)
-- **RGB Video**: 30 FPS (target: 24 FPS) 
+- **RGB Video**: 30 FPS (target: 24 FPS)
 - **GSR Sampling**: 128 Hz (target: 51.2 Hz)
 - **Command Latency**: <200ms (target: <500ms)
 - **System Reliability**: 99.2% success rate
