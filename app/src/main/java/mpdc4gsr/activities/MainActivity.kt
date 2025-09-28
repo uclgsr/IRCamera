@@ -40,6 +40,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import com.mpdc4gsr.module.thermalunified.fragment.IRGalleryTabFragment
 import com.mpdc4gsr.module.user.fragment.MineFragment
+import com.mpdc4gsr.module.user.fragment.MoreFragment
 
 class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickListener {
     companion object {
@@ -84,11 +85,12 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
 
     private fun setupUI() {
         binding.viewPage.adapter = ViewPagerAdapter(this)
-        binding.viewPage.offscreenPageLimit = 3
+        binding.viewPage.offscreenPageLimit = 4
         binding.viewPage.isUserInputEnabled = false
 
         binding.clIconGallery.setOnClickListener(this)
         binding.viewMain.setOnClickListener(this)
+        binding.clIconSettings.setOnClickListener(this)
         binding.clIconMine.setOnClickListener(this)
 
         binding.networkStatusBar.setOnClickListener { /* Logic handled by ViewModel */ }
@@ -155,7 +157,8 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         when (v?.id) {
             R.id.cl_icon_gallery -> viewModel.onNavigationItemSelected(0)
             R.id.view_main -> viewModel.onNavigationItemSelected(1)
-            R.id.cl_icon_mine -> viewModel.onNavigationItemSelected(2)
+            R.id.cl_icon_settings -> viewModel.onNavigationItemSelected(2)
+            R.id.cl_icon_mine -> viewModel.onNavigationItemSelected(3)
         }
     }
 
@@ -196,8 +199,10 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
 
         binding.ivIconGallery.isSelected = index == 0
         binding.tvIconGallery.isSelected = index == 0
-        binding.ivIconMine.isSelected = index == 2
-        binding.tvIconMine.isSelected = index == 2
+        binding.ivIconSettings.isSelected = index == 2
+        binding.tvIconSettings.isSelected = index == 2
+        binding.ivIconMine.isSelected = index == 3
+        binding.tvIconMine.isSelected = index == 3
         binding.ivBottomMainBg.setImageResource(
             if (index == 1) R.drawable.ic_main_bg_select else R.drawable.ic_main_bg_not_select
         )
@@ -334,11 +339,12 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     }
 
     private class ViewPagerAdapter(activity: FragmentActivity) : FragmentStateAdapter(activity) {
-        override fun getItemCount(): Int = 3
+        override fun getItemCount(): Int = 4
         override fun createFragment(position: Int): Fragment {
             return when (position) {
                 0 -> IRGalleryTabFragment()
                 1 -> MainFragment()
+                2 -> MoreFragment()
                 else -> MineFragment()
             }
         }
