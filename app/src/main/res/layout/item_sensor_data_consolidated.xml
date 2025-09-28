@@ -39,7 +39,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:contentDescription="Sensor type"
-                android:src="@{sensorType.equals(@string/thermal_sensor_type) ? @drawable/ic_thermal : sensorType.equals(@string/gsr_sensor_type) ? @drawable/ic_gsr_pulse : @drawable/ic_sensor_generic}"
+                app:sensorIcon="@{sensorType}"
                 android:tint="@{hasError ? @color/red : @color/primary_color}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
