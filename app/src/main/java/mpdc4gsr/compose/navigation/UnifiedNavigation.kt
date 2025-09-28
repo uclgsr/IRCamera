@@ -31,11 +31,15 @@ sealed class UnifiedRoute(val route: String) {
     // GSR Sensor Routes
     object GSRSettings : UnifiedRoute("gsr_settings")
     object GSRModernizationDemo : UnifiedRoute("gsr_modernization_demo")
+    object GSRPlot : UnifiedRoute("gsr_plot/{sessionId}") {
+        fun createRoute(sessionId: String) = "gsr_plot/$sessionId"
+    }
+    object GSRDataView : UnifiedRoute("gsr_data_view/{filePath}") {
+        fun createRoute(filePath: String) = "gsr_data_view/$filePath"
+    }
     object SessionDetail : UnifiedRoute("session_detail/{sessionId}") {
         fun createRoute(sessionId: String) = "session_detail/$sessionId"
     }
-    object GSRDataView : UnifiedRoute("gsr_data_view")
-    object GSRPlot : UnifiedRoute("gsr_plot")
     
     // Camera Integration Routes
     object CameraDashboard : UnifiedRoute("camera_dashboard")
@@ -132,7 +136,23 @@ fun UnifiedNavHost(
             SessionDetailScreen(
                 sessionId = sessionId,
                 onBackClick = { navController.popBackStack() },
-                onNavigateToGSRPlot = { navController.navigate(UnifiedRoute.GSRPlot.route) }
+                onNavigateToGSRPlot = { navController.navigate(UnifiedRoute.GSRPlot.createRoute(sessionId)) }
+            )
+        }
+        
+        composable(UnifiedRoute.GSRPlot.route) { backStackEntry ->
+            val sessionId = backStackEntry.arguments?.getString("sessionId") ?: "unknown"
+            GSRPlotScreen(
+                sessionId = sessionId,
+                onBackClick = { navController.popBackStack() }
+            )
+        }
+        
+        composable(UnifiedRoute.GSRDataView.route) { backStackEntry ->
+            val filePath = backStackEntry.arguments?.getString("filePath") ?: ""
+            GSRDataViewScreen(
+                filePath = filePath,
+                onBackClick = { navController.popBackStack() }
             )
         }
         

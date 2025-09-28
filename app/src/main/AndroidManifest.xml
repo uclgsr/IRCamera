@@ -245,6 +245,18 @@
             android:exported="false"
             android:label="Session Details (Compose)"
             android:theme="@style/AppTheme" />
+            
+        <activity
+            android:name="mpdc4gsr.sensors.gsr.GSRPlotComposeActivity"
+            android:exported="false"
+            android:label="GSR Data Analysis (Compose)"
+            android:theme="@style/AppTheme" />
+            
+        <activity
+            android:name="mpdc4gsr.sensors.gsr.GSRDataViewComposeActivity"
+            android:exported="false"
+            android:label="GSR Data Viewer (Compose)"
+            android:theme="@style/AppTheme" />
         <activity
             android:name="mpdc4gsr.sensors.gsr.SessionExportActivity"
             android:exported="false"
