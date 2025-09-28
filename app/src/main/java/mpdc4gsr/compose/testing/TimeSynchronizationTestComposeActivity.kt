@@ -60,6 +60,14 @@ class TimeSynchronizationTestComposeActivity : ComponentActivity() {
 
     private var timeSyncService: TimeSynchronizationService? = null
     private var recordingController: RecordingController? = null
+    
+    // State variables hoisted to activity level
+    private var timestampChecks = listOf<TimestampCheck>()
+    private var syncEvents = listOf<SyncEvent>()
+    private var syncMetrics = mapOf<String, Any>()
+    private var maxDriftMs = 0L
+    private var currentSyncStatus = "Not Synchronized"
+    private var isTestRunning = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

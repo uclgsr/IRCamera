@@ -494,9 +494,15 @@ class TestingSuiteHubActivity : ComponentActivity() {
 
     private fun runComprehensiveTests() {
         lifecycleScope.launch {
-            // Launch comprehensive testing suite
-            val intent = Intent(this@TestingSuiteHubActivity, ComposeTestingSuite::class.java)
-            startActivity(intent)
+            // Run comprehensive testing suite directly
+            try {
+                val testingSuite = ComposeTestingSuite()
+                val results = testingSuite.runAllTests()
+                Log.i("TestingSuiteHub", "Comprehensive tests completed: ${results.size} tests executed")
+                // You could show a dialog with results here
+            } catch (e: Exception) {
+                Log.e("TestingSuiteHub", "Comprehensive tests failed: ${e.message}")
+            }
         }
     }
 }

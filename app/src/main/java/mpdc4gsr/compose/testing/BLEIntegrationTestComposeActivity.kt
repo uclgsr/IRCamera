@@ -2,7 +2,7 @@ package mpdc4gsr.compose.testing
 
 import android.os.Bundle
 import android.util.Log
-import androidx.activity.ComponentActivity
+import androidx.fragment.app.FragmentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -29,7 +29,7 @@ import mpdc4gsr.sensors.unified.model.DeviceInfo
  * Compose version of BLE Integration Test Activity
  * Tests BLE functionality in a modern Compose UI
  */
-class BLEIntegrationTestComposeActivity : ComponentActivity() {
+class BLEIntegrationTestComposeActivity : FragmentActivity() {
 
     companion object {
         private const val TAG = "BLEIntegrationTestCompose"
@@ -229,7 +229,7 @@ class BLEIntegrationTestComposeActivity : ComponentActivity() {
         Log.d(TAG, "Running BLE permissions test")
         // Test BLE and location permissions
         try {
-            val hasPermissions = permissionController.hasBLEPermissions()
+            val hasPermissions = permissionController.hasBluetoothPermissions()
             // Update test result based on permissions check
             Log.d(TAG, "BLE permissions check: $hasPermissions")
         } catch (e: Exception) {
@@ -241,9 +241,12 @@ class BLEIntegrationTestComposeActivity : ComponentActivity() {
         Log.d(TAG, "Running device discovery test")
         try {
             deviceManager?.let { manager ->
-                // Start device discovery
-                val discoveredDevices = manager.discoverDevices().first()
-                Log.d(TAG, "Discovered ${discoveredDevices.size} devices")
+                // Start device scanning
+                val success = manager.startDeviceScanning()
+                Log.d(TAG, "Device scanning started: $success")
+                delay(5000) // Let it scan for 5 seconds
+                manager.stopDeviceScanning()
+                Log.d(TAG, "Device discovery test completed")
             }
         } catch (e: Exception) {
             Log.e(TAG, "Discovery test failed: ${e.message}")
@@ -254,8 +257,8 @@ class BLEIntegrationTestComposeActivity : ComponentActivity() {
         Log.d(TAG, "Running connection test")
         try {
             gsrRecorder?.let { recorder ->
-                // Test connection to first available device
-                val result = recorder.testConnection()
+                // Test connection by initializing the recorder
+                val result = recorder.initialize()
                 Log.d(TAG, "Connection test result: $result")
             }
         } catch (e: Exception) {
@@ -267,8 +270,12 @@ class BLEIntegrationTestComposeActivity : ComponentActivity() {
         Log.d(TAG, "Running data streaming test")
         try {
             gsrRecorder?.let { recorder ->
-                // Test data streaming for 5 seconds
-                val streamingResult = recorder.testStreaming(5000)
+                // Test data streaming by starting a temporary recording
+                val tempDir = createTempDir("test_streaming")
+                val streamingResult = recorder.startRecording(tempDir.absolutePath)
+                delay(5000) // Record for 5 seconds
+                recorder.stopRecording()
+                tempDir.deleteRecursively()
                 Log.d(TAG, "Streaming test completed: $streamingResult")
             }
         } catch (e: Exception) {
@@ -280,9 +287,17 @@ class BLEIntegrationTestComposeActivity : ComponentActivity() {
         Log.d(TAG, "Running reconnection test")
         try {
             gsrRecorder?.let { recorder ->
-                // Test reconnection handling
-                val reconnectionResult = recorder.testReconnection()
-                Log.d(TAG, "Reconnection test result: $reconnectionResult")
+                // Test reconnection by stopping and restarting recording
+                val tempDir = createTempDir("test_reconnection")
+                val initialResult = recorder.startRecording(tempDir.absolutePath)
+                delay(2000)
+                recorder.stopRecording()
+                delay(1000)
+                val reconnectResult = recorder.startRecording(tempDir.absolutePath)
+                delay(2000)
+                recorder.stopRecording()
+                tempDir.deleteRecursively()
+                Log.d(TAG, "Reconnection test result: initial=$initialResult, reconnect=$reconnectResult")
             }
         } catch (e: Exception) {
             Log.e(TAG, "Reconnection test failed: ${e.message}")

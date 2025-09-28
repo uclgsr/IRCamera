@@ -55,6 +55,11 @@ class SimpleNetworkTestComposeActivity : ComponentActivity() {
     private val mockController = MockRecordingController()
     private var tcpClient: TcpClient? = null
     private var commandHandler: SimpleCommandHandler? = null
+    
+    // State variables hoisted to activity level
+    private var networkCommands = listOf<NetworkCommand>()
+    private var networkMetrics = mapOf<String, Any>()
+    private var isTestRunning = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,12 +75,25 @@ class SimpleNetworkTestComposeActivity : ComponentActivity() {
     @Composable
     fun SimpleNetworkTestScreen() {
         var testResults by remember { mutableStateOf(listOf<TestCase>()) }
-        var isTestRunning by remember { mutableStateOf(false) }
+        var isTestRunningState by remember { mutableStateOf(false) }
         var connectionStatus by remember { mutableStateOf(ConnectionStatus.DISCONNECTED) }
         var ipAddress by remember { mutableStateOf(DEFAULT_PC_IP) }
         var port by remember { mutableStateOf(DEFAULT_PC_PORT.toString()) }
-        var networkCommands by remember { mutableStateOf(listOf<NetworkCommand>()) }
-        var networkMetrics by remember { mutableStateOf(mapOf<String, Any>()) }
+        var networkCommandsState by remember { mutableStateOf(listOf<NetworkCommand>()) }
+        var networkMetricsState by remember { mutableStateOf(mapOf<String, Any>()) }
+
+        // Sync with activity state
+        LaunchedEffect(isTestRunning) {
+            isTestRunningState = isTestRunning
+        }
+        
+        LaunchedEffect(networkCommands) {
+            networkCommandsState = networkCommands
+        }
+        
+        LaunchedEffect(networkMetrics) {
+            networkMetricsState = networkMetrics
+        }
 
         // Initialize test cases
         LaunchedEffect(Unit) {
@@ -240,9 +258,9 @@ class SimpleNetworkTestComposeActivity : ComponentActivity() {
                 Spacer(modifier = Modifier.height(16.dp))
 
                 // Network Metrics
-                if (networkMetrics.isNotEmpty()) {
+                if (networkMetricsState.isNotEmpty()) {
                     TestMetricsDisplay(
-                        metrics = networkMetrics,
+                        metrics = networkMetricsState,
                         modifier = Modifier.padding(vertical = 8.dp)
                     )
                     Spacer(modifier = Modifier.height(16.dp))
@@ -318,12 +336,13 @@ class SimpleNetworkTestComposeActivity : ComponentActivity() {
                 Button(
                     onClick = { 
                         isTestRunning = true
+                        isTestRunningState = true
                         lifecycleScope.launch { runAllNetworkTests() }
                     },
-                    enabled = !isTestRunning,
+                    enabled = !isTestRunningState,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    if (isTestRunning) {
+                    if (isTestRunningState) {
                         CircularProgressIndicator(
                             modifier = Modifier.size(16.dp),
                             strokeWidth = 2.dp
@@ -349,7 +368,7 @@ class SimpleNetworkTestComposeActivity : ComponentActivity() {
                 }
 
                 // Network Commands Log
-                if (networkCommands.isNotEmpty()) {
+                if (networkCommandsState.isNotEmpty()) {
                     Spacer(modifier = Modifier.height(16.dp))
                     
                     Card {
@@ -361,7 +380,7 @@ class SimpleNetworkTestComposeActivity : ComponentActivity() {
                             )
                             Spacer(modifier = Modifier.height(8.dp))
                             
-                            networkCommands.takeLast(5).forEach { command ->
+                            networkCommandsState.takeLast(5).forEach { command ->
                                 NetworkCommandItem(command = command)
                                 Spacer(modifier = Modifier.height(6.dp))
                             }
