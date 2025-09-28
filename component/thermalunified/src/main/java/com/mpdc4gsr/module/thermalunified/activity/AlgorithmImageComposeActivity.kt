@@ -172,7 +172,7 @@ private fun AlgorithmImageView(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Icon(
-                    Icons.Default.Settings,
+                    Icons.Default.AutoFixHigh,
                     contentDescription = "Processing",
                     tint = Color(0xFF7D8590),
                     modifier = Modifier.size(64.dp)
