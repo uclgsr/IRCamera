@@ -102,7 +102,7 @@ class IRThermalFragmentViewModel : BaseViewModel() {
         }
     }
 
-    fun onSocketDisconnected(isTS004: Boolean, isTC007Device: Boolean) {
+    fun onSocketDisConnected(isTS004: Boolean, isTC007Device: Boolean) {
         if (isTC007Device && !isTS004) {
             _deviceConnectionState.value = _deviceConnectionState.value.copy(
                 hasConnection = false,
