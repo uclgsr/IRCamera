@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?><!-- Consolidated Media Item - Replaces multiple video/image item layouts -->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="mediaType"
+            type="String" />
+
+        <variable
+            name="title"
+            type="String" />
+
+        <variable
+            name="subtitle"
+            type="String" />
+
+        <variable
+            name="duration"
+            type="String" />
+
+        <variable
+            name="isVideo"
+            type="Boolean" />
+    </data>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8dp"
+        android:layout_marginVertical="4dp"
+        app:cardBackgroundColor="@color/background_card"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="2dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="12dp">
+
+            <!-- Media Thumbnail -->
+            <ImageView
+                android:id="@+id/media_thumbnail"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:background="@color/background_secondary"
+                android:contentDescription="Media thumbnail"
+                android:scaleType="centerCrop"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:src="@drawable/ic_main_device_bg_not" />
+
+            <!-- Play Button Overlay (for videos) -->
+            <ImageView
+                android:id="@+id/play_overlay"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@drawable/shape_oval_ff0000"
+                android:contentDescription="Play video"
+                android:src="@android:drawable/ic_media_play"
+                android:tint="@color/white"
+                android:visibility="@{isVideo ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toBottomOf="@+id/media_thumbnail"
+                app:layout_constraintEnd_toEndOf="@+id/media_thumbnail"
+                app:layout_constraintStart_toStartOf="@+id/media_thumbnail"
+                app:layout_constraintTop_toTopOf="@+id/media_thumbnail" />
+
+            <!-- Media Type Badge -->
+            <TextView
+                android:id="@+id/media_type_badge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:background="@drawable/bg_corners50_solid_theme"
+                android:paddingHorizontal="6dp"
+                android:paddingVertical="2dp"
+                android:text="@{mediaType ?? (isVideo ? @string/video_type : @string/image_type)}"
+                android:textColor="@color/white"
+                android:textSize="8sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="@+id/media_thumbnail"
+                app:layout_constraintTop_toTopOf="@+id/media_thumbnail"
+                tools:text="RGB" />
+
+            <!-- Title -->
+            <TextView
+                android:id="@+id/title_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="8dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@{title ?? @string/untitled_media}"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@+id/options_button"
+                app:layout_constraintStart_toEndOf="@+id/media_thumbnail"
+                app:layout_constraintTop_toTopOf="@+id/media_thumbnail"
+                tools:text="Recording_Session_001" />
+
+            <!-- Subtitle -->
+            <TextView
+                android:id="@+id/subtitle_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="8dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@{subtitle ?? @string/no_description}"
+                android:textColor="@color/text_secondary"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toStartOf="@+id/options_button"
+                app:layout_constraintStart_toEndOf="@+id/media_thumbnail"
+                app:layout_constraintTop_toBottomOf="@+id/title_text"
+                tools:text="Multi-modal recording session" />
+
+            <!-- Duration/Size Info -->
+            <TextView
+                android:id="@+id/duration_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="8dp"
+                android:text="@{duration ?? @string/unknown_duration}"
+                android:textColor="@color/text_secondary"
+                android:textSize="10sp"
+                app:layout_constraintEnd_toStartOf="@+id/options_button"
+                app:layout_constraintStart_toEndOf="@+id/media_thumbnail"
+                app:layout_constraintTop_toBottomOf="@+id/subtitle_text"
+                tools:text="5:23 • 15.4 MB" />
+
+            <!-- Options Button -->
+            <ImageButton
+                android:id="@+id/options_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:contentDescription="More options"
+                android:src="@android:drawable/ic_menu_more"
+                android:tint="@color/text_secondary"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <!-- Progress Bar (for processing/uploading) -->
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="0dp"
+                android:layout_height="2dp"
+                android:layout_marginTop="8dp"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/media_thumbnail"
+                tools:progress="50"
+                tools:visibility="visible" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+</layout>

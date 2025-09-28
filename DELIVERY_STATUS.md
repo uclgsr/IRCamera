@@ -62,13 +62,13 @@ with all requested thesis deliverables. Here's what has been delivered:
 
 ## [CHART] **VALIDATED PERFORMANCE** (All Targets Exceeded)
 
-| Metric              | Target | Achieved | Performance |
-|---------------------|--------|----------|-------------|
-| Time Sync Accuracy  | +/-10ms  | +/-8.5ms   | **118%** [DONE]  |
-| Sensor Coordination | <100ms | ~80ms    | **125%** [DONE]  |  
-| Command Response    | <500ms | ~150ms   | **333%** [DONE]  |
-| System Stability    | >90%   | >95%     | **106%** [DONE]  |
-| Recording Duration  | 5+ min | 60+ min  | **1200%** [DONE] |
+| Metric              | Target  | Achieved | Performance      |
+|---------------------|---------|----------|------------------|
+| Time Sync Accuracy  | +/-10ms | +/-8.5ms | **118%** [DONE]  |
+| Sensor Coordination | <100ms  | ~80ms    | **125%** [DONE]  |  
+| Command Response    | <500ms  | ~150ms   | **333%** [DONE]  |
+| System Stability    | >90%    | >95%     | **106%** [DONE]  |
+| Recording Duration  | 5+ min  | 60+ min  | **1200%** [DONE] |
 
 ## IMPLEMENTATION: **READY-TO-USE IMPLEMENTATION**
 

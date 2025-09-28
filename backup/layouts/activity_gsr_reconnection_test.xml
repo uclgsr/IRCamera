@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:orientation="vertical" android:padding="16dp">
+
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp" android:text="GSR Reconnection Testing" android:textAlignment="center"
+        android:textSize="20sp" android:textStyle="bold" />
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp" android:orientation="horizontal">
+
+        <Button android:id="@+id/start_test_button" android:layout_width="0dp" android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp" android:layout_weight="1" android:text="Start Test" />
+
+        <Button android:id="@+id/simulate_disconnect_button" android:layout_width="0dp"
+            android:layout_height="wrap_content" android:layout_marginStart="4dp" android:layout_weight="1"
+            android:enabled="false" android:text="Disconnect" />
+
+    </LinearLayout>
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp" android:orientation="horizontal">
+
+        <Button android:id="@+id/simulate_reconnect_button" android:layout_width="0dp"
+            android:layout_height="wrap_content" android:layout_marginEnd="4dp" android:layout_weight="1"
+            android:enabled="false" android:text="Reconnect" />
+
+        <Button android:id="@+id/analyze_gaps_button" android:layout_width="0dp" android:layout_height="wrap_content"
+            android:layout_marginStart="4dp" android:layout_weight="1" android:enabled="false"
+            android:text="Analyze Gaps" />
+
+    </LinearLayout>
+
+    <ScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
+
+        <TextView android:id="@+id/result_text_view" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:fontFamily="monospace"
+            android:text="Reconnection test results will appear here..." android:textSize="12sp" />
+
+    </ScrollView>
+
+</LinearLayout>

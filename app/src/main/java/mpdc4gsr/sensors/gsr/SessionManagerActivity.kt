@@ -41,7 +41,7 @@ class SessionManagerActivity : BaseViewModelActivity<SessionManagerViewModel>() 
     override fun providerVMClass(): Class<SessionManagerViewModel> =
         SessionManagerViewModel::class.java
 
-    override fun initContentView() = R.layout.activity_session_manager
+    override fun initContentView() = R.layout.activity_session_consolidated
 
     override fun initView() {
         binding = ActivitySessionManagerBinding.inflate(layoutInflater)
@@ -61,15 +61,15 @@ class SessionManagerActivity : BaseViewModelActivity<SessionManagerViewModel>() 
         binding.bottomNavigation.clNavGallery.setOnClickListener {
             navigateToMainActivity(0) // Gallery page
         }
-        
+
         binding.bottomNavigation.clNavMain.setOnClickListener {
             navigateToMainActivity(1) // Main page
         }
-        
+
         binding.bottomNavigation.clNavMine.setOnClickListener {
             navigateToMainActivity(2) // Mine page
         }
-        
+
         // Update navigation background to show main is selected
         binding.bottomNavigation.ivNavigationBg.setImageResource(R.drawable.ic_main_bg_select)
     }
@@ -258,7 +258,7 @@ class SessionManagerActivity : BaseViewModelActivity<SessionManagerViewModel>() 
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
             val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_session, parent, false)
+                .inflate(R.layout.item_sensor_data_consolidated, parent, false)
             return ViewHolder(view)
         }
 

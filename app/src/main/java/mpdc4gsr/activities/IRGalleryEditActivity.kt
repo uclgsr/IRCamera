@@ -183,15 +183,15 @@ class IRGalleryEditActivity : BaseBindingActivity<ActivityIrGalleryEditBinding>(
         binding.bottomNavigation.clNavGallery.setOnClickListener {
             navigateToMainActivity(0) // Gallery page
         }
-        
+
         binding.bottomNavigation.clNavMain.setOnClickListener {
             navigateToMainActivity(1) // Main page
         }
-        
+
         binding.bottomNavigation.clNavMine.setOnClickListener {
             navigateToMainActivity(2) // Mine page
         }
-        
+
         // Update navigation background to show gallery is selected (since this is IR gallery editing)
         binding.bottomNavigation.ivNavigationBg.setImageResource(R.drawable.ic_main_bg_select)
     }

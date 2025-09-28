@@ -38,7 +38,7 @@ class ComprehensiveRecordingController(
     companion object {
         private const val TAG = "ComprehensiveRecordingController"
         private val DEFAULT_TRIGGER_SOURCE = TriggerSource.LOCAL_UI
-        
+
         // Sensor configuration constants
         private const val RGB_SENSOR_NAME = "RGB"
         private const val THERMAL_SENSOR_NAME = "Thermal"
@@ -745,10 +745,10 @@ class ComprehensiveRecordingController(
     suspend fun initializeSensors(): Boolean {
         return try {
             Log.i(TAG, "Initializing sensors with sensor recorder registration")
-            
+
             // Get or create a proper lifecycle owner
             val effectiveLifecycleOwner = lifecycleOwner ?: createManagedLifecycleOwner()
-            
+
             // Initialize RGB Camera Recorder
             try {
                 val rgbRecorder = mpdc4gsr.sensors.RgbCameraRecorder(
@@ -763,7 +763,7 @@ class ComprehensiveRecordingController(
             } catch (e: Exception) {
                 Log.w(TAG, "[WARN] Failed to initialize RGB camera recorder: ${e.message}")
             }
-            
+
             // Initialize Thermal Camera Recorder  
             try {
                 val thermalRecorder = mpdc4gsr.sensors.thermal.ThermalCameraRecorder(
@@ -777,7 +777,7 @@ class ComprehensiveRecordingController(
             } catch (e: Exception) {
                 Log.w(TAG, "[WARN] Failed to initialize thermal camera recorder: ${e.message}")
             }
-            
+
             // Initialize GSR Sensor Recorder using Shimmer3GSRRecorder to avoid circular dependency
             try {
                 val gsrRecorder = mpdc4gsr.sensors.unified.Shimmer3GSRRecorder(
@@ -786,24 +786,24 @@ class ComprehensiveRecordingController(
                     sensorId = GSR_SENSOR_ID,
                     samplingRateHz = GSR_SAMPLING_RATE_HZ
                 )
-                addSensorRecorder(GSR_SENSOR_NAME, gsrRecorder)  
+                addSensorRecorder(GSR_SENSOR_NAME, gsrRecorder)
                 Log.i(TAG, "[OK] GSR sensor recorder registered")
             } catch (e: Exception) {
                 Log.w(TAG, "[WARN] Failed to initialize GSR sensor recorder: ${e.message}")
             }
-            
+
             val registeredSensors = sensorRecorders.keys.toList()
             Log.i(TAG, "Sensor initialization completed - registered sensors: ${registeredSensors.joinToString()}")
-            
+
             // Return true if at least one sensor was registered successfully
             registeredSensors.isNotEmpty()
-            
+
         } catch (e: Exception) {
             Log.e(TAG, "Error initializing sensors", e)
             false
         }
     }
-    
+
     /**
      * Creates a managed lifecycle owner that properly transitions through lifecycle states.
      * This is used when no lifecycle owner is provided to ensure proper camera operations.

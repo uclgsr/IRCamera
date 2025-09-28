@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent"
+    android:layout_height="wrap_content" android:layout_margin="4dp" android:clickable="true" android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground" app:cardCornerRadius="8dp" app:cardElevation="2dp">
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="horizontal" android:padding="16dp">
+
+
+        <ImageView android:id="@+id/imageGsrCapable" android:layout_width="48dp" android:layout_height="48dp"
+            android:layout_marginEnd="16dp" android:contentDescription="Shimmer GSR Device"
+            android:scaleType="centerInside" android:src="@drawable/ic_device_type_shimmer_gsr" />
+
+
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView android:id="@+id/textDeviceName" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:text="Shimmer3 GSR+"
+                android:textColor="@android:color/black" android:textSize="16sp" android:textStyle="bold" />
+
+            <TextView android:id="@+id/textDeviceAddress" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:layout_marginTop="2dp" android:text="00:06:66:XX:XX:XX"
+                android:textColor="@android:color/darker_gray" android:textSize="12sp" />
+
+            <TextView android:id="@+id/textDeviceType" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:layout_marginTop="2dp"
+                android:text="Shimmer3 GSR+ (Galvanic Skin Response)" android:textColor="@android:color/darker_gray"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+
+        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_marginStart="8dp" android:gravity="center" android:orientation="vertical">
+
+            <ImageView android:id="@+id/imageSignalStrength" android:layout_width="24dp" android:layout_height="24dp"
+                android:contentDescription="Signal Strength" android:src="@drawable/ic_bluetooth_disabled"
+                android:tint="@android:color/holo_green_dark" />
+
+            <TextView android:id="@+id/textSignalStrength" android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:layout_marginTop="2dp" android:text="-65 dBm"
+                android:textColor="@android:color/darker_gray" android:textSize="10sp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

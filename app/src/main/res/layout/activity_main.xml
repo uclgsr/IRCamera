@@ -1,7 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?><!-- Consolidated Main Activity Layout - Based on original with minimal GSR enhancements -->
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <!-- Minimal data binding for sensor mode -->
+        <variable
+            name="sensorMode"
+            type="String" />
+    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -11,16 +18,7 @@
         android:fitsSystemWindows="true"
         tools:context="com.mpdc4gsr.tc001.MainActivity">
 
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/view_page"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@+id/cl_bottom"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/sensor_controls_container" />
-
-
+        <!-- Simplified network status bar (only when recording) -->
         <LinearLayout
             android:id="@+id/network_status_bar"
             android:layout_width="match_parent"
@@ -29,6 +27,7 @@
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:padding="8dp"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -43,16 +42,6 @@
                 android:contentDescription="Thermal Camera"
                 android:src="@android:drawable/ic_search_category_default"
                 android:tint="#FF6B35" />
-
-            <ImageButton
-                android:id="@+id/fault_tolerant_recording_access"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginEnd="8dp"
-                android:background="?android:attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/fault_tolerant_recording_description"
-                android:src="@android:drawable/ic_media_play"
-                android:tint="@color/fault_tolerant_recording_button" />
 
             <View
                 android:layout_width="0dp"
@@ -74,34 +63,28 @@
                 android:text="PC: Disconnected"
                 android:textColor="#FFFFFF"
                 android:textSize="10sp" />
-
         </LinearLayout>
 
-        <!-- Enhanced Sensor Status and Recording Controls -->
-        <LinearLayout
+        <!-- Simplified sensor controls (collapsible) -->
+        <FrameLayout
             android:id="@+id/sensor_controls_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#FF1A1A1A"
-            android:orientation="vertical"
-            android:padding="8dp"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/network_status_bar">
+            app:layout_constraintTop_toBottomOf="@+id/network_status_bar" />
 
-            <!-- Placeholder for ComprehensiveSensorStatusWidget -->
-            <FrameLayout
-                android:id="@+id/sensor_status_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <!-- Placeholder for RecordingControlsWidget -->
-            <FrameLayout
-                android:id="@+id/recording_controls_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-        </LinearLayout>
+        <!-- Main ViewPager (reusing original structure) -->
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/view_page"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/cl_bottom"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/sensor_controls_container" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_bottom"
@@ -129,10 +112,10 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/view_main"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintHorizontal_weight="1">
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
                     android:id="@+id/iv_icon_gallery"
@@ -171,20 +154,20 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@id/cl_icon_gallery"
                 app:layout_constraintEnd_toStartOf="@id/cl_icon_settings"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintHorizontal_weight="1" />
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toEndOf="@id/cl_icon_gallery"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_icon_settings"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@id/view_main"
                 app:layout_constraintEnd_toStartOf="@id/cl_icon_mine"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintHorizontal_weight="1">
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toEndOf="@id/view_main"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
                     android:id="@+id/iv_icon_settings"
@@ -223,10 +206,10 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@id/cl_icon_settings"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintHorizontal_weight="1">
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toEndOf="@id/cl_icon_settings"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
                     android:id="@+id/iv_icon_mine"
@@ -273,5 +256,4 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </layout>

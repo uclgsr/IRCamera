@@ -86,7 +86,7 @@ class UnifiedSensorActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_unified_sensor)
+        setContentView(R.layout.activity_multi_modal_consolidated)
 
         Log.i(TAG, "Starting Unified Sensor Activity - IRCamera Extension")
 

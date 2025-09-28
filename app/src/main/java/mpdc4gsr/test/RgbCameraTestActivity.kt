@@ -70,7 +70,7 @@ class RgbCameraTestActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_rgb_camera_test)
+        setContentView(R.layout.activity_camera_test_consolidated)
 
         initializeViews()
         setupListeners()
@@ -80,21 +80,25 @@ class RgbCameraTestActivity : AppCompatActivity() {
 
     private fun setupBottomNavigation() {
         val bottomNavigation = findViewById<androidx.constraintlayout.widget.ConstraintLayout>(R.id.bottom_navigation)
-        
-        bottomNavigation.findViewById<androidx.constraintlayout.widget.ConstraintLayout>(R.id.cl_nav_gallery)?.setOnClickListener {
-            navigateToMainActivity(0) // Gallery page
-        }
-        
-        bottomNavigation.findViewById<androidx.constraintlayout.widget.ConstraintLayout>(R.id.cl_nav_main)?.setOnClickListener {
-            navigateToMainActivity(1) // Main page
-        }
-        
-        bottomNavigation.findViewById<androidx.constraintlayout.widget.ConstraintLayout>(R.id.cl_nav_mine)?.setOnClickListener {
-            navigateToMainActivity(2) // Mine page
-        }
-        
+
+        bottomNavigation.findViewById<androidx.constraintlayout.widget.ConstraintLayout>(R.id.cl_nav_gallery)
+            ?.setOnClickListener {
+                navigateToMainActivity(0) // Gallery page
+            }
+
+        bottomNavigation.findViewById<androidx.constraintlayout.widget.ConstraintLayout>(R.id.cl_nav_main)
+            ?.setOnClickListener {
+                navigateToMainActivity(1) // Main page
+            }
+
+        bottomNavigation.findViewById<androidx.constraintlayout.widget.ConstraintLayout>(R.id.cl_nav_mine)
+            ?.setOnClickListener {
+                navigateToMainActivity(2) // Mine page
+            }
+
         // Update navigation background to show main is selected (camera testing is main functionality)
-        bottomNavigation.findViewById<android.widget.ImageView>(R.id.iv_navigation_bg)?.setImageResource(R.drawable.ic_main_bg_select)
+        bottomNavigation.findViewById<android.widget.ImageView>(R.id.iv_navigation_bg)
+            ?.setImageResource(R.drawable.ic_main_bg_select)
     }
 
     private fun navigateToMainActivity(pageIndex: Int) {

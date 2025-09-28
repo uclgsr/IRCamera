@@ -33,7 +33,7 @@ class DualModeCameraActivity : BaseViewModelActivity<DualModeCameraViewModel>() 
     override fun providerVMClass(): Class<DualModeCameraViewModel> =
         DualModeCameraViewModel::class.java
 
-    override fun initContentView() = R.layout.activity_dual_mode_camera
+    override fun initContentView() = R.layout.activity_camera_test_consolidated
 
     override fun initView() {
         previewView = findViewById(R.id.preview_view)
@@ -51,21 +51,25 @@ class DualModeCameraActivity : BaseViewModelActivity<DualModeCameraViewModel>() 
 
     private fun setupBottomNavigation() {
         val bottomNavigation = findViewById<androidx.constraintlayout.widget.ConstraintLayout>(R.id.bottom_navigation)
-        
-        bottomNavigation.findViewById<androidx.constraintlayout.widget.ConstraintLayout>(R.id.cl_nav_gallery)?.setOnClickListener {
-            navigateToMainActivity(0) // Gallery page
-        }
-        
-        bottomNavigation.findViewById<androidx.constraintlayout.widget.ConstraintLayout>(R.id.cl_nav_main)?.setOnClickListener {
-            navigateToMainActivity(1) // Main page
-        }
-        
-        bottomNavigation.findViewById<androidx.constraintlayout.widget.ConstraintLayout>(R.id.cl_nav_mine)?.setOnClickListener {
-            navigateToMainActivity(2) // Mine page
-        }
-        
+
+        bottomNavigation.findViewById<androidx.constraintlayout.widget.ConstraintLayout>(R.id.cl_nav_gallery)
+            ?.setOnClickListener {
+                navigateToMainActivity(0) // Gallery page
+            }
+
+        bottomNavigation.findViewById<androidx.constraintlayout.widget.ConstraintLayout>(R.id.cl_nav_main)
+            ?.setOnClickListener {
+                navigateToMainActivity(1) // Main page
+            }
+
+        bottomNavigation.findViewById<androidx.constraintlayout.widget.ConstraintLayout>(R.id.cl_nav_mine)
+            ?.setOnClickListener {
+                navigateToMainActivity(2) // Mine page
+            }
+
         // Update navigation background to show main is selected (camera is main functionality)
-        bottomNavigation.findViewById<android.widget.ImageView>(R.id.iv_navigation_bg)?.setImageResource(R.drawable.ic_main_bg_select)
+        bottomNavigation.findViewById<android.widget.ImageView>(R.id.iv_navigation_bg)
+            ?.setImageResource(R.drawable.ic_main_bg_select)
     }
 
     private fun navigateToMainActivity(pageIndex: Int) {

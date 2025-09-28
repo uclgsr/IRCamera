@@ -5,7 +5,7 @@ import android.os.Build
 import android.os.Bundle
 import android.view.MenuItem
 import com.csl.irCamera.R
-import com.csl.irCamera.databinding.ActivityGsrPlotBinding
+import com.csl.irCamera.databinding.ActivityMultiModalConsolidatedBinding
 import com.mpdc4gsr.libunified.app.ktbase.BaseBindingActivity
 import com.mpdc4gsr.libunified.ui.components.Description
 import com.mpdc4gsr.libunified.ui.components.XAxis
@@ -15,10 +15,10 @@ import com.mpdc4gsr.libunified.ui.data.LineData
 import com.mpdc4gsr.libunified.ui.data.LineDataSet
 import com.mpdc4gsr.libunified.ui.formatter.ValueFormatter
 
-class GSRPlotActivity : BaseBindingActivity<ActivityGsrPlotBinding>() {
+class GSRPlotActivity : BaseBindingActivity<ActivityMultiModalConsolidatedBinding>() {
     private lateinit var plotData: GSRPlotData
 
-    override fun initContentLayoutId() = R.layout.activity_gsr_plot
+    override fun initContentLayoutId() = R.layout.activity_multi_modal_consolidated
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,15 +38,15 @@ class GSRPlotActivity : BaseBindingActivity<ActivityGsrPlotBinding>() {
         binding.bottomNavigation.clNavGallery.setOnClickListener {
             navigateToMainActivity(0) // Gallery page
         }
-        
+
         binding.bottomNavigation.clNavMain.setOnClickListener {
             navigateToMainActivity(1) // Main page
         }
-        
+
         binding.bottomNavigation.clNavMine.setOnClickListener {
             navigateToMainActivity(2) // Mine page
         }
-        
+
         // Update navigation background to show main is selected
         binding.bottomNavigation.ivNavigationBg.setImageResource(R.drawable.ic_main_bg_select)
     }

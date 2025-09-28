@@ -63,7 +63,7 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
     private var sessionId: String? = null
     private var participantId: String? = null
 
-    override fun initContentLayoutId() = R.layout.activity_multi_modal_recording
+    override fun initContentLayoutId() = R.layout.activity_multi_modal_consolidated
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
