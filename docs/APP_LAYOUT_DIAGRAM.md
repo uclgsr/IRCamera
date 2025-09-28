@@ -11,8 +11,9 @@ From our analysis, the app contains:
 - **24 Fragment layouts** - Reusable UI components
 - **15 Layout templates** - Base layout structures
 - **13 UI components** - Custom UI widgets
-- **Other specialized layouts** - Various utility layouts
+- **28 Other specialized layouts** - Various utility layouts
 
+**Total: 258 layouts**
 ## Complete Layout Architecture Diagram
 
 ```mermaid
