@@ -345,7 +345,8 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 0 -> IRGalleryTabFragment()
                 1 -> MainFragment()
                 2 -> MoreFragment()
-                else -> MineFragment()
+                3 -> MineFragment()
+                else -> throw IndexOutOfBoundsException("Invalid position $position in ViewPagerAdapter")
             }
         }
     }
