@@ -51,10 +51,37 @@ class GSRDataViewActivity : BaseViewModelActivity<GSRDataViewViewModel>() {
 
         setupUI()
         setupObservers()
+        setupBottomNavigation()
         handleIntent()
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = "GSR Data Analysis"
+    }
+
+    private fun setupBottomNavigation() {
+        binding.bottomNavigation.clNavGallery.setOnClickListener {
+            navigateToMainActivity(0) // Gallery page
+        }
+        
+        binding.bottomNavigation.clNavMain.setOnClickListener {
+            navigateToMainActivity(1) // Main page
+        }
+        
+        binding.bottomNavigation.clNavMine.setOnClickListener {
+            navigateToMainActivity(2) // Mine page
+        }
+        
+        // Update navigation background to show main is selected
+        binding.bottomNavigation.ivNavigationBg.setImageResource(R.drawable.ic_main_bg_select)
+    }
+
+    private fun navigateToMainActivity(pageIndex: Int) {
+        val intent = Intent(this, mpdc4gsr.activities.MainActivity::class.java).apply {
+            putExtra("page", pageIndex)
+        }
+        startActivity(intent)
+        finish()
+    }
     }
 
     override fun initData() {

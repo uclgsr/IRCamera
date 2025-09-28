@@ -6,27 +6,37 @@
         <!-- Data binding placeholder -->
     </data>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#16131e"
-        android:orientation="vertical">
+        android:background="#16131e">
 
-        <!-- Loading UI -->
         <LinearLayout
-            android:id="@+id/loading_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:padding="16dp"
-            android:visibility="gone">
+            android:id="@+id/main_content"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="#16131e"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <ProgressBar
-                android:id="@+id/progress_bar"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginEnd="8dp" />
+            <!-- Loading UI -->
+            <LinearLayout
+                android:id="@+id/loading_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="16dp"
+                android:visibility="gone">
+
+                <ProgressBar
+                    android:id="@+id/progress_bar"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="8dp" />
 
             <TextView
                 android:id="@+id/loading_text"
@@ -267,7 +277,7 @@
         <!-- Status Text -->
         <TextView
             android:id="@+id/status_text"
-            android:layout_width="match_parent"
+                    android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:padding="8dp"
@@ -275,5 +285,16 @@
             android:textColor="#ccffffff"
             android:textSize="12sp" />
 
-    </LinearLayout>
+        </LinearLayout>
+
+        <include
+            android:id="@+id/bottom_navigation"
+            layout="@layout/include_bottom_navigation"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
