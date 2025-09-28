@@ -80,16 +80,36 @@
 
         </LinearLayout>
 
-        <!-- Sensors Title -->
-        <TextView
-            android:id="@+id/sensorsTitle"
+        <!-- Sensors Title with Collapse/Expand Toggle -->
+        <LinearLayout
+            android:id="@+id/sensorsTitleContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:text="Sensor Connections"
-            android:textColor="@android:color/primary_text_dark"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <TextView
+                android:id="@+id/sensorsTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Sensor Connections"
+                android:textColor="@android:color/primary_text_dark"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/collapseExpandIcon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center_vertical"
+                android:contentDescription="Expand/Collapse sensors"
+                android:src="@android:drawable/arrow_down_float" />
+
+        </LinearLayout>
 
         <!-- 
             Sensors Container - All sensor status views are added here programmatically
