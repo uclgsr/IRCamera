@@ -92,15 +92,15 @@ class GSRSettingsActivity : BaseViewModelActivity<GSRSettingsViewModel>() {
 
     private fun setupBottomNavigation() {
         binding.bottomNavigation.clNavGallery.setOnClickListener {
-            navigateToMainActivity(0) // Gallery page
+            navigateToMainActivity(mpdc4gsr.activities.MainActivity.PAGE_GALLERY) // Gallery page
         }
         
         binding.bottomNavigation.clNavMain.setOnClickListener {
-            navigateToMainActivity(1) // Main page
+            navigateToMainActivity(mpdc4gsr.activities.MainActivity.PAGE_MAIN) // Main page
         }
         
         binding.bottomNavigation.clNavMine.setOnClickListener {
-            navigateToMainActivity(2) // Mine page
+            navigateToMainActivity(mpdc4gsr.activities.MainActivity.PAGE_MINE) // Mine page
         }
         
         // Update navigation background to show main is selected
