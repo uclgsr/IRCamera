@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Font sizes -->
+    <dimen name="app_font_11">11sp</dimen>
+    <dimen name="app_font_12">12sp</dimen>
+    <dimen name="app_font_14">14sp</dimen>
+    <dimen name="app_font_16">16sp</dimen>
+
+    <!-- Common spacing -->
+    <dimen name="margin_small">8dp</dimen>
+    <dimen name="margin_medium">16dp</dimen>
+    <dimen name="margin_large">24dp</dimen>
+
+    <!-- Navigation bar height -->
+    <dimen name="bottom_navigation_height">56dp</dimen>
+</resources>

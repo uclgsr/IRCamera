@@ -9,6 +9,7 @@ import com.csl.irCamera.databinding.ActivityMultiModalConsolidatedBinding
 import com.mpdc4gsr.libunified.app.ktbase.BaseBindingActivity
 import com.mpdc4gsr.libunified.ui.components.Description
 import com.mpdc4gsr.libunified.ui.components.XAxis
+import com.mpdc4gsr.libunified.ui.components.YAxis
 import com.mpdc4gsr.libunified.ui.data.Entry
 import com.mpdc4gsr.libunified.ui.data.LineData
 import com.mpdc4gsr.libunified.ui.data.LineDataSet
@@ -29,7 +30,33 @@ class GSRPlotActivity : BaseBindingActivity<ActivityMultiModalConsolidatedBindin
 
         loadPlotData()
         setupCharts()
+        setupBottomNavigation()
         displayStatistics()
+    }
+
+    private fun setupBottomNavigation() {
+        binding.bottomNavigation.clNavGallery.setOnClickListener {
+            navigateToMainActivity(0) // Gallery page
+        }
+
+        binding.bottomNavigation.clNavMain.setOnClickListener {
+            navigateToMainActivity(1) // Main page
+        }
+
+        binding.bottomNavigation.clNavMine.setOnClickListener {
+            navigateToMainActivity(2) // Mine page
+        }
+
+        // Update navigation background to show main is selected
+        binding.bottomNavigation.ivNavigationBg.setImageResource(R.drawable.ic_main_bg_select)
+    }
+
+    private fun navigateToMainActivity(pageIndex: Int) {
+        val intent = android.content.Intent(this, mpdc4gsr.activities.MainActivity::class.java).apply {
+            putExtra("page", pageIndex)
+        }
+        startActivity(intent)
+        finish()
     }
 
     private fun loadPlotData() {
@@ -49,27 +76,26 @@ class GSRPlotActivity : BaseBindingActivity<ActivityMultiModalConsolidatedBindin
     private fun setupGSRChart() {
 
         binding.gsrChart.apply {
-            description =
-                Description().apply {
-                    text = "GSR (µS) over Time"
-                    textSize = 12f
-                }
+            description = Description().apply {
+                text = "GSR (µS) over Time"
+                textSize = 12f
+            }
 
-            xAxis.apply {
+            getXAxis().apply {
                 position = XAxis.XAxisPosition.BOTTOM
                 valueFormatter = TimeFormatter()
                 granularity = 1f
                 labelCount = 6
             }
 
-            axisLeft.apply {
+            getAxisLeft().apply {
                 setDrawGridLines(true)
                 gridColor = Color.LTGRAY
             }
-            axisRight.isEnabled = false
+            getAxisRight().isEnabled = false
 
             setTouchEnabled(true)
-            isDragEnabled = true
+            setDragEnabled(true)
             setScaleEnabled(true)
             setPinchZoom(true)
         }
@@ -107,27 +133,26 @@ class GSRPlotActivity : BaseBindingActivity<ActivityMultiModalConsolidatedBindin
     private fun setupPPGChart() {
 
         binding.ppgChart.apply {
-            description =
-                Description().apply {
-                    text = "PPG Signal over Time"
-                    textSize = 12f
-                }
+            description = Description().apply {
+                text = "PPG Signal over Time"
+                textSize = 12f
+            }
 
-            xAxis.apply {
+            getXAxis().apply {
                 position = XAxis.XAxisPosition.BOTTOM
                 valueFormatter = TimeFormatter()
                 granularity = 1f
                 labelCount = 6
             }
 
-            axisLeft.apply {
+            getAxisLeft().apply {
                 setDrawGridLines(true)
                 gridColor = Color.LTGRAY
             }
-            axisRight.isEnabled = false
+            getAxisRight().isEnabled = false
 
             setTouchEnabled(true)
-            isDragEnabled = true
+            setDragEnabled(true)
             setScaleEnabled(true)
             setPinchZoom(true)
         }

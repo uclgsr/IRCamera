@@ -16,6 +16,7 @@ import androidx.exifinterface.media.ExifInterface
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityGsrRawImageViewBinding
 import com.mpdc4gsr.libunified.app.ktbase.BaseBindingActivity
+import mpdc4gsr.activities.MainActivity
 import java.io.File
 
 class GSRRawImageViewActivity : BaseBindingActivity<ActivityGsrRawImageViewBinding>() {
@@ -58,6 +59,32 @@ class GSRRawImageViewActivity : BaseBindingActivity<ActivityGsrRawImageViewBindi
     private fun setupUI() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = imageFile.name
+        setupBottomNavigation()
+    }
+
+    private fun setupBottomNavigation() {
+        binding.bottomNavigation.clNavGallery.setOnClickListener {
+            navigateToMainActivity(0) // Gallery page
+        }
+
+        binding.bottomNavigation.clNavMain.setOnClickListener {
+            navigateToMainActivity(1) // Main page
+        }
+
+        binding.bottomNavigation.clNavMine.setOnClickListener {
+            navigateToMainActivity(2) // Mine page
+        }
+
+        // Update navigation background to show gallery is selected (image viewing is gallery functionality)
+        binding.bottomNavigation.ivNavigationBg.setImageResource(R.drawable.ic_main_bg_select)
+    }
+
+    private fun navigateToMainActivity(pageIndex: Int) {
+        val intent = Intent(this, MainActivity::class.java).apply {
+            putExtra("page", pageIndex)
+        }
+        startActivity(intent)
+        finish()
     }
 
     private fun loadImage() {
