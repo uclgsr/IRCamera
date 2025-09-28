@@ -44,8 +44,8 @@ class DevicePairingViewModel : BaseViewModel(), NetworkClient.NetworkEventListen
     private val _pairingEvents = MutableSharedFlow<PairingEvent>()
     val pairingEvents: SharedFlow<PairingEvent> = _pairingEvents.asSharedFlow()
 
-    private val _uiState = MutableStateFlow(PairingUiState())
-    val uiState: StateFlow<PairingUiState> = _uiState.asStateFlow()
+    private val _pairingUiState = MutableStateFlow(PairingUiState())
+    val pairingUiState: StateFlow<PairingUiState> = _pairingUiState.asStateFlow()
 
     private lateinit var networkClient: NetworkClient
     private val controllers = mutableListOf<NetworkClient.ControllerInfo>()
@@ -208,7 +208,7 @@ class DevicePairingViewModel : BaseViewModel(), NetworkClient.NetworkEventListen
         val statusMessage = _statusMessage.value ?: ""
         val deviceCount = controllers.size
 
-        _uiState.value = PairingUiState(
+        _pairingUiState.value = PairingUiState(
             isScanning = scanState == ScanState.SCANNING,
             isConnecting = connectionState == ConnectionState.CONNECTING,
             isLoading = scanState == ScanState.SCANNING || connectionState == ConnectionState.CONNECTING,
@@ -272,7 +272,7 @@ class DevicePairingViewModel : BaseViewModel(), NetworkClient.NetworkEventListen
         updateUiState()
     }
 
-    fun clearError() {
+    fun clearPairingError() {
         _error.value = null
     }
 

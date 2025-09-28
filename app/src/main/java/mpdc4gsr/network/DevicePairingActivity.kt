@@ -96,7 +96,7 @@ class DevicePairingActivity : BaseViewModelActivity<DevicePairingViewModel>(),
         viewModel.error.observe(this) { error ->
             error?.let {
                 Toast.makeText(this, it, Toast.LENGTH_LONG).show()
-                viewModel.clearError()
+                viewModel.clearPairingError()
             }
         }
 
