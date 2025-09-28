@@ -4,6 +4,10 @@ import android.app.Dialog
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.ColorMatrix
+import android.graphics.ColorMatrixColorFilter
+import android.graphics.Paint
+import android.os.Build
 import android.os.Bundle
 import android.renderscript.Allocation
 import android.renderscript.Element
@@ -89,7 +93,9 @@ class HomeGuideDialog(context: Context, private val currentStep: Int) :
         }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
+        @Suppress("DEPRECATION")
         super.onBackPressed()
         onSkinClickListener?.invoke()
     }
@@ -104,17 +110,42 @@ class HomeGuideDialog(context: Context, private val currentStep: Int) :
                 val canvas = Canvas(sourceBitmap)
                 rootView.draw(canvas)
 
-                val renderScript = RenderScript.create(context)
-                val inputAllocation = Allocation.createFromBitmap(renderScript, sourceBitmap)
-                val outputAllocation = Allocation.createTyped(renderScript, inputAllocation.type)
+                val renderScript = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+                    @Suppress("DEPRECATION")
+                    RenderScript.create(context)
+                } else null
+                val inputAllocation = if (renderScript != null) {
+                    @Suppress("DEPRECATION")
+                    Allocation.createFromBitmap(renderScript, sourceBitmap)
+                } else null
+                val outputAllocation = if (renderScript != null && inputAllocation != null) {
+                    @Suppress("DEPRECATION")
+                    Allocation.createTyped(renderScript, inputAllocation.type)
+                } else null
 
-                val blurScript =
+                if (renderScript != null && inputAllocation != null && outputAllocation != null && Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+                    val blurScript = @Suppress("DEPRECATION")
                     ScriptIntrinsicBlur.create(renderScript, Element.U8_4(renderScript))
-                blurScript.setRadius(20f)
-                blurScript.setInput(inputAllocation)
-                blurScript.forEach(outputAllocation)
-                outputAllocation.copyTo(outputBitmap)
-                renderScript.destroy()
+                    @Suppress("DEPRECATION")
+                    blurScript.setRadius(20f)
+                    @Suppress("DEPRECATION")
+                    blurScript.setInput(inputAllocation)
+                    @Suppress("DEPRECATION")
+                    blurScript.forEach(outputAllocation)
+                    @Suppress("DEPRECATION")
+                    outputAllocation.copyTo(outputBitmap)
+                    @Suppress("DEPRECATION")
+                    renderScript.destroy()
+                } else {
+                    // Fallback for API 31+ where RenderScript is deprecated
+                    val canvas2 = Canvas(outputBitmap)
+                    val paint = Paint()
+                    val matrix = ColorMatrix()
+                    matrix.setSaturation(0.8f) // Slightly desaturate for blur effect
+                    paint.colorFilter = ColorMatrixColorFilter(matrix)
+                    paint.alpha = 128 // Make it semi-transparent for blur effect
+                    canvas2.drawBitmap(sourceBitmap, 0f, 0f, paint)
+                }
 
                 launch(Dispatchers.Main) {
                     ivBlurBg.isVisible = true

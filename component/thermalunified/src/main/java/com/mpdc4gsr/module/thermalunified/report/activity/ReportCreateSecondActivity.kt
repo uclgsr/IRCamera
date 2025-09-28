@@ -1,5 +1,6 @@
 package com.mpdc4gsr.module.thermalunified.report.activity
 
+import android.os.Build
 import android.view.View
 import android.widget.ImageView
 import android.widget.ScrollView
@@ -64,11 +65,19 @@ class ReportCreateSecondActivity : BaseActivity(), View.OnClickListener {
 
     override fun initView() {
 
-
         currentFilePath = intent.getStringExtra(ExtraKeyConfig.FILE_ABSOLUTE_PATH)!!
-        imageTempBean = intent.getParcelableExtra(ExtraKeyConfig.IMAGE_TEMP_BEAN)
-        reportIRList =
-            intent.getParcelableArrayListExtra(ExtraKeyConfig.REPORT_IR_LIST) ?: ArrayList(10)
+        imageTempBean = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            intent.getParcelableExtra(ExtraKeyConfig.IMAGE_TEMP_BEAN, ImageTempBean::class.java)
+        } else {
+            @Suppress("DEPRECATION")
+            intent.getParcelableExtra<ImageTempBean>(ExtraKeyConfig.IMAGE_TEMP_BEAN)
+        }
+        reportIRList = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            intent.getParcelableArrayListExtra(ExtraKeyConfig.REPORT_IR_LIST, ReportIRBean::class.java) ?: ArrayList(10)
+        } else {
+            @Suppress("DEPRECATION")
+            intent.getParcelableArrayListExtra<ReportIRBean>(ExtraKeyConfig.REPORT_IR_LIST) ?: ArrayList(10)
+        }
 
         refreshImg(currentFilePath)
         refreshData(imageTempBean)
@@ -180,10 +189,18 @@ class ReportCreateSecondActivity : BaseActivity(), View.OnClickListener {
                 }
                 val reportIRBeanList = ArrayList<ReportIRBean>(reportIRList)
                 reportIRBeanList.add(buildReportIr(currentFilePath))
-                val reportInfo =
+                val reportInfo = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    intent.getParcelableExtra(ExtraKeyConfig.REPORT_INFO, ReportInfoBean::class.java)
+                } else {
+                    @Suppress("DEPRECATION")
                     intent.getParcelableExtra<ReportInfoBean>(ExtraKeyConfig.REPORT_INFO)
-                val reportCondition =
+                }
+                val reportCondition = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    intent.getParcelableExtra(ExtraKeyConfig.REPORT_CONDITION, ReportConditionBean::class.java)
+                } else {
+                    @Suppress("DEPRECATION")
                     intent.getParcelableExtra<ReportConditionBean>(ExtraKeyConfig.REPORT_CONDITION)
+                }
                 if (reportInfo != null && reportCondition != null) {
                     NavigationManager.getInstance()
                         .build(RouterConfig.REPORT_PICK_IMG)
@@ -201,10 +218,18 @@ class ReportCreateSecondActivity : BaseActivity(), View.OnClickListener {
             tvPreview -> {
                 val appLanguage = ConstantLanguages.ENGLISH
                 val sdkVersion = "1.2.8_23050619"
-                val reportInfoBean: ReportInfoBean? =
-                    intent.getParcelableExtra(ExtraKeyConfig.REPORT_INFO)
-                val conditionBean: ReportConditionBean? =
-                    intent.getParcelableExtra(ExtraKeyConfig.REPORT_CONDITION)
+                val reportInfoBean: ReportInfoBean? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    intent.getParcelableExtra(ExtraKeyConfig.REPORT_INFO, ReportInfoBean::class.java)
+                } else {
+                    @Suppress("DEPRECATION")
+                    intent.getParcelableExtra<ReportInfoBean>(ExtraKeyConfig.REPORT_INFO)
+                }
+                val conditionBean: ReportConditionBean? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    intent.getParcelableExtra(ExtraKeyConfig.REPORT_CONDITION, ReportConditionBean::class.java)
+                } else {
+                    @Suppress("DEPRECATION")
+                    intent.getParcelableExtra<ReportConditionBean>(ExtraKeyConfig.REPORT_CONDITION)
+                }
                 val reportIRBeanList = ArrayList<ReportIRBean>(reportIRList)
                 reportIRBeanList.add(buildReportIr(currentFilePath))
                 val reportBean = ReportBean(
