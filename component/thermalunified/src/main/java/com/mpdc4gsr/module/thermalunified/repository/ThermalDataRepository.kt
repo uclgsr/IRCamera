@@ -53,24 +53,13 @@ class ThermalDataRepository : BaseRepository() {
         startTime: Long,
         endTime: Long
     ): Flow<Result<List<ThermalFrameData>>> = safeFlow {
-        
-        // Check cache first
         val cacheKey = "thermal_${deviceId}_${startTime}_${endTime}"
-        val cached = getFromCache<List<ThermalFrameData>>(cacheKey)
-        
-        if (cached != null) {
-            return@safeFlow Result.success(cached)
+        val ttlMs = 300000L // 5 minutes TTL
+        val data = getCachedOrExecute<List<ThermalFrameData>>(cacheKey, ttlMs) {
+            delay(1500) // Simulate data loading
+            generateHistoricalData(deviceId, startTime, endTime)
         }
-        
-        // Simulate data loading
-        delay(1500)
-        
-        val historicalData = generateHistoricalData(deviceId, startTime, endTime)
-        
-        // Cache the results
-        putInCache(cacheKey, historicalData, ttlMs = 300000) // 5 minutes TTL
-        
-        Result.success(historicalData)
+        Result.success(data)
     }
     
     private fun generateThermalFrame(deviceId: String): ThermalFrameData {
