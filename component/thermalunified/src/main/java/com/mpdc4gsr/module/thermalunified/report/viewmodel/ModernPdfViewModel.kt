@@ -309,7 +309,7 @@ class ModernPdfViewModel : BaseViewModel() {
 
     // Extension functions for ReportData
     private fun ReportData.hasMoreData(): Boolean {
-        return code == 200 && data != null && data!!.isNotEmpty() && data!!.size >= 20
+        return code == 200 && data?.records?.isNotEmpty() == true && data!!.records!!.size >= 20
     }
 
     companion object {

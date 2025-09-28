@@ -142,7 +142,7 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
     private fun setupObservers() {
         // Thermal UI state observer
         lifecycleScope.launch {
-            thermalViewModel.uiState.collect { uiState ->
+            thermalViewModel.thermalUiState.collect { uiState ->
                 updateThermalUI(uiState)
             }
         }

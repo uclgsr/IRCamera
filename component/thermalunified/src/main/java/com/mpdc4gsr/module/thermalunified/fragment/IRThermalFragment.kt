@@ -88,7 +88,7 @@ class IRThermalFragment : BaseFragment(), View.OnClickListener {
     private fun setupObservers() {
         // Device connection state observer
         lifecycleScope.launch {
-            viewModel.uiState.collect { uiState ->
+            viewModel.thermalUiState.collect { uiState ->
                 updateConnectionUI(uiState)
             }
         }

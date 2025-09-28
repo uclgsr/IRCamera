@@ -72,7 +72,7 @@ class ThermalFragmentViewModel : BaseViewModel() {
                     processingProgress = imageState.processingProgress
                 )
             }.collect { newUiState ->
-                _uiState.value = newUiState
+                _thermalUiState.value = newUiState
             }
         }
     }

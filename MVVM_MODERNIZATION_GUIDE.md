@@ -172,6 +172,110 @@ sealed class UiEvent {
 - Type-safe error handling
 - Event-driven UI updates
 
+### 3. PolicyViewModel
+
+**Before**: Simple ViewModel with direct repository calls
+**After**: Complete modern implementation with StateFlow and proper error handling
+
+**Key Improvements**:
+- StateFlow-based state management
+- Type-safe enum for policy types
+- Proper error handling and retry logic
+- Caching with Repository pattern
+- Event-driven architecture
+
+### 4. MainFragmentViewModel
+
+**Before**: LiveData-based device state management
+**After**: StateFlow with combined state objects and reactive updates
+
+**Key Improvements**:
+- StateFlow for reactive device state
+- Combined state objects for complex UI scenarios
+- SharedFlow for navigation events
+- Enhanced battery monitoring with low battery warnings
+- Type-safe device management
+
+### 5. SensorDataRepository
+
+**New Addition**: Modern repository demonstrating advanced patterns
+
+**Features**:
+- Multi-sensor data streams
+- Combined data flows
+- Real-time data simulation
+- Device status management
+- Type-safe sensor data models
+
+## Advanced Patterns
+
+### 1. Combined State Objects
+
+For complex UI scenarios, use combined state objects:
+
+```kotlin
+data class ScreenState(
+    val isLoading: Boolean = false,
+    val hasData: Boolean = false,
+    val errorMessage: String? = null,
+    val lastUpdated: Long? = null
+)
+```
+
+### 2. Multi-Stream Data Combination
+
+Combine multiple data streams reactively:
+
+```kotlin
+val combinedData = combine(
+    dataStream1,
+    dataStream2,
+    dataStream3
+) { data1, data2, data3 ->
+    CombinedData(data1, data2, data3)
+}
+```
+
+### 3. Repository Caching Strategy
+
+Implement intelligent caching based on data type:
+
+```kotlin
+// Real-time data - short cache
+private const val SENSOR_DATA_TTL = 5 * 1000L
+
+// Configuration data - longer cache
+private const val CONFIG_DATA_TTL = 60 * 60 * 1000L
+
+// Session data - no expiration until manually cleared
+private const val SESSION_DATA_TTL = Long.MAX_VALUE
+```
+
+### 4. Type-Safe Event Handling
+
+Use sealed classes for events with data:
+
+```kotlin
+sealed class NavigationEvent {
+    data class Navigate(val route: String, val extras: Bundle = Bundle()) : NavigationEvent()
+    data class ShowDialog(val title: String, val message: String) : NavigationEvent()
+    object GoBack : NavigationEvent()
+}
+```
+
+### 5. Error Recovery Patterns
+
+Implement retry and fallback mechanisms:
+
+```kotlin
+fun retry() {
+    val currentState = _state.value
+    if (currentState is State.Error) {
+        loadData(forceRefresh = true)
+    }
+}
+```
+
 ## Best Practices
 
 ### 1. State Management
@@ -202,6 +306,12 @@ sealed class UiEvent {
 - Use TestCoroutineDispatcher for testing coroutines
 - Mock repositories for unit testing ViewModels
 
+### 6. Performance Optimization
+- Use appropriate cache TTL based on data volatility
+- Combine related data streams to reduce observer count
+- Use `distinctUntilChanged()` for expensive UI updates
+- Implement proper data pagination for large datasets
+
 ## Migration Checklist
 
 When modernizing an existing ViewModel:
@@ -217,6 +327,9 @@ When modernizing an existing ViewModel:
 - [ ] Create meaningful state classes
 - [ ] Add loading states
 - [ ] Handle network connectivity
+- [ ] Add retry mechanisms
+- [ ] Implement proper data validation
+- [ ] Add performance optimizations
 
 ## Common Pitfalls
 
@@ -225,14 +338,69 @@ When modernizing an existing ViewModel:
 3. **Not handling loading states**: Always provide user feedback for async operations
 4. **Ignoring error handling**: Always handle exceptions properly
 5. **Not using sealed classes**: This reduces type safety and makes debugging harder
+6. **Excessive state updates**: Use `distinctUntilChanged()` for expensive operations
+7. **Poor cache management**: Set appropriate TTL values for different data types
+8. **Not handling edge cases**: Consider offline scenarios, low battery, etc.
+
+## Testing Strategies
+
+### 1. ViewModel Testing
+```kotlin
+@Test
+fun `test data loading success`() = runTest {
+    // Given
+    val mockRepository = mockk<MyRepository>()
+    val viewModel = MyViewModel(mockRepository)
+    
+    // When
+    viewModel.loadData()
+    
+    // Then
+    assertEquals(LoadingState.Success, viewModel.state.value)
+}
+```
+
+### 2. Repository Testing
+```kotlin
+@Test
+fun `test repository caching`() = runTest {
+    val repository = MyRepository()
+    
+    // First call should fetch from network
+    val result1 = repository.getData().first()
+    
+    // Second call should use cache
+    val result2 = repository.getData().first()
+    
+    assertEquals(result1, result2)
+}
+```
+
+### 3. Flow Testing
+```kotlin
+@Test
+fun `test combined data flow`() = runTest {
+    val repository = MyRepository()
+    
+    repository.getCombinedData(listOf("device1", "device2"))
+        .test {
+            val emission = awaitItem()
+            assertTrue(emission is Result.Success)
+            assertEquals(2, emission.data.devices.size)
+        }
+}
+```
 
 ## Future Enhancements
 
 1. **Dependency Injection**: Consider using Hilt for more sophisticated DI
 2. **Navigation Component**: Integrate with Navigation Component for type-safe navigation
 3. **Data Binding**: Update data binding expressions to work with StateFlow
-4. **Testing Infrastructure**: Add comprehensive testing utilities
+4. **Compose Integration**: Prepare for Jetpack Compose migration
 5. **Performance Monitoring**: Add performance monitoring for state changes
+6. **Offline Support**: Implement comprehensive offline data management
+7. **Real-time Synchronization**: Add real-time data synchronization capabilities
+8. **Advanced Analytics**: Integrate analytics for user behavior tracking
 
 ## Conclusion
 
@@ -242,5 +410,8 @@ The modernized MVVM architecture provides:
 - More maintainable and testable code
 - Consistent patterns across the application
 - Better separation of concerns with Repository pattern
+- Advanced caching and performance optimizations
+- Type-safe state management
+- Comprehensive error recovery mechanisms
 
-This modernization maintains backward compatibility where possible while providing a clear path forward for new development.
+This modernization maintains backward compatibility where possible while providing a clear path forward for new development and establishes patterns that scale well with application growth.

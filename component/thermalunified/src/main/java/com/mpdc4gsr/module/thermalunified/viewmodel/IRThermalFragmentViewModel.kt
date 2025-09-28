@@ -45,7 +45,7 @@ class IRThermalFragmentViewModel : BaseViewModel() {
             // Monitor device connections and update UI state accordingly
             combine(
                 _deviceConnectionState,
-                _uiState
+                _thermalUiState
             ) { connectionState, uiState ->
                 uiState.copy(
                     isConnected = connectionState.hasConnection,
@@ -53,7 +53,7 @@ class IRThermalFragmentViewModel : BaseViewModel() {
                     showConnectButton = !connectionState.hasConnection && connectionState.hasUsbDevice
                 )
             }.collect { newUiState ->
-                _uiState.value = newUiState
+                _thermalUiState.value = newUiState
             }
         }
     }
