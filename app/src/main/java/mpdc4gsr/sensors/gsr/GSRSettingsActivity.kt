@@ -174,6 +174,36 @@ class GSRSettingsActivity : BaseViewModelActivity<GSRSettingsViewModel>() {
         // binding.requestPermissionsButton?.setOnClickListener {
         //     viewModel.requestPermissions()
         // }
+
+        // Setup bottom navigation
+        setupBottomNavigation()
+    }
+
+    private fun setupBottomNavigation() {
+        binding.bottomNavigation?.clNavGallery?.setOnClickListener {
+            navigateToMainActivity(0) // Gallery page
+        }
+        
+        binding.bottomNavigation?.clNavMain?.setOnClickListener {
+            navigateToMainActivity(1) // Main page
+        }
+        
+        binding.bottomNavigation?.clNavMine?.setOnClickListener {
+            navigateToMainActivity(2) // Mine page
+        }
+        
+        // Update navigation selection to show current context (Settings would be closest to Mine)
+        binding.bottomNavigation?.ivNavMine?.isSelected = true
+        binding.bottomNavigation?.tvNavMine?.isSelected = true
+    }
+
+    private fun navigateToMainActivity(pageIndex: Int) {
+        val intent = Intent(this, mpdc4gsr.activities.MainActivity::class.java).apply {
+            putExtra("page", pageIndex)
+            flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+        }
+        startActivity(intent)
+        finish()
     }
 
     private fun setupObservers() {
