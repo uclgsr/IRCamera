@@ -28,6 +28,7 @@ class MultiModalRecordingViewModel : BaseViewModel() {
     private lateinit var sessionManager: SessionManager
     private var rgbCameraRecorder: RgbCameraRecorder? = null
     private var networkClient: com.mpdc4gsr.gsr.network.NetworkClient? = null
+    private lateinit var context: Context
 
     // Recording State Management
     private val _recordingState = MutableLiveData<RecordingState>()
@@ -111,7 +112,7 @@ class MultiModalRecordingViewModel : BaseViewModel() {
     )
 
     data class ShimmerDeviceInfo(
-        val shimmer: Shimmer,
+        val shimmer: Shimmer?,
         val deviceName: String,
         val macAddress: String,
         val batteryLevel: Int? = null,
@@ -163,9 +164,10 @@ class MultiModalRecordingViewModel : BaseViewModel() {
     }
 
     fun initialize(context: Context) {
+        this.context = context
         initializeRecorders(context)
         generateDefaultSessionId()
-        checkSystemReadiness()
+        updateSystemReadiness()
     }
 
     private fun initializeRecorders(context: Context) {
@@ -173,6 +175,7 @@ class MultiModalRecordingViewModel : BaseViewModel() {
             try {
                 // Initialize GSR Recorder
                 gsrRecorder = GSRRecorder(context, RealShimmerDeviceFactory(context))
+                gsrRecorder.addListener(createGSRListener())
                 
                 // Initialize Session Manager
                 sessionManager = SessionManager.getInstance(context)
@@ -240,7 +243,7 @@ class MultiModalRecordingViewModel : BaseViewModel() {
                 )
                 
                 // Start GSR recording
-                gsrRecorder.startRecording(sessionInfo, createGSRListener())
+                gsrRecorder.startRecording(sessionInfo.sessionId, sessionInfo.participantId)
                 
                 // Start camera recording if enabled
                 if (config.enableVideo) {
@@ -316,16 +319,17 @@ class MultiModalRecordingViewModel : BaseViewModel() {
                 val timestamp = System.currentTimeMillis()
                 val syncMark = SyncMark(
                     timestamp = timestamp,
-                    markId = "sync_${currentState.syncMarkCount + 1}",
-                    description = "Manual sync event"
+                    utcTimestamp = timestamp,
+                    eventType = "USER_TRIGGER",
+                    sessionId = currentState.sessionId
                 )
                 
                 // Add sync mark to GSR data
-                gsrRecorder.addSyncMark(syncMark)
+                gsrRecorder.addSyncMark("USER_TRIGGER", "Manual sync event")
                 
                 // Add sync mark to camera data if recording
                 if (_cameraState.value.isRecording) {
-                    rgbCameraRecorder?.addSyncMark(syncMark)
+                    rgbCameraRecorder?.addSyncMarker("USER_TRIGGER", timestamp * 1_000_000, emptyMap())
                 }
                 
                 // Update state
@@ -335,7 +339,7 @@ class MultiModalRecordingViewModel : BaseViewModel() {
                 
                 _recordingAction.value = RecordingAction(
                     type = ActionType.SYNC_EVENT_TRIGGERED,
-                    message = "Sync event ${syncMark.markId} triggered"
+                    message = "Sync event USER_TRIGGER triggered"
                 )
                 
             } catch (e: Exception) {
@@ -390,17 +394,17 @@ class MultiModalRecordingViewModel : BaseViewModel() {
     }
 
     private suspend fun discoverShimmerDevices(): List<ShimmerDeviceInfo> {
-        // Simulate device discovery
+        // Simulate device discovery - use null placeholders for now as this is discovery phase
         return listOf(
             ShimmerDeviceInfo(
-                shimmer = Shimmer(null), // Placeholder
+                shimmer = null,
                 deviceName = "Shimmer GSR #001",
                 macAddress = "00:11:22:AA:BB:CC",
                 batteryLevel = 85,
                 signalStrength = 75
             ),
             ShimmerDeviceInfo(
-                shimmer = Shimmer(null), // Placeholder
+                shimmer = null,
                 deviceName = "Shimmer GSR #002", 
                 macAddress = "00:11:22:AA:BB:DD",
                 batteryLevel = 92,
@@ -419,12 +423,20 @@ class MultiModalRecordingViewModel : BaseViewModel() {
                 _statusMessage.value = "GSR recording stopped"
             }
 
-            override fun onSampleReceived(sample: GSRSample) {
+            override fun onSampleRecorded(sample: GSRSample) {
                 val currentState = _recordingState.value
                 _recordingState.value = currentState?.copy(
                     sampleCount = currentState.sampleCount + 1
                 )
                 _gsrState.value = _gsrState.value.copy(lastSample = sample)
+            }
+
+            override fun onSyncMarkAdded(syncMark: SyncMark) {
+                // Handle sync mark addition
+                val currentState = _recordingState.value
+                _recordingState.value = currentState?.copy(
+                    syncMarkCount = currentState.syncMarkCount + 1
+                )
             }
 
             override fun onError(error: String) {
