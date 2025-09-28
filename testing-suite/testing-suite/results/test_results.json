@@ -1,0 +1,135 @@
+[
+  {
+    "test_name": "LaTeX File Exists: docs/latex/main.tex",
+    "test_category": "Documentation",
+    "status": "FAIL",
+    "duration_ms": 0,
+    "metrics": {
+      "error": "File not found"
+    },
+    "timestamp": "2025-09-23T14:06:35.551595",
+    "description": "LaTeX file docs/latex/main.tex should exist"
+  },
+  {
+    "test_name": "LaTeX File Exists: docs/latex/4.tex",
+    "test_category": "Documentation",
+    "status": "FAIL",
+    "duration_ms": 0,
+    "metrics": {
+      "error": "File not found"
+    },
+    "timestamp": "2025-09-23T14:06:35.551619",
+    "description": "LaTeX file docs/latex/4.tex should exist"
+  },
+  {
+    "test_name": "LaTeX File Exists: docs/latex/5.tex",
+    "test_category": "Documentation",
+    "status": "FAIL",
+    "duration_ms": 0,
+    "metrics": {
+      "error": "File not found"
+    },
+    "timestamp": "2025-09-23T14:06:35.551633",
+    "description": "LaTeX file docs/latex/5.tex should exist"
+  },
+  {
+    "test_name": "LaTeX File Exists: docs/latex/6.tex",
+    "test_category": "Documentation",
+    "status": "FAIL",
+    "duration_ms": 0,
+    "metrics": {
+      "error": "File not found"
+    },
+    "timestamp": "2025-09-23T14:06:35.551644",
+    "description": "LaTeX file docs/latex/6.tex should exist"
+  },
+  {
+    "test_name": "Diagram Exists: docs/thesis-diagrams/session-sequence-diagram.md",
+    "test_category": "Documentation",
+    "status": "FAIL",
+    "duration_ms": 0,
+    "metrics": {
+      "error": "File not found"
+    },
+    "timestamp": "2025-09-23T14:06:35.551682",
+    "description": "Diagram file docs/thesis-diagrams/session-sequence-diagram.md should exist"
+  },
+  {
+    "test_name": "Diagram Exists: docs/thesis-diagrams/time-sync-timeline.md",
+    "test_category": "Documentation",
+    "status": "FAIL",
+    "duration_ms": 0,
+    "metrics": {
+      "error": "File not found"
+    },
+    "timestamp": "2025-09-23T14:06:35.551698",
+    "description": "Diagram file docs/thesis-diagrams/time-sync-timeline.md should exist"
+  },
+  {
+    "test_name": "Diagram Exists: docs/thesis-diagrams/state-machine-diagram.md",
+    "test_category": "Documentation",
+    "status": "FAIL",
+    "duration_ms": 0,
+    "metrics": {
+      "error": "File not found"
+    },
+    "timestamp": "2025-09-23T14:06:35.551709",
+    "description": "Diagram file docs/thesis-diagrams/state-machine-diagram.md should exist"
+  },
+  {
+    "test_name": "Diagram Exists: docs/thesis-diagrams/android-architecture-diagram.md",
+    "test_category": "Documentation",
+    "status": "FAIL",
+    "duration_ms": 0,
+    "metrics": {
+      "error": "File not found"
+    },
+    "timestamp": "2025-09-23T14:06:35.551719",
+    "description": "Diagram file docs/thesis-diagrams/android-architecture-diagram.md should exist"
+  },
+  {
+    "test_name": "Diagram Exists: docs/thesis-diagrams/enhanced-data-flow.md",
+    "test_category": "Documentation",
+    "status": "FAIL",
+    "duration_ms": 0,
+    "metrics": {
+      "error": "File not found"
+    },
+    "timestamp": "2025-09-23T14:06:35.551729",
+    "description": "Diagram file docs/thesis-diagrams/enhanced-data-flow.md should exist"
+  },
+  {
+    "test_name": "Table Exists: docs/thesis-diagrams/system-configuration-tables.md",
+    "test_category": "Documentation",
+    "status": "FAIL",
+    "duration_ms": 0,
+    "metrics": {
+      "error": "File not found"
+    },
+    "timestamp": "2025-09-23T14:06:35.551763",
+    "description": "Table file docs/thesis-diagrams/system-configuration-tables.md should exist"
+  },
+  {
+    "test_name": "Table Exists: docs/thesis-diagrams/performance-test-tables.md",
+    "test_category": "Documentation",
+    "status": "FAIL",
+    "duration_ms": 0,
+    "metrics": {
+      "error": "File not found"
+    },
+    "timestamp": "2025-09-23T14:06:35.551780",
+    "description": "Table file docs/thesis-diagrams/performance-test-tables.md should exist"
+  },
+  {
+    "test_name": "Cross-Reference Validation",
+    "test_category": "Integration",
+    "status": "PARTIAL",
+    "duration_ms": 0.03218650817871094,
+    "metrics": {
+      "reference_coverage": 0,
+      "total_refs": 0
+    },
+    "timestamp": "2025-09-23T14:06:35.552900",
+    "description": "Validation of cross-references between thesis sections"
+  }
+]
