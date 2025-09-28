@@ -369,11 +369,6 @@ dependencies {
 
     implementation(libs.bundles.camerax)
     
-    // Compose dependencies
-    implementation(platform(libs.compose.bom))
-    implementation(libs.bundles.compose)
-    debugImplementation(libs.compose.ui.tooling)
-    
     testImplementation(libs.junit)
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.hamcrest)

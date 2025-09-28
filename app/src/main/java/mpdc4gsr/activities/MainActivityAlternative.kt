@@ -46,7 +46,7 @@ import com.mpdc4gsr.module.user.fragment.MineFragment
 import com.mpdc4gsr.module.user.fragment.MoreFragment
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import mpdc4gsr.compose.base.BaseComposeActivity
+import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import mpdc4gsr.compose.components.SensorStatusCard
 import mpdc4gsr.compose.components.ThermalVisualizationCard
 import mpdc4gsr.core.RecordingService
@@ -70,10 +70,10 @@ import org.greenrobot.eventbus.ThreadMode
  * - Enhanced multi-modal recording support
  * - Improved network status and device management
  */
-class MainActivityComposeEnhanced : BaseComposeActivity<MainActivityViewModel>() {
+class MainActivityAlternative : BaseComposeActivity<MainActivityViewModel>() {
 
     companion object {
-        private const val TAG = "MainActivityComposeEnhanced"
+        private const val TAG = "MainActivityAlternative"
     }
 
     // Preserved original functionality
