@@ -255,6 +255,51 @@ class SessionDirectoryManager(private val context: Context) {
         }
         return File(sensorDir, fileName)
     }
+
+    
+    fun deleteSession(sessionId: String): Boolean {
+        return try {
+            val sessionDir = File(baseDirectory, sessionId)
+            val legacyDir = File(context.getExternalFilesDir(null), "recordings/$sessionId")
+            
+            var deleted = false
+            
+            if (sessionDir.exists()) {
+                deleted = sessionDir.deleteRecursively()
+                Log.i(TAG, "Deleted session directory: $sessionId")
+            }
+            
+            if (legacyDir.exists()) {
+                deleted = legacyDir.deleteRecursively() || deleted
+                Log.i(TAG, "Deleted legacy session directory: $sessionId")
+            }
+            
+            deleted
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to delete session: $sessionId", e)
+            false
+        }
+    }
+
+    
+    fun exportSession(sessionId: String): Boolean {
+        return try {
+            val sessionDir = File(baseDirectory, sessionId)
+            if (!sessionDir.exists()) {
+                Log.w(TAG, "Session directory not found for export: $sessionId")
+                return false
+            }
+            
+            // Export functionality is not implemented yet
+            Log.w(TAG, "Export functionality not implemented for session: $sessionId")
+            
+            // Return false to indicate the feature is not implemented
+            false
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to export session: $sessionId", e)
+            false
+        }
+    }
 }
 
 data class SessionDirectory(

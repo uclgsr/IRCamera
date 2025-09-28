@@ -19,6 +19,7 @@ import com.csl.irCamera.R
 import com.csl.irCamera.databinding.FragmentMainBinding
 import com.mpdc4gsr.libunified.app.bean.event.SocketMsgEvent
 import com.mpdc4gsr.libunified.app.comm.navigation.NavigationManager
+import com.mpdc4gsr.libunified.app.common.SharedManager
 import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
 import com.mpdc4gsr.libunified.app.config.RouterConfig
 import com.mpdc4gsr.libunified.app.dialog.TipDialog
@@ -31,6 +32,7 @@ import com.mpdc4gsr.libunified.app.utils.NetWorkUtils
 import com.mpdc4gsr.libunified.app.utils.WsCmdConstants
 import com.mpdc4gsr.libunified.ui.widget.BatteryView
 import mpdc4gsr.activities.DeviceTypeActivity
+import mpdc4gsr.ui_components.MainFragmentViewModel.ConnectType
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.json.JSONObject
@@ -187,7 +189,7 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
         }
     }
 
-    private class MyAdapter : RecyclerView.Adapter<MyAdapter.ViewHolder>() {
+    private inner class MyAdapter : RecyclerView.Adapter<MyAdapter.ViewHolder>() {
 
         var hasConnectLine: Boolean = false
             set(value) {
@@ -284,35 +286,29 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
                         onItemClickListener?.invoke(getConnectType(position))
                     }
                 }
-                ivBg.setOnLongClickListener {
+                ivBg.setOnLongClickListener { view ->
                     val position = bindingAdapterPosition
                     if (position != RecyclerView.NO_POSITION) {
-
                         val deviceType = getConnectType(position)
-                        when (deviceType) {
+                        val currentState = this@MainFragment.viewModel.deviceState.value
+                        
+                        val shouldPreventLongClick = when (deviceType) {
                             MainFragmentViewModel.ConnectType.LINE -> {
-                                // Check connection state via ViewModel instead of direct calls
-                                val currentState = this@MainFragment.viewModel.deviceState.value
-                                if (currentState?.hasConnectLine == true) {
-                                    return@setOnLongClickListener true
-                                }
+                                currentState?.hasConnectLine == true
                             }
-
                             MainFragmentViewModel.ConnectType.TS004 -> {
-                                val currentState = this@MainFragment.viewModel.deviceState.value
-                                if (currentState?.hasConnectTS004 == true) {
-                                    return@setOnLongClickListener true
-                                }
+                                currentState?.hasConnectTS004 == true
                             }
-
                             MainFragmentViewModel.ConnectType.TC007 -> {
-                                val currentState = this@MainFragment.viewModel.deviceState.value
-                                if (currentState?.hasConnectTC007 == true) {
-                                    return@setOnLongClickListener true
-                                }
+                                currentState?.hasConnectTC007 == true
                             }
                         }
-                        onItemLongClickListener?.invoke(ivBg, deviceType)
+                        
+                        if (shouldPreventLongClick) {
+                            return@setOnLongClickListener true
+                        }
+                        
+                        onItemLongClickListener?.invoke(view, deviceType)
                     }
                     true
                 }
