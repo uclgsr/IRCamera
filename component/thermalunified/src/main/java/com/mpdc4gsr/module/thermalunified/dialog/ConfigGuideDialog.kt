@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.mpdc4gsr.module.thermalunified.dialog
 
 import android.annotation.SuppressLint

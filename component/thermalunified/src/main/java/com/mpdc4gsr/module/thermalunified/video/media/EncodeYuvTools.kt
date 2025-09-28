@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.mpdc4gsr.module.thermalunified.video.media
 
 import android.graphics.Bitmap
@@ -12,13 +14,13 @@ object EncodeYuvTools {
         inputWidth: Int,
         inputHeight: Int,
         scaled: Bitmap?,
-        colorFormat: Int = COLOR_FormatYUV420SemiPlanar,
+        colorFormat: Int = @Suppress("DEPRECATION") COLOR_FormatYUV420SemiPlanar,
     ): ByteArray {
         val argb = IntArray(inputWidth * inputHeight)
         scaled!!.getPixels(argb, 0, inputWidth, 0, 0, inputWidth, inputHeight)
         val yuv = ByteArray(inputWidth * inputHeight * 3 / 2)
         when (colorFormat) {
-            COLOR_FormatYUV420SemiPlanar ->
+            @Suppress("DEPRECATION") COLOR_FormatYUV420SemiPlanar ->
                 encodeYUV420SP(
                     yuv,
                     argb,
@@ -26,7 +28,7 @@ object EncodeYuvTools {
                     inputHeight,
                 )
 
-            COLOR_FormatYUV420Planar ->
+            @Suppress("DEPRECATION") COLOR_FormatYUV420Planar ->
                 encodeYUV420P(
                     yuv,
                     argb,
@@ -34,7 +36,7 @@ object EncodeYuvTools {
                     inputHeight,
                 )
 
-            COLOR_FormatYUV420PackedSemiPlanar ->
+            @Suppress("DEPRECATION") COLOR_FormatYUV420PackedSemiPlanar ->
                 encodeYUV420PSP(
                     yuv,
                     argb,
@@ -42,7 +44,7 @@ object EncodeYuvTools {
                     inputHeight,
                 )
 
-            COLOR_FormatYUV420PackedPlanar ->
+            @Suppress("DEPRECATION") COLOR_FormatYUV420PackedPlanar ->
                 encodeYUV420PP(
                     yuv,
                     argb,
