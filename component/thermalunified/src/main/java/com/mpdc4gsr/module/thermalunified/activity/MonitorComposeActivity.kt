@@ -7,9 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons  
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.CropFree
 import androidx.compose.material.icons.filled.Place
-import androidx.compose.material.icons.filled.Timeline
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -280,14 +278,14 @@ private fun MonitorTypeSelectionView(
                 
                 MonitorTypeButton(
                     text = "Line", 
-                    icon = Icons.Default.Timeline,
+                    icon = Icons.Default.Place,
                     onClick = { onTypeSelected(2) },
                     modifier = Modifier.weight(1f)
                 )
                 
                 MonitorTypeButton(
                     text = "Area",
-                    icon = Icons.Default.CropFree,
+                    icon = Icons.Default.Place,
                     onClick = { onTypeSelected(3) },
                     modifier = Modifier.weight(1f)
                 )
