@@ -23,11 +23,12 @@ import com.csl.irCamera.databinding.ActivitySessionManagerWithNavBinding
 import com.mpdc4gsr.gsr.model.SessionInfo
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModelActivity
 import com.mpdc4gsr.libunified.app.navigation.BottomNavigationHelper
+import mpdc4gsr.activities.MainActivity
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-class SessionManagerActivity : BaseViewModelActivity<SessionManagerViewModel>() {
+class SessionManagerActivity : BaseViewModelActivity<SessionManagerViewModel>(), BottomNavigationHelper.NavigationHandler {
     private lateinit var binding: ActivitySessionManagerWithNavBinding
     private lateinit var adapter: SessionAdapter
 
@@ -84,6 +85,25 @@ class SessionManagerActivity : BaseViewModelActivity<SessionManagerViewModel>() 
         
         // Set current page as MAIN (session management is part of main functionality)
         updateNavigationSelection(BottomNavigationHelper.NavigationPage.MAIN)
+    }
+    
+    override fun navigateToPage(page: BottomNavigationHelper.NavigationPage) {
+        val pageIndex = when (page) {
+            BottomNavigationHelper.NavigationPage.GALLERY -> 0
+            BottomNavigationHelper.NavigationPage.MAIN -> 1
+            BottomNavigationHelper.NavigationPage.MINE -> 2
+        }
+        
+        try {
+            val intent = Intent().apply {
+                setClassName(this@SessionManagerActivity, MainActivity::class.java.name)
+                putExtra("page", pageIndex)
+            }
+            startActivity(intent)
+            finish()
+        } catch (e: Exception) {
+            android.util.Log.e(TAG, "Navigation failed", e)
+        }
     }
     
     private fun handleNavigation(page: BottomNavigationHelper.NavigationPage) {

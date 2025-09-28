@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.mpdc4gsr.libunified.R
 import com.mpdc4gsr.libunified.app.navigation.BottomNavigationHelper
 
 /**
@@ -51,8 +52,8 @@ abstract class BaseNavigationActivity : BaseActivity() {
         val contentView = rootView?.getChildAt(0) as? ViewGroup
         
         if (contentView is ConstraintLayout) {
-            // Find the main content view (usually the one that takes most space)
-            val mainContentView = findMainContentView(contentView)
+            // Look for a main content view with a conventional ID first
+            val mainContentView = contentView.findViewById<View>(android.R.id.content)
             
             navigationHelper = BottomNavigationHelper.create(this, getCurrentNavigationPage())
             navigationHelper?.setOnNavigationItemSelectedListener { page ->
@@ -70,43 +71,6 @@ abstract class BaseNavigationActivity : BaseActivity() {
                 navigationHelper?.addToActivity(parent)
             }
         }
-    }
-    
-    /**
-     * Find the main content view that should be above navigation
-     * This is usually the largest view or the one with most constraints
-     */
-    private fun findMainContentView(parent: ConstraintLayout): View? {
-        var mainView: View? = null
-        var maxArea = 0
-        
-        for (i in 0 until parent.childCount) {
-            val child = parent.getChildAt(i)
-            val layoutParams = child.layoutParams as? ConstraintLayout.LayoutParams
-            
-            // Skip views that are likely to be navigation or small UI elements
-            if (layoutParams != null) {
-                val area = child.width * child.height
-                if (area > maxArea && !isLikelyBottomNavigation(child)) {
-                    maxArea = area
-                    mainView = child
-                }
-            }
-        }
-        
-        return mainView
-    }
-    
-    /**
-     * Heuristic to determine if a view is likely bottom navigation
-     */
-    private fun isLikelyBottomNavigation(view: View): Boolean {
-        val layoutParams = view.layoutParams as? ConstraintLayout.LayoutParams ?: return false
-        
-        // Check if view is constrained to bottom and has typical navigation characteristics
-        return layoutParams.bottomToBottom == ConstraintLayout.LayoutParams.PARENT_ID &&
-                view.id.toString().contains("bottom", ignoreCase = true) ||
-                view.id.toString().contains("nav", ignoreCase = true)
     }
     
     /**

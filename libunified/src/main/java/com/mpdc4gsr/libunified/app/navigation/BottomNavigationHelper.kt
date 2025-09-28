@@ -16,16 +16,28 @@ import com.mpdc4gsr.libunified.databinding.LayoutBottomNavigationBinding
  */
 class BottomNavigationHelper private constructor(
     private val activity: Activity,
-    private val currentPage: NavigationPage = NavigationPage.MAIN
+    private val currentPage: NavigationPage = NavigationPage.MAIN,
+    private val navigationHandler: NavigationHandler? = null
 ) {
     
     enum class NavigationPage {
         GALLERY, MAIN, MINE
     }
     
+    /**
+     * Interface to handle navigation without hardcoded dependencies
+     */
+    interface NavigationHandler {
+        fun navigateToPage(page: NavigationPage)
+    }
+    
     companion object {
-        fun create(activity: Activity, currentPage: NavigationPage = NavigationPage.MAIN): BottomNavigationHelper {
-            return BottomNavigationHelper(activity, currentPage)
+        fun create(
+            activity: Activity, 
+            currentPage: NavigationPage = NavigationPage.MAIN,
+            navigationHandler: NavigationHandler? = null
+        ): BottomNavigationHelper {
+            return BottomNavigationHelper(activity, currentPage, navigationHandler)
         }
     }
     
@@ -97,6 +109,13 @@ class BottomNavigationHelper private constructor(
     }
     
     private fun navigateToDefault(page: NavigationPage) {
+        // First try the provided navigation handler
+        navigationHandler?.let {
+            it.navigateToPage(page)
+            return
+        }
+        
+        // Then try the navigation manager
         val routerPath = when (page) {
             NavigationPage.GALLERY -> RouterConfig.GALLERY
             NavigationPage.MAIN -> RouterConfig.IR_MAIN
@@ -108,28 +127,16 @@ class BottomNavigationHelper private constructor(
                 .build(routerPath)
                 .navigation(activity)
         } catch (e: Exception) {
-            // Fallback to basic navigation
-            when (page) {
-                NavigationPage.GALLERY -> {
-                    // Try to navigate to main app gallery
-                    val intent = Intent()
-                    intent.setClassName(activity, "mpdc4gsr.activities.MainActivity")
-                    intent.putExtra("page", 0)
-                    activity.startActivity(intent)
-                }
-                NavigationPage.MAIN -> {
-                    val intent = Intent()
-                    intent.setClassName(activity, "mpdc4gsr.activities.MainActivity") 
-                    intent.putExtra("page", 1)
-                    activity.startActivity(intent)
-                }
-                NavigationPage.MINE -> {
-                    val intent = Intent()
-                    intent.setClassName(activity, "mpdc4gsr.activities.MainActivity")
-                    intent.putExtra("page", 2)
-                    activity.startActivity(intent)
-                }
+            // If both fail, broadcast an intent that the app can handle
+            val intent = Intent("com.mpdc4gsr.NAVIGATE_TO_PAGE").apply {
+                putExtra("page", when (page) {
+                    NavigationPage.GALLERY -> 0
+                    NavigationPage.MAIN -> 1 
+                    NavigationPage.MINE -> 2
+                })
+                setPackage(activity.packageName)
             }
+            activity.sendBroadcast(intent)
         }
     }
     
@@ -138,7 +145,6 @@ class BottomNavigationHelper private constructor(
     }
     
     fun updateSelectedPage(page: NavigationPage) {
-        this.currentPage = page
         updateSelectedState()
     }
     

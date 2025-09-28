@@ -21,12 +21,13 @@ import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityGsrSettingsWithNavBinding
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModelActivity
 import com.mpdc4gsr.libunified.app.navigation.BottomNavigationHelper
+import mpdc4gsr.activities.MainActivity
 
 /**
  * GSRSettingsActivity - Phase 4 MVVM Implementation
  * Demonstrates Repository pattern with comprehensive settings management
  */
-class GSRSettingsActivity : BaseViewModelActivity<GSRSettingsViewModel>() {
+class GSRSettingsActivity : BaseViewModelActivity<GSRSettingsViewModel>(), BottomNavigationHelper.NavigationHandler {
 
     companion object {
         private const val TAG = "GSRSettingsActivity"
@@ -95,49 +96,35 @@ class GSRSettingsActivity : BaseViewModelActivity<GSRSettingsViewModel>() {
     private fun setupBottomNavigation() {
         // Setup navigation click listeners for the included bottom navigation
         binding.bottomNavigation.clNavGallery.setOnClickListener {
-            // Navigate to Gallery
-            handleNavigation(BottomNavigationHelper.NavigationPage.GALLERY)
+            navigateToPage(BottomNavigationHelper.NavigationPage.GALLERY)
         }
         
         binding.bottomNavigation.clNavMain.setOnClickListener {
-            // Navigate to Main
-            handleNavigation(BottomNavigationHelper.NavigationPage.MAIN)
+            navigateToPage(BottomNavigationHelper.NavigationPage.MAIN)
         }
         
         binding.bottomNavigation.clNavMine.setOnClickListener {
-            // Navigate to Mine/Profile
-            handleNavigation(BottomNavigationHelper.NavigationPage.MINE)
+            navigateToPage(BottomNavigationHelper.NavigationPage.MINE)
         }
         
         // Set current page as MAIN (settings is part of main functionality)
         updateNavigationSelection(BottomNavigationHelper.NavigationPage.MAIN)
     }
     
-    private fun handleNavigation(page: BottomNavigationHelper.NavigationPage) {
+    override fun navigateToPage(page: BottomNavigationHelper.NavigationPage) {
+        val pageIndex = when (page) {
+            BottomNavigationHelper.NavigationPage.GALLERY -> 0
+            BottomNavigationHelper.NavigationPage.MAIN -> 1
+            BottomNavigationHelper.NavigationPage.MINE -> 2
+        }
+        
         try {
-            when (page) {
-                BottomNavigationHelper.NavigationPage.GALLERY -> {
-                    val intent = Intent()
-                    intent.setClassName(this, "mpdc4gsr.activities.MainActivity")
-                    intent.putExtra("page", 0)
-                    startActivity(intent)
-                    finish()
-                }
-                BottomNavigationHelper.NavigationPage.MAIN -> {
-                    val intent = Intent()
-                    intent.setClassName(this, "mpdc4gsr.activities.MainActivity")
-                    intent.putExtra("page", 1)
-                    startActivity(intent)
-                    finish()
-                }
-                BottomNavigationHelper.NavigationPage.MINE -> {
-                    val intent = Intent()
-                    intent.setClassName(this, "mpdc4gsr.activities.MainActivity")
-                    intent.putExtra("page", 2)
-                    startActivity(intent)
-                    finish()
-                }
+            val intent = Intent().apply {
+                setClassName(this@GSRSettingsActivity, MainActivity::class.java.name)
+                putExtra("page", pageIndex)
             }
+            startActivity(intent)
+            finish()
         } catch (e: Exception) {
             Log.e(TAG, "Navigation failed", e)
         }

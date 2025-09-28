@@ -1,8 +1,10 @@
 package mpdc4gsr.activities
 
 import android.content.ComponentName
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
@@ -49,6 +51,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     private val viewModel: MainActivityViewModel by viewModels()
     private lateinit var permissionController: PermissionController
     private var isServiceBound = false
+    private var navigationReceiver: BroadcastReceiver? = null
 
     /**
      * The ServiceConnection's only role is to link the Activity's lifecycle
@@ -83,6 +86,22 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         
         // Handle navigation from other activities
         handleNavigationIntent()
+        setupNavigationReceiver()
+    }
+    
+    private fun setupNavigationReceiver() {
+        navigationReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                if (intent?.action == "com.mpdc4gsr.NAVIGATE_TO_PAGE") {
+                    val targetPage = intent.getIntExtra("page", 1)
+                    binding.viewPage.setCurrentItem(targetPage, false)
+                    viewModel.onNavigationItemSelected(targetPage)
+                }
+            }
+        }
+        
+        val filter = IntentFilter("com.mpdc4gsr.NAVIGATE_TO_PAGE")
+        registerReceiver(navigationReceiver, filter)
     }
     
     private fun handleNavigationIntent() {
@@ -341,6 +360,9 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         permissionController.cleanup()
         if (isServiceBound) {
             unbindService(serviceConnection)
+        }
+        navigationReceiver?.let {
+            unregisterReceiver(it)
         }
     }
 
