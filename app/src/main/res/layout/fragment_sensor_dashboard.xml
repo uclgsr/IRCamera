@@ -73,28 +73,23 @@
             android:textSize="16sp"
             android:textStyle="bold" />
 
-        <!-- Scrollable Sensors Container -->
-        <ScrollView
-            android:id="@+id/sensorsScrollView"
+        <!-- Sensors Container - Let the parent ScrollView handle scrolling for better UX -->
+        <LinearLayout
+            android:id="@+id/sensorsContainer"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:fillViewport="true"
-            android:nestedScrollingEnabled="true"
-            android:scrollbars="vertical">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="8dp"
+            android:minHeight="200dp">
 
-            <LinearLayout
-                android:id="@+id/sensorsContainer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="8dp">
+            <!-- Individual sensor status views will be added programmatically -->
 
-                <!-- Individual sensor status views will be added programmatically -->
+        </LinearLayout>
 
-            </LinearLayout>
-
-        </ScrollView>
+        <!-- Extra spacing to ensure proper scrolling -->
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="50dp" />
 
     </LinearLayout>
 

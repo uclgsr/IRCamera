@@ -231,8 +231,8 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.rgbCameraState.collect { 
-                    // Update sensor dashboard fragment
-                    val fragment = supportFragmentManager.findFragmentByTag("sensor_dashboard") as? SensorDashboardFragment
+                    // Update sensor dashboard fragment using helper method
+                    val fragment = SensorDashboardFragment.getInstance(supportFragmentManager)
                     // fragment?.updateSensorStatus("rgb_camera", ...) 
                 }
             }
@@ -241,7 +241,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.sessionState.collect { 
                     // Update recordingControlsWidget and sensor dashboard fragment
-                    val fragment = supportFragmentManager.findFragmentByTag("sensor_dashboard") as? SensorDashboardFragment
+                    val fragment = SensorDashboardFragment.getInstance(supportFragmentManager)
                     // fragment?.updateRecordingStatus(...)
                 }
             }

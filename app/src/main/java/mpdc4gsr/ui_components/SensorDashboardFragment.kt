@@ -40,6 +40,11 @@ class SensorDashboardFragment : Fragment() {
         fun newInstance(): SensorDashboardFragment {
             return SensorDashboardFragment()
         }
+        
+        // Helper method to get fragment instance from fragment manager
+        fun getInstance(fragmentManager: androidx.fragment.app.FragmentManager): SensorDashboardFragment? {
+            return fragmentManager.findFragmentByTag("sensor_dashboard") as? SensorDashboardFragment
+        }
     }
 
     // UI Components
