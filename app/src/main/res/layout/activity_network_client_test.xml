@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#16131e"
+    android:background="@color/color_16131E"
     android:orientation="vertical"
     android:padding="16dp">
 
@@ -13,7 +13,7 @@
         android:layout_marginBottom="16dp"
         android:gravity="center"
         android:text="Network Client Test"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/white"
         android:textSize="24sp"
         android:textStyle="bold" />
 
@@ -22,7 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        android:background="#AA000000"
+        android:background="@color/black"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:padding="12dp">
@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Disconnected"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/white"
             android:textSize="16sp" />
 
     </LinearLayout>
@@ -50,7 +50,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        android:background="#FF1A1A1A"
+        android:background="@color/color_16131E"
         android:orientation="vertical"
         android:padding="12dp">
 
@@ -75,23 +75,23 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"
-                android:background="#33FFFFFF"
+                android:background="@color/white"
                 android:hint="IP Address"
                 android:padding="8dp"
                 android:text="192.168.1.100"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/white"
                 android:textColorHint="#AAAAAA" />
 
             <EditText
                 android:id="@+id/port_input"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:background="#33FFFFFF"
+                android:background="@color/white"
                 android:hint="Port"
                 android:inputType="number"
                 android:padding="8dp"
                 android:text="8080"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/white"
                 android:textColorHint="#AAAAAA" />
 
         </LinearLayout>
@@ -112,7 +112,7 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:text="Connect Wi-Fi"
-                android:textColor="#FFFFFF" />
+                android:textColor="@color/white" />
 
             <Button
                 android:id="@+id/test_ping_button"
@@ -125,7 +125,7 @@
                 android:enabled="false"
                 android:focusable="true"
                 android:text="Test Ping"
-                android:textColor="#FFFFFF" />
+                android:textColor="@color/white" />
 
         </LinearLayout>
 
@@ -136,7 +136,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        android:background="#FF1A1A1A"
+        android:background="@color/color_16131E"
         android:orientation="vertical"
         android:padding="12dp">
 
@@ -165,7 +165,7 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:text="Connect Bluetooth"
-                android:textColor="#FFFFFF" />
+                android:textColor="@color/white" />
 
             <Button
                 android:id="@+id/disconnect_button"
@@ -178,7 +178,7 @@
                 android:enabled="false"
                 android:focusable="true"
                 android:text="Disconnect"
-                android:textColor="#FFFFFF" />
+                android:textColor="@color/white" />
 
         </LinearLayout>
 
@@ -190,7 +190,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:text="Connection Information"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/white"
         android:textSize="16sp"
         android:textStyle="bold" />
 
@@ -198,7 +198,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="#33FFFFFF">
+        android:background="@color/white">
 
         <TextView
             android:id="@+id/connection_info_text"
@@ -207,7 +207,7 @@
             android:fontFamily="monospace"
             android:padding="8dp"
             android:text="No connection information available"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/white"
             android:textSize="12sp" />
 
     </ScrollView>
