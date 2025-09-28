@@ -113,7 +113,7 @@ dependencies {
     debugImplementation(libs.compose.ui.test.manifest)
     
     // Image loading for Compose
-    implementation("io.coil-kt:coil-compose:2.4.0")
+    implementation(libs.coil.compose)
 
     // Utilities
     implementation(libs.utilcode)
