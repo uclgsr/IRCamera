@@ -351,7 +351,7 @@ graph TB
 ```mermaid
 flowchart TD
     subgraph "Data Sources"
-        TC001Sensor[TC001 Thermal Camera<br/>30 FPS @ 384x288<br/>-20 degreesC to +400 degreesC]
+        TC001Sensor[TC001 Thermal Camera<br/>30 FPS @ 384x288<br/>-20 degrees C to +400 degrees C]
         Shimmer3Sensor[Shimmer3 GSR<br/>51.2 Hz Sampling<br/>Galvanic Skin Response]
     end
     
