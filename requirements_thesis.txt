@@ -1,0 +1,12 @@
+# Requirements for thesis deliverable generation
+# Core dependencies for basic functionality
+typing-extensions>=4.0.0
+
+# Optional dependencies for advanced analysis and visualization
+# Install these for full functionality:
+pandas>=1.3.0
+numpy>=1.20.0
+matplotlib>=3.3.0
+
+# For development and testing
+pytest>=7.0.0
