@@ -45,7 +45,7 @@ flowchart TD
     end
     
     subgraph "Data Output Layer"
-        ThermalCSV[thermal_data.csv<br/>timestamp_ns,w,h,t0...t49151<br/>Calibrated temperatures  degreesC]
+        ThermalCSV[thermal_data.csv<br/>timestamp_ns,w,h,t0...t49151<br/>Calibrated temperatures degrees C]
         GSRCSV[gsr_data.csv<br/>timestamp_ns,gsr_microS,ppg_raw<br/>Physiological measurements]
         VideoMP4[rgb_video.mp4<br/>H.264 encoded stream<br/>Synchronized timestamps]
         MetaJSON[metadata.json<br/>Session configuration<br/>Device specifications<br/>Calibration parameters]
