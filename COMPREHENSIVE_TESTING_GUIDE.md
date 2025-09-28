@@ -134,7 +134,7 @@ This document provides complete testing procedures and coverage analysis for the
 - Driver loads successfully without errors
 - Thermal stream starts at 25 FPS
 - Resolution: 256x192 pixels
-- Temperature range: -20 degreesC to +400 degreesC
+- Temperature range: -20 degrees C to +400 degrees C
 
 #### 2.2 Thermal Data Processing
 **Objective**: Verify thermal data processing and temperature calculation accuracy
