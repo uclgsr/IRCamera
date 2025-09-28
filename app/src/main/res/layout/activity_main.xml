@@ -124,25 +124,15 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
 
-            <View
-                android:id="@+id/view_main"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintWidth_percent="0.28" />
-
-
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_icon_gallery"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/view_main"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintWidth_percent="0.28">
+                app:layout_constraintHorizontal_weight="1">
 
                 <ImageView
                     android:id="@+id/iv_icon_gallery"
@@ -176,6 +166,15 @@
                     app:layout_constraintTop_toBottomOf="@id/iv_icon_gallery" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <View
+                android:id="@+id/view_main"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/cl_icon_gallery"
+                app:layout_constraintEnd_toStartOf="@id/cl_icon_settings"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintHorizontal_weight="1" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_icon_settings"
@@ -185,7 +184,7 @@
                 app:layout_constraintStart_toEndOf="@id/view_main"
                 app:layout_constraintEnd_toStartOf="@id/cl_icon_mine"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintWidth_percent="0.22">
+                app:layout_constraintHorizontal_weight="1">
 
                 <ImageView
                     android:id="@+id/iv_icon_settings"
@@ -225,8 +224,9 @@
                 android:layout_height="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@id/cl_icon_settings"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintWidth_percent="0.22">
+                app:layout_constraintHorizontal_weight="1">
 
                 <ImageView
                     android:id="@+id/iv_icon_mine"
