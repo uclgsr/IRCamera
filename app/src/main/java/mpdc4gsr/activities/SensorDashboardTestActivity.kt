@@ -72,14 +72,14 @@ class SensorDashboardTestActivity : AppCompatActivity() {
         // Test multi-device status
         fragment.updateMultiDeviceStatus(2, 1, 4)
         
-        // Demonstrate collapsible functionality after a delay
-        fragment.view?.postDelayed({
+        // Demonstrate collapsible functionality using coroutines for lifecycle safety and readability
+        fragment.viewLifecycleOwner.lifecycleScope.launch {
+            delay(3000)
             fragment.setSensorsCollapsed(true)
-            
-            // Expand again after another delay to show the toggle functionality
-            fragment.view?.postDelayed({
-                fragment.setSensorsCollapsed(false)
-            }, 2000)
-        }, 3000)
+
+            // Expand again after another delay
+            delay(2000)
+            fragment.setSensorsCollapsed(false)
+        }
     }
 }
