@@ -5,6 +5,8 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.view.Gravity
 import android.widget.ImageView
@@ -306,6 +308,8 @@ class SensorDashboardFragment : Fragment() {
             } else {
                 detailsText.visibility = GONE
             }
+        }
+
         fun showSimulationMode(isSimulation: Boolean) {
             if (isSimulation) {
                 isSimulationMode = true
@@ -318,8 +322,6 @@ class SensorDashboardFragment : Fragment() {
                     detailsText.visibility = GONE
                 }
                 isSimulationMode = false
-            }
-        }
             }
         }
 
