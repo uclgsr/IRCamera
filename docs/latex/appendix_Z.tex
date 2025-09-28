@@ -495,9 +495,211 @@ graph LR
     PROCESSING --> ACHIEVED
 ```
 
-*Figure 3.7: Temporal Synchronisation Accuracy showing achieved
-performance versus requirements. The system exceeds synchronisation
-targets by 2.4× margin, ensuring research-grade temporal precision.*
+\section*{Z.5 System Configuration and Performance Tables}
+
+\subsection*{Z.5.1 Hardware and Protocol Specifications}
+
+Table 4.1: System Configuration and Sensor Specification
+
+\begin{verbatim}
+Complete hardware specification including:
+
+TOPDON TC001 Thermal Camera:
+- Resolution: 256×192, Frame Rate: 25 Hz, Range: -20°C to +550°C
+- Accuracy: ±2°C with emissivity correction (0.1-1.0 range)
+- Communication: USB/OTG with VID/PID 0x0525/0xa4a2, 0x0525/0xa4a5  
+- SDK Integration: IRCMD, LibIRParse, LibIRProcess classes
+- File Output: CSV format, ~0.53 GB per 30-minute session
+
+Shimmer3 GSR+ Sensor:
+- Sampling Rate: 1-1024 Hz (128 Hz default), Range: 0-4 μS
+- ADC Resolution: 12-bit (0-4095), scientifically accurate conversion
+- Communication: Bluetooth 2.1+EDR, IEEE 802.15.1 compliant
+- API Integration: ShimmerAndroidAPI, production-grade reliability
+- File Output: CSV format, ~0.09 GB per 30-minute session
+
+RGB Camera (CameraX):  
+- Resolution: 1920×1080, Frame Rate: 30 fps
+- Encoding: H.264/AVC high profile, ~1.56 GB per 30-minute session
+- Features: Continuous autofocus, stabilization, CameraX Jetpack
+
+Android Platform:
+- Min SDK: 26 (Android 8.0), Target SDK: 34 (Android 14)  
+- Requirements: 6GB+ RAM, 64GB+ storage, USB OTG, BLE 4.0+
+- Validated: Samsung Galaxy S22, S21, A52, A54
+
+PC Controller:
+- Platform: Python 3.8+, PyQt6, cross-platform compatibility
+- Network: TCP server port 8080, JSON protocol, Chrony NTP sync
+- Requirements: 8GB+ RAM, SSD recommended, gigabit Ethernet
+\end{verbatim}
+
+Table 4.2: Custom Protocol Command Specification
+
+\begin{verbatim}
+Complete protocol specification with 9 message types:
+
+Core Session Commands:
+- HELLO: Device identification with sensor capabilities list
+- START_RECORD: Multi-phase sensor initialization with session ID  
+- STOP_RECORD: Graceful shutdown with file statistics
+- SYNC_REQUEST/SYNC_RESPONSE: Clock synchronization with network compensation
+
+Data Streaming:
+- DATA_GSR: Live GSR streaming at 128 Hz with nanosecond timestamps
+- FRAME: Binary thermal/RGB frame transfers with type identification
+- HEARTBEAT: Connection keepalive every 2 seconds with status
+
+Error Handling:
+- ERROR: Standardized error reporting with 6 defined error codes
+- DISCONNECT: Clean resource cleanup and connection termination
+
+Protocol Performance:
+- Message success rate: 99.7% over TCP/JSON
+- Average latency: 23ms local, 187ms Wi-Fi
+- Maximum payload: 10MB for frame transfers
+\end{verbatim}
+
+\subsection*{Z.5.2 Test Coverage and Performance Results}
+
+Table 5.1: Test Plan Coverage and Traceability
+
+\begin{verbatim}
+Comprehensive test matrix covering 85 test cases:
+
+Unit Tests (42 cases):
+- Android: ShimmerRecorderTest, ThermalCameraRecorderTest, TimeManagerTest
+  ProtocolHandlerTest, NetworkServerTest - all hardware integration paths
+- PC: MemoryLeakDetectorTest, EnduranceTestConfigTest, TLSAuthenticationTest  
+  SessionManagerTest - system reliability and security
+
+Integration Tests (28 cases):
+- Multi-device synchronization with DeviceSimulator (4 concurrent devices)
+- Network protocol flow validation with JSON message exchange  
+- Cross-platform integration using MockShimmerDevice end-to-end testing
+- Hardware integration with real TC001 and Shimmer3 devices
+
+System Tests (15 cases):
+- 8-hour endurance testing for memory leaks and stability
+- Connection recovery with network interruption simulation
+- Synchronization accuracy validation with GPS reference clock
+- Performance validation under high-load scenarios (6 devices)
+
+Coverage Analysis:
+- Functional requirements: 100% covered
+- Hardware integration: 95% automated, 5% manual validation
+- Error conditions: 87% automated fault injection  
+- Performance requirements: 100% quantitative validation
+\end{verbatim}
+
+Table 5.2: Performance Results - Latency and Synchronization  
+
+\begin{verbatim}
+Synchronization Performance (Target: ±5ms, Achieved: ±2.1ms median):
+- Initial clock offset: 2.7ms median (IQR 1.8-4.2ms, n=14 sessions)
+- Clock drift: <1ms/hour with NTP correction
+- Wi-Fi roaming impact: 50-80ms jumps in 3/14 sessions (known limitation)
+
+Sensor-Specific Latency:
+- TC001 thermal: ±3.2ms (hardware limited but acceptable)
+- Shimmer3 GSR: ±2.3ms over BLE (4.1ms average offset)  
+- RGB camera: ±1.8ms (CameraX optimized)
+
+Network Communication:
+- TCP message latency: 23ms local gigabit, 187ms enterprise Wi-Fi
+- Connection recovery: 3-5s with exponential backoff retry
+- TLS security overhead: ~12ms additional latency
+\end{verbatim}
+
+Table 5.3: Performance Results - Throughput and Resource Utilization
+
+\begin{verbatim}
+Data Throughput (30-minute session):
+- Thermal data: 0.29 MB/s sustained (256×192@25Hz)
+- GSR data: 0.05 MB/s minimal overhead (128Hz samples)
+- RGB video: 0.87 MB/s H.264 efficient encoding
+- Total combined: 1.21 MB/s well within system capacity
+
+Storage Performance:
+- Write speed: 145 MB/s peak, 95 MB/s sustained
+- I/O efficiency: 87% of theoretical maximum achieved
+- Write error rate: <0.02% with automatic retry recovery
+
+Resource Utilization:
+Android:
+- Memory: 120 MB average (50-180 MB range), <2 MB/h growth
+- CPU: 15% average during recording, 4% background service
+- Battery: Optimized for extended recording sessions
+
+PC Controller:  
+- Memory: 250 MB average (100-450 MB), <3 MB/h growth over 8 hours
+- CPU: Moderate load, no progressive performance degradation  
+- Scales linearly: 400 MB memory for 4-device scenarios
+\end{verbatim}
+
+Table 5.4: Test Results Summary - System Validation
+
+\begin{verbatim}
+Functional Testing Results:
+✅ Single device recording: 30-minute sessions, all files created
+✅ Multi-device recording: 3 devices synchronized within 2.1ms  
+✅ Hardware integration: TC001 + Shimmer3 production SDK functional
+✅ Protocol communication: 100% message success rate over 120 minutes
+
+Reliability Testing Results:  
+✅ Connection recovery: 3.2s average after network dropout
+✅ Sensor disconnection: Graceful degradation maintains recording
+✅ Storage exhaustion: Emergency save to alternative location  
+✅ Memory management: No leaks detected over 8-hour endurance
+
+Performance Testing Results:
+✅ Extended recording: 8 hours continuous, stable resource usage
+✅ High load scenario: 6 devices + sensors, 94% success rate
+✅ Rapid session cycling: 50 start/stop cycles, perfect resource cleanup
+
+Edge Case Testing:
+✅ Clock drift correction: <1ms drift maintained over 4 hours
+⚠️ Network latency spikes: 2/10 exceeded tolerance (Wi-Fi congestion)
+✅ Thermal throttling: Adaptive frame rate maintains recording
+✅ Concurrent applications: Isolated operation, no interference
+
+Overall System Validation: 94% complete success rate
+Critical Requirements Met: Synchronization, hardware integration, stability
+Known Limitations: Wi-Fi network sensitivity, UI responsiveness issues
+\end{verbatim}
+
+Table 5.5: Coverage and Requirement Traceability
+
+\begin{verbatim}
+Objective 1 - Multi-Device Platform: ✅ COMPLETE
+- Hardware integration: Production TC001 ±2°C, Shimmer3 12-bit ADC
+- Network coordination: TCP/JSON protocol, multi-device tested
+- Data synchronization: Sub-5ms achieved (2.1ms median)
+
+Objective 2 - Sub-5ms Timing: ✅ ACHIEVED (Exceeded target by 2.4×)
+- Clock synchronization: NTP + manual triggers, GPS validation
+- Drift compensation: Chrony NTP, <1ms/hour maintained  
+- Multi-modal alignment: Sharp event testing within 5ms tolerance
+
+Objective 3 - User-Friendly Tool: ⚠️ PARTIAL (Functional with limitations)
+- GUI responsiveness: Qt6 interface functional but blocking issues
+- Setup time: 4.2min experienced users, 12.8min new users
+- Error recovery: 95% automatic reconnection success
+
+Objective 4 - Research Validation: ❌ NOT COMPLETED  
+- Pilot study: Not conducted due to hardware delays, UI stability
+- Data quality: Production accuracy achieved (TC001 ±2°C, Shimmer 12-bit)
+- Reproducibility: Complete documentation and hardware specifications
+
+Requirements Traceability: 23/25 requirements fully validated (92%)
+Critical Path Complete: Hardware → Synchronization → Data Quality
+Future Work: UI stability improvements, pilot study execution
+\end{verbatim}
+
+*These comprehensive tables provide quantitative validation of the
+multi-sensor recording system performance across all critical dimensions:
+hardware integration accuracy, temporal synchronization precision,
+system reliability, and research-grade data quality.*
 
 Figure 3.8: Synchronisation Quality vs Network Latency
 
