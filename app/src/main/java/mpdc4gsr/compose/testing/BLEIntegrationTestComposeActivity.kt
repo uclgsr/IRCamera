@@ -1,0 +1,303 @@
+package mpdc4gsr.compose.testing
+
+import android.os.Bundle
+import android.util.Log
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.lifecycleScope
+import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import mpdc4gsr.permissions.PermissionController
+import mpdc4gsr.sensors.unified.ShimmerDeviceManager
+import mpdc4gsr.sensors.unified.UnifiedGSRRecorder
+import mpdc4gsr.sensors.unified.model.DeviceInfo
+
+/**
+ * Compose version of BLE Integration Test Activity
+ * Tests BLE functionality in a modern Compose UI
+ */
+class BLEIntegrationTestComposeActivity : ComponentActivity() {
+
+    companion object {
+        private const val TAG = "BLEIntegrationTestCompose"
+    }
+
+    private lateinit var permissionController: PermissionController
+    private var gsrRecorder: UnifiedGSRRecorder? = null
+    private var deviceManager: ShimmerDeviceManager? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        
+        // Initialize components
+        permissionController = PermissionController(this)
+        initializeRecorder()
+        
+        setContent {
+            LibUnifiedTheme {
+                BLEIntegrationTestScreen(
+                    onRunTest = { testType -> runTest(testType) },
+                    onClearLogs = { /* Clear logs */ }
+                )
+            }
+        }
+    }
+
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    fun BLEIntegrationTestScreen(
+        onRunTest: (String) -> Unit,
+        onClearLogs: () -> Unit
+    ) {
+        var testResults by remember { mutableStateOf(listOf<TestCase>()) }
+        var isTestRunning by remember { mutableStateOf(false) }
+        var logMessages by remember { mutableStateOf(listOf<String>()) }
+
+        // Initialize test cases
+        LaunchedEffect(Unit) {
+            testResults = listOf(
+                TestCase(
+                    id = "permissions",
+                    name = "BLE Permissions",
+                    description = "Test BLE and location permissions"
+                ),
+                TestCase(
+                    id = "discovery", 
+                    name = "Device Discovery",
+                    description = "Test Shimmer device discovery"
+                ),
+                TestCase(
+                    id = "connection",
+                    name = "Device Connection", 
+                    description = "Test connection to Shimmer GSR device"
+                ),
+                TestCase(
+                    id = "streaming",
+                    name = "Data Streaming",
+                    description = "Test real-time GSR data streaming"
+                ),
+                TestCase(
+                    id = "reconnection",
+                    name = "Reconnection Test",
+                    description = "Test automatic reconnection handling"
+                )
+            )
+        }
+
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = {
+                        Text(
+                            text = "BLE Integration Test",
+                            fontWeight = FontWeight.Medium
+                        )
+                    },
+                    navigationIcon = {
+                        IconButton(onClick = { finish() }) {
+                            Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                        }
+                    },
+                    actions = {
+                        IconButton(onClick = onClearLogs) {
+                            Icon(Icons.Default.Clear, contentDescription = "Clear Logs")
+                        }
+                    }
+                )
+            }
+        ) { paddingValues ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+                    .padding(16.dp)
+                    .verticalScroll(rememberScrollState())
+            ) {
+                // Test Progress Overview
+                TestProgressIndicator(
+                    totalTests = testResults.size,
+                    completedTests = testResults.count { it.status != TestStatus.PENDING },
+                    passedTests = testResults.count { it.status == TestStatus.PASSED },
+                    failedTests = testResults.count { it.status == TestStatus.FAILED }
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Run All Tests Button
+                Button(
+                    onClick = { 
+                        if (!isTestRunning) {
+                            lifecycleScope.launch { runAllTests() }
+                        }
+                    },
+                    enabled = !isTestRunning,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    if (isTestRunning) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(16.dp),
+                            strokeWidth = 2.dp
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text("Running Tests...")
+                    } else {
+                        Icon(Icons.Default.PlayArrow, contentDescription = null)
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text("Run All Tests")
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Individual Test Cases
+                testResults.forEach { testCase ->
+                    TestResultCard(
+                        testCase = testCase,
+                        onRunTest = { onRunTest(testCase.id) },
+                        modifier = Modifier.padding(vertical = 4.dp)
+                    )
+                }
+
+                if (logMessages.isNotEmpty()) {
+                    Spacer(modifier = Modifier.height(16.dp))
+                    
+                    Card {
+                        Column(modifier = Modifier.padding(16.dp)) {
+                            Text(
+                                text = "Test Logs",
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Medium
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            
+                            logMessages.forEach { message ->
+                                Text(
+                                    text = message,
+                                    style = MaterialTheme.typography.bodySmall,
+                                    modifier = Modifier.padding(vertical = 2.dp)
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun initializeRecorder() {
+        try {
+            // Initialize GSR recorder and device manager
+            gsrRecorder = UnifiedGSRRecorder(this)
+            deviceManager = ShimmerDeviceManager(this)
+            Log.d(TAG, "BLE components initialized successfully")
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to initialize BLE components: ${e.message}")
+        }
+    }
+
+    private suspend fun runAllTests() {
+        Log.i(TAG, "Starting comprehensive BLE integration tests")
+        
+        // Run each test sequentially
+        runPermissionsTest()
+        delay(1000)
+        runDiscoveryTest()
+        delay(1000)
+        runConnectionTest()
+        delay(1000)
+        runStreamingTest()
+        delay(1000)
+        runReconnectionTest()
+        
+        Log.i(TAG, "BLE integration tests completed")
+    }
+
+    private suspend fun runPermissionsTest() {
+        Log.d(TAG, "Running BLE permissions test")
+        // Test BLE and location permissions
+        try {
+            val hasPermissions = permissionController.hasBLEPermissions()
+            // Update test result based on permissions check
+            Log.d(TAG, "BLE permissions check: $hasPermissions")
+        } catch (e: Exception) {
+            Log.e(TAG, "Permissions test failed: ${e.message}")
+        }
+    }
+
+    private suspend fun runDiscoveryTest() {
+        Log.d(TAG, "Running device discovery test")
+        try {
+            deviceManager?.let { manager ->
+                // Start device discovery
+                val discoveredDevices = manager.discoverDevices().first()
+                Log.d(TAG, "Discovered ${discoveredDevices.size} devices")
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Discovery test failed: ${e.message}")
+        }
+    }
+
+    private suspend fun runConnectionTest() {
+        Log.d(TAG, "Running connection test")
+        try {
+            gsrRecorder?.let { recorder ->
+                // Test connection to first available device
+                val result = recorder.testConnection()
+                Log.d(TAG, "Connection test result: $result")
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Connection test failed: ${e.message}")
+        }
+    }
+
+    private suspend fun runStreamingTest() {
+        Log.d(TAG, "Running data streaming test")
+        try {
+            gsrRecorder?.let { recorder ->
+                // Test data streaming for 5 seconds
+                val streamingResult = recorder.testStreaming(5000)
+                Log.d(TAG, "Streaming test completed: $streamingResult")
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Streaming test failed: ${e.message}")
+        }
+    }
+
+    private suspend fun runReconnectionTest() {
+        Log.d(TAG, "Running reconnection test")
+        try {
+            gsrRecorder?.let { recorder ->
+                // Test reconnection handling
+                val reconnectionResult = recorder.testReconnection()
+                Log.d(TAG, "Reconnection test result: $reconnectionResult")
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Reconnection test failed: ${e.message}")
+        }
+    }
+
+    private fun runTest(testType: String) {
+        lifecycleScope.launch {
+            when (testType) {
+                "permissions" -> runPermissionsTest()
+                "discovery" -> runDiscoveryTest()
+                "connection" -> runConnectionTest()
+                "streaming" -> runStreamingTest()
+                "reconnection" -> runReconnectionTest()
+            }
+        }
+    }
+}

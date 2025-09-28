@@ -165,6 +165,15 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                     }
                 )
 
+                LauncherCard(
+                    title = "Testing Suite Hub",
+                    subtitle = "Comprehensive testing dashboard with 14+ test activities",
+                    icon = Icons.Default.BugReport,
+                    onClick = { 
+                        startActivity(Intent(this@ComposeMigrationLauncherActivity, mpdc4gsr.compose.testing.TestingSuiteHubActivity::class.java))
+                    }
+                )
+
                 // New Compose Activities Section
                 Text(
                     text = "Additional Compose Conversions",
