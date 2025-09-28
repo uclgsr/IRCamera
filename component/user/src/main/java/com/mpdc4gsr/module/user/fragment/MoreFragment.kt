@@ -84,28 +84,10 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
         settingDeviceInformation.setOnClickListener(this)
         settingReset.setOnClickListener(this)
 
-        settingReset.isVisible = false
+        setupObservers()
+    }
 
-        settingVersion.isVisible = isTC007 && Build.VERSION.SDK_INT >= 29
-        settingDeviceInformation.isVisible = isTC007
-        settingItemDual.isVisible = !isTC007 && DeviceTools.isTC001PlusConnect()
-
-        if (isTC007) {
-            refresh07Connect(WebSocketProxy.getInstance().isTC007Connect())
-        }
-
-        val settingItemAutoShow =
-            requireView().findViewById<androidx.appcompat.widget.SwitchCompat>(R.id.setting_item_auto_show)
-        settingItemAutoShow.isChecked =
-            if (isTC007) SharedManager.isConnect07AutoOpen else SharedManager.isConnectAutoOpen
-        settingItemAutoShow.setOnCheckedChangeListener { _, isChecked ->
-            if (isTC007) {
-                SharedManager.isConnect07AutoOpen = isChecked
-            } else {
-                SharedManager.isConnectAutoOpen = isChecked
-            }
-        }
-
+    private fun setupObservers() {
         settingItemConfigSelect.isChecked =
             if (isTC007) WifiSaveSettingUtil.isSaveSetting else SaveSettingUtil.isSaveSetting
         settingItemConfigSelect.setOnCheckedChangeListener { _, isChecked ->
@@ -202,18 +184,14 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
             }
 
             settingVersion -> {
-
-
                 val firmwareData = firmwareViewModel.firmwareDataLD.value
                 if (firmwareData != null) {
                     showFirmwareUpDialog(firmwareData)
                 } else {
-                    XLog.i("TC007 [ph][ph][ph][ph] - [ph][ph][ph][ph]")
+                    XLog.i("TC007 firmware check")
                     showLoadingDialog()
                     firmwareViewModel.queryFirmware(false)
                 }
-
-
             }
 
             settingDeviceInformation -> {
@@ -258,8 +236,6 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
         dialog.contentStr = firmwareData.updateStr
         dialog.isShowRestartTips = true
         dialog.onConfirmClickListener = {
-
-
             installFirmware(FileConfig.getFirmwareFile(firmwareData.downUrl))
         }
         dialog.show()
@@ -300,7 +276,7 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
 
     private fun installFirmware(file: File) {
         lifecycleScope.launch {
-            XLog.d("TC007 [ph][ph][ph][ph] - [ph][ph][ph][ph][ph][ph][ph][ph][ph]")
+            XLog.d("TC007 firmware install")
             val installDialog = FirmwareInstallDialog(requireContext())
             installDialog.show()
 
@@ -308,7 +284,7 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
             val isSuccess = false
             installDialog.dismiss()
             if (isSuccess) {
-                XLog.d("TC007 [ph][ph][ph][ph] - [ph][ph][ph][ph][ph][ph][ph][ph] TC007 [ph][ph]，[ph][ph][ph][ph][ph][ph]")
+                XLog.d("TC007 firmware install success")
                 (requireActivity().application as BaseApplication).disconnectWebSocket()
                 TipDialog.Builder(requireContext())
                     .setTitleMessage(getString(RCore.string.app_tip))
@@ -322,7 +298,7 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
                     }
                     .create().show()
             } else {
-                XLog.w("TC007 [ph][ph][ph][ph] - [ph][ph][ph][ph][ph][ph][ph][ph] TC007 [ph][ph]!")
+                XLog.w("TC007 firmware install failed")
                 showReInstallDialog(file)
             }
         }
@@ -371,7 +347,7 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
             // TC007Repository functionality removed
             val isSuccess = false
             if (isSuccess) {
-                XLog.d("TC007 [ph][ph][ph][ph][ph][ph][ph][ph]，[ph][ph][ph][ph][ph][ph]")
+                XLog.d("TC007 reset success")
                 TToast.shortToast(requireContext(), RCore.string.ts004_reset_tip4)
                 (requireActivity().application as BaseApplication).disconnectWebSocket()
                 // EventBus.getDefault().post(TS004ResetEvent()) // TS004ResetEvent removed

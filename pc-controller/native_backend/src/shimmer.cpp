@@ -420,8 +420,9 @@ namespace ircamera {
 
             double mean = calculate_mean(data);
             double sq_sum = std::accumulate(data.begin(), data.end(), 0.0,
-                                            [mean](double a, double b) { return a + (b - mean) *
-                                                                                    (b - mean);
+                                            [mean](double a, double b) {
+                                                return a + (b - mean) *
+                                                           (b - mean);
                                             });
 
             return std::sqrt(sq_sum / (data.size() - 1));

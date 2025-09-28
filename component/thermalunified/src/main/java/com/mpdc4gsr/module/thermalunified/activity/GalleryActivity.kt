@@ -4,83 +4,104 @@ package com.mpdc4gsr.module.thermalunified.activity
 
 import android.Manifest
 import android.content.Context
+import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
-import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
-import com.mpdc4gsr.libunified.app.tools.PermissionTool
+import com.hjq.permissions.OnPermissionCallback
+import com.hjq.permissions.XXPermissions
+import com.mpdc4gsr.libunified.app.ktbase.BaseViewModelActivity
 import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.module.thermalunified.fragment.GalleryPictureFragment
 import com.mpdc4gsr.module.thermalunified.fragment.GalleryVideoFragment
+import com.mpdc4gsr.module.thermalunified.viewmodel.GalleryActivityViewModel
 
 
-class GalleryActivity : BaseActivity() {
+class GalleryActivity : BaseViewModelActivity<GalleryActivityViewModel>() {
 
-
-    private val permissionList by lazy {
-        if (this.applicationInfo.targetSdkVersion >= 34) {
-            listOf(
-                Manifest.permission.READ_MEDIA_VIDEO,
-                Manifest.permission.READ_MEDIA_IMAGES,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            )
-        } else if (this.applicationInfo.targetSdkVersion >= 33) {
-            mutableListOf(
-                Manifest.permission.READ_MEDIA_VIDEO,
-                Manifest.permission.READ_MEDIA_IMAGES,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            )
-        } else {
-            mutableListOf(
-                Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            )
-        }
-    }
+    override fun providerVMClass(): Class<GalleryActivityViewModel> =
+        GalleryActivityViewModel::class.java
 
     override fun initContentView() = R.layout.activity_gallery
 
     override fun initView() {
+        setupObservers()
+        viewModel.initializePermissions(applicationInfo.targetSdkVersion)
+    }
 
+    private fun setupObservers() {
+        viewModel.permissionState.observe(this) { permissionState ->
+            if (!permissionState.hasAllPermissions) {
+                requestPermissions(permissionState.missingPermissions)
+            } else {
+                setupViewPager()
+            }
+        }
+
+        viewModel.viewPagerState.observe(this) { state ->
+            when (state) {
+                is GalleryActivityViewModel.ViewPagerState.Ready -> {
+                    setupViewPager()
+                }
+
+                is GalleryActivityViewModel.ViewPagerState.TabSelected -> {
+                    selectTab(state.position)
+                }
+            }
+        }
+    }
+
+    private fun requestPermissions(permissions: List<String>) {
+        XXPermissions.with(this)
+            .permission(permissions)
+            .request(object : OnPermissionCallback {
+                override fun onGranted(permissions: MutableList<String>, allGranted: Boolean) {
+                    viewModel.onPermissionsResult(allGranted)
+                }
+
+                override fun onDenied(permissions: MutableList<String>, doNotAskAgain: Boolean) {
+                    viewModel.onPermissionsResult(false)
+                }
+            })
+    }
+
+    private fun setupViewPager() {
         val galleryViewPager = findViewById<ViewPager>(R.id.gallery_viewpager)
         val galleryTab = findViewById<TabLayout>(R.id.gallery_tab)
 
         galleryViewPager.adapter = ViewAdapter(this, supportFragmentManager)
         galleryTab.setupWithViewPager(galleryViewPager)
+    }
 
-        PermissionTool.requestFile(this) {
-
-        }
+    private fun selectTab(position: Int) {
+        val galleryTab = findViewById<TabLayout>(R.id.gallery_tab)
+        galleryTab.getTabAt(position)?.select()
     }
 
     override fun initData() {
+        // Data initialization handled by ViewModel
     }
 
-    inner class ViewAdapter : FragmentStatePagerAdapter {
-        private var titles: Array<String> = arrayOf()
+    class ViewAdapter(private val context: Context, fm: FragmentManager) :
+        FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
-        constructor (context: Context, fm: FragmentManager) : super(
-            fm,
-            BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT,
-        ) {
-            titles = arrayOf("图片", "视频")
-        }
-
-        override fun getCount(): Int {
-            return titles.size
-        }
-
-        override fun getPageTitle(position: Int): CharSequence? {
-            return titles[position]
-        }
+        private val titles = arrayOf(
+            context.getString(com.mpdc4gsr.libunified.R.string.album_menu_Photos),
+            context.getString(com.mpdc4gsr.libunified.R.string.app_video)
+        )
 
         override fun getItem(position: Int): Fragment {
             return when (position) {
                 0 -> GalleryPictureFragment()
-                else -> GalleryVideoFragment()
+                1 -> GalleryVideoFragment()
+                else -> GalleryPictureFragment()
             }
         }
+
+        override fun getCount(): Int = titles.size
+
+        override fun getPageTitle(position: Int): CharSequence? = titles[position]
     }
 }

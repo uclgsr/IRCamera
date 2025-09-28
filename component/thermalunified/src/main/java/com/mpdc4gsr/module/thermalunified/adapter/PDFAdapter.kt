@@ -21,29 +21,29 @@ class PDFAdapter : BaseQuickAdapter<ReportData.Records?, BaseViewHolder>, LoadMo
     var jumpDetailListener: ((item: ReportData.Records, position: Int) -> Unit)? = null
 
     override fun convert(
-        baseViewHolder: BaseViewHolder,
+        holder: BaseViewHolder,
         item: ReportData.Records?,
     ) {
         item?.let {
             if (it.isShowTitleTime) {
-                baseViewHolder.setVisible(R.id.item_message_read, true)
-                baseViewHolder.setGone(R.id.tv_time, false)
-                baseViewHolder.setText(R.id.tv_time, it.uploadTime?.split(" ")?.get(0))
+                holder.setVisible(R.id.item_message_read, true)
+                holder.setGone(R.id.tv_time, false)
+                holder.setText(R.id.tv_time, it.uploadTime?.split(" ")?.get(0))
             } else {
-                baseViewHolder.setVisible(R.id.item_message_read, false)
-                baseViewHolder.setGone(R.id.tv_time, true)
+                holder.setVisible(R.id.item_message_read, false)
+                holder.setGone(R.id.tv_time, true)
             }
             item?.reportContent?.infrared_data?.get(0)?.picture_url?.let { url ->
-                GlideLoader.loadP(baseViewHolder.getView(R.id.img_content), url)
+                GlideLoader.loadP(holder.getView(R.id.img_content), url)
             }
-            baseViewHolder.setText(
+            holder.setText(
                 R.id.item_pdf_title,
                 item?.reportContent?.report_info?.report_name + ""
             )
-            baseViewHolder.setText(R.id.item_pdf_content, it.uploadTime + "")
+            holder.setText(R.id.item_pdf_content, it.uploadTime + "")
             addChildClickViewIds(R.id.item_message_lay)
-            val view = baseViewHolder.itemView.findViewById<View>(R.id.tv_del)
-            baseViewHolder.itemView.findViewById<View>(R.id.item_message_lay).setOnClickListener {
+            val view = holder.itemView.findViewById<View>(R.id.tv_del)
+            holder.itemView.findViewById<View>(R.id.item_message_lay).setOnClickListener {
                 jumpDetailListener?.invoke(item, data.indexOf(item))
             }
             view.setOnClickListener {

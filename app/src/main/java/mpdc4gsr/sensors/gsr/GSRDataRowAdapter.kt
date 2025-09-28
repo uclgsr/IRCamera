@@ -6,8 +6,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.csl.irCamera.databinding.ItemGsrDataRowBinding
 
 class GSRDataRowAdapter(
-    private val dataRows: List<GSRDataViewActivity.GSRDataRow>,
+    private val onItemClick: (GSRDataViewViewModel.GSRDataRow) -> Unit
 ) : RecyclerView.Adapter<GSRDataRowAdapter.ViewHolder>() {
+
+    private var dataRows = listOf<GSRDataViewViewModel.GSRDataRow>()
+
     class ViewHolder(private val binding: ItemGsrDataRowBinding) :
         RecyclerView.ViewHolder(binding.root) {
         val rowNumber = binding.rowNumber
@@ -41,8 +44,14 @@ class GSRDataRowAdapter(
         holder.gsrValue.text = "%.3f μS".format(dataRow.gsrValue)
         holder.resistance.text = "%.1f kΩ".format(dataRow.resistance / 1000)
         holder.conductance.text = "%.6f S".format(dataRow.conductance)
+
+        holder.itemView.setOnClickListener { onItemClick(dataRow) }
     }
 
-    override fun getItemCount() =
-        minOf(dataRows.size, 100)
+    override fun getItemCount() = dataRows.size
+
+    fun updateData(newDataRows: List<GSRDataViewViewModel.GSRDataRow>) {
+        dataRows = newDataRows
+        notifyDataSetChanged()
+    }
 }

@@ -340,14 +340,15 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
 
 
 
-        binding.cameraPreview.cameraPreViewCloseListener = object : com.mpdc4gsr.libunified.ui.camera.CameraPreView.CameraPreViewCloseListener {
-            override fun onClose() {
-                if (isOpenPreview) {
-                    popupWindow?.dismiss()
-                    cameraPreviewConfig(false)
+        binding.cameraPreview.cameraPreViewCloseListener =
+            object : com.mpdc4gsr.libunified.ui.camera.CameraPreView.CameraPreViewCloseListener {
+                override fun onClose() {
+                    if (isOpenPreview) {
+                        popupWindow?.dismiss()
+                        cameraPreviewConfig(false)
+                    }
                 }
             }
-        }
         binding.viewMenuFirst.onTabClickListener = {
             ViewStubUtils.showViewStub(binding.viewStubCamera, false, null)
             popupWindow?.dismiss()
@@ -1864,14 +1865,15 @@ class IRThermalLiteActivity : BaseIRActivity(), ITsTempListener, ILiteListener {
                         val frontBitmap = binding.cameraPreview.getBitmap()
                         if (cameraViewBitmap != null && frontBitmap != null) {
                             // Create a simple bitmap view listener for merging
-                            val viewListener = object : com.mpdc4gsr.libunified.app.listener.BitmapViewListener {
-                                override val viewAlpha: Float = 0.8f
-                                override val viewScale: Float = 1.0f
-                                override val viewX: Float = 0f
-                                override val viewY: Float = 0f
-                                override val viewWidth: Float = frontBitmap.width.toFloat()
-                                override val viewHeight: Float = frontBitmap.height.toFloat()
-                            }
+                            val viewListener =
+                                object : com.mpdc4gsr.libunified.app.listener.BitmapViewListener {
+                                    override val viewAlpha: Float = 0.8f
+                                    override val viewScale: Float = 1.0f
+                                    override val viewX: Float = 0f
+                                    override val viewY: Float = 0f
+                                    override val viewWidth: Float = frontBitmap.width.toFloat()
+                                    override val viewHeight: Float = frontBitmap.height.toFloat()
+                                }
                             cameraViewBitmap = BitmapUtils.mergeBitmapByView(
                                 cameraViewBitmap,
                                 frontBitmap,

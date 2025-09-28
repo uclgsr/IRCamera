@@ -2,19 +2,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#16131e">
+    android:background="#16131e"
+    android:orientation="vertical">
 
     <!-- Title -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="16dp"
         android:text="Sensor Dashboard Fragment Test"
         android:textColor="#FFFFFF"
         android:textSize="18sp"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:padding="16dp" />
+        android:textStyle="bold" />
 
     <!-- Fragment Container -->
     <FrameLayout
@@ -27,10 +27,10 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="8dp"
         android:text="Test the scrolling behavior by scrolling up and down in the sensor dashboard above."
         android:textColor="#CCCCCC"
-        android:textSize="12sp"
-        android:gravity="center"
-        android:padding="8dp" />
+        android:textSize="12sp" />
 
 </LinearLayout>

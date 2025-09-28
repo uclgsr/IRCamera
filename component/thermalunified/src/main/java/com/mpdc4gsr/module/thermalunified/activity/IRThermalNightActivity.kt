@@ -1215,14 +1215,15 @@ open class IRThermalNightActivity : BaseIRActivity(), ITsTempListener {
         thermalRecyclerNight.onTwoLightListener = { twoLightType, isSelected ->
             setTwoLight(twoLightType, isSelected)
         }
-        cameraPreview.cameraPreViewCloseListener = object : com.mpdc4gsr.libunified.ui.camera.CameraPreView.CameraPreViewCloseListener {
-            override fun onClose() {
-                if (isOpenPreview) {
-                    popupWindow?.dismiss()
-                    cameraPreviewConfig(false)
+        cameraPreview.cameraPreViewCloseListener =
+            object : com.mpdc4gsr.libunified.ui.camera.CameraPreView.CameraPreViewCloseListener {
+                override fun onClose() {
+                    if (isOpenPreview) {
+                        popupWindow?.dismiss()
+                        cameraPreviewConfig(false)
+                    }
                 }
             }
-        }
         thermalRecyclerNight.onTempSourceListener = {
             setAiState(it)
         }

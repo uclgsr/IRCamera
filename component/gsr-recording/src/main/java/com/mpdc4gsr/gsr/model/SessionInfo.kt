@@ -1,5 +1,7 @@
 package com.mpdc4gsr.gsr.model
 
+import java.io.Serializable
+
 data class SessionInfo(
     val sessionId: String,
     val startTime: Long,
@@ -7,13 +9,17 @@ data class SessionInfo(
     var participantId: String? = null,
     var studyName: String? = null,
     var sampleCount: Long = 0,
+    /**
+     * Total size in bytes of all session data files associated with this session.
+     */
+    var totalDataSize: Long = 0,
     val metadata: MutableMap<String, String> = mutableMapOf(),
     val syncMarks: MutableList<SyncMark> = mutableListOf(),
 
     var hasGSRData: Boolean = false,
     var hasRGBData: Boolean = false,
     var hasThermalData: Boolean = false,
-) {
+) : Serializable {
 
     fun isActive(): Boolean = endTime == null
 

@@ -15,9 +15,15 @@
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/action_share"
-        android:icon="@drawable/ic_share"
-        android:title="Share"
+        android:id="@+id/action_analysis"
+        android:icon="@android:drawable/ic_menu_view"
+        android:title="Analysis"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_refresh"
+        android:icon="@android:drawable/ic_popup_sync"
+        android:title="Refresh"
         app:showAsAction="ifRoom" />
 
 </menu>

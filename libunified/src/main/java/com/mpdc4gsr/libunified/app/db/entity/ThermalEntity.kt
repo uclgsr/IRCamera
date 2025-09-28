@@ -42,7 +42,7 @@ class ThermalEntity {
 
     @ColumnInfo(name = "update_time")
     var updateTime: Long = 0
-    
+
     // Additional properties for comprehensive thermal data
     val temperature: Float get() = thermal
     val maxTemp: Float get() = thermalMax

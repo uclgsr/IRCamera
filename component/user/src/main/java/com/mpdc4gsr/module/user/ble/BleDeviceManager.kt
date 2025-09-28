@@ -386,15 +386,15 @@ class BleDeviceManager(private val context: Context) : CoroutineScope {
     fun getDiscoveredDeviceCount(): Int {
         return deviceInfoMap.size
     }
-    
+
     fun getGsrDeviceCount(): Int {
         return gsrSensorAddresses.size
     }
-    
+
     fun getPairedDeviceCount(): Int {
         return deviceInfoMap.values.count { it.isPaired }
     }
-    
+
     fun isScanning(): Boolean {
         return easyBLE?.isScanning() ?: false
     }

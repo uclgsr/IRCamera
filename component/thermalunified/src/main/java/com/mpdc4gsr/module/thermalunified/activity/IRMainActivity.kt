@@ -6,6 +6,7 @@ import android.graphics.Shader
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -37,6 +38,7 @@ import com.mpdc4gsr.module.thermalunified.fragment.AbilityFragment
 import com.mpdc4gsr.module.thermalunified.fragment.IRGalleryTabFragment
 import com.mpdc4gsr.module.thermalunified.fragment.IRThermalFragment
 import com.mpdc4gsr.module.thermalunified.fragment.PDFListFragment
+import com.mpdc4gsr.module.thermalunified.viewmodel.IRMainActivityViewModel
 import com.mpdc4gsr.module.user.fragment.MoreFragment
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -46,15 +48,14 @@ import com.mpdc4gsr.libunified.R as LibR
 
 class IRMainActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var binding: ActivityIrMainBinding
-
-
-    private var isTC007 = false
+    private val viewModel: IRMainActivityViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityIrMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initView()
+        setupObservers()
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -62,8 +63,52 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
         initView()
     }
 
+    private fun setupObservers() {
+        viewModel.deviceState.observe(this) { deviceState ->
+            updateDeviceState(deviceState)
+        }
+
+        viewModel.fragmentCommunication.observe(this) { communication ->
+            handleFragmentCommunication(communication)
+        }
+
+        viewModel.navigationEvent.observe(this) { event ->
+            when (event) {
+                is IRMainActivityViewModel.NavigationEvent.ToMonitor -> {
+                    NavigationManager.getInstance()
+                        .build(RouterConfig.THERMAL_MONITOR)
+                        .withBoolean(ExtraKeyConfig.IS_TC007, event.isTC007)
+                        .navigation(this)
+                }
+
+                is IRMainActivityViewModel.NavigationEvent.ToGallery -> {
+                    NavigationManager.getInstance()
+                        .build(RouterConfig.GALLERY)
+                        .navigation(this)
+                }
+
+                is IRMainActivityViewModel.NavigationEvent.ToThermal -> {
+                    // Handle thermal navigation
+                }
+            }
+        }
+
+        viewModel.viewPagerState.observe(this) { state ->
+            when (state) {
+                is IRMainActivityViewModel.ViewPagerState.PageSelected -> {
+                    refreshTabSelect(state.position)
+                }
+
+                is IRMainActivityViewModel.ViewPagerState.NavigateToPage -> {
+                    binding.viewPage.setCurrentItem(state.position, false)
+                }
+            }
+        }
+    }
+
     private fun initView() {
-        isTC007 = intent.getBooleanExtra(ExtraKeyConfig.IS_TC007, false)
+        val isTC007 = intent.getBooleanExtra(ExtraKeyConfig.IS_TC007, false)
+        viewModel.setDeviceType(isTC007)
 
         binding.viewPage.offscreenPageLimit = 5
         binding.viewPage.isUserInputEnabled = false
@@ -71,7 +116,7 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
         binding.viewPage.registerOnPageChangeCallback(
             object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {
-                    refreshTabSelect(position)
+                    viewModel.onPageSelected(position)
                 }
             },
         )
@@ -79,96 +124,83 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
 
         binding.clIconMonitor.setOnClickListener(this)
         binding.clIconGallery.setOnClickListener(this)
-
         binding.clIconReport.setOnClickListener(this)
         binding.clIconMine.setOnClickListener(this)
 
+        viewModel.initializeDeviceState()
         showGuideDialog()
     }
 
-    override fun onResume() {
-        super.onResume()
-
-        if (isTC007) {
-            if (WebSocketProxy.getInstance().isTC007Connect()) {
+    private fun updateDeviceState(deviceState: IRMainActivityViewModel.DeviceState) {
+        if (deviceState.isTC007) {
+            if (deviceState.isWebSocketConnected) {
                 NetWorkUtils.switchNetwork(false)
                 binding.ivMainBg.setImageResource(R.drawable.ic_ir_main_bg_connect)
-                lifecycleScope.launch {
-                    // TC007Repository.syncTime() // TC007Repository functionality removed
-                }
-                if (SharedManager.isConnect07AutoOpen) {
-                    NavigationManager.getInstance().build(RouterConfig.IR_THERMAL_07)
-                        .navigation(this)
+                if (deviceState.shouldAutoOpen) {
+                    viewModel.navigateToThermal()
                 }
             } else {
                 binding.ivMainBg.setImageResource(R.drawable.ic_ir_main_bg_disconnect)
             }
         } else {
-            if (DeviceTools.isConnect(isAutoRequest = false)) {
+            if (deviceState.isUsbConnected) {
                 binding.ivMainBg.setImageResource(R.drawable.ic_ir_main_bg_connect)
+                if (deviceState.shouldAutoOpen) {
+                    viewModel.navigateToThermal()
+                }
             } else {
                 binding.ivMainBg.setImageResource(R.drawable.ic_ir_main_bg_disconnect)
             }
         }
-    }
 
-    private fun initData() {
-    }
-
-    private fun connected() {
-        if (!isTC007) {
-            binding.ivMainBg.setImageResource(R.drawable.ic_ir_main_bg_connect)
+        // Apply blur effect if needed
+        if (deviceState.shouldBlur && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            binding.root.setRenderEffect(
+                RenderEffect.createBlurEffect(25f, 25f, Shader.TileMode.CLAMP)
+            )
+        } else {
+            binding.root.setRenderEffect(null)
         }
     }
 
-    private fun disConnected() {
-        if (!isTC007) {
-            binding.ivMainBg.setImageResource(R.drawable.ic_ir_main_bg_disconnect)
+    private fun handleFragmentCommunication(communication: IRMainActivityViewModel.FragmentCommunicationState) {
+        // Handle inter-fragment communication through ViewModel
+        when (communication.activeFragment) {
+            0 -> {
+                // IRThermalFragment communication
+            }
+
+            1 -> {
+                // IRGalleryTabFragment communication  
+            }
+            // Handle other fragments as needed
         }
     }
 
-    private fun onSocketConnected(isTS004: Boolean) {
-        if (!isTS004 && isTC007) {
-            binding.ivMainBg.setImageResource(R.drawable.ic_ir_main_bg_connect)
-        }
-    }
-
-    private fun onSocketDisConnected(isTS004: Boolean) {
-        if (!isTS004 && isTC007) {
-            binding.ivMainBg.setImageResource(R.drawable.ic_ir_main_bg_disconnect)
-        }
+    override fun onResume() {
+        super.onResume()
+        viewModel.refreshDeviceState()
     }
 
     override fun onClick(v: View?) {
         when (v) {
             binding.clIconMonitor -> {
-                binding.viewPage.setCurrentItem(0, false)
+                viewModel.navigateToPage(0)
             }
 
             binding.clIconGallery -> {
-                checkStoragePermission()
+                viewModel.navigateToPage(1)
             }
 
-
             binding.clIconReport -> {
-                if (LMS.getInstance().isLogin) {
-                    binding.viewPage.setCurrentItem(3, false)
-                } else {
-                    LMS.getInstance().activityLogin(null) {
-                        if (it) {
-                            binding.viewPage.setCurrentItem(3, false)
-                            EventBus.getDefault().post(PDFEvent())
-                        }
-                    }
-                }
+                viewModel.navigateToPage(3)
             }
 
             binding.clIconMine -> {
-                binding.viewPage.setCurrentItem(4, false)
+                viewModel.navigateToPage(4)
             }
         }
     }
-
 
     private fun refreshTabSelect(index: Int) {
         binding.ivIconMonitor.isSelected = false
@@ -203,124 +235,96 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun showGuideDialog() {
-        if (SharedManager.homeGuideStep == 0) {
-            return
-        }
+        viewModel.handleGuideDialog { step, navigationTarget ->
+            when (step) {
+                1 -> viewModel.navigateToPage(0)
+                2 -> viewModel.navigateToPage(4)
+                3 -> viewModel.navigateToPage(2)
+            }
 
-        when (SharedManager.homeGuideStep) {
-            1 -> binding.viewPage.setCurrentItem(0, false)
-            2 -> binding.viewPage.setCurrentItem(4, false)
-            3 -> binding.viewPage.setCurrentItem(2, false)
-        }
-
-        val guideDialog = HomeGuideDialog(this, SharedManager.homeGuideStep)
-        guideDialog.onNextClickListener = {
-            when (it) {
-                1 -> {
-                    binding.viewPage.setCurrentItem(4, false)
-                    if (Build.VERSION.SDK_INT < 31) {
-                        lifecycleScope.launch {
-                            delay(100)
-                            guideDialog.blurBg(binding.clRoot)
+            val guideDialog = HomeGuideDialog(this, step)
+            guideDialog.onNextClickListener = { nextStep ->
+                viewModel.handleGuideNavigation(nextStep)
+                when (nextStep) {
+                    1 -> {
+                        viewModel.navigateToPage(4)
+                        if (Build.VERSION.SDK_INT < 31) {
+                            lifecycleScope.launch {
+                                delay(100)
+                                guideDialog.blurBg(binding.clRoot)
+                            }
                         }
                     }
-                    SharedManager.homeGuideStep = 2
-                }
 
-                2 -> {
-                    binding.viewPage.setCurrentItem(2, false)
-                    if (Build.VERSION.SDK_INT < 31) {
-                        lifecycleScope.launch {
-                            delay(100)
-                            guideDialog.blurBg(binding.clRoot)
+                    2 -> {
+                        viewModel.navigateToPage(2)
+                        if (Build.VERSION.SDK_INT < 31) {
+                            lifecycleScope.launch {
+                                delay(100)
+                                guideDialog.blurBg(binding.clRoot)
+                            }
                         }
                     }
-                    SharedManager.homeGuideStep = 3
-                }
 
-                3 -> {
-                    SharedManager.homeGuideStep = 0
+                    3 -> {
+                        // Guide completed
+                    }
                 }
             }
-        }
-        guideDialog.onSkinClickListener = {
-            SharedManager.homeGuideStep = 0
-        }
-        guideDialog.setOnDismissListener {
+            guideDialog.onSkinClickListener = {
+                viewModel.completeGuide()
+            }
+            guideDialog.setOnDismissListener {
+                if (Build.VERSION.SDK_INT >= 31) {
+                    window?.decorView?.setRenderEffect(null)
+                }
+            }
+            guideDialog.show()
+
             if (Build.VERSION.SDK_INT >= 31) {
-                window?.decorView?.setRenderEffect(null)
-            }
-        }
-        guideDialog.show()
-
-        if (Build.VERSION.SDK_INT >= 31) {
-            window?.decorView?.setRenderEffect(
-                RenderEffect.createBlurEffect(
-                    20f,
-                    20f,
-                    Shader.TileMode.MIRROR
+                window?.decorView?.setRenderEffect(
+                    RenderEffect.createBlurEffect(20f, 20f, Shader.TileMode.MIRROR)
                 )
-            )
-        } else {
-            lifecycleScope.launch {
-
-
-                delay(100)
-                guideDialog.blurBg(binding.clRoot)
+            } else {
+                lifecycleScope.launch {
+                    delay(100)
+                    guideDialog.blurBg(binding.clRoot)
+                }
             }
         }
     }
 
-    private fun checkStoragePermission() {
-        val permissionList: List<String> =
-            if (this.applicationInfo.targetSdkVersion >= 34) {
-                listOf(
-                    Permission.READ_MEDIA_VIDEO,
-                    Permission.READ_MEDIA_IMAGES,
-                    Permission.WRITE_EXTERNAL_STORAGE,
-                )
-            } else if (this.applicationInfo.targetSdkVersion >= 34) {
-                listOf(
-                    Permission.READ_MEDIA_VIDEO,
-                    Permission.READ_MEDIA_IMAGES,
-                    Permission.WRITE_EXTERNAL_STORAGE,
-                )
-            } else if (this.applicationInfo.targetSdkVersion == 33) {
-                listOf(
-                    Permission.READ_MEDIA_VIDEO,
-                    Permission.READ_MEDIA_IMAGES,
-                    Permission.WRITE_EXTERNAL_STORAGE,
-                )
-            } else {
-                listOf(Permission.READ_EXTERNAL_STORAGE, Permission.WRITE_EXTERNAL_STORAGE)
-            }
+    // ViewPager adapter remains as inner class for fragment management
+    private inner class ViewPagerAdapter(fa: FragmentActivity, private val isTC007: Boolean) :
+        FragmentStateAdapter(fa) {
 
-        if (!XXPermissions.isGranted(this, permissionList)) {
-            if (BaseApplication.instance.isDomestic()) {
-                // Show tooltip only once per session to avoid spam
-                if (!SharedManager.hasShownStoragePermissionTip) {
-                    TipDialog.Builder(this)
-                        .setMessage(
-                            getString(
-                                LibR.string.permission_request_storage_app,
-                                CommUtils.getAppName()
-                            )
-                        )
-                        .setCancelListener(LibR.string.app_cancel)
-                        .setPositiveListener(LibR.string.app_confirm) {
-                            initStoragePermission(permissionList)
-                        }
-                        .create().show()
-                    SharedManager.hasShownStoragePermissionTip = true
-                } else {
-                    // Skip dialog if already shown
-                    initStoragePermission(permissionList)
+        override fun getItemCount(): Int = 5
+
+        override fun createFragment(position: Int): Fragment {
+            return when (position) {
+                0 -> IRThermalFragment().apply {
+                    arguments = Bundle().also { it.putBoolean(ExtraKeyConfig.IS_TC007, isTC007) }
                 }
-            } else {
-                initStoragePermission(permissionList)
+
+                1 -> IRGalleryTabFragment().apply {
+                    arguments = Bundle().also {
+                        val dirType = if (isTC007) DirType.TC007.ordinal else DirType.LINE.ordinal
+                        it.putBoolean(ExtraKeyConfig.CAN_SWITCH_DIR, false)
+                        it.putBoolean(ExtraKeyConfig.HAS_BACK_ICON, false)
+                        it.putInt(ExtraKeyConfig.DIR_TYPE, dirType)
+                    }
+                }
+
+                2 -> AbilityFragment()
+                3 -> PDFListFragment()
+                4 -> MoreFragment().apply {
+                    arguments = Bundle().also { it.putBoolean(ExtraKeyConfig.IS_TC007, isTC007) }
+                }
+
+                else -> IRThermalFragment().apply {
+                    arguments = Bundle().also { it.putBoolean(ExtraKeyConfig.IS_TC007, isTC007) }
+                }
             }
-        } else {
-            initStoragePermission(permissionList)
         }
     }
 
@@ -347,7 +351,6 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
                         doNotAskAgain: Boolean,
                     ) {
                         if (doNotAskAgain) {
-
                             TipDialog.Builder(this@IRMainActivity)
                                 .setTitleMessage(getString(LibR.string.app_tip))
                                 .setMessage(getString(LibR.string.app_album_content))
@@ -362,36 +365,5 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
                     }
                 },
             )
-    }
-
-    private class ViewPagerAdapter(val activity: FragmentActivity, val isTC007: Boolean) :
-        FragmentStateAdapter(activity) {
-        override fun getItemCount() = 5
-
-        override fun createFragment(position: Int): Fragment {
-            if (position == 1) {
-                return IRGalleryTabFragment().apply {
-                    arguments =
-                        Bundle().also {
-                            val dirType =
-                                if (isTC007) DirType.TC007.ordinal else DirType.LINE.ordinal
-                            it.putBoolean(ExtraKeyConfig.CAN_SWITCH_DIR, false)
-                            it.putBoolean(ExtraKeyConfig.HAS_BACK_ICON, false)
-                            it.putInt(ExtraKeyConfig.DIR_TYPE, dirType)
-                        }
-                }
-            } else {
-                val fragment =
-                    when (position) {
-                        0 -> AbilityFragment()
-                        2 -> IRThermalFragment()
-                        3 -> PDFListFragment()
-                        else -> MoreFragment()
-                    }
-                fragment.arguments =
-                    Bundle().also { it.putBoolean(ExtraKeyConfig.IS_TC007, isTC007) }
-                return fragment
-            }
-        }
     }
 }

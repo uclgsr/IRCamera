@@ -19,12 +19,13 @@ import com.mpdc4gsr.libunified.app.dialog.ConfirmSelectDialog
 import com.mpdc4gsr.libunified.app.dialog.FirmwareUpDialog
 import com.mpdc4gsr.libunified.app.dialog.TipDialog
 import com.mpdc4gsr.libunified.app.http.tool.DownloadTool
-import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
+import com.mpdc4gsr.libunified.app.ktbase.BaseViewModelActivity
 import com.mpdc4gsr.libunified.app.lms.weiget.TToast
 import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import com.mpdc4gsr.libunified.app.utils.Constants
 import com.mpdc4gsr.libunified.app.viewmodel.FirmwareViewModel
 import com.mpdc4gsr.module.user.R
+import com.mpdc4gsr.module.user.viewmodel.MoreActivityViewModel
 import com.mpdc4gsr.module.user.dialog.DownloadProDialog
 import com.mpdc4gsr.module.user.dialog.FirmwareInstallDialog
 import kotlinx.coroutines.delay
@@ -33,7 +34,7 @@ import java.io.File
 import java.text.DecimalFormat
 import com.mpdc4gsr.libunified.R as RCore
 
-class MoreActivity : BaseActivity(), View.OnClickListener {
+class MoreActivity : BaseViewModelActivity<MoreActivityViewModel>(), View.OnClickListener {
     private val firmwareViewModel: FirmwareViewModel by viewModels()
 
     private lateinit var settingDeviceInformation: View
@@ -73,65 +74,106 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
         settingVersion.isVisible = false
     }
 
+    override fun providerVMClass(): Class<MoreActivityViewModel> = MoreActivityViewModel::class.java
+
     override fun initData() {
         updateVersion()
+        setupObservers()
+    }
 
-        firmwareViewModel.firmwareDataLD.observe(this) {
-            tvUpgradePoint.isVisible = it != null
-            dismissCameraLoading()
-            if (it == null) {
-                ToastUtils.showShort(RCore.string.setting_firmware_update_latest_version)
-            } else {
-                showFirmwareUpDialog(it)
+    private fun setupObservers() {
+        // Navigation events from ViewModel
+        viewModel.navigationEvent.observe(this) { event ->
+            when (event) {
+                is MoreActivityViewModel.NavigationEvent.DeviceInformation -> {
+                    NavigationManager.getInstance()
+                        .build(event.route)
+                        .withBoolean(
+                            ExtraKeyConfig.IS_TC007,
+                            event.extras[ExtraKeyConfig.IS_TC007] as Boolean
+                        )
+                        .navigation(this@MoreActivity)
+                }
+
+                is MoreActivityViewModel.NavigationEvent.TISR -> {
+                    NavigationManager.getInstance().build(event.route).navigation(this@MoreActivity)
+                }
+
+                is MoreActivityViewModel.NavigationEvent.AutoSave -> {
+                    NavigationManager.getInstance().build(event.route).navigation(this@MoreActivity)
+                }
+
+                is MoreActivityViewModel.NavigationEvent.StorageSpace -> {
+                    NavigationManager.getInstance().build(event.route).navigation(this@MoreActivity)
+                }
             }
         }
-        firmwareViewModel.failLD.observe(this) {
-            dismissCameraLoading()
-            TToast.shortToast(
-                this,
-                if (it) RCore.string.upgrade_bind_error else RCore.string.operation_failed_tips
-            )
-            tvUpgradePoint.isVisible = false
+
+        // Firmware state from ViewModel
+        viewModel.firmwareState.observe(this) { state ->
+            when (state) {
+                is MoreActivityViewModel.FirmwareState.Checking -> showCameraLoading()
+                is MoreActivityViewModel.FirmwareState.Available -> {
+                    dismissCameraLoading()
+                    showFirmwareUpDialog(state.data)
+                }
+
+                is MoreActivityViewModel.FirmwareState.UpToDate -> {
+                    dismissCameraLoading()
+                    ToastUtils.showShort(RCore.string.setting_firmware_update_latest_version)
+                }
+
+                is MoreActivityViewModel.FirmwareState.Failed -> {
+                    dismissCameraLoading()
+                    TToast.shortToast(
+                        this,
+                        if (state.isBindError) RCore.string.upgrade_bind_error else RCore.string.operation_failed_tips
+                    )
+                }
+            }
+        }
+
+        // Upgrade point visibility
+        viewModel.upgradePointVisible.observe(this) { visible ->
+            tvUpgradePoint.isVisible = visible
+        }
+
+        // Existing firmware ViewModel observers (delegate to our ViewModel)
+        firmwareViewModel.firmwareDataLD.observe(this) { data ->
+            viewModel.onFirmwareDataReceived(data)
+        }
+        firmwareViewModel.failLD.observe(this) { isBindError ->
+            viewModel.onFirmwareFailed(isBindError)
         }
     }
 
     override fun onClick(v: View?) {
         when (v) {
             settingDeviceInformation -> {
-                NavigationManager.getInstance()
-                    .build(RouterConfig.DEVICE_INFORMATION)
-                    .withBoolean(ExtraKeyConfig.IS_TC007, false)
-                    .navigation(this@MoreActivity)
+                viewModel.navigateToDeviceInformation()
             }
 
             settingTisr -> {
-                NavigationManager.getInstance().build(RouterConfig.TISR)
-                    .navigation(this@MoreActivity)
+                viewModel.navigateToTISR()
             }
 
             settingAutoSave -> {
-                NavigationManager.getInstance().build(RouterConfig.AUTO_SAVE)
-                    .navigation(this@MoreActivity)
+                viewModel.navigateToAutoSave()
             }
 
             settingStorageSpace -> {
-                NavigationManager.getInstance().build(RouterConfig.STORAGE_SPACE)
-                    .navigation(this@MoreActivity)
+                viewModel.navigateToStorageSpace()
             }
 
             settingVersion -> {
-
-
                 val firmwareData = firmwareViewModel.firmwareDataLD.value
                 if (firmwareData != null) {
                     showFirmwareUpDialog(firmwareData)
                 } else {
                     XLog.i("TS004 [ph][ph][ph][ph] - [ph][ph][ph][ph]")
-                    showCameraLoading()
+                    viewModel.checkFirmwareUpdate()
                     firmwareViewModel.queryFirmware(true)
                 }
-
-
             }
 
             settingReset -> {
@@ -139,12 +181,14 @@ class MoreActivity : BaseActivity(), View.OnClickListener {
             }
 
             settingDisconnect -> {
+                viewModel.requestDisconnect()
                 NavigationManager.getInstance().build(RouterConfig.IR_MORE_HELP)
                     .withInt(Constants.SETTING_CONNECTION_TYPE, Constants.SETTING_DISCONNECTION)
                     .navigation(this@MoreActivity)
             }
         }
     }
+
 
     private fun showFirmwareUpDialog(firmwareData: FirmwareViewModel.FirmwareData) {
         val dialog = FirmwareUpDialog(this)

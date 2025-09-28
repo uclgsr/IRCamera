@@ -252,6 +252,138 @@
                     android:text="Connect to Device" />
             </LinearLayout>
 
+            <!-- Add missing UI elements -->
+            <Button
+                android:id="@+id/scan_devices_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Scan Devices" />
+
+            <!-- Recording Status Information -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Recording Status"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/sample_count_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:text="Samples: 0" />
+
+            <TextView
+                android:id="@+id/sync_mark_count_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:text="Sync marks: 0" />
+
+            <TextView
+                android:id="@+id/session_id_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:text="Session: Not started" />
+
+            <TextView
+                android:id="@+id/session_details_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:text="No session details" />
+
+            <!-- Sensor Status Information -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Sensor Status"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/gsr_status_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:text="GSR: Disconnected" />
+
+            <TextView
+                android:id="@+id/camera_status_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:text="Camera: Initializing" />
+
+            <TextView
+                android:id="@+id/system_status_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:text="Systems initializing" />
+
+            <!-- Device Information -->
+            <TextView
+                android:id="@+id/device_count_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:text="Discovered devices: 0" />
+
+            <TextView
+                android:id="@+id/connected_device_count_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:text="Connected devices: 0" />
+
+            <TextView
+                android:id="@+id/connected_device_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:text="No devices connected" />
+
+            <TextView
+                android:id="@+id/battery_level_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:text="Battery: Unknown" />
+
+            <TextView
+                android:id="@+id/configuration_summary_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:text="Configuration summary" />
+
+            <!-- Recording Indicators -->
+            <TextView
+                android:id="@+id/recording_indicator"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:text="● RECORDING"
+                android:textColor="#ff0000"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/sync_indicator"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:text="⚡ SYNC EVENT"
+                android:textColor="#00ff00"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
         </LinearLayout>
 
     </ScrollView>

@@ -25,24 +25,24 @@ import kotlinx.coroutines.launch
  * Enhanced Comprehensive Sensor Status Dashboard Fragment
  * Implements TODO requirement: "Provide clear UI indicators for each sensor's status
  * (connected, streaming, error). Connection status indicators for each sensor."
- * 
+ *
  * This fragment is droppable and all views are scrollable.
  */
 class SensorDashboardFragment : Fragment() {
 
     companion object {
         private const val TAG = "SensorDashboardFragment"
-        
+
         private const val COLOR_CONNECTED = Color.GREEN
         private const val COLOR_STREAMING = Color.BLUE
         private const val COLOR_ERROR = Color.RED
         private const val COLOR_DISCONNECTED = Color.GRAY
         private const val COLOR_SIMULATION = Color.YELLOW
-        
+
         fun newInstance(): SensorDashboardFragment {
             return SensorDashboardFragment()
         }
-        
+
         // Helper method to get fragment instance from fragment manager
         fun getInstance(fragmentManager: androidx.fragment.app.FragmentManager): SensorDashboardFragment? {
             return fragmentManager.findFragmentByTag("sensor_dashboard") as? SensorDashboardFragment
@@ -61,7 +61,7 @@ class SensorDashboardFragment : Fragment() {
     private var isRecording = false
     private var recordingStartTime = 0L
     private var timerUpdateJob: Job? = null
-    
+
     private var currentSessionId: String? = null
     private var activeSensorCount = 0
     private var errorSensorCount = 0
@@ -86,7 +86,7 @@ class SensorDashboardFragment : Fragment() {
         recordingIndicator = view.findViewById(R.id.recordingIndicator)
         recordingTimer = view.findViewById(R.id.recordingTimer)
         sensorsContainer = view.findViewById(R.id.sensorsContainer)
-        
+
         // Set initial states
         overallStatusText.setTextColor(COLOR_DISCONNECTED)
         recordingIndicator.setBackgroundColor(COLOR_DISCONNECTED)
@@ -331,7 +331,8 @@ class SensorDashboardFragment : Fragment() {
 
         fun updateMultiDeviceInfo(connectedCount: Int, streamingCount: Int, maxDevices: Int) {
             if (sensorType == SensorType.GSR) {
-                detailsText.text = "Multi-device: $connectedCount/$maxDevices connected, $streamingCount streaming"
+                detailsText.text =
+                    "Multi-device: $connectedCount/$maxDevices connected, $streamingCount streaming"
                 detailsText.visibility = VISIBLE
             }
         }

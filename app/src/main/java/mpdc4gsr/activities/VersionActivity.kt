@@ -14,8 +14,8 @@ import com.mpdc4gsr.libunified.app.lms.UrlConstant
 import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import com.mpdc4gsr.libunified.app.tools.CheckDoubleClick
 import com.mpdc4gsr.libunified.app.utils.CommUtils
+import com.mpdc4gsr.libunified.app.utils.UnifiedVersionUtils
 import mpdc4gsr.utils.AppVersionUtil
-import mpdc4gsr.utils.VersionUtils
 import java.util.Calendar
 
 class VersionActivity : BaseBindingActivity<ActivityVersionBinding>(), View.OnClickListener {
@@ -30,7 +30,7 @@ class VersionActivity : BaseBindingActivity<ActivityVersionBinding>(), View.OnCl
     private fun initView() {
 
         binding.versionCodeText.text =
-            "${getString(R.string.set_version)}V${VersionUtils.getCodeStr(this)}"
+            "${getString(R.string.set_version)}V${UnifiedVersionUtils.getVersionName(this)}"
         val year = Calendar.getInstance().get(Calendar.YEAR)
         binding.versionYearTxt.text = getString(R.string.version_year, "2023-$year")
         binding.versionStatementPrivateTxt.setOnClickListener(this)

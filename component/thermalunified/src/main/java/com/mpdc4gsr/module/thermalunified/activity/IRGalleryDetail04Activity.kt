@@ -3,6 +3,7 @@ package com.mpdc4gsr.module.thermalunified.activity
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.media.MediaScannerConnection
+import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
 import android.widget.ImageView
@@ -52,7 +53,12 @@ class IRGalleryDetail04Activity : BaseActivity() {
     override fun initView() {
         isRemote = intent.getBooleanExtra("isRemote", false)
         position = intent.getIntExtra("position", 0)
-        dataList = intent.getParcelableArrayListExtra("list")!!
+        dataList = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            intent.getParcelableArrayListExtra("list", GalleryBean::class.java)!!
+        } else {
+            @Suppress("DEPRECATION")
+            intent.getParcelableArrayListExtra<GalleryBean>("list")!!
+        }
 
         val titleView = findViewById<com.mpdc4gsr.libunified.app.view.TitleView>(R.id.title_view)
         titleView.setTitleText("${position + 1}/${dataList.size}")

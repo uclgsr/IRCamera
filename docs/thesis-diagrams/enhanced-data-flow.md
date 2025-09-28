@@ -136,6 +136,7 @@ flowchart TD
 ## Data Volume and Performance Characteristics
 
 ### Typical 30-minute Recording Session Data Breakdown
+
 ```mermaid
 pie title Session Data Distribution (2.30 GB total)
     "RGB Video (H.264)" : 68
@@ -146,6 +147,7 @@ pie title Session Data Distribution (2.30 GB total)
 ```
 
 ### Network Traffic Analysis
+
 ```mermaid
 gantt
     title Network Message Flow During Recording Session
@@ -166,17 +168,19 @@ gantt
 ```
 
 ### Storage I/O Performance
-| Data Type | Write Rate | Compression | File Size (30 min) | Quality |
-|-----------|------------|-------------|-------------------|---------|
-| Thermal CSV | 0.29 MB/s | 3.2:1 | 0.53 GB | ±2°C accuracy |
-| GSR CSV | 0.05 MB/s | 1.8:1 | 0.09 GB | 12-bit precision |
-| RGB Video | 0.87 MB/s | 8.5:1 | 1.56 GB | H.264 high profile |
-| Metadata | 0.001 MB/s | JSON | 0.04 GB | Configuration |
-| **Total** | **1.21 MB/s** | **6.1:1 avg** | **2.30 GB** | **Research grade** |
+
+| Data Type   | Write Rate    | Compression   | File Size (30 min) | Quality            |
+|-------------|---------------|---------------|--------------------|--------------------|
+| Thermal CSV | 0.29 MB/s     | 3.2:1         | 0.53 GB            | ±2°C accuracy      |
+| GSR CSV     | 0.05 MB/s     | 1.8:1         | 0.09 GB            | 12-bit precision   |
+| RGB Video   | 0.87 MB/s     | 8.5:1         | 1.56 GB            | H.264 high profile |
+| Metadata    | 0.001 MB/s    | JSON          | 0.04 GB            | Configuration      |
+| **Total**   | **1.21 MB/s** | **6.1:1 avg** | **2.30 GB**        | **Research grade** |
 
 ## Quality Assurance and Validation
 
 ### Multi-Modal Synchronization Validation
+
 ```mermaid
 timeline
     title Sharp Event Stimulus Testing (Hand Clap Validation)
@@ -202,4 +206,6 @@ timeline
         : Synchronization accuracy confirmed
 ```
 
-This comprehensive data flow architecture demonstrates the complete pipeline from multi-sensor hardware integration through synchronized data processing to research-grade output files, with quantitative performance validation and quality assurance measures.
+This comprehensive data flow architecture demonstrates the complete pipeline from multi-sensor
+hardware integration through synchronized data processing to research-grade output files, with
+quantitative performance validation and quality assurance measures.
