@@ -35,25 +35,68 @@ class GSRDataRepository : BaseRepository() {
     enum class SessionStatus { ACTIVE, PAUSED, COMPLETED, CANCELLED }
 
     // Real-time GSR data stream
-    fun getGSRDataStream(deviceId: String): Flow<Result<GSRReading>> = safeFlow {
-        var counter = 0
-        while (true) {
-            delay(100) // 10Hz sampling rate
-
-            val reading = generateGSRReading(deviceId, counter++)
-            emit(Result.success(reading))
+    fun getGSRDataStream(deviceId: String): Flow<BaseRepository.Result<GSRReading>> = flow {
+        emit(BaseRepository.Result.Loading)
+        try {
+            var counter = 0
+            while (true) {
+                delay(100) // 10Hz sampling rate
+                
+                val reading = generateGSRReading(deviceId, counter++)
+                emit(BaseRepository.Result.Success(reading))
+            }
+        } catch (e: Exception) {
+            emit(BaseRepository.Result.Error(e))
         }
+    }.flowOn(kotlinx.coroutines.Dispatchers.IO)
+    
+    // Historical GSR data with advanced caching
+    fun getHistoricalGSRData(
+        sessionId: String,
+        startTime: Long,
+        endTime: Long
+    ): Flow<BaseRepository.Result<List<GSRReading>>> = safeFlow {
+        val cacheKey = "gsr_${sessionId}_${startTime}_${endTime}"
+        val ttlMs = 600_000L // 10 minutes
+        val data = getCachedOrExecute(
+            key = cacheKey,
+            ttlMs = ttlMs
+        ) {
+            // Simulate database query
+            delay(2000)
+            generateHistoricalGSRData(sessionId, startTime, endTime)
+        }
+        data
     }
-
-    val cacheKey = "gsr_${sessionId}_${startTime}_${endTime}"
-    val ttlMs = 600_000L // 10 minutes
-    val data = getCachedOrExecute(
-        key = cacheKey,
-        ttlMs = ttlMs
-    ) {
-        // Simulate database query
-        delay(2000)
-        generateHistoricalGSRData(sessionId, startTime, endTime)
+    
+    // Session management
+    fun getGSRSessions(deviceId: String): Flow<BaseRepository.Result<List<GSRSession>>> = safeFlow {
+        val cacheKey = "sessions_$deviceId"
+        val ttlMs = 120_000L // 2 minutes
+        val data = getCachedOrExecute(
+            key = cacheKey,
+            ttlMs = ttlMs
+        ) {
+            delay(1000)
+            generateSampleSessions(deviceId)
+        }
+        data
+    }
+    
+    private fun generateGSRReading(deviceId: String, counter: Int): GSRReading {
+        val baselineResistance = 50.0f // kiloohms
+        val variation = (Math.sin(counter * 0.01) * 10 + Math.random() * 5).toFloat()
+        val resistance = (baselineResistance + variation).coerceAtLeast(1.0f)
+        val conductance = 1000.0f / resistance // Convert to microsiemens
+        
+        return GSRReading(
+            timestamp = System.currentTimeMillis(),
+            conductance = conductance,
+            resistance = resistance,
+            deviceId = deviceId,
+            sessionId = "session_${System.currentTimeMillis() / 100000}",
+            quality = if (Math.random() < 0.9) SignalQuality.GOOD else SignalQuality.FAIR
+        )
     }
     Result.success(data )
 }
