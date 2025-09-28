@@ -87,6 +87,28 @@ class GSRSettingsActivity : BaseViewModelActivity<GSRSettingsViewModel>() {
     private fun setupUI() {
         setupDeviceSpinner()
         setupSettingsControls()
+        setupBottomNavigation()
+    }
+
+    private fun setupBottomNavigation() {
+        binding.clNavGallery.setOnClickListener {
+            navigateToMainActivity(mpdc4gsr.activities.MainActivity.PAGE_GALLERY) // Gallery page
+        }
+
+        binding.clNavMine.setOnClickListener {
+            navigateToMainActivity(mpdc4gsr.activities.MainActivity.PAGE_MINE) // Mine page
+        }
+
+        // Update navigation background to show mine is selected (settings context)
+        binding.ivBottomMainBg.setImageResource(R.drawable.ic_main_bg_not_select)
+    }
+
+    private fun navigateToMainActivity(pageIndex: Int) {
+        val intent = Intent(this, mpdc4gsr.activities.MainActivity::class.java).apply {
+            putExtra("page", pageIndex)
+        }
+        startActivity(intent)
+        finish()
     }
 
     private fun setupDeviceSpinner() {
@@ -148,7 +170,12 @@ class GSRSettingsActivity : BaseViewModelActivity<GSRSettingsViewModel>() {
         // binding.requestPermissionsButton?.setOnClickListener {
         //     viewModel.requestPermissions()
         // }
+
+        // Setup bottom navigation
+        // setupBottomNavigation() // Removed redundant call
     }
+
+
 
     private fun setupObservers() {
         // Settings state observers
