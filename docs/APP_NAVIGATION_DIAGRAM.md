@@ -105,50 +105,84 @@ graph TB
         DevicePairing[DevicePairingActivity<br/>🔗 Device Pairing]
     end
     
-    %% Thermal Camera Activities
-    subgraph "Thermal Camera Activities"
-        IRMonitorActivity[IRMonitorActivity<br/>Live Monitoring]
-        IRConfigActivity[IRConfigActivity<br/>Camera Settings]
-        IRMonitorChartActivity[IRMonitorChartActivity<br/>Data Charts]
-        IRCorrectionActivity[IRCorrectionActivity<br/>Image Correction]
-        IRThermalPlusActivity[IRThermalPlusActivity<br/>Advanced Thermal]
-        IRThermalNightActivity[IRThermalNightActivity<br/>Night Vision]
-        GalleryActivity[GalleryActivity<br/>Image Gallery]
-        VideoActivity[VideoActivity<br/>Video Playback]
+    %% Thermal Camera Module Activities - COMPLETE LIST
+    subgraph "Thermal Camera Module - Component Activities"
+        IRMainActivity[IRMainActivity<br/>🌡️ Thermal Camera Hub]
+        IRMonitorActivity[IRMonitorActivity<br/>📹 Live Thermal Monitor]
+        IRConfigActivity[IRConfigActivity<br/>⚙️ Camera Configuration]
+        IRCorrectionActivity[IRCorrectionActivity<br/>🔧 Image Correction]
+        IRCorrectionTwo[IRCorrectionTwoActivity<br/>🔧 Correction Step 2]
+        IRCorrectionThree[IRCorrectionThreeActivity<br/>🔧 Correction Step 3] 
+        IRCorrectionFour[IRCorrectionFourActivity<br/>🔧 Correction Step 4]
+        IRGalleryDetail01[IRGalleryDetail01Activity<br/>🖼️ Gallery Detail 1]
+        IRGalleryDetail04[IRGalleryDetail04Activity<br/>🖼️ Gallery Detail 4]
+        IRGalleryHome[IRGalleryHomeActivity<br/>🏠 Gallery Home]
+        IRLogMPChart[IRLogMPChartActivity<br/>📊 Log MP Charts]
+        IRMonitorChart[IRMonitorChartActivity<br/>📈 Monitor Charts]
+        IRThermalNight[IRThermalNightActivity<br/>🌙 Night Thermal]
+        IRThermalPlus[IRThermalPlusActivity<br/>➕ Enhanced Thermal]
+        IRVideoGSY[IRVideoGSYActivity<br/>🎥 Video GSY Player]
+        GalleryActivity[GalleryActivity<br/>🖼️ Main Gallery]
+        ConnectActivity[ConnectActivity<br/>🔗 Connection Interface]
+        ThermalActivity[ThermalActivity<br/>🌡️ Thermal Processing]
+        VideoActivity[VideoActivity<br/>🎥 Video Playback]
+        MonitorActivity[MonitorActivity<br/>📊 Monitor Interface]
+        MonitorChartActivity[MonitorChartActivity<br/>📈 Monitor Charts]
+        MonitoryHomeActivity[MonitoryHomeActivity<br/>🏠 Monitor Home]
     end
     
-    %% Lite Thermal Activities
+    %% Thermal Lite Module
     subgraph "Thermal Lite Module"
-        IRThermalLiteActivity[IRThermalLiteActivity<br/>Lite Interface]
-        IRMonitorLiteActivity[IRMonitorLiteActivity<br/>Lite Monitoring]
-        IRMonitorChartLiteActivity[IRMonitorChartLiteActivity<br/>Lite Charts]
+        IRThermalLite[IRThermalLiteActivity<br/>🌡️ Lite Thermal]
+        IRMonitorLite[IRMonitorLiteActivity<br/>📹 Lite Monitor]
+        IRMonitorChartLite[IRMonitorChartLiteActivity<br/>📈 Lite Charts]
+        IRCorrectionLiteThree[IRCorrectionLiteThreeActivity<br/>🔧 Lite Correction 3]
+        IRCorrectionLiteFour[IRCorrectionLiteFourActivity<br/>🔧 Lite Correction 4]
+        ImagePickIRLite[ImagePickIRLiteActivity<br/>🖼️ Lite Image Picker]
     end
     
-    %% Report Activities
-    subgraph "Report Module"
-        ReportCreateFirstActivity[ReportCreateFirstActivity<br/>Report Creation Step 1]
-        ReportCreateSecondActivity[ReportCreateSecondActivity<br/>Report Creation Step 2]
-        ReportPreviewSecondActivity[ReportPreviewSecondActivity<br/>Report Preview]
-        ReportPickImgActivity[ReportPickImgActivity<br/>Image Selection]
+    %% Report Module
+    subgraph "Report Generation Module"
+        ReportCreateFirst[ReportCreateFirstActivity<br/>📝 Report Create 1]
+        ReportCreateSecond[ReportCreateSecondActivity<br/>📝 Report Create 2]
+        ReportDetail[ReportDetailActivity<br/>📋 Report Details]
+        ReportPreviewFirst[ReportPreviewFirstActivity<br/>👁️ Report Preview 1]
+        ReportPreviewSecond[ReportPreviewSecondActivity<br/>👁️ Report Preview 2]
     end
     
-    %% User Module Activities
-    subgraph "User Management"
-        QuestionActivity[QuestionActivity<br/>FAQ/Questions]
-        ElectronicManualActivity[ElectronicManualActivity<br/>User Manual]
-        StorageSpaceActivity[StorageSpaceActivity<br/>Storage Management]
-        PolicyActivity[PolicyActivity<br/>Privacy Policy]
-        VersionActivity[VersionActivity<br/>App Version Info]
+    %% User Management Module
+    subgraph "User Management Module"
+        QuestionActivity[QuestionActivity<br/>❓ FAQ Interface]
+        QuestionDetails[QuestionDetailsActivity<br/>❓ Question Details]
+        ElectronicManual[ElectronicManualActivity<br/>📖 Electronic Manual]
+        StorageSpace[StorageSpaceActivity<br/>💾 Storage Management]
+        AutoSave[AutoSaveActivity<br/>💾 Auto-save Settings]
+        DeviceDetails[DeviceDetailsActivity<br/>📱 Device Information]
+        MoreActivity[MoreActivity<br/>➕ More Options]
+        TISRActivity[TISRActivity<br/>🔧 TISR Functionality]
+        UnitActivity[UnitActivity<br/>📏 Unit Settings]
     end
     
-    %% Testing & Development
-    subgraph "Testing & Development"
-        SensorDashboardTestActivity[SensorDashboardTestActivity<br/>Sensor Testing]
-        NetworkConfigActivity[NetworkConfigActivity<br/>Network Configuration]
-        SimpleNetworkTestActivity[SimpleNetworkTestActivity<br/>Network Testing]
-        NetworkClientTestActivity[NetworkClientTestActivity<br/>Client Testing]
-        SimplifiedMainActivity[SimplifiedMainActivity<br/>Simplified Interface]
-        DeviceTypeActivity[DeviceTypeActivity<br/>Device Selection]
+    %% Testing & Development - COMPLETE LIST
+    subgraph "Testing & Development - Comprehensive"
+        SensorDashboardTest[SensorDashboardTestActivity<br/>🧪 Sensor Testing]
+        NetworkTest[NetworkClientTestActivity<br/>🌐 Network Testing]
+        NetworkConfig[NetworkConfigActivity<br/>⚙️ Network Configuration]
+        SimpleNetworkTest[SimpleNetworkTestActivity<br/>🌐 Simple Network Test]
+        BLEIntegrationTest[BLEIntegrationTestActivity<br/>📡 BLE Integration Test]
+        CompleteSessionTrial[CompleteSessionTrialActivity<br/>🔬 Complete Session Trial]
+        CrossModalSyncTest[CrossModalSyncTestActivity<br/>🔄 Cross-Modal Sync Test]
+        GSRBenchTest[GSRBenchTestActivity<br/>🏃 GSR Bench Test]
+        GSRDataIntegrityTest[GSRDataIntegrityTestActivity<br/>🔒 GSR Data Integrity]
+        GSRReconnectionTest[GSRReconnectionTestActivity<br/>🔄 GSR Reconnection Test]
+        ParallelRecordingTest[ParallelRecordingTestActivity<br/>⏯️ Parallel Recording Test]
+        RawCaptureTest[RawCaptureTestActivity<br/>📷 Raw Capture Test]
+        RgbCameraTest[RgbCameraTestActivity<br/>📷 RGB Camera Test]
+        SessionLifecycleTest[SessionLifecycleTestActivity<br/>♻️ Session Lifecycle Test]
+        SynchronizationTest[SynchronizationTestActivity<br/>🔄 Synchronization Test]
+        TimeSynchronizationTest[TimeSynchronizationTestActivity<br/>⏰ Time Sync Test]
+        TimestampSyncVerification[TimestampSyncVerificationActivity<br/>⏰ Timestamp Sync Verification]
+        TimestampUnificationTest[TimestampUnificationTestActivity<br/>⏰ Timestamp Unification Test]
     end
     
     %% Navigation Flows
@@ -170,23 +204,46 @@ graph TB
     IRMainActivity --> PDFListTab
     IRMainActivity --> MineTabThermal
     
-    %% Thermal Navigation
-    IRThermalTab --> IRMonitorActivity
-    IRThermalTab --> IRThermalPlusActivity
-    IRThermalTab --> IRThermalLiteActivity
-    IRThermalTab --> IRThermalNightActivity
+    %% Thermal Navigation - COMPLETE FLOWS  
+    IRThermalTab --> IRMainActivity
+    IRMainActivity --> IRMonitorActivity
+    IRMainActivity --> IRConfigActivity
+    IRMainActivity --> IRCorrectionActivity
+    IRMainActivity --> IRGalleryHome
     
-    IRGalleryTab --> GalleryActivity
-    IRGalleryTab --> VideoActivity
+    IRMonitorActivity --> IRMonitorChart
+    IRMonitorActivity --> IRLogMPChart
+    IRCorrectionActivity --> IRCorrectionTwo
+    IRCorrectionTwo --> IRCorrectionThree
+    IRCorrectionThree --> IRCorrectionFour
     
-    %% Monitoring Flow
-    IRMonitorActivity --> IRMonitorChartActivity
-    IRMonitorActivity --> IRConfigActivity
-    IRMonitorActivity --> IRCorrectionActivity
+    IRGalleryHome --> IRGalleryDetail01
+    IRGalleryHome --> IRGalleryDetail04
+    IRGalleryHome --> GalleryActivity
+    GalleryActivity --> VideoActivity
     
-    %% Lite Module Flow
-    IRThermalLiteActivity --> IRMonitorLiteActivity
-    IRMonitorLiteActivity --> IRMonitorChartLiteActivity
+    %% Thermal Lite Flows
+    IRThermalTab --> IRThermalLite
+    IRThermalLite --> IRMonitorLite
+    IRMonitorLite --> IRMonitorChartLite
+    
+    %% Report Generation Flows
+    PDFListTab --> ReportCreateFirst  
+    ReportCreateFirst --> ReportCreateSecond
+    ReportCreateSecond --> ReportPreviewFirst
+    ReportPreviewFirst --> ReportPreviewSecond
+    ReportCreateSecond --> ReportDetail
+    
+    %% User Management Flows
+    SettingsTab --> QuestionActivity
+    SettingsTab --> ElectronicManual
+    SettingsTab --> StorageSpace
+    SettingsTab --> AutoSave
+    QuestionActivity --> QuestionDetails
+    SettingsTab --> DeviceDetails
+    SettingsTab --> MoreActivity
+    SettingsTab --> TISRActivity
+    SettingsTab --> UnitActivity
     
     %% GSR Navigation - Enhanced Flows
     MainTab --> MultiModalActivity
@@ -250,11 +307,13 @@ graph TB
     
     class MainActivity mainEntry
     class GalleryTab,MainTab,SettingsTab,MineTab,IRThermalTab,IRGalleryTab,AbilityTab,PDFListTab,MineTabThermal tabFragment
-    class IRMainActivity,IRMonitorActivity,IRConfigActivity,IRMonitorChartActivity,IRCorrectionActivity,IRThermalPlusActivity,IRThermalNightActivity,GalleryActivity,VideoActivity,IRThermalLiteActivity,IRMonitorLiteActivity,IRMonitorChartLiteActivity thermalActivity
+    class IRMainActivity,IRMonitorActivity,IRConfigActivity,IRCorrectionActivity,IRCorrectionTwo,IRCorrectionThree,IRCorrectionFour,IRGalleryDetail01,IRGalleryDetail04,IRGalleryHome,IRLogMPChart,IRMonitorChart,IRThermalNight,IRThermalPlus,IRVideoGSY,GalleryActivity,ConnectActivity,ThermalActivity,VideoActivity,MonitorActivity,MonitorChartActivity,MonitoryHomeActivity thermalActivity
+    class IRThermalLite,IRMonitorLite,IRMonitorChartLite,IRCorrectionLiteThree,IRCorrectionLiteFour,ImagePickIRLite thermalActivity
     class MultiModalActivity,GSRSettings,GSRPlot,GSRGallery,GSRDataView,GSRVideoPlayer,SessionManager,SessionDetail,SessionExport,ShimmerConfig,GSRDeviceManagement,GSRQuickRecording,ResearchTemplate,GSRRawImageView gsrActivity
     class HubSpokeIntegration,DualModeCamera,DevicePairing gsrActivity
-    class QuestionActivity,ElectronicManualActivity,StorageSpaceActivity,PolicyActivity,VersionActivity,ReportCreateFirstActivity,ReportCreateSecondActivity,ReportPreviewSecondActivity,ReportPickImgActivity userActivity
-    class SensorDashboardTestActivity,NetworkConfigActivity,SimpleNetworkTestActivity,NetworkClientTestActivity,SimplifiedMainActivity,DeviceTypeActivity testActivity
+    class ReportCreateFirst,ReportCreateSecond,ReportDetail,ReportPreviewFirst,ReportPreviewSecond userActivity
+    class QuestionActivity,QuestionDetails,ElectronicManual,StorageSpace,AutoSave,DeviceDetails,MoreActivity,TISRActivity,UnitActivity,PolicyActivity,VersionActivity userActivity
+    class SensorDashboardTest,NetworkTest,NetworkConfig,SimpleNetworkTest,BLEIntegrationTest,CompleteSessionTrial,CrossModalSyncTest,GSRBenchTest,GSRDataIntegrityTest,GSRReconnectionTest,ParallelRecordingTest,RawCaptureTest,RgbCameraTest,SessionLifecycleTest,SynchronizationTest,TimeSynchronizationTest,TimestampSyncVerification,TimestampUnificationTest testActivity
     class NavigationManager,RouterConfig navigationSystem
 ```
 

@@ -1,19 +1,37 @@
 # IRCamera App Layout Architecture
 
-This document provides a comprehensive overview of the layout structure and UI components used throughout the IRCamera Android application. Following a major consolidation effort, the app now contains 219 layout files with a streamlined and efficient architecture.
+This document provides a comprehensive overview of the layout structure and UI components used throughout the IRCamera Android application. Following a major consolidation effort, the app now contains **220 layout files** with a streamlined and efficient architecture.
 
-## Layout Overview by Type
+## Layout Overview by Type - CORRECTED
 
-From our analysis, the app now contains:
-- **64 Activity layouts** - Full-screen application views (35 moved to backup/layouts/)
+From our comprehensive analysis, the app contains:
+- **App Module**: 30 layout files - Main application layouts
+- **Component Module**: 121 layout files - Thermal and user module layouts  
+- **LibUnified Module**: 69 layout files - Base templates and utility layouts
 - **10 Consolidated layouts** - New unified layout templates replacing multiple specialized layouts
-- **37 Dialog layouts** - Modal dialogs and popups
-- **24 Fragment layouts** - Reusable UI components  
-- **15 Item layouts** - Streamlined RecyclerView and list item templates
-- **13 UI components** - Custom UI widgets
-- **56 Other specialized layouts** - Various utility layouts
+- **51 Backup layouts** - Legacy layouts moved to backup/layouts/ directory
 
-**Total: 219 layouts** (down from 258 after consolidation)
+**Total: 220 layouts** (corrected from previous 219 count)
+
+## Module-Specific Breakdown
+
+### App Module Layouts (30)
+- Core application interfaces
+- GSR sensor layouts  
+- Testing and development layouts
+- 10 new consolidated layouts
+
+### Component Module Layouts (121) - PREVIOUSLY UNDERDOCUMENTED
+- **Thermal Unified Module**: ~80 layouts
+- **User Module**: ~25 layouts  
+- **Report Module**: ~16 layouts
+- This represents the largest portion of layouts and was severely underdocumented
+
+### LibUnified Module Layouts (69) - PREVIOUSLY UNDERDOCUMENTED  
+- Base activity templates
+- Common dialog layouts
+- Utility UI components
+- Framework layouts
 
 ## Major Architecture Consolidation
 
