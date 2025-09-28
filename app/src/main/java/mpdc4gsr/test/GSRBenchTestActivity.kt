@@ -39,7 +39,7 @@ class GSRBenchTestActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_gsr_bench_test)
+        setContentView(R.layout.activity_camera_test_consolidated)
 
         setupUI()
         initializeComponents()

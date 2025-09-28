@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Consolidated Sensor Data Item - Replaces multiple GSR/sensor item layouts -->
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="sensorType"
+            type="String" />
+        <variable
+            name="dataValue"
+            type="String" />
+        <variable
+            name="timestamp"
+            type="String" />
+        <variable
+            name="hasError"
+            type="Boolean" />
+    </data>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8dp"
+        android:layout_marginVertical="4dp"
+        app:cardBackgroundColor="@{hasError ? @color/red : @color/c_bg_white}"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="2dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="12dp">
+
+            <!-- Sensor Type Icon -->
+            <ImageView
+                android:id="@+id/sensor_icon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:contentDescription="Sensor type"
+                app:sensorIcon="@{sensorType}"
+                android:tint="@{hasError ? @color/red : @color/primary_color}"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:src="@drawable/ic_gsr_pulse" />
+
+            <!-- Sensor Type Label -->
+            <TextView
+                android:id="@+id/sensor_type_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:text="@{sensorType ?? @string/unknown_sensor}"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@+id/timestamp_text"
+                app:layout_constraintStart_toEndOf="@+id/sensor_icon"
+                app:layout_constraintTop_toTopOf="@+id/sensor_icon"
+                tools:text="GSR Sensor" />
+
+            <!-- Timestamp -->
+            <TextView
+                android:id="@+id/timestamp_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{timestamp ?? @string/no_timestamp}"
+                android:textColor="@{hasError ? @color/red : @color/text_secondary}"
+                android:textSize="10sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="12:34:56" />
+
+            <!-- Data Value -->
+            <TextView
+                android:id="@+id/data_value_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="4dp"
+                android:fontFamily="monospace"
+                android:text="@{dataValue ?? @string/no_data_available}"
+                android:textColor="@{hasError ? @color/red : @color/white}"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/sensor_icon"
+                app:layout_constraintTop_toBottomOf="@+id/sensor_type_text"
+                tools:text="2.54 μS" />
+
+            <!-- Status Indicator -->
+            <View
+                android:id="@+id/status_indicator"
+                android:layout_width="4dp"
+                android:layout_height="0dp"
+                android:background="@{hasError ? @color/red : @color/status_connected}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <!-- Error Message (Conditional) -->
+            <TextView
+                android:id="@+id/error_message_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="4dp"
+                android:text="@{hasError ? @string/sensor_error_message : @string/empty}"
+                android:textColor="@color/red"
+                android:textSize="12sp"
+                android:visibility="@{hasError ? View.VISIBLE : View.GONE}"
+                app:layout_constraintEnd_toStartOf="@+id/status_indicator"
+                app:layout_constraintStart_toEndOf="@+id/sensor_icon"
+                app:layout_constraintTop_toBottomOf="@+id/data_value_text"
+                tools:text="Connection timeout"
+                tools:visibility="gone" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+</layout>

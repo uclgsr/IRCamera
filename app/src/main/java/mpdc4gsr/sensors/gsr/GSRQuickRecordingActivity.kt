@@ -9,14 +9,14 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.csl.irCamera.R
-import com.csl.irCamera.databinding.ActivityGsrQuickRecordingBinding
+import com.csl.irCamera.databinding.ActivityMultiModalConsolidatedBinding
 import com.mpdc4gsr.libunified.app.ktbase.BaseBindingActivity
 import kotlinx.coroutines.launch
 import mpdc4gsr.controller.ComprehensiveRecordingController
 import mpdc4gsr.permissions.PermissionController
 import mpdc4gsr.permissions.PermissionManager
 
-class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingBinding>() {
+class GSRQuickRecordingActivity : BaseBindingActivity<ActivityMultiModalConsolidatedBinding>() {
     companion object {
         private const val TAG = "GSRQuickRecording"
         private const val REQUEST_PERMISSIONS = 100
@@ -37,7 +37,7 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityGsrQuickRecordingB
         }
     }
 
-    override fun initContentLayoutId() = R.layout.activity_gsr_quick_recording
+    override fun initContentLayoutId() = R.layout.activity_multi_modal_consolidated
 
 
     private lateinit var recordingController: ComprehensiveRecordingController
