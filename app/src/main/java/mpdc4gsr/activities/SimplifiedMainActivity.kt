@@ -53,21 +53,21 @@ class SimplifiedMainActivity : AppCompatActivity() {
         connectButton = findViewById(R.id.connectButton)
         
         // Verify views were found
-        android.util.Log.d("SimplifiedMainActivity", "Views found - recordButton: ${recordButton != null}, connectButton: ${connectButton != null}")
+        Log.d(TAG, "Views found - recordButton: ${recordButton != null}, connectButton: ${connectButton != null}")
 
         recordButton.setOnClickListener {
-            android.util.Log.d("SimplifiedMainActivity", "Record button clicked")
-            android.widget.Toast.makeText(this, "Record button clicked!", android.widget.Toast.LENGTH_SHORT).show()
+            Log.d(TAG, "Record button clicked")
+            Toast.makeText(this, "Record button clicked!", Toast.LENGTH_SHORT).show()
             toggleRecording()
         }
 
         connectButton.setOnClickListener {
-            android.util.Log.d("SimplifiedMainActivity", "Connect button clicked")
-            android.widget.Toast.makeText(this, "Connect button clicked!", android.widget.Toast.LENGTH_SHORT).show()
+            Log.d(TAG, "Connect button clicked")
+            Toast.makeText(this, "Connect button clicked!", Toast.LENGTH_SHORT).show()
             toggleConnection()
         }
         
-        android.util.Log.d("SimplifiedMainActivity", "Click listeners setup complete")
+        Log.d(TAG, "Click listeners setup complete")
     }
 
     private fun checkPermissions() {
