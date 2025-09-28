@@ -38,9 +38,11 @@ Sensing Platform.
 ## Architecture and Design
 
 ### System Architecture
-
-- **[docs/COMPREHENSIVE_ARCHITECTURE_DIAGRAMS.md](docs/COMPREHENSIVE_ARCHITECTURE_DIAGRAMS.md)** - Complete system
-  architecture diagrams
+- **[docs/COMPREHENSIVE_ARCHITECTURE_DIAGRAMS.md](docs/COMPREHENSIVE_ARCHITECTURE_DIAGRAMS.md)** - Complete system architecture diagrams
+- **[docs/APP_NAVIGATION_DIAGRAM.md](docs/APP_NAVIGATION_DIAGRAM.md)** - Comprehensive app navigation flow and UI structure (UPDATED - 110 activities)
+- **[docs/APP_LAYOUT_DIAGRAM.md](docs/APP_LAYOUT_DIAGRAM.md)** - Complete layout architecture and UI component structure (UPDATED - 220 layouts)
+- **[docs/LAYOUT_ACTIVITY_AUDIT.md](docs/LAYOUT_ACTIVITY_AUDIT.md)** - Comprehensive audit report identifying mismatches and inconsistencies
+- **[docs/DOCUMENTATION_UPDATE_SUMMARY.md](docs/DOCUMENTATION_UPDATE_SUMMARY.md)** - Summary of major documentation corrections and updates
 - **[docs/BACKGROUND_DEVICE_SCANNING.md](docs/BACKGROUND_DEVICE_SCANNING.md)** - BLE device scanning implementation
 
 ### Thesis Documentation
