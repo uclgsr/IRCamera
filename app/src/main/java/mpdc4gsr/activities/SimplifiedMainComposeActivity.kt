@@ -375,8 +375,8 @@ class SimplifiedMainComposeActivity : BaseComposeActivity() {
     private fun toggleRecording(onStateChange: (Boolean, String) -> Unit) {
         lifecycleScope.launch {
             try {
-                val currentState = !getCurrentRecordingState()
-                if (currentState) {
+                recordingState = !recordingState
+                if (recordingState) {
                     onStateChange(true, "Recording started - ${getCurrentTimestamp()}")
                     Toast.makeText(this@SimplifiedMainComposeActivity, "Recording started", Toast.LENGTH_SHORT).show()
                 } else {
