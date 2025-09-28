@@ -228,7 +228,7 @@ class GSRSessionAdapter(
     ): ViewHolder {
         val view =
             LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_gsr_session, parent, false)
+                .inflate(R.layout.item_sensor_data_consolidated, parent, false)
         return ViewHolder(view)
     }
 

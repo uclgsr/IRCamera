@@ -23,7 +23,7 @@ class SessionExportActivity : BaseBindingActivity<ActivitySessionExportBinding>(
         }
     }
 
-    override fun initContentLayoutId() = R.layout.activity_session_export
+    override fun initContentLayoutId() = R.layout.activity_session_consolidated
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

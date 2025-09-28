@@ -31,7 +31,7 @@ class DeviceAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DeviceViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_shimmer_device, parent, false)
+            .inflate(R.layout.item_device_consolidated, parent, false)
         return DeviceViewHolder(view)
     }
 
