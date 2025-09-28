@@ -20,10 +20,22 @@ class SensorDashboardTestActivity : AppCompatActivity() {
                 .replace(R.id.fragment_container, fragment, "sensor_dashboard")
                 .commit()
                 
-            // Simulate some sensor data updates after a delay
-            fragment.view?.postDelayed({
-                testSensorUpdates(fragment)
-            }, 1000)
+            // Simulate some sensor data updates after the fragment's view is created
+            val fragmentManager = supportFragmentManager
+            val callback = object : androidx.fragment.app.FragmentManager.FragmentLifecycleCallbacks() {
+                override fun onFragmentViewCreated(
+                    fm: androidx.fragment.app.FragmentManager,
+                    f: androidx.fragment.app.Fragment,
+                    v: android.view.View,
+                    savedInstanceState: Bundle?
+                ) {
+                    if (f === fragment) {
+                        testSensorUpdates(fragment)
+                        fm.unregisterFragmentLifecycleCallbacks(this)
+                    }
+                }
+            }
+            fragmentManager.registerFragmentLifecycleCallbacks(callback, false)
         }
     }
     
