@@ -452,6 +452,13 @@
             android:label="GSR Modernization Demo"
             android:screenOrientation="userPortrait"
             android:theme="@style/AppTheme" />
+            
+        <activity
+            android:name="mpdc4gsr.activities.UnifiedComposeActivity"
+            android:exported="true"
+            android:label="Unified Compose Navigation"
+            android:screenOrientation="userPortrait"
+            android:theme="@style/AppTheme" />
 
         <activity
             android:name="mpdc4gsr.activities.SensorDashboardComposeEnhanced"
