@@ -1229,14 +1229,17 @@ class RecordingService : LifecycleService() {
                 bind(InetSocketAddress(actualServerPort))
             }
             isServerRunning.set(true)
-            
+
             structuredLogger.logServerEvent(
                 "server_socket_started",
                 mapOf("port" to actualServerPort, "preferred_port" to SERVER_PORT)
             )
-            
-            Log.i(TAG, "Server socket bound to port $actualServerPort${if (actualServerPort != SERVER_PORT) " (preferred port $SERVER_PORT was in use)" else ""}")
-            
+
+            Log.i(
+                TAG,
+                "Server socket bound to port $actualServerPort${if (actualServerPort != SERVER_PORT) " (preferred port $SERVER_PORT was in use)" else ""}"
+            )
+
             if (FeatureFlags.MDNS_ENABLE) {
                 registerNsdService()
             }

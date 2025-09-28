@@ -177,7 +177,9 @@ class SessionManagerViewModel : BaseViewModel() {
                             "participantId" -> sessionInfo.participantId = value.trim()
                             "studyName" -> sessionInfo.studyName = value.trim()
                             "endTime" -> sessionInfo.endTime = value.trim().toLongOrNull()
-                            "sampleCount" -> sessionInfo.sampleCount = value.trim().toLongOrNull() ?: 0
+                            "sampleCount" -> sessionInfo.sampleCount =
+                                value.trim().toLongOrNull() ?: 0
+
                             else -> sessionInfo.metadata[key.trim()] = value.trim()
                         }
                     }
@@ -241,9 +243,10 @@ class SessionManagerViewModel : BaseViewModel() {
         // Apply type filter
         filtered = when (currentFilter) {
             FilterType.ALL -> filtered
-            FilterType.RECENT -> filtered.filter { 
+            FilterType.RECENT -> filtered.filter {
                 System.currentTimeMillis() - it.startTime < 24 * 60 * 60 * 1000 // Last 24 hours
             }
+
             FilterType.COMPLETED -> filtered.filter { it.endTime != null }
             FilterType.WITH_DATA -> filtered.filter { it.totalDataSize > 0 }
         }
@@ -252,8 +255,11 @@ class SessionManagerViewModel : BaseViewModel() {
         if (currentSearchQuery.isNotEmpty()) {
             filtered = filtered.filter { session ->
                 session.sessionId.contains(currentSearchQuery, ignoreCase = true) ||
-                session.participantId?.contains(currentSearchQuery, ignoreCase = true) == true ||
-                session.studyName?.contains(currentSearchQuery, ignoreCase = true) == true
+                        session.participantId?.contains(
+                            currentSearchQuery,
+                            ignoreCase = true
+                        ) == true ||
+                        session.studyName?.contains(currentSearchQuery, ignoreCase = true) == true
             }
         }
 

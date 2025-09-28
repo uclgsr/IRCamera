@@ -36,9 +36,13 @@ class GSRVideoPlayerViewModel : BaseViewModel() {
         val filePath: String
     )
 
-    fun loadVideo(videoPath: String, packageName: String, context: android.content.Context? = null) {
+    fun loadVideo(
+        videoPath: String,
+        packageName: String,
+        context: android.content.Context? = null
+    ) {
         val videoFile = File(videoPath)
-        
+
         if (!videoFile.exists()) {
             _errorState.value = "Video file does not exist"
             return
@@ -74,9 +78,11 @@ class GSRVideoPlayerViewModel : BaseViewModel() {
             videoFile.length() >= 1024 * 1024 * 1024 -> {
                 "%.1f GB".format(videoFile.length() / (1024.0 * 1024.0 * 1024.0))
             }
+
             videoFile.length() >= 1024 * 1024 -> {
                 "%.1f MB".format(videoFile.length() / (1024.0 * 1024.0))
             }
+
             else -> {
                 "%.1f KB".format(videoFile.length() / 1024.0)
             }
@@ -113,7 +119,11 @@ class GSRVideoPlayerViewModel : BaseViewModel() {
         }
     }
 
-    fun createShareUri(videoPath: String, packageName: String, context: android.content.Context? = null): Uri? {
+    fun createShareUri(
+        videoPath: String,
+        packageName: String,
+        context: android.content.Context? = null
+    ): Uri? {
         val videoFile = File(videoPath)
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             try {

@@ -17,7 +17,8 @@ class IRThermalFragmentViewModel : BaseViewModel() {
 
     // Device connection state management
     private val _deviceConnectionState = MutableStateFlow(DeviceConnectionState())
-    val deviceConnectionState: StateFlow<DeviceConnectionState> = _deviceConnectionState.asStateFlow()
+    val deviceConnectionState: StateFlow<DeviceConnectionState> =
+        _deviceConnectionState.asStateFlow()
 
     // Navigation events
     private val _navigationEvent = MutableLiveData<NavigationEvent>()
@@ -78,7 +79,7 @@ class IRThermalFragmentViewModel : BaseViewModel() {
         if (!isTC007Device) {
             SharedManager.hasTcLine = true
         }
-        
+
         _deviceConnectionState.value = _deviceConnectionState.value.copy(
             hasConnection = true,
             isTC007Connected = isTC007Device
@@ -118,12 +119,15 @@ class IRThermalFragmentViewModel : BaseViewModel() {
                 DeviceTools.isTC001PlusConnect() -> {
                     _navigationEvent.value = NavigationEvent.StartThermalPlusActivity
                 }
+
                 DeviceTools.isTC001LiteConnect() -> {
                     _navigationEvent.value = NavigationEvent.NavigateToTCLite
                 }
+
                 DeviceTools.isHikConnect() -> {
                     _navigationEvent.value = NavigationEvent.NavigateToHikMain
                 }
+
                 else -> {
                     _navigationEvent.value = NavigationEvent.StartThermalNightActivity
                 }
@@ -133,7 +137,7 @@ class IRThermalFragmentViewModel : BaseViewModel() {
 
     fun handleMainEnter() {
         val connectionState = _deviceConnectionState.value
-        
+
         if (!connectionState.hasConnection) {
             if (!connectionState.hasUsbDevice) {
                 _thermalAction.value = ThermalAction.ShowDeviceConnectTip

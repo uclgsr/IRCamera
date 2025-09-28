@@ -56,10 +56,13 @@ import java.util.List;
  */
 public class CameraPreviewManager {
 
+    private static CameraPreviewManager mInstance;
     private final String TAG = "CameraPreviewManager";
-    private IIrFrameCallback mIIrFrameCallback;
     public LiteSurfaceView mSurfaceView;
-
+    public byte[] frameIrAndTempData = new byte[192 * 256 * 4];
+    public byte[] takePhotoIrAndTempData = new byte[192 * 256 * 4];
+    byte[] tmpData = null;
+    private IIrFrameCallback mIIrFrameCallback;
     private CommonParams.FrameOutputFormat FRAME_OUT_PUT_FORMAT = CommonParams.FrameOutputFormat.YUYV_AND_TEMP_OUTPUT;
     //出图预览宽高
     private int mPreviewWidth;
@@ -72,41 +75,19 @@ public class CameraPreviewManager {
     private int mFinalImageHeight = 0;
     //UVCCamera请求数据格式
     private UvcParams.FrameFormatType mFrameFormatType = UvcParams.FrameFormatType.FRAME_FORMAT_YUYV;
-
     //出图交互类
     private IrcamEngine mIrcamEngine;
-
     private LibIRTemp mLibIRTemp;
-
     //图像当前角度旋转
     private RotateDegree mImageRotate = RotateDegree.DEGREE_270;
     private LibIRProcess.ImageRes_t mImageRes;
-
     //暂停输出图像标记
     private boolean mFramePause = false;
-
     //双图模式是否显示完整红外+温度图像
     private boolean mShowDoubleImage = false;
     private IRImageHelp irImageHelp;
-
-
     private OnTempDataChangeCallback mOnTempDataChangeCallback;
-
-    private CameraPreviewManager() {
-        irImageHelp = new IRImageHelp();
-    }
-
-    private static CameraPreviewManager mInstance;
-
-    public static synchronized CameraPreviewManager getInstance() {
-        if (mInstance == null) {
-            mInstance = new CameraPreviewManager();
-        }
-        return mInstance;
-    }
-
     private Handler mMainHandler;
-
     //红外数据
     private byte[] mIrData;
     //红外数据长度
@@ -130,33 +111,34 @@ public class CameraPreviewManager {
     private int mTempLength;
     //zeta zoom code
     private byte[] mResultARBGDataForZetaZoom;
-    public byte[] frameIrAndTempData = new byte[192 * 256 * 4];
-    public byte[] takePhotoIrAndTempData = new byte[192 * 256 * 4];
-
-
     private boolean mIsShowFPS = true;
     private boolean mSaveData = false;
     private boolean mTakePhoto = false;
-
     private SurfaceNativeWindow mSurfaceNativeWindow;
     private Surface mSurface;
     private Bitmap mPhotoBitmap;
-
     private boolean mSunProtectEnable = false;
-
     private float max = Float.MAX_VALUE;
     private float min = Float.MIN_VALUE;
     private int pseudocolorMode = 3;
     private AlarmBean alarmBean;
     private int maxColor;
     private int minColor;
-
     //自动增益切换参数
     private boolean mAutoSwitchGainEnable = false;
     private AutoGainImageRes mAutoGainImageRes = new AutoGainImageRes();
     private AutoGainSwitchInfo mAutoGainSwitchInfo = new AutoGainSwitchInfo();
     private AutoGainSwitchParam mGainSwitchParam = new AutoGainSwitchParam();
+    private CameraPreviewManager() {
+        irImageHelp = new IRImageHelp();
+    }
 
+    public static synchronized CameraPreviewManager getInstance() {
+        if (mInstance == null) {
+            mInstance = new CameraPreviewManager();
+        }
+        return mInstance;
+    }
 
     public int getPreviewWidth() {
         return mPreviewWidth;
@@ -271,17 +253,17 @@ public class CameraPreviewManager {
                                     com.energy.iruvc.sdkisp.LibIRProcess.convertYuyvMapToARGBPseudocolor(mIrData,
                                             mPreviewWidth * mPreviewHeight,
                                             PseudocodeUtils.INSTANCE.changePseudocodeModeByOld(pseudocolorMode), mIrARGBData);
-                                }else {
+                                } else {
                                     //先灰度化
                                     com.energy.iruvc.sdkisp.LibIRProcess.convertYuyvMapToARGBPseudocolor(mIrData,
                                             mPreviewWidth * mPreviewHeight,
                                             PseudocodeUtils.INSTANCE.changePseudocodeModeByOld(1), mIrARGBData);
                                 }
-                                irImageHelp.customPseudoColor(mIrARGBData,mTempData,mPreviewWidth,mPreviewHeight);
+                                irImageHelp.customPseudoColor(mIrARGBData, mTempData, mPreviewWidth, mPreviewHeight);
                                 /*
                                  * 等温尺处理,展示伪彩的温度范围内信息
                                  */
-                                irImageHelp.setPseudoColorMaxMin(mIrARGBData,mTempData,max,min,mPreviewWidth,mPreviewHeight);
+                                irImageHelp.setPseudoColorMaxMin(mIrARGBData, mTempData, max, min, mPreviewWidth, mPreviewHeight);
                                 mIrARGBData = irImageHelp.contourDetection(alarmBean,
                                         mIrARGBData, mTempData, mPreviewWidth, mPreviewHeight);
                             }
@@ -321,8 +303,8 @@ public class CameraPreviewManager {
                             }
                         });
                     }
-                }catch (Exception e){
-                    XLog.e(TAG,"Lite图像处理异常"+e.getMessage());
+                } catch (Exception e) {
+                    XLog.e(TAG, "Lite图像处理异常" + e.getMessage());
                 }
             }
         };
@@ -500,17 +482,17 @@ public class CameraPreviewManager {
         }
     }
 
-    public Bitmap scaledBitmap(){
+    public Bitmap scaledBitmap() {
         return scaledBitmap(false);
     }
-    byte[] tmpData = null;
-    public Bitmap scaledBitmap(Boolean isTakePhoto){
-        if (tmpData == null){
+
+    public Bitmap scaledBitmap(Boolean isTakePhoto) {
+        if (tmpData == null) {
             tmpData = new byte[mIrARGBLength];
         }
-        System.arraycopy(mIrRotateData,0,tmpData,0,mIrARGBLength);
+        System.arraycopy(mIrRotateData, 0, tmpData, 0, mIrARGBLength);
         mPhotoBitmap = Bitmap.createBitmap(mFinalImageWidth, mFinalImageHeight, Bitmap.Config.ARGB_8888);
-        if (isTakePhoto){
+        if (isTakePhoto) {
             System.arraycopy(frameIrAndTempData, 0, takePhotoIrAndTempData, 0, takePhotoIrAndTempData.length);
         }
         mPhotoBitmap.copyPixelsFromBuffer(ByteBuffer.wrap(tmpData));
@@ -691,15 +673,15 @@ public class CameraPreviewManager {
         return mIrcamEngine;
     }
 
+    public RotateDegree getImageRotate() {
+        return mImageRotate;
+    }
+
     public void setImageRotate(RotateDegree imageRotate) {
         this.mImageRotate = imageRotate;
         mIrRotateData = null;
         mIrRotateData = new byte[mIrARGBLength];
         Log.d(TAG, "setImageRotate : " + imageRotate.getValue());
-    }
-
-    public RotateDegree getImageRotate() {
-        return mImageRotate;
     }
 
     public void setFramePause(boolean framePause) {
@@ -714,20 +696,16 @@ public class CameraPreviewManager {
         this.mShowDoubleImage = showDoubleImage;
     }
 
-    public void setAutoSwitchGainEnable(boolean mAutoSwitchGainEnable) {
-        this.mAutoSwitchGainEnable = mAutoSwitchGainEnable;
-    }
-
     public boolean getAutoSwitchGainEnable() {
         return mAutoSwitchGainEnable;
     }
 
-    public void setOnTempDataChangeCallback(OnTempDataChangeCallback onTempDataChangeCallback) {
-        this.mOnTempDataChangeCallback = onTempDataChangeCallback;
+    public void setAutoSwitchGainEnable(boolean mAutoSwitchGainEnable) {
+        this.mAutoSwitchGainEnable = mAutoSwitchGainEnable;
     }
 
-    public interface OnTempDataChangeCallback {
-        void onTempDataChange(byte[] data);
+    public void setOnTempDataChangeCallback(OnTempDataChangeCallback onTempDataChangeCallback) {
+        this.mOnTempDataChangeCallback = onTempDataChangeCallback;
     }
 
     private void handleSurfaceDisplay() {
@@ -736,7 +714,7 @@ public class CameraPreviewManager {
             case DEGREE_0:
                 mFinalImageWidth = mPreviewWidth;
                 mFinalImageHeight = mPreviewHeight;
-                System.arraycopy(mIrARGBData,0,mIrRotateData,0,mIrARGBData.length);
+                System.arraycopy(mIrARGBData, 0, mIrRotateData, 0, mIrARGBData.length);
                 break;
             case DEGREE_90:
                 mFinalImageWidth = mPreviewHeight;
@@ -768,8 +746,8 @@ public class CameraPreviewManager {
             if (mSurface != null) {
                 mSurfaceNativeWindow.onDrawFrame(mSurface, mIrRotateData, mFinalImageWidth, mFinalImageHeight);
             }
-        }catch (Exception e){
-            XLog.e(TAG+":lite的图像渲染异常："+e.getMessage());
+        } catch (Exception e) {
+            XLog.e(TAG + ":lite的图像渲染异常：" + e.getMessage());
         }
     }
 
@@ -805,11 +783,11 @@ public class CameraPreviewManager {
 //        }
     }
 
-    //==============================Zeta Zoom end =======================================//
-
     public AlarmBean getAlarmBean() {
         return alarmBean;
     }
+
+    //==============================Zeta Zoom end =======================================//
 
     public void setAlarmBean(AlarmBean alarmBean) {
         this.alarmBean = alarmBean;
@@ -823,9 +801,14 @@ public class CameraPreviewManager {
     }
 
     public void setColorList(int[] colorList, @Nullable float[] places, boolean isUseGray, float customMaxTemp, float customMinTemp) {
-        irImageHelp.setColorList(colorList, places, isUseGray,customMaxTemp,customMinTemp);
+        irImageHelp.setColorList(colorList, places, isUseGray, customMaxTemp, customMinTemp);
     }
+
     public void setPseudocolorMode(int pseudocolorMode) {
         this.pseudocolorMode = pseudocolorMode;
+    }
+
+    public interface OnTempDataChangeCallback {
+        void onTempDataChange(byte[] data);
     }
 }

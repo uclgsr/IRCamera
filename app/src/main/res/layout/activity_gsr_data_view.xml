@@ -17,9 +17,9 @@
             android:id="@+id/loading_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:orientation="horizontal"
             android:padding="16dp"
-            android:gravity="center"
             android:visibility="gone">
 
             <ProgressBar
@@ -50,38 +50,38 @@
                 android:id="@+id/data_status_indicator"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
                 android:background="@android:color/darker_gray"
                 android:padding="8dp"
                 android:text="No Data"
                 android:textAlignment="center"
                 android:textColor="@android:color/white"
-                android:textSize="12sp"
-                android:layout_marginBottom="8dp" />
+                android:textSize="12sp" />
 
             <!-- Filter Controls -->
             <LinearLayout
                 android:id="@+id/filter_controls"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
                 android:orientation="horizontal"
-                android:visibility="gone"
-                android:layout_marginBottom="8dp">
+                android:visibility="gone">
 
                 <Button
                     android:id="@+id/apply_filters_button"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="4dp"
                     android:layout_weight="1"
-                    android:text="Apply Filters"
-                    android:layout_marginEnd="4dp" />
+                    android:text="Apply Filters" />
 
                 <Button
                     android:id="@+id/reset_filters_button"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
                     android:layout_weight="1"
-                    android:text="Reset"
-                    android:layout_marginStart="4dp" />
+                    android:text="Reset" />
 
             </LinearLayout>
 
@@ -90,25 +90,25 @@
                 android:id="@+id/export_controls"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
                 android:orientation="horizontal"
-                android:visibility="gone"
-                android:layout_marginBottom="8dp">
+                android:visibility="gone">
 
                 <Button
                     android:id="@+id/export_button"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="4dp"
                     android:layout_weight="1"
-                    android:text="Export"
-                    android:layout_marginEnd="4dp" />
+                    android:text="Export" />
 
                 <Button
                     android:id="@+id/quick_export_button"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
                     android:layout_weight="1"
-                    android:text="Quick Export"
-                    android:layout_marginStart="4dp" />
+                    android:text="Quick Export" />
 
             </LinearLayout>
 
@@ -117,11 +117,11 @@
                 android:id="@+id/filtered_count_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:gravity="center"
                 android:text="Showing 0 samples"
                 android:textColor="#ccffffff"
-                android:textSize="12sp"
-                android:gravity="center"
-                android:layout_marginBottom="8dp" />
+                android:textSize="12sp" />
 
         </LinearLayout>
 
@@ -189,19 +189,19 @@
             android:id="@+id/analysis_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone"
             android:layout_marginHorizontal="16dp"
-            android:layout_marginBottom="8dp">
+            android:layout_marginBottom="8dp"
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
                 android:text="Analysis Results"
                 android:textColor="#ffffff"
                 android:textSize="14sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="4dp" />
+                android:textStyle="bold" />
 
         </LinearLayout>
 
@@ -213,10 +213,10 @@
             android:layout_marginHorizontal="16dp"
             android:layout_marginBottom="16dp"
             android:layout_weight="1"
+            android:visibility="gone"
             app:cardBackgroundColor="#2a2a2a"
             app:cardCornerRadius="8dp"
-            app:cardElevation="2dp"
-            android:visibility="gone">
+            app:cardElevation="2dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -249,9 +249,9 @@
             android:id="@+id/error_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:orientation="vertical"
             android:padding="16dp"
-            android:gravity="center"
             android:visibility="gone">
 
             <TextView
@@ -269,11 +269,11 @@
             android:id="@+id/status_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="8dp"
             android:text=""
             android:textColor="#ccffffff"
-            android:textSize="12sp"
-            android:gravity="center"
-            android:padding="8dp" />
+            android:textSize="12sp" />
 
     </LinearLayout>
 </layout>

@@ -108,7 +108,7 @@ class ThermalFragmentViewModel : BaseViewModel() {
                     isProcessing = false,
                     processingProgress = 0f
                 )
-                
+
                 ProcessedThermalResult(
                     processedBitmap = null,
                     temperatureAnalysis = TemperatureAnalysis(),
@@ -130,7 +130,7 @@ class ThermalFragmentViewModel : BaseViewModel() {
         // Extract temperature data from thermal bitmap
         val pixels = IntArray(bitmap.width * bitmap.height)
         bitmap.getPixels(pixels, 0, bitmap.width, 0, 0, bitmap.width, bitmap.height)
-        
+
         return pixels.map { pixel: Int ->
             // Convert pixel data to temperature values
             // TODO: Implement proper pixel to temperature conversion
@@ -173,26 +173,26 @@ class ThermalFragmentViewModel : BaseViewModel() {
     private fun detectHotSpots(temperatureData: FloatArray): List<HotSpot> {
         val threshold = temperatureData.maxOrNull()?.let { it * 0.8f } ?: 0f
         val hotSpots = mutableListOf<HotSpot>()
-        
+
         temperatureData.forEachIndexed { index, temp ->
             if (temp > threshold) {
                 hotSpots.add(HotSpot(index, temp))
             }
         }
-        
+
         return hotSpots
     }
 
     private fun detectColdSpots(temperatureData: FloatArray): List<ColdSpot> {
         val threshold = temperatureData.minOrNull()?.let { it * 1.2f } ?: 0f
         val coldSpots = mutableListOf<ColdSpot>()
-        
+
         temperatureData.forEachIndexed { index, temp ->
             if (temp < threshold) {
                 coldSpots.add(ColdSpot(index, temp))
             }
         }
-        
+
         return coldSpots
     }
 
@@ -201,7 +201,7 @@ class ThermalFragmentViewModel : BaseViewModel() {
 
         val firstHalf = temperatureData.take(temperatureData.size / 2).average()
         val secondHalf = temperatureData.takeLast(temperatureData.size / 2).average()
-        
+
         return when {
             secondHalf > firstHalf * 1.05 -> TemperatureTrend.RISING
             secondHalf < firstHalf * 0.95 -> TemperatureTrend.FALLING
@@ -210,9 +210,10 @@ class ThermalFragmentViewModel : BaseViewModel() {
     }
 
     private fun assessDataQuality(temperatureData: FloatArray): DataQuality {
-        val validCount = temperatureData.count { it > -40f && it < 150f } // Reasonable temperature range
+        val validCount =
+            temperatureData.count { it > -40f && it < 150f } // Reasonable temperature range
         val qualityPercentage = validCount.toFloat() / temperatureData.size
-        
+
         return when {
             qualityPercentage >= 0.95f -> DataQuality.EXCELLENT
             qualityPercentage >= 0.85f -> DataQuality.GOOD
@@ -241,7 +242,7 @@ class ThermalFragmentViewModel : BaseViewModel() {
     fun addFenceMeasurement(x: Int, y: Int, temperature: Float) {
         val currentMeasurements = _fenceState.value.measurements.toMutableList()
         currentMeasurements.add(FenceMeasurement(x, y, temperature))
-        
+
         _fenceState.value = _fenceState.value.copy(
             measurements = currentMeasurements
         )
@@ -257,9 +258,9 @@ class ThermalFragmentViewModel : BaseViewModel() {
     }
 
     fun stopVideoRecording() {
-        val recordingDuration = System.currentTimeMillis() - 
-            (_videoRecordingState.value.recordingStartTime ?: 0L)
-        
+        val recordingDuration = System.currentTimeMillis() -
+                (_videoRecordingState.value.recordingStartTime ?: 0L)
+
         _videoRecordingState.value = _videoRecordingState.value.copy(
             isRecording = false,
             recordingDuration = recordingDuration
@@ -271,11 +272,17 @@ class ThermalFragmentViewModel : BaseViewModel() {
         rawHeight = height
     }
 
-    fun calculateViewPosition(index: Int, viewWidth: Int, viewHeight: Int, parentWidth: Int, parentHeight: Int): Pair<Float, Float> {
+    fun calculateViewPosition(
+        index: Int,
+        viewWidth: Int,
+        viewHeight: Int,
+        parentWidth: Int,
+        parentHeight: Int
+    ): Pair<Float, Float> {
         if (rawWidth == 0 || rawHeight == 0) {
             return Pair(0f, 0f)
         }
-        
+
         val y = index / rawWidth
         val x = index - y * rawWidth
         val x1 = x * parentWidth / rawWidth
@@ -345,7 +352,8 @@ class ThermalFragmentViewModel : BaseViewModel() {
         object StartProcessing : ThermalProcessingAction()
         object ProcessingComplete : ThermalProcessingAction()
         data class ProcessingError(val message: String) : ThermalProcessingAction()
-        data class TemperatureAlert(val temperature: Float, val type: AlertType) : ThermalProcessingAction()
+        data class TemperatureAlert(val temperature: Float, val type: AlertType) :
+            ThermalProcessingAction()
     }
 
     enum class AlertType { HOT_SPOT, COLD_SPOT, TEMPERATURE_THRESHOLD }

@@ -177,14 +177,16 @@ class ShimmerDeviceManager(
             != PackageManager.PERMISSION_GRANTED
         ) return emptyList()
 
-        val bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
+        val bluetoothManager =
+            context.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
         return bluetoothManager?.adapter?.bondedDevices
             ?.filter { isValidShimmerDevice(it) } ?: emptyList()
     }
 
 
     private suspend fun performEnhancedBluetoothLeScanning() {
-        val bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
+        val bluetoothManager =
+            context.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
         val bluetoothAdapter = bluetoothManager?.adapter
         val bluetoothLeScanner = bluetoothAdapter?.bluetoothLeScanner
 
@@ -338,7 +340,8 @@ class ShimmerDeviceManager(
 
 
             currentScanCallback?.let { callback ->
-                val bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
+                val bluetoothManager =
+                    context.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
                 val bluetoothAdapter = bluetoothManager?.adapter
                 val bluetoothLeScanner = bluetoothAdapter?.bluetoothLeScanner
 

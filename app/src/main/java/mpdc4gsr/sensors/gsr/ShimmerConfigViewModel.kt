@@ -135,13 +135,13 @@ class ShimmerConfigViewModel : BaseViewModel() {
         viewModelScope.launch {
             try {
                 _uiState.value = _uiState.value.copy(isLoading = true)
-                
+
                 // Note: This would need to be adapted based on actual ShimmerDeviceManager API
                 // shimmerDeviceManager = ShimmerDeviceManager(context, context)
-                
+
                 // Simulated initialization - replace with actual implementation
                 val initialized = true // shimmerDeviceManager?.initialize() ?: false
-                
+
                 if (initialized) {
                     _uiState.value = _uiState.value.copy(
                         statusMessage = "Shimmer device manager ready - tap 'Start Scan' to discover devices",
@@ -361,10 +361,10 @@ class ShimmerConfigViewModel : BaseViewModel() {
                     statusMessage = "Testing connection to ${device.name}...",
                     isLoading = true
                 )
-                
+
                 // Simulate connection test
                 kotlinx.coroutines.delay(2000)
-                
+
                 _uiState.value = _uiState.value.copy(
                     statusMessage = "Connection test successful",
                     isLoading = false

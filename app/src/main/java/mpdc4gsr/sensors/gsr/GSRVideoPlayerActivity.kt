@@ -34,19 +34,20 @@ class GSRVideoPlayerActivity : BaseViewModelActivity<GSRVideoPlayerViewModel>() 
     private lateinit var binding: ActivityGsrVideoPlayerBinding
     private lateinit var videoPath: String
 
-    override fun providerVMClass(): Class<GSRVideoPlayerViewModel> = GSRVideoPlayerViewModel::class.java
+    override fun providerVMClass(): Class<GSRVideoPlayerViewModel> =
+        GSRVideoPlayerViewModel::class.java
 
     override fun initContentView() = R.layout.activity_gsr_video_player
 
     override fun initView() {
         binding = ActivityGsrVideoPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        
+
         videoPath = intent.getStringExtra(EXTRA_VIDEO_PATH) ?: ""
-        
+
         setupObservers()
         setupVideoView()
-        
+
         viewModel.loadVideo(videoPath, packageName, this)
     }
 
@@ -60,11 +61,11 @@ class GSRVideoPlayerActivity : BaseViewModelActivity<GSRVideoPlayerViewModel>() 
             if (videoState.uri != null) {
                 supportActionBar?.setDisplayHomeAsUpEnabled(true)
                 supportActionBar?.title = videoState.title
-                
+
                 binding.videoView.setVideoURI(videoState.uri)
                 binding.videoView.start()
                 binding.videoView.requestFocus()
-                
+
                 Log.w(TAG, "Video URI loaded: ${videoState.uri}")
             }
         }
@@ -84,7 +85,7 @@ class GSRVideoPlayerActivity : BaseViewModelActivity<GSRVideoPlayerViewModel>() 
 
     private fun setupVideoView() {
         binding.videoView.setMediaController(MediaController(this))
-        
+
         binding.videoView.setOnPreparedListener { mediaPlayer ->
             Log.i(TAG, "Video prepared, starting playback")
             mediaPlayer.setVideoScalingMode(
@@ -92,7 +93,7 @@ class GSRVideoPlayerActivity : BaseViewModelActivity<GSRVideoPlayerViewModel>() 
             )
             viewModel.onVideoReady()
         }
-        
+
         binding.videoView.setOnErrorListener { _, what: Int, extra: Int ->
             viewModel.onVideoError(what, extra)
             false

@@ -21,7 +21,8 @@ import com.mpdc4gsr.module.thermalunified.viewmodel.GalleryActivityViewModel
 
 class GalleryActivity : BaseViewModelActivity<GalleryActivityViewModel>() {
 
-    override fun providerVMClass(): Class<GalleryActivityViewModel> = GalleryActivityViewModel::class.java
+    override fun providerVMClass(): Class<GalleryActivityViewModel> =
+        GalleryActivityViewModel::class.java
 
     override fun initContentView() = R.layout.activity_gallery
 
@@ -44,6 +45,7 @@ class GalleryActivity : BaseViewModelActivity<GalleryActivityViewModel>() {
                 is GalleryActivityViewModel.ViewPagerState.Ready -> {
                     setupViewPager()
                 }
+
                 is GalleryActivityViewModel.ViewPagerState.TabSelected -> {
                     selectTab(state.position)
                 }
@@ -58,7 +60,7 @@ class GalleryActivity : BaseViewModelActivity<GalleryActivityViewModel>() {
                 override fun onGranted(permissions: MutableList<String>, allGranted: Boolean) {
                     viewModel.onPermissionsResult(allGranted)
                 }
-                
+
                 override fun onDenied(permissions: MutableList<String>, doNotAskAgain: Boolean) {
                     viewModel.onPermissionsResult(false)
                 }

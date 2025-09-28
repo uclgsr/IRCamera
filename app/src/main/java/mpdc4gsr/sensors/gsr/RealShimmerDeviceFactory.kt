@@ -73,7 +73,7 @@ class RealShimmerDevice(
                 shimmerManager = ShimmerBluetoothManagerAndroid(context, shimmerHandler)
                 Log.i(TAG, "ShimmerBluetoothManagerAndroid initialized successfully")
             }
-            
+
             shimmer = Shimmer(shimmerHandler, context)
             shimmer?.let { device ->
                 // Set up data handler to forward data to registered callback

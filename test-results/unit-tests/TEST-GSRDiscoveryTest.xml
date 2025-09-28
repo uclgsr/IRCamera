@@ -1,1 +1,5 @@
-<testsuites><testsuite name="GSRDiscoveryTest" tests="4" failures="0"><testcase name="should_discover_shimmer_devices_within_timeout"/></testsuite></testsuites>
+<testsuites>
+    <testsuite name="GSRDiscoveryTest" failures="0" tests="4">
+        <testcase name="should_discover_shimmer_devices_within_timeout" />
+    </testsuite>
+</testsuites>

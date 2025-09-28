@@ -55,7 +55,7 @@ class DevicePairingViewModel : BaseViewModel(), NetworkClient.NetworkEventListen
     fun initialize(context: android.content.Context) {
         networkClient = NetworkClient(context)
         networkClient.setEventListener(this)
-        
+
         _connectionState.value = ConnectionState.DISCONNECTED
         _scanState.value = ScanState.IDLE
         _statusMessage.value = "Ready to scan for PC Controllers"
@@ -83,9 +83,9 @@ class DevicePairingViewModel : BaseViewModel(), NetworkClient.NetworkEventListen
                 } else {
                     "No PC Controllers found. Make sure you're on the same network."
                 }
-                
+
                 _scanState.value = ScanState.COMPLETED
-                
+
             } catch (e: Exception) {
                 _statusMessage.value = "Scan failed: ${e.message}"
                 _scanState.value = ScanState.FAILED
@@ -104,7 +104,8 @@ class DevicePairingViewModel : BaseViewModel(), NetworkClient.NetworkEventListen
 
         viewModelScope.launch {
             try {
-                val success = networkClient.connectToController(controller.ipAddress, controller.port)
+                val success =
+                    networkClient.connectToController(controller.ipAddress, controller.port)
                 if (success) {
                     _connectedController.value = controller
                     _connectionState.value = ConnectionState.CONNECTED

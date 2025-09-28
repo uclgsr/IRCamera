@@ -27,7 +27,8 @@ class DualModeCameraActivity : BaseViewModelActivity<DualModeCameraViewModel>() 
             }
         }
 
-    override fun providerVMClass(): Class<DualModeCameraViewModel> = DualModeCameraViewModel::class.java
+    override fun providerVMClass(): Class<DualModeCameraViewModel> =
+        DualModeCameraViewModel::class.java
 
     override fun initContentView() = R.layout.activity_dual_mode_camera
 
@@ -36,7 +37,8 @@ class DualModeCameraActivity : BaseViewModelActivity<DualModeCameraViewModel>() 
         cameraModeSelector = findViewById(R.id.camera_mode_selector)
 
         val initialMode = intent.getStringExtra("INITIAL_MODE") ?: "VIDEO_4K"
-        val enableSamsungOptimizations = intent.getBooleanExtra("ENABLE_SAMSUNG_OPTIMIZATIONS", true)
+        val enableSamsungOptimizations =
+            intent.getBooleanExtra("ENABLE_SAMSUNG_OPTIMIZATIONS", true)
 
         setupObservers()
         viewModel.initialize(initialMode, enableSamsungOptimizations)
@@ -49,10 +51,13 @@ class DualModeCameraActivity : BaseViewModelActivity<DualModeCameraViewModel>() 
                 DualModeCameraViewModel.PermissionState.GRANTED -> {
                     viewModel.initializeCamera(this, this, previewView)
                 }
+
                 DualModeCameraViewModel.PermissionState.DENIED -> {
                     finish()
                 }
-                else -> { /* Handle other states if needed */ }
+
+                else -> { /* Handle other states if needed */
+                }
             }
         }
 
@@ -89,6 +94,7 @@ class DualModeCameraActivity : BaseViewModelActivity<DualModeCameraViewModel>() 
             ) == PackageManager.PERMISSION_GRANTED -> {
                 viewModel.onPermissionGranted()
             }
+
             else -> {
                 viewModel.requestPermission()
                 requestPermissionLauncher.launch(Manifest.permission.CAMERA)

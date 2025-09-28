@@ -185,7 +185,7 @@ class GSRDataViewViewModel : BaseViewModel() {
     ) {
         val isDataReady: Boolean
             get() = loadingState == DataLoadingState.Success && dataRows.isNotEmpty()
-        
+
         val hasStatistics: Boolean
             get() = statistics != null
     }
@@ -296,7 +296,7 @@ class GSRDataViewViewModel : BaseViewModel() {
                 val gsrValue = parts[1].trim().toDouble()
                 val resistance = parts[2].trim().toDouble()
                 val conductance = parts[3].trim().toDouble()
-                
+
                 GSRDataRow(
                     timestamp = parts[0].trim(),
                     gsrValue = gsrValue,
@@ -428,7 +428,10 @@ class GSRDataViewViewModel : BaseViewModel() {
     }
 
     private fun performDataExport(exportTypes: List<ExportType>): ExportResult {
-        val exportDir = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "GSR_Exports")
+        val exportDir = File(
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+            "GSR_Exports"
+        )
         if (!exportDir.exists()) {
             exportDir.mkdirs()
         }
@@ -457,16 +460,27 @@ class GSRDataViewViewModel : BaseViewModel() {
 
         // Write header with metadata
         csvWriter.writeNext(arrayOf("# GSR Data Export - Enhanced Format"))
-        csvWriter.writeNext(arrayOf("# Export Date: ${SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date())}"))
+        csvWriter.writeNext(
+            arrayOf(
+                "# Export Date: ${
+                    SimpleDateFormat(
+                        "yyyy-MM-dd HH:mm:ss",
+                        Locale.getDefault()
+                    ).format(Date())
+                }"
+            )
+        )
         csvWriter.writeNext(arrayOf("# Sample Count: ${_gsrDataRows.value.size}"))
         csvWriter.writeNext(arrayOf("# Sampling Rate: 128 Hz"))
         csvWriter.writeNext(arrayOf(""))
 
         // Write column headers
-        csvWriter.writeNext(arrayOf(
-            "timestamp", "gsr_microsiemens", "resistance_ohms", "conductance_siemens",
-            "gsr_normalized", "quality_score", "trend", "notes"
-        ))
+        csvWriter.writeNext(
+            arrayOf(
+                "timestamp", "gsr_microsiemens", "resistance_ohms", "conductance_siemens",
+                "gsr_normalized", "quality_score", "trend", "notes"
+            )
+        )
 
         // Write data rows with enhancements
         _gsrDataRows.value.forEach { row ->
@@ -474,16 +488,18 @@ class GSRDataViewViewModel : BaseViewModel() {
             val qualityScore = getQualityScore(row.quality)
             val trend = calculateLocalTrend(row, _gsrDataRows.value)
 
-            csvWriter.writeNext(arrayOf(
-                row.timestamp,
-                "%.4f".format(row.gsrValue),
-                "%.2f".format(row.resistance),
-                "%.6f".format(row.conductance),
-                "%.4f".format(normalizedGSR),
-                "%.2f".format(qualityScore),
-                trend,
-                ""
-            ))
+            csvWriter.writeNext(
+                arrayOf(
+                    row.timestamp,
+                    "%.4f".format(row.gsrValue),
+                    "%.2f".format(row.resistance),
+                    "%.6f".format(row.conductance),
+                    "%.4f".format(normalizedGSR),
+                    "%.2f".format(qualityScore),
+                    trend,
+                    ""
+                )
+            )
         }
 
         csvWriter.close()
@@ -502,13 +518,15 @@ class GSRDataViewViewModel : BaseViewModel() {
             val date = parts.getOrNull(0) ?: ""
             val time = parts.getOrNull(1) ?: ""
 
-            csvWriter.writeNext(arrayOf(
-                date,
-                time,
-                "%.3f".format(row.gsrValue),
-                "%.1f".format(row.resistance / 1000),
-                row.quality.name
-            ))
+            csvWriter.writeNext(
+                arrayOf(
+                    date,
+                    time,
+                    "%.3f".format(row.gsrValue),
+                    "%.1f".format(row.resistance / 1000),
+                    row.quality.name
+                )
+            )
         }
 
         csvWriter.close()
@@ -517,10 +535,13 @@ class GSRDataViewViewModel : BaseViewModel() {
 
     private fun exportJSONFormat(exportDir: File, timestamp: String): File {
         val outputFile = File(exportDir, "gsr_data_$timestamp.json")
-        
+
         val exportData = mapOf(
             "metadata" to mapOf(
-                "exportDate" to SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault()).format(Date()),
+                "exportDate" to SimpleDateFormat(
+                    "yyyy-MM-dd'T'HH:mm:ss'Z'",
+                    Locale.getDefault()
+                ).format(Date()),
                 "sampleCount" to _gsrDataRows.value.size,
                 "samplingRate" to 128,
                 "statistics" to _statistics.value
@@ -576,7 +597,10 @@ class GSRDataViewViewModel : BaseViewModel() {
         val analysis = _analysisResults.value
 
         val analysisData = mapOf(
-            "analysisDate" to SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault()).format(Date()),
+            "analysisDate" to SimpleDateFormat(
+                "yyyy-MM-dd'T'HH:mm:ss'Z'",
+                Locale.getDefault()
+            ).format(Date()),
             "peakAnalysis" to analysis?.peakDetection,
             "trendAnalysis" to analysis?.trendAnalysis,
             "frequencyAnalysis" to analysis?.frequencyAnalysis,
@@ -611,7 +635,7 @@ class GSRDataViewViewModel : BaseViewModel() {
 
     private fun calculateAdvancedAnalysis(): AnalysisResults {
         val dataRows = _gsrDataRows.value
-        
+
         return AnalysisResults(
             peakDetection = detectPeaks(dataRows),
             trendAnalysis = analyzeTrend(dataRows),
@@ -624,17 +648,19 @@ class GSRDataViewViewModel : BaseViewModel() {
         // Simplified peak detection algorithm
         val peaks = mutableListOf<Peak>()
         val values = dataRows.map { it.gsrValue }
-        
+
         for (i in 1 until values.size - 1) {
-            if (values[i] > values[i-1] && values[i] > values[i+1]) {
+            if (values[i] > values[i - 1] && values[i] > values[i + 1]) {
                 val prominence = calculateProminence(values, i)
                 if (prominence > 0.5) { // Threshold for significant peaks
-                    peaks.add(Peak(
-                        timestamp = System.currentTimeMillis() + i * 1000 / 128, // Approximate
-                        value = values[i],
-                        prominence = prominence,
-                        width = calculatePeakWidth(values, i)
-                    ))
+                    peaks.add(
+                        Peak(
+                            timestamp = System.currentTimeMillis() + i * 1000 / 128, // Approximate
+                            value = values[i],
+                            prominence = prominence,
+                            width = calculatePeakWidth(values, i)
+                        )
+                    )
                 }
             }
         }
@@ -652,31 +678,31 @@ class GSRDataViewViewModel : BaseViewModel() {
         val n = values.size
         val xMean = (n - 1) / 2.0
         val yMean = values.average()
-        
+
         var numerator = 0.0
         var denominator = 0.0
-        
+
         for (i in values.indices) {
             val x = i.toDouble()
             val y = values[i]
             numerator += (x - xMean) * (y - yMean)
             denominator += (x - xMean).pow(2)
         }
-        
+
         val slope = if (denominator != 0.0) numerator / denominator else 0.0
-        
+
         // Calculate R-squared
         val yPred = values.indices.map { slope * (it - xMean) + yMean }
         val ssRes = values.zip(yPred) { actual, predicted -> (actual - predicted).pow(2) }.sum()
         val ssTot = values.map { (it - yMean).pow(2) }.sum()
         val rSquared = 1 - (ssRes / ssTot)
-        
+
         val trend = when {
             slope > 0.01 -> TrendDirection.INCREASING
             slope < -0.01 -> TrendDirection.DECREASING
             else -> TrendDirection.STABLE
         }
-        
+
         return TrendAnalysis(slope, rSquared, trend, slope * 60 * 128) // change per minute
     }
 
@@ -702,13 +728,16 @@ class GSRDataViewViewModel : BaseViewModel() {
     }
 
     // Helper functions
-    private fun applyFilters(dataRows: List<GSRDataRow>, filterConfig: FilterConfiguration): List<GSRDataRow> {
+    private fun applyFilters(
+        dataRows: List<GSRDataRow>,
+        filterConfig: FilterConfiguration
+    ): List<GSRDataRow> {
         return dataRows.filter { row ->
             val passesGSRFilter = filterConfig.minGSR?.let { row.gsrValue >= it } ?: true &&
                     filterConfig.maxGSR?.let { row.gsrValue <= it } ?: true
-            
+
             val passesQualityFilter = row.quality.ordinal >= filterConfig.qualityThreshold.ordinal
-            
+
             passesGSRFilter && passesQualityFilter
         }
     }
@@ -731,10 +760,10 @@ class GSRDataViewViewModel : BaseViewModel() {
     private fun calculateLocalTrend(row: GSRDataRow, allRows: List<GSRDataRow>): String {
         val index = allRows.indexOf(row)
         if (index < 5 || index >= allRows.size - 5) return "stable"
-        
+
         val before = allRows.subList(index - 5, index).map { it.gsrValue }.average()
         val after = allRows.subList(index + 1, index + 6).map { it.gsrValue }.average()
-        
+
         return when {
             after > before + 0.5 -> "increasing"
             after < before - 0.5 -> "decreasing"
@@ -752,13 +781,13 @@ class GSRDataViewViewModel : BaseViewModel() {
     private fun calculatePeakWidth(values: List<Double>, peakIndex: Int): Double {
         val peakValue = values[peakIndex]
         val halfMax = peakValue / 2
-        
+
         var leftIndex = peakIndex
         while (leftIndex > 0 && values[leftIndex] > halfMax) leftIndex--
-        
+
         var rightIndex = peakIndex
         while (rightIndex < values.size - 1 && values[rightIndex] > halfMax) rightIndex++
-        
+
         return (rightIndex - leftIndex).toDouble()
     }
 
