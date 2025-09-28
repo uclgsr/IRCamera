@@ -46,7 +46,7 @@ import com.mpdc4gsr.module.user.fragment.MineFragment
 import com.mpdc4gsr.module.user.fragment.MoreFragment
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import mpdc4gsr.compose.base.BaseComposeActivity
+import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import mpdc4gsr.compose.components.SensorStatusCard
 import mpdc4gsr.compose.components.ThermalVisualizationCard
 import mpdc4gsr.core.RecordingService

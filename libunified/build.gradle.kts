@@ -1,6 +1,7 @@
 plugins {
     id("com.android.library")
     kotlin("android")
+    alias(libs.plugins.kotlin.compose)
     id("kotlin-parcelize")
     id("com.google.devtools.ksp")
 }
@@ -73,6 +74,11 @@ android {
         buildConfig = true
         dataBinding = true
         viewBinding = true
+        compose = true
+    }
+    
+    composeOptions {
+        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
 
     sourceSets {
@@ -201,6 +207,12 @@ dependencies {
 
     // UI-specific dependencies
     api(libs.bundles.ui.common)
+    
+    // Compose dependencies for shared base classes
+    api(platform(libs.compose.bom))
+    api(libs.compose.ui)
+    api(libs.compose.material3)
+    api(libs.compose.activity)
 
     testImplementation("org.robolectric:robolectric:4.10.3")
     testImplementation("junit:junit:4.13.2")

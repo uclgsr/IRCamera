@@ -8,7 +8,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import mpdc4gsr.compose.base.BaseComposeActivity
+import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import mpdc4gsr.compose.components.SensorStatusCard
 import mpdc4gsr.compose.components.ThermalVisualizationCard
 import mpdc4gsr.compose.utils.AndroidViewWrapper
