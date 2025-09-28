@@ -13,10 +13,10 @@ flowchart TD
     
     subgraph "Android Device 1"
         A1[Android Sensor Node<br/>Samsung Galaxy S22]
-        A1_Thermal[TC001 Thermal Camera<br/>256×192@25Hz<br/>±2°C accuracy]
+        A1_Thermal[TC001 Thermal Camera<br/>256x192@25Hz<br/>+/-2 degreesC accuracy]
         A1_GSR[Shimmer3 GSR Sensor<br/>128Hz@12-bit ADC<br/>Microsiemens conversion]
-        A1_RGB[RGB Camera<br/>1920×1080@30fps<br/>H.264 encoding]
-        A1_Time[TimeManager<br/>Nanosecond precision<br/>±2.1ms sync]
+        A1_RGB[RGB Camera<br/>1920x1080@30fps<br/>H.264 encoding]
+        A1_Time[TimeManager<br/>Nanosecond precision<br/>+/-2.1ms sync]
         A1_Storage[Local Storage<br/>Session directory<br/>CSV + MP4 files]
     end
     
@@ -45,8 +45,8 @@ flowchart TD
     end
     
     subgraph "Data Output Layer"
-        ThermalCSV[thermal_data.csv<br/>timestamp_ns,w,h,t0...t49151<br/>Calibrated temperatures °C]
-        GSRCSV[gsr_data.csv<br/>timestamp_ns,gsr_μS,ppg_raw<br/>Physiological measurements]
+        ThermalCSV[thermal_data.csv<br/>timestamp_ns,w,h,t0...t49151<br/>Calibrated temperatures  degreesC]
+        GSRCSV[gsr_data.csv<br/>timestamp_ns,gsr_microS,ppg_raw<br/>Physiological measurements]
         VideoMP4[rgb_video.mp4<br/>H.264 encoded stream<br/>Synchronized timestamps]
         MetaJSON[metadata.json<br/>Session configuration<br/>Device specifications<br/>Calibration parameters]
         SyncLog[sync_log.csv<br/>Timestamp alignment<br/>Drift measurements<br/>Quality metrics]
@@ -171,7 +171,7 @@ gantt
 
 | Data Type   | Write Rate    | Compression   | File Size (30 min) | Quality            |
 |-------------|---------------|---------------|--------------------|--------------------|
-| Thermal CSV | 0.29 MB/s     | 3.2:1         | 0.53 GB            | ±2°C accuracy      |
+| Thermal CSV | 0.29 MB/s     | 3.2:1         | 0.53 GB            | +/-2 degreesC accuracy      |
 | GSR CSV     | 0.05 MB/s     | 1.8:1         | 0.09 GB            | 12-bit precision   |
 | RGB Video   | 0.87 MB/s     | 8.5:1         | 1.56 GB            | H.264 high profile |
 | Metadata    | 0.001 MB/s    | JSON          | 0.04 GB            | Configuration      |

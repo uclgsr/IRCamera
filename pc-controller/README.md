@@ -1,32 +1,59 @@
-# IRCamera PC Controller Hub
+# IRCamera PC Controller - Complete Guide
 
-The PC Controller serves as the central **Hub** in the IRCamera Multi-Modal Thermal Sensing
-Platform's Hub-and-Spoke
-architecture, coordinating distributed Android sensor nodes for scientific data collection.
+The PC Controller serves as the central **Hub** in the IRCamera Multi-Modal Thermal Sensing Platform's Hub-and-Spoke architecture, coordinating distributed Android sensor nodes for scientific data collection.
 
 ## Overview
 
-This directory contains both a simplified MVP implementation and a comprehensive full-featured
-application for
-multi-modal physiological sensing research. The PC Controller manages device discovery, session
-coordination, and data
-collection across multiple Android sensor nodes.
+This comprehensive desktop application orchestrates multi-modal recording sessions with Android devices, providing real-time data visualization, session management, and high-performance data processing capabilities. The implementation represents the unified result of multiple controller iterations, combining the best features from previous versions.
+
+## Unified Implementation
+
+The current controller consolidates features from three previous implementations:
+
+### Original Components Integrated
+1. **Basic GUI Framework** (from tkinter controller)
+   - Device status tracking and session management
+   - Simple but functional interface design
+
+2. **Advanced Protocol Handling** (from standardized controller)  
+   - Robust message parsing and time synchronization
+   - Connection lifecycle management
+   - Support for both legacy and JSON message formats
+
+3. **High-Performance Visualization** (from enhanced PyQt6 controller)
+   - Professional PyQt6 interface with responsive design
+   - Real-time plotting with PyQtGraph backend
+   - Optional SSL/TLS encryption support
 
 ## Architecture
 
 The PC Controller implements a **Hub-and-Spoke Model** where:
 
 - **Hub (PC Controller)**: Central coordinator with PyQt6 GUI
-- **Spokes (Android Nodes)**: Mobile sensor nodes with thermal, GSR, and RGB capabilities
+- **Spokes (Android Nodes)**: Mobile sensor nodes with thermal, GSR, and RGB capabilities  
 - **Communication**: JSON-based TCP protocol with mDNS device discovery
 - **Purpose**: Scientific data acquisition and machine learning analysis
 
 ## Key Features
 
-### Core Functionality
+### Networking and Device Interface
+- **Complete TCP Server/Protocol**: Full JSON-based communication with Android devices
+- **Device Registration**: Automatic discovery and registration system
+- **Session Coordination**: Remote session start/stop control
+- **Live Data Streaming**: Real-time telemetry reception and processing
+- **Error Handling**: Robust reconnection logic and graceful error recovery
+- **Multi-device Support**: Simultaneous connections from multiple Android devices
 
+### High-Performance Data Processing
+- **C++ Backend Integration**: PyBind11-based native processing modules (optional)
+- **GSR Data Processing**: Native packet parsing and analysis
+- **Thread-safe Operations**: Lock-free queues and concurrent data structures
+- **Memory Management**: Efficient buffering with configurable limits
+- **Data Export**: CSV, JSON, and HDF5 export capabilities
+
+### Core Functionality
 - **Device Management**: Automatic mDNS discovery and manual device addition
-- **Session Lifecycle**: Complete recording session coordination
+- **Session Lifecycle**: Complete recording session coordination  
 - **Multi-Modal Synchronization**: Precise temporal alignment across sensors
 - **Real-Time Communication**: TCP/JSON protocol with command acknowledgments
 - **Professional GUI**: Comprehensive PyQt6 interface for researchers

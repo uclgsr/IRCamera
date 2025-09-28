@@ -351,7 +351,7 @@ graph TB
 ```mermaid
 flowchart TD
     subgraph "Data Sources"
-        TC001Sensor[TC001 Thermal Camera<br/>30 FPS @ 384x288<br/>-20°C to +400°C]
+        TC001Sensor[TC001 Thermal Camera<br/>30 FPS @ 384x288<br/>-20 degreesC to +400 degreesC]
         Shimmer3Sensor[Shimmer3 GSR<br/>51.2 Hz Sampling<br/>Galvanic Skin Response]
     end
     
@@ -537,7 +537,7 @@ sequenceDiagram
 ```mermaid
 graph TB
     subgraph "Topdon TC001 Thermal Camera"
-        TC001Hardware[TC001 Hardware<br/>Thermal Sensor Array<br/>384x288 Resolution<br/>-20°C to +400°C Range]
+        TC001Hardware[TC001 Hardware<br/>Thermal Sensor Array<br/>384x288 Resolution<br/>-20 degreesC to +400 degreesC Range]
         TC001USB[USB Interface<br/>USB 2.0 Connection<br/>Hot-plug Support<br/>Power via USB]
         TC001Driver[TC001 Driver<br/>Native Library<br/>JNI Interface<br/>Frame Capture API]
         TC001SDK[TC001 SDK<br/>Temperature Conversion<br/>Image Processing<br/>Calibration Data]

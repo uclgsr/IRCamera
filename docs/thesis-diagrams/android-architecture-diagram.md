@@ -208,24 +208,24 @@ graph TB
 
 ```text
 app/
-├── src/main/java/mpdc4gsr/
-│   ├── MainActivity.kt (298 lines)
-│   ├── network/
-│   │   ├── NetworkServer.kt (245 lines)
-│   │   ├── ProtocolHandler.kt (189 lines)
-│   │   └── Protocol.kt (99 lines)
-│   ├── sensors/
-│   │   ├── ThermalCameraRecorder.kt (312 lines)
-│   │   ├── ShimmerRecorder.kt (287 lines)
-│   │   └── SensorCoordinator.kt (201 lines)
-│   ├── utils/
-│   │   ├── TimeManager.kt (89 lines)
-│   │   └── StorageManager.kt (156 lines)
-│   └── hardware/
-│       ├── USBManager.kt (134 lines)
-│       └── BLEManager.kt (178 lines)
-├── build.gradle.kts
-└── AndroidManifest.xml
+|-- src/main/java/mpdc4gsr/
+|   |-- MainActivity.kt (298 lines)
+|   |-- network/
+|   |   |-- NetworkServer.kt (245 lines)
+|   |   |-- ProtocolHandler.kt (189 lines)
+|   |   |-- Protocol.kt (99 lines)
+|   |-- sensors/
+|   |   |-- ThermalCameraRecorder.kt (312 lines)
+|   |   |-- ShimmerRecorder.kt (287 lines)
+|   |   |-- SensorCoordinator.kt (201 lines)
+|   |-- utils/
+|   |   |-- TimeManager.kt (89 lines)
+|   |   |-- StorageManager.kt (156 lines)
+|   |-- hardware/
+|       |-- USBManager.kt (134 lines)
+|       |-- BLEManager.kt (178 lines)
+|-- build.gradle.kts
+|-- AndroidManifest.xml
 ```
 
 ### Library Dependencies

@@ -4,13 +4,13 @@
 
 | Component                       | Specification                               | Parameters                        | Communication             | Notes                                            |
 |---------------------------------|---------------------------------------------|-----------------------------------|---------------------------|--------------------------------------------------|
-| **Topdon TC001 Thermal Camera** | Resolution: 256×192                         | Frame Rate: 25 Hz                 | USB/OTG                   | Hardware VID/PID: 0x0525/0xa4a2, 0x0525/0xa4a5   |
-|                                 | Temperature Range: -20°C to +550°C          | Accuracy: ±2°C                    | Data Format: CSV          | SDK Integration: IRCMD, LibIRParse, LibIRProcess |
+| **Topdon TC001 Thermal Camera** | Resolution: 256x192                         | Frame Rate: 25 Hz                 | USB/OTG                   | Hardware VID/PID: 0x0525/0xa4a2, 0x0525/0xa4a5   |
+|                                 | Temperature Range: -20 degreesC to +550 degreesC          | Accuracy: +/-2 degreesC                    | Data Format: CSV          | SDK Integration: IRCMD, LibIRParse, LibIRProcess |
 |                                 | Calibration: Hardware emissivity correction | Emissivity Range: 0.1-1.0         | File Size: ~0.53 GB/30min | Color Palettes: Iron, Rainbow, Grayscale         |
-| **Shimmer3 GSR+ Sensor**        | Sampling Rate: 1-1024 Hz (128 Hz default)   | Range: 0-4 μS                     | Bluetooth 2.1+EDR         | IEEE 802.15.1 compliant                          |
+| **Shimmer3 GSR+ Sensor**        | Sampling Rate: 1-1024 Hz (128 Hz default)   | Range: 0-4 microS                     | Bluetooth 2.1+EDR         | IEEE 802.15.1 compliant                          |
 |                                 | ADC Resolution: 12-bit (0-4095)             | Battery: 12+ hours                | Data Format: CSV          | ShimmerAndroidAPI integration                    |
-|                                 | Internal Clock: 32 kHz crystal              | Accuracy: ±20 ppm                 | File Size: ~0.09 GB/30min | Scientific-grade precision                       |
-| **RGB Camera (CameraX)**        | Resolution: 1920×1080                       | Frame Rate: 30 fps                | Internal camera API       | H.264 encoding                                   |
+|                                 | Internal Clock: 32 kHz crystal              | Accuracy: +/-20 ppm                 | File Size: ~0.09 GB/30min | Scientific-grade precision                       |
+| **RGB Camera (CameraX)**        | Resolution: 1920x1080                       | Frame Rate: 30 fps                | Internal camera API       | H.264 encoding                                   |
 |                                 | Encoding: H.264/AVC                         | Quality: High profile             | File Format: MP4          | File Size: ~1.56 GB/30min                        |
 |                                 | Focus: Continuous autofocus                 | Stabilization: Available          | Storage: Local device     | CameraX Jetpack library                          |
 | **Android Device**              | Min SDK: 26 (Android 8.0)                   | Target SDK: 34 (Android 14)       | Wi-Fi 802.11n/ac          | Samsung Galaxy validated                         |
@@ -49,8 +49,8 @@
 
 | Integration Point        | Technology               | Implementation                  | Validation                     | Performance                  |
 |--------------------------|--------------------------|---------------------------------|--------------------------------|------------------------------|
-| **TC001 Thermal SDK**    | Native Android SDK       | `com.energy.iruvc.*` classes    | Hardware device detection      | 256×192@25Hz sustained       |
-|                          | Temperature calibration  | Hardware emissivity correction  | ±2°C accuracy validation       | Production-grade accuracy    |
+| **TC001 Thermal SDK**    | Native Android SDK       | `com.energy.iruvc.*` classes    | Hardware device detection      | 256x192@25Hz sustained       |
+|                          | Temperature calibration  | Hardware emissivity correction  | +/-2 degreesC accuracy validation       | Production-grade accuracy    |
 |                          | Color palette processing | Iron/Rainbow/Grayscale          | Visual thermal rendering       | Professional imaging quality |
 | **Shimmer3 Integration** | ShimmerAndroidAPI        | `com.shimmerresearch.android.*` | 12-bit ADC validation          | 128 Hz @ <3ms latency        |
 |                          | BLE protocol handling    | Nordic BLE library backend      | Connection reliability testing | >95% uptime typical          |

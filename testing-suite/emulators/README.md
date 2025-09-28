@@ -13,8 +13,8 @@ reproducible, deterministic testing scenarios.
 
 ### TC001 Thermal Camera Emulator (`tc001_emulator.py`)
 
-- **Resolution**: 256×192 temperature matrices
-- **Temperature Range**: -20°C to +550°C with ±2°C accuracy
+- **Resolution**: 256x192 temperature matrices
+- **Temperature Range**: -20 degreesC to +550 degreesC with +/-2 degreesC accuracy
 - **Scenarios**: Human subject detection, hot object tracking, thermal events, calibration targets
 - **Physics Simulation**: Thermal diffusion, cooling dynamics, environmental changes
 - **Frame Rate**: 10 Hz (matches hardware specification)
@@ -22,7 +22,7 @@ reproducible, deterministic testing scenarios.
 ### Shimmer3 GSR Sensor Emulator (`shimmer3_emulator.py`)
 
 - **Sampling Rate**: 128 Hz (configurable 1-1024 Hz)
-- **GSR Range**: 0-4 μS with 12-bit ADC resolution
+- **GSR Range**: 0-4 microS with 12-bit ADC resolution
 - **Scenarios**: Baseline recording, stress responses, electrode contact variations
 - **Physiological Modeling**: Heart rate influence, respiratory patterns, stress recovery cycles
 - **Hardware Simulation**: Battery drain, Bluetooth characteristics, electrode contact quality
