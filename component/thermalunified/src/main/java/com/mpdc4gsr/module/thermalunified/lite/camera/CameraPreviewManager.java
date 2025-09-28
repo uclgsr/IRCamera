@@ -129,6 +129,7 @@ public class CameraPreviewManager {
     private AutoGainImageRes mAutoGainImageRes = new AutoGainImageRes();
     private AutoGainSwitchInfo mAutoGainSwitchInfo = new AutoGainSwitchInfo();
     private AutoGainSwitchParam mGainSwitchParam = new AutoGainSwitchParam();
+
     private CameraPreviewManager() {
         irImageHelp = new IRImageHelp();
     }

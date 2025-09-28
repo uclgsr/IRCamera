@@ -72,7 +72,7 @@ class IRThermalFragment : BaseFragment(), View.OnClickListener {
         setupAnimation()
         setupObservers()
         setupLifecycleObserver()
-        
+
         // Initial device state check
         viewModel.checkDeviceConnection(isTC007)
     }
@@ -118,7 +118,7 @@ class IRThermalFragment : BaseFragment(), View.OnClickListener {
                     } else {
                         NetWorkUtils.connectivityManager.bindProcessToNetwork(null)
                     }
-                    
+
                     // Refresh device connection state on resume
                     viewModel.checkDeviceConnection(isTC007)
                 }
@@ -162,19 +162,23 @@ class IRThermalFragment : BaseFragment(), View.OnClickListener {
                 NavigationManager.getInstance().build(RouterConfig.IR_THERMAL_07)
                     .navigation(requireContext())
             }
+
             is IRThermalFragmentViewModel.NavigationEvent.StartThermalPlusActivity -> {
                 startActivityForResult(
                     Intent(requireContext(), IRThermalPlusActivity::class.java), 101
                 )
             }
+
             is IRThermalFragmentViewModel.NavigationEvent.NavigateToTCLite -> {
                 NavigationManager.getInstance().build(RouterConfig.IR_TCLITE)
                     .navigation(requireContext(), 101)
             }
+
             is IRThermalFragmentViewModel.NavigationEvent.NavigateToHikMain -> {
                 NavigationManager.getInstance().build(RouterConfig.IR_HIK_MAIN)
                     .navigation(requireContext())
             }
+
             is IRThermalFragmentViewModel.NavigationEvent.StartThermalNightActivity -> {
                 startActivityForResult(
                     Intent(requireContext(), IRThermalNightActivity::class.java), 101
@@ -193,9 +197,11 @@ class IRThermalFragment : BaseFragment(), View.OnClickListener {
                         .create().show()
                 }
             }
+
             is IRThermalFragmentViewModel.ThermalAction.ShowConnectTip -> {
                 showConnectTip()
             }
+
             is IRThermalFragmentViewModel.ThermalAction.ShowPermissionSettingsTip -> {
                 context?.let { context ->
                     TipDialog.Builder(context)
@@ -218,6 +224,7 @@ class IRThermalFragment : BaseFragment(), View.OnClickListener {
             is IRThermalFragmentViewModel.PermissionState.RequestCameraPermission -> {
                 requestCameraPermission()
             }
+
             else -> {
                 // Other permission states handled by callbacks
             }
@@ -245,14 +252,17 @@ class IRThermalFragment : BaseFragment(), View.OnClickListener {
             clOpenThermal -> {
                 viewModel.handleThermalOpen(isTC007)
             }
+
             tvMainEnter -> {
                 viewModel.handleMainEnter()
             }
+
             cl07ConnectTips -> {
                 NavigationManager.getInstance().build(RouterConfig.IR_CONNECT_TIPS)
                     .withBoolean(ExtraKeyConfig.IS_TC007, true)
                     .navigation(requireContext())
             }
+
             tv07Connect -> {
                 NavigationManager.getInstance()
                     .build(RouterConfig.IR_DEVICE_ADD)
