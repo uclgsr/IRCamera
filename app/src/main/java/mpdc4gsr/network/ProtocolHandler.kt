@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import mpdc4gsr.sync.TimeSyncManager
 import mpdc4gsr.utils.TimeManager
+import org.json.JSONObject
 
 /**
  * Handles protocol messages according to the standardized networking specification.
@@ -25,6 +26,13 @@ class ProtocolHandler(
         suspend fun onStartRecording(sessionId: String): CommandResult
         suspend fun onStopRecording(sessionId: String): CommandResult
         suspend fun onSyncRequest(pcTimestamp: Long): SyncResult
+    }
+
+    // Extended interface for cases that need configuration and client address
+    interface CommandCallback {
+        suspend fun onStartRecording(sessionId: String, configuration: org.json.JSONObject): Boolean
+        suspend fun onStopRecording(): Boolean
+        suspend fun onSyncRequest(pcAddress: String): Boolean
     }
 
     data class CommandResult(
