@@ -47,6 +47,9 @@ sealed class UnifiedRoute(val route: String) {
     object DualModeCamera : UnifiedRoute("dual_mode_camera")
     object CameraSettings : UnifiedRoute("camera_settings")
     
+    // Network Routes
+    object DevicePairing : UnifiedRoute("device_pairing")
+    
     // Thermal Camera Routes
     object ThermalMain : UnifiedRoute("thermal_main")
     object ThermalGallery : UnifiedRoute("thermal_gallery")
@@ -171,10 +174,31 @@ fun UnifiedNavHost(
         }
         
         composable(UnifiedRoute.DualModeCamera.route) {
-            DualModeCameraScreen(
-                onBackClick = { navController.popBackStack() },
-                onNavigateToSettings = { navController.navigate(UnifiedRoute.CameraSettings.route) }
-            )
+            LaunchedEffect(Unit) {
+                try {
+                    context.startActivity(
+                        Intent(context, Class.forName("mpdc4gsr.activities.DualModeCameraActivityCompose"))
+                    )
+                } catch (e: Exception) {
+                    // Fallback to screen
+                    navController.navigate("dual_mode_camera_screen")
+                }
+            }
+            ThermalLoadingScreen("Loading Dual Mode Camera...")
+        }
+        
+        composable(UnifiedRoute.DevicePairing.route) {
+            LaunchedEffect(Unit) {
+                try {
+                    context.startActivity(
+                        Intent(context, Class.forName("mpdc4gsr.activities.DevicePairingActivityCompose"))
+                    )
+                } catch (e: Exception) {
+                    // Fallback to screen
+                    navController.navigate("device_pairing_screen")
+                }
+            }
+            ThermalLoadingScreen("Loading Device Pairing...")
         }
         
         // Thermal Camera Routes
@@ -258,6 +282,20 @@ fun UnifiedNavHost(
         composable(UnifiedRoute.TestingSuite.route) {
             TestResultsScreen(
                 onBackClick = { navController.popBackStack() }
+            )
+        }
+        
+        // Fallback routes for screens when activities fail to launch
+        composable("dual_mode_camera_screen") {
+            DualModeCameraScreen(
+                onBackClick = { navController.popBackStack() },
+                onNavigateToSettings = { navController.navigate(UnifiedRoute.CameraSettings.route) }
+            )
+        }
+        
+        composable("device_pairing_screen") {
+            DevicePairingScreen(
+                onNavigateBack = { navController.popBackStack() }
             )
         }
     }
