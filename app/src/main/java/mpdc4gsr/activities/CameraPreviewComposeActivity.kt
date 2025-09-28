@@ -39,7 +39,7 @@ class CameraPreviewComposeActivity : BaseComposeActivity() {
         var recordingDuration by remember { mutableStateOf(0L) }
         var thermalOverlayEnabled by remember { mutableStateOf(true) }
         var currentTemperature by remember { mutableStateOf(25.4f) }
-        var flashMode by remember { mutableStateOf("Auto") }
+        var flashMode by remember { mutableStateOf(FlashMode.Auto) }
         var zoomLevel by remember { mutableStateOf(1.0f) }
 
         // Simulate recording timer
