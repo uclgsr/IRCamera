@@ -82,6 +82,7 @@ class TestingSuiteHubActivity : ComponentActivity() {
                     title = "GSR Reconnection Test",
                     description = "Test GSR device reconnection handling",
                     icon = Icons.Default.Refresh,
+                    composeActivity = GSRReconnectionTestComposeActivity::class.java,
                     legacyActivity = GSRReconnectionTestActivity::class.java,
                     category = TestCategory.BLE_INTEGRATION
                 ),
@@ -102,6 +103,7 @@ class TestingSuiteHubActivity : ComponentActivity() {
                     title = "GSR Data Integrity",
                     description = "Validate GSR data quality and consistency",
                     icon = Icons.Default.VerifiedUser,
+                    composeActivity = GSRDataIntegrityTestComposeActivity::class.java,
                     legacyActivity = GSRDataIntegrityTestActivity::class.java,
                     category = TestCategory.DATA_INTEGRITY,
                     priority = TestPriority.HIGH
@@ -123,6 +125,7 @@ class TestingSuiteHubActivity : ComponentActivity() {
                     title = "RAW Capture Test",
                     description = "Test RAW image capture functionality",
                     icon = Icons.Default.PhotoCamera,
+                    composeActivity = RawCaptureTestComposeActivity::class.java,
                     legacyActivity = RawCaptureTestActivity::class.java,
                     category = TestCategory.CAMERA_SYSTEMS
                 ),
@@ -180,6 +183,7 @@ class TestingSuiteHubActivity : ComponentActivity() {
                     title = "Complete Session Trial",
                     description = "End-to-end session testing",
                     icon = Icons.Default.CheckCircle,
+                    composeActivity = CompleteSessionTrialComposeActivity::class.java,
                     legacyActivity = CompleteSessionTrialActivity::class.java,
                     category = TestCategory.PERFORMANCE,
                     priority = TestPriority.HIGH
