@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -41,7 +42,8 @@ class TestingSuiteHubActivity : ComponentActivity() {
 
     enum class TestCategory {
         BLE_INTEGRATION, GSR_SENSORS, CAMERA_SYSTEMS, 
-        SYNCHRONIZATION, DATA_INTEGRITY, PERFORMANCE
+        SYNCHRONIZATION, DATA_INTEGRITY, PERFORMANCE,
+        USER_INTERFACE, NETWORK, SYSTEM
     }
 
     enum class TestPriority {
@@ -146,6 +148,7 @@ class TestingSuiteHubActivity : ComponentActivity() {
                     title = "Time Synchronization",
                     description = "Test timestamp synchronization accuracy",
                     icon = Icons.Default.Schedule,
+                    composeActivity = TimeSynchronizationTestComposeActivity::class.java,
                     legacyActivity = TimeSynchronizationTestActivity::class.java,
                     category = TestCategory.SYNCHRONIZATION
                 ),
@@ -187,6 +190,35 @@ class TestingSuiteHubActivity : ComponentActivity() {
                     legacyActivity = CompleteSessionTrialActivity::class.java,
                     category = TestCategory.PERFORMANCE,
                     priority = TestPriority.HIGH
+                ),
+                
+                // Additional Testing Activities
+                TestingModule(
+                    id = "sensor_dashboard",
+                    title = "Sensor Dashboard Test",
+                    description = "Test sensor dashboard UI and functionality",
+                    icon = Icons.Default.Dashboard,
+                    composeActivity = SensorDashboardTestComposeActivity::class.java,
+                    legacyActivity = SensorDashboardTestActivity::class.java,
+                    category = TestCategory.USER_INTERFACE
+                ),
+                TestingModule(
+                    id = "simple_network",
+                    title = "Simple Network Test",
+                    description = "Test PC remote control and networking",
+                    icon = Icons.Default.NetworkCheck,
+                    composeActivity = SimpleNetworkTestComposeActivity::class.java,
+                    legacyActivity = SimpleNetworkTestActivity::class.java,
+                    category = TestCategory.NETWORK
+                ),
+                TestingModule(
+                    id = "permission_request",
+                    title = "Permission Request Test",
+                    description = "Test app permission system validation",
+                    icon = Icons.Default.Security,
+                    composeActivity = PermissionRequestTestComposeActivity::class.java,
+                    legacyActivity = PermissionRequestActivity::class.java,
+                    category = TestCategory.SYSTEM
                 )
             )
         }
@@ -234,30 +266,73 @@ class TestingSuiteHubActivity : ComponentActivity() {
                 Spacer(modifier = Modifier.height(16.dp))
 
                 // Category Filter Chips
-                Row(
+                LazyRow(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    FilterChip(
-                        onClick = { selectedCategory = null },
-                        label = { Text("All") },
-                        selected = selectedCategory == null
-                    )
-                    FilterChip(
-                        onClick = { selectedCategory = TestCategory.BLE_INTEGRATION },
-                        label = { Text("BLE") },
-                        selected = selectedCategory == TestCategory.BLE_INTEGRATION
-                    )
-                    FilterChip(
-                        onClick = { selectedCategory = TestCategory.GSR_SENSORS },
-                        label = { Text("GSR") },
-                        selected = selectedCategory == TestCategory.GSR_SENSORS
-                    )
-                    FilterChip(
-                        onClick = { selectedCategory = TestCategory.CAMERA_SYSTEMS },
-                        label = { Text("Camera") },
-                        selected = selectedCategory == TestCategory.CAMERA_SYSTEMS
-                    )
+                    item {
+                        FilterChip(
+                            onClick = { selectedCategory = null },
+                            label = { Text("All") },
+                            selected = selectedCategory == null
+                        )
+                    }
+                    item {
+                        FilterChip(
+                            onClick = { selectedCategory = TestCategory.BLE_INTEGRATION },
+                            label = { Text("BLE") },
+                            selected = selectedCategory == TestCategory.BLE_INTEGRATION
+                        )
+                    }
+                    item {
+                        FilterChip(
+                            onClick = { selectedCategory = TestCategory.GSR_SENSORS },
+                            label = { Text("GSR") },
+                            selected = selectedCategory == TestCategory.GSR_SENSORS
+                        )
+                    }
+                    item {
+                        FilterChip(
+                            onClick = { selectedCategory = TestCategory.CAMERA_SYSTEMS },
+                            label = { Text("Camera") },
+                            selected = selectedCategory == TestCategory.CAMERA_SYSTEMS
+                        )
+                    }
+                    item {
+                        FilterChip(
+                            onClick = { selectedCategory = TestCategory.SYNCHRONIZATION },
+                            label = { Text("Sync") },
+                            selected = selectedCategory == TestCategory.SYNCHRONIZATION
+                        )
+                    }
+                    item {
+                        FilterChip(
+                            onClick = { selectedCategory = TestCategory.PERFORMANCE },
+                            label = { Text("Performance") },
+                            selected = selectedCategory == TestCategory.PERFORMANCE
+                        )
+                    }
+                    item {
+                        FilterChip(
+                            onClick = { selectedCategory = TestCategory.USER_INTERFACE },
+                            label = { Text("UI") },
+                            selected = selectedCategory == TestCategory.USER_INTERFACE
+                        )
+                    }
+                    item {
+                        FilterChip(
+                            onClick = { selectedCategory = TestCategory.NETWORK },
+                            label = { Text("Network") },
+                            selected = selectedCategory == TestCategory.NETWORK
+                        )
+                    }
+                    item {
+                        FilterChip(
+                            onClick = { selectedCategory = TestCategory.SYSTEM },
+                            label = { Text("System") },
+                            selected = selectedCategory == TestCategory.SYSTEM
+                        )
+                    }
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
