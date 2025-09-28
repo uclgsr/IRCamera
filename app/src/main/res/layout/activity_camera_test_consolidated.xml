@@ -207,10 +207,10 @@
                             android:text="Manual Exposure:"
                             android:textColor="@color/white" />
 
-                        <Switch
-                            android:id="@+id/manual_exposure_switch"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
+<com.google.android.material.switchmaterial.SwitchMaterial
+    android:id="@+id/manual_exposure_switch"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" />
                     </LinearLayout>
 
                     <LinearLayout
