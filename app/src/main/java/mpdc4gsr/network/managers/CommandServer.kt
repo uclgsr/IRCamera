@@ -14,7 +14,6 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import mpdc4gsr.network.NetworkServer
-import android.util.Log
 import mpdc4gsr.network.ProtocolHandler
 import mpdc4gsr.sync.TimeSyncManager
 import org.json.JSONObject
@@ -34,6 +33,27 @@ class CommandServer(
 ) {
     companion object {
         private const val TAG = "CommandServer"
+    }
+    
+    // Data classes and enums - defined first to avoid forward reference issues
+    sealed class CommandEvent {
+        data class StartRecord(val sessionId: String, val configuration: JSONObject) : CommandEvent()
+        object StopRecord : CommandEvent()
+        data class SyncRequest(val pcAddress: String) : CommandEvent()
+        object StatusRequest : CommandEvent()
+    }
+    
+    enum class ServerStatus {
+        STOPPED,
+        STARTING,
+        RUNNING,
+        ERROR
+    }
+    
+    enum class ConnectionStatus {
+        DISCONNECTED,
+        CONNECTED,
+        ERROR
     }
     
     private val serverScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
@@ -76,7 +96,8 @@ class CommandServer(
             
             networkServer?.let { server ->
                 protocolHandler = ProtocolHandler(context, server).apply {
-                setCommandHandler(createProtocolCallback())
+                    setCommandHandler(createProtocolCallback())
+                }
             }
             
             // Start network server and monitor connection status
@@ -154,7 +175,7 @@ class CommandServer(
             val statusMessage = JSONObject().apply {
                 put("message_type", "status_update")
                 put("status", status)
-                put("timestamp", timeSyncManager?.getSyncedTimestampNs() ?: System.currentTimeMillis())
+                put("timestamp", System.currentTimeMillis())
                 put("device_id", android.os.Build.MODEL)
                 data?.let { put("data", it) }
             }
@@ -250,26 +271,5 @@ class CommandServer(
                 }
             }
         }
-    }
-    
-    // Data classes and enums
-    sealed class CommandEvent {
-        data class StartRecord(val sessionId: String, val configuration: JSONObject) : CommandEvent()
-        object StopRecord : CommandEvent()
-        data class SyncRequest(val pcAddress: String) : CommandEvent()
-        object StatusRequest : CommandEvent()
-    }
-    
-    enum class ServerStatus {
-        STOPPED,
-        STARTING,
-        RUNNING,
-        ERROR
-    }
-    
-    enum class ConnectionStatus {
-        DISCONNECTED,
-        CONNECTED,
-        ERROR
     }
 }
