@@ -172,7 +172,7 @@ class GSRSettingsActivity : BaseViewModelActivity<GSRSettingsViewModel>() {
         // }
 
         // Setup bottom navigation
-        setupBottomNavigation()
+        // setupBottomNavigation() // Removed redundant call
     }
 
     private fun setupBottomNavigation() {
