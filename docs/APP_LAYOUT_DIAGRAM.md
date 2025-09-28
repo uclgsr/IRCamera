@@ -239,10 +239,11 @@ graph TB
 ### Navigation Flow
 ```
 activity_main.xml 
-├── fragment_main.xml (Dashboard)
-├── fragment_sensor_dashboard.xml (Status)
-├── IR Module → activity_ir_main.xml
-└── GSR Module → activity_multi_modal_recording.xml
+├── Gallery Tab → fragment_gallery.xml
+├── Main Tab → fragment_main.xml (Dashboard)
+│    └── fragment_sensor_dashboard.xml (Status)
+├── Settings Tab → fragment_settings.xml
+└── Profile Tab → fragment_profile.xml
 ```
 
 ### Component Hierarchy
