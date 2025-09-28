@@ -740,8 +740,8 @@ class ComprehensiveRecordingController(
                 val rgbRecorder = mpdc4gsr.sensors.RgbCameraRecorder(
                     context = context,
                     lifecycleOwner = lifecycleOwner ?: object : LifecycleOwner {
-                        override val lifecycle: Lifecycle
-                            get() = LifecycleRegistry(this)
+                        private val lifecycleRegistry = LifecycleRegistry(this)
+                        override val lifecycle: Lifecycle get() = lifecycleRegistry
                     },
                     previewView = null, // No preview needed for background recording
                     useFrontCamera = false,
