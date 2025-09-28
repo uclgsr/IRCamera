@@ -9,6 +9,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.csl.irCamera.BuildConfig
 import com.csl.irCamera.R
 import kotlinx.coroutines.launch
 import mpdc4gsr.network.CommandConnection
@@ -40,36 +41,50 @@ class SimpleNetworkTestActivity : AppCompatActivity() {
     private lateinit var ipAddressInput: EditText
     private lateinit var portInput: EditText
     private lateinit var connectButton: Button
+    private lateinit var connectBluetoothButton: Button
     private lateinit var disconnectButton: Button
     private lateinit var testCommandsButton: Button
     private lateinit var statusText: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (BuildConfig.DEBUG) Log.d(TAG, "onCreate() called")
         setContentView(R.layout.activity_network_client_test)
+        if (BuildConfig.DEBUG) Log.d(TAG, "Layout set successfully")
 
         initializeViews()
         setupClickListeners()
         updateUI()
+        if (BuildConfig.DEBUG) Log.d(TAG, "onCreate() completed successfully")
     }
 
     private fun initializeViews() {
+        if (BuildConfig.DEBUG) Log.d(TAG, "Initializing views")
         connectionStatusIndicator = findViewById(R.id.connection_status_indicator)
         connectionStatusText = findViewById(R.id.connection_status_text)
         ipAddressInput = findViewById(R.id.ip_address_input)
         portInput = findViewById(R.id.port_input)
         connectButton = findViewById(R.id.connect_wifi_button)
+        connectBluetoothButton = findViewById(R.id.connect_bluetooth_button)
         disconnectButton = findViewById(R.id.disconnect_button)
         testCommandsButton = findViewById(R.id.test_ping_button)
         statusText = findViewById(R.id.connection_info_text)
 
+        // Verify all views were found
+        if (BuildConfig.DEBUG) Log.d(TAG, "Views found - connectButton: ${connectButton != null}, connectBluetoothButton: ${connectBluetoothButton != null}, disconnectButton: ${disconnectButton != null}, testCommandsButton: ${testCommandsButton != null}")
+
         // Set default values
         ipAddressInput.setText(DEFAULT_PC_IP)
         portInput.setText(DEFAULT_PC_PORT.toString())
+        if (BuildConfig.DEBUG) Log.d(TAG, "Views initialization complete")
     }
 
     private fun setupClickListeners() {
+        if (BuildConfig.DEBUG) Log.d(TAG, "Setting up click listeners")
+        
         connectButton.setOnClickListener {
+            if (BuildConfig.DEBUG) Log.d(TAG, "Connect button clicked")
+            Toast.makeText(this, "Connect button clicked!", Toast.LENGTH_SHORT).show()
             val ip = ipAddressInput.text.toString().trim()
             val portStr = portInput.text.toString().trim()
 
@@ -86,13 +101,24 @@ class SimpleNetworkTestActivity : AppCompatActivity() {
             }
         }
 
+        connectBluetoothButton.setOnClickListener {
+            if (BuildConfig.DEBUG) Log.d(TAG, "Connect Bluetooth button clicked")
+            Toast.makeText(this, "Bluetooth button clicked! (Not implemented yet)", Toast.LENGTH_SHORT).show()
+        }
+
         disconnectButton.setOnClickListener {
+            if (BuildConfig.DEBUG) Log.d(TAG, "Disconnect button clicked")
+            Toast.makeText(this, "Disconnect button clicked!", Toast.LENGTH_SHORT).show()
             disconnectFromPC()
         }
 
         testCommandsButton.setOnClickListener {
+            if (BuildConfig.DEBUG) Log.d(TAG, "Test commands button clicked")
+            Toast.makeText(this, "Test commands button clicked!", Toast.LENGTH_SHORT).show()
             testCommands()
         }
+        
+        if (BuildConfig.DEBUG) Log.d(TAG, "Click listeners setup complete")
     }
 
     private fun connectToPC(ip: String, port: Int) {
@@ -311,6 +337,7 @@ class SimpleNetworkTestActivity : AppCompatActivity() {
         val isConnected = tcpClient?.isConnected() ?: false
 
         connectButton.isEnabled = !isConnected
+        connectBluetoothButton.isEnabled = !isConnected
         disconnectButton.isEnabled = isConnected
         testCommandsButton.isEnabled = isConnected
 

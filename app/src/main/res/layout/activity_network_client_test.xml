@@ -103,21 +103,27 @@
 
             <Button
                 android:id="@+id/connect_wifi_button"
+                style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"
                 android:backgroundTint="#FF6B35"
+                android:clickable="true"
+                android:focusable="true"
                 android:text="Connect Wi-Fi"
                 android:textColor="#FFFFFF" />
 
             <Button
                 android:id="@+id/test_ping_button"
+                style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:backgroundTint="#4CAF50"
+                android:clickable="true"
                 android:enabled="false"
+                android:focusable="true"
                 android:text="Test Ping"
                 android:textColor="#FFFFFF" />
 
@@ -150,21 +156,27 @@
 
             <Button
                 android:id="@+id/connect_bluetooth_button"
+                style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"
                 android:backgroundTint="#2196F3"
+                android:clickable="true"
+                android:focusable="true"
                 android:text="Connect Bluetooth"
                 android:textColor="#FFFFFF" />
 
             <Button
                 android:id="@+id/disconnect_button"
+                style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:backgroundTint="#F44336"
+                android:clickable="true"
                 android:enabled="false"
+                android:focusable="true"
                 android:text="Disconnect"
                 android:textColor="#FFFFFF" />
 

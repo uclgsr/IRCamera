@@ -362,7 +362,8 @@
         <activity
             android:name="mpdc4gsr.activities.SimplifiedMainActivity"
             android:exported="false"
-            android:label="Simplified Main" />
+            android:label="Simplified Main"
+            android:theme="@style/AppTheme" />
 
         <service
             android:name="mpdc4gsr.core.RecordingService"
