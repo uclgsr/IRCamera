@@ -1,19 +1,27 @@
 # IRCamera App Layout Architecture
 
-This document provides a comprehensive overview of the layout structure and UI components used throughout the IRCamera Android application. With 258 different layout files, this diagram organizes them by function and purpose.
+This document provides a comprehensive overview of the layout structure and UI components used throughout the IRCamera Android application. Following a major consolidation effort, the app now contains 219 layout files with a streamlined and efficient architecture.
 
 ## Layout Overview by Type
 
-From our analysis, the app contains:
-- **99 Activity layouts** - Full-screen application views
-- **42 Item layouts** - RecyclerView and list item templates  
+From our analysis, the app now contains:
+- **64 Activity layouts** - Full-screen application views (35 moved to backup/layouts/)
+- **10 Consolidated layouts** - New unified layout templates replacing multiple specialized layouts
 - **37 Dialog layouts** - Modal dialogs and popups
-- **24 Fragment layouts** - Reusable UI components
-- **15 Layout templates** - Base layout structures
+- **24 Fragment layouts** - Reusable UI components  
+- **15 Item layouts** - Streamlined RecyclerView and list item templates
 - **13 UI components** - Custom UI widgets
-- **28 Other specialized layouts** - Various utility layouts
+- **56 Other specialized layouts** - Various utility layouts
 
-**Total: 258 layouts**
+**Total: 219 layouts** (down from 258 after consolidation)
+
+## Major Architecture Consolidation
+
+**Recent Update**: The app underwent significant layout consolidation:
+- **35 legacy activity layouts** moved to `backup/layouts/` directory
+- **10 new consolidated layouts** created to replace multiple specialized layouts
+- **Improved maintainability** through unified design patterns
+- **Enhanced data binding** integration across consolidated layouts
 ## Complete Layout Architecture Diagram
 
 ```mermaid
@@ -21,7 +29,27 @@ graph TB
     %% Main Application Structure
     subgraph "Main App Entry"
         MainActivity_Layout[activity_main.xml<br/>🏠 Main App Container]
+        MainConsolidated_Layout[activity_main_consolidated.xml<br/>🏠 Consolidated Main Interface]
         SimplifiedMain_Layout[activity_simplified_main.xml<br/>📱 Simplified Interface]
+    end
+    
+    %% Consolidated Layout Architecture
+    subgraph "New Consolidated Layouts"
+        MultiModalConsolidated_Layout[activity_multi_modal_consolidated.xml<br/>🎭 Multi-Modal Recording Hub]
+        CameraTestConsolidated_Layout[activity_camera_test_consolidated.xml<br/>📷 Camera Testing Suite]
+        SessionConsolidated_Layout[activity_session_consolidated.xml<br/>📝 Session Management Hub]
+        InfoConsolidated_Layout[activity_info_consolidated.xml<br/>ℹ️ Information Display Hub]
+        DeviceConsolidated_Item[item_device_consolidated.xml<br/>📱 Unified Device Item]
+        MediaConsolidated_Item[item_media_consolidated.xml<br/>🎬 Unified Media Item]
+        SensorDataConsolidated_Item[item_sensor_data_consolidated.xml<br/>📊 Unified Sensor Data Item]
+        MultiModalConsolidated_Fragment[fragment_multi_modal_consolidated.xml<br/>🎭 Multi-Modal Fragment]
+        CameraModeSelector_Layout[camera_mode_selector_consolidated.xml<br/>📹 Camera Mode Selector]
+    end
+    
+    %% Legacy Layouts (Moved to Backup)
+    subgraph "Legacy Layouts (backup/layouts/)"
+        BackupActivityLayouts[35 Activity Layouts<br/>📦 Moved to backup/layouts/]
+        BackupFragmentLayouts[16 Fragment Layouts<br/>📦 Legacy fragments backed up]
     end
     
     %% Core Fragment Layouts
@@ -46,13 +74,13 @@ graph TB
         IRCaptureFragment_Layout[fragment_ir_monitor_capture.xml<br/>📸 Capture Interface]
     end
     
-    %% GSR Sensor Module Layouts
-    subgraph "GSR Sensor Layouts"
-        GSRMultiModal_Layout[activity_multi_modal_recording.xml<br/>🎭 Multi-Modal Recording]
+    %% GSR Sensor Module Layouts (Updated)
+    subgraph "GSR Sensor Layouts - Streamlined"
         GSRSettings_Layout[activity_gsr_settings.xml<br/>⚙️ GSR Configuration]
         GSRPlot_Layout[activity_gsr_plot.xml<br/>📈 GSR Data Visualization]
         GSRGallery_Layout[activity_gsr_gallery.xml<br/>🖼️ GSR Media Gallery]
-        ShimmerConfig_Layout[activity_shimmer_config.xml<br/>📡 Shimmer Device Config]
+        GSRVideoPlayer_Layout[activity_gsr_video_player.xml<br/>🎥 GSR Video Playback]
+        GSRDataView_Layout[activity_gsr_data_view.xml<br/>📋 GSR Data Analysis]
         GSRDeviceManagement_Layout[activity_gsr_device_management.xml<br/>📱 Device Management]
         SessionManager_Layout[activity_session_manager.xml<br/>📝 Session Management]
         GSRQuickRecording_Layout[activity_gsr_quick_recording.xml<br/>⚡ Quick Recording]
@@ -76,16 +104,15 @@ graph TB
         WebView_Layout[activity_web_view.xml<br/>🌐 Web Content]
     end
     
-    %% Item Templates & Adapters
-    subgraph "RecyclerView Item Templates"
-        ShimmerDeviceItem_Layout[item_shimmer_device.xml<br/>📡 Shimmer Device Item]
-        ShimmerDetailedItem_Layout[item_shimmer_device_detailed.xml<br/>📡 Detailed Device Item]
-        GSRDeviceItem_Layout[item_gsr_device.xml<br/>📊 GSR Device Item]
-        GSRSessionItem_Layout[item_gsr_session.xml<br/>📈 GSR Session Item]
-        SessionItem_Layout[item_session.xml<br/>📝 Session Item]
-        TemplateItem_Layout[item_template.xml<br/>📋 Generic Template]
-        DeviceTypeItem_Layout[item_device_type.xml<br/>📱 Device Type Selection]
-        GSRRawImageItem_Layout[item_gsr_raw_image_file.xml<br/>🖼️ Raw Image File Item]
+    %% Item Templates & Adapters - Streamlined
+    subgraph "RecyclerView Item Templates - Consolidated"
+        DeviceConsolidated_Item[item_device_consolidated.xml<br/>📱 Unified Device Item]
+        MediaConsolidated_Item[item_media_consolidated.xml<br/>🎬 Unified Media Item] 
+        SensorDataConsolidated_Item[item_sensor_data_consolidated.xml<br/>📊 Unified Sensor Data Item]
+        DeviceConnect_Item[item_device_connect.xml<br/>🔗 Device Connection Item]
+        DeviceType_Item[item_device_type.xml<br/>📱 Device Type Selection]
+        PCController_Item[item_pc_controller.xml<br/>💻 PC Controller Item]
+        ControllerDevice_Item[item_controller_device.xml<br/>🎮 Controller Device Item]
     end
     
     %% Dialog Layouts
@@ -104,29 +131,34 @@ graph TB
         NewVersion_Layout[item_new_version.xml<br/>🆕 Version Update Item]
     end
     
-    %% Layout Relationships and Flow
+    %% Layout Relationships and Flow - Updated
     MainActivity_Layout --> MainFragment_Layout
     MainActivity_Layout --> SensorDashboard_Layout
+    MainConsolidated_Layout --> MultiModalConsolidated_Fragment
     
     MainFragment_Layout --> IRMain_Layout
-    MainFragment_Layout --> GSRMultiModal_Layout
+    MainFragment_Layout --> MultiModalConsolidated_Layout
     
-    IRMain_Layout --> IRThermal_Layout
-    IRMain_Layout --> IRGallery_Layout
-    IRThermal_Layout --> IRMonitor_Layout
-    IRMonitor_Layout --> IRMonitorChart_Layout
-    IRMonitor_Layout --> IRCaptureFragment_Layout
+    %% Consolidated Layout Usage
+    MultiModalConsolidated_Layout --> GSRSession_Layout
+    MultiModalConsolidated_Layout --> GSRData_Layout
+    MultiModalConsolidated_Layout --> GSRVideo_Layout
     
-    GSRMultiModal_Layout --> GSRSession_Layout
-    GSRMultiModal_Layout --> GSRData_Layout
-    GSRMultiModal_Layout --> GSRVideo_Layout
-    GSRMultiModal_Layout --> GSRSettings_Layout
+    CameraTestConsolidated_Layout --> IRThermal_Layout
+    CameraTestConsolidated_Layout --> IRMonitor_Layout
     
-    %% Item Templates Usage
-    ShimmerDeviceItem_Layout -.-> GSRDeviceManagement_Layout
-    GSRDeviceItem_Layout -.-> GSRDeviceManagement_Layout
-    GSRSessionItem_Layout -.-> SessionManager_Layout
-    SessionItem_Layout -.-> SessionManager_Layout
+    SessionConsolidated_Layout --> SessionManager_Layout
+    SessionConsolidated_Layout --> GSRDeviceManagement_Layout
+    
+    %% Legacy Layout Migration
+    BackupActivityLayouts -.-> MultiModalConsolidated_Layout
+    BackupActivityLayouts -.-> CameraTestConsolidated_Layout
+    BackupActivityLayouts -.-> SessionConsolidated_Layout
+    
+    %% Consolidated Item Templates Usage
+    DeviceConsolidated_Item -.-> GSRDeviceManagement_Layout
+    MediaConsolidated_Item -.-> GSRGallery_Layout
+    SensorDataConsolidated_Item -.-> MultiModalConsolidated_Layout
     
     %% Dialog Usage
     TipDialog_Layout -.-> IRThermal_Layout
@@ -139,6 +171,7 @@ graph TB
     
     %% Styling
     classDef mainLayout fill:#ff6b6b,stroke:#333,stroke-width:3px,color:#fff
+    classDef consolidatedLayout fill:#28a745,stroke:#333,stroke-width:3px,color:#fff
     classDef fragmentLayout fill:#4ecdc4,stroke:#333,stroke-width:2px,color:#fff
     classDef thermalLayout fill:#ffbe0b,stroke:#333,stroke-width:2px,color:#333
     classDef gsrLayout fill:#8ecae6,stroke:#333,stroke-width:2px,color:#333
@@ -147,21 +180,50 @@ graph TB
     classDef itemLayout fill:#023047,stroke:#333,stroke-width:1px,color:#fff
     classDef dialogLayout fill:#ffb3c6,stroke:#333,stroke-width:1px,color:#333
     classDef componentLayout fill:#ffc9b9,stroke:#333,stroke-width:1px,color:#333
+    classDef backupLayout fill:#6c757d,stroke:#333,stroke-width:1px,color:#fff
     
     class MainActivity_Layout,SimplifiedMain_Layout mainLayout
+    class MainConsolidated_Layout,MultiModalConsolidated_Layout,CameraTestConsolidated_Layout,SessionConsolidated_Layout,InfoConsolidated_Layout,DeviceConsolidated_Item,MediaConsolidated_Item,SensorDataConsolidated_Item,MultiModalConsolidated_Fragment,CameraModeSelector_Layout consolidatedLayout
     class MainFragment_Layout,SensorDashboard_Layout,GSRSession_Layout,GSRData_Layout,GSRVideo_Layout,GSRRawImage_Layout fragmentLayout
     class IRMain_Layout,IRThermal_Layout,IRMonitor_Layout,IRConfig_Layout,IRGallery_Layout,IRCorrection_Layout,IRMonitorChart_Layout,IRCaptureFragment_Layout thermalLayout
-    class GSRMultiModal_Layout,GSRSettings_Layout,GSRPlot_Layout,GSRGallery_Layout,ShimmerConfig_Layout,GSRDeviceManagement_Layout,SessionManager_Layout,GSRQuickRecording_Layout gsrLayout
+    class GSRSettings_Layout,GSRPlot_Layout,GSRGallery_Layout,GSRVideoPlayer_Layout,GSRDataView_Layout,GSRDeviceManagement_Layout,SessionManager_Layout,GSRQuickRecording_Layout gsrLayout
     class SensorDashboardTest_Layout,NetworkTest_Layout,NetworkConfig_Layout,RGBCameraTest_Layout,ShimmerIntegration_Layout,Phase2Validation_Layout testLayout
     class Policy_Layout,Version_Layout,PDF_Layout,WebView_Layout userLayout
-    class ShimmerDeviceItem_Layout,ShimmerDetailedItem_Layout,GSRDeviceItem_Layout,GSRSessionItem_Layout,SessionItem_Layout,TemplateItem_Layout,DeviceTypeItem_Layout,GSRRawImageItem_Layout itemLayout
+    class DeviceConsolidated_Item,MediaConsolidated_Item,SensorDataConsolidated_Item,DeviceConnect_Item,DeviceType_Item,PCController_Item,ControllerDevice_Item itemLayout
     class TipDialog_Layout,ConfigGuide_Layout,MsgDialog_Layout,FirmwareDialog_Layout dialogLayout
     class ConnectionGuide_Layout,ReportInfo_Layout,ReportInput_Layout,NewVersion_Layout componentLayout
+    class BackupActivityLayouts,BackupFragmentLayouts backupLayout
 ```
 
-## Layout Function Categories
+## Layout Function Categories - Updated Architecture
 
-### 1. **Main Application Structure**
+### 1. **Consolidated Layout Architecture (New)**
+The app now features a streamlined layout architecture with consolidated templates:
+
+- **`activity_main_consolidated.xml`** - Enhanced main container with unified data binding
+  - Supports multi-modal recording modes through data binding variables
+  - Integrated sensor status monitoring and recording controls
+  - Simplified network status bar with essential connectivity information
+
+- **`activity_multi_modal_consolidated.xml`** - Unified multi-modal recording interface
+  - Replaces multiple GSR recording activities with single flexible layout
+  - Supports multiple sensor types through data binding
+  - Includes RGB camera integration and preview capabilities
+  - ScrollView-based design for responsive content display
+
+- **`activity_session_consolidated.xml`** - Centralized session management
+  - Combines session creation, management, and export functionality
+  - Unified interface for different session types (GSR, thermal, multi-modal)
+
+- **`activity_camera_test_consolidated.xml`** - Comprehensive camera testing suite
+  - Consolidates multiple camera testing layouts into single interface
+  - Supports thermal, RGB, and combined camera testing scenarios
+
+### 2. **Legacy Layout Migration**
+- **35 activity layouts** moved to `backup/layouts/` directory
+- **16 fragment layouts** archived for reference
+- **Gradual migration strategy** maintains backward compatibility
+- **Improved maintainability** through reduced layout proliferation
 - **`activity_main.xml`** - Primary app container with ViewPager2 and bottom navigation
   - Contains network status bar, sensor controls container, and 4-tab navigation
   - Includes quick access buttons for thermal camera and fault-tolerant recording

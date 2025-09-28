@@ -1,6 +1,8 @@
 # IRCamera App Navigation Diagram
 
-This document provides a comprehensive mermaid graph showing the navigation structure of the IRCamera Android application.
+This document provides a comprehensive mermaid graph showing the navigation structure of the IRCamera Android application. 
+
+**Recent Update**: Following major consolidation efforts, the app navigation has been streamlined with enhanced integration capabilities and improved multi-modal recording workflows.
 
 ## Simplified Navigation Overview
 
@@ -78,18 +80,29 @@ graph TB
         MineTabThermal[MineFragment<br/>User Profile]
     end
     
-    %% GSR/Sensor Activities
-    subgraph "GSR Sensor Module"
-        MultiModalActivity[MultiModalRecordingActivity<br/>Multi-Modal Recording]
-        GSRSettingsActivity[GSRSettingsActivity<br/>GSR Configuration]
-        GSRPlotActivity[GSRPlotActivity<br/>GSR Data Visualization]
-        GSRGalleryActivity[GSRGalleryActivity<br/>GSR Media Gallery]
-        ShimmerMvpActivity[ShimmerMvpActivity<br/>Shimmer MVP Interface]
-        UnifiedSensorActivity[UnifiedSensorActivity<br/>Unified Sensor Platform]
-        SessionManagerActivity[SessionManagerActivity<br/>Session Management]
-        ShimmerConfigActivity[ShimmerConfigActivity<br/>Shimmer Configuration]
-        GSRDeviceManagementActivity[GSRDeviceManagementActivity<br/>Device Management]
-        FaultTolerantRecording[FaultTolerantRecordingActivity<br/>Enhanced Recording]
+    %% GSR/Sensor Activities - Streamlined Architecture
+    subgraph "GSR Sensor Module - Consolidated"
+        MultiModalActivity[MultiModalRecordingActivity<br/>🎭 Multi-Modal Recording Hub]
+        GSRSettings[GSRSettingsActivity<br/>⚙️ GSR Configuration]
+        GSRPlot[GSRPlotActivity<br/>📈 GSR Data Visualization]
+        GSRGallery[GSRGalleryActivity<br/>🖼️ GSR Media Gallery]
+        GSRDataView[GSRDataViewActivity<br/>📊 GSR Data Analysis]
+        GSRVideoPlayer[GSRVideoPlayerActivity<br/>🎥 GSR Video Playback]
+        SessionManager[SessionManagerActivity<br/>📝 Session Management]
+        SessionDetail[SessionDetailActivity<br/>📋 Session Details]
+        SessionExport[SessionExportActivity<br/>📤 Session Export]
+        ShimmerConfig[ShimmerConfigActivity<br/>📡 Shimmer Configuration]
+        GSRDeviceManagement[GSRDeviceManagementActivity<br/>📱 Device Management]
+        GSRQuickRecording[GSRQuickRecordingActivity<br/>⚡ Quick Recording]
+        ResearchTemplate[ResearchTemplateActivity<br/>🔬 Research Templates]
+        GSRRawImageView[GSRRawImageViewActivity<br/>🖼️ Raw Image Viewer]
+    end
+    
+    %% New Integration Activities
+    subgraph "Enhanced Integration"
+        HubSpokeIntegration[HubSpokeIntegrationActivity<br/>🔗 Hub-Spoke Integration]
+        DualModeCamera[DualModeCameraActivity<br/>📷 Dual Camera Mode]
+        DevicePairing[DevicePairingActivity<br/>🔗 Device Pairing]
     end
     
     %% Thermal Camera Activities
@@ -175,15 +188,29 @@ graph TB
     IRThermalLiteActivity --> IRMonitorLiteActivity
     IRMonitorLiteActivity --> IRMonitorChartLiteActivity
     
-    %% GSR Navigation
+    %% GSR Navigation - Enhanced Flows
     MainTab --> MultiModalActivity
-    MultiModalActivity --> GSRSettingsActivity
-    MultiModalActivity --> GSRPlotActivity
-    MultiModalActivity --> GSRGalleryActivity
-    MultiModalActivity --> SessionManagerActivity
+    MultiModalActivity --> GSRSettings
+    MultiModalActivity --> GSRPlot
+    MultiModalActivity --> GSRGallery
+    MultiModalActivity --> GSRDataView
+    MultiModalActivity --> SessionManager
     
-    ShimmerMvpActivity --> ShimmerConfigActivity
-    UnifiedSensorActivity --> GSRDeviceManagementActivity
+    SessionManager --> SessionDetail
+    SessionManager --> SessionExport
+    GSRDataView --> GSRVideoPlayer
+    GSRDataView --> GSRRawImageView
+    
+    ShimmerMvpActivity --> ShimmerConfig
+    UnifiedSensorActivity --> GSRDeviceManagement
+    
+    %% Enhanced Integration Flows
+    MainTab --> HubSpokeIntegration
+    MainTab --> DualModeCamera
+    MainTab --> DevicePairing
+    
+    HubSpokeIntegration --> MultiModalActivity
+    DualModeCamera --> IRMonitorActivity
     
     %% Report Navigation
     PDFListTab --> ReportCreateFirstActivity
@@ -224,18 +251,31 @@ graph TB
     class MainActivity mainEntry
     class GalleryTab,MainTab,SettingsTab,MineTab,IRThermalTab,IRGalleryTab,AbilityTab,PDFListTab,MineTabThermal tabFragment
     class IRMainActivity,IRMonitorActivity,IRConfigActivity,IRMonitorChartActivity,IRCorrectionActivity,IRThermalPlusActivity,IRThermalNightActivity,GalleryActivity,VideoActivity,IRThermalLiteActivity,IRMonitorLiteActivity,IRMonitorChartLiteActivity thermalActivity
-    class MultiModalActivity,GSRSettingsActivity,GSRPlotActivity,GSRGalleryActivity,ShimmerMvpActivity,UnifiedSensorActivity,SessionManagerActivity,ShimmerConfigActivity,GSRDeviceManagementActivity,FaultTolerantRecording gsrActivity
+    class MultiModalActivity,GSRSettings,GSRPlot,GSRGallery,GSRDataView,GSRVideoPlayer,SessionManager,SessionDetail,SessionExport,ShimmerConfig,GSRDeviceManagement,GSRQuickRecording,ResearchTemplate,GSRRawImageView gsrActivity
+    class HubSpokeIntegration,DualModeCamera,DevicePairing gsrActivity
     class QuestionActivity,ElectronicManualActivity,StorageSpaceActivity,PolicyActivity,VersionActivity,ReportCreateFirstActivity,ReportCreateSecondActivity,ReportPreviewSecondActivity,ReportPickImgActivity userActivity
     class SensorDashboardTestActivity,NetworkConfigActivity,SimpleNetworkTestActivity,NetworkClientTestActivity,SimplifiedMainActivity,DeviceTypeActivity testActivity
     class NavigationManager,RouterConfig navigationSystem
 ```
 
-## Navigation Key Points
+## Navigation Key Points - Updated Architecture
 
 ### 1. Main Entry Structure
 - **MainActivity** serves as the primary entry point with a 4-tab ViewPager
 - Each tab hosts different functional areas of the app
 - Navigation is controlled through MainActivityViewModel
+
+### 2. Enhanced Integration Architecture
+- **HubSpokeIntegrationActivity** - New centralized integration hub
+- **DualModeCameraActivity** - Enhanced dual camera mode support
+- **DevicePairingActivity** - Streamlined device pairing workflow
+- **Improved multi-modal workflows** with better sensor coordination
+
+### 3. Streamlined GSR Module
+- **Consolidated recording workflows** through enhanced MultiModalRecordingActivity
+- **Expanded session management** with detailed session analysis and export capabilities
+- **Enhanced data visualization** with improved GSR plotting and raw image viewing
+- **Research template system** for standardized experimental protocols
 
 ### 2. Tab Structure
 - **Page 0 (Gallery)**: IRGalleryTabFragment - Media gallery for thermal images
