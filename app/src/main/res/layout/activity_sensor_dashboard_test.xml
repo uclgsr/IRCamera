@@ -27,8 +27,8 @@
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="600dp"
-        android:minHeight="400dp" />
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
     <!-- Instructions -->
     <TextView
