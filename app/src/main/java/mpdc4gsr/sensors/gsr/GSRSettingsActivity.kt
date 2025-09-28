@@ -16,7 +16,9 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
-import androidx.lifecycle.observe
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityGsrSettingsBinding
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModelActivity
@@ -153,54 +155,69 @@ class GSRSettingsActivity : BaseViewModelActivity<GSRSettingsViewModel>() {
 
     private fun setupObservers() {
         // Settings state observers
-        viewModel.gsrSettings.observe(this) { settings ->
-            updateGSRSettingsUI(settings)
-        }
-
-        viewModel.deviceSettings.observe(this) { settings ->
-            updateDeviceSettingsUI(settings)
-        }
-
-        // Permission state observer
-        viewModel.permissionState.observe(this) { permissionState ->
-            updatePermissionUI(permissionState)
-        }
-
-        // Device connection state observer
-        viewModel.deviceConnectionState.observe(this) { connectionState ->
-            updateDeviceConnectionUI(connectionState)
-        }
-
-        // Available devices observer
-        viewModel.availableDevices.observe(this) { devices ->
-            updateDeviceList(devices)
-        }
-
-        // Scanning state observer
-        viewModel.scanningState.observe(this) { scanningState ->
-            updateScanningUI(scanningState)
-        }
-
-        // Error observer
-        viewModel.error.observe(this) { error ->
-            error?.let {
-                Toast.makeText(this, it, Toast.LENGTH_LONG).show()
-                viewModel.clearError()
+        lifecycleScope.launch {
+            viewModel.gsrSettings.collect { settings ->
+                updateGSRSettingsUI(settings)
             }
         }
 
-        // Settings action observer
-        viewModel.settingsAction.observe(this) { action ->
-            action?.let {
-                handleSettingsAction(it)
-                viewModel.clearAction()
+        lifecycleScope.launch {
+            viewModel.deviceSettings.collect { settings ->
+                updateDeviceSettingsUI(settings)
+            }
+        }
+
+        // Permission state observer
+        lifecycleScope.launch {
+            viewModel.permissionState.collect { permissionState ->
+                updatePermissionUI(permissionState)
+            }
+        }
+
+        // Device connection state observer
+        lifecycleScope.launch {
+            viewModel.deviceConnectionState.collect { connectionState ->
+                updateDeviceConnectionUI(connectionState)
+            }
+        }
+
+        // Available devices observer
+        lifecycleScope.launch {
+            viewModel.availableDevices.collect { devices ->
+                updateDeviceList(devices)
+            }
+        }
+
+        // Scanning state observer
+        lifecycleScope.launch {
+            viewModel.scanningState.collect { scanningState ->
+                updateScanningUI(scanningState)
+            }
+        }
+
+        // Error observer
+        lifecycleScope.launch {
+            viewModel.error.collect { error ->
+                error?.let {
+                    Toast.makeText(this@GSRSettingsActivity, it, Toast.LENGTH_LONG).show()
+                    viewModel.clearError()
+                }
+            }
+        }
+
+        // Settings events observer
+        lifecycleScope.launch {
+            viewModel.settingsEvents.collect { event ->
+                handleSettingsEvent(event)
             }
         }
 
         // Combined UI state observer for optimization
-        viewModel.uiState.observe(this) { uiState ->
-            // Update UI based on combined state
-            updateCombinedUI(uiState)
+        lifecycleScope.launch {
+            viewModel.settingsUiState.collect { uiState ->
+                // Update UI based on combined state
+                updateCombinedUI(uiState)
+            }
         }
     }
 
@@ -306,51 +323,57 @@ class GSRSettingsActivity : BaseViewModelActivity<GSRSettingsViewModel>() {
         // }
     }
 
-    private fun handleSettingsAction(action: GSRSettingsViewModel.SettingsAction) {
-        when (action.type) {
-            GSRSettingsViewModel.ActionType.SHOW_PERMISSION_DIALOG -> {
-                val permissions = action.data as? List<String> ?: return
-                showPermissionDialog(permissions)
+    private fun handleSettingsEvent(event: GSRSettingsViewModel.SettingsEvent) {
+        when (event) {
+            is GSRSettingsViewModel.SettingsEvent.ShowPermissionDialog -> {
+                showPermissionDialog(event.permissions)
             }
 
-            GSRSettingsViewModel.ActionType.SHOW_PERMISSION_DENIED_DIALOG -> {
-                val permissions = action.data as? List<String> ?: return
-                showPermissionDeniedDialog(permissions)
+            is GSRSettingsViewModel.SettingsEvent.ShowPermissionDeniedDialog -> {
+                showPermissionDeniedDialog(event.permissions)
             }
 
-            GSRSettingsViewModel.ActionType.SHOW_PERMISSION_PERMANENTLY_DENIED_DIALOG -> {
-                val permissions = action.data as? List<String> ?: return
-                showPermissionPermanentlyDeniedDialog(permissions)
+            is GSRSettingsViewModel.SettingsEvent.ShowPermissionPermanentlyDeniedDialog -> {
+                showPermissionPermanentlyDeniedDialog(event.permissions)
             }
 
-            GSRSettingsViewModel.ActionType.OPEN_APP_SETTINGS -> {
+            is GSRSettingsViewModel.SettingsEvent.OpenAppSettings -> {
                 openAppSettings()
             }
 
-            GSRSettingsViewModel.ActionType.DEVICE_SCAN_COMPLETED -> {
-                Toast.makeText(this, action.message, Toast.LENGTH_SHORT).show()
+            is GSRSettingsViewModel.SettingsEvent.DeviceScanCompleted -> {
+                Toast.makeText(this, event.message, Toast.LENGTH_SHORT).show()
             }
 
-            GSRSettingsViewModel.ActionType.DEVICE_CONNECTED -> {
-                Toast.makeText(this, action.message, Toast.LENGTH_SHORT).show()
+            is GSRSettingsViewModel.SettingsEvent.DeviceConnected -> {
+                Toast.makeText(this, event.message, Toast.LENGTH_SHORT).show()
             }
 
-            GSRSettingsViewModel.ActionType.DEVICE_DISCONNECTED -> {
-                Toast.makeText(this, action.message, Toast.LENGTH_SHORT).show()
+            is GSRSettingsViewModel.SettingsEvent.DeviceDisconnected -> {
+                Toast.makeText(this, event.message, Toast.LENGTH_SHORT).show()
             }
 
-            GSRSettingsViewModel.ActionType.SETTINGS_EXPORTED -> {
-                Toast.makeText(this, action.message, Toast.LENGTH_SHORT).show()
+            is GSRSettingsViewModel.SettingsEvent.SettingsExported -> {
+                Toast.makeText(this, event.message, Toast.LENGTH_SHORT).show()
             }
 
-            GSRSettingsViewModel.ActionType.SETTINGS_IMPORTED -> {
-                Toast.makeText(this, action.message, Toast.LENGTH_SHORT).show()
+            is GSRSettingsViewModel.SettingsEvent.SettingsImported -> {
+                Toast.makeText(this, event.message, Toast.LENGTH_SHORT).show()
+            }
+
+            is GSRSettingsViewModel.SettingsEvent.ShowError -> {
+                Toast.makeText(this, event.message, Toast.LENGTH_SHORT).show()
+            }
+
+            is GSRSettingsViewModel.SettingsEvent.ShowToast -> {
+                Toast.makeText(this, event.message, Toast.LENGTH_SHORT).show()
             }
 
             else -> {
-                // Handle other actions
+                // Handle other events
             }
         }
+    }
     }
 
     private fun showPermissionDialog(missingPermissions: List<String>) {
