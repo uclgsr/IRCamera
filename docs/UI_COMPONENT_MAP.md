@@ -644,9 +644,315 @@ fun ThermalCameraView(
 }
 ```
 
-## Dialogs and Popups
+## 🔔 Modern Dialog and Popup Systems
 
-### **Custom Dialog Classes**
+### **Material3 Dialog Implementation**
+The application now uses Material3 dialogs with consistent theming:
+
+```kotlin
+@Composable
+fun ThermalCalibrationDialog(
+    onDismiss: () -> Unit,
+    onSinglePointCalibration: (Float) -> Unit,
+    onDoublePointCalibration: (Float, Float) -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Temperature Calibration") },
+        text = {
+            LazyColumn(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                item {
+                    CalibrationSection(
+                        title = "Single-Point Calibration",
+                        content = {
+                            SinglePointCalibrationForm(
+                                onCalibrate = onSinglePointCalibration
+                            )
+                        }
+                    )
+                }
+                
+                item {
+                    CalibrationSection(
+                        title = "Double-Point Calibration",
+                        content = {
+                            DoublePointCalibrationForm(
+                                onCalibrate = onDoublePointCalibration
+                            )
+                        }
+                    )
+                }
+                
+                item {
+                    BadPixelCorrectionSection()
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Close")
+            }
+        }
+    )
+}
+```
+
+### **Auto Shutter Settings Dialog**
+Modern implementation of the legacy `layout_shut.xml`:
+
+```kotlin
+@Composable
+fun ShutterSettingsDialog(
+    currentSettings: ShutterSettings,
+    onSettingsChange: (ShutterSettings) -> Unit,
+    onDismiss: () -> Unit
+) {
+    var settings by remember { mutableStateOf(currentSettings) }
+    
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Auto Shutter Settings") },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text("Auto Mode", modifier = Modifier.weight(1f))
+                    Switch(
+                        checked = settings.autoMode,
+                        onCheckedChange = { settings = settings.copy(autoMode = it) }
+                    )
+                }
+                
+                OutlinedTextField(
+                    value = settings.minInterval.toString(),
+                    onValueChange = { value ->
+                        value.toIntOrNull()?.let {
+                            settings = settings.copy(minInterval = it)
+                        }
+                    },
+                    label = { Text("Min Interval (ms)") },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                )
+                
+                OutlinedTextField(
+                    value = settings.maxInterval.toString(),
+                    onValueChange = { value ->
+                        value.toIntOrNull()?.let {
+                            settings = settings.copy(maxInterval = it)
+                        }
+                    },
+                    label = { Text("Max Interval (ms)") },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                )
+                
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    OutlinedTextField(
+                        value = settings.oocThreshold.toString(),
+                        onValueChange = { value ->
+                            value.toFloatOrNull()?.let {
+                                settings = settings.copy(oocThreshold = it)
+                            }
+                        },
+                        label = { Text("OOC Threshold") },
+                        modifier = Modifier.weight(1f),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
+                    )
+                    
+                    OutlinedTextField(
+                        value = settings.bThreshold.toString(),
+                        onValueChange = { value ->
+                            value.toFloatOrNull()?.let {
+                                settings = settings.copy(bThreshold = it)
+                            }
+                        },
+                        label = { Text("B Threshold") },
+                        modifier = Modifier.weight(1f),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
+                    )
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    onSettingsChange(settings)
+                    onDismiss()
+                }
+            ) {
+                Text("Apply")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Cancel")
+            }
+        }
+    )
+}
+```
+
+### **Tip Dialog System**
+Modernized tip dialogs with Material3 design:
+
+```kotlin
+@Composable
+fun ThermalTipDialog(
+    tipType: TipType,
+    onDismiss: () -> Unit,
+    onDontShowAgain: (Boolean) -> Unit
+) {
+    var dontShowAgain by remember { mutableStateOf(false) }
+    
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        icon = {
+            Icon(
+                when (tipType) {
+                    TipType.GUIDE -> Icons.Default.Help
+                    TipType.PREVIEW -> Icons.Default.Visibility
+                    TipType.OBSERVE -> Icons.Default.RemoveRedEye
+                },
+                contentDescription = null,
+                modifier = Modifier.size(24.dp)
+            )
+        },
+        title = { Text(stringResource(tipType.titleRes)) },
+        text = {
+            Column {
+                Text(stringResource(tipType.messageRes))
+                
+                Spacer(modifier = Modifier.height(16.dp))
+                
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Checkbox(
+                        checked = dontShowAgain,
+                        onCheckedChange = { dontShowAgain = it }
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text("Don't show this again")
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    onDontShowAgain(dontShowAgain)
+                    onDismiss()
+                }
+            ) {
+                Text("Got it")
+            }
+        }
+    )
+}
+```
+
+## 🎨 Third-Party Widgets & Modern Alternatives
+
+### **LottieAnimationView (XML) → Lottie Compose**
+- **XML Usage:** Animated indicators on connection screen (loading/searching animation)
+- **XML Implementation:** Shows looping animation while device connection is being established
+- **XML Example:** `animation_view` in `fragment_thermal_ir.xml` with `TDAnimationJSON.json`
+- **XML Attributes:**
+  - `app:lottie_fileName="TDAnimationJSON.json"`
+  - `app:lottie_imageAssetsFolder="images/"`
+  - `app:lottie_autoPlay="true"`
+  - `app:lottie_loop="true"`
+- **Compose Implementation:**
+```kotlin
+@Composable
+fun ConnectionLoadingAnimation(
+    isVisible: Boolean,
+    modifier: Modifier = Modifier
+) {
+    AnimatedVisibility(
+        visible = isVisible,
+        enter = fadeIn(),
+        exit = fadeOut()
+    ) {
+        val composition by rememberLottieComposition(
+            LottieCompositionSpec.Asset("TDAnimationJSON.json")
+        )
+        val progress by animateLottieCompositionAsState(
+            composition = composition,
+            iterations = LottieConstants.IterateForever
+        )
+        
+        LottieAnimation(
+            composition = composition,
+            progress = { progress },
+            modifier = modifier.size(120.dp)
+        )
+    }
+}
+```
+
+### **RecyclerView/Chart Components → LazyColumn + Charts**
+- **XML Usage:** Data visualization and list display
+- **XML Library:** MPAndroidChart components like `Legend` (referenced in `libui` module)
+- **XML Examples:** Chart views for temperature monitoring (`monitor_create_chart` string)
+- **Compose Implementation:**
+```kotlin
+@Composable
+fun ThermalDataChart(
+    temperatureData: List<TemperatureReading>,
+    modifier: Modifier = Modifier
+) {
+    val chartData = remember(temperatureData) {
+        temperatureData.mapIndexed { index, reading ->
+            Entry(index.toFloat(), reading.temperature)
+        }
+    }
+    
+    AndroidView(
+        factory = { context ->
+            LineChart(context).apply {
+                val lineDataSet = LineDataSet(chartData, "Temperature").apply {
+                    color = Color.Red.toArgb()
+                    setDrawCircles(false)
+                    lineWidth = 2f
+                }
+                
+                data = LineData(lineDataSet)
+                description.isEnabled = false
+                legend.isEnabled = true
+                
+                xAxis.position = XAxis.XAxisPosition.BOTTOM
+                axisRight.isEnabled = false
+                
+                setTouchEnabled(true)
+                isDragEnabled = true
+                setScaleEnabled(true)
+                setPinchZoom(true)
+            }
+        },
+        modifier = modifier.height(200.dp),
+        update = { chart ->
+            chart.notifyDataSetChanged()
+            chart.invalidate()
+        }
+    )
+}
+
+@Composable
+fun DeviceListScreen(
+    devices: List<Device>,
+    onDeviceClick: (Device) -> Unit
+) {
+    LazyColumn(
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        contentPadding = PaddingValues(16.dp)
+    ) {
+        items(devices, key = { it.id }) { device ->
+            DeviceItem(
+                device = device,
+                onClick = { onDeviceClick(device) }
+            )
+        }
+    }
+}
+```
+
+### **Custom Dialog Classes (Legacy)**
 - **TipDialog, ColorSelectDialog:** Use small XML layouts with `dialog_` prefix
 - **Examples:** `dialog_msg.xml`, `dialog_config_guide.xml`
 - **Compose Equivalent:** `AlertDialog` or custom `Dialog` composables
