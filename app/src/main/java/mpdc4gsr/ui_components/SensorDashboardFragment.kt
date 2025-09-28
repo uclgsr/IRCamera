@@ -306,16 +306,20 @@ class SensorDashboardFragment : Fragment() {
             } else {
                 detailsText.visibility = GONE
             }
-        }
-
         fun showSimulationMode(isSimulation: Boolean) {
-            isSimulationMode = isSimulation
             if (isSimulation) {
+                isSimulationMode = true
                 detailsText.text = "Using simulated data - no hardware detected"
                 detailsText.setTextColor(COLOR_SIMULATION)
                 detailsText.visibility = VISIBLE
-            } else if (detailsText.text.toString().contains("simulated")) {
-                detailsText.visibility = GONE
+            } else {
+                // Only hide the text if it was previously in simulation mode.
+                if (isSimulationMode) {
+                    detailsText.visibility = GONE
+                }
+                isSimulationMode = false
+            }
+        }
             }
         }
 
