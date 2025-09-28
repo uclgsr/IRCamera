@@ -362,6 +362,42 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                     }
                 )
 
+                // GSR Sensor Suite
+                Text(
+                    text = "GSR Sensor Suite",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.secondary,
+                    modifier = Modifier.padding(top = 16.dp)
+                )
+
+                LauncherCard(
+                    title = "GSR Device Management (Compose)",
+                    subtitle = "Enhanced GSR device discovery, connection, and real-time monitoring",
+                    icon = Icons.Default.DeviceHub,
+                    onClick = { 
+                        startActivity(Intent(this@ComposeMigrationLauncherActivity, GSRDeviceManagementActivityCompose::class.java))
+                    }
+                )
+
+                LauncherCard(
+                    title = "Multi-Modal Recording (Compose)",
+                    subtitle = "Advanced coordinated multi-sensor recording with live statistics",
+                    icon = Icons.Default.RecordVoiceOver,
+                    onClick = { 
+                        startActivity(Intent(this@ComposeMigrationLauncherActivity, MultiModalRecordingActivityCompose::class.java))
+                    }
+                )
+
+                LauncherCard(
+                    title = "Session Manager (Compose)",
+                    subtitle = "Comprehensive session management with filtering and export capabilities",
+                    icon = Icons.Default.Folder,
+                    onClick = { 
+                        startActivity(Intent(this@ComposeMigrationLauncherActivity, SessionManagerActivityCompose::class.java))
+                    }
+                )
+
                 // Comparison option
                 Card(
                     modifier = Modifier.fillMaxWidth(),
