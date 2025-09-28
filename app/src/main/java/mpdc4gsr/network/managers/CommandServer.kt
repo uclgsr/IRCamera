@@ -14,7 +14,6 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import mpdc4gsr.network.NetworkServer
-import android.util.Log
 import mpdc4gsr.network.ProtocolHandler
 import mpdc4gsr.sync.TimeSyncManager
 import org.json.JSONObject
@@ -154,7 +153,7 @@ class CommandServer(
             val statusMessage = JSONObject().apply {
                 put("message_type", "status_update")
                 put("status", status)
-                put("timestamp", timeSyncManager?.getSyncedTimestampNs() ?: System.currentTimeMillis())
+                put("timestamp", System.currentTimeMillis())
                 put("device_id", android.os.Build.MODEL)
                 data?.let { put("data", it) }
             }

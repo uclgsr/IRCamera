@@ -547,7 +547,7 @@ class GSRDataViewViewModel : BaseViewModel() {
 
         val summary = buildString {
             appendLine("GSR Data Statistical Summary")
-            appendLine("=" * 40)
+            appendLine("=".repeat(40))
             appendLine("Export Date: ${SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date())}")
             appendLine()
             appendLine("Dataset Information:")
