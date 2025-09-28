@@ -25,6 +25,11 @@ class MainRecordingController(
 ) {
     companion object {
         private const val TAG = "MainRecordingController"
+        
+        // Sensor name constants for consistency
+        private const val RGB_SENSOR_NAME = "RGB"
+        private const val THERMAL_SENSOR_NAME = "Thermal"
+        private const val GSR_SENSOR_NAME = "GSR"
     }
 
 
@@ -54,7 +59,7 @@ class MainRecordingController(
 
     suspend fun startRecording(
         sessionId: String? = null,
-        enabledSensors: List<String> = listOf("RGB", "Thermal", "Shimmer")
+        enabledSensors: List<String> = listOf(RGB_SENSOR_NAME, THERMAL_SENSOR_NAME, GSR_SENSOR_NAME)
     ): Boolean {
         return withContext(Dispatchers.IO) {
             try {
