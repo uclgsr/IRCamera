@@ -13,35 +13,35 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
-import com.mpdc4gsr.module.user.viewmodel.AutoSaveViewModel
+import com.mpdc4gsr.module.user.viewmodel.TISRViewModel
 import com.mpdc4gsr.libunified.R as RCore
 
 /**
- * User Management Module - AutoSave Settings Compose Activity
+ * User Management Module - TISR Settings Compose Activity
  * 
- * Simple settings screen that allows users to toggle auto-save functionality.
- * Demonstrates modern Compose migration from XML with:
- * - Material 3 components
- * - State management with ViewModel
- * - Settings UI components
+ * TISR (Temperature Image Super Resolution) toggle settings screen.
+ * Demonstrates:
+ * - Socket communication with device
+ * - Real-time settings update
+ * - Error handling for network operations
  */
-class AutoSaveComposeActivity : BaseComposeActivity<AutoSaveViewModel>() {
+class TISRComposeActivity : BaseComposeActivity<TISRViewModel>() {
 
-    override fun createViewModel(): AutoSaveViewModel {
-        return viewModels<AutoSaveViewModel>().value
+    override fun createViewModel(): TISRViewModel {
+        return viewModels<TISRViewModel>().value
     }
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    override fun Content(viewModel: AutoSaveViewModel) {
-        val isAutoSaveEnabled by viewModel.isAutoSaveEnabled.collectAsState()
+    override fun Content(viewModel: TISRViewModel) {
+        val isTISREnabled by viewModel.isTISREnabled.collectAsState()
         
         Scaffold(
             topBar = {
                 TopAppBar(
                     title = { 
                         Text(
-                            text = stringResource(RCore.string.ts004_auto_save),
+                            text = "TISR",
                             fontWeight = FontWeight.Bold
                         )
                     },
@@ -60,7 +60,7 @@ class AutoSaveComposeActivity : BaseComposeActivity<AutoSaveViewModel>() {
                     .padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // Auto Save Settings Card
+                // TISR Settings Card
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp),
@@ -73,14 +73,14 @@ class AutoSaveComposeActivity : BaseComposeActivity<AutoSaveViewModel>() {
                         modifier = Modifier.padding(16.dp)
                     ) {
                         Text(
-                            text = stringResource(RCore.string.ts004_auto_save),
+                            text = stringResource(RCore.string.ts004_tisr_title),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.padding(bottom = 12.dp)
                         )
                         
-                        // Switch Item
+                        // TISR Switch Item
                         Card(
                             modifier = Modifier.fillMaxWidth(),
                             colors = CardDefaults.cardColors(
@@ -99,24 +99,29 @@ class AutoSaveComposeActivity : BaseComposeActivity<AutoSaveViewModel>() {
                                     modifier = Modifier.weight(1f)
                                 ) {
                                     Text(
-                                        text = stringResource(RCore.string.ts004_auto_save),
+                                        text = stringResource(RCore.string.ts004_tisr_title),
                                         style = MaterialTheme.typography.bodyLarge,
                                         fontWeight = FontWeight.Medium,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
-                                    Text(
-                                        text = stringResource(RCore.string.ts004_save_tips),
-                                        style = MaterialTheme.typography.bodySmall,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
-                                    )
                                 }
                                 
                                 Switch(
-                                    checked = isAutoSaveEnabled,
-                                    onCheckedChange = { viewModel.updateAutoSaveState(it) }
+                                    checked = isTISREnabled,
+                                    onCheckedChange = { viewModel.updateTISRState(it) }
                                 )
                             }
                         }
+                        
+                        Spacer(modifier = Modifier.height(8.dp))
+                        
+                        // Info Text
+                        Text(
+                            text = stringResource(RCore.string.ts004_tisr_tips),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+                            modifier = Modifier.padding(horizontal = 8.dp)
+                        )
                     }
                 }
             }

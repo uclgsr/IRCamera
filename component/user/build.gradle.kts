@@ -1,6 +1,7 @@
 plugins {
     id("com.android.library")
     kotlin("android")
+    alias(libs.plugins.kotlin.compose)
 }
 
 android {
@@ -54,6 +55,11 @@ android {
     buildFeatures {
         viewBinding = true
         dataBinding = true
+        compose = true
+    }
+    
+    composeOptions {
+        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
 
     lint {
@@ -95,6 +101,16 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
+    
+    // Compose BOM and dependencies
+    implementation(platform(libs.compose.bom))
+    implementation(libs.compose.ui)
+    implementation(libs.compose.ui.tooling.preview)
+    implementation(libs.compose.material3)
+    implementation(libs.compose.activity)
+    implementation(libs.compose.viewmodel)
+    debugImplementation(libs.compose.ui.tooling)
+    debugImplementation(libs.compose.ui.test.manifest)
 
     // Utilities
     implementation(libs.utilcode)
