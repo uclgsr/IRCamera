@@ -2,6 +2,8 @@ package mpdc4gsr.controller
 
 import android.content.Context
 import android.util.Log
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -143,7 +145,7 @@ class ComprehensiveRecordingController(
 
     suspend fun startRecording(
         sessionId: String? = null,
-        enabledSensors: List<String> = listOf("RGB", "Thermal", "Shimmer"),
+        enabledSensors: List<String> = listOf("RGB", "Thermal", "GSR"),
         estimatedDurationMinutes: Int = 30,
         triggerSource: TriggerSource = TriggerSource.LOCAL_UI
     ): Boolean {
@@ -730,8 +732,59 @@ class ComprehensiveRecordingController(
 
     suspend fun initializeSensors(): Boolean {
         return try {
-            Log.i(TAG, "Initializing sensors")
-            true
+            Log.i(TAG, "Initializing sensors with sensor recorder registration")
+            
+            // Initialize RGB Camera Recorder
+            try {
+                val rgbRecorder = mpdc4gsr.sensors.RgbCameraRecorder(
+                    context = context,
+                    lifecycleOwner = lifecycleOwner ?: object : androidx.lifecycle.LifecycleOwner {
+                        override val lifecycle = androidx.lifecycle.Lifecycle.UNKNOWN
+                    },
+                    previewView = null, // No preview needed for background recording
+                    useFrontCamera = false,
+                    permissionManager = permissionManager
+                )
+                addSensorRecorder("RGB", rgbRecorder)
+                Log.i(TAG, "✅ RGB Camera recorder registered")
+            } catch (e: Exception) {
+                Log.w(TAG, "⚠️ Failed to initialize RGB camera recorder: ${e.message}")
+            }
+            
+            // Initialize Thermal Camera Recorder  
+            try {
+                val thermalRecorder = mpdc4gsr.sensors.thermal.ThermalCameraRecorder(
+                    context = context,
+                    sensorIdParam = "thermal_camera_1",
+                    thermalFrameRate = 9.0, // 9Hz as per TOPDON TC001 specs
+                    thermalResolution = Pair(256, 192)
+                )
+                addSensorRecorder("Thermal", thermalRecorder)
+                Log.i(TAG, "✅ Thermal camera recorder registered")
+            } catch (e: Exception) {
+                Log.w(TAG, "⚠️ Failed to initialize thermal camera recorder: ${e.message}")
+            }
+            
+            // Initialize GSR Sensor Recorder
+            try {
+                val gsrRecorder = mpdc4gsr.sensors.gsr.GSRSensorRecorder(
+                    context = context,
+                    sensorId = "gsr_shimmer_1",
+                    samplingRateHz = 128,
+                    recordingController = mpdc4gsr.controller.RecordingController(context, lifecycleOwner)
+                )
+                addSensorRecorder("GSR", gsrRecorder)  
+                Log.i(TAG, "✅ GSR sensor recorder registered")
+            } catch (e: Exception) {
+                Log.w(TAG, "⚠️ Failed to initialize GSR sensor recorder: ${e.message}")
+            }
+            
+            val registeredSensors = sensorRecorders.keys.toList()
+            Log.i(TAG, "Sensor initialization completed - registered sensors: ${registeredSensors.joinToString()}")
+            
+            // Return true if at least one sensor was registered successfully
+            registeredSensors.isNotEmpty()
+            
         } catch (e: Exception) {
             Log.e(TAG, "Error initializing sensors", e)
             false

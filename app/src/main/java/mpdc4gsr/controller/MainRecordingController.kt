@@ -54,7 +54,7 @@ class MainRecordingController(
 
     suspend fun startRecording(
         sessionId: String? = null,
-        enabledSensors: List<String> = listOf("RGB", "Thermal", "Shimmer")
+        enabledSensors: List<String> = listOf("RGB", "Thermal", "GSR")
     ): Boolean {
         return withContext(Dispatchers.IO) {
             try {
