@@ -40,17 +40,21 @@ class SimpleNetworkTestActivity : AppCompatActivity() {
     private lateinit var ipAddressInput: EditText
     private lateinit var portInput: EditText
     private lateinit var connectButton: Button
+    private lateinit var connectBluetoothButton: Button
     private lateinit var disconnectButton: Button
     private lateinit var testCommandsButton: Button
     private lateinit var statusText: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d(TAG, "onCreate() called")
         setContentView(R.layout.activity_network_client_test)
+        Log.d(TAG, "Layout set successfully")
 
         initializeViews()
         setupClickListeners()
         updateUI()
+        Log.d(TAG, "onCreate() completed successfully")
     }
 
     private fun initializeViews() {
@@ -60,12 +64,13 @@ class SimpleNetworkTestActivity : AppCompatActivity() {
         ipAddressInput = findViewById(R.id.ip_address_input)
         portInput = findViewById(R.id.port_input)
         connectButton = findViewById(R.id.connect_wifi_button)
+        connectBluetoothButton = findViewById(R.id.connect_bluetooth_button)
         disconnectButton = findViewById(R.id.disconnect_button)
         testCommandsButton = findViewById(R.id.test_ping_button)
         statusText = findViewById(R.id.connection_info_text)
 
         // Verify all views were found
-        Log.d(TAG, "Views found - connectButton: ${connectButton != null}, disconnectButton: ${disconnectButton != null}, testCommandsButton: ${testCommandsButton != null}")
+        Log.d(TAG, "Views found - connectButton: ${connectButton != null}, connectBluetoothButton: ${connectBluetoothButton != null}, disconnectButton: ${disconnectButton != null}, testCommandsButton: ${testCommandsButton != null}")
 
         // Set default values
         ipAddressInput.setText(DEFAULT_PC_IP)
@@ -78,6 +83,7 @@ class SimpleNetworkTestActivity : AppCompatActivity() {
         
         connectButton.setOnClickListener {
             Log.d(TAG, "Connect button clicked")
+            Toast.makeText(this, "Connect button clicked!", Toast.LENGTH_SHORT).show()
             val ip = ipAddressInput.text.toString().trim()
             val portStr = portInput.text.toString().trim()
 
@@ -94,13 +100,20 @@ class SimpleNetworkTestActivity : AppCompatActivity() {
             }
         }
 
+        connectBluetoothButton.setOnClickListener {
+            Log.d(TAG, "Connect Bluetooth button clicked")
+            Toast.makeText(this, "Bluetooth button clicked! (Not implemented yet)", Toast.LENGTH_SHORT).show()
+        }
+
         disconnectButton.setOnClickListener {
             Log.d(TAG, "Disconnect button clicked")
+            Toast.makeText(this, "Disconnect button clicked!", Toast.LENGTH_SHORT).show()
             disconnectFromPC()
         }
 
         testCommandsButton.setOnClickListener {
             Log.d(TAG, "Test commands button clicked")
+            Toast.makeText(this, "Test commands button clicked!", Toast.LENGTH_SHORT).show()
             testCommands()
         }
         
@@ -323,6 +336,7 @@ class SimpleNetworkTestActivity : AppCompatActivity() {
         val isConnected = tcpClient?.isConnected() ?: false
 
         connectButton.isEnabled = !isConnected
+        connectBluetoothButton.isEnabled = !isConnected
         disconnectButton.isEnabled = isConnected
         testCommandsButton.isEnabled = isConnected
 

@@ -37,11 +37,14 @@ class SimplifiedMainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        android.util.Log.d("SimplifiedMainActivity", "onCreate() called")
         setContentView(R.layout.activity_simplified_main)
+        android.util.Log.d("SimplifiedMainActivity", "Layout set successfully")
 
         initializeViews()
         checkPermissions()
         updateUI()
+        android.util.Log.d("SimplifiedMainActivity", "onCreate() completed successfully")
     }
 
     private fun initializeViews() {
@@ -54,11 +57,13 @@ class SimplifiedMainActivity : AppCompatActivity() {
 
         recordButton.setOnClickListener {
             android.util.Log.d("SimplifiedMainActivity", "Record button clicked")
+            android.widget.Toast.makeText(this, "Record button clicked!", android.widget.Toast.LENGTH_SHORT).show()
             toggleRecording()
         }
 
         connectButton.setOnClickListener {
             android.util.Log.d("SimplifiedMainActivity", "Connect button clicked")
+            android.widget.Toast.makeText(this, "Connect button clicked!", android.widget.Toast.LENGTH_SHORT).show()
             toggleConnection()
         }
         

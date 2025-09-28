@@ -85,6 +85,8 @@
                 android:layout_height="56dp"
                 android:layout_marginBottom="12dp"
                 android:background="#3498db"
+                android:clickable="true"
+                android:focusable="true"
                 android:text="Connect to PC"
                 android:textColor="@android:color/white"
                 android:textSize="16sp" />
@@ -95,6 +97,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:background="#e74c3c"
+                android:clickable="true"
+                android:focusable="true"
                 android:text="Start Recording"
                 android:textColor="@android:color/white"
                 android:textSize="16sp" />
