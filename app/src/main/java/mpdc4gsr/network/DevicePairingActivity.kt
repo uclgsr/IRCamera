@@ -112,27 +112,27 @@ class DevicePairingActivity : BaseViewModelActivity<DevicePairingViewModel>(),
         // Collect one-time events
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.pairingEvents.collectLatest { event ->
+                viewModel.events.collectLatest { event ->
                     handlePairingEvent(event)
                 }
             }
         }
     }
 
-    private fun handleUiState(state: DevicePairingViewModel.PairingUiState) {
+    private fun handleUiState(state: DevicePairingViewModel.PairingScreenState) {
         binding.apply {
-            scanButton.text = if (state.isScanning) "Stop Scan" else "Start Scan"
-            scanButton.isEnabled = !state.isConnecting
-
-            progressBar.isVisible = state.isLoading || state.isScanning
-            statusText.text = state.statusMessage
-
+            scanButton.text = if (state.showProgress) "Stop Scan" else "Start Scan"
+            scanButton.isEnabled = state.canScan
+            
+            progressBar.isVisible = state.showProgress
+            statusText.text = "Discovered ${state.discoveredCount} device(s)"
+            
             // Update scan results count if the view exists
             try {
                 val resourceId = resources.getIdentifier("scan_results_count", "id", packageName)
                 if (resourceId != 0) {
                     val scanResultsCount = binding.root.findViewById<android.widget.TextView>(resourceId)
-                    scanResultsCount?.text = "${state.deviceCount} device(s) found"
+                    scanResultsCount?.text = "${state.discoveredCount} device(s) found"
                 }
             } catch (e: Exception) {
                 // View may not exist in layout, continue gracefully
@@ -179,103 +179,28 @@ class DevicePairingActivity : BaseViewModelActivity<DevicePairingViewModel>(),
 
     private fun handlePairingEvent(event: DevicePairingViewModel.PairingEvent) {
         when (event) {
-            is DevicePairingViewModel.PairingEvent.ShowToast -> {
-                Toast.makeText(this, event.message, Toast.LENGTH_SHORT).show()
-            }
-
             is DevicePairingViewModel.PairingEvent.ShowError -> {
                 Toast.makeText(this, event.message, Toast.LENGTH_LONG).show()
             }
-
-            is DevicePairingViewModel.PairingEvent.NavigateToRecording -> {
-                val sessionInfo = SessionInfo(
-                    sessionId = "paired_session_${System.currentTimeMillis()}",
-                    startTime = System.currentTimeMillis()
-                )
-                MultiModalRecordingActivity.startRecording(this, sessionInfo)
+            is DevicePairingViewModel.PairingEvent.ShowSuccess -> {
+                Toast.makeText(this, event.message, Toast.LENGTH_SHORT).show()
             }
-
-            is DevicePairingViewModel.PairingEvent.ControllerConnected -> {
-                Toast.makeText(this, "Connected to ${event.controller.name}", Toast.LENGTH_SHORT).show()
+            is DevicePairingViewModel.PairingEvent.NavigateToSession -> {
+                MultiModalRecordingActivity.startRecording(this, event.sessionInfo)
+            }
+            is DevicePairingViewModel.PairingEvent.ShowConnectionDialog -> {
+                Toast.makeText(this, "Connecting to ${event.controller.name}...", Toast.LENGTH_SHORT).show()
                 binding.disconnectButton.isVisible = true
             }
-        }
-    }
-
-    private fun setupObservers() {
-        viewModel.discoveredControllers.observe(this) { controllers ->
-            controllersAdapter.updateControllers(controllers)
-        }
-
-        viewModel.connectedController.observe(this) { controller ->
-            updateConnectionUI(controller)
-        }
-
-        viewModel.connectionState.observe(this) { state ->
-            updateConnectionState(state)
-        }
-
-        viewModel.scanState.observe(this) { state ->
-            updateScanState(state)
-        }
-
-        viewModel.statusMessage.observe(this) { message ->
-            binding.statusText.text = message
-        }
-
-        viewModel.error.observe(this) { error ->
-            error?.let {
-                Toast.makeText(this, it, Toast.LENGTH_LONG).show()
-                viewModel.clearError()
-            }
-        }
-
-        viewModel.navigationEvent.observe(this) { event ->
-            event?.let {
-                handleNavigationEvent(it)
-                viewModel.clearNavigationEvent()
+            is DevicePairingViewModel.PairingEvent.NavigateBack -> {
+                finish()
             }
         }
     }
 
-    private fun updateConnectionUI(controller: NetworkClient.ControllerInfo?) {
-        binding.disconnectButton.isVisible = controller != null
-        try {
-            // Try to access the connected device text view if it exists in the layout
-            val resourceId = resources.getIdentifier("connected_device_text", "id", packageName)
-            if (resourceId != 0) {
-                val connectedDeviceText =
-                    binding.root.findViewById<android.widget.TextView>(resourceId)
-                connectedDeviceText?.let { textView ->
-                    textView.isVisible = controller != null
-                    textView.text = controller?.let {
-                        "Connected to: ${it.deviceName} (${it.ipAddress}:${it.port})"
-                    } ?: ""
-                }
-            }
-        } catch (e: Exception) {
-            // Element may not exist in layout, continue gracefully
-        }
-    }
 
-    private fun updateConnectionState(state: DevicePairingViewModel.ConnectionState) {
-        binding.progressBar.isVisible = state == DevicePairingViewModel.ConnectionState.CONNECTING
-    }
 
-    private fun updateScanState(state: DevicePairingViewModel.ScanState) {
-        binding.scanButton.isEnabled = viewModel.canStartScan()
-        binding.progressBar.isVisible = state == DevicePairingViewModel.ScanState.SCANNING
-    }
 
-    private fun handleNavigationEvent(event: DevicePairingViewModel.NavigationEvent) {
-        when (event.action) {
-            "START_RECORDING", "RECORDING_STARTED" -> {
-                event.sessionInfo?.let { sessionInfo ->
-                    MultiModalRecordingActivity.startRecording(this, sessionInfo)
-                }
-            }
-        }
-    }
 
     // NetworkClient.NetworkEventListener implementation
     override fun onControllerDiscovered(controller: NetworkClient.ControllerInfo) {
