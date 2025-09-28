@@ -42,7 +42,7 @@ class FirmwareRepository(
     fun checkFirmwareUpdate(
         isTC007: Boolean,
         deviceInfo: DeviceInfo
-    ): Flow<Result<FirmwareInfo?>> = safeFlow {
+    ): Flow<BaseRepository.Result<FirmwareInfo?>> = safeFlow {
         val cacheKey = "${CACHE_KEY_FIRMWARE_CHECK}_${if (isTC007) "TC007" else "TS004"}"
 
         getCachedOrExecute(cacheKey, FIRMWARE_CACHE_TTL) {
@@ -56,7 +56,7 @@ class FirmwareRepository(
     suspend fun downloadFirmware(
         firmwareInfo: FirmwareInfo,
         outputDir: File
-    ): Result<File> = safeCall {
+    ): BaseRepository.Result<File> = safeCall {
         // Simplified implementation - in real app would download file
         val outputFile = File(outputDir, extractFileName(firmwareInfo.downloadUrl))
         outputFile.createNewFile()
@@ -66,7 +66,7 @@ class FirmwareRepository(
     /**
      * Get firmware info from local assets
      */
-    suspend fun getFirmwareFromAssets(isTC007: Boolean): Result<FirmwareInfo> = safeCall {
+    suspend fun getFirmwareFromAssets(isTC007: Boolean): BaseRepository.Result<FirmwareInfo> = safeCall {
         val version = if (isTC007) TC007_FIRMWARE_VERSION else TS004_FIRMWARE_VERSION
         val fileName = if (isTC007) TC007_FIRMWARE_NAME else TS004_FIRMWARE_NAME
 

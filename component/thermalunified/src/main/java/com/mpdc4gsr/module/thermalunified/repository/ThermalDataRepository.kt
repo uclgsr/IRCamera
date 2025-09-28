@@ -3,6 +3,7 @@ package com.mpdc4gsr.module.thermalunified.repository
 import com.mpdc4gsr.libunified.app.repository.BaseRepository
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.Dispatchers
 
 /**
  * Thermal Data Repository - Advanced Repository Pattern
@@ -38,28 +39,33 @@ class ThermalDataRepository : BaseRepository() {
     )
 
     // Real-time thermal data stream
-    fun getThermalDataStream(deviceId: String): Flow<Result<ThermalFrameData>> = safeFlow {
-        while (true) {
-            delay(100) // 10 FPS simulation
-
-            val frame = generateThermalFrame(deviceId)
-            emit(Result.success(frame))
+    fun getThermalDataStream(deviceId: String): Flow<BaseRepository.Result<ThermalFrameData>> = flow {
+        emit(BaseRepository.Result.Loading)
+        try {
+            while (true) {
+                delay(100) // 10 FPS simulation
+                
+                val frame = generateThermalFrame(deviceId)
+                emit(BaseRepository.Result.Success(frame))
+            }
+        } catch (e: Exception) {
+            emit(BaseRepository.Result.Error(e))
         }
-    }
-
+    }.flowOn(Dispatchers.IO)
+    
     // Historical thermal data with caching
     fun getHistoricalThermalData(
         deviceId: String,
         startTime: Long,
         endTime: Long
-    ): Flow<Result<List<ThermalFrameData>>> = safeFlow {
+    ): Flow<BaseRepository.Result<List<ThermalFrameData>>> = safeFlow {
         val cacheKey = "thermal_${deviceId}_${startTime}_${endTime}"
         val ttlMs = 300000L // 5 minutes TTL
         val data = getCachedOrExecute<List<ThermalFrameData>>(cacheKey, ttlMs) {
             delay(1500) // Simulate data loading
             generateHistoricalData(deviceId, startTime, endTime)
         }
-        Result.success(data)
+        data
     }
 
     private fun generateThermalFrame(deviceId: String): ThermalFrameData {
