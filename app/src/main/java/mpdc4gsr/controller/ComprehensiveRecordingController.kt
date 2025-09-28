@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LifecycleRegistry
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -738,8 +739,9 @@ class ComprehensiveRecordingController(
             try {
                 val rgbRecorder = mpdc4gsr.sensors.RgbCameraRecorder(
                     context = context,
-                    lifecycleOwner = lifecycleOwner ?: object : androidx.lifecycle.LifecycleOwner {
-                        override val lifecycle = androidx.lifecycle.Lifecycle.UNKNOWN
+                    lifecycleOwner = lifecycleOwner ?: object : LifecycleOwner {
+                        override val lifecycle: Lifecycle
+                            get() = LifecycleRegistry(this)
                     },
                     previewView = null, // No preview needed for background recording
                     useFrontCamera = false,
@@ -771,7 +773,13 @@ class ComprehensiveRecordingController(
                     context = context,
                     sensorId = "gsr_shimmer_1",
                     samplingRateHz = 128,
-                    recordingController = mpdc4gsr.controller.RecordingController(context, lifecycleOwner)
+                    recordingController = mpdc4gsr.controller.RecordingController(
+                        context, 
+                        lifecycleOwner ?: object : LifecycleOwner {
+                            override val lifecycle: Lifecycle
+                                get() = LifecycleRegistry(this)
+                        }
+                    )
                 )
                 addSensorRecorder("GSR", gsrRecorder)  
                 Log.i(TAG, "✅ GSR sensor recorder registered")
