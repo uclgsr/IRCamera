@@ -5,8 +5,10 @@ import android.app.Application
 import android.content.Context
 import android.content.pm.PackageManager
 import androidx.core.app.ActivityCompat
+import androidx.lifecycle.viewModelScope
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import mpdc4gsr.sensors.unified.ShimmerDeviceManager
 import mpdc4gsr.sensors.unified.model.DeviceInfo
 
@@ -34,8 +36,8 @@ class ShimmerConfigViewModel : BaseViewModel() {
     }
 
     // StateFlow for UI state management
-    private val _uiState = MutableStateFlow(ShimmerConfigUiState())
-    val uiState: StateFlow<ShimmerConfigUiState> = _uiState.asStateFlow()
+    private val _shimmerUiState = MutableStateFlow(ShimmerConfigUiState())
+    val shimmerUiState: StateFlow<ShimmerConfigUiState> = _shimmerUiState.asStateFlow()
 
     // Device management StateFlows
     private val _discoveredDevices = MutableStateFlow<List<DeviceInfo>>(emptyList())
@@ -51,12 +53,25 @@ class ShimmerConfigViewModel : BaseViewModel() {
     // SharedFlow for one-time events
     private val _configEvents = MutableSharedFlow<ConfigEvent>()
     val configEvents: SharedFlow<ConfigEvent> = _configEvents.asSharedFlow()
+    
+    // SharedFlow for config actions
+    private val _configAction = MutableSharedFlow<ConfigAction>()
+    val configAction: SharedFlow<ConfigAction> = _configAction.asSharedFlow()
 
     // Internal state
     private var shimmerDeviceManager: ShimmerDeviceManager? = null
     private var isScanning = false
     private var connectedDevice: DeviceInfo? = null
     private var connectedDeviceAddress: String? = null
+
+    // Sealed classes for actions and events
+    data class ConfigAction(val actionType: ActionType)
+    
+    enum class ActionType {
+        SHOW_PROGRESS_BAR,
+        HIDE_PROGRESS_BAR, 
+        SHOW_ERROR
+    }
 
     // Data classes for state management
     data class ShimmerConfigUiState(
@@ -118,7 +133,7 @@ class ShimmerConfigViewModel : BaseViewModel() {
         if (allGranted) {
             initializeShimmerManager(context)
         } else {
-            _uiState.value = _uiState.value.copy(
+            _shimmerUiState.value = _shimmerUiState.value.copy(
                 statusMessage = "Bluetooth permissions required for Shimmer device scanning"
             )
             launchWithErrorHandling {
@@ -131,7 +146,7 @@ class ShimmerConfigViewModel : BaseViewModel() {
     private fun initializeShimmerManager(context: Context) {
         launchWithErrorHandling {
             try {
-                _uiState.value = _uiState.value.copy(isLoading = true)
+                _shimmerUiState.value = _shimmerUiState.value.copy(isLoading = true)
 
                 // Note: This would need to be adapted based on actual ShimmerDeviceManager API
                 // shimmerDeviceManager = ShimmerDeviceManager(context, context)
@@ -140,20 +155,20 @@ class ShimmerConfigViewModel : BaseViewModel() {
                 val initialized = true // shimmerDeviceManager?.initialize() ?: false
 
                 if (initialized) {
-                    _uiState.value = _uiState.value.copy(
+                    _shimmerUiState.value = _shimmerUiState.value.copy(
                         statusMessage = "Shimmer device manager ready - tap 'Start Scan' to discover devices",
                         isLoading = false,
                         hasManagerInitialized = true
                     )
                     setupDeviceFlowCollectors()
                 } else {
-                    _uiState.value = _uiState.value.copy(
+                    _shimmerUiState.value = _shimmerUiState.value.copy(
                         statusMessage = "Failed to initialize Bluetooth - check if Bluetooth is enabled",
                         isLoading = false
                     )
                 }
             } catch (e: Exception) {
-                _uiState.value = _uiState.value.copy(
+                _shimmerUiState.value = _shimmerUiState.value.copy(
                     statusMessage = "Initialization error: ${e.message}",
                     isLoading = false
                 )
@@ -166,14 +181,14 @@ class ShimmerConfigViewModel : BaseViewModel() {
         viewModelScope.launch {
             shimmerDeviceManager?.scanResults?.collectLatest { devices ->
                 _discoveredDevices.value = devices
-                _uiState.value = _uiState.value.copy(
+                _shimmerUiState.value = _shimmerUiState.value.copy(
                     deviceCount = devices.size,
                     statusMessage = if (devices.isEmpty() && isScanning) {
                         "Scanning for Shimmer devices... (${devices.size} found)"
                     } else if (devices.isNotEmpty()) {
                         "Found ${devices.size} Shimmer device(s) - select one to connect"
                     } else {
-                        _uiState.value.statusMessage
+                        _shimmerUiState.value.statusMessage
                     }
                 )
             }
@@ -185,7 +200,7 @@ class ShimmerConfigViewModel : BaseViewModel() {
                 when (event.state) {
                     ShimmerDeviceManager.ConnectionState.CONNECTING -> {
                         _connectionState.value = ConnectionState.Connecting
-                        _uiState.value = _uiState.value.copy(
+                        _shimmerUiState.value = _shimmerUiState.value.copy(
                             statusMessage = "Connecting to Shimmer device...",
                             isLoading = true
                         )
@@ -198,7 +213,7 @@ class ShimmerConfigViewModel : BaseViewModel() {
                             connectedDevice = it
                             connectedDeviceAddress = event.deviceAddress
                             _connectionState.value = ConnectionState.Connected(it)
-                            _uiState.value = _uiState.value.copy(
+                            _shimmerUiState.value = _shimmerUiState.value.copy(
                                 statusMessage = "Successfully connected to ${it.name ?: event.deviceAddress}",
                                 isLoading = false
                             )
@@ -213,7 +228,7 @@ class ShimmerConfigViewModel : BaseViewModel() {
                     ShimmerDeviceManager.ConnectionState.DISCONNECTED -> {
                         connectedDevice = null
                         _connectionState.value = ConnectionState.Disconnected
-                        _uiState.value = _uiState.value.copy(
+                        _shimmerUiState.value = _shimmerUiState.value.copy(
                             statusMessage = "Shimmer device disconnected",
                             isLoading = false
                         )
@@ -224,7 +239,7 @@ class ShimmerConfigViewModel : BaseViewModel() {
                         _connectionState.value = ConnectionState.Failed(
                             event.message ?: "Unknown error"
                         )
-                        _uiState.value = _uiState.value.copy(
+                        _shimmerUiState.value = _shimmerUiState.value.copy(
                             statusMessage = "Connection failed: ${event.message ?: "Unknown error"}",
                             isLoading = false
                         )
@@ -238,7 +253,7 @@ class ShimmerConfigViewModel : BaseViewModel() {
                         _connectionState.value = ConnectionState.Timeout(
                             "Connection timeout"
                         )
-                        _uiState.value = _uiState.value.copy(
+                        _shimmerUiState.value = _shimmerUiState.value.copy(
                             statusMessage = "Connection timeout - device may be out of range or not responding",
                             isLoading = false
                         )
@@ -264,7 +279,7 @@ class ShimmerConfigViewModel : BaseViewModel() {
     private fun startDeviceScanning() {
         val manager = shimmerDeviceManager
         if (manager == null) {
-            _uiState.value = _uiState.value.copy(
+            _shimmerUiState.value = _shimmerUiState.value.copy(
                 statusMessage = "Device manager not initialized"
             )
             return
@@ -275,7 +290,7 @@ class ShimmerConfigViewModel : BaseViewModel() {
                 val scanStarted = true // manager.startDeviceScanning()
                 if (scanStarted) {
                     isScanning = true
-                    _uiState.value = _uiState.value.copy(
+                    _shimmerUiState.value = _shimmerUiState.value.copy(
                         isScanning = true,
                         statusMessage = "Scanning for Shimmer3 GSR+ devices...",
                         deviceCount = 0
@@ -283,12 +298,12 @@ class ShimmerConfigViewModel : BaseViewModel() {
                     _discoveredDevices.value = emptyList()
                     _configAction.value = ConfigAction(ActionType.UPDATE_SCAN_BUTTON)
                 } else {
-                    _uiState.value = _uiState.value.copy(
+                    _shimmerUiState.value = _shimmerUiState.value.copy(
                         statusMessage = "Failed to start device scanning - check Bluetooth permissions"
                     )
                 }
             } catch (e: Exception) {
-                _uiState.value = _uiState.value.copy(
+                _shimmerUiState.value = _shimmerUiState.value.copy(
                     statusMessage = "Scan error: ${e.message}"
                 )
             }
@@ -303,7 +318,7 @@ class ShimmerConfigViewModel : BaseViewModel() {
                 // manager.stopDeviceScanning()
                 isScanning = false
                 val deviceCount = _discoveredDevices.value.size
-                _uiState.value = _uiState.value.copy(
+                _shimmerUiState.value = _shimmerUiState.value.copy(
                     isScanning = false,
                     statusMessage = if (deviceCount > 0) {
                         "Scan completed - found $deviceCount Shimmer device(s)"
@@ -313,7 +328,7 @@ class ShimmerConfigViewModel : BaseViewModel() {
                 )
                 _configAction.value = ConfigAction(ActionType.UPDATE_SCAN_BUTTON)
             } catch (e: Exception) {
-                _uiState.value = _uiState.value.copy(
+                _shimmerUiState.value = _shimmerUiState.value.copy(
                     statusMessage = "Error stopping scan: ${e.message}"
                 )
             }
@@ -324,7 +339,7 @@ class ShimmerConfigViewModel : BaseViewModel() {
     fun connectToDevice(device: DeviceInfo) {
         val manager = shimmerDeviceManager
         if (manager == null) {
-            _uiState.value = _uiState.value.copy(
+            _shimmerUiState.value = _shimmerUiState.value.copy(
                 statusMessage = "Device manager not initialized"
             )
             return
@@ -335,7 +350,7 @@ class ShimmerConfigViewModel : BaseViewModel() {
                 // manager.connectToDevice(device.address)
                 _connectionState.value = ConnectionState.Connecting
             } catch (e: Exception) {
-                _uiState.value = _uiState.value.copy(
+                _shimmerUiState.value = _shimmerUiState.value.copy(
                     statusMessage = "Connection error: ${e.message}"
                 )
             }
@@ -354,7 +369,7 @@ class ShimmerConfigViewModel : BaseViewModel() {
 
         viewModelScope.launch {
             try {
-                _uiState.value = _uiState.value.copy(
+                _shimmerUiState.value = _shimmerUiState.value.copy(
                     statusMessage = "Testing connection to ${device.name}...",
                     isLoading = true
                 )
@@ -362,7 +377,7 @@ class ShimmerConfigViewModel : BaseViewModel() {
                 // Simulate connection test
                 kotlinx.coroutines.delay(2000)
 
-                _uiState.value = _uiState.value.copy(
+                _shimmerUiState.value = _shimmerUiState.value.copy(
                     statusMessage = "Connection test successful",
                     isLoading = false
                 )
@@ -371,7 +386,7 @@ class ShimmerConfigViewModel : BaseViewModel() {
                     message = "Connection test successful"
                 )
             } catch (e: Exception) {
-                _uiState.value = _uiState.value.copy(
+                _shimmerUiState.value = _shimmerUiState.value.copy(
                     statusMessage = "Connection test failed: ${e.message}",
                     isLoading = false
                 )
@@ -395,7 +410,7 @@ class ShimmerConfigViewModel : BaseViewModel() {
                 connectedDevice = null
                 connectedDeviceAddress = null
                 _connectionState.value = ConnectionState.Disconnected
-                _uiState.value = _uiState.value.copy(
+                _shimmerUiState.value = _shimmerUiState.value.copy(
                     statusMessage = "Device disconnected"
                 )
                 _configAction.value = ConfigAction(
@@ -403,7 +418,7 @@ class ShimmerConfigViewModel : BaseViewModel() {
                     message = "Device disconnected"
                 )
             } catch (e: Exception) {
-                _uiState.value = _uiState.value.copy(
+                _shimmerUiState.value = _shimmerUiState.value.copy(
                     statusMessage = "Disconnect error: ${e.message}"
                 )
             }

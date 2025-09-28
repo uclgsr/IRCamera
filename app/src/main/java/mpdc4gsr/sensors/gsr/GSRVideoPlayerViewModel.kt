@@ -3,8 +3,10 @@ package mpdc4gsr.sensors.gsr
 import android.net.Uri
 import android.os.Build
 import androidx.core.content.FileProvider
+import androidx.lifecycle.viewModelScope
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -28,7 +30,7 @@ class GSRVideoPlayerViewModel : BaseViewModel() {
     val videoEvents: SharedFlow<VideoEvent> = _videoEvents.asSharedFlow()
 
     // Combined UI State
-    val uiState: StateFlow<VideoPlayerUiState> = combine(
+    val videoUiState: StateFlow<VideoPlayerUiState> = combine(
         _videoState,
         _videoInfo
     ) { videoState, videoInfo ->

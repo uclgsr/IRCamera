@@ -2,6 +2,7 @@ package mpdc4gsr.sensors.gsr
 
 import android.content.Context
 import android.util.Log
+import androidx.lifecycle.viewModelScope
 import com.mpdc4gsr.gsr.model.SessionInfo
 import com.mpdc4gsr.gsr.service.SessionManager
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
@@ -29,8 +30,8 @@ class SessionManagerViewModel : BaseViewModel() {
     val sessionEvents: SharedFlow<SessionEvent> = _sessionEvents.asSharedFlow()
 
     // UI State
-    private val _uiState = MutableStateFlow(SessionManagerUiState())
-    val uiState: StateFlow<SessionManagerUiState> = _uiState.asStateFlow()
+    private val _sessionUiState = MutableStateFlow(SessionManagerUiState())
+    val sessionUiState: StateFlow<SessionManagerUiState> = _sessionUiState.asStateFlow()
 
     private lateinit var sessionManager: SessionManager
     private lateinit var sessionDirectoryManager: SessionDirectoryManager
@@ -76,7 +77,7 @@ class SessionManagerViewModel : BaseViewModel() {
             initialize(context)
         }
 
-        _uiState.value = _uiState.value.copy(isLoading = true)
+        _sessionUiState.value = _sessionUiState.value.copy(isLoading = true)
         
         launchWithErrorHandling {
             try {
@@ -104,7 +105,7 @@ class SessionManagerViewModel : BaseViewModel() {
                 _allSessions.value = sortedSessions
                 applyCurrentFilters()
 
-                _uiState.value = _uiState.value.copy(
+                _sessionUiState.value = _sessionUiState.value.copy(
                     isLoading = false,
                     sessionCount = sortedSessions.size
                 )
@@ -113,7 +114,7 @@ class SessionManagerViewModel : BaseViewModel() {
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to load sessions", e)
                 _sessionEvents.emit(SessionEvent.ShowError("Failed to load sessions: ${e.message}"))
-                _uiState.value = _uiState.value.copy(isLoading = false)
+                _sessionUiState.value = _sessionUiState.value.copy(isLoading = false)
             }
         }
     }
@@ -223,7 +224,7 @@ class SessionManagerViewModel : BaseViewModel() {
 
     fun filterSessions(query: String?) {
         currentSearchQuery = query ?: ""
-        _uiState.value = _uiState.value.copy(searchQuery = currentSearchQuery)
+        _sessionUiState.value = _sessionUiState.value.copy(searchQuery = currentSearchQuery)
         applyCurrentFilters()
     }
 
@@ -235,7 +236,7 @@ class SessionManagerViewModel : BaseViewModel() {
             3 -> FilterType.WITH_DATA
             else -> FilterType.ALL
         }
-        _uiState.value = _uiState.value.copy(currentFilter = currentFilter)
+        _sessionUiState.value = _sessionUiState.value.copy(currentFilter = currentFilter)
         applyCurrentFilters()
     }
 
@@ -263,7 +264,7 @@ class SessionManagerViewModel : BaseViewModel() {
         }
 
         _filteredSessions.value = filtered
-        _uiState.value = _uiState.value.copy(filteredCount = filtered.size)
+        _sessionUiState.value = _sessionUiState.value.copy(filteredCount = filtered.size)
     }
 
     fun onSessionClick(session: SessionInfo) {
@@ -295,7 +296,7 @@ class SessionManagerViewModel : BaseViewModel() {
                 val updatedSessions = _allSessions.value.filter { it.sessionId != session.sessionId }
                 _allSessions.value = updatedSessions
                 applyCurrentFilters()
-                _uiState.value = _uiState.value.copy(sessionCount = updatedSessions.size)
+                _sessionUiState.value = _sessionUiState.value.copy(sessionCount = updatedSessions.size)
 
                 _sessionEvents.emit(SessionEvent.DeletedSuccess(session, "Session ${session.sessionId} deleted successfully"))
             } else {

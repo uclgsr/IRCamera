@@ -43,7 +43,7 @@ class GSRSettingsViewModel : BaseViewModel() {
     val settingsEvents: SharedFlow<SettingsEvent> = _settingsEvents.asSharedFlow()
 
     // Combined state for UI optimization
-    val uiState: StateFlow<UIState> by lazy {
+    val settingsUiState: StateFlow<UIState> by lazy {
         combine(
             if (::repository.isInitialized) repository.gsrSettings else flowOf(GSRSettingsRepository.GSRSettings()),
             if (::repository.isInitialized) repository.deviceSettings else flowOf(GSRSettingsRepository.DeviceSettings()),
