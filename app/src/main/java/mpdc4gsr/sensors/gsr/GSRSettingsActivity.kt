@@ -104,7 +104,7 @@ class GSRSettingsActivity : BaseViewModelActivity<GSRSettingsViewModel>() {
         }
         
         // Update navigation background to show main is selected
-        binding.bottomNavigation.ivNavigationBg.setImageResource(R.drawable.ic_main_bg_select)
+        binding.bottomNavigation.ivNavigationBg.setImageResource(R.drawable.ic_main_bg_not_select)
     }
 
     private fun navigateToMainActivity(pageIndex: Int) {
