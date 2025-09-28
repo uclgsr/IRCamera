@@ -53,26 +53,27 @@ class RealShimmerDevice(
     private var shimmerHandler: Handler? = null
 
     init {
-        try {
-            // Create handler that processes Shimmer messages and dispatches to our methods
-            shimmerHandler = object : Handler(Looper.getMainLooper()) {
-                override fun handleMessage(msg: android.os.Message) {
-                    when (msg.what) {
-                        1 -> handleStateChange(msg) // MSG_IDENTIFIER_STATE_CHANGE
-                        2 -> handleDataPacket(msg)  // MSG_IDENTIFIER_DATA_PACKET
-                        else -> Log.d(TAG, "Unknown message type: ${msg.what}")
-                    }
-                }
-            }
-            shimmerManager = ShimmerBluetoothManagerAndroid(context, shimmerHandler)
-            Log.i(TAG, "ShimmerBluetoothManagerAndroid initialized successfully")
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to initialize ShimmerBluetoothManagerAndroid", e)
-        }
+        // Defer Handler creation until connect is called to avoid Looper issues
+        Log.d(TAG, "RealShimmerDevice created, will initialize Handler on first connect")
     }
 
     override fun connect(address: String, name: String): Boolean {
         return try {
+            // Initialize Handler and ShimmerManager if not already done
+            if (shimmerHandler == null) {
+                shimmerHandler = object : Handler(Looper.getMainLooper()) {
+                    override fun handleMessage(msg: android.os.Message) {
+                        when (msg.what) {
+                            1 -> handleStateChange(msg) // MSG_IDENTIFIER_STATE_CHANGE
+                            2 -> handleDataPacket(msg)  // MSG_IDENTIFIER_DATA_PACKET
+                            else -> Log.d(TAG, "Unknown message type: ${msg.what}")
+                        }
+                    }
+                }
+                shimmerManager = ShimmerBluetoothManagerAndroid(context, shimmerHandler)
+                Log.i(TAG, "ShimmerBluetoothManagerAndroid initialized successfully")
+            }
+            
             shimmer = Shimmer(shimmerHandler, context)
             shimmer?.let { device ->
                 // Set up data handler to forward data to registered callback
