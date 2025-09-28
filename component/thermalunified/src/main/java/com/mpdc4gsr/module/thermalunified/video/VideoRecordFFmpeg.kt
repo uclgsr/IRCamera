@@ -733,7 +733,20 @@ class VideoRecordFFmpeg(
             paint.getTextBounds(address, 0, address.length, rectText)
             if (rectText.width() > bmp.width - pix20) {
 
-                val staticLayout =
+                val staticLayout = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    StaticLayout.Builder.obtain(
+                        address,
+                        0,
+                        address.length,
+                        paint,
+                        bmp.width - pix20
+                    )
+                        .setAlignment(Layout.Alignment.ALIGN_NORMAL)
+                        .setLineSpacing(0.0f, 1.0f)
+                        .setIncludePad(false)
+                        .build()
+                } else {
+                    @Suppress("DEPRECATION")
                     StaticLayout(
                         address,
                         paint,
@@ -743,6 +756,7 @@ class VideoRecordFFmpeg(
                         0.0f,
                         false,
                     )
+                }
                 beginY = beginY - (textHeight + SizeUtils.dp2px(1f)) * staticLayout.lineCount
                 canvas.save()
                 canvas.translate(beginX.toInt().toFloat(), (beginY.toInt() - textHeight).toFloat())
@@ -759,7 +773,20 @@ class VideoRecordFFmpeg(
             paint.getTextBounds(title, 0, title.length, rectText)
             if (rectText.width() > bmp.width - pix20) {
 
-                val staticLayout =
+                val staticLayout = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    StaticLayout.Builder.obtain(
+                        title,
+                        0,
+                        title.length,
+                        paint,
+                        bmp.width - pix20
+                    )
+                        .setAlignment(Layout.Alignment.ALIGN_NORMAL)
+                        .setLineSpacing(0.0f, 1.0f)
+                        .setIncludePad(false)
+                        .build()
+                } else {
+                    @Suppress("DEPRECATION")
                     StaticLayout(
                         title,
                         paint,
@@ -769,6 +796,7 @@ class VideoRecordFFmpeg(
                         0.0f,
                         false,
                     )
+                }
                 beginY = beginY - textHeight * staticLayout.lineCount
                 canvas.save()
                 canvas.translate(beginX.toInt().toFloat(), (beginY.toInt() - textHeight).toFloat())

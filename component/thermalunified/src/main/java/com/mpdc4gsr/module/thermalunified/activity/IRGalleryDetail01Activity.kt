@@ -2,6 +2,7 @@ package com.mpdc4gsr.module.thermalunified.activity
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.LinearLayout
@@ -63,7 +64,12 @@ class IRGalleryDetail01Activity : BaseActivity(), View.OnClickListener {
 
     override fun initView() {
         position = intent.getIntExtra("position", 0)
-        dataList = intent.getParcelableArrayListExtra("list")!!
+        dataList = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            intent.getParcelableArrayListExtra("list", GalleryBean::class.java)!!
+        } else {
+            @Suppress("DEPRECATION")
+            intent.getParcelableArrayListExtra<GalleryBean>("list")!!
+        }
         isTC007 = intent.getBooleanExtra(ExtraKeyConfig.IS_TC007, false)
 
         val titleView = findViewById<TitleView>(R.id.title_view)

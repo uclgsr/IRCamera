@@ -1,9 +1,11 @@
 package com.mpdc4gsr.module.thermalunified.report.activity
 
+import android.os.Build
 import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
 import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
 import com.mpdc4gsr.libunified.app.view.TitleView
 import com.mpdc4gsr.module.thermalunified.R
+import com.mpdc4gsr.module.thermalunified.report.bean.ReportConditionBean
 import com.mpdc4gsr.module.thermalunified.report.bean.ReportInfoBean
 import com.mpdc4gsr.module.thermalunified.report.view.ReportInfoView
 import com.mpdc4gsr.module.thermalunified.report.view.WatermarkView
@@ -29,9 +31,21 @@ class ReportPreviewFirstActivity : BaseActivity() {
             finish()
         }
 
-        val reportInfoBean: ReportInfoBean? = intent.getParcelableExtra(ExtraKeyConfig.REPORT_INFO)
+        val reportInfoBean: ReportInfoBean? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            intent.getParcelableExtra(ExtraKeyConfig.REPORT_INFO, ReportInfoBean::class.java)
+        } else {
+            @Suppress("DEPRECATION")
+            intent.getParcelableExtra<ReportInfoBean>(ExtraKeyConfig.REPORT_INFO)
+        }
         reportInfoView.refreshInfo(reportInfoBean)
-        reportInfoView.refreshCondition(intent.getParcelableExtra(ExtraKeyConfig.REPORT_CONDITION))
+        reportInfoView.refreshCondition(
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                intent.getParcelableExtra(ExtraKeyConfig.REPORT_CONDITION, ReportConditionBean::class.java)
+            } else {
+                @Suppress("DEPRECATION")
+                intent.getParcelableExtra<ReportConditionBean>(ExtraKeyConfig.REPORT_CONDITION)
+            }
+        )
 
         if (reportInfoBean?.is_report_watermark == 1) {
             watermarkView.watermarkText = reportInfoBean.report_watermark
