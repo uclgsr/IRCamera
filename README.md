@@ -30,7 +30,7 @@ The IRCamera platform implements a hub-and-spoke architecture where Android devi
 
 ### Key Components
 - `ThermalCameraManager.kt` - Topdon TC001 integration
-- `GSRSensorService.kt` - Shimmer3 BLE management  
+- `GSRSensorService.kt` - Shimmer3 BLE management
 - `RgbCameraManager.kt` - Camera2 API handling
 - `TimeSyncManager.kt` - Cross-device synchronization
 - `CommandServer.kt` - PC-Android coordination protocol
