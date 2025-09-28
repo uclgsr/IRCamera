@@ -299,6 +299,42 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                     }
                 )
 
+                // Testing & Development Section
+                Text(
+                    text = "Testing & Development Tools",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.secondary,
+                    modifier = Modifier.padding(top = 16.dp)
+                )
+
+                LauncherCard(
+                    title = "Shimmer GSR Testing (Compose)",
+                    subtitle = "Advanced GSR sensor testing with real-time data monitoring",
+                    icon = Icons.Default.Sensors,
+                    onClick = { 
+                        startActivity(Intent(this@ComposeMigrationLauncherActivity, ShimmerMvpActivityCompose::class.java))
+                    }
+                )
+
+                LauncherCard(
+                    title = "Sensor Dashboard Test (Compose)",
+                    subtitle = "Comprehensive sensor dashboard testing interface",
+                    icon = Icons.Default.Dashboard,
+                    onClick = { 
+                        startActivity(Intent(this@ComposeMigrationLauncherActivity, SensorDashboardTestActivityCompose::class.java))
+                    }
+                )
+
+                LauncherCard(
+                    title = "Network Test Interface (Compose)",
+                    subtitle = "PC Remote Control and bidirectional telemetry testing",
+                    icon = Icons.Default.NetworkCheck,
+                    onClick = { 
+                        startActivity(Intent(this@ComposeMigrationLauncherActivity, SimpleNetworkTestActivityCompose::class.java))
+                    }
+                )
+
                 // Comparison option
                 Card(
                     modifier = Modifier.fillMaxWidth(),

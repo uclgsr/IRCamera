@@ -59,6 +59,9 @@
     <string name="fault_tolerant_recording">Fault-Tolerant Recording</string>
     <string name="simplified_interface">Simplified Interface</string>
     <string name="thermal_image_editor">Thermal Image Editor</string>
+    <string name="shimmer_gsr_testing">Shimmer GSR Testing</string>
+    <string name="sensor_dashboard_test">Sensor Dashboard Test</string>
+    <string name="network_test_interface">Network Test Interface</string>
 
     <string name="version_code">1.0</string>
     <string name="top_infrared_up_case">MPDC4GSR</string>
