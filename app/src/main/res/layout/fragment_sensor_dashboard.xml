@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:scrollbars="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Title Section -->
+        <TextView
+            android:id="@+id/titleText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="Multi-Modal Sensor Dashboard"
+            android:textColor="@android:color/primary_text_dark"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <!-- Overall Status Section -->
+        <TextView
+            android:id="@+id/overallStatusText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="System Status: Initializing..."
+            android:textColor="@android:color/secondary_text_dark"
+            android:textSize="14sp" />
+
+        <!-- Recording Status Section -->
+        <LinearLayout
+            android:id="@+id/recordingSection"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <ImageView
+                android:id="@+id/recordingIndicator"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="8dp"
+                android:background="@android:color/darker_gray"
+                android:contentDescription="Recording status indicator" />
+
+            <TextView
+                android:id="@+id/recordingTimer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ready to Record"
+                android:textColor="@android:color/primary_text_dark"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+        <!-- Sensors Title -->
+        <TextView
+            android:id="@+id/sensorsTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="Sensor Connections"
+            android:textColor="@android:color/primary_text_dark"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <!-- Scrollable Sensors Container -->
+        <ScrollView
+            android:id="@+id/sensorsScrollView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:fillViewport="true"
+            android:nestedScrollingEnabled="true"
+            android:scrollbars="vertical">
+
+            <LinearLayout
+                android:id="@+id/sensorsContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="8dp">
+
+                <!-- Individual sensor status views will be added programmatically -->
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </LinearLayout>
+
+</ScrollView>

@@ -34,6 +34,7 @@ import mpdc4gsr.permissions.PermissionController
 import mpdc4gsr.ui_components.ComprehensiveSensorStatusWidget
 import mpdc4gsr.ui_components.MainFragment
 import mpdc4gsr.ui_components.RecordingControlsWidget
+import mpdc4gsr.ui_components.SensorDashboardFragment
 import mpdc4gsr.viewmodel.MainActivityViewModel
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -213,26 +214,36 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     // --- Helper and Legacy Methods ---
 
     private fun initializeEnhancedUIComponents() {
-        val sensorStatusWidget = ComprehensiveSensorStatusWidget(this)
-        findViewById<android.widget.FrameLayout>(R.id.sensor_status_container)?.addView(
-            sensorStatusWidget
-        )
+        // Replace widget with fragment for better lifecycle management and scrollability
+        val sensorDashboardFragment = SensorDashboardFragment.newInstance()
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.sensor_status_container, sensorDashboardFragment, "sensor_dashboard")
+            .commit()
 
+        // Keep recording controls widget as is for now
         val recordingControlsWidget = RecordingControlsWidget(this)
         findViewById<android.widget.FrameLayout>(R.id.recording_controls_container)?.addView(
             recordingControlsWidget
         )
 
-        // The logic for updating these widgets now resides in observeViewModel,
+        // The logic for updating these fragments/widgets now resides in observeViewModel,
         // collecting state flows like `viewModel.rgbCameraState`, `viewModel.sessionState`, etc.
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.rgbCameraState.collect { /* Update sensorStatusWidget */ }
+                viewModel.rgbCameraState.collect { 
+                    // Update sensor dashboard fragment
+                    val fragment = supportFragmentManager.findFragmentByTag("sensor_dashboard") as? SensorDashboardFragment
+                    // fragment?.updateSensorStatus("rgb_camera", ...) 
+                }
             }
         }
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.sessionState.collect { /* Update recordingControlsWidget */ }
+                viewModel.sessionState.collect { 
+                    // Update recordingControlsWidget and sensor dashboard fragment
+                    val fragment = supportFragmentManager.findFragmentByTag("sensor_dashboard") as? SensorDashboardFragment
+                    // fragment?.updateRecordingStatus(...)
+                }
             }
         }
     }
