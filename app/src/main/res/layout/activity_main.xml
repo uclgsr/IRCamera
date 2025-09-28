@@ -124,25 +124,15 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
 
-            <View
-                android:id="@+id/view_main"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintWidth_percent="0.28" />
-
-
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_icon_gallery"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/view_main"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintWidth_percent="0.28">
+                app:layout_constraintHorizontal_weight="1">
 
                 <ImageView
                     android:id="@+id/iv_icon_gallery"
@@ -176,15 +166,67 @@
                     app:layout_constraintTop_toBottomOf="@id/iv_icon_gallery" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <View
+                android:id="@+id/view_main"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/cl_icon_gallery"
+                app:layout_constraintEnd_toStartOf="@id/cl_icon_settings"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintHorizontal_weight="1" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_icon_settings"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/view_main"
+                app:layout_constraintEnd_toStartOf="@id/cl_icon_mine"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintHorizontal_weight="1">
+
+                <ImageView
+                    android:id="@+id/iv_icon_settings"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:contentDescription="@string/main_settings"
+                    android:src="@drawable/selector_settings"
+                    app:layout_constraintBottom_toTopOf="@+id/tv_icon_settings"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_chainStyle="packed"
+                    app:layout_constraintWidth_percent="0.17" />
+
+                <TextView
+                    android:id="@+id/tv_icon_settings"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:paddingStart="4dp"
+                    android:paddingEnd="4dp"
+                    android:text="@string/main_settings"
+                    android:textColor="@color/tab_text"
+                    android:textSize="@dimen/app_font_11"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/iv_icon_settings" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_icon_mine"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@id/view_main"
+                app:layout_constraintStart_toEndOf="@id/cl_icon_settings"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintWidth_percent="0.28">
+                app:layout_constraintHorizontal_weight="1">
 
                 <ImageView
                     android:id="@+id/iv_icon_mine"

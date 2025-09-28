@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.ServiceConnection
 import android.os.Bundle
+import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
 import android.view.KeyEvent
@@ -26,6 +27,7 @@ import com.csl.irCamera.databinding.ActivityMainBinding
 import com.mpdc4gsr.libunified.app.bean.event.TS004ResetEvent
 import com.mpdc4gsr.libunified.app.bean.event.WinterClickEvent
 import com.mpdc4gsr.libunified.app.bean.event.device.DevicePermissionEvent
+import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
 import com.mpdc4gsr.libunified.app.dialog.TipDialog
 import com.mpdc4gsr.libunified.app.ktbase.BaseBindingActivity
 import kotlinx.coroutines.flow.collectLatest
@@ -42,16 +44,26 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import com.mpdc4gsr.module.thermalunified.fragment.IRGalleryTabFragment
 import com.mpdc4gsr.module.user.fragment.MineFragment
+import com.mpdc4gsr.module.user.fragment.MoreFragment
 
 class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickListener {
     companion object {
         private const val TAG = "MainActivity"
+        private const val PAGE_GALLERY = 0
+        private const val PAGE_MAIN = 1
+        private const val PAGE_SETTINGS = 2
+        private const val PAGE_MINE = 3
     }
 
     private val viewModel: MainActivityViewModel by viewModels()
     private lateinit var permissionController: PermissionController
     private var isServiceBound = false
     private var navigationReceiver: BroadcastReceiver? = null
+    private var isTC004 = false
+    private var isTS004 = false
+    private var isTC007 = false
+    private var isTS007 = false
+
 
     /**
      * The ServiceConnection's only role is to link the Activity's lifecycle
@@ -76,6 +88,9 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        
+        // Get device type from intent
+        isTC007 = intent.getBooleanExtra(ExtraKeyConfig.IS_TC007, false)
 
         permissionController = PermissionController(this)
 
@@ -113,12 +128,13 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     }
 
     private fun setupUI() {
-        binding.viewPage.adapter = ViewPagerAdapter(this)
-        binding.viewPage.offscreenPageLimit = 3
+        binding.viewPage.adapter = ViewPagerAdapter(this, isTC007)
+        binding.viewPage.offscreenPageLimit = 4
         binding.viewPage.isUserInputEnabled = false
 
         binding.clIconGallery.setOnClickListener(this)
         binding.viewMain.setOnClickListener(this)
+        binding.clIconSettings.setOnClickListener(this)
         binding.clIconMine.setOnClickListener(this)
 
         binding.networkStatusBar.setOnClickListener { /* Logic handled by ViewModel */ }
@@ -183,9 +199,10 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.cl_icon_gallery -> viewModel.onNavigationItemSelected(0)
-            R.id.view_main -> viewModel.onNavigationItemSelected(1)
-            R.id.cl_icon_mine -> viewModel.onNavigationItemSelected(2)
+            R.id.cl_icon_gallery -> viewModel.onNavigationItemSelected(PAGE_GALLERY)
+            R.id.view_main -> viewModel.onNavigationItemSelected(PAGE_MAIN)
+            R.id.cl_icon_settings -> viewModel.onNavigationItemSelected(PAGE_SETTINGS)
+            R.id.cl_icon_mine -> viewModel.onNavigationItemSelected(PAGE_MINE)
         }
     }
 
@@ -224,12 +241,14 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             binding.viewPage.setCurrentItem(index, false)
         }
 
-        binding.ivIconGallery.isSelected = index == 0
-        binding.tvIconGallery.isSelected = index == 0
-        binding.ivIconMine.isSelected = index == 2
-        binding.tvIconMine.isSelected = index == 2
+        binding.ivIconGallery.isSelected = index == PAGE_GALLERY
+        binding.tvIconGallery.isSelected = index == PAGE_GALLERY
+        binding.ivIconSettings.isSelected = index == PAGE_SETTINGS
+        binding.tvIconSettings.isSelected = index == PAGE_SETTINGS
+        binding.ivIconMine.isSelected = index == PAGE_MINE
+        binding.tvIconMine.isSelected = index == PAGE_MINE
         binding.ivBottomMainBg.setImageResource(
-            if (index == 1) R.drawable.ic_main_bg_select else R.drawable.ic_main_bg_not_select
+            if (index == PAGE_MAIN) R.drawable.ic_main_bg_select else R.drawable.ic_main_bg_not_select
         )
     }
 
@@ -366,13 +385,20 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         }
     }
 
-    private class ViewPagerAdapter(activity: FragmentActivity) : FragmentStateAdapter(activity) {
-        override fun getItemCount(): Int = 3
+    private class ViewPagerAdapter(
+        activity: FragmentActivity, 
+        private val isTC007: Boolean
+    ) : FragmentStateAdapter(activity) {
+        override fun getItemCount(): Int = 4
         override fun createFragment(position: Int): Fragment {
             return when (position) {
-                0 -> IRGalleryTabFragment()
-                1 -> MainFragment()
-                else -> MineFragment()
+                PAGE_GALLERY -> IRGalleryTabFragment()
+                PAGE_MAIN -> MainFragment()
+                PAGE_SETTINGS -> MoreFragment().apply {
+                    arguments = Bundle().also { it.putBoolean(ExtraKeyConfig.IS_TC007, isTC007) }
+                }
+                PAGE_MINE -> MineFragment()
+                else -> throw IndexOutOfBoundsException("Invalid position $position in ViewPagerAdapter")
             }
         }
     }
