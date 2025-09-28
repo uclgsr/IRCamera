@@ -230,21 +230,67 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         // collecting state flows like `viewModel.rgbCameraState`, `viewModel.sessionState`, etc.
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.rgbCameraState.collect { 
+                viewModel.rgbCameraState.collect { sensorState ->
                     // Update sensor dashboard fragment using helper method
                     val fragment = SensorDashboardFragment.getInstance(supportFragmentManager)
-                    // fragment?.updateSensorStatus("rgb_camera", ...) 
+                    fragment?.updateSensorStatus(
+                        "rgb_camera",
+                        mapViewModelStatusToFragmentStatus(sensorState.status),
+                        sensorState.message
+                    )
                 }
             }
         }
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.sessionState.collect { 
-                    // Update recordingControlsWidget and sensor dashboard fragment
+                viewModel.thermalCameraState.collect { sensorState ->
                     val fragment = SensorDashboardFragment.getInstance(supportFragmentManager)
-                    // fragment?.updateRecordingStatus(...)
+                    fragment?.updateSensorStatus(
+                        "thermal_camera",
+                        mapViewModelStatusToFragmentStatus(sensorState.status),
+                        sensorState.message
+                    )
                 }
             }
+        }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.gsrSensorState.collect { sensorState ->
+                    val fragment = SensorDashboardFragment.getInstance(supportFragmentManager)
+                    fragment?.updateSensorStatus(
+                        "shimmer_gsr",
+                        mapViewModelStatusToFragmentStatus(sensorState.status),
+                        sensorState.message
+                    )
+                }
+            }
+        }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.sessionState.collect { sessionState ->
+                    // Update recordingControlsWidget and sensor dashboard fragment
+                    val fragment = SensorDashboardFragment.getInstance(supportFragmentManager)
+                    val currentSession = viewModel.currentSession.value
+                    fragment?.updateRecordingStatus(
+                        sessionState == MainActivityViewModel.SessionState.RECORDING,
+                        currentSession?.sessionId
+                    )
+                }
+            }
+        }
+    }
+
+    /**
+     * Maps ViewModel sensor status to Fragment sensor status
+     */
+    private fun mapViewModelStatusToFragmentStatus(viewModelStatus: MainActivityViewModel.SensorStatus): SensorDashboardFragment.SensorStatus {
+        return when (viewModelStatus) {
+            MainActivityViewModel.SensorStatus.DISCONNECTED -> SensorDashboardFragment.SensorStatus.DISCONNECTED
+            MainActivityViewModel.SensorStatus.CONNECTING -> SensorDashboardFragment.SensorStatus.CONNECTING
+            MainActivityViewModel.SensorStatus.CONNECTED -> SensorDashboardFragment.SensorStatus.CONNECTED
+            MainActivityViewModel.SensorStatus.STREAMING -> SensorDashboardFragment.SensorStatus.STREAMING
+            MainActivityViewModel.SensorStatus.ERROR -> SensorDashboardFragment.SensorStatus.ERROR
+            MainActivityViewModel.SensorStatus.SIMULATION -> SensorDashboardFragment.SensorStatus.SIMULATION
         }
     }
 
