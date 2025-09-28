@@ -78,7 +78,13 @@ class CommandClient:
             sock.send(message_json.encode() + b'\n')
             
             # Wait for response
-            response_data = sock.recv(4096)
+            # Read until newline to ensure complete message
+            response_data = b""
+            while b'\n' not in response_data:
+                chunk = sock.recv(1024)
+                if not chunk:
+                    break
+                response_data += chunk
             response = response_data.decode().strip()
             
             # Log command

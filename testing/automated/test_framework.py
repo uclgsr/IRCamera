@@ -252,8 +252,11 @@ class AutomatedTestFramework:
                 test.add_metric("start_command_success", 1, "bool")
                 test.add_metric("start_command_time_ns", start_command_time, "ns")
                 
-                # In real implementation, would analyze sensor start timestamps from logs
+                # Retrieve sensor start timestamps and validate timing
                 # For now, mark as passed if START command succeeded
+                # TODO: Implement actual sensor timing validation by retrieving
+                # sensor start timestamps from logs or status endpoint and ensuring
+                # their spread is within required tolerance (e.g., <100ms)
                 test.finish(True)
             else:
                 test.add_error("START command failed")

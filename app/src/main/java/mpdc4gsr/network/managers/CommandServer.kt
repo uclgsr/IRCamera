@@ -74,7 +74,8 @@ class CommandServer(
             // Initialize network components
             networkServer = NetworkServer(context, port)
             
-            protocolHandler = ProtocolHandler(context, networkServer!!).apply {
+            networkServer?.let { server ->
+                protocolHandler = ProtocolHandler(context, server).apply {
                 setCommandHandler(createProtocolCallback())
             }
             
@@ -108,17 +109,17 @@ class CommandServer(
     /**
      * Stop the command server
      */
-    fun stop() {
+    suspend fun stop() {
         Log.i(TAG, "Stopping command server")
-        
+
         serverScope.launch {
             networkServer?.stop()
-        }
+        }.join()
         serverScope.cancel()
-        
+
         _serverStatus.value = ServerStatus.STOPPED
         _connectionStatus.value = ConnectionStatus.DISCONNECTED
-        
+
         Log.i(TAG, "Command server stopped")
     }
     
@@ -177,16 +178,17 @@ class CommandServer(
                 
                 return try {
                     // Delegate to recording controller
-                    recordingController?.let { controller ->
-                        // This would start the actual recording
+                    commandCallback?.let { callback ->
+                        // Pass empty configuration for now - protocol handler should provide full config
+                        val success = callback.onStartRecording(sessionId, JSONObject())
                         ProtocolHandler.CommandResult(
-                            success = true,
-                            message = "Recording started",
+                            success = success,
+                            message = if (success) "Recording started" else "Recording start failed",
                             data = mapOf("session_id" to sessionId)
                         )
                     } ?: ProtocolHandler.CommandResult(
                         success = false,
-                        message = "Recording controller not available"
+                        message = "Command callback not available"
                     )
                 } catch (e: Exception) {
                     Log.e(TAG, "Failed to start recording", e)
@@ -201,16 +203,16 @@ class CommandServer(
                 Log.i(TAG, "Stopping recording for session: $sessionId")
                 
                 return try {
-                    recordingController?.let { controller ->
-                        // This would stop the actual recording
+                    commandCallback?.let { callback ->
+                        val success = callback.onStopRecording()
                         ProtocolHandler.CommandResult(
-                            success = true,
-                            message = "Recording stopped",
+                            success = success,
+                            message = if (success) "Recording stopped" else "Recording stop failed",
                             data = mapOf("session_id" to sessionId)
                         )
                     } ?: ProtocolHandler.CommandResult(
                         success = false,
-                        message = "Recording controller not available"
+                        message = "Command callback not available"
                     )
                 } catch (e: Exception) {
                     Log.e(TAG, "Failed to stop recording", e)
@@ -225,14 +227,20 @@ class CommandServer(
                 Log.i(TAG, "Processing sync request from PC")
                 
                 return try {
-                    timeSyncManager?.let { syncManager ->
-                        val phoneTime = System.currentTimeMillis()
-                        // This would perform actual sync calculation
-                        ProtocolHandler.SyncResult(
-                            success = true,
-                            phoneTimestamp = phoneTime,
-                            offsetNs = 0L // Would be calculated by sync manager
-                        )
+                    commandCallback?.let { callback ->
+                        // Protocol handler should provide PC address, using empty string for now
+                        val success = callback.onSyncRequest("")
+                        if (success) {
+                            timeSyncManager?.let {
+                                ProtocolHandler.SyncResult(
+                                    success = true,
+                                    phoneTimestamp = System.currentTimeMillis(),
+                                    offsetNs = 0L // Should be calculated by sync manager
+                                )
+                            } ?: ProtocolHandler.SyncResult(success = false)
+                        } else {
+                            ProtocolHandler.SyncResult(success = false)
+                        }
                     } ?: ProtocolHandler.SyncResult(
                         success = false
                     )

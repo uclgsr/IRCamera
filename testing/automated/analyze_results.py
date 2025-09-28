@@ -152,7 +152,17 @@ class TestResultAnalyzer:
         
         # Create table CSV
         table_file = self.output_dir / "test_cases_validation_table.csv"
-        df = pd.DataFrame(test_cases_data)
+        if HAS_ANALYSIS_DEPS:
+            df = pd.DataFrame(test_cases_data)
+        else:
+            # Use basic CSV writing as fallback
+            import csv
+            with open(table_file, 'w', newline='', encoding='utf-8') as f:
+                if test_cases_data:
+                    writer = csv.DictWriter(f, fieldnames=test_cases_data[0].keys())
+                    writer.writeheader()
+                    writer.writerows(test_cases_data)
+            return str(table_file)
         df.to_csv(table_file, index=False)
         
         # Create formatted table for thesis
@@ -236,13 +246,23 @@ Samples: {len(rtt_values)}'''
         # Generate sync error statistics table
         stats_data = {
             'Metric': ['Mean RTT', 'Standard Deviation', 'Minimum RTT', 'Maximum RTT', 'Sample Count'],
-            'Value': [f"{np.mean(rtt_values):.3f}", f"{np.std(rtt_values):.3f}", 
-                     f"{np.min(rtt_values):.3f}", f"{np.max(rtt_values):.3f}", str(len(rtt_values))],
+            'Value': [f"{rtt_mean:.3f}", f"{rtt_std:.3f}", 
+                     f"{rtt_min:.3f}", f"{rtt_max:.3f}", str(len(rtt_values))],
             'Unit': ['ms', 'ms', 'ms', 'ms', 'samples']
         }
         
-        stats_df = pd.DataFrame(stats_data)
-        stats_df.to_csv(self.output_dir / "time_sync_statistics.csv", index=False)
+        if HAS_ANALYSIS_DEPS:
+            stats_df = pd.DataFrame(stats_data)
+            stats_df.to_csv(self.output_dir / "time_sync_statistics.csv", index=False)
+        else:
+            # Use basic CSV writing as fallback
+            import csv
+            with open(self.output_dir / "time_sync_statistics.csv", 'w', newline='', encoding='utf-8') as f:
+                writer = csv.DictWriter(f, fieldnames=stats_data.keys())
+                writer.writeheader()
+                for i in range(len(stats_data['Metric'])):
+                    row = {key: stats_data[key][i] for key in stats_data.keys()}
+                    writer.writerow(row)
         
         logger.info("Time synchronization analysis completed")
     
@@ -288,8 +308,18 @@ Samples: {len(rtt_values)}'''
             'Status': ['OK' if d < 100 else 'Slow' for d in start_delays]
         }
         
-        delay_df = pd.DataFrame(delay_data)
-        delay_df.to_csv(self.output_dir / "sensor_startup_delays.csv", index=False)
+        if HAS_ANALYSIS_DEPS:
+            delay_df = pd.DataFrame(delay_data)
+            delay_df.to_csv(self.output_dir / "sensor_startup_delays.csv", index=False)
+        else:
+            # Use basic CSV writing as fallback
+            import csv
+            with open(self.output_dir / "sensor_startup_delays.csv", 'w', newline='', encoding='utf-8') as f:
+                writer = csv.DictWriter(f, fieldnames=delay_data.keys())
+                writer.writeheader()
+                for i in range(len(delay_data['Sensor'])):
+                    row = {key: delay_data[key][i] for key in delay_data.keys()}
+                    writer.writerow(row)
         
         logger.info("Multi-sensor synchronization analysis completed")
     
@@ -306,8 +336,18 @@ Samples: {len(rtt_values)}'''
             'Performance': ['98%', '100%', '99.8%']
         }
         
-        throughput_df = pd.DataFrame(throughput_data)
-        throughput_df.to_csv(self.output_dir / "data_throughput_performance.csv", index=False)
+        if HAS_ANALYSIS_DEPS:
+            throughput_df = pd.DataFrame(throughput_data)
+            throughput_df.to_csv(self.output_dir / "data_throughput_performance.csv", index=False)
+        else:
+            # Use basic CSV writing as fallback
+            import csv
+            with open(self.output_dir / "data_throughput_performance.csv", 'w', newline='', encoding='utf-8') as f:
+                writer = csv.DictWriter(f, fieldnames=throughput_data.keys())
+                writer.writeheader()
+                for i in range(len(throughput_data['Sensor'])):
+                    row = {key: throughput_data[key][i] for key in throughput_data.keys()}
+                    writer.writerow(row)
         
         # Create performance comparison chart
         sensors = throughput_data['Sensor']
