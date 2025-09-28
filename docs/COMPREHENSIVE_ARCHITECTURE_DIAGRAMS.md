@@ -537,7 +537,7 @@ sequenceDiagram
 ```mermaid
 graph TB
     subgraph "Topdon TC001 Thermal Camera"
-        TC001Hardware[TC001 Hardware<br/>Thermal Sensor Array<br/>384x288 Resolution<br/>-20 degreesC to +400 degreesC Range]
+        TC001Hardware[TC001 Hardware<br/>Thermal Sensor Array<br/>384x288 Resolution<br/>-20 degrees C to +400 degrees C Range]
         TC001USB[USB Interface<br/>USB 2.0 Connection<br/>Hot-plug Support<br/>Power via USB]
         TC001Driver[TC001 Driver<br/>Native Library<br/>JNI Interface<br/>Frame Capture API]
         TC001SDK[TC001 SDK<br/>Temperature Conversion<br/>Image Processing<br/>Calibration Data]
