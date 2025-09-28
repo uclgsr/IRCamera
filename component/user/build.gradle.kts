@@ -111,6 +111,9 @@ dependencies {
     implementation(libs.compose.viewmodel)
     debugImplementation(libs.compose.ui.tooling)
     debugImplementation(libs.compose.ui.test.manifest)
+    
+    // Image loading for Compose
+    implementation("io.coil-kt:coil-compose:2.4.0")
 
     // Utilities
     implementation(libs.utilcode)
