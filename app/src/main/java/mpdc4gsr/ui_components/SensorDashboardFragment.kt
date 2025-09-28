@@ -168,15 +168,25 @@ class SensorDashboardFragment : Fragment() {
         )
         val targetHeight = sensorsContainer.measuredHeight
         
-        val animator = ValueAnimator.ofInt(0, targetHeight)
-        animator.duration = 300
-        animator.interpolator = AccelerateDecelerateInterpolator()
+        // Fallback to wrap content if measurement fails
+        val finalTargetHeight = if (targetHeight > 0) targetHeight else ViewGroup.LayoutParams.WRAP_CONTENT
         
-        animator.addUpdateListener { animation ->
-            val value = animation.animatedValue as Int
-            val layoutParams = sensorsContainer.layoutParams
-            layoutParams.height = value
-            sensorsContainer.layoutParams = layoutParams
+        val animator = if (finalTargetHeight == ViewGroup.LayoutParams.WRAP_CONTENT) {
+            // If we can't measure, just reset the height immediately
+            sensorsContainer.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+            sensorsContainer.requestLayout()
+            null
+        } else {
+            ValueAnimator.ofInt(0, finalTargetHeight).apply {
+                duration = 300
+                interpolator = AccelerateDecelerateInterpolator()
+                addUpdateListener { animation ->
+                    val value = animation.animatedValue as Int
+                    val layoutParams = sensorsContainer.layoutParams
+                    layoutParams.height = value
+                    sensorsContainer.layoutParams = layoutParams
+                }
+            }
         }
         
         // Rotate arrow icon to point down (expanded state)
@@ -184,7 +194,7 @@ class SensorDashboardFragment : Fragment() {
         iconRotation.duration = 300
         iconRotation.interpolator = AccelerateDecelerateInterpolator()
         
-        animator.start()
+        animator?.start()
         iconRotation.start()
     }
 
