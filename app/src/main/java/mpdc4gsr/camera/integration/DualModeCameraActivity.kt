@@ -50,25 +50,18 @@ class DualModeCameraActivity : BaseViewModelActivity<DualModeCameraViewModel>() 
     }
 
     private fun setupBottomNavigation() {
-        val bottomNavigation = findViewById<androidx.constraintlayout.widget.ConstraintLayout>(R.id.bottom_navigation)
-
-        bottomNavigation.findViewById<androidx.constraintlayout.widget.ConstraintLayout>(R.id.cl_nav_gallery)
+        findViewById<androidx.constraintlayout.widget.ConstraintLayout>(R.id.cl_nav_gallery)
             ?.setOnClickListener {
                 navigateToMainActivity(0) // Gallery page
             }
 
-        bottomNavigation.findViewById<androidx.constraintlayout.widget.ConstraintLayout>(R.id.cl_nav_main)
-            ?.setOnClickListener {
-                navigateToMainActivity(1) // Main page
-            }
-
-        bottomNavigation.findViewById<androidx.constraintlayout.widget.ConstraintLayout>(R.id.cl_nav_mine)
+        findViewById<androidx.constraintlayout.widget.ConstraintLayout>(R.id.cl_nav_mine)
             ?.setOnClickListener {
                 navigateToMainActivity(2) // Mine page
             }
 
         // Update navigation background to show main is selected (camera is main functionality)
-        bottomNavigation.findViewById<android.widget.ImageView>(R.id.iv_navigation_bg)
+        findViewById<android.widget.ImageView>(R.id.iv_bottom_main_bg)
             ?.setImageResource(R.drawable.ic_main_bg_select)
     }
 

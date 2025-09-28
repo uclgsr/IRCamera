@@ -91,20 +91,16 @@ class GSRSettingsActivity : BaseViewModelActivity<GSRSettingsViewModel>() {
     }
 
     private fun setupBottomNavigation() {
-        binding.bottomNavigation.clNavGallery.setOnClickListener {
+        binding.clNavGallery.setOnClickListener {
             navigateToMainActivity(mpdc4gsr.activities.MainActivity.PAGE_GALLERY) // Gallery page
         }
 
-        binding.bottomNavigation.clNavMain.setOnClickListener {
-            navigateToMainActivity(mpdc4gsr.activities.MainActivity.PAGE_MAIN) // Main page
-        }
-
-        binding.bottomNavigation.clNavMine.setOnClickListener {
+        binding.clNavMine.setOnClickListener {
             navigateToMainActivity(mpdc4gsr.activities.MainActivity.PAGE_MINE) // Mine page
         }
 
-        // Update navigation background to show main is selected
-        binding.bottomNavigation.ivNavigationBg.setImageResource(R.drawable.ic_main_bg_not_select)
+        // Update navigation background to show mine is selected (settings context)
+        binding.ivBottomMainBg.setImageResource(R.drawable.ic_main_bg_not_select)
     }
 
     private fun navigateToMainActivity(pageIndex: Int) {

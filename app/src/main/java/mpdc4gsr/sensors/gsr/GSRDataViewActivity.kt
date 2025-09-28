@@ -64,20 +64,16 @@ class GSRDataViewActivity : BaseViewModelActivity<GSRDataViewViewModel>() {
     }
 
     private fun setupBottomNavigation() {
-        binding.bottomNavigation.clNavGallery.setOnClickListener {
+        binding.clNavGallery.setOnClickListener {
             navigateToMainActivity(0) // Gallery page
         }
 
-        binding.bottomNavigation.clNavMain.setOnClickListener {
-            navigateToMainActivity(1) // Main page
-        }
-
-        binding.bottomNavigation.clNavMine.setOnClickListener {
+        binding.clNavMine.setOnClickListener {
             navigateToMainActivity(2) // Mine page
         }
 
         // Update navigation background to show main is selected
-        binding.bottomNavigation.ivNavigationBg.setImageResource(R.drawable.ic_main_bg_select)
+        binding.ivBottomMainBg.setImageResource(R.drawable.ic_main_bg_select)
     }
 
     private fun navigateToMainActivity(pageIndex: Int) {
