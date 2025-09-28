@@ -34,14 +34,14 @@ class ReportRepository : BaseRepository() {
         isTC007: Boolean,
         page: Int,
         pageSize: Int = 20
-    ): Flow<Result<List<ReportData>>> = safeFlow {
+    ): Flow<BaseRepository.Result<List<ReportData>>> = safeFlow {
         
         val cacheKey = "reports_${if (isTC007) "tc007" else "ts004"}_$page"
         val cached = reportCache[cacheKey]
         
         // Return cached data if valid
         if (cached != null && System.currentTimeMillis() - cached.cachedAt < 60000) {
-            return@safeFlow Result.success(cached.data)
+            return@safeFlow cached.data
         }
         
         // Simulate network call
@@ -56,7 +56,7 @@ class ReportRepository : BaseRepository() {
             page = page
         )
         
-        Result.success(reports)
+        reports
     }
     
     private fun generateSampleReports(isTC007: Boolean, page: Int, pageSize: Int): List<ReportData> {

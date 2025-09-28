@@ -35,16 +35,27 @@ class GSRDataRepository : BaseRepository() {
     enum class SessionStatus { ACTIVE, PAUSED, COMPLETED, CANCELLED }
     
     // Real-time GSR data stream
-    fun getGSRDataStream(deviceId: String): Flow<Result<GSRReading>> = safeFlow {
-        var counter = 0
-        while (true) {
-            delay(100) // 10Hz sampling rate
-            
-            val reading = generateGSRReading(deviceId, counter++)
-            emit(Result.success(reading))
+    fun getGSRDataStream(deviceId: String): Flow<BaseRepository.Result<GSRReading>> = flow {
+        emit(BaseRepository.Result.Loading)
+        try {
+            var counter = 0
+            while (true) {
+                delay(100) // 10Hz sampling rate
+                
+                val reading = generateGSRReading(deviceId, counter++)
+                emit(BaseRepository.Result.Success(reading))
+            }
+        } catch (e: Exception) {
+            emit(BaseRepository.Result.Error(e))
         }
-    }
+    }.flowOn(kotlinx.coroutines.Dispatchers.IO)
     
+    // Historical GSR data with advanced caching
+    fun getHistoricalGSRData(
+        sessionId: String,
+        startTime: Long,
+        endTime: Long
+    ): Flow<BaseRepository.Result<List<GSRReading>>> = safeFlow {
         val cacheKey = "gsr_${sessionId}_${startTime}_${endTime}"
         val ttlMs = 600_000L // 10 minutes
         val data = getCachedOrExecute(
@@ -55,11 +66,11 @@ class GSRDataRepository : BaseRepository() {
             delay(2000)
             generateHistoricalGSRData(sessionId, startTime, endTime)
         }
-        Result.success(data)
+        data
     }
     
     // Session management
-    fun getGSRSessions(deviceId: String): Flow<Result<List<GSRSession>>> = safeFlow {
+    fun getGSRSessions(deviceId: String): Flow<BaseRepository.Result<List<GSRSession>>> = safeFlow {
         val cacheKey = "sessions_$deviceId"
         val ttlMs = 120_000L // 2 minutes
         val data = getCachedOrExecute(
@@ -69,7 +80,7 @@ class GSRDataRepository : BaseRepository() {
             delay(1000)
             generateSampleSessions(deviceId)
         }
-        Result.success(data)
+        data
     }
     
     private fun generateGSRReading(deviceId: String, counter: Int): GSRReading {
