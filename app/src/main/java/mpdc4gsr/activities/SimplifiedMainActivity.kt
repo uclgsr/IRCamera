@@ -61,7 +61,7 @@ class SimplifiedMainActivity : AppCompatActivity() {
         connectButton = findViewById(R.id.connectButton)
         
         // Verify views were found
-        if (BuildConfig.DEBUG) Log.d(TAG, "Views found - recordButton: ${recordButton != null}, connectButton: ${connectButton != null}")
+        if (BuildConfig.DEBUG) Log.d(TAG, "Views initialization complete - all views found")
 
         recordButton.setOnClickListener {
             if (BuildConfig.DEBUG) Log.d(TAG, "Record button clicked")
