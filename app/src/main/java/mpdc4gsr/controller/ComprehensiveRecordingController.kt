@@ -705,9 +705,13 @@ class ComprehensiveRecordingController(
 
     private fun getAvailableSpaceGB(): Double {
         return try {
-            val sessionDir = File(context.filesDir, "sessions")
-            sessionDir.freeSpace / (1024.0 * 1024.0 * 1024.0)
+            // Use the same logic as UnifiedSessionUtils to ensure consistency
+            val rootDir = context.getExternalFilesDir(null) ?: context.filesDir
+            val sessionDir = File(rootDir, "sessions").apply { mkdirs() }
+            val freeSpaceBytes = sessionDir.freeSpace
+            freeSpaceBytes / (1024.0 * 1024.0 * 1024.0)
         } catch (e: Exception) {
+            Log.w(TAG, "Error calculating available storage space", e)
             RecordingConstants.FALLBACK_AVAILABLE_SPACE_GB
         }
     }
