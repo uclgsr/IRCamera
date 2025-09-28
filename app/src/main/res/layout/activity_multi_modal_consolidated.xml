@@ -22,6 +22,10 @@
             type="Boolean" />
     </data>
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -174,7 +178,7 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Recording Controls Card -->
+            <!-- Device Pairing Controls Card -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -192,7 +196,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="16dp"
-                        android:text="Recording Controls"
+                        android:text="Device Pairing Controls"
                         android:textColor="@color/white"
                         android:textSize="16sp"
                         android:textStyle="bold" />
@@ -201,6 +205,53 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/scanButton"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="8dp"
+                            android:layout_weight="2"
+                            android:backgroundTint="@color/fab_gsr_background"
+                            android:text="Scan for Controllers"
+                            android:textColor="@color/white" />
+
+                        <Button
+                            android:id="@+id/disconnectButton"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_weight="1"
+                            android:backgroundTint="#FF757575"
+                            android:text="Disconnect"
+                            android:textColor="@color/white"
+                            android:visibility="gone" />
+                    </LinearLayout>
+
+                    <!-- Progress Bar -->
+                    <ProgressBar
+                        android:id="@+id/progressBar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:visibility="gone" />
+
+                    <!-- Controllers RecyclerView -->
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/controllersRecyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:maxHeight="200dp"
+                        android:visibility="gone" />
+                        
+                    <!-- Recording Controls (if needed) -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
 
                         <Button
                             android:id="@+id/start_stop_button"
@@ -349,4 +400,14 @@
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
+    
+    <!-- Flash Overlay for sync flash -->
+    <View
+        android:id="@+id/flashOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:visibility="gone" />
+        
+    </FrameLayout>
 </layout>
