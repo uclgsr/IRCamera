@@ -288,8 +288,8 @@ class DevicePairingViewModel : BaseViewModel(), NetworkClient.NetworkEventListen
     companion object {
         private const val TAG = "DevicePairingViewModel"
     }
-}
 
+    fun connectToController(controller: Controller) {
         _connectionState.value = ConnectionState.CONNECTING
         _statusMessage.value = "Connecting to ${controller.deviceName}..."
 
