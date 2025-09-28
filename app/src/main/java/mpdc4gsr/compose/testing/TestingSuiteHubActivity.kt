@@ -133,6 +133,7 @@ class TestingSuiteHubActivity : ComponentActivity() {
                     title = "Cross-Modal Sync",
                     description = "Test synchronization between sensors",
                     icon = Icons.Default.Sync,
+                    composeActivity = CrossModalSyncTestComposeActivity::class.java,
                     legacyActivity = CrossModalSyncTestActivity::class.java,
                     category = TestCategory.SYNCHRONIZATION,
                     priority = TestPriority.HIGH
@@ -160,6 +161,7 @@ class TestingSuiteHubActivity : ComponentActivity() {
                     title = "Session Lifecycle",
                     description = "Test recording session management",
                     icon = Icons.Default.Timelapse,
+                    composeActivity = SessionLifecycleTestComposeActivity::class.java,
                     legacyActivity = SessionLifecycleTestActivity::class.java,
                     category = TestCategory.PERFORMANCE
                 ),
@@ -168,6 +170,7 @@ class TestingSuiteHubActivity : ComponentActivity() {
                     title = "Parallel Recording",
                     description = "Test multi-sensor parallel recording",
                     icon = Icons.Default.MultipleStop,
+                    composeActivity = ParallelRecordingTestComposeActivity::class.java,
                     legacyActivity = ParallelRecordingTestActivity::class.java,
                     category = TestCategory.PERFORMANCE,
                     priority = TestPriority.HIGH
