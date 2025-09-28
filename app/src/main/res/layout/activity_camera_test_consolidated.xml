@@ -249,10 +249,10 @@
                             android:text="Manual Focus:"
                             android:textColor="@color/white" />
 
-                        <Switch
-                            android:id="@+id/manual_focus_switch"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
+<com.google.android.material.switchmaterial.SwitchMaterial
+    android:id="@+id/manual_focus_switch"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" />
                     </LinearLayout>
 
                     <LinearLayout
