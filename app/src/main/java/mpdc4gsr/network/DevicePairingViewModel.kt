@@ -1,103 +1,294 @@
 package mpdc4gsr.network
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.mpdc4gsr.gsr.model.SessionInfo
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
+/**
+ * Modernized DevicePairingViewModel using StateFlow and Repository pattern
+ * Manages network device discovery and pairing with reactive state management
+ */
 class DevicePairingViewModel : BaseViewModel(), NetworkClient.NetworkEventListener {
 
-    private val _discoveredControllers = MutableLiveData<List<NetworkClient.ControllerInfo>>()
-    val discoveredControllers: LiveData<List<NetworkClient.ControllerInfo>> = _discoveredControllers
+    // StateFlow for reactive state management
+    private val _discoveredControllers = MutableStateFlow<List<NetworkClient.ControllerInfo>>(emptyList())
+    val discoveredControllers: StateFlow<List<NetworkClient.ControllerInfo>> = _discoveredControllers.asStateFlow()
 
-    private val _connectedController = MutableLiveData<NetworkClient.ControllerInfo?>()
-    val connectedController: LiveData<NetworkClient.ControllerInfo?> = _connectedController
+    private val _connectedController = MutableStateFlow<NetworkClient.ControllerInfo?>(null)
+    val connectedController: StateFlow<NetworkClient.ControllerInfo?> = _connectedController.asStateFlow()
 
-    private val _connectionState = MutableLiveData<ConnectionState>()
-    val connectionState: LiveData<ConnectionState> = _connectionState
+    private val _connectionState = MutableStateFlow(ConnectionState.DISCONNECTED)
+    val connectionState: StateFlow<ConnectionState> = _connectionState.asStateFlow()
 
-    private val _scanState = MutableLiveData<ScanState>()
-    val scanState: LiveData<ScanState> = _scanState
+    private val _scanState = MutableStateFlow(ScanState.IDLE)
+    val scanState: StateFlow<ScanState> = _scanState.asStateFlow()
 
-    private val _statusMessage = MutableLiveData<String>()
-    val statusMessage: LiveData<String> = _statusMessage
+    private val _statusMessage = MutableStateFlow("")
+    val statusMessage: StateFlow<String> = _statusMessage.asStateFlow()
 
-    private val _error = MutableLiveData<String?>()
-    val error: LiveData<String?> = _error
+    // SharedFlow for one-time events
+    private val _events = MutableSharedFlow<PairingEvent>()
+    val events: SharedFlow<PairingEvent> = _events.asSharedFlow()
 
-    private val _navigationEvent = MutableLiveData<NavigationEvent?>()
-    val navigationEvent: LiveData<NavigationEvent?> = _navigationEvent
+    // Combined state for complex UI scenarios
+    private val _pairingScreenState = MutableStateFlow(PairingScreenState())
+    val pairingScreenState: StateFlow<PairingScreenState> = _pairingScreenState.asStateFlow()
 
     private lateinit var networkClient: NetworkClient
     private val controllers = mutableListOf<NetworkClient.ControllerInfo>()
 
+    // Enhanced state enums
     enum class ConnectionState {
         DISCONNECTED,
         CONNECTING,
         CONNECTED,
-        CONNECTION_FAILED
+        CONNECTION_FAILED,
+        AUTHENTICATING,
+        AUTHENTICATED
     }
 
     enum class ScanState {
         IDLE,
         SCANNING,
         COMPLETED,
-        FAILED
+        FAILED,
+        TIMEOUT
     }
 
-    data class NavigationEvent(
-        val action: String,
-        val sessionInfo: SessionInfo? = null
+    // Sealed classes for type-safe event handling
+    sealed class PairingEvent {
+        data class ShowError(val message: String) : PairingEvent()
+        data class ShowSuccess(val message: String) : PairingEvent()
+        data class NavigateToSession(val sessionInfo: SessionInfo) : PairingEvent()
+        data class ShowConnectionDialog(val controller: NetworkClient.ControllerInfo) : PairingEvent()
+        object NavigateBack : PairingEvent()
+    }
+
+    data class PairingScreenState(
+        val isInitialized: Boolean = false,
+        val canScan: Boolean = true,
+        val canConnect: Boolean = false,
+        val showProgress: Boolean = false,
+        val discoveredCount: Int = 0,
+        val lastScanTime: Long? = null
     )
 
-    fun initialize(context: android.content.Context) {
-        networkClient = NetworkClient(context)
-        networkClient.setEventListener(this)
-
-        _connectionState.value = ConnectionState.DISCONNECTED
-        _scanState.value = ScanState.IDLE
-        _statusMessage.value = "Ready to scan for PC Controllers"
-        _discoveredControllers.value = emptyList()
+    init {
+        // Setup combined state management
+        viewModelScope.launch {
+            combine(
+                _scanState,
+                _connectionState,
+                _discoveredControllers
+            ) { scanState, connectionState, controllers ->
+                PairingScreenState(
+                    isInitialized = ::networkClient.isInitialized,
+                    canScan = scanState != ScanState.SCANNING && connectionState != ConnectionState.CONNECTING,
+                    canConnect = controllers.isNotEmpty() && connectionState == ConnectionState.DISCONNECTED,
+                    showProgress = scanState == ScanState.SCANNING || connectionState == ConnectionState.CONNECTING,
+                    discoveredCount = controllers.size,
+                    lastScanTime = if (scanState == ScanState.COMPLETED) System.currentTimeMillis() else null
+                )
+            }.collect { newState ->
+                _pairingScreenState.value = newState
+            }
+        }
     }
 
-    fun startControllerScan() {
-        if (_scanState.value == ScanState.SCANNING) {
-            return // Already scanning
+    fun initialize(context: android.content.Context) {
+        launchWithErrorHandling {
+            networkClient = NetworkClient(context)
+            networkClient.setEventListener(this)
+
+            _connectionState.value = ConnectionState.DISCONNECTED
+            _scanState.value = ScanState.IDLE
+            _statusMessage.value = "Ready to scan for PC Controllers"
+            _discoveredControllers.value = emptyList()
+            
+            _events.emit(PairingEvent.ShowSuccess("Network client initialized successfully"))
         }
+    }
 
-        _scanState.value = ScanState.SCANNING
-        _statusMessage.value = "Scanning for PC Controllers..."
-        controllers.clear()
-        _discoveredControllers.value = emptyList()
+    fun startControllerScan(forceRefresh: Boolean = false) {
+        launchWithErrorHandling {
+            val currentScanState = _scanState.value
+            if (currentScanState == ScanState.SCANNING) {
+                return@launchWithErrorHandling // Already scanning
+            }
 
-        viewModelScope.launch {
+            _scanState.value = ScanState.SCANNING
+            _statusMessage.value = "Scanning for PC Controllers..."
+            
+            if (forceRefresh) {
+                controllers.clear()
+                _discoveredControllers.value = emptyList()
+            }
+
             try {
                 val foundControllers = networkClient.discoverControllers()
+                controllers.clear()
                 controllers.addAll(foundControllers)
                 _discoveredControllers.value = controllers.toList()
 
-                _statusMessage.value = if (foundControllers.isNotEmpty()) {
+                val message = if (foundControllers.isNotEmpty()) {
                     "Found ${foundControllers.size} PC Controller(s)"
                 } else {
                     "No PC Controllers found. Make sure you're on the same network."
                 }
-
+                
+                _statusMessage.value = message
                 _scanState.value = ScanState.COMPLETED
+                
+                if (foundControllers.isNotEmpty()) {
+                    _events.emit(PairingEvent.ShowSuccess(message))
+                } else {
+                    _events.emit(PairingEvent.ShowError("No controllers found"))
+                }
 
             } catch (e: Exception) {
-                _statusMessage.value = "Scan failed: ${e.message}"
+                val errorMessage = "Scan failed: ${e.message}"
+                _statusMessage.value = errorMessage
                 _scanState.value = ScanState.FAILED
-                _error.value = "Failed to scan for controllers: ${e.message}"
+                _events.emit(PairingEvent.ShowError("Failed to scan for controllers: ${e.message}"))
             }
         }
     }
 
     fun connectToController(controller: NetworkClient.ControllerInfo) {
-        if (_connectionState.value == ConnectionState.CONNECTING) {
-            return // Already connecting
+        launchWithLoading {
+            val currentConnectionState = _connectionState.value
+            if (currentConnectionState == ConnectionState.CONNECTING) {
+                return@launchWithLoading // Already connecting
+            }
+
+            try {
+                _connectionState.value = ConnectionState.CONNECTING
+                _statusMessage.value = "Connecting to ${controller.name}..."
+
+                // Show connection dialog
+                _events.emit(PairingEvent.ShowConnectionDialog(controller))
+
+                val success = networkClient.connectToController(controller)
+                
+                if (success) {
+                    _connectedController.value = controller
+                    _connectionState.value = ConnectionState.CONNECTED
+                    _statusMessage.value = "Connected to ${controller.name}"
+                    _events.emit(PairingEvent.ShowSuccess("Successfully connected to ${controller.name}"))
+                } else {
+                    _connectionState.value = ConnectionState.CONNECTION_FAILED
+                    _statusMessage.value = "Failed to connect to ${controller.name}"
+                    _events.emit(PairingEvent.ShowError("Connection failed"))
+                }
+
+            } catch (e: Exception) {
+                _connectionState.value = ConnectionState.CONNECTION_FAILED
+                _statusMessage.value = "Connection error: ${e.message}"
+                _events.emit(PairingEvent.ShowError("Connection error: ${e.message}"))
+            }
         }
+    }
+
+    fun disconnectFromController() {
+        launchWithErrorHandling {
+            val currentController = _connectedController.value
+            if (currentController != null) {
+                try {
+                    networkClient.disconnect()
+                    _connectedController.value = null
+                    _connectionState.value = ConnectionState.DISCONNECTED
+                    _statusMessage.value = "Disconnected from ${currentController.name}"
+                    _events.emit(PairingEvent.ShowSuccess("Disconnected successfully"))
+                } catch (e: Exception) {
+                    _events.emit(PairingEvent.ShowError("Disconnect error: ${e.message}"))
+                }
+            }
+        }
+    }
+
+    fun retryConnection() {
+        val lastController = _connectedController.value
+        if (lastController != null) {
+            connectToController(lastController)
+        } else {
+            startControllerScan(forceRefresh = true)
+        }
+    }
+
+    fun startSession(sessionInfo: SessionInfo) {
+        launchWithErrorHandling {
+            val currentController = _connectedController.value
+            if (currentController != null && _connectionState.value == ConnectionState.CONNECTED) {
+                try {
+                    val success = networkClient.startSession(sessionInfo)
+                    if (success) {
+                        _events.emit(PairingEvent.NavigateToSession(sessionInfo))
+                    } else {
+                        _events.emit(PairingEvent.ShowError("Failed to start session"))
+                    }
+                } catch (e: Exception) {
+                    _events.emit(PairingEvent.ShowError("Session start error: ${e.message}"))
+                }
+            } else {
+                _events.emit(PairingEvent.ShowError("No active connection"))
+            }
+        }
+    }
+
+    // NetworkClient.NetworkEventListener implementation
+    override fun onControllerDiscovered(controller: NetworkClient.ControllerInfo) {
+        viewModelScope.launch {
+            if (!controllers.contains(controller)) {
+                controllers.add(controller)
+                _discoveredControllers.value = controllers.toList()
+                _statusMessage.value = "Found ${controllers.size} controller(s)"
+            }
+        }
+    }
+
+    override fun onConnectionEstablished(controller: NetworkClient.ControllerInfo) {
+        viewModelScope.launch {
+            _connectedController.value = controller
+            _connectionState.value = ConnectionState.CONNECTED
+            _statusMessage.value = "Connected to ${controller.name}"
+            _events.emit(PairingEvent.ShowSuccess("Connection established"))
+        }
+    }
+
+    override fun onConnectionLost(reason: String) {
+        viewModelScope.launch {
+            _connectedController.value = null
+            _connectionState.value = ConnectionState.DISCONNECTED
+            _statusMessage.value = "Connection lost: $reason"
+            _events.emit(PairingEvent.ShowError("Connection lost: $reason"))
+        }
+    }
+
+    override fun onError(error: String) {
+        viewModelScope.launch {
+            _events.emit(PairingEvent.ShowError(error))
+        }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        if (::networkClient.isInitialized) {
+            networkClient.disconnect()
+        }
+    }
+
+    companion object {
+        private const val TAG = "DevicePairingViewModel"
+    }
+}
 
         _connectionState.value = ConnectionState.CONNECTING
         _statusMessage.value = "Connecting to ${controller.deviceName}..."
