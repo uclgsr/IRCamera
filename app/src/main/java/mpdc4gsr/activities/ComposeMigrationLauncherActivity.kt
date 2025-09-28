@@ -263,6 +263,42 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                     }
                 )
 
+                // Advanced Features Section
+                Text(
+                    text = "Advanced Features",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.secondary,
+                    modifier = Modifier.padding(top = 16.dp)
+                )
+
+                LauncherCard(
+                    title = "Fault-Tolerant Recording (Compose)",
+                    subtitle = "Enhanced recording with automatic error recovery",
+                    icon = Icons.Default.HighQuality,
+                    onClick = { 
+                        startActivity(Intent(this@ComposeMigrationLauncherActivity, FaultTolerantRecordingActivityCompose::class.java))
+                    }
+                )
+
+                LauncherCard(
+                    title = "Simplified Interface (Compose)",
+                    subtitle = "Clean and streamlined user interface",
+                    icon = Icons.Default.Tune,
+                    onClick = { 
+                        startActivity(Intent(this@ComposeMigrationLauncherActivity, SimplifiedMainActivityCompose::class.java))
+                    }
+                )
+
+                LauncherCard(
+                    title = "Thermal Image Editor (Compose)",
+                    subtitle = "Advanced thermal image editing and analysis",
+                    icon = Icons.Default.PhotoFilter,
+                    onClick = { 
+                        startActivity(Intent(this@ComposeMigrationLauncherActivity, IRGalleryEditActivityCompose::class.java))
+                    }
+                )
+
                 // Comparison option
                 Card(
                     modifier = Modifier.fillMaxWidth(),

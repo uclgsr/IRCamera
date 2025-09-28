@@ -56,6 +56,9 @@
     <string name="terms_and_conditions">Terms and Conditions</string>
     <string name="network_configuration">Network Configuration</string>
     <string name="unified_sensor_control">Unified Sensor Control</string>
+    <string name="fault_tolerant_recording">Fault-Tolerant Recording</string>
+    <string name="simplified_interface">Simplified Interface</string>
+    <string name="thermal_image_editor">Thermal Image Editor</string>
 
     <string name="version_code">1.0</string>
     <string name="top_infrared_up_case">MPDC4GSR</string>
