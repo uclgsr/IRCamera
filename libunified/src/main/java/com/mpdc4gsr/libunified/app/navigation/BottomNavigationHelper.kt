@@ -138,7 +138,7 @@ class BottomNavigationHelper private constructor(
     }
     
     fun updateSelectedPage(page: NavigationPage) {
-        currentPage
+        this.currentPage = page
         updateSelectedState()
     }
     
