@@ -37,7 +37,7 @@ class GSRVideoPlayerActivity : BaseViewModelActivity<GSRVideoPlayerViewModel>() 
     override fun providerVMClass(): Class<GSRVideoPlayerViewModel> =
         GSRVideoPlayerViewModel::class.java
 
-    override fun initContentView() = R.layout.activity_multi_modal_consolidated
+    override fun initContentView() = R.layout.activity_gsr_video_player
 
     override fun initView() {
         binding = ActivityGsrVideoPlayerBinding.inflate(layoutInflater)

@@ -16,8 +16,9 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
+import androidx.lifecycle.observe
 import com.csl.irCamera.R
-import com.csl.irCamera.databinding.ActivityInfoConsolidatedBinding
+import com.csl.irCamera.databinding.ActivityGsrSettingsBinding
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModelActivity
 
 /**
@@ -43,16 +44,16 @@ class GSRSettingsActivity : BaseViewModelActivity<GSRSettingsViewModel>() {
         }
     }
 
-    private lateinit var binding: ActivityInfoConsolidatedBinding
+    private lateinit var binding: ActivityGsrSettingsBinding
     private lateinit var deviceAdapter: ArrayAdapter<String>
     private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
 
     override fun providerVMClass(): Class<GSRSettingsViewModel> = GSRSettingsViewModel::class.java
 
-    override fun initContentView() = R.layout.activity_info_consolidated
+    override fun initContentView() = R.layout.activity_gsr_settings
 
     override fun initView() {
-        binding = ActivityInfoConsolidatedBinding.inflate(layoutInflater)
+        binding = ActivityGsrSettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         setupPermissionHandling()

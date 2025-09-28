@@ -71,11 +71,11 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityMultiModalConsolid
             runOnUiThread {
                 if (success) {
                     binding.statusText.text = "Enhanced recording system ready"
-                    binding.startRecordingButton.isEnabled = true
-                    binding.gsrStatusText.text = "Enhanced fault-tolerant recording enabled"
+                    binding.startStopButton.isEnabled = true
+                    binding.statusText.text = "Enhanced fault-tolerant recording enabled"
                 } else {
                     binding.statusText.text = "Enhanced recording system ready"
-                    binding.startRecordingButton.isEnabled = true
+                    binding.startStopButton.isEnabled = true
                 }
             }
         }
@@ -87,7 +87,7 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityMultiModalConsolid
                     when (state) {
                         mpdc4gsr.controller.RecordingState.RECORDING -> {
                             isRecording = true
-                            binding.startRecordingButton.text = "Stop Recording"
+                            binding.startStopButton.text = "Stop Recording"
                             binding.statusText.text = "Recording in progress..."
                             binding.statusText.setTextColor(
                                 ContextCompat.getColor(
@@ -99,7 +99,7 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityMultiModalConsolid
 
                         mpdc4gsr.controller.RecordingState.STOPPED -> {
                             isRecording = false
-                            binding.startRecordingButton.text = "Start Recording"
+                            binding.startStopButton.text = "Start Recording"
                             binding.statusText.text = "Recording stopped"
                             binding.statusText.setTextColor(
                                 ContextCompat.getColor(
@@ -138,7 +138,7 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityMultiModalConsolid
     }
 
     private fun setupUI() {
-        binding.startRecordingButton.setOnClickListener {
+        binding.startStopButton.setOnClickListener {
             if (isRecording) {
                 stopRecording()
             } else {
@@ -146,7 +146,7 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityMultiModalConsolid
             }
         }
 
-        binding.addSyncMarkerButton.setOnClickListener {
+        binding.syncMarkerButton.setOnClickListener {
             addSyncMarker()
         }
 
@@ -163,7 +163,7 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityMultiModalConsolid
             }
         }
 
-        binding.gsrSettingsButton.setOnClickListener {
+        binding.settingsButton.setOnClickListener {
 
             try {
                 val intent = Intent(this, GSRSettingsActivity::class.java)
@@ -195,7 +195,7 @@ class GSRQuickRecordingActivity : BaseBindingActivity<ActivityMultiModalConsolid
     private fun showPermissionError(message: String) {
         runOnUiThread {
             binding.statusText.text = message
-            binding.startRecordingButton.isEnabled = false
+            binding.startStopButton.isEnabled = false
             Toast.makeText(this, message, Toast.LENGTH_LONG).show()
         }
     }
