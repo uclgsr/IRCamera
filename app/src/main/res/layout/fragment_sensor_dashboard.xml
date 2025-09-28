@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+    Scrollable Sensor Dashboard Fragment Layout
+    
+    This layout implements a fully scrollable multi-modal sensor dashboard that can be 
+    dropped into any Activity or Fragment container. All content is contained within 
+    a ScrollView to ensure proper scrolling behavior on all device sizes.
+    
+    Key Features:
+    - Root ScrollView with fillViewport for full height utilization
+    - Visible scroll indicators with overScrollMode for user feedback
+    - Minimum height constraints to ensure content is always scrollable
+    - Extra padding for better touch interaction
+    - Dividers between sensor items for visual separation
+-->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:scrollbars="vertical"
+    android:overScrollMode="always"
+    android:scrollbarStyle="outsideOverlay">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:minHeight="300dp">
+
+        <!-- Title Section -->
+        <TextView
+            android:id="@+id/titleText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="Multi-Modal Sensor Dashboard"
+            android:textColor="@android:color/primary_text_dark"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <!-- Overall Status Section -->
+        <TextView
+            android:id="@+id/overallStatusText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="System Status: Initializing..."
+            android:textColor="@android:color/secondary_text_dark"
+            android:textSize="14sp" />
+
+        <!-- Recording Status Section with interactive background -->
+        <LinearLayout
+            android:id="@+id/recordingSection"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="8dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:layout_marginVertical="4dp">
+
+            <ImageView
+                android:id="@+id/recordingIndicator"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="8dp"
+                android:background="@android:color/darker_gray"
+                android:contentDescription="Recording status indicator" />
+
+            <TextView
+                android:id="@+id/recordingTimer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ready to Record"
+                android:textColor="@android:color/primary_text_dark"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+        <!-- Sensors Title -->
+        <TextView
+            android:id="@+id/sensorsTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="Sensor Connections"
+            android:textColor="@android:color/primary_text_dark"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <!-- 
+            Sensors Container - All sensor status views are added here programmatically
+            The parent ScrollView handles all scrolling - no nested scrolling issues
+            Dividers provide visual separation between sensor items
+        -->
+        <LinearLayout
+            android:id="@+id/sensorsContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="8dp"
+            android:minHeight="200dp"
+            android:divider="@android:drawable/divider_horizontal_bright"
+            android:showDividers="between">
+
+            <!-- Individual sensor status views will be added programmatically -->
+
+        </LinearLayout>
+
+        <!-- Extra spacing to ensure proper scrolling and touch area at bottom -->
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="100dp" />
+
+    </LinearLayout>
+
+</ScrollView>
