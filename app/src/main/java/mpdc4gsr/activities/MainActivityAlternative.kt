@@ -70,10 +70,10 @@ import org.greenrobot.eventbus.ThreadMode
  * - Enhanced multi-modal recording support
  * - Improved network status and device management
  */
-class MainActivityComposeEnhanced : BaseComposeActivity<MainActivityViewModel>() {
+class MainActivityAlternative : BaseComposeActivity<MainActivityViewModel>() {
 
     companion object {
-        private const val TAG = "MainActivityComposeEnhanced"
+        private const val TAG = "MainActivityAlternative"
     }
 
     // Preserved original functionality

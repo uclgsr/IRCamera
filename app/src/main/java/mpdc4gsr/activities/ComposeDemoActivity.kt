@@ -172,7 +172,7 @@ class ComposeDemoActivity : BaseComposeActivity<MainActivityViewModel>() {
                 // Launch full hybrid activity
                 Button(
                     onClick = {
-                        startActivity(Intent(this@ComposeDemoActivity, MainActivityCompose::class.java))
+                        startActivity(Intent(this@ComposeDemoActivity, MainActivity::class.java))
                     },
                     modifier = Modifier.fillMaxWidth()
                 ) {

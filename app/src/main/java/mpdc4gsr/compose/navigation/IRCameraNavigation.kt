@@ -73,7 +73,7 @@ fun IRCameraNavHost(
         }
         
         composable(IRCameraScreen.MainCompose.route) {
-            LaunchActivityScreen(MainActivityCompose::class.java)
+            LaunchActivityScreen(MainActivity::class.java)
         }
         
         // Thermal camera screens

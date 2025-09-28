@@ -96,7 +96,7 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                     subtitle = "Updated with consolidated layout integration",
                     icon = Icons.Default.Dashboard,
                     onClick = { 
-                        startActivity(Intent(this@ComposeMigrationLauncherActivity, MainActivityComposeEnhanced::class.java))
+                        startActivity(Intent(this@ComposeMigrationLauncherActivity, MainActivityAlternative::class.java))
                     }
                 )
 
@@ -122,7 +122,7 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                     subtitle = "Original hybrid MainActivity with modern Compose UI",
                     icon = Icons.Default.Dashboard,
                     onClick = { 
-                        startActivity(Intent(this@ComposeMigrationLauncherActivity, MainActivityCompose::class.java))
+                        startActivity(Intent(this@ComposeMigrationLauncherActivity, MainActivity::class.java))
                     }
                 )
 
