@@ -62,10 +62,10 @@ class CommandServer {
     /**
      * Handle sync request command
      */
-    suspend fun handleSyncRequest(pcTimestamp: Long): ProtocolHandler.SyncResult {
+    suspend fun handleSyncRequest(pcTimestamp: Long, pcAddress: String): ProtocolHandler.SyncResult {
         return commandCallback?.let { callback ->
-            // TODO: The `pcAddress` is needed here but not provided by the handler.
-            val success = callback.onSyncRequest("") // Passing empty string for now.
+            // Pass the actual PC address to the sync request handler.
+            val success = callback.onSyncRequest(pcAddress)
             if (success) {
                 timeSyncManager?.let {
                     ProtocolHandler.SyncResult(
