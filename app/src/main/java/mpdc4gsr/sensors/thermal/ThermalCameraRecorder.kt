@@ -1153,7 +1153,7 @@ class ThermalCameraRecorder(
                                 }
                             }
 
-                            if (previewCallback != null && frame != null) {
+                            if (previewCallback != null) {
                                 recordingScope.launch {
                                     val thermalData =
                                         processRealThermalData(
@@ -3192,7 +3192,7 @@ class ThermalCameraRecorder(
             val device = event.device
             Log.d(TAG, "USB permission event for device: ${device?.productName}")
 
-            if (device != null && device.isTcTsDevice()) {
+            if (device.isTcTsDevice()) {
                 Log.i(TAG, "Processing USB permission event for thermal camera device")
 
                 val manager = usbManager
