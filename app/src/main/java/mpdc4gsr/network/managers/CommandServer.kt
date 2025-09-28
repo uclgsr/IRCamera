@@ -29,8 +29,6 @@ class CommandServer {
      */
     suspend fun handleStartRecording(sessionId: String): ProtocolHandler.CommandResult {
         return commandCallback?.let { callback ->
-            // TODO: The `configuration` parameter is missing from ProtocolHandler.CommandHandler.onStartRecording.
-            // It should be added to pass the recording configuration. For now, passing an empty JSONObject.
             val success = callback.onStartRecording(sessionId, JSONObject())
             ProtocolHandler.CommandResult(
                 success = success,
