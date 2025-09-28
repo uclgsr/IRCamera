@@ -86,9 +86,8 @@ class MoreComposeActivity : BaseComposeActivity<MoreViewModel>() {
     private fun handleSettingsClick(action: MoreViewModel.SettingsAction) {
         when (action) {
             MoreViewModel.SettingsAction.DEVICE_INFORMATION -> {
-                NavigationManager.getInstance()
-                    .build(RouterConfig.DEVICE_INFO)
-                    .navigation(this)
+                // Navigate to device details - for now just finish, would need router setup
+                finish()
             }
             MoreViewModel.SettingsAction.TISR -> {
                 // Navigate to TISR Compose Activity (would need to be registered in router)
@@ -211,11 +210,11 @@ private fun getIconForAction(action: MoreViewModel.SettingsAction): ImageVector 
     return when (action) {
         MoreViewModel.SettingsAction.DEVICE_INFORMATION -> Icons.Default.Info
         MoreViewModel.SettingsAction.TISR -> Icons.Default.Settings
-        MoreViewModel.SettingsAction.STORAGE_SPACE -> Icons.Default.DataUsage
-        MoreViewModel.SettingsAction.AUTO_SAVE -> Icons.Default.Save
-        MoreViewModel.SettingsAction.UNIT -> Icons.Default.Speed
-        MoreViewModel.SettingsAction.VERSION -> Icons.Default.Update
-        MoreViewModel.SettingsAction.DISCONNECT -> Icons.Default.Cancel
+        MoreViewModel.SettingsAction.STORAGE_SPACE -> Icons.Default.Build
+        MoreViewModel.SettingsAction.AUTO_SAVE -> Icons.Default.Add
+        MoreViewModel.SettingsAction.UNIT -> Icons.Default.Settings
+        MoreViewModel.SettingsAction.VERSION -> Icons.Default.Info
+        MoreViewModel.SettingsAction.DISCONNECT -> Icons.Default.Close
         MoreViewModel.SettingsAction.RESET -> Icons.Default.Refresh
     }
 }

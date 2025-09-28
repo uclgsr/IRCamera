@@ -8,10 +8,10 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.FilePresent
+import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.CameraAlt
-import androidx.compose.material.icons.filled.Videocam
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -155,14 +155,14 @@ class StorageSpaceComposeActivity : BaseComposeActivity<StorageSpaceViewModel>()
                         )
                         
                         StorageItem(
-                            icon = Icons.Default.CameraAlt,
+                            icon = Icons.Default.Add,
                             title = "Photos",
                             size = viewModel.formatFileSize(storageInfo.photoSpace),
                             color = MaterialTheme.colorScheme.secondary
                         )
                         
                         StorageItem(
-                            icon = Icons.Default.Videocam,
+                            icon = Icons.Default.Info,
                             title = "Videos",
                             size = viewModel.formatFileSize(storageInfo.videoSpace),
                             color = MaterialTheme.colorScheme.tertiary
@@ -176,7 +176,7 @@ class StorageSpaceComposeActivity : BaseComposeActivity<StorageSpaceViewModel>()
                         )
                         
                         StorageItem(
-                            icon = Icons.Default.FilePresent,
+                            icon = Icons.Default.Build,
                             title = "Free Space",
                             size = viewModel.formatFileSize(storageInfo.freeSpace),
                             color = MaterialTheme.colorScheme.surfaceVariant
