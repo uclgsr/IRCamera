@@ -176,10 +176,14 @@ class SensorDashboardFragment : Fragment() {
         val finalTargetHeight = if (targetHeight > 0) targetHeight else ViewGroup.LayoutParams.WRAP_CONTENT
         
         val animator = if (finalTargetHeight == ViewGroup.LayoutParams.WRAP_CONTENT) {
-            // If we can't measure, just reset the height immediately
+            // If we can't measure, animate alpha as a fallback for visual consistency
             sensorsContainer.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
             sensorsContainer.requestLayout()
-            null
+            sensorsContainer.alpha = 0f
+            ObjectAnimator.ofFloat(sensorsContainer, "alpha", 0f, 1f).apply {
+                duration = 300
+                interpolator = AccelerateDecelerateInterpolator()
+            }
         } else {
             ValueAnimator.ofInt(0, finalTargetHeight).apply {
                 duration = 300
