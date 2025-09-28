@@ -309,14 +309,14 @@ private fun VideoControlsOverlay(
                 ) {
                     IconButton(onClick = { /* Fullscreen toggle */ }) {
                         Icon(
-                            Icons.Default.Settings,
+                            Icons.Default.Fullscreen,
                             contentDescription = "Fullscreen",
                             tint = Color.White
                         )
                     }
                     IconButton(onClick = { /* Export frame */ }) {
                         Icon(
-                            Icons.Default.Settings,
+                            Icons.Default.CameraAlt,
                             contentDescription = "Capture Frame",
                             tint = Color.White
                         )
