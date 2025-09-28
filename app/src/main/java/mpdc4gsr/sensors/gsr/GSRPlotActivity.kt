@@ -9,6 +9,7 @@ import com.csl.irCamera.databinding.ActivityGsrPlotBinding
 import com.mpdc4gsr.libunified.app.ktbase.BaseBindingActivity
 import com.mpdc4gsr.libunified.ui.components.Description
 import com.mpdc4gsr.libunified.ui.components.XAxis
+import com.mpdc4gsr.libunified.ui.components.YAxis
 import com.mpdc4gsr.libunified.ui.data.Entry
 import com.mpdc4gsr.libunified.ui.data.LineData
 import com.mpdc4gsr.libunified.ui.data.LineDataSet
@@ -57,7 +58,6 @@ class GSRPlotActivity : BaseBindingActivity<ActivityGsrPlotBinding>() {
         startActivity(intent)
         finish()
     }
-    }
 
     private fun loadPlotData() {
         plotData = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -76,27 +76,26 @@ class GSRPlotActivity : BaseBindingActivity<ActivityGsrPlotBinding>() {
     private fun setupGSRChart() {
 
         binding.gsrChart.apply {
-            description =
-                Description().apply {
-                    text = "GSR (µS) over Time"
-                    textSize = 12f
-                }
+            description = Description().apply {
+                text = "GSR (µS) over Time"
+                textSize = 12f
+            }
 
-            xAxis.apply {
+            getXAxis().apply {
                 position = XAxis.XAxisPosition.BOTTOM
                 valueFormatter = TimeFormatter()
                 granularity = 1f
                 labelCount = 6
             }
 
-            axisLeft.apply {
+            getAxisLeft().apply {
                 setDrawGridLines(true)
                 gridColor = Color.LTGRAY
             }
-            axisRight.isEnabled = false
+            getAxisRight().isEnabled = false
 
             setTouchEnabled(true)
-            isDragEnabled = true
+            setDragEnabled(true)
             setScaleEnabled(true)
             setPinchZoom(true)
         }
@@ -134,27 +133,26 @@ class GSRPlotActivity : BaseBindingActivity<ActivityGsrPlotBinding>() {
     private fun setupPPGChart() {
 
         binding.ppgChart.apply {
-            description =
-                Description().apply {
-                    text = "PPG Signal over Time"
-                    textSize = 12f
-                }
+            description = Description().apply {
+                text = "PPG Signal over Time"
+                textSize = 12f
+            }
 
-            xAxis.apply {
+            getXAxis().apply {
                 position = XAxis.XAxisPosition.BOTTOM
                 valueFormatter = TimeFormatter()
                 granularity = 1f
                 labelCount = 6
             }
 
-            axisLeft.apply {
+            getAxisLeft().apply {
                 setDrawGridLines(true)
                 gridColor = Color.LTGRAY
             }
-            axisRight.isEnabled = false
+            getAxisRight().isEnabled = false
 
             setTouchEnabled(true)
-            isDragEnabled = true
+            setDragEnabled(true)
             setScaleEnabled(true)
             setPinchZoom(true)
         }
