@@ -6,7 +6,6 @@ Implements robust socket communication with proper message parsing.
 
 import socket
 import json
-import threading
 import time
 from typing import Optional, Dict, Any
 
@@ -54,14 +53,14 @@ class CommandClient:
         if self.socket_file:
             try:
                 self.socket_file.close()
-            except:
+            except Exception:
                 pass
             self.socket_file = None
         
         if self.socket:
             try:
                 self.socket.close()
-            except:
+            except Exception:
                 pass
             self.socket = None
         
@@ -203,7 +202,7 @@ class CommandClient:
         }
         
         response = self.send_command(command)
-        if response:
+        if response and response.get("status") == "success":
             print("Device status retrieved successfully")
             return response
         else:

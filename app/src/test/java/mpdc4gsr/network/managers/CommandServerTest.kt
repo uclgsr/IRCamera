@@ -70,15 +70,13 @@ class CommandServerTest {
     fun testHandleStopRecordingSuccess() = runBlocking {
         // Arrange
         mockCallback.stopRecordingResult = true
-        val sessionId = "test-session-123"
 
         // Act
-        val result = commandServer.handleStopRecording(sessionId)
+        val result = commandServer.handleStopRecording()
 
         // Assert
         assertTrue("Stop recording should succeed", result.success)
         assertEquals("Recording stopped", result.message)
-        assertEquals(sessionId, result.data["session_id"])
         assertTrue("Callback should be called", mockCallback.stopRecordingCalled)
     }
 
@@ -86,10 +84,9 @@ class CommandServerTest {
     fun testHandleStopRecordingFailure() = runBlocking {
         // Arrange
         mockCallback.stopRecordingResult = false
-        val sessionId = "test-session-456"
 
         // Act
-        val result = commandServer.handleStopRecording(sessionId)
+        val result = commandServer.handleStopRecording()
 
         // Assert
         assertFalse("Stop recording should fail", result.success)
@@ -102,14 +99,16 @@ class CommandServerTest {
         // Arrange
         mockCallback.syncRequestResult = true
         val pcTimestamp = 1640995200000L
+        val pcAddress = "192.168.1.100"
 
         // Act
-        val result = commandServer.handleSyncRequest(pcTimestamp)
+        val result = commandServer.handleSyncRequest(pcTimestamp, pcAddress)
 
         // Assert
         assertTrue("Sync request should succeed", result.success)
         assertTrue("Phone timestamp should be set", result.phoneTimestamp > 0)
         assertTrue("Callback should be called", mockCallback.syncRequestCalled)
+        assertEquals("PC address should be passed to callback", pcAddress, mockCallback.lastPcAddress)
     }
 
     @Test
@@ -117,9 +116,10 @@ class CommandServerTest {
         // Arrange
         mockCallback.syncRequestResult = false
         val pcTimestamp = 1640995200000L
+        val pcAddress = "192.168.1.100"
 
         // Act
-        val result = commandServer.handleSyncRequest(pcTimestamp)
+        val result = commandServer.handleSyncRequest(pcTimestamp, pcAddress)
 
         // Assert
         assertFalse("Sync request should fail", result.success)
@@ -131,9 +131,10 @@ class CommandServerTest {
         // Arrange
         commandServer.setCommandCallback(null)
         val pcTimestamp = 1640995200000L
+        val pcAddress = "192.168.1.100"
 
         // Act
-        val result = commandServer.handleSyncRequest(pcTimestamp)
+        val result = commandServer.handleSyncRequest(pcTimestamp, pcAddress)
 
         // Assert
         assertFalse("Sync request should fail without callback", result.success)

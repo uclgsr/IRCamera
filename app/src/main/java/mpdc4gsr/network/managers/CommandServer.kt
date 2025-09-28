@@ -44,14 +44,13 @@ class CommandServer {
     /**
      * Handle stop recording command
      */
-    suspend fun handleStopRecording(sessionId: String): ProtocolHandler.CommandResult {
+    suspend fun handleStopRecording(): ProtocolHandler.CommandResult {
         return commandCallback?.let { callback ->
             // This would stop the actual recording
             val success = callback.onStopRecording()
             ProtocolHandler.CommandResult(
                 success = success,
-                message = if (success) "Recording stopped" else "Recording stop failed",
-                data = mapOf("session_id" to sessionId)
+                message = if (success) "Recording stopped" else "Recording stop failed"
             )
         } ?: ProtocolHandler.CommandResult(
             success = false,
