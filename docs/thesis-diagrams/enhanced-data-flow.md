@@ -13,7 +13,7 @@ flowchart TD
     
     subgraph "Android Device 1"
         A1[Android Sensor Node<br/>Samsung Galaxy S22]
-        A1_Thermal[TC001 Thermal Camera<br/>256x192@25Hz<br/>+/-2 degreesC accuracy]
+        A1_Thermal[TC001 Thermal Camera<br/>256x192@25Hz<br/>+/-2 degrees C accuracy]
         A1_GSR[Shimmer3 GSR Sensor<br/>128Hz@12-bit ADC<br/>Microsiemens conversion]
         A1_RGB[RGB Camera<br/>1920x1080@30fps<br/>H.264 encoding]
         A1_Time[TimeManager<br/>Nanosecond precision<br/>+/-2.1ms sync]
