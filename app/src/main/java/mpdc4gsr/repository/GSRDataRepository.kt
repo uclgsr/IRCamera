@@ -45,40 +45,31 @@ class GSRDataRepository : BaseRepository() {
         }
     }
     
-    // Historical GSR data with advanced caching
-    fun getHistoricalGSRData(
-        sessionId: String,
-        startTime: Long,
-        endTime: Long
-    ): Flow<Result<List<GSRReading>>> = safeFlow {
-        
         val cacheKey = "gsr_${sessionId}_${startTime}_${endTime}"
-        val historicalData = getCachedOrExecute(
+        val ttlMs = 600_000L // 10 minutes
+        val data = getCachedOrExecute(
             key = cacheKey,
-            ttlMs = 600_000L // 10 minutes
+            ttlMs = ttlMs
         ) {
             // Simulate database query
             delay(2000)
             generateHistoricalGSRData(sessionId, startTime, endTime)
         }
-        Result.success(historicalData)
+        Result.success(data)
     }
     
     // Session management
     fun getGSRSessions(deviceId: String): Flow<Result<List<GSRSession>>> = safeFlow {
         val cacheKey = "sessions_$deviceId"
-        val cached = getFromCache<List<GSRSession>>(cacheKey)
-        
-        if (cached != null) {
-            return@safeFlow Result.success(cached)
+        val ttlMs = 120_000L // 2 minutes
+        val data = getCachedOrExecute(
+            key = cacheKey,
+            ttlMs = ttlMs
+        ) {
+            delay(1000)
+            generateSampleSessions(deviceId)
         }
-        
-        delay(1000)
-        
-        val sessions = generateSampleSessions(deviceId)
-        putInCache(cacheKey, sessions, ttlMs = 120000) // 2 minutes
-        
-        Result.success(sessions)
+        Result.success(data)
     }
     
     private fun generateGSRReading(deviceId: String, counter: Int): GSRReading {
