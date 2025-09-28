@@ -1468,15 +1468,18 @@ class GSRSensorRecorder(
     }
 
 
-    private fun initializeShimmerBluetoothManager(): Boolean {
+    private suspend fun initializeShimmerBluetoothManager(): Boolean {
         return try {
-            shimmerBluetoothManager =
-                ShimmerBluetoothManagerAndroid(
-                    context,
-                    android.os.Handler(android.os.Looper.getMainLooper())
-                )
-            Log.i(TAG, "ShimmerBluetoothManagerAndroid initialized successfully")
-            true
+            // Switch to Main dispatcher to ensure proper Looper context for Handler creation
+            withContext(Dispatchers.Main) {
+                shimmerBluetoothManager =
+                    ShimmerBluetoothManagerAndroid(
+                        context,
+                        android.os.Handler(android.os.Looper.getMainLooper())
+                    )
+                Log.i(TAG, "ShimmerBluetoothManagerAndroid initialized successfully")
+                true
+            }
         } catch (e: Exception) {
             Log.e(TAG, "Failed to initialize ShimmerBluetoothManagerAndroid", e)
             false
