@@ -346,3 +346,4 @@ if __name__ == "__main__":
     
     client.disconnect_all()
     print("CommandClient test completed")
+    

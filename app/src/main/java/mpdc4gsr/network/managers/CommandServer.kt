@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import mpdc4gsr.network.NetworkServer
+import android.util.Log
 import mpdc4gsr.network.ProtocolHandler
 import mpdc4gsr.sync.TimeSyncManager
 import org.json.JSONObject
@@ -34,7 +35,7 @@ class CommandServer(
     companion object {
         private const val TAG = "CommandServer"
     }
-
+    
     private val serverScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     
     private val _serverStatus = MutableStateFlow(ServerStatus.STOPPED)
