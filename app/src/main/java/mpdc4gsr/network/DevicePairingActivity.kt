@@ -8,7 +8,7 @@ import androidx.activity.viewModels
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.csl.irCamera.R
-import com.csl.irCamera.databinding.ActivityDevicePairingBinding
+import com.csl.irCamera.databinding.ActivityMultiModalConsolidatedBinding
 import com.mpdc4gsr.gsr.model.SessionInfo
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModelActivity
 import mpdc4gsr.sensors.gsr.MultiModalRecordingActivity
@@ -25,16 +25,16 @@ class DevicePairingActivity : BaseViewModelActivity<DevicePairingViewModel>(),
         }
     }
 
-    private lateinit var binding: ActivityDevicePairingBinding
+    private lateinit var binding: ActivityMultiModalConsolidatedBinding
     private lateinit var controllersAdapter: ControllersAdapter
 
     override fun providerVMClass(): Class<DevicePairingViewModel> =
         DevicePairingViewModel::class.java
 
-    override fun initContentView() = R.layout.activity_device_pairing
+    override fun initContentView() = R.layout.activity_multi_modal_consolidated
 
     override fun initView() {
-        binding = ActivityDevicePairingBinding.inflate(layoutInflater)
+        binding = ActivityMultiModalConsolidatedBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         initializeViews()

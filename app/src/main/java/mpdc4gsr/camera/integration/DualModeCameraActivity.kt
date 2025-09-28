@@ -30,7 +30,7 @@ class DualModeCameraActivity : BaseViewModelActivity<DualModeCameraViewModel>() 
     override fun providerVMClass(): Class<DualModeCameraViewModel> =
         DualModeCameraViewModel::class.java
 
-    override fun initContentView() = R.layout.activity_dual_mode_camera
+    override fun initContentView() = R.layout.activity_camera_test_consolidated
 
     override fun initView() {
         previewView = findViewById(R.id.preview_view)

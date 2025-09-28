@@ -23,7 +23,7 @@ class GSRDeviceAdapter(
     ): DeviceViewHolder {
         val view =
             LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_gsr_device, parent, false)
+                .inflate(R.layout.item_device_consolidated, parent, false)
         return DeviceViewHolder(view)
     }
 

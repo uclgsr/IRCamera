@@ -68,7 +68,7 @@ class RgbCameraTestActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_rgb_camera_test)
+        setContentView(R.layout.activity_camera_test_consolidated)
 
         initializeViews()
         setupListeners()

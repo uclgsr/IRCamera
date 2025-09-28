@@ -5,7 +5,7 @@ import android.os.Build
 import android.os.Bundle
 import android.view.MenuItem
 import com.csl.irCamera.R
-import com.csl.irCamera.databinding.ActivityGsrPlotBinding
+import com.csl.irCamera.databinding.ActivityMultiModalConsolidatedBinding
 import com.mpdc4gsr.libunified.app.ktbase.BaseBindingActivity
 import com.mpdc4gsr.libunified.ui.components.Description
 import com.mpdc4gsr.libunified.ui.components.XAxis
@@ -14,10 +14,10 @@ import com.mpdc4gsr.libunified.ui.data.LineData
 import com.mpdc4gsr.libunified.ui.data.LineDataSet
 import com.mpdc4gsr.libunified.ui.formatter.ValueFormatter
 
-class GSRPlotActivity : BaseBindingActivity<ActivityGsrPlotBinding>() {
+class GSRPlotActivity : BaseBindingActivity<ActivityMultiModalConsolidatedBinding>() {
     private lateinit var plotData: GSRPlotData
 
-    override fun initContentLayoutId() = R.layout.activity_gsr_plot
+    override fun initContentLayoutId() = R.layout.activity_multi_modal_consolidated
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
