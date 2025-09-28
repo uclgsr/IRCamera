@@ -41,7 +41,7 @@ class ReportRepository : BaseRepository() {
 
         // Return cached data if valid
         if (cached != null && System.currentTimeMillis() - cached.cachedAt < 60000) {
-            return@safeFlow Result.success(cached.data)
+            return@safeFlow cached.data
         }
 
         // Simulate network call
@@ -55,8 +55,6 @@ class ReportRepository : BaseRepository() {
             cachedAt = System.currentTimeMillis(),
             page = page
         )
-
-        Result.success(reports)
     }
 
     private fun generateSampleReports(isTC007: Boolean, page: Int, pageSize: Int): List<ReportData> {
