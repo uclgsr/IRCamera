@@ -165,8 +165,9 @@ class SensorDashboardFragment : Fragment() {
      */
     private fun expandSensors() {
         // Measure the height needed for full content
+        val parentWidth = (sensorsContainer.parent as? ViewGroup)?.width ?: sensorsContainer.width
         sensorsContainer.measure(
-            View.MeasureSpec.makeMeasureSpec(sensorsContainer.width, View.MeasureSpec.EXACTLY),
+            View.MeasureSpec.makeMeasureSpec(parentWidth, View.MeasureSpec.EXACTLY),
             View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
         )
         val targetHeight = sensorsContainer.measuredHeight
