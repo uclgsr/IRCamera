@@ -54,6 +54,7 @@ class SimpleNetworkTestActivity : AppCompatActivity() {
     }
 
     private fun initializeViews() {
+        Log.d(TAG, "Initializing views")
         connectionStatusIndicator = findViewById(R.id.connection_status_indicator)
         connectionStatusText = findViewById(R.id.connection_status_text)
         ipAddressInput = findViewById(R.id.ip_address_input)
@@ -63,13 +64,20 @@ class SimpleNetworkTestActivity : AppCompatActivity() {
         testCommandsButton = findViewById(R.id.test_ping_button)
         statusText = findViewById(R.id.connection_info_text)
 
+        // Verify all views were found
+        Log.d(TAG, "Views found - connectButton: ${connectButton != null}, disconnectButton: ${disconnectButton != null}, testCommandsButton: ${testCommandsButton != null}")
+
         // Set default values
         ipAddressInput.setText(DEFAULT_PC_IP)
         portInput.setText(DEFAULT_PC_PORT.toString())
+        Log.d(TAG, "Views initialization complete")
     }
 
     private fun setupClickListeners() {
+        Log.d(TAG, "Setting up click listeners")
+        
         connectButton.setOnClickListener {
+            Log.d(TAG, "Connect button clicked")
             val ip = ipAddressInput.text.toString().trim()
             val portStr = portInput.text.toString().trim()
 
@@ -87,12 +95,16 @@ class SimpleNetworkTestActivity : AppCompatActivity() {
         }
 
         disconnectButton.setOnClickListener {
+            Log.d(TAG, "Disconnect button clicked")
             disconnectFromPC()
         }
 
         testCommandsButton.setOnClickListener {
+            Log.d(TAG, "Test commands button clicked")
             testCommands()
         }
+        
+        Log.d(TAG, "Click listeners setup complete")
     }
 
     private fun connectToPC(ip: String, port: Int) {
