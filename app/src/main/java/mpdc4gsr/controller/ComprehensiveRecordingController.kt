@@ -38,6 +38,17 @@ class ComprehensiveRecordingController(
     companion object {
         private const val TAG = "ComprehensiveRecordingController"
         private val DEFAULT_TRIGGER_SOURCE = TriggerSource.LOCAL_UI
+        
+        // Sensor configuration constants
+        private const val RGB_SENSOR_NAME = "RGB"
+        private const val THERMAL_SENSOR_NAME = "Thermal"
+        private const val GSR_SENSOR_NAME = "GSR"
+        private const val THERMAL_SENSOR_ID = "thermal_camera_1"
+        private const val GSR_SENSOR_ID = "gsr_shimmer_1"
+        private const val THERMAL_FRAME_RATE_HZ = 9.0 // TOPDON TC001 specs
+        private const val THERMAL_WIDTH_PIXELS = 256
+        private const val THERMAL_HEIGHT_PIXELS = 192
+        private const val GSR_SAMPLING_RATE_HZ = 128
     }
 
 
@@ -146,7 +157,7 @@ class ComprehensiveRecordingController(
 
     suspend fun startRecording(
         sessionId: String? = null,
-        enabledSensors: List<String> = listOf("RGB", "Thermal", "GSR"),
+        enabledSensors: List<String> = listOf(RGB_SENSOR_NAME, THERMAL_SENSOR_NAME, GSR_SENSOR_NAME),
         estimatedDurationMinutes: Int = 30,
         triggerSource: TriggerSource = TriggerSource.LOCAL_UI
     ): Boolean {
@@ -735,56 +746,50 @@ class ComprehensiveRecordingController(
         return try {
             Log.i(TAG, "Initializing sensors with sensor recorder registration")
             
+            // Get or create a proper lifecycle owner
+            val effectiveLifecycleOwner = lifecycleOwner ?: createManagedLifecycleOwner()
+            
             // Initialize RGB Camera Recorder
             try {
                 val rgbRecorder = mpdc4gsr.sensors.RgbCameraRecorder(
                     context = context,
-                    lifecycleOwner = lifecycleOwner ?: object : LifecycleOwner {
-                        private val lifecycleRegistry = LifecycleRegistry(this)
-                        override val lifecycle: Lifecycle get() = lifecycleRegistry
-                    },
+                    lifecycleOwner = effectiveLifecycleOwner,
                     previewView = null, // No preview needed for background recording
                     useFrontCamera = false,
                     permissionManager = permissionManager
                 )
-                addSensorRecorder("RGB", rgbRecorder)
-                Log.i(TAG, "✅ RGB Camera recorder registered")
+                addSensorRecorder(RGB_SENSOR_NAME, rgbRecorder)
+                Log.i(TAG, "[OK] RGB Camera recorder registered")
             } catch (e: Exception) {
-                Log.w(TAG, "⚠️ Failed to initialize RGB camera recorder: ${e.message}")
+                Log.w(TAG, "[WARN] Failed to initialize RGB camera recorder: ${e.message}")
             }
             
             // Initialize Thermal Camera Recorder  
             try {
                 val thermalRecorder = mpdc4gsr.sensors.thermal.ThermalCameraRecorder(
                     context = context,
-                    sensorIdParam = "thermal_camera_1",
-                    thermalFrameRate = 9.0, // 9Hz as per TOPDON TC001 specs
-                    thermalResolution = Pair(256, 192)
+                    sensorIdParam = THERMAL_SENSOR_ID,
+                    thermalFrameRate = THERMAL_FRAME_RATE_HZ,
+                    thermalResolution = Pair(THERMAL_WIDTH_PIXELS, THERMAL_HEIGHT_PIXELS)
                 )
-                addSensorRecorder("Thermal", thermalRecorder)
-                Log.i(TAG, "✅ Thermal camera recorder registered")
+                addSensorRecorder(THERMAL_SENSOR_NAME, thermalRecorder)
+                Log.i(TAG, "[OK] Thermal camera recorder registered")
             } catch (e: Exception) {
-                Log.w(TAG, "⚠️ Failed to initialize thermal camera recorder: ${e.message}")
+                Log.w(TAG, "[WARN] Failed to initialize thermal camera recorder: ${e.message}")
             }
             
-            // Initialize GSR Sensor Recorder
+            // Initialize GSR Sensor Recorder using Shimmer3GSRRecorder to avoid circular dependency
             try {
-                val gsrRecorder = mpdc4gsr.sensors.gsr.GSRSensorRecorder(
+                val gsrRecorder = mpdc4gsr.sensors.unified.Shimmer3GSRRecorder(
                     context = context,
-                    sensorId = "gsr_shimmer_1",
-                    samplingRateHz = 128,
-                    recordingController = mpdc4gsr.controller.RecordingController(
-                        context, 
-                        lifecycleOwner ?: object : LifecycleOwner {
-                            private val lifecycleRegistry = LifecycleRegistry(this)
-                            override val lifecycle: Lifecycle get() = lifecycleRegistry
-                        }
-                    )
+                    lifecycleOwner = effectiveLifecycleOwner,
+                    sensorId = GSR_SENSOR_ID,
+                    samplingRateHz = GSR_SAMPLING_RATE_HZ
                 )
-                addSensorRecorder("GSR", gsrRecorder)  
-                Log.i(TAG, "✅ GSR sensor recorder registered")
+                addSensorRecorder(GSR_SENSOR_NAME, gsrRecorder)  
+                Log.i(TAG, "[OK] GSR sensor recorder registered")
             } catch (e: Exception) {
-                Log.w(TAG, "⚠️ Failed to initialize GSR sensor recorder: ${e.message}")
+                Log.w(TAG, "[WARN] Failed to initialize GSR sensor recorder: ${e.message}")
             }
             
             val registeredSensors = sensorRecorders.keys.toList()
@@ -796,6 +801,23 @@ class ComprehensiveRecordingController(
         } catch (e: Exception) {
             Log.e(TAG, "Error initializing sensors", e)
             false
+        }
+    }
+    
+    /**
+     * Creates a managed lifecycle owner that properly transitions through lifecycle states.
+     * This is used when no lifecycle owner is provided to ensure proper camera operations.
+     */
+    private fun createManagedLifecycleOwner(): LifecycleOwner {
+        return object : LifecycleOwner {
+            private val lifecycleRegistry = LifecycleRegistry(this).apply {
+                // Properly initialize the lifecycle state for camera operations
+                currentState = Lifecycle.State.INITIALIZED
+                currentState = Lifecycle.State.CREATED
+                currentState = Lifecycle.State.STARTED
+                currentState = Lifecycle.State.RESUMED
+            }
+            override val lifecycle: Lifecycle get() = lifecycleRegistry
         }
     }
 
