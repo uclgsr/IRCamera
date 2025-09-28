@@ -57,9 +57,10 @@ class SimpleNetworkTestComposeActivity : ComponentActivity() {
     private var commandHandler: SimpleCommandHandler? = null
     
     // State variables hoisted to activity level
-    private var networkCommands = listOf<NetworkCommand>()
-    private var networkMetrics = mapOf<String, Any>()
-    private var isTestRunning = false
+    // State hoisted to activity level
+    private val _networkCommands = mutableStateOf(listOf<NetworkCommand>())
+    private val _networkMetrics = mutableStateOf(mapOf<String, Any>())
+    private val _isTestRunning = mutableStateOf(false)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,25 +76,14 @@ class SimpleNetworkTestComposeActivity : ComponentActivity() {
     @Composable
     fun SimpleNetworkTestScreen() {
         var testResults by remember { mutableStateOf(listOf<TestCase>()) }
-        var isTestRunningState by remember { mutableStateOf(false) }
         var connectionStatus by remember { mutableStateOf(ConnectionStatus.DISCONNECTED) }
         var ipAddress by remember { mutableStateOf(DEFAULT_PC_IP) }
         var port by remember { mutableStateOf(DEFAULT_PC_PORT.toString()) }
-        var networkCommandsState by remember { mutableStateOf(listOf<NetworkCommand>()) }
-        var networkMetricsState by remember { mutableStateOf(mapOf<String, Any>()) }
 
-        // Sync with activity state
-        LaunchedEffect(isTestRunning) {
-            isTestRunningState = isTestRunning
-        }
-        
-        LaunchedEffect(networkCommands) {
-            networkCommandsState = networkCommands
-        }
-        
-        LaunchedEffect(networkMetrics) {
-            networkMetricsState = networkMetrics
-        }
+        // Use hoisted state
+        val networkCommands by _networkCommands
+        val networkMetrics by _networkMetrics
+        val isTestRunning by _isTestRunning
 
         // Initialize test cases
         LaunchedEffect(Unit) {
@@ -258,9 +248,9 @@ class SimpleNetworkTestComposeActivity : ComponentActivity() {
                 Spacer(modifier = Modifier.height(16.dp))
 
                 // Network Metrics
-                if (networkMetricsState.isNotEmpty()) {
+                if (networkMetrics.isNotEmpty()) {
                     TestMetricsDisplay(
-                        metrics = networkMetricsState,
+                        metrics = networkMetrics,
                         modifier = Modifier.padding(vertical = 8.dp)
                     )
                     Spacer(modifier = Modifier.height(16.dp))
@@ -335,14 +325,13 @@ class SimpleNetworkTestComposeActivity : ComponentActivity() {
                 // Run All Tests Button
                 Button(
                     onClick = { 
-                        isTestRunning = true
-                        isTestRunningState = true
+                        _isTestRunning.value = true
                         lifecycleScope.launch { runAllNetworkTests() }
                     },
-                    enabled = !isTestRunningState,
+                    enabled = !isTestRunning,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    if (isTestRunningState) {
+                    if (isTestRunning) {
                         CircularProgressIndicator(
                             modifier = Modifier.size(16.dp),
                             strokeWidth = 2.dp
@@ -368,7 +357,7 @@ class SimpleNetworkTestComposeActivity : ComponentActivity() {
                 }
 
                 // Network Commands Log
-                if (networkCommandsState.isNotEmpty()) {
+                if (networkCommands.isNotEmpty()) {
                     Spacer(modifier = Modifier.height(16.dp))
                     
                     Card {
@@ -380,7 +369,7 @@ class SimpleNetworkTestComposeActivity : ComponentActivity() {
                             )
                             Spacer(modifier = Modifier.height(8.dp))
                             
-                            networkCommandsState.takeLast(5).forEach { command ->
+                            networkCommands.takeLast(5).forEach { command ->
                                 NetworkCommandItem(command = command)
                                 Spacer(modifier = Modifier.height(6.dp))
                             }
@@ -499,7 +488,7 @@ class SimpleNetworkTestComposeActivity : ComponentActivity() {
             updatedCommands.add(command)
         }
         
-        networkCommands = networkCommands + updatedCommands
+        _networkCommands.value = _networkCommands.value + updatedCommands
     }
 
     private suspend fun runAllNetworkTests() {
@@ -526,17 +515,17 @@ class SimpleNetworkTestComposeActivity : ComponentActivity() {
             
             // Calculate metrics
             metrics["Connection Type"] = "WiFi"
-            metrics["Commands Sent"] = networkCommands.size
-            metrics["Success Rate"] = "${networkCommands.count { it.success } * 100 / networkCommands.size.coerceAtLeast(1)}%"
+            metrics["Commands Sent"] = _networkCommands.value.size
+            metrics["Success Rate"] = "${_networkCommands.value.count { it.success } * 100 / _networkCommands.value.size.coerceAtLeast(1)}%"
             metrics["Average Latency"] = "45ms"
             metrics["Connection Uptime"] = "99.8%"
             
-            networkMetrics = metrics
+            _networkMetrics.value = metrics
             
         } catch (e: Exception) {
             Log.e(TAG, "Network tests failed: ${e.message}")
         } finally {
-            isTestRunning = false
+            _isTestRunning.value = false
         }
     }
 

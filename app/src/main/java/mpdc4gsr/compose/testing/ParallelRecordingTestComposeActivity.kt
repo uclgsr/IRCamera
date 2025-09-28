@@ -481,7 +481,7 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
                     lastDataTimestamp = System.currentTimeMillis(),
                     avgDataRate = newDataPoints.toFloat(),
                     bufferUtilization = (second * 0.1f).coerceAtMost(0.9f),
-                    errorCount = if (second > 5 && Math.random() < 0.1) sensor.errorCount + 1 else sensor.errorCount
+                    errorCount = if (second > 5 && kotlin.random.Random.nextDouble() < 0.1) sensor.errorCount + 1 else sensor.errorCount
                 )
             } else {
                 sensor

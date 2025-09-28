@@ -486,6 +486,7 @@ class SensorDashboardTestComposeActivity : ComponentActivity() {
     private suspend fun runAllDashboardTests() {
         Log.i(TAG, "Running all sensor dashboard tests")
         
+        val startTime = System.currentTimeMillis()
         val metrics = mutableMapOf<String, Any>()
         
         try {
@@ -516,7 +517,7 @@ class SensorDashboardTestComposeActivity : ComponentActivity() {
             metrics["Sensors Tested"] = sensorStates.size
             metrics["Connected Sensors"] = sensorStates.count { it.status == SensorStatus.CONNECTED || it.status == SensorStatus.STREAMING }
             metrics["Simulated Sensors"] = sensorStates.count { it.isSimulated }
-            metrics["Test Duration"] = "${System.currentTimeMillis() % 100000}ms"
+            metrics["Test Duration"] = "${System.currentTimeMillis() - startTime}ms"
             
             testMetrics = metrics
             

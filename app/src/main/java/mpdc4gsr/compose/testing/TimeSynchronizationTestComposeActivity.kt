@@ -62,12 +62,12 @@ class TimeSynchronizationTestComposeActivity : ComponentActivity() {
     private var recordingController: RecordingController? = null
     
     // State variables hoisted to activity level
-    private var timestampChecks = listOf<TimestampCheck>()
-    private var syncEvents = listOf<SyncEvent>()
-    private var syncMetrics = mapOf<String, Any>()
-    private var maxDriftMs = 0L
-    private var currentSyncStatus = "Not Synchronized"
-    private var isTestRunning = false
+    private val _timestampChecks = mutableStateOf(listOf<TimestampCheck>())
+    private val _syncEvents = mutableStateOf(listOf<SyncEvent>())
+    private val _syncMetrics = mutableStateOf(mapOf<String, Any>())
+    private val _maxDriftMs = mutableStateOf(0L)
+    private val _currentSyncStatus = mutableStateOf("Not Synchronized")
+    private val _isTestRunning = mutableStateOf(false)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -85,12 +85,14 @@ class TimeSynchronizationTestComposeActivity : ComponentActivity() {
     @Composable
     fun TimeSynchronizationTestScreen() {
         var testResults by remember { mutableStateOf(listOf<TestCase>()) }
-        var isTestRunning by remember { mutableStateOf(false) }
-        var timestampChecks by remember { mutableStateOf(listOf<TimestampCheck>()) }
-        var syncEvents by remember { mutableStateOf(listOf<SyncEvent>()) }
-        var syncMetrics by remember { mutableStateOf(mapOf<String, Any>()) }
-        var currentSyncStatus by remember { mutableStateOf("Not Synchronized") }
-        var maxDriftMs by remember { mutableStateOf(0L) }
+        
+        // Use hoisted state
+        val isTestRunning by _isTestRunning
+        val timestampChecks by _timestampChecks
+        val syncEvents by _syncEvents
+        val syncMetrics by _syncMetrics
+        val currentSyncStatus by _currentSyncStatus
+        val maxDriftMs by _maxDriftMs
 
         // Initialize test cases
         LaunchedEffect(Unit) {
@@ -244,7 +246,7 @@ class TimeSynchronizationTestComposeActivity : ComponentActivity() {
                 ) {
                     Button(
                         onClick = { 
-                            isTestRunning = true
+                            _isTestRunning.value = true
                             lifecycleScope.launch { runAllSyncTests() }
                         },
                         enabled = !isTestRunning,
@@ -467,6 +469,7 @@ class TimeSynchronizationTestComposeActivity : ComponentActivity() {
     private suspend fun runAllSyncTests() {
         Log.i(TAG, "Running all time synchronization tests")
         
+        val startTime = System.currentTimeMillis()
         val metrics = mutableMapOf<String, Any>()
         val checks = mutableListOf<TimestampCheck>()
         val events = mutableListOf<SyncEvent>()
@@ -501,18 +504,18 @@ class TimeSynchronizationTestComposeActivity : ComponentActivity() {
             metrics["Sync Rate"] = "$syncRate%"
             metrics["Sensors Tested"] = checks.size
             metrics["Events Captured"] = events.size
-            metrics["Test Duration"] = "${System.currentTimeMillis() % 100000}ms"
+            metrics["Test Duration"] = "${System.currentTimeMillis() - startTime}ms"
             
-            timestampChecks = checks
-            syncEvents = events
-            syncMetrics = metrics
-            maxDriftMs = maxDrift
-            currentSyncStatus = if (maxDrift <= SYNC_TOLERANCE_MS) "Synchronized" else "Out of Sync"
+            _timestampChecks.value = checks
+            _syncEvents.value = events
+            _syncMetrics.value = metrics
+            _maxDriftMs.value = maxDrift
+            _currentSyncStatus.value = if (maxDrift <= SYNC_TOLERANCE_MS) "Synchronized" else "Out of Sync"
             
         } catch (e: Exception) {
             Log.e(TAG, "All sync tests failed: ${e.message}")
         } finally {
-            isTestRunning = false
+            _isTestRunning.value = false
         }
     }
 
