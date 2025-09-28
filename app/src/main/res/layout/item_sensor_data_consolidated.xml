@@ -1,19 +1,22 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Consolidated Sensor Data Item - Replaces multiple GSR/sensor item layouts -->
+<?xml version="1.0" encoding="utf-8"?><!-- Consolidated Sensor Data Item - Replaces multiple GSR/sensor item layouts -->
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="sensorType"
             type="String" />
+
         <variable
             name="dataValue"
             type="String" />
+
         <variable
             name="timestamp"
             type="String" />
+
         <variable
             name="hasError"
             type="Boolean" />
@@ -39,10 +42,10 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:contentDescription="Sensor type"
-                app:sensorIcon="@{sensorType}"
                 android:tint="@{hasError ? @color/red : @color/primary_color}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                app:sensorIcon="@{sensorType}"
                 tools:src="@drawable/ic_gsr_pulse" />
 
             <!-- Sensor Type Label -->

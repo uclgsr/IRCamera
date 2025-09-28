@@ -1,25 +1,30 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Consolidated Device Item - Replaces item_gsr_device.xml, item_shimmer_device_detailed.xml, and others -->
+<?xml version="1.0" encoding="utf-8"?><!-- Consolidated Device Item - Replaces item_gsr_device.xml, item_shimmer_device_detailed.xml, and others -->
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="deviceName"
             type="String" />
+
         <variable
             name="deviceType"
             type="String" />
+
         <variable
             name="deviceId"
             type="String" />
+
         <variable
             name="isConnected"
             type="Boolean" />
+
         <variable
             name="signalStrength"
             type="Integer" />
+
         <variable
             name="batteryLevel"
             type="Integer" />
@@ -119,7 +124,7 @@
                 android:layout_width="16dp"
                 android:layout_height="16dp"
                 android:contentDescription="Signal strength"
-                android:src="@android:drawable/stat_sys_signal_4"
+                android:src="@android:drawable/ic_dialog_info"
                 android:tint="@color/signal_strength_color"
                 android:visibility="@{isConnected ? View.VISIBLE : View.GONE}"
                 app:layout_constraintEnd_toStartOf="@+id/battery_level_text"

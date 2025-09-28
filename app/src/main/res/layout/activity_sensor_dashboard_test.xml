@@ -6,40 +6,40 @@
     android:overScrollMode="ifContentScrolls"
     android:scrollbars="vertical">
 
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/color_16131E"
-    android:orientation="vertical">
-
-    <!-- Title -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:padding="16dp"
-        android:text="Sensor Dashboard Fragment Test"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+        android:background="@color/color_16131E"
+        android:orientation="vertical">
 
-    <!-- Fragment Container -->
-    <FrameLayout
-        android:id="@+id/fragment_container"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+        <!-- Title -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="16dp"
+            android:text="Sensor Dashboard Fragment Test"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
-    <!-- Instructions -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:padding="8dp"
-        android:text="Test the scrolling behavior by scrolling up and down in the sensor dashboard above."
-        android:textColor="#CCCCCC"
-        android:textSize="12sp" />
+        <!-- Fragment Container -->
+        <FrameLayout
+            android:id="@+id/fragment_container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
-</LinearLayout>
+        <!-- Instructions -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="Test the scrolling behavior by scrolling up and down in the sensor dashboard above."
+            android:textColor="#CCCCCC"
+            android:textSize="12sp" />
+
+    </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>

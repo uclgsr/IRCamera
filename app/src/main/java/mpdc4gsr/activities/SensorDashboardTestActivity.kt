@@ -74,7 +74,7 @@ class SensorDashboardTestActivity : AppCompatActivity() {
 
         // Test multi-device status
         fragment.updateMultiDeviceStatus(2, 1, 4)
-        
+
         // Demonstrate collapsible functionality using coroutines for lifecycle safety and readability
         fragment.viewLifecycleOwner.lifecycleScope.launch {
             delay(3000)
