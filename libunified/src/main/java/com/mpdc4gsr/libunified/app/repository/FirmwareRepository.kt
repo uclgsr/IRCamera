@@ -17,7 +17,7 @@ class FirmwareRepository(
         private const val TS004_FIRMWARE_NAME = "TS004V1.70.zip"
         private const val TC007_FIRMWARE_VERSION = "V4.06"
         private const val TC007_FIRMWARE_NAME = "TC007V4.06.zip"
-        
+
         private const val CACHE_KEY_FIRMWARE_CHECK = "firmware_check"
         private const val FIRMWARE_CACHE_TTL = 30 * 60 * 1000L // 30 minutes
     }
@@ -44,7 +44,7 @@ class FirmwareRepository(
         deviceInfo: DeviceInfo
     ): Flow<BaseRepository.Result<FirmwareInfo?>> = safeFlow {
         val cacheKey = "${CACHE_KEY_FIRMWARE_CHECK}_${if (isTC007) "TC007" else "TS004"}"
-        
+
         getCachedOrExecute(cacheKey, FIRMWARE_CACHE_TTL) {
             performFirmwareCheck(isTC007, deviceInfo)
         }
@@ -69,7 +69,7 @@ class FirmwareRepository(
     suspend fun getFirmwareFromAssets(isTC007: Boolean): BaseRepository.Result<FirmwareInfo> = safeCall {
         val version = if (isTC007) TC007_FIRMWARE_VERSION else TS004_FIRMWARE_VERSION
         val fileName = if (isTC007) TC007_FIRMWARE_NAME else TS004_FIRMWARE_NAME
-        
+
         FirmwareInfo(
             version = version,
             updateDescription = "Local firmware update available",
@@ -86,7 +86,7 @@ class FirmwareRepository(
         // Simplified implementation - compare with hardcoded versions
         val latestVersion = if (isTC007) TC007_FIRMWARE_VERSION else TS004_FIRMWARE_VERSION
         val isUpdateAvailable = compareVersions(latestVersion, deviceInfo.currentFirmwareVersion) > 0
-        
+
         return if (isUpdateAvailable) {
             FirmwareInfo(
                 version = latestVersion,
@@ -103,19 +103,19 @@ class FirmwareRepository(
     private fun compareVersions(version1: String, version2: String): Int {
         val v1Parts = version1.removePrefix("V").split(".")
         val v2Parts = version2.removePrefix("V").split(".")
-        
+
         val maxLength = maxOf(v1Parts.size, v2Parts.size)
-        
+
         for (i in 0 until maxLength) {
             val v1Part = v1Parts.getOrNull(i)?.toIntOrNull() ?: 0
             val v2Part = v2Parts.getOrNull(i)?.toIntOrNull() ?: 0
-            
+
             when {
                 v1Part > v2Part -> return 1
                 v1Part < v2Part -> return -1
             }
         }
-        
+
         return 0
     }
 

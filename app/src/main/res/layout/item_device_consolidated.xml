@@ -1,25 +1,30 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Consolidated Device Item - Replaces item_gsr_device.xml, item_shimmer_device_detailed.xml, and others -->
+<?xml version="1.0" encoding="utf-8"?><!-- Consolidated Device Item - Replaces item_gsr_device.xml, item_shimmer_device_detailed.xml, and others -->
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="deviceName"
             type="String" />
+
         <variable
             name="deviceType"
             type="String" />
+
         <variable
             name="deviceId"
             type="String" />
+
         <variable
             name="isConnected"
             type="Boolean" />
+
         <variable
             name="signalStrength"
             type="Integer" />
+
         <variable
             name="batteryLevel"
             type="Integer" />

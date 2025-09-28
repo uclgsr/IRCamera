@@ -59,7 +59,7 @@ class SimplifiedMainActivity : AppCompatActivity() {
         statusText = findViewById(R.id.statusText)
         recordButton = findViewById(R.id.recordButton)
         connectButton = findViewById(R.id.connectButton)
-        
+
         // Verify views were found
         if (BuildConfig.DEBUG) Log.d(TAG, "Views initialization complete - all views found")
 
@@ -74,7 +74,7 @@ class SimplifiedMainActivity : AppCompatActivity() {
             Toast.makeText(this, "Connect button clicked!", Toast.LENGTH_SHORT).show()
             toggleConnection()
         }
-        
+
         if (BuildConfig.DEBUG) Log.d(TAG, "Click listeners setup complete")
     }
 

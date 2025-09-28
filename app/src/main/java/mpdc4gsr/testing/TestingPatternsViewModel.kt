@@ -132,10 +132,12 @@ class TestingPatternsViewModel : BaseViewModel() {
     fun runTestSuite(categories: List<TestCategory> = TestCategory.values().toList()) {
         launchWithErrorHandling {
             if (_testExecutionState.value is TestExecutionState.Running) {
-                _testEvents.emit(TestEvent.TestFailed(
-                    TestCase("", "Suite", "", TestCategory.UNIT, 0),
-                    "Test suite already running"
-                ))
+                _testEvents.emit(
+                    TestEvent.TestFailed(
+                        TestCase("", "Suite", "", TestCategory.UNIT, 0),
+                        "Test suite already running"
+                    )
+                )
                 return@launchWithErrorHandling
             }
 
@@ -150,16 +152,16 @@ class TestingPatternsViewModel : BaseViewModel() {
                 _testEvents.emit(TestEvent.TestStarted(testCase))
 
                 val result = executeTestCase(testCase)
-                
+
                 val updatedResults = _testResults.value + result
                 _testResults.value = updatedResults
-                
+
                 _testEvents.emit(TestEvent.TestCompleted(result))
             }
 
             val endTime = System.currentTimeMillis()
             val totalDuration = endTime - startTime
-            
+
             val summary = TestSummary(
                 totalDuration = totalDuration,
                 totalTests = testCases.size,
@@ -179,7 +181,7 @@ class TestingPatternsViewModel : BaseViewModel() {
      */
     private suspend fun executeTestCase(testCase: TestCase): TestResult {
         val startTime = System.currentTimeMillis()
-        
+
         return try {
             when (testCase.category) {
                 TestCategory.UNIT -> executeUnitTest(testCase)
@@ -203,13 +205,13 @@ class TestingPatternsViewModel : BaseViewModel() {
 
     private suspend fun executeUnitTest(testCase: TestCase): TestResult {
         val startTime = System.currentTimeMillis()
-        
+
         // Simulate unit test execution
         kotlinx.coroutines.delay(testCase.estimatedDuration)
-        
+
         val duration = System.currentTimeMillis() - startTime
         val passed = Math.random() > 0.1 // 90% pass rate
-        
+
         return TestResult(
             testId = testCase.id,
             testName = testCase.name,
@@ -224,7 +226,7 @@ class TestingPatternsViewModel : BaseViewModel() {
         kotlinx.coroutines.delay(testCase.estimatedDuration)
         val duration = System.currentTimeMillis() - startTime
         val result = Math.random() > 0.2 // 80% pass rate
-        
+
         return TestResult(
             testId = testCase.id,
             testName = testCase.name,
@@ -239,7 +241,7 @@ class TestingPatternsViewModel : BaseViewModel() {
         kotlinx.coroutines.delay(testCase.estimatedDuration)
         val duration = System.currentTimeMillis() - startTime
         val passed = Math.random() > 0.15 // 85% pass rate for UI tests
-        
+
         return TestResult(
             testId = testCase.id,
             testName = testCase.name,
@@ -254,14 +256,14 @@ class TestingPatternsViewModel : BaseViewModel() {
         kotlinx.coroutines.delay(testCase.estimatedDuration)
         val duration = System.currentTimeMillis() - startTime
         val performanceThresholdMet = duration < testCase.estimatedDuration * 1.2
-        
+
         return TestResult(
             testId = testCase.id,
             testName = testCase.name,
             status = if (performanceThresholdMet) TestStatus.PASSED else TestStatus.FAILED,
             duration = duration,
-            message = if (performanceThresholdMet) 
-                "Performance within threshold" else 
+            message = if (performanceThresholdMet)
+                "Performance within threshold" else
                 "Performance exceeded threshold by ${duration - testCase.estimatedDuration}ms"
         )
     }
@@ -271,7 +273,7 @@ class TestingPatternsViewModel : BaseViewModel() {
         kotlinx.coroutines.delay(testCase.estimatedDuration)
         val duration = System.currentTimeMillis() - startTime
         val stressTestPassed = Math.random() > 0.2 // 80% pass rate for stress tests
-        
+
         return TestResult(
             testId = testCase.id,
             testName = testCase.name,
@@ -286,7 +288,7 @@ class TestingPatternsViewModel : BaseViewModel() {
         kotlinx.coroutines.delay(testCase.estimatedDuration)
         val duration = System.currentTimeMillis() - startTime
         val regressionPassed = Math.random() > 0.05 // 95% pass rate for regression tests
-        
+
         return TestResult(
             testId = testCase.id,
             testName = testCase.name,
@@ -298,17 +300,53 @@ class TestingPatternsViewModel : BaseViewModel() {
 
     private fun getAvailableTestCases(): List<TestCase> {
         return listOf(
-            TestCase("unit_001", "StateFlow Basic Operations", "Test StateFlow emit and collect", TestCategory.UNIT, 500),
-            TestCase("unit_002", "Repository Result Wrapper", "Test Result wrapper functionality", TestCategory.UNIT, 300),
+            TestCase(
+                "unit_001",
+                "StateFlow Basic Operations",
+                "Test StateFlow emit and collect",
+                TestCategory.UNIT,
+                500
+            ),
+            TestCase(
+                "unit_002",
+                "Repository Result Wrapper",
+                "Test Result wrapper functionality",
+                TestCategory.UNIT,
+                300
+            ),
             TestCase("unit_003", "Error Handling", "Test ViewModel error handling", TestCategory.UNIT, 400),
-            TestCase("integration_001", "Sensor Data Repository", "Test sensor data integration", TestCategory.INTEGRATION, 1000),
+            TestCase(
+                "integration_001",
+                "Sensor Data Repository",
+                "Test sensor data integration",
+                TestCategory.INTEGRATION,
+                1000
+            ),
             TestCase("integration_002", "Network Client", "Test network connectivity", TestCategory.INTEGRATION, 1500),
             TestCase("ui_001", "Fragment Navigation", "Test fragment navigation", TestCategory.UI, 2000),
             TestCase("ui_002", "StateFlow UI Updates", "Test UI updates via StateFlow", TestCategory.UI, 1200),
-            TestCase("performance_001", "Large Dataset Processing", "Test performance with large datasets", TestCategory.PERFORMANCE, 3000),
+            TestCase(
+                "performance_001",
+                "Large Dataset Processing",
+                "Test performance with large datasets",
+                TestCategory.PERFORMANCE,
+                3000
+            ),
             TestCase("performance_002", "Memory Usage", "Test memory efficiency", TestCategory.PERFORMANCE, 2500),
-            TestCase("stress_001", "Concurrent Operations", "Test concurrent data operations", TestCategory.STRESS, 4000),
-            TestCase("regression_001", "Legacy Compatibility", "Test backward compatibility", TestCategory.REGRESSION, 1800)
+            TestCase(
+                "stress_001",
+                "Concurrent Operations",
+                "Test concurrent data operations",
+                TestCategory.STRESS,
+                4000
+            ),
+            TestCase(
+                "regression_001",
+                "Legacy Compatibility",
+                "Test backward compatibility",
+                TestCategory.REGRESSION,
+                1800
+            )
         )
     }
 

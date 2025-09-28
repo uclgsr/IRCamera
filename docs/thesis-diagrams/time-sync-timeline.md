@@ -117,13 +117,13 @@ flowchart TB
 
 ### Measured Timing Accuracy
 
-| Sensor Modality     | Nominal Rate | Actual Precision | Drift Analysis    |
-|---------------------|--------------|------------------|-------------------|
-| PC Controller       | 1000Hz       | +/-0.1ms (NTP)     | <1ms/hour         |
-| Android TimeManager | 1000Hz       | +/-2.1ms (median)  | +/-20ppm crystal    |
-| TC001 Thermal       | 25Hz         | +/-3.2ms           | Hardware limited  |
-| Shimmer3 GSR        | 128Hz        | +/-2.3ms (BLE)     | +/-20ppm internal   |
-| RGB Camera          | 30fps        | +/-1.8ms           | CameraX optimized |
+| Sensor Modality     | Nominal Rate | Actual Precision  | Drift Analysis    |
+|---------------------|--------------|-------------------|-------------------|
+| PC Controller       | 1000Hz       | +/-0.1ms (NTP)    | <1ms/hour         |
+| Android TimeManager | 1000Hz       | +/-2.1ms (median) | +/-20ppm crystal  |
+| TC001 Thermal       | 25Hz         | +/-3.2ms          | Hardware limited  |
+| Shimmer3 GSR        | 128Hz        | +/-2.3ms (BLE)    | +/-20ppm internal |
+| RGB Camera          | 30fps        | +/-1.8ms          | CameraX optimized |
 
 ### Synchronization Failure Modes
 

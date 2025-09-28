@@ -61,12 +61,13 @@ class ModernFirmwareViewModel(
     fun checkFirmwareUpdate(isTC007: Boolean, deviceInfo: FirmwareRepository.DeviceInfo) {
         viewModelScope.launch {
             _firmwareState.value = FirmwareState.Checking
-            
+
             firmwareRepository.checkFirmwareUpdate(isTC007, deviceInfo).collect { result ->
                 when (result) {
                     is BaseRepository.Result.Loading -> {
                         _firmwareState.value = FirmwareState.Checking
                     }
+
                     is BaseRepository.Result.Success -> {
                         val firmwareInfo = result.data
                         if (firmwareInfo != null && firmwareInfo.isUpdateAvailable) {
@@ -77,6 +78,7 @@ class ModernFirmwareViewModel(
                             _events.emit(FirmwareEvent.ShowSuccess("Firmware is up to date"))
                         }
                     }
+
                     is BaseRepository.Result.Error -> {
                         val errorMessage = result.exception.message ?: "Unknown error occurred"
                         _firmwareState.value = FirmwareState.Error(errorMessage)
@@ -91,18 +93,20 @@ class ModernFirmwareViewModel(
     fun downloadFirmwareUpdate(firmwareInfo: FirmwareRepository.FirmwareInfo, outputDir: File) {
         viewModelScope.launch {
             _downloadState.value = DownloadState.Downloading(0f)
-            
+
             when (val result = firmwareRepository.downloadFirmware(firmwareInfo, outputDir)) {
                 is BaseRepository.Result.Success -> {
                     _downloadState.value = DownloadState.Completed(result.data)
                     _events.emit(FirmwareEvent.ShowSuccess("Firmware downloaded successfully"))
                     _events.emit(FirmwareEvent.UpdateCompleted)
                 }
+
                 is BaseRepository.Result.Error -> {
                     val errorMessage = result.exception.message ?: "Download failed"
                     _downloadState.value = DownloadState.Error(errorMessage)
                     _events.emit(FirmwareEvent.ShowError(errorMessage))
                 }
+
                 else -> {
                     // Handle loading state if needed
                 }
@@ -118,11 +122,13 @@ class ModernFirmwareViewModel(
                     _firmwareState.value = FirmwareState.UpdateAvailable(result.data)
                     _events.emit(FirmwareEvent.ShowUpdateDialog(result.data))
                 }
+
                 is BaseRepository.Result.Error -> {
                     val errorMessage = result.exception.message ?: "Failed to load local firmware"
                     _firmwareState.value = FirmwareState.Error(errorMessage)
                     _events.emit(FirmwareEvent.ShowError(errorMessage))
                 }
+
                 else -> {
                     // Handle loading state if needed
                 }

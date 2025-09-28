@@ -80,7 +80,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         // Get device type from intent
         isTC007 = intent.getBooleanExtra(ExtraKeyConfig.IS_TC007, false)
 
@@ -348,7 +348,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     }
 
     private class ViewPagerAdapter(
-        activity: FragmentActivity, 
+        activity: FragmentActivity,
         private val isTC007: Boolean
     ) : FragmentStateAdapter(activity) {
         override fun getItemCount(): Int = 4
@@ -359,6 +359,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 PAGE_SETTINGS -> MoreFragment().apply {
                     arguments = Bundle().also { it.putBoolean(ExtraKeyConfig.IS_TC007, isTC007) }
                 }
+
                 PAGE_MINE -> MineFragment()
                 else -> throw IndexOutOfBoundsException("Invalid position $position in ViewPagerAdapter")
             }

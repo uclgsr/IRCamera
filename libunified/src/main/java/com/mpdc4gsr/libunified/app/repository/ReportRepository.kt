@@ -55,7 +55,7 @@ class ReportRepository : BaseRepository() {
             cachedAt = System.currentTimeMillis(),
             page = page
         )
-        
+       
         reports
     }
     

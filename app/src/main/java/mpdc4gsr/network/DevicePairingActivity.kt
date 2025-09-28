@@ -142,7 +142,7 @@ class DevicePairingActivity : BaseViewModelActivity<DevicePairingViewModel>(),
 
     private fun handleConnectionState(state: DevicePairingViewModel.ConnectionState) {
         binding.progressBar.isVisible = state == DevicePairingViewModel.ConnectionState.CONNECTING
-        
+
         // Update connection status text if it exists
         try {
             val resourceId = resources.getIdentifier("connection_status", "id", packageName)
@@ -154,14 +154,17 @@ class DevicePairingActivity : BaseViewModelActivity<DevicePairingViewModel>(),
                             textView.text = "Connected to ${state.controller.name}"
                             textView.setTextColor(getColor(android.R.color.holo_green_dark))
                         }
+
                         is DevicePairingViewModel.ConnectionState.Connecting -> {
                             textView.text = "Connecting..."
                             textView.setTextColor(getColor(android.R.color.holo_orange_dark))
                         }
+
                         is DevicePairingViewModel.ConnectionState.Disconnected -> {
                             textView.text = "Disconnected"
                             textView.setTextColor(getColor(android.R.color.darker_gray))
                         }
+
                         is DevicePairingViewModel.ConnectionState.Failed -> {
                             textView.text = "Connection failed: ${state.message}"
                             textView.setTextColor(getColor(android.R.color.holo_red_dark))

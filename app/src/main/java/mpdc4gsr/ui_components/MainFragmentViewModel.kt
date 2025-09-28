@@ -45,7 +45,7 @@ class MainFragmentViewModel : BaseViewModel() {
     ) {
         val hasAnyConnection: Boolean
             get() = hasConnectLine || hasConnectTS004 || hasConnectTC007
-            
+
         val connectedDeviceCount: Int
             get() = listOf(hasConnectLine, hasConnectTS004, hasConnectTC007).count { it }
     }
@@ -58,7 +58,9 @@ class MainFragmentViewModel : BaseViewModel() {
     )
 
     sealed class NavigationEvent {
-        data class Navigate(val route: String, val isTC007: Boolean = false, val isTS004: Boolean = false) : NavigationEvent()
+        data class Navigate(val route: String, val isTC007: Boolean = false, val isTS004: Boolean = false) :
+            NavigationEvent()
+
         data class ShowDeviceSelection(val availableDevices: List<ConnectType>) : NavigationEvent()
         data class ShowError(val message: String) : NavigationEvent()
         object ShowDeviceAddDialog : NavigationEvent()
@@ -98,7 +100,7 @@ class MainFragmentViewModel : BaseViewModel() {
     fun initializeDeviceState() {
         launchWithErrorHandling {
             _mainScreenState.value = _mainScreenState.value.copy(isRefreshingDevices = true)
-            
+
             val hasConnectLine = DeviceTools.isConnect()
             val hasConnectTS004 = WebSocketProxy.getInstance().isTS004Connect()
             val hasConnectTC007 = WebSocketProxy.getInstance().isTC007Connect()
@@ -111,7 +113,7 @@ class MainFragmentViewModel : BaseViewModel() {
                 hasConnectTC007 = hasConnectTC007,
                 lastUpdated = System.currentTimeMillis()
             )
-            
+
             _mainScreenState.value = _mainScreenState.value.copy(
                 isInitialized = true,
                 isRefreshingDevices = false,
@@ -126,7 +128,7 @@ class MainFragmentViewModel : BaseViewModel() {
     fun refreshDeviceState() {
         launchWithErrorHandling {
             _deviceState.value = _deviceState.value.copy(isRefreshing = true)
-            
+
             val hasAnyDevice = SharedManager.hasTcLine
             val hasConnectLine = DeviceTools.isConnect(isAutoRequest = false)
             val hasConnectTS004 = false // TS004 functionality removed
@@ -140,7 +142,7 @@ class MainFragmentViewModel : BaseViewModel() {
                 isRefreshing = false,
                 lastUpdated = System.currentTimeMillis()
             )
-            
+
             _mainScreenState.value = _mainScreenState.value.copy(
                 showWelcomeScreen = !_deviceState.value.hasAnyConnection
             )
@@ -154,10 +156,12 @@ class MainFragmentViewModel : BaseViewModel() {
         launchWithErrorHandling {
             when (connectType) {
                 ConnectType.LINE -> {
-                    _navigationEvents.emit(NavigationEvent.Navigate(
-                        route = "IR_MAIN",
-                        isTC007 = false
-                    ))
+                    _navigationEvents.emit(
+                        NavigationEvent.Navigate(
+                            route = "IR_MAIN",
+                            isTC007 = false
+                        )
+                    )
                 }
 
                 ConnectType.TS004 -> {
@@ -165,21 +169,25 @@ class MainFragmentViewModel : BaseViewModel() {
                     if (currentState.hasConnectTS004) {
                         _navigationEvents.emit(NavigationEvent.Navigate(route = "IR_MONOCULAR"))
                     } else {
-                        _navigationEvents.emit(NavigationEvent.Navigate(
-                            route = "IR_DEVICE_ADD",
-                            isTS004 = true
-                        ))
+                        _navigationEvents.emit(
+                            NavigationEvent.Navigate(
+                                route = "IR_DEVICE_ADD",
+                                isTS004 = true
+                            )
+                        )
                     }
                 }
 
                 ConnectType.TC007 -> {
-                    _navigationEvents.emit(NavigationEvent.Navigate(
-                        route = "IR_MAIN",
-                        isTC007 = true
-                    ))
+                    _navigationEvents.emit(
+                        NavigationEvent.Navigate(
+                            route = "IR_MAIN",
+                            isTC007 = true
+                        )
+                    )
                 }
             }
-            
+
             _mainScreenState.value = _mainScreenState.value.copy(currentDevice = connectType)
         }
     }
@@ -193,9 +201,11 @@ class MainFragmentViewModel : BaseViewModel() {
                 ConnectType.LINE -> {
                     SharedManager.hasTcLine = false
                 }
+
                 ConnectType.TS004 -> {
                     // TS004 functionality removed
                 }
+
                 ConnectType.TC007 -> {
                     // TC007 functionality removed
                 }
@@ -250,9 +260,9 @@ class MainFragmentViewModel : BaseViewModel() {
                     status = battery.getString("status"),
                     remaining = battery.getString("remaining")
                 )
-                
+
                 _batteryInfo.value = batteryInfo
-                
+
                 // Show low battery warning if needed
                 if (batteryInfo.isLowBattery()) {
                     _navigationEvents.emit(NavigationEvent.ShowError("Battery is low: ${batteryInfo.remaining}%"))
@@ -270,11 +280,11 @@ class MainFragmentViewModel : BaseViewModel() {
     fun getAvailableDevices(): List<ConnectType> {
         val currentState = _deviceState.value
         val availableDevices = mutableListOf<ConnectType>()
-        
+
         if (currentState.hasAnyDevice) availableDevices.add(ConnectType.LINE)
         if (currentState.hasConnectTS004) availableDevices.add(ConnectType.TS004)
         if (currentState.hasConnectTC007) availableDevices.add(ConnectType.TC007)
-        
+
         return availableDevices
     }
 

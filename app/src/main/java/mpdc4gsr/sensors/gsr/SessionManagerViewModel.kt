@@ -78,7 +78,7 @@ class SessionManagerViewModel : BaseViewModel() {
         }
 
         _sessionUiState.value = _sessionUiState.value.copy(isLoading = true)
-        
+
         launchWithErrorHandling {
             try {
                 // Display storage info
@@ -250,6 +250,7 @@ class SessionManagerViewModel : BaseViewModel() {
             FilterType.RECENT -> filtered.filter {
                 System.currentTimeMillis() - it.startTime < 24 * 60 * 60 * 1000 // Last 24 hours
             }
+
             FilterType.COMPLETED -> filtered.filter { it.endTime != null }
             FilterType.WITH_DATA -> filtered.filter { it.totalDataSize > 0 }
         }
@@ -298,7 +299,12 @@ class SessionManagerViewModel : BaseViewModel() {
                 applyCurrentFilters()
                 _sessionUiState.value = _sessionUiState.value.copy(sessionCount = updatedSessions.size)
 
-                _sessionEvents.emit(SessionEvent.DeletedSuccess(session, "Session ${session.sessionId} deleted successfully"))
+                _sessionEvents.emit(
+                    SessionEvent.DeletedSuccess(
+                        session,
+                        "Session ${session.sessionId} deleted successfully"
+                    )
+                )
             } else {
                 _sessionEvents.emit(SessionEvent.ShowError("Failed to delete session ${session.sessionId}"))
             }
@@ -312,7 +318,12 @@ class SessionManagerViewModel : BaseViewModel() {
             }
 
             if (success) {
-                _sessionEvents.emit(SessionEvent.ExportSuccess(session, "Session ${session.sessionId} exported successfully"))
+                _sessionEvents.emit(
+                    SessionEvent.ExportSuccess(
+                        session,
+                        "Session ${session.sessionId} exported successfully"
+                    )
+                )
             } else {
                 _sessionEvents.emit(SessionEvent.ExportFailed(session, "Failed to export session ${session.sessionId}"))
             }

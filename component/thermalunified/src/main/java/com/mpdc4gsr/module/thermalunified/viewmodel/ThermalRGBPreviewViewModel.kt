@@ -221,7 +221,7 @@ class ThermalRGBPreviewViewModel : BaseViewModel() {
         launchWithErrorHandling {
             val rgbFrame = _rgbPreviewState.value.currentFrame
             val thermalFrame = _thermalOverlayState.value.thermalBitmap
-            
+
             if (rgbFrame != null && thermalFrame != null) {
                 // In a real implementation, this would combine the frames
                 // For now, we'll just use the thermal frame as the synced frame
@@ -244,6 +244,7 @@ class ThermalRGBPreviewViewModel : BaseViewModel() {
                     blendMode = BlendMode.OVERLAY
                 )
             }
+
             PreviewPreset.INDUSTRIAL -> {
                 _thermalOverlayState.value = _thermalOverlayState.value.copy(
                     colorPalette = ColorPalette.IRON,
@@ -251,6 +252,7 @@ class ThermalRGBPreviewViewModel : BaseViewModel() {
                     blendMode = BlendMode.MULTIPLY
                 )
             }
+
             PreviewPreset.RESEARCH -> {
                 _thermalOverlayState.value = _thermalOverlayState.value.copy(
                     colorPalette = ColorPalette.RAINBOW,
@@ -258,6 +260,7 @@ class ThermalRGBPreviewViewModel : BaseViewModel() {
                     blendMode = BlendMode.SIDE_BY_SIDE
                 )
             }
+
             PreviewPreset.NIGHT_VISION -> {
                 _rgbPreviewState.value = _rgbPreviewState.value.copy(
                     exposureMode = ExposureMode.SCENE_NIGHT
