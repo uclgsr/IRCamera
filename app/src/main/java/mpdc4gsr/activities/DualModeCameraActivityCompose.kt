@@ -95,7 +95,7 @@ class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewMode
                         Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
                     }
                     is DualModeCameraViewModel.CameraEvent.NavigateToSettings -> {
-                        // Handle navigation to settings
+                        context.startActivity(Intent(context, SettingsActivity::class.java))
                     }
                     is DualModeCameraViewModel.CameraEvent.NavigateBack -> {
                         finish()
