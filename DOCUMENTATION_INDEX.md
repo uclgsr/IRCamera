@@ -31,6 +31,7 @@ This comprehensive index provides quick navigation to all documentation across t
 
 ### System Architecture
 - **[docs/COMPREHENSIVE_ARCHITECTURE_DIAGRAMS.md](docs/COMPREHENSIVE_ARCHITECTURE_DIAGRAMS.md)** - Complete system architecture diagrams
+- **[docs/APP_NAVIGATION_DIAGRAM.md](docs/APP_NAVIGATION_DIAGRAM.md)** - Comprehensive app navigation flow and UI structure
 - **[docs/BACKGROUND_DEVICE_SCANNING.md](docs/BACKGROUND_DEVICE_SCANNING.md)** - BLE device scanning implementation
 
 ### Thesis Documentation
