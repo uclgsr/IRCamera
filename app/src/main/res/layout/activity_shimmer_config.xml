@@ -4,18 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
+    android:background="@color/color_16131E"
     android:orientation="vertical">
-
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
+        android:background="@color/colorPrimary"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
-
 
     <ScrollView
         android:layout_width="match_parent"
@@ -26,7 +24,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
@@ -46,6 +43,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
                         android:text="Status"
+                        android:textColor="@color/font_color"
                         android:textSize="18sp"
                         android:textStyle="bold" />
 
@@ -55,6 +53,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
                         android:text="Initializing..."
+                        android:textColor="@color/font_second_color"
                         android:textSize="14sp" />
 
                     <TextView
@@ -62,7 +61,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Not Connected"
-                        android:textColor="@android:color/holo_red_dark"
+                        android:textColor="@color/status_disconnected"
                         android:textSize="14sp"
                         android:textStyle="bold" />
 
@@ -78,7 +77,6 @@
                 </LinearLayout>
 
             </androidx.cardview.widget.CardView>
-
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
@@ -98,6 +96,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="12dp"
                         android:text="Device Control"
+                        android:textColor="@color/font_color"
                         android:textSize="18sp"
                         android:textStyle="bold" />
 
@@ -113,9 +112,9 @@
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="8dp"
                             android:layout_weight="1"
-                            android:background="?attr/colorPrimary"
+                            android:background="@color/colorPrimary"
                             android:text="Start Scan"
-                            android:textColor="@android:color/white" />
+                            android:textColor="@color/white" />
 
                         <Button
                             android:id="@+id/buttonTestConnection"
@@ -123,10 +122,10 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
                             android:layout_weight="1"
-                            android:background="?attr/colorAccent"
+                            android:background="@color/colorAccent"
                             android:enabled="false"
                             android:text="Test Connection"
-                            android:textColor="@android:color/white" />
+                            android:textColor="@color/white" />
 
                     </LinearLayout>
 
@@ -134,15 +133,14 @@
                         android:id="@+id/buttonDisconnect"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@android:color/holo_red_dark"
+                        android:background="@color/status_disconnected"
                         android:enabled="false"
                         android:text="Disconnect Device"
-                        android:textColor="@android:color/white" />
+                        android:textColor="@color/white" />
 
                 </LinearLayout>
 
             </androidx.cardview.widget.CardView>
-
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
@@ -161,6 +159,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="12dp"
                         android:text="Discovered Shimmer Devices"
+                        android:textColor="@color/font_color"
                         android:textSize="18sp"
                         android:textStyle="bold" />
 
@@ -177,7 +176,7 @@
                         android:layout_marginTop="8dp"
                         android:gravity="center"
                         android:text="Tap on a device to connect"
-                        android:textColor="@android:color/darker_gray"
+                        android:textColor="@color/font_third_color"
                         android:textSize="12sp"
                         android:textStyle="italic" />
 
@@ -185,12 +184,11 @@
 
             </androidx.cardview.widget.CardView>
 
-
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                app:cardBackgroundColor="@android:color/holo_blue_light"
+                app:cardBackgroundColor="@color/colorPrimary"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="4dp">
 
@@ -205,7 +203,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
                         android:text="Setup Instructions"
-                        android:textColor="@android:color/white"
+                        android:textColor="@color/white"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
@@ -214,7 +212,7 @@
                         android:layout_height="wrap_content"
                         android:lineSpacingExtra="2dp"
                         android:text="1. Ensure your Shimmer3 GSR+ device is powered on\n2. Make sure Bluetooth is enabled on your phone\n3. Tap 'Start Scan' to discover nearby devices\n4. Select your device from the list to connect\n5. Test the connection before starting a recording session"
-                        android:textColor="@android:color/white"
+                        android:textColor="@color/white"
                         android:textSize="14sp" />
 
                 </LinearLayout>

@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <!-- AppTheme for AppCompat activities -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:statusBarColor">@color/color_16131E</item>
-        <!-- Remove borderless button style that might interfere with button clicks -->
-        <!-- <item name="buttonStyle">@style/Widget.AppCompat.Button.Borderless</item> -->
     </style>
 
     <style name="Blank" parent="Theme.AppCompat.Light.NoActionBar">
