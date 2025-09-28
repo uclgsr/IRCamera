@@ -38,11 +38,17 @@ Sensing Platform.
 ## Architecture and Design
 
 ### System Architecture
-- **[docs/COMPREHENSIVE_ARCHITECTURE_DIAGRAMS.md](docs/COMPREHENSIVE_ARCHITECTURE_DIAGRAMS.md)** - Complete system architecture diagrams
-- **[docs/APP_NAVIGATION_DIAGRAM.md](docs/APP_NAVIGATION_DIAGRAM.md)** - Comprehensive app navigation flow and UI structure (UPDATED - 110 activities)
-- **[docs/APP_LAYOUT_DIAGRAM.md](docs/APP_LAYOUT_DIAGRAM.md)** - Complete layout architecture and UI component structure (UPDATED - 220 layouts)
-- **[docs/LAYOUT_ACTIVITY_AUDIT.md](docs/LAYOUT_ACTIVITY_AUDIT.md)** - Comprehensive audit report identifying mismatches and inconsistencies
-- **[docs/DOCUMENTATION_UPDATE_SUMMARY.md](docs/DOCUMENTATION_UPDATE_SUMMARY.md)** - Summary of major documentation corrections and updates
+
+- **[docs/COMPREHENSIVE_ARCHITECTURE_DIAGRAMS.md](docs/COMPREHENSIVE_ARCHITECTURE_DIAGRAMS.md)** - Complete system
+  architecture diagrams
+- **[docs/APP_NAVIGATION_DIAGRAM.md](docs/APP_NAVIGATION_DIAGRAM.md)** - Comprehensive app navigation flow and UI
+  structure (UPDATED - 110 activities)
+- **[docs/APP_LAYOUT_DIAGRAM.md](docs/APP_LAYOUT_DIAGRAM.md)** - Complete layout architecture and UI component
+  structure (UPDATED - 220 layouts)
+- **[docs/LAYOUT_ACTIVITY_AUDIT.md](docs/LAYOUT_ACTIVITY_AUDIT.md)** - Comprehensive audit report identifying mismatches
+  and inconsistencies
+- **[docs/DOCUMENTATION_UPDATE_SUMMARY.md](docs/DOCUMENTATION_UPDATE_SUMMARY.md)** - Summary of major documentation
+  corrections and updates
 - **[docs/BACKGROUND_DEVICE_SCANNING.md](docs/BACKGROUND_DEVICE_SCANNING.md)** - BLE device scanning implementation
 
 ### Thesis Documentation
@@ -68,18 +74,22 @@ Sensing Platform.
 
 - **[testing-suite/testing-suite/results/executive_summary.md](testing-suite/testing-suite/results/executive_summary.md)
   ** - Master test execution summary
-- *
-  *[testing-suite/testing-suite/results/performance_comparison.md](testing-suite/testing-suite/results/performance_comparison.md)
-  ** - Performance benchmarking results
-- *
-  *[testing-suite/testing-suite/results/comprehensive_test_visualization.md](testing-suite/testing-suite/results/comprehensive_test_visualization.md)
-  ** - Test visualization and metrics
-- *
-  *[testing-suite/testing-suite/results/integration/thesis_integration_summary.md](testing-suite/testing-suite/results/integration/thesis_integration_summary.md)
-  ** - Integration test results
-- *
-  *[testing-suite/testing-suite/results/benchmarks/performance_validation_diagram.md](testing-suite/testing-suite/results/benchmarks/performance_validation_diagram.md)
-  ** - Performance validation diagrams
+-
+    *
+*[testing-suite/testing-suite/results/performance_comparison.md](testing-suite/testing-suite/results/performance_comparison.md)
+** - Performance benchmarking results
+-
+    *
+*[testing-suite/testing-suite/results/comprehensive_test_visualization.md](testing-suite/testing-suite/results/comprehensive_test_visualization.md)
+** - Test visualization and metrics
+-
+    *
+*[testing-suite/testing-suite/results/integration/thesis_integration_summary.md](testing-suite/testing-suite/results/integration/thesis_integration_summary.md)
+** - Integration test results
+-
+    *
+*[testing-suite/testing-suite/results/benchmarks/performance_validation_diagram.md](testing-suite/testing-suite/results/benchmarks/performance_validation_diagram.md)
+** - Performance validation diagrams
 
 ## Documentation by Use Case
 

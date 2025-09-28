@@ -123,10 +123,10 @@ class DevicePairingActivity : BaseViewModelActivity<DevicePairingViewModel>(),
         binding.apply {
             scanButton.text = if (state.showProgress) "Stop Scan" else "Start Scan"
             scanButton.isEnabled = state.canScan
-            
+
             progressBar.isVisible = state.showProgress
             statusText.text = "Discovered ${state.discoveredCount} device(s)"
-            
+
             // Update scan results count if the view exists
             try {
                 val resourceId = resources.getIdentifier("scan_results_count", "id", packageName)
@@ -182,24 +182,25 @@ class DevicePairingActivity : BaseViewModelActivity<DevicePairingViewModel>(),
             is DevicePairingViewModel.PairingEvent.ShowError -> {
                 Toast.makeText(this, event.message, Toast.LENGTH_LONG).show()
             }
+
             is DevicePairingViewModel.PairingEvent.ShowSuccess -> {
                 Toast.makeText(this, event.message, Toast.LENGTH_SHORT).show()
             }
+
             is DevicePairingViewModel.PairingEvent.NavigateToSession -> {
                 MultiModalRecordingActivity.startRecording(this, event.sessionInfo)
             }
+
             is DevicePairingViewModel.PairingEvent.ShowConnectionDialog -> {
                 Toast.makeText(this, "Connecting to ${event.controller.name}...", Toast.LENGTH_SHORT).show()
                 binding.disconnectButton.isVisible = true
             }
+
             is DevicePairingViewModel.PairingEvent.NavigateBack -> {
                 finish()
             }
         }
     }
-
-
-
 
 
     // NetworkClient.NetworkEventListener implementation

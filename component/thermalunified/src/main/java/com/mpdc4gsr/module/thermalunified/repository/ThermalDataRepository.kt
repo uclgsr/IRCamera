@@ -44,7 +44,7 @@ class ThermalDataRepository : BaseRepository() {
         try {
             while (true) {
                 delay(100) // 10 FPS simulation
-                
+
                 val frame = generateThermalFrame(deviceId)
                 emit(BaseRepository.Result.Success(frame))
             }
@@ -52,7 +52,7 @@ class ThermalDataRepository : BaseRepository() {
             emit(BaseRepository.Result.Error(e))
         }
     }.flowOn(Dispatchers.IO)
-    
+
     // Historical thermal data with caching
     fun getHistoricalThermalData(
         deviceId: String,
