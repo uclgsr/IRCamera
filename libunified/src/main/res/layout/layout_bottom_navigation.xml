@@ -34,7 +34,7 @@
             android:id="@+id/iv_nav_gallery"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:contentDescription="@null"
+            android:contentDescription="@string/app_gallery"
             android:src="@drawable/selector_gallery"
             app:layout_constraintBottom_toTopOf="@+id/tv_nav_gallery"
             app:layout_constraintDimensionRatio="1:1"
