@@ -317,7 +317,9 @@ abstract class AbstractScanner implements Scanner {
     /**
      * 执行停止搜索
      */
-    protected abstract void performStopScan();    private final Runnable stopScanRunnable = () -> stopScan(false);
+    protected abstract void performStopScan();
+
+    private final Runnable stopScanRunnable = () -> stopScan(false);
 
 
 
