@@ -776,3 +776,470 @@ For teams planning Compose migration:
 5. **Phase 5:** Implement full Compose thermal overlays and drawing components
 
 This documentation serves as the definitive guide for maintaining architectural consistency while enabling modern UI development practices in the IRCamera application.
+
+## Extended UI Patterns and Modern Components
+
+### **Data Binding Layouts**
+The IRCamera app extensively uses Android Data Binding for dynamic UI updates:
+
+**Multi-Modal Recording Pattern:**
+```xml
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable name="isRecording" type="Boolean" />
+        <variable name="sensorTypes" type="java.util.Set&lt;String&gt;" />
+        <variable name="hasRgbCamera" type="Boolean" />
+    </data>
+    <!-- Layout content with binding expressions -->
+</layout>
+```
+
+**Key Data Binding Patterns:**
+- **Conditional Visibility:** `android:visibility="@{isRecording ? View.VISIBLE : View.GONE}"`
+- **Dynamic Text:** `android:text="@{isRecording ? @string/stop_recording : @string/start_recording}"`
+- **Color Binding:** `android:backgroundTint="@{isConnected ? @color/status_connected : @color/status_disconnected}"`
+- **Resource Selection:** `android:src="@{deviceType.equals(@string/gsr_sensor_type) ? @drawable/ic_gsr_pulse : @drawable/ic_sensor_generic}"`
+
+**Compose Equivalent:**
+```kotlin
+@Composable
+fun MultiModalRecording(
+    isRecording: Boolean,
+    sensorTypes: Set<String>,
+    hasRgbCamera: Boolean
+) {
+    Column {
+        if (hasRgbCamera) {
+            CameraPreviewCard()
+        }
+        RecordingControlsCard(
+            isRecording = isRecording,
+            onStartStop = { /* ... */ }
+        )
+        if (isRecording) {
+            RealTimeDataCard()
+        }
+    }
+}
+```
+
+### **Material3 Component Integration**
+
+**CardView-Based Layouts:**
+- **Pattern:** Dark-themed cards (`#FF2A2A2A`) with 8dp corner radius
+- **Usage:** System status, recording controls, session information sections
+- **Padding:** Consistent 16dp internal padding for card content
+- **Structure:** CardView → LinearLayout → Content sections
+
+**ChipGroup for Sensor Selection:**
+```xml
+<com.google.android.material.chip.ChipGroup
+    android:id="@+id/sensor_chip_group"
+    app:chipSpacingHorizontal="8dp"
+    app:singleSelection="false" />
+```
+
+**Material3 Button Styles:**
+- **TextButton:** `style="@style/Widget.Material3.Button.TextButton"`
+- **Color Usage:** `textColor="@color/primary_color"` for primary actions
+- **Sizing:** Consistent 12sp text size for compact controls
+
+**Compose Migration:**
+```kotlin
+@Composable
+fun SensorSelectionChips(
+    selectedSensors: Set<String>,
+    onSelectionChange: (Set<String>) -> Unit
+) {
+    LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        items(availableSensors) { sensor ->
+            FilterChip(
+                selected = sensor in selectedSensors,
+                onClick = { 
+                    onSelectionChange(
+                        if (sensor in selectedSensors) 
+                            selectedSensors - sensor 
+                        else selectedSensors + sensor
+                    )
+                },
+                label = { Text(sensor) }
+            )
+        }
+    }
+}
+```
+
+### **Advanced List Item Patterns**
+
+**Device Item Template** (`item_device_consolidated.xml`):
+```
+CardView (8dp corner radius, 2dp elevation)
+└── ConstraintLayout (16dp padding)
+    ├── ImageView (device_icon, 48dp) + Connection indicator (12dp overlay)
+    ├── Text Column (name, type, ID with different text styles)
+    ├── Status Indicators (signal strength, battery level)
+    └── Action Buttons (connect/disconnect, settings)
+```
+
+**Key Patterns:**
+- **Device Icons:** Dynamic based on device type (thermal/GSR/generic)
+- **Status Colors:** Connected/disconnected state coloring throughout item
+- **Monospace Font:** Device IDs use `fontFamily="monospace"`
+- **Button Layout:** Horizontal LinearLayout with weighted TextButtons
+
+**Compose Equivalent:**
+```kotlin
+@Composable
+fun DeviceItem(
+    device: Device,
+    onConnect: () -> Unit,
+    onSettings: () -> Unit
+) {
+    Card(
+        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+    ) {
+        Row(
+            modifier = Modifier.padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box {
+                Icon(
+                    imageVector = device.getTypeIcon(),
+                    contentDescription = "Device icon",
+                    tint = if (device.isConnected) Color.Green else Color.Red,
+                    modifier = Modifier.size(48.dp)
+                )
+                if (device.isConnected) {
+                    Box(
+                        modifier = Modifier
+                            .size(12.dp)
+                            .background(Color.Green, CircleShape)
+                            .align(Alignment.TopEnd)
+                    )
+                }
+            }
+            
+            Column(modifier = Modifier.weight(1f).padding(start = 12.dp)) {
+                Text(device.name, style = MaterialTheme.typography.titleMedium)
+                Text(device.type, style = MaterialTheme.typography.bodySmall)
+                Text(
+                    device.id, 
+                    fontFamily = FontFamily.Monospace,
+                    style = MaterialTheme.typography.labelSmall
+                )
+                Text(
+                    if (device.isConnected) "Connected" else "Disconnected",
+                    color = if (device.isConnected) Color.Green else Color.Red,
+                    style = MaterialTheme.typography.labelMedium
+                )
+            }
+            
+            Row {
+                TextButton(onClick = onConnect) {
+                    Text(if (device.isConnected) "Disconnect" else "Connect")
+                }
+                TextButton(onClick = onSettings) {
+                    Text("Settings")
+                }
+            }
+        }
+    }
+}
+```
+
+### **Complex Layout Hierarchies**
+
+**Multi-Modal Recording Activity Structure:**
+```
+ScrollView (fillViewport, vertical scrollbars)
+└── LinearLayout (vertical, 16dp padding)
+    ├── Title TextView (24sp, bold, center-aligned)
+    ├── Camera Preview CardView (conditional visibility)
+    │   └── FrameLayout (camera container) + Control Buttons
+    ├── System Status CardView
+    │   └── Dynamic sensor status container + Status text
+    ├── Recording Controls CardView
+    │   ├── Start/Stop + Sync buttons (weighted layout)
+    │   └── ChipGroup (sensor selection)
+    ├── Real-time Data CardView (conditional, recording only)
+    │   └── ScrollView (200dp height, monospace data display)
+    ├── Session Information CardView
+    └── Navigation Actions (horizontal button layout)
+```
+
+### **Bottom Navigation Pattern**
+
+**IRCamera Style Navigation:**
+```xml
+<ConstraintLayout (56dp height, #16131e background)
+    ├── ImageView (background image, fitXY scaling)
+    ├── View (center spacer, 28% width)
+    ├── Gallery Tab (ConstraintLayout, 28% width)
+    │   ├── ImageView (icon, selector drawable)
+    │   └── TextView (label, 11sp)
+    └── Mine Tab (ConstraintLayout, 28% width)
+        ├── ImageView (icon, selector drawable)
+        └── TextView (label, 11sp)
+```
+
+**Key Features:**
+- **Aspect Ratio:** Background uses `layout_constraintDimensionRatio="1125:255"`
+- **Selector Drawables:** State-aware icons (`selector_gallery`, `selector_mine`)
+- **Text Styling:** `app_font_11` dimension, `tab_text` color
+- **Spacing:** 4dp margin between icon and text
+
+**Compose Equivalent:**
+```kotlin
+@Composable
+fun IRCameraBottomNavigation(
+    selectedTab: NavigationTab,
+    onTabSelected: (NavigationTab) -> Unit
+) {
+    NavigationBar(
+        containerColor = Color(0xFF16131E),
+        modifier = Modifier.height(56.dp)
+    ) {
+        NavigationBarItem(
+            selected = selectedTab == NavigationTab.Gallery,
+            onClick = { onTabSelected(NavigationTab.Gallery) },
+            icon = { 
+                Icon(
+                    if (selectedTab == NavigationTab.Gallery) 
+                        Icons.Filled.PhotoLibrary 
+                    else Icons.Outlined.PhotoLibrary,
+                    contentDescription = "Gallery"
+                )
+            },
+            label = { Text("Gallery", fontSize = 11.sp) }
+        )
+        NavigationBarItem(
+            selected = selectedTab == NavigationTab.Mine,
+            onClick = { onTabSelected(NavigationTab.Mine) },
+            icon = { 
+                Icon(
+                    if (selectedTab == NavigationTab.Mine) 
+                        Icons.Filled.Person 
+                    else Icons.Outlined.Person,
+                    contentDescription = "Mine"
+                )
+            },
+            label = { Text("Mine", fontSize = 11.sp) }
+        )
+    }
+}
+```
+
+### **GSR and Multi-Sensor UI Patterns**
+
+**Real-Time Data Display:**
+- **Container:** ScrollView with fixed height (200dp) and dark background (`#FF1A1A1A`)
+- **Content:** Monospace font for data consistency
+- **Pattern:** Dynamic LinearLayout container for sensor data streams
+- **Styling:** 12sp white text on dark background for readability
+
+**Sensor Status Integration:**
+- **Dynamic Containers:** FrameLayout containers populated programmatically
+- **Status Colors:** Consistent green/red for connected/disconnected states
+- **Icon System:** Device-type specific icons (thermal, GSR, generic sensors)
+- **Battery Indicators:** Percentage display with color coding
+
+**Session Management:**
+- **Information Cards:** Consistent CardView styling for session metadata
+- **Action Patterns:** Horizontal button layouts for session navigation
+- **Data Persistence:** Integration with session storage and retrieval systems
+
+## Testing and Implementation Guidance
+
+### **Fragment Container Testing**
+The app includes specialized testing layouts for validating UI behavior:
+
+**Sensor Dashboard Test Pattern:**
+```xml
+<NestedScrollView (fillViewport, vertical scrollbars)
+└── LinearLayout (vertical, dark background)
+    ├── Title TextView (18sp, bold, center)
+    ├── FrameLayout (fragment container, weighted)
+    └── Instructions TextView (12sp, secondary color)
+```
+
+**Key Testing Features:**
+- **Nested Scrolling:** `NestedScrollView` with `fillViewport="true"`
+- **Fragment Integration:** Dedicated container for fragment testing
+- **Behavior Validation:** Instructions for testing scrolling behavior
+- **Consistent Styling:** Maintains app color scheme (`color_16131E` background)
+
+### **Layout Validation Patterns**
+
+**Responsive Design Testing:**
+- **Weight-Based Containers:** Fragment containers use `layout_weight="1"` for flexibility
+- **Scroll Behavior:** Instructions text guides expected user interactions
+- **Color Consistency:** Test layouts maintain production color schemes
+- **Typography Hierarchy:** Clear size differentiation (18sp title, 12sp instructions)
+
+### **Development Best Practices**
+
+**Data Binding Implementation:**
+1. **Variable Declaration:** Always include proper type declarations in `<data>` section
+2. **Null Safety:** Use null coalescing (`??`) for default values
+3. **Resource References:** Prefer string resources over hardcoded text
+4. **Boolean Logic:** Use ternary operators for conditional attributes
+
+**CardView Consistency:**
+1. **Background Color:** Use `#FF2A2A2A` for dark theme cards
+2. **Corner Radius:** Standard 8dp for card corners
+3. **Elevation:** 2dp elevation for subtle depth
+4. **Padding:** 16dp internal padding for content spacing
+
+**Color System Implementation:**
+```xml
+<!-- Status Colors -->
+<color name="status_connected">#FF4CAF50</color>
+<color name="status_disconnected">#FFF44336</color>
+<color name="background_card">#FF2A2A2A</color>
+
+<!-- Text Hierarchy -->
+<color name="text_primary">#FFFFFFFF</color>
+<color name="text_secondary">#FFCCCCCC</color>
+<color name="text_tertiary">#FF999999</color>
+
+<!-- Interactive Elements -->
+<color name="primary_color">#FF2196F3</color>
+<color name="signal_strength_color">#FFFF9800</color>
+<color name="battery_level_color">#FF8BC34A</color>
+```
+
+### **Accessibility Implementation**
+
+**Content Descriptions:**
+- **Icons:** Always include meaningful `contentDescription` attributes
+- **Status Indicators:** Describe connection states and signal levels  
+- **Interactive Elements:** Clear descriptions for buttons and controls
+
+**Text Sizing:**
+- **Scalable Units:** Use `sp` for text sizes to respect user font preferences
+- **Size Hierarchy:** Maintain consistent size relationships (24sp/18sp/16sp/14sp/12sp/11sp/10sp)
+- **Readability:** Ensure adequate contrast with background colors
+
+### **Performance Considerations**
+
+**Efficient Layouts:**
+- **ConstraintLayout:** Prefer over nested LinearLayouts for complex positioning
+- **RecyclerView:** Use for dynamic lists instead of ScrollView + LinearLayout
+- **ViewBinding:** Combine with data binding for optimal performance
+- **Image Loading:** Use appropriate drawable types (vector vs bitmap)
+
+**Memory Management:**
+- **Fragment Containers:** Properly manage fragment lifecycle in dynamic containers
+- **Data Binding:** Avoid memory leaks with proper lifecycle awareness
+- **Large Datasets:** Implement pagination for extensive sensor data
+
+## Advanced Integration Patterns
+
+### **Cross-Module Communication**
+
+**EventBus Integration with Modern UI:**
+```kotlin
+// Traditional XML + EventBus
+@Subscribe(threadMode = ThreadMode.MAIN)
+fun onSensorUpdate(event: SensorDataEvent) {
+    binding.sensorDataText.text = event.data
+    binding.isRecording = event.isActive
+}
+
+// Compose + EventBus
+@Composable
+fun SensorDashboard() {
+    var sensorData by remember { mutableStateOf("") }
+    var isRecording by remember { mutableStateOf(false) }
+    
+    DisposableEffect(Unit) {
+        val subscriber = object {
+            @Subscribe(threadMode = ThreadMode.MAIN)
+            fun onSensorUpdate(event: SensorDataEvent) {
+                sensorData = event.data
+                isRecording = event.isActive
+            }
+        }
+        
+        EventBus.getDefault().register(subscriber)
+        onDispose { EventBus.getDefault().unregister(subscriber) }
+    }
+    
+    // UI content using sensorData and isRecording
+}
+```
+
+### **Modern Architecture Integration**
+
+**MVVM with Data Binding:**
+```kotlin
+// ViewModel
+class MultiModalRecordingViewModel : ViewModel() {
+    val isRecording = MutableLiveData<Boolean>()
+    val sensorTypes = MutableLiveData<Set<String>>()
+    val sessionInfo = MutableLiveData<String>()
+}
+
+// Fragment with Data Binding
+class MultiModalRecordingFragment : Fragment() {
+    private lateinit var binding: ActivityMultiModalConsolidatedBinding
+    private lateinit var viewModel: MultiModalRecordingViewModel
+    
+    override fun onCreateView(...): View {
+        binding = DataBindingUtil.inflate(...)
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = this
+        return binding.root
+    }
+}
+```
+
+**Compose Integration:**
+```kotlin
+@Composable
+fun MultiModalRecordingScreen(viewModel: MultiModalRecordingViewModel) {
+    val isRecording by viewModel.isRecording.observeAsState(false)
+    val sensorTypes by viewModel.sensorTypes.observeAsState(emptySet())
+    val sessionInfo by viewModel.sessionInfo.observeAsState("")
+    
+    MultiModalRecording(
+        isRecording = isRecording,
+        sensorTypes = sensorTypes,
+        sessionInfo = sessionInfo,
+        onStartStop = viewModel::toggleRecording,
+        onSensorToggle = viewModel::toggleSensor
+    )
+}
+```
+
+### **Migration Strategy for Complex Layouts**
+
+**Phase-by-Phase Approach:**
+
+**Phase 1: Static Content Migration**
+- Convert CardViews to Card composables
+- Migrate TextViews and ImageViews
+- Implement basic styling and spacing
+
+**Phase 2: Interactive Elements**
+- Convert Buttons to Compose buttons with proper styling
+- Implement ChipGroup as FilterChip components
+- Add click handlers and state management
+
+**Phase 3: Data Binding Integration**
+- Replace XML data binding with Compose state
+- Implement conditional visibility with Compose
+- Add dynamic content updates
+
+**Phase 4: Complex Layouts**
+- Convert ConstraintLayouts to Compose equivalents
+- Implement ScrollView as LazyColumn where appropriate
+- Add proper layout behavior and constraints
+
+**Phase 5: Complete Integration**
+- Connect to existing ViewModels and data sources
+- Implement EventBus integration patterns
+- Add comprehensive testing and validation
+
+This comprehensive documentation now covers the complete UI architecture of the IRCamera application, from basic components to advanced modern patterns, providing developers with all necessary guidance for maintenance, expansion, and modernization.
