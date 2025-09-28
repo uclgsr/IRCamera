@@ -335,6 +335,24 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                     }
                 )
 
+                // UI Components Section
+                Text(
+                    text = "Enhanced UI Components",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.secondary,
+                    modifier = Modifier.padding(top = 16.dp)
+                )
+
+                LauncherCard(
+                    title = "Compose Components Showcase",
+                    subtitle = "Interactive showcase of modernized UI components with enhanced functionality",
+                    icon = Icons.Default.AutoAwesome,
+                    onClick = { 
+                        startActivity(Intent(this@ComposeMigrationLauncherActivity, ComposeComponentsShowcaseActivity::class.java))
+                    }
+                )
+
                 // Comparison option
                 Card(
                     modifier = Modifier.fillMaxWidth(),
