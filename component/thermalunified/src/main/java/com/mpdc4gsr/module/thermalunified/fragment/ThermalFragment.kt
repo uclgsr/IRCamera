@@ -43,7 +43,7 @@ import com.mpdc4gsr.libunified.R as LibUiR
 import com.mpdc4gsr.libunified.app.matrix.GuideInterface as LibGuideInterface
 
 class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
-    
+
     // Use the comprehensive ViewModel instead of basic ThermalViewModel
     private val thermalViewModel: ThermalFragmentViewModel by viewModels()
 
@@ -100,7 +100,7 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
         mDisplayFrameLayout = requireView().findViewById(R.id.temp_display_layout)
         mFenceLayout = requireView().findViewById(R.id.fence_lay)
         mCameraLayout = requireView().findViewById(R.id.temp_camera_layout)
-        
+
         // Initial visibility setup
         mDisplayFrameLayout?.visibility = View.GONE
         mFenceLayout?.visibility = View.GONE
@@ -109,20 +109,20 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
     private fun setupThermalSurface() {
         mIrSurfaceViewLayout = requireView().findViewById(R.id.final_ir_layout)
         mIrSurfaceView = IrSurfaceView(requireContext())
-        
+
         val layoutParams = FrameLayout.LayoutParams(
             FrameLayout.LayoutParams.MATCH_PARENT,
             FrameLayout.LayoutParams.MATCH_PARENT,
             Gravity.CENTER
         )
-        
+
         mIrSurfaceView?.apply {
             this.layoutParams = layoutParams
             setMatrix(ThermalTool.getRotate(rotateType), 256f, 192f)
         }
-        
+
         mIrSurfaceViewLayout?.addView(mIrSurfaceView)
-        
+
         setupDimensions()
         setupLayoutObserver()
     }
@@ -134,7 +134,7 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
         height = screenHeight
         highCrossWidth = resources.getDimension(R.dimen.high_cross_width).toInt()
         highCrossHeight = resources.getDimension(R.dimen.high_cross_height).toInt()
-        
+
         // Update ViewModel with surface dimensions
         thermalViewModel.updateSurfaceDimensions(256, 192)
     }
@@ -184,7 +184,7 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
         if (uiState.isProcessing) {
             // Show processing indicator
         }
-        
+
         // Update temperature displays visibility
         updateTemperatureDisplayVisibility(uiState)
     }
@@ -209,6 +209,7 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
                 maxImg?.visibility = View.GONE
                 minImg?.visibility = View.GONE
             }
+
             1 -> {
                 mCenterTextView?.apply {
                     visibility = View.VISIBLE
@@ -219,6 +220,7 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
                 maxImg?.visibility = View.GONE
                 minImg?.visibility = View.GONE
             }
+
             else -> {
                 // Handle other display modes
                 updateAdvancedTemperatureDisplay(analysis)
@@ -245,7 +247,7 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
 
     private fun updateFenceUI(fenceState: ThermalFragmentViewModel.FenceState) {
         mFenceLayout?.visibility = if (fenceState.isActive) View.VISIBLE else View.GONE
-        
+
         // Update fence measurements display
         if (fenceState.measurements.isNotEmpty()) {
             updateFenceMeasurements(fenceState.measurements)
@@ -264,23 +266,43 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
             is ThermalFragmentViewModel.ThermalProcessingAction.StartProcessing -> {
                 // Show processing indicator
             }
+
             is ThermalFragmentViewModel.ThermalProcessingAction.ProcessingComplete -> {
                 // Hide processing indicator
             }
+
             is ThermalFragmentViewModel.ThermalProcessingAction.ProcessingError -> {
                 ToastTools.showShort(action.message)
             }
+
             is ThermalFragmentViewModel.ThermalProcessingAction.TemperatureAlert -> {
                 handleTemperatureAlert(action.temperature, action.type)
             }
         }
     }
 
-    private fun handleTemperatureAlert(temperature: Float, type: ThermalFragmentViewModel.AlertType) {
+    private fun handleTemperatureAlert(
+        temperature: Float,
+        type: ThermalFragmentViewModel.AlertType
+    ) {
         val message = when (type) {
-            ThermalFragmentViewModel.AlertType.HOT_SPOT -> "Hot spot detected: ${formatTemperature(temperature)}"
-            ThermalFragmentViewModel.AlertType.COLD_SPOT -> "Cold spot detected: ${formatTemperature(temperature)}"
-            ThermalFragmentViewModel.AlertType.TEMPERATURE_THRESHOLD -> "Temperature threshold exceeded: ${formatTemperature(temperature)}"
+            ThermalFragmentViewModel.AlertType.HOT_SPOT -> "Hot spot detected: ${
+                formatTemperature(
+                    temperature
+                )
+            }"
+
+            ThermalFragmentViewModel.AlertType.COLD_SPOT -> "Cold spot detected: ${
+                formatTemperature(
+                    temperature
+                )
+            }"
+
+            ThermalFragmentViewModel.AlertType.TEMPERATURE_THRESHOLD -> "Temperature threshold exceeded: ${
+                formatTemperature(
+                    temperature
+                )
+            }"
         }
         ToastTools.showShort(message)
     }
@@ -290,11 +312,11 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
         val vg = imageView.parent as ViewGroup
         val pw = vg.width
         val ph = vg.height
-        
+
         val position = thermalViewModel.calculateViewPosition(
             index, imageView.width, imageView.height, pw, ph
         )
-        
+
         imageView.x = position.first
         imageView.y = position.second
     }
@@ -365,6 +387,7 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
                 maxImg?.visibility = View.GONE
                 minImg?.visibility = View.GONE
             }
+
             1 -> {
                 mCenterTextView?.visibility = View.VISIBLE
                 mMaxTextView?.visibility = View.GONE
@@ -372,6 +395,7 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
                 maxImg?.visibility = View.GONE
                 minImg?.visibility = View.GONE
             }
+
             else -> {
                 mCenterTextView?.visibility = View.VISIBLE
                 mMaxTextView?.visibility = View.GONE
@@ -397,7 +421,8 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
     }
 
     private fun updateLayoutParameters() {
-        irSurfaceViewLayoutParams = mIrSurfaceViewLayout?.layoutParams as? ConstraintLayout.LayoutParams
+        irSurfaceViewLayoutParams =
+            mIrSurfaceViewLayout?.layoutParams as? ConstraintLayout.LayoutParams
         displayViewLayoutParams = mDisplayFrameLayout?.layoutParams as? FrameLayout.LayoutParams
         fenceLayoutParams = mFenceLayout?.layoutParams as? FrameLayout.LayoutParams
         cameraLayoutParams = mCameraLayout?.layoutParams as? FrameLayout.LayoutParams
@@ -416,6 +441,7 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
                     irSurfaceViewHeight = ScreenUtils.getScreenWidth() * 256 / 192
                 }
             }
+
             0, 2 -> {
                 irSurfaceViewWidth = width
                 irSurfaceViewHeight = height
@@ -456,9 +482,12 @@ class ThermalFragment : BaseThermalFragment(), IYapVideoProvider<Bitmap> {
 
     private fun startThermalProcessing() {
         onIrVideoStart()
-        
+
         mIrSurfaceView?.post {
-            Log.w("ThermalFragment", "Surface view dimensions - w:${mIrSurfaceView?.width}, h:${mIrSurfaceView?.height}")
+            Log.w(
+                "ThermalFragment",
+                "Surface view dimensions - w:${mIrSurfaceView?.width}, h:${mIrSurfaceView?.height}"
+            )
         }
     }
 

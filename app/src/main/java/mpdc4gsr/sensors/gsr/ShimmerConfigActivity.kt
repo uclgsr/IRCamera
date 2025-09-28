@@ -27,7 +27,8 @@ class ShimmerConfigActivity : BaseViewModelActivity<ShimmerConfigViewModel>() {
 
     private lateinit var deviceAdapter: ShimmerDeviceAdapter
 
-    override fun providerVMClass(): Class<ShimmerConfigViewModel> = ShimmerConfigViewModel::class.java
+    override fun providerVMClass(): Class<ShimmerConfigViewModel> =
+        ShimmerConfigViewModel::class.java
 
     override fun initContentView(): Int = R.layout.activity_shimmer_config
 
@@ -111,7 +112,7 @@ class ShimmerConfigActivity : BaseViewModelActivity<ShimmerConfigViewModel>() {
             viewModel.uiState.collectLatest { uiState ->
                 updateUI(uiState.statusMessage)
                 updateScanButton(uiState.isScanning)
-                
+
                 if (uiState.isLoading) {
                     findViewById<android.widget.ProgressBar>(R.id.progressBar)?.visibility =
                         View.VISIBLE
@@ -137,9 +138,11 @@ class ShimmerConfigActivity : BaseViewModelActivity<ShimmerConfigViewModel>() {
                     is ShimmerConfigViewModel.ConnectionState.Connected -> {
                         updateConnectionStatus(connectionState.device)
                     }
+
                     is ShimmerConfigViewModel.ConnectionState.Disconnected -> {
                         updateConnectionStatus(null)
                     }
+
                     else -> {
                         // Other states handled by UI state updates
                     }
@@ -167,21 +170,26 @@ class ShimmerConfigActivity : BaseViewModelActivity<ShimmerConfigViewModel>() {
                     Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
                 }
             }
+
             ShimmerConfigViewModel.ActionType.SHOW_PERMISSION_ERROR -> {
                 showPermissionError()
             }
+
             ShimmerConfigViewModel.ActionType.UPDATE_SCAN_BUTTON -> {
                 // Already handled by UI state observer
             }
+
             ShimmerConfigViewModel.ActionType.UPDATE_CONNECTION_STATUS -> {
                 action.device?.let { device ->
                     updateConnectionStatus(device)
                 }
             }
+
             ShimmerConfigViewModel.ActionType.SHOW_PROGRESS_BAR -> {
                 findViewById<android.widget.ProgressBar>(R.id.progressBar)?.visibility =
                     View.VISIBLE
             }
+
             ShimmerConfigViewModel.ActionType.HIDE_PROGRESS_BAR -> {
                 findViewById<android.widget.ProgressBar>(R.id.progressBar)?.visibility =
                     View.GONE
@@ -231,7 +239,7 @@ class ShimmerConfigActivity : BaseViewModelActivity<ShimmerConfigViewModel>() {
         onBackPressed()
         return true
     }
-    
+
     override fun onDestroy() {
         super.onDestroy()
     }

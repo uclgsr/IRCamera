@@ -65,7 +65,8 @@ class MultiModalRecordingViewModel : BaseViewModel() {
     val recordingAction: LiveData<RecordingAction?> = _recordingAction
 
     // Configuration
-    private val _recordingConfig = MutableStateFlow<RecordingConfiguration>(RecordingConfiguration())
+    private val _recordingConfig =
+        MutableStateFlow<RecordingConfiguration>(RecordingConfiguration())
     val recordingConfig: StateFlow<RecordingConfiguration> = _recordingConfig
 
     // Combined state for UI optimization
@@ -137,7 +138,7 @@ class MultiModalRecordingViewModel : BaseViewModel() {
     ) {
         val allSystemsReady: Boolean
             get() = gsrState.isConnected && cameraState.isInitialized
-        
+
         val anySystemRecording: Boolean
             get() = gsrState.isRecording || cameraState.isRecording
     }
@@ -176,16 +177,16 @@ class MultiModalRecordingViewModel : BaseViewModel() {
                 // Initialize GSR Recorder
                 gsrRecorder = GSRRecorder(context, RealShimmerDeviceFactory(context))
                 gsrRecorder.addListener(createGSRListener())
-                
+
                 // Initialize Session Manager
                 sessionManager = SessionManager.getInstance(context)
-                
+
                 _statusMessage.value = "Initializing multimodal recording system..."
-                
+
                 // Set initial states
                 _recordingState.value = RecordingState()
                 updateSystemReadiness()
-                
+
             } catch (e: Exception) {
                 _error.value = "Failed to initialize recording system: ${e.message}"
             }
@@ -198,7 +199,7 @@ class MultiModalRecordingViewModel : BaseViewModel() {
             try {
                 val initialized = rgbCameraRecorder.initialize()
                 _cameraState.value = _cameraState.value.copy(isInitialized = initialized)
-                
+
                 if (initialized) {
                     _statusMessage.value = "Camera system initialized"
                 } else {
@@ -213,7 +214,7 @@ class MultiModalRecordingViewModel : BaseViewModel() {
 
     fun updateRecordingConfiguration(config: RecordingConfiguration) {
         _recordingConfig.value = config
-        
+
         // Update camera configuration
         _cameraState.value = _cameraState.value.copy(
             videoEnabled = config.enableVideo,
@@ -241,16 +242,16 @@ class MultiModalRecordingViewModel : BaseViewModel() {
                     participantId = config.participantId.takeIf { it.isNotEmpty() },
                     startTime = System.currentTimeMillis()
                 )
-                
+
                 // Start GSR recording
                 gsrRecorder.startRecording(sessionInfo.sessionId, sessionInfo.participantId)
-                
+
                 // Start camera recording if enabled
                 if (config.enableVideo) {
                     rgbCameraRecorder?.startRecording(sessionInfo.sessionId)
                     _cameraState.value = _cameraState.value.copy(isRecording = true)
                 }
-                
+
                 // Update states
                 _sessionInfo.value = sessionInfo
                 _recordingState.value = RecordingState(
@@ -260,12 +261,12 @@ class MultiModalRecordingViewModel : BaseViewModel() {
                     participantId = sessionInfo.participantId
                 )
                 _gsrState.value = _gsrState.value.copy(isRecording = true)
-                
+
                 _recordingAction.value = RecordingAction(
                     type = ActionType.RECORDING_STARTED,
                     message = "Recording started for session ${sessionInfo.sessionId}"
                 )
-                
+
             } catch (e: Exception) {
                 _recordingState.value = currentState?.copy(isStartingRecording = false)
                 _error.value = "Failed to start recording: ${e.message}"
@@ -280,27 +281,27 @@ class MultiModalRecordingViewModel : BaseViewModel() {
 
                 // Stop GSR recording
                 gsrRecorder.stopRecording()
-                
+
                 // Stop camera recording
                 rgbCameraRecorder?.stopRecording()
-                
+
                 // Update final session info
                 val finalSession = _sessionInfo.value?.copy(
                     endTime = System.currentTimeMillis()
                 )
-                
+
                 // Update states
                 _recordingState.value = RecordingState()
                 _gsrState.value = _gsrState.value.copy(isRecording = false)
                 _cameraState.value = _cameraState.value.copy(isRecording = false)
                 _sessionInfo.value = finalSession
-                
+
                 _recordingAction.value = RecordingAction(
                     type = ActionType.RECORDING_STOPPED,
                     message = "Recording stopped. Session saved.",
                     data = finalSession
                 )
-                
+
             } catch (e: Exception) {
                 _error.value = "Failed to stop recording: ${e.message}"
             }
@@ -323,25 +324,29 @@ class MultiModalRecordingViewModel : BaseViewModel() {
                     eventType = "USER_TRIGGER",
                     sessionId = currentState.sessionId
                 )
-                
+
                 // Add sync mark to GSR data
                 gsrRecorder.addSyncMark("USER_TRIGGER", "Manual sync event")
-                
+
                 // Add sync mark to camera data if recording
                 if (_cameraState.value.isRecording) {
-                    rgbCameraRecorder?.addSyncMarker("USER_TRIGGER", timestamp * 1_000_000, emptyMap())
+                    rgbCameraRecorder?.addSyncMarker(
+                        "USER_TRIGGER",
+                        timestamp * 1_000_000,
+                        emptyMap()
+                    )
                 }
-                
+
                 // Update state
                 _recordingState.value = currentState.copy(
                     syncMarkCount = currentState.syncMarkCount + 1
                 )
-                
+
                 _recordingAction.value = RecordingAction(
                     type = ActionType.SYNC_EVENT_TRIGGERED,
                     message = "Sync event USER_TRIGGER triggered"
                 )
-                
+
             } catch (e: Exception) {
                 _error.value = "Failed to trigger sync event: ${e.message}"
             }
@@ -352,13 +357,13 @@ class MultiModalRecordingViewModel : BaseViewModel() {
         viewModelScope.launch {
             try {
                 _statusMessage.value = "Discovering Shimmer devices..."
-                
+
                 // Simulate device discovery
                 val devices = discoverShimmerDevices()
                 _discoveredDevices.value = devices
-                
+
                 _statusMessage.value = "Found ${devices.size} Shimmer device(s)"
-                
+
             } catch (e: Exception) {
                 _error.value = "Device discovery failed: ${e.message}"
             }
@@ -369,24 +374,24 @@ class MultiModalRecordingViewModel : BaseViewModel() {
         viewModelScope.launch {
             try {
                 _statusMessage.value = "Connecting to ${deviceInfo.deviceName}..."
-                
+
                 // Simulate device connection
                 kotlinx.coroutines.delay(2000)
-                
+
                 val connectedDevice = deviceInfo.copy(isConnected = true)
                 val currentConnected = _connectedDevices.value?.toMutableList() ?: mutableListOf()
                 currentConnected.add(connectedDevice)
                 _connectedDevices.value = currentConnected
-                
+
                 _gsrState.value = _gsrState.value.copy(isConnected = true)
-                
+
                 _recordingAction.value = RecordingAction(
                     type = ActionType.DEVICE_CONNECTED,
                     message = "Connected to ${deviceInfo.deviceName}"
                 )
-                
+
                 updateSystemReadiness()
-                
+
             } catch (e: Exception) {
                 _error.value = "Failed to connect to device: ${e.message}"
             }
@@ -405,7 +410,7 @@ class MultiModalRecordingViewModel : BaseViewModel() {
             ),
             ShimmerDeviceInfo(
                 shimmer = null,
-                deviceName = "Shimmer GSR #002", 
+                deviceName = "Shimmer GSR #002",
                 macAddress = "00:11:22:AA:BB:DD",
                 batteryLevel = 92,
                 signalStrength = 88
@@ -448,11 +453,11 @@ class MultiModalRecordingViewModel : BaseViewModel() {
     private fun updateSystemReadiness() {
         val gsrReady = _gsrState.value.isConnected
         val cameraReady = _cameraState.value.isInitialized
-        
+
         _statusMessage.value = when {
             gsrReady && cameraReady -> "All systems ready for recording"
             gsrReady -> "GSR ready, initializing camera..."
-            cameraReady -> "Camera ready, connect GSR device..."  
+            cameraReady -> "Camera ready, connect GSR device..."
             else -> "Initializing recording systems..."
         }
     }

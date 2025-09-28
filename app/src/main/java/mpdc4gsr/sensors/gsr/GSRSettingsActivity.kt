@@ -25,7 +25,7 @@ import com.mpdc4gsr.libunified.app.ktbase.BaseViewModelActivity
  * Demonstrates Repository pattern with comprehensive settings management
  */
 class GSRSettingsActivity : BaseViewModelActivity<GSRSettingsViewModel>() {
-    
+
     companion object {
         private const val TAG = "GSRSettingsActivity"
 
@@ -54,13 +54,13 @@ class GSRSettingsActivity : BaseViewModelActivity<GSRSettingsViewModel>() {
     override fun initView() {
         binding = ActivityGsrSettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        
+
         setupPermissionHandling()
         setupUI()
         setupObservers()
-        
+
         viewModel.initialize(this)
-        
+
         setupBackPressedCallback()
     }
 
@@ -78,7 +78,8 @@ class GSRSettingsActivity : BaseViewModelActivity<GSRSettingsViewModel>() {
 
             viewModel.onPermissionsResult(
                 permissions.keys.toTypedArray(),
-                permissions.values.map { if (it) PackageManager.PERMISSION_GRANTED else PackageManager.PERMISSION_DENIED }.toIntArray()
+                permissions.values.map { if (it) PackageManager.PERMISSION_GRANTED else PackageManager.PERMISSION_DENIED }
+                    .toIntArray()
             )
         }
     }
@@ -89,23 +90,31 @@ class GSRSettingsActivity : BaseViewModelActivity<GSRSettingsViewModel>() {
     }
 
     private fun setupDeviceSpinner() {
-        deviceAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, mutableListOf<String>())
+        deviceAdapter =
+            ArrayAdapter(this, android.R.layout.simple_spinner_item, mutableListOf<String>())
         deviceAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        
-        binding.shimmerDeviceSpinner?.adapter = deviceAdapter
-        binding.shimmerDeviceSpinner?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: android.view.View?, position: Int, id: Long) {
-                // Handle device selection through ViewModel
-            }
 
-            override fun onNothingSelected(parent: AdapterView<*>) {}
-        }
+        binding.shimmerDeviceSpinner?.adapter = deviceAdapter
+        binding.shimmerDeviceSpinner?.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>,
+                    view: android.view.View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    // Handle device selection through ViewModel
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>) {}
+            }
     }
 
     private fun setupSettingsControls() {
         // Sampling Rate Spinner
         val samplingRates = arrayOf("32 Hz", "64 Hz", "128 Hz", "256 Hz", "512 Hz", "1024 Hz")
-        val samplingAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, samplingRates)
+        val samplingAdapter =
+            ArrayAdapter(this, android.R.layout.simple_spinner_item, samplingRates)
         samplingAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.gsrSamplingRateSpinner?.adapter = samplingAdapter
 
@@ -116,26 +125,26 @@ class GSRSettingsActivity : BaseViewModelActivity<GSRSettingsViewModel>() {
         // binding.dataFormatSpinner?.adapter = formatAdapter
 
         // Button listeners
-        binding.scanDevicesButton?.setOnClickListener { 
+        binding.scanDevicesButton?.setOnClickListener {
             viewModel.startDeviceScan()
         }
-        
+
         binding.connectDeviceButton?.setOnClickListener {
             // Handle device connection
         }
-        
+
         // binding.disconnectButton?.setOnClickListener {
         //     viewModel.disconnectDevice()
         // }
-        
+
         // binding.exportSettingsButton?.setOnClickListener {
         //     viewModel.exportSettings()
         // }
-        
+
         // binding.resetSettingsButton?.setOnClickListener {
         //     showResetConfirmationDialog()
         // }
-        
+
         // binding.requestPermissionsButton?.setOnClickListener {
         //     viewModel.requestPermissions()
         // }
@@ -200,7 +209,7 @@ class GSRSettingsActivity : BaseViewModelActivity<GSRSettingsViewModel>() {
         // binding.realTimeMonitoringSwitch?.isChecked = settings.enableRealTimeMonitoring
         // binding.filteringEnabledSwitch?.isChecked = settings.enableFiltering
         // binding.notificationEnabledSwitch?.isChecked = settings.notificationEnabled
-        
+
         // Update sampling rate spinner
         val samplingRateIndex = when (settings.samplingRate) {
             32 -> 0
@@ -212,7 +221,7 @@ class GSRSettingsActivity : BaseViewModelActivity<GSRSettingsViewModel>() {
             else -> 2 // default to 128 Hz
         }
         binding.gsrSamplingRateSpinner?.setSelection(samplingRateIndex)
-        
+
         // Update data format spinner - commented out as it doesn't exist in current layout
         // val formatIndex = when (settings.dataFormat) {
         //     GSRSettingsRepository.DataFormat.CSV -> 0
@@ -226,7 +235,7 @@ class GSRSettingsActivity : BaseViewModelActivity<GSRSettingsViewModel>() {
         // binding.autoReconnectSwitch?.isChecked = settings.autoReconnect
         // binding.keepConnectedSwitch?.isChecked = settings.keepDeviceConnected
         binding.gsrCalibrationSwitch?.isChecked = settings.deviceCalibrationEnabled
-        
+
         // Update selected device display - commented out as it doesn't exist in current layout
         // binding.selectedDeviceText?.text = settings.deviceName ?: "No device selected"
     }
@@ -237,7 +246,7 @@ class GSRSettingsActivity : BaseViewModelActivity<GSRSettingsViewModel>() {
         } else {
             "Missing Required Permissions (${permissionState.missingPermissions.size})"
         }
-        
+
         // binding.permissionStatusText?.text = status
         // binding.permissionStatusText?.setTextColor(
         //     if (permissionState.hasAllPermissions) {
@@ -246,7 +255,7 @@ class GSRSettingsActivity : BaseViewModelActivity<GSRSettingsViewModel>() {
         //         android.graphics.Color.parseColor("#f44336") // Red
         //     }
         // )
-        
+
         // binding.requestPermissionsButton?.isVisible = !permissionState.hasAllPermissions
         // binding.deviceManagementLayout?.isVisible = permissionState.hasAllPermissions
     }
@@ -255,7 +264,7 @@ class GSRSettingsActivity : BaseViewModelActivity<GSRSettingsViewModel>() {
         // binding.connectionStatusText?.text = connectionState.connectionStatus
         binding.connectDeviceButton?.isVisible = !connectionState.isConnected
         // binding.disconnectButton?.isVisible = connectionState.isConnected
-        
+
         connectionState.deviceInfo?.let { device ->
             // binding.connectedDeviceText?.text = "Connected: ${device.name}"
             // binding.signalStrengthText?.text = "Signal: ${connectionState.signalStrength}%"
@@ -266,14 +275,15 @@ class GSRSettingsActivity : BaseViewModelActivity<GSRSettingsViewModel>() {
         deviceAdapter.clear()
         deviceAdapter.addAll(devices.map { "${it.name} (${it.address})" })
         deviceAdapter.notifyDataSetChanged()
-        
+
         // binding.deviceCountText?.text = "Found ${devices.size} device(s)"
     }
 
     private fun updateScanningUI(scanningState: GSRSettingsViewModel.ScanningState) {
-        binding.scanDevicesButton?.isEnabled = scanningState != GSRSettingsViewModel.ScanningState.SCANNING
+        binding.scanDevicesButton?.isEnabled =
+            scanningState != GSRSettingsViewModel.ScanningState.SCANNING
         // binding.scanProgressBar?.isVisible = scanningState == GSRSettingsViewModel.ScanningState.SCANNING
-        
+
         // binding.scanStatusText?.text = when (scanningState) {
         //     GSRSettingsViewModel.ScanningState.IDLE -> "Ready to scan"
         //     GSRSettingsViewModel.ScanningState.SCANNING -> "Scanning for devices..."
@@ -284,9 +294,9 @@ class GSRSettingsActivity : BaseViewModelActivity<GSRSettingsViewModel>() {
 
     private fun updateCombinedUI(uiState: GSRSettingsViewModel.UIState) {
         // Update UI elements that depend on multiple state components
-        val isFullyConfigured = uiState.gsrSettings.isEnabled && 
-                               uiState.deviceSettings.selectedDeviceId != null
-        
+        val isFullyConfigured = uiState.gsrSettings.isEnabled &&
+                uiState.deviceSettings.selectedDeviceId != null
+
         // binding.readyIndicator?.isVisible = isFullyConfigured
         // binding.configurationStatusText?.text = if (isFullyConfigured) {
         //     "GSR system ready for recording"
@@ -301,32 +311,41 @@ class GSRSettingsActivity : BaseViewModelActivity<GSRSettingsViewModel>() {
                 val permissions = action.data as? List<String> ?: return
                 showPermissionDialog(permissions)
             }
+
             GSRSettingsViewModel.ActionType.SHOW_PERMISSION_DENIED_DIALOG -> {
                 val permissions = action.data as? List<String> ?: return
                 showPermissionDeniedDialog(permissions)
             }
+
             GSRSettingsViewModel.ActionType.SHOW_PERMISSION_PERMANENTLY_DENIED_DIALOG -> {
                 val permissions = action.data as? List<String> ?: return
                 showPermissionPermanentlyDeniedDialog(permissions)
             }
+
             GSRSettingsViewModel.ActionType.OPEN_APP_SETTINGS -> {
                 openAppSettings()
             }
+
             GSRSettingsViewModel.ActionType.DEVICE_SCAN_COMPLETED -> {
                 Toast.makeText(this, action.message, Toast.LENGTH_SHORT).show()
             }
+
             GSRSettingsViewModel.ActionType.DEVICE_CONNECTED -> {
                 Toast.makeText(this, action.message, Toast.LENGTH_SHORT).show()
             }
+
             GSRSettingsViewModel.ActionType.DEVICE_DISCONNECTED -> {
                 Toast.makeText(this, action.message, Toast.LENGTH_SHORT).show()
             }
+
             GSRSettingsViewModel.ActionType.SETTINGS_EXPORTED -> {
                 Toast.makeText(this, action.message, Toast.LENGTH_SHORT).show()
             }
+
             GSRSettingsViewModel.ActionType.SETTINGS_IMPORTED -> {
                 Toast.makeText(this, action.message, Toast.LENGTH_SHORT).show()
             }
+
             else -> {
                 // Handle other actions
             }
@@ -387,7 +406,11 @@ class GSRSettingsActivity : BaseViewModelActivity<GSRSettingsViewModel>() {
             startActivity(intent)
         } catch (e: Exception) {
             Log.e(TAG, "Failed to open app settings", e)
-            Toast.makeText(this, "Please grant permissions in app settings manually", Toast.LENGTH_LONG).show()
+            Toast.makeText(
+                this,
+                "Please grant permissions in app settings manually",
+                Toast.LENGTH_LONG
+            ).show()
         }
     }
 

@@ -38,19 +38,20 @@ class SessionManagerActivity : BaseViewModelActivity<SessionManagerViewModel>() 
         }
     }
 
-    override fun providerVMClass(): Class<SessionManagerViewModel> = SessionManagerViewModel::class.java
+    override fun providerVMClass(): Class<SessionManagerViewModel> =
+        SessionManagerViewModel::class.java
 
     override fun initContentView() = R.layout.activity_session_manager
 
     override fun initView() {
         binding = ActivitySessionManagerBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        
+
         initializeViews()
         setupRecyclerView()
         setupSearchAndFilter()
         setupObservers()
-        
+
         // Load sessions
         viewModel.loadSessions(this)
     }
@@ -82,7 +83,8 @@ class SessionManagerActivity : BaseViewModelActivity<SessionManagerViewModel>() 
         }
 
         viewModel.storageInfo.observe(this) { storageInfo ->
-            val storageText = "Storage: ${storageInfo.formattedAvailable} available (${100 - storageInfo.usagePercentage}% free)"
+            val storageText =
+                "Storage: ${storageInfo.formattedAvailable} available (${100 - storageInfo.usagePercentage}% free)"
             supportActionBar?.subtitle = storageText
 
             if (storageInfo.isLowStorage) {
@@ -95,7 +97,7 @@ class SessionManagerActivity : BaseViewModelActivity<SessionManagerViewModel>() 
         }
 
         viewModel.sessionAction.observe(this) { action ->
-            action?.let { 
+            action?.let {
                 handleSessionAction(it)
                 viewModel.clearSessionAction()
             }
@@ -107,22 +109,27 @@ class SessionManagerActivity : BaseViewModelActivity<SessionManagerViewModel>() 
             SessionManagerViewModel.ActionType.OPEN_DETAILS -> {
                 openSessionDetails(action.session)
             }
+
             SessionManagerViewModel.ActionType.DELETE_CONFIRM -> {
                 confirmDeleteSession(action.session)
             }
+
             SessionManagerViewModel.ActionType.EXPORT -> {
                 viewModel.exportSession(action.session)
             }
+
             SessionManagerViewModel.ActionType.DELETED_SUCCESS -> {
                 action.message?.let { message ->
                     Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
                 }
             }
+
             SessionManagerViewModel.ActionType.EXPORT_SUCCESS -> {
                 action.message?.let { message ->
                     Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
                 }
             }
+
             SessionManagerViewModel.ActionType.EXPORT_FAILED -> {
                 action.message?.let { message ->
                     showError(message)

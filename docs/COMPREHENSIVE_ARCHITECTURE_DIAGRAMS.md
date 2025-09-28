@@ -1,6 +1,7 @@
 # IRCamera Architecture Diagrams - Complete Fresh Start
 
-This document provides comprehensive Mermaid architecture diagrams for the IRCamera Multi-Modal Thermal Sensing Platform, created from scratch based on current repository analysis.
+This document provides comprehensive Mermaid architecture diagrams for the IRCamera Multi-Modal
+Thermal Sensing Platform, created from scratch based on current repository analysis.
 
 ## Table of Contents
 
@@ -609,4 +610,5 @@ This comprehensive architecture documentation covers:
 - **Network Communication**: Hub-spoke protocol and session management
 - **Hardware Integration**: TC001 thermal camera and Shimmer3 GSR sensor
 
-Each diagram provides implementation-level detail suitable for developers, researchers, and system integrators working with the IRCamera Multi-Modal Thermal Sensing Platform.
+Each diagram provides implementation-level detail suitable for developers, researchers, and system
+integrators working with the IRCamera Multi-Modal Thermal Sensing Platform.

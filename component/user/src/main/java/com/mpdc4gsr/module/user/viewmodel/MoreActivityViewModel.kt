@@ -25,6 +25,7 @@ class MoreActivityViewModel : BaseViewModel() {
             RouterConfig.DEVICE_INFORMATION,
             mapOf(ExtraKeyConfig.IS_TC007 to false)
         )
+
         object TISR : NavigationEvent(RouterConfig.TISR)
         object AutoSave : NavigationEvent(RouterConfig.AUTO_SAVE)
         object StorageSpace : NavigationEvent(RouterConfig.STORAGE_SPACE)

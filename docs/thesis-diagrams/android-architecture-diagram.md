@@ -94,6 +94,7 @@ graph TB
 ### Core Application Components
 
 #### MainActivity.kt
+
 ```kotlin
 class MainActivity : AppCompatActivity() {
     private val recordingController = RecordingController()
@@ -105,7 +106,8 @@ class MainActivity : AppCompatActivity() {
 }
 ```
 
-#### RecordingService.kt  
+#### RecordingService.kt
+
 ```kotlin
 class RecordingService : Service() {
     private val sensorCoordinator = SensorCoordinator()
@@ -203,6 +205,7 @@ graph TB
 ## Module Dependencies and Build Configuration
 
 ### Android Module Structure
+
 ```text
 app/
 ├── src/main/java/mpdc4gsr/
@@ -226,6 +229,7 @@ app/
 ```
 
 ### Library Dependencies
+
 ```kotlin
 // app/build.gradle.kts
 dependencies {
@@ -258,6 +262,7 @@ dependencies {
 ```
 
 ### Permission Requirements
+
 ```xml
 <!-- AndroidManifest.xml -->
 <uses-permission android:name="android.permission.CAMERA" />
@@ -275,6 +280,7 @@ dependencies {
 ## Data Flow and Storage Architecture
 
 ### Session Data Management
+
 ```mermaid
 graph TB
     subgraph "Data Storage Pipeline"
@@ -298,4 +304,6 @@ graph TB
     end
 ```
 
-This architecture provides a clean separation of concerns with well-defined interfaces between layers, enabling maintainable and testable code while supporting the complex multi-sensor coordination requirements of the research platform.
+This architecture provides a clean separation of concerns with well-defined interfaces between
+layers, enabling maintainable and testable code while supporting the complex multi-sensor
+coordination requirements of the research platform.

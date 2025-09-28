@@ -676,35 +676,47 @@ class IRGalleryEditActivity : BaseBindingActivity<ActivityIrGalleryEditBinding>(
                                         buildImageTempBean()
                                     )
 
-                            val reportInfo = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                                intent.getParcelableExtra(ExtraKeyConfig.REPORT_INFO, Parcelable::class.java)
-                            } else {
-                                @Suppress("DEPRECATION")
-                                intent.getParcelableExtra<Parcelable>(ExtraKeyConfig.REPORT_INFO)
-                            }
+                            val reportInfo =
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                    intent.getParcelableExtra(
+                                        ExtraKeyConfig.REPORT_INFO,
+                                        Parcelable::class.java
+                                    )
+                                } else {
+                                    @Suppress("DEPRECATION")
+                                    intent.getParcelableExtra<Parcelable>(ExtraKeyConfig.REPORT_INFO)
+                                }
                             reportInfo?.let {
                                 navigationBuilder.withParcelable(ExtraKeyConfig.REPORT_INFO, it)
                             }
-                            
-                            val reportCondition = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                                intent.getParcelableExtra(ExtraKeyConfig.REPORT_CONDITION, Parcelable::class.java)
-                            } else {
-                                @Suppress("DEPRECATION")
-                                intent.getParcelableExtra<Parcelable>(ExtraKeyConfig.REPORT_CONDITION)
-                            }
+
+                            val reportCondition =
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                    intent.getParcelableExtra(
+                                        ExtraKeyConfig.REPORT_CONDITION,
+                                        Parcelable::class.java
+                                    )
+                                } else {
+                                    @Suppress("DEPRECATION")
+                                    intent.getParcelableExtra<Parcelable>(ExtraKeyConfig.REPORT_CONDITION)
+                                }
                             reportCondition?.let {
                                 navigationBuilder.withParcelable(
                                     ExtraKeyConfig.REPORT_CONDITION,
                                     it
                                 )
                             }
-                            
-                            val reportIrList = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                                intent.getParcelableArrayListExtra(ExtraKeyConfig.REPORT_IR_LIST, Parcelable::class.java)
-                            } else {
-                                @Suppress("DEPRECATION")
-                                intent.getParcelableArrayListExtra<Parcelable>(ExtraKeyConfig.REPORT_IR_LIST)
-                            }
+
+                            val reportIrList =
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                    intent.getParcelableArrayListExtra(
+                                        ExtraKeyConfig.REPORT_IR_LIST,
+                                        Parcelable::class.java
+                                    )
+                                } else {
+                                    @Suppress("DEPRECATION")
+                                    intent.getParcelableArrayListExtra<Parcelable>(ExtraKeyConfig.REPORT_IR_LIST)
+                                }
                             reportIrList?.let {
                                 navigationBuilder.withParcelableArrayList(
                                     ExtraKeyConfig.REPORT_IR_LIST,

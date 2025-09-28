@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- 
+<?xml version="1.0" encoding="utf-8"?><!--
     Scrollable Sensor Dashboard Fragment Layout
     
     This layout implements a fully scrollable multi-modal sensor dashboard that can be 
@@ -18,16 +17,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:scrollbars="vertical"
     android:overScrollMode="always"
-    android:scrollbarStyle="outsideOverlay">
+    android:scrollbarStyle="outsideOverlay"
+    android:scrollbars="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:minHeight="300dp"
         android:orientation="vertical"
-        android:padding="16dp"
-        android:minHeight="300dp">
+        android:padding="16dp">
 
         <!-- Title Section -->
         <TextView
@@ -57,11 +56,11 @@
             android:id="@+id/recordingSection"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginVertical="4dp"
+            android:background="?android:attr/selectableItemBackground"
             android:gravity="center"
             android:orientation="horizontal"
-            android:padding="8dp"
-            android:background="?android:attr/selectableItemBackground"
-            android:layout_marginVertical="4dp">
+            android:padding="8dp">
 
             <ImageView
                 android:id="@+id/recordingIndicator"
@@ -101,10 +100,10 @@
             android:id="@+id/sensorsContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:divider="@android:drawable/divider_horizontal_bright"
+            android:minHeight="200dp"
             android:orientation="vertical"
             android:padding="8dp"
-            android:minHeight="200dp"
-            android:divider="@android:drawable/divider_horizontal_bright"
             android:showDividers="middle">
 
             <!-- Individual sensor status views will be added programmatically -->

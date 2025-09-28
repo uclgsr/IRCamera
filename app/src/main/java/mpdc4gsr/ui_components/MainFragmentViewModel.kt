@@ -89,6 +89,7 @@ class MainFragmentViewModel : BaseViewModel() {
                     isTC007 = false
                 )
             }
+
             ConnectType.TS004 -> {
                 val currentState = _deviceState.value
                 if (currentState?.hasConnectTS004 == true) {
@@ -100,6 +101,7 @@ class MainFragmentViewModel : BaseViewModel() {
                     )
                 }
             }
+
             ConnectType.TC007 -> {
                 _navigationEvent.value = NavigationEvent(
                     route = "IR_MAIN",
@@ -114,9 +116,11 @@ class MainFragmentViewModel : BaseViewModel() {
             ConnectType.LINE -> {
                 SharedManager.hasTcLine = false
             }
+
             ConnectType.TS004 -> {
                 // TS004 functionality removed
             }
+
             ConnectType.TC007 -> {
                 // TC007 functionality removed
             }
@@ -149,7 +153,7 @@ class MainFragmentViewModel : BaseViewModel() {
         try {
             val battery: JSONObject = JSONObject(messageText).getJSONObject("battery")
             _batteryInfo.value = BatteryInfo(
-                status = battery.getString("status"), 
+                status = battery.getString("status"),
                 remaining = battery.getString("remaining")
             )
         } catch (e: Exception) {

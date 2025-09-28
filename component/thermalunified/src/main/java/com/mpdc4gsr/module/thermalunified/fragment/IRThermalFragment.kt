@@ -152,8 +152,7 @@ class IRThermalFragment : BaseFragment(), View.OnClickListener {
         viewModel.onSocketConnected(isTS004, isTC007)
     }
 
-    // TODO: Fix onSocketDisconnected override issue
-    override fun onSocketDisconnected(isTS004: Boolean) {
+    override fun onSocketDisConnected(isTS004: Boolean) {
         viewModel.onSocketDisconnected(isTS004, isTC007)
     }
 
@@ -174,7 +173,7 @@ class IRThermalFragment : BaseFragment(), View.OnClickListener {
             }
             is IRThermalFragmentViewModel.NavigationEvent.NavigateToHikMain -> {
                 NavigationManager.getInstance().build(RouterConfig.IR_HIK_MAIN)
-                    .navigation(requireActivity())
+                    .navigation(requireContext())
             }
             is IRThermalFragmentViewModel.NavigationEvent.StartThermalNightActivity -> {
                 startActivityForResult(

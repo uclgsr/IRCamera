@@ -51,8 +51,9 @@ public class ExcelUtil {
     private static String getTemperature(int index, @NonNull byte[] norTempData, boolean isShowC) {
         int tempValue = (norTempData[2 * index + 1] << 8 & 0xff00) | (norTempData[2 * index] & 0xff);
         float value = tempValue / 64f - 273.15f;
-        return UnitTools.showC(value,isShowC);
+        return UnitTools.showC(value, isShowC);
     }
+
     @Nullable
     public static String exportExcel(@NonNull String name, int width, int height, @NonNull byte[] norTempData, @Nullable Callback callback) {
         Workbook workbook = new XSSFWorkbook();
@@ -69,7 +70,7 @@ public class ExcelUtil {
                 sheet.setColumnWidth(j, 9 * width);
                 Cell cell = row.createCell(j);
                 cell.setCellStyle(cellStyle);
-                cell.setCellValue(getTemperature(index, norTempData,isShowC));
+                cell.setCellValue(getTemperature(index, norTempData, isShowC));
                 if (index % 100 == 0 && callback != null) {
                     //每1像素回调1次太频繁且意义不大，故而每100个像素才回调1次
                     callback.onOneCell(index / 100, width * height / 100);
@@ -77,14 +78,14 @@ public class ExcelUtil {
             }
         }
         try {
-            if(Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
                 File excel = new File(FileConfig.getExcelDir(), name + ".xlsx");
                 FileOutputStream fos = new FileOutputStream(excel);
                 workbook.write(fos);
                 fos.flush();
                 fos.close();
                 return excel.getAbsolutePath();
-            }else {
+            } else {
                 String fileName = name + ".xlsx";
                 ContentValues values = new ContentValues();
                 values.put(MediaStore.MediaColumns.DISPLAY_NAME, fileName);
@@ -99,26 +100,22 @@ public class ExcelUtil {
                         bos.flush();
                         bos.close();
                     }
-                    Log.w("导出",UriUtils.uri2File(uri).getAbsolutePath());
+                    Log.w("导出", UriUtils.uri2File(uri).getAbsolutePath());
                     return UriUtils.uri2File(uri).getAbsolutePath();
-                }else {
+                } else {
                     return null;
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             return null;
         }
-    }
-    @FunctionalInterface
-    public interface Callback {
-        void onOneCell(int current, int total);
     }
 
     /**
      * @param listData
      * @return
      */
-    public static String exportExcel(ArrayList<ThermalEntity> listData,boolean isPoint) {
+    public static String exportExcel(ArrayList<ThermalEntity> listData, boolean isPoint) {
         boolean isShowC = SharedManager.INSTANCE.getTemperature() == 1;
         try {
             // 创建excel xlsx格式
@@ -126,7 +123,7 @@ public class ExcelUtil {
             // 创建工作表
             Sheet sheet = wb.createSheet();
             String[] title = {Utils.getApp().getString(R.string.detail_date), Utils.getApp().getString(R.string.chart_temperature_low), Utils.getApp().getString(R.string.chart_temperature_high)};
-            if (isPoint){
+            if (isPoint) {
                 title = new String[]{Utils.getApp().getString(R.string.detail_date), Utils.getApp().getString(R.string.chart_temperature)};
             }
             //创建行对象
@@ -138,7 +135,7 @@ public class ExcelUtil {
             titleStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
             titleStyle.setAlignment(HorizontalAlignment.CENTER); // 居中
             titleStyle.setVerticalAlignment(VerticalAlignment.CENTER);
-            Font font =  wb.createFont();
+            Font font = wb.createFont();
             font.setBold(true);//粗体显示
             titleStyle.setFont(font);
             CellStyle contentStyle = wb.createCellStyle();
@@ -165,7 +162,7 @@ public class ExcelUtil {
                 for (int j = 0; j < title.length; j++) {
                     Cell cell = row.createCell(j);
                     //要和title[]一一对应
-                    if (isPoint){
+                    if (isPoint) {
                         switch (j) {
                             case 0:
                                 //时间
@@ -177,7 +174,7 @@ public class ExcelUtil {
                                 cell.setCellValue(UnitTools.showC(bean.getMinTemp()));
                                 break;
                         }
-                    }else {
+                    } else {
                         switch (j) {
                             case 0:
                                 //时间
@@ -191,22 +188,22 @@ public class ExcelUtil {
                             case 2:
                                 //最高温
                                 cell.setCellStyle(contentStyle);
-                                cell.setCellValue(UnitTools.showC(bean.getMaxTemp(),isShowC));
+                                cell.setCellValue(UnitTools.showC(bean.getMaxTemp(), isShowC));
                                 break;
                         }
                     }
                 }
             }
             String timeStr = listData.isEmpty() ? TimeTool.INSTANCE.showDateSecond() : TimeUtils.millis2String(listData.get(0).getStartTime(), "yyyyMMddHHmmss");
-            if(Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-                File excel = new File(FileConfig.getExcelDir(), "TCView_"+ timeStr + ".xlsx");
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                File excel = new File(FileConfig.getExcelDir(), "TCView_" + timeStr + ".xlsx");
                 FileOutputStream fos = new FileOutputStream(excel);
                 wb.write(fos);
                 fos.flush();
                 fos.close();
                 return excel.getAbsolutePath();
-            }else {
-                String fileName = "TCView_"+timeStr + ".xlsx";
+            } else {
+                String fileName = "TCView_" + timeStr + ".xlsx";
                 ContentValues values = new ContentValues();
                 values.put(MediaStore.MediaColumns.DISPLAY_NAME, fileName);
 //                values.put(MediaStore.MediaColumns.MIME_TYPE, "application/xlsx");
@@ -222,9 +219,9 @@ public class ExcelUtil {
                         bos.flush();
                         bos.close();
                     }
-                    Log.w("导出",UriUtils.uri2File(uri).getAbsolutePath());
+                    Log.w("导出", UriUtils.uri2File(uri).getAbsolutePath());
                     return UriUtils.uri2File(uri).getAbsolutePath();
-                }else {
+                } else {
                     return null;
                 }
             }
@@ -233,5 +230,10 @@ public class ExcelUtil {
             return null;
         }
 
+    }
+
+    @FunctionalInterface
+    public interface Callback {
+        void onOneCell(int current, int total);
     }
 }

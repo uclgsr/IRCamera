@@ -98,7 +98,8 @@ class NetworkManager(
                 try {
                     val (address, _) = networkSettings.getSavedBluetoothDeviceInfo()
                     if (address != null) {
-                        val bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
+                        val bluetoothManager =
+                            context.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
                         val bluetoothAdapter = bluetoothManager?.adapter
                         if (bluetoothAdapter?.isEnabled == true) {
                             try {

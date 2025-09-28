@@ -15,7 +15,7 @@ import mpdc4gsr.sensors.gsr.MultiModalRecordingActivity
 
 class DevicePairingActivity : BaseViewModelActivity<DevicePairingViewModel>(),
     NetworkClient.NetworkEventListener {
-    
+
     companion object {
         private const val TAG = "DevicePairingActivity"
 
@@ -28,26 +28,27 @@ class DevicePairingActivity : BaseViewModelActivity<DevicePairingViewModel>(),
     private lateinit var binding: ActivityDevicePairingBinding
     private lateinit var controllersAdapter: ControllersAdapter
 
-    override fun providerVMClass(): Class<DevicePairingViewModel> = DevicePairingViewModel::class.java
+    override fun providerVMClass(): Class<DevicePairingViewModel> =
+        DevicePairingViewModel::class.java
 
     override fun initContentView() = R.layout.activity_device_pairing
 
     override fun initView() {
         binding = ActivityDevicePairingBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        
+
         initializeViews()
         setupRecyclerView()
         setupObservers()
-        
+
         viewModel.initialize(this)
     }
 
     private fun initializeViews() {
-        binding.scanButton.setOnClickListener { 
+        binding.scanButton.setOnClickListener {
             viewModel.startControllerScan()
         }
-        binding.disconnectButton.setOnClickListener { 
+        binding.disconnectButton.setOnClickListener {
             viewModel.disconnectFromController()
         }
     }
@@ -108,11 +109,12 @@ class DevicePairingActivity : BaseViewModelActivity<DevicePairingViewModel>(),
             // Try to access the connected device text view if it exists in the layout
             val resourceId = resources.getIdentifier("connected_device_text", "id", packageName)
             if (resourceId != 0) {
-                val connectedDeviceText = binding.root.findViewById<android.widget.TextView>(resourceId)
+                val connectedDeviceText =
+                    binding.root.findViewById<android.widget.TextView>(resourceId)
                 connectedDeviceText?.let { textView ->
                     textView.isVisible = controller != null
-                    textView.text = controller?.let { 
-                        "Connected to: ${it.deviceName} (${it.ipAddress}:${it.port})" 
+                    textView.text = controller?.let {
+                        "Connected to: ${it.deviceName} (${it.ipAddress}:${it.port})"
                     } ?: ""
                 }
             }
@@ -220,12 +222,16 @@ class ControllersAdapter(
     private val onControllerClick: (NetworkClient.ControllerInfo) -> Unit,
 ) : androidx.recyclerview.widget.RecyclerView.Adapter<ControllersAdapter.ControllerViewHolder>() {
 
-    class ControllerViewHolder(itemView: android.view.View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
+    class ControllerViewHolder(itemView: android.view.View) :
+        androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
         val deviceNameText: android.widget.TextView = itemView.findViewById(android.R.id.text1)
         val deviceInfoText: android.widget.TextView = itemView.findViewById(android.R.id.text2)
     }
 
-    override fun onCreateViewHolder(parent: android.view.ViewGroup, viewType: Int): ControllerViewHolder {
+    override fun onCreateViewHolder(
+        parent: android.view.ViewGroup,
+        viewType: Int
+    ): ControllerViewHolder {
         val view = android.view.LayoutInflater.from(parent.context)
             .inflate(android.R.layout.simple_list_item_2, parent, false)
         return ControllerViewHolder(view)
@@ -235,7 +241,7 @@ class ControllersAdapter(
         val controller = controllers[position]
         holder.deviceNameText.text = controller.deviceName
         holder.deviceInfoText.text = "${controller.ipAddress}:${controller.port}"
-        
+
         holder.itemView.setOnClickListener {
             onControllerClick(controller)
         }

@@ -96,6 +96,7 @@ flowchart TB
 ## State Transition Conditions
 
 ### Normal Operation Flow
+
 ```mermaid
 graph TB
     subgraph "Happy Path State Transitions"
@@ -115,6 +116,7 @@ graph TB
 ```
 
 ### Error Handling and Recovery
+
 ```mermaid
 graph TB
     subgraph "Error Conditions and Recovery Paths"
@@ -150,6 +152,7 @@ graph TB
 ## State Machine Implementation
 
 ### PC Controller State Management
+
 ```python
 class SessionStateMachine:
     def __init__(self):
@@ -177,6 +180,7 @@ class SessionStateMachine:
 ```
 
 ### Android State Synchronization
+
 ```kotlin
 class AndroidStateMachine {
     private var currentState = DeviceState.DISCONNECTED
@@ -208,6 +212,7 @@ class AndroidStateMachine {
 ## State Persistence and Recovery
 
 ### Session State Persistence
+
 ```json
 {
   "session_state": {
@@ -231,4 +236,5 @@ class AndroidStateMachine {
 }
 ```
 
-This state machine design ensures robust operation with clear state boundaries, comprehensive error handling, and automatic recovery mechanisms suitable for long-duration research recording sessions.
+This state machine design ensures robust operation with clear state boundaries, comprehensive error
+handling, and automatic recovery mechanisms suitable for long-duration research recording sessions.

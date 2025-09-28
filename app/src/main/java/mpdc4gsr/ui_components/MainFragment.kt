@@ -48,7 +48,7 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
         setupRecyclerView()
         setupObservers()
         setupLifecycleObserver()
-        
+
         binding.tvConnectDevice.setOnClickListener(this)
         binding.ivAdd.setOnClickListener(this)
 
@@ -85,7 +85,7 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
         viewModel.deviceState.observe(viewLifecycleOwner) { deviceState ->
             binding.clHasDevice.isVisible = deviceState.hasAnyDevice
             binding.clNoDevice.isVisible = !deviceState.hasAnyDevice
-            
+
             adapter.hasConnectLine = deviceState.hasConnectLine
             adapter.hasConnectTS004 = deviceState.hasConnectTS004
             adapter.hasConnectTC007 = deviceState.hasConnectTC007
@@ -105,11 +105,13 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
                             .withBoolean(ExtraKeyConfig.IS_TC007, event.isTC007)
                             .navigation(requireContext())
                     }
+
                     "IR_MONOCULAR" -> {
                         NavigationManager.getInstance()
                             .build(RouterConfig.IR_MONOCULAR)
                             .navigation(requireContext())
                     }
+
                     "IR_DEVICE_ADD" -> {
                         NavigationManager.getInstance()
                             .build(RouterConfig.IR_DEVICE_ADD)
@@ -218,7 +220,8 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
             }
 
         var onItemClickListener: ((type: MainFragmentViewModel.ConnectType) -> Unit)? = null
-        var onItemLongClickListener: ((view: View, type: MainFragmentViewModel.ConnectType) -> Unit)? = null
+        var onItemLongClickListener: ((view: View, type: MainFragmentViewModel.ConnectType) -> Unit)? =
+            null
 
         override fun onCreateViewHolder(
             parent: ViewGroup,
@@ -291,23 +294,25 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
                     if (position != RecyclerView.NO_POSITION) {
                         val deviceType = getConnectType(position)
                         val currentState = this@MainFragment.viewModel.deviceState.value
-                        
+
                         val shouldPreventLongClick = when (deviceType) {
                             MainFragmentViewModel.ConnectType.LINE -> {
                                 currentState?.hasConnectLine == true
                             }
+
                             MainFragmentViewModel.ConnectType.TS004 -> {
                                 currentState?.hasConnectTS004 == true
                             }
+
                             MainFragmentViewModel.ConnectType.TC007 -> {
                                 currentState?.hasConnectTC007 == true
                             }
                         }
-                        
+
                         if (shouldPreventLongClick) {
                             return@setOnLongClickListener true
                         }
-                        
+
                         onItemLongClickListener?.invoke(view, deviceType)
                     }
                     true

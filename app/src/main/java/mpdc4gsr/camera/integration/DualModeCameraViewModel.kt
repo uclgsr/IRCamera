@@ -52,13 +52,13 @@ class DualModeCameraViewModel : BaseViewModel() {
 
     fun initialize(initialMode: String, enableOptimizations: Boolean) {
         enableSamsungOptimizations = enableOptimizations
-        
+
         val mode = when (initialMode) {
             "RAW_50MP" -> CameraMode.RAW
             "VIDEO_4K" -> CameraMode.VIDEO_4K
             else -> CameraMode.PREVIEW
         }
-        
+
         _cameraMode.value = mode
         _permissionState.value = PermissionState.UNKNOWN
         _cameraState.value = CameraState(
@@ -96,10 +96,10 @@ class DualModeCameraViewModel : BaseViewModel() {
                 )
 
                 rgbCameraRecorder?.initialize()
-                
+
                 _cameraState.value = _cameraState.value?.copy(isInitialized = true)
                 _statusMessage.value = "Dual-mode camera system initialized"
-                
+
             } catch (e: Exception) {
                 _error.value = "Failed to initialize camera: ${e.message}"
             }
@@ -115,14 +115,16 @@ class DualModeCameraViewModel : BaseViewModel() {
         viewModelScope.launch {
             try {
                 _cameraMode.value = newMode
-                
+
                 when (newMode) {
                     CameraMode.RAW -> {
                         handleRawModeSwitch()
                     }
+
                     CameraMode.VIDEO_4K -> {
                         _statusMessage.value = "Switched to 4K Video Mode"
                     }
+
                     CameraMode.PREVIEW -> {
                         _statusMessage.value = "Switched to Preview Mode"
                     }

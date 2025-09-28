@@ -23,7 +23,7 @@ object SharedManager {
         set(value) = SPUtils.getInstance().put("isNeedShowTrendTips", value)
 
     var hasShownStoragePermissionTip: Boolean
-        get() = SPUtils.getInstance().getBoolean("hasShownStoragePermissionTip", false) 
+        get() = SPUtils.getInstance().getBoolean("hasShownStoragePermissionTip", false)
         set(value) = SPUtils.getInstance().put("hasShownStoragePermissionTip", value)
 
     var houseSpaceUnit: Int

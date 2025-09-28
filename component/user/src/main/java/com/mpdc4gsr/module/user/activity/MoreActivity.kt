@@ -88,15 +88,21 @@ class MoreActivity : BaseViewModelActivity<MoreActivityViewModel>(), View.OnClic
                 is MoreActivityViewModel.NavigationEvent.DeviceInformation -> {
                     NavigationManager.getInstance()
                         .build(event.route)
-                        .withBoolean(ExtraKeyConfig.IS_TC007, event.extras[ExtraKeyConfig.IS_TC007] as Boolean)
+                        .withBoolean(
+                            ExtraKeyConfig.IS_TC007,
+                            event.extras[ExtraKeyConfig.IS_TC007] as Boolean
+                        )
                         .navigation(this@MoreActivity)
                 }
+
                 is MoreActivityViewModel.NavigationEvent.TISR -> {
                     NavigationManager.getInstance().build(event.route).navigation(this@MoreActivity)
                 }
+
                 is MoreActivityViewModel.NavigationEvent.AutoSave -> {
                     NavigationManager.getInstance().build(event.route).navigation(this@MoreActivity)
                 }
+
                 is MoreActivityViewModel.NavigationEvent.StorageSpace -> {
                     NavigationManager.getInstance().build(event.route).navigation(this@MoreActivity)
                 }
@@ -111,10 +117,12 @@ class MoreActivity : BaseViewModelActivity<MoreActivityViewModel>(), View.OnClic
                     dismissCameraLoading()
                     showFirmwareUpDialog(state.data)
                 }
+
                 is MoreActivityViewModel.FirmwareState.UpToDate -> {
                     dismissCameraLoading()
                     ToastUtils.showShort(RCore.string.setting_firmware_update_latest_version)
                 }
+
                 is MoreActivityViewModel.FirmwareState.Failed -> {
                     dismissCameraLoading()
                     TToast.shortToast(
@@ -180,7 +188,6 @@ class MoreActivity : BaseViewModelActivity<MoreActivityViewModel>(), View.OnClic
             }
         }
     }
-
 
 
     private fun showFirmwareUpDialog(firmwareData: FirmwareViewModel.FirmwareData) {

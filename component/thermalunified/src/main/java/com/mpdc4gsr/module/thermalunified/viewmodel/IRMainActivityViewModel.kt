@@ -87,7 +87,7 @@ class IRMainActivityViewModel : BaseViewModel() {
                     shouldAutoOpen = isConnected && SharedManager.isConnectAutoOpen
                 )
             }
-            
+
             _deviceState.value = deviceState
         }
     }
@@ -131,14 +131,14 @@ class IRMainActivityViewModel : BaseViewModel() {
     fun handleGuideDialog(onGuideShow: (Int, Int) -> Unit) {
         val currentStep = SharedManager.homeGuideStep
         if (currentStep == 0) return
-        
+
         val navigationTarget = when (currentStep) {
             1 -> 0
             2 -> 4
             3 -> 2
             else -> 2
         }
-        
+
         onGuideShow(currentStep, navigationTarget)
     }
 

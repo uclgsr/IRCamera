@@ -80,11 +80,13 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
                         .withBoolean(ExtraKeyConfig.IS_TC007, event.isTC007)
                         .navigation(this)
                 }
+
                 is IRMainActivityViewModel.NavigationEvent.ToGallery -> {
                     NavigationManager.getInstance()
                         .build(RouterConfig.GALLERY)
                         .navigation(this)
                 }
+
                 is IRMainActivityViewModel.NavigationEvent.ToThermal -> {
                     // Handle thermal navigation
                 }
@@ -96,6 +98,7 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
                 is IRMainActivityViewModel.ViewPagerState.PageSelected -> {
                     refreshTabSelect(state.position)
                 }
+
                 is IRMainActivityViewModel.ViewPagerState.NavigateToPage -> {
                     binding.viewPage.setCurrentItem(state.position, false)
                 }
@@ -166,6 +169,7 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
             0 -> {
                 // IRThermalFragment communication
             }
+
             1 -> {
                 // IRGalleryTabFragment communication  
             }
@@ -183,17 +187,21 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
             binding.clIconMonitor -> {
                 viewModel.navigateToPage(0)
             }
+
             binding.clIconGallery -> {
                 viewModel.navigateToPage(1)
             }
+
             binding.clIconReport -> {
                 viewModel.navigateToPage(3)
             }
+
             binding.clIconMine -> {
                 viewModel.navigateToPage(4)
             }
         }
     }
+
     private fun refreshTabSelect(index: Int) {
         binding.ivIconMonitor.isSelected = false
         binding.tvIconMonitor.isSelected = false
@@ -208,14 +216,17 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
                 binding.ivIconMonitor.isSelected = true
                 binding.tvIconMonitor.isSelected = true
             }
+
             1 -> {
                 binding.ivIconGallery.isSelected = true
                 binding.tvIconGallery.isSelected = true
             }
+
             3 -> {
                 binding.ivIconReport.isSelected = true
                 binding.tvIconReport.isSelected = true
             }
+
             4 -> {
                 binding.ivIconMine.isSelected = true
                 binding.tvIconMine.isSelected = true
@@ -227,10 +238,10 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
         viewModel.handleGuideDialog { step, navigationTarget ->
             when (step) {
                 1 -> viewModel.navigateToPage(0)
-                2 -> viewModel.navigateToPage(4) 
+                2 -> viewModel.navigateToPage(4)
                 3 -> viewModel.navigateToPage(2)
             }
-            
+
             val guideDialog = HomeGuideDialog(this, step)
             guideDialog.onNextClickListener = { nextStep ->
                 viewModel.handleGuideNavigation(nextStep)
@@ -244,6 +255,7 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
                             }
                         }
                     }
+
                     2 -> {
                         viewModel.navigateToPage(2)
                         if (Build.VERSION.SDK_INT < 31) {
@@ -253,6 +265,7 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
                             }
                         }
                     }
+
                     3 -> {
                         // Guide completed
                     }
@@ -292,6 +305,7 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
                 0 -> IRThermalFragment().apply {
                     arguments = Bundle().also { it.putBoolean(ExtraKeyConfig.IS_TC007, isTC007) }
                 }
+
                 1 -> IRGalleryTabFragment().apply {
                     arguments = Bundle().also {
                         val dirType = if (isTC007) DirType.TC007.ordinal else DirType.LINE.ordinal
@@ -300,11 +314,13 @@ class IRMainActivity : AppCompatActivity(), View.OnClickListener {
                         it.putInt(ExtraKeyConfig.DIR_TYPE, dirType)
                     }
                 }
+
                 2 -> AbilityFragment()
                 3 -> PDFListFragment()
                 4 -> MoreFragment().apply {
                     arguments = Bundle().also { it.putBoolean(ExtraKeyConfig.IS_TC007, isTC007) }
                 }
+
                 else -> IRThermalFragment().apply {
                     arguments = Bundle().also { it.putBoolean(ExtraKeyConfig.IS_TC007, isTC007) }
                 }

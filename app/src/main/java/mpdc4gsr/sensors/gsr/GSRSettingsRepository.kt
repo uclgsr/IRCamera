@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.StateFlow
 class GSRSettingsRepository(private val context: Context) {
 
     private val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
-    
+
     // StateFlow for reactive settings updates
     private val _gsrSettings = MutableStateFlow(loadGSRSettings())
     val gsrSettings: StateFlow<GSRSettings> = _gsrSettings
@@ -56,7 +56,7 @@ class GSRSettingsRepository(private val context: Context) {
         private const val KEY_BUFFER_SIZE = "gsr_buffer_size"
         private const val KEY_ENABLE_FILTERING = "gsr_enable_filtering"
         private const val KEY_NOTIFICATION_ENABLED = "gsr_notification_enabled"
-        
+
         private const val KEY_SELECTED_DEVICE_ID = "gsr_selected_device_id"
         private const val KEY_DEVICE_NAME = "gsr_device_name"
         private const val KEY_CONNECTION_TIMEOUT = "gsr_connection_timeout"
@@ -127,7 +127,7 @@ class GSRSettingsRepository(private val context: Context) {
     suspend fun resetToDefaults() {
         val defaultGSRSettings = GSRSettings()
         val defaultDeviceSettings = DeviceSettings()
-        
+
         updateGSRSettings(defaultGSRSettings)
         updateDeviceSettings(defaultDeviceSettings)
     }
@@ -164,7 +164,7 @@ class GSRSettingsRepository(private val context: Context) {
     fun exportSettings(): Map<String, Any> {
         val currentGSR = _gsrSettings.value
         val currentDevice = _deviceSettings.value
-        
+
         return mapOf(
             "gsr_settings" to mapOf(
                 "enabled" to currentGSR.isEnabled,
@@ -200,7 +200,9 @@ class GSRSettingsRepository(private val context: Context) {
                 enableRealTimeMonitoring = gsrMap["real_time_monitoring"] as? Boolean ?: true,
                 dataFormat = try {
                     DataFormat.valueOf(gsrMap["data_format"] as? String ?: DataFormat.CSV.name)
-                } catch (e: Exception) { DataFormat.CSV },
+                } catch (e: Exception) {
+                    DataFormat.CSV
+                },
                 bufferSize = gsrMap["buffer_size"] as? Int ?: DEFAULT_BUFFER_SIZE,
                 enableFiltering = gsrMap["enable_filtering"] as? Boolean ?: true,
                 notificationEnabled = gsrMap["notification_enabled"] as? Boolean ?: true
@@ -209,10 +211,12 @@ class GSRSettingsRepository(private val context: Context) {
             val deviceSettings = DeviceSettings(
                 selectedDeviceId = deviceMap["selected_device_id"] as? String,
                 deviceName = deviceMap["device_name"] as? String,
-                connectionTimeout = deviceMap["connection_timeout"] as? Int ?: DEFAULT_CONNECTION_TIMEOUT,
+                connectionTimeout = deviceMap["connection_timeout"] as? Int
+                    ?: DEFAULT_CONNECTION_TIMEOUT,
                 autoReconnect = deviceMap["auto_reconnect"] as? Boolean ?: true,
                 keepDeviceConnected = deviceMap["keep_device_connected"] as? Boolean ?: false,
-                deviceCalibrationEnabled = deviceMap["device_calibration_enabled"] as? Boolean ?: true
+                deviceCalibrationEnabled = deviceMap["device_calibration_enabled"] as? Boolean
+                    ?: true
             )
 
             updateGSRSettings(gsrSettings)

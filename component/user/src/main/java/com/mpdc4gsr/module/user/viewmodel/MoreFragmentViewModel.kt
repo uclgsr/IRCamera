@@ -24,7 +24,9 @@ class MoreFragmentViewModel : BaseViewModel() {
     val deviceTypeState: LiveData<DeviceTypeState> = _deviceTypeState
 
     sealed class FragmentAction {
-        data class Navigate(val route: String, val extras: Map<String, Any> = emptyMap()) : FragmentAction()
+        data class Navigate(val route: String, val extras: Map<String, Any> = emptyMap()) :
+            FragmentAction()
+
         data class ShowFirmwareDialog(val data: FirmwareViewModel.FirmwareData) : FragmentAction()
         object ShowResetConfirmation : FragmentAction()
     }

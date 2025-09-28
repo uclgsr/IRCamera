@@ -162,13 +162,13 @@ class PermissionController(private val activity: FragmentActivity) {
     private fun showPermissionRationaleDialog(missing: List<String>, onResult: (Boolean) -> Unit) {
         // Dismiss any existing dialog first
         dismissCurrentDialog()
-        
+
         // Check if activity is still valid
         if (activity.isFinishing || activity.isDestroyed) {
             onResult(false)
             return
         }
-        
+
         val names = getPermissionNames(missing)
         val message = """
             This app requires the following permissions for multi-sensor recording:
@@ -187,18 +187,18 @@ class PermissionController(private val activity: FragmentActivity) {
         currentDialog = AlertDialog.Builder(activity)
             .setTitle("Permissions Required")
             .setMessage(message)
-            .setPositiveButton("Grant Permissions") { dialog, _ -> 
+            .setPositiveButton("Grant Permissions") { dialog, _ ->
                 dialog.dismiss()
-                onResult(true) 
+                onResult(true)
             }
-            .setNegativeButton("Cancel") { dialog, _ -> 
+            .setNegativeButton("Cancel") { dialog, _ ->
                 dialog.dismiss()
-                onResult(false) 
+                onResult(false)
             }
             .setCancelable(false)
             .setOnDismissListener { currentDialog = null }
             .create()
-        
+
         currentDialog?.show()
     }
 
@@ -214,12 +214,12 @@ class PermissionController(private val activity: FragmentActivity) {
     private fun showPermanentlyDeniedDialog(permanentlyDenied: List<String>) {
         // Dismiss any existing dialog first
         dismissCurrentDialog()
-        
+
         // Check if activity is still valid
         if (activity.isFinishing || activity.isDestroyed) {
             return
         }
-        
+
         val names = getPermissionNames(permanentlyDenied)
         val message = """
             You have permanently denied the following critical permissions:
@@ -232,16 +232,16 @@ class PermissionController(private val activity: FragmentActivity) {
         currentDialog = AlertDialog.Builder(activity)
             .setTitle("Permissions Permanently Denied")
             .setMessage(message)
-            .setPositiveButton("Open Settings") { dialog, _ -> 
+            .setPositiveButton("Open Settings") { dialog, _ ->
                 dialog.dismiss()
-                openAppSettings() 
+                openAppSettings()
             }
-            .setNegativeButton("Cancel") { dialog, _ -> 
+            .setNegativeButton("Cancel") { dialog, _ ->
                 dialog.dismiss()
             }
             .setOnDismissListener { currentDialog = null }
             .create()
-            
+
         currentDialog?.show()
     }
 

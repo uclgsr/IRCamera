@@ -1,10 +1,13 @@
 # Background Device Scanning
 
-This document describes the background device scanning feature implemented for continuous BLE device discovery.
+This document describes the background device scanning feature implemented for continuous BLE device
+discovery.
 
 ## Overview
 
-The background device scanning system provides continuous, automated discovery of BLE devices (particularly GSR sensors) without requiring user interaction. The system runs as a foreground service and intelligently manages scanning intervals to minimize battery impact.
+The background device scanning system provides continuous, automated discovery of BLE devices (
+particularly GSR sensors) without requiring user interaction. The system runs as a foreground
+service and intelligently manages scanning intervals to minimize battery impact.
 
 ## Architecture
 
@@ -102,6 +105,7 @@ Background scanning controls are integrated into existing activities:
 ### Notification
 
 The service provides a persistent notification with:
+
 - Current scanning status
 - Scan count and last device count
 - Pause/Resume and Stop actions
@@ -120,6 +124,7 @@ The system implements several battery optimization strategies:
 ### Demo Activity
 
 `BackgroundScanningDemoActivity` provides a comprehensive test interface:
+
 - Start/Stop/Pause/Resume controls
 - Real-time status updates
 - Scan count and device count display
@@ -127,6 +132,7 @@ The system implements several battery optimization strategies:
 ### Integration Tests
 
 `BackgroundScanningIntegrationTest` provides examples for:
+
 - App launch integration
 - Battery-aware scanning
 - Recording session workflow
@@ -166,11 +172,13 @@ const val ACTION_RESUME_SCANNING = "mpdc4gsr.action.RESUME_BACKGROUND_SCANNING"
 1. **Service Not Starting**: Check permissions, especially `FOREGROUND_SERVICE_CONNECTED_DEVICE`
 2. **No Devices Found**: Verify BLE is enabled and location permissions granted
 3. **High Battery Usage**: Check scan intervals and consider pausing during active use
-4. **Service Stops**: Android may kill background services; the service is configured with `START_STICKY` for restart
+4. **Service Stops**: Android may kill background services; the service is configured with
+   `START_STICKY` for restart
 
 ### Debugging
 
 Enable debug logging:
+
 ```kotlin
 private const val TAG = "BackgroundDeviceScanning"
 Log.d(TAG, "Your debug message")

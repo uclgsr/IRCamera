@@ -172,7 +172,8 @@ class HubSpokeIntegrationActivity : BaseBindingActivity<ActivityHubSpokeIntegrat
                 }
 
                 // Check for paired Bluetooth devices via Android BluetoothAdapter
-                val bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
+                val bluetoothManager =
+                    getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
                 val bluetoothAdapter = bluetoothManager?.adapter
                 val pairedDevices = bluetoothAdapter?.bondedDevices
                 pairedDevices?.forEach { btDevice ->

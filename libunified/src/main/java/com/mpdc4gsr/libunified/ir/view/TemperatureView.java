@@ -1373,6 +1373,17 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
         }
     }
 
+    // Additional method for compatibility
+    public void updateMagnifier() {
+        // Trigger a redraw to update magnifier display
+        post(new Runnable() {
+            @Override
+            public void run() {
+                invalidate();
+            }
+        });
+    }
+
     private enum LineMoveType {ALL, START, END}
 
     private enum RectMoveType {ALL, EDGE, CORNER}
@@ -1392,16 +1403,5 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
 
     public interface TempListener {
         void getTemp(float max, float min, byte[] tempData);
-    }
-
-    // Additional method for compatibility
-    public void updateMagnifier() {
-        // Trigger a redraw to update magnifier display
-        post(new Runnable() {
-            @Override
-            public void run() {
-                invalidate();
-            }
-        });
     }
 }

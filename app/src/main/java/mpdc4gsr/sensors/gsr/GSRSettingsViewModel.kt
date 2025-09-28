@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
 /**
- * ViewModel for GSR Settings - Phase 4 MVVM Implementation  
+ * ViewModel for GSR Settings - Phase 4 MVVM Implementation
  * Manages GSR sensor configuration, permissions, and device management with Repository pattern
  */
 class GSRSettingsViewModel : BaseViewModel() {
@@ -174,12 +174,14 @@ class GSRSettingsViewModel : BaseViewModel() {
                 )
                 enableDeviceManagement()
             }
+
             permanentlyDeniedPermissions.isNotEmpty() -> {
                 _settingsAction.value = SettingsAction(
                     type = ActionType.SHOW_PERMISSION_PERMANENTLY_DENIED_DIALOG,
                     data = permanentlyDeniedPermissions
                 )
             }
+
             else -> {
                 _settingsAction.value = SettingsAction(
                     type = ActionType.SHOW_PERMISSION_DENIED_DIALOG,

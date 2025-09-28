@@ -25,7 +25,7 @@ import java.io.Serializable
  * Demonstrates sophisticated data analysis patterns with clean MVVM separation for large-scale sensor data
  */
 class GSRDataViewActivity : BaseViewModelActivity<GSRDataViewViewModel>() {
-    
+
     companion object {
         private const val EXTRA_FILE_PATH = "file_path"
 
@@ -48,11 +48,11 @@ class GSRDataViewActivity : BaseViewModelActivity<GSRDataViewViewModel>() {
     override fun initView() {
         binding = ActivityGsrDataViewBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        
+
         setupUI()
         setupObservers()
         handleIntent()
-        
+
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = "GSR Data Analysis"
     }
@@ -72,7 +72,7 @@ class GSRDataViewActivity : BaseViewModelActivity<GSRDataViewViewModel>() {
         adapter = GSRDataRowAdapter { dataRow ->
             showDataRowDetails(dataRow)
         }
-        
+
         // Use the actual RecyclerView ID from the layout file
         findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.data_recycler_view)?.let { recyclerView ->
             recyclerView.layoutManager = LinearLayoutManager(this@GSRDataViewActivity)
@@ -88,7 +88,7 @@ class GSRDataViewActivity : BaseViewModelActivity<GSRDataViewViewModel>() {
                 applyDataFilters()
             }
         }
-        
+
         val resetButtonId = getResourceId("resetFiltersButton")
         if (resetButtonId != 0) {
             findViewById<android.widget.Button>(resetButtonId)?.setOnClickListener {
@@ -105,7 +105,7 @@ class GSRDataViewActivity : BaseViewModelActivity<GSRDataViewViewModel>() {
                 showExportDialog()
             }
         }
-        
+
         val quickExportButtonId = getResourceId("quickExportButton")
         if (quickExportButtonId != 0) {
             findViewById<android.widget.Button>(quickExportButtonId)?.setOnClickListener {
@@ -196,16 +196,19 @@ class GSRDataViewActivity : BaseViewModelActivity<GSRDataViewViewModel>() {
                 binding.progressBar.isVisible = false
                 binding.loadingText.isVisible = false
             }
+
             GSRDataViewViewModel.DataLoadingState.Loading -> {
                 binding.progressBar.isVisible = true
                 binding.loadingText.isVisible = true
                 binding.loadingText.text = "Loading GSR data..."
             }
+
             GSRDataViewViewModel.DataLoadingState.Success -> {
                 binding.progressBar.isVisible = false
                 binding.loadingText.isVisible = false
                 binding.dataContainer.isVisible = true
             }
+
             GSRDataViewViewModel.DataLoadingState.Error -> {
                 binding.progressBar.isVisible = false
                 binding.loadingText.isVisible = false
@@ -259,7 +262,7 @@ class GSRDataViewActivity : BaseViewModelActivity<GSRDataViewViewModel>() {
         binding.analysisContainer.isVisible = combinedState.isDataReady
         binding.exportControls.isVisible = combinedState.isDataReady
         binding.filterControls.isVisible = combinedState.isDataReady
-        
+
         // Update status indicator
         binding.dataStatusIndicator.let { indicator ->
             when {
@@ -267,10 +270,12 @@ class GSRDataViewActivity : BaseViewModelActivity<GSRDataViewViewModel>() {
                     indicator.setBackgroundColor(android.graphics.Color.parseColor("#4caf50"))
                     indicator.text = "✓ Data Ready"
                 }
+
                 combinedState.loadingState == GSRDataViewViewModel.DataLoadingState.Loading -> {
                     indicator.setBackgroundColor(android.graphics.Color.parseColor("#ff9800"))
                     indicator.text = "⟳ Loading..."
                 }
+
                 else -> {
                     indicator.setBackgroundColor(android.graphics.Color.parseColor("#f44336"))
                     indicator.text = "✗ No Data"
@@ -285,19 +290,23 @@ class GSRDataViewActivity : BaseViewModelActivity<GSRDataViewViewModel>() {
                 // binding.exportProgress?.isVisible = false
                 // binding.exportButton?.isEnabled = true
             }
+
             GSRDataViewViewModel.ExportState.Preparing -> {
                 // binding.exportProgress?.isVisible = true
                 // binding.exportButton?.isEnabled = false
             }
+
             GSRDataViewViewModel.ExportState.Exporting -> {
                 // binding.exportProgress?.isVisible = true
                 // binding.exportButton?.isEnabled = false
             }
+
             GSRDataViewViewModel.ExportState.Success -> {
                 // binding.exportProgress?.isVisible = false
                 // binding.exportButton?.isEnabled = true
                 Toast.makeText(this, "Export completed successfully", Toast.LENGTH_SHORT).show()
             }
+
             GSRDataViewViewModel.ExportState.Error -> {
                 // binding.exportProgress?.isVisible = false
                 // binding.exportButton?.isEnabled = true
@@ -338,21 +347,26 @@ class GSRDataViewActivity : BaseViewModelActivity<GSRDataViewViewModel>() {
                 Toast.makeText(this, action.message, Toast.LENGTH_SHORT).show()
                 // Optionally show data loaded animation or feedback
             }
+
             GSRDataViewViewModel.ActionType.STATISTICS_CALCULATED -> {
                 // Handle statistics completion
             }
+
             GSRDataViewViewModel.ActionType.EXPORT_COMPLETED -> {
                 val result = action.data as? GSRDataViewViewModel.ExportResult
                 result?.let {
                     showExportCompletedDialog(it)
                 }
             }
+
             GSRDataViewViewModel.ActionType.ANALYSIS_COMPLETED -> {
                 Toast.makeText(this, "Advanced analysis completed", Toast.LENGTH_SHORT).show()
             }
+
             GSRDataViewViewModel.ActionType.FILTER_APPLIED -> {
                 Toast.makeText(this, "Filters applied to data", Toast.LENGTH_SHORT).show()
             }
+
             GSRDataViewViewModel.ActionType.ERROR_OCCURRED -> {
                 showError(action.message)
             }
@@ -363,14 +377,14 @@ class GSRDataViewActivity : BaseViewModelActivity<GSRDataViewViewModel>() {
         // val minGSR = binding.minGsrInput?.text?.toString()?.toDoubleOrNull()
         // val maxGSR = binding.maxGsrInput?.text?.toString()?.toDoubleOrNull()
         val qualityThreshold = getSelectedQualityThreshold()
-        
+
         val filterConfig = GSRDataViewViewModel.FilterConfiguration(
             minGSR = null,
             maxGSR = null,
             qualityThreshold = qualityThreshold,
             outlierRemoval = false // binding.removeOutliersCheckbox?.isChecked ?: false
         )
-        
+
         viewModel.updateFilterConfiguration(filterConfig)
     }
 
@@ -379,7 +393,7 @@ class GSRDataViewActivity : BaseViewModelActivity<GSRDataViewViewModel>() {
         // binding.maxGsrInput?.text?.clear()
         // binding.qualitySpinner?.setSelection(0)
         // binding.removeOutliersCheckbox?.isChecked = false
-        
+
         viewModel.updateFilterConfiguration(GSRDataViewViewModel.FilterConfiguration())
     }
 
@@ -396,11 +410,11 @@ class GSRDataViewActivity : BaseViewModelActivity<GSRDataViewViewModel>() {
 
     private fun showExportDialog() {
         val exportTypes = arrayOf(
-            "Enhanced CSV", "Excel Compatible CSV", "JSON Format", 
+            "Enhanced CSV", "Excel Compatible CSV", "JSON Format",
             "Statistical Summary", "Analysis Results"
         )
         val selectedTypes = mutableListOf<GSRDataViewViewModel.ExportType>()
-        
+
         AlertDialog.Builder(this)
             .setTitle("Select Export Formats")
             .setMultiChoiceItems(exportTypes, null) { _, which, isChecked ->
@@ -412,7 +426,7 @@ class GSRDataViewActivity : BaseViewModelActivity<GSRDataViewViewModel>() {
                     4 -> GSRDataViewViewModel.ExportType.ANALYSIS
                     else -> GSRDataViewViewModel.ExportType.ENHANCED_CSV
                 }
-                
+
                 if (isChecked) {
                     selectedTypes.add(exportType)
                 } else {
@@ -423,7 +437,11 @@ class GSRDataViewActivity : BaseViewModelActivity<GSRDataViewViewModel>() {
                 if (selectedTypes.isNotEmpty()) {
                     viewModel.exportData(selectedTypes)
                 } else {
-                    Toast.makeText(this, "Please select at least one export format", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this,
+                        "Please select at least one export format",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
             .setNegativeButton("Cancel", null)
@@ -449,14 +467,18 @@ class GSRDataViewActivity : BaseViewModelActivity<GSRDataViewViewModel>() {
             appendLine()
             appendLine("Location: ${exportResult.exportDirectory.absolutePath}")
         }
-        
+
         AlertDialog.Builder(this)
             .setTitle("Export Complete")
             .setMessage(message)
             .setPositiveButton("OK", null)
             .setNeutralButton("Open Folder") { _, _ ->
                 // Could open file manager to show exported files
-                Toast.makeText(this, "Export folder: ${exportResult.exportDirectory.name}", Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    this,
+                    "Export folder: ${exportResult.exportDirectory.name}",
+                    Toast.LENGTH_LONG
+                ).show()
             }
             .show()
     }
@@ -474,7 +496,7 @@ class GSRDataViewActivity : BaseViewModelActivity<GSRDataViewViewModel>() {
             appendLine("• Conductance: %.6f S".format(dataRow.conductance))
             appendLine("• Quality: ${dataRow.quality}")
         }
-        
+
         AlertDialog.Builder(this)
             .setTitle("Data Point Details")
             .setMessage(details)
@@ -545,9 +567,11 @@ class GSRDataViewActivity : BaseViewModelActivity<GSRDataViewViewModel>() {
         return when (item.itemId) {
             R.id.action_plot -> {
                 // Could show detailed analysis view
-                Toast.makeText(this, "Advanced analysis view coming soon", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Advanced analysis view coming soon", Toast.LENGTH_SHORT)
+                    .show()
                 true
             }
+
             R.id.action_export -> {
                 val allExportTypes = listOf(
                     GSRDataViewViewModel.ExportType.ENHANCED_CSV,
@@ -559,24 +583,26 @@ class GSRDataViewActivity : BaseViewModelActivity<GSRDataViewViewModel>() {
                 viewModel.exportData(allExportTypes)
                 true
             }
+
             R.id.action_analysis -> {
                 generatePlot()
                 true
             }
+
             android.R.id.home -> {
                 onBackPressed()
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
 
 
-
     private fun preparePlotData(): GSRPlotData {
         val gsrDataPoints = viewModel.gsrDataPoints.value
         val statistics = viewModel.statistics.value
-        
+
         if (gsrDataPoints.isEmpty()) {
             return GSRPlotData(
                 timestamps = emptyList(),
@@ -590,7 +616,8 @@ class GSRDataViewActivity : BaseViewModelActivity<GSRDataViewViewModel>() {
             )
         }
 
-        val timestamps = gsrDataPoints.map { (it.timestamp - gsrDataPoints.first().timestamp) / 1000000.0 }
+        val timestamps =
+            gsrDataPoints.map { (it.timestamp - gsrDataPoints.first().timestamp) / 1000000.0 }
         val gsrValues = gsrDataPoints.map { it.gsrValue }
         val ppgValues = gsrDataPoints.map { it.ppgValue.toDouble() }
 
@@ -620,7 +647,7 @@ class GSRDataViewActivity : BaseViewModelActivity<GSRDataViewViewModel>() {
 
     private fun calculateMovingAverage(values: List<Double>, windowSize: Int): List<Double> {
         if (values.isEmpty() || windowSize <= 0) return values
-        
+
         return values.mapIndexed { index, _ ->
             val startIndex = maxOf(0, index - windowSize / 2)
             val endIndex = minOf(values.size, index + windowSize / 2 + 1)
@@ -630,51 +657,58 @@ class GSRDataViewActivity : BaseViewModelActivity<GSRDataViewViewModel>() {
 
     private fun detectGSREvents(gsrValues: List<Double>, timestamps: List<Double>): List<GSREvent> {
         if (gsrValues.size < 3) return emptyList()
-        
+
         val events = mutableListOf<GSREvent>()
         val threshold = 0.5 // Configurable threshold for event detection
-        
+
         for (i in 1 until gsrValues.size - 1) {
             val prevValue = gsrValues[i - 1]
             val currentValue = gsrValues[i]
             val nextValue = gsrValues[i + 1]
-            
+
             // Detect increases
             if (currentValue - prevValue > threshold && currentValue > nextValue) {
-                events.add(GSREvent(
-                    timestamp = timestamps[i],
-                    type = "INCREASE",
-                    magnitude = currentValue - prevValue,
-                    gsrValue = currentValue
-                ))
+                events.add(
+                    GSREvent(
+                        timestamp = timestamps[i],
+                        type = "INCREASE",
+                        magnitude = currentValue - prevValue,
+                        gsrValue = currentValue
+                    )
+                )
             }
-            
+
             // Detect decreases
             if (prevValue - currentValue > threshold && currentValue < nextValue) {
-                events.add(GSREvent(
-                    timestamp = timestamps[i],
-                    type = "DECREASE",
-                    magnitude = prevValue - currentValue,
-                    gsrValue = currentValue
-                ))
+                events.add(
+                    GSREvent(
+                        timestamp = timestamps[i],
+                        type = "DECREASE",
+                        magnitude = prevValue - currentValue,
+                        gsrValue = currentValue
+                    )
+                )
             }
         }
-        
+
         return events
     }
 
-    private fun calculateTimeWindowedStatistics(gsrValues: List<Double>, timestamps: List<Double>): List<TimeWindowStats> {
+    private fun calculateTimeWindowedStatistics(
+        gsrValues: List<Double>,
+        timestamps: List<Double>
+    ): List<TimeWindowStats> {
         if (gsrValues.isEmpty() || timestamps.isEmpty()) return emptyList()
-        
+
         val windowSize = 60.0 // 60 second windows
         val stats = mutableListOf<TimeWindowStats>()
         val totalDuration = timestamps.lastOrNull() ?: 0.0
-        
+
         var dataIndex = 0
         var startTime = 0.0
         while (startTime < totalDuration && dataIndex < timestamps.size) {
             val endTime = minOf(startTime + windowSize, totalDuration)
-            
+
             val windowStartIndex = dataIndex
             while (dataIndex < timestamps.size && timestamps[dataIndex] < endTime) {
                 dataIndex++
@@ -686,21 +720,23 @@ class GSRDataViewActivity : BaseViewModelActivity<GSRDataViewViewModel>() {
                 val mean = windowValues.average()
                 val variance = windowValues.map { (it - mean) * (it - mean) }.average()
                 val stdDev = kotlin.math.sqrt(variance)
-                
-                stats.add(TimeWindowStats(
-                    startTime = startTime,
-                    endTime = endTime,
-                    mean = mean,
-                    stdDev = stdDev,
-                    min = windowValues.minOrNull() ?: 0.0,
-                    max = windowValues.maxOrNull() ?: 0.0,
-                    count = windowValues.size
-                ))
+
+                stats.add(
+                    TimeWindowStats(
+                        startTime = startTime,
+                        endTime = endTime,
+                        mean = mean,
+                        stdDev = stdDev,
+                        min = windowValues.minOrNull() ?: 0.0,
+                        max = windowValues.maxOrNull() ?: 0.0,
+                        count = windowValues.size
+                    )
+                )
             }
-            
+
             startTime += windowSize
         }
-        
+
         return stats
     }
 

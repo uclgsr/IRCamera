@@ -312,12 +312,12 @@ abstract class AbstractScanner implements Scanner {
     /**
      * 执行搜索
      */
-    protected abstract void performStartScan();    private final Runnable stopScanRunnable = () -> stopScan(false);
+    protected abstract void performStartScan();
 
     /**
      * 执行停止搜索
      */
-    protected abstract void performStopScan();
+    protected abstract void performStopScan();    private final Runnable stopScanRunnable = () -> stopScan(false);
 
 
 
