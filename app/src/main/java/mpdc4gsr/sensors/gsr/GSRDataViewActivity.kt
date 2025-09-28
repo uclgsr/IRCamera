@@ -58,6 +58,11 @@ class GSRDataViewActivity : BaseViewModelActivity<GSRDataViewViewModel>() {
         supportActionBar?.title = "GSR Data Analysis"
     }
 
+    override fun initData() {
+        // Initialize any data needed for the activity
+        // This method is called by BaseActivity after initView()
+    }
+
     private fun setupBottomNavigation() {
         binding.bottomNavigation.clNavGallery.setOnClickListener {
             navigateToMainActivity(0) // Gallery page
@@ -81,12 +86,6 @@ class GSRDataViewActivity : BaseViewModelActivity<GSRDataViewViewModel>() {
         }
         startActivity(intent)
         finish()
-    }
-    }
-
-    override fun initData() {
-        // Initialize any data needed for the activity
-        // This method is called by BaseActivity after initView()
     }
 
     private fun setupUI() {
