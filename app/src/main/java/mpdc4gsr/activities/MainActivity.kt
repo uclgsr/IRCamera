@@ -92,6 +92,16 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         bindRecordingService()
     }
 
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        intent?.let {
+            val pageIndex = it.getIntExtra("page", -1)
+            if (pageIndex in 0..3) {
+                viewModel.onNavigationItemSelected(pageIndex)
+            }
+        }
+    }
+
     private fun setupUI() {
         binding.viewPage.adapter = ViewPagerAdapter(this, isTC007)
         binding.viewPage.offscreenPageLimit = 4
