@@ -87,12 +87,15 @@ class SensorDashboardFragment : Fragment() {
         initializeDefaultSensors()
         
         // Restore collapsed state if needed
-        savedInstanceState?.getBoolean("isCollapsed", false)?.let { collapsed ->
-            if (collapsed) {
-                // Post to ensure views are measured first
+        savedInstanceState?.getBoolean("isCollapsed", false)?.let { wasCollapsed ->
+            if (wasCollapsed) {
+                // Post to ensure views are measured before setting final state
                 view.post {
-                    isCollapsed = false // Set to false first so toggleSensorsCollapse() works correctly
-                    toggleSensorsCollapse()
+                    // Set initial state without animation
+                    isCollapsed = true
+                    sensorsContainer.layoutParams.height = 0
+                    sensorsContainer.requestLayout()
+                    collapseExpandIcon.rotation = -90f
                 }
             }
         }
