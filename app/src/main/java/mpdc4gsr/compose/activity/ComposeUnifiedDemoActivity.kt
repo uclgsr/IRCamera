@@ -141,16 +141,247 @@ fun ComposeUnifiedDemo() {
 }
 
 @Composable
-private fun DemoHomeScreen(
-    onNavigateToConnect: () -> Unit,
-    onNavigateToMonitor: () -> Unit,
-    onNavigateToCalibrate: () -> Unit,
-    onNavigateToAnnotate: () -> Unit,
-    onNavigateToUnifiedDashboard: () -> Unit,
-    onNavigateToGSR: () -> Unit,
-    onNavigateToRGBCamera: () -> Unit,
+private fun DemoNavigationScreen(
+    navController: NavController,
     modifier: Modifier = Modifier
 ) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+        // Header
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
+        ) {
+            Column(
+                modifier = Modifier.padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "IR Camera Compose UI",
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
+                )
+                Text(
+                    text = "Complete Multi-Modal Sensor Platform",
+                    fontSize = 14.sp,
+                    color = Color.Gray,
+                    modifier = Modifier.padding(top = 4.dp)
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+        
+        // Navigation items
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            items(getAllNavigationItems()) { item ->
+                NavigationItemCard(
+                    item = item,
+                    onClick = { navController.navigate(item.route) }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun NavigationItemCard(
+    item: NavigationItem,
+    onClick: () -> Unit
+) {
+    Card(
+        onClick = onClick,
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = item.icon,
+                contentDescription = null,
+                tint = Color.Blue,
+                modifier = Modifier.size(32.dp)
+            )
+            
+            Spacer(modifier = Modifier.width(16.dp))
+            
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(
+                    text = item.title,
+                    color = Color.White,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = item.description,
+                    color = Color.Gray,
+                    fontSize = 14.sp
+                )
+            }
+            
+            Icon(
+                imageVector = Icons.Default.ArrowForward,
+                contentDescription = null,
+                tint = Color.Gray,
+                modifier = Modifier.size(20.dp)
+            )
+        }
+    }
+}
+
+data class NavigationItem(
+    val title: String,
+    val description: String,
+    val icon: ImageVector,
+    val route: String
+)
+
+private fun getAllNavigationItems(): List<NavigationItem> {
+    return listOf(
+        // Main Application
+        NavigationItem(
+            title = "Main Application",
+            description = "Complete app with tab navigation",
+            icon = Icons.Default.Home,
+            route = "main"
+        ),
+        NavigationItem(
+            title = "Unified Sensor Dashboard",
+            description = "Master dashboard for all sensors",
+            icon = Icons.Default.Dashboard,
+            route = "unified_dashboard"
+        ),
+        
+        // Core Thermal Screens
+        NavigationItem(
+            title = "Device Connection",
+            description = "Connect thermal devices",
+            icon = Icons.Default.Link,
+            route = "connect"
+        ),
+        NavigationItem(
+            title = "Thermal Monitor",
+            description = "Live thermal camera preview",
+            icon = Icons.Default.Thermostat,
+            route = "monitor"
+        ),
+        NavigationItem(
+            title = "Calibration",
+            description = "Dual-camera alignment",
+            icon = Icons.Default.Tune,
+            route = "calibrate"
+        ),
+        NavigationItem(
+            title = "Annotation & Report",  
+            description = "Temperature measurement annotation",
+            icon = Icons.Default.Edit,
+            route = "annotate"
+        ),
+        
+        // Individual Sensors
+        NavigationItem(
+            title = "GSR Sensor",
+            description = "Galvanic skin response monitoring",
+            icon = Icons.Default.MonitorHeart,
+            route = "gsr_sensor"
+        ),
+        NavigationItem(
+            title = "RGB Camera",
+            description = "Standard camera interface",
+            icon = Icons.Default.Camera,
+            route = "rgb_camera"
+        ),
+        
+        // Data & Media
+        NavigationItem(
+            title = "Gallery",
+            description = "Media and data gallery",
+            icon = Icons.Default.PhotoLibrary,
+            route = "gallery"
+        ),
+        NavigationItem(
+            title = "Thermal Gallery",
+            description = "Thermal images & recordings",
+            icon = Icons.Default.Folder,
+            route = "thermal_gallery"
+        ),
+        NavigationItem(
+            title = "GSR Data Viewer",
+            description = "Comprehensive GSR data analysis",
+            icon = Icons.Default.Analytics,
+            route = "gsr_data"
+        ),
+        NavigationItem(
+            title = "GSR Video Player",
+            description = "GSR session video playback",
+            icon = Icons.Default.PlayCircle,
+            route = "gsr_video"
+        ),
+        
+        // Recording & Reports
+        NavigationItem(
+            title = "Multi-Modal Recording",
+            description = "Synchronized sensor recording",
+            icon = Icons.Default.RecordVoiceOver,
+            route = "multimodal_recording"
+        ),
+        NavigationItem(
+            title = "Report Creation",
+            description = "Create thermal analysis reports",
+            icon = Icons.Default.Description,
+            route = "report_creation"
+        ),
+        
+        // Settings & Profile
+        NavigationItem(
+            title = "Settings",
+            description = "Application settings",
+            icon = Icons.Default.Settings,
+            route = "settings"
+        ),
+        NavigationItem(
+            title = "GSR Settings",
+            description = "GSR sensor configuration",
+            icon = Icons.Default.Tune,
+            route = "gsr_settings"
+        ),
+        NavigationItem(
+            title = "Camera Settings",
+            description = "RGB camera configuration",
+            icon = Icons.Default.CameraAlt,
+            route = "camera_settings"
+        ),
+        NavigationItem(
+            title = "Thermal Settings",
+            description = "Thermal camera configuration",
+            icon = Icons.Default.Thermostat,
+            route = "thermal_settings"
+        ),
+        NavigationItem(
+            title = "Profile",
+            description = "User profile and research stats",
+            icon = Icons.Default.Person,
+            route = "profile"
+        ),
+        NavigationItem(
+            title = "Policy Viewer",
+            description = "Terms & privacy policy",
+            icon = Icons.Default.Policy,
+            route = "policy"
+        )
+    )
+}
     Column(
         modifier = modifier
             .fillMaxSize()
