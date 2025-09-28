@@ -21,9 +21,12 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.Dispatchers
 import mpdc4gsr.compose.base.BaseComposeActivity
 import mpdc4gsr.compose.theme.IRCameraTheme
 import mpdc4gsr.viewmodel.BaseViewModel
+import androidx.lifecycle.viewModelScope
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -738,12 +741,17 @@ data class SessionManagerUiState(
 class SessionManagerViewModel : BaseViewModel() {
     private val _uiState = androidx.compose.runtime.mutableStateOf(SessionManagerUiState())
     val uiState: androidx.compose.runtime.State<SessionManagerUiState> = _uiState
+    
+    private var loadingJob: Job? = null
 
     fun loadSessions() {
         _uiState.value = _uiState.value.copy(isLoading = true)
         
-        // Simulate loading sessions
-        kotlinx.coroutines.GlobalScope.launch {
+        // Cancel any existing loading job
+        loadingJob?.cancel()
+        
+        // Simulate loading sessions on main dispatcher
+        loadingJob = viewModelScope.launch(Dispatchers.Main) {
             delay(1000)
             
             val mockSessions = listOf(
@@ -809,5 +817,10 @@ class SessionManagerViewModel : BaseViewModel() {
 
     fun exportSession(session: RecordingSession, format: ExportFormat) {
         // Implementation for exporting session data
+    }
+    
+    override fun onCleared() {
+        super.onCleared()
+        loadingJob?.cancel()
     }
 }

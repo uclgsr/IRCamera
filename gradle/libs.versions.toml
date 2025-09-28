@@ -35,6 +35,7 @@ compose-compiler = "1.5.15"
 compose-activity = "1.9.3"
 compose-navigation = "2.9.0"
 compose-lifecycle = "2.9.3"
+coil = "2.8.0"
 
 androidxCore = "1.16.0"
 androidxAppcompat = "1.7.0"
@@ -209,6 +210,9 @@ compose-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-
 compose-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata" }
 compose-navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "compose-navigation" }
 compose-animation = { group = "androidx.compose.animation", name = "animation" }
+
+# Coil for image loading
+coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidxCore" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidxAppcompat" }

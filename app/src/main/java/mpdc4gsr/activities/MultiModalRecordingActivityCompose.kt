@@ -22,9 +22,12 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.Dispatchers
 import mpdc4gsr.compose.base.BaseComposeActivity
 import mpdc4gsr.compose.theme.IRCameraTheme
 import mpdc4gsr.viewmodel.BaseViewModel
+import androidx.lifecycle.viewModelScope
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -758,6 +761,8 @@ data class MultiModalRecordingUiState(
 class MultiModalRecordingViewModel : BaseViewModel() {
     private val _uiState = androidx.compose.runtime.mutableStateOf(MultiModalRecordingUiState())
     val uiState: androidx.compose.runtime.State<MultiModalRecordingUiState> = _uiState
+    
+    private var recordingJob: Job? = null
 
     fun initializeSensors() {
         val sensors = listOf(
@@ -783,8 +788,11 @@ class MultiModalRecordingViewModel : BaseViewModel() {
     fun startRecording() {
         _uiState.value = _uiState.value.copy(isRecording = true)
         
-        // Simulate recording statistics updates
-        kotlinx.coroutines.GlobalScope.launch {
+        // Cancel any existing recording job
+        recordingJob?.cancel()
+        
+        // Start recording statistics updates on main dispatcher
+        recordingJob = viewModelScope.launch(Dispatchers.Main) {
             while (_uiState.value.isRecording) {
                 delay(1000)
                 _uiState.value = _uiState.value.copy(
@@ -805,6 +813,15 @@ class MultiModalRecordingViewModel : BaseViewModel() {
     }
 
     fun stopRecording() {
+        _uiState.value = _uiState.value.copy(isRecording = false)
+        recordingJob?.cancel()
+        recordingJob = null
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        recordingJob?.cancel()
+    }
         _uiState.value = _uiState.value.copy(isRecording = false)
     }
 
