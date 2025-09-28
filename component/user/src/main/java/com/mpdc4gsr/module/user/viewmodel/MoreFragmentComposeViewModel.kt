@@ -13,6 +13,12 @@ import kotlinx.coroutines.flow.asStateFlow
  */
 class MoreFragmentComposeViewModel : BaseViewModel() {
     
+    companion object {
+        // Mock data constants for improved maintainability
+        private const val DEFAULT_VERSION = "1.0.0"
+        private const val DEFAULT_UPGRADE_AVAILABLE = false
+    }
+    
     data class DeviceSettingsState(
         val isTC007: Boolean = false,
         val isSaveSettingEnabled: Boolean = false,
@@ -34,8 +40,8 @@ class MoreFragmentComposeViewModel : BaseViewModel() {
             _deviceSettings.value = DeviceSettingsState(
                 isTC007 = isTC007,
                 isSaveSettingEnabled = isSaveEnabled,
-                hasUpgrade = false, // Mock data
-                versionText = "1.0.0" // Mock version
+                hasUpgrade = DEFAULT_UPGRADE_AVAILABLE,
+                versionText = DEFAULT_VERSION
             )
         }
     }

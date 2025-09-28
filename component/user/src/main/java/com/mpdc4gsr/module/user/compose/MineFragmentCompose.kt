@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -33,6 +34,7 @@ fun MineFragmentCompose(
     viewModel: MineFragmentViewModel,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
     val userProfile by viewModel.userProfile.collectAsState()
     val showWinterPoint by viewModel.showWinterPoint.collectAsState()
     
@@ -122,7 +124,7 @@ fun MineFragmentCompose(
                     onClick = {
                         NavigationManager.getInstance()
                             .build(RouterConfig.VERSION)
-                            .navigation(null) // Context needed
+                            .navigation(context)
                     }
                 )
                 
@@ -141,7 +143,7 @@ fun MineFragmentCompose(
                         NavigationManager.getInstance()
                             .build(RouterConfig.ELECTRONIC_MANUAL)
                             .withInt(Constants.SETTING_TYPE, Constants.SETTING_BOOK)
-                            .navigation(null)
+                            .navigation(context)
                     }
                 )
                 
@@ -153,7 +155,7 @@ fun MineFragmentCompose(
                         NavigationManager.getInstance()
                             .build(RouterConfig.ELECTRONIC_MANUAL)
                             .withInt(Constants.SETTING_TYPE, Constants.SETTING_FAQ)
-                            .navigation(null)
+                            .navigation(context)
                     }
                 )
                 
@@ -172,7 +174,7 @@ fun MineFragmentCompose(
                     onClick = {
                         NavigationManager.getInstance()
                             .build(RouterConfig.UNIT)
-                            .navigation(null)
+                            .navigation(context)
                     }
                 )
             }

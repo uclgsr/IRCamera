@@ -10,6 +10,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -29,6 +30,7 @@ fun MoreFragmentCompose(
     isTC007: Boolean = false,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
     val deviceSettings by viewModel.deviceSettings.collectAsState()
     
     // Initialize ViewModel with device type
@@ -141,7 +143,7 @@ fun MoreFragmentCompose(
                     onClick = {
                         NavigationManager.getInstance()
                             .build(RouterConfig.UNIT)
-                            .navigation(null)
+                            .navigation(context)
                     }
                 )
                 
@@ -153,7 +155,7 @@ fun MoreFragmentCompose(
                     onClick = {
                         NavigationManager.getInstance()
                             .build(RouterConfig.VERSION)
-                            .navigation(null)
+                            .navigation(context)
                     }
                 )
                 
@@ -164,7 +166,7 @@ fun MoreFragmentCompose(
                     onClick = {
                         NavigationManager.getInstance()
                             .build(RouterConfig.DEVICE_INFO)
-                            .navigation(null)
+                            .navigation(context)
                     }
                 )
                 
