@@ -269,7 +269,7 @@ private fun RecordingIndicator(
             horizontalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             Icon(
-                Icons.Default.Settings,
+                Icons.Default.FiberManualRecord,
                 contentDescription = "Recording",
                 tint = Color.White,
                 modifier = Modifier.size(16.dp)
