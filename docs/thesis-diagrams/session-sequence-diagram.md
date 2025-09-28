@@ -29,7 +29,7 @@ sequenceDiagram
     par Thermal Stream Initialization
         Android->>Thermal: Start capture (LibIRParse.startStream())
         Thermal-->>Android: Frame callback (256x192 thermal data)
-        Android->>Android: Temperature calibration (+/-2 degreesC accuracy)
+        Android->>Android: Temperature calibration (+/-2 degrees C accuracy)
         Android->>PC: ACK cmd=START_RECORD status=thermal_ready
     and GSR Stream Initialization  
         Android->>GSR: Send 0x07 (start streaming command)
