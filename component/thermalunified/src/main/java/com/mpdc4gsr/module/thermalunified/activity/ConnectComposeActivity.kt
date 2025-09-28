@@ -215,7 +215,7 @@ private fun ConnectionControls(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Icon(
-                        Icons.Default.Settings,
+                        Icons.Default.Bluetooth,
                         contentDescription = "Connect",
                         modifier = Modifier.size(20.dp)
                     )
