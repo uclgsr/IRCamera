@@ -1,0 +1,438 @@
+package mpdc4gsr.compose.screens
+
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.VideoCall
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
+import mpdc4gsr.compose.components.TitleBar
+import mpdc4gsr.compose.components.TitleBarAction
+import mpdc4gsr.compose.theme.IRCameraTheme
+
+/**
+ * ThermalMonitorScreen composable - replaces MonitorThermalFragment layout
+ * Main screen for thermal camera preview with overlays and controls
+ */
+@Composable
+fun ThermalMonitorScreen(
+    onBackClick: (() -> Unit)? = null,
+    onSettingsClick: () -> Unit = {},
+    onRecordClick: () -> Unit = {},
+    modifier: Modifier = Modifier
+) {
+    // Sample state for demonstration - will be connected to actual ViewModels
+    var isRecording by remember { mutableStateOf(false) }
+    var currentTemp by remember { mutableStateOf(25.6f) }
+    var maxTemp by remember { mutableStateOf(45.2f) }
+    var minTemp by remember { mutableStateOf(18.9f) }
+    var isConnected by remember { mutableStateOf(true) }
+    var showAdvancedControls by remember { mutableStateOf(false) }
+    
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .background(Color(0xFF16131e)) // Match reference background
+    ) {
+        // Title bar with action buttons
+        TitleBar(
+            title = "Thermal Monitor",
+            showBackButton = true,
+            onBackClick = onBackClick
+        ) {
+            TitleBarAction(
+                icon = Icons.Default.Settings,
+                contentDescription = "Settings",
+                onClick = onSettingsClick
+            )
+        }
+        
+        // Main content area using ConstraintLayout for precise positioning
+        ConstraintLayout(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(8.dp)
+        ) {
+            val (preview, overlay, controls, statusPanel) = createRefs()
+            
+            // Thermal camera preview area
+            ThermalCameraPreview(
+                modifier = Modifier
+                    .constrainAs(preview) {
+                        top.linkTo(parent.top)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                        width = Dimension.fillToConstraints
+                        height = Dimension.ratio("4:3") // Match thermal camera aspect ratio
+                    }
+            )
+            
+            // Temperature overlay on top of preview
+            TemperatureOverlay(
+                currentTemp = currentTemp,
+                maxTemp = maxTemp,
+                minTemp = minTemp,
+                modifier = Modifier
+                    .constrainAs(overlay) {
+                        top.linkTo(preview.top)
+                        start.linkTo(preview.start)
+                        end.linkTo(preview.end)
+                        bottom.linkTo(preview.bottom)
+                        width = Dimension.fillToConstraints
+                        height = Dimension.fillToConstraints
+                    }
+            )
+            
+            // Status panel for connection and sensor info
+            StatusPanel(
+                isConnected = isConnected,
+                modifier = Modifier
+                    .constrainAs(statusPanel) {
+                        top.linkTo(preview.bottom, margin = 16.dp)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    }
+            )
+            
+            // Recording and control buttons
+            ControlPanel(
+                isRecording = isRecording,
+                onRecordClick = { 
+                    isRecording = !isRecording
+                    onRecordClick()
+                },
+                onAdvancedClick = { showAdvancedControls = !showAdvancedControls },
+                modifier = Modifier
+                    .constrainAs(controls) {
+                        top.linkTo(statusPanel.bottom, margin = 16.dp)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    }
+            )
+        }
+        
+        // Advanced controls overlay
+        if (showAdvancedControls) {
+            AdvancedControlsPanel(
+                onDismiss = { showAdvancedControls = false }
+            )
+        }
+    }
+}
+
+/**
+ * Thermal camera preview component
+ * In actual implementation, this would host the IR camera view
+ */
+@Composable
+private fun ThermalCameraPreview(
+    modifier: Modifier = Modifier
+) {
+    // Placeholder for actual thermal camera preview
+    // In production, this would use AndroidView to host the IrSurfaceView
+    Box(
+        modifier = modifier
+            .background(Color.Black)
+            .aspectRatio(4f / 3f),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = "Thermal Camera Preview",
+            color = Color.White,
+            fontSize = 16.sp
+        )
+        
+        // Sample thermal visualization
+        Canvas(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            // Draw sample thermal patterns
+            drawCircle(
+                color = Color.Red,
+                radius = 30f,
+                center = Offset(size.width * 0.3f, size.height * 0.4f)
+            )
+            drawCircle(
+                color = Color.Blue,
+                radius = 20f,
+                center = Offset(size.width * 0.7f, size.height * 0.6f)
+            )
+        }
+    }
+}
+
+/**
+ * Temperature overlay component
+ * Replaces TemperatureView functionality for displaying measurement data
+ */
+@Composable
+private fun TemperatureOverlay(
+    currentTemp: Float,
+    maxTemp: Float,
+    minTemp: Float,
+    modifier: Modifier = Modifier
+) {
+    Box(modifier = modifier) {
+        // Current temperature display (center)
+        Surface(
+            modifier = Modifier.align(Alignment.Center),
+            color = Color.Black.copy(alpha = 0.7f),
+            shape = CircleShape
+        ) {
+            Text(
+                text = "${currentTemp}°C",
+                color = Color.White,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(12.dp)
+            )
+        }
+        
+        // Max temperature (top-right)
+        Surface(
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .padding(16.dp),
+            color = Color.Red.copy(alpha = 0.8f),
+            shape = CircleShape
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.padding(8.dp)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(8.dp)
+                        .clip(CircleShape)
+                        .background(Color.White)
+                )
+                Text(
+                    text = "${maxTemp}°C",
+                    color = Color.White,
+                    fontSize = 12.sp,
+                    modifier = Modifier.padding(top = 2.dp)
+                )
+            }
+        }
+        
+        // Min temperature (bottom-left)
+        Surface(
+            modifier = Modifier
+                .align(Alignment.BottomStart)
+                .padding(16.dp),
+            color = Color.Blue.copy(alpha = 0.8f),
+            shape = CircleShape
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.padding(8.dp)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(8.dp)
+                        .clip(CircleShape)
+                        .background(Color.White)
+                )
+                Text(
+                    text = "${minTemp}°C",
+                    color = Color.White,
+                    fontSize = 12.sp,
+                    modifier = Modifier.padding(top = 2.dp)
+                )
+            }
+        }
+    }
+}
+
+/**
+ * Status panel showing connection and sensor status
+ */
+@Composable
+private fun StatusPanel(
+    isConnected: Boolean,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp),
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        StatusIndicator(
+            label = "Camera",
+            isActive = isConnected,
+            color = if (isConnected) Color.Green else Color.Gray
+        )
+        
+        StatusIndicator(
+            label = "Recording",
+            isActive = false, // Will be connected to actual recording state
+            color = Color.Red
+        )
+        
+        StatusIndicator(
+            label = "Storage",
+            isActive = true,
+            color = Color.Green
+        )
+    }
+}
+
+/**
+ * Individual status indicator
+ */
+@Composable
+private fun StatusIndicator(
+    label: String,
+    isActive: Boolean,
+    color: Color,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
+    ) {
+        Box(
+            modifier = Modifier
+                .size(12.dp)
+                .clip(CircleShape)
+                .background(if (isActive) color else Color.Gray)
+        )
+        Text(
+            text = label,
+            color = Color.White,
+            fontSize = 10.sp,
+            modifier = Modifier.padding(top = 4.dp)
+        )
+    }
+}
+
+/**
+ * Control panel with recording and advanced controls
+ */
+@Composable
+private fun ControlPanel(
+    isRecording: Boolean,
+    onRecordClick: () -> Unit,
+    onAdvancedClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceEvenly
+    ) {
+        // Record button
+        FloatingActionButton(
+            onClick = onRecordClick,
+            containerColor = if (isRecording) Color.Red else Color.Blue
+        ) {
+            Icon(
+                imageVector = Icons.Default.VideoCall,
+                contentDescription = if (isRecording) "Stop recording" else "Start recording",
+                tint = Color.White
+            )
+        }
+        
+        // Advanced controls button
+        Button(
+            onClick = onAdvancedClick,
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFF2A2A2A)
+            )
+        ) {
+            Text(
+                text = "Advanced",
+                color = Color.White
+            )
+        }
+    }
+}
+
+/**
+ * Advanced controls panel overlay
+ */
+@Composable
+private fun AdvancedControlsPanel(
+    onDismiss: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Card(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = Color(0xFF2A2A2A)
+        )
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Text(
+                text = "Advanced Controls",
+                color = Color.White,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold
+            )
+            
+            Spacer(modifier = Modifier.height(16.dp))
+            
+            // Sample controls - will be replaced with actual thermal camera controls
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text("Focus Lock", color = Color.White)
+                Switch(
+                    checked = false,
+                    onCheckedChange = { }
+                )
+            }
+            
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text("Auto Exposure", color = Color.White)
+                Switch(
+                    checked = true,
+                    onCheckedChange = { }
+                )
+            }
+            
+            Spacer(modifier = Modifier.height(16.dp))
+            
+            Button(
+                onClick = onDismiss,
+                modifier = Modifier.align(Alignment.End)
+            ) {
+                Text("Close")
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ThermalMonitorScreenPreview() {
+    IRCameraTheme {
+        ThermalMonitorScreen()
+    }
+}
