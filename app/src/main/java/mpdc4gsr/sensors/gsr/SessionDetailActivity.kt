@@ -5,10 +5,10 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import com.csl.irCamera.R
-import com.csl.irCamera.databinding.ActivitySessionDetailBinding
+import com.csl.irCamera.databinding.ActivitySessionConsolidatedBinding
 import com.mpdc4gsr.libunified.app.ktbase.BaseBindingActivity
 
-class SessionDetailActivity : BaseBindingActivity<ActivitySessionDetailBinding>() {
+class SessionDetailActivity : BaseBindingActivity<ActivitySessionConsolidatedBinding>() {
     companion object {
         private const val EXTRA_SESSION_ID = "session_id"
 
@@ -24,7 +24,7 @@ class SessionDetailActivity : BaseBindingActivity<ActivitySessionDetailBinding>(
         }
     }
 
-    override fun initContentLayoutId() = R.layout.activity_session_detail
+    override fun initContentLayoutId() = R.layout.activity_session_consolidated
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

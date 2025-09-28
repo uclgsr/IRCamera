@@ -43,7 +43,7 @@ class GSRDataViewActivity : BaseViewModelActivity<GSRDataViewViewModel>() {
 
     override fun providerVMClass(): Class<GSRDataViewViewModel> = GSRDataViewViewModel::class.java
 
-    override fun initContentView() = R.layout.activity_gsr_data_view
+    override fun initContentView() = R.layout.activity_multi_modal_consolidated
 
     override fun initView() {
         binding = ActivityGsrDataViewBinding.inflate(layoutInflater)

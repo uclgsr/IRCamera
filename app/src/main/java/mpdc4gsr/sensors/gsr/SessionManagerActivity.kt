@@ -41,7 +41,7 @@ class SessionManagerActivity : BaseViewModelActivity<SessionManagerViewModel>() 
     override fun providerVMClass(): Class<SessionManagerViewModel> =
         SessionManagerViewModel::class.java
 
-    override fun initContentView() = R.layout.activity_session_manager
+    override fun initContentView() = R.layout.activity_session_consolidated
 
     override fun initView() {
         binding = ActivitySessionManagerBinding.inflate(layoutInflater)
@@ -232,7 +232,7 @@ class SessionManagerActivity : BaseViewModelActivity<SessionManagerViewModel>() 
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
             val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_session, parent, false)
+                .inflate(R.layout.item_sensor_data_consolidated, parent, false)
             return ViewHolder(view)
         }
 

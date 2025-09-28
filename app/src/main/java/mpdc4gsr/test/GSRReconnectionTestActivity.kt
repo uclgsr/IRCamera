@@ -45,7 +45,7 @@ class GSRReconnectionTestActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_gsr_reconnection_test)
+        setContentView(R.layout.activity_camera_test_consolidated)
 
         setupUI()
         initializeComponents()

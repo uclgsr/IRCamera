@@ -56,7 +56,7 @@
     <color name="color_img_calibration_button">@color/colorPrimary</color>
     <color name="we_read_theme_color">@color/colorAccent</color>
     <color name="wheel_unselect_text">#B2FFFFFF</color>
-    <color name="toastTextColor">@color/font_color</color>
+    <color name="toastTextColor">#FFFFFFFF</color>
 
     <!-- Legacy colors for compatibility -->
     <color name="white_80">@color/color_CCFFFFFF</color>
@@ -64,4 +64,5 @@
     <color name="lms_color_333">#FF333333</color>
     <color name="tx_333">#FF333333</color>
     <color name="lms_red">#FFFF0000</color>
+    <color name="red">#FFFF0000</color>
 </resources>
