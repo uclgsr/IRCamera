@@ -29,8 +29,8 @@ class IRThermalFragmentViewModel : BaseViewModel() {
     val permissionState: LiveData<PermissionState> = _permissionState
 
     // UI state management
-    private val _uiState = MutableStateFlow(ThermalUIState())
-    val uiState: StateFlow<ThermalUIState> = _uiState.asStateFlow()
+    private val _thermalUiState = MutableStateFlow(ThermalUIState())
+    val thermalUiState: StateFlow<ThermalUIState> = _thermalUiState.asStateFlow()
 
     // Action events for dialogs and operations
     private val _thermalAction = MutableLiveData<ThermalAction>()

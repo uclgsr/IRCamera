@@ -43,8 +43,8 @@ class ThermalFragmentViewModel : BaseViewModel() {
     val videoRecordingState: StateFlow<VideoRecordingState> = _videoRecordingState.asStateFlow()
 
     // UI interaction state
-    private val _uiState = MutableStateFlow(ThermalUIState())
-    val uiState: StateFlow<ThermalUIState> = _uiState.asStateFlow()
+    private val _thermalUiState = MutableStateFlow(ThermalUIState())
+    val thermalUiState: StateFlow<ThermalUIState> = _thermalUiState.asStateFlow()
 
     // Thermal surface dimensions
     var rawWidth: Int = 0
