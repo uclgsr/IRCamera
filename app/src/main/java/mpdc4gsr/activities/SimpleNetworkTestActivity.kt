@@ -71,7 +71,7 @@ class SimpleNetworkTestActivity : AppCompatActivity() {
         statusText = findViewById(R.id.connection_info_text)
 
         // Verify all views were found
-        if (BuildConfig.DEBUG) Log.d(TAG, "Views found - connectButton: ${connectButton != null}, connectBluetoothButton: ${connectBluetoothButton != null}, disconnectButton: ${disconnectButton != null}, testCommandsButton: ${testCommandsButton != null}")
+        if (BuildConfig.DEBUG) Log.d(TAG, "Views initialization complete - all views found")
 
         // Set default values
         ipAddressInput.setText(DEFAULT_PC_IP)
