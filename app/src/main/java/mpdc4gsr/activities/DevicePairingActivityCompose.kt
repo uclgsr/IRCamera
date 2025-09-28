@@ -20,6 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.activity.viewModels
 import com.csl.irCamera.R
 import com.mpdc4gsr.gsr.model.SessionInfo
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
@@ -48,7 +49,7 @@ class DevicePairingActivityCompose : BaseComposeActivity<DevicePairingViewModel>
     }
 
     override fun createViewModel(): DevicePairingViewModel {
-        return viewModel<DevicePairingViewModel>().also { 
+        return viewModels<DevicePairingViewModel>().value.also { 
             it.initialize(this)
         }
     }
