@@ -93,7 +93,7 @@ class DevicePairingActivity : BaseViewModelActivity<DevicePairingViewModel>(),
         // Collect available controllers
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.availableControllers.collectLatest { controllers ->
+                viewModel.discoveredControllers.collectLatest { controllers ->
                     controllersAdapter.updateControllers(controllers)
                     binding.controllersRecyclerView.isVisible = controllers.isNotEmpty()
                 }
