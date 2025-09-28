@@ -14,7 +14,7 @@ reproducible, deterministic testing scenarios.
 ### TC001 Thermal Camera Emulator (`tc001_emulator.py`)
 
 - **Resolution**: 256x192 temperature matrices
-- **Temperature Range**: -20 degreesC to +550 degreesC with +/-2 degreesC accuracy
+- **Temperature Range**: -20 degrees C to +550 degrees C with +/-2 degrees C accuracy
 - **Scenarios**: Human subject detection, hot object tracking, thermal events, calibration targets
 - **Physics Simulation**: Thermal diffusion, cooling dynamics, environmental changes
 - **Frame Rate**: 10 Hz (matches hardware specification)
