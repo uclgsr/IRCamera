@@ -504,7 +504,7 @@ class GSRDataViewActivity : BaseViewModelActivity<GSRDataViewViewModel>() {
             .show()
     }
 
-    private fun showError(message: String) {
+    override fun showError(message: String) {
         AlertDialog.Builder(this)
             .setTitle("Error")
             .setMessage(message)
