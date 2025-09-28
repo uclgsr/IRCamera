@@ -105,7 +105,7 @@
             android:padding="8dp"
             android:minHeight="200dp"
             android:divider="@android:drawable/divider_horizontal_bright"
-            android:showDividers="between">
+            android:showDividers="middle">
 
             <!-- Individual sensor status views will be added programmatically -->
 
