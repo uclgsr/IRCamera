@@ -309,12 +309,11 @@ class MultiModalRecordingActivity : BaseBindingActivity<ActivityMultiModalRecord
                 }
                 
                 // Add sync mark to camera recording if available
-                rgbCameraRecorder?.addSyncMark(com.mpdc4gsr.gsr.model.SyncMark(
-                    timestamp = System.currentTimeMillis(),
-                    utcTimestamp = System.currentTimeMillis(),
-                    eventType = "manual_sync",
-                    sessionId = sessionId ?: ""
-                ))
+                rgbCameraRecorder?.addSyncMarker(
+                    markerType = "manual_sync",
+                    timestampNs = System.nanoTime(),
+                    metadata = mapOf("sessionId" to (sessionId ?: ""))
+                )
                 
                 // Visual feedback
                 binding.syncIndicator.apply {
