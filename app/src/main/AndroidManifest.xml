@@ -279,6 +279,11 @@
             android:label="Device Pairing" />
 
         <activity
+            android:name="mpdc4gsr.activities.DevicePairingActivityCompose"
+            android:exported="false"
+            android:label="Device Pairing (Compose)" />
+
+        <activity
             android:name="mpdc4gsr.permissions.PermissionRequestActivity"
             android:exported="false"
             android:label="Enhanced Permission System Test" />
@@ -367,6 +372,11 @@
             android:name="mpdc4gsr.camera.integration.DualModeCameraActivity"
             android:exported="false"
             android:label="Dual Mode Camera" />
+
+        <activity
+            android:name="mpdc4gsr.activities.DualModeCameraActivityCompose"
+            android:exported="false"
+            android:label="Dual Mode Camera (Compose)" />
 
         <activity
             android:name="mpdc4gsr.sensors.gsr.RawCaptureTestActivity"
