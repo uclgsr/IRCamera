@@ -77,4 +77,8 @@
     <color name="tx_333">#FF333333</color>
     <color name="lms_red">#FFFF0000</color>
     <color name="red">#FFFF0000</color>
+    <!-- Bottom navigation colors -->
+    <color name="tab_text">#FFFFFF</color>
+    <color name="tab_text_selected">#00FF00</color>
+
 </resources>

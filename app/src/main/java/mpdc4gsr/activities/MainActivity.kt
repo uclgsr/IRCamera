@@ -46,8 +46,10 @@ import com.mpdc4gsr.module.user.fragment.MoreFragment
 class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickListener {
     companion object {
         private const val TAG = "MainActivity"
-        private const val PAGE_GALLERY = 0
-        private const val PAGE_MAIN = 1
+        const val PAGE_GALLERY = 0
+        const val PAGE_MAIN = 1
+        const val PAGE_SETTINGS = 2
+        const val PAGE_MINE = 2
         private const val PAGE_SETTINGS = 2
         private const val PAGE_MINE = 3
     }
@@ -96,8 +98,8 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         super.onNewIntent(intent)
         intent?.let {
             val pageIndex = it.getIntExtra("page", -1)
-            if (pageIndex in 0..3) {
-                viewModel.onNavigationItemSelected(pageIndex)
+            if (pageIndex in 0..2) {
+                binding.viewPage.setCurrentItem(pageIndex, false)
             }
         }
     }
