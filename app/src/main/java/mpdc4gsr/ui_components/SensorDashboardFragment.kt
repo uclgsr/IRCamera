@@ -188,7 +188,9 @@ class SensorDashboardFragment : Fragment() {
                 val elapsed = System.currentTimeMillis() - recordingStartTime
                 val formattedTime = formatElapsedTime(elapsed)
                 recordingTimer.text = "RECORDING: $formattedTime"
-                delay(1000)
+                // Calculate delay to next second boundary to minimize drift
+                val delayToNextSecond = 1000 - (elapsed % 1000)
+                delay(delayToNextSecond)
             }
         }
     }
