@@ -218,7 +218,7 @@ class SessionManagerActivity : BaseViewModelActivity<SessionManagerViewModel>() 
         binding.loadingView.isVisible = show
     }
 
-    protected fun showError(message: String) {
+    private fun showError(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
 
