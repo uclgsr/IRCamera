@@ -43,6 +43,7 @@ fun ComposeUnifiedDemo() {
             DemoHomeScreen(
                 onNavigateToConnect = { navController.navigate("connect") },
                 onNavigateToMonitor = { navController.navigate("monitor") },
+                onNavigateToCalibrate = { navController.navigate("calibrate") },
                 onNavigateToAnnotate = { navController.navigate("annotate") }
             )
         }
@@ -69,6 +70,17 @@ fun ComposeUnifiedDemo() {
             )
         }
         
+        composable("calibrate") {
+            CalibrateScreen(
+                onBackClick = { navController.popBackStack() },
+                onCalibrationComplete = {
+                    // Navigate back after successful calibration
+                    navController.popBackStack()
+                },
+                onCalibrationCancel = { navController.popBackStack() }
+            )
+        }
+        
         composable("annotate") {
             AnnotateScreen(
                 onBackClick = { navController.popBackStack() },
@@ -87,6 +99,7 @@ fun ComposeUnifiedDemo() {
 private fun DemoHomeScreen(
     onNavigateToConnect: () -> Unit,
     onNavigateToMonitor: () -> Unit,
+    onNavigateToCalibrate: () -> Unit,
     onNavigateToAnnotate: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -127,6 +140,13 @@ private fun DemoHomeScreen(
         }
         
         Button(
+            onClick = onNavigateToCalibrate,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Calibration Screen")
+        }
+        
+        Button(
             onClick = onNavigateToAnnotate,
             modifier = Modifier.fillMaxWidth()
         ) {
@@ -156,6 +176,7 @@ private fun DemoHomeScreen(
                     "• TitleBar component replacing TitleView",
                     "• ConnectScreen with device list (LazyColumn)",
                     "• ThermalMonitorScreen with camera preview",
+                    "• CalibrateScreen with dual-camera alignment",
                     "• Temperature overlays and measurement displays",
                     "• AnnotateScreen with report functionality",
                     "• Consistent dark theme matching reference",
