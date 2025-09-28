@@ -12,9 +12,13 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.launch
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.FragmentMainBinding
 import com.mpdc4gsr.libunified.app.bean.event.SocketMsgEvent
@@ -82,46 +86,94 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
     }
 
     private fun setupObservers() {
-        viewModel.deviceState.observe(viewLifecycleOwner) { deviceState ->
-            binding.clHasDevice.isVisible = deviceState.hasAnyDevice
-            binding.clNoDevice.isVisible = !deviceState.hasAnyDevice
+        // Device state observer with StateFlow
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.deviceState.collect { deviceState ->
+                    binding.clHasDevice.isVisible = deviceState.hasAnyDevice
+                    binding.clNoDevice.isVisible = !deviceState.hasAnyDevice
 
-            adapter.hasConnectLine = deviceState.hasConnectLine
-            adapter.hasConnectTS004 = deviceState.hasConnectTS004
-            adapter.hasConnectTC007 = deviceState.hasConnectTC007
-            adapter.notifyDataSetChanged()
-        }
-
-        viewModel.batteryInfo.observe(viewLifecycleOwner) { batteryInfo ->
-            adapter.tc007Battery = batteryInfo
-        }
-
-        viewModel.navigationEvent.observe(viewLifecycleOwner) { navigationEvent ->
-            navigationEvent?.let { event ->
-                when (event.route) {
-                    "IR_MAIN" -> {
-                        NavigationManager.getInstance()
-                            .build(RouterConfig.IR_MAIN)
-                            .withBoolean(ExtraKeyConfig.IS_TC007, event.isTC007)
-                            .navigation(requireContext())
-                    }
-
-                    "IR_MONOCULAR" -> {
-                        NavigationManager.getInstance()
-                            .build(RouterConfig.IR_MONOCULAR)
-                            .navigation(requireContext())
-                    }
-
-                    "IR_DEVICE_ADD" -> {
-                        NavigationManager.getInstance()
-                            .build(RouterConfig.IR_DEVICE_ADD)
-                            .withBoolean("isTS004", event.isTS004)
-                            .navigation(requireContext())
-                    }
+                    adapter.hasConnectLine = deviceState.hasConnectLine
+                    adapter.hasConnectTS004 = deviceState.hasConnectTS004
+                    adapter.hasConnectTC007 = deviceState.hasConnectTC007
+                    adapter.notifyDataSetChanged()
                 }
-                viewModel.clearNavigationEvent()
             }
         }
+
+        // Battery info observer with StateFlow
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.batteryInfo.collect { batteryInfo ->
+                    // Handle battery info updates
+                    batteryInfo?.let {
+                        // Update battery UI if needed
+                    }
+                }
+            }
+        }
+
+        // Navigation events observer with SharedFlow
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.navigationEvents.collect { event ->
+                    when (event) {
+                        is MainFragmentViewModel.NavigationEvent.Navigate -> {
+                            handleNavigation(event.route, event.isTC007, event.isTS004)
+                        }
+                        is MainFragmentViewModel.NavigationEvent.ShowError -> {
+                            showError(event.message)
+                        }
+                        is MainFragmentViewModel.NavigationEvent.ShowDeviceSelection -> {
+                            showDeviceSelection(event.availableDevices)
+                        }
+                        is MainFragmentViewModel.NavigationEvent.ShowDeviceAddDialog -> {
+                            showDeviceAddDialog()
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun handleNavigation(route: String, isTC007: Boolean, isTS004: Boolean) {
+        when (route) {
+            "IR_MAIN" -> {
+                NavigationManager.getInstance()
+                    .build(RouterConfig.IR_MAIN)
+                    .withBoolean(ExtraKeyConfig.IS_TC007, isTC007)
+                    .navigation(requireContext())
+            }
+
+            "IR_MONOCULAR" -> {
+                NavigationManager.getInstance()
+                    .build(RouterConfig.IR_MONOCULAR)
+                    .navigation(requireContext())
+            }
+
+            "IR_DEVICE_ADD" -> {
+                NavigationManager.getInstance()
+                    .build(RouterConfig.IR_DEVICE_ADD)
+                    .withBoolean("isTS004", isTS004)
+                    .navigation(requireContext())
+            }
+        }
+    }
+
+    private fun showError(message: String) {
+        // Show error message to user
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun showDeviceSelection(availableDevices: List<MainFragmentViewModel.ConnectType>) {
+        // Show device selection dialog
+        // Implementation depends on your dialog framework
+    }
+
+    private fun showDeviceAddDialog() {
+        // Show device add dialog
+        // Implementation depends on your dialog framework
+    }
     }
 
     private fun setupLifecycleObserver() {

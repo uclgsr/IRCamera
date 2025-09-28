@@ -3,16 +3,13 @@ package mpdc4gsr.sensors.gsr
 import android.content.Context
 import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
-import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 /**
- * ViewModel for GSR Settings - Phase 4 MVVM Implementation
+ * Modern GSR Settings ViewModel - MVVM StateFlow Implementation
  * Manages GSR sensor configuration, permissions, and device management with Repository pattern
  */
 class GSRSettingsViewModel : BaseViewModel() {
@@ -20,39 +17,51 @@ class GSRSettingsViewModel : BaseViewModel() {
     private lateinit var repository: GSRSettingsRepository
     private var gsrSensorRecorder: GSRSensorRecorder? = null
 
-    // LiveData from Repository StateFlows
-    val gsrSettings by lazy { repository.gsrSettings.asLiveData() }
-    val deviceSettings by lazy { repository.deviceSettings.asLiveData() }
+    // StateFlow from Repository
+    val gsrSettings: StateFlow<GSRSettingsRepository.GSRSettings> by lazy { 
+        repository.gsrSettings.stateIn(viewModelScope, SharingStarted.Lazily, GSRSettingsRepository.GSRSettings())
+    }
+    val deviceSettings: StateFlow<GSRSettingsRepository.DeviceSettings> by lazy { 
+        repository.deviceSettings.stateIn(viewModelScope, SharingStarted.Lazily, GSRSettingsRepository.DeviceSettings())
+    }
 
-    // UI State Management
-    private val _permissionState = MutableLiveData<PermissionState>()
-    val permissionState: LiveData<PermissionState> = _permissionState
+    // Modern UI State Management with StateFlow
+    private val _permissionState = MutableStateFlow(PermissionState(false, emptyList(), emptyList()))
+    val permissionState: StateFlow<PermissionState> = _permissionState.asStateFlow()
 
-    private val _deviceConnectionState = MutableLiveData<DeviceConnectionState>()
-    val deviceConnectionState: LiveData<DeviceConnectionState> = _deviceConnectionState
+    private val _deviceConnectionState = MutableStateFlow(DeviceConnectionState(false))
+    val deviceConnectionState: StateFlow<DeviceConnectionState> = _deviceConnectionState.asStateFlow()
 
-    private val _availableDevices = MutableLiveData<List<DeviceInfo>>()
-    val availableDevices: LiveData<List<DeviceInfo>> = _availableDevices
+    private val _availableDevices = MutableStateFlow<List<DeviceInfo>>(emptyList())
+    val availableDevices: StateFlow<List<DeviceInfo>> = _availableDevices.asStateFlow()
 
-    private val _scanningState = MutableLiveData<ScanningState>()
-    val scanningState: LiveData<ScanningState> = _scanningState
+    private val _scanningState = MutableStateFlow(ScanningState.IDLE)
+    val scanningState: StateFlow<ScanningState> = _scanningState.asStateFlow()
 
-    private val _error = MutableLiveData<String?>()
-    val error: LiveData<String?> = _error
-
-    private val _settingsAction = MutableLiveData<SettingsAction?>()
-    val settingsAction: LiveData<SettingsAction?> = _settingsAction
+    // SharedFlow for one-time events
+    private val _settingsEvents = MutableSharedFlow<SettingsEvent>()
+    val settingsEvents: SharedFlow<SettingsEvent> = _settingsEvents.asSharedFlow()
 
     // Combined state for UI optimization
-    val uiState by lazy {
-        combine(repository.gsrSettings, repository.deviceSettings) { gsrSettings, deviceSettings ->
-            UIState(gsrSettings, deviceSettings)
-        }.asLiveData()
+    val settingsUiState: StateFlow<UIState> by lazy {
+        combine(
+            if (::repository.isInitialized) repository.gsrSettings else flowOf(GSRSettingsRepository.GSRSettings()),
+            if (::repository.isInitialized) repository.deviceSettings else flowOf(GSRSettingsRepository.DeviceSettings()),
+            _permissionState,
+            _deviceConnectionState,
+            _scanningState
+        ) { gsrSettings, deviceSettings, permissions, connection, scanning ->
+            UIState(gsrSettings, deviceSettings, permissions, connection, scanning)
+        }.stateIn(viewModelScope, SharingStarted.Lazily, UIState())
     }
 
     data class UIState(
-        val gsrSettings: GSRSettingsRepository.GSRSettings,
-        val deviceSettings: GSRSettingsRepository.DeviceSettings
+        val gsrSettings: GSRSettingsRepository.GSRSettings = GSRSettingsRepository.GSRSettings(),
+        val deviceSettings: GSRSettingsRepository.DeviceSettings = GSRSettingsRepository.DeviceSettings(),
+        val permissionState: PermissionState = PermissionState(false, emptyList(), emptyList()),
+        val connectionState: DeviceConnectionState = DeviceConnectionState(false),
+        val scanningState: ScanningState = ScanningState.IDLE,
+        val isLoading: Boolean = false
     )
 
     data class PermissionState(
@@ -81,24 +90,21 @@ class GSRSettingsViewModel : BaseViewModel() {
         IDLE, SCANNING, COMPLETED, FAILED
     }
 
-    data class SettingsAction(
-        val type: ActionType,
-        val message: String? = null,
-        val data: Any? = null
-    )
-
-    enum class ActionType {
-        SHOW_PERMISSION_DIALOG,
-        SHOW_PERMISSION_DENIED_DIALOG,
-        SHOW_PERMISSION_PERMANENTLY_DENIED_DIALOG,
-        OPEN_APP_SETTINGS,
-        DEVICE_SCAN_COMPLETED,
-        DEVICE_CONNECTED,
-        DEVICE_DISCONNECTED,
-        SETTINGS_EXPORTED,
-        SETTINGS_IMPORTED,
-        CALIBRATION_STARTED,
-        CALIBRATION_COMPLETED
+    // Modern Event-driven architecture with SharedFlow
+    sealed class SettingsEvent {
+        data class ShowPermissionDialog(val permissions: List<String>) : SettingsEvent()
+        data class ShowPermissionDeniedDialog(val permissions: List<String>) : SettingsEvent()
+        data class ShowPermissionPermanentlyDeniedDialog(val permissions: List<String>) : SettingsEvent()
+        object OpenAppSettings : SettingsEvent()
+        data class DeviceScanCompleted(val message: String) : SettingsEvent()
+        data class DeviceConnected(val device: DeviceInfo, val message: String) : SettingsEvent()
+        data class DeviceDisconnected(val message: String) : SettingsEvent()
+        data class SettingsExported(val data: Map<String, Any>, val message: String) : SettingsEvent()
+        data class SettingsImported(val message: String) : SettingsEvent()
+        data class CalibrationStarted(val message: String) : SettingsEvent()
+        data class CalibrationCompleted(val message: String) : SettingsEvent()
+        data class ShowToast(val message: String) : SettingsEvent()
+        data class ShowError(val message: String) : SettingsEvent()
     }
 
     fun initialize(context: Context) {
@@ -108,11 +114,10 @@ class GSRSettingsViewModel : BaseViewModel() {
     }
 
     private fun initializeGSRRecorder(context: Context) {
-        viewModelScope.launch {
+        launchWithErrorHandling {
             try {
                 val currentSettings = repository.gsrSettings.value
                 // Create a temporary RecordingController since it's required by the constructor
-                // This will be replaced when the actual LifecycleOwner is available
                 val tempRecordingController = mpdc4gsr.controller.RecordingController(
                     context,
                     object : androidx.lifecycle.LifecycleOwner {
@@ -131,7 +136,7 @@ class GSRSettingsViewModel : BaseViewModel() {
                     connectionStatus = "Ready"
                 )
             } catch (e: Exception) {
-                _error.value = "Failed to initialize GSR recorder: ${e.message}"
+                _settingsEvents.emit(SettingsEvent.ShowError("Failed to initialize GSR recorder: ${e.message}"))
             }
         }
     }
@@ -161,43 +166,37 @@ class GSRSettingsViewModel : BaseViewModel() {
             if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
                 deniedPermissions.add(permissions[i])
                 // In a real scenario, we'd check if rationale should be shown
-                // For now, assume they're permanently denied if denied
                 permanentlyDeniedPermissions.add(permissions[i])
             }
         }
 
-        when {
-            deniedPermissions.isEmpty() -> {
-                _permissionState.value = _permissionState.value?.copy(
-                    hasAllPermissions = true,
-                    missingPermissions = emptyList()
-                )
-                enableDeviceManagement()
-            }
+        launchWithErrorHandling {
+            when {
+                deniedPermissions.isEmpty() -> {
+                    _permissionState.value = _permissionState.value.copy(
+                        hasAllPermissions = true,
+                        missingPermissions = emptyList()
+                    )
+                    enableDeviceManagement()
+                }
 
-            permanentlyDeniedPermissions.isNotEmpty() -> {
-                _settingsAction.value = SettingsAction(
-                    type = ActionType.SHOW_PERMISSION_PERMANENTLY_DENIED_DIALOG,
-                    data = permanentlyDeniedPermissions
-                )
-            }
+                permanentlyDeniedPermissions.isNotEmpty() -> {
+                    _settingsEvents.emit(SettingsEvent.ShowPermissionPermanentlyDeniedDialog(permanentlyDeniedPermissions))
+                }
 
-            else -> {
-                _settingsAction.value = SettingsAction(
-                    type = ActionType.SHOW_PERMISSION_DENIED_DIALOG,
-                    data = deniedPermissions
-                )
+                else -> {
+                    _settingsEvents.emit(SettingsEvent.ShowPermissionDeniedDialog(deniedPermissions))
+                }
             }
         }
     }
 
     fun requestPermissions() {
-        val currentState = _permissionState.value
-        if (currentState?.missingPermissions?.isNotEmpty() == true) {
-            _settingsAction.value = SettingsAction(
-                type = ActionType.SHOW_PERMISSION_DIALOG,
-                data = currentState.missingPermissions
-            )
+        launchWithErrorHandling {
+            val currentState = _permissionState.value
+            if (currentState.missingPermissions.isNotEmpty()) {
+                _settingsEvents.emit(SettingsEvent.ShowPermissionDialog(currentState.missingPermissions))
+            }
         }
     }
 
@@ -205,19 +204,16 @@ class GSRSettingsViewModel : BaseViewModel() {
         if (_scanningState.value == ScanningState.SCANNING) return
 
         _scanningState.value = ScanningState.SCANNING
-        viewModelScope.launch {
+        launchWithErrorHandling {
             try {
                 // Simulate device scanning
                 val devices = scanForDevices()
                 _availableDevices.value = devices
                 _scanningState.value = ScanningState.COMPLETED
-                _settingsAction.value = SettingsAction(
-                    type = ActionType.DEVICE_SCAN_COMPLETED,
-                    message = "Found ${devices.size} device(s)"
-                )
+                _settingsEvents.emit(SettingsEvent.DeviceScanCompleted("Found ${devices.size} device(s)"))
             } catch (e: Exception) {
                 _scanningState.value = ScanningState.FAILED
-                _error.value = "Device scan failed: ${e.message}"
+                _settingsEvents.emit(SettingsEvent.ShowError("Device scan failed: ${e.message}"))
             }
         }
     }
@@ -232,7 +228,7 @@ class GSRSettingsViewModel : BaseViewModel() {
     }
 
     fun connectToDevice(deviceInfo: DeviceInfo) {
-        viewModelScope.launch {
+        launchWithErrorHandling {
             try {
                 _deviceConnectionState.value = DeviceConnectionState(
                     isConnected = false,
@@ -259,103 +255,69 @@ class GSRSettingsViewModel : BaseViewModel() {
                     signalStrength = 85
                 )
 
-                _settingsAction.value = SettingsAction(
-                    type = ActionType.DEVICE_CONNECTED,
-                    message = "Connected to ${deviceInfo.name}"
-                )
+                _settingsEvents.emit(SettingsEvent.DeviceConnected(deviceInfo, "Connected to ${deviceInfo.name}"))
 
             } catch (e: Exception) {
                 _deviceConnectionState.value = DeviceConnectionState(
                     isConnected = false,
                     connectionStatus = "Connection failed"
                 )
-                _error.value = "Failed to connect to device: ${e.message}"
+                _settingsEvents.emit(SettingsEvent.ShowError("Failed to connect to device: ${e.message}"))
             }
         }
     }
 
     fun disconnectDevice() {
-        viewModelScope.launch {
+        launchWithErrorHandling {
             try {
                 _deviceConnectionState.value = DeviceConnectionState(
                     isConnected = false,
                     connectionStatus = "Disconnected"
                 )
-
-                _settingsAction.value = SettingsAction(
-                    type = ActionType.DEVICE_DISCONNECTED,
-                    message = "Device disconnected"
-                )
+                _settingsEvents.emit(SettingsEvent.DeviceDisconnected("Device disconnected"))
             } catch (e: Exception) {
-                _error.value = "Failed to disconnect device: ${e.message}"
+                _settingsEvents.emit(SettingsEvent.ShowError("Failed to disconnect device: ${e.message}"))
             }
         }
     }
 
     fun updateGSRSettings(settings: GSRSettingsRepository.GSRSettings) {
-        viewModelScope.launch {
-            try {
-                repository.updateGSRSettings(settings)
-                // Restart GSR recorder with new settings if needed
-                if (gsrSensorRecorder != null) {
-                    // Update sampling rate, etc.
-                }
-            } catch (e: Exception) {
-                _error.value = "Failed to update GSR settings: ${e.message}"
+        launchWithErrorHandling {
+            repository.updateGSRSettings(settings)
+            // Restart GSR recorder with new settings if needed
+            if (gsrSensorRecorder != null) {
+                // Update sampling rate, etc.
             }
         }
     }
 
     fun updateDeviceSettings(settings: GSRSettingsRepository.DeviceSettings) {
-        viewModelScope.launch {
-            try {
-                repository.updateDeviceSettings(settings)
-            } catch (e: Exception) {
-                _error.value = "Failed to update device settings: ${e.message}"
-            }
+        launchWithErrorHandling {
+            repository.updateDeviceSettings(settings)
         }
     }
 
     fun exportSettings() {
-        viewModelScope.launch {
-            try {
-                val settingsMap = repository.exportSettings()
-                _settingsAction.value = SettingsAction(
-                    type = ActionType.SETTINGS_EXPORTED,
-                    message = "Settings exported successfully",
-                    data = settingsMap
-                )
-            } catch (e: Exception) {
-                _error.value = "Failed to export settings: ${e.message}"
-            }
+        launchWithErrorHandling {
+            val settingsMap = repository.exportSettings()
+            _settingsEvents.emit(SettingsEvent.SettingsExported(settingsMap, "Settings exported successfully"))
         }
     }
 
     fun importSettings(settingsMap: Map<String, Any>) {
-        viewModelScope.launch {
-            try {
-                val success = repository.importSettings(settingsMap)
-                if (success) {
-                    _settingsAction.value = SettingsAction(
-                        type = ActionType.SETTINGS_IMPORTED,
-                        message = "Settings imported successfully"
-                    )
-                } else {
-                    _error.value = "Failed to import settings: Invalid format"
-                }
-            } catch (e: Exception) {
-                _error.value = "Failed to import settings: ${e.message}"
+        launchWithErrorHandling {
+            val success = repository.importSettings(settingsMap)
+            if (success) {
+                _settingsEvents.emit(SettingsEvent.SettingsImported("Settings imported successfully"))
+            } else {
+                _settingsEvents.emit(SettingsEvent.ShowError("Failed to import settings: Invalid format"))
             }
         }
     }
 
     fun resetToDefaults() {
-        viewModelScope.launch {
-            try {
-                repository.resetToDefaults()
-            } catch (e: Exception) {
-                _error.value = "Failed to reset settings: ${e.message}"
-            }
+        launchWithErrorHandling {
+            repository.resetToDefaults()
         }
     }
 
@@ -390,14 +352,6 @@ class GSRSettingsViewModel : BaseViewModel() {
             }
         }
         return missing
-    }
-
-    fun clearError() {
-        _error.value = null
-    }
-
-    fun clearAction() {
-        _settingsAction.value = null
     }
 
     companion object {

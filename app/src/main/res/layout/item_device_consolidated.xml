@@ -119,7 +119,7 @@
                 android:layout_width="16dp"
                 android:layout_height="16dp"
                 android:contentDescription="Signal strength"
-                android:src="@android:drawable/stat_sys_signal_4"
+                android:src="@android:drawable/ic_dialog_info"
                 android:tint="@color/signal_strength_color"
                 android:visibility="@{isConnected ? View.VISIBLE : View.GONE}"
                 app:layout_constraintEnd_toStartOf="@+id/battery_level_text"

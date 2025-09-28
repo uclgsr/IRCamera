@@ -29,8 +29,8 @@ class IRThermalFragmentViewModel : BaseViewModel() {
     val permissionState: LiveData<PermissionState> = _permissionState
 
     // UI state management
-    private val _uiState = MutableStateFlow(ThermalUIState())
-    val uiState: StateFlow<ThermalUIState> = _uiState.asStateFlow()
+    private val _thermalUiState = MutableStateFlow(ThermalUIState())
+    val thermalUiState: StateFlow<ThermalUIState> = _thermalUiState.asStateFlow()
 
     // Action events for dialogs and operations
     private val _thermalAction = MutableLiveData<ThermalAction>()
@@ -45,7 +45,7 @@ class IRThermalFragmentViewModel : BaseViewModel() {
             // Monitor device connections and update UI state accordingly
             combine(
                 _deviceConnectionState,
-                _uiState
+                _thermalUiState
             ) { connectionState, uiState ->
                 uiState.copy(
                     isConnected = connectionState.hasConnection,
@@ -53,7 +53,7 @@ class IRThermalFragmentViewModel : BaseViewModel() {
                     showConnectButton = !connectionState.hasConnection && connectionState.hasUsbDevice
                 )
             }.collect { newUiState ->
-                _uiState.value = newUiState
+                _thermalUiState.value = newUiState
             }
         }
     }
