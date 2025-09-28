@@ -61,10 +61,7 @@ camerax = "1.5.0"
 coroutines = "1.9.0"
 
 
-# Compose BOM and dependencies
-composeBom = "2024.12.01"
-composeCompiler = "1.5.15"
-composeActivity = "1.9.3"
+
 
 kotlinxSerialization = "1.7.3"
 
@@ -305,15 +302,6 @@ camerax-video = { group = "androidx.camera", name = "camera-video", version.ref 
 camerax-view = { group = "androidx.camera", name = "camera-view", version.ref = "camerax" }
 camerax-extensions = { group = "androidx.camera", name = "camera-extensions", version.ref = "camerax" }
 
-# Compose dependencies
-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
-compose-ui = { group = "androidx.compose.ui", name = "ui" }
-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
-compose-activity = { group = "androidx.activity", name = "activity-compose", version.ref = "composeActivity" }
-compose-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycle" }
-compose-navigation = { group = "androidx.navigation", name = "navigation-compose", version = "2.8.5" }
 compose-constraint-layout = { group = "androidx.constraintlayout", name = "constraintlayout-compose", version = "1.1.0" }
 
 
