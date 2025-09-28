@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:overScrollMode="ifContentScrolls"
+    android:scrollbars="vertical">
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="32dp">
+
+    <!-- Title -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:text="@string/enhanced_fault_tolerant_recording_title"
+        android:textColor="@color/text_primary"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <!-- Status text -->
+    <TextView
+        android:id="@+id/status_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="@string/initializing_enhanced_recording_system"
+        android:textColor="@color/text_primary" />
+
+    <!-- Progress bar -->
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+
+    <!-- Sensor status -->
+    <TextView
+        android:id="@+id/sensor_status_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="@string/sensor_status_initializing"
+        android:textColor="@color/text_secondary" />
+
+    <!-- Start button -->
+    <Button
+        android:id="@+id/start_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:enabled="false"
+        android:text="@string/start_enhanced_recording" />
+
+    <!-- Stop button -->
+    <Button
+        android:id="@+id/stop_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:enabled="false"
+        android:text="@string/stop_recording" />
+
+    <!-- Back button -->
+    <Button
+        android:id="@+id/back_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/back" />
+
+</LinearLayout>
+
+</androidx.core.widget.NestedScrollView>

@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_16131E"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Title -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:gravity="center"
+        android:text="Network Client Test"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <!-- Connection Status -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:background="@color/black"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="12dp">
+
+        <ImageView
+            android:id="@+id/connection_status_indicator"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginEnd="8dp"
+            android:src="@android:drawable/presence_offline" />
+
+        <TextView
+            android:id="@+id/connection_status_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Disconnected"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+    <!-- Wi-Fi Connection Section -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:background="@color/color_16131E"
+        android:orientation="vertical"
+        android:padding="12dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="Wi-Fi Connection"
+            android:textColor="#FF6B35"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/ip_address_input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:hint="IP Address"
+                android:padding="8dp"
+                android:text="192.168.1.100"
+                android:textColor="@color/white"
+                android:textColorHint="#AAAAAA" />
+
+            <EditText
+                android:id="@+id/port_input"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:hint="Port"
+                android:inputType="number"
+                android:padding="8dp"
+                android:text="8080"
+                android:textColor="@color/white"
+                android:textColorHint="#AAAAAA" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/connect_wifi_button"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                android:backgroundTint="#FF6B35"
+                android:clickable="true"
+                android:focusable="true"
+                android:text="Connect Wi-Fi"
+                android:textColor="@color/white" />
+
+            <Button
+                android:id="@+id/test_ping_button"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="#4CAF50"
+                android:clickable="true"
+                android:enabled="false"
+                android:focusable="true"
+                android:text="Test Ping"
+                android:textColor="@color/white" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Bluetooth Connection Section -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:background="@color/color_16131E"
+        android:orientation="vertical"
+        android:padding="12dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="Bluetooth Connection"
+            android:textColor="#2196F3"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/connect_bluetooth_button"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                android:backgroundTint="#2196F3"
+                android:clickable="true"
+                android:focusable="true"
+                android:text="Connect Bluetooth"
+                android:textColor="@color/white" />
+
+            <Button
+                android:id="@+id/disconnect_button"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="#F44336"
+                android:clickable="true"
+                android:enabled="false"
+                android:focusable="true"
+                android:text="Disconnect"
+                android:textColor="@color/white" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Connection Info -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="Connection Information"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/white">
+
+        <TextView
+            android:id="@+id/connection_info_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="monospace"
+            android:padding="8dp"
+            android:text="No connection information available"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+
+    </ScrollView>
+
+</LinearLayout>
