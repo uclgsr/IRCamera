@@ -257,6 +257,12 @@
             android:exported="false"
             android:label="GSR Data Viewer (Compose)"
             android:theme="@style/AppTheme" />
+            
+        <activity
+            android:name="mpdc4gsr.sensors.gsr.GSRVideoPlayerComposeActivity"
+            android:exported="false"
+            android:label="GSR Video Player (Compose)"
+            android:theme="@style/AppTheme" />
         <activity
             android:name="mpdc4gsr.sensors.gsr.SessionExportActivity"
             android:exported="false"

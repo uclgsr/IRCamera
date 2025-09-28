@@ -435,6 +435,13 @@ private fun InteractiveDemosCard(
                 icon = Icons.Default.Widgets,
                 onClick = onNavigateToComponentShowcase
             )
+            
+            DemoItem(
+                title = "Testing Suite",
+                description = "Comprehensive testing and validation",
+                icon = Icons.Default.Science,
+                onClick = { /* Navigate to testing suite */ }
+            )
         }
     }
 }

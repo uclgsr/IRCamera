@@ -12,6 +12,7 @@ import mpdc4gsr.activities.*
 import mpdc4gsr.sensors.gsr.GSRSettingsComposeActivity
 import mpdc4gsr.sensors.gsr.SessionDetailComposeActivity
 import mpdc4gsr.compose.screens.*
+import mpdc4gsr.compose.testing.TestResultsScreen
 
 /**
  * Unified Navigation System - Phase 2 Implementation
@@ -59,6 +60,7 @@ sealed class UnifiedRoute(val route: String) {
     // Development and Demo Routes
     object ModernizationProgress : UnifiedRoute("modernization_progress")
     object ComponentShowcase : UnifiedRoute("component_showcase")
+    object TestingSuite : UnifiedRoute("testing_suite")
 }
 
 @Composable
@@ -206,6 +208,12 @@ fun UnifiedNavHost(
         
         composable(UnifiedRoute.ComponentShowcase.route) {
             ComponentShowcaseScreen(
+                onBackClick = { navController.popBackStack() }
+            )
+        }
+        
+        composable(UnifiedRoute.TestingSuite.route) {
+            TestResultsScreen(
                 onBackClick = { navController.popBackStack() }
             )
         }
