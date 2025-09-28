@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
+import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
@@ -17,8 +18,9 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
 import com.csl.irCamera.R
-import com.csl.irCamera.databinding.ActivityGsrSettingsBinding
+import com.csl.irCamera.databinding.ActivityGsrSettingsWithNavBinding
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModelActivity
+import com.mpdc4gsr.libunified.app.navigation.BottomNavigationHelper
 
 /**
  * GSRSettingsActivity - Phase 4 MVVM Implementation
@@ -43,16 +45,16 @@ class GSRSettingsActivity : BaseViewModelActivity<GSRSettingsViewModel>() {
         }
     }
 
-    private lateinit var binding: ActivityGsrSettingsBinding
+    private lateinit var binding: ActivityGsrSettingsWithNavBinding
     private lateinit var deviceAdapter: ArrayAdapter<String>
     private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
 
     override fun providerVMClass(): Class<GSRSettingsViewModel> = GSRSettingsViewModel::class.java
 
-    override fun initContentView() = R.layout.activity_gsr_settings
+    override fun initContentView() = R.layout.activity_gsr_settings_with_nav
 
     override fun initView() {
-        binding = ActivityGsrSettingsBinding.inflate(layoutInflater)
+        binding = ActivityGsrSettingsWithNavBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         setupPermissionHandling()
@@ -87,6 +89,87 @@ class GSRSettingsActivity : BaseViewModelActivity<GSRSettingsViewModel>() {
     private fun setupUI() {
         setupDeviceSpinner()
         setupSettingsControls()
+        setupBottomNavigation()
+    }
+
+    private fun setupBottomNavigation() {
+        // Setup navigation click listeners for the included bottom navigation
+        binding.bottomNavigation.clNavGallery.setOnClickListener {
+            // Navigate to Gallery
+            handleNavigation(BottomNavigationHelper.NavigationPage.GALLERY)
+        }
+        
+        binding.bottomNavigation.clNavMain.setOnClickListener {
+            // Navigate to Main
+            handleNavigation(BottomNavigationHelper.NavigationPage.MAIN)
+        }
+        
+        binding.bottomNavigation.clNavMine.setOnClickListener {
+            // Navigate to Mine/Profile
+            handleNavigation(BottomNavigationHelper.NavigationPage.MINE)
+        }
+        
+        // Set current page as MAIN (settings is part of main functionality)
+        updateNavigationSelection(BottomNavigationHelper.NavigationPage.MAIN)
+    }
+    
+    private fun handleNavigation(page: BottomNavigationHelper.NavigationPage) {
+        try {
+            when (page) {
+                BottomNavigationHelper.NavigationPage.GALLERY -> {
+                    val intent = Intent()
+                    intent.setClassName(this, "mpdc4gsr.activities.MainActivity")
+                    intent.putExtra("page", 0)
+                    startActivity(intent)
+                    finish()
+                }
+                BottomNavigationHelper.NavigationPage.MAIN -> {
+                    val intent = Intent()
+                    intent.setClassName(this, "mpdc4gsr.activities.MainActivity")
+                    intent.putExtra("page", 1)
+                    startActivity(intent)
+                    finish()
+                }
+                BottomNavigationHelper.NavigationPage.MINE -> {
+                    val intent = Intent()
+                    intent.setClassName(this, "mpdc4gsr.activities.MainActivity")
+                    intent.putExtra("page", 2)
+                    startActivity(intent)
+                    finish()
+                }
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Navigation failed", e)
+        }
+    }
+    
+    private fun updateNavigationSelection(currentPage: BottomNavigationHelper.NavigationPage) {
+        // Reset all selections
+        binding.bottomNavigation.ivNavGallery.isSelected = false
+        binding.bottomNavigation.tvNavGallery.isSelected = false
+        binding.bottomNavigation.ivNavMain.isSelected = false
+        binding.bottomNavigation.tvNavMain.isSelected = false
+        binding.bottomNavigation.ivNavMine.isSelected = false
+        binding.bottomNavigation.tvNavMine.isSelected = false
+        
+        // Set current selection
+        when (currentPage) {
+            BottomNavigationHelper.NavigationPage.GALLERY -> {
+                binding.bottomNavigation.ivNavGallery.isSelected = true
+                binding.bottomNavigation.tvNavGallery.isSelected = true
+                binding.bottomNavigation.ivBottomBg.setImageResource(R.drawable.ic_main_bg_not_select)
+            }
+            BottomNavigationHelper.NavigationPage.MAIN -> {
+                binding.bottomNavigation.ivNavMain.isSelected = true
+                binding.bottomNavigation.tvNavMain.isSelected = true
+                binding.bottomNavigation.ivBottomBg.setImageResource(R.drawable.ic_main_bg_select)
+            }
+            BottomNavigationHelper.NavigationPage.MINE -> {
+                binding.bottomNavigation.ivNavMine.isSelected = true
+                binding.bottomNavigation.tvNavMine.isSelected = true
+                binding.bottomNavigation.ivBottomBg.setImageResource(R.drawable.ic_main_bg_not_select)
+            }
+        }
     }
 
     private fun setupDeviceSpinner() {
@@ -234,7 +317,7 @@ class GSRSettingsActivity : BaseViewModelActivity<GSRSettingsViewModel>() {
     private fun updateDeviceSettingsUI(settings: GSRSettingsRepository.DeviceSettings) {
         // binding.autoReconnectSwitch?.isChecked = settings.autoReconnect
         // binding.keepConnectedSwitch?.isChecked = settings.keepDeviceConnected
-        binding.gsrCalibrationSwitch?.isChecked = settings.deviceCalibrationEnabled
+        // binding.gsrCalibrationSwitch?.isChecked = settings.deviceCalibrationEnabled
 
         // Update selected device display - commented out as it doesn't exist in current layout
         // binding.selectedDeviceText?.text = settings.deviceName ?: "No device selected"
@@ -262,7 +345,7 @@ class GSRSettingsActivity : BaseViewModelActivity<GSRSettingsViewModel>() {
 
     private fun updateDeviceConnectionUI(connectionState: GSRSettingsViewModel.DeviceConnectionState) {
         // binding.connectionStatusText?.text = connectionState.connectionStatus
-        binding.connectDeviceButton?.isVisible = !connectionState.isConnected
+        // binding.connectDeviceButton?.isVisible = !connectionState.isConnected
         // binding.disconnectButton?.isVisible = connectionState.isConnected
 
         connectionState.deviceInfo?.let { device ->
@@ -280,8 +363,8 @@ class GSRSettingsActivity : BaseViewModelActivity<GSRSettingsViewModel>() {
     }
 
     private fun updateScanningUI(scanningState: GSRSettingsViewModel.ScanningState) {
-        binding.scanDevicesButton?.isEnabled =
-            scanningState != GSRSettingsViewModel.ScanningState.SCANNING
+        // binding.scanDevicesButton?.isEnabled =
+        //     scanningState != GSRSettingsViewModel.ScanningState.SCANNING
         // binding.scanProgressBar?.isVisible = scanningState == GSRSettingsViewModel.ScanningState.SCANNING
 
         // binding.scanStatusText?.text = when (scanningState) {
