@@ -1,6 +1,7 @@
 package mpdc4gsr.camera.integration
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.widget.LinearLayout
@@ -10,7 +11,9 @@ import androidx.activity.viewModels
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import com.csl.irCamera.R
+import com.csl.irCamera.databinding.ActivityDualModeCameraBinding
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModelActivity
+import mpdc4gsr.activities.MainActivity
 
 class DualModeCameraActivity : BaseViewModelActivity<DualModeCameraViewModel>() {
     private lateinit var previewView: PreviewView
@@ -35,6 +38,7 @@ class DualModeCameraActivity : BaseViewModelActivity<DualModeCameraViewModel>() 
     override fun initView() {
         previewView = findViewById(R.id.preview_view)
         cameraModeSelector = findViewById(R.id.camera_mode_selector)
+        setupBottomNavigation()
 
         val initialMode = intent.getStringExtra("INITIAL_MODE") ?: "VIDEO_4K"
         val enableSamsungOptimizations =
@@ -43,6 +47,33 @@ class DualModeCameraActivity : BaseViewModelActivity<DualModeCameraViewModel>() 
         setupObservers()
         viewModel.initialize(initialMode, enableSamsungOptimizations)
         checkCameraPermission()
+    }
+
+    private fun setupBottomNavigation() {
+        val bottomNavigation = findViewById<androidx.constraintlayout.widget.ConstraintLayout>(R.id.bottom_navigation)
+        
+        bottomNavigation.findViewById<androidx.constraintlayout.widget.ConstraintLayout>(R.id.cl_nav_gallery)?.setOnClickListener {
+            navigateToMainActivity(0) // Gallery page
+        }
+        
+        bottomNavigation.findViewById<androidx.constraintlayout.widget.ConstraintLayout>(R.id.cl_nav_main)?.setOnClickListener {
+            navigateToMainActivity(1) // Main page
+        }
+        
+        bottomNavigation.findViewById<androidx.constraintlayout.widget.ConstraintLayout>(R.id.cl_nav_mine)?.setOnClickListener {
+            navigateToMainActivity(2) // Mine page
+        }
+        
+        // Update navigation background to show main is selected (camera is main functionality)
+        bottomNavigation.findViewById<android.widget.ImageView>(R.id.iv_navigation_bg)?.setImageResource(R.drawable.ic_main_bg_select)
+    }
+
+    private fun navigateToMainActivity(pageIndex: Int) {
+        val intent = Intent(this, MainActivity::class.java).apply {
+            putExtra("page", pageIndex)
+        }
+        startActivity(intent)
+        finish()
     }
 
     private fun setupObservers() {
