@@ -236,6 +236,33 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                     }
                 )
 
+                LauncherCard(
+                    title = "Terms & Conditions (Compose)",
+                    subtitle = "Modern agreement screen with interactive elements",
+                    icon = Icons.Default.Assignment,
+                    onClick = { 
+                        startActivity(Intent(this@ComposeMigrationLauncherActivity, ClauseActivityCompose::class.java))
+                    }
+                )
+
+                LauncherCard(
+                    title = "Network Configuration (Compose)",
+                    subtitle = "Advanced network setup with device discovery",
+                    icon = Icons.Default.NetworkCheck,
+                    onClick = { 
+                        startActivity(Intent(this@ComposeMigrationLauncherActivity, NetworkConfigActivityCompose::class.java))
+                    }
+                )
+
+                LauncherCard(
+                    title = "Unified Sensor Control (Compose)",
+                    subtitle = "Comprehensive sensor management and monitoring",
+                    icon = Icons.Default.Sensors,
+                    onClick = { 
+                        startActivity(Intent(this@ComposeMigrationLauncherActivity, UnifiedSensorActivityCompose::class.java))
+                    }
+                )
+
                 // Comparison option
                 Card(
                     modifier = Modifier.fillMaxWidth(),

@@ -53,6 +53,9 @@
     <string name="device_type_selection">Device Type Selection</string>
     <string name="connection_help">Connection Help</string>
     <string name="disconnection_troubleshooting">Troubleshooting Guide</string>
+    <string name="terms_and_conditions">Terms and Conditions</string>
+    <string name="network_configuration">Network Configuration</string>
+    <string name="unified_sensor_control">Unified Sensor Control</string>
 
     <string name="version_code">1.0</string>
     <string name="top_infrared_up_case">MPDC4GSR</string>
