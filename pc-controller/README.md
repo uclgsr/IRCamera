@@ -30,7 +30,7 @@ The current controller consolidates features from three previous implementations
 The PC Controller implements a **Hub-and-Spoke Model** where:
 
 - **Hub (PC Controller)**: Central coordinator with PyQt6 GUI
-- **Spokes (Android Nodes)**: Mobile sensor nodes with thermal, GSR, and RGB capabilities  
+- **Spokes (Android Nodes)**: Mobile sensor nodes with thermal, GSR, and RGB capabilities
 - **Communication**: JSON-based TCP protocol with mDNS device discovery
 - **Purpose**: Scientific data acquisition and machine learning analysis
 
