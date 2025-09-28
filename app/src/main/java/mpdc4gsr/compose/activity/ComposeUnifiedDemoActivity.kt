@@ -14,6 +14,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import mpdc4gsr.compose.screens.*
+import mpdc4gsr.compose.sensors.gsr.GSRSensorScreen
+import mpdc4gsr.compose.sensors.camera.RGBCameraScreen
 import mpdc4gsr.compose.theme.IRCameraTheme
 
 /**
@@ -44,7 +46,10 @@ fun ComposeUnifiedDemo() {
                 onNavigateToConnect = { navController.navigate("connect") },
                 onNavigateToMonitor = { navController.navigate("monitor") },
                 onNavigateToCalibrate = { navController.navigate("calibrate") },
-                onNavigateToAnnotate = { navController.navigate("annotate") }
+                onNavigateToAnnotate = { navController.navigate("annotate") },
+                onNavigateToUnifiedDashboard = { navController.navigate("unified_dashboard") },
+                onNavigateToGSR = { navController.navigate("gsr_sensor") },
+                onNavigateToRGBCamera = { navController.navigate("rgb_camera") }
             )
         }
         
@@ -92,6 +97,46 @@ fun ComposeUnifiedDemo() {
                 }
             )
         }
+        
+        composable("unified_dashboard") {
+            UnifiedSensorDashboard(
+                onBackClick = { navController.popBackStack() },
+                onSettingsClick = {
+                    // Settings functionality
+                },
+                onSensorClick = { sensorType ->
+                    when (sensorType) {
+                        SensorType.GSR -> navController.navigate("gsr_sensor")
+                        SensorType.ThermalIR -> navController.navigate("monitor")
+                        SensorType.RGBCamera -> navController.navigate("rgb_camera")
+                    }
+                }
+            )
+        }
+        
+        composable("gsr_sensor") {
+            GSRSensorScreen(
+                onBackClick = { navController.popBackStack() },
+                onSettingsClick = {
+                    // GSR settings functionality
+                },
+                onSaveData = {
+                    // Save GSR data functionality
+                }
+            )
+        }
+        
+        composable("rgb_camera") {
+            RGBCameraScreen(
+                onBackClick = { navController.popBackStack() },
+                onSettingsClick = {
+                    // RGB camera settings functionality
+                },
+                onCapturePhoto = {
+                    // Capture photo functionality
+                }
+            )
+        }
     }
 }
 
@@ -101,6 +146,9 @@ private fun DemoHomeScreen(
     onNavigateToMonitor: () -> Unit,
     onNavigateToCalibrate: () -> Unit,
     onNavigateToAnnotate: () -> Unit,
+    onNavigateToUnifiedDashboard: () -> Unit,
+    onNavigateToGSR: () -> Unit,
+    onNavigateToRGBCamera: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -117,12 +165,70 @@ private fun DemoHomeScreen(
         )
         
         Text(
-            text = "Unified UI Implementation",
+            text = "Unified Multi-Modal Sensor UI",
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onBackground
         )
         
         Spacer(modifier = Modifier.height(32.dp))
+        
+        // Unified dashboard button (featured)
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.primary
+            )
+        ) {
+            Button(
+                onClick = onNavigateToUnifiedDashboard,
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Transparent
+                )
+            ) {
+                Text(
+                    "🚀 Unified Sensor Dashboard",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+        }
+        
+        Spacer(modifier = Modifier.height(16.dp))
+        
+        // Individual sensor screens
+        Text(
+            text = "Individual Sensor Screens:",
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.onBackground
+        )
+        
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Button(
+                onClick = onNavigateToGSR,
+                modifier = Modifier.weight(1f)
+            ) {
+                Text("GSR Sensor", fontSize = 12.sp)
+            }
+            Button(
+                onClick = onNavigateToRGBCamera,
+                modifier = Modifier.weight(1f)
+            ) {
+                Text("RGB Camera", fontSize = 12.sp)
+            }
+        }
+        
+        Spacer(modifier = Modifier.height(16.dp))
+        
+        // Original thermal camera screens
+        Text(
+            text = "Thermal Camera Screens:",
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.onBackground
+        )
         
         // Demo navigation buttons
         Button(
@@ -173,14 +279,18 @@ private fun DemoHomeScreen(
                 Spacer(modifier = Modifier.height(8.dp))
                 
                 val features = listOf(
-                    "• TitleBar component replacing TitleView",
-                    "• ConnectScreen with device list (LazyColumn)",
-                    "• ThermalMonitorScreen with camera preview",
-                    "• CalibrateScreen with dual-camera alignment",
-                    "• Temperature overlays and measurement displays",
-                    "• AnnotateScreen with report functionality",
-                    "• Consistent dark theme matching reference",
-                    "• Navigation between all screens"
+                    "✅ Unified Multi-Modal Sensor Dashboard",
+                    "✅ GSR (Galvanic Skin Response) Sensor Screen",
+                    "✅ RGB Camera Control and Recording Screen", 
+                    "✅ Thermal IR Camera with Temperature Overlays",
+                    "✅ TitleBar component replacing TitleView",
+                    "✅ ConnectScreen with device list (LazyColumn)",
+                    "✅ ThermalMonitorScreen with camera preview",
+                    "✅ CalibrateScreen with dual-camera alignment",
+                    "✅ AnnotateScreen with report functionality",
+                    "✅ Real-time sensor data visualization",
+                    "✅ Consistent dark theme matching reference",
+                    "✅ Complete navigation between all screens"
                 )
                 
                 features.forEach { feature ->
