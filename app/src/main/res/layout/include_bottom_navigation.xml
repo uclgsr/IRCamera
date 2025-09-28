@@ -43,7 +43,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_chainStyle="packed"
-            app:layout_constraintWidth_percent="0.24" />
+            app:layout_constraintWidth_percent="0.17" />
 
         <TextView
             android:id="@+id/tv_nav_gallery"
