@@ -187,6 +187,13 @@
         <activity
             android:name=".lite.ui.activity.IrDisplayActivity"
             android:screenOrientation="userPortrait" />
+
+        <!-- Jetpack Compose Activities - Thermal Module -->
+        <activity
+            android:name=".activity.ThermalCameraComposeActivity"
+            android:exported="false"
+            android:label="Thermal Camera (Compose)"
+            android:screenOrientation="userPortrait" />
     </application>
 
 </manifest>

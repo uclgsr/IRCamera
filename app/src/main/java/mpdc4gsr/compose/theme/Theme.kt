@@ -21,7 +21,7 @@ private val DarkColorScheme = darkColorScheme(
     errorContainer = Color(0xFF93000A),
     onError = Color(0xFF690005),
     onErrorContainer = Color(0xFFFFDAD6),
-    background = Color(0xFF16131e), // Match reference app background
+    background = Color(0xFF16131e),
     onBackground = Color(0xFFE6E6E6),
     surface = Color(0xFF1E1E1E),
     onSurface = Color(0xFFE6E6E6),
@@ -65,6 +65,7 @@ private val LightColorScheme = lightColorScheme(
 fun IRCameraTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     dynamicColor: Boolean = false, // Disabled for consistent thermal imaging theme
+
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
@@ -75,6 +76,7 @@ fun IRCameraTheme(
     MaterialTheme(
         colorScheme = colorScheme,
         typography = Typography,
+
         content = content
     )
 }

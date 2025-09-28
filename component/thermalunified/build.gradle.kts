@@ -1,6 +1,7 @@
 plugins {
     id("com.android.library")
     kotlin("android")
+    alias(libs.plugins.kotlin.compose)
     id("kotlin-parcelize")
     id("com.google.devtools.ksp")
 }
@@ -58,6 +59,7 @@ android {
     buildFeatures {
         viewBinding = true
         dataBinding = true
+        compose = true
     }
 
     lint {
@@ -72,6 +74,11 @@ dependencies {
     implementation(project(":BleModule"))
     implementation(project(":libunified"))
     implementation(project(":component:user"))
+
+    // Jetpack Compose
+    implementation(platform(libs.compose.bom))
+    implementation(libs.bundles.compose.core)
+    debugImplementation(libs.bundles.compose.debug)
 
     // Core Android libraries
     implementation(libs.androidx.core.ktx)
