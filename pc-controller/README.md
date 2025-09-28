@@ -53,7 +53,7 @@ The PC Controller implements a **Hub-and-Spoke Model** where:
 
 ### Core Functionality
 - **Device Management**: Automatic mDNS discovery and manual device addition
-- **Session Lifecycle**: Complete recording session coordination  
+- **Session Lifecycle**: Complete recording session coordination
 - **Multi-Modal Synchronization**: Precise temporal alignment across sensors
 - **Real-Time Communication**: TCP/JSON protocol with command acknowledgments
 - **Professional GUI**: Comprehensive PyQt6 interface for researchers
