@@ -73,6 +73,9 @@ abstract class BaseRepository(
     /**
      * Get cached data or execute operation
      */
+    // The unchecked cast from CachedData<Any> to CachedData<T> is safe here because
+    // each cacheKey is always associated with a single type T for the lifetime of the cache entry.
+    // The function contract ensures that the same key is not reused for different types.
     @Suppress("UNCHECKED_CAST")
     protected suspend fun <T> getCachedOrExecute(
         cacheKey: String,
