@@ -19,17 +19,15 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.csl.irCamera.R
-import com.csl.irCamera.databinding.ActivitySessionManagerWithNavBinding
+import com.csl.irCamera.databinding.ActivitySessionManagerBinding
 import com.mpdc4gsr.gsr.model.SessionInfo
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModelActivity
-import com.mpdc4gsr.libunified.app.navigation.BottomNavigationHelper
-import mpdc4gsr.activities.MainActivity
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-class SessionManagerActivity : BaseViewModelActivity<SessionManagerViewModel>(), BottomNavigationHelper.NavigationHandler {
-    private lateinit var binding: ActivitySessionManagerWithNavBinding
+class SessionManagerActivity : BaseViewModelActivity<SessionManagerViewModel>() {
+    private lateinit var binding: ActivitySessionManagerBinding
     private lateinit var adapter: SessionAdapter
 
     companion object {
@@ -43,10 +41,10 @@ class SessionManagerActivity : BaseViewModelActivity<SessionManagerViewModel>(),
     override fun providerVMClass(): Class<SessionManagerViewModel> =
         SessionManagerViewModel::class.java
 
-    override fun initContentView() = R.layout.activity_session_manager_with_nav
+    override fun initContentView() = R.layout.activity_session_manager
 
     override fun initView() {
-        binding = ActivitySessionManagerWithNavBinding.inflate(layoutInflater)
+        binding = ActivitySessionManagerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         initializeViews()
@@ -66,103 +64,6 @@ class SessionManagerActivity : BaseViewModelActivity<SessionManagerViewModel>(),
     private fun initializeViews() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = "Session Manager"
-        setupBottomNavigation()
-    }
-
-    private fun setupBottomNavigation() {
-        // Setup navigation click listeners for the included bottom navigation
-        binding.bottomNavigation.clNavGallery.setOnClickListener {
-            handleNavigation(BottomNavigationHelper.NavigationPage.GALLERY)
-        }
-        
-        binding.bottomNavigation.clNavMain.setOnClickListener {
-            handleNavigation(BottomNavigationHelper.NavigationPage.MAIN)
-        }
-        
-        binding.bottomNavigation.clNavMine.setOnClickListener {
-            handleNavigation(BottomNavigationHelper.NavigationPage.MINE)
-        }
-        
-        // Set current page as MAIN (session management is part of main functionality)
-        updateNavigationSelection(BottomNavigationHelper.NavigationPage.MAIN)
-    }
-    
-    override fun navigateToPage(page: BottomNavigationHelper.NavigationPage) {
-        val pageIndex = when (page) {
-            BottomNavigationHelper.NavigationPage.GALLERY -> 0
-            BottomNavigationHelper.NavigationPage.MAIN -> 1
-            BottomNavigationHelper.NavigationPage.MINE -> 2
-        }
-        
-        try {
-            val intent = Intent().apply {
-                setClassName(this@SessionManagerActivity, MainActivity::class.java.name)
-                putExtra("page", pageIndex)
-            }
-            startActivity(intent)
-            finish()
-        } catch (e: Exception) {
-            android.util.Log.e(TAG, "Navigation failed", e)
-        }
-    }
-    
-    private fun handleNavigation(page: BottomNavigationHelper.NavigationPage) {
-        try {
-            when (page) {
-                BottomNavigationHelper.NavigationPage.GALLERY -> {
-                    val intent = Intent()
-                    intent.setClassName(this, "mpdc4gsr.activities.MainActivity")
-                    intent.putExtra("page", 0)
-                    startActivity(intent)
-                    finish()
-                }
-                BottomNavigationHelper.NavigationPage.MAIN -> {
-                    val intent = Intent()
-                    intent.setClassName(this, "mpdc4gsr.activities.MainActivity")
-                    intent.putExtra("page", 1)
-                    startActivity(intent)
-                    finish()
-                }
-                BottomNavigationHelper.NavigationPage.MINE -> {
-                    val intent = Intent()
-                    intent.setClassName(this, "mpdc4gsr.activities.MainActivity")
-                    intent.putExtra("page", 2)
-                    startActivity(intent)
-                    finish()
-                }
-            }
-        } catch (e: Exception) {
-            android.util.Log.e(TAG, "Navigation failed", e)
-        }
-    }
-    
-    private fun updateNavigationSelection(currentPage: BottomNavigationHelper.NavigationPage) {
-        // Reset all selections
-        binding.bottomNavigation.ivNavGallery.isSelected = false
-        binding.bottomNavigation.tvNavGallery.isSelected = false
-        binding.bottomNavigation.ivNavMain.isSelected = false
-        binding.bottomNavigation.tvNavMain.isSelected = false
-        binding.bottomNavigation.ivNavMine.isSelected = false
-        binding.bottomNavigation.tvNavMine.isSelected = false
-        
-        // Set current selection
-        when (currentPage) {
-            BottomNavigationHelper.NavigationPage.GALLERY -> {
-                binding.bottomNavigation.ivNavGallery.isSelected = true
-                binding.bottomNavigation.tvNavGallery.isSelected = true
-                binding.bottomNavigation.ivBottomBg.setImageResource(R.drawable.ic_main_bg_not_select)
-            }
-            BottomNavigationHelper.NavigationPage.MAIN -> {
-                binding.bottomNavigation.ivNavMain.isSelected = true
-                binding.bottomNavigation.tvNavMain.isSelected = true
-                binding.bottomNavigation.ivBottomBg.setImageResource(R.drawable.ic_main_bg_select)
-            }
-            BottomNavigationHelper.NavigationPage.MINE -> {
-                binding.bottomNavigation.ivNavMine.isSelected = true
-                binding.bottomNavigation.tvNavMine.isSelected = true
-                binding.bottomNavigation.ivBottomBg.setImageResource(R.drawable.ic_main_bg_not_select)
-            }
-        }
     }
 
     private fun setupObservers() {
@@ -272,9 +173,9 @@ class SessionManagerActivity : BaseViewModelActivity<SessionManagerViewModel>(),
             filterOptions,
         )
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        binding.sortSpinner.adapter = spinnerAdapter
+        binding.filterSpinner.adapter = spinnerAdapter
 
-        binding.sortSpinner.onItemSelectedListener =
+        binding.filterSpinner.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
                     parent: AdapterView<*>,
@@ -292,8 +193,7 @@ class SessionManagerActivity : BaseViewModelActivity<SessionManagerViewModel>(),
     }
 
     private fun showLoading(show: Boolean) {
-        // binding.loadingView.isVisible = show
-        // Loading indication can be handled by showing a progress dialog or similar
+        binding.loadingView.isVisible = show
     }
 
     private fun showError(message: String) {

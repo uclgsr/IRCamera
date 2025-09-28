@@ -102,5 +102,4 @@ object RouterConfig {
     const val VIDEO = "/thermal/video"
     const val MONITOR_CHART = "/thermal/monitor/chart"
     const val LOG_MP_CHART = "/thermal/log/mp/chart"
-    const val MINE = "/$GROUP_USER/mine"
 }
