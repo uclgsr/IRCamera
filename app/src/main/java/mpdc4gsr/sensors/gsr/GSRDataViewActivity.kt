@@ -193,37 +193,35 @@ class GSRDataViewActivity : BaseViewModelActivity<GSRDataViewViewModel>() {
     private fun updateLoadingUI(loadingState: GSRDataViewViewModel.DataLoadingState) {
         when (loadingState) {
             GSRDataViewViewModel.DataLoadingState.Idle -> {
-                binding.progressBar?.isVisible = false
-                binding.loadingText?.isVisible = false
+                binding.progressBar.isVisible = false
+                binding.loadingText.isVisible = false
             }
             GSRDataViewViewModel.DataLoadingState.Loading -> {
-                binding.progressBar?.isVisible = true
-                binding.loadingText?.let { textView ->
-                    textView.isVisible = true
-                    textView.text = "Loading GSR data..."
-                }
+                binding.progressBar.isVisible = true
+                binding.loadingText.isVisible = true
+                binding.loadingText.text = "Loading GSR data..."
             }
             GSRDataViewViewModel.DataLoadingState.Success -> {
-                binding.progressBar?.isVisible = false
-                binding.loadingText?.isVisible = false
-                binding.dataContainer?.isVisible = true
+                binding.progressBar.isVisible = false
+                binding.loadingText.isVisible = false
+                binding.dataContainer.isVisible = true
             }
             GSRDataViewViewModel.DataLoadingState.Error -> {
-                binding.progressBar?.isVisible = false
-                binding.loadingText?.isVisible = false
-                binding.errorContainer?.isVisible = true
+                binding.progressBar.isVisible = false
+                binding.loadingText.isVisible = false
+                binding.errorContainer.isVisible = true
             }
         }
     }
 
     private fun updateDataDisplay(filteredRows: List<GSRDataViewViewModel.GSRDataRow>) {
         adapter.updateData(filteredRows)
-        binding.filteredCountText?.text = "Showing ${filteredRows.size} samples"
+        binding.filteredCountText.text = "Showing ${filteredRows.size} samples"
     }
 
     private fun updateFileInfoUI(fileInfo: GSRDataViewViewModel.FileInfo?) {
         fileInfo?.let { info ->
-            binding.fileInfoText?.text = buildString {
+            binding.fileInfoText.text = buildString {
                 appendLine("File: ${info.name}")
                 appendLine("Size: ${info.size}")
                 appendLine("Path: ${info.path}")
@@ -236,7 +234,7 @@ class GSRDataViewActivity : BaseViewModelActivity<GSRDataViewViewModel>() {
 
     private fun updateStatisticsUI(statistics: GSRDataViewViewModel.GSRStatistics?) {
         statistics?.let { stats ->
-            binding.statisticsText?.text = buildString {
+            binding.statisticsText.text = buildString {
                 appendLine("Dataset Statistics:")
                 appendLine("━━━━━━━━━━━━━━━━━━━━")
                 appendLine("Samples: ${stats.sampleCount}")
@@ -258,12 +256,12 @@ class GSRDataViewActivity : BaseViewModelActivity<GSRDataViewViewModel>() {
 
     private fun updateCombinedDataUI(combinedState: GSRDataViewViewModel.CombinedDataState) {
         // Update overall UI state based on combined state
-        binding.analysisContainer?.isVisible = combinedState.isDataReady
-        binding.exportControls?.isVisible = combinedState.isDataReady
-        binding.filterControls?.isVisible = combinedState.isDataReady
+        binding.analysisContainer.isVisible = combinedState.isDataReady
+        binding.exportControls.isVisible = combinedState.isDataReady
+        binding.filterControls.isVisible = combinedState.isDataReady
         
         // Update status indicator
-        binding.dataStatusIndicator?.let { indicator ->
+        binding.dataStatusIndicator.let { indicator ->
             when {
                 combinedState.isDataReady -> {
                     indicator.setBackgroundColor(android.graphics.Color.parseColor("#4caf50"))
@@ -705,4 +703,40 @@ class GSRDataViewActivity : BaseViewModelActivity<GSRDataViewViewModel>() {
         
         return stats
     }
+
+    // Data classes for plotting functionality
+    data class GSRPlotData(
+        val timestamps: List<Double>,
+        val gsrValues: List<Double>,
+        val ppgValues: List<Double>,
+        val gsrMovingAverage: List<Double>,
+        val ppgMovingAverage: List<Double>,
+        val gsrEvents: List<GSREvent>,
+        val statistics: List<TimeWindowStats>,
+        val metadata: PlotMetadata
+    ) : java.io.Serializable
+
+    data class GSREvent(
+        val timestamp: Double,
+        val type: String,
+        val magnitude: Double,
+        val gsrValue: Double
+    ) : java.io.Serializable
+
+    data class TimeWindowStats(
+        val startTime: Double,
+        val endTime: Double,
+        val mean: Double,
+        val stdDev: Double,
+        val min: Double,
+        val max: Double,
+        val count: Int
+    ) : java.io.Serializable
+
+    data class PlotMetadata(
+        val fileName: String,
+        val duration: Double,
+        val samplingRate: Double,
+        val dataPoints: Int
+    ) : java.io.Serializable
 }
