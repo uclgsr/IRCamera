@@ -64,8 +64,8 @@ class IRMonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         actions = {
                             IconButton(onClick = { showTemperatureOverlay = !showTemperatureOverlay }) {
                                 Icon(
-                                    if (showTemperatureOverlay) Icons.Default.Settings else Icons.Default.Settings,
-                                    contentDescription = "Toggle Overlay",
+                                    if (showTemperatureOverlay) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                                    contentDescription = if (showTemperatureOverlay) "Hide Overlay" else "Show Overlay",
                                     tint = Color.White
                                 )
                             }
