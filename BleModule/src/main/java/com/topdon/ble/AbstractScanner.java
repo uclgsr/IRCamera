@@ -322,6 +322,4 @@ abstract class AbstractScanner implements Scanner {
     private final Runnable stopScanRunnable = () -> stopScan(false);
 
 
-
-
 }

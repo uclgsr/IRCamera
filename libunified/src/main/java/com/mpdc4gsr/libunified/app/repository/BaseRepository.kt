@@ -83,7 +83,7 @@ abstract class BaseRepository(
         operation: suspend () -> T
     ): T {
         val cached = cache[cacheKey] as? CachedData<T>
-        
+
         return if (cached != null && !cached.isExpired) {
             cached.data
         } else {
@@ -114,7 +114,7 @@ abstract class BaseRepository(
         shouldFetch: (T?) -> Boolean = { true }
     ): Flow<Result<T>> = flow {
         emit(Result.Loading)
-        
+
         val data = query().collect { localData ->
             if (shouldFetch(localData)) {
                 try {

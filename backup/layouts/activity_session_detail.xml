@@ -3,19 +3,11 @@
 
     <data />
 
-    <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true"
-        android:overScrollMode="ifContentScrolls"
-        android:scrollbars="vertical">
+    <androidx.core.widget.NestedScrollView android:layout_width="match_parent" android:layout_height="match_parent"
+        android:fillViewport="true" android:overScrollMode="ifContentScrolls" android:scrollbars="vertical">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="32dp"
-            android:text="Session Details Loading..."
-            android:textSize="16sp" />
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:padding="32dp"
+            android:text="Session Details Loading..." android:textSize="16sp" />
 
     </androidx.core.widget.NestedScrollView>
 

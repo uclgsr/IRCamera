@@ -25,7 +25,7 @@ class MainRecordingController(
 ) {
     companion object {
         private const val TAG = "MainRecordingController"
-        
+
         // Sensor name constants for consistency
         private const val RGB_SENSOR_NAME = "RGB"
         private const val THERMAL_SENSOR_NAME = "Thermal"

@@ -99,7 +99,7 @@ class ModernPdfViewModel : BaseViewModel() {
 
                 // Fetch data through repository
                 val result = reportRepository.getReportData(isTC007, page, forceRefresh)
-                
+
                 when (result) {
                     is BaseRepository.Result.Success -> {
                         val reportData = result.data
@@ -107,29 +107,31 @@ class ModernPdfViewModel : BaseViewModel() {
                             data = reportData,
                             isLoadMore = page > 1
                         )
-                        
+
                         // Update pagination state
                         _paginationState.value = _paginationState.value.copy(
                             currentPage = page,
                             hasMorePages = reportData.hasMoreData(),
                             isLoadingMore = false
                         )
-                        
+
                         if (page == 1) {
                             _events.emit(PdfEvent.RefreshCompleted)
                         }
                     }
+
                     is BaseRepository.Result.Error -> {
                         val errorMessage = result.exception.message ?: "Unknown error occurred"
                         _reportDataState.value = ReportDataState.Error(errorMessage)
                         _paginationState.value = _paginationState.value.copy(isLoadingMore = false)
                         _events.emit(PdfEvent.ShowError(errorMessage))
                     }
+
                     is BaseRepository.Result.Loading -> {
                         // Already handled above
                     }
                 }
-                
+
             } catch (e: Exception) {
                 val errorMessage = e.message ?: "Failed to load report data"
                 _reportDataState.value = ReportDataState.Error(errorMessage)
@@ -196,17 +198,17 @@ class ModernPdfViewModel : BaseViewModel() {
      * Repository implementation for handling data operations
      */
     private inner class ReportRepository : BaseRepository() {
-        
+
         private val cacheKey = "report_data"
-        
+
         suspend fun getReportData(
             isTC007: Boolean,
             page: Int,
             forceRefresh: Boolean = false
         ): BaseRepository.Result<ReportData> = safeCall {
-            
+
             val key = "${cacheKey}_${isTC007}_$page"
-            
+
             if (!forceRefresh) {
                 // Try cached data first (5 minute cache)
                 getCachedOrExecute(key, 5 * 60 * 1000L) {
@@ -218,7 +220,7 @@ class ModernPdfViewModel : BaseViewModel() {
                 fetchReportDataFromNetwork(isTC007, page)
             }
         }
-        
+
         private suspend fun fetchReportDataFromNetwork(
             isTC007: Boolean,
             page: Int
@@ -260,14 +262,14 @@ class ModernPdfViewModel : BaseViewModel() {
 
                     override fun onFail(failMsg: String?, errorCode: String) {
                         super.onFail(failMsg, errorCode)
-                        
+
                         // Handle localized error messages
                         try {
                             val localizedMessage = StringUtils.getResString(
                                 LMS.mContext,
                                 if (TextUtils.isEmpty(errorCode)) -500 else errorCode.toInt()
                             )
-                            
+
                             // Emit toast event on main thread
                             viewModelScope.launch {
                                 _events.emit(PdfEvent.ShowToast(localizedMessage))
@@ -275,7 +277,7 @@ class ModernPdfViewModel : BaseViewModel() {
                         } catch (e: Exception) {
                             e.printStackTrace()
                         }
-                        
+
                         error = Exception(failMsg ?: "Server error")
                         result = ReportData().apply {
                             msg = failMsg
@@ -294,7 +296,7 @@ class ModernPdfViewModel : BaseViewModel() {
             viewModelScope.launch(Dispatchers.IO) {
                 try {
                     downLatch.await()
-                    
+
                     when {
                         error != null -> continuation.resumeWithException(error!!)
                         result != null -> continuation.resume(result!!)

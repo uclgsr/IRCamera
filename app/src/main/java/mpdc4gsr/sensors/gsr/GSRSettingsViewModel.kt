@@ -18,10 +18,10 @@ class GSRSettingsViewModel : BaseViewModel() {
     private var gsrSensorRecorder: GSRSensorRecorder? = null
 
     // StateFlow from Repository
-    val gsrSettings: StateFlow<GSRSettingsRepository.GSRSettings> by lazy { 
+    val gsrSettings: StateFlow<GSRSettingsRepository.GSRSettings> by lazy {
         repository.gsrSettings.stateIn(viewModelScope, SharingStarted.Lazily, GSRSettingsRepository.GSRSettings())
     }
-    val deviceSettings: StateFlow<GSRSettingsRepository.DeviceSettings> by lazy { 
+    val deviceSettings: StateFlow<GSRSettingsRepository.DeviceSettings> by lazy {
         repository.deviceSettings.stateIn(viewModelScope, SharingStarted.Lazily, GSRSettingsRepository.DeviceSettings())
     }
 
@@ -181,7 +181,11 @@ class GSRSettingsViewModel : BaseViewModel() {
                 }
 
                 permanentlyDeniedPermissions.isNotEmpty() -> {
-                    _settingsEvents.emit(SettingsEvent.ShowPermissionPermanentlyDeniedDialog(permanentlyDeniedPermissions))
+                    _settingsEvents.emit(
+                        SettingsEvent.ShowPermissionPermanentlyDeniedDialog(
+                            permanentlyDeniedPermissions
+                        )
+                    )
                 }
 
                 else -> {

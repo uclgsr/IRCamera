@@ -123,10 +123,10 @@ class DevicePairingActivity : BaseViewModelActivity<DevicePairingViewModel>(),
         binding.apply {
             scanButton.text = if (state.isScanning) "Stop Scan" else "Start Scan"
             scanButton.isEnabled = !state.isConnecting
-            
+
             progressBar.isVisible = state.isLoading || state.isScanning
             statusText.text = state.statusMessage
-            
+
             // Update scan results count if the view exists
             try {
                 val resourceId = resources.getIdentifier("scan_results_count", "id", packageName)
@@ -142,7 +142,7 @@ class DevicePairingActivity : BaseViewModelActivity<DevicePairingViewModel>(),
 
     private fun handleConnectionState(state: DevicePairingViewModel.ConnectionState) {
         binding.progressBar.isVisible = state == DevicePairingViewModel.ConnectionState.CONNECTING
-        
+
         // Update connection status text if it exists
         try {
             val resourceId = resources.getIdentifier("connection_status", "id", packageName)
@@ -154,14 +154,17 @@ class DevicePairingActivity : BaseViewModelActivity<DevicePairingViewModel>(),
                             textView.text = "Connected to ${state.controller.name}"
                             textView.setTextColor(getColor(android.R.color.holo_green_dark))
                         }
+
                         is DevicePairingViewModel.ConnectionState.Connecting -> {
                             textView.text = "Connecting..."
                             textView.setTextColor(getColor(android.R.color.holo_orange_dark))
                         }
+
                         is DevicePairingViewModel.ConnectionState.Disconnected -> {
                             textView.text = "Disconnected"
                             textView.setTextColor(getColor(android.R.color.darker_gray))
                         }
+
                         is DevicePairingViewModel.ConnectionState.Failed -> {
                             textView.text = "Connection failed: ${state.message}"
                             textView.setTextColor(getColor(android.R.color.holo_red_dark))
@@ -179,9 +182,11 @@ class DevicePairingActivity : BaseViewModelActivity<DevicePairingViewModel>(),
             is DevicePairingViewModel.PairingEvent.ShowToast -> {
                 Toast.makeText(this, event.message, Toast.LENGTH_SHORT).show()
             }
+
             is DevicePairingViewModel.PairingEvent.ShowError -> {
                 Toast.makeText(this, event.message, Toast.LENGTH_LONG).show()
             }
+
             is DevicePairingViewModel.PairingEvent.NavigateToRecording -> {
                 val sessionInfo = SessionInfo(
                     sessionId = "paired_session_${System.currentTimeMillis()}",
@@ -189,6 +194,7 @@ class DevicePairingActivity : BaseViewModelActivity<DevicePairingViewModel>(),
                 )
                 MultiModalRecordingActivity.startRecording(this, sessionInfo)
             }
+
             is DevicePairingViewModel.PairingEvent.ControllerConnected -> {
                 Toast.makeText(this, "Connected to ${event.controller.name}", Toast.LENGTH_SHORT).show()
                 binding.disconnectButton.isVisible = true

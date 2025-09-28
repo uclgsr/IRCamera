@@ -93,7 +93,7 @@ class SensorDataRepository(
      */
     fun getDeviceStatus(deviceId: String): Flow<Result<DeviceStatus>> = safeFlow {
         val cacheKey = "${DEVICE_STATUS_CACHE_KEY}_$deviceId"
-        
+
         getCachedOrExecute(cacheKey, DEVICE_STATUS_TTL) {
             fetchDeviceStatus(deviceId)
         }
@@ -105,15 +105,15 @@ class SensorDataRepository(
     fun getCombinedSensorData(deviceIds: List<String>): Flow<Result<CombinedSensorData>> {
         val gsrStreams = deviceIds.map { getGSRDataStream(it) }
         val thermalStreams = deviceIds.map { getThermalDataStream(it) }
-        
+
         return combine(gsrStreams + thermalStreams) { results ->
-            val gsrData = results.take(deviceIds.size).mapNotNull { 
-                if (it is Result.Success) it.data else null 
+            val gsrData = results.take(deviceIds.size).mapNotNull {
+                if (it is Result.Success) it.data else null
             }
-            val thermalData = results.drop(deviceIds.size).mapNotNull { 
-                if (it is Result.Success) it.data else null 
+            val thermalData = results.drop(deviceIds.size).mapNotNull {
+                if (it is Result.Success) it.data else null
             }
-            
+
             Result.Success(CombinedSensorData(gsrData, thermalData))
         }
     }
@@ -129,11 +129,11 @@ class SensorDataRepository(
     // Private helper methods for simulation
     private suspend fun simulateGSRDataStream(deviceId: String): GSRSensorData {
         delay(100) // Simulate network delay
-        
+
         val gsrValue = 5.0 + (Math.random() * 10.0) // 5-15 µS
         val resistance = 1_000_000 / gsrValue // Ohm's law approximation
         val conductance = 1.0 / resistance * 1_000_000 // µS
-        
+
         return GSRSensorData(
             timestamp = System.currentTimeMillis(),
             gsrValue = gsrValue,
@@ -147,11 +147,11 @@ class SensorDataRepository(
 
     private suspend fun simulateThermalDataStream(deviceId: String): ThermalSensorData {
         delay(50) // Simulate faster thermal data
-        
+
         val width = 640
         val height = 480
         val frameData = ByteArray(width * height * 2) // Simulated 16-bit thermal data
-        
+
         return ThermalSensorData(
             timestamp = System.currentTimeMillis(),
             frameData = frameData,
@@ -166,7 +166,7 @@ class SensorDataRepository(
 
     private suspend fun fetchDeviceStatus(deviceId: String): DeviceStatus {
         delay(200) // Simulate network request
-        
+
         return DeviceStatus(
             deviceId = deviceId,
             deviceType = when {
