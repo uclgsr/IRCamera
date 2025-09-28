@@ -41,7 +41,7 @@ class GSRDataRepository : BaseRepository() {
             var counter = 0
             while (true) {
                 delay(100) // 10Hz sampling rate
-                
+
                 val reading = generateGSRReading(deviceId, counter++)
                 emit(BaseRepository.Result.Success(reading))
             }
@@ -49,7 +49,7 @@ class GSRDataRepository : BaseRepository() {
             emit(BaseRepository.Result.Error(e))
         }
     }.flowOn(kotlinx.coroutines.Dispatchers.IO)
-    
+
     // Historical GSR data with advanced caching
     fun getHistoricalGSRData(
         sessionId: String,
@@ -68,7 +68,7 @@ class GSRDataRepository : BaseRepository() {
         }
         data
     }
-    
+
     // Session management
     fun getGSRSessions(deviceId: String): Flow<BaseRepository.Result<List<GSRSession>>> = safeFlow {
         val cacheKey = "sessions_$deviceId"
@@ -82,13 +82,13 @@ class GSRDataRepository : BaseRepository() {
         }
         data
     }
-    
+
     private fun generateGSRReading(deviceId: String, counter: Int): GSRReading {
         val baselineResistance = 50.0f // kiloohms
         val variation = (Math.sin(counter * 0.01) * 10 + Math.random() * 5).toFloat()
         val resistance = (baselineResistance + variation).coerceAtLeast(1.0f)
         val conductance = 1000.0f / resistance // Convert to microsiemens
-        
+
         return GSRReading(
             timestamp = System.currentTimeMillis(),
             conductance = conductance,

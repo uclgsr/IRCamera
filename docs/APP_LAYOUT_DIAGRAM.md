@@ -1,12 +1,15 @@
 # IRCamera App Layout Architecture
 
-This document provides a comprehensive overview of the layout structure and UI components used throughout the IRCamera Android application. Following a major consolidation effort, the app now contains **220 layout files** with a streamlined and efficient architecture.
+This document provides a comprehensive overview of the layout structure and UI components used throughout the IRCamera
+Android application. Following a major consolidation effort, the app now contains **220 layout files** with a
+streamlined and efficient architecture.
 
 ## Layout Overview by Type - CORRECTED
 
 From our comprehensive analysis, the app contains:
+
 - **App Module**: 30 layout files - Main application layouts
-- **Component Module**: 121 layout files - Thermal and user module layouts  
+- **Component Module**: 121 layout files - Thermal and user module layouts
 - **LibUnified Module**: 69 layout files - Base templates and utility layouts
 - **10 Consolidated layouts** - New unified layout templates replacing multiple specialized layouts
 - **51 Backup layouts** - Legacy layouts moved to backup/layouts/ directory
@@ -16,18 +19,21 @@ From our comprehensive analysis, the app contains:
 ## Module-Specific Breakdown
 
 ### App Module Layouts (30)
+
 - Core application interfaces
-- GSR sensor layouts  
+- GSR sensor layouts
 - Testing and development layouts
 - 10 new consolidated layouts
 
 ### Component Module Layouts (121) - PREVIOUSLY UNDERDOCUMENTED
+
 - **Thermal Unified Module**: ~80 layouts
-- **User Module**: ~25 layouts  
+- **User Module**: ~25 layouts
 - **Report Module**: ~16 layouts
 - This represents the largest portion of layouts and was severely underdocumented
 
-### LibUnified Module Layouts (69) - PREVIOUSLY UNDERDOCUMENTED  
+### LibUnified Module Layouts (69) - PREVIOUSLY UNDERDOCUMENTED
+
 - Base activity templates
 - Common dialog layouts
 - Utility UI components
@@ -36,10 +42,12 @@ From our comprehensive analysis, the app contains:
 ## Major Architecture Consolidation
 
 **Recent Update**: The app underwent significant layout consolidation:
+
 - **35 legacy activity layouts** moved to `backup/layouts/` directory
 - **10 new consolidated layouts** created to replace multiple specialized layouts
 - **Improved maintainability** through unified design patterns
 - **Enhanced data binding** integration across consolidated layouts
+
 ## Complete Layout Architecture Diagram
 
 ```mermaid
@@ -216,47 +224,51 @@ graph TB
 ## Layout Function Categories - Updated Architecture
 
 ### 1. **Consolidated Layout Architecture (New)**
+
 The app now features a streamlined layout architecture with consolidated templates:
 
 - **`activity_main_consolidated.xml`** - Enhanced main container with unified data binding
-  - Supports multi-modal recording modes through data binding variables
-  - Integrated sensor status monitoring and recording controls
-  - Simplified network status bar with essential connectivity information
+    - Supports multi-modal recording modes through data binding variables
+    - Integrated sensor status monitoring and recording controls
+    - Simplified network status bar with essential connectivity information
 
 - **`activity_multi_modal_consolidated.xml`** - Unified multi-modal recording interface
-  - Replaces multiple GSR recording activities with single flexible layout
-  - Supports multiple sensor types through data binding
-  - Includes RGB camera integration and preview capabilities
-  - ScrollView-based design for responsive content display
+    - Replaces multiple GSR recording activities with single flexible layout
+    - Supports multiple sensor types through data binding
+    - Includes RGB camera integration and preview capabilities
+    - ScrollView-based design for responsive content display
 
 - **`activity_session_consolidated.xml`** - Centralized session management
-  - Combines session creation, management, and export functionality
-  - Unified interface for different session types (GSR, thermal, multi-modal)
+    - Combines session creation, management, and export functionality
+    - Unified interface for different session types (GSR, thermal, multi-modal)
 
 - **`activity_camera_test_consolidated.xml`** - Comprehensive camera testing suite
-  - Consolidates multiple camera testing layouts into single interface
-  - Supports thermal, RGB, and combined camera testing scenarios
+    - Consolidates multiple camera testing layouts into single interface
+    - Supports thermal, RGB, and combined camera testing scenarios
 
 ### 2. **Legacy Layout Migration**
+
 - **35 activity layouts** moved to `backup/layouts/` directory
 - **16 fragment layouts** archived for reference
 - **Gradual migration strategy** maintains backward compatibility
 - **Improved maintainability** through reduced layout proliferation
 - **`activity_main.xml`** - Primary app container with ViewPager2 and bottom navigation
-  - Contains network status bar, sensor controls container, and 4-tab navigation
-  - Includes quick access buttons for thermal camera and fault-tolerant recording
-  - Implements constraint-based responsive layout design
+    - Contains network status bar, sensor controls container, and 4-tab navigation
+    - Includes quick access buttons for thermal camera and fault-tolerant recording
+    - Implements constraint-based responsive layout design
 
 - **`activity_simplified_main.xml`** - Streamlined interface for specific use cases
-  - Reduced complexity version of main interface
-  - Focus on core functionality without advanced features
+    - Reduced complexity version of main interface
+    - Focus on core functionality without advanced features
 
 ### 2. **Fragment-Based UI Components**
+
 - **`fragment_main.xml`** - Main dashboard fragment displaying device connections and controls
 - **`fragment_sensor_dashboard.xml`** - Real-time sensor status monitoring with scrollable interface
 - **`fragment_gsr_*.xml`** - GSR-specific UI components for session management, data display, and video playback
 
 ### 3. **Thermal Camera Interface Layouts**
+
 - **`activity_ir_main.xml`** - Thermal camera hub with 5-tab structure
 - **`fragment_ir_thermal.xml`** - Live thermal camera controls and preview
 - **`activity_ir_monitor.xml`** - Full-screen thermal monitoring interface
@@ -264,6 +276,7 @@ The app now features a streamlined layout architecture with consolidated templat
 - **`fragment_gallery.xml`** - Thermal image and video gallery browser
 
 ### 4. **GSR Sensor Management Layouts**
+
 - **`activity_multi_modal_recording.xml`** - Synchronized thermal+GSR recording interface
 - **`activity_gsr_settings.xml`** - GSR sensor configuration and calibration
 - **`activity_gsr_plot.xml`** - Real-time and historical GSR data visualization
@@ -271,18 +284,21 @@ The app now features a streamlined layout architecture with consolidated templat
 - **`activity_session_manager.xml`** - Research session management and organization
 
 ### 5. **RecyclerView Item Templates**
+
 - **`item_shimmer_device*.xml`** - Shimmer device list items with connection status
 - **`item_gsr_*.xml`** - Various GSR data and session display templates
 - **`item_session.xml`** - Session list item with metadata and controls
 - **`item_template.xml`** - Generic reusable item template structure
 
 ### 6. **Modal Dialogs and Popups**
+
 - **`dialog_tip_*.xml`** - Contextual help and guidance dialogs
 - **`dialog_config_guide.xml`** - Step-by-step configuration assistance
 - **`dialog_msg.xml`** - General message and confirmation dialogs
 - **`dialog_firmware_up.xml`** - Firmware update progress and instructions
 
 ### 7. **Testing and Development Interfaces**
+
 - **`activity_sensor_dashboard_test.xml`** - Sensor testing and validation interface
 - **`activity_network_*_test.xml`** - Network connectivity testing tools
 - **`activity_phase2_validation.xml`** - Phase 2 system validation interface
@@ -291,26 +307,31 @@ The app now features a streamlined layout architecture with consolidated templat
 ## Layout Design Patterns
 
 ### 1. **Constraint-Based Responsive Design**
+
 - Extensive use of `ConstraintLayout` for flexible, responsive layouts
 - Dimension ratios and percentage-based sizing for multi-device support
 - Proper constraint chains for element alignment and distribution
 
 ### 2. **ViewPager2 Tab Architecture**
+
 - Main app uses 4-tab structure: Gallery, Main, Settings, Profile
 - Thermal module uses 5-tab structure: Thermal, Gallery, Abilities, Reports, Profile
 - Fragment-based tab content for memory efficiency and lifecycle management
 
 ### 3. **Scrollable Container Pattern**
+
 - Critical interfaces like sensor dashboard use `ScrollView` containers
 - `fillViewport` and `minHeight` attributes ensure proper scrolling behavior
 - Overscroll indicators provide user feedback on scroll boundaries
 
 ### 4. **Data Binding Integration**
+
 - Many layouts include `<data>` sections for ViewModel binding
 - Two-way data binding for real-time sensor data updates
 - Observable field binding for automatic UI state updates
 
 ### 5. **Material Design Components**
+
 - Consistent use of Material Design guidelines and components
 - Proper color schemes and typography scaling
 - Touch target sizing and accessibility considerations
@@ -318,6 +339,7 @@ The app now features a streamlined layout architecture with consolidated templat
 ## Key Layout Relationships
 
 ### Navigation Flow
+
 ```
 activity_main.xml 
 ├── Gallery Tab → fragment_gallery.xml
@@ -328,6 +350,7 @@ activity_main.xml
 ```
 
 ### Component Hierarchy
+
 ```
 Main Container
 ├── Status Bar Components
@@ -337,8 +360,10 @@ Main Container
 ```
 
 ### Data Flow Layouts
+
 ```
 Sensor Input → Dashboard Fragment → Activity Container → Navigation Destination
 ```
 
-This comprehensive layout architecture enables the IRCamera app to provide a sophisticated multi-modal physiological sensing interface while maintaining usability and performance across different Android devices and screen sizes.
+This comprehensive layout architecture enables the IRCamera app to provide a sophisticated multi-modal physiological
+sensing interface while maintaining usability and performance across different Android devices and screen sizes.

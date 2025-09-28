@@ -1,8 +1,10 @@
 # IRCamera App Navigation Diagram
 
-This document provides a comprehensive mermaid graph showing the navigation structure of the IRCamera Android application. 
+This document provides a comprehensive mermaid graph showing the navigation structure of the IRCamera Android
+application.
 
-**Recent Update**: Following major consolidation efforts, the app navigation has been streamlined with enhanced integration capabilities and improved multi-modal recording workflows.
+**Recent Update**: Following major consolidation efforts, the app navigation has been streamlined with enhanced
+integration capabilities and improved multi-modal recording workflows.
 
 ## Simplified Navigation Overview
 
@@ -320,53 +322,62 @@ graph TB
 ## Navigation Key Points - Updated Architecture
 
 ### 1. Main Entry Structure
+
 - **MainActivity** serves as the primary entry point with a 4-tab ViewPager
 - Each tab hosts different functional areas of the app
 - Navigation is controlled through MainActivityViewModel
 
 ### 2. Enhanced Integration Architecture
+
 - **HubSpokeIntegrationActivity** - New centralized integration hub
 - **DualModeCameraActivity** - Enhanced dual camera mode support
 - **DevicePairingActivity** - Streamlined device pairing workflow
 - **Improved multi-modal workflows** with better sensor coordination
 
 ### 3. Streamlined GSR Module
+
 - **Consolidated recording workflows** through enhanced MultiModalRecordingActivity
 - **Expanded session management** with detailed session analysis and export capabilities
 - **Enhanced data visualization** with improved GSR plotting and raw image viewing
 - **Research template system** for standardized experimental protocols
 
 ### 2. Tab Structure
+
 - **Page 0 (Gallery)**: IRGalleryTabFragment - Media gallery for thermal images
 - **Page 1 (Main)**: MainFragment - Primary dashboard with sensor controls
 - **Page 2 (Settings)**: MoreFragment - App settings and configuration
 - **Page 3 (Mine)**: MineFragment - User profile and personal settings
 
 ### 3. Thermal Camera Module
+
 - **IRMainActivity** serves as thermal camera hub with 5 tabs
 - Provides comprehensive thermal imaging capabilities
 - Supports both TC007 and standard thermal cameras
 - Includes monitoring, gallery, reports, and configuration
 
 ### 4. GSR Sensor Integration
+
 - Multiple GSR-related activities for Shimmer3 sensor management
 - **MultiModalRecordingActivity** for synchronized thermal+GSR recording
 - Device configuration and data visualization capabilities
 - Session management for research workflows
 
 ### 5. Navigation System
+
 - **NavigationManager** handles all inter-activity navigation
 - **RouterConfig** defines route constants for different modules
 - Type-safe navigation with parameter passing
 - Support for both Fragment and Activity navigation
 
 ### 6. Module Architecture
+
 - **Component-based architecture** with separate modules
 - **Thermal Unified Module** for thermal camera functionality
 - **User Module** for settings and profile management
 - **GSR Recording Module** for sensor data collection
 
 ### 7. Testing & Development
+
 - Dedicated test activities for development and debugging
 - Network configuration and testing capabilities
 - Sensor dashboard testing interface
@@ -375,6 +386,7 @@ graph TB
 ## Usage Examples
 
 ### Navigate to Thermal Camera
+
 ```kotlin
 NavigationManager.build(RouterConfig.IR_MAIN)
     .withBoolean(ExtraKeyConfig.IS_TC007, isTC007Device)
@@ -382,15 +394,18 @@ NavigationManager.build(RouterConfig.IR_MAIN)
 ```
 
 ### Navigate to GSR Recording
+
 ```kotlin
 NavigationManager.build(RouterConfig.GSR_MULTI_MODAL)
     .navigation(context)
 ```
 
 ### Navigate to Settings
+
 ```kotlin
 NavigationManager.build(RouterConfig.ELECTRONIC_MANUAL)
     .navigation(context)
 ```
 
-This navigation structure provides a comprehensive overview of how different views and activities are connected within the IRCamera application, making it easier to understand the app's architecture and navigation flow.
+This navigation structure provides a comprehensive overview of how different views and activities are connected within
+the IRCamera application, making it easier to understand the app's architecture and navigation flow.
