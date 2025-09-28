@@ -153,7 +153,7 @@ class IRThermalFragment : BaseFragment(), View.OnClickListener {
     }
 
     override fun onSocketDisConnected(isTS004: Boolean) {
-        viewModel.onSocketDisconnected(isTS004, isTC007)
+        viewModel.onSocketDisConnected(isTS004, isTC007)
     }
 
     private fun handleNavigationEvent(event: IRThermalFragmentViewModel.NavigationEvent) {
@@ -169,7 +169,7 @@ class IRThermalFragment : BaseFragment(), View.OnClickListener {
             }
             is IRThermalFragmentViewModel.NavigationEvent.NavigateToTCLite -> {
                 NavigationManager.getInstance().build(RouterConfig.IR_TCLITE)
-                    .navigation(requireActivity(), 101)
+                    .navigation(requireContext(), 101)
             }
             is IRThermalFragmentViewModel.NavigationEvent.NavigateToHikMain -> {
                 NavigationManager.getInstance().build(RouterConfig.IR_HIK_MAIN)
