@@ -295,6 +295,23 @@
             android:label="Shimmer Configuration" />
 
 
+        <activity
+            android:name="mpdc4gsr.compose.activity.MainComposeActivity"
+            android:exported="true"
+            android:label="IR Camera - Compose UI"
+            android:theme="@style/Theme.AppCompat.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="mpdc4gsr.compose.activity.ComposeUnifiedDemoActivity"
+            android:exported="true"
+            android:label="IR Camera Compose Demo"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+
         <!-- Test Activities -->
         <activity
             android:name="mpdc4gsr.sensors.gsr.GSRBenchTestActivity"
