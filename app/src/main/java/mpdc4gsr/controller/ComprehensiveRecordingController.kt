@@ -776,8 +776,8 @@ class ComprehensiveRecordingController(
                     recordingController = mpdc4gsr.controller.RecordingController(
                         context, 
                         lifecycleOwner ?: object : LifecycleOwner {
-                            override val lifecycle: Lifecycle
-                                get() = LifecycleRegistry(this)
+                            private val lifecycleRegistry = LifecycleRegistry(this)
+                            override val lifecycle: Lifecycle get() = lifecycleRegistry
                         }
                     )
                 )
