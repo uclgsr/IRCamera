@@ -205,6 +205,37 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                     }
                 )
 
+                LauncherCard(
+                    title = "Device Type Selection (Compose)",
+                    subtitle = "Modern device selection with enhanced UX",
+                    icon = Icons.Default.DeviceHub,
+                    onClick = { 
+                        startActivity(Intent(this@ComposeMigrationLauncherActivity, DeviceTypeActivityCompose::class.java))
+                    }
+                )
+
+                LauncherCard(
+                    title = "Help & Support (Compose)",
+                    subtitle = "Interactive help guide with actionable steps",
+                    icon = Icons.Default.Help,
+                    onClick = { 
+                        val intent = Intent(this@ComposeMigrationLauncherActivity, MoreHelpActivityCompose::class.java)
+                        intent.putExtra("SETTING_CONNECTION_TYPE", 1) // Connection help
+                        startActivity(intent)
+                    }
+                )
+
+                LauncherCard(
+                    title = "PDF Manual Viewer (Compose)",
+                    subtitle = "Enhanced manual viewer with modern UI",
+                    icon = Icons.Default.PictureAsPdf,
+                    onClick = { 
+                        val intent = Intent(this@ComposeMigrationLauncherActivity, PdfActivityCompose::class.java)
+                        intent.putExtra("isTS001", true) // TC001 manual
+                        startActivity(intent)
+                    }
+                )
+
                 // Comparison option
                 Card(
                     modifier = Modifier.fillMaxWidth(),
