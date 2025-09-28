@@ -85,7 +85,7 @@ class SensorDashboardFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupUI(view)
         initializeDefaultSensors()
-        
+
         // Restore collapsed state if needed
         savedInstanceState?.getBoolean("isCollapsed", false)?.let { wasCollapsed ->
             if (wasCollapsed) {
@@ -114,7 +114,7 @@ class SensorDashboardFragment : Fragment() {
         // Set initial states
         overallStatusText.setTextColor(COLOR_DISCONNECTED)
         recordingIndicator.setBackgroundColor(COLOR_DISCONNECTED)
-        
+
         // Set up collapse/expand click listener
         sensorsTitleContainer.setOnClickListener {
             toggleSensorsCollapse()
@@ -126,7 +126,7 @@ class SensorDashboardFragment : Fragment() {
      */
     private fun toggleSensorsCollapse() {
         isCollapsed = !isCollapsed
-        
+
         if (isCollapsed) {
             collapseSensors()
         } else {
@@ -139,23 +139,23 @@ class SensorDashboardFragment : Fragment() {
      */
     private fun collapseSensors() {
         val initialHeight = sensorsContainer.height
-        
+
         val animator = ValueAnimator.ofInt(initialHeight, 0)
         animator.duration = 300
         animator.interpolator = AccelerateDecelerateInterpolator()
-        
+
         animator.addUpdateListener { animation ->
             val value = animation.animatedValue as Int
             val layoutParams = sensorsContainer.layoutParams
             layoutParams.height = value
             sensorsContainer.layoutParams = layoutParams
         }
-        
+
         // Rotate arrow icon to point right (collapsed state)
         val iconRotation = ObjectAnimator.ofFloat(collapseExpandIcon, "rotation", 0f, -90f)
         iconRotation.duration = 300
         iconRotation.interpolator = AccelerateDecelerateInterpolator()
-        
+
         animator.start()
         iconRotation.start()
     }
@@ -171,10 +171,10 @@ class SensorDashboardFragment : Fragment() {
             View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
         )
         val targetHeight = sensorsContainer.measuredHeight
-        
+
         // Fallback to wrap content if measurement fails
         val finalTargetHeight = if (targetHeight > 0) targetHeight else ViewGroup.LayoutParams.WRAP_CONTENT
-        
+
         val animator = if (finalTargetHeight == ViewGroup.LayoutParams.WRAP_CONTENT) {
             // If we can't measure, animate alpha as a fallback for visual consistency
             sensorsContainer.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
@@ -196,12 +196,12 @@ class SensorDashboardFragment : Fragment() {
                 }
             }
         }
-        
+
         // Rotate arrow icon to point down (expanded state)
         val iconRotation = ObjectAnimator.ofFloat(collapseExpandIcon, "rotation", -90f, 0f)
         iconRotation.duration = 300
         iconRotation.interpolator = AccelerateDecelerateInterpolator()
-        
+
         animator?.start()
         iconRotation.start()
     }

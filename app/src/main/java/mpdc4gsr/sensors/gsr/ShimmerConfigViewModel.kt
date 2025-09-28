@@ -53,7 +53,7 @@ class ShimmerConfigViewModel : BaseViewModel() {
     // SharedFlow for one-time events
     private val _configEvents = MutableSharedFlow<ConfigEvent>()
     val configEvents: SharedFlow<ConfigEvent> = _configEvents.asSharedFlow()
-    
+
     // SharedFlow for config actions
     private val _configAction = MutableSharedFlow<ConfigAction>()
     val configAction: SharedFlow<ConfigAction> = _configAction.asSharedFlow()
@@ -66,10 +66,10 @@ class ShimmerConfigViewModel : BaseViewModel() {
 
     // Sealed classes for actions and events
     data class ConfigAction(val actionType: ActionType)
-    
+
     enum class ActionType {
         SHOW_PROGRESS_BAR,
-        HIDE_PROGRESS_BAR, 
+        HIDE_PROGRESS_BAR,
         SHOW_ERROR
     }
 

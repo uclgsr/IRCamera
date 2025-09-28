@@ -80,16 +80,18 @@ class PolicyViewModel : BaseViewModel() {
                 _policyState.value = PolicyState.Loading
 
                 val result = policyRepository.getPolicyContent(type)
-                
+
                 when (result) {
                     is BaseRepository.Result.Success -> {
                         _policyState.value = PolicyState.Success(result.data)
                     }
+
                     is BaseRepository.Result.Error -> {
                         val errorMessage = result.exception.message ?: "Failed to load policy"
                         _policyState.value = PolicyState.Error(errorMessage)
                         _events.emit(PolicyEvent.ShowError(errorMessage))
                     }
+
                     is BaseRepository.Result.Loading -> {
                         // Already handled above
                     }
@@ -126,22 +128,22 @@ class PolicyViewModel : BaseViewModel() {
      * Repository for policy data operations
      */
     private inner class PolicyRepository : BaseRepository() {
-        
+
         private val cacheKey = "policy_content"
-        
+
         suspend fun getPolicyContent(type: PolicyType): BaseRepository.Result<HtmlBean> = safeCall {
             val key = "${cacheKey}_${type.value}"
-            
+
             // Cache for 1 hour
             getCachedOrExecute(key, 60 * 60 * 1000L) {
                 fetchPolicyFromNetwork(type)
             }
         }
-        
+
         private suspend fun fetchPolicyFromNetwork(type: PolicyType): HtmlBean {
             val urlType = type.toUrlType()
             val result = LmsRepository.getStatementUrl(urlType.toString())
-            
+
             return if (result != null && !result.htmlContent.isNullOrBlank()) {
                 HtmlBean(
                     body = result.htmlContent,
@@ -153,7 +155,7 @@ class PolicyViewModel : BaseViewModel() {
                 throw Exception("No content available for ${type.name.lowercase()} policy")
             }
         }
-        
+
         private fun getTitleForType(type: PolicyType): String {
             return when (type) {
                 PolicyType.PRIVACY -> "Privacy Policy"

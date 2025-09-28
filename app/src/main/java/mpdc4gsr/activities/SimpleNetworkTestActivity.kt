@@ -81,7 +81,7 @@ class SimpleNetworkTestActivity : AppCompatActivity() {
 
     private fun setupClickListeners() {
         if (BuildConfig.DEBUG) Log.d(TAG, "Setting up click listeners")
-        
+
         connectButton.setOnClickListener {
             if (BuildConfig.DEBUG) Log.d(TAG, "Connect button clicked")
             Toast.makeText(this, "Connect button clicked!", Toast.LENGTH_SHORT).show()
@@ -117,7 +117,7 @@ class SimpleNetworkTestActivity : AppCompatActivity() {
             Toast.makeText(this, "Test commands button clicked!", Toast.LENGTH_SHORT).show()
             testCommands()
         }
-        
+
         if (BuildConfig.DEBUG) Log.d(TAG, "Click listeners setup complete")
     }
 

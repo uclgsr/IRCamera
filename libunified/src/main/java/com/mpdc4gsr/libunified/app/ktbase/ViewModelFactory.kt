@@ -20,6 +20,7 @@ class BaseViewModelFactory(
             modelClass.isAssignableFrom(BaseViewModel::class.java) -> {
                 BaseViewModel() as T
             }
+
             else -> {
                 try {
                     // Try to create with application context
@@ -41,32 +42,34 @@ class BaseViewModelFactory(
     @Suppress("UNCHECKED_CAST")
     private fun <T : ViewModel> createWithRepositories(modelClass: Class<T>): T {
         val constructors = modelClass.declaredConstructors
-        
+
         for (constructor in constructors) {
             val parameterTypes = constructor.parameterTypes
             val parameters = mutableListOf<Any>()
             var canCreate = true
-            
+
             for (paramType in parameterTypes) {
                 when {
                     paramType == Application::class.java -> {
                         parameters.add(application)
                     }
+
                     repositories.containsKey(paramType) -> {
                         parameters.add(repositories[paramType]!!)
                     }
+
                     else -> {
                         canCreate = false
                         break
                     }
                 }
             }
-            
+
             if (canCreate) {
                 return constructor.newInstance(*parameters.toTypedArray()) as T
             }
         }
-        
+
         throw IllegalArgumentException("Cannot create ViewModel ${modelClass.simpleName}")
     }
 

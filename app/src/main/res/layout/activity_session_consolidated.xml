@@ -1,19 +1,22 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Consolidated Session Management Activity - Replaces session detail, manager, and export activities -->
+<?xml version="1.0" encoding="utf-8"?><!-- Consolidated Session Management Activity - Replaces session detail, manager, and export activities -->
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="sessionMode"
             type="String" />
+
         <variable
             name="sessionData"
             type="Object" />
+
         <variable
             name="isExporting"
             type="Boolean" />
+
         <variable
             name="hasData"
             type="Boolean" />

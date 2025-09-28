@@ -78,7 +78,7 @@ class MoreFragmentViewModel : BaseViewModel() {
                 deviceId = deviceId,
                 firmwareVersion = firmwareVersion
             )
-            
+
             // Update combined state
             _moreScreenState.value = _moreScreenState.value.copy(
                 isDeviceConnected = true
@@ -154,19 +154,19 @@ class MoreFragmentViewModel : BaseViewModel() {
                     isCheckingUpdates = true,
                     lastUpdateCheck = System.currentTimeMillis()
                 )
-                
+
                 // Simulate firmware check - in real implementation would call repository
                 kotlinx.coroutines.delay(2000)
-                
+
                 // This would be replaced with actual firmware check logic
                 _firmwareState.value = FirmwareState.UpToDate
                 _moreScreenState.value = _moreScreenState.value.copy(
                     isCheckingUpdates = false,
                     hasAvailableUpdate = false
                 )
-                
+
                 _fragmentAction.emit(FragmentAction.ShowSuccess("Firmware is up to date"))
-                
+
             } catch (e: Exception) {
                 _firmwareState.value = FirmwareState.Failed(false, e.message)
                 _moreScreenState.value = _moreScreenState.value.copy(
@@ -199,7 +199,7 @@ class MoreFragmentViewModel : BaseViewModel() {
                 isCheckingUpdates = false,
                 hasAvailableUpdate = false
             )
-            
+
             val message = if (isBindError) {
                 "Firmware service binding failed"
             } else {

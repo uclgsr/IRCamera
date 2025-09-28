@@ -1,19 +1,22 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Consolidated Info Activity - Replaces version, policy, clause, and help activities -->
+<?xml version="1.0" encoding="utf-8"?><!-- Consolidated Info Activity - Replaces version, policy, clause, and help activities -->
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="infoType"
             type="String" />
+
         <variable
             name="title"
             type="String" />
+
         <variable
             name="content"
             type="String" />
+
         <variable
             name="hasWebView"
             type="Boolean" />

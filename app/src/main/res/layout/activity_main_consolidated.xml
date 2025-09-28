@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Consolidated Main Activity Layout - Base layout that supports multi-modal recording -->
+<?xml version="1.0" encoding="utf-8"?><!-- Consolidated Main Activity Layout - Base layout that supports multi-modal recording -->
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
@@ -9,6 +8,7 @@
         <variable
             name="sensorMode"
             type="String" />
+
         <variable
             name="recordingEnabled"
             type="Boolean" />

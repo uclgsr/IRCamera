@@ -116,9 +116,11 @@ class GSRVideoPlayerViewModel : BaseViewModel() {
             videoFile.length() >= 1024 * 1024 * 1024 -> {
                 "%.1f GB".format(videoFile.length() / (1024.0 * 1024.0 * 1024.0))
             }
+
             videoFile.length() >= 1024 * 1024 -> {
                 "%.1f MB".format(videoFile.length() / (1024.0 * 1024.0))
             }
+
             else -> {
                 "%.1f KB".format(videoFile.length() / 1024.0)
             }

@@ -136,10 +136,10 @@ class DualModeCameraViewModel : BaseViewModel() {
 
             _cameraMode.value = mode
             _permissionState.value = PermissionState.UNKNOWN
-            
+
             val deviceInfo = SamsungDeviceCompatibility.getDeviceInfo()
             val supportedModes = getSupportedModes()
-            
+
             _cameraState.value = CameraState(
                 isInitialized = false,
                 isRecording = false,
@@ -173,11 +173,15 @@ class DualModeCameraViewModel : BaseViewModel() {
     fun requestPermission() {
         _permissionState.value = PermissionState.REQUESTING
         viewModelScope.launch {
-            _events.emit(CameraEvent.RequestPermission(listOf(
-                android.Manifest.permission.CAMERA,
-                android.Manifest.permission.RECORD_AUDIO,
-                android.Manifest.permission.WRITE_EXTERNAL_STORAGE
-            )))
+            _events.emit(
+                CameraEvent.RequestPermission(
+                    listOf(
+                        android.Manifest.permission.CAMERA,
+                        android.Manifest.permission.RECORD_AUDIO,
+                        android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    )
+                )
+            )
         }
     }
 
@@ -202,7 +206,7 @@ class DualModeCameraViewModel : BaseViewModel() {
                     currentResolution = "1920x1080", // Default resolution
                     frameRate = 30
                 )
-                
+
                 _events.emit(CameraEvent.ShowSuccess("Dual-mode camera system initialized"))
 
             } catch (e: Exception) {
@@ -230,30 +234,35 @@ class DualModeCameraViewModel : BaseViewModel() {
                 CameraMode.RAW -> {
                     handleRawModeSwitch()
                 }
+
                 CameraMode.VIDEO_4K -> {
                     _cameraState.value = _cameraState.value.copy(
                         currentResolution = "3840x2160",
                         frameRate = 30
                     )
                 }
+
                 CameraMode.VIDEO_1080P -> {
                     _cameraState.value = _cameraState.value.copy(
                         currentResolution = "1920x1080",
                         frameRate = 60
                     )
                 }
+
                 CameraMode.PREVIEW -> {
                     _cameraState.value = _cameraState.value.copy(
                         currentResolution = "1920x1080",
                         frameRate = 30
                     )
                 }
+
                 CameraMode.PHOTO_BURST -> {
                     _cameraState.value = _cameraState.value.copy(
                         currentResolution = "4000x3000",
                         frameRate = 0
                     )
                 }
+
                 CameraMode.NIGHT_MODE -> {
                     _cameraState.value = _cameraState.value.copy(
                         currentResolution = "1920x1080",
@@ -274,12 +283,12 @@ class DualModeCameraViewModel : BaseViewModel() {
             val deviceInfo = SamsungDeviceCompatibility.getDeviceInfo()
             "RAW Mode: Standard DNG ($deviceInfo)"
         }
-        
+
         _cameraState.value = _cameraState.value.copy(
             currentResolution = "4000x3000",
             frameRate = 0
         )
-        
+
         _events.emit(CameraEvent.ShowSuccess(message))
     }
 
@@ -298,14 +307,14 @@ class DualModeCameraViewModel : BaseViewModel() {
             try {
                 val fileName = "recording_${System.currentTimeMillis()}"
                 rgbCameraRecorder?.startRecording()
-                
+
                 _recordingState.value = _recordingState.value.copy(
                     isRecording = true,
                     recordingDuration = 0L
                 )
-                
+
                 _cameraState.value = _cameraState.value.copy(isRecording = true)
-                
+
                 _events.emit(CameraEvent.RecordingStarted(fileName))
                 _events.emit(CameraEvent.ShowSuccess("Recording started"))
 
@@ -325,14 +334,14 @@ class DualModeCameraViewModel : BaseViewModel() {
             try {
                 val duration = _recordingState.value.recordingDuration
                 rgbCameraRecorder?.stopRecording()
-                
+
                 _recordingState.value = _recordingState.value.copy(
                     isRecording = false,
                     recordedFileCount = _recordingState.value.recordedFileCount + 1
                 )
-                
+
                 _cameraState.value = _cameraState.value.copy(isRecording = false)
-                
+
                 val filePath = "recording_path" // Would be actual path in real implementation
                 _events.emit(CameraEvent.RecordingStopped(filePath, duration))
                 _events.emit(CameraEvent.ShowSuccess("Recording stopped"))
@@ -380,66 +389,66 @@ class DualModeCameraViewModel : BaseViewModel() {
         private const val TAG = "DualModeCameraViewModel"
     }
 }
-        }
+}
 
-        viewModelScope.launch {
-            try {
-                // Implement recording logic through RgbCameraRecorder
-                _cameraState.value = _cameraState.value?.copy(isRecording = true)
-                _statusMessage.value = "Recording started"
-            } catch (e: Exception) {
-                _error.value = "Failed to start recording: ${e.message}"
-            }
-        }
+viewModelScope.launch {
+    try {
+        // Implement recording logic through RgbCameraRecorder
+        _cameraState.value = _cameraState.value?.copy(isRecording = true)
+        _statusMessage.value = "Recording started"
+    } catch (e: Exception) {
+        _error.value = "Failed to start recording: ${e.message}"
     }
+}
+}
 
-    fun stopRecording() {
-        viewModelScope.launch {
-            try {
-                // Implement stop recording logic
-                _cameraState.value = _cameraState.value?.copy(isRecording = false)
-                _statusMessage.value = "Recording stopped"
-            } catch (e: Exception) {
-                _error.value = "Failed to stop recording: ${e.message}"
-            }
-        }
-    }
-
-    fun cleanup() {
-        viewModelScope.launch {
-            try {
-                rgbCameraRecorder?.cleanup()
-                _cameraState.value = CameraState(
-                    isInitialized = false,
-                    isRecording = false
-                )
-            } catch (e: Exception) {
-                _error.value = "Cleanup error: ${e.message}"
-            }
+fun stopRecording() {
+    viewModelScope.launch {
+        try {
+            // Implement stop recording logic
+            _cameraState.value = _cameraState.value?.copy(isRecording = false)
+            _statusMessage.value = "Recording stopped"
+        } catch (e: Exception) {
+            _error.value = "Failed to stop recording: ${e.message}"
         }
     }
+}
 
-    fun clearError() {
-        _error.value = null
+fun cleanup() {
+    viewModelScope.launch {
+        try {
+            rgbCameraRecorder?.cleanup()
+            _cameraState.value = CameraState(
+                isInitialized = false,
+                isRecording = false
+            )
+        } catch (e: Exception) {
+            _error.value = "Cleanup error: ${e.message}"
+        }
     }
+}
 
-    fun clearStatusMessage() {
-        _statusMessage.value = null
-    }
+fun clearError() {
+    _error.value = null
+}
 
-    fun getSamsungOptimizationStatus(): String {
-        return if (enableSamsungOptimizations) {
-            if (SamsungDeviceCompatibility.isStage3Compatible()) {
-                "Samsung Stage3/Level3 optimizations enabled"
-            } else {
-                "Samsung optimizations enabled (${SamsungDeviceCompatibility.getDeviceInfo()})"
-            }
+fun clearStatusMessage() {
+    _statusMessage.value = null
+}
+
+fun getSamsungOptimizationStatus(): String {
+    return if (enableSamsungOptimizations) {
+        if (SamsungDeviceCompatibility.isStage3Compatible()) {
+            "Samsung Stage3/Level3 optimizations enabled"
         } else {
-            "Samsung optimizations disabled"
+            "Samsung optimizations enabled (${SamsungDeviceCompatibility.getDeviceInfo()})"
         }
+    } else {
+        "Samsung optimizations disabled"
     }
+}
 
-    companion object {
-        private const val TAG = "DualModeCameraViewModel"
-    }
+companion object {
+    private const val TAG = "DualModeCameraViewModel"
+}
 }

@@ -1,19 +1,22 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Consolidated Camera Mode Selector - Enhanced for RGB, thermal, and multi-modal support -->
+<?xml version="1.0" encoding="utf-8"?><!-- Consolidated Camera Mode Selector - Enhanced for RGB, thermal, and multi-modal support -->
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="availableModes"
             type="java.util.Set&lt;String&gt;" />
+
         <variable
             name="selectedMode"
             type="String" />
+
         <variable
             name="isRecording"
             type="Boolean" />
+
         <variable
             name="isSwitching"
             type="Boolean" />

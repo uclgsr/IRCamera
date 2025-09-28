@@ -1,19 +1,22 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Consolidated Camera Test Activity - Replaces RGB and dual-mode camera test activities -->
+<?xml version="1.0" encoding="utf-8"?><!-- Consolidated Camera Test Activity - Replaces RGB and dual-mode camera test activities -->
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="cameraType"
             type="String" />
+
         <variable
             name="isDualMode"
             type="Boolean" />
+
         <variable
             name="isRecording"
             type="Boolean" />
+
         <variable
             name="hasManualControls"
             type="Boolean" />
@@ -249,10 +252,10 @@
                             android:text="Manual Focus:"
                             android:textColor="@color/white" />
 
-<com.google.android.material.switchmaterial.SwitchMaterial
-    android:id="@+id/manual_focus_switch"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content" />
+                        <com.google.android.material.switchmaterial.SwitchMaterial
+                            android:id="@+id/manual_focus_switch"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
                     </LinearLayout>
 
                     <LinearLayout

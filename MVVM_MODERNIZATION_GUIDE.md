@@ -5,6 +5,7 @@ This document outlines the modernization and consolidation of the MVVM architect
 ## Overview
 
 The MVVM architecture has been modernized to use current Android development best practices, focusing on:
+
 - StateFlow instead of LiveData for reactive UI
 - Repository pattern for data management
 - Coroutine-based error handling
@@ -18,6 +19,7 @@ The MVVM architecture has been modernized to use current Android development bes
 **Location**: `libunified/src/main/java/com/mpdc4gsr/libunified/app/ktbase/BaseViewModel.kt`
 
 **Features**:
+
 - StateFlow-based UI state management
 - SharedFlow for one-time events
 - Built-in error handling with CoroutineExceptionHandler
@@ -25,6 +27,7 @@ The MVVM architecture has been modernized to use current Android development bes
 - Coroutine scope helpers (`launchWithErrorHandling`, `launchWithLoading`)
 
 **Example Usage**:
+
 ```kotlin
 class MyViewModel : BaseViewModel() {
     fun performAction() {
@@ -41,12 +44,14 @@ class MyViewModel : BaseViewModel() {
 **Location**: `libunified/src/main/java/com/mpdc4gsr/libunified/app/ktbase/BaseViewModelActivity.kt`
 
 **Features**:
+
 - Automatic lifecycle-aware observers using `repeatOnLifecycle`
 - Built-in UI state handling (loading, error)
 - Automatic ViewModel initialization
 - Event handling for common UI actions
 
 **Key Methods**:
+
 - `handleUiState()` - Override to handle custom UI states
 - `handleUiEvent()` - Override to handle custom events
 - `showLoading()`, `hideLoading()` - Override for custom loading indicators
@@ -56,6 +61,7 @@ class MyViewModel : BaseViewModel() {
 **Location**: `libunified/src/main/java/com/mpdc4gsr/libunified/app/ktbase/BaseViewModelFragment.kt`
 
 **Features**:
+
 - Same as BaseViewModelActivity but for Fragments
 - Uses `viewLifecycleOwner` for proper lifecycle management
 - Automatic cleanup on destroy
@@ -65,11 +71,13 @@ class MyViewModel : BaseViewModel() {
 **Location**: `libunified/src/main/java/com/mpdc4gsr/libunified/app/ktbase/ViewModelFactory.kt`
 
 **Features**:
+
 - Dependency injection for ViewModels
 - Builder pattern for easy setup
 - Support for Application context and Repository injection
 
 **Example Usage**:
+
 ```kotlin
 val factory = BaseViewModelFactory.Builder(application)
     .addRepository<MyRepository>(myRepository)
@@ -83,12 +91,14 @@ val viewModel = createViewModelWithFactory<MyViewModel>(factory)
 **Location**: `libunified/src/main/java/com/mpdc4gsr/libunified/app/repository/BaseRepository.kt`
 
 **Features**:
+
 - Result wrapper for type-safe error handling
 - Built-in caching mechanism
 - Coroutine-based operations
 - Network-bound resource pattern
 
 **Example Usage**:
+
 ```kotlin
 class MyRepository : BaseRepository() {
     fun getData(): Flow<Result<DataType>> = safeFlow {
@@ -102,6 +112,7 @@ class MyRepository : BaseRepository() {
 ### StateFlow vs LiveData
 
 **Old Pattern (LiveData)**:
+
 ```kotlin
 private val _data = MutableLiveData<DataType>()
 val data: LiveData<DataType> = _data
@@ -113,6 +124,7 @@ viewModel.data.observe(this) { data ->
 ```
 
 **New Pattern (StateFlow)**:
+
 ```kotlin
 private val _data = MutableStateFlow<DataType>(initialValue)
 val data: StateFlow<DataType> = _data.asStateFlow()
@@ -130,6 +142,7 @@ lifecycleScope.launch {
 ### Sealed Classes for Type Safety
 
 **State Classes**:
+
 ```kotlin
 sealed class UiState {
     object Loading : UiState()
@@ -139,6 +152,7 @@ sealed class UiState {
 ```
 
 **Event Classes**:
+
 ```kotlin
 sealed class UiEvent {
     data class ShowToast(val message: String) : UiEvent()
@@ -155,6 +169,7 @@ sealed class UiEvent {
 **After**: Uses StateFlow with proper error handling and event management
 
 **Key Improvements**:
+
 - SharedFlow for one-time navigation events
 - Combined state objects for complex UI scenarios
 - Proper error handling with coroutines
@@ -166,6 +181,7 @@ sealed class UiEvent {
 **After**: StateFlow with Repository pattern and proper pagination
 
 **Key Improvements**:
+
 - Repository pattern for data operations
 - Pagination state management
 - Caching mechanism
@@ -178,6 +194,7 @@ sealed class UiEvent {
 **After**: Complete modern implementation with StateFlow and proper error handling
 
 **Key Improvements**:
+
 - StateFlow-based state management
 - Type-safe enum for policy types
 - Proper error handling and retry logic
@@ -190,6 +207,7 @@ sealed class UiEvent {
 **After**: StateFlow with combined state objects and reactive updates
 
 **Key Improvements**:
+
 - StateFlow for reactive device state
 - Combined state objects for complex UI scenarios
 - SharedFlow for navigation events
@@ -201,6 +219,7 @@ sealed class UiEvent {
 **New Addition**: Modern repository demonstrating advanced patterns
 
 **Features**:
+
 - Multi-sensor data streams
 - Combined data flows
 - Real-time data simulation
@@ -279,34 +298,40 @@ fun retry() {
 ## Best Practices
 
 ### 1. State Management
+
 - Use StateFlow for data that represents current state
 - Use SharedFlow for one-time events
 - Create sealed classes for type-safe state representation
 - Always use `asStateFlow()` and `asSharedFlow()` to expose read-only flows
 
 ### 2. Error Handling
+
 - Use the built-in `launchWithErrorHandling` for simple operations
 - Use `launchWithLoading` for operations that need loading states
 - Always provide meaningful error messages
 - Handle network connectivity checks
 
 ### 3. Repository Pattern
+
 - Extend BaseRepository for data operations
 - Use the Result wrapper for type-safe error handling
 - Implement caching where appropriate
 - Use coroutines for async operations
 
 ### 4. Lifecycle Management
+
 - Always use `repeatOnLifecycle` with StateFlow
 - Use `viewLifecycleOwner` in Fragments
 - Properly handle ViewModel cleanup
 
 ### 5. Testing
+
 - StateFlow makes testing easier with immediate value access
 - Use TestCoroutineDispatcher for testing coroutines
 - Mock repositories for unit testing ViewModels
 
 ### 6. Performance Optimization
+
 - Use appropriate cache TTL based on data volatility
 - Combine related data streams to reduce observer count
 - Use `distinctUntilChanged()` for expensive UI updates
@@ -345,6 +370,7 @@ When modernizing an existing ViewModel:
 ## Testing Strategies
 
 ### 1. ViewModel Testing
+
 ```kotlin
 @Test
 fun `test data loading success`() = runTest {
@@ -361,6 +387,7 @@ fun `test data loading success`() = runTest {
 ```
 
 ### 2. Repository Testing
+
 ```kotlin
 @Test
 fun `test repository caching`() = runTest {
@@ -377,6 +404,7 @@ fun `test repository caching`() = runTest {
 ```
 
 ### 3. Flow Testing
+
 ```kotlin
 @Test
 fun `test combined data flow`() = runTest {
@@ -405,6 +433,7 @@ fun `test combined data flow`() = runTest {
 ## Conclusion
 
 The modernized MVVM architecture provides:
+
 - Better reactive programming with StateFlow
 - Improved error handling and user experience
 - More maintainable and testable code
@@ -414,4 +443,5 @@ The modernized MVVM architecture provides:
 - Type-safe state management
 - Comprehensive error recovery mechanisms
 
-This modernization maintains backward compatibility where possible while providing a clear path forward for new development and establishes patterns that scale well with application growth.
+This modernization maintains backward compatibility where possible while providing a clear path forward for new
+development and establishes patterns that scale well with application growth.

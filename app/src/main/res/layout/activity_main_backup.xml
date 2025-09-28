@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Consolidated Main Activity Layout - Based on original with minimal GSR enhancements -->
+<?xml version="1.0" encoding="utf-8"?><!-- Consolidated Main Activity Layout - Based on original with minimal GSR enhancements -->
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
@@ -129,10 +128,10 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/view_main"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintHorizontal_weight="1">
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
                     android:id="@+id/iv_icon_gallery"
@@ -171,20 +170,20 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@id/cl_icon_gallery"
                 app:layout_constraintEnd_toStartOf="@id/cl_icon_settings"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintHorizontal_weight="1" />
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toEndOf="@id/cl_icon_gallery"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_icon_settings"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@id/view_main"
                 app:layout_constraintEnd_toStartOf="@id/cl_icon_mine"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintHorizontal_weight="1">
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toEndOf="@id/view_main"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
                     android:id="@+id/iv_icon_settings"
@@ -223,10 +222,10 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@id/cl_icon_settings"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintHorizontal_weight="1">
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toEndOf="@id/cl_icon_settings"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
                     android:id="@+id/iv_icon_mine"

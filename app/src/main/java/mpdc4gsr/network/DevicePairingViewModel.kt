@@ -112,7 +112,7 @@ class DevicePairingViewModel : BaseViewModel(), NetworkClient.NetworkEventListen
             _scanState.value = ScanState.IDLE
             _statusMessage.value = "Ready to scan for PC Controllers"
             _discoveredControllers.value = emptyList()
-            
+
             _events.emit(PairingEvent.ShowSuccess("Network client initialized successfully"))
         }
     }
@@ -126,7 +126,7 @@ class DevicePairingViewModel : BaseViewModel(), NetworkClient.NetworkEventListen
 
             _scanState.value = ScanState.SCANNING
             _statusMessage.value = "Scanning for PC Controllers..."
-            
+
             if (forceRefresh) {
                 controllers.clear()
                 _discoveredControllers.value = emptyList()
@@ -143,10 +143,10 @@ class DevicePairingViewModel : BaseViewModel(), NetworkClient.NetworkEventListen
                 } else {
                     "No PC Controllers found. Make sure you're on the same network."
                 }
-                
+
                 _statusMessage.value = message
                 _scanState.value = ScanState.COMPLETED
-                
+
                 if (foundControllers.isNotEmpty()) {
                     _events.emit(PairingEvent.ShowSuccess(message))
                 } else {
@@ -177,7 +177,7 @@ class DevicePairingViewModel : BaseViewModel(), NetworkClient.NetworkEventListen
                 _events.emit(PairingEvent.ShowConnectionDialog(controller))
 
                 val success = networkClient.connectToController(controller)
-                
+
                 if (success) {
                     _connectedController.value = controller
                     _connectionState.value = ConnectionState.CONNECTED
