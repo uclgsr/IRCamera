@@ -45,6 +45,12 @@
     <string name="app_got_it">Got it</string>
     <string name="app_save_image">Save Image</string>
 
+    <!-- New Compose Activity Strings -->
+    <string name="web_content">Web Content</string>
+    <string name="version_info">Version Information</string>
+    <string name="network_error">Network Error</string>
+    <string name="retry">Retry</string>
+
     <string name="version_code">1.0</string>
     <string name="top_infrared_up_case">MPDC4GSR</string>
     <string name="see_more_than">See More Than</string>

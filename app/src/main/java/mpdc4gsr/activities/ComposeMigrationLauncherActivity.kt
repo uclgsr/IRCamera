@@ -165,6 +165,46 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                     }
                 )
 
+                // New Compose Activities Section
+                Text(
+                    text = "Additional Compose Conversions",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.tertiary,
+                    modifier = Modifier.padding(top = 16.dp)
+                )
+
+                LauncherCard(
+                    title = "WebView Activity (Compose)",
+                    subtitle = "Modern WebView implementation with error handling",
+                    icon = Icons.Default.Web,
+                    onClick = { 
+                        val intent = Intent(this@ComposeMigrationLauncherActivity, WebViewActivityCompose::class.java)
+                        intent.putExtra("URL", "https://github.com/uclgsr/IRCamera")
+                        startActivity(intent)
+                    }
+                )
+
+                LauncherCard(
+                    title = "Version Info (Compose)",
+                    subtitle = "Complete app version information with modern UI",
+                    icon = Icons.Default.Info,
+                    onClick = { 
+                        startActivity(Intent(this@ComposeMigrationLauncherActivity, VersionActivityCompose::class.java))
+                    }
+                )
+
+                LauncherCard(
+                    title = "Policy Viewer (Compose)",
+                    subtitle = "Privacy policy and terms with rich content display",
+                    icon = Icons.Default.Policy,
+                    onClick = { 
+                        val intent = Intent(this@ComposeMigrationLauncherActivity, PolicyActivityCompose::class.java)
+                        intent.putExtra(PolicyActivityCompose.KEY_THEME_TYPE, 2) // Privacy Policy
+                        startActivity(intent)
+                    }
+                )
+
                 // Comparison option
                 Card(
                     modifier = Modifier.fillMaxWidth(),
