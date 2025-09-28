@@ -34,7 +34,6 @@ class ReportRepository : BaseRepository() {
         isTC007: Boolean,
         page: Int,
         pageSize: Int = 20
-
     ): Flow<BaseRepository.Result<List<ReportData>>> = safeFlow {
 
         val cacheKey = "reports_${if (isTC007) "tc007" else "ts004"}_$page"
