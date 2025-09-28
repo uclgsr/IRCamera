@@ -2,7 +2,11 @@ package mpdc4gsr.activities
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.csl.irCamera.R
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.time.delay
 import mpdc4gsr.ui_components.SensorDashboardFragment
 
 /**
