@@ -2,13 +2,16 @@ package mpdc4gsr.activities
 
 import android.Manifest
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.PermissionChecker
 import androidx.lifecycle.lifecycleScope
+import com.csl.irCamera.BuildConfig
 import com.csl.irCamera.R
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -17,6 +20,11 @@ import java.util.Date
 import java.util.Locale
 
 class SimplifiedMainActivity : AppCompatActivity() {
+
+    companion object {
+        private const val TAG = "SimplifiedMainActivity"
+        private const val PERMISSION_REQUEST_CODE = 1001
+    }
 
     private lateinit var statusText: TextView
     private lateinit var recordButton: Button
@@ -37,14 +45,14 @@ class SimplifiedMainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        android.util.Log.d("SimplifiedMainActivity", "onCreate() called")
+        if (BuildConfig.DEBUG) Log.d(TAG, "onCreate() called")
         setContentView(R.layout.activity_simplified_main)
-        android.util.Log.d("SimplifiedMainActivity", "Layout set successfully")
+        if (BuildConfig.DEBUG) Log.d(TAG, "Layout set successfully")
 
         initializeViews()
         checkPermissions()
         updateUI()
-        android.util.Log.d("SimplifiedMainActivity", "onCreate() completed successfully")
+        if (BuildConfig.DEBUG) Log.d(TAG, "onCreate() completed successfully")
     }
 
     private fun initializeViews() {
@@ -53,21 +61,21 @@ class SimplifiedMainActivity : AppCompatActivity() {
         connectButton = findViewById(R.id.connectButton)
         
         // Verify views were found
-        Log.d(TAG, "Views found - recordButton: ${recordButton != null}, connectButton: ${connectButton != null}")
+        if (BuildConfig.DEBUG) Log.d(TAG, "Views found - recordButton: ${recordButton != null}, connectButton: ${connectButton != null}")
 
         recordButton.setOnClickListener {
-            Log.d(TAG, "Record button clicked")
+            if (BuildConfig.DEBUG) Log.d(TAG, "Record button clicked")
             Toast.makeText(this, "Record button clicked!", Toast.LENGTH_SHORT).show()
             toggleRecording()
         }
 
         connectButton.setOnClickListener {
-            Log.d(TAG, "Connect button clicked")
+            if (BuildConfig.DEBUG) Log.d(TAG, "Connect button clicked")
             Toast.makeText(this, "Connect button clicked!", Toast.LENGTH_SHORT).show()
             toggleConnection()
         }
         
-        Log.d(TAG, "Click listeners setup complete")
+        if (BuildConfig.DEBUG) Log.d(TAG, "Click listeners setup complete")
     }
 
     private fun checkPermissions() {
@@ -183,9 +191,5 @@ class SimplifiedMainActivity : AppCompatActivity() {
 
     private fun getCurrentTime(): String {
         return SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date())
-    }
-
-    companion object {
-        private const val PERMISSION_REQUEST_CODE = 1001
     }
 }

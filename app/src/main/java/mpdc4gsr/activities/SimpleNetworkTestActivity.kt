@@ -9,6 +9,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.csl.irCamera.BuildConfig
 import com.csl.irCamera.R
 import kotlinx.coroutines.launch
 import mpdc4gsr.network.CommandConnection
@@ -47,18 +48,18 @@ class SimpleNetworkTestActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d(TAG, "onCreate() called")
+        if (BuildConfig.DEBUG) Log.d(TAG, "onCreate() called")
         setContentView(R.layout.activity_network_client_test)
-        Log.d(TAG, "Layout set successfully")
+        if (BuildConfig.DEBUG) Log.d(TAG, "Layout set successfully")
 
         initializeViews()
         setupClickListeners()
         updateUI()
-        Log.d(TAG, "onCreate() completed successfully")
+        if (BuildConfig.DEBUG) Log.d(TAG, "onCreate() completed successfully")
     }
 
     private fun initializeViews() {
-        Log.d(TAG, "Initializing views")
+        if (BuildConfig.DEBUG) Log.d(TAG, "Initializing views")
         connectionStatusIndicator = findViewById(R.id.connection_status_indicator)
         connectionStatusText = findViewById(R.id.connection_status_text)
         ipAddressInput = findViewById(R.id.ip_address_input)
@@ -70,19 +71,19 @@ class SimpleNetworkTestActivity : AppCompatActivity() {
         statusText = findViewById(R.id.connection_info_text)
 
         // Verify all views were found
-        Log.d(TAG, "Views found - connectButton: ${connectButton != null}, connectBluetoothButton: ${connectBluetoothButton != null}, disconnectButton: ${disconnectButton != null}, testCommandsButton: ${testCommandsButton != null}")
+        if (BuildConfig.DEBUG) Log.d(TAG, "Views found - connectButton: ${connectButton != null}, connectBluetoothButton: ${connectBluetoothButton != null}, disconnectButton: ${disconnectButton != null}, testCommandsButton: ${testCommandsButton != null}")
 
         // Set default values
         ipAddressInput.setText(DEFAULT_PC_IP)
         portInput.setText(DEFAULT_PC_PORT.toString())
-        Log.d(TAG, "Views initialization complete")
+        if (BuildConfig.DEBUG) Log.d(TAG, "Views initialization complete")
     }
 
     private fun setupClickListeners() {
-        Log.d(TAG, "Setting up click listeners")
+        if (BuildConfig.DEBUG) Log.d(TAG, "Setting up click listeners")
         
         connectButton.setOnClickListener {
-            Log.d(TAG, "Connect button clicked")
+            if (BuildConfig.DEBUG) Log.d(TAG, "Connect button clicked")
             Toast.makeText(this, "Connect button clicked!", Toast.LENGTH_SHORT).show()
             val ip = ipAddressInput.text.toString().trim()
             val portStr = portInput.text.toString().trim()
@@ -101,23 +102,23 @@ class SimpleNetworkTestActivity : AppCompatActivity() {
         }
 
         connectBluetoothButton.setOnClickListener {
-            Log.d(TAG, "Connect Bluetooth button clicked")
+            if (BuildConfig.DEBUG) Log.d(TAG, "Connect Bluetooth button clicked")
             Toast.makeText(this, "Bluetooth button clicked! (Not implemented yet)", Toast.LENGTH_SHORT).show()
         }
 
         disconnectButton.setOnClickListener {
-            Log.d(TAG, "Disconnect button clicked")
+            if (BuildConfig.DEBUG) Log.d(TAG, "Disconnect button clicked")
             Toast.makeText(this, "Disconnect button clicked!", Toast.LENGTH_SHORT).show()
             disconnectFromPC()
         }
 
         testCommandsButton.setOnClickListener {
-            Log.d(TAG, "Test commands button clicked")
+            if (BuildConfig.DEBUG) Log.d(TAG, "Test commands button clicked")
             Toast.makeText(this, "Test commands button clicked!", Toast.LENGTH_SHORT).show()
             testCommands()
         }
         
-        Log.d(TAG, "Click listeners setup complete")
+        if (BuildConfig.DEBUG) Log.d(TAG, "Click listeners setup complete")
     }
 
     private fun connectToPC(ip: String, port: Int) {
