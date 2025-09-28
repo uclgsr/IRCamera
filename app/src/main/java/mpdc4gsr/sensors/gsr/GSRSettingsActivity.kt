@@ -195,17 +195,7 @@ class GSRSettingsActivity : BaseViewModelActivity<GSRSettingsViewModel>() {
             }
         }
 
-        // Error observer
-        lifecycleScope.launch {
-            viewModel.error.collect { error ->
-                error?.let {
-                    Toast.makeText(this@GSRSettingsActivity, it, Toast.LENGTH_LONG).show()
-                    viewModel.clearError()
-                }
-            }
-        }
-
-        // Settings events observer
+        // Settings events observer (includes error handling)
         lifecycleScope.launch {
             viewModel.settingsEvents.collect { event ->
                 handleSettingsEvent(event)
