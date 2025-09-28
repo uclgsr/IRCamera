@@ -122,7 +122,7 @@
             android:id="@+id/iv_nav_mine"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:contentDescription="@null"
+            android:contentDescription="@string/search_learn_more"
             android:src="@drawable/selector_more"
             app:layout_constraintBottom_toTopOf="@+id/tv_nav_mine"
             app:layout_constraintDimensionRatio="1:1"
