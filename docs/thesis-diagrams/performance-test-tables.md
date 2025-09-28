@@ -113,7 +113,7 @@
 | Error Recovery                         | REQ-3.3        | Automatic reconnection logic                 | Fault injection            | Network failure scenarios   | [DONE] 95% recovery success |
 | **Objective 4: Research Validation**   |                |                                              |                            |                             |                        |
 | Pilot Study Execution                  | REQ-4.1        | Complete system integration                  | Live participant testing   | N/A                         | [FAIL] Not completed        |
-| Data Quality Validation                | REQ-4.2        | Scientific accuracy verification             | Hardware calibration       | TC001 +/-2 degreesC, Shimmer 12-bit  | [DONE] Production accuracy  |
+| Data Quality Validation                | REQ-4.2        | Scientific accuracy verification             | Hardware calibration       | TC001 +/-2 degrees C, Shimmer 12-bit  | [DONE] Production accuracy  |
 | Reproducibility                        | REQ-4.3        | Session management + metadata                | Documentation completeness | Code + hardware specs       | [DONE] Fully documented     |
 
 ### Legend:
