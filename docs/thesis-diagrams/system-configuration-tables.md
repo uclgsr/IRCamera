@@ -5,7 +5,7 @@
 | Component                       | Specification                               | Parameters                        | Communication             | Notes                                            |
 |---------------------------------|---------------------------------------------|-----------------------------------|---------------------------|--------------------------------------------------|
 | **Topdon TC001 Thermal Camera** | Resolution: 256x192                         | Frame Rate: 25 Hz                 | USB/OTG                   | Hardware VID/PID: 0x0525/0xa4a2, 0x0525/0xa4a5   |
-|                                 | Temperature Range: -20 degreesC to +550 degreesC          | Accuracy: +/-2 degreesC                    | Data Format: CSV          | SDK Integration: IRCMD, LibIRParse, LibIRProcess |
+|                                 | Temperature Range: -20 degrees C to +550 degrees C          | Accuracy: +/-2 degrees C                    | Data Format: CSV          | SDK Integration: IRCMD, LibIRParse, LibIRProcess |
 |                                 | Calibration: Hardware emissivity correction | Emissivity Range: 0.1-1.0         | File Size: ~0.53 GB/30min | Color Palettes: Iron, Rainbow, Grayscale         |
 | **Shimmer3 GSR+ Sensor**        | Sampling Rate: 1-1024 Hz (128 Hz default)   | Range: 0-4 microS                     | Bluetooth 2.1+EDR         | IEEE 802.15.1 compliant                          |
 |                                 | ADC Resolution: 12-bit (0-4095)             | Battery: 12+ hours                | Data Format: CSV          | ShimmerAndroidAPI integration                    |
