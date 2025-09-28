@@ -64,6 +64,5 @@
     <color name="lms_color_333">#FF333333</color>
     <color name="tx_333">#FF333333</color>
     <color name="lms_red">#FFFF0000</color>
-    <color name="toastTextColor">#FFFFFFFF</color>
     <color name="red">#FFFF0000</color>
 </resources>
