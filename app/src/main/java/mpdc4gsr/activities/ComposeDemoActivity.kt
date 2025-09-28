@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import mpdc4gsr.compose.base.BaseComposeActivity
+import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import mpdc4gsr.compose.components.SensorStatusCard
 import mpdc4gsr.compose.components.ThermalVisualizationCard
 import mpdc4gsr.viewmodel.ConnectionState
@@ -172,7 +172,7 @@ class ComposeDemoActivity : BaseComposeActivity<MainActivityViewModel>() {
                 // Launch full hybrid activity
                 Button(
                     onClick = {
-                        startActivity(Intent(this@ComposeDemoActivity, MainActivityCompose::class.java))
+                        startActivity(Intent(this@ComposeDemoActivity, MainActivity::class.java))
                     },
                     modifier = Modifier.fillMaxWidth()
                 ) {

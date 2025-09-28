@@ -7,7 +7,6 @@ plugins {
     kotlin("android")
     alias(libs.plugins.kotlin.compose)
     id("com.google.devtools.ksp")
-    id("org.jetbrains.kotlin.plugin.compose") version "2.2.0"
 }
 
 val buildDayStr = SimpleDateFormat("yyMMdd", Locale.getDefault()).format(Date())
@@ -252,7 +251,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.composeCompiler.get()
+        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
 
     dependenciesInfo {
@@ -369,11 +368,6 @@ dependencies {
 
 
     implementation(libs.bundles.camerax)
-    
-    // Compose dependencies
-    implementation(platform(libs.compose.bom))
-    implementation(libs.bundles.compose)
-    debugImplementation(libs.compose.ui.tooling)
     
     testImplementation(libs.junit)
     testImplementation(libs.junit.jupiter)
