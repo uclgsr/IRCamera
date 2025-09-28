@@ -5,17 +5,15 @@ import android.app.Application
 import android.content.Context
 import android.content.pm.PackageManager
 import androidx.core.app.ActivityCompat
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.*
 import mpdc4gsr.sensors.unified.ShimmerDeviceManager
 import mpdc4gsr.sensors.unified.model.DeviceInfo
 
+/**
+ * Modern Shimmer Config ViewModel - MVVM StateFlow Implementation
+ * Manages Shimmer device configuration, scanning, and connections with reactive patterns
+ */
 class ShimmerConfigViewModel : BaseViewModel() {
 
     companion object {
@@ -35,24 +33,24 @@ class ShimmerConfigViewModel : BaseViewModel() {
             }
     }
 
-    // State management for UI
+    // StateFlow for UI state management
     private val _uiState = MutableStateFlow(ShimmerConfigUiState())
-    val uiState: StateFlow<ShimmerConfigUiState> = _uiState
+    val uiState: StateFlow<ShimmerConfigUiState> = _uiState.asStateFlow()
 
-    // Device management
+    // Device management StateFlows
     private val _discoveredDevices = MutableStateFlow<List<DeviceInfo>>(emptyList())
-    val discoveredDevices: StateFlow<List<DeviceInfo>> = _discoveredDevices
+    val discoveredDevices: StateFlow<List<DeviceInfo>> = _discoveredDevices.asStateFlow()
 
     private val _connectionState = MutableStateFlow<ConnectionState>(ConnectionState.Disconnected)
-    val connectionState: StateFlow<ConnectionState> = _connectionState
+    val connectionState: StateFlow<ConnectionState> = _connectionState.asStateFlow()
 
-    // Permission management
-    private val _permissionState = MutableLiveData<PermissionState>()
-    val permissionState: LiveData<PermissionState> = _permissionState
+    // Permission management StateFlow
+    private val _permissionState = MutableStateFlow(PermissionState(false, emptyList()))
+    val permissionState: StateFlow<PermissionState> = _permissionState.asStateFlow()
 
-    // Action events for UI
-    private val _configAction = MutableLiveData<ConfigAction>()
-    val configAction: LiveData<ConfigAction> = _configAction
+    // SharedFlow for one-time events
+    private val _configEvents = MutableSharedFlow<ConfigEvent>()
+    val configEvents: SharedFlow<ConfigEvent> = _configEvents.asSharedFlow()
 
     // Internal state
     private var shimmerDeviceManager: ShimmerDeviceManager? = null
@@ -83,19 +81,16 @@ class ShimmerConfigViewModel : BaseViewModel() {
         val shouldShowRationale: Boolean = false
     )
 
-    data class ConfigAction(
-        val type: ActionType,
-        val message: String? = null,
-        val device: DeviceInfo? = null
-    )
-
-    enum class ActionType {
-        SHOW_TOAST,
-        SHOW_PERMISSION_ERROR,
-        UPDATE_SCAN_BUTTON,
-        UPDATE_CONNECTION_STATUS,
-        HIDE_PROGRESS_BAR,
-        SHOW_PROGRESS_BAR
+    sealed class ConfigEvent {
+        data class ShowToast(val message: String) : ConfigEvent()
+        object ShowPermissionError : ConfigEvent()
+        object UpdateScanButton : ConfigEvent()
+        object UpdateConnectionStatus : ConfigEvent()
+        object HideProgressBar : ConfigEvent()
+        object ShowProgressBar : ConfigEvent()
+        data class DeviceConnected(val device: DeviceInfo) : ConfigEvent()
+        data class ConnectionFailed(val message: String) : ConfigEvent()
+        data class ShowError(val message: String) : ConfigEvent()
     }
 
     // Permission management
@@ -126,13 +121,15 @@ class ShimmerConfigViewModel : BaseViewModel() {
             _uiState.value = _uiState.value.copy(
                 statusMessage = "Bluetooth permissions required for Shimmer device scanning"
             )
-            _configAction.value = ConfigAction(ActionType.SHOW_PERMISSION_ERROR)
+            launchWithErrorHandling {
+                _configEvents.emit(ConfigEvent.ShowPermissionError)
+            }
         }
     }
 
     // Shimmer manager initialization
     private fun initializeShimmerManager(context: Context) {
-        viewModelScope.launch {
+        launchWithErrorHandling {
             try {
                 _uiState.value = _uiState.value.copy(isLoading = true)
 
