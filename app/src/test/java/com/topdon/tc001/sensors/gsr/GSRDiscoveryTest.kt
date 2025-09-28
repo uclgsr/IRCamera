@@ -34,10 +34,10 @@ class GSRDiscoveryTest {
     fun `should attempt device discovery with proper BLE permissions`() = runTest {
         // Setup - Mock BLE permissions granted
         every { 
-            mockContext.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) 
+            mockContext.checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) 
         } returns android.content.pm.PackageManager.PERMISSION_GRANTED
         every { 
-            mockContext.checkSelfPermission(Manifest.permission.BLUETOOTH) 
+            mockContext.checkSelfPermission(android.Manifest.permission.BLUETOOTH) 
         } returns android.content.pm.PackageManager.PERMISSION_GRANTED
         
         val mockBluetoothManager = mockk<android.bluetooth.BluetoothManager>()
