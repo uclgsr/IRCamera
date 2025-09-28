@@ -1,60 +1,387 @@
-# UI Component Map (XML & Compose Equivalents)
+# IRCamera Complete UI Component Map (XML & Compose Equivalents)
 
-All screens in the *IRCamera* repository are built with standard Android views and a few custom components. Below is a comprehensive map of the UI elements and components used, along with their roles, naming conventions, and Compose equivalents.
+**Last Updated:** Post-Dev Branch Merge - Comprehensive Update  
+**Total Layouts:** 220+ layout files across modules  
+**Architecture:** Hybrid XML/Compose with active migration to Jetpack Compose
 
-## Standard Layout Containers
+The IRCamera Multi-Modal Thermal Sensing Platform combines traditional Android XML layouts with modern Jetpack Compose implementations. This comprehensive map documents all UI elements, components, patterns, and architectural decisions across the entire application ecosystem.
 
-### **ConstraintLayout**
-- **Usage:** Root container for most screens (activities/fragments) and some inner groupings for flexible positioning
-- **Example:** `activity_ir_monitor.xml`, `fragment_thermal_ir.xml`
-- **Compose Equivalent:** `ConstraintLayout` composable with `ConstraintLayoutScope`
-- **Key Attributes:** `layout_constraintWidth_percent`, `layout_constraintHeight_percent`, `layout_constraintDimensionRatio`
+## 📋 Documentation Overview
 
-### **LinearLayout**
-- **Usage:** Simple vertical or horizontal grouping of elements (e.g. vertical list of texts and buttons in wizard screens)
-- **Example:** `ll_seek_bar` in `activity_manual_step2.xml` for slider control with end labels
-- **Compose Equivalent:** `Column` for vertical, `Row` for horizontal arrangement
-- **ID Prefix:** `ll_` (e.g., `ll_seek_bar`)
+This document provides complete coverage of:
+- **Standard Android Components** (TextView, ImageView, Button, etc.) with Compose equivalents
+- **Custom Thermal Components** (TemperatureView, ThermalOverlay, etc.) with specialized patterns
+- **GSR Sensor Components** (Multi-modal recording, device management, real-time data display)
+- **Modern Compose Implementations** (MainComposeActivity, SensorDashboard, unified navigation)
+- **Consolidated Layout Patterns** (220+ layouts reorganized for maintainability)
+- **Cross-Module Architecture** (LibUnified, Component modules, App module integration)
+- **Migration Strategies** (5-phase XML to Compose conversion approach)
 
-### **FrameLayout / FragmentContainerView**
-- **Usage:** Stack views (e.g. camera preview with overlay) or host fragments dynamically
-- **Example:** `thermal_lay` in `fragment_ir_monitor_thermal.xml` stacking CameraView and TemperatureView
-- **Compose Equivalent:** `Box` for stacking, fragment hosting through navigation
-- **Key Pattern:** Camera preview + overlay views stacked for thermal display
+## 🏗️ Repository Architecture Overview
 
-## Standard Widgets
+### **Module Structure (Post-Consolidation)**
+```
+IRCamera/
+├── app/ (30 layouts) - Main application interfaces
+│   ├── GSR sensor management screens
+│   ├── Multi-modal recording interfaces  
+│   ├── Testing and development layouts
+│   └── 10 consolidated layout templates
+├── component/ (121 layouts) - Core functionality modules
+│   ├── thermalunified/ (~80 layouts) - Thermal camera components
+│   ├── user/ (~25 layouts) - User management
+│   └── gsr-recording/ (~16 layouts) - GSR sensor integration
+├── libunified/ (69 layouts) - Base templates and utilities
+│   ├── Common dialog layouts
+│   ├── Base activity templates  
+│   └── Framework UI components
+└── backup/layouts/ (51 layouts) - Legacy layouts (preserved for reference)
+```
 
-### **TextView (ID prefix: `tv_`)**
-- **Usage:** Labels, titles, and button-like text
-- **Examples:** 
-  - `tv_tips` and `tv_content` for instructions
-  - `tv_correction` for text buttons
-  - `tv_open_thermal` for menu labels
-- **Compose Equivalent:** `Text` composable
-- **Common Attributes:**
+### **Compose Integration Status**
+The application is actively migrating from XML to Jetpack Compose:
+
+**Completed Compose Implementations:**
+- `MainComposeActivity` - Unified entry point with navigation
+- `SensorDashboardComposeActivity` - Real-time sensor dashboard
+- `SettingsComposeActivity` - Complete settings screens
+- `ComposeDemoActivity` - Showcase of migrated components
+- `BaseComposeActivity` - Foundation for new Compose screens
+
+**Hybrid Integration Patterns:**
+- `ThermalComposeIntegration` - Thermal camera + Compose interop
+- `ComposeInterop` - XML-Compose bridge utilities
+- `BaseComposeFragment` - Fragment-based Compose integration
+
+### **Layout Consolidation Impact**
+Recent architectural improvements:
+- **35 legacy layouts** moved to backup directory
+- **10 consolidated templates** replace specialized layouts
+- **Enhanced data binding** across all new implementations
+- **Improved maintainability** through unified design patterns
+
+## 📱 Standard Layout Containers
+
+### **ConstraintLayout (XML) → ConstraintLayout (Compose)**
+- **Usage:** Root container for most screens (activities/fragments) and complex positioning
+- **XML Examples:** `activity_ir_monitor.xml`, `fragment_thermal_ir.xml`
+- **Compose Implementation:**
+```kotlin
+@Composable
+fun ThermalMonitorScreen() {
+    ConstraintLayout(modifier = Modifier.fillMaxSize()) {
+        val (titleBar, content, controls) = createRefs()
+        
+        ThermalTopBar(
+            modifier = Modifier.constrainAs(titleBar) {
+                top.linkTo(parent.top)
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+            }
+        )
+        
+        ThermalCameraPreview(
+            modifier = Modifier.constrainAs(content) {
+                top.linkTo(titleBar.bottom)
+                bottom.linkTo(controls.top)
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+            }
+        )
+        
+        ControlPanel(
+            modifier = Modifier.constrainAs(controls) {
+                bottom.linkTo(parent.bottom)
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+                height = Dimension.percent(0.15f)
+            }
+        )
+    }
+}
+```
+
+### **LinearLayout (XML) → Column/Row (Compose)**
+- **Usage:** Simple vertical or horizontal grouping of elements
+- **XML Examples:** `ll_seek_bar` in `activity_manual_step2.xml`
+- **Compose Implementation:**
+```kotlin
+@Composable
+fun AlignmentControls() {
+    Column(
+        modifier = Modifier.padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Text("Dual Light Correction", style = MaterialTheme.typography.titleLarge)
+        InstructionImage()
+        AlignmentSlider()
+        ActionButton("Confirm Alignment")
+    }
+}
+
+@Composable
+fun AlignmentSlider() {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text("-10°", style = MaterialTheme.typography.bodySmall)
+        Slider(
+            value = alignmentValue,
+            onValueChange = { alignmentValue = it },
+            valueRange = -10f..10f,
+            modifier = Modifier.weight(1f).padding(horizontal = 8.dp)
+        )
+        Text("10°", style = MaterialTheme.typography.bodySmall)
+    }
+}
+```
+
+### **FrameLayout (XML) → Box (Compose)**
+- **Usage:** Stack views (camera preview + overlays) or host fragments dynamically  
+- **XML Examples:** `thermal_lay` stacking CameraView and TemperatureView
+- **Compose Implementation:**
+```kotlin
+@Composable
+fun ThermalCameraPreview() {
+    Box(modifier = Modifier.fillMaxSize()) {
+        // Base camera feed
+        AndroidView(
+            factory = { context ->
+                CameraView(context).apply {
+                    // Configure thermal camera
+                }
+            },
+            modifier = Modifier.fillMaxSize()
+        )
+        
+        // Temperature overlay
+        TemperatureOverlay(
+            temperatureData = temperatureData,
+            regionMode = regionMode,
+            onRegionSelect = { region -> 
+                // Handle region selection
+            },
+            modifier = Modifier.fillMaxSize()
+        )
+        
+        // UI controls overlay
+        ThermalControls(
+            modifier = Modifier.align(Alignment.BottomCenter)
+        )
+    }
+}
+```
+
+## 🎯 Standard Widgets & Modern Implementations
+
+### **TextView (ID prefix: `tv_`) → Text (Compose)**
+- **XML Usage:** Labels, titles, and button-like text
+- **XML Examples:** `tv_tips`, `tv_content`, `tv_correction`, `tv_open_thermal`
+- **XML Attributes:**
   - `textColor="@color/white"` for dark backgrounds
   - `textSize="16sp"` for body text, `17sp` for buttons
   - `drawableEnd` for arrow indicators
+- **Compose Implementation:**
+```kotlin
+@Composable
+fun ThermalInstructions() {
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Text(
+            text = stringResource(R.string.dual_light_correction_tips_2),
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+        
+        TextButton(
+            onClick = { /* navigation action */ },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Open Thermal")
+            Icon(
+                Icons.Default.ArrowForward,
+                contentDescription = "Navigate",
+                modifier = Modifier.padding(start = 4.dp)
+            )
+        }
+    }
+}
+```
 
-### **ImageView (ID prefix: `iv_`)**
-- **Usage:** Icons or illustrations
-- **Examples:**
-  - `iv_tips` (informational images)
-  - `iv_sketch_map` (diagram images)
-  - `iv_open_thermal` (arrow icons)
-- **Compose Equivalent:** `Image` or `Icon` composable
-- **Common Sources:** Vector drawables (SVG), PNG assets
-- **Styling:** `contentDescription="@null"` for decorative images
+### **ImageView (ID prefix: `iv_`) → Image/Icon (Compose)**
+- **XML Usage:** Icons, illustrations, device status indicators
+- **XML Examples:** `iv_tips`, `iv_sketch_map`, `iv_open_thermal`
+- **XML Sources:** Vector drawables (SVG), PNG assets, selector drawables
+- **Compose Implementation:**
+```kotlin
+@Composable
+fun DeviceStatusIcon(
+    deviceType: DeviceType,
+    isConnected: Boolean
+) {
+    Box {
+        Icon(
+            imageVector = when (deviceType) {
+                DeviceType.THERMAL -> Icons.Default.Thermostat
+                DeviceType.GSR -> Icons.Default.Sensors
+                else -> Icons.Default.DeviceUnknown
+            },
+            contentDescription = "Device ${deviceType.name}",
+            tint = if (isConnected) Color.Green else Color.Red,
+            modifier = Modifier.size(48.dp)
+        )
+        
+        // Connection status indicator
+        if (isConnected) {
+            Box(
+                modifier = Modifier
+                    .size(12.dp)
+                    .background(Color.Green, CircleShape)
+                    .align(Alignment.TopEnd)
+            )
+        }
+    }
+}
+```
 
-### **Button**
-- **Usage:** Clickable actions
+### **Button → Button/TextButton (Compose)**
+- **XML Usage:** Clickable actions with consistent theming
+- **XML Examples:** `motion_btn`, `motion_start_btn`
+- **XML Styling:**
+  - `background="@drawable/bg_corners05_solid_theme"` (active)
+  - `background="@drawable/bg_corners05_solid_50_theme"` (disabled)
+  - `textColor="@color/color_img_calibration_button"`
+- **Compose Implementation:**
+```kotlin
+@Composable
+fun ThermalActionButtons(
+    isRecording: Boolean,
+    onStartStop: () -> Unit,
+    onCreateChart: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        horizontalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        Button(
+            onClick = onCreateChart,
+            modifier = Modifier.weight(0.4f),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.primary
+            )
+        ) {
+            Text("Create Chart")
+        }
+        
+        AnimatedVisibility(visible = isRecording) {
+            Button(
+                onClick = onStartStop,
+                modifier = Modifier.weight(0.4f),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.secondary
+                )
+            ) {
+                Text("Start")
+            }
+        }
+    }
+}
+```
+
+### **SeekBar (XML) → Slider (Compose)**
+- **XML Usage:** Temperature adjustment, alignment offset control
+- **XML Example:** `seek_bar` with "-10°" and "10°" labels
+- **Compose Implementation:**
+```kotlin
+@Composable
+fun TemperatureAdjustmentSlider(
+    value: Float,
+    onValueChange: (Float) -> Unit,
+    range: ClosedFloatingPointRange<Float> = -10f..10f
+) {
+    Column {
+        Text(
+            "Temperature Adjustment",
+            style = MaterialTheme.typography.titleMedium
+        )
+        
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("${range.start.toInt()}°")
+            
+            Slider(
+                value = value,
+                onValueChange = onValueChange,
+                valueRange = range,
+                steps = 20,
+                modifier = Modifier.weight(1f).padding(horizontal = 8.dp),
+                colors = SliderDefaults.colors(
+                    thumbColor = MaterialTheme.colorScheme.primary,
+                    activeTrackColor = MaterialTheme.colorScheme.primary
+                )
+            )
+            
+            Text("${range.endInclusive.toInt()}°")
+        }
+    }
+}
+```
+
+### **EditText (XML) → TextField (Compose)**
+- **XML Usage:** Numeric inputs, calibration fields, device configuration
+- **XML Examples:** `min`, `max`, `ooc`, `b`, `singlepoint`, `lowpoint`
+- **Compose Implementation:**
+```kotlin
+@Composable
+fun CalibrationInputs(
+    singlePoint: String,
+    onSinglePointChange: (String) -> Unit,
+    lowPoint: String,
+    onLowPointChange: (String) -> Unit,
+    highPoint: String,
+    onHighPointChange: (String) -> Unit
+) {
+    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        OutlinedTextField(
+            value = singlePoint,
+            onValueChange = onSinglePointChange,
+            label = { Text("Single Point Temperature") },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier.fillMaxWidth()
+        )
+        
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            OutlinedTextField(
+                value = lowPoint,
+                onValueChange = onLowPointChange,
+                label = { Text("Low Point") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                modifier = Modifier.weight(1f)
+            )
+            
+            OutlinedTextField(
+                value = highPoint,
+                onValueChange = onHighPointChange,
+                label = { Text("High Point") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                modifier = Modifier.weight(1f)
+            )
+        }
+    }
+}
+```
 - **Examples:** `motion_btn`, `motion_start_btn` in monitor screen
-- **Compose Equivalent:** `Button` composable
-- **Standard Styling:**
+- **XML Styling:**
   - `background="@drawable/bg_corners05_solid_theme"` (active state)
   - `background="@drawable/bg_corners05_solid_50_theme"` (disabled state)
   - `textColor="#55272F"` or `@color/color_img_calibration_button`
   - `layout_constraintWidth_percent="0.4"` for consistent sizing
+- **Compose Equivalent:** `Button` composable
 
 ### **ToggleButton**
 - **Usage:** On/off settings
@@ -78,44 +405,244 @@ All screens in the *IRCamera* repository are built with standard Android views a
 - **Compose Equivalent:** `AndroidView` wrapping the surface view
 - **Key Pattern:** Full-screen camera feed with overlay views
 
-## Custom Wrapper Components
+## 🔧 Custom Wrapper Components & Modern Implementations
 
-### **TitleView**
-- **Class:** `com.mpdc4gsr.libunified.app.view.TitleView`
-- **Usage:** Consistent top app bar on all screens
-- **Components:** Left icon (back arrow), centered title text, optional right-side icons/buttons
-- **Key Attributes:**
+### **TitleView (XML) → TopAppBar (Compose)**
+- **XML Class:** `com.mpdc4gsr.libunified.app.view.TitleView`
+- **XML Usage:** Consistent top app bar on all screens
+- **XML Components:** Left icon (back arrow), centered title text, optional right-side icons/buttons
+- **XML Attributes:**
   - `app:titleText` for title
   - `app:isTitleCenter` for centered vs left-aligned titles
   - Built-in back navigation handling
-- **Compose Equivalent:** `TopAppBar` with `navigationIcon` and `actions`
-- **Styling:** Uniform padding, text size, color across all screens
+- **Compose Implementation:**
+```kotlin
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun IRCameraTitleBar(
+    title: String,
+    onNavigateBack: () -> Unit = {},
+    actions: @Composable RowScope.() -> Unit = {}
+) {
+    TopAppBar(
+        title = { 
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleLarge,
+                color = MaterialTheme.colorScheme.onSurface
+            ) 
+        },
+        navigationIcon = {
+            IconButton(onClick = onNavigateBack) {
+                Icon(
+                    Icons.Default.ArrowBack,
+                    contentDescription = "Back",
+                    tint = MaterialTheme.colorScheme.onSurface
+                )
+            }
+        },
+        actions = actions,
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = Color(0xFF16131E)
+        )
+    )
+}
+```
 
-### **TemperatureView**
-- **Class:** `com.mpdc4gsr.libunified.ir.view.TemperatureView`
-- **Usage:** Custom view overlay for thermal data readouts
-- **Features:** Temperature metrics for selected regions (point/line/area)
-- **API:** `temperatureRegionMode`, `setImageSize()`, visibility toggles via EventBus
-- **Compose Equivalent:** Custom `Canvas` composable with drawing operations
-- **Key Pattern:** Overlay spanning match_parent over camera preview
+### **TemperatureView (XML) → Custom Canvas (Compose)**
+- **XML Class:** `com.mpdc4gsr.libunified.ir.view.TemperatureView`
+- **XML Usage:** Custom view overlay for thermal data readouts
+- **XML Features:** Temperature metrics for selected regions (point/line/area)
+- **XML API:** `temperatureRegionMode`, `setImageSize()`, visibility toggles via EventBus
+- **Compose Implementation:**
+```kotlin
+@Composable
+fun TemperatureOverlay(
+    temperatureData: TemperatureData,
+    regionMode: TemperatureRegionMode,
+    onRegionSelect: (Region) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    var selectedRegion by remember { mutableStateOf<Region?>(null) }
+    
+    Canvas(
+        modifier = modifier
+            .fillMaxSize()
+            .pointerInput(regionMode) {
+                detectTapGestures { offset ->
+                    val region = when (regionMode) {
+                        TemperatureRegionMode.POINT -> PointRegion(offset)
+                        TemperatureRegionMode.LINE -> LineRegion(offset, offset)
+                        TemperatureRegionMode.AREA -> RectRegion(offset, offset)
+                    }
+                    selectedRegion = region
+                    onRegionSelect(region)
+                }
+            }
+    ) {
+        // Draw temperature visualization
+        temperatureData.regions.forEach { region ->
+            when (region) {
+                is PointRegion -> drawPoint(region, Paint().apply { 
+                    color = Color.Red.toArgb()
+                })
+                is LineRegion -> drawLine(region, Paint().apply { 
+                    color = Color.Blue.toArgb()
+                    strokeWidth = 4f
+                })
+                is RectRegion -> drawRect(region, Paint().apply { 
+                    color = Color.Green.toArgb()
+                    style = Paint.Style.STROKE
+                })
+            }
+        }
+        
+        // Draw temperature labels
+        selectedRegion?.let { region ->
+            drawTemperatureLabel(
+                region.center,
+                temperatureData.getTemperature(region),
+                Paint().apply {
+                    color = Color.White.toArgb()
+                    textSize = 48f
+                }
+            )
+        }
+    }
+}
+```
 
-### **MoveImageView**
-- **Class:** `com.mpdc4gsr.module.thermalunified.view.MoveImageView`
-- **Usage:** Drag gestures for image alignment in dual-light correction
-- **Pattern:** Stacked on top of camera preview SurfaceView inside FrameLayout
-- **Compose Equivalent:** Custom composable with `Modifier.pointerInput` for drag handling
+### **MoveImageView (XML) → Draggable Composable (Compose)**
+- **XML Class:** `com.mpdc4gsr.module.thermalunified.view.MoveImageView`
+- **XML Usage:** Drag gestures for image alignment in dual-light correction
+- **XML Pattern:** Stacked on top of camera preview SurfaceView inside FrameLayout
+- **Compose Implementation:**
+```kotlin
+@Composable
+fun DraggableAlignmentOverlay(
+    offset: Offset,
+    onOffsetChange: (Offset) -> Unit,
+    alignmentImage: ImageBitmap,
+    modifier: Modifier = Modifier
+) {
+    var dragOffset by remember { mutableStateOf(offset) }
+    
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .pointerInput(Unit) {
+                detectDragGestures(
+                    onDragStart = { dragOffset = offset },
+                    onDrag = { change, _ ->
+                        dragOffset += change
+                        onOffsetChange(dragOffset)
+                    }
+                )
+            }
+    ) {
+        Image(
+            bitmap = alignmentImage,
+            contentDescription = "Alignment overlay",
+            modifier = Modifier
+                .offset { IntOffset(dragOffset.x.toInt(), dragOffset.y.toInt()) }
+                .alpha(0.7f),
+            contentScale = ContentScale.Fit
+        )
+    }
+}
+```
 
-### **ImageEditView**
-- **Class:** `com.mpdc4gsr.libunified.app.view.ImageEditView`
-- **Usage:** Drawing annotations on captured images (circles, rectangles, arrows)
-- **Pattern:** Toggles visible after photo capture in image pick screen
-- **Compose Equivalent:** Custom drawing canvas with gesture handling
+### **ImageEditView (XML) → Drawing Canvas (Compose)**
+- **XML Class:** `com.mpdc4gsr.libunified.app.view.ImageEditView`
+- **XML Usage:** Drawing annotations on captured images (circles, rectangles, arrows)
+- **XML Pattern:** Toggles visible after photo capture in image pick screen
+- **Compose Implementation:**
+```kotlin
+@Composable
+fun ImageAnnotationCanvas(
+    capturedImage: ImageBitmap,
+    selectedTool: DrawingTool,
+    selectedColor: Color,
+    onAnnotationAdded: (Annotation) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    var annotations by remember { mutableStateOf(listOf<Annotation>()) }
+    var currentPath by remember { mutableStateOf<Path?>(null) }
+    
+    Canvas(
+        modifier = modifier
+            .fillMaxSize()
+            .pointerInput(selectedTool, selectedColor) {
+                detectDragGestures(
+                    onDragStart = { offset ->
+                        currentPath = Path().apply { moveTo(offset.x, offset.y) }
+                    },
+                    onDrag = { change, _ ->
+                        currentPath?.lineTo(change.position.x, change.position.y)
+                    },
+                    onDragEnd = {
+                        currentPath?.let { path ->
+                            val annotation = when (selectedTool) {
+                                DrawingTool.CIRCLE -> CircleAnnotation(path, selectedColor)
+                                DrawingTool.RECTANGLE -> RectAnnotation(path, selectedColor)
+                                DrawingTool.ARROW -> ArrowAnnotation(path, selectedColor)
+                                DrawingTool.FREE_DRAW -> FreeDrawAnnotation(path, selectedColor)
+                            }
+                            annotations = annotations + annotation
+                            onAnnotationAdded(annotation)
+                        }
+                        currentPath = null
+                    }
+                )
+            }
+    ) {
+        // Draw captured image as background
+        drawImage(capturedImage)
+        
+        // Draw all annotations
+        annotations.forEach { annotation ->
+            annotation.draw(this)
+        }
+        
+        // Draw current path being drawn
+        currentPath?.let { path ->
+            drawPath(
+                path = path,
+                color = selectedColor,
+                style = Stroke(width = 8f)
+            )
+        }
+    }
+}
+```
 
-### **CameraView**
-- **Class:** `com.infisense.usbir.view.CameraView`
-- **Usage:** IR camera preview display
-- **Integration:** Tied to thermal data through `SynchronizedBitmap`
-- **Compose Equivalent:** `AndroidView` wrapper with camera integration
+### **CameraView (XML) → AndroidView Integration (Compose)**
+- **XML Class:** `com.infisense.usbir.view.CameraView`
+- **XML Usage:** IR camera preview display
+- **XML Integration:** Tied to thermal data through `SynchronizedBitmap`
+- **Compose Implementation:**
+```kotlin
+@Composable
+fun ThermalCameraView(
+    onCameraInitialized: (CameraView) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    AndroidView(
+        factory = { context ->
+            CameraView(context).apply {
+                // Configure thermal camera settings
+                setImageSize(384, 288) // TC001 resolution
+                setPseudocolorMode(PseudocolorMode.IRON)
+                onCameraInitialized(this)
+            }
+        },
+        modifier = modifier,
+        update = { cameraView ->
+            // Update camera settings as needed
+        }
+    )
+}
+```
 
 ## Dialogs and Popups
 
