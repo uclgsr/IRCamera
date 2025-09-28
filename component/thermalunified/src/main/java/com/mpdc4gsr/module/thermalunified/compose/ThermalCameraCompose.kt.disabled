@@ -3,10 +3,7 @@ package com.mpdc4gsr.module.thermalunified.compose
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CameraAlt
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.VideoCall
-import androidx.compose.material.icons.filled.VideocamOff
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -364,43 +361,6 @@ fun ThermalFragmentViewModel.takeSnapshot() {
 fun ThermalFragmentViewModel.openSettings() {
     // Implementation would open thermal settings
 }
-            shape = RoundedCornerShape(12.dp)
-        ) {
-            AndroidView(
-                factory = { context ->
-                    IrSurfaceView(context).apply {
-                        // Configure the thermal camera surface view
-                        // This preserves all existing thermal camera functionality
-                        setupThermalSurface(this, viewModel)
-                    }
-                },
-                modifier = Modifier.fillMaxSize()
-            ) { view ->
-                // Handle updates to the thermal surface view
-                updateThermalSurface(view, temperatureData)
-            }
-        }
-        
-        // Temperature readings card
-        temperatureData?.let { data ->
-            ThermalReadingsCard(
-                centerTemp = data.centerTemp,
-                maxTemp = data.maxTemp,
-                minTemp = data.minTemp,
-                maxTempLocation = data.maxTempLocation,
-                minTempLocation = data.minTempLocation
-            )
-        }
-        
-        // Control panel
-        ThermalControlPanel(
-            isRecording = isRecording,
-            onStartRecording = { viewModel.startRecording() },
-            onStopRecording = { viewModel.stopRecording() },
-            onTakeSnapshot = { viewModel.takeSnapshot() },
-            onOpenSettings = { viewModel.openSettings() }
-        )
-    }
 }
 
 @Composable
@@ -556,17 +516,6 @@ private fun ThermalControlPanel(
             }
         }
     }
-}
-
-// Helper functions for integrating with existing thermal implementation
-private fun setupThermalSurface(surfaceView: IrSurfaceView, viewModel: ThermalFragmentViewModel) {
-    // Configure the surface view with existing thermal camera setup
-    // This would integrate with existing thermal camera initialization
-}
-
-private fun updateThermalSurface(surfaceView: IrSurfaceView, temperatureData: Any?) {
-    // Update the surface view with new temperature data
-    // This would use existing thermal data processing
 }
 
 // Data classes for Compose state

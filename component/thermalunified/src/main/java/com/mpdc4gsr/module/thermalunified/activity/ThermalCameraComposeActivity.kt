@@ -1,3 +1,8 @@
+/*
+// TODO: Fix BaseComposeActivity dependency issue
+// This activity needs to be refactored to not depend on app module classes
+// or BaseComposeActivity needs to be moved to a shared library
+
 package com.mpdc4gsr.module.thermalunified.activity
 
 import android.os.Bundle
@@ -68,3 +73,4 @@ class ThermalCameraComposeActivity : BaseComposeActivity<ThermalFragmentViewMode
         // This integrates with existing thermal camera disconnection logic
     }
 }
+*/
