@@ -77,21 +77,21 @@ class SensorDataRepository(
     /**
      * Get real-time GSR sensor data stream
      */
-    fun getGSRDataStream(deviceId: String): Flow<Result<GSRSensorData>> = safeFlow {
+    fun getGSRDataStream(deviceId: String): Flow<BaseRepository.Result<GSRSensorData>> = safeFlow {
         simulateGSRDataStream(deviceId)
     }
 
     /**
      * Get thermal sensor data stream
      */
-    fun getThermalDataStream(deviceId: String): Flow<Result<ThermalSensorData>> = safeFlow {
+    fun getThermalDataStream(deviceId: String): Flow<BaseRepository.Result<ThermalSensorData>> = safeFlow {
         simulateThermalDataStream(deviceId)
     }
 
     /**
      * Get device status with caching
      */
-    fun getDeviceStatus(deviceId: String): Flow<Result<DeviceStatus>> = safeFlow {
+    fun getDeviceStatus(deviceId: String): Flow<BaseRepository.Result<DeviceStatus>> = safeFlow {
         val cacheKey = "${DEVICE_STATUS_CACHE_KEY}_$deviceId"
         
         getCachedOrExecute(cacheKey, DEVICE_STATUS_TTL) {
@@ -102,19 +102,19 @@ class SensorDataRepository(
     /**
      * Get combined sensor data from multiple sources
      */
-    fun getCombinedSensorData(deviceIds: List<String>): Flow<Result<CombinedSensorData>> {
+    fun getCombinedSensorData(deviceIds: List<String>): Flow<BaseRepository.Result<CombinedSensorData>> {
         val gsrStreams = deviceIds.map { getGSRDataStream(it) }
         val thermalStreams = deviceIds.map { getThermalDataStream(it) }
         
         return combine(gsrStreams + thermalStreams) { results ->
             val gsrData = results.take(deviceIds.size).mapNotNull { 
-                if (it is Result.Success) it.data else null 
+                if (it is BaseRepository.Result.Success) it.data else null 
             }
             val thermalData = results.drop(deviceIds.size).mapNotNull { 
-                if (it is Result.Success) it.data else null 
+                if (it is BaseRepository.Result.Success) it.data else null 
             }
             
-            Result.Success(CombinedSensorData(gsrData, thermalData))
+            BaseRepository.Result.Success(CombinedSensorData(gsrData, thermalData))
         }
     }
 
