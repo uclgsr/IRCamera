@@ -245,7 +245,7 @@ class RequirementsEvaluationFramework:
             not_met_reqs = sum(1 for r in evaluation_results if r['Outcome'] == 'Not Met')
             
             f.write(f"- Total Requirements: {total_reqs}\n")
-            f.write(f"- Fully Met: {met_reqs} ({met_reqs/total_reqs*100:.1f}%)\n")
+            f.write(f"- Fully Met: {met_reqs} ({met_reqs/total_reqs*100:.1f}% if total_reqs > 0 else 'N/A')\n")
             f.write(f"- Partially Met: {partial_reqs} ({partial_reqs/total_reqs*100:.1f}%)\n")
             f.write(f"- Not Met: {not_met_reqs} ({not_met_reqs/total_reqs*100:.1f}%)\n\n")
             
