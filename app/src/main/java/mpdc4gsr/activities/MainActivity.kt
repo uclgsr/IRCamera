@@ -80,6 +80,17 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         observeViewModel()
         requestAllPermissions()
         bindRecordingService()
+        
+        // Handle navigation from other activities
+        handleNavigationIntent()
+    }
+    
+    private fun handleNavigationIntent() {
+        val targetPage = intent.getIntExtra("page", 1) // Default to main page
+        if (targetPage != 1) { // Only navigate if not already on main page
+            binding.viewPage.setCurrentItem(targetPage, false)
+            viewModel.onNavigationItemSelected(targetPage)
+        }
     }
 
     private fun setupUI() {
@@ -357,5 +368,11 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         permissionController.onActivityResult(requestCode, resultCode)
+    }
+    
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        setIntent(intent) // Update the activity's intent
+        handleNavigationIntent()
     }
 }
