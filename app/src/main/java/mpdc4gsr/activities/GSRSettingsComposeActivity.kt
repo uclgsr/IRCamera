@@ -141,9 +141,9 @@ class GSRSettingsComposeActivity : BaseComposeActivity() {
                                 valueRange = 1f..512f,
                                 steps = 10,
                                 colors = SliderDefaults.colors(
-                                    thumbColor = Color(0xFF6B35FF),
-                                    activeTrackColor = Color(0xFF6B35FF),
-                                    inactiveTrackColor = Color(0xFF3A3A3A)
+                                    thumbColor = MaterialTheme.colorScheme.primary,
+                                    activeTrackColor = MaterialTheme.colorScheme.primary,
+                                    inactiveTrackColor = MaterialTheme.colorScheme.surfaceVariant
                                 )
                             )
 
