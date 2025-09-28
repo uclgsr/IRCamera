@@ -64,4 +64,14 @@
     <color name="lms_color_333">#FF333333</color>
     <color name="tx_333">#FF333333</color>
     <color name="lms_red">#FFFF0000</color>
+
+    <!-- Missing colors causing build failures -->
+    <color name="button_accent">#FF2B79D8</color>
+    <color name="button_secondary">#FF666666</color>
+    <color name="card_background">#FF2a2a2a</color>
+    <color name="text_hint">#FF999999</color>
+    <color name="background_card">#FF2a2a2a</color>
+    <color name="border_light">#FF444444</color>
+    <color name="background_secondary">#FF333333</color>
+    <color name="tab_text">#CCFFFFFF</color>
 </resources>

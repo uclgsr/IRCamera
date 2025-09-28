@@ -125,4 +125,10 @@
     <!-- Main navigation labels -->
     <string name="main_settings">Settings</string>
 
+    <!-- Bottom navigation strings -->
+    <string name="app_gallery">Gallery</string>
+    <string name="vehicle_function">Main</string>
+    <string name="search_learn_more">Mine</string>
+    <string name="tc_local_album">Gallery</string>
+
 </resources>
