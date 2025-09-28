@@ -84,7 +84,7 @@ class DevicePairingActivity : BaseViewModelActivity<DevicePairingViewModel>(),
         // Collect UI state changes
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState.collectLatest { state ->
+                viewModel.pairingScreenState.collectLatest { state ->
                     handleUiState(state)
                 }
             }
