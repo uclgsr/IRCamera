@@ -50,7 +50,7 @@
 | Integration Point        | Technology               | Implementation                  | Validation                     | Performance                  |
 |--------------------------|--------------------------|---------------------------------|--------------------------------|------------------------------|
 | **TC001 Thermal SDK**    | Native Android SDK       | `com.energy.iruvc.*` classes    | Hardware device detection      | 256x192@25Hz sustained       |
-|                          | Temperature calibration  | Hardware emissivity correction  | +/-2 degreesC accuracy validation       | Production-grade accuracy    |
+|                          | Temperature calibration  | Hardware emissivity correction  | +/-2 degrees C accuracy validation       | Production-grade accuracy    |
 |                          | Color palette processing | Iron/Rainbow/Grayscale          | Visual thermal rendering       | Professional imaging quality |
 | **Shimmer3 Integration** | ShimmerAndroidAPI        | `com.shimmerresearch.android.*` | 12-bit ADC validation          | 128 Hz @ <3ms latency        |
 |                          | BLE protocol handling    | Nordic BLE library backend      | Connection reliability testing | >95% uptime typical          |
