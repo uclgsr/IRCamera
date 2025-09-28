@@ -122,4 +122,7 @@
     <!-- Enhanced Recording Label -->
     <string name="enhanced_recording_label">Enhanced Recording</string>
 
+    <!-- Main navigation labels -->
+    <string name="main_settings">Settings</string>
+
 </resources>

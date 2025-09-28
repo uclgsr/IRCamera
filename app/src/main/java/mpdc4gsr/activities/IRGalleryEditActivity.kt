@@ -882,7 +882,7 @@ class IRGalleryEditActivity : BaseBindingActivity<ActivityIrGalleryEditBinding>(
         var newTemp = temp
         try {
             val s = struct
-            if (s == null || s.distance <= 0 || s.radiation <= 0) {
+            if (s.distance <= 0 || s.radiation <= 0) {
                 return temp
             }
             val paramsArray =

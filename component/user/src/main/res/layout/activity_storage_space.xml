@@ -16,14 +16,28 @@
         app:layout_constraintTop_toTopOf="parent"
         app:titleText="@string/ts004_storage_space" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cLayout_storage"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="20dp"
-        android:layout_marginTop="36dp"
-        android:background="@drawable/setting_bg_shape"
-        app:layout_constraintTop_toBottomOf="@id/title_view">
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:fillViewport="true"
+        android:overScrollMode="ifContentScrolls"
+        android:scrollbars="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title_view">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cLayout_storage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/setting_bg_shape">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_horizontal"
@@ -190,14 +204,15 @@
         android:layout_marginLeft="20dp"
         android:layout_marginTop="24dp"
         android:layout_marginRight="20dp"
+        android:layout_marginBottom="32dp"
         android:background="@drawable/bg_corners10_solid_ffba42_stroke_theme"
         android:gravity="center"
         android:text="@string/more_storage_reset"
         android:textColor="@color/white"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cLayout_storage" />
+        android:textSize="16sp" />
 
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
