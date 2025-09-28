@@ -5,6 +5,7 @@ import java.util.Locale
 plugins {
     id("com.android.application")
     kotlin("android")
+    alias(libs.plugins.kotlin.compose)
     id("com.google.devtools.ksp")
 }
 
@@ -246,6 +247,7 @@ android {
         buildConfig = true
         dataBinding = true
         viewBinding = true
+        compose = true
     }
 
     dependenciesInfo {
@@ -283,6 +285,18 @@ dependencies {
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 
     implementation(libs.guava)
+
+    // Jetpack Compose BOM and core dependencies
+    implementation(platform(libs.compose.bom))
+    implementation(libs.bundles.compose.core)
+    implementation(libs.bundles.compose.navigation.bundle)
+    implementation(libs.bundles.compose.icons)
+    
+    // Compose debug tools - only in debug builds
+    debugImplementation(libs.bundles.compose.debug)
+    
+    // Compose testing
+    androidTestImplementation(libs.bundles.compose.test)
 
     implementation(project(":component:thermalunified"))
     implementation(project(":component:gsr-recording"))
@@ -333,6 +347,20 @@ dependencies {
     implementation(files("libs/shimmerdriverpc-0.11.5_beta.jar"))
     implementation(files("libs/shimmerbluetoothmanager-0.11.5_beta.jar"))
 
+    // Testing dependencies  
+    testImplementation(libs.junit)
+    testImplementation("org.robolectric:robolectric:4.10.3")
+    testImplementation("androidx.test:core:1.5.0")
+    testImplementation("androidx.test.ext:junit:1.1.5")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
+    
+    // Compose testing dependencies
+    androidTestImplementation(platform(libs.compose.bom))
+    androidTestImplementation(libs.bundles.compose.test)
+    debugImplementation(libs.bundles.compose.debug)
+    
+    androidTestImplementation(libs.test.ext.junit)
+    androidTestImplementation(libs.test.espresso.core)
 
 
     implementation(libs.bundles.camerax)
