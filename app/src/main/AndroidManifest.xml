@@ -365,6 +365,59 @@
             android:label="Simplified Main"
             android:theme="@style/AppTheme" />
 
+        <!-- Jetpack Compose Activities - Task Implementation -->
+        <activity
+            android:name="mpdc4gsr.activities.MainActivityCompose"
+            android:exported="false"
+            android:label="Main Dashboard (Compose)"
+            android:screenOrientation="userPortrait"
+            android:theme="@style/AppTheme" />
+
+        <activity
+            android:name="mpdc4gsr.activities.SensorDashboardComposeActivity"
+            android:exported="false"
+            android:label="Sensor Dashboard (Compose)"
+            android:screenOrientation="userPortrait"
+            android:theme="@style/AppTheme" />
+
+        <activity
+            android:name="mpdc4gsr.activities.SettingsComposeActivity"
+            android:exported="false"
+            android:label="Settings (Compose)"
+            android:screenOrientation="userPortrait"
+            android:theme="@style/AppTheme" />
+
+        <activity
+            android:name="mpdc4gsr.activities.ComposeDemoActivity"
+            android:exported="true"
+            android:label="Compose Infrastructure Demo"
+            android:screenOrientation="userPortrait"
+            android:theme="@style/AppTheme" />
+
+        <activity
+            android:name="mpdc4gsr.activities.FullMigrationDemoActivity"
+            android:exported="true"
+            android:label="Full Migration Demo"
+            android:screenOrientation="userPortrait"
+            android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="mpdc4gsr.activities.ComposeMigrationLauncherActivity"
+            android:exported="true"
+            android:label="Compose Migration Launcher"
+            android:screenOrientation="userPortrait"
+            android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
         <service
             android:name="mpdc4gsr.core.RecordingService"
             android:enabled="true"

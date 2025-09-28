@@ -347,6 +347,20 @@ dependencies {
     implementation(files("libs/shimmerdriverpc-0.11.5_beta.jar"))
     implementation(files("libs/shimmerbluetoothmanager-0.11.5_beta.jar"))
 
+    // Testing dependencies  
+    testImplementation(libs.junit)
+    testImplementation("org.robolectric:robolectric:4.10.3")
+    testImplementation("androidx.test:core:1.5.0")
+    testImplementation("androidx.test.ext:junit:1.1.5")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
+    
+    // Compose testing dependencies
+    androidTestImplementation(platform(libs.compose.bom))
+    androidTestImplementation(libs.bundles.compose.test)
+    debugImplementation(libs.bundles.compose.debug)
+    
+    androidTestImplementation(libs.test.ext.junit)
+    androidTestImplementation(libs.test.espresso.core)
 
 
     implementation(libs.bundles.camerax)
