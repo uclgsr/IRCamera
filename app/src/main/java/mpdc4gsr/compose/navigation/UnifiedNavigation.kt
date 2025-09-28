@@ -48,6 +48,9 @@ sealed class UnifiedRoute(val route: String) {
     object CameraSettings : UnifiedRoute("camera_settings")
     
     // Thermal Camera Routes
+    object ThermalMain : UnifiedRoute("thermal_main")
+    object ThermalGallery : UnifiedRoute("thermal_gallery")
+    object ThermalReport : UnifiedRoute("thermal_report")
     object ThermalCamera : UnifiedRoute("thermal_camera")
     object ThermalSettings : UnifiedRoute("thermal_settings")
     object ThermalGallery : UnifiedRoute("thermal_gallery")
@@ -175,6 +178,45 @@ fun UnifiedNavHost(
         }
         
         // Thermal Camera Routes
+        composable(UnifiedRoute.ThermalMain.route) {
+            LaunchedEffect(Unit) {
+                try {
+                    context.startActivity(
+                        Intent(context, Class.forName("com.mpdc4gsr.module.thermalunified.activity.IRMainComposeActivity"))
+                    )
+                } catch (e: Exception) {
+                    // Fallback to placeholder
+                }
+            }
+            ThermalLoadingScreen("Loading Thermal Main...")
+        }
+        
+        composable(UnifiedRoute.ThermalGallery.route) {
+            LaunchedEffect(Unit) {
+                try {
+                    context.startActivity(
+                        Intent(context, Class.forName("com.mpdc4gsr.module.thermalunified.activity.ThermalGalleryComposeActivity"))
+                    )
+                } catch (e: Exception) {
+                    // Fallback to placeholder
+                }
+            }
+            ThermalLoadingScreen("Loading Thermal Gallery...")
+        }
+        
+        composable(UnifiedRoute.ThermalReport.route) {
+            LaunchedEffect(Unit) {
+                try {
+                    context.startActivity(
+                        Intent(context, Class.forName("com.mpdc4gsr.module.thermalunified.activity.ThermalReportComposeActivity"))
+                    )
+                } catch (e: Exception) {
+                    // Fallback to placeholder
+                }
+            }
+            ThermalLoadingScreen("Loading Thermal Reports...")
+        }
+        
         composable(UnifiedRoute.ThermalCamera.route) {
             ThermalCameraScreen(
                 onBackClick = { navController.popBackStack() },
@@ -202,6 +244,7 @@ fun UnifiedNavHost(
             ModernizationProgressScreen(
                 onNavigateToGSRDemo = { navController.navigate(UnifiedRoute.GSRModernizationDemo.route) },
                 onNavigateToCameraDemo = { navController.navigate(UnifiedRoute.CameraDashboard.route) },
+                onNavigateToThermalDemo = { navController.navigate(UnifiedRoute.ThermalMain.route) },
                 onNavigateToComponentShowcase = { navController.navigate(UnifiedRoute.ComponentShowcase.route) }
             )
         }

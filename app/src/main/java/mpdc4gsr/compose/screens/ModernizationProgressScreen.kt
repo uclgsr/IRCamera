@@ -27,6 +27,7 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 fun ModernizationProgressScreen(
     onNavigateToGSRDemo: () -> Unit,
     onNavigateToCameraDemo: () -> Unit,
+    onNavigateToThermalDemo: () -> Unit,
     onNavigateToComponentShowcase: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -46,6 +47,7 @@ fun ModernizationProgressScreen(
             ModernizationProgressContent(
                 onNavigateToGSRDemo = onNavigateToGSRDemo,
                 onNavigateToCameraDemo = onNavigateToCameraDemo,
+                onNavigateToThermalDemo = onNavigateToThermalDemo,
                 onNavigateToComponentShowcase = onNavigateToComponentShowcase,
                 modifier = Modifier.padding(paddingValues)
             )
@@ -57,6 +59,7 @@ fun ModernizationProgressScreen(
 private fun ModernizationProgressContent(
     onNavigateToGSRDemo: () -> Unit,
     onNavigateToCameraDemo: () -> Unit,
+    onNavigateToThermalDemo: () -> Unit,
     onNavigateToComponentShowcase: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -80,6 +83,7 @@ private fun ModernizationProgressContent(
         InteractiveDemosCard(
             onNavigateToGSRDemo = onNavigateToGSRDemo,
             onNavigateToCameraDemo = onNavigateToCameraDemo,
+            onNavigateToThermalDemo = onNavigateToThermalDemo,
             onNavigateToComponentShowcase = onNavigateToComponentShowcase
         )
         
@@ -397,6 +401,7 @@ private fun ProgressCategory(
 private fun InteractiveDemosCard(
     onNavigateToGSRDemo: () -> Unit,
     onNavigateToCameraDemo: () -> Unit,
+    onNavigateToThermalDemo: () -> Unit,
     onNavigateToComponentShowcase: () -> Unit
 ) {
     Card(
@@ -427,6 +432,13 @@ private fun InteractiveDemosCard(
                 description = "Modern dual-mode camera interface",
                 icon = Icons.Default.CameraAlt,
                 onClick = onNavigateToCameraDemo
+            )
+            
+            DemoItem(
+                title = "Thermal Imaging Suite",
+                description = "Professional thermal analysis tools",
+                icon = Icons.Default.Thermostat,
+                onClick = onNavigateToThermalDemo
             )
             
             DemoItem(

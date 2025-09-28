@@ -194,6 +194,25 @@
             android:exported="false"
             android:label="Thermal Camera (Compose)"
             android:screenOrientation="userPortrait" />
+
+        <!-- New Compose Activities for Phase 5 Thermal Modernization -->
+        <activity
+            android:name=".activity.IRMainComposeActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.IRCamera" />
+
+        <activity
+            android:name=".activity.ThermalGalleryComposeActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.IRCamera" />
+
+        <activity
+            android:name=".activity.ThermalReportComposeActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.IRCamera" />
     </application>
 
 </manifest>
