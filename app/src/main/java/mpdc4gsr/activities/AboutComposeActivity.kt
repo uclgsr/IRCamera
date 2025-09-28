@@ -88,7 +88,7 @@ class AboutComposeActivity : BaseComposeActivity() {
                                 modifier = Modifier.size(80.dp),
                                 shape = CircleShape,
                                 colors = CardDefaults.cardColors(
-                                    containerColor = Color(0xFF6B35FF)
+                                    containerColor = MaterialTheme.colorScheme.primary
                                 )
                             ) {
                                 Box(
@@ -98,7 +98,7 @@ class AboutComposeActivity : BaseComposeActivity() {
                                     Icon(
                                         imageVector = Icons.Default.Camera,
                                         contentDescription = "App Icon",
-                                        tint = Color.White,
+                                        tint = MaterialTheme.colorScheme.onPrimary,
                                         modifier = Modifier.size(40.dp)
                                     )
                                 }
