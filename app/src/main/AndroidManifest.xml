@@ -418,6 +418,21 @@
             </intent-filter>
         </activity>
 
+        <!-- Enhanced Compose Activities - Updated with dev branch integration -->
+        <activity
+            android:name="mpdc4gsr.activities.MainActivityComposeEnhanced"
+            android:exported="true"
+            android:label="Enhanced Main Dashboard"
+            android:screenOrientation="userPortrait"
+            android:theme="@style/AppTheme" />
+
+        <activity
+            android:name="mpdc4gsr.activities.SensorDashboardComposeEnhanced"
+            android:exported="true"
+            android:label="Enhanced Sensor Dashboard"
+            android:screenOrientation="userPortrait"
+            android:theme="@style/AppTheme" />
+
         <service
             android:name="mpdc4gsr.core.RecordingService"
             android:enabled="true"

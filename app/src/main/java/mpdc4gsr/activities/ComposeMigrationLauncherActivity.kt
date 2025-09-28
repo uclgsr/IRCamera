@@ -69,31 +69,57 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = "🚀 Complete Migration Available",
+                            text = "🚀 Enhanced Migration - Dev Updated",
                             style = MaterialTheme.typography.headlineMedium,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onPrimaryContainer
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = "All parallel development tasks completed with production-ready applications",
+                            text = "Updated with consolidated layout integration from dev branch",
                             style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f)
                         )
                     }
                 }
 
-                // Task implementations
+                // Enhanced implementations
                 Text(
-                    text = "Implemented Tasks",
+                    text = "Enhanced Implementations (Updated)",
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary
                 )
 
                 LauncherCard(
+                    title = "Enhanced Main Dashboard",
+                    subtitle = "Updated with consolidated layout integration",
+                    icon = Icons.Default.Dashboard,
+                    onClick = { 
+                        startActivity(Intent(this@ComposeMigrationLauncherActivity, MainActivityComposeEnhanced::class.java))
+                    }
+                )
+
+                LauncherCard(
+                    title = "Enhanced Sensor Dashboard", 
+                    subtitle = "Multi-modal sensor integration with consolidated patterns",
+                    icon = Icons.Default.Analytics,
+                    onClick = { 
+                        startActivity(Intent(this@ComposeMigrationLauncherActivity, SensorDashboardComposeEnhanced::class.java))
+                    }
+                )
+
+                // Original implementations
+                Text(
+                    text = "Original Implementations",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.secondary
+                )
+
+                LauncherCard(
                     title = "Task A: Main Dashboard",
-                    subtitle = "Hybrid MainActivity with modern Compose UI",
+                    subtitle = "Original hybrid MainActivity with modern Compose UI",
                     icon = Icons.Default.Dashboard,
                     onClick = { 
                         startActivity(Intent(this@ComposeMigrationLauncherActivity, MainActivityCompose::class.java))
