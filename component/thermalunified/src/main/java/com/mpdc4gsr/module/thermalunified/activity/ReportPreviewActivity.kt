@@ -3,8 +3,11 @@ package com.mpdc4gsr.module.thermalunified.activity
 
 import android.content.Intent
 import android.graphics.Color
+import android.os.Build
 import android.view.View
 import android.view.WindowManager
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.blankj.utilcode.util.CollectionUtils
@@ -158,7 +161,14 @@ class ReportPreviewActivity : BaseActivity(), View.OnClickListener {
     }
 
     override fun initData() {
-        window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            // Use modern API for API 30+
+            WindowCompat.setDecorFitsSystemWindows(window, false)
+        } else {
+            // Use deprecated flag for older APIs
+            @Suppress("DEPRECATION")
+            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+        }
         setAvatorChange()
     }
 

@@ -164,6 +164,7 @@ class IRThermalFragment : BaseFragment(), View.OnClickListener {
             }
 
             is IRThermalFragmentViewModel.NavigationEvent.StartThermalPlusActivity -> {
+                @Suppress("DEPRECATION")
                 startActivityForResult(
                     Intent(requireContext(), IRThermalPlusActivity::class.java), 101
                 )
@@ -180,6 +181,7 @@ class IRThermalFragment : BaseFragment(), View.OnClickListener {
             }
 
             is IRThermalFragmentViewModel.NavigationEvent.StartThermalNightActivity -> {
+                @Suppress("DEPRECATION")
                 startActivityForResult(
                     Intent(requireContext(), IRThermalNightActivity::class.java), 101
                 )
