@@ -74,4 +74,9 @@
     <color name="border_light">#FF444444</color>
     <color name="background_secondary">#FF333333</color>
     <color name="tab_text">#CCFFFFFF</color>
+    <color name="background_primary">#FF16131E</color>
+    <color name="header_background">#FF2a2a2a</color>
+    <color name="segmented_button_text">#CCFFFFFF</color>
+    <color name="signal_strength_color">#FF4CAF50</color>
+    <color name="battery_level_color">#FF2196F3</color>
 </resources>
