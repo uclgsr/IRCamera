@@ -2,6 +2,7 @@ package mpdc4gsr.sensors.gsr
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
