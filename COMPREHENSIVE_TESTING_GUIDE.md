@@ -147,7 +147,7 @@ This document provides complete testing procedures and coverage analysis for the
 5. Check performance metrics and frame timing
 
 **Expected Results**:
-- Temperature accuracy: +/-2 degreesC or +/-2% of reading
+- Temperature accuracy: +/-2 degrees C or +/-2% of reading
 - Frame processing time: <40ms per frame
 - Hot spot detection: Accurate to +/-1 pixel
 - Data export: Proper CSV/JSON formatting
