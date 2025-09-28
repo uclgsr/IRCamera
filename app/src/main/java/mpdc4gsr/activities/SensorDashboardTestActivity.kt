@@ -71,5 +71,15 @@ class SensorDashboardTestActivity : AppCompatActivity() {
 
         // Test multi-device status
         fragment.updateMultiDeviceStatus(2, 1, 4)
+        
+        // Demonstrate collapsible functionality after a delay
+        fragment.view?.postDelayed({
+            fragment.setSensorsCollapsed(true)
+            
+            // Expand again after another delay to show the toggle functionality
+            fragment.view?.postDelayed({
+                fragment.setSensorsCollapsed(false)
+            }, 2000)
+        }, 3000)
     }
 }
