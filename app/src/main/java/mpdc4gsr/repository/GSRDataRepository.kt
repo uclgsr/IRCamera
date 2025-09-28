@@ -53,20 +53,14 @@ class GSRDataRepository : BaseRepository() {
     ): Flow<Result<List<GSRReading>>> = safeFlow {
         
         val cacheKey = "gsr_${sessionId}_${startTime}_${endTime}"
-        val cached = getFromCache<List<GSRReading>>(cacheKey)
-        
-        if (cached != null) {
-            return@safeFlow Result.success(cached)
+        val historicalData = getCachedOrExecute(
+            key = cacheKey,
+            ttlMs = 600_000L // 10 minutes
+        ) {
+            // Simulate database query
+            delay(2000)
+            generateHistoricalGSRData(sessionId, startTime, endTime)
         }
-        
-        // Simulate database query
-        delay(2000)
-        
-        val historicalData = generateHistoricalGSRData(sessionId, startTime, endTime)
-        
-        // Cache with longer TTL for historical data
-        putInCache(cacheKey, historicalData, ttlMs = 600000) // 10 minutes
-        
         Result.success(historicalData)
     }
     
