@@ -81,7 +81,6 @@ class SessionManagerActivity : BaseViewModelActivity<SessionManagerViewModel>() 
         startActivity(intent)
         finish()
     }
-    }
 
     override fun initData() {
         // Initialize any data needed for the activity
@@ -223,7 +222,7 @@ class SessionManagerActivity : BaseViewModelActivity<SessionManagerViewModel>() 
         binding.loadingView.isVisible = show
     }
 
-    private fun showError(message: String) {
+    protected fun showError(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
 
