@@ -60,7 +60,7 @@ class BlankDevComposeActivity : BaseComposeActivity<BlankDevViewModel>() {
                     val device = intent.getParcelableExtra<UsbDevice>(UsbManager.EXTRA_DEVICE)
                     device?.let { createViewModel().handleUsbDeviceDetached(it) }
                 }
-                "mpdc4gsr.USB_PERMISSION" -> {
+                BlankDevViewModel.ACTION_USB_PERMISSION -> {
                     val device = intent.getParcelableExtra<UsbDevice>(UsbManager.EXTRA_DEVICE)
                     val granted = intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)
                     device?.let { createViewModel().handleUsbPermissionResult(it, granted) }

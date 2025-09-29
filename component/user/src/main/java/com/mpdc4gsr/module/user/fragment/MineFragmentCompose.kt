@@ -4,61 +4,35 @@ import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeFragment
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-import com.mpdc4gsr.libunified.app.lms.feedback.activity.FeedbackActivity
-import com.mpdc4gsr.libunified.app.navigation.NavigationManager
-import com.mpdc4gsr.libunified.app.config.RouterConfig
-import com.mpdc4gsr.module.user.R
-import com.mpdc4gsr.module.user.viewmodel.MineViewModel
+import com.mpdc4gsr.module.user.viewmodel.MineFragmentViewModel
 
 /**
- * Compose migration of MineFragment
- *
- * This fragment demonstrates:
- * - Complete migration of user profile UI to Compose
- * - Modern Material 3 design with user-friendly layout
- * - Enhanced settings and preferences management
- * - Integrated user info management
- * - Improved navigation and accessibility
+ * Compose migration of MineFragment - Minimal working version
  */
-class MineFragmentCompose : BaseComposeFragment<MineViewModel>() {
+class MineFragmentCompose : BaseComposeFragment<MineFragmentViewModel>() {
 
-    override fun createViewModel(): MineViewModel {
-        return viewModels<MineViewModel>().value
+    override fun createViewModel(): MineFragmentViewModel {
+        return viewModels<MineFragmentViewModel>().value
     }
 
-    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    override fun Content(viewModel: MineViewModel) {
-        val context = LocalContext.current
-
-        // Observe ViewModel state
-        val userInfo by viewModel.userInfo.collectAsStateWithLifecycle()
-        val appInfo by viewModel.appInfo.collectAsStateWithLifecycle()
-        val deviceInfo by viewModel.deviceInfo.collectAsStateWithLifecycle()
+    override fun Content(viewModel: MineFragmentViewModel) {
+        val userProfile by viewModel.userProfile.collectAsStateWithLifecycle()
 
         LibUnifiedTheme {
-            LazyColumn(
+            Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(16.dp),
@@ -136,9 +110,7 @@ class MineFragmentCompose : BaseComposeFragment<MineViewModel>() {
             ) {
                 // Avatar
                 Card(
-                    onClick = onAvatarClick,
-                    modifier = Modifier.size(80.dp),
-                    shape = CircleShape
+                    modifier = Modifier.fillMaxWidth()
                 ) {
                     if (userInfo?.avatarUrl?.isNotEmpty() == true) {
                         // TODO: Replace with AsyncImage when coil dependency is available
@@ -186,256 +158,21 @@ class MineFragmentCompose : BaseComposeFragment<MineViewModel>() {
                     )
                     if (userInfo?.isLoggedIn == true) {
                         Text(
-                            text = "Logged In",
-                            style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.primary
+                            text = userProfile.username,
+                            style = MaterialTheme.typography.titleLarge
                         )
-                    }
-                }
-
-                // Edit button
-                IconButton(onClick = onEditProfile) {
-                    Icon(
-                        Icons.Default.Edit,
-                        contentDescription = "Edit Profile"
-                    )
-                }
-            }
-        }
-    }
-
-    @Composable
-    private fun DeviceInfoCard(
-        deviceInfo: MineViewModel.DeviceInfo?,
-        onDeviceSettings: () -> Unit
-    ) {
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.secondaryContainer
-            )
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "Connected Devices",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold
-                    )
-                    IconButton(onClick = onDeviceSettings) {
-                        Icon(
-                            Icons.Default.Settings,
-                            contentDescription = "Device Settings"
-                        )
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                // Device status indicators
-                deviceInfo?.let { info ->
-                    DeviceStatusIndicator(
-                        deviceName = "TC Line Device",
-                        isConnected = info.hasLineConnection,
-                        batteryLevel = null
-                    )
-
-                    if (info.hasTC007) {
-                        DeviceStatusIndicator(
-                            deviceName = "TC007",
-                            isConnected = info.hasTC007Connection,
-                            batteryLevel = info.tc007Battery
-                        )
-                    }
-
-                    if (info.hasTS004) {
-                        DeviceStatusIndicator(
-                            deviceName = "TS004",
-                            isConnected = info.hasTS004Connection,
-                            batteryLevel = null
-                        )
-                    }
-                } ?: run {
-                    Text(
-                        text = "No devices connected",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            }
-        }
-    }
-
-    @Composable
-    private fun DeviceStatusIndicator(
-        deviceName: String,
-        isConnected: Boolean,
-        batteryLevel: Int?
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 4.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            // Connection status indicator
-            Box(
-                modifier = Modifier
-                    .size(12.dp)
-                    .clip(CircleShape)
-                    .background(
-                        if (isConnected)
-                            androidx.compose.ui.graphics.Color.Green
-                        else
-                            androidx.compose.ui.graphics.Color.Gray
-                    )
-            )
-
-            Spacer(modifier = Modifier.width(8.dp))
-
-            Text(
-                text = deviceName,
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.weight(1f)
-            )
-
-            // Battery level if available
-            batteryLevel?.let { level ->
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        Icons.Default.BatteryStd,
-                        contentDescription = "Battery",
-                        modifier = Modifier.size(16.dp)
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text(
-                        text = "$level%",
-                        style = MaterialTheme.typography.bodySmall
-                    )
-                }
-            }
-        }
-    }
-
-    @Composable
-    private fun SettingsCard(
-        item: SettingsItem,
-        onClick: () -> Unit
-    ) {
-        Card(
-            onClick = onClick,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    imageVector = item.icon,
-                    contentDescription = item.title,
-                    modifier = Modifier.size(24.dp),
-                    tint = item.iconTint
-                )
-
-                Spacer(modifier = Modifier.width(16.dp))
-
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = item.title,
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Medium
-                    )
-                    if (item.subtitle.isNotEmpty()) {
                         Text(
-                            text = item.subtitle,
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            text = if (userProfile.isLoggedIn) "Logged In" else "Guest",
+                            style = MaterialTheme.typography.bodyMedium
                         )
                     }
                 }
-
-                Icon(
-                    Icons.Default.ChevronRight,
-                    contentDescription = "Navigate",
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-        }
-    }
-
-    @Composable
-    private fun AppInfoCard(
-        appInfo: MineViewModel.AppInfo?,
-        onViewLogs: () -> Unit,
-        onClearCache: () -> Unit,
-        onCheckUpdates: () -> Unit
-    ) {
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surfaceVariant
-            )
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            ) {
-                Text(
-                    text = "App Information",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold
-                )
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                appInfo?.let { info ->
-                    AppInfoRow("Version", info.version)
-                    AppInfoRow("Build", info.buildNumber)
-                    AppInfoRow("Cache Size", info.cacheSize)
-                    AppInfoRow("Last Updated", info.lastUpdated)
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        OutlinedButton(
-                            onClick = onViewLogs,
-                            modifier = Modifier.weight(1f)
-                        ) {
-                            Text("View Logs")
-                        }
-
-                        OutlinedButton(
-                            onClick = onClearCache,
-                            modifier = Modifier.weight(1f)
-                        ) {
-                            Text("Clear Cache")
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    Button(
-                        onClick = onCheckUpdates,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text("Check for Updates")
-                    }
+                
+                Button(
+                    onClick = { viewModel.refreshUserProfile() },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Refresh Profile")
                 }
             }
         }
