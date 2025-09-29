@@ -513,6 +513,67 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                     }
                 )
 
+                // Thermal Camera Module Section
+                Text(
+                    text = "Thermal Camera Module Activities (Priority 3)",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.tertiary,
+                    modifier = Modifier.padding(top = 16.dp)
+                )
+
+                LauncherCard(
+                    title = "Thermal Gallery (Compose)",
+                    subtitle = "Advanced thermal image gallery with filtering and analysis",
+                    icon = Icons.Default.PhotoLibrary,
+                    onClick = {
+                        startActivity(
+                            Intent(
+                                this@ComposeMigrationLauncherActivity,
+                                com.mpdc4gsr.module.thermalunified.activity.ThermalGalleryComposeActivity::class.java
+                            )
+                        )
+                    }
+                )
+
+                LauncherCard(
+                    title = "Thermal Report Creation (Compose)",
+                    subtitle = "Professional thermal report generation with templates",
+                    icon = Icons.Default.Assignment,
+                    onClick = {
+                        startActivity(
+                            Intent(
+                                this@ComposeMigrationLauncherActivity,
+                                com.mpdc4gsr.module.thermalunified.report.activity.ThermalReportCreationComposeActivity::class.java
+                            )
+                        )
+                    }
+                )
+
+                // Fragment Migration Section
+                Text(
+                    text = "Fragment to Compose Migration (Priority 3)",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.tertiary,
+                    modifier = Modifier.padding(top = 16.dp)
+                )
+
+                LauncherCard(
+                    title = "Sensor Dashboard Fragment (Compose)",
+                    subtitle = "Modern Fragment with Compose UI for sensor monitoring",
+                    icon = Icons.Default.Dashboard,
+                    onClick = {
+                        // This would be integrated into MainActivity's fragment navigation
+                        // For demo purposes, show a message
+                        android.widget.Toast.makeText(
+                            this@ComposeMigrationLauncherActivity,
+                            "Fragment integrated into MainActivity navigation",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                )
+
                 // Advanced Features Section
                 Text(
                     text = "Advanced Features",

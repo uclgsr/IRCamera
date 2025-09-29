@@ -223,6 +223,19 @@
             android:exported="false"
             android:label="GSR Device Management (Compose)"
             android:theme="@style/AppTheme" />
+
+        <!-- Thermal Camera Module Compose Activities -->
+        <activity
+            android:name="com.mpdc4gsr.module.thermalunified.activity.ThermalGalleryComposeActivity"
+            android:exported="false"
+            android:label="Thermal Gallery (Compose)"
+            android:theme="@style/AppTheme" />
+
+        <activity
+            android:name="com.mpdc4gsr.module.thermalunified.report.activity.ThermalReportCreationComposeActivity"
+            android:exported="false"
+            android:label="Thermal Report Creation (Compose)"
+            android:theme="@style/AppTheme" />
         <activity
             android:name="mpdc4gsr.sensors.gsr.GSRRawImageViewActivity"
             android:exported="false"
