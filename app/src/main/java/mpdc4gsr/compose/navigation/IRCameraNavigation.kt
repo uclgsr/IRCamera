@@ -44,6 +44,16 @@ sealed class IRCameraScreen(val route: String) {
     object IRCorrectionFragmentCompose : IRCameraScreen("ir_correction_fragment_compose")
     object MonitorThermalFragment : IRCameraScreen("monitor_thermal_fragment")
     object MonitorThermalFragmentCompose : IRCameraScreen("monitor_thermal_fragment_compose")
+
+    // Priority 4: Additional Gallery and Lite Fragments
+    object IRGalleryTabFragment : IRCameraScreen("ir_gallery_tab_fragment")
+    object IRGalleryTabFragmentCompose : IRCameraScreen("ir_gallery_tab_fragment_compose")
+    object GalleryPictureFragment : IRCameraScreen("gallery_picture_fragment")
+    object GalleryPictureFragmentCompose : IRCameraScreen("gallery_picture_fragment_compose")
+    object IRPlushFragment : IRCameraScreen("ir_plush_fragment")
+    object IRPlushFragmentCompose : IRCameraScreen("ir_plush_fragment_compose")
+    object IRMonitorLiteFragment : IRCameraScreen("ir_monitor_lite_fragment")
+    object IRMonitorLiteFragmentCompose : IRCameraScreen("ir_monitor_lite_fragment_compose")
     
     object Settings : IRCameraScreen("settings")
     object SettingsCompose : IRCameraScreen("settings_compose")
