@@ -258,7 +258,7 @@ class ReportPreviewComposeActivity : BaseComposeActivity<ThermalViewModel>() {
     ) {
         Button(
             onClick = { /* Handle format selection */ },
-            modifier = Modifier.weight(1f),
+            modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(
                 containerColor = if (selected) Color(0xFFFF6B35) else Color(0xFF161B22),
                 contentColor = if (selected) Color.White else Color(0xFF7D8590)

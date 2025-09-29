@@ -72,6 +72,17 @@ class IRCorrectionLiteThreeComposeActivity : BaseComposeActivity<IRCorrectionLit
         var colorTemperature by remember { mutableStateOf(5000f) }
         var saturation by remember { mutableStateOf(1f) }
 
+        // Handle processing with LaunchedEffect
+        LaunchedEffect(isProcessing) {
+            if (isProcessing) {
+                for (i in 0..100) {
+                    progress = i / 100f
+                    kotlinx.coroutines.delay(30)
+                }
+                isProcessing = false
+            }
+        }
+
         Column(
             modifier = modifier
                 .fillMaxSize()
@@ -225,17 +236,6 @@ class IRCorrectionLiteThreeComposeActivity : BaseComposeActivity<IRCorrectionLit
                 Button(
                     onClick = {
                         isProcessing = true
-                        // Simulate processing
-                        LaunchedEffect(isProcessing) {
-                            if (isProcessing) {
-                                for (i in 0..100) {
-                                    progress = i / 100f
-                                    kotlinx.coroutines.delay(30)
-                                }
-                                isProcessing = false
-                                // Navigate to step 4
-                            }
-                        }
                     },
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.buttonColors(

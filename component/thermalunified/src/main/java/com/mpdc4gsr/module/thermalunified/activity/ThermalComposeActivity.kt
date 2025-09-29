@@ -259,7 +259,7 @@ private fun ThermalToolButton(
 }
 
 // Data classes and helper functions
-data class ThermalTab(
+private data class ThermalTab(
     val title: String,
     val icon: ImageVector
 )

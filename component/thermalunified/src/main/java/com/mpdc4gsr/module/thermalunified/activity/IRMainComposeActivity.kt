@@ -325,7 +325,7 @@ private fun ThermalTabButton(
 }
 
 // Data class for tab configuration
-data class ThermalTab(
+private data class ThermalTab(
     val title: String,
     val icon: ImageVector
 )

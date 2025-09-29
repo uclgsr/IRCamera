@@ -322,12 +322,12 @@ private fun GalleryList(
     items: List<GalleryItem>,
     modifier: Modifier = Modifier
 ) {
-    androidx.compose.foundation.lazy.LazyColumn(
+    LazyColumn(
         modifier = modifier,
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        androidx.compose.foundation.lazy.items(items) { item ->
+        items(items) { item ->
             GalleryListItem(
                 item = item,
                 onClick = { /* Open detail */ }

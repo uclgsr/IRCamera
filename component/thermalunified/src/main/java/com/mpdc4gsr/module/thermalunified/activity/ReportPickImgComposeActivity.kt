@@ -364,7 +364,7 @@ class ReportPickImgComposeActivity : BaseComposeActivity<ReportPickImgViewModel>
     }
 }
 
-data class ThermalImage(
+private data class ThermalImage(
     val id: Int,
     val name: String,
     val temperature: Double,

@@ -44,6 +44,7 @@ class ThermalGalleryViewModel : BaseViewModel() {
     // ViewModel implementation
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ThermalGalleryScreen(
     viewModel: ThermalGalleryViewModel = viewModel()
