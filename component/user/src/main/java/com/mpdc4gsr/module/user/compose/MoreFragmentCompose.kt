@@ -148,7 +148,7 @@ fun MoreFragmentCompose(
                 )
 
                 ListItemComponent(
-                    leftText = stringResource(RCore.string.app_version),
+                    leftText = stringResource(RCore.string.setting_version),
                     leftIcon = Icons.Default.Info,
                     rightText = if (deviceSettings.hasUpgrade) "Update Available" else deviceSettings.versionText,
                     showLine = true,
@@ -160,12 +160,12 @@ fun MoreFragmentCompose(
                 )
 
                 ListItemComponent(
-                    leftText = stringResource(RCore.string.more_device_info),
+                    leftText = "Device Information",
                     leftIcon = Icons.Default.Devices,
                     showLine = true,
                     onClick = {
                         NavigationManager.getInstance()
-                            .build(RouterConfig.DEVICE_INFO)
+                            .build(RouterConfig.DEVICE_INFORMATION)
                             .navigation(context)
                     }
                 )

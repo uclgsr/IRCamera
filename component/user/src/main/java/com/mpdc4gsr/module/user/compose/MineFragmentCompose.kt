@@ -7,17 +7,16 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.Help
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
 import com.mpdc4gsr.libunified.app.config.RouterConfig
 import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import com.mpdc4gsr.libunified.app.utils.Constants
@@ -61,14 +60,23 @@ fun MineFragmentCompose(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 // User Avatar
-                AsyncImage(
-                    model = userProfile.avatarUrl ?: RCore.drawable.ic_launcher_background,
-                    contentDescription = "User Avatar",
+                Surface(
                     modifier = Modifier
                         .size(64.dp)
                         .clip(CircleShape),
-                    contentScale = ContentScale.Crop
-                )
+                    color = MaterialTheme.colorScheme.primary
+                ) {
+                    Box(
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            Icons.Default.Person,
+                            contentDescription = "User Avatar",
+                            modifier = Modifier.size(32.dp),
+                            tint = MaterialTheme.colorScheme.onPrimary
+                        )
+                    }
+                }
 
                 Spacer(modifier = Modifier.width(16.dp))
 
@@ -118,7 +126,7 @@ fun MineFragmentCompose(
                 modifier = Modifier.padding(8.dp)
             ) {
                 ListItemComponent(
-                    leftText = stringResource(RCore.string.app_version),
+                    leftText = stringResource(RCore.string.setting_version),
                     leftIcon = Icons.Default.Info,
                     showLine = true,
                     onClick = {
@@ -129,7 +137,7 @@ fun MineFragmentCompose(
                 )
 
                 ListItemComponent(
-                    leftText = stringResource(RCore.string.cache_clear),
+                    leftText = stringResource(RCore.string.set_clear_cache),
                     leftIcon = Icons.Default.Delete,
                     showLine = true,
                     onClick = { viewModel.clearCache() }
@@ -149,7 +157,7 @@ fun MineFragmentCompose(
 
                 ListItemComponent(
                     leftText = stringResource(RCore.string.app_question),
-                    leftIcon = Icons.Default.Help,
+                    leftIcon = Icons.AutoMirrored.Filled.Help,
                     showLine = true,
                     onClick = {
                         NavigationManager.getInstance()
@@ -160,7 +168,7 @@ fun MineFragmentCompose(
                 )
 
                 ListItemComponent(
-                    leftText = stringResource(RCore.string.feedback),
+                    leftText = stringResource(RCore.string.setting_feedback),
                     leftIcon = Icons.Default.Feedback,
                     showLine = true,
                     onClick = {

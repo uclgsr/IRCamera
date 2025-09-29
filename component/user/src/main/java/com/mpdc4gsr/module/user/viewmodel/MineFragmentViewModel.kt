@@ -30,11 +30,12 @@ class MineFragmentViewModel : BaseViewModel() {
 
     private fun loadUserProfile() {
         launchWithErrorHandling {
-            val userInfo = UserInfoManager.getUserInfo()
+            val userInfoManager = UserInfoManager.getInstance()
+            val isLoggedIn = userInfoManager.isLogin()
             _userProfile.value = UserProfileState(
-                username = userInfo?.username ?: "Guest",
-                avatarUrl = userInfo?.avatarUrl,
-                isLoggedIn = userInfo != null
+                username = if (isLoggedIn) "User" else "Guest",
+                avatarUrl = null,
+                isLoggedIn = isLoggedIn
             )
         }
     }
