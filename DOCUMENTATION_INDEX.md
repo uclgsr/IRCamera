@@ -47,7 +47,13 @@ handling system
 
 ### System Architecture
 
-- **[docs/COMPREHENSIVE_ARCHITECTURE_DIAGRAMS.md](docs/COMPREHENSIVE_ARCHITECTURE_DIAGRAMS.md)** -
+- **[docs/COMPREHENSIVE_ARCHITECTURE_DIAGRAMS.md](docs/COMPREHENSIVE_ARCHITECTURE_DIAGRAMS.md)** - 
+  Complete system design overview
+- **[docs/APP_NAVIGATION_DIAGRAM.md](docs/APP_NAVIGATION_DIAGRAM.md)** - Navigation flows across 210 activities in 4 modules
+- **[docs/APP_LAYOUT_DIAGRAM.md](docs/APP_LAYOUT_DIAGRAM.md)** - UI layout architecture covering 221 layouts
+- **[docs/BACKGROUND_DEVICE_SCANNING.md](docs/BACKGROUND_DEVICE_SCANNING.md)** - BLE device discovery
+- **[docs/DOCUMENTATION_UPDATE_SUMMARY.md](docs/DOCUMENTATION_UPDATE_SUMMARY.md)** - Documentation audit and corrections
+- **[docs/LAYOUT_ACTIVITY_AUDIT.md](docs/LAYOUT_ACTIVITY_AUDIT.md)** - Comprehensive activity and layout audit
   Complete system
   architecture diagrams
 - **[docs/APP_NAVIGATION_DIAGRAM.md](docs/APP_NAVIGATION_DIAGRAM.md)** - Comprehensive app

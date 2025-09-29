@@ -40,10 +40,10 @@ graph TB
     end
     
     subgraph "Unified Core Libraries"
-        LibUnified[libunified Module<br/>598 files<br/>Core Functionality<br/>UI Components]
-        BLECore[ble-core Module<br/>BLE Abstraction Layer<br/>Device Management]
-        BLEShimmer[ble-shimmer Module<br/>Shimmer-specific Protocol<br/>GSR Processing]
-        BLETopdon[ble-topdon Module<br/>Topdon-specific Protocol<br/>Thermal Processing]
+        LibUnified[libunified Module<br/>7 activities, 69 layouts<br/>Core Functionality<br/>UI Components]
+        ComponentThermal[thermalunified Module<br/>93 activities, 154 layouts<br/>Complete Thermal System<br/>Image Processing]
+        ComponentUser[user Module<br/>18 activities, 140 layouts<br/>User Management<br/>Authentication System]
+        AppModule[app Module<br/>92 activities, 31 layouts<br/>Core Infrastructure<br/>Main Controllers]
     end
     
     %% Application Flow Connections
