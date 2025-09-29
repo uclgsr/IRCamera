@@ -28,6 +28,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import mpdc4gsr.data.SessionMetadata
 import mpdc4gsr.network.NetworkServer
+import mpdc4gsr.permissions.PermissionController
 import mpdc4gsr.sensors.ErrorType
 import mpdc4gsr.sensors.RecordingStats
 import mpdc4gsr.sensors.RecordingStatus
@@ -705,7 +706,7 @@ class ThermalCameraRecorder(
                         context: android.content.Context?,
                         intent: android.content.Intent?
                     ) {
-                        if ("mpdc4gsr.USB_PERMISSION" == intent?.action) {
+                        if (PermissionController.ACTION_USB_PERMISSION == intent?.action) {
                             val device =
                                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
                                     intent.getParcelableExtra(
@@ -738,7 +739,7 @@ class ThermalCameraRecorder(
 
                 // Register receiver
                 val filter =
-                    android.content.IntentFilter("mpdc4gsr.USB_PERMISSION")
+                    android.content.IntentFilter(PermissionController.ACTION_USB_PERMISSION)
                 context.registerReceiver(permissionReceiver, filter)
 
 

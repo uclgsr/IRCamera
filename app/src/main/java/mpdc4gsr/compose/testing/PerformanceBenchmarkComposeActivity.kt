@@ -278,7 +278,7 @@ fun DrawScope.drawPerformanceChart(
         }
     }
     
-    drawPath(fpsPath, Color.Blue, style = androidx.compose.ui.graphics.drawscope.Stroke(width = 3.dp.toPx()))
+    drawPath(fpsPath, MaterialTheme.colorScheme.primary, style = androidx.compose.ui.graphics.drawscope.Stroke(width = 3.dp.toPx()))
     
     // Draw Memory line (red)
     val memoryPath = Path()

@@ -499,7 +499,7 @@ class IRMonitorHistoryFragmentCompose : BaseComposeFragment<IRMonitorHistoryView
     }
 
     private fun getSessionTypeColor(type: SessionType): Color = when (type) {
-        SessionType.MONITORING -> Color.Blue
+        SessionType.MONITORING -> MaterialTheme.colorScheme.primary
         SessionType.CAPTURE -> Color.Green
         SessionType.ANALYSIS -> Color(0xFFFFA500)
         SessionType.CALIBRATION -> Color.Red

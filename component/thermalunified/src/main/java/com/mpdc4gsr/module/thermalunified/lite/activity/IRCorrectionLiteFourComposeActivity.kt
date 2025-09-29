@@ -148,7 +148,7 @@ class IRCorrectionLiteFourViewModel : ViewModel() {
                     temperature = temp.toFloat(),
                     points = generateLinePoints(temp.toFloat()),
                     color = when {
-                        temp < 25 -> Color.Blue
+                        temp < 25 -> MaterialTheme.colorScheme.primary
                         temp < 35 -> Color.Green
                         else -> Color.Red
                     }
@@ -727,7 +727,7 @@ fun StatisticsSummaryCard(
                 StatisticItem(
                     label = "Min",
                     value = "${analysisData.minTemperature}°C",
-                    color = Color.Blue
+                    color = MaterialTheme.colorScheme.primary
                 )
                 StatisticItem(
                     label = "Max",

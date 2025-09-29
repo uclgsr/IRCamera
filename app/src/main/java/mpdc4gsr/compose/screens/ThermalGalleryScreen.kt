@@ -79,7 +79,7 @@ fun ThermalGalleryScreen(
                     text = {
                         Text(
                             title,
-                            color = if (selectedTab == index) Color.Blue else Color.Gray
+                            color = if (selectedTab == index) MaterialTheme.colorScheme.primary else Color.Gray
                         )
                     }
                 )
@@ -182,7 +182,7 @@ private fun ThermalImageGridItem(item: ThermalMediaItem) {
                                 Color.Yellow,
                                 Color.Red,
                                 Color(0xFF8B0000),
-                                Color.Blue
+                                MaterialTheme.colorScheme.primary
                             ),
                             radius = 200f
                         )
@@ -314,7 +314,7 @@ private fun ThermalVideoGridItem(item: ThermalMediaItem) {
                         androidx.compose.ui.graphics.Brush.linearGradient(
                             colors = listOf(
                                 Color(0xFF4A0080),
-                                Color.Blue,
+                                MaterialTheme.colorScheme.primary,
                                 Color.Cyan,
                                 Color.Green,
                                 Color.Yellow,
@@ -389,7 +389,7 @@ private fun ThermalVideoListItem(item: ThermalMediaItem) {
                 modifier = Modifier
                     .width(80.dp)
                     .height(45.dp)
-                    .background(Color.Blue.copy(alpha = 0.3f), RoundedCornerShape(8.dp))
+                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.3f), RoundedCornerShape(8.dp))
             ) {
                 Icon(
                     Icons.Default.PlayArrow,
@@ -427,7 +427,7 @@ private fun ThermalVideoListItem(item: ThermalMediaItem) {
 
             // Actions
             IconButton(onClick = { /* Play */ }) {
-                Icon(Icons.Default.PlayArrow, contentDescription = "Play", tint = Color.Blue)
+                Icon(Icons.Default.PlayArrow, contentDescription = "Play", tint = MaterialTheme.colorScheme.primary)
             }
         }
     }
@@ -475,7 +475,7 @@ private fun ThermalReportItem(item: ThermalMediaItem) {
 
             Row {
                 IconButton(onClick = { /* View */ }) {
-                    Icon(Icons.Default.Visibility, contentDescription = "View", tint = Color.Blue)
+                    Icon(Icons.Default.Visibility, contentDescription = "View", tint = MaterialTheme.colorScheme.primary)
                 }
                 IconButton(onClick = { /* Share */ }) {
                     Icon(Icons.Default.Share, contentDescription = "Share", tint = Color.Gray)

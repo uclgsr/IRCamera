@@ -181,7 +181,7 @@ private fun AnalysisTypeSelector(
                         },
                         selected = selectedType == type,
                         colors = FilterChipDefaults.filterChipColors(
-                            selectedContainerColor = Color.Blue,
+                            selectedContainerColor = MaterialTheme.colorScheme.primary,
                             selectedLabelColor = Color.White,
                             containerColor = Color.Gray,
                             labelColor = Color.White

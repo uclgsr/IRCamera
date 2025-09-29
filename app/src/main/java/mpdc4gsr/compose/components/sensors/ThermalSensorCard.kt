@@ -139,7 +139,7 @@ fun ThermalSensorCard(
                 MetricItem(
                     label = "Min",
                     value = "${String.format("%.1f", minTemp)}°C",
-                    color = Color.Blue
+                    color = MaterialTheme.colorScheme.primary
                 )
                 MetricItem(
                     label = "Resolution",
@@ -166,7 +166,7 @@ fun ThermalSensorCard(
                     SensorState.Connected -> {
                         Button(
                             onClick = { onAction(ThermalAction.StartPreview) },
-                            colors = ButtonDefaults.buttonColors(containerColor = Color.Blue)
+                            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
                         ) {
                             Icon(Icons.Default.PlayArrow, contentDescription = null)
                             Spacer(Modifier.width(4.dp))
@@ -262,7 +262,7 @@ private fun ThermalPreviewVisualization(
 
                     // Min temperature spot (blue)
                     drawCircle(
-                        color = Color.Blue.copy(alpha = 0.8f),
+                        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f),
                         radius = hotspotRadius * 0.7f,
                         center = Offset(width * 0.3f, height * 0.7f)
                     )
@@ -306,7 +306,7 @@ private fun ThermalPreviewVisualization(
                         modifier = Modifier
                             .align(Alignment.BottomStart)
                             .padding(8.dp),
-                        color = Color.Blue.copy(alpha = 0.8f),
+                        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f),
                         shape = RoundedCornerShape(4.dp)
                     ) {
                         Text(
@@ -391,7 +391,7 @@ private fun MetricItem(
 private fun getStatusColor(state: SensorState): Color {
     return when (state) {
         SensorState.Connected -> Color.Green
-        SensorState.Streaming -> Color.Blue
+        SensorState.Streaming -> MaterialTheme.colorScheme.primary
         SensorState.Error -> Color.Red
         SensorState.Disconnected -> Color.Gray
         SensorState.Connecting -> Color.Yellow

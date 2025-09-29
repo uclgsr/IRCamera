@@ -241,7 +241,7 @@ private fun ThermalCameraView(
                 center = Offset(size.width * 0.7f, size.height * 0.6f)
             )
             drawCircle(
-                color = Color.Blue,
+                color = MaterialTheme.colorScheme.primary,
                 radius = 15f,
                 center = Offset(size.width * 0.5f, size.height * 0.2f)
             )

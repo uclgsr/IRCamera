@@ -402,7 +402,7 @@ class SensorDashboardFragmentCompose : SimpleComposeFragment() {
             DISCONNECTED -> Color.Gray
             CONNECTING -> Color(0xFFFFA500) // Orange
             CONNECTED -> Color.Green
-            STREAMING -> Color.Blue
+            STREAMING -> MaterialTheme.colorScheme.primary
             ERROR -> Color.Red
             SIMULATION -> Color(0xFFFFA500) // Orange
         }

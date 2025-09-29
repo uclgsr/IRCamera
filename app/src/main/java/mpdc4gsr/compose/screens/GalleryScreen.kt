@@ -225,7 +225,7 @@ private fun ThermalImageCard(
 
                     // Cool spot
                     drawCircle(
-                        color = Color.Blue.copy(alpha = 0.8f),
+                        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f),
                         radius = width * 0.1f,
                         center = Offset(width * 0.3f, height * 0.7f)
                     )
@@ -250,7 +250,7 @@ private fun ThermalImageCard(
                     }
                     Spacer(modifier = Modifier.height(2.dp))
                     Surface(
-                        color = Color.Blue.copy(alpha = 0.8f),
+                        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f),
                         shape = RoundedCornerShape(4.dp)
                     ) {
                         Text(
@@ -306,7 +306,7 @@ private fun RecordingCard(
             Icon(
                 Icons.Default.VideoLibrary,
                 contentDescription = null,
-                tint = Color.Blue,
+                tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.size(48.dp)
             )
 
