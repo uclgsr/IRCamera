@@ -45,9 +45,14 @@ analyze_compose_activities() {
     # Count Compose activities
     COMPOSE_COUNT=$(find . -name "*Compose*.kt" | grep -i activity | wc -l)
     TOTAL_ACTIVITIES=$(find . -name "*Activity*.kt" | wc -l)
-    COMPOSE_PERCENTAGE=$((COMPOSE_COUNT * 100 / TOTAL_ACTIVITIES))
-    
-    echo "  📊 Compose Activities: $COMPOSE_COUNT / $TOTAL_ACTIVITIES ($COMPOSE_PERCENTAGE%)"
+    if [ "$TOTAL_ACTIVITIES" -gt 0 ]; then
+        COMPOSE_PERCENTAGE=$((COMPOSE_COUNT * 100 / TOTAL_ACTIVITIES))
+        echo "  📊 Compose Activities: $COMPOSE_COUNT / $TOTAL_ACTIVITIES ($COMPOSE_PERCENTAGE%)"
+    else
+        COMPOSE_PERCENTAGE="N/A"
+        echo "  📊 Compose Activities: $COMPOSE_COUNT / $TOTAL_ACTIVITIES ($COMPOSE_PERCENTAGE)"
+        echo "  ⚠️  No Activity files found. Percentage calculation skipped."
+    fi
     
     # Check base classes
     if [ -f "app/src/main/java/mpdc4gsr/compose/base/BaseComposeActivity.kt" ]; then
