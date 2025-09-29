@@ -40,16 +40,16 @@ class IRCorrectionLiteThreeComposeActivity : BaseComposeActivity<IRCorrectionLit
                             Text(
                                 "Lite Correction - Step 3",
                                 fontWeight = FontWeight.Bold,
-                                color = Color.White
+                                color = MaterialTheme.colorScheme.onPrimary
                             )
                         },
                         navigationIcon = {
                             IconButton(onClick = { finish() }) {
-                                Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = Color.White)
+                                Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = MaterialTheme.colorScheme.onPrimary)
                             }
                         },
                         colors = TopAppBarDefaults.topAppBarColors(
-                            containerColor = Color(0xFF4A90E2) // Lite blue theme
+                            containerColor = MaterialTheme.colorScheme.primary
                         )
                     )
                 }
@@ -143,7 +143,7 @@ class IRCorrectionLiteThreeComposeActivity : BaseComposeActivity<IRCorrectionLit
             // Color correction controls
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFFF8F9FA))
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
             ) {
                 Column(
                     modifier = Modifier.padding(16.dp),
@@ -163,8 +163,8 @@ class IRCorrectionLiteThreeComposeActivity : BaseComposeActivity<IRCorrectionLit
                             onValueChange = { colorTemperature = it },
                             valueRange = 2700f..10000f,
                             colors = SliderDefaults.colors(
-                                thumbColor = Color(0xFF4A90E2),
-                                activeTrackColor = Color(0xFF4A90E2)
+                                thumbColor = MaterialTheme.colorScheme.primary,
+                                activeTrackColor = MaterialTheme.colorScheme.primary
                             )
                         )
                     }
@@ -177,8 +177,8 @@ class IRCorrectionLiteThreeComposeActivity : BaseComposeActivity<IRCorrectionLit
                             onValueChange = { saturation = it },
                             valueRange = 0f..2f,
                             colors = SliderDefaults.colors(
-                                thumbColor = Color(0xFF4A90E2),
-                                activeTrackColor = Color(0xFF4A90E2)
+                                thumbColor = MaterialTheme.colorScheme.primary,
+                                activeTrackColor = MaterialTheme.colorScheme.primary
                             )
                         )
                     }
@@ -190,7 +190,7 @@ class IRCorrectionLiteThreeComposeActivity : BaseComposeActivity<IRCorrectionLit
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFF1E1E1E))
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
             ) {
                 Column(
                     modifier = Modifier
@@ -201,13 +201,13 @@ class IRCorrectionLiteThreeComposeActivity : BaseComposeActivity<IRCorrectionLit
                 ) {
                     Text(
                         "Color Correction Preview",
-                        color = Color.White,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         style = MaterialTheme.typography.headlineSmall,
                         fontWeight = FontWeight.Bold
                     )
                     Text(
                         "Real-time thermal image preview with color corrections",
-                        color = Color(0xFF9E9E9E),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
                         style = MaterialTheme.typography.bodyMedium
                     )
                 }
@@ -225,7 +225,7 @@ class IRCorrectionLiteThreeComposeActivity : BaseComposeActivity<IRCorrectionLit
                     },
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.outlinedButtonColors(
-                        contentColor = Color(0xFF4A90E2)
+                        contentColor = MaterialTheme.colorScheme.primary
                     )
                 ) {
                     Icon(Icons.Default.Refresh, contentDescription = null)
@@ -239,7 +239,7 @@ class IRCorrectionLiteThreeComposeActivity : BaseComposeActivity<IRCorrectionLit
                     },
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF4A90E2)
+                        containerColor = MaterialTheme.colorScheme.primary
                     ),
                     enabled = !isProcessing
                 ) {
