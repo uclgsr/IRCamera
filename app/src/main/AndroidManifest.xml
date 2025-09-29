@@ -141,6 +141,13 @@
             android:label="Navigation Test"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
 
+        <!-- Unified Navigation Demo Activity -->
+        <activity
+            android:name="mpdc4gsr.activities.UnifiedNavigationDemoActivity"
+            android:exported="true"
+            android:label="Navigation System Demo"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+
         <!-- Test Activities -->
 
         <!-- File Provider -->
