@@ -234,18 +234,7 @@
             android:label="Research Templates (Compose)"
             android:theme="@style/AppTheme" />
 
-        <!-- Network & Device Management Compose Activities -->
-        <activity
-            android:name="mpdc4gsr.network.DevicePairingComposeActivity"
-            android:exported="false"
-            android:label="Device Pairing (Compose)"
-            android:theme="@style/AppTheme" />
-
-        <activity
-            android:name="mpdc4gsr.permissions.PermissionRequestComposeActivity"
-            android:exported="false"
-            android:label="Permission Manager (Compose)"
-            android:theme="@style/AppTheme" />
+        <!-- Duplicate entries removed - these activities are already declared above -->
 
         <activity
             android:name="mpdc4gsr.camera.integration.DualModeCameraComposeActivity"
@@ -424,12 +413,7 @@
             android:screenOrientation="userPortrait"
             android:theme="@style/AppTheme" />
 
-        <activity
-            android:name="mpdc4gsr.activities.SettingsComposeActivity"
-            android:exported="false"
-            android:label="Settings (Compose)"
-            android:screenOrientation="userPortrait"
-            android:theme="@style/AppTheme" />
+        <!-- Duplicate entry removed - SettingsComposeActivity already declared above -->
 
         <activity
             android:name="mpdc4gsr.activities.ComposeDemoActivity"
