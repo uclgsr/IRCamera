@@ -381,7 +381,7 @@
         <activity
             android:name="mpdc4gsr.activities.CameraNetworkDemoActivity"
             android:exported="true"
-            android:label="Camera & Network Demo">
+            android:label="Camera &amp; Network Demo">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
