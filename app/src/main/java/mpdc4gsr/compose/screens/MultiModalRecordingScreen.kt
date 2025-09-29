@@ -435,7 +435,7 @@ private fun RecordingControlsSection(
             FloatingActionButton(
                 onClick = onStartStop,
                 modifier = Modifier.size(80.dp),
-                containerColor = if (isRecording) Color.Red else Color.Blue,
+                containerColor = if (isRecording) Color.Red else MaterialTheme.colorScheme.primary,
                 contentColor = Color.White
             ) {
                 Icon(
