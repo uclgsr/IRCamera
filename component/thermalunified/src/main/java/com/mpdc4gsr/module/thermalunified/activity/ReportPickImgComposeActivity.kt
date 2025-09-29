@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-import com.mpdc4gsr.libunified.app.viewmodel.BaseViewModel
+import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 
 /**
  * Report Image Selection - Smart selection with AI recommendations
@@ -86,7 +86,7 @@ class ReportPickImgComposeActivity : BaseComposeActivity<ReportPickImgViewModel>
 
         val thermalImages = remember {
             (1..20).map { index ->
-                ThermalImage(
+                ReportThermalImage(
                     id = index,
                     name = "Thermal_IMG_$index.jpg",
                     temperature = (25.0 + index * 2.5),
@@ -264,7 +264,7 @@ class ReportPickImgComposeActivity : BaseComposeActivity<ReportPickImgViewModel>
 
     @Composable
     private fun ThermalImageCard(
-        image: ThermalImage,
+        image: ReportThermalImage,
         isSelected: Boolean,
         showRecommendation: Boolean,
         onSelectionChange: (Boolean) -> Unit
@@ -364,7 +364,7 @@ class ReportPickImgComposeActivity : BaseComposeActivity<ReportPickImgViewModel>
     }
 }
 
-data class ThermalImage(
+private data class ReportThermalImage(
     val id: Int,
     val name: String,
     val temperature: Double,

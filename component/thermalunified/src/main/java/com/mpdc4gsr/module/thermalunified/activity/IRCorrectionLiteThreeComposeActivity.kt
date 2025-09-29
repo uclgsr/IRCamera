@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-import com.mpdc4gsr.libunified.app.viewmodel.BaseViewModel
+import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 
 /**
  * Lite Correction Step 3 - Advanced color correction and temperature calibration
@@ -71,6 +71,17 @@ class IRCorrectionLiteThreeComposeActivity : BaseComposeActivity<IRCorrectionLit
         var progress by remember { mutableStateOf(0f) }
         var colorTemperature by remember { mutableStateOf(5000f) }
         var saturation by remember { mutableStateOf(1f) }
+
+        // Handle processing with LaunchedEffect
+        LaunchedEffect(isProcessing) {
+            if (isProcessing) {
+                for (i in 0..100) {
+                    progress = i / 100f
+                    kotlinx.coroutines.delay(30)
+                }
+                isProcessing = false
+            }
+        }
 
         Column(
             modifier = modifier
@@ -225,17 +236,6 @@ class IRCorrectionLiteThreeComposeActivity : BaseComposeActivity<IRCorrectionLit
                 Button(
                     onClick = {
                         isProcessing = true
-                        // Simulate processing
-                        LaunchedEffect(isProcessing) {
-                            if (isProcessing) {
-                                for (i in 0..100) {
-                                    progress = i / 100f
-                                    kotlinx.coroutines.delay(30)
-                                }
-                                isProcessing = false
-                                // Navigate to step 4
-                            }
-                        }
                     },
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.buttonColors(

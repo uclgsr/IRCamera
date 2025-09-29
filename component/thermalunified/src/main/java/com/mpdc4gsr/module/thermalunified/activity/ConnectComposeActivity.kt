@@ -19,6 +19,8 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.app.tools.DeviceTools
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 /**
  * Modern Compose implementation of device connection activity
@@ -35,6 +37,7 @@ class ConnectComposeActivity : BaseComposeActivity<ThermalViewModel>() {
     override fun Content(viewModel: ThermalViewModel) {
         var isConnected by remember { mutableStateOf(DeviceTools.isConnect()) }
         var isConnecting by remember { mutableStateOf(false) }
+        val coroutineScope = rememberCoroutineScope()
         
         LibUnifiedTheme {
             Scaffold(
@@ -89,8 +92,8 @@ class ConnectComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         onConnect = {
                             isConnecting = true
                             // Simulate connection process
-                            kotlinx.coroutines.DelicateCoroutinesApi.GlobalScope.launch {
-                                kotlinx.coroutines.delay(2000L)
+                            coroutineScope.launch {
+                                delay(2000L)
                                 isConnected = true
                                 isConnecting = false
                             }

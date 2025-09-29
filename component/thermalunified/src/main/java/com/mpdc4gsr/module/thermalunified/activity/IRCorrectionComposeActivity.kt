@@ -19,6 +19,8 @@ import androidx.compose.ui.unit.sp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 /**
  * Modern Compose implementation of thermal correction activity
@@ -36,6 +38,7 @@ class IRCorrectionComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         var selectedCorrection by remember { mutableIntStateOf(0) }
         var correctionProgress by remember { mutableFloatStateOf(0f) }
         var isProcessing by remember { mutableStateOf(false) }
+        val coroutineScope = rememberCoroutineScope()
         
         LibUnifiedTheme {
             Scaffold(
@@ -118,9 +121,9 @@ class IRCorrectionComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 isProcessing = true
                                 correctionProgress = 0f
                                 // Simulate correction process
-                                kotlinx.coroutines.DelicateCoroutinesApi.GlobalScope.launch {
+                                coroutineScope.launch {
                                     for (i in 1..100) {
-                                        kotlinx.coroutines.delay(50L)
+                                        delay(50L)
                                         correctionProgress = i / 100f
                                     }
                                     isProcessing = false

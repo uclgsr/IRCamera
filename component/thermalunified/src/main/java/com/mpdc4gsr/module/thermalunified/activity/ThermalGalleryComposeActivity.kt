@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-import com.mpdc4gsr.libunified.app.viewmodel.BaseViewModel
+import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 
 /**
  * Modern Compose thermal gallery implementation
@@ -29,13 +29,14 @@ import com.mpdc4gsr.libunified.app.viewmodel.BaseViewModel
  */
 class ThermalGalleryComposeActivity : BaseComposeActivity<ThermalGalleryViewModel>() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            LibUnifiedTheme {
-                ThermalGalleryScreen()
-            }
-        }
+    override fun createViewModel(): ThermalGalleryViewModel {
+        return ThermalGalleryViewModel()
+    }
+
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    override fun Content(viewModel: ThermalGalleryViewModel) {
+        ThermalGalleryScreen()
     }
 }
 
@@ -43,6 +44,7 @@ class ThermalGalleryViewModel : BaseViewModel() {
     // ViewModel implementation
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ThermalGalleryScreen(
     viewModel: ThermalGalleryViewModel = viewModel()
@@ -185,7 +187,7 @@ private fun ThermalListView() {
 }
 
 @Composable
-private fun ThermalImageCard(image: ThermalImage) {
+private fun ThermalImageCard(image: GalleryThermalImage) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -240,7 +242,7 @@ private fun ThermalImageCard(image: ThermalImage) {
 }
 
 @Composable
-private fun ThermalImageListItem(image: ThermalImage) {
+private fun ThermalImageListItem(image: GalleryThermalImage) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = Color(0xFF21262D)),
@@ -306,9 +308,9 @@ private fun ThermalImageListItem(image: ThermalImage) {
     }
 }
 
-private fun generateSampleThermalImages(): List<ThermalImage> {
+private fun generateSampleThermalImages(): List<GalleryThermalImage> {
     return (1..20).map { index ->
-        ThermalImage(
+        GalleryThermalImage(
             id = index,
             name = "thermal_image_$index.tiff",
             temperature = (20..80).random(),
@@ -319,7 +321,7 @@ private fun generateSampleThermalImages(): List<ThermalImage> {
     }
 }
 
-private data class ThermalImage(
+private data class GalleryThermalImage(
     val id: Int,
     val name: String,
     val temperature: Int,

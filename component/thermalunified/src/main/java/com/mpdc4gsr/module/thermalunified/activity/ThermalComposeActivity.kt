@@ -159,7 +159,7 @@ private fun ThermalNavigationTabs(
 
 @Composable
 private fun ThermalTabButton(
-    tab: ThermalTab,
+    tab: ThermalComposeTab,
     isSelected: Boolean,
     onClick: () -> Unit
 ) {
@@ -259,7 +259,7 @@ private fun ThermalToolButton(
 }
 
 // Data classes and helper functions
-data class ThermalTab(
+internal data class ThermalComposeTab(
     val title: String,
     val icon: ImageVector
 )
@@ -270,13 +270,13 @@ data class ThermalTool(
     val actionCode: Int
 )
 
-private fun getThermalTabs(): List<ThermalTab> {
+private fun getThermalTabs(): List<ThermalComposeTab> {
     return listOf(
-        ThermalTab("Camera", Icons.Default.CameraAlt),
-        ThermalTab("Measure", Icons.Default.Straighten),
-        ThermalTab("Analysis", Icons.Default.Analytics),
-        ThermalTab("Palette", Icons.Default.Palette),
-        ThermalTab("Settings", Icons.Default.Settings)
+        ThermalComposeTab("Camera", Icons.Default.CameraAlt),
+        ThermalComposeTab("Measure", Icons.Default.Settings),
+        ThermalComposeTab("Analysis", Icons.Default.Analytics),
+        ThermalComposeTab("Palette", Icons.Default.Palette),
+        ThermalComposeTab("Settings", Icons.Default.Settings)
     )
 }
 

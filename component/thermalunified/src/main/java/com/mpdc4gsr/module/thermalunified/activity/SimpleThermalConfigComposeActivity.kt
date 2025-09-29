@@ -155,7 +155,7 @@ class SimpleThermalConfigComposeActivity : BaseComposeActivity<ThermalViewModel>
                         ProfileOption(
                             "High Precision",
                             "Maximum accuracy for detailed analysis",
-                            Icons.Default.Precision Manufacturing,
+                            Icons.Default.PrecisionManufacturing,
                             selectedProfile == "High Precision"
                         ) { selectedProfile = "High Precision" }
                     }
