@@ -10,7 +10,7 @@ import com.mpdc4gsr.module.thermalunified.repository.ConfigRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class IRConfigViewModel(private val application: Application) : BaseViewModel() {
+class IRConfigViewModel : BaseViewModel() {
     val configLiveData = SingleLiveEvent<ModelBean>()
 
     fun getConfig(isTC007: Boolean) {
