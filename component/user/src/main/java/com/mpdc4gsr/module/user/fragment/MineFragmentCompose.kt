@@ -1,27 +1,46 @@
 package com.mpdc4gsr.module.user.fragment
 
+import android.content.Context
 import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeFragment
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
+import com.mpdc4gsr.libunified.app.config.RouterConfig
+import com.mpdc4gsr.libunified.app.navigation.NavigationManager
+import com.mpdc4gsr.libunified.app.lms.feedback.activity.FeedbackActivity
 import com.mpdc4gsr.module.user.viewmodel.MineFragmentViewModel
+import com.mpdc4gsr.module.user.viewmodel.MineViewModel
 
 /**
  * Compose migration of MineFragment - Minimal working version
  */
 class MineFragmentCompose : BaseComposeFragment<MineFragmentViewModel>() {
+
+    data class SettingsItem(
+        val id: String,
+        val title: String,
+        val subtitle: String,
+        val icon: ImageVector,
+        val iconTint: Color
+    )
 
     override fun createViewModel(): MineFragmentViewModel {
         return viewModels<MineFragmentViewModel>().value
@@ -29,10 +48,11 @@ class MineFragmentCompose : BaseComposeFragment<MineFragmentViewModel>() {
 
     @Composable
     override fun Content(viewModel: MineFragmentViewModel) {
+        val context = LocalContext.current
         val userProfile by viewModel.userProfile.collectAsStateWithLifecycle()
 
         LibUnifiedTheme {
-            Column(
+            LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(16.dp),
@@ -41,17 +61,9 @@ class MineFragmentCompose : BaseComposeFragment<MineFragmentViewModel>() {
                 // User profile section
                 item {
                     UserProfileCard(
-                        userInfo = userInfo,
-                        onEditProfile = { viewModel.editUserProfile() },
-                        onAvatarClick = { viewModel.changeAvatar() }
-                    )
-                }
-
-                // Device information section
-                item {
-                    DeviceInfoCard(
-                        deviceInfo = deviceInfo,
-                        onDeviceSettings = { viewModel.openDeviceSettings() }
+                        userProfile = userProfile,
+                        onEditProfile = { },
+                        onAvatarClick = { }
                     )
                 }
 
@@ -71,7 +83,37 @@ class MineFragmentCompose : BaseComposeFragment<MineFragmentViewModel>() {
                     SettingsCard(
                         item = settingItem,
                         onClick = {
-                            handleSettingsClick(context, settingItem, viewModel)
+                            when (settingItem.id) {
+                                "general" -> {
+                                    NavigationManager.getInstance()
+                                        .build(RouterConfig.VERSION)
+                                        .navigation(context)
+                                }
+                                "thermal" -> {
+                                    NavigationManager.getInstance()
+                                        .build(RouterConfig.IR_SETTING)
+                                        .navigation(context)
+                                }
+                                "network" -> {
+                                    NavigationManager.getInstance()
+                                        .build(RouterConfig.VERSION)
+                                        .navigation(context)
+                                }
+                                "storage" -> {
+                                    NavigationManager.getInstance()
+                                        .build(RouterConfig.VERSION)
+                                        .navigation(context)
+                                }
+                                "feedback" -> {
+                                    val intent = Intent(context, FeedbackActivity::class.java)
+                                    context.startActivity(intent)
+                                }
+                                "about" -> {
+                                    NavigationManager.getInstance()
+                                        .build(RouterConfig.VERSION)
+                                        .navigation(context)
+                                }
+                            }
                         }
                     )
                 }
@@ -79,10 +121,9 @@ class MineFragmentCompose : BaseComposeFragment<MineFragmentViewModel>() {
                 // App information section
                 item {
                     AppInfoCard(
-                        appInfo = appInfo,
-                        onViewLogs = { viewModel.viewAppLogs() },
-                        onClearCache = { viewModel.clearAppCache() },
-                        onCheckUpdates = { viewModel.checkForUpdates() }
+                        onViewLogs = { },
+                        onClearCache = { viewModel.clearCache() },
+                        onCheckUpdates = { }
                     )
                 }
             }
@@ -91,7 +132,7 @@ class MineFragmentCompose : BaseComposeFragment<MineFragmentViewModel>() {
 
     @Composable
     private fun UserProfileCard(
-        userInfo: MineViewModel.UserInfo?,
+        userProfile: MineFragmentViewModel.UserProfileState,
         onEditProfile: () -> Unit,
         onAvatarClick: () -> Unit
     ) {
@@ -110,33 +151,19 @@ class MineFragmentCompose : BaseComposeFragment<MineFragmentViewModel>() {
             ) {
                 // Avatar
                 Card(
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.size(60.dp),
+                    shape = RoundedCornerShape(30.dp)
                 ) {
-                    if (userInfo?.avatarUrl?.isNotEmpty() == true) {
-                        // TODO: Replace with AsyncImage when coil dependency is available
-                        Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Icon(
-                                Icons.Default.AccountCircle,
-                                contentDescription = "Profile Picture",
-                                modifier = Modifier.size(40.dp),
-                                tint = MaterialTheme.colorScheme.primary
-                            )
-                        }
-                    } else {
-                        Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Icon(
-                                Icons.Default.Person,
-                                contentDescription = "Default Avatar",
-                                modifier = Modifier.size(40.dp),
-                                tint = MaterialTheme.colorScheme.onSurface
-                            )
-                        }
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            if (userProfile.isLoggedIn) Icons.Default.AccountCircle else Icons.Default.Person,
+                            contentDescription = "Profile Picture",
+                            modifier = Modifier.size(40.dp),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
                     }
                 }
 
@@ -147,37 +174,130 @@ class MineFragmentCompose : BaseComposeFragment<MineFragmentViewModel>() {
                     modifier = Modifier.weight(1f)
                 ) {
                     Text(
-                        text = userInfo?.name ?: "User",
+                        text = userProfile.username,
                         style = MaterialTheme.typography.headlineSmall,
                         fontWeight = FontWeight.Bold
                     )
                     Text(
-                        text = userInfo?.email ?: "user@example.com",
+                        text = if (userProfile.isLoggedIn) "Logged In" else "Guest",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
-                    if (userInfo?.isLoggedIn == true) {
-                        Text(
-                            text = userProfile.username,
-                            style = MaterialTheme.typography.titleLarge
-                        )
-                        Text(
-                            text = if (userProfile.isLoggedIn) "Logged In" else "Guest",
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                    }
                 }
                 
                 Button(
-                    onClick = { viewModel.refreshUserProfile() },
-                    modifier = Modifier.fillMaxWidth()
+                    onClick = onEditProfile,
+                    modifier = Modifier.wrapContentWidth()
                 ) {
-                    Text("Refresh Profile")
+                    Text("Edit")
                 }
             }
         }
     }
 
+    @Composable
+    private fun SettingsCard(
+        item: SettingsItem,
+        onClick: () -> Unit
+    ) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 4.dp),
+            onClick = onClick
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = item.icon,
+                    contentDescription = item.title,
+                    modifier = Modifier.size(24.dp),
+                    tint = item.iconTint
+                )
+                
+                Spacer(modifier = Modifier.width(16.dp))
+                
+                Column(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(
+                        text = item.title,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    Text(
+                        text = item.subtitle,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                
+                Icon(
+                    Icons.Default.ChevronRight,
+                    contentDescription = "Navigate",
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
+    }
+
+    @Composable
+    private fun AppInfoCard(
+        onViewLogs: () -> Unit,
+        onClearCache: () -> Unit,
+        onCheckUpdates: () -> Unit
+    ) {
+        Card(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp)
+            ) {
+                Text(
+                    text = "App Information",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
+                
+                AppInfoRow("Version", "1.10.000")
+                AppInfoRow("Build", "1100")
+                AppInfoRow("Cache Size", "0 MB")
+                
+                Spacer(modifier = Modifier.height(16.dp))
+                
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    OutlinedButton(
+                        onClick = onViewLogs,
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text("Logs")
+                    }
+                    
+                    OutlinedButton(
+                        onClick = onClearCache,
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text("Clear Cache")
+                    }
+                    
+                    Button(
+                        onClick = onCheckUpdates,
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text("Update")
+                    }
+                }
+            }
+        }
+    }
     @Composable
     private fun AppInfoRow(label: String, value: String) {
         Row(
@@ -206,94 +326,43 @@ class MineFragmentCompose : BaseComposeFragment<MineFragmentViewModel>() {
                 title = "General Settings",
                 subtitle = "Language, theme, notifications",
                 icon = Icons.Default.Settings,
-                iconTint = MaterialTheme.colorScheme.primary
+                iconTint = Color.Blue
             ),
             SettingsItem(
                 id = "thermal",
                 title = "Thermal Settings",
                 subtitle = "Camera calibration, temperature units",
                 icon = Icons.Default.Thermostat,
-                iconTint = androidx.compose.ui.graphics.Color.Red
+                iconTint = Color.Red
             ),
             SettingsItem(
                 id = "network",
                 title = "Network Settings",
                 subtitle = "WiFi, connection preferences",
                 icon = Icons.Default.NetworkWifi,
-                iconTint = androidx.compose.ui.graphics.Color.Green
+                iconTint = Color.Green
             ),
             SettingsItem(
                 id = "storage",
                 title = "Storage Management",
                 subtitle = "File locations, auto-cleanup",
                 icon = Icons.Default.Storage,
-                iconTint = MaterialTheme.colorScheme.primary
+                iconTint = Color.Blue
             ),
             SettingsItem(
                 id = "feedback",
                 title = "Feedback & Support",
                 subtitle = "Send feedback, get help",
                 icon = Icons.Default.Feedback,
-                iconTint = androidx.compose.ui.graphics.Color.Red
+                iconTint = Color.Red
             ),
             SettingsItem(
                 id = "about",
                 title = "About",
                 subtitle = "Version info, licenses",
                 icon = Icons.Default.Info,
-                iconTint = androidx.compose.ui.graphics.Color.Gray
+                iconTint = Color.Gray
             )
         )
     }
-
-    private fun handleSettingsClick(
-        context: android.content.Context,
-        item: SettingsItem,
-        viewModel: MineViewModel
-    ) {
-        when (item.id) {
-            "general" -> {
-                NavigationManager.getInstance()
-                    .build(RouterConfig.GENERAL_SETTINGS)
-                    .navigation(context)
-            }
-
-            "thermal" -> {
-                NavigationManager.getInstance()
-                    .build(RouterConfig.THERMAL_SETTINGS)
-                    .navigation(context)
-            }
-
-            "network" -> {
-                NavigationManager.getInstance()
-                    .build(RouterConfig.NETWORK_SETTINGS)
-                    .navigation(context)
-            }
-
-            "storage" -> {
-                NavigationManager.getInstance()
-                    .build(RouterConfig.STORAGE_SETTINGS)
-                    .navigation(context)
-            }
-
-            "feedback" -> {
-                val intent = Intent(context, FeedbackActivity::class.java)
-                context.startActivity(intent)
-            }
-
-            "about" -> {
-                NavigationManager.getInstance()
-                    .build(RouterConfig.ABOUT)
-                    .navigation(context)
-            }
-        }
-    }
-
-    data class SettingsItem(
-        val id: String,
-        val title: String,
-        val subtitle: String,
-        val icon: ImageVector,
-        val iconTint: androidx.compose.ui.graphics.Color
-    )
 }

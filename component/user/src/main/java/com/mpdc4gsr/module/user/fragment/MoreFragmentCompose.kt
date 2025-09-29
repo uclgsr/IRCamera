@@ -1,18 +1,27 @@
 package com.mpdc4gsr.module.user.fragment
 
+import android.content.Context
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeFragment
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
+import com.mpdc4gsr.libunified.app.config.RouterConfig
+import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import com.mpdc4gsr.module.user.viewmodel.MoreFragmentComposeViewModel
 
 /**
@@ -20,14 +29,51 @@ import com.mpdc4gsr.module.user.viewmodel.MoreFragmentComposeViewModel
  */
 class MoreFragmentCompose : BaseComposeFragment<MoreFragmentComposeViewModel>() {
 
+    data class QuickActionItem(
+        val id: String,
+        val title: String,
+        val description: String,
+        val icon: ImageVector,
+        val backgroundColor: Color,
+        val iconTint: Color,
+        val textColor: Color = Color.Unspecified,
+        val badge: String? = null
+    )
+
+    data class HelpSupportItem(
+        val id: String,
+        val title: String,
+        val description: String,
+        val icon: ImageVector
+    )
+
+    data class CommunityItem(
+        val id: String,
+        val title: String,
+        val description: String,
+        val icon: ImageVector,
+        val url: String
+    )
+
+    data class AdvancedToolItem(
+        val id: String,
+        val title: String,
+        val description: String,
+        val icon: ImageVector,
+        val requirements: String,
+        val isExperimental: Boolean = false
+    )
+
     override fun createViewModel(): MoreFragmentComposeViewModel {
         return viewModels<MoreFragmentComposeViewModel>().value
     }
 
     @Composable
     override fun Content(viewModel: MoreFragmentComposeViewModel) {
+        val context = LocalContext.current
+        
         LibUnifiedTheme {
-            Column(
+            LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(16.dp),
@@ -58,7 +104,7 @@ class MoreFragmentCompose : BaseComposeFragment<MoreFragmentComposeViewModel>() 
                     QuickActionCard(
                         action = action,
                         onClick = {
-                            handleQuickActionClick(context, action, viewModel)
+                            handleQuickActionClick(context, action)
                         }
                     )
                 }
@@ -73,35 +119,7 @@ class MoreFragmentCompose : BaseComposeFragment<MoreFragmentComposeViewModel>() 
                     HelpSupportCard(
                         item = item,
                         onClick = {
-                            handleHelpSupportClick(context, item, viewModel)
-                        }
-                    )
-                }
-
-                // Community section
-                item {
-                    SectionHeader("Community")
-                }
-
-                items(getCommunityItems()) { item ->
-                    CommunityCard(
-                        item = item,
-                        onClick = {
-                            handleCommunityClick(context, item, viewModel)
-                        }
-                    )
-                }
-
-                // Advanced Tools section
-                item {
-                    SectionHeader("Advanced Tools")
-                }
-
-                items(getAdvancedToolItems()) { tool ->
-                    AdvancedToolCard(
-                        tool = tool,
-                        onClick = {
-                            handleAdvancedToolClick(context, tool, viewModel)
+                            handleHelpSupportClick(context, item)
                         }
                     )
                 }
@@ -145,39 +163,86 @@ class MoreFragmentCompose : BaseComposeFragment<MoreFragmentComposeViewModel>() 
                     tint = action.iconTint
                 )
                 
-                Card(
-                    modifier = Modifier.fillMaxWidth()
+                Spacer(modifier = Modifier.width(16.dp))
+                
+                Column(
+                    modifier = Modifier.weight(1f)
                 ) {
-                    Column(
-                        modifier = Modifier.padding(16.dp)
+                    Text(
+                        text = action.title,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.SemiBold,
+                        color = if (action.textColor != Color.Unspecified) action.textColor else MaterialTheme.colorScheme.onSurface
+                    )
+                    Text(
+                        text = action.description,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                
+                action.badge?.let { badge ->
+                    Surface(
+                        color = MaterialTheme.colorScheme.primary,
+                        shape = RoundedCornerShape(4.dp),
+                        modifier = Modifier.padding(start = 8.dp)
                     ) {
                         Text(
-                            text = "Additional Features",
-                            style = MaterialTheme.typography.titleMedium
-                        )
-                        Text(
-                            text = "Explore more tools and settings",
-                            style = MaterialTheme.typography.bodyMedium
+                            text = badge,
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onPrimary
                         )
                     }
                 }
+            }
+        }
+    }
 
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Text(
-                    text = tool.description,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.8f)
+    @Composable
+    private fun HelpSupportCard(
+        item: HelpSupportItem,
+        onClick: () -> Unit
+    ) {
+        Card(
+            onClick = onClick,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = item.icon,
+                    contentDescription = item.title,
+                    modifier = Modifier.size(24.dp),
+                    tint = MaterialTheme.colorScheme.primary
                 )
-
-                if (tool.requirements.isNotEmpty()) {
-                    Spacer(modifier = Modifier.height(8.dp))
+                
+                Spacer(modifier = Modifier.width(16.dp))
+                
+                Column(
+                    modifier = Modifier.weight(1f)
+                ) {
                     Text(
-                        text = "Requires: ${tool.requirements}",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.6f)
+                        text = item.title,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Medium
+                    )
+                    Text(
+                        text = item.description,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
+                
+                Icon(
+                    Icons.Default.ChevronRight,
+                    contentDescription = "Navigate",
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                )
             }
         }
     }
@@ -189,9 +254,9 @@ class MoreFragmentCompose : BaseComposeFragment<MoreFragmentComposeViewModel>() 
                 title = "Quick Calibration",
                 description = "Calibrate thermal camera quickly",
                 icon = Icons.Default.Tune,
-                backgroundColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
-                iconTint = MaterialTheme.colorScheme.primary,
-                textColor = MaterialTheme.colorScheme.primary,
+                backgroundColor = Color.Blue.copy(alpha = 0.1f),
+                iconTint = Color.Blue,
+                textColor = Color.Blue,
                 badge = "QUICK"
             ),
             QuickActionItem(
@@ -199,18 +264,18 @@ class MoreFragmentCompose : BaseComposeFragment<MoreFragmentComposeViewModel>() 
                 title = "Export Data",
                 description = "Export thermal imaging data",
                 icon = Icons.Default.FileDownload,
-                backgroundColor = androidx.compose.ui.graphics.Color.Green.copy(alpha = 0.1f),
-                iconTint = androidx.compose.ui.graphics.Color.Green,
-                textColor = androidx.compose.ui.graphics.Color.Green
+                backgroundColor = Color.Green.copy(alpha = 0.1f),
+                iconTint = Color.Green,
+                textColor = Color.Green
             ),
             QuickActionItem(
                 id = "share",
                 title = "Share Analysis",
                 description = "Share thermal analysis results",
                 icon = Icons.Default.Share,
-                backgroundColor = androidx.compose.ui.graphics.Color.Red.copy(alpha = 0.1f),
-                iconTint = androidx.compose.ui.graphics.Color.Red,
-                textColor = androidx.compose.ui.graphics.Color.Red
+                backgroundColor = Color.Red.copy(alpha = 0.1f),
+                iconTint = Color.Red,
+                textColor = Color.Red
             )
         )
     }
@@ -244,82 +309,52 @@ class MoreFragmentCompose : BaseComposeFragment<MoreFragmentComposeViewModel>() 
         )
     }
 
-    private fun getCommunityItems(): List<CommunityItem> {
-        return listOf(
-            CommunityItem(
-                id = "forum",
-                title = "Community Forum",
-                description = "Discuss with other users",
-                icon = Icons.Default.Forum,
-                url = "https://community.thermalcamera.com"
-            ),
-            CommunityItem(
-                id = "github",
-                title = "GitHub Repository",
-                description = "View source code and contribute",
-                icon = Icons.Default.Code,
-                url = "https://github.com/uclgsr/IRCamera"
-            ),
-            CommunityItem(
-                id = "discord",
-                title = "Discord Server",
-                description = "Real-time chat with community",
-                icon = Icons.Default.Chat,
-                url = "https://discord.gg/thermalcamera"
-            )
-        )
-    }
-
-    private fun getAdvancedToolItems(): List<AdvancedToolItem> {
-        return listOf(
-            AdvancedToolItem(
-                id = "thermal_analysis",
-                title = "Advanced Thermal Analysis",
-                description = "Deep thermal data analysis with ML",
-                icon = Icons.Default.Analytics,
-                requirements = "Pro license",
-                isExperimental = false
-            ),
-            AdvancedToolItem(
-                id = "batch_processing",
-                title = "Batch Processing",
-                description = "Process multiple thermal images",
-                icon = Icons.Default.GridView,
-                requirements = "High-end device",
-                isExperimental = true
-            ),
-            AdvancedToolItem(
-                id = "ai_detection",
-                title = "AI Object Detection",
-                description = "AI-powered thermal object detection",
-                icon = Icons.Default.Psychology,
-                requirements = "Internet connection",
-                isExperimental = true
-            )
-        )
-    }
-
     private fun handleQuickActionClick(
-        context: android.content.Context,
-        action: QuickActionItem,
-        viewModel: MoreViewModel
+        context: Context,
+        action: QuickActionItem
     ) {
         when (action.id) {
-            "calibrate" -> viewModel.startQuickCalibration()
-            "export" -> viewModel.exportData()
-            "share" -> viewModel.shareAnalysis()
+            "calibrate" -> {
+                NavigationManager.getInstance()
+                    .build(RouterConfig.IR_SETTING)
+                    .navigation(context)
+            }
+            "export" -> {
+                NavigationManager.getInstance()
+                    .build(RouterConfig.VERSION)
+                    .navigation(context)
+            }
+            "share" -> {
+                NavigationManager.getInstance()
+                    .build(RouterConfig.VERSION)
+                    .navigation(context)
+            }
         }
     }
 
     private fun handleHelpSupportClick(
-        context: android.content.Context,
-        item: HelpSupportItem,
-        viewModel: MoreViewModel
+        context: Context,
+        item: HelpSupportItem
     ) {
         when (item.id) {
             "user_guide" -> {
                 NavigationManager.getInstance()
-                    .build(RouterConfig.USER_GUIDE)
+                    .build(RouterConfig.VERSION)
+                    .navigation(context)
+            }
+            "faq" -> {
+                NavigationManager.getInstance()
+                    .build(RouterConfig.VERSION)
+                    .navigation(context)
+            }
+            "troubleshooting" -> {
+                NavigationManager.getInstance()
+                    .build(RouterConfig.VERSION)
+                    .navigation(context)
+            }
+            "contact_support" -> {
+                NavigationManager.getInstance()
+                    .build(RouterConfig.VERSION)
                     .navigation(context)
             }
         }
