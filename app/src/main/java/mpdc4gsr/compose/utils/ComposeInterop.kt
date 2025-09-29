@@ -77,9 +77,76 @@ fun HybridScreen(
 
 /**
  * Bridge for StateFlow/LiveData to Compose State
- * Already handled by compose-runtime-livedata, but adding for completeness
+ * Enhanced utilities for fragment integration
  */
 object StateFlowBridge {
     // Additional utilities for complex state bridging can be added here
     // if the standard collectAsState() doesn't cover all use cases
+}
+
+/**
+ * Enhanced Fragment-Compose interoperability utilities
+ * for seamless migration support
+ */
+object FragmentComposeUtils {
+    
+    /**
+     * Create a Compose wrapper for existing Fragment
+     * Useful for gradual migration where you want to embed existing fragments
+     * in new Compose screens
+     */
+    @Composable
+    fun FragmentCompose(
+        fragmentManager: FragmentManager,
+        fragmentTag: String,
+        fragmentFactory: () -> Fragment,
+        modifier: Modifier = Modifier.fillMaxSize()
+    ) {
+        FragmentContainer(
+            fragmentManager = fragmentManager,
+            fragmentFactory = fragmentFactory,
+            modifier = modifier,
+            containerId = View.generateViewId()
+        )
+    }
+    
+    /**
+     * Navigation helper for Fragment to Compose transitions
+     * Maintains back stack consistency
+     */
+    fun navigateFromFragmentToCompose(
+        fragment: Fragment,
+        composeActivityClass: Class<*>,
+        extras: Bundle? = null,
+        finishCurrent: Boolean = false
+    ) {
+        val intent = Intent(fragment.requireContext(), composeActivityClass).apply {
+            extras?.let { putExtras(it) }
+        }
+        fragment.startActivity(intent)
+        
+        if (finishCurrent && fragment.activity != null) {
+            fragment.activity?.finish()
+        }
+    }
+    
+    /**
+     * State preservation helper for Fragment-Compose migration
+     * Ensures state is maintained across the transition
+     */
+    fun preserveFragmentState(
+        fragment: Fragment,
+        key: String,
+        value: Any
+    ) {
+        fragment.arguments = (fragment.arguments ?: Bundle()).apply {
+            when (value) {
+                is String -> putString(key, value)
+                is Int -> putInt(key, value)
+                is Boolean -> putBoolean(key, value)
+                is Bundle -> putBundle(key, value)
+                // Add more types as needed
+            }
+        }
+    }
 }
