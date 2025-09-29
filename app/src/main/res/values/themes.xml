@@ -15,4 +15,14 @@
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowBackground">@color/transparent</item>
     </style>
+
+    <!-- Add the missing Theme.IRCamera style -->
+    <style name="Theme.IRCamera" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:statusBarColor">@color/color_16131E</item>
+        <item name="android:windowBackground">@color/color_16131E</item>
+    </style>
+
 </resources>
