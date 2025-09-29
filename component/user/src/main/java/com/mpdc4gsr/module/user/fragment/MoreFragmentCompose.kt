@@ -1,19 +1,63 @@
 package com.mpdc4gsr.module.user.fragment
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeFragment
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
+import com.mpdc4gsr.libunified.app.config.RouterConfig
+import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import com.mpdc4gsr.module.user.viewmodel.MoreFragmentComposeViewModel
+
+// Data classes for the fragment
+data class QuickActionItem(
+    val id: String,
+    val title: String,
+    val description: String,
+    val icon: ImageVector,
+    val backgroundColor: Color = Color.Transparent,
+    val iconTint: Color = Color.Black,
+    val textColor: Color = Color.Black,
+    val badge: String? = null
+)
+
+data class HelpSupportItem(
+    val id: String,
+    val title: String,
+    val description: String,
+    val icon: ImageVector
+)
+
+data class CommunityItem(
+    val id: String,
+    val title: String,
+    val description: String,
+    val icon: ImageVector,
+    val url: String
+)
+
+data class AdvancedToolItem(
+    val id: String,
+    val title: String,
+    val description: String,
+    val icon: ImageVector,
+    val requirements: String = "",
+    val isExperimental: Boolean = false
+)
 
 /**
  * Compose migration of MoreFragment - Minimal working version
@@ -26,8 +70,16 @@ class MoreFragmentCompose : BaseComposeFragment<MoreFragmentComposeViewModel>() 
 
     @Composable
     override fun Content(viewModel: MoreFragmentComposeViewModel) {
+        val context = LocalContext.current
+        
+        // Remember the items outside of LazyColumn
+        val quickActionItems = remember { getQuickActionItems() }
+        val helpSupportItems = remember { getHelpSupportItems() }
+        val communityItems = remember { getCommunityItems() }
+        val advancedToolItems = remember { getAdvancedToolItems() }
+        
         LibUnifiedTheme {
-            Column(
+            LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(16.dp),
@@ -53,7 +105,6 @@ class MoreFragmentCompose : BaseComposeFragment<MoreFragmentComposeViewModel>() 
                     SectionHeader("Quick Actions")
                 }
 
-                val quickActionItems = getQuickActionItems()
                 items(quickActionItems) { action ->
                     QuickActionCard(
                         action = action,
@@ -68,7 +119,6 @@ class MoreFragmentCompose : BaseComposeFragment<MoreFragmentComposeViewModel>() 
                     SectionHeader("Help & Support")
                 }
 
-                val helpSupportItems = getHelpSupportItems()
                 items(helpSupportItems) { item ->
                     HelpSupportCard(
                         item = item,
@@ -83,7 +133,7 @@ class MoreFragmentCompose : BaseComposeFragment<MoreFragmentComposeViewModel>() 
                     SectionHeader("Community")
                 }
 
-                items(getCommunityItems()) { item ->
+                items(communityItems) { item ->
                     CommunityCard(
                         item = item,
                         onClick = {
@@ -97,7 +147,7 @@ class MoreFragmentCompose : BaseComposeFragment<MoreFragmentComposeViewModel>() 
                     SectionHeader("Advanced Tools")
                 }
 
-                items(getAdvancedToolItems()) { tool ->
+                items(advancedToolItems) { tool ->
                     AdvancedToolCard(
                         tool = tool,
                         onClick = {
@@ -145,29 +195,188 @@ class MoreFragmentCompose : BaseComposeFragment<MoreFragmentComposeViewModel>() 
                     tint = action.iconTint
                 )
                 
-                Card(
-                    modifier = Modifier.fillMaxWidth()
+                Spacer(modifier = Modifier.width(16.dp))
+                
+                Column(
+                    modifier = Modifier.weight(1f)
                 ) {
-                    Column(
-                        modifier = Modifier.padding(16.dp)
-                    ) {
-                        Text(
-                            text = "Additional Features",
-                            style = MaterialTheme.typography.titleMedium
-                        )
-                        Text(
-                            text = "Explore more tools and settings",
-                            style = MaterialTheme.typography.bodyMedium
-                        )
+                    Text(
+                        text = action.title,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.SemiBold,
+                        color = action.textColor
+                    )
+                    Text(
+                        text = action.description,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = action.textColor.copy(alpha = 0.8f)
+                    )
+                }
+                
+                action.badge?.let { badge ->
+                    Badge {
+                        Text(text = badge)
                     }
                 }
+            }
+        }
+    }
 
+    @Composable
+    private fun HelpSupportCard(
+        item: HelpSupportItem,
+        onClick: () -> Unit
+    ) {
+        Card(
+            onClick = onClick,
+            modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant
+            ),
+            shape = RoundedCornerShape(12.dp)
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = item.icon,
+                    contentDescription = item.title,
+                    modifier = Modifier.size(24.dp),
+                    tint = MaterialTheme.colorScheme.primary
+                )
+                
+                Spacer(modifier = Modifier.width(16.dp))
+                
+                Column(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(
+                        text = item.title,
+                        style = MaterialTheme.typography.titleSmall,
+                        fontWeight = FontWeight.Medium
+                    )
+                    Text(
+                        text = item.description,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+        }
+    }
+
+    @Composable
+    private fun CommunityCard(
+        item: CommunityItem,
+        onClick: () -> Unit
+    ) {
+        Card(
+            onClick = onClick,
+            modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.secondaryContainer
+            ),
+            shape = RoundedCornerShape(12.dp)
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = item.icon,
+                    contentDescription = item.title,
+                    modifier = Modifier.size(24.dp),
+                    tint = MaterialTheme.colorScheme.onSecondaryContainer
+                )
+                
+                Spacer(modifier = Modifier.width(16.dp))
+                
+                Column(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(
+                        text = item.title,
+                        style = MaterialTheme.typography.titleSmall,
+                        fontWeight = FontWeight.Medium,
+                        color = MaterialTheme.colorScheme.onSecondaryContainer
+                    )
+                    Text(
+                        text = item.description,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.8f)
+                    )
+                }
+            }
+        }
+    }
+
+    @Composable
+    private fun AdvancedToolCard(
+        tool: AdvancedToolItem,
+        onClick: () -> Unit
+    ) {
+        Card(
+            onClick = onClick,
+            modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.tertiaryContainer
+            ),
+            shape = RoundedCornerShape(12.dp)
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp)
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = tool.icon,
+                        contentDescription = tool.title,
+                        modifier = Modifier.size(24.dp),
+                        tint = MaterialTheme.colorScheme.onTertiaryContainer
+                    )
+                    
+                    Spacer(modifier = Modifier.width(16.dp))
+                    
+                    Column(
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = tool.title,
+                                style = MaterialTheme.typography.titleSmall,
+                                fontWeight = FontWeight.Medium,
+                                color = MaterialTheme.colorScheme.onTertiaryContainer
+                            )
+                            
+                            if (tool.isExperimental) {
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Badge(
+                                    containerColor = MaterialTheme.colorScheme.error
+                                ) {
+                                    Text(
+                                        text = "BETA",
+                                        style = MaterialTheme.typography.labelSmall
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+                
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
                     text = tool.description,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.8f)
+                    color = MaterialTheme.colorScheme.onTertiaryContainer.copy(alpha = 0.8f)
                 )
 
                 if (tool.requirements.isNotEmpty()) {
@@ -175,7 +384,7 @@ class MoreFragmentCompose : BaseComposeFragment<MoreFragmentComposeViewModel>() 
                     Text(
                         text = "Requires: ${tool.requirements}",
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.6f)
+                        color = MaterialTheme.colorScheme.onTertiaryContainer.copy(alpha = 0.6f)
                     )
                 }
             }
@@ -189,9 +398,9 @@ class MoreFragmentCompose : BaseComposeFragment<MoreFragmentComposeViewModel>() 
                 title = "Quick Calibration",
                 description = "Calibrate thermal camera quickly",
                 icon = Icons.Default.Tune,
-                backgroundColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
-                iconTint = MaterialTheme.colorScheme.primary,
-                textColor = MaterialTheme.colorScheme.primary,
+                backgroundColor = Color.Blue.copy(alpha = 0.1f),
+                iconTint = Color.Blue,
+                textColor = Color.Blue,
                 badge = "QUICK"
             ),
             QuickActionItem(
@@ -199,18 +408,18 @@ class MoreFragmentCompose : BaseComposeFragment<MoreFragmentComposeViewModel>() 
                 title = "Export Data",
                 description = "Export thermal imaging data",
                 icon = Icons.Default.FileDownload,
-                backgroundColor = androidx.compose.ui.graphics.Color.Green.copy(alpha = 0.1f),
-                iconTint = androidx.compose.ui.graphics.Color.Green,
-                textColor = androidx.compose.ui.graphics.Color.Green
+                backgroundColor = Color.Green.copy(alpha = 0.1f),
+                iconTint = Color.Green,
+                textColor = Color.Green
             ),
             QuickActionItem(
                 id = "share",
                 title = "Share Analysis",
                 description = "Share thermal analysis results",
                 icon = Icons.Default.Share,
-                backgroundColor = androidx.compose.ui.graphics.Color.Red.copy(alpha = 0.1f),
-                iconTint = androidx.compose.ui.graphics.Color.Red,
-                textColor = androidx.compose.ui.graphics.Color.Red
+                backgroundColor = Color.Red.copy(alpha = 0.1f),
+                iconTint = Color.Red,
+                textColor = Color.Red
             )
         )
     }
@@ -302,19 +511,40 @@ class MoreFragmentCompose : BaseComposeFragment<MoreFragmentComposeViewModel>() 
     private fun handleQuickActionClick(
         context: android.content.Context,
         action: QuickActionItem,
-        viewModel: MoreViewModel
+        viewModel: MoreFragmentComposeViewModel
     ) {
         when (action.id) {
-            "calibrate" -> viewModel.startQuickCalibration()
-            "export" -> viewModel.exportData()
-            "share" -> viewModel.shareAnalysis()
+            "calibrate" -> {
+                // Quick calibration logic can be added to ViewModel later
+                android.widget.Toast.makeText(
+                    context,
+                    "Calibration feature is not yet implemented.",
+                    android.widget.Toast.LENGTH_SHORT
+                ).show()
+            }
+            "export" -> {
+                // Export data logic can be added to ViewModel later
+                android.widget.Toast.makeText(
+                    context,
+                    "Export feature is not yet implemented.",
+                    android.widget.Toast.LENGTH_SHORT
+                ).show()
+            }
+            "share" -> {
+                // Share analysis logic can be added to ViewModel later
+                android.widget.Toast.makeText(
+                    context,
+                    "Share feature is not yet implemented.",
+                    android.widget.Toast.LENGTH_SHORT
+                ).show()
+            }
         }
     }
 
     private fun handleHelpSupportClick(
         context: android.content.Context,
         item: HelpSupportItem,
-        viewModel: MoreViewModel
+        viewModel: MoreFragmentComposeViewModel
     ) {
         when (item.id) {
             "user_guide" -> {
@@ -322,6 +552,30 @@ class MoreFragmentCompose : BaseComposeFragment<MoreFragmentComposeViewModel>() 
                     .build(RouterConfig.USER_GUIDE)
                     .navigation(context)
             }
+            // Add other help support actions as needed
         }
+    }
+
+    private fun handleCommunityClick(
+        context: android.content.Context,
+        item: CommunityItem,
+        viewModel: MoreFragmentComposeViewModel
+    ) {
+        // Community click logic can be implemented later
+        // For now, show a placeholder message
+        android.widget.Toast.makeText(
+            context,
+            "Community feature not yet implemented.",
+            android.widget.Toast.LENGTH_SHORT
+        ).show()
+    }
+
+    private fun handleAdvancedToolClick(
+        context: android.content.Context,
+        tool: AdvancedToolItem,
+        viewModel: MoreFragmentComposeViewModel
+    ) {
+        // Advanced tool click logic can be implemented later
+        // For now, we'll just handle the click without action
     }
 }
