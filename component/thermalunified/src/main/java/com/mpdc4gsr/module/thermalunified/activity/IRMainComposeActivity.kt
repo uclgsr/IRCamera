@@ -1,7 +1,9 @@
 package com.mpdc4gsr.module.thermalunified.activity
 
 import android.os.Bundle
+import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
@@ -36,15 +38,22 @@ import kotlinx.coroutines.launch
  * Modern Compose implementation of thermal main hub activity
  * Preserves the 5-tab ViewPager structure with enhanced Material 3 UI
  */
-class IRMainComposeActivity : BaseComposeActivity<IRMainActivityViewModel>() {
+class IRMainComposeActivity : AppCompatActivity() {
 
-    override fun createViewModel(): IRMainActivityViewModel {
-        return viewModels<IRMainActivityViewModel>().value
+    private val viewModel: IRMainActivityViewModel by viewModels()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        
+        setContent {
+            LibUnifiedTheme {
+                MainContent()
+            }
+        }
     }
 
-    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    override fun Content(viewModel: IRMainActivityViewModel) {
+    private fun MainContent() {
         val pagerState = rememberPagerState(pageCount = { 5 })
         val scope = rememberCoroutineScope()
         
