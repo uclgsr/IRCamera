@@ -73,12 +73,12 @@ class SensorDashboardTestViewModel : BaseViewModel() {
         kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
             _isRunningTest.value = true
             _testProgress.value = 0f
-            
+
             val sensors = TestSensorType.values()
-            
+
             sensors.forEachIndexed { index, sensorType ->
                 _testMessage.value = "Testing ${sensorType.displayName}..."
-                
+
                 // Update to connecting
                 updateSensorStatus(
                     sensorType,
@@ -86,9 +86,9 @@ class SensorDashboardTestViewModel : BaseViewModel() {
                     "Connecting...",
                     "Just now"
                 )
-                
+
                 delay(1500)
-                
+
                 // Simulate different test outcomes
                 val testResult = when (index % 4) {
                     0 -> {
@@ -106,6 +106,7 @@ class SensorDashboardTestViewModel : BaseViewModel() {
                             }
                         )
                     }
+
                     1 -> {
                         // Warning state
                         Triple(
@@ -114,6 +115,7 @@ class SensorDashboardTestViewModel : BaseViewModel() {
                             "Reduced rate"
                         )
                     }
+
                     2 -> {
                         // Error state
                         Triple(
@@ -122,6 +124,7 @@ class SensorDashboardTestViewModel : BaseViewModel() {
                             "0 KB/s"
                         )
                     }
+
                     else -> {
                         // Disconnected
                         Triple(
@@ -131,7 +134,7 @@ class SensorDashboardTestViewModel : BaseViewModel() {
                         )
                     }
                 }
-                
+
                 updateSensorStatus(
                     sensorType,
                     testResult.first,
@@ -139,11 +142,11 @@ class SensorDashboardTestViewModel : BaseViewModel() {
                     "Just tested",
                     testResult.third
                 )
-                
+
                 _testProgress.value = (index + 1).toFloat() / sensors.size
                 delay(1000)
             }
-            
+
             _testMessage.value = "Testing complete. Results displayed above."
             _isRunningTest.value = false
         }
@@ -152,19 +155,19 @@ class SensorDashboardTestViewModel : BaseViewModel() {
     fun testIndividualSensor(sensorType: TestSensorType) {
         kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
             _testMessage.value = "Testing ${sensorType.displayName}..."
-            
+
             updateSensorStatus(
                 sensorType,
                 SensorDashboardFragment.SensorStatus.CONNECTING,
                 "Testing connection...",
                 "Testing now"
             )
-            
+
             delay(2000)
-            
+
             // Simulate random test result
             val success = kotlin.random.Random.nextFloat() > 0.3f
-            
+
             if (success) {
                 updateSensorStatus(
                     sensorType,
@@ -227,7 +230,8 @@ class SensorDashboardTestViewModel : BaseViewModel() {
 
 class SensorDashboardTestActivityCompose : BaseComposeActivity<SensorDashboardTestViewModel>() {
 
-    override fun createViewModel(): SensorDashboardTestViewModel = viewModels<SensorDashboardTestViewModel>().value
+    override fun createViewModel(): SensorDashboardTestViewModel =
+        viewModels<SensorDashboardTestViewModel>().value
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -270,9 +274,9 @@ class SensorDashboardTestActivityCompose : BaseComposeActivity<SensorDashboardTe
                             .fillMaxWidth()
                             .padding(bottom = 16.dp),
                         colors = CardDefaults.cardColors(
-                            containerColor = if (isRunningTest) 
-                                MaterialTheme.colorScheme.surfaceVariant 
-                            else 
+                            containerColor = if (isRunningTest)
+                                MaterialTheme.colorScheme.surfaceVariant
+                            else
                                 MaterialTheme.colorScheme.surface
                         )
                     ) {
@@ -296,9 +300,9 @@ class SensorDashboardTestActivityCompose : BaseComposeActivity<SensorDashboardTe
                                         modifier = Modifier.size(24.dp)
                                     )
                                 }
-                                
+
                                 Spacer(modifier = Modifier.width(12.dp))
-                                
+
                                 Column(modifier = Modifier.weight(1f)) {
                                     Text(
                                         text = if (isRunningTest) "Running Tests..." else "Test Controls",
@@ -312,7 +316,7 @@ class SensorDashboardTestActivityCompose : BaseComposeActivity<SensorDashboardTe
                                     )
                                 }
                             }
-                            
+
                             if (isRunningTest) {
                                 Spacer(modifier = Modifier.height(12.dp))
                                 LinearProgressIndicator(
@@ -350,7 +354,7 @@ class SensorDashboardTestActivityCompose : BaseComposeActivity<SensorDashboardTe
                             Spacer(modifier = Modifier.width(8.dp))
                             Text("Run All Tests")
                         }
-                        
+
                         OutlinedButton(
                             onClick = { viewModel.resetAllSensors() },
                             modifier = Modifier.weight(1f),
@@ -513,7 +517,8 @@ private fun SensorTestCard(
                     }
                 ) {
                     Text(
-                        text = sensorStatus.status.name.lowercase().replaceFirstChar { it.uppercase() },
+                        text = sensorStatus.status.name.lowercase()
+                            .replaceFirstChar { it.uppercase() },
                         style = MaterialTheme.typography.labelSmall,
                         color = when (sensorStatus.status) {
                             SensorDashboardFragment.SensorStatus.CONNECTED -> MaterialTheme.colorScheme.onPrimary
@@ -524,9 +529,9 @@ private fun SensorTestCard(
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                     )
                 }
-                
+
                 Spacer(modifier = Modifier.height(8.dp))
-                
+
                 OutlinedButton(
                     onClick = onTest,
                     enabled = isTestingEnabled,

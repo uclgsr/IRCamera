@@ -27,7 +27,8 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
     // A single UiState class can be used to hold all UI-related state.
     // However, to align with the existing structure, individual flows are maintained.
     // For simplicity, a new state for the current navigation page is added.
-    private val _currentPage = MutableStateFlow(1) // PAGE_MAIN = 1 (0: Gallery, 1: Main, 2: Settings, 3: Mine)
+    private val _currentPage =
+        MutableStateFlow(1) // PAGE_MAIN = 1 (0: Gallery, 1: Main, 2: Settings, 3: Mine)
     val currentPage: StateFlow<Int> = _currentPage.asStateFlow()
 
     // State properties using StateFlow for better coroutine support and lifecycle awareness

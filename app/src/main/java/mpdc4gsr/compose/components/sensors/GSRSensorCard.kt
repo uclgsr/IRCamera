@@ -41,7 +41,7 @@ fun GSRSensorCard(
     var gsrValue by remember { mutableFloatStateOf(2.45f) }
     var skinConductance by remember { mutableFloatStateOf(0.82f) }
     var isRecording by remember { mutableStateOf(false) }
-    
+
     // Simulate GSR data updates
     LaunchedEffect(state) {
         if (state == SensorState.Streaming) {
@@ -52,7 +52,7 @@ fun GSRSensorCard(
             }
         }
     }
-    
+
     Card(
         onClick = onClick,
         modifier = modifier.fillMaxWidth(),
@@ -90,7 +90,7 @@ fun GSRSensorCard(
                         fontWeight = FontWeight.Bold
                     )
                 }
-                
+
                 Surface(
                     color = getStatusColor(state).copy(alpha = 0.2f),
                     shape = RoundedCornerShape(16.dp)
@@ -103,7 +103,7 @@ fun GSRSensorCard(
                     )
                 }
             }
-            
+
             // GSR data visualization
             if (state == SensorState.Streaming || state == SensorState.Connected) {
                 GSRDataVisualization(
@@ -112,7 +112,7 @@ fun GSRSensorCard(
                     isStreaming = state == SensorState.Streaming
                 )
             }
-            
+
             // Sensor metrics
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -134,7 +134,7 @@ fun GSRSensorCard(
                     color = Color.Yellow
                 )
             }
-            
+
             // Control buttons
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -149,6 +149,7 @@ fun GSRSensorCard(
                             Text("Connect")
                         }
                     }
+
                     SensorState.Connected -> {
                         Button(
                             onClick = { onAction(GSRAction.StartStream) },
@@ -165,6 +166,7 @@ fun GSRSensorCard(
                             Text("Disconnect")
                         }
                     }
+
                     SensorState.Streaming -> {
                         Button(
                             onClick = { onAction(GSRAction.StopStream) },
@@ -184,6 +186,7 @@ fun GSRSensorCard(
                             )
                         }
                     }
+
                     SensorState.Error -> {
                         Button(
                             onClick = { onAction(GSRAction.Connect) },
@@ -192,6 +195,7 @@ fun GSRSensorCard(
                             Text("Retry")
                         }
                     }
+
                     else -> {}
                 }
             }
@@ -226,7 +230,7 @@ private fun GSRDataVisualization(
                     val width = size.width
                     val height = size.height
                     val centerY = height / 2
-                    
+
                     // Draw baseline
                     drawLine(
                         color = Color.Gray,
@@ -234,27 +238,27 @@ private fun GSRDataVisualization(
                         end = Offset(width, centerY),
                         strokeWidth = 1.dp.toPx()
                     )
-                    
+
                     // Draw GSR waveform
                     val path = Path()
                     val points = 100
                     val timeOffset = System.currentTimeMillis() / 100f
-                    
+
                     for (i in 0..points) {
                         val x = (i.toFloat() / points) * width
                         val freq1 = 0.1f // Slow breathing component
                         val freq2 = 0.02f // Even slower arousal component
-                        val y = centerY + 
-                            (sin((i * freq1 + timeOffset) * 0.1f) * gsrValue * 5f) +
-                            (sin((i * freq2 + timeOffset) * 0.05f) * skinConductance * 10f)
-                        
+                        val y = centerY +
+                                (sin((i * freq1 + timeOffset) * 0.1f) * gsrValue * 5f) +
+                                (sin((i * freq2 + timeOffset) * 0.05f) * skinConductance * 10f)
+
                         if (i == 0) {
                             path.moveTo(x, y)
                         } else {
                             path.lineTo(x, y)
                         }
                     }
-                    
+
                     drawPath(
                         path = path,
                         color = Color.Cyan,

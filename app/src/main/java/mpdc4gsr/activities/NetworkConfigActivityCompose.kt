@@ -81,32 +81,86 @@ class NetworkConfigViewModel : BaseViewModel() {
         kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
             _isScanning.value = true
             _availableDevices.value = emptyList()
-            
+
             // Simulate device discovery
             delay(1000)
-            
+
             val mockDevices = when (_selectedConnectionType.value) {
                 ConnectionType.WIFI -> listOf(
-                    NetworkDevice("TC001-WiFi-Device", "192.168.1.100", ConnectionType.WIFI, signalStrength = 85),
-                    NetworkDevice("TS004-WiFi-Device", "192.168.1.101", ConnectionType.WIFI, signalStrength = 72),
-                    NetworkDevice("IRCamera-Hub", "192.168.1.102", ConnectionType.WIFI, signalStrength = 91)
+                    NetworkDevice(
+                        "TC001-WiFi-Device",
+                        "192.168.1.100",
+                        ConnectionType.WIFI,
+                        signalStrength = 85
+                    ),
+                    NetworkDevice(
+                        "TS004-WiFi-Device",
+                        "192.168.1.101",
+                        ConnectionType.WIFI,
+                        signalStrength = 72
+                    ),
+                    NetworkDevice(
+                        "IRCamera-Hub",
+                        "192.168.1.102",
+                        ConnectionType.WIFI,
+                        signalStrength = 91
+                    )
                 )
+
                 ConnectionType.BLUETOOTH -> listOf(
-                    NetworkDevice("TC001-BT", "00:11:22:33:44:55", ConnectionType.BLUETOOTH, signalStrength = 78),
-                    NetworkDevice("TS004-BT", "00:11:22:33:44:56", ConnectionType.BLUETOOTH, signalStrength = 65),
-                    NetworkDevice("GSR-Sensor-BT", "00:11:22:33:44:57", ConnectionType.BLUETOOTH, signalStrength = 82)
+                    NetworkDevice(
+                        "TC001-BT",
+                        "00:11:22:33:44:55",
+                        ConnectionType.BLUETOOTH,
+                        signalStrength = 78
+                    ),
+                    NetworkDevice(
+                        "TS004-BT",
+                        "00:11:22:33:44:56",
+                        ConnectionType.BLUETOOTH,
+                        signalStrength = 65
+                    ),
+                    NetworkDevice(
+                        "GSR-Sensor-BT",
+                        "00:11:22:33:44:57",
+                        ConnectionType.BLUETOOTH,
+                        signalStrength = 82
+                    )
                 )
+
                 ConnectionType.ETHERNET -> listOf(
-                    NetworkDevice("Wired-TC001", "192.168.0.50", ConnectionType.ETHERNET, signalStrength = 100),
-                    NetworkDevice("Wired-TS004", "192.168.0.51", ConnectionType.ETHERNET, signalStrength = 100)
+                    NetworkDevice(
+                        "Wired-TC001",
+                        "192.168.0.50",
+                        ConnectionType.ETHERNET,
+                        signalStrength = 100
+                    ),
+                    NetworkDevice(
+                        "Wired-TS004",
+                        "192.168.0.51",
+                        ConnectionType.ETHERNET,
+                        signalStrength = 100
+                    )
                 )
+
                 ConnectionType.HOTSPOT -> listOf(
-                    NetworkDevice("Mobile-TC001", "192.168.43.100", ConnectionType.HOTSPOT, signalStrength = 88),
-                    NetworkDevice("Mobile-TS004", "192.168.43.101", ConnectionType.HOTSPOT, signalStrength = 75)
+                    NetworkDevice(
+                        "Mobile-TC001",
+                        "192.168.43.100",
+                        ConnectionType.HOTSPOT,
+                        signalStrength = 88
+                    ),
+                    NetworkDevice(
+                        "Mobile-TS004",
+                        "192.168.43.101",
+                        ConnectionType.HOTSPOT,
+                        signalStrength = 75
+                    )
                 )
+
                 null -> emptyList()
             }
-            
+
             delay(2000) // Simulate scanning time
             _availableDevices.value = mockDevices
             _isScanning.value = false
@@ -117,14 +171,16 @@ class NetworkConfigViewModel : BaseViewModel() {
         kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
             _connectionStatus.value = "Connecting..."
             delay(3000) // Simulate connection time
-            
+
             // Simulate connection success
             _connectedDevice.value = device.copy(isConnected = true)
             _connectionStatus.value = "Connected to ${device.name}"
-            
+
             // Update the device list to show connected status
-            _availableDevices.value = _availableDevices.value.map { 
-                if (it.address == device.address) it.copy(isConnected = true) else it.copy(isConnected = false)
+            _availableDevices.value = _availableDevices.value.map {
+                if (it.address == device.address) it.copy(isConnected = true) else it.copy(
+                    isConnected = false
+                )
             }
         }
     }
@@ -150,11 +206,12 @@ class NetworkConfigActivityCompose : BaseComposeActivity<NetworkConfigViewModel>
         }
     }
 
-    override fun createViewModel(): NetworkConfigViewModel = viewModels<NetworkConfigViewModel>().value
+    override fun createViewModel(): NetworkConfigViewModel =
+        viewModels<NetworkConfigViewModel>().value
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         networkSettings = NetworkSettings(this)
         permissionManager = PermissionManager(this, PermissionController(this))
         val bluetoothManager = getSystemService(BLUETOOTH_SERVICE) as? BluetoothManager
@@ -193,9 +250,9 @@ class NetworkConfigActivityCompose : BaseComposeActivity<NetworkConfigViewModel>
                             .fillMaxWidth()
                             .padding(bottom = 16.dp),
                         colors = CardDefaults.cardColors(
-                            containerColor = if (connectedDevice != null) 
-                                MaterialTheme.colorScheme.primaryContainer 
-                            else 
+                            containerColor = if (connectedDevice != null)
+                                MaterialTheme.colorScheme.primaryContainer
+                            else
                                 MaterialTheme.colorScheme.surface
                         )
                     ) {
@@ -208,9 +265,9 @@ class NetworkConfigActivityCompose : BaseComposeActivity<NetworkConfigViewModel>
                             Icon(
                                 imageVector = if (connectedDevice != null) Icons.Default.CheckCircle else Icons.Default.Circle,
                                 contentDescription = null,
-                                tint = if (connectedDevice != null) 
-                                    MaterialTheme.colorScheme.primary 
-                                else 
+                                tint = if (connectedDevice != null)
+                                    MaterialTheme.colorScheme.primary
+                                else
                                     MaterialTheme.colorScheme.onSurfaceVariant,
                                 modifier = Modifier.size(24.dp)
                             )
@@ -433,9 +490,9 @@ private fun DeviceCard(
     Card(
         modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
-            containerColor = if (device.isConnected) 
-                MaterialTheme.colorScheme.primaryContainer 
-            else 
+            containerColor = if (device.isConnected)
+                MaterialTheme.colorScheme.primaryContainer
+            else
                 MaterialTheme.colorScheme.surface
         ),
         elevation = CardDefaults.cardElevation(
@@ -452,9 +509,9 @@ private fun DeviceCard(
                 imageVector = device.type.icon,
                 contentDescription = null,
                 modifier = Modifier.size(32.dp),
-                tint = if (device.isConnected) 
-                    MaterialTheme.colorScheme.primary 
-                else 
+                tint = if (device.isConnected)
+                    MaterialTheme.colorScheme.primary
+                else
                     MaterialTheme.colorScheme.onSurface
             )
 

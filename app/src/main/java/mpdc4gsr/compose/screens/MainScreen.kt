@@ -35,7 +35,7 @@ fun MainScreen(
     modifier: Modifier = Modifier
 ) {
     var selectedTab by remember { mutableIntStateOf(0) }
-    
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -52,7 +52,7 @@ fun MainScreen(
                 onClick = onNavigateToSettings
             )
         }
-        
+
         // Main content area
         Box(
             modifier = Modifier
@@ -66,7 +66,7 @@ fun MainScreen(
                 3 -> ProfileTab(onNavigateToProfile = onNavigateToProfile)
             }
         }
-        
+
         // Bottom navigation
         NavigationBar(
             containerColor = Color(0xFF2A2A2A)
@@ -163,7 +163,7 @@ private fun SensorDashboardTab(
                 )
             }
         }
-        
+
         // Quick actions
         Card(
             modifier = Modifier.fillMaxWidth(),
@@ -181,7 +181,7 @@ private fun SensorDashboardTab(
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
                 )
-                
+
                 Button(
                     onClick = onNavigateToSensors,
                     modifier = Modifier.fillMaxWidth(),
@@ -193,7 +193,7 @@ private fun SensorDashboardTab(
                 }
             }
         }
-        
+
         // System status overview
         SystemStatusOverview()
     }
@@ -390,7 +390,7 @@ private fun SystemStatusOverview(
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly

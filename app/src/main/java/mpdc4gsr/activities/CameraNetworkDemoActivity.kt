@@ -21,11 +21,11 @@ class CameraNetworkDemoViewModel : BaseViewModel()
 
 /**
  * Camera Integration and Network Demo Activity
- * 
+ *
  * Demonstrates the newly implemented Compose activities:
  * - DualModeCameraActivityCompose: Advanced camera integration
  * - DevicePairingActivityCompose: Network device pairing
- * 
+ *
  * These represent the latest additions to the Compose migration,
  * focusing on core functionality for camera and network operations.
  */
@@ -37,11 +37,11 @@ class CameraNetworkDemoActivity : BaseComposeActivity<CameraNetworkDemoViewModel
     @Composable
     override fun Content(viewModel: CameraNetworkDemoViewModel) {
         val context = LocalContext.current
-        
+
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { 
+                    title = {
                         Text(
                             "Camera Integration & Network",
                             fontWeight = FontWeight.Bold
@@ -65,7 +65,7 @@ class CameraNetworkDemoActivity : BaseComposeActivity<CameraNetworkDemoViewModel
             ) {
                 // Introduction Card
                 IntroductionCard()
-                
+
                 // Camera Integration Section
                 DemoSection(
                     title = "Camera Integration",
@@ -75,7 +75,7 @@ class CameraNetworkDemoActivity : BaseComposeActivity<CameraNetworkDemoViewModel
                         startActivity(Intent(context, DualModeCameraActivityCompose::class.java))
                     }
                 )
-                
+
                 // Network Pairing Section  
                 DemoSection(
                     title = "Network Device Pairing",
@@ -85,13 +85,13 @@ class CameraNetworkDemoActivity : BaseComposeActivity<CameraNetworkDemoViewModel
                         startActivity(Intent(context, DevicePairingActivityCompose::class.java))
                     }
                 )
-                
+
                 // Migration Benefits Card
                 MigrationBenefitsCard()
             }
         }
     }
-    
+
     @Composable
     private fun IntroductionCard() {
         Card(
@@ -126,7 +126,7 @@ class CameraNetworkDemoActivity : BaseComposeActivity<CameraNetworkDemoViewModel
             }
         }
     }
-    
+
     @Composable
     private fun DemoSection(
         title: String,
@@ -157,14 +157,14 @@ class CameraNetworkDemoActivity : BaseComposeActivity<CameraNetworkDemoViewModel
                         fontWeight = FontWeight.Bold
                     )
                 }
-                
+
                 Text(
                     text = description,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
-                
+
                 Button(
                     onClick = onLaunchClick,
                     modifier = Modifier.fillMaxWidth()
@@ -176,7 +176,7 @@ class CameraNetworkDemoActivity : BaseComposeActivity<CameraNetworkDemoViewModel
             }
         }
     }
-    
+
     @Composable
     private fun MigrationBenefitsCard() {
         Card(
@@ -205,7 +205,7 @@ class CameraNetworkDemoActivity : BaseComposeActivity<CameraNetworkDemoViewModel
                         fontWeight = FontWeight.Bold
                     )
                 }
-                
+
                 val benefits = listOf(
                     "Modern Material Design 3 interface",
                     "Reactive state management with StateFlow",
@@ -216,7 +216,7 @@ class CameraNetworkDemoActivity : BaseComposeActivity<CameraNetworkDemoViewModel
                     "Future-proof architecture",
                     "Seamless navigation integration"
                 )
-                
+
                 benefits.forEach { benefit ->
                     Row(
                         modifier = Modifier.padding(vertical = 4.dp),

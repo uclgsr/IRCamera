@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.dp
 
 /**
  * Reusable Compose component equivalent to ListItemView.kt
- * 
+ *
  * A customizable list item with optional left icon, left text, right text, and line separator
  */
 @Composable
@@ -51,6 +51,7 @@ fun ListItemComponent(
                             )
                             Spacer(modifier = Modifier.width(12.dp))
                         }
+
                         leftIconRes != null -> {
                             Icon(
                                 painter = painterResource(id = leftIconRes),
@@ -61,7 +62,7 @@ fun ListItemComponent(
                             Spacer(modifier = Modifier.width(12.dp))
                         }
                     }
-                    
+
                     // Left text
                     Text(
                         text = leftText,
@@ -70,7 +71,7 @@ fun ListItemComponent(
                         fontWeight = FontWeight.Medium
                     )
                 }
-                
+
                 // Right text
                 rightText?.let {
                     Text(
@@ -81,7 +82,7 @@ fun ListItemComponent(
                 }
             }
         }
-        
+
         if (onClick != null) {
             Card(
                 onClick = onClick,
@@ -101,7 +102,7 @@ fun ListItemComponent(
                 content()
             }
         }
-        
+
         // Line separator
         if (showLine) {
             HorizontalDivider(

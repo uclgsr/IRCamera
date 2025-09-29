@@ -12,7 +12,7 @@ import mpdc4gsr.compose.utils.FragmentContainer
 
 /**
  * Task E: Complete Navigation Integration
- * 
+ *
  * Unified navigation system that bridges Compose and Fragment navigation:
  * - Seamless transitions between Compose and Fragment screens
  * - Deep linking support
@@ -38,7 +38,7 @@ fun IRCameraNavHost(
     startDestination: String = IRCameraScreen.Demo.route
 ) {
     val context = LocalContext.current
-    
+
     NavHost(
         navController = navController,
         startDestination = startDestination
@@ -64,18 +64,18 @@ fun IRCameraNavHost(
                 }
             )
         }
-        
+
         // Main dashboard screens
         composable(IRCameraScreen.Main.route) {
             // Could embed original MainActivity using AndroidView if needed
             // For now, launch as separate activity
             LaunchActivityScreen(MainActivity::class.java)
         }
-        
+
         composable(IRCameraScreen.MainCompose.route) {
             LaunchActivityScreen(MainActivity::class.java)
         }
-        
+
         // Thermal camera screens
         composable(IRCameraScreen.ThermalCamera.route) {
             // Could embed existing thermal fragment using FragmentContainer
@@ -83,13 +83,13 @@ fun IRCameraNavHost(
                 onNavigateBack = { navController.popBackStack() }
             )
         }
-        
+
         composable(IRCameraScreen.ThermalCameraCompose.route) {
             LaunchActivityScreen(
                 activityClass = com.mpdc4gsr.module.thermalunified.activity.ThermalCameraComposeActivity::class.java
             )
         }
-        
+
         // Sensor dashboard screens
         composable(IRCameraScreen.SensorDashboard.route) {
             // Could embed existing sensor dashboard fragment
@@ -97,11 +97,11 @@ fun IRCameraNavHost(
                 onNavigateBack = { navController.popBackStack() }
             )
         }
-        
+
         composable(IRCameraScreen.SensorDashboardCompose.route) {
             LaunchActivityScreen(SensorDashboardComposeActivity::class.java)
         }
-        
+
         // Settings screens
         composable(IRCameraScreen.Settings.route) {
             // Could embed existing settings fragment
@@ -109,11 +109,11 @@ fun IRCameraNavHost(
                 onNavigateBack = { navController.popBackStack() }
             )
         }
-        
+
         composable(IRCameraScreen.SettingsCompose.route) {
             LaunchActivityScreen(SettingsComposeActivity::class.java)
         }
-        
+
         // About screen
         composable(IRCameraScreen.About.route) {
             AboutScreen(
@@ -126,7 +126,7 @@ fun IRCameraNavHost(
 @Composable
 private fun LaunchActivityScreen(activityClass: Class<*>) {
     val context = LocalContext.current
-    
+
     // Launch activity and finish current one
     androidx.compose.runtime.LaunchedEffect(Unit) {
         context.startActivity(Intent(context, activityClass))
@@ -134,7 +134,7 @@ private fun LaunchActivityScreen(activityClass: Class<*>) {
             context.finish()
         }
     }
-    
+
     // Show loading indicator while launching
     androidx.compose.foundation.layout.Box(
         modifier = androidx.compose.ui.Modifier.fillMaxSize(),

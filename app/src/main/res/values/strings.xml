@@ -148,7 +148,7 @@
     <string name="app_gallery">Gallery</string>
     <string name="vehicle_function">Main</string>
     <string name="search_learn_more">Mine</string>
-    
+
     <!-- GSR Sensor Suite Activities -->
     <string name="gsr_device_management_compose_title">GSR Device Management</string>
     <string name="gsr_device_management_compose_subtitle">Enhanced GSR device discovery, connection, and real-time monitoring</string>
@@ -156,7 +156,7 @@
     <string name="multi_modal_recording_compose_subtitle">Advanced coordinated multi-sensor recording with live statistics</string>
     <string name="session_manager_compose_title">Session Manager</string>
     <string name="session_manager_compose_subtitle">Comprehensive session management with filtering and export capabilities</string>
-    
+
     <!-- GSR Device Management -->
     <string name="gsr_bluetooth_permissions_required">Bluetooth Permissions Required</string>
     <string name="gsr_bluetooth_permissions_explanation">GSR device management requires Bluetooth permissions to discover and connect to nearby sensors. This enables real-time physiological monitoring capabilities.</string>
@@ -183,7 +183,7 @@
     <string name="gsr_device_battery">Battery: %d%%</string>
     <string name="gsr_device_signal">Signal: %d dBm</string>
     <string name="gsr_unknown_device">Unknown Device</string>
-    
+
     <!-- Multi-Modal Recording -->
     <string name="multimodal_recording_active">Recording Active</string>
     <string name="multimodal_recording_controls">Recording Controls</string>
@@ -212,7 +212,7 @@
     <string name="multimodal_session_prefix">Session: %s</string>
     <string name="multimodal_participant_prefix">Participant: %s</string>
     <string name="multimodal_protocol_prefix">Protocol: %s</string>
-    
+
     <!-- Session Manager -->
     <string name="session_manager_title">Session Manager</string>
     <string name="session_manager_sessions_count">%d sessions</string>
@@ -253,7 +253,7 @@
     <string name="session_manager_notes_label">Notes</string>
     <string name="session_manager_not_specified">Not specified</string>
     <string name="session_manager_none">None</string>
-    
+
     <!-- Export Formats -->
     <string name="export_format_csv">CSV</string>
     <string name="export_format_csv_desc">Comma-separated values for spreadsheet analysis</string>

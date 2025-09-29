@@ -33,7 +33,7 @@ class ComposeTestingSuiteActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         setContent {
             LibUnifiedTheme {
                 ComposeTestingSuiteScreen()
@@ -158,21 +158,21 @@ class ComposeTestingSuiteActivity : ComponentActivity() {
         onProgress: (Float, List<TestResult>) -> Unit
     ) {
         Log.i(TAG, "Starting comprehensive testing suite")
-        
+
         try {
             val testingSuite = ComposeTestingSuite()
             val results = mutableListOf<TestResult>()
-            
+
             // Simulate progressive testing with updates
             onProgress(0.1f, results)
-            
+
             val finalResults = testingSuite.runAllTests()
             results.addAll(finalResults)
-            
+
             onProgress(1f, results)
-            
+
             Log.i(TAG, "Comprehensive tests completed: ${results.size} tests executed")
-            
+
         } catch (e: Exception) {
             Log.e(TAG, "Comprehensive tests failed: ${e.message}")
             // Add error result

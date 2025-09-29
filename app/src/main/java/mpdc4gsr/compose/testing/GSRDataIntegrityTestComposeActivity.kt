@@ -30,7 +30,7 @@ import kotlin.system.measureTimeMillis
  * Tests GSR data validation, sampling rate accuracy, and consistency checks
  */
 class GSRDataIntegrityTestComposeActivity : ComponentActivity() {
-    
+
     companion object {
         private const val TAG = "GSRDataIntegrityTestCompose"
         private const val TEST_DURATION_SECONDS = 10
@@ -46,9 +46,9 @@ class GSRDataIntegrityTestComposeActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         initializeComponents()
-        
+
         setContent {
             LibUnifiedTheme {
                 GSRDataIntegrityTestScreen()
@@ -91,7 +91,7 @@ class GSRDataIntegrityTestComposeActivity : ComponentActivity() {
                 ),
                 TestCase(
                     id = "range_validation",
-                    name = "Range Validation", 
+                    name = "Range Validation",
                     description = "Verify GSR values within expected ranges"
                 ),
                 TestCase(
@@ -130,9 +130,9 @@ class GSRDataIntegrityTestComposeActivity : ComponentActivity() {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     colors = CardDefaults.cardColors(
-                        containerColor = if (isTestRunning) 
-                            MaterialTheme.colorScheme.primaryContainer 
-                        else 
+                        containerColor = if (isTestRunning)
+                            MaterialTheme.colorScheme.primaryContainer
+                        else
                             MaterialTheme.colorScheme.surfaceVariant
                     )
                 ) {
@@ -158,7 +158,7 @@ class GSRDataIntegrityTestComposeActivity : ComponentActivity() {
                                     fontWeight = FontWeight.Medium
                                 )
                             }
-                            
+
                             if (isTestRunning) {
                                 Row(verticalAlignment = Alignment.CenterVertically) {
                                     Icon(
@@ -175,7 +175,7 @@ class GSRDataIntegrityTestComposeActivity : ComponentActivity() {
                                 }
                             }
                         }
-                        
+
                         if (isTestRunning || samplesCollected > 0) {
                             Spacer(modifier = Modifier.height(12.dp))
                             Row(
@@ -191,9 +191,9 @@ class GSRDataIntegrityTestComposeActivity : ComponentActivity() {
                                         text = "${currentSampleRate.toInt()} Hz",
                                         style = MaterialTheme.typography.bodyMedium,
                                         fontWeight = FontWeight.Medium,
-                                        color = if (abs(currentSampleRate - EXPECTED_SAMPLE_RATE) <= 5) 
-                                            MaterialTheme.colorScheme.primary 
-                                        else 
+                                        color = if (abs(currentSampleRate - EXPECTED_SAMPLE_RATE) <= 5)
+                                            MaterialTheme.colorScheme.primary
+                                        else
                                             MaterialTheme.colorScheme.error
                                     )
                                 }
@@ -220,10 +220,11 @@ class GSRDataIntegrityTestComposeActivity : ComponentActivity() {
                                     )
                                 }
                             }
-                            
+
                             if (samplesCollected > 0) {
                                 Spacer(modifier = Modifier.height(8.dp))
-                                val progress = (samplesCollected.toFloat() / EXPECTED_SAMPLES).coerceAtMost(1f)
+                                val progress =
+                                    (samplesCollected.toFloat() / EXPECTED_SAMPLES).coerceAtMost(1f)
                                 LinearProgressIndicator(
                                     progress = progress,
                                     modifier = Modifier.fillMaxWidth()
@@ -260,7 +261,7 @@ class GSRDataIntegrityTestComposeActivity : ComponentActivity() {
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Button(
-                        onClick = { 
+                        onClick = {
                             isTestRunning = true
                             lifecycleScope.launch { runFullIntegrityTest() }
                         },
@@ -280,9 +281,9 @@ class GSRDataIntegrityTestComposeActivity : ComponentActivity() {
                             Text("Run Full Test")
                         }
                     }
-                    
+
                     OutlinedButton(
-                        onClick = { 
+                        onClick = {
                             lifecycleScope.launch { runQuickIntegrityCheck() }
                         },
                         enabled = !isTestRunning,
@@ -308,7 +309,7 @@ class GSRDataIntegrityTestComposeActivity : ComponentActivity() {
                 // Integrity Checks Results
                 if (integrityChecks.isNotEmpty()) {
                     Spacer(modifier = Modifier.height(16.dp))
-                    
+
                     Card {
                         Column(modifier = Modifier.padding(16.dp)) {
                             Text(
@@ -317,7 +318,7 @@ class GSRDataIntegrityTestComposeActivity : ComponentActivity() {
                                 fontWeight = FontWeight.Medium
                             )
                             Spacer(modifier = Modifier.height(8.dp))
-                            
+
                             integrityChecks.forEach { check ->
                                 IntegrityCheckItem(check = check)
                                 Spacer(modifier = Modifier.height(6.dp))
@@ -348,7 +349,7 @@ class GSRDataIntegrityTestComposeActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-            
+
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = check.value,
@@ -359,9 +360,9 @@ class GSRDataIntegrityTestComposeActivity : ComponentActivity() {
                 Icon(
                     imageVector = if (check.passed) Icons.Default.CheckCircle else Icons.Default.Error,
                     contentDescription = null,
-                    tint = if (check.passed) 
-                        MaterialTheme.colorScheme.primary 
-                    else 
+                    tint = if (check.passed)
+                        MaterialTheme.colorScheme.primary
+                    else
                         MaterialTheme.colorScheme.error,
                     modifier = Modifier.size(20.dp)
                 )
@@ -388,64 +389,73 @@ class GSRDataIntegrityTestComposeActivity : ComponentActivity() {
 
     private suspend fun runFullIntegrityTest() {
         Log.i(TAG, "Starting full GSR data integrity test")
-        
+
         val metrics = mutableMapOf<String, Any>()
         val checks = mutableListOf<IntegrityCheck>()
-        
+
         try {
             // Simulate data collection
             var collectedSamples = 0
             val startTime = System.currentTimeMillis()
-            
+
             repeat(TEST_DURATION_SECONDS * 10) { // Simulate 10 updates per second
                 delay(100)
                 collectedSamples += 13 // Simulate ~128 Hz
                 samplesCollected = collectedSamples
-                currentSampleRate = collectedSamples.toDouble() / ((System.currentTimeMillis() - startTime) / 1000.0)
+                currentSampleRate =
+                    collectedSamples.toDouble() / ((System.currentTimeMillis() - startTime) / 1000.0)
             }
-            
+
             val finalSampleRate = collectedSamples.toDouble() / TEST_DURATION_SECONDS
-            
+
             // Generate integrity checks
-            checks.add(IntegrityCheck(
-                checkName = "Sample Rate Accuracy",
-                value = "${finalSampleRate.toInt()} Hz",
-                passed = abs(finalSampleRate - EXPECTED_SAMPLE_RATE) <= 5,
-                details = "Target: ${EXPECTED_SAMPLE_RATE.toInt()} Hz, Tolerance: ±5 Hz"
-            ))
-            
-            checks.add(IntegrityCheck(
-                checkName = "Sample Count",
-                value = "$collectedSamples samples",
-                passed = abs(collectedSamples - EXPECTED_SAMPLES) <= SAMPLE_TOLERANCE,
-                details = "Expected: $EXPECTED_SAMPLES ±$SAMPLE_TOLERANCE"
-            ))
-            
-            checks.add(IntegrityCheck(
-                checkName = "Data Continuity",
-                value = "99.8%",
-                passed = true,
-                details = "No significant gaps detected"
-            ))
-            
-            checks.add(IntegrityCheck(
-                checkName = "Signal Quality",
-                value = "Excellent",
-                passed = true,
-                details = "SNR > 40dB, minimal artifacts"
-            ))
-            
+            checks.add(
+                IntegrityCheck(
+                    checkName = "Sample Rate Accuracy",
+                    value = "${finalSampleRate.toInt()} Hz",
+                    passed = abs(finalSampleRate - EXPECTED_SAMPLE_RATE) <= 5,
+                    details = "Target: ${EXPECTED_SAMPLE_RATE.toInt()} Hz, Tolerance: ±5 Hz"
+                )
+            )
+
+            checks.add(
+                IntegrityCheck(
+                    checkName = "Sample Count",
+                    value = "$collectedSamples samples",
+                    passed = abs(collectedSamples - EXPECTED_SAMPLES) <= SAMPLE_TOLERANCE,
+                    details = "Expected: $EXPECTED_SAMPLES ±$SAMPLE_TOLERANCE"
+                )
+            )
+
+            checks.add(
+                IntegrityCheck(
+                    checkName = "Data Continuity",
+                    value = "99.8%",
+                    passed = true,
+                    details = "No significant gaps detected"
+                )
+            )
+
+            checks.add(
+                IntegrityCheck(
+                    checkName = "Signal Quality",
+                    value = "Excellent",
+                    passed = true,
+                    details = "SNR > 40dB, minimal artifacts"
+                )
+            )
+
             integrityChecks = checks
-            
+
             // Update metrics
             metrics["Sample Rate"] = "${finalSampleRate.toInt()} Hz"
             metrics["Samples Collected"] = collectedSamples
             metrics["Data Completeness"] = "99.8%"
             metrics["Signal Quality"] = "Excellent"
             metrics["Test Duration"] = "${TEST_DURATION_SECONDS}s"
-            
+
             dataQualityMetrics = metrics
-            
+
         } catch (e: Exception) {
             Log.e(TAG, "Full integrity test failed: ${e.message}")
         } finally {
@@ -462,7 +472,7 @@ class GSRDataIntegrityTestComposeActivity : ComponentActivity() {
                 samplesCollected += 4
                 currentSampleRate = samplesCollected.toDouble() / (it + 1) * 10
             }
-            
+
             val quickChecks = listOf(
                 IntegrityCheck(
                     checkName = "Quick Sample Rate",
@@ -477,9 +487,9 @@ class GSRDataIntegrityTestComposeActivity : ComponentActivity() {
                     details = "GSR signal detected"
                 )
             )
-            
+
             integrityChecks = quickChecks
-            
+
         } catch (e: Exception) {
             Log.e(TAG, "Quick integrity check failed: ${e.message}")
         }

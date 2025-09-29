@@ -53,44 +53,44 @@ class PdfViewModel : BaseViewModel() {
 
     fun loadPdf(isTS001: Boolean, context: android.content.Context) {
         val pdfType = if (isTS001) PdfType.TC001 else PdfType.TS004
-        
+
         kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
             try {
                 _isLoading.value = true
                 _error.value = null
-                
+
                 // Simulate loading delay
                 delay(1000)
-                
+
                 val pdfDir = File(context.getExternalFilesDir("pdf")!!)
                 if (!pdfDir.exists()) {
                     pdfDir.mkdirs()
                 }
-                
+
                 val pdfFile = File(pdfDir, pdfType.fileName)
                 val isAvailable = pdfFile.exists()
-                
+
                 if (!isAvailable) {
                     // Copy from assets if available
                     copyPdfFromAssets(context, pdfType.fileName, pdfFile)
                 }
-                
+
                 val fileSize = if (pdfFile.exists()) {
                     formatFileSize(pdfFile.length())
                 } else {
                     "0 KB"
                 }
-                
+
                 val document = PdfDocument(
                     type = pdfType,
                     file = if (pdfFile.exists()) pdfFile else null,
                     isAvailable = pdfFile.exists(),
                     fileSize = fileSize
                 )
-                
+
                 _pdfDocument.value = document
                 _isLoading.value = false
-                
+
             } catch (e: Exception) {
                 _error.value = "Failed to load PDF: ${e.message}"
                 _isLoading.value = false
@@ -98,11 +98,15 @@ class PdfViewModel : BaseViewModel() {
         }
     }
 
-    private suspend fun copyPdfFromAssets(context: android.content.Context, fileName: String, destinationFile: File) {
+    private suspend fun copyPdfFromAssets(
+        context: android.content.Context,
+        fileName: String,
+        destinationFile: File
+    ) {
         try {
             val inputStream = context.assets.open("manuals/$fileName")
             val outputStream = FileOutputStream(destinationFile)
-            
+
             inputStream.copyTo(outputStream)
             inputStream.close()
             outputStream.close()
@@ -127,7 +131,7 @@ class PdfActivityCompose : BaseComposeActivity<PdfViewModel>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         val isTS001 = intent.getBooleanExtra("isTS001", false)
         viewModels<PdfViewModel>().value.loadPdf(isTS001, this)
     }
@@ -165,6 +169,7 @@ class PdfActivityCompose : BaseComposeActivity<PdfViewModel>() {
                         isLoading -> {
                             LoadingContent()
                         }
+
                         error != null -> {
                             ErrorContent(
                                 error = error!!,
@@ -174,6 +179,7 @@ class PdfActivityCompose : BaseComposeActivity<PdfViewModel>() {
                                 }
                             )
                         }
+
                         pdfDocument != null -> {
                             PdfContent(document = pdfDocument!!)
                         }

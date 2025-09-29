@@ -272,7 +272,7 @@ class VersionActivityCompose : BaseComposeActivity<VersionViewModel>() {
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 textAlign = TextAlign.Center
                             )
-                            
+
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -282,22 +282,24 @@ class VersionActivityCompose : BaseComposeActivity<VersionViewModel>() {
                                 OutlinedButton(
                                     onClick = {
                                         // Navigate to privacy policy
-                                        val intent = Intent(context, PolicyActivity::class.java).apply {
-                                            putExtra(PolicyActivity.KEY_THEME_TYPE, 2)
-                                        }
+                                        val intent =
+                                            Intent(context, PolicyActivity::class.java).apply {
+                                                putExtra(PolicyActivity.KEY_THEME_TYPE, 2)
+                                            }
                                         context.startActivity(intent)
                                     },
                                     modifier = Modifier.weight(1f)
                                 ) {
                                     Text("Privacy Policy")
                                 }
-                                
+
                                 OutlinedButton(
                                     onClick = {
                                         // Navigate to terms
-                                        val intent = Intent(context, PolicyActivity::class.java).apply {
-                                            putExtra(PolicyActivity.KEY_THEME_TYPE, 1)
-                                        }
+                                        val intent =
+                                            Intent(context, PolicyActivity::class.java).apply {
+                                                putExtra(PolicyActivity.KEY_THEME_TYPE, 1)
+                                            }
                                         context.startActivity(intent)
                                     },
                                     modifier = Modifier.weight(1f)

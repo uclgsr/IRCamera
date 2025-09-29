@@ -17,7 +17,7 @@ import kotlin.system.measureTimeMillis
 
 /**
  * Compose Performance Monitor - Phase 4 Optimization Suite
- * 
+ *
  * Comprehensive performance monitoring and optimization tools for the modernized Compose app:
  * - Real-time composition tracking and recomposition detection
  * - Memory usage monitoring for large datasets (GSR data, thermal images)
@@ -27,37 +27,37 @@ import kotlin.system.measureTimeMillis
  */
 object ComposePerformanceMonitor {
     private const val TAG = "ComposePerformance"
-    
+
     private val _recompositionCount = MutableStateFlow(0)
     val recompositionCount: StateFlow<Int> = _recompositionCount
-    
+
     private val _frameTimeMs = MutableStateFlow(0L)
     val frameTimeMs: StateFlow<Long> = _frameTimeMs
-    
+
     private val _memoryUsageMb = MutableStateFlow(0f)
     val memoryUsageMb: StateFlow<Float> = _memoryUsageMb
-    
+
     private val _navigationLatencyMs = MutableStateFlow(0L)
     val navigationLatencyMs: StateFlow<Long> = _navigationLatencyMs
-    
+
     private val performanceMetrics = mutableMapOf<String, PerformanceMetric>()
-    
+
     /**
      * Tracks recompositions in a Composable
      */
     @Composable
     fun TrackRecomposition(name: String, content: @Composable () -> Unit) {
         val recompositionCount = remember { mutableIntStateOf(0) }
-        
+
         LaunchedEffect(Unit) {
             recompositionCount.intValue++
             _recompositionCount.value = _recompositionCount.value + 1
             Log.d(TAG, "$name recomposed ${recompositionCount.intValue} times")
         }
-        
+
         content()
     }
-    
+
     /**
      * Measures and logs the execution time of a composable block
      */
@@ -68,19 +68,19 @@ object ComposePerformanceMonitor {
     ): T {
         val startTime = remember { System.currentTimeMillis() }
         val result = content()
-        
+
         LaunchedEffect(result) {
             val endTime = System.currentTimeMillis()
             val duration = endTime - startTime
             _frameTimeMs.value = duration
-            
+
             recordMetric(name, duration)
             Log.d(TAG, "$name composition took ${duration}ms")
         }
-        
+
         return result
     }
-    
+
     /**
      * Monitors memory usage during large data operations
      */
@@ -88,21 +88,21 @@ object ComposePerformanceMonitor {
         val runtime = Runtime.getRuntime()
         val usedMemory = (runtime.totalMemory() - runtime.freeMemory()) / 1024 / 1024
         _memoryUsageMb.value = usedMemory.toFloat()
-        
+
         Log.d(TAG, "$operationName memory usage: ${usedMemory}MB")
     }
-    
+
     /**
      * Tracks navigation performance
      */
     fun trackNavigation(route: String, startTime: Long) {
         val latency = System.currentTimeMillis() - startTime
         _navigationLatencyMs.value = latency
-        
+
         recordMetric("navigation_$route", latency)
         Log.d(TAG, "Navigation to $route took ${latency}ms")
     }
-    
+
     /**
      * Records custom performance metrics
      */
@@ -110,14 +110,14 @@ object ComposePerformanceMonitor {
         val metric = performanceMetrics.getOrPut(name) { PerformanceMetric(name) }
         metric.addSample(value)
     }
-    
+
     /**
      * Gets performance summary
      */
     fun getPerformanceSummary(): Map<String, PerformanceMetric> {
         return performanceMetrics.toMap()
     }
-    
+
     /**
      * Modifier for tracking draw performance
      */
@@ -125,7 +125,7 @@ object ComposePerformanceMonitor {
         val drawTime = measureTimeMillis {
             drawContent()
         }
-        
+
         if (drawTime > 16) { // Frame budget is 16ms for 60fps
             Log.w(TAG, "$name draw took ${drawTime}ms (potential jank)")
         }
@@ -146,7 +146,7 @@ data class PerformanceMetric(
             samples.removeAt(0)
         }
     }
-    
+
     val average: Double get() = if (samples.isEmpty()) 0.0 else samples.average()
     val max: Long get() = samples.maxOrNull() ?: 0L
     val min: Long get() = samples.minOrNull() ?: 0L
@@ -162,18 +162,18 @@ fun PerformanceOverlay(
     modifier: Modifier = Modifier
 ) {
     if (!showOverlay) return
-    
+
     val recompositionCount by ComposePerformanceMonitor.recompositionCount.collectAsState()
     val frameTime by ComposePerformanceMonitor.frameTimeMs.collectAsState()
     val memoryUsage by ComposePerformanceMonitor.memoryUsageMb.collectAsState()
     val navigationLatency by ComposePerformanceMonitor.navigationLatencyMs.collectAsState()
-    
+
     val density = LocalDensity.current
-    
+
     Box(
         modifier = modifier.drawWithContent {
             drawContent()
-            
+
             // Draw performance overlay
             drawIntoCanvas { canvas ->
                 val paint = android.graphics.Paint().apply {
@@ -181,21 +181,21 @@ fun PerformanceOverlay(
                     textSize = with(density) { 12.dp.toPx() }
                     isAntiAlias = true
                 }
-                
+
                 val backgroundPaint = android.graphics.Paint().apply {
                     color = Color.Black.copy(alpha = 0.6f).toArgb()
                 }
-                
+
                 val metrics = listOf(
                     "Recompositions: $recompositionCount",
                     "Frame Time: ${frameTime}ms",
                     "Memory: ${String.format("%.1f", memoryUsage)}MB",
                     "Nav Latency: ${navigationLatency}ms"
                 )
-                
+
                 val textHeight = 40f
                 val overlayHeight = metrics.size * textHeight + 20f
-                
+
                 // Draw background
                 canvas.nativeCanvas.drawRect(
                     10f,
@@ -204,7 +204,7 @@ fun PerformanceOverlay(
                     overlayHeight,
                     backgroundPaint
                 )
-                
+
                 // Draw metrics
                 metrics.forEachIndexed { index, metric ->
                     canvas.nativeCanvas.drawText(
@@ -223,27 +223,41 @@ fun PerformanceOverlay(
  * Hook for tracking sensor data processing performance
  */
 object SensorDataPerformanceTracker {
-    
+
     fun trackGSRDataProcessing(dataPoints: Int, processingTimeMs: Long) {
         val throughput = dataPoints / (processingTimeMs / 1000.0)
-        Log.d("SensorPerformance", "GSR processing: $dataPoints points in ${processingTimeMs}ms (${String.format("%.1f", throughput)} points/sec)")
-        
+        Log.d(
+            "SensorPerformance",
+            "GSR processing: $dataPoints points in ${processingTimeMs}ms (${
+                String.format(
+                    "%.1f",
+                    throughput
+                )
+            } points/sec)"
+        )
+
         if (processingTimeMs > 100) {
-            Log.w("SensorPerformance", "GSR processing slower than expected: ${processingTimeMs}ms for $dataPoints points")
+            Log.w(
+                "SensorPerformance",
+                "GSR processing slower than expected: ${processingTimeMs}ms for $dataPoints points"
+            )
         }
     }
-    
+
     fun trackThermalImageProcessing(imageSize: String, processingTimeMs: Long) {
         Log.d("SensorPerformance", "Thermal image processing: $imageSize in ${processingTimeMs}ms")
-        
+
         if (processingTimeMs > 200) {
-            Log.w("SensorPerformance", "Thermal processing slower than expected: ${processingTimeMs}ms")
+            Log.w(
+                "SensorPerformance",
+                "Thermal processing slower than expected: ${processingTimeMs}ms"
+            )
         }
     }
-    
+
     fun trackNavigationPerformance(fromRoute: String, toRoute: String, transitionTimeMs: Long) {
         Log.d("SensorPerformance", "Navigation from $fromRoute to $toRoute: ${transitionTimeMs}ms")
-        
+
         if (transitionTimeMs > 300) {
             Log.w("SensorPerformance", "Navigation slower than expected: ${transitionTimeMs}ms")
         }
@@ -254,7 +268,7 @@ object SensorDataPerformanceTracker {
  * Memory optimization utilities
  */
 object ComposeMemoryOptimizer {
-    
+
     /**
      * Checks if the app is using excessive memory
      */
@@ -263,7 +277,7 @@ object ComposeMemoryOptimizer {
         val maxMemory = runtime.maxMemory()
         val usedMemory = runtime.totalMemory() - runtime.freeMemory()
         val memoryRatio = usedMemory.toFloat() / maxMemory.toFloat()
-        
+
         return when {
             memoryRatio > 0.9f -> MemoryPressureLevel.CRITICAL
             memoryRatio > 0.7f -> MemoryPressureLevel.HIGH
@@ -271,7 +285,7 @@ object ComposeMemoryOptimizer {
             else -> MemoryPressureLevel.LOW
         }
     }
-    
+
     /**
      * Suggests optimizations based on memory pressure
      */
@@ -283,15 +297,18 @@ object ComposeMemoryOptimizer {
                 "Clear unused caches",
                 "Reduce number of concurrent operations"
             )
+
             MemoryPressureLevel.HIGH -> listOf(
                 "Optimize image loading",
                 "Use lighter data structures",
                 "Consider pagination for long lists"
             )
+
             MemoryPressureLevel.MODERATE -> listOf(
                 "Monitor memory usage trends",
                 "Consider preemptive cleanup"
             )
+
             MemoryPressureLevel.LOW -> listOf(
                 "Memory usage is optimal"
             )

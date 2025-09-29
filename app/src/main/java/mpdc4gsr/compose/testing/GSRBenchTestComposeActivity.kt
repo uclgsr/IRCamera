@@ -45,9 +45,9 @@ class GSRBenchTestComposeActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         initializeComponents()
-        
+
         setContent {
             LibUnifiedTheme {
                 GSRBenchTestScreen()
@@ -143,7 +143,7 @@ class GSRBenchTestComposeActivity : ComponentActivity() {
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Button(
-                        onClick = { 
+                        onClick = {
                             lifecycleScope.launch { runComprehensiveBenchTest() }
                         },
                         enabled = !isTestRunning,
@@ -153,9 +153,9 @@ class GSRBenchTestComposeActivity : ComponentActivity() {
                         Spacer(modifier = Modifier.width(4.dp))
                         Text("Full Bench")
                     }
-                    
+
                     OutlinedButton(
-                        onClick = { 
+                        onClick = {
                             lifecycleScope.launch { runConnectionTest() }
                         },
                         enabled = !isTestRunning,
@@ -181,7 +181,7 @@ class GSRBenchTestComposeActivity : ComponentActivity() {
                 // Test Logs
                 if (testLogs.isNotEmpty()) {
                     Spacer(modifier = Modifier.height(16.dp))
-                    
+
                     Card {
                         Column(modifier = Modifier.padding(16.dp)) {
                             Row(
@@ -200,9 +200,9 @@ class GSRBenchTestComposeActivity : ComponentActivity() {
                                     Text("Clear")
                                 }
                             }
-                            
+
                             Spacer(modifier = Modifier.height(8.dp))
-                            
+
                             testLogs.takeLast(10).forEach { message ->
                                 Text(
                                     text = message,
@@ -229,44 +229,44 @@ class GSRBenchTestComposeActivity : ComponentActivity() {
 
     private suspend fun runComprehensiveBenchTest() {
         Log.i(TAG, "Starting comprehensive GSR bench test")
-        
+
         val overallStartTime = System.currentTimeMillis()
         val testMetrics = mutableMapOf<String, Any>()
-        
+
         try {
             // Connection Test
             val connectionTime = measureTimeMillis {
                 runConnectionTest()
             }
             testMetrics["Connection Time"] = "${connectionTime}ms"
-            
+
             delay(1000)
-            
+
             // Calibration Test
             val calibrationTime = measureTimeMillis {
                 runCalibrationTest()
             }
             testMetrics["Calibration Time"] = "${calibrationTime}ms"
-            
+
             delay(1000)
-            
+
             // Data Quality Test
             val qualityResults = runDataQualityTest()
             testMetrics.putAll(qualityResults)
-            
+
             delay(1000)
-            
+
             // Performance Benchmark
             val performanceResults = runPerformanceBenchmark()
             testMetrics.putAll(performanceResults)
-            
+
             // Update metrics
             val totalTime = System.currentTimeMillis() - overallStartTime
             testMetrics["Total Test Time"] = "${totalTime}ms"
-            
+
             // Update state (this would be done with proper state management in real implementation)
             Log.d(TAG, "Benchmark completed with metrics: $testMetrics")
-            
+
         } catch (e: Exception) {
             Log.e(TAG, "Comprehensive bench test failed: ${e.message}")
         }
@@ -297,27 +297,27 @@ class GSRBenchTestComposeActivity : ComponentActivity() {
     private suspend fun runDataQualityTest(): Map<String, Any> {
         Log.d(TAG, "Running GSR data quality test")
         val qualityMetrics = mutableMapOf<String, Any>()
-        
+
         try {
             // Simulate data quality analysis
             delay(2000)
-            
+
             qualityMetrics["Sample Rate"] = "128 Hz"
             qualityMetrics["Data Integrity"] = "99.8%"
             qualityMetrics["Signal Quality"] = "Excellent"
-            
+
             Log.d(TAG, "Data quality test completed: $qualityMetrics")
         } catch (e: Exception) {
             Log.e(TAG, "Data quality test failed: ${e.message}")
         }
-        
+
         return qualityMetrics
     }
 
     private suspend fun runPerformanceBenchmark(): Map<String, Any> {
         Log.d(TAG, "Running GSR performance benchmark")
         val performanceMetrics = mutableMapOf<String, Any>()
-        
+
         try {
             // Simulate performance testing
             val processingTime = measureTimeMillis {
@@ -327,16 +327,16 @@ class GSRBenchTestComposeActivity : ComponentActivity() {
                     GSRCalculationUtils.calculateResistance(500.0, 1000.0)
                 }
             }
-            
+
             performanceMetrics["Processing Speed"] = "${processingTime}ms/1000 samples"
             performanceMetrics["Memory Usage"] = "~15MB"
             performanceMetrics["CPU Usage"] = "~12%"
-            
+
             Log.d(TAG, "Performance benchmark completed: $performanceMetrics")
         } catch (e: Exception) {
             Log.e(TAG, "Performance benchmark failed: ${e.message}")
         }
-        
+
         return performanceMetrics
     }
 

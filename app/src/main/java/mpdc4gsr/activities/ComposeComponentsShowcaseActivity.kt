@@ -48,9 +48,11 @@ class ComposeComponentsShowcaseViewModel : BaseViewModel() {
  * Showcase activity for all new Compose components
  * Demonstrates the enhanced UI components that can be used throughout the application
  */
-class ComposeComponentsShowcaseActivity : BaseComposeActivity<ComposeComponentsShowcaseViewModel>() {
+class ComposeComponentsShowcaseActivity :
+    BaseComposeActivity<ComposeComponentsShowcaseViewModel>() {
 
-    override fun createViewModel(): ComposeComponentsShowcaseViewModel = viewModels<ComposeComponentsShowcaseViewModel>().value
+    override fun createViewModel(): ComposeComponentsShowcaseViewModel =
+        viewModels<ComposeComponentsShowcaseViewModel>().value
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -161,18 +163,18 @@ class ComposeComponentsShowcaseActivity : BaseComposeActivity<ComposeComponentsS
                                     Spacer(modifier = Modifier.width(8.dp))
                                     Text("Select Sensors (${selectedSensors.size})")
                                 }
-                                
+
                                 if (selectedSensors.isNotEmpty()) {
                                     Spacer(modifier = Modifier.height(12.dp))
-                                    
+
                                     Text(
                                         text = "Selected Sensors:",
                                         style = MaterialTheme.typography.titleSmall,
                                         fontWeight = FontWeight.Medium
                                     )
-                                    
+
                                     Spacer(modifier = Modifier.height(8.dp))
-                                    
+
                                     selectedSensors.forEach { sensor ->
                                         Row(
                                             modifier = Modifier.padding(vertical = 2.dp),
@@ -225,7 +227,7 @@ class ComposeComponentsShowcaseActivity : BaseComposeActivity<ComposeComponentsS
                                 )
                             }
                             Spacer(modifier = Modifier.height(12.dp))
-                            
+
                             val benefits = listOf(
                                 "Real-time animated status indicators",
                                 "Improved user interaction and feedback",
@@ -236,7 +238,7 @@ class ComposeComponentsShowcaseActivity : BaseComposeActivity<ComposeComponentsS
                                 "Modern UI patterns and animations",
                                 "Better error handling and recovery"
                             )
-                            
+
                             benefits.forEach { benefit ->
                                 Row(
                                     modifier = Modifier.padding(vertical = 2.dp),
@@ -297,7 +299,7 @@ private fun ComponentSection(
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(bottom = 12.dp)
         )
-        
+
         content()
     }
 }

@@ -19,18 +19,28 @@ class GSRSettingsViewModel : BaseViewModel() {
 
     // StateFlow from Repository
     val gsrSettings: StateFlow<GSRSettingsRepository.GSRSettings> by lazy {
-        repository.gsrSettings.stateIn(viewModelScope, SharingStarted.Lazily, GSRSettingsRepository.GSRSettings())
+        repository.gsrSettings.stateIn(
+            viewModelScope,
+            SharingStarted.Lazily,
+            GSRSettingsRepository.GSRSettings()
+        )
     }
     val deviceSettings: StateFlow<GSRSettingsRepository.DeviceSettings> by lazy {
-        repository.deviceSettings.stateIn(viewModelScope, SharingStarted.Lazily, GSRSettingsRepository.DeviceSettings())
+        repository.deviceSettings.stateIn(
+            viewModelScope,
+            SharingStarted.Lazily,
+            GSRSettingsRepository.DeviceSettings()
+        )
     }
 
     // Modern UI State Management with StateFlow
-    private val _permissionState = MutableStateFlow(PermissionState(false, emptyList(), emptyList()))
+    private val _permissionState =
+        MutableStateFlow(PermissionState(false, emptyList(), emptyList()))
     val permissionState: StateFlow<PermissionState> = _permissionState.asStateFlow()
 
     private val _deviceConnectionState = MutableStateFlow(DeviceConnectionState(false))
-    val deviceConnectionState: StateFlow<DeviceConnectionState> = _deviceConnectionState.asStateFlow()
+    val deviceConnectionState: StateFlow<DeviceConnectionState> =
+        _deviceConnectionState.asStateFlow()
 
     private val _availableDevices = MutableStateFlow<List<DeviceInfo>>(emptyList())
     val availableDevices: StateFlow<List<DeviceInfo>> = _availableDevices.asStateFlow()
@@ -46,7 +56,9 @@ class GSRSettingsViewModel : BaseViewModel() {
     val settingsUiState: StateFlow<UIState> by lazy {
         combine(
             if (::repository.isInitialized) repository.gsrSettings else flowOf(GSRSettingsRepository.GSRSettings()),
-            if (::repository.isInitialized) repository.deviceSettings else flowOf(GSRSettingsRepository.DeviceSettings()),
+            if (::repository.isInitialized) repository.deviceSettings else flowOf(
+                GSRSettingsRepository.DeviceSettings()
+            ),
             _permissionState,
             _deviceConnectionState,
             _scanningState
@@ -94,12 +106,16 @@ class GSRSettingsViewModel : BaseViewModel() {
     sealed class SettingsEvent {
         data class ShowPermissionDialog(val permissions: List<String>) : SettingsEvent()
         data class ShowPermissionDeniedDialog(val permissions: List<String>) : SettingsEvent()
-        data class ShowPermissionPermanentlyDeniedDialog(val permissions: List<String>) : SettingsEvent()
+        data class ShowPermissionPermanentlyDeniedDialog(val permissions: List<String>) :
+            SettingsEvent()
+
         object OpenAppSettings : SettingsEvent()
         data class DeviceScanCompleted(val message: String) : SettingsEvent()
         data class DeviceConnected(val device: DeviceInfo, val message: String) : SettingsEvent()
         data class DeviceDisconnected(val message: String) : SettingsEvent()
-        data class SettingsExported(val data: Map<String, Any>, val message: String) : SettingsEvent()
+        data class SettingsExported(val data: Map<String, Any>, val message: String) :
+            SettingsEvent()
+
         data class SettingsImported(val message: String) : SettingsEvent()
         data class CalibrationStarted(val message: String) : SettingsEvent()
         data class CalibrationCompleted(val message: String) : SettingsEvent()
@@ -259,7 +275,12 @@ class GSRSettingsViewModel : BaseViewModel() {
                     signalStrength = 85
                 )
 
-                _settingsEvents.emit(SettingsEvent.DeviceConnected(deviceInfo, "Connected to ${deviceInfo.name}"))
+                _settingsEvents.emit(
+                    SettingsEvent.DeviceConnected(
+                        deviceInfo,
+                        "Connected to ${deviceInfo.name}"
+                    )
+                )
 
             } catch (e: Exception) {
                 _deviceConnectionState.value = DeviceConnectionState(
@@ -304,7 +325,12 @@ class GSRSettingsViewModel : BaseViewModel() {
     fun exportSettings() {
         launchWithErrorHandling {
             val settingsMap = repository.exportSettings()
-            _settingsEvents.emit(SettingsEvent.SettingsExported(settingsMap, "Settings exported successfully"))
+            _settingsEvents.emit(
+                SettingsEvent.SettingsExported(
+                    settingsMap,
+                    "Settings exported successfully"
+                )
+            )
         }
     }
 

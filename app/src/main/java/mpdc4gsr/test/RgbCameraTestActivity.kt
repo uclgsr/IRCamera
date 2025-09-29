@@ -79,7 +79,8 @@ class RgbCameraTestActivity : AppCompatActivity() {
     }
 
     private fun setupBottomNavigation() {
-        val bottomNavigation = findViewById<androidx.constraintlayout.widget.ConstraintLayout>(R.id.bottom_navigation)
+        val bottomNavigation =
+            findViewById<androidx.constraintlayout.widget.ConstraintLayout>(R.id.bottom_navigation)
 
         bottomNavigation.findViewById<androidx.constraintlayout.widget.ConstraintLayout>(R.id.cl_nav_gallery)
             ?.setOnClickListener {

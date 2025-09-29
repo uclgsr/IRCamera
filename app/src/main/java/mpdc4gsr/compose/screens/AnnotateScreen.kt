@@ -51,7 +51,7 @@ fun AnnotateScreen(
             )
         )
     }
-    
+
     var reportInfo by remember {
         mutableStateOf(
             ReportInfo(
@@ -62,7 +62,7 @@ fun AnnotateScreen(
             )
         )
     }
-    
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -85,7 +85,7 @@ fun AnnotateScreen(
                 onClick = onSave
             )
         }
-        
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -100,16 +100,16 @@ fun AnnotateScreen(
                     .fillMaxWidth()
                     .aspectRatio(4f / 3f)
             )
-            
+
             // Report information panel
             ReportInfoPanel(
                 reportInfo = reportInfo,
                 onInfoChanged = { reportInfo = it }
             )
-            
+
             // Measurement summary
             MeasurementSummary(annotations = annotations)
-            
+
             // Watermark preview area
             WatermarkPreview()
         }
@@ -143,7 +143,7 @@ private fun ThermalImageWithAnnotations(
                     color = Color(0xFF1A1A2E),
                     size = size
                 )
-                
+
                 // Draw thermal patterns
                 drawCircle(
                     color = Color.Red,
@@ -155,7 +155,7 @@ private fun ThermalImageWithAnnotations(
                     radius = 30f,
                     center = Offset(size.width * 0.7f, size.height * 0.6f)
                 )
-                
+
                 // Draw annotations
                 annotations.forEach { annotation ->
                     drawAnnotation(annotation, size.width, size.height)
@@ -200,6 +200,7 @@ private fun DrawScope.drawAnnotation(
                 style = Stroke(width = 2.dp.toPx())
             )
         }
+
         is ThermalAnnotation.Line -> {
             val start = Offset(
                 annotation.start.x * imageWidth,
@@ -219,6 +220,7 @@ private fun DrawScope.drawAnnotation(
             drawCircle(color = Color.Green, radius = 6f, center = start)
             drawCircle(color = Color.Green, radius = 6f, center = end)
         }
+
         is ThermalAnnotation.Rectangle -> {
             val topLeft = Offset(
                 annotation.topLeft.x * imageWidth,
@@ -263,7 +265,7 @@ private fun ReportInfoPanel(
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
             )
-            
+
             OutlinedTextField(
                 value = reportInfo.title,
                 onValueChange = { onInfoChanged(reportInfo.copy(title = it)) },
@@ -276,7 +278,7 @@ private fun ReportInfoPanel(
                 ),
                 modifier = Modifier.fillMaxWidth()
             )
-            
+
             OutlinedTextField(
                 value = reportInfo.notes,
                 onValueChange = { onInfoChanged(reportInfo.copy(notes = it)) },
@@ -290,7 +292,7 @@ private fun ReportInfoPanel(
                 maxLines = 3,
                 modifier = Modifier.fillMaxWidth()
             )
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -334,7 +336,7 @@ private fun MeasurementSummary(
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
             )
-            
+
             annotations.forEach { annotation ->
                 when (annotation) {
                     is ThermalAnnotation.Point -> {
@@ -343,9 +345,14 @@ private fun MeasurementSummary(
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Text("Point", color = Color.Yellow, fontSize = 14.sp)
-                            Text("${annotation.temperature}°C", color = Color.White, fontSize = 14.sp)
+                            Text(
+                                "${annotation.temperature}°C",
+                                color = Color.White,
+                                fontSize = 14.sp
+                            )
                         }
                     }
+
                     is ThermalAnnotation.Line -> {
                         Column {
                             Text("Line Measurement", color = Color.Green, fontSize = 14.sp)
@@ -353,11 +360,20 @@ private fun MeasurementSummary(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
-                                Text("Max: ${annotation.maxTemp}°C", color = Color.White, fontSize = 12.sp)
-                                Text("Min: ${annotation.minTemp}°C", color = Color.White, fontSize = 12.sp)
+                                Text(
+                                    "Max: ${annotation.maxTemp}°C",
+                                    color = Color.White,
+                                    fontSize = 12.sp
+                                )
+                                Text(
+                                    "Min: ${annotation.minTemp}°C",
+                                    color = Color.White,
+                                    fontSize = 12.sp
+                                )
                             }
                         }
                     }
+
                     is ThermalAnnotation.Rectangle -> {
                         Column {
                             Text("Area Measurement", color = Color.Cyan, fontSize = 14.sp)
@@ -365,8 +381,16 @@ private fun MeasurementSummary(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
-                                Text("Avg: ${annotation.avgTemp}°C", color = Color.White, fontSize = 12.sp)
-                                Text("Max: ${annotation.maxTemp}°C", color = Color.White, fontSize = 12.sp)
+                                Text(
+                                    "Avg: ${annotation.avgTemp}°C",
+                                    color = Color.White,
+                                    fontSize = 12.sp
+                                )
+                                Text(
+                                    "Max: ${annotation.maxTemp}°C",
+                                    color = Color.White,
+                                    fontSize = 12.sp
+                                )
                             }
                         }
                     }
@@ -399,9 +423,9 @@ private fun WatermarkPreview(
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Spacer(modifier = Modifier.height(8.dp))
-            
+
             // Watermark preview area
             Box(
                 modifier = Modifier
@@ -432,14 +456,14 @@ sealed class ThermalAnnotation {
         val position: Offset,
         val temperature: Float
     ) : ThermalAnnotation()
-    
+
     data class Line(
         val start: Offset,
         val end: Offset,
         val maxTemp: Float,
         val minTemp: Float
     ) : ThermalAnnotation()
-    
+
     data class Rectangle(
         val topLeft: Offset,
         val bottomRight: Offset,

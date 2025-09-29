@@ -32,7 +32,7 @@ import kotlin.system.measureTimeMillis
  * Tests automatic reconnection logic and UI indicators for GSR devices
  */
 class GSRReconnectionTestComposeActivity : ComponentActivity() {
-    
+
     companion object {
         private const val TAG = "GSRReconnectionTestCompose"
         private const val RECONNECTION_TEST_DURATION = 60 // 60 seconds total test
@@ -59,9 +59,9 @@ class GSRReconnectionTestComposeActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         initializeComponents()
-        
+
         setContent {
             LibUnifiedTheme {
                 GSRReconnectionTestScreen()
@@ -120,11 +120,11 @@ class GSRReconnectionTestComposeActivity : ComponentActivity() {
         LaunchedEffect(isTestRunning) {
             if (isTestRunning) {
                 testStartTime = System.currentTimeMillis()
-                
+
                 while (isTestRunning && elapsedTime < RECONNECTION_TEST_DURATION) {
                     delay(1000)
                     elapsedTime += 1
-                    
+
                     // Simulate connection events based on elapsed time
                     when (elapsedTime.toInt()) {
                         DISCONNECT_SIMULATION_TIME -> {
@@ -132,37 +132,48 @@ class GSRReconnectionTestComposeActivity : ComponentActivity() {
                             disconnectTime = System.currentTimeMillis()
                             connectionEvents = connectionEvents + ConnectionEvent(
                                 eventType = "DISCONNECT",
-                                timestamp = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date()),
+                                timestamp = SimpleDateFormat(
+                                    "HH:mm:ss",
+                                    Locale.getDefault()
+                                ).format(Date()),
                                 connectionState = ConnectionState.DISCONNECTED,
                                 details = "GSR device connection lost"
                             )
                         }
+
                         DISCONNECT_SIMULATION_TIME + 5 -> {
                             connectionState = ConnectionState.RECONNECTING
                             connectionEvents = connectionEvents + ConnectionEvent(
                                 eventType = "RECONNECTING",
-                                timestamp = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date()),
+                                timestamp = SimpleDateFormat(
+                                    "HH:mm:ss",
+                                    Locale.getDefault()
+                                ).format(Date()),
                                 connectionState = ConnectionState.RECONNECTING,
                                 details = "Attempting automatic reconnection"
                             )
                         }
+
                         RECONNECT_SIMULATION_TIME -> {
                             connectionState = ConnectionState.CONNECTED
                             reconnectTime = System.currentTimeMillis()
                             dataGapDuration = reconnectTime - disconnectTime
                             connectionEvents = connectionEvents + ConnectionEvent(
                                 eventType = "RECONNECT",
-                                timestamp = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date()),
+                                timestamp = SimpleDateFormat(
+                                    "HH:mm:ss",
+                                    Locale.getDefault()
+                                ).format(Date()),
                                 connectionState = ConnectionState.CONNECTED,
                                 details = "GSR device reconnected successfully"
                             )
                         }
                     }
                 }
-                
+
                 if (elapsedTime >= RECONNECTION_TEST_DURATION) {
                     isTestRunning = false
-                    
+
                     // Generate final metrics
                     val metrics = mutableMapOf<String, Any>()
                     metrics["Test Duration"] = "${RECONNECTION_TEST_DURATION}s"
@@ -233,7 +244,7 @@ class GSRReconnectionTestComposeActivity : ComponentActivity() {
                                     fontWeight = FontWeight.Medium
                                 )
                             }
-                            
+
                             if (isTestRunning) {
                                 Text(
                                     text = "${elapsedTime}s / ${RECONNECTION_TEST_DURATION}s",
@@ -241,7 +252,7 @@ class GSRReconnectionTestComposeActivity : ComponentActivity() {
                                 )
                             }
                         }
-                        
+
                         if (isTestRunning) {
                             Spacer(modifier = Modifier.height(12.dp))
                             LinearProgressIndicator(
@@ -249,7 +260,7 @@ class GSRReconnectionTestComposeActivity : ComponentActivity() {
                                 modifier = Modifier.fillMaxWidth()
                             )
                         }
-                        
+
                         if (dataGapDuration > 0) {
                             Spacer(modifier = Modifier.height(8.dp))
                             Text(
@@ -288,14 +299,17 @@ class GSRReconnectionTestComposeActivity : ComponentActivity() {
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Button(
-                        onClick = { 
+                        onClick = {
                             isTestRunning = true
                             elapsedTime = 0
                             connectionState = ConnectionState.CONNECTED
                             connectionEvents = listOf(
                                 ConnectionEvent(
                                     eventType = "TEST_START",
-                                    timestamp = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date()),
+                                    timestamp = SimpleDateFormat(
+                                        "HH:mm:ss",
+                                        Locale.getDefault()
+                                    ).format(Date()),
                                     connectionState = ConnectionState.CONNECTED,
                                     details = "Reconnection test started"
                                 )
@@ -317,9 +331,9 @@ class GSRReconnectionTestComposeActivity : ComponentActivity() {
                             Text("Start Test")
                         }
                     }
-                    
+
                     OutlinedButton(
-                        onClick = { 
+                        onClick = {
                             connectionState = ConnectionState.DISCONNECTED
                             lifecycleScope.launch { simulateDisconnect() }
                         },
@@ -339,7 +353,7 @@ class GSRReconnectionTestComposeActivity : ComponentActivity() {
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     OutlinedButton(
-                        onClick = { 
+                        onClick = {
                             connectionState = ConnectionState.CONNECTED
                             lifecycleScope.launch { simulateReconnect() }
                         },
@@ -350,9 +364,9 @@ class GSRReconnectionTestComposeActivity : ComponentActivity() {
                         Spacer(modifier = Modifier.width(4.dp))
                         Text("Simulate Reconnect")
                     }
-                    
+
                     OutlinedButton(
-                        onClick = { 
+                        onClick = {
                             lifecycleScope.launch { analyzeDataGaps() }
                         },
                         enabled = !isTestRunning && dataGapDuration > 0,
@@ -378,7 +392,7 @@ class GSRReconnectionTestComposeActivity : ComponentActivity() {
                 // Connection Events Log
                 if (connectionEvents.isNotEmpty()) {
                     Spacer(modifier = Modifier.height(16.dp))
-                    
+
                     Card {
                         Column(modifier = Modifier.padding(16.dp)) {
                             Text(
@@ -387,7 +401,7 @@ class GSRReconnectionTestComposeActivity : ComponentActivity() {
                                 fontWeight = FontWeight.Medium
                             )
                             Spacer(modifier = Modifier.height(8.dp))
-                            
+
                             connectionEvents.takeLast(8).forEach { event ->
                                 ConnectionEventItem(event = event)
                                 Spacer(modifier = Modifier.height(6.dp))
@@ -427,7 +441,7 @@ class GSRReconnectionTestComposeActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-            
+
             Text(
                 text = event.timestamp,
                 style = MaterialTheme.typography.bodySmall

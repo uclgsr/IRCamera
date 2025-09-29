@@ -38,7 +38,7 @@ fun UnifiedSensorDashboard(
     var thermalState by remember { mutableStateOf(SensorState.Streaming) }
     var rgbState by remember { mutableStateOf(SensorState.Connected) }
     var unifiedState by remember { mutableStateOf(UnifiedSystemState.Active) }
-    
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -56,7 +56,7 @@ fun UnifiedSensorDashboard(
                 onClick = onSettingsClick
             )
         }
-        
+
         // Scrollable sensor content
         Column(
             modifier = Modifier
@@ -78,16 +78,18 @@ fun UnifiedSensorDashboard(
                         is SystemAction.StartRecording -> {
                             unifiedState = UnifiedSystemState.Recording
                         }
+
                         is SystemAction.StopRecording -> {
                             unifiedState = UnifiedSystemState.Active
                         }
+
                         is SystemAction.Synchronize -> {
                             // Trigger sensor synchronization
                         }
                     }
                 }
             )
-            
+
             // Individual sensor cards
             GSRSensorCard(
                 state = gsrState,
@@ -102,7 +104,7 @@ fun UnifiedSensorDashboard(
                     }
                 }
             )
-            
+
             ThermalSensorCard(
                 state = thermalState,
                 onStateChange = { thermalState = it },
@@ -116,7 +118,7 @@ fun UnifiedSensorDashboard(
                     }
                 }
             )
-            
+
             RGBCameraSensorCard(
                 state = rgbState,
                 onStateChange = { rgbState = it },

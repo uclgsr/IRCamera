@@ -26,7 +26,7 @@ import com.mpdc4gsr.libunified.R as RCore
 
 /**
  * Compose equivalent of MineFragment.kt
- * 
+ *
  * User profile screen with settings and navigation options
  */
 @Composable
@@ -37,7 +37,7 @@ fun MineFragmentCompose(
     val context = LocalContext.current
     val userProfile by viewModel.userProfile.collectAsState()
     val showWinterPoint by viewModel.showWinterPoint.collectAsState()
-    
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -69,9 +69,9 @@ fun MineFragmentCompose(
                         .clip(CircleShape),
                     contentScale = ContentScale.Crop
                 )
-                
+
                 Spacer(modifier = Modifier.width(16.dp))
-                
+
                 // User Info
                 Column(
                     modifier = Modifier.weight(1f)
@@ -82,14 +82,14 @@ fun MineFragmentCompose(
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.onSurface
                     )
-                    
+
                     Text(
                         text = if (userProfile.isLoggedIn) "Logged In" else "Guest",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                     )
                 }
-                
+
                 // Winter Easter Egg
                 if (showWinterPoint) {
                     IconButton(
@@ -104,7 +104,7 @@ fun MineFragmentCompose(
                 }
             }
         }
-        
+
         // Settings Options
         Card(
             modifier = Modifier.fillMaxWidth(),
@@ -127,14 +127,14 @@ fun MineFragmentCompose(
                             .navigation(context)
                     }
                 )
-                
+
                 ListItemComponent(
                     leftText = stringResource(RCore.string.cache_clear),
                     leftIcon = Icons.Default.Delete,
                     showLine = true,
                     onClick = { viewModel.clearCache() }
                 )
-                
+
                 ListItemComponent(
                     leftText = stringResource(RCore.string.electronic_manual),
                     leftIcon = Icons.Default.Book,
@@ -146,7 +146,7 @@ fun MineFragmentCompose(
                             .navigation(context)
                     }
                 )
-                
+
                 ListItemComponent(
                     leftText = stringResource(RCore.string.app_question),
                     leftIcon = Icons.Default.Help,
@@ -158,7 +158,7 @@ fun MineFragmentCompose(
                             .navigation(context)
                     }
                 )
-                
+
                 ListItemComponent(
                     leftText = stringResource(RCore.string.feedback),
                     leftIcon = Icons.Default.Feedback,
@@ -167,7 +167,7 @@ fun MineFragmentCompose(
                         // Feedback navigation
                     }
                 )
-                
+
                 ListItemComponent(
                     leftText = stringResource(RCore.string.setting_unit),
                     leftIcon = Icons.Default.Settings,

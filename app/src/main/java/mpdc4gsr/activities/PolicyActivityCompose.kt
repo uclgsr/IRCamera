@@ -71,16 +71,16 @@ class PolicyViewModel : BaseViewModel() {
         try {
             _isLoading.value = true
             _showError.value = false
-            
+
             // Simulate loading delay
             delay(500)
-            
+
             val content = when (_policyType.value) {
                 PolicyType.USER_AGREEMENT -> generateUserAgreementContent()
                 PolicyType.PRIVACY_POLICY -> generatePrivacyPolicyContent()
                 PolicyType.THIRD_PARTY -> generateThirdPartyContent()
             }
-            
+
             _htmlContent.value = content
             _isLoading.value = false
         } catch (e: Exception) {
@@ -427,7 +427,7 @@ class PolicyActivityCompose : BaseComposeActivity<PolicyViewModel>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         val themeType = intent.getIntExtra(KEY_THEME_TYPE, 1)
         val viewModel = viewModels<PolicyViewModel>().value
         viewModel.setPolicyType(themeType)
@@ -521,10 +521,11 @@ class PolicyActivityCompose : BaseComposeActivity<PolicyViewModel>() {
                                 )
                                 Spacer(modifier = Modifier.height(16.dp))
                                 Button(
-                                    onClick = { 
-                                        kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.Main).launch {
-                                            viewModel.loadContent(context)
-                                        }
+                                    onClick = {
+                                        kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.Main)
+                                            .launch {
+                                                viewModel.loadContent(context)
+                                            }
                                     },
                                     colors = ButtonDefaults.buttonColors(
                                         containerColor = MaterialTheme.colorScheme.primary

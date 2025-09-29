@@ -75,9 +75,9 @@ class IRGalleryEditViewModel : BaseViewModel() {
         kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
             _isProcessing.value = true
             _statusMessage.value = "Loading thermal image..."
-            
+
             kotlinx.coroutines.delay(2000) // Simulate image loading
-            
+
             _editState.value = _editState.value.copy(isImageLoaded = true)
             _statusMessage.value = "Image loaded successfully"
             _isProcessing.value = false
@@ -118,9 +118,9 @@ class IRGalleryEditViewModel : BaseViewModel() {
         kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
             _isProcessing.value = true
             _statusMessage.value = "Saving image..."
-            
+
             kotlinx.coroutines.delay(3000) // Simulate saving
-            
+
             _editState.value = _editState.value.copy(hasUnsavedChanges = false)
             _statusMessage.value = "Image saved successfully"
             _isProcessing.value = false
@@ -131,9 +131,9 @@ class IRGalleryEditViewModel : BaseViewModel() {
         kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
             _isProcessing.value = true
             _statusMessage.value = "Exporting image..."
-            
+
             kotlinx.coroutines.delay(2500) // Simulate export
-            
+
             _statusMessage.value = "Image exported to gallery"
             _isProcessing.value = false
         }
@@ -142,11 +142,12 @@ class IRGalleryEditViewModel : BaseViewModel() {
 
 class IRGalleryEditActivityCompose : BaseComposeActivity<IRGalleryEditViewModel>() {
 
-    override fun createViewModel(): IRGalleryEditViewModel = viewModels<IRGalleryEditViewModel>().value
+    override fun createViewModel(): IRGalleryEditViewModel =
+        viewModels<IRGalleryEditViewModel>().value
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         // Simulate loading an image (in real implementation, get from intent)
         val imagePath = intent.getStringExtra("image_path") ?: "sample_thermal_image.jpg"
         viewModels<IRGalleryEditViewModel>().value.loadImage(imagePath)
@@ -194,9 +195,9 @@ class IRGalleryEditActivityCompose : BaseComposeActivity<IRGalleryEditViewModel>
                             .fillMaxWidth()
                             .padding(bottom = 16.dp),
                         colors = CardDefaults.cardColors(
-                            containerColor = if (isProcessing) 
-                                MaterialTheme.colorScheme.surfaceVariant 
-                            else 
+                            containerColor = if (isProcessing)
+                                MaterialTheme.colorScheme.surfaceVariant
+                            else
                                 MaterialTheme.colorScheme.surface
                         )
                     ) {
@@ -214,7 +215,7 @@ class IRGalleryEditActivityCompose : BaseComposeActivity<IRGalleryEditViewModel>
                                 )
                                 Spacer(modifier = Modifier.width(12.dp))
                             }
-                            
+
                             Text(
                                 text = statusMessage,
                                 style = MaterialTheme.typography.bodyMedium,
@@ -330,7 +331,7 @@ class IRGalleryEditActivityCompose : BaseComposeActivity<IRGalleryEditViewModel>
                                 )
                             }
                         }
-                        
+
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -386,30 +387,36 @@ class IRGalleryEditActivityCompose : BaseComposeActivity<IRGalleryEditViewModel>
                                     fontWeight = FontWeight.SemiBold,
                                     modifier = Modifier.padding(bottom = 8.dp)
                                 )
-                                
+
                                 Text(
                                     text = "Min: ${editState.temperatureRange.first}°C",
                                     style = MaterialTheme.typography.bodySmall
                                 )
-                                
+
                                 Slider(
                                     value = editState.temperatureRange.first,
                                     onValueChange = { newMin ->
-                                        viewModel.updateTemperatureRange(newMin, editState.temperatureRange.second)
+                                        viewModel.updateTemperatureRange(
+                                            newMin,
+                                            editState.temperatureRange.second
+                                        )
                                     },
                                     valueRange = -10f..50f,
                                     modifier = Modifier.padding(bottom = 8.dp)
                                 )
-                                
+
                                 Text(
                                     text = "Max: ${editState.temperatureRange.second}°C",
                                     style = MaterialTheme.typography.bodySmall
                                 )
-                                
+
                                 Slider(
                                     value = editState.temperatureRange.second,
                                     onValueChange = { newMax ->
-                                        viewModel.updateTemperatureRange(editState.temperatureRange.first, newMax)
+                                        viewModel.updateTemperatureRange(
+                                            editState.temperatureRange.first,
+                                            newMax
+                                        )
                                     },
                                     valueRange = 10f..100f
                                 )
@@ -434,7 +441,7 @@ class IRGalleryEditActivityCompose : BaseComposeActivity<IRGalleryEditViewModel>
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text("Save")
                             }
-                            
+
                             Button(
                                 onClick = { viewModel.exportImage() },
                                 modifier = Modifier.weight(1f),
@@ -466,9 +473,9 @@ private fun EditToolButton(
     Card(
         modifier = modifier,
         colors = CardDefaults.cardColors(
-            containerColor = if (isSelected) 
-                MaterialTheme.colorScheme.primaryContainer 
-            else 
+            containerColor = if (isSelected)
+                MaterialTheme.colorScheme.primaryContainer
+            else
                 MaterialTheme.colorScheme.surface
         ),
         onClick = onClick
@@ -481,9 +488,9 @@ private fun EditToolButton(
                 imageVector = tool.icon,
                 contentDescription = null,
                 modifier = Modifier.size(24.dp),
-                tint = if (isSelected) 
-                    MaterialTheme.colorScheme.primary 
-                else 
+                tint = if (isSelected)
+                    MaterialTheme.colorScheme.primary
+                else
                     MaterialTheme.colorScheme.onSurface
             )
             Spacer(modifier = Modifier.height(4.dp))
@@ -491,9 +498,9 @@ private fun EditToolButton(
                 text = tool.displayName,
                 style = MaterialTheme.typography.labelSmall,
                 textAlign = TextAlign.Center,
-                color = if (isSelected) 
-                    MaterialTheme.colorScheme.onPrimaryContainer 
-                else 
+                color = if (isSelected)
+                    MaterialTheme.colorScheme.onPrimaryContainer
+                else
                     MaterialTheme.colorScheme.onSurface
             )
         }
@@ -510,9 +517,9 @@ private fun PaletteButton(
     Card(
         modifier = modifier,
         colors = CardDefaults.cardColors(
-            containerColor = if (isSelected) 
-                MaterialTheme.colorScheme.primaryContainer 
-            else 
+            containerColor = if (isSelected)
+                MaterialTheme.colorScheme.primaryContainer
+            else
                 MaterialTheme.colorScheme.surface
         ),
         onClick = onClick

@@ -1,41 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:orientation="vertical" android:padding="16dp">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="vertical" android:padding="16dp">
 
     <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp" android:text="Complete Session Trial" android:textAlignment="center"
-        android:textSize="20sp" android:textStyle="bold" />
+        android:layout_marginBottom="16dp" android:text="Complete Session Trial"
+        android:textAlignment="center" android:textSize="20sp" android:textStyle="bold" />
 
     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
         android:layout_marginBottom="8dp" android:orientation="horizontal">
 
-        <Button android:id="@+id/start_trial_button" android:layout_width="0dp" android:layout_height="wrap_content"
-            android:layout_marginEnd="4dp" android:layout_weight="1" android:text="Start 5min Trial" />
+        <Button android:id="@+id/start_trial_button" android:layout_width="0dp"
+            android:layout_height="wrap_content" android:layout_marginEnd="4dp"
+            android:layout_weight="1" android:text="Start 5min Trial" />
 
-        <Button android:id="@+id/stop_trial_button" android:layout_width="0dp" android:layout_height="wrap_content"
-            android:layout_marginStart="4dp" android:layout_weight="1" android:enabled="false"
-            android:text="Stop Trial" />
+        <Button android:id="@+id/stop_trial_button" android:layout_width="0dp"
+            android:layout_height="wrap_content" android:layout_marginStart="4dp"
+            android:layout_weight="1" android:enabled="false" android:text="Stop Trial" />
 
     </LinearLayout>
 
     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
         android:layout_marginBottom="16dp" android:orientation="horizontal">
 
-        <Button android:id="@+id/verify_output_button" android:layout_width="0dp" android:layout_height="wrap_content"
-            android:layout_marginEnd="4dp" android:layout_weight="1" android:enabled="false"
-            android:text="Verify Output" />
+        <Button android:id="@+id/verify_output_button" android:layout_width="0dp"
+            android:layout_height="wrap_content" android:layout_marginEnd="4dp"
+            android:layout_weight="1" android:enabled="false" android:text="Verify Output" />
 
-        <Button android:id="@+id/generate_report_button" android:layout_width="0dp" android:layout_height="wrap_content"
-            android:layout_marginStart="4dp" android:layout_weight="1" android:enabled="false"
-            android:text="Generate Report" />
+        <Button android:id="@+id/generate_report_button" android:layout_width="0dp"
+            android:layout_height="wrap_content" android:layout_marginStart="4dp"
+            android:layout_weight="1" android:enabled="false" android:text="Generate Report" />
 
     </LinearLayout>
 
-    <ScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
+    <ScrollView android:layout_width="match_parent" android:layout_height="0dp"
+        android:layout_weight="1">
 
         <TextView android:id="@+id/result_text_view" android:layout_width="match_parent"
             android:layout_height="wrap_content" android:fontFamily="monospace"
-            android:text="Complete session trial results will appear here..." android:textSize="12sp" />
+            android:text="Complete session trial results will appear here..."
+            android:textSize="12sp" />
 
     </ScrollView>
 

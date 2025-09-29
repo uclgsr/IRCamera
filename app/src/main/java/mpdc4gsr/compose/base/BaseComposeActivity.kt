@@ -39,14 +39,14 @@ abstract class BaseComposeActivity<VM : BaseViewModel> : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         EventBus.getDefault().register(this)
-        
+
         setContent {
             IRCameraTheme {
                 val viewModel = createViewModel()
                 Content(viewModel)
-                
+
                 // Handle connection state changes in Compose
                 HandleConnectionEvents(viewModel)
             }
@@ -70,12 +70,13 @@ abstract class BaseComposeActivity<VM : BaseViewModel> : ComponentActivity() {
     @Composable
     private fun HandleConnectionEvents(viewModel: VM) {
         val connectionState by viewModel.connectionState.collectAsState()
-        
+
         LaunchedEffect(connectionState) {
             when (connectionState) {
                 is mpdc4gsr.viewmodel.ConnectionState.Connected -> onDeviceConnected()
                 is mpdc4gsr.viewmodel.ConnectionState.Disconnected -> onDeviceDisconnected()
-                else -> { /* Handle other states */ }
+                else -> { /* Handle other states */
+                }
             }
         }
     }

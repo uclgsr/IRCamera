@@ -10,21 +10,21 @@ import mpdc4gsr.compose.theme.IRCameraTheme
 
 /**
  * Full Migration Demo Activity
- * 
+ *
  * This activity demonstrates the complete Jetpack Compose migration with all tasks completed:
  * - Task A: Main Dashboard Migration ✅
- * - Task B: Thermal Camera Enhancement ✅ 
+ * - Task B: Thermal Camera Enhancement ✅
  * - Task C: Sensor Dashboard Modernization ✅
  * - Task D: Settings Migration ✅
  * - Task E: Navigation Integration ✅
- * 
+ *
  * This is the entry point to showcase the entire migrated application.
  */
 class FullMigrationDemoActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         setContent {
             IRCameraTheme {
                 CompleteMigrationApp()
@@ -35,7 +35,7 @@ class FullMigrationDemoActivity : ComponentActivity() {
     @Composable
     private fun CompleteMigrationApp() {
         val navController = rememberNavController()
-        
+
         IRCameraNavHost(
             navController = navController,
             startDestination = "demo" // Start with demo screen showing all completed tasks

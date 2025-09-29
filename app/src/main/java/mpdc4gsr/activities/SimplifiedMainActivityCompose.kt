@@ -48,7 +48,10 @@ enum class AppFeature(
 data class SystemInfo(
     val appVersion: String = BuildConfig.VERSION_NAME,
     val buildType: String = BuildConfig.BUILD_TYPE,
-    val timestamp: String = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date()),
+    val timestamp: String = SimpleDateFormat(
+        "yyyy-MM-dd HH:mm:ss",
+        Locale.getDefault()
+    ).format(Date()),
     val deviceModel: String = "${android.os.Build.MANUFACTURER} ${android.os.Build.MODEL}",
     val androidVersion: String = android.os.Build.VERSION.RELEASE
 )
@@ -85,11 +88,31 @@ class SimplifiedMainViewModel : BaseViewModel() {
 
     fun updatePermissionStatuses(permissions: Map<String, Boolean>) {
         _permissionStatuses.value = listOf(
-            PermissionStatus("Camera", permissions[Manifest.permission.CAMERA] ?: false, "Required for RGB camera"),
-            PermissionStatus("Audio", permissions[Manifest.permission.RECORD_AUDIO] ?: false, "Required for audio recording"),
-            PermissionStatus("Storage", permissions[Manifest.permission.WRITE_EXTERNAL_STORAGE] ?: false, "Required for data storage"),
-            PermissionStatus("Location", permissions[Manifest.permission.ACCESS_FINE_LOCATION] ?: false, "Required for GPS metadata"),
-            PermissionStatus("Bluetooth", permissions[Manifest.permission.BLUETOOTH] ?: false, "Required for sensor connection")
+            PermissionStatus(
+                "Camera",
+                permissions[Manifest.permission.CAMERA] ?: false,
+                "Required for RGB camera"
+            ),
+            PermissionStatus(
+                "Audio",
+                permissions[Manifest.permission.RECORD_AUDIO] ?: false,
+                "Required for audio recording"
+            ),
+            PermissionStatus(
+                "Storage",
+                permissions[Manifest.permission.WRITE_EXTERNAL_STORAGE] ?: false,
+                "Required for data storage"
+            ),
+            PermissionStatus(
+                "Location",
+                permissions[Manifest.permission.ACCESS_FINE_LOCATION] ?: false,
+                "Required for GPS metadata"
+            ),
+            PermissionStatus(
+                "Bluetooth",
+                permissions[Manifest.permission.BLUETOOTH] ?: false,
+                "Required for sensor connection"
+            )
         )
     }
 
@@ -110,7 +133,7 @@ class SimplifiedMainViewModel : BaseViewModel() {
         kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
             _isRecording.value = true
             var seconds = 0
-            
+
             while (_isRecording.value) {
                 delay(1000)
                 seconds++
@@ -131,14 +154,14 @@ class SimplifiedMainViewModel : BaseViewModel() {
     fun connectDevices(onComplete: () -> Unit = {}) {
         kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
             _connectionStatus.value = "Connecting to devices..."
-            
+
             // Simulate device connection process
             val devices = listOf("Thermal Camera", "GSR Sensor", "Audio Interface")
             devices.forEach { device ->
                 _connectionStatus.value = "Connecting to $device..."
                 delay(1500)
             }
-            
+
             delay(1000)
             _isConnected.value = true
             _connectionStatus.value = "All devices connected"
@@ -181,7 +204,8 @@ class SimplifiedMainActivityCompose : BaseComposeActivity<SimplifiedMainViewMode
         viewModels<SimplifiedMainViewModel>().value.updatePermissionStatuses(permissions)
     }
 
-    override fun createViewModel(): SimplifiedMainViewModel = viewModels<SimplifiedMainViewModel>().value
+    override fun createViewModel(): SimplifiedMainViewModel =
+        viewModels<SimplifiedMainViewModel>().value
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -211,7 +235,7 @@ class SimplifiedMainActivityCompose : BaseComposeActivity<SimplifiedMainViewMode
                     title = "Simplified Interface",
                     onBackClick = { finish() },
                     actions = {
-                        IconButton(onClick = { 
+                        IconButton(onClick = {
                             permissionLauncher.launch(requiredPermissions)
                         }) {
                             Icon(
@@ -315,7 +339,7 @@ class SimplifiedMainActivityCompose : BaseComposeActivity<SimplifiedMainViewMode
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text(if (isConnected) "Start Recording" else "Connect & Record")
                             }
-                            
+
                             if (isConnected) {
                                 OutlinedButton(
                                     onClick = { viewModel.disconnectDevices() },
@@ -419,9 +443,9 @@ private fun FeatureCard(
     Card(
         modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
-            containerColor = if (isSelected && feature.isEnabled) 
-                MaterialTheme.colorScheme.primaryContainer 
-            else 
+            containerColor = if (isSelected && feature.isEnabled)
+                MaterialTheme.colorScheme.primaryContainer
+            else
                 MaterialTheme.colorScheme.surface
         )
     ) {
@@ -435,9 +459,9 @@ private fun FeatureCard(
                 imageVector = feature.icon,
                 contentDescription = null,
                 modifier = Modifier.size(32.dp),
-                tint = if (isSelected && feature.isEnabled) 
-                    MaterialTheme.colorScheme.primary 
-                else 
+                tint = if (isSelected && feature.isEnabled)
+                    MaterialTheme.colorScheme.primary
+                else
                     MaterialTheme.colorScheme.onSurfaceVariant
             )
 
@@ -448,9 +472,9 @@ private fun FeatureCard(
                     text = feature.displayName,
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.Medium,
-                    color = if (feature.isEnabled) 
-                        MaterialTheme.colorScheme.onSurface 
-                    else 
+                    color = if (feature.isEnabled)
+                        MaterialTheme.colorScheme.onSurface
+                    else
                         MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(
@@ -488,15 +512,15 @@ private fun PermissionRow(
         Icon(
             imageVector = if (permission.isGranted) Icons.Default.CheckCircle else Icons.Default.Error,
             contentDescription = null,
-            tint = if (permission.isGranted) 
-                MaterialTheme.colorScheme.primary 
-            else 
+            tint = if (permission.isGranted)
+                MaterialTheme.colorScheme.primary
+            else
                 MaterialTheme.colorScheme.error,
             modifier = Modifier.size(20.dp)
         )
-        
+
         Spacer(modifier = Modifier.width(12.dp))
-        
+
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = permission.name,
@@ -509,13 +533,13 @@ private fun PermissionRow(
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
-        
+
         Text(
             text = if (permission.isGranted) "Granted" else "Denied",
             style = MaterialTheme.typography.labelSmall,
-            color = if (permission.isGranted) 
-                MaterialTheme.colorScheme.primary 
-            else 
+            color = if (permission.isGranted)
+                MaterialTheme.colorScheme.primary
+            else
                 MaterialTheme.colorScheme.error
         )
     }

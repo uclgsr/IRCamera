@@ -157,7 +157,11 @@ class ComprehensiveRecordingController(
 
     suspend fun startRecording(
         sessionId: String? = null,
-        enabledSensors: List<String> = listOf(RGB_SENSOR_NAME, THERMAL_SENSOR_NAME, GSR_SENSOR_NAME),
+        enabledSensors: List<String> = listOf(
+            RGB_SENSOR_NAME,
+            THERMAL_SENSOR_NAME,
+            GSR_SENSOR_NAME
+        ),
         estimatedDurationMinutes: Int = 30,
         triggerSource: TriggerSource = TriggerSource.LOCAL_UI
     ): Boolean {
@@ -793,7 +797,10 @@ class ComprehensiveRecordingController(
             }
 
             val registeredSensors = sensorRecorders.keys.toList()
-            Log.i(TAG, "Sensor initialization completed - registered sensors: ${registeredSensors.joinToString()}")
+            Log.i(
+                TAG,
+                "Sensor initialization completed - registered sensors: ${registeredSensors.joinToString()}"
+            )
 
             // Return true if at least one sensor was registered successfully
             registeredSensors.isNotEmpty()

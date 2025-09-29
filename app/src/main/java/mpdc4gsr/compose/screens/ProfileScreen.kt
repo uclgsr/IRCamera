@@ -40,7 +40,7 @@ fun ProfileScreen(
             showBackButton = true,
             onBackClick = onBackClick
         )
-        
+
         // Profile content
         Column(
             modifier = Modifier
@@ -51,13 +51,13 @@ fun ProfileScreen(
         ) {
             // User profile card
             UserProfileCard()
-            
+
             // Research statistics
             ResearchStatsCard()
-            
+
             // Recent activities
             RecentActivitiesCard()
-            
+
             // Quick actions
             QuickActionsCard()
         }
@@ -98,9 +98,9 @@ private fun UserProfileCard(
                     )
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             // User information
             Text(
                 text = "Research User",
@@ -118,9 +118,9 @@ private fun UserProfileCard(
                 color = Color.Blue,
                 fontSize = 12.sp
             )
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             // Edit profile button
             Button(
                 onClick = { /* Edit profile */ },
@@ -156,9 +156,9 @@ private fun ResearchStatsCard(
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
@@ -179,9 +179,9 @@ private fun ResearchStatsCard(
                     color = Color.Cyan
                 )
             }
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             // Progress indicators
             Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -231,16 +231,16 @@ private fun RecentActivitiesCard(
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             val activities = listOf(
                 Activity("GSR Session recorded", "2 hours ago", Icons.Default.Sensors),
                 Activity("Thermal calibration completed", "1 day ago", Icons.Default.Thermostat),
                 Activity("Data exported to CSV", "2 days ago", Icons.Default.FileDownload),
                 Activity("Multi-modal recording", "3 days ago", Icons.Default.VideoCall)
             )
-            
+
             activities.forEach { activity ->
                 ActivityItem(activity = activity)
                 if (activity != activities.last()) {
@@ -273,9 +273,9 @@ private fun QuickActionsCard(
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
@@ -357,9 +357,9 @@ private fun ProgressItem(
                 fontSize = 12.sp
             )
         }
-        
+
         Spacer(modifier = Modifier.height(4.dp))
-        
+
         LinearProgressIndicator(
             progress = { current.toFloat() / total.toFloat() },
             modifier = Modifier.fillMaxWidth(),
@@ -387,9 +387,9 @@ private fun ActivityItem(
             tint = Color.Blue,
             modifier = Modifier.size(20.dp)
         )
-        
+
         Spacer(modifier = Modifier.width(12.dp))
-        
+
         Column(
             modifier = Modifier.weight(1f)
         ) {
@@ -432,9 +432,9 @@ private fun QuickActionButton(
                 tint = Color.White
             )
         }
-        
+
         Spacer(modifier = Modifier.height(8.dp))
-        
+
         Text(
             text = label,
             color = Color.White,

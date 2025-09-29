@@ -18,7 +18,7 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 
 /**
  * Dual Mode Camera Screen - Advanced Camera Integration
- * 
+ *
  * Modern implementation of dual-mode camera functionality:
  * - Simultaneous RGB and thermal camera operation
  * - Real-time preview synchronization
@@ -36,7 +36,7 @@ fun DualModeCameraScreen(
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { 
+                    title = {
                         Text(
                             "Dual Mode Camera",
                             fontWeight = FontWeight.Bold
@@ -74,7 +74,7 @@ private fun DualModeCameraContent(
     var thermalCameraActive by remember { mutableStateOf(true) }
     var isRecording by remember { mutableStateOf(false) }
     var syncEnabled by remember { mutableStateOf(true) }
-    
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -87,7 +87,7 @@ private fun DualModeCameraContent(
             selectedMode = selectedMode,
             onModeChange = { selectedMode = it }
         )
-        
+
         // Dual Camera Preview
         DualCameraPreviewCard(
             mode = selectedMode,
@@ -95,7 +95,7 @@ private fun DualModeCameraContent(
             thermalActive = thermalCameraActive,
             syncEnabled = syncEnabled
         )
-        
+
         // Camera Status and Controls
         CameraControlsCard(
             rgbActive = rgbCameraActive,
@@ -107,10 +107,10 @@ private fun DualModeCameraContent(
             onRecordingToggle = { isRecording = it },
             onSyncToggle = { syncEnabled = it }
         )
-        
+
         // Recording Settings
         RecordingSettingsCard()
-        
+
         // Calibration Tools
         CalibrationToolsCard()
     }
@@ -141,7 +141,7 @@ private fun CameraModeSelector(
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -153,7 +153,7 @@ private fun CameraModeSelector(
                     onClick = { onModeChange(CameraMode.RGB_ONLY) },
                     modifier = Modifier.weight(1f)
                 )
-                
+
                 CameraModeChip(
                     mode = CameraMode.THERMAL_ONLY,
                     label = "Thermal Only",
@@ -162,7 +162,7 @@ private fun CameraModeSelector(
                     modifier = Modifier.weight(1f)
                 )
             }
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -174,7 +174,7 @@ private fun CameraModeSelector(
                     onClick = { onModeChange(CameraMode.DUAL_VIEW) },
                     modifier = Modifier.weight(1f)
                 )
-                
+
                 CameraModeChip(
                     mode = CameraMode.OVERLAY,
                     label = "Overlay",
@@ -197,11 +197,11 @@ private fun CameraModeChip(
 ) {
     FilterChip(
         onClick = onClick,
-        label = { 
+        label = {
             Text(
                 label,
                 modifier = Modifier.padding(horizontal = 4.dp)
-            ) 
+            )
         },
         selected = selected,
         modifier = modifier
@@ -233,7 +233,7 @@ private fun DualCameraPreviewCard(
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold
                 )
-                
+
                 if (syncEnabled) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -253,21 +253,24 @@ private fun DualCameraPreviewCard(
                     }
                 }
             }
-            
+
             // Preview area based on mode
             when (mode) {
                 CameraMode.RGB_ONLY -> {
                     RGBPreviewArea(active = rgbActive)
                 }
+
                 CameraMode.THERMAL_ONLY -> {
                     ThermalPreviewArea(active = thermalActive)
                 }
+
                 CameraMode.DUAL_VIEW -> {
                     DualViewPreviewArea(
                         rgbActive = rgbActive,
                         thermalActive = thermalActive
                     )
                 }
+
                 CameraMode.OVERLAY -> {
                     OverlayPreviewArea(
                         rgbActive = rgbActive,
@@ -419,7 +422,7 @@ private fun DualViewPreviewArea(
                 )
             }
         }
-        
+
         Box(
             modifier = Modifier
                 .weight(1f)
@@ -520,9 +523,9 @@ private fun CameraControlsCard(
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Divider()
-            
+
             // Camera toggles
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -540,7 +543,7 @@ private fun CameraControlsCard(
                     onCheckedChange = onRGBToggle
                 )
             }
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -557,7 +560,7 @@ private fun CameraControlsCard(
                     onCheckedChange = onThermalToggle
                 )
             }
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -574,9 +577,9 @@ private fun CameraControlsCard(
                     onCheckedChange = onSyncToggle
                 )
             }
-            
+
             Divider()
-            
+
             // Recording controls
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -605,7 +608,7 @@ private fun CameraControlsCard(
                         Text("Start Recording")
                     }
                 }
-                
+
                 OutlinedButton(
                     onClick = { /* Take snapshot */ },
                     modifier = Modifier.weight(1f),
@@ -635,9 +638,9 @@ private fun RecordingSettingsCard() {
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Divider()
-            
+
             // Quality settings
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -646,7 +649,7 @@ private fun RecordingSettingsCard() {
                 Text("RGB Quality")
                 Text("1080p @ 30fps", fontWeight = FontWeight.Medium)
             }
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -654,7 +657,7 @@ private fun RecordingSettingsCard() {
                 Text("Thermal Quality")
                 Text("384x288 @ 25fps", fontWeight = FontWeight.Medium)
             }
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -681,9 +684,9 @@ private fun CalibrationToolsCard() {
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Divider()
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -696,7 +699,7 @@ private fun CalibrationToolsCard() {
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Align")
                 }
-                
+
                 OutlinedButton(
                     onClick = { /* Calibrate colors */ },
                     modifier = Modifier.weight(1f)

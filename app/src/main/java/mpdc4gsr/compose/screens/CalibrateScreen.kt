@@ -40,7 +40,7 @@ fun CalibrateScreen(
     var calibrationStep by remember { mutableIntStateOf(1) }
     var isCalibrating by remember { mutableStateOf(false) }
     var calibrationProgress by remember { mutableFloatStateOf(0f) }
-    
+
     // Simulate calibration progress
     LaunchedEffect(isCalibrating) {
         if (isCalibrating) {
@@ -54,7 +54,7 @@ fun CalibrateScreen(
             }
         }
     }
-    
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -79,7 +79,7 @@ fun CalibrateScreen(
                 )
             }
         }
-        
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -91,7 +91,7 @@ fun CalibrateScreen(
                 step = calibrationStep,
                 isCalibrating = isCalibrating
             )
-            
+
             // Dual camera preview with alignment overlay
             DualCameraPreview(
                 step = calibrationStep,
@@ -101,7 +101,7 @@ fun CalibrateScreen(
                     .fillMaxWidth()
                     .weight(1f)
             )
-            
+
             // Progress indicator
             if (isCalibrating) {
                 CalibrationProgress(progress = calibrationProgress)
@@ -141,9 +141,9 @@ private fun CalibrationInstructions(
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Spacer(modifier = Modifier.height(8.dp))
-            
+
             val instruction = when {
                 isCalibrating -> "Please wait while the thermal and RGB cameras are being aligned. Keep the device steady."
                 step == 1 -> "Point both cameras at a distinctive object with clear temperature contrast (e.g., a warm cup on a cool table)."
@@ -151,7 +151,7 @@ private fun CalibrationInstructions(
                 step == 3 -> "Verify the alignment and tap the check button to complete calibration."
                 else -> "Calibration complete. The thermal and RGB cameras are now aligned."
             }
-            
+
             Text(
                 text = instruction,
                 color = Color.Gray,
@@ -190,7 +190,7 @@ private fun DualCameraPreview(
                 progress = progress,
                 modifier = Modifier.weight(1f)
             )
-            
+
             // RGB camera view  
             RGBCameraView(
                 step = step,
@@ -228,18 +228,18 @@ private fun ThermalCameraView(
                 color = Color(0xFF1A1A2E),
                 size = size
             )
-            
+
             // Sample thermal hotspot
             drawCircle(
                 color = Color.Red,
                 radius = 40f,
                 center = Offset(size.width * 0.6f, size.height * 0.4f)
             )
-            
+
             // Draw calibration overlays
             drawCalibrationOverlay(step, isCalibrating, progress, size)
         }
-        
+
         // Camera label
         Text(
             text = "Thermal",
@@ -282,18 +282,18 @@ private fun RGBCameraView(
                 color = Color(0xFF2E2E2E),
                 size = size
             )
-            
+
             // Sample RGB features
             drawRect(
                 color = Color.Gray,
                 topLeft = Offset(size.width * 0.5f, size.height * 0.3f),
                 size = Size(size.width * 0.2f, size.height * 0.2f)
             )
-            
+
             // Draw calibration overlays
             drawCalibrationOverlay(step, isCalibrating, progress, size)
         }
-        
+
         // Camera label
         Text(
             text = "RGB",
@@ -320,7 +320,7 @@ private fun DrawScope.drawCalibrationOverlay(
     canvasSize: Size
 ) {
     val center = Offset(canvasSize.width / 2, canvasSize.height / 2)
-    
+
     when {
         isCalibrating -> {
             // Draw progress indicator
@@ -340,11 +340,12 @@ private fun DrawScope.drawCalibrationOverlay(
                 size = Size(radius * 2, radius * 2)
             )
         }
+
         step >= 1 -> {
             // Draw crosshair for alignment
             val crosshairSize = 30f
             val strokeWidth = 2.dp.toPx()
-            
+
             // Horizontal line
             drawLine(
                 color = Color.Yellow,
@@ -352,7 +353,7 @@ private fun DrawScope.drawCalibrationOverlay(
                 end = Offset(center.x + crosshairSize, center.y),
                 strokeWidth = strokeWidth
             )
-            
+
             // Vertical line
             drawLine(
                 color = Color.Yellow,
@@ -360,7 +361,7 @@ private fun DrawScope.drawCalibrationOverlay(
                 end = Offset(center.x, center.y + crosshairSize),
                 strokeWidth = strokeWidth
             )
-            
+
             // Center dot
             drawCircle(
                 color = Color.Yellow,
@@ -369,7 +370,7 @@ private fun DrawScope.drawCalibrationOverlay(
             )
         }
     }
-    
+
     if (step >= 2 && !isCalibrating) {
         // Draw alignment grid
         val gridSpacing = canvasSize.width / 6
@@ -382,7 +383,7 @@ private fun DrawScope.drawCalibrationOverlay(
                 strokeWidth = 1.dp.toPx()
             )
         }
-        
+
         val gridSpacingY = canvasSize.height / 6
         for (i in 1..5) {
             val y = i * gridSpacingY
@@ -414,9 +415,9 @@ private fun CalibrationProgress(
             fontSize = 16.sp,
             fontWeight = FontWeight.Medium
         )
-        
+
         Spacer(modifier = Modifier.height(8.dp))
-        
+
         LinearProgressIndicator(
             progress = { progress },
             modifier = Modifier
@@ -465,7 +466,7 @@ private fun CalibrationStepControls(
                 }
             }
         }
-        
+
         // Control buttons
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -479,7 +480,7 @@ private fun CalibrationStepControls(
                     Text("Previous")
                 }
             }
-            
+
             if (currentStep < 3) {
                 Button(
                     onClick = { onStepChange(currentStep + 1) }

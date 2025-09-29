@@ -26,7 +26,7 @@ import androidx.lifecycle.viewModelScope
 
 /**
  * GSRQuickRecordingActivityCompose - Enhanced Quick GSR Recording
- * 
+ *
  * Streamlined interface for rapid GSR data collection with:
  * - One-touch recording start/stop functionality
  * - Real-time GSR signal quality monitoring
@@ -50,7 +50,7 @@ class GSRQuickRecordingActivityCompose : BaseComposeActivity<GSRQuickRecordingVi
 @Composable
 fun GSRQuickRecordingScreen(viewModel: GSRQuickRecordingViewModel) {
     val uiState by viewModel.uiState.collectAsState()
-    
+
     LaunchedEffect(Unit) {
         viewModel.initializeQuickRecording()
     }
@@ -66,9 +66,9 @@ fun GSRQuickRecordingScreen(viewModel: GSRQuickRecordingViewModel) {
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold
         )
-        
+
         Spacer(modifier = Modifier.height(24.dp))
-        
+
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
@@ -82,7 +82,7 @@ fun GSRQuickRecordingScreen(viewModel: GSRQuickRecordingViewModel) {
                     onStopRecording = { viewModel.stopQuickRecording() }
                 )
             }
-            
+
             // GSR Device Status
             item {
                 GSRDeviceStatusCard(
@@ -91,7 +91,7 @@ fun GSRQuickRecordingScreen(viewModel: GSRQuickRecordingViewModel) {
                     batteryLevel = uiState.batteryLevel
                 )
             }
-            
+
             // Live GSR Data Visualization
             if (uiState.isRecording) {
                 item {
@@ -102,7 +102,7 @@ fun GSRQuickRecordingScreen(viewModel: GSRQuickRecordingViewModel) {
                     )
                 }
             }
-            
+
             // Quick Settings
             item {
                 QuickSettingsCard(
@@ -112,7 +112,7 @@ fun GSRQuickRecordingScreen(viewModel: GSRQuickRecordingViewModel) {
                     onAutoSaveToggle = { viewModel.toggleAutoSave() }
                 )
             }
-            
+
             // Recent Sessions
             if (uiState.recentSessions.isNotEmpty()) {
                 item {
@@ -122,7 +122,7 @@ fun GSRQuickRecordingScreen(viewModel: GSRQuickRecordingViewModel) {
                         fontWeight = FontWeight.SemiBold
                     )
                 }
-                
+
                 items(uiState.recentSessions.take(3)) { session ->
                     QuickSessionCard(
                         session = session,
@@ -147,7 +147,7 @@ fun QuickRecordingStatusCard(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
             containerColor = if (isRecording) Color(0xFFF44336).copy(alpha = 0.1f)
-                           else MaterialTheme.colorScheme.surface
+            else MaterialTheme.colorScheme.surface
         )
     ) {
         Column(
@@ -175,9 +175,9 @@ fun QuickRecordingStatusCard(
                             )
                         }
                     }
-                    
+
                     Spacer(modifier = Modifier.width(12.dp))
-                    
+
                     Text(
                         text = "Recording Active",
                         style = MaterialTheme.typography.headlineSmall,
@@ -185,9 +185,9 @@ fun QuickRecordingStatusCard(
                         color = Color(0xFFF44336)
                     )
                 }
-                
+
                 Spacer(modifier = Modifier.height(16.dp))
-                
+
                 // Recording stats
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -196,9 +196,9 @@ fun QuickRecordingStatusCard(
                     QuickStatItem("Duration", formatDuration(recordingDuration))
                     QuickStatItem("Samples", samplesCollected.toString())
                 }
-                
+
                 Spacer(modifier = Modifier.height(20.dp))
-                
+
                 Button(
                     onClick = onStopRecording,
                     colors = ButtonDefaults.buttonColors(
@@ -217,23 +217,23 @@ fun QuickRecordingStatusCard(
                     modifier = Modifier.size(64.dp),
                     tint = Color(0xFF4CAF50)
                 )
-                
+
                 Spacer(modifier = Modifier.height(16.dp))
-                
+
                 Text(
                     text = "Ready to Record",
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold
                 )
-                
+
                 Text(
                     text = "Tap to start quick GSR recording",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                 )
-                
+
                 Spacer(modifier = Modifier.height(20.dp))
-                
+
                 Button(
                     onClick = onStartRecording,
                     colors = ButtonDefaults.buttonColors(
@@ -274,9 +274,9 @@ fun GSRDeviceStatusCard(
                         else -> Color(0xFFF44336)
                     }
                 )
-                
+
                 Spacer(modifier = Modifier.width(12.dp))
-                
+
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = "GSR Device",
@@ -293,7 +293,7 @@ fun GSRDeviceStatusCard(
                         }
                     )
                 }
-                
+
                 Column(horizontalAlignment = Alignment.End) {
                     Text(
                         text = "Quality: $signalQuality%",
@@ -307,7 +307,7 @@ fun GSRDeviceStatusCard(
                     }
                 }
             }
-            
+
             if (deviceStatus == "Connected") {
                 Spacer(modifier = Modifier.height(12.dp))
                 LinearProgressIndicator(
@@ -341,20 +341,26 @@ fun LiveGSRDataCard(
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold
             )
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 QuickStatItem("Current", String.format("%.2f µS", currentValue))
                 QuickStatItem("Average", String.format("%.2f µS", averageValue))
-                QuickStatItem("Range", String.format("%.1f", recentValues.maxOrNull()?.minus(recentValues.minOrNull() ?: 0.0) ?: 0.0))
+                QuickStatItem(
+                    "Range",
+                    String.format(
+                        "%.1f",
+                        recentValues.maxOrNull()?.minus(recentValues.minOrNull() ?: 0.0) ?: 0.0
+                    )
+                )
             }
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             // Simple data visualization placeholder
             Box(
                 modifier = Modifier
@@ -390,9 +396,9 @@ fun QuickSettingsCard(
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold
             )
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -410,9 +416,9 @@ fun QuickSettingsCard(
                     }
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(8.dp))
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -446,9 +452,9 @@ fun QuickSessionCard(
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.primary
             )
-            
+
             Spacer(modifier = Modifier.width(12.dp))
-            
+
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = session.name,
@@ -461,7 +467,7 @@ fun QuickSessionCard(
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                 )
             }
-            
+
             IconButton(onClick = onView) {
                 Icon(Icons.Default.Visibility, contentDescription = "View")
             }
@@ -524,7 +530,7 @@ data class GSRQuickRecordingUiState(
 class GSRQuickRecordingViewModel : BaseViewModel() {
     private val _uiState = androidx.compose.runtime.mutableStateOf(GSRQuickRecordingUiState())
     val uiState: androidx.compose.runtime.State<GSRQuickRecordingUiState> = _uiState
-    
+
     private var recordingJob: Job? = null
 
     fun initializeQuickRecording() {
@@ -533,16 +539,16 @@ class GSRQuickRecordingViewModel : BaseViewModel() {
             QuickSession("Quick Session 2", 120000, 30720, System.currentTimeMillis() - 7200000),
             QuickSession("Quick Session 3", 240000, 61440, System.currentTimeMillis() - 10800000)
         )
-        
+
         _uiState.value = _uiState.value.copy(recentSessions = mockSessions)
     }
 
     fun startQuickRecording() {
         _uiState.value = _uiState.value.copy(isRecording = true)
-        
+
         // Cancel any existing recording job
         recordingJob?.cancel()
-        
+
         // Start recording simulation on main dispatcher
         recordingJob = viewModelScope.launch(Dispatchers.Main) {
             while (_uiState.value.isRecording) {

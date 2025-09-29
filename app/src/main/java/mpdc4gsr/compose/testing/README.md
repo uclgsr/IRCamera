@@ -1,6 +1,7 @@
 # Testing Suite Compose Migration
 
-This directory contains the Compose migration of the IRCamera Testing Suite, providing modern UI implementations of all testing activities.
+This directory contains the Compose migration of the IRCamera Testing Suite, providing modern UI
+implementations of all testing activities.
 
 ## Overview
 
@@ -23,32 +24,40 @@ The Testing Suite has been migrated from traditional XML-based layouts to Jetpac
 ### Test Activities
 
 #### BLE Integration Tests
+
 - **BLEIntegrationTestComposeActivity**: BLE connectivity and data streaming tests
 - Tests: Permissions, Discovery, Connection, Streaming, Reconnection
 
-#### GSR Sensor Tests  
+#### GSR Sensor Tests
+
 - **GSRBenchTestComposeActivity**: GSR performance benchmarking
 - Tests: Connection, Calibration, Data Quality, Performance, Stress Testing
 
 #### Camera System Tests
+
 - **RgbCameraTestComposeActivity**: Camera functionality and controls
 - Tests: Permissions, Capabilities, 4K Recording, Tap-to-Focus, Manual Controls, RAW Capture
 
 #### Synchronization Tests
+
 - **CrossModalSyncTestComposeActivity**: Multi-sensor synchronization
 - Tests: GSR-Thermal Sync, GSR-RGB Sync, Thermal-RGB Sync, Triple Sync, Timestamp Accuracy
 
 #### Session Management Tests
+
 - **SessionLifecycleTestComposeActivity**: Recording session lifecycle
 - Tests: Creation, Multi-sensor Start, Pause/Resume, Graceful Stop, Error Recovery, Data Integrity
 
 #### Performance Tests
+
 - **ParallelRecordingTestComposeActivity**: Multi-sensor parallel recording
-- Tests: Sensor Initialization, Synchronized Start/Stop, Data Collection, Buffer Management, Error Handling
+- Tests: Sensor Initialization, Synchronized Start/Stop, Data Collection, Buffer Management, Error
+  Handling
 
 ### Hub Activity
 
 **TestingSuiteHubActivity** provides:
+
 - Centralized access to all testing modules
 - Category-based filtering (BLE, GSR, Camera, Synchronization, Performance)
 - Search functionality
@@ -83,30 +92,35 @@ LauncherCard(
 ## Test Categories
 
 ### BLE Integration
+
 - BLE connectivity testing
 - Device discovery and pairing
 - Data streaming validation
 - Reconnection handling
 
 ### GSR Sensors
+
 - Performance benchmarking
 - Data quality validation
 - Calibration testing
 - Stress testing
 
 ### Camera Systems
+
 - RGB camera functionality
 - 4K recording capabilities
 - Manual controls testing
 - RAW capture validation
 
 ### Synchronization
+
 - Multi-sensor sync testing
 - Timestamp accuracy validation
 - Cross-modal coordination
 - Drift detection and correction
 
 ### Performance
+
 - Session lifecycle management
 - Parallel recording coordination
 - Buffer management
@@ -115,18 +129,21 @@ LauncherCard(
 ## Features
 
 ### Real-time Updates
+
 - Live test progress indicators
 - Real-time sensor status monitoring
 - Dynamic metrics visualization
 - Event logging and tracking
 
 ### Enhanced UX
+
 - Material 3 design language
 - Consistent theming with LibUnifiedTheme
 - Intuitive test controls
 - Clear result visualization
 
 ### Comprehensive Testing
+
 - Individual test execution
 - Full test suite automation
 - Performance metrics collection
@@ -161,6 +178,7 @@ Each Compose test activity maintains compatibility with its legacy counterpart:
 ## Testing Philosophy
 
 All tests follow the MVP approach:
+
 - **Real functionality**: No stub implementations
 - **Actual hardware integration**: Tests real sensors and devices
 - **Evidence collection**: Quantitative metrics for validation

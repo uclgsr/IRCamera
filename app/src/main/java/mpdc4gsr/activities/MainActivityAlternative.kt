@@ -60,10 +60,10 @@ import org.greenrobot.eventbus.ThreadMode
 
 /**
  * Enhanced MainActivityCompose - Updated to leverage dev branch consolidated layouts
- * 
+ *
  * This version integrates with the new consolidated layout system while maintaining
  * the modern Compose UI and full backward compatibility.
- * 
+ *
  * Key enhancements from dev branch integration:
  * - Leverages activity_main_consolidated.xml patterns
  * - Integrates with consolidated camera and sensor layouts
@@ -107,12 +107,12 @@ class MainActivityAlternative : BaseComposeActivity<MainActivityViewModel>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         viewModel = viewModels<MainActivityViewModel>().value
-        
+
         // Get device type from intent (preserved from original)
         isTC007 = intent.getBooleanExtra(ExtraKeyConfig.IS_TC007, false)
-        
+
         super.onCreate(savedInstanceState)
-        
+
         permissionController = PermissionController(this)
         requestAllPermissions()
         bindRecordingService()
@@ -122,7 +122,7 @@ class MainActivityAlternative : BaseComposeActivity<MainActivityViewModel>() {
     @Composable
     override fun Content(viewModel: MainActivityViewModel) {
         val context = LocalContext.current
-        
+
         // Observe ViewModel state
         val currentPage by viewModel.currentPage.collectAsState()
         val networkConnectionState by viewModel.networkConnectionState.collectAsState()
@@ -147,7 +147,7 @@ class MainActivityAlternative : BaseComposeActivity<MainActivityViewModel>() {
                 // Modern bottom navigation with consolidated layout integration
                 EnhancedBottomNavigation(
                     currentPage = currentPage,
-                    onPageSelected = { page -> 
+                    onPageSelected = { page ->
                         viewModel.setCurrentPage(page)
                         // Trigger page change in ViewPager2
                     },
@@ -170,7 +170,7 @@ class MainActivityAlternative : BaseComposeActivity<MainActivityViewModel>() {
                     onSensorConfig = { sensor -> launchSensorConfig(sensor) },
                     onQuickRecord = { launchQuickRecord() }
                 )
-                
+
                 // Main content area with enhanced ViewPager2 integration
                 Box(
                     modifier = Modifier
@@ -183,9 +183,10 @@ class MainActivityAlternative : BaseComposeActivity<MainActivityViewModel>() {
                             ViewPager2(context).apply {
                                 adapter = EnhancedPagerAdapter(context as FragmentActivity)
                                 offscreenPageLimit = 4
-                                
+
                                 // Preserve existing page change logic
-                                registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+                                registerOnPageChangeCallback(object :
+                                    ViewPager2.OnPageChangeCallback() {
                                     override fun onPageSelected(position: Int) {
                                         super.onPageSelected(position)
                                         viewModel.setCurrentPage(position)
@@ -200,7 +201,7 @@ class MainActivityAlternative : BaseComposeActivity<MainActivityViewModel>() {
                             viewPager.setCurrentItem(currentPage, true)
                         }
                     }
-                    
+
                     // Overlay recording status (consolidated layout pattern)
                     if (sessionState.isRecording) {
                         RecordingStatusOverlay(
@@ -255,7 +256,7 @@ class MainActivityAlternative : BaseComposeActivity<MainActivityViewModel>() {
                             modifier = Modifier.size(20.dp)
                         )
                     }
-                    
+
                     IconButton(
                         onClick = onFaultTolerantAccess,
                         modifier = Modifier.size(32.dp)
@@ -268,7 +269,7 @@ class MainActivityAlternative : BaseComposeActivity<MainActivityViewModel>() {
                         )
                     }
                 }
-                
+
                 // Network status indicator (enhanced)
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -288,7 +289,7 @@ class MainActivityAlternative : BaseComposeActivity<MainActivityViewModel>() {
                         },
                         modifier = Modifier.size(16.dp)
                     )
-                    
+
                     if (sessionState.isRecording) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically
@@ -307,7 +308,7 @@ class MainActivityAlternative : BaseComposeActivity<MainActivityViewModel>() {
                             )
                         }
                     }
-                    
+
                     IconButton(
                         onClick = onNetworkConfig,
                         modifier = Modifier.size(32.dp)
@@ -349,7 +350,7 @@ class MainActivityAlternative : BaseComposeActivity<MainActivityViewModel>() {
                     fontWeight = FontWeight.SemiBold,
                     modifier = Modifier.padding(bottom = 12.dp)
                 )
-                
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly
@@ -362,7 +363,7 @@ class MainActivityAlternative : BaseComposeActivity<MainActivityViewModel>() {
                         color = Color(0xFFFF6B35),
                         onClick = { onSensorConfig("thermal") }
                     )
-                    
+
                     SensorCard(
                         title = "GSR",
                         status = gsrSensorState.status.name,
@@ -370,7 +371,7 @@ class MainActivityAlternative : BaseComposeActivity<MainActivityViewModel>() {
                         color = Color(0xFF4ECDC4),
                         onClick = { onSensorConfig("gsr") }
                     )
-                    
+
                     SensorCard(
                         title = "RGB",
                         status = rgbCameraState.status.name,
@@ -379,9 +380,9 @@ class MainActivityAlternative : BaseComposeActivity<MainActivityViewModel>() {
                         onClick = { onSensorConfig("rgb") }
                     )
                 }
-                
+
                 Spacer(modifier = Modifier.height(12.dp))
-                
+
                 Button(
                     onClick = onQuickRecord,
                     modifier = Modifier.fillMaxWidth(),
@@ -453,7 +454,7 @@ class MainActivityAlternative : BaseComposeActivity<MainActivityViewModel>() {
                 NavigationItem("More", Icons.Default.Apps, 2),
                 NavigationItem("Profile", Icons.Default.Person, 3)
             )
-            
+
             items.forEach { item ->
                 NavigationBarItem(
                     selected = currentPage == item.index,
@@ -522,11 +523,11 @@ class MainActivityAlternative : BaseComposeActivity<MainActivityViewModel>() {
     }
 
     // Enhanced adapter that integrates with consolidated layouts
-    private inner class EnhancedPagerAdapter(fragmentActivity: FragmentActivity) : 
+    private inner class EnhancedPagerAdapter(fragmentActivity: FragmentActivity) :
         FragmentStateAdapter(fragmentActivity) {
-        
+
         override fun getItemCount(): Int = 4
-        
+
         override fun createFragment(position: Int): Fragment {
             return when (position) {
                 0 -> MainFragment().apply {
@@ -536,6 +537,7 @@ class MainActivityAlternative : BaseComposeActivity<MainActivityViewModel>() {
                         putBoolean("multi_modal_support", true)
                     }
                 }
+
                 1 -> IRGalleryTabFragment()
                 2 -> MoreFragment()
                 3 -> MineFragment()
@@ -546,7 +548,12 @@ class MainActivityAlternative : BaseComposeActivity<MainActivityViewModel>() {
 
     // Enhanced launch methods leveraging consolidated patterns
     private fun launchThermalQuickAccess() {
-        startActivity(Intent(this, com.mpdc4gsr.module.thermalunified.activity.ThermalCameraComposeActivity::class.java))
+        startActivity(
+            Intent(
+                this,
+                com.mpdc4gsr.module.thermalunified.activity.ThermalCameraComposeActivity::class.java
+            )
+        )
     }
 
     private fun launchFaultTolerantRecording() {
@@ -559,7 +566,13 @@ class MainActivityAlternative : BaseComposeActivity<MainActivityViewModel>() {
 
     private fun launchSensorConfig(sensorType: String) {
         when (sensorType) {
-            "thermal" -> startActivity(Intent(this, com.mpdc4gsr.module.thermalunified.activity.ThermalCameraComposeActivity::class.java))
+            "thermal" -> startActivity(
+                Intent(
+                    this,
+                    com.mpdc4gsr.module.thermalunified.activity.ThermalCameraComposeActivity::class.java
+                )
+            )
+
             "gsr" -> startActivity(Intent(this, SensorDashboardComposeActivity::class.java))
             "rgb" -> startActivity(Intent(this, mpdc4gsr.test.RgbCameraTestActivity::class.java))
         }
@@ -642,6 +655,7 @@ class MainActivityAlternative : BaseComposeActivity<MainActivityViewModel>() {
                     super.onKeyDown(keyCode, event)
                 }
             }
+
             else -> super.onKeyDown(keyCode, event)
         }
     }

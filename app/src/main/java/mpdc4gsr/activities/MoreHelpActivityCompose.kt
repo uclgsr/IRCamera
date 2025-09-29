@@ -136,7 +136,7 @@ class MoreHelpActivityCompose : BaseComposeActivity<MoreHelpViewModel>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         wifiManager = getSystemService(Context.WIFI_SERVICE) as WifiManager
         val connectionType = intent.getIntExtra(Constants.SETTING_CONNECTION_TYPE, 0)
         viewModels<MoreHelpViewModel>().value.setConnectionType(connectionType)
@@ -187,7 +187,7 @@ class MoreHelpActivityCompose : BaseComposeActivity<MoreHelpViewModel>() {
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Icon(
-                                imageVector = if (connectionType == Constants.SETTING_CONNECTION) 
+                                imageVector = if (connectionType == Constants.SETTING_CONNECTION)
                                     Icons.Default.Help else Icons.Default.BugReport,
                                 contentDescription = null,
                                 modifier = Modifier.size(48.dp),
@@ -195,7 +195,7 @@ class MoreHelpActivityCompose : BaseComposeActivity<MoreHelpViewModel>() {
                             )
                             Spacer(modifier = Modifier.height(12.dp))
                             Text(
-                                text = if (connectionType == Constants.SETTING_CONNECTION) 
+                                text = if (connectionType == Constants.SETTING_CONNECTION)
                                     "Device Connection Guide" else "Troubleshooting Guide",
                                 style = MaterialTheme.typography.headlineSmall,
                                 fontWeight = FontWeight.Bold,
@@ -228,7 +228,7 @@ class MoreHelpActivityCompose : BaseComposeActivity<MoreHelpViewModel>() {
                                 }
                             }
                         )
-                        
+
                         if (index < helpSteps.size - 1) {
                             Spacer(modifier = Modifier.height(12.dp))
                         }
@@ -382,7 +382,7 @@ private fun HelpStepCard(
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-                
+
                 if (step.isActionable && step.action != null) {
                     Spacer(modifier = Modifier.height(12.dp))
                     OutlinedButton(

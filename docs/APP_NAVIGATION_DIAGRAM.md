@@ -1,9 +1,11 @@
 # IRCamera App Navigation Diagram
 
-This document provides a comprehensive mermaid graph showing the navigation structure of the IRCamera Android
+This document provides a comprehensive mermaid graph showing the navigation structure of the
+IRCamera Android
 application.
 
-**Recent Update**: Following major consolidation efforts, the app navigation has been streamlined with enhanced
+**Recent Update**: Following major consolidation efforts, the app navigation has been streamlined
+with enhanced
 integration capabilities and improved multi-modal recording workflows.
 
 ## Simplified Navigation Overview
@@ -407,5 +409,6 @@ NavigationManager.build(RouterConfig.ELECTRONIC_MANUAL)
     .navigation(context)
 ```
 
-This navigation structure provides a comprehensive overview of how different views and activities are connected within
+This navigation structure provides a comprehensive overview of how different views and activities
+are connected within
 the IRCamera application, making it easier to understand the app's architecture and navigation flow.

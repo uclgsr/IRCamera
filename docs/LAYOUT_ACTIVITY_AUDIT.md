@@ -1,6 +1,7 @@
 # IRCamera Layout and Activity Audit Report
 
-This document provides a comprehensive audit of layout files and activities in the IRCamera application, identifying
+This document provides a comprehensive audit of layout files and activities in the IRCamera
+application, identifying
 mismatches and inconsistencies between documentation and actual implementation.
 
 ## Current State Summary
@@ -27,7 +28,8 @@ mismatches and inconsistencies between documentation and actual implementation.
 **Documentation stated**: ~49 activities total
 **Actual count**: 110 activities total
 
-**Analysis**: The documentation severely underestimated the total number of activities by not properly accounting for
+**Analysis**: The documentation severely underestimated the total number of activities by not
+properly accounting for
 activities in the component modules.
 
 ### 2. Layout Count Discrepancy
@@ -213,16 +215,21 @@ activities in the component modules.
 
 ### Activities Referenced in Navigation That Exist
 
-✅ **HubSpokeIntegrationActivity** - Found at: app/src/main/java/mpdc4gsr/sensors/HubSpokeIntegrationActivity.kt
-✅ **DualModeCameraActivity** - Found at: app/src/main/java/mpdc4gsr/camera/integration/DualModeCameraActivity.kt  
+✅ **HubSpokeIntegrationActivity** - Found at:
+app/src/main/java/mpdc4gsr/sensors/HubSpokeIntegrationActivity.kt
+✅ **DualModeCameraActivity** - Found at:
+app/src/main/java/mpdc4gsr/camera/integration/DualModeCameraActivity.kt  
 ✅ **DevicePairingActivity** - Found at: app/src/main/java/mpdc4gsr/network/DevicePairingActivity.kt
 ✅ **ShimmerMvpActivity** - Found at: app/src/main/java/mpdc4gsr/activities/ShimmerMvpActivity.kt
-✅ **UnifiedSensorActivity** - Found at: app/src/main/java/mpdc4gsr/activities/UnifiedSensorActivity.kt
-✅ **FaultTolerantRecordingActivity** - Found at: app/src/main/java/mpdc4gsr/activities/FaultTolerantRecordingActivity.kt
+✅ **UnifiedSensorActivity** - Found at:
+app/src/main/java/mpdc4gsr/activities/UnifiedSensorActivity.kt
+✅ **FaultTolerantRecordingActivity** - Found at:
+app/src/main/java/mpdc4gsr/activities/FaultTolerantRecordingActivity.kt
 
 ### Missing from Navigation Documentation
 
-❌ **Component Module Activities**: 55 activities in component modules not included in navigation flows
+❌ **Component Module Activities**: 55 activities in component modules not included in navigation
+flows
 ❌ **LibUnified Activities**: 6 activities not documented in navigation
 ❌ **Complete activity interconnections**: Many activity relationships not mapped
 
@@ -336,5 +343,6 @@ activities in the component modules.
 
 ---
 
-*This audit identifies significant gaps in the current documentation that need to be addressed to provide accurate
+*This audit identifies significant gaps in the current documentation that need to be addressed to
+provide accurate
 architectural guidance.*

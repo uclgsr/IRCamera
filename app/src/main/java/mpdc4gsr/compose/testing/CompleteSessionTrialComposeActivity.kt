@@ -32,7 +32,7 @@ import kotlin.system.measureTimeMillis
  * End-to-end session testing with 5-minute extended trials
  */
 class CompleteSessionTrialComposeActivity : ComponentActivity() {
-    
+
     companion object {
         private const val TAG = "CompleteSessionTrialCompose"
         private const val EXTENDED_DURATION_SECONDS = 300 // 5 minutes as per plan
@@ -46,9 +46,9 @@ class CompleteSessionTrialComposeActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         initializeComponents()
-        
+
         setContent {
             LibUnifiedTheme {
                 CompleteSessionTrialScreen()
@@ -92,7 +92,7 @@ class CompleteSessionTrialComposeActivity : ComponentActivity() {
                 ),
                 TestCase(
                     id = "report_generation",
-                    name = "Report Generation", 
+                    name = "Report Generation",
                     description = "Generate comprehensive session report"
                 )
             )
@@ -105,24 +105,37 @@ class CompleteSessionTrialComposeActivity : ComponentActivity() {
                     delay(1000)
                     elapsedTime += 1
                     sessionProgress = elapsedTime.toFloat() / EXTENDED_DURATION_SECONDS
-                    
+
                     // Update phase based on elapsed time
                     sessionPhase = when {
                         elapsedTime < 30 -> "Initialization"
-                        elapsedTime < 270 -> "Recording (${elapsedTime / 60}:${String.format("%02d", elapsedTime % 60)})"
+                        elapsedTime < 270 -> "Recording (${elapsedTime / 60}:${
+                            String.format(
+                                "%02d",
+                                elapsedTime % 60
+                            )
+                        })"
+
                         else -> "Finalizing"
                     }
-                    
+
                     // Log status every 10 seconds
                     if (elapsedTime % STATUS_UPDATE_INTERVAL == 0L) {
-                        trialLogs = trialLogs + "${SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date())}: Recording ${elapsedTime}s - All sensors active"
+                        trialLogs = trialLogs + "${
+                            SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date())
+                        }: Recording ${elapsedTime}s - All sensors active"
                     }
                 }
-                
+
                 if (elapsedTime >= EXTENDED_DURATION_SECONDS) {
                     isRecording = false
                     sessionPhase = "Completed"
-                    trialLogs = trialLogs + "${SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date())}: Trial completed successfully"
+                    trialLogs = trialLogs + "${
+                        SimpleDateFormat(
+                            "HH:mm:ss",
+                            Locale.getDefault()
+                        ).format(Date())
+                    }: Trial completed successfully"
                 }
             }
         }
@@ -184,7 +197,7 @@ class CompleteSessionTrialComposeActivity : ComponentActivity() {
                                     fontWeight = FontWeight.Medium
                                 )
                             }
-                            
+
                             if (isRecording) {
                                 Text(
                                     text = "${elapsedTime}s / ${EXTENDED_DURATION_SECONDS}s",
@@ -192,7 +205,7 @@ class CompleteSessionTrialComposeActivity : ComponentActivity() {
                                 )
                             }
                         }
-                        
+
                         if (isRecording) {
                             Spacer(modifier = Modifier.height(12.dp))
                             LinearProgressIndicator(
@@ -219,7 +232,7 @@ class CompleteSessionTrialComposeActivity : ComponentActivity() {
                             fontWeight = FontWeight.Medium
                         )
                         Spacer(modifier = Modifier.height(8.dp))
-                        
+
                         listOf(
                             "Duration" to "${EXTENDED_DURATION_SECONDS / 60} minutes (${EXTENDED_DURATION_SECONDS}s)",
                             "Sensors" to "RGB Camera, Thermal Camera, GSR Sensor",
@@ -263,7 +276,7 @@ class CompleteSessionTrialComposeActivity : ComponentActivity() {
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Button(
-                        onClick = { 
+                        onClick = {
                             lifecycleScope.launch { startCompleteSessionTrial() }
                             isRecording = true
                             elapsedTime = 0
@@ -276,9 +289,9 @@ class CompleteSessionTrialComposeActivity : ComponentActivity() {
                         Spacer(modifier = Modifier.width(4.dp))
                         Text("Start Trial")
                     }
-                    
+
                     Button(
-                        onClick = { 
+                        onClick = {
                             lifecycleScope.launch { stopCompleteSessionTrial() }
                             isRecording = false
                             sessionPhase = "Stopped"
@@ -302,7 +315,7 @@ class CompleteSessionTrialComposeActivity : ComponentActivity() {
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     OutlinedButton(
-                        onClick = { 
+                        onClick = {
                             lifecycleScope.launch { verifySessionOutput() }
                         },
                         enabled = !isRecording && sessionPhase == "Completed",
@@ -312,9 +325,9 @@ class CompleteSessionTrialComposeActivity : ComponentActivity() {
                         Spacer(modifier = Modifier.width(4.dp))
                         Text("Verify Output")
                     }
-                    
+
                     OutlinedButton(
-                        onClick = { 
+                        onClick = {
                             lifecycleScope.launch { generateCompleteReport() }
                         },
                         enabled = !isRecording && sessionPhase == "Completed",
@@ -340,7 +353,7 @@ class CompleteSessionTrialComposeActivity : ComponentActivity() {
                 // Trial Logs
                 if (trialLogs.isNotEmpty()) {
                     Spacer(modifier = Modifier.height(16.dp))
-                    
+
                     Card {
                         Column(modifier = Modifier.padding(16.dp)) {
                             Row(
@@ -359,9 +372,9 @@ class CompleteSessionTrialComposeActivity : ComponentActivity() {
                                     Text("Clear")
                                 }
                             }
-                            
+
                             Spacer(modifier = Modifier.height(8.dp))
-                            
+
                             trialLogs.takeLast(10).forEach { log ->
                                 Text(
                                     text = log,
@@ -388,16 +401,17 @@ class CompleteSessionTrialComposeActivity : ComponentActivity() {
     private suspend fun startCompleteSessionTrial() {
         Log.i(TAG, "Starting complete session trial")
         trialStartTime = System.currentTimeMillis()
-        
+
         try {
             // Initialize session directory
-            val sessionName = "trial_${SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())}"
+            val sessionName =
+                "trial_${SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())}"
             trialSessionDir = File(filesDir, "trials/$sessionName")
             trialSessionDir?.mkdirs()
-            
+
             // Start recording with all sensors
             recordingController?.startRecording()
-            
+
             Log.d(TAG, "Complete session trial started successfully")
         } catch (e: Exception) {
             Log.e(TAG, "Failed to start session trial: ${e.message}")
@@ -407,7 +421,7 @@ class CompleteSessionTrialComposeActivity : ComponentActivity() {
     private suspend fun stopCompleteSessionTrial() {
         Log.i(TAG, "Stopping complete session trial")
         trialEndTime = System.currentTimeMillis()
-        
+
         try {
             recordingController?.stopRecording()
             Log.d(TAG, "Complete session trial stopped successfully")

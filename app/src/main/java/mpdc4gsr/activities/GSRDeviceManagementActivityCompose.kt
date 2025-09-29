@@ -37,7 +37,7 @@ import androidx.lifecycle.viewModelScope
 
 /**
  * GSRDeviceManagementActivityCompose - Enhanced Compose GSR Device Management
- * 
+ *
  * Modern interface for managing GSR sensor devices with:
  * - Real-time device discovery and scanning
  * - Interactive device connection management
@@ -62,7 +62,7 @@ class GSRDeviceManagementActivityCompose : BaseComposeActivity<GSRDeviceManageme
 fun GSRDeviceManagementScreen(viewModel: GSRDeviceManagementViewModel) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
-    
+
     var showPermissionDialog by remember { mutableStateOf(false) }
     var showDeviceDetails by remember { mutableStateOf<GSRDevice?>(null) }
 
@@ -86,7 +86,7 @@ fun GSRDeviceManagementScreen(viewModel: GSRDeviceManagementViewModel) {
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold
             )
-            
+
             IconButton(
                 onClick = { viewModel.startScanning(context) },
                 enabled = uiState.isBluetoothEnabled && uiState.hasPermissions
@@ -190,7 +190,7 @@ fun GSRDeviceManagementScreen(viewModel: GSRDeviceManagementViewModel) {
     if (showPermissionDialog) {
         PermissionExplanationDialog(
             onDismiss = { showPermissionDialog = false },
-            onRequestPermissions = { 
+            onRequestPermissions = {
                 showPermissionDialog = false
                 viewModel.requestPermissions(context)
             }
@@ -214,8 +214,8 @@ fun PermissionStatusCard(
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
-            containerColor = if (hasPermissions) Color(0xFF4CAF50).copy(alpha = 0.1f) 
-                           else Color(0xFFF44336).copy(alpha = 0.1f)
+            containerColor = if (hasPermissions) Color(0xFF4CAF50).copy(alpha = 0.1f)
+            else Color(0xFFF44336).copy(alpha = 0.1f)
         )
     ) {
         Row(
@@ -227,9 +227,9 @@ fun PermissionStatusCard(
                 contentDescription = null,
                 tint = if (hasPermissions) Color(0xFF4CAF50) else Color(0xFFF44336)
             )
-            
+
             Spacer(modifier = Modifier.width(12.dp))
-            
+
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = if (hasPermissions) "Permissions Granted" else "Permissions Required",
@@ -237,12 +237,12 @@ fun PermissionStatusCard(
                     fontWeight = FontWeight.SemiBold
                 )
                 Text(
-                    text = if (hasPermissions) "Bluetooth scanning is enabled" 
-                           else "Bluetooth permissions needed for device discovery",
+                    text = if (hasPermissions) "Bluetooth scanning is enabled"
+                    else "Bluetooth permissions needed for device discovery",
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
-            
+
             if (!hasPermissions) {
                 Button(onClick = onRequestPermissions) {
                     Text("Grant")
@@ -260,8 +260,8 @@ fun BluetoothStatusCard(
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
-            containerColor = if (isEnabled) Color(0xFF2196F3).copy(alpha = 0.1f) 
-                           else Color(0xFFFF9800).copy(alpha = 0.1f)
+            containerColor = if (isEnabled) Color(0xFF2196F3).copy(alpha = 0.1f)
+            else Color(0xFFFF9800).copy(alpha = 0.1f)
         )
     ) {
         Row(
@@ -273,9 +273,9 @@ fun BluetoothStatusCard(
                 contentDescription = null,
                 tint = if (isEnabled) Color(0xFF2196F3) else Color(0xFFFF9800)
             )
-            
+
             Spacer(modifier = Modifier.width(12.dp))
-            
+
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = if (isEnabled) "Bluetooth Enabled" else "Bluetooth Disabled",
@@ -283,12 +283,12 @@ fun BluetoothStatusCard(
                     fontWeight = FontWeight.SemiBold
                 )
                 Text(
-                    text = if (isEnabled) "Ready for device discovery" 
-                           else "Enable Bluetooth to discover GSR devices",
+                    text = if (isEnabled) "Ready for device discovery"
+                    else "Enable Bluetooth to discover GSR devices",
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
-            
+
             if (!isEnabled) {
                 Button(onClick = onEnableBluetooth) {
                     Text("Enable")
@@ -317,9 +317,9 @@ fun ScanningStatusCard(
                 modifier = Modifier.size(24.dp),
                 strokeWidth = 2.dp
             )
-            
+
             Spacer(modifier = Modifier.width(12.dp))
-            
+
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = "Scanning for Devices",
@@ -331,7 +331,7 @@ fun ScanningStatusCard(
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
-            
+
             OutlinedButton(onClick = onStopScanning) {
                 Text("Stop")
             }
@@ -351,7 +351,7 @@ fun GSRDeviceCard(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
             containerColor = if (isConnected) Color(0xFF4CAF50).copy(alpha = 0.1f)
-                           else MaterialTheme.colorScheme.surface
+            else MaterialTheme.colorScheme.surface
         )
     ) {
         Column(
@@ -365,9 +365,9 @@ fun GSRDeviceCard(
                     contentDescription = null,
                     tint = if (isConnected) Color(0xFF4CAF50) else MaterialTheme.colorScheme.onSurface
                 )
-                
+
                 Spacer(modifier = Modifier.width(12.dp))
-                
+
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = device.name ?: "Unknown Device",
@@ -387,7 +387,7 @@ fun GSRDeviceCard(
                         )
                     }
                 }
-                
+
                 Column {
                     if (isConnected) {
                         OutlinedButton(
@@ -403,9 +403,9 @@ fun GSRDeviceCard(
                             Text("Connect")
                         }
                     }
-                    
+
                     Spacer(modifier = Modifier.height(4.dp))
-                    
+
                     TextButton(onClick = onShowDetails) {
                         Text("Details")
                     }
@@ -435,26 +435,26 @@ fun EmptyDevicesState(
                 modifier = Modifier.size(64.dp),
                 tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
             )
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             Text(
                 text = "No GSR Devices Found",
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.SemiBold
             )
-            
+
             Spacer(modifier = Modifier.height(8.dp))
-            
+
             Text(
                 text = if (canScan) "Start scanning to discover nearby GSR sensors"
-                       else "Enable permissions and Bluetooth to discover devices",
+                else "Enable permissions and Bluetooth to discover devices",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
             )
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             if (canScan) {
                 Button(onClick = onStartScanning) {
                     Icon(
@@ -551,20 +551,31 @@ data class GSRDeviceManagementUiState(
 class GSRDeviceManagementViewModel : BaseViewModel() {
     private val _uiState = androidx.compose.runtime.mutableStateOf(GSRDeviceManagementUiState())
     val uiState: androidx.compose.runtime.State<GSRDeviceManagementUiState> = _uiState
-    
+
     private var scanningJob: Job? = null
 
     fun checkPermissions(context: Context) {
-        val hasPermissions = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-            ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED &&
-            ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED
-        } else {
-            ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-        }
-        
-        val bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+        val hasPermissions =
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                ContextCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.BLUETOOTH_SCAN
+                ) == PackageManager.PERMISSION_GRANTED &&
+                        ContextCompat.checkSelfPermission(
+                            context,
+                            Manifest.permission.BLUETOOTH_CONNECT
+                        ) == PackageManager.PERMISSION_GRANTED
+            } else {
+                ContextCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED
+            }
+
+        val bluetoothManager =
+            context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
         val isBluetoothEnabled = bluetoothManager.adapter?.isEnabled == true
-        
+
         _uiState.value = _uiState.value.copy(
             hasPermissions = hasPermissions,
             isBluetoothEnabled = isBluetoothEnabled
@@ -573,10 +584,10 @@ class GSRDeviceManagementViewModel : BaseViewModel() {
 
     fun startScanning(context: Context) {
         _uiState.value = _uiState.value.copy(isScanning = true)
-        
+
         // Cancel any existing scanning job
         scanningJob?.cancel()
-        
+
         // Simulate device discovery on main dispatcher
         scanningJob = viewModelScope.launch(Dispatchers.Main) {
             delay(2000)

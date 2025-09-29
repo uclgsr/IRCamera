@@ -124,12 +124,12 @@ class SimpleNetworkTestViewModel : BaseViewModel() {
         kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
             _connectionStatus.value = ConnectionStatus.CONNECTING
             _statusMessage.value = "Connecting to ${_ipAddress.value}:${_port.value}..."
-            
+
             delay(2000) // Simulate connection time
-            
+
             // Simulate connection result (80% success rate)
             val success = kotlin.random.Random.nextFloat() > 0.2f
-            
+
             if (success) {
                 _connectionStatus.value = ConnectionStatus.CONNECTED
                 _statusMessage.value = "Connected to PC Remote Control successfully"
@@ -148,34 +148,34 @@ class SimpleNetworkTestViewModel : BaseViewModel() {
 
     fun runAllTests() {
         if (_connectionStatus.value != ConnectionStatus.CONNECTED) return
-        
+
         kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
             _isRunningTests.value = true
             _testResults.value = emptyList()
             _statusMessage.value = "Running automated test suite..."
-            
+
             _testCommands.value.forEach { testCommand ->
                 _statusMessage.value = "Testing: ${testCommand.name}"
                 delay(1500)
-                
+
                 val success = kotlin.random.Random.nextFloat() > 0.15f // 85% success rate
                 val response = if (success) {
                     testCommand.expectedResponse
                 } else {
                     "ERROR_${kotlin.random.Random.nextInt(100, 999)}"
                 }
-                
+
                 val result = TestResult(
                     command = testCommand.command,
                     response = response,
                     success = success,
                     timestamp = System.currentTimeMillis()
                 )
-                
+
                 _testResults.value = _testResults.value + result
                 delay(500)
             }
-            
+
             val successCount = _testResults.value.count { it.success }
             val totalCount = _testResults.value.size
             _statusMessage.value = "Test suite complete: $successCount/$totalCount tests passed"
@@ -185,26 +185,26 @@ class SimpleNetworkTestViewModel : BaseViewModel() {
 
     fun runSingleTest(command: NetworkTestCommand) {
         if (_connectionStatus.value != ConnectionStatus.CONNECTED) return
-        
+
         kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
             _statusMessage.value = "Testing: ${command.name}"
-            
+
             delay(1000)
-            
+
             val success = kotlin.random.Random.nextFloat() > 0.2f // 80% success rate
             val response = if (success) {
                 command.expectedResponse
             } else {
                 "ERROR_TIMEOUT"
             }
-            
+
             val result = TestResult(
                 command = command.command,
                 response = response,
                 success = success,
                 timestamp = System.currentTimeMillis()
             )
-            
+
             _testResults.value = _testResults.value + result
             _statusMessage.value = if (success) {
                 "${command.name} test passed"
@@ -222,7 +222,8 @@ class SimpleNetworkTestViewModel : BaseViewModel() {
 
 class SimpleNetworkTestActivityCompose : BaseComposeActivity<SimpleNetworkTestViewModel>() {
 
-    override fun createViewModel(): SimpleNetworkTestViewModel = viewModels<SimpleNetworkTestViewModel>().value
+    override fun createViewModel(): SimpleNetworkTestViewModel =
+        viewModels<SimpleNetworkTestViewModel>().value
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -290,6 +291,7 @@ class SimpleNetworkTestActivityCompose : BaseComposeActivity<SimpleNetworkTestVi
                                         strokeWidth = 2.dp
                                     )
                                 }
+
                                 ConnectionStatus.CONNECTED -> {
                                     Icon(
                                         imageVector = Icons.Default.CheckCircle,
@@ -298,6 +300,7 @@ class SimpleNetworkTestActivityCompose : BaseComposeActivity<SimpleNetworkTestVi
                                         modifier = Modifier.size(24.dp)
                                     )
                                 }
+
                                 ConnectionStatus.ERROR -> {
                                     Icon(
                                         imageVector = Icons.Default.Error,
@@ -306,6 +309,7 @@ class SimpleNetworkTestActivityCompose : BaseComposeActivity<SimpleNetworkTestVi
                                         modifier = Modifier.size(24.dp)
                                     )
                                 }
+
                                 else -> {
                                     Icon(
                                         imageVector = Icons.Default.NetworkCheck,
@@ -315,12 +319,13 @@ class SimpleNetworkTestActivityCompose : BaseComposeActivity<SimpleNetworkTestVi
                                     )
                                 }
                             }
-                            
+
                             Spacer(modifier = Modifier.width(12.dp))
-                            
+
                             Column(modifier = Modifier.weight(1f)) {
                                 Text(
-                                    text = connectionStatus.name.lowercase().replaceFirstChar { it.uppercase() },
+                                    text = connectionStatus.name.lowercase()
+                                        .replaceFirstChar { it.uppercase() },
                                     style = MaterialTheme.typography.titleMedium,
                                     fontWeight = FontWeight.Bold
                                 )
@@ -349,7 +354,7 @@ class SimpleNetworkTestActivityCompose : BaseComposeActivity<SimpleNetworkTestVi
                                     fontWeight = FontWeight.SemiBold,
                                     modifier = Modifier.padding(bottom = 12.dp)
                                 )
-                                
+
                                 OutlinedTextField(
                                     value = ipAddress,
                                     onValueChange = { viewModel.updateIpAddress(it) },
@@ -360,7 +365,7 @@ class SimpleNetworkTestActivityCompose : BaseComposeActivity<SimpleNetworkTestVi
                                         .padding(bottom = 8.dp),
                                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                                 )
-                                
+
                                 OutlinedTextField(
                                     value = port,
                                     onValueChange = { viewModel.updatePort(it) },
@@ -371,7 +376,7 @@ class SimpleNetworkTestActivityCompose : BaseComposeActivity<SimpleNetworkTestVi
                                         .padding(bottom = 16.dp),
                                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                                 )
-                                
+
                                 Button(
                                     onClick = { viewModel.connect() },
                                     modifier = Modifier.fillMaxWidth()
@@ -415,7 +420,7 @@ class SimpleNetworkTestActivityCompose : BaseComposeActivity<SimpleNetworkTestVi
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text("Run All Tests")
                             }
-                            
+
                             OutlinedButton(
                                 onClick = { viewModel.disconnect() },
                                 modifier = Modifier.weight(1f)
@@ -583,7 +588,7 @@ private fun TestResultRow(
     modifier: Modifier = Modifier
 ) {
     val timeFormat = java.text.SimpleDateFormat("HH:mm:ss", java.util.Locale.getDefault())
-    
+
     Row(
         modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
@@ -594,27 +599,27 @@ private fun TestResultRow(
             tint = if (result.success) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
             modifier = Modifier.size(16.dp)
         )
-        
+
         Spacer(modifier = Modifier.width(8.dp))
-        
+
         Text(
             text = result.command,
             style = MaterialTheme.typography.bodySmall,
             modifier = Modifier.width(120.dp)
         )
-        
+
         Spacer(modifier = Modifier.width(8.dp))
-        
+
         Text(
             text = result.response,
             style = MaterialTheme.typography.bodySmall,
-            color = if (result.success) 
-                MaterialTheme.colorScheme.onSurface 
-            else 
+            color = if (result.success)
+                MaterialTheme.colorScheme.onSurface
+            else
                 MaterialTheme.colorScheme.error,
             modifier = Modifier.weight(1f)
         )
-        
+
         Text(
             text = timeFormat.format(java.util.Date(result.timestamp)),
             style = MaterialTheme.typography.bodySmall,

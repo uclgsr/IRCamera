@@ -62,7 +62,7 @@ import org.greenrobot.eventbus.ThreadMode
 
 /**
  * Primary MainActivity with Modern Compose UI
- * 
+ *
  * This implementation provides:
  * - Modern Compose UI for status cards and controls
  * - Preserved ViewPager2 for existing fragments (backward compatibility)
@@ -71,7 +71,7 @@ import org.greenrobot.eventbus.ThreadMode
  * - EventBus integration for device communication
  */
 class MainActivity : BaseComposeActivity<MainActivityViewModel>() {
-    
+
     companion object {
         private const val TAG = "MainActivity"
         private const val PAGE_GALLERY = 0
@@ -110,12 +110,12 @@ class MainActivity : BaseComposeActivity<MainActivityViewModel>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         viewModel = viewModels<MainActivityViewModel>().value
-        
+
         // Get device type from intent (preserved from original)
         isTC007 = intent.getBooleanExtra(ExtraKeyConfig.IS_TC007, false)
-        
+
         super.onCreate(savedInstanceState)
-        
+
         permissionController = PermissionController(this)
         requestAllPermissions()
         bindRecordingService()
@@ -125,7 +125,7 @@ class MainActivity : BaseComposeActivity<MainActivityViewModel>() {
     @Composable
     override fun Content(viewModel: MainActivityViewModel) {
         val context = LocalContext.current
-        
+
         // Observe ViewModel state
         val currentPage by viewModel.currentPage.collectAsState()
         val networkConnectionState by viewModel.networkConnectionState.collectAsState()
@@ -146,7 +146,7 @@ class MainActivity : BaseComposeActivity<MainActivityViewModel>() {
                 onThermalQuickAccess = { /* Launch thermal camera */ },
                 onFaultTolerantAccess = { launchFaultTolerantRecording() }
             )
-            
+
             // Enhanced sensor status card (new Compose component)
             SensorStatusCard(
                 thermalCameraState = mapSensorStateToConnectionState(thermalCameraState),
@@ -154,7 +154,7 @@ class MainActivity : BaseComposeActivity<MainActivityViewModel>() {
                 bleConnectionState = mapGSRConnectionToConnectionState(gsrConnectionState),
                 modifier = Modifier.padding(16.dp)
             )
-            
+
             // Recording controls (modernized with Compose)
             RecordingControlsCard(
                 sessionState = sessionState,
@@ -162,7 +162,7 @@ class MainActivity : BaseComposeActivity<MainActivityViewModel>() {
                 onStopRecording = { viewModel.stopRecording() },
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
-            
+
             // ViewPager2 embedded in Compose (preserves existing fragments)
             AndroidView(
                 factory = { context ->
@@ -170,7 +170,7 @@ class MainActivity : BaseComposeActivity<MainActivityViewModel>() {
                         adapter = ViewPagerAdapter(context as FragmentActivity, isTC007)
                         offscreenPageLimit = 4
                         isUserInputEnabled = false
-                        
+
                         // Set current page based on ViewModel state
                         setCurrentItem(currentPage, false)
                     }
@@ -184,7 +184,7 @@ class MainActivity : BaseComposeActivity<MainActivityViewModel>() {
                     }
                 }
             )
-            
+
             // Bottom navigation (modernized with Compose)
             BottomNavigationBar(
                 currentPage = currentPage,
@@ -214,7 +214,7 @@ class MainActivity : BaseComposeActivity<MainActivityViewModel>() {
                     tint = Color(0xFFFF6B35)
                 )
             }
-            
+
             IconButton(onClick = onFaultTolerantAccess) {
                 Icon(
                     Icons.Default.Settings,
@@ -222,9 +222,9 @@ class MainActivity : BaseComposeActivity<MainActivityViewModel>() {
                     tint = Color(0xFF4ECDC4)
                 )
             }
-            
+
             Spacer(modifier = Modifier.weight(1f))
-            
+
             // Network status indicator
             val (color, text) = when (connectionState) {
                 MainActivityViewModel.NetworkConnectionState.DISCONNECTED -> Color.Gray to "PC: Disconnected"
@@ -233,7 +233,7 @@ class MainActivity : BaseComposeActivity<MainActivityViewModel>() {
                 MainActivityViewModel.NetworkConnectionState.CONNECTED -> Color.Green to "PC: Connected"
                 MainActivityViewModel.NetworkConnectionState.ERROR -> Color.Red to "PC: Error"
             }
-            
+
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Box(
                     modifier = Modifier
@@ -280,7 +280,7 @@ class MainActivity : BaseComposeActivity<MainActivityViewModel>() {
                         ) {
                             Text("Stop Recording")
                         }
-                        
+
                         // Recording indicator
                         Row(
                             verticalAlignment = Alignment.CenterVertically
@@ -299,6 +299,7 @@ class MainActivity : BaseComposeActivity<MainActivityViewModel>() {
                             )
                         }
                     }
+
                     else -> {
                         Button(
                             onClick = onStartRecording,
@@ -308,7 +309,7 @@ class MainActivity : BaseComposeActivity<MainActivityViewModel>() {
                         ) {
                             Text("Start Recording")
                         }
-                        
+
                         Text(
                             text = "Ready to Record",
                             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
@@ -334,21 +335,21 @@ class MainActivity : BaseComposeActivity<MainActivityViewModel>() {
                 selected = currentPage == PAGE_GALLERY,
                 onClick = { onPageSelected(PAGE_GALLERY) }
             )
-            
+
             BottomNavItem(
                 icon = Icons.Default.Camera,
                 label = "Main",
                 selected = currentPage == PAGE_MAIN,
                 onClick = { onPageSelected(PAGE_MAIN) }
             )
-            
+
             BottomNavItem(
                 icon = Icons.Default.Settings,
                 label = "Settings",
                 selected = currentPage == PAGE_SETTINGS,
                 onClick = { onPageSelected(PAGE_SETTINGS) }
             )
-            
+
             BottomNavItem(
                 icon = Icons.Default.Person,
                 label = "Profile",
@@ -443,13 +444,16 @@ class MainActivity : BaseComposeActivity<MainActivityViewModel>() {
 
     // Preserve existing EventBus handlers
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun getDevicePermission(event: DevicePermissionEvent) { /* ... */ }
+    fun getDevicePermission(event: DevicePermissionEvent) { /* ... */
+    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onWinterClick(event: WinterClickEvent) { /* ... */ }
+    fun onWinterClick(event: WinterClickEvent) { /* ... */
+    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onTS004ResetEvent(event: TS004ResetEvent) { /* Show Dialog */ }
+    fun onTS004ResetEvent(event: TS004ResetEvent) { /* Show Dialog */
+    }
 
     override fun onDestroy() {
         super.onDestroy()
@@ -461,7 +465,7 @@ class MainActivity : BaseComposeActivity<MainActivityViewModel>() {
 
     // ViewPager adapter preserved from original
     private class ViewPagerAdapter(
-        activity: FragmentActivity, 
+        activity: FragmentActivity,
         private val isTC007: Boolean
     ) : FragmentStateAdapter(activity) {
         override fun getItemCount(): Int = 4
@@ -472,6 +476,7 @@ class MainActivity : BaseComposeActivity<MainActivityViewModel>() {
                 PAGE_SETTINGS -> MoreFragment().apply {
                     arguments = Bundle().also { it.putBoolean(ExtraKeyConfig.IS_TC007, isTC007) }
                 }
+
                 PAGE_MINE -> MineFragment()
                 else -> throw IndexOutOfBoundsException("Invalid position $position in ViewPagerAdapter")
             }
