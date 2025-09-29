@@ -79,7 +79,8 @@ class MoreFragmentCompose : BaseComposeFragment<MoreViewModel>() {
                     SectionHeader("Quick Actions")
                 }
 
-                items(getQuickActionItems()) { action ->
+                val quickActionItems = getQuickActionItems()
+                items(quickActionItems) { action ->
                     QuickActionCard(
                         action = action,
                         onClick = {
@@ -93,7 +94,8 @@ class MoreFragmentCompose : BaseComposeFragment<MoreViewModel>() {
                     SectionHeader("Help & Support")
                 }
 
-                items(getHelpSupportItems()) { item ->
+                val helpSupportItems = getHelpSupportItems()
+                items(helpSupportItems) { item ->
                     HelpSupportCard(
                         item = item,
                         onClick = {
@@ -382,9 +384,9 @@ class MoreFragmentCompose : BaseComposeFragment<MoreViewModel>() {
                 title = "Quick Calibration",
                 description = "Calibrate thermal camera quickly",
                 icon = Icons.Default.Tune,
-                backgroundColor = MaterialTheme.colorScheme.primaryContainer,
-                iconTint = MaterialTheme.colorScheme.onPrimaryContainer,
-                textColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                backgroundColor = androidx.compose.ui.graphics.Color.Blue.copy(alpha = 0.1f),
+                iconTint = androidx.compose.ui.graphics.Color.Blue,
+                textColor = androidx.compose.ui.graphics.Color.Blue,
                 badge = "QUICK"
             ),
             QuickActionItem(
@@ -392,18 +394,18 @@ class MoreFragmentCompose : BaseComposeFragment<MoreViewModel>() {
                 title = "Export Data",
                 description = "Export thermal imaging data",
                 icon = Icons.Default.FileDownload,
-                backgroundColor = MaterialTheme.colorScheme.secondaryContainer,
-                iconTint = MaterialTheme.colorScheme.onSecondaryContainer,
-                textColor = MaterialTheme.colorScheme.onSecondaryContainer
+                backgroundColor = androidx.compose.ui.graphics.Color.Green.copy(alpha = 0.1f),
+                iconTint = androidx.compose.ui.graphics.Color.Green,
+                textColor = androidx.compose.ui.graphics.Color.Green
             ),
             QuickActionItem(
                 id = "share",
                 title = "Share Analysis",
                 description = "Share thermal analysis results",
                 icon = Icons.Default.Share,
-                backgroundColor = MaterialTheme.colorScheme.tertiaryContainer,
-                iconTint = MaterialTheme.colorScheme.onTertiaryContainer,
-                textColor = MaterialTheme.colorScheme.onTertiaryContainer
+                backgroundColor = androidx.compose.ui.graphics.Color.Red.copy(alpha = 0.1f),
+                iconTint = androidx.compose.ui.graphics.Color.Red,
+                textColor = androidx.compose.ui.graphics.Color.Red
             )
         )
     }
