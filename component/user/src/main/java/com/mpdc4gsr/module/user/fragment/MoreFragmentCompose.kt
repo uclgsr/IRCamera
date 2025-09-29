@@ -477,7 +477,7 @@ class MoreFragmentCompose : BaseComposeFragment<MoreViewModel>() {
                 id = "batch_processing",
                 title = "Batch Processing",
                 description = "Process multiple thermal images",
-                icon = Icons.Default.Batch,
+                icon = Icons.Default.GridView,
                 requirements = "High-end device",
                 isExperimental = true
             ),
