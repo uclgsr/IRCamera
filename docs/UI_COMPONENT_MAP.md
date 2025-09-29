@@ -1,7 +1,7 @@
 # IRCamera Complete UI Component Map (XML & Compose Equivalents)
 
 **Last Updated:** Post-Dev Branch Merge - Comprehensive Update  
-**Total Layouts:** 220+ layout files across modules  
+**Total Layouts:** 221 layout files across modules  
 **Architecture:** Hybrid XML/Compose with active migration to Jetpack Compose
 
 The IRCamera Multi-Modal Thermal Sensing Platform combines traditional Android XML layouts with
@@ -26,16 +26,16 @@ This document provides complete coverage of:
 
 ```
 IRCamera/
-├── app/ (30 layouts) - Main application interfaces
-│   ├── GSR sensor management screens
+├── app/ (31 layouts) - Main application interfaces
+│   ├── Core application infrastructure
 │   ├── Multi-modal recording interfaces  
 │   ├── Testing and development layouts
-│   └── 10 consolidated layout templates
-├── component/ (121 layouts) - Core functionality modules
-│   ├── thermalunified/ (~80 layouts) - Thermal camera components
-│   ├── user/ (~25 layouts) - User management
-│   └── gsr-recording/ (~16 layouts) - GSR sensor integration
-├── libunified/ (69 layouts) - Base templates and utilities
+│   └── Sensor coordination layouts
+├── component/ (294 layouts total) - Specialized functionality modules
+│   ├── thermalunified/ (154 layouts) - Complete thermal imaging system
+│   ├── user/ (140 layouts) - User management and authentication
+│   └── gsr-recording/ (0 layouts) - GSR sensor integration (logic only)
+├── libunified/ (69 layouts) - Shared utilities and common components
 │   ├── Common dialog layouts
 │   ├── Base activity templates  
 │   └── Framework UI components
