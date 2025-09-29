@@ -1,5 +1,6 @@
 package com.mpdc4gsr.module.user.fragment
 
+import android.content.Context
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -64,6 +65,41 @@ data class AdvancedToolItem(
  */
 class MoreFragmentCompose : BaseComposeFragment<MoreFragmentComposeViewModel>() {
 
+    data class QuickActionItem(
+        val id: String,
+        val title: String,
+        val description: String,
+        val icon: ImageVector,
+        val backgroundColor: Color,
+        val iconTint: Color,
+        val textColor: Color = Color.Unspecified,
+        val badge: String? = null
+    )
+
+    data class HelpSupportItem(
+        val id: String,
+        val title: String,
+        val description: String,
+        val icon: ImageVector
+    )
+
+    data class CommunityItem(
+        val id: String,
+        val title: String,
+        val description: String,
+        val icon: ImageVector,
+        val url: String
+    )
+
+    data class AdvancedToolItem(
+        val id: String,
+        val title: String,
+        val description: String,
+        val icon: ImageVector,
+        val requirements: String,
+        val isExperimental: Boolean = false
+    )
+
     override fun createViewModel(): MoreFragmentComposeViewModel {
         return viewModels<MoreFragmentComposeViewModel>().value
     }
@@ -71,13 +107,11 @@ class MoreFragmentCompose : BaseComposeFragment<MoreFragmentComposeViewModel>() 
     @Composable
     override fun Content(viewModel: MoreFragmentComposeViewModel) {
         val context = LocalContext.current
-        
-        // Remember the items outside of LazyColumn
         val quickActionItems = remember { getQuickActionItems() }
         val helpSupportItems = remember { getHelpSupportItems() }
         val communityItems = remember { getCommunityItems() }
         val advancedToolItems = remember { getAdvancedToolItems() }
-        
+
         LibUnifiedTheme {
             LazyColumn(
                 modifier = Modifier
@@ -109,7 +143,7 @@ class MoreFragmentCompose : BaseComposeFragment<MoreFragmentComposeViewModel>() 
                     QuickActionCard(
                         action = action,
                         onClick = {
-                            handleQuickActionClick(context, action, viewModel)
+                            handleQuickActionClick(context, action)
                         }
                     )
                 }
@@ -378,15 +412,29 @@ class MoreFragmentCompose : BaseComposeFragment<MoreFragmentComposeViewModel>() 
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onTertiaryContainer.copy(alpha = 0.8f)
                 )
-
-                if (tool.requirements.isNotEmpty()) {
-                    Spacer(modifier = Modifier.height(8.dp))
+                
+                Spacer(modifier = Modifier.width(16.dp))
+                
+                Column(
+                    modifier = Modifier.weight(1f)
+                ) {
                     Text(
-                        text = "Requires: ${tool.requirements}",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onTertiaryContainer.copy(alpha = 0.6f)
+                        text = item.title,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Medium
+                    )
+                    Text(
+                        text = item.description,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
+                
+                Icon(
+                    Icons.Default.ChevronRight,
+                    contentDescription = "Navigate",
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                )
             }
         }
     }
@@ -453,61 +501,6 @@ class MoreFragmentCompose : BaseComposeFragment<MoreFragmentComposeViewModel>() 
         )
     }
 
-    private fun getCommunityItems(): List<CommunityItem> {
-        return listOf(
-            CommunityItem(
-                id = "forum",
-                title = "Community Forum",
-                description = "Discuss with other users",
-                icon = Icons.Default.Forum,
-                url = "https://community.thermalcamera.com"
-            ),
-            CommunityItem(
-                id = "github",
-                title = "GitHub Repository",
-                description = "View source code and contribute",
-                icon = Icons.Default.Code,
-                url = "https://github.com/uclgsr/IRCamera"
-            ),
-            CommunityItem(
-                id = "discord",
-                title = "Discord Server",
-                description = "Real-time chat with community",
-                icon = Icons.Default.Chat,
-                url = "https://discord.gg/thermalcamera"
-            )
-        )
-    }
-
-    private fun getAdvancedToolItems(): List<AdvancedToolItem> {
-        return listOf(
-            AdvancedToolItem(
-                id = "thermal_analysis",
-                title = "Advanced Thermal Analysis",
-                description = "Deep thermal data analysis with ML",
-                icon = Icons.Default.Analytics,
-                requirements = "Pro license",
-                isExperimental = false
-            ),
-            AdvancedToolItem(
-                id = "batch_processing",
-                title = "Batch Processing",
-                description = "Process multiple thermal images",
-                icon = Icons.Default.GridView,
-                requirements = "High-end device",
-                isExperimental = true
-            ),
-            AdvancedToolItem(
-                id = "ai_detection",
-                title = "AI Object Detection",
-                description = "AI-powered thermal object detection",
-                icon = Icons.Default.Psychology,
-                requirements = "Internet connection",
-                isExperimental = true
-            )
-        )
-    }
-
     private fun handleQuickActionClick(
         context: android.content.Context,
         action: QuickActionItem,
@@ -549,7 +542,22 @@ class MoreFragmentCompose : BaseComposeFragment<MoreFragmentComposeViewModel>() 
         when (item.id) {
             "user_guide" -> {
                 NavigationManager.getInstance()
-                    .build(RouterConfig.USER_GUIDE)
+                    .build(RouterConfig.VERSION)
+                    .navigation(context)
+            }
+            "faq" -> {
+                NavigationManager.getInstance()
+                    .build(RouterConfig.VERSION)
+                    .navigation(context)
+            }
+            "troubleshooting" -> {
+                NavigationManager.getInstance()
+                    .build(RouterConfig.VERSION)
+                    .navigation(context)
+            }
+            "contact_support" -> {
+                NavigationManager.getInstance()
+                    .build(RouterConfig.VERSION)
                     .navigation(context)
             }
             // Add other help support actions as needed
