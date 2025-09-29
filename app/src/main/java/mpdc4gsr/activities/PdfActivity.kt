@@ -1,16 +1,15 @@
 package mpdc4gsr.activities
 
-import android.view.WindowManager
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.ActivityPdfBinding
-import com.mpdc4gsr.libunified.app.ktbase.BaseBindingActivity
+import com.mpdc4gsr.libunified.app.ktbase.BaseScreenBindingActivity
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStream
 
 
-class PdfActivity : BaseBindingActivity<ActivityPdfBinding>() {
+class PdfActivity : BaseScreenBindingActivity<ActivityPdfBinding>() {
 
     private val pdfView get() = binding.pdfView
 
@@ -41,16 +40,6 @@ class PdfActivity : BaseBindingActivity<ActivityPdfBinding>() {
         if (!tc004File.exists()) {
             copyBigDataToSD("TS004.pdf", tc004File)
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
 
     @Throws(IOException::class)

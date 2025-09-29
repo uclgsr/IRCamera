@@ -31,7 +31,7 @@ import com.mpdc4gsr.libunified.ui.utils.ViewPortHandler;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
-public class PieChartRenderer extends DataRenderer {
+public class PieChartRenderer extends BaseChartRenderer {
 
     protected PieChart mChart;
 
@@ -606,11 +606,8 @@ public class PieChartRenderer extends DataRenderer {
         c.restore();
     }
 
-    @Override
-    public void drawValue(Canvas c, String valueText, float x, float y, int color) {
-        mValuePaint.setColor(color);
-        c.drawText(valueText, x, y, mValuePaint);
-    }
+    // drawValue method is now inherited from BaseChartRenderer
+    // This eliminates the duplication found in 8+ chart renderer files
 
     protected void drawEntryLabel(Canvas c, String label, float x, float y) {
         c.drawText(label, x, y, mEntryLabelsPaint);
