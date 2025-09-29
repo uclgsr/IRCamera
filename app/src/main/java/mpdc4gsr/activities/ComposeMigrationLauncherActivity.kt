@@ -346,6 +346,290 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                     }
                 )
 
+                // New GSR Sensor Activities Section
+                Text(
+                    text = "GSR Sensor Activities (High Priority)",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.padding(top = 16.dp)
+                )
+
+                LauncherCard(
+                    title = "Session Manager (Compose)",
+                    subtitle = "Modern session management with search and batch operations",
+                    icon = Icons.Default.FolderOpen,
+                    onClick = {
+                        startActivity(
+                            Intent(
+                                this@ComposeMigrationLauncherActivity,
+                                mpdc4gsr.sensors.gsr.SessionManagerComposeActivity::class.java
+                            )
+                        )
+                    }
+                )
+
+                LauncherCard(
+                    title = "Multi-Modal Recording (Compose)",
+                    subtitle = "Advanced multi-sensor recording with real-time monitoring",
+                    icon = Icons.Default.RadioButtonChecked,
+                    onClick = {
+                        startActivity(
+                            Intent(
+                                this@ComposeMigrationLauncherActivity,
+                                mpdc4gsr.sensors.gsr.MultiModalRecordingComposeActivity::class.java
+                            )
+                        )
+                    }
+                )
+
+                LauncherCard(
+                    title = "Shimmer Configuration (Compose)",
+                    subtitle = "Device discovery and configuration with modern UI",
+                    icon = Icons.Default.BluetoothConnected,
+                    onClick = {
+                        startActivity(
+                            Intent(
+                                this@ComposeMigrationLauncherActivity,
+                                mpdc4gsr.sensors.gsr.ShimmerConfigComposeActivity::class.java
+                            )
+                        )
+                    }
+                )
+
+                LauncherCard(
+                    title = "Research Templates (Compose)",
+                    subtitle = "Interactive template gallery with creation wizard",
+                    icon = Icons.Default.Science,
+                    onClick = {
+                        startActivity(
+                            Intent(
+                                this@ComposeMigrationLauncherActivity,
+                                mpdc4gsr.sensors.gsr.ResearchTemplateComposeActivity::class.java
+                            )
+                        )
+                    }
+                )
+
+                LauncherCard(
+                    title = "GSR Video Player (Compose)",
+                    subtitle = "Enhanced video playback with synchronized sensor data",
+                    icon = Icons.Default.PlayCircle,
+                    onClick = {
+                        startActivity(
+                            Intent(
+                                this@ComposeMigrationLauncherActivity,
+                                mpdc4gsr.sensors.gsr.GSRVideoPlayerComposeActivity::class.java
+                            )
+                        )
+                    }
+                )
+
+                LauncherCard(
+                    title = "GSR Data Plot (Compose)",
+                    subtitle = "Modern data visualization with interactive charts",
+                    icon = Icons.Default.Timeline,
+                    onClick = {
+                        startActivity(
+                            Intent(
+                                this@ComposeMigrationLauncherActivity,
+                                mpdc4gsr.sensors.gsr.GSRPlotComposeActivity::class.java
+                            )
+                        )
+                    }
+                )
+
+                // Network & Device Management Section
+                Text(
+                    text = "Network & Device Management (Priority 2)",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.secondary,
+                    modifier = Modifier.padding(top = 16.dp)
+                )
+
+                LauncherCard(
+                    title = "Device Pairing (Compose)",
+                    subtitle = "Advanced BLE device discovery and pairing with diagnostics",
+                    icon = Icons.Default.BluetoothConnected,
+                    onClick = {
+                        startActivity(
+                            Intent(
+                                this@ComposeMigrationLauncherActivity,
+                                mpdc4gsr.network.DevicePairingComposeActivity::class.java
+                            )
+                        )
+                    }
+                )
+
+                LauncherCard(
+                    title = "Permission Manager (Compose)",
+                    subtitle = "Interactive permission management with educational content",
+                    icon = Icons.Default.Security,
+                    onClick = {
+                        startActivity(
+                            Intent(
+                                this@ComposeMigrationLauncherActivity,
+                                mpdc4gsr.permissions.PermissionRequestComposeActivity::class.java
+                            )
+                        )
+                    }
+                )
+
+                LauncherCard(
+                    title = "GSR Device Management (Compose)",
+                    subtitle = "Comprehensive GSR device monitoring and configuration",
+                    icon = Icons.Default.DeviceHub,
+                    onClick = {
+                        startActivity(
+                            Intent(
+                                this@ComposeMigrationLauncherActivity,
+                                mpdc4gsr.sensors.gsr.GSRDeviceManagementComposeActivity::class.java
+                            )
+                        )
+                    }
+                )
+
+                // Camera Integration Section
+                Text(
+                    text = "Camera Integration Activities (Priority 2)",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.secondary,
+                    modifier = Modifier.padding(top = 16.dp)
+                )
+
+                LauncherCard(
+                    title = "Dual Mode Camera (Compose)",
+                    subtitle = "Advanced dual camera recording with thermal and RGB sync",
+                    icon = Icons.Default.CameraAlt,
+                    onClick = {
+                        startActivity(
+                            Intent(
+                                this@ComposeMigrationLauncherActivity,
+                                mpdc4gsr.camera.integration.DualModeCameraComposeActivity::class.java
+                            )
+                        )
+                    }
+                )
+
+                // Thermal Camera Module Section
+                Text(
+                    text = "Thermal Camera Module Activities (Priority 3)",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.tertiary,
+                    modifier = Modifier.padding(top = 16.dp)
+                )
+
+                LauncherCard(
+                    title = "Thermal Gallery (Compose)",
+                    subtitle = "Advanced thermal image gallery with filtering and analysis",
+                    icon = Icons.Default.PhotoLibrary,
+                    onClick = {
+                        startActivity(
+                            Intent(
+                                this@ComposeMigrationLauncherActivity,
+                                com.mpdc4gsr.module.thermalunified.activity.ThermalGalleryComposeActivity::class.java
+                            )
+                        )
+                    }
+                )
+
+                LauncherCard(
+                    title = "Thermal Report Creation (Compose)",
+                    subtitle = "Professional thermal report generation with templates",
+                    icon = Icons.Default.Assignment,
+                    onClick = {
+                        startActivity(
+                            Intent(
+                                this@ComposeMigrationLauncherActivity,
+                                com.mpdc4gsr.module.thermalunified.report.activity.ThermalReportCreationComposeActivity::class.java
+                            )
+                        )
+                    }
+                )
+
+                LauncherCard(
+                    title = "Thermal Video Player (Compose)",
+                    subtitle = "Advanced thermal video playback with analysis tools",
+                    icon = Icons.Default.PlayArrow,
+                    onClick = {
+                        startActivity(
+                            Intent(
+                                this@ComposeMigrationLauncherActivity,
+                                com.mpdc4gsr.module.thermalunified.activity.ThermalVideoComposeActivity::class.java
+                            )
+                        )
+                    }
+                )
+
+                LauncherCard(
+                    title = "IR Thermal Lite (Compose)",
+                    subtitle = "Lightweight thermal camera interface with essential controls",
+                    icon = Icons.Default.Thermostat,
+                    onClick = {
+                        startActivity(
+                            Intent(
+                                this@ComposeMigrationLauncherActivity,
+                                com.mpdc4gsr.module.thermalunified.lite.activity.IRThermalLiteComposeActivity::class.java
+                            )
+                        )
+                    }
+                )
+
+                LauncherCard(
+                    title = "Thermal Monitoring (Compose)",
+                    subtitle = "Advanced thermal monitoring dashboard with alerts",
+                    icon = Icons.Default.Monitor,
+                    onClick = {
+                        startActivity(
+                            Intent(
+                                this@ComposeMigrationLauncherActivity,
+                                com.mpdc4gsr.module.thermalunified.activity.ThermalMonitoringComposeActivity::class.java
+                            )
+                        )
+                    }
+                )
+
+                LauncherCard(
+                    title = "IR Correction Lite (Compose)",
+                    subtitle = "Thermal image correction and calibration tools",
+                    icon = Icons.Default.AutoFixHigh,
+                    onClick = {
+                        startActivity(
+                            Intent(
+                                this@ComposeMigrationLauncherActivity,
+                                com.mpdc4gsr.module.thermalunified.lite.activity.IRCorrectionLiteComposeActivity::class.java
+                            )
+                        )
+                    }
+                )
+
+                // Fragment Migration Section
+                Text(
+                    text = "Fragment to Compose Migration (Priority 3)",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.tertiary,
+                    modifier = Modifier.padding(top = 16.dp)
+                )
+
+                LauncherCard(
+                    title = "Sensor Dashboard Fragment (Compose)",
+                    subtitle = "Modern Fragment with Compose UI for sensor monitoring",
+                    icon = Icons.Default.Dashboard,
+                    onClick = {
+                        // This would be integrated into MainActivity's fragment navigation
+                        // For demo purposes, show a message
+                        android.widget.Toast.makeText(
+                            this@ComposeMigrationLauncherActivity,
+                            "Fragment integrated into MainActivity navigation",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                )
+
                 // Advanced Features Section
                 Text(
                     text = "Advanced Features",

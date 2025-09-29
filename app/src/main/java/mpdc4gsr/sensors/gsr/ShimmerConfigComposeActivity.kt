@@ -1,10 +1,9 @@
-package mpdc4gsr.network
+package mpdc4gsr.sensors.gsr
 
 import android.content.Context
 import android.content.Intent
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -25,37 +24,37 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
+import mpdc4gsr.sensors.unified.model.DeviceInfo
 
 /**
- * DevicePairingComposeActivity - Modern Device Discovery & Pairing with Compose
+ * ShimmerConfigComposeActivity - Modern Shimmer Device Configuration with Compose
  *
- * Advanced BLE device discovery and pairing interface featuring:
- * - Real-time device scanning with RSSI indicators
- * - Interactive device pairing workflow with status updates
- * - Connection health monitoring and diagnostics
- * - Multi-device management with connection priorities
- * - Advanced filtering and device categorization
- * - Secure pairing with authentication validation
+ * Advanced Shimmer3 GSR+ device configuration interface with:
+ * - Real-time device discovery and connection management
+ * - Interactive configuration panels for sampling rates and sensors
+ * - Live device status monitoring with visual indicators
+ * - Calibration wizard with step-by-step guidance
+ * - Advanced sensor configuration (GSR range, PPG channels)
+ * - Firmware update management and device diagnostics
  */
-class DevicePairingComposeActivity : BaseComposeActivity<DevicePairingViewModel>() {
+class ShimmerConfigComposeActivity : BaseComposeActivity<ShimmerConfigViewModel>() {
 
     companion object {
         fun startActivity(context: Context) {
-            context.startActivity(Intent(context, DevicePairingComposeActivity::class.java))
+            context.startActivity(Intent(context, ShimmerConfigComposeActivity::class.java))
         }
     }
 
-    override fun createViewModel(): DevicePairingViewModel {
-        return viewModels<DevicePairingViewModel>().value
+    override fun createViewModel(): ShimmerConfigViewModel {
+        return viewModels<ShimmerConfigViewModel>().value
     }
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    override fun Content(viewModel: DevicePairingViewModel) {
+    override fun Content(viewModel: ShimmerConfigViewModel) {
         var isScanning by remember { mutableStateOf(false) }
-        var selectedDevice by remember { mutableStateOf<BluetoothDeviceInfo?>(null) }
-        var showPairingDialog by remember { mutableStateOf(false) }
-        var deviceFilter by remember { mutableStateOf("All") }
+        var selectedDevice by remember { mutableStateOf<DeviceInfo?>(null) }
+        var showConfigDialog by remember { mutableStateOf(false) }
 
         LibUnifiedTheme {
             Scaffold(
@@ -63,7 +62,7 @@ class DevicePairingComposeActivity : BaseComposeActivity<DevicePairingViewModel>
                     TopAppBar(
                         title = {
                             Text(
-                                "Device Pairing",
+                                "Shimmer Configuration",
                                 fontWeight = FontWeight.Bold
                             )
                         },
@@ -75,37 +74,35 @@ class DevicePairingComposeActivity : BaseComposeActivity<DevicePairingViewModel>
                         actions = {
                             IconButton(onClick = { isScanning = !isScanning }) {
                                 Icon(
-                                    if (isScanning) Icons.Default.Stop else Icons.Default.Search,
-                                    contentDescription = if (isScanning) "Stop Scan" else "Start Scan"
+                                    if (isScanning) Icons.Default.Stop else Icons.Default.Refresh,
+                                    contentDescription = if (isScanning) "Stop Scan" else "Scan"
                                 )
                             }
-                            IconButton(onClick = { /* Open settings */ }) {
-                                Icon(Icons.Default.Settings, contentDescription = "Settings")
+                            IconButton(onClick = { /* Help */ }) {
+                                Icon(Icons.Default.Help, contentDescription = "Help")
                             }
                         }
                     )
                 }
             ) { paddingValues ->
-                DevicePairingContent(
+                ShimmerConfigContent(
                     isScanning = isScanning,
                     selectedDevice = selectedDevice,
                     onDeviceSelect = { selectedDevice = it },
-                    onPairDevice = { showPairingDialog = true },
-                    deviceFilter = deviceFilter,
-                    onFilterChange = { deviceFilter = it },
+                    onConfigureDevice = { showConfigDialog = true },
                     viewModel = viewModel,
                     modifier = Modifier.padding(paddingValues)
                 )
             }
         }
 
-        if (showPairingDialog && selectedDevice != null) {
-            DevicePairingDialog(
+        if (showConfigDialog && selectedDevice != null) {
+            DeviceConfigurationDialog(
                 device = selectedDevice!!,
-                onDismiss = { showPairingDialog = false },
-                onPair = { device ->
-                    // Initiate pairing
-                    showPairingDialog = false
+                onDismiss = { showConfigDialog = false },
+                onSaveConfiguration = { config ->
+                    // Save device configuration
+                    showConfigDialog = false
                 }
             )
         }
@@ -113,14 +110,12 @@ class DevicePairingComposeActivity : BaseComposeActivity<DevicePairingViewModel>
 }
 
 @Composable
-private fun DevicePairingContent(
+private fun ShimmerConfigContent(
     isScanning: Boolean,
-    selectedDevice: BluetoothDeviceInfo?,
-    onDeviceSelect: (BluetoothDeviceInfo?) -> Unit,
-    onPairDevice: () -> Unit,
-    deviceFilter: String,
-    onFilterChange: (String) -> Unit,
-    viewModel: DevicePairingViewModel,
+    selectedDevice: DeviceInfo?,
+    onDeviceSelect: (DeviceInfo?) -> Unit,
+    onConfigureDevice: () -> Unit,
+    viewModel: ShimmerConfigViewModel,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -131,20 +126,12 @@ private fun DevicePairingContent(
         // Scanning Status Card
         ScanningStatusCard(
             isScanning = isScanning,
-            devicesFound = 8, // Replace with actual count
-            modifier = Modifier.padding(bottom = 16.dp)
-        )
-
-        // Device Filter Row
-        DeviceFilterRow(
-            selectedFilter = deviceFilter,
-            onFilterChange = onFilterChange,
             modifier = Modifier.padding(bottom = 16.dp)
         )
 
         // Device List
         Text(
-            text = "Discovered Devices",
+            text = "Available Devices",
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(bottom = 12.dp)
@@ -155,28 +142,31 @@ private fun DevicePairingContent(
             modifier = Modifier.weight(1f)
         ) {
             // Mock devices - replace with actual data from viewModel
-            val mockDevices = getMockBluetoothDevices().filter { device ->
-                deviceFilter == "All" || device.type == deviceFilter
-            }
+            val mockDevices = listOf(
+                DeviceInfo("shimmer_001", "Shimmer3 GSR+ #001", "connected", -45),
+                DeviceInfo("shimmer_002", "Shimmer3 GSR+ #002", "available", -62),
+                DeviceInfo("shimmer_003", "Shimmer3 GSR+ #003", "configuring", -38)
+            )
 
             items(mockDevices) { device ->
                 DeviceCard(
                     device = device,
-                    isSelected = selectedDevice?.address == device.address,
+                    isSelected = selectedDevice?.deviceId == device.deviceId,
                     onSelect = { onDeviceSelect(device) },
-                    onPair = { 
+                    onConnect = { /* Connect to device */ },
+                    onConfigure = { 
                         onDeviceSelect(device)
-                        onPairDevice()
+                        onConfigureDevice()
                     }
                 )
             }
         }
 
-        // Connection Status Footer
+        // Selected Device Configuration Panel
         selectedDevice?.let { device ->
-            ConnectionStatusFooter(
+            SelectedDevicePanel(
                 device = device,
-                onPair = onPairDevice,
+                onConfigure = onConfigureDevice,
                 modifier = Modifier.padding(top = 16.dp)
             )
         }
@@ -186,7 +176,6 @@ private fun DevicePairingContent(
 @Composable
 private fun ScanningStatusCard(
     isScanning: Boolean,
-    devicesFound: Int,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -207,12 +196,12 @@ private fun ScanningStatusCard(
         ) {
             Column {
                 Text(
-                    text = if (isScanning) "Scanning..." else "Scan Complete",
+                    text = if (isScanning) "Scanning for devices..." else "Scan complete",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Medium
                 )
                 Text(
-                    text = "$devicesFound devices found",
+                    text = if (isScanning) "Looking for Shimmer devices" else "3 devices found",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -227,8 +216,7 @@ private fun ScanningStatusCard(
                 Icon(
                     Icons.Default.CheckCircle,
                     contentDescription = "Scan complete",
-                    tint = Color(0xFF4CAF50),
-                    modifier = Modifier.size(24.dp)
+                    tint = Color(0xFF4CAF50)
                 )
             }
         }
@@ -236,42 +224,16 @@ private fun ScanningStatusCard(
 }
 
 @Composable
-private fun DeviceFilterRow(
-    selectedFilter: String,
-    onFilterChange: (String) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    val filters = listOf("All", "Thermal", "GSR", "Camera", "Unknown")
-    
-    LazyColumn(
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = modifier
-    ) {
-        items(filters) { filter ->
-            FilterChip(
-                selected = selectedFilter == filter,
-                onClick = { onFilterChange(filter) },
-                label = { Text(filter) },
-                leadingIcon = if (selectedFilter == filter) {
-                    { Icon(Icons.Default.Check, contentDescription = "Selected", modifier = Modifier.size(16.dp)) }
-                } else null
-            )
-        }
-    }
-}
-
-@Composable
 private fun DeviceCard(
-    device: BluetoothDeviceInfo,
+    device: DeviceInfo,
     isSelected: Boolean,
     onSelect: () -> Unit,
-    onPair: () -> Unit,
+    onConnect: () -> Unit,
+    onConfigure: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
-        modifier = modifier
-            .fillMaxWidth()
-            .clickable { onSelect() },
+        modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
             containerColor = if (isSelected) 
                 MaterialTheme.colorScheme.tertiaryContainer 
@@ -289,65 +251,69 @@ private fun DeviceCard(
             ) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = device.name.ifEmpty { "Unknown Device" },
+                        text = device.name,
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Medium
                     )
                     Text(
-                        text = device.address,
+                        text = "ID: ${device.deviceId}",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     
-                    // Device type and signal strength
+                    // Status and signal strength
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.padding(top = 4.dp)
                     ) {
-                        // Device type chip
-                        Surface(
-                            shape = RoundedCornerShape(12.dp),
-                            color = getDeviceTypeColor(device.type),
-                            modifier = Modifier.padding(end = 8.dp)
-                        ) {
-                            Text(
-                                text = device.type,
-                                style = MaterialTheme.typography.labelSmall,
-                                color = Color.White,
-                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
-                            )
-                        }
+                        // Connection status indicator
+                        Box(
+                            modifier = Modifier
+                                .size(8.dp)
+                                .clip(CircleShape)
+                                .background(
+                                    when (device.status) {
+                                        "connected" -> Color(0xFF4CAF50)
+                                        "available" -> Color(0xFF2196F3)
+                                        "configuring" -> Color(0xFFFF9800)
+                                        else -> Color(0xFF9E9E9E)
+                                    }
+                                )
+                        )
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text(
+                            text = device.status.replaceFirstChar { it.uppercaseChar() },
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        
+                        Spacer(modifier = Modifier.width(12.dp))
                         
                         // Signal strength
                         Icon(
                             Icons.Default.Wifi,
                             contentDescription = "Signal strength",
                             modifier = Modifier.size(16.dp),
-                            tint = getSignalStrengthColor(device.rssi)
+                            tint = when {
+                                device.signalStrength > -50 -> Color(0xFF4CAF50)
+                                device.signalStrength > -60 -> Color(0xFFFF9800)
+                                else -> Color(0xFFE53E3E)
+                            }
                         )
                         Text(
-                            text = "${device.rssi} dBm",
+                            text = "${device.signalStrength} dBm",
                             style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            modifier = Modifier.padding(start = 4.dp)
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }
                 
-                // Connection status indicator
-                Box(
-                    modifier = Modifier
-                        .size(12.dp)
-                        .clip(CircleShape)
-                        .background(
-                            when (device.connectionStatus) {
-                                "connected" -> Color(0xFF4CAF50)
-                                "paired" -> Color(0xFF2196F3)
-                                "available" -> Color(0xFFFF9800)
-                                else -> Color(0xFF9E9E9E)
-                            }
-                        )
-                )
+                IconButton(onClick = onSelect) {
+                    Icon(
+                        if (isSelected) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
+                        contentDescription = if (isSelected) "Collapse" else "Expand"
+                    )
+                }
             }
             
             if (isSelected) {
@@ -358,7 +324,7 @@ private fun DeviceCard(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     OutlinedButton(
-                        onClick = { /* Connect */ },
+                        onClick = onConnect,
                         modifier = Modifier.weight(1f)
                     ) {
                         Icon(
@@ -371,16 +337,16 @@ private fun DeviceCard(
                     }
                     
                     Button(
-                        onClick = onPair,
+                        onClick = onConfigure,
                         modifier = Modifier.weight(1f)
                     ) {
                         Icon(
-                            Icons.Default.Bluetooth,
-                            contentDescription = "Pair",
+                            Icons.Default.Settings,
+                            contentDescription = "Configure",
                             modifier = Modifier.size(18.dp)
                         )
                         Spacer(modifier = Modifier.width(4.dp))
-                        Text("Pair")
+                        Text("Configure")
                     }
                 }
             }
@@ -389,9 +355,9 @@ private fun DeviceCard(
 }
 
 @Composable
-private fun ConnectionStatusFooter(
-    device: BluetoothDeviceInfo,
-    onPair: () -> Unit,
+private fun SelectedDevicePanel(
+    device: DeviceInfo,
+    onConfigure: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -411,77 +377,100 @@ private fun ConnectionStatusFooter(
             )
             
             Text(
-                text = "${device.name} (${device.address})",
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.padding(bottom = 4.dp)
+                text = device.name,
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Medium
             )
             
             Text(
-                text = "Status: ${device.connectionStatus.replaceFirstChar { it.uppercaseChar() }}",
-                style = MaterialTheme.typography.bodySmall,
+                text = "Status: ${device.status.replaceFirstChar { it.uppercaseChar() }}",
+                style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onPrimaryContainer,
                 modifier = Modifier.padding(bottom = 12.dp)
             )
             
             Button(
-                onClick = onPair,
+                onClick = onConfigure,
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Icon(
-                    Icons.Default.BluetoothConnected,
-                    contentDescription = "Pair Device",
+                    Icons.Default.Tune,
+                    contentDescription = "Advanced Configuration",
                     modifier = Modifier.size(20.dp)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                Text("Pair Device")
+                Text("Advanced Configuration")
             }
         }
     }
 }
 
 @Composable
-private fun DevicePairingDialog(
-    device: BluetoothDeviceInfo,
+private fun DeviceConfigurationDialog(
+    device: DeviceInfo,
     onDismiss: () -> Unit,
-    onPair: (BluetoothDeviceInfo) -> Unit
+    onSaveConfiguration: (Map<String, Any>) -> Unit
 ) {
-    var isPairing by remember { mutableStateOf(false) }
+    var samplingRate by remember { mutableStateOf(128f) }
+    var gsrRange by remember { mutableStateOf("Auto") }
+    var enablePPG by remember { mutableStateOf(true) }
 
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { 
-            Text("Pair with ${device.name}") 
+            Text("Configure ${device.name}") 
         },
         text = {
             Column {
-                Text(text = "Device Address: ${device.address}")
-                Text(text = "Device Type: ${device.type}")
-                Text(text = "Signal Strength: ${device.rssi} dBm")
+                Text(
+                    text = "Sampling Rate (Hz)",
+                    style = MaterialTheme.typography.labelMedium,
+                    modifier = Modifier.padding(bottom = 4.dp)
+                )
+                Slider(
+                    value = samplingRate,
+                    onValueChange = { samplingRate = it },
+                    valueRange = 1f..512f,
+                    steps = 8
+                )
+                Text(
+                    text = "${samplingRate.toInt()} Hz",
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
                 
-                if (isPairing) {
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(16.dp),
-                            strokeWidth = 2.dp
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text("Pairing in progress...")
-                    }
+                Text(
+                    text = "GSR Range",
+                    style = MaterialTheme.typography.labelMedium,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+                
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Checkbox(
+                        checked = enablePPG,
+                        onCheckedChange = { enablePPG = it }
+                    )
+                    Text(
+                        text = "Enable PPG channels",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
                 }
             }
         },
         confirmButton = {
-            Button(
+            TextButton(
                 onClick = {
-                    isPairing = true
-                    onPair(device)
-                },
-                enabled = !isPairing
+                    onSaveConfiguration(mapOf(
+                        "samplingRate" to samplingRate.toInt(),
+                        "gsrRange" to gsrRange,
+                        "enablePPG" to enablePPG
+                    ))
+                }
             ) {
-                Text("Pair")
+                Text("Save")
             }
         },
         dismissButton = {
@@ -491,32 +480,3 @@ private fun DevicePairingDialog(
         }
     )
 }
-
-private fun getDeviceTypeColor(type: String) = when (type) {
-    "Thermal" -> Color(0xFFE53E3E)
-    "GSR" -> Color(0xFF4CAF50)
-    "Camera" -> Color(0xFF2196F3)
-    else -> Color(0xFF9E9E9E)
-}
-
-private fun getSignalStrengthColor(rssi: Int) = when {
-    rssi > -50 -> Color(0xFF4CAF50)
-    rssi > -60 -> Color(0xFFFF9800)
-    else -> Color(0xFFE53E3E)
-}
-
-data class BluetoothDeviceInfo(
-    val name: String,
-    val address: String,
-    val type: String,
-    val rssi: Int,
-    val connectionStatus: String
-)
-
-private fun getMockBluetoothDevices() = listOf(
-    BluetoothDeviceInfo("TOPDON TC001", "00:11:22:33:44:55", "Thermal", -45, "available"),
-    BluetoothDeviceInfo("Shimmer3 GSR+", "AA:BB:CC:DD:EE:FF", "GSR", -52, "paired"),
-    BluetoothDeviceInfo("RGB Camera Pro", "12:34:56:78:90:AB", "Camera", -38, "connected"),
-    BluetoothDeviceInfo("Unknown Device", "FF:EE:DD:CC:BB:AA", "Unknown", -68, "available"),
-    BluetoothDeviceInfo("Samsung Galaxy", "11:22:33:44:55:66", "Camera", -42, "available")
-)
