@@ -2,6 +2,7 @@ package mpdc4gsr.sensors.gsr
 
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -18,6 +19,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -96,12 +98,14 @@ class SessionManagerComposeActivity : BaseComposeActivity<SessionManagerViewMode
                     }
                 }
             ) { paddingValues ->
+                val context = LocalContext.current
                 SessionManagerContent(
                     searchQuery = searchQuery,
                     onSearchQueryChange = { searchQuery = it },
                     selectedSessions = selectedSessions,
                     onSessionSelectionChange = { selectedSessions = it },
                     viewModel = viewModel,
+                    context = context,
                     modifier = Modifier.padding(paddingValues)
                 )
             }
@@ -124,6 +128,7 @@ private fun SessionManagerContent(
     selectedSessions: Set<String>,
     onSessionSelectionChange: (Set<String>) -> Unit,
     viewModel: SessionManagerViewModel,
+    context: Context,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -183,7 +188,7 @@ private fun SessionManagerContent(
                     },
                     onClick = {
                         SessionDetailComposeActivity.startActivity(
-                            context = viewModel as Context, // This needs proper context injection
+                            context = context,
                             sessionId = session.sessionId
                         )
                     }
