@@ -151,6 +151,17 @@
             android:exported="false"
             android:label="Enhanced Permission System Test" />
 
+        <!-- Network & Device Management - Compose Activities -->
+        <activity
+            android:name="mpdc4gsr.network.DevicePairingComposeActivity"
+            android:exported="false"
+            android:label="Device Pairing (Modern)" />
+
+        <activity
+            android:name="mpdc4gsr.permissions.PermissionRequestComposeActivity"
+            android:exported="false"
+            android:label="Permission Manager (Modern)" />
+
         <!-- Additional GSR Activities -->
         <activity
             android:name="mpdc4gsr.sensors.gsr.GSRVideoPlayerActivity"

@@ -13,6 +13,8 @@ import mpdc4gsr.sensors.gsr.GSRSettingsComposeActivity
 import mpdc4gsr.sensors.gsr.SessionDetailComposeActivity
 import mpdc4gsr.compose.screens.*
 import mpdc4gsr.compose.testing.TestResultsScreen
+import mpdc4gsr.network.DevicePairingComposeActivity
+import mpdc4gsr.permissions.PermissionRequestComposeActivity
 
 /**
  * Unified Navigation System - Phase 2 Implementation
@@ -51,6 +53,7 @@ sealed class UnifiedRoute(val route: String) {
 
     // Network Routes
     object DevicePairing : UnifiedRoute("device_pairing")
+    object PermissionRequest : UnifiedRoute("permission_request")
 
     // Thermal Camera Routes
     object ThermalMain : UnifiedRoute("thermal_main")
@@ -201,15 +204,15 @@ fun UnifiedNavHost(
         composable(UnifiedRoute.DevicePairing.route) {
             LaunchedEffect(Unit) {
                 try {
+                    DevicePairingComposeActivity.start(context)
+                } catch (e: Exception) {
+                    // Fallback to legacy activity
                     context.startActivity(
                         Intent(
                             context,
-                            Class.forName("mpdc4gsr.activities.DevicePairingActivityCompose")
+                            Class.forName("mpdc4gsr.network.DevicePairingActivity")
                         )
                     )
-                } catch (e: Exception) {
-                    // Fallback to screen
-                    navController.navigate("device_pairing_screen")
                 }
             }
             ThermalLoadingScreen("Loading Device Pairing...")
@@ -308,6 +311,24 @@ fun UnifiedNavHost(
             )
         }
 
+        // Network & Device Management Routes
+        composable(UnifiedRoute.PermissionRequest.route) {
+            LaunchedEffect(Unit) {
+                try {
+                    PermissionRequestComposeActivity.start(context)
+                } catch (e: Exception) {
+                    // Fallback to legacy activity
+                    context.startActivity(
+                        Intent(
+                            context,
+                            Class.forName("mpdc4gsr.permissions.PermissionRequestActivity")
+                        )
+                    )
+                }
+            }
+            ThermalLoadingScreen("Loading Permission Manager...")
+        }
+
         // Fallback routes for screens when activities fail to launch
         composable("dual_mode_camera_screen") {
             DualModeCameraScreen(
@@ -338,6 +359,14 @@ object NavigationHelper {
 
     fun navigateToCamera(navController: NavHostController) {
         navController.navigate(UnifiedRoute.CameraDashboard.route)
+    }
+    
+    fun navigateToDevicePairing(navController: NavHostController) {
+        navController.navigate(UnifiedRoute.DevicePairing.route)
+    }
+    
+    fun navigateToPermissionRequest(navController: NavHostController) {
+        navController.navigate(UnifiedRoute.PermissionRequest.route)
     }
 
     fun navigateWithPopUp(
