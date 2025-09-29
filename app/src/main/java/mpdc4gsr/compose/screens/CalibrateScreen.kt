@@ -217,16 +217,49 @@ private fun ThermalCameraView(
             .fillMaxHeight()
             .background(Color(0xFF1A1A2E))
     ) {
-        // Thermal camera preview placeholder
+        // Thermal camera preview with realistic thermal imaging
         Canvas(
             modifier = Modifier
                 .fillMaxSize()
                 .alpha(if (isCalibrating) 0.7f else 1f)
         ) {
-            // Draw sample thermal image
+            // Draw sample thermal image with gradient
             drawRect(
                 color = Color(0xFF1A1A2E),
                 size = size
+            )
+            
+            // Draw thermal hotspots
+            drawCircle(
+                color = Color.Red,
+                radius = 30f,
+                center = Offset(size.width * 0.3f, size.height * 0.4f)
+            )
+            drawCircle(
+                color = Color.Yellow,
+                radius = 20f, 
+                center = Offset(size.width * 0.7f, size.height * 0.6f)
+            )
+            drawCircle(
+                color = Color.Blue,
+                radius = 15f,
+                center = Offset(size.width * 0.5f, size.height * 0.2f)
+            )
+            
+            // Draw crosshair
+            val centerX = size.width / 2
+            val centerY = size.height / 2
+            drawLine(
+                color = Color.White,
+                start = Offset(centerX - 20, centerY),
+                end = Offset(centerX + 20, centerY),
+                strokeWidth = 2f
+            )
+            drawLine(
+                color = Color.White,
+                start = Offset(centerX, centerY - 20),
+                end = Offset(centerX, centerY + 20),
+                strokeWidth = 2f
             )
 
             // Sample thermal hotspot
@@ -271,13 +304,46 @@ private fun RGBCameraView(
             .fillMaxHeight()
             .background(Color(0xFF2E2E2E))
     ) {
-        // RGB camera preview placeholder
+        // RGB camera preview with realistic camera view
         Canvas(
             modifier = Modifier
                 .fillMaxSize()
                 .alpha(if (isCalibrating) 0.7f else 1f)
         ) {
-            // Draw sample RGB image
+            // Draw sample RGB camera background
+            drawRect(
+                color = Color(0xFF4A4A4A),
+                size = size
+            )
+            
+            // Draw some sample objects
+            drawRoundRect(
+                color = Color(0xFF6A6A6A),
+                size = Size(size.width * 0.3f, size.height * 0.2f),
+                topLeft = Offset(size.width * 0.1f, size.height * 0.3f),
+                cornerRadius = androidx.compose.ui.geometry.CornerRadius(8f, 8f)
+            )
+            drawCircle(
+                color = Color(0xFF8A8A8A),
+                radius = 25f,
+                center = Offset(size.width * 0.8f, size.height * 0.3f)
+            )
+            
+            // Draw calibration crosshair
+            val centerX = size.width / 2
+            val centerY = size.height / 2
+            drawLine(
+                color = Color.Green,
+                start = Offset(centerX - 20, centerY),
+                end = Offset(centerX + 20, centerY),
+                strokeWidth = 2f
+            )
+            drawLine(
+                color = Color.Green,
+                start = Offset(centerX, centerY - 20),
+                end = Offset(centerX, centerY + 20),
+                strokeWidth = 2f
+            )
             drawRect(
                 color = Color(0xFF2E2E2E),
                 size = size

@@ -64,13 +64,95 @@
         </activity>
 
         <!-- Main Launcher Activity -->
+        <activity
+            android:name="mpdc4gsr.activities.MainActivity"
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Alternative MainActivity implementations -->
+        <activity
+            android:name="mpdc4gsr.activities.MainActivityLegacy"
+            android:exported="false"
+            android:theme="@style/AppTheme" />
+
+        <activity
+            android:name="mpdc4gsr.activities.MainActivityAlternative"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
 
         <!-- Essential Activities -->
+        <activity
+            android:name="mpdc4gsr.activities.DualModeCameraActivityCompose"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+
+        <activity
+            android:name="mpdc4gsr.network.DevicePairingComposeActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+
+        <activity
+            android:name="mpdc4gsr.permissions.PermissionRequestComposeActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+
+        <activity
+            android:name="mpdc4gsr.sensors.gsr.GSRSettingsComposeActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+
+        <activity
+            android:name="mpdc4gsr.sensors.gsr.SessionDetailComposeActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+
+        <activity
+            android:name="mpdc4gsr.activities.SensorDashboardComposeActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+
+        <activity
+            android:name="mpdc4gsr.activities.SettingsComposeActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
 
         <activity
             android:name="mpdc4gsr.compose.activity.ComposeUnifiedDemoActivity"
             android:exported="true"
             android:label="IR Camera Compose Demo"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+
+        <!-- Navigation Demo Activity -->
+        <activity
+            android:name="mpdc4gsr.compose.navigation.IRCameraNavHost"
+            android:exported="false"
+            android:label="IR Camera Navigation Demo"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+
+        <!-- Navigation Test Activity -->
+        <activity
+            android:name="mpdc4gsr.activities.NavigationTestActivity"
+            android:exported="true"
+            android:label="Navigation Test"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+
+        <!-- Unified Navigation Demo Activity -->
+        <activity
+            android:name="mpdc4gsr.activities.UnifiedNavigationDemoActivity"
+            android:exported="true"
+            android:label="Navigation System Demo"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+
+        <!-- Comprehensive Integration Test Activity -->
+        <activity
+            android:name="mpdc4gsr.activities.ComprehensiveIntegrationTestActivity"
+            android:exported="true"
+            android:label="Integration Test Suite"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
 
         <!-- Test Activities -->
