@@ -1,9 +1,12 @@
 package com.mpdc4gsr.module.thermalunified.activity
 
 import android.os.Bundle
-import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -11,330 +14,291 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.ui.viewinterop.AndroidView
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
+import com.mpdc4gsr.module.thermalunified.fragment.IRThermalFragment
+import com.mpdc4gsr.module.thermalunified.fragment.IRGalleryTabFragment
+import com.mpdc4gsr.module.thermalunified.fragment.AbilityFragment
+import com.mpdc4gsr.module.thermalunified.fragment.PDFListFragment
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRMainActivityViewModel
+import com.mpdc4gsr.module.user.fragment.MoreFragment
+import kotlinx.coroutines.launch
 
 /**
- * Modern Compose implementation of the thermal main activity
- * Demonstrates successful cross-module integration using shared BaseComposeActivity
+ * Modern Compose implementation of thermal main hub activity
+ * Preserves the 5-tab ViewPager structure with enhanced Material 3 UI
  */
 class IRMainComposeActivity : BaseComposeActivity<IRMainActivityViewModel>() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            LibUnifiedTheme {
-                ThermalMainScreen()
+    override fun createViewModel(): IRMainActivityViewModel {
+        return viewModels<IRMainActivityViewModel>().value
+    }
+
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    override fun Content(viewModel: IRMainActivityViewModel) {
+        val pagerState = rememberPagerState(pageCount = { 5 })
+        val scope = rememberCoroutineScope()
+        
+        LibUnifiedTheme {
+            Scaffold(
+                containerColor = Color(0xFF16131E)
+            ) { paddingValues ->
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues)
+                        .background(Color(0xFF16131E))
+                ) {
+                    // Main ViewPager content (85% of screen)
+                    HorizontalPager(
+                        state = pagerState,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(0.85f)
+                    ) { page ->
+                        when (page) {
+                            0 -> ThermalTabContent()
+                            1 -> GalleryTabContent()
+                            2 -> AbilityTabContent()
+                            3 -> PDFTabContent()
+                            4 -> MoreTabContent()
+                        }
+                    }
+                    
+                    // Bottom navigation (15% of screen)
+                    ThermalBottomNavigation(
+                        selectedPage = pagerState.currentPage,
+                        onPageSelected = { page ->
+                            scope.launch {
+                                pagerState.animateScrollToPage(page)
+                            }
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(0.15f)
+                    )
+                }
             }
         }
     }
 }
 
 @Composable
-private fun ThermalMainScreen(
-    viewModel: IRMainActivityViewModel = viewModel()
-) {
-    var selectedTab by remember { mutableIntStateOf(0) }
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFF0D1117))
-    ) {
-        // Top App Bar
-        TopAppBar(
-            title = {
-                Text(
-                    "Thermal Camera",
-                    color = Color.White,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Medium
-                )
-            },
-            colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = Color(0xFF161B22),
-                titleContentColor = Color.White
-            ),
-            actions = {
-                IconButton(onClick = { /* Settings */ }) {
-                    Icon(
-                        Icons.Default.Settings,
-                        contentDescription = "Settings",
-                        tint = Color(0xFFFF6B35)
-                    )
-                }
+private fun ThermalTabContent() {
+    val context = LocalContext.current
+    val activity = context as? IRMainComposeActivity
+    
+    // Embed existing thermal fragment using AndroidView with proper FragmentManager integration
+    AndroidView(
+        factory = { context ->
+            androidx.fragment.app.FragmentContainerView(context).apply {
+                id = androidx.core.R.id.accessibility_custom_action_0
             }
-        )
-
-        // Main Content
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .weight(1f)
-        ) {
-            when (selectedTab) {
-                0 -> ThermalCameraTab()
-                1 -> ThermalGalleryTab()
-                2 -> ThermalAnalysisTab()
-                3 -> ThermalReportsTab()
+        },
+        update = { view ->
+            activity?.let {
+                val fragment = IRThermalFragment()
+                it.supportFragmentManager.beginTransaction()
+                    .replace(view.id, fragment)
+                    .commitAllowingStateLoss()
             }
-        }
+        },
+        modifier = Modifier.fillMaxSize()
+    )
+}
 
-        // Bottom Navigation
-        ThermalBottomNavigation(
-            selectedTab = selectedTab,
-            onTabSelected = { selectedTab = it }
-        )
-    }
+@Composable
+private fun GalleryTabContent() {
+    val context = LocalContext.current
+    val activity = context as? IRMainComposeActivity
+    
+    // Embed existing gallery fragment using AndroidView with proper FragmentManager integration
+    AndroidView(
+        factory = { context ->
+            androidx.fragment.app.FragmentContainerView(context).apply {
+                id = androidx.core.R.id.accessibility_custom_action_1
+            }
+        },
+        update = { view ->
+            activity?.let {
+                val fragment = IRGalleryTabFragment()
+                it.supportFragmentManager.beginTransaction()
+                    .replace(view.id, fragment)
+                    .commitAllowingStateLoss()
+            }
+        },
+        modifier = Modifier.fillMaxSize()
+    )
+}
+
+@Composable
+private fun AbilityTabContent() {
+    val context = LocalContext.current
+    val activity = context as? IRMainComposeActivity
+    
+    // Embed existing ability fragment using AndroidView with proper FragmentManager integration
+    AndroidView(
+        factory = { context ->
+            androidx.fragment.app.FragmentContainerView(context).apply {
+                id = androidx.core.R.id.accessibility_custom_action_2
+            }
+        },
+        update = { view ->
+            activity?.let {
+                val fragment = AbilityFragment()
+                it.supportFragmentManager.beginTransaction()
+                    .replace(view.id, fragment)
+                    .commitAllowingStateLoss()
+            }
+        },
+        modifier = Modifier.fillMaxSize()
+    )
+
+}
+
+@Composable
+private fun PDFTabContent() {
+    val context = LocalContext.current
+    val activity = context as? IRMainComposeActivity
+    
+    // Embed existing PDF fragment using AndroidView with proper FragmentManager integration
+    AndroidView(
+        factory = { context ->
+            androidx.fragment.app.FragmentContainerView(context).apply {
+                id = androidx.core.R.id.accessibility_custom_action_3
+            }
+        },
+        update = { view ->
+            activity?.let {
+                val fragment = PDFListFragment()
+                it.supportFragmentManager.beginTransaction()
+                    .replace(view.id, fragment)
+                    .commitAllowingStateLoss()
+            }
+        },
+        modifier = Modifier.fillMaxSize()
+    )
+}
+
+@Composable
+private fun MoreTabContent() {
+    val context = LocalContext.current
+    val activity = context as? IRMainComposeActivity
+    
+    // Embed existing more fragment using AndroidView with proper FragmentManager integration
+    AndroidView(
+        factory = { context ->
+            androidx.fragment.app.FragmentContainerView(context).apply {
+                id = androidx.core.R.id.accessibility_custom_action_4
+            }
+        },
+        update = { view ->
+            activity?.let {
+                val fragment = MoreFragment()
+                it.supportFragmentManager.beginTransaction()
+                    .replace(view.id, fragment)
+                    .commitAllowingStateLoss()
+            }
+        },
+        modifier = Modifier.fillMaxSize()
+    )
 }
 
 @Composable
 private fun ThermalBottomNavigation(
-    selectedTab: Int,
-    onTabSelected: (Int) -> Unit
+    selectedPage: Int,
+    onPageSelected: (Int) -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    val tabs = listOf(
-        ThermalTab("Camera", Icons.Default.Camera),
-        ThermalTab("Gallery", Icons.Default.Photo),
-        ThermalTab("Analysis", Icons.Default.Analytics),
-        ThermalTab("Reports", Icons.Default.Description)
-    )
-
-    NavigationBar(
-        containerColor = Color(0xFF161B22),
-        contentColor = Color.White
+    val tabs = getThermalTabs()
+    
+    Card(
+        modifier = modifier,
+        colors = CardDefaults.cardColors(
+            containerColor = Color(0xFF21262D)
+        ),
+        shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
     ) {
-        tabs.forEachIndexed { index, tab ->
-            NavigationBarItem(
-                icon = {
-                    Icon(
-                        tab.icon,
-                        contentDescription = tab.title,
-                        tint = if (selectedTab == index) Color(0xFFFF6B35) else Color(0xFF7D8590)
-                    )
-                },
-                label = {
-                    Text(
-                        tab.title,
-                        color = if (selectedTab == index) Color(0xFFFF6B35) else Color(0xFF7D8590),
-                        fontSize = 12.sp
-                    )
-                },
-                selected = selectedTab == index,
-                onClick = { onTabSelected(index) },
-                colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = Color(0xFFFF6B35),
-                    selectedTextColor = Color(0xFFFF6B35),
-                    indicatorColor = Color(0xFF21262D),
-                    unselectedIconColor = Color(0xFF7D8590),
-                    unselectedTextColor = Color(0xFF7D8590)
-                )
-            )
-        }
-    }
-}
-
-@Composable
-private fun ThermalCameraTab() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        // Camera Preview Placeholder
-        Card(
+        Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .height(300.dp),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFF21262D)),
-            shape = RoundedCornerShape(12.dp)
+                .fillMaxSize()
+                .padding(8.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Icon(
-                        Icons.Default.Videocam,
-                        contentDescription = "Camera Preview",
-                        tint = Color(0xFFFF6B35),
-                        modifier = Modifier.size(64.dp)
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Text(
-                        "Thermal Camera Preview",
-                        color = Color.White,
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Medium
-                    )
-                    Text(
-                        "Connect thermal camera to start",
-                        color = Color(0xFF7D8590),
-                        fontSize = 14.sp
-                    )
-                }
+            tabs.forEachIndexed { index, tab ->
+                ThermalTabButton(
+                    tab = tab,
+                    isSelected = selectedPage == index,
+                    onClick = { onPageSelected(index) },
+                    modifier = Modifier.weight(1f)
+                )
             }
         }
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        // Control Buttons
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            ThermalActionButton(
-                icon = Icons.Default.PhotoCamera,
-                text = "Capture",
-                onClick = { /* Capture */ }
-            )
-            ThermalActionButton(
-                icon = Icons.Default.VideoCall,
-                text = "Record",
-                onClick = { /* Record */ }
-            )
-            ThermalActionButton(
-                icon = Icons.Default.Tune,
-                text = "Settings",
-                onClick = { /* Settings */ }
-            )
-        }
     }
 }
 
 @Composable
-private fun ThermalGalleryTab() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Icon(
-            Icons.Default.Photo,
-            contentDescription = "Gallery",
-            tint = Color(0xFFFF6B35),
-            modifier = Modifier.size(64.dp)
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            "Thermal Gallery",
-            color = Color.White,
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold
-        )
-        Text(
-            "View and manage thermal images",
-            color = Color(0xFF7D8590),
-            fontSize = 16.sp
-        )
-    }
-}
-
-@Composable
-private fun ThermalAnalysisTab() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Icon(
-            Icons.Default.Analytics,
-            contentDescription = "Analysis",
-            tint = Color(0xFFFF6B35),
-            modifier = Modifier.size(64.dp)
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            "Thermal Analysis",
-            color = Color.White,
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold
-        )
-        Text(
-            "Advanced temperature analysis tools",
-            color = Color(0xFF7D8590),
-            fontSize = 16.sp
-        )
-    }
-}
-
-@Composable
-private fun ThermalReportsTab() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Icon(
-            Icons.Default.Description,
-            contentDescription = "Reports",
-            tint = Color(0xFFFF6B35),
-            modifier = Modifier.size(64.dp)
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            "Thermal Reports",
-            color = Color.White,
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold
-        )
-        Text(
-            "Generate professional thermal reports",
-            color = Color(0xFF7D8590),
-            fontSize = 16.sp
-        )
-    }
-}
-
-@Composable
-private fun ThermalActionButton(
-    icon: ImageVector,
-    text: String,
-    onClick: () -> Unit
+private fun ThermalTabButton(
+    tab: ThermalTab,
+    isSelected: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    Button(
-        onClick = onClick,
-        colors = ButtonDefaults.buttonColors(
-            containerColor = Color(0xFFFF6B35),
-            contentColor = Color.White
-        ),
-        shape = RoundedCornerShape(8.dp),
-        modifier = Modifier.height(56.dp)
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally
+        Box(
+            modifier = Modifier
+                .size(40.dp)
+                .clip(CircleShape)
+                .background(
+                    if (isSelected) Color(0xFFFF6B35) else Color.Transparent
+                ),
+            contentAlignment = Alignment.Center
         ) {
-            Icon(
-                icon,
-                contentDescription = text,
-                modifier = Modifier.size(20.dp)
-            )
-            Text(
-                text,
-                fontSize = 12.sp,
-                fontWeight = FontWeight.Medium
-            )
+            IconButton(onClick = onClick) {
+                Icon(
+                    tab.icon,
+                    contentDescription = tab.title,
+                    tint = if (isSelected) Color.White else Color(0xFF7D8590),
+                    modifier = Modifier.size(24.dp)
+                )
+            }
         }
+        
+        Text(
+            tab.title,
+            color = if (isSelected) Color(0xFFFF6B35) else Color(0xFF7D8590),
+            fontSize = 10.sp,
+            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
+        )
     }
 }
 
-private data class ThermalTab(
+// Data class for tab configuration
+data class ThermalTab(
     val title: String,
     val icon: ImageVector
 )
+
+private fun getThermalTabs(): List<ThermalTab> {
+    return listOf(
+        ThermalTab("Thermal", Icons.Default.Thermostat),
+        ThermalTab("Gallery", Icons.Default.Photo),
+        ThermalTab("Ability", Icons.Default.Build),
+        ThermalTab("PDF", Icons.Default.Description),
+        ThermalTab("More", Icons.Default.MoreVert)
+    )
+}
