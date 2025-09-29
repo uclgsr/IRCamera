@@ -550,6 +550,62 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                     }
                 )
 
+                LauncherCard(
+                    title = "Thermal Video Player (Compose)",
+                    subtitle = "Advanced thermal video playback with analysis tools",
+                    icon = Icons.Default.PlayArrow,
+                    onClick = {
+                        startActivity(
+                            Intent(
+                                this@ComposeMigrationLauncherActivity,
+                                com.mpdc4gsr.module.thermalunified.activity.ThermalVideoComposeActivity::class.java
+                            )
+                        )
+                    }
+                )
+
+                LauncherCard(
+                    title = "IR Thermal Lite (Compose)",
+                    subtitle = "Lightweight thermal camera interface with essential controls",
+                    icon = Icons.Default.Thermostat,
+                    onClick = {
+                        startActivity(
+                            Intent(
+                                this@ComposeMigrationLauncherActivity,
+                                com.mpdc4gsr.module.thermalunified.lite.activity.IRThermalLiteComposeActivity::class.java
+                            )
+                        )
+                    }
+                )
+
+                LauncherCard(
+                    title = "Thermal Monitoring (Compose)",
+                    subtitle = "Advanced thermal monitoring dashboard with alerts",
+                    icon = Icons.Default.Monitor,
+                    onClick = {
+                        startActivity(
+                            Intent(
+                                this@ComposeMigrationLauncherActivity,
+                                com.mpdc4gsr.module.thermalunified.activity.ThermalMonitoringComposeActivity::class.java
+                            )
+                        )
+                    }
+                )
+
+                LauncherCard(
+                    title = "IR Correction Lite (Compose)",
+                    subtitle = "Thermal image correction and calibration tools",
+                    icon = Icons.Default.AutoFixHigh,
+                    onClick = {
+                        startActivity(
+                            Intent(
+                                this@ComposeMigrationLauncherActivity,
+                                com.mpdc4gsr.module.thermalunified.lite.activity.IRCorrectionLiteComposeActivity::class.java
+                            )
+                        )
+                    }
+                )
+
                 // Fragment Migration Section
                 Text(
                     text = "Fragment to Compose Migration (Priority 3)",
