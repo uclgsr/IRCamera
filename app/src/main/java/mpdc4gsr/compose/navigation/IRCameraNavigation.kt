@@ -1,14 +1,18 @@
 package mpdc4gsr.compose.navigation
 
 import android.content.Intent
-import androidx.compose.runtime.Composable
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import mpdc4gsr.activities.*
-import mpdc4gsr.compose.utils.FragmentContainer
 
 /**
  * Task E: Complete Navigation Integration
@@ -108,13 +112,19 @@ fun IRCameraNavHost(
 
         // Main dashboard screens
         composable(IRCameraScreen.Main.route) {
-            // Could embed original MainActivity using AndroidView if needed
-            // For now, launch as separate activity
-            LaunchActivityScreen(MainActivity::class.java)
+            // Launch main activity
+            LaunchedEffect(Unit) {
+                context.startActivity(Intent(context, MainActivity::class.java))
+            }
+            LoadingScreen()
         }
 
         composable(IRCameraScreen.MainCompose.route) {
-            LaunchActivityScreen(MainActivity::class.java)
+            // Launch MainActivity instead of non-existent activity
+            LaunchedEffect(Unit) {
+                context.startActivity(Intent(context, MainActivity::class.java))
+            }
+            LoadingScreen()
         }
 
         // Thermal camera screens
@@ -126,9 +136,18 @@ fun IRCameraNavHost(
         }
 
         composable(IRCameraScreen.ThermalCameraCompose.route) {
-            LaunchActivityScreen(
-                activityClass = com.mpdc4gsr.module.thermalunified.activity.ThermalCameraComposeActivity::class.java
-            )
+            // Try to launch thermal activity or show placeholder
+            LaunchedEffect(Unit) {
+                try {
+                    val intent = Intent().apply {
+                        setClassName(context, "com.mpdc4gsr.module.thermalunified.activity.ThermalCameraComposeActivity")
+                    }
+                    context.startActivity(intent)
+                } catch (e: Exception) {
+                    // Fallback - stay in compose
+                }
+            }
+            LoadingScreen()
         }
 
         // Sensor dashboard screens
@@ -140,7 +159,14 @@ fun IRCameraNavHost(
         }
 
         composable(IRCameraScreen.SensorDashboardCompose.route) {
-            LaunchActivityScreen(SensorDashboardComposeActivity::class.java)
+            LaunchedEffect(Unit) {
+                try {
+                    context.startActivity(Intent(context, SensorDashboardComposeActivity::class.java))
+                } catch (e: Exception) {
+                    // Stay in compose if activity doesn't exist
+                }
+            }
+            LoadingScreen()
         }
 
         // Settings screens
@@ -152,7 +178,14 @@ fun IRCameraNavHost(
         }
 
         composable(IRCameraScreen.SettingsCompose.route) {
-            LaunchActivityScreen(SettingsComposeActivity::class.java)
+            LaunchedEffect(Unit) {
+                try {
+                    context.startActivity(Intent(context, SettingsComposeActivity::class.java))
+                } catch (e: Exception) {
+                    // Stay in compose if activity doesn't exist
+                }
+            }
+            LoadingScreen()
         }
 
         // About screen
@@ -165,23 +198,12 @@ fun IRCameraNavHost(
 }
 
 @Composable
-private fun LaunchActivityScreen(activityClass: Class<*>) {
-    val context = LocalContext.current
-
-    // Launch activity and finish current one
-    androidx.compose.runtime.LaunchedEffect(Unit) {
-        context.startActivity(Intent(context, activityClass))
-        if (context is android.app.Activity) {
-            context.finish()
-        }
-    }
-
-    // Show loading indicator while launching
-    androidx.compose.foundation.layout.Box(
-        modifier = androidx.compose.ui.Modifier.fillMaxSize(),
-        contentAlignment = androidx.compose.ui.Alignment.Center
+private fun LoadingScreen() {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
     ) {
-        androidx.compose.material3.CircularProgressIndicator()
+        CircularProgressIndicator()
     }
 }
 
@@ -255,36 +277,6 @@ private fun SettingsFragmentScreen(onNavigateBack: () -> Unit) {
         androidx.compose.foundation.layout.Spacer(modifier = androidx.compose.ui.Modifier.height(16.dp))
         androidx.compose.material3.Text(
             text = "This screen would embed existing settings fragments",
-            style = androidx.compose.material3.MaterialTheme.typography.bodyMedium
-        )
-        androidx.compose.foundation.layout.Spacer(modifier = androidx.compose.ui.Modifier.height(16.dp))
-        androidx.compose.material3.Button(onClick = onNavigateBack) {
-            androidx.compose.material3.Text("Back")
-        }
-    }
-}
-
-@Composable
-private fun AboutScreen(onNavigateBack: () -> Unit) {
-    androidx.compose.foundation.layout.Column(
-        modifier = androidx.compose.ui.Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally,
-        verticalArrangement = androidx.compose.foundation.layout.Arrangement.Center
-    ) {
-        androidx.compose.material3.Text(
-            text = "IRCamera",
-            style = androidx.compose.material3.MaterialTheme.typography.headlineLarge
-        )
-        androidx.compose.foundation.layout.Spacer(modifier = androidx.compose.ui.Modifier.height(8.dp))
-        androidx.compose.material3.Text(
-            text = "Version 1.10.000",
-            style = androidx.compose.material3.MaterialTheme.typography.bodyLarge
-        )
-        androidx.compose.foundation.layout.Spacer(modifier = androidx.compose.ui.Modifier.height(16.dp))
-        androidx.compose.material3.Text(
-            text = "Thermal imaging and GSR sensor data collection application",
             style = androidx.compose.material3.MaterialTheme.typography.bodyMedium
         )
         androidx.compose.foundation.layout.Spacer(modifier = androidx.compose.ui.Modifier.height(16.dp))

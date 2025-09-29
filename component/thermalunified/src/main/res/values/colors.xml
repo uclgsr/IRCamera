@@ -11,6 +11,7 @@
     <!-- Material Design colors -->
     <color name="colorPrimary">#FF1976D2</color>
     <color name="colorPrimaryDark">#FF1565C0</color>
+    <color name="colorAccent">#FF2B79D8</color>
     <color name="color_16131E">#FF16131E</color>
 
     <!-- Font colors -->

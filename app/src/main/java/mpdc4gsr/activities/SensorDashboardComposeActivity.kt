@@ -20,7 +20,7 @@ import mpdc4gsr.compose.components.sensor.GSRConnectionState
 import mpdc4gsr.viewmodel.ConnectionState
 // Note: MainActivityViewModel was moved to backup during cleanup
 // Using modern Compose ViewModels instead
-// import mpdc4gsr.viewmodel.MainActivityViewModel
+import mpdc4gsr.viewmodel.BaseViewModel
 
 /**
  * Task C: Complete Sensor Dashboard using Compose

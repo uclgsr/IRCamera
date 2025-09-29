@@ -66,6 +66,7 @@ class DevicePairingActivityCompose : BaseComposeActivity<DevicePairingViewModel>
         val scanState by viewModel.scanState.collectAsState()
         val statusMessage by viewModel.statusMessage.collectAsState()
         val pairingScreenState by viewModel.pairingScreenState.collectAsState()
+        val flashState by viewModel.flashState.collectAsState()
 
         // Handle events
         LaunchedEffect(viewModel) {
@@ -99,40 +100,41 @@ class DevicePairingActivityCompose : BaseComposeActivity<DevicePairingViewModel>
         }
 
         LibUnifiedTheme {
-            Scaffold(
-                topBar = {
-                    TopAppBar(
-                        title = {
-                            Text(
-                                "Device Pairing",
-                                fontWeight = FontWeight.Bold
-                            )
-                        },
-                        navigationIcon = {
-                            IconButton(onClick = { finish() }) {
-                                Icon(Icons.Default.ArrowBack, contentDescription = "Back")
-                            }
-                        },
-                        actions = {
-                            IconButton(onClick = {
-                                if (scanState == DevicePairingViewModel.ScanState.SCANNING) {
-                                    viewModel.stopControllerScan()
-                                } else {
-                                    viewModel.startControllerScan()
-                                }
-                            }) {
-                                Icon(
-                                    if (scanState == DevicePairingViewModel.ScanState.SCANNING)
-                                        Icons.Default.Stop
-                                    else
-                                        Icons.Default.Refresh,
-                                    contentDescription = "Scan"
+            Box(modifier = Modifier.fillMaxSize()) {
+                Scaffold(
+                    topBar = {
+                        TopAppBar(
+                            title = {
+                                Text(
+                                    "Device Pairing",
+                                    fontWeight = FontWeight.Bold
                                 )
+                            },
+                            navigationIcon = {
+                                IconButton(onClick = { finish() }) {
+                                    Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                                }
+                            },
+                            actions = {
+                                IconButton(onClick = {
+                                    if (scanState == DevicePairingViewModel.ScanState.SCANNING) {
+                                        viewModel.stopControllerScan()
+                                    } else {
+                                        viewModel.startControllerScan()
+                                    }
+                                }) {
+                                    Icon(
+                                        if (scanState == DevicePairingViewModel.ScanState.SCANNING)
+                                            Icons.Default.Stop
+                                        else
+                                            Icons.Default.Refresh,
+                                        contentDescription = "Scan"
+                                    )
+                                }
                             }
-                        }
-                    )
-                }
-            ) { paddingValues ->
+                        )
+                    }
+                ) { paddingValues ->
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -162,6 +164,23 @@ class DevicePairingActivityCompose : BaseComposeActivity<DevicePairingViewModel>
                         onControllerClick = { controller ->
                             viewModel.connectToController(controller)
                         }
+                    )
+                }
+            }
+
+            // Flash overlay for sync flash
+            if (flashState.isVisible) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color.White.copy(alpha = 0.8f))
+                ) {
+                    Text(
+                        text = "SYNC FLASH",
+                        modifier = Modifier.align(Alignment.Center),
+                        style = MaterialTheme.typography.headlineLarge,
+                        color = Color.Black,
+                        fontWeight = FontWeight.Bold
                     )
                 }
             }
@@ -511,8 +530,8 @@ class DevicePairingActivityCompose : BaseComposeActivity<DevicePairingViewModel>
 
     override fun onSyncFlash(durationMs: Int) {
         runOnUiThread {
-            // TODO: Implement flash overlay in Compose
-            Toast.makeText(this, "Sync flash", Toast.LENGTH_SHORT).show()
+            // Trigger flash overlay through ViewModel
+            viewModel.triggerSyncFlash(durationMs)
         }
     }
 
