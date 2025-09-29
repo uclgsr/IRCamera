@@ -315,7 +315,7 @@ fun ThermalPreviewCard(
                 Text(
                     text = "Min: ${thermalData.minTemperature}°C",
                     style = MaterialTheme.typography.bodySmall,
-                    color = Color.Blue
+                    color = MaterialTheme.colorScheme.primary
                 )
                 Text(
                     text = "Max: ${thermalData.maxTemperature}°C",

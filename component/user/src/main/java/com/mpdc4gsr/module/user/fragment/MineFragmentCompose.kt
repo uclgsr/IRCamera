@@ -206,7 +206,7 @@ class MineFragmentCompose : BaseComposeFragment<MineFragmentViewModel>() {
                 title = "General Settings",
                 subtitle = "Language, theme, notifications",
                 icon = Icons.Default.Settings,
-                iconTint = androidx.compose.ui.graphics.Color.Blue
+                iconTint = MaterialTheme.colorScheme.primary
             ),
             SettingsItem(
                 id = "thermal",
@@ -227,7 +227,7 @@ class MineFragmentCompose : BaseComposeFragment<MineFragmentViewModel>() {
                 title = "Storage Management",
                 subtitle = "File locations, auto-cleanup",
                 icon = Icons.Default.Storage,
-                iconTint = androidx.compose.ui.graphics.Color.Blue
+                iconTint = MaterialTheme.colorScheme.primary
             ),
             SettingsItem(
                 id = "feedback",

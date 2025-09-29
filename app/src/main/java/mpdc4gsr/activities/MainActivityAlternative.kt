@@ -464,7 +464,7 @@ class MainActivityAlternative : BaseComposeActivity<MainActivityViewModel>() {
                             // Show badge for connection status
                             containerColor = when {
                                 item.index == 0 && thermalCameraState.status == MainActivityViewModel.SensorStatus.CONNECTED -> Color.Green
-                                item.index == 0 && gsrConnectionState == MainActivityViewModel.GSRConnectionState.CONNECTED -> Color.Blue
+                                item.index == 0 && gsrConnectionState == MainActivityViewModel.GSRConnectionState.CONNECTED -> MaterialTheme.colorScheme.primary
                                 else -> Color.Transparent
                             }
                         ) {

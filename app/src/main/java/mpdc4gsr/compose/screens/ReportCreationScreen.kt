@@ -141,7 +141,7 @@ private fun ReportProgressIndicator(
             LinearProgressIndicator(
                 progress = { (currentStep + 1).toFloat() / steps.size },
                 modifier = Modifier.fillMaxWidth(),
-                color = Color.Blue,
+                color = MaterialTheme.colorScheme.primary,
                 trackColor = Color.Gray
             )
         }
@@ -184,9 +184,9 @@ private fun BasicInfoStep(
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedTextColor = Color.White,
                         unfocusedTextColor = Color.White,
-                        focusedBorderColor = Color.Blue,
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
                         unfocusedBorderColor = Color.Gray,
-                        focusedLabelColor = Color.Blue,
+                        focusedLabelColor = MaterialTheme.colorScheme.primary,
                         unfocusedLabelColor = Color.Gray
                     )
                 )
@@ -204,9 +204,9 @@ private fun BasicInfoStep(
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedTextColor = Color.White,
                         unfocusedTextColor = Color.White,
-                        focusedBorderColor = Color.Blue,
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
                         unfocusedBorderColor = Color.Gray,
-                        focusedLabelColor = Color.Blue,
+                        focusedLabelColor = MaterialTheme.colorScheme.primary,
                         unfocusedLabelColor = Color.Gray
                     )
                 )
@@ -261,9 +261,9 @@ private fun ContentStep(
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedTextColor = Color.White,
                         unfocusedTextColor = Color.White,
-                        focusedBorderColor = Color.Blue,
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
                         unfocusedBorderColor = Color.Gray,
-                        focusedLabelColor = Color.Blue,
+                        focusedLabelColor = MaterialTheme.colorScheme.primary,
                         unfocusedLabelColor = Color.Gray
                     )
                 )
@@ -402,7 +402,7 @@ private fun PreviewStep(
 
             Text(
                 text = "Export Format: ${format.displayName}",
-                color = Color.Blue,
+                color = MaterialTheme.colorScheme.primary,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -482,9 +482,9 @@ private fun ContentToggleItem(
             checked = checked,
             onCheckedChange = onCheckedChange,
             colors = SwitchDefaults.colors(
-                checkedThumbColor = Color.Blue,
+                checkedThumbColor = MaterialTheme.colorScheme.primary,
                 uncheckedThumbColor = Color.Gray,
-                checkedTrackColor = Color.Blue.copy(alpha = 0.3f),
+                checkedTrackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
                 uncheckedTrackColor = Color.Gray.copy(alpha = 0.3f)
             )
         )
@@ -500,7 +500,7 @@ private fun ReportFormatOption(
     Card(
         onClick = onSelected,
         colors = CardDefaults.cardColors(
-            containerColor = if (selected) Color.Blue.copy(alpha = 0.2f) else Color.Transparent
+            containerColor = if (selected) MaterialTheme.colorScheme.primary.copy(alpha = 0.2f) else Color.Transparent
         ),
         border = if (selected) CardDefaults.outlinedCardBorder() else null
     ) {
@@ -514,7 +514,7 @@ private fun ReportFormatOption(
                 selected = selected,
                 onClick = onSelected,
                 colors = RadioButtonDefaults.colors(
-                    selectedColor = Color.Blue,
+                    selectedColor = MaterialTheme.colorScheme.primary,
                     unselectedColor = Color.Gray
                 )
             )
@@ -569,7 +569,7 @@ private fun ReportNavigationButtons(
             Button(
                 onClick = onNext,
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Blue
+                    containerColor = MaterialTheme.colorScheme.primary
                 )
             ) {
                 Text("Next")
@@ -580,7 +580,7 @@ private fun ReportNavigationButtons(
             Button(
                 onClick = onFinish,
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Blue
+                    containerColor = MaterialTheme.colorScheme.primary
                 )
             ) {
                 Icon(Icons.Default.Check, contentDescription = null)

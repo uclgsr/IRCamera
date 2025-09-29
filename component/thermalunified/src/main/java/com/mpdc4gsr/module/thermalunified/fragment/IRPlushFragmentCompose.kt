@@ -301,7 +301,7 @@ class IRPlushFragmentCompose : BaseComposeFragment<IRPlushViewModel>() {
                 TemperatureCard(
                     label = "IR Min",
                     temperature = "${data.irMinTemp}°C",
-                    color = Color.Blue
+                    color = MaterialTheme.colorScheme.primary
                 )
 
                 TemperatureCard(
