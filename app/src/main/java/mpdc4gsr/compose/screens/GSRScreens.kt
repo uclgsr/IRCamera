@@ -46,37 +46,7 @@ fun GSRSettingsScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun GSRModernizationDemoScreen(
-    onBackClick: () -> Unit,
-    onNavigateToSettings: () -> Unit,
-    onNavigateToSessionDetail: (String) -> Unit
-) {
-    LibUnifiedTheme {
-        Scaffold(
-            topBar = {
-                TopAppBar(
-                    title = { Text("GSR Modernization Demo", fontWeight = FontWeight.Bold) },
-                    navigationIcon = {
-                        IconButton(onClick = onBackClick) {
-                            Icon(Icons.Default.ArrowBack, contentDescription = "Back")
-                        }
-                    }
-                )
-            }
-        ) { paddingValues ->
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues),
-                contentAlignment = Alignment.Center
-            ) {
-                Text("GSR Modernization Demo Screen - Use GSRModernizationDemoActivity")
-            }
-        }
-    }
-}
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -10,7 +10,7 @@ includes GSR (Galvanic Skin Response), RGB Camera, and Thermal IR sensors.
 
 ```
 compose/
-├── activity/                    # Demo and integration activities
+├── activity/                    # Integration activities
 ├── components/                  # Reusable UI components
 │   ├── sensors/                # Sensor-specific components
 │   ├── dashboard/              # Dashboard components  
@@ -89,11 +89,11 @@ compose/
 
 ## Usage
 
-### Demo Activity
+### Usage Examples
 
 ```kotlin
-// Launch the unified demo
-val intent = Intent(context, ComposeUnifiedDemoActivity::class.java)
+// Launch the main unified activity
+val intent = Intent(context, MainActivity::class.java)
 startActivity(intent)
 ```
 

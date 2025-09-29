@@ -14,7 +14,6 @@ components for comprehensive thesis evaluation.
 ### 2. Real Hardware Integration (NEW)
 
 - `real_integration_tests.py` - **Actual hardware integration testing**
-- `run_real_integration_demo.py` - Complete demonstration script
 
 ## Key Differences: Real vs Simulated Testing
 
@@ -78,7 +77,7 @@ python3 real_integration_tests.py
 
 ```bash
 cd testing-suite
-python3 run_real_integration_demo.py
+python3 real_integration_tests.py
 ```
 
 This will execute all test phases and generate comprehensive results in the `results/` directory.
