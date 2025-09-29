@@ -11,36 +11,80 @@
 
     <application>
 
+        <!-- Core Activities - Migrated to Compose -->
         <activity
-            android:name=".activity.IRMonitorActivity"
+            android:name=".activity.IRMonitorComposeActivity"
             android:launchMode="singleTop"
             android:screenOrientation="userPortrait" />
         
         <activity
-            android:name=".activity.IRLogMPChartActivity"
+            android:name=".activity.IRLogMPChartComposeActivity"
             android:launchMode="singleTop"
             android:screenOrientation="userPortrait" />
 
         <activity
-            android:name=".activity.IRConfigActivity"
+            android:name=".activity.IRConfigComposeActivity"
             android:launchMode="singleTop"
             android:screenOrientation="userPortrait" />
-        <activity android:name=".activity.TestRecordActivity" />
+        <!-- Test utility activity (deprecated - Java-based utility) -->
+        <!-- <activity android:name=".activity.TestRecordActivity" /> -->
+        
+        <!-- Report Activities - Migrated to Compose -->
         <activity
-            android:name=".report.activity.PDFListActivity"
+            android:name=".report.activity.ReportCreateComposeActivity"
+            android:screenOrientation="userPortrait" />
+        <activity
+            android:name=".report.activity.ReportPreviewComposeActivity"
+            android:screenOrientation="userPortrait" />
+        <activity
+            android:name=".report.activity.ReportPreviewSecondComposeActivity"
             android:screenOrientation="userPortrait" />
 
         <activity
-            android:name=".activity.IRCorrectionThreeActivity"
+            android:name=".activity.IRCorrectionThreeComposeActivity"
             android:screenOrientation="userPortrait" />
 
-        <activity
-            android:name=".activity.ReportPreviewActivity"
-            android:screenOrientation="userPortrait" />
+        <!-- Legacy Activities (deprecated - use Compose versions above) -->
+        <!-- <activity android:name=".activity.IRMonitorActivity" android:launchMode="singleTop" android:screenOrientation="userPortrait" /> -->
+        <!-- <activity android:name=".activity.IRLogMPChartActivity" android:launchMode="singleTop" android:screenOrientation="userPortrait" /> -->
+        <!-- <activity android:name=".activity.IRConfigActivity" android:launchMode="singleTop" android:screenOrientation="userPortrait" /> -->
+        <!-- <activity android:name=".report.activity.ReportCreateFirstActivity" android:screenOrientation="userPortrait" /> -->
+        <!-- <activity android:name=".report.activity.ReportCreateSecondActivity" android:screenOrientation="userPortrait" /> -->
+        <!-- <activity android:name=".report.activity.ReportDetailActivity" android:screenOrientation="userPortrait" /> -->
+        <!-- <activity android:name=".report.activity.ReportPreviewFirstActivity" android:screenOrientation="userPortrait" /> -->
+        <!-- <activity android:name=".report.activity.ReportPreviewSecondActivity" android:screenOrientation="userPortrait" /> -->
+        <!-- <activity android:name=".report.activity.PDFListActivity" android:screenOrientation="userPortrait" /> -->
+        <!-- <activity android:name=".activity.IRCorrectionThreeActivity" android:screenOrientation="userPortrait" /> -->
+        <!-- <activity android:name=".activity.ReportPreviewActivity" android:screenOrientation="userPortrait" /> -->
 
         <!-- Activities from thermal module -->
 
-        <!-- Activities from thermal-lite module -->
+        <!-- Activities from thermal-lite module - Migrated to Compose -->
+        <activity android:name=".lite.activity.IRMonitorLiteComposeActivity" />
+        <activity android:name=".activity.IRMonitorChartComposeActivity" />
+        <activity android:name=".lite.activity.IRCorrectionLiteThreeComposeActivity" />
+        <activity android:name=".lite.activity.IRCorrectionLiteFourComposeActivity" />
+        <activity
+            android:name=".lite.activity.ImagePickIRLiteComposeActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".lite.activity.IRThermalLiteComposeActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:maxAspectRatio="2.4"
+            android:requestLegacyExternalStorage="true"
+            android:screenOrientation="userPortrait"
+            android:windowSoftInputMode="adjustPan" />
+        
+        <!-- Legacy Activities (deprecated - use Compose versions above) -->
+        <!-- <activity android:name=".lite.activity.IRMonitorLiteActivity" /> -->
+        <!-- <activity android:name=".lite.activity.IRMonitorChartLiteActivity" /> -->
+        <!-- <activity android:name=".lite.activity.IRCorrectionLiteThreeActivity" /> -->
+        <!-- <activity android:name=".lite.activity.IRCorrectionLiteFourActivity" /> -->
+        <!-- <activity android:name=".lite.activity.ImagePickIRLiteActivity" android:screenOrientation="portrait" /> -->
+        <!-- <activity android:name=".lite.activity.IRThermalLiteActivity" android:configChanges="orientation|screenSize|keyboardHidden" android:exported="true" android:launchMode="singleTask" android:maxAspectRatio="2.4" android:requestLegacyExternalStorage="true" android:screenOrientation="userPortrait" android:windowSoftInputMode="adjustPan" /> -->
+
         <!-- Missing base activities -->
         
         <activity
@@ -78,6 +122,8 @@
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.IRCamera" />
+
+        <!-- Note: Component Module Compose Activities declared earlier in manifest to avoid duplicates -->
     </application>
 
 </manifest>

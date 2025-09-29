@@ -192,7 +192,7 @@ private fun SettingsSection(
     ) {
         Text(
             text = title,
-            color = Color.Blue,
+            color = MaterialTheme.colorScheme.primary,
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(bottom = 8.dp)
@@ -237,7 +237,7 @@ private fun SettingsItem(
             Icon(
                 imageVector = icon,
                 contentDescription = null,
-                tint = Color.Blue,
+                tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.size(24.dp)
             )
 
@@ -290,7 +290,7 @@ private fun SettingsSwitchItem(
         Icon(
             imageVector = icon,
             contentDescription = null,
-            tint = Color.Blue,
+            tint = MaterialTheme.colorScheme.primary,
             modifier = Modifier.size(24.dp)
         )
 
@@ -316,9 +316,9 @@ private fun SettingsSwitchItem(
             checked = checked,
             onCheckedChange = onCheckedChange,
             colors = SwitchDefaults.colors(
-                checkedThumbColor = Color.Blue,
+                checkedThumbColor = MaterialTheme.colorScheme.primary,
                 uncheckedThumbColor = Color.Gray,
-                checkedTrackColor = Color.Blue.copy(alpha = 0.3f),
+                checkedTrackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
                 uncheckedTrackColor = Color.Gray.copy(alpha = 0.3f)
             )
         )

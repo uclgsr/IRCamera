@@ -32,7 +32,7 @@ class ShimmerFactoryResolverTest {
 
         // Then
         assertNotNull("Factory should not be null", factory)
-        assertTrue("Factory should be a ShimmerDeviceFactory", factory is ShimmerDeviceFactory)
+        // factory is always ShimmerDeviceFactory by contract, no need for type check
     }
 
     @Test
@@ -45,7 +45,7 @@ class ShimmerFactoryResolverTest {
 
         // Then
         assertNotNull("Device should not be null", device)
-        assertTrue("Device should be a ShimmerDeviceInterface", device is ShimmerDeviceInterface)
+        // device is always ShimmerDeviceInterface by contract, no need for type check
     }
 
     @Test

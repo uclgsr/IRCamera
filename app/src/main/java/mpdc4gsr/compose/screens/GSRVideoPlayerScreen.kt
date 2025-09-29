@@ -93,7 +93,7 @@ fun GSRVideoPlayerScreen(
                     FloatingActionButton(
                         onClick = { isPlaying = !isPlaying },
                         modifier = Modifier.align(Alignment.Center),
-                        containerColor = Color.Blue.copy(alpha = 0.8f)
+                        containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f)
                     ) {
                         Icon(
                             imageVector = if (isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
@@ -192,8 +192,8 @@ private fun VideoControlsCard(
                 onValueChange = { onSeek(it.toInt()) },
                 valueRange = 0f..duration.toFloat(),
                 colors = SliderDefaults.colors(
-                    thumbColor = Color.Blue,
-                    activeTrackColor = Color.Blue,
+                    thumbColor = MaterialTheme.colorScheme.primary,
+                    activeTrackColor = MaterialTheme.colorScheme.primary,
                     inactiveTrackColor = Color.Gray
                 )
             )

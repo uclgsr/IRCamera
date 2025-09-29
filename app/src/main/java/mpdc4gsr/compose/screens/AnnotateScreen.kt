@@ -151,7 +151,7 @@ private fun ThermalImageWithAnnotations(
                     center = Offset(size.width * 0.3f, size.height * 0.4f)
                 )
                 drawCircle(
-                    color = Color.Blue,
+                    color = MaterialTheme.colorScheme.primary,
                     radius = 30f,
                     center = Offset(size.width * 0.7f, size.height * 0.6f)
                 )
@@ -273,7 +273,7 @@ private fun ReportInfoPanel(
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedTextColor = Color.White,
                     unfocusedTextColor = Color.White,
-                    focusedBorderColor = Color.Blue,
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
                     unfocusedBorderColor = Color.Gray
                 ),
                 modifier = Modifier.fillMaxWidth()
@@ -286,7 +286,7 @@ private fun ReportInfoPanel(
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedTextColor = Color.White,
                     unfocusedTextColor = Color.White,
-                    focusedBorderColor = Color.Blue,
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
                     unfocusedBorderColor = Color.Gray
                 ),
                 maxLines = 3,
