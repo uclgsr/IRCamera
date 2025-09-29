@@ -2,6 +2,7 @@ package com.mpdc4gsr.module.user.fragment
 
 import android.content.Intent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -22,8 +23,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeFragment
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.app.lms.feedback.activity.FeedbackActivity
@@ -93,7 +92,8 @@ class MineFragmentCompose : BaseComposeFragment<MineViewModel>() {
                 }
 
                 // Settings options
-                items(getSettingsItems()) { settingItem ->
+                val settingsItems = getSettingsItems()
+                items(settingsItems) { settingItem ->
                     SettingsCard(
                         item = settingItem,
                         onClick = {
@@ -141,15 +141,18 @@ class MineFragmentCompose : BaseComposeFragment<MineViewModel>() {
                     shape = CircleShape
                 ) {
                     if (userInfo?.avatarUrl?.isNotEmpty() == true) {
-                        AsyncImage(
-                            model = ImageRequest.Builder(LocalContext.current)
-                                .data(userInfo.avatarUrl)
-                                .crossfade(true)
-                                .build(),
-                            contentDescription = "Profile Picture",
+                        // TODO: Replace with AsyncImage when coil dependency is available
+                        Box(
                             modifier = Modifier.fillMaxSize(),
-                            contentScale = ContentScale.Crop
-                        )
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                Icons.Default.AccountCircle,
+                                contentDescription = "Profile Picture",
+                                modifier = Modifier.size(40.dp),
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        }
                     } else {
                         Box(
                             modifier = Modifier.fillMaxSize(),
@@ -466,42 +469,42 @@ class MineFragmentCompose : BaseComposeFragment<MineViewModel>() {
                 title = "General Settings",
                 subtitle = "Language, theme, notifications",
                 icon = Icons.Default.Settings,
-                iconTint = MaterialTheme.colorScheme.primary
+                iconTint = androidx.compose.ui.graphics.Color.Blue
             ),
             SettingsItem(
                 id = "thermal",
                 title = "Thermal Settings",
                 subtitle = "Camera calibration, temperature units",
                 icon = Icons.Default.Thermostat,
-                iconTint = MaterialTheme.colorScheme.secondary
+                iconTint = androidx.compose.ui.graphics.Color.Red
             ),
             SettingsItem(
                 id = "network",
                 title = "Network Settings",
                 subtitle = "WiFi, connection preferences",
                 icon = Icons.Default.NetworkWifi,
-                iconTint = MaterialTheme.colorScheme.tertiary
+                iconTint = androidx.compose.ui.graphics.Color.Green
             ),
             SettingsItem(
                 id = "storage",
                 title = "Storage Management",
                 subtitle = "File locations, auto-cleanup",
                 icon = Icons.Default.Storage,
-                iconTint = MaterialTheme.colorScheme.primary
+                iconTint = androidx.compose.ui.graphics.Color.Blue
             ),
             SettingsItem(
                 id = "feedback",
                 title = "Feedback & Support",
                 subtitle = "Send feedback, get help",
                 icon = Icons.Default.Feedback,
-                iconTint = MaterialTheme.colorScheme.secondary
+                iconTint = androidx.compose.ui.graphics.Color.Red
             ),
             SettingsItem(
                 id = "about",
                 title = "About",
                 subtitle = "Version info, licenses",
                 icon = Icons.Default.Info,
-                iconTint = MaterialTheme.colorScheme.onSurfaceVariant
+                iconTint = androidx.compose.ui.graphics.Color.Gray
             )
         )
     }
