@@ -69,6 +69,8 @@
                 <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
                 <action android:name="android.hardware.usb.action.USB_DEVICE_DETACHED" />
                 <action android:name="mpdc4gsr.USB_PERMISSION" />
+            </intent-filter>
+        </receiver>
 
         <activity
             android:name="mpdc4gsr.activities.NetworkConfigActivity"
