@@ -465,10 +465,9 @@ class GalleryVideoFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
     }
 
     private fun formatDuration(durationMs: Long): String {
-        val duration = durationMs.milliseconds
-        val hours = duration.inWholeHours
-        val minutes = (duration.inWholeMinutes % 60)
-        val seconds = (duration.inWholeSeconds % 60)
+        val hours = durationMs / 3600000
+        val minutes = (durationMs / 60000) % 60
+        val seconds = (durationMs / 1000) % 60
         
         return when {
             hours > 0 -> "%d:%02d:%02d".format(hours, minutes, seconds)
