@@ -69,6 +69,273 @@
                 <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
                 <action android:name="android.hardware.usb.action.USB_DEVICE_DETACHED" />
                 <action android:name="mpdc4gsr.USB_PERMISSION" />
+
+        <activity
+            android:name="mpdc4gsr.activities.NetworkConfigActivity"
+            android:exported="false"
+            android:label="Network Configuration"
+            android:screenOrientation="userPortrait"
+            android:theme="@style/AppTheme" />
+
+        <activity
+            android:name="mpdc4gsr.sensors.gsr.MultiModalRecordingActivity"
+            android:exported="false" />
+
+        <activity
+            android:name="mpdc4gsr.sensors.gsr.GSRQuickRecordingActivity"
+            android:exported="false"
+            android:label="@string/gsr_quick_access" />
+
+        <activity
+            android:name="mpdc4gsr.activities.FaultTolerantRecordingActivity"
+            android:exported="false"
+            android:label="@string/enhanced_recording_label" />
+
+        <activity
+            android:name="mpdc4gsr.sensors.gsr.SessionManagerActivity"
+            android:exported="false"
+            android:label="Session Manager" />
+        <activity
+            android:name="mpdc4gsr.sensors.gsr.ResearchTemplateActivity"
+            android:exported="false"
+            android:label="Research Templates" />
+        <activity
+            android:name="mpdc4gsr.sensors.gsr.SessionDetailActivity"
+            android:exported="false"
+            android:label="Session Details" />
+        <activity
+            android:name="mpdc4gsr.sensors.gsr.SessionDetailComposeActivity"
+            android:exported="false"
+            android:label="Session Details (Compose)"
+            android:theme="@style/AppTheme" />
+
+        <activity
+            android:name="mpdc4gsr.sensors.gsr.GSRPlotComposeActivity"
+            android:exported="false"
+            android:label="GSR Data Analysis (Compose)"
+            android:theme="@style/AppTheme" />
+
+        <activity
+            android:name="mpdc4gsr.sensors.gsr.GSRDataViewComposeActivity"
+            android:exported="false"
+            android:label="GSR Data Viewer (Compose)"
+            android:theme="@style/AppTheme" />
+
+        <activity
+            android:name="mpdc4gsr.sensors.gsr.GSRVideoPlayerComposeActivity"
+            android:exported="false"
+            android:label="GSR Video Player (Compose)"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name="mpdc4gsr.sensors.gsr.SessionExportActivity"
+            android:exported="false"
+            android:label="Export Session" />
+
+        <activity
+            android:name="mpdc4gsr.sensors.HubSpokeIntegrationActivity"
+            android:exported="false"
+            android:label="Hub-Spoke Recording" />
+
+        <activity
+            android:name="mpdc4gsr.network.DevicePairingActivity"
+            android:exported="false"
+            android:label="Device Pairing" />
+
+        <activity
+            android:name="mpdc4gsr.activities.DevicePairingActivityCompose"
+            android:exported="false"
+            android:label="Device Pairing (Compose)" />
+
+        <activity
+            android:name="mpdc4gsr.permissions.PermissionRequestActivity"
+            android:exported="false"
+            android:label="Enhanced Permission System Test" />
+
+        <!-- Additional GSR Activities -->
+        <activity
+            android:name="mpdc4gsr.sensors.gsr.GSRVideoPlayerActivity"
+            android:exported="false"
+            android:label="GSR Video Player" />
+        <activity
+            android:name="mpdc4gsr.sensors.gsr.GSRPlotActivity"
+            android:exported="false"
+            android:label="GSR Plot Viewer" />
+        <activity
+            android:name="mpdc4gsr.sensors.gsr.GSRDataViewActivity"
+            android:exported="false"
+            android:label="GSR Data Viewer" />
+        <activity
+            android:name="mpdc4gsr.sensors.gsr.GSRSettingsActivity"
+            android:exported="false"
+            android:label="GSR Settings" />
+        <activity
+            android:name="mpdc4gsr.sensors.gsr.GSRSettingsComposeActivity"
+            android:exported="false"
+            android:label="GSR Settings (Compose)"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name="mpdc4gsr.sensors.gsr.GSRRawImageViewActivity"
+            android:exported="false"
+            android:label="GSR Raw Image Viewer" />
+        <activity
+            android:name="mpdc4gsr.sensors.gsr.GSRGalleryActivity"
+            android:exported="false"
+            android:label="GSR Gallery" />
+        <activity
+            android:name="mpdc4gsr.sensors.gsr.GSRDeviceManagementActivity"
+            android:exported="false"
+            android:label="GSR Device Management" />
+        <activity
+            android:name="mpdc4gsr.sensors.gsr.ShimmerConfigActivity"
+            android:exported="false"
+            android:label="Shimmer Configuration" />
+
+
+        <activity
+            android:name="mpdc4gsr.compose.activity.MainComposeActivity"
+            android:exported="true"
+            android:label="IR Camera - Compose UI"
+            android:theme="@style/Theme.AppCompat.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="mpdc4gsr.compose.activity.ComposeUnifiedDemoActivity"
+            android:exported="true"
+            android:label="IR Camera Compose Demo"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+
+        <!-- Test Activities -->
+        <activity
+            android:name="mpdc4gsr.sensors.gsr.GSRBenchTestActivity"
+            android:exported="false"
+            android:label="GSR Benchmark Test" />
+        <activity
+            android:name="mpdc4gsr.sensors.gsr.GSRDataIntegrityTestActivity"
+            android:exported="false"
+            android:label="GSR Data Integrity Test" />
+        <activity
+            android:name="mpdc4gsr.sensors.gsr.GSRReconnectionTestActivity"
+            android:exported="false"
+            android:label="GSR Reconnection Test" />
+        <activity
+            android:name="mpdc4gsr.sensors.gsr.ParallelRecordingTestActivity"
+            android:exported="false"
+            android:label="Parallel Recording Test" />
+        <activity
+            android:name="mpdc4gsr.sensors.gsr.SessionLifecycleTestActivity"
+            android:exported="false"
+            android:label="Session Lifecycle Test" />
+
+        <!-- Camera Activities -->
+        <activity
+            android:name="mpdc4gsr.camera.integration.DualModeCameraActivity"
+            android:exported="false"
+            android:label="Dual Mode Camera" />
+
+        <activity
+            android:name="mpdc4gsr.activities.DualModeCameraActivityCompose"
+            android:exported="false"
+            android:label="Dual Mode Camera (Compose)" />
+
+        <activity
+            android:name="mpdc4gsr.activities.CameraNetworkDemoActivity"
+            android:exported="true"
+            android:label="Camera &amp; Network Demo">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="mpdc4gsr.sensors.gsr.RawCaptureTestActivity"
+            android:exported="false"
+            android:label="Raw Capture Test" />
+        <activity
+            android:name="mpdc4gsr.sensors.gsr.RgbCameraTestActivity"
+            android:exported="false"
+            android:label="RGB Camera Test" />
+
+        <!-- Session and Synchronization Activities -->
+        <activity
+            android:name="mpdc4gsr.sensors.gsr.CompleteSessionTrialActivity"
+            android:exported="false"
+            android:label="Complete Session Trial" />
+
+        <activity
+            android:name="mpdc4gsr.sensors.gsr.CrossModalSyncTestActivity"
+            android:exported="false"
+            android:label="Cross Modal Sync Test" />
+        <activity
+            android:name="mpdc4gsr.sensors.gsr.SynchronizationTestActivity"
+            android:exported="false"
+            android:label="Synchronization Test" />
+        <activity
+            android:name="mpdc4gsr.sensors.gsr.TimeSynchronizationTestActivity"
+            android:exported="false"
+            android:label="Time Synchronization Test" />
+
+        <!-- BLE and Permission Activities -->
+        <activity
+            android:name="mpdc4gsr.sensors.gsr.BLEIntegrationTestActivity"
+            android:exported="false"
+            android:label="BLE Integration Test" />
+
+
+        <!-- Simplified Main Activity -->
+        <activity
+            android:name="mpdc4gsr.activities.SimplifiedMainActivity"
+            android:exported="false"
+            android:label="Simplified Main"
+            android:theme="@style/AppTheme" />
+
+        <!-- Jetpack Compose Activities -->
+        <activity
+            android:name="mpdc4gsr.activities.SensorDashboardComposeActivity"
+            android:exported="false"
+            android:label="Sensor Dashboard (Compose)"
+            android:screenOrientation="userPortrait"
+            android:theme="@style/AppTheme" />
+
+        <activity
+            android:name="mpdc4gsr.activities.SettingsComposeActivity"
+            android:exported="false"
+            android:label="Settings (Compose)"
+            android:screenOrientation="userPortrait"
+            android:theme="@style/AppTheme" />
+
+        <activity
+            android:name="mpdc4gsr.activities.ComposeDemoActivity"
+            android:exported="true"
+            android:label="Compose Infrastructure Demo"
+            android:screenOrientation="userPortrait"
+            android:theme="@style/AppTheme" />
+
+        <activity
+            android:name="mpdc4gsr.activities.FullMigrationDemoActivity"
+            android:exported="true"
+            android:label="Full Migration Demo"
+            android:screenOrientation="userPortrait"
+            android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="mpdc4gsr.activities.ComposeMigrationLauncherActivity"
+            android:exported="true"
+            android:label="Compose Migration Launcher"
+            android:screenOrientation="userPortrait"
+            android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <meta-data
                 android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
