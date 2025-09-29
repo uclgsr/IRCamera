@@ -148,10 +148,10 @@ object NavigationManager {
 
                 RouterConfig.REPORT_PICK_IMG -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.ReportPickImgComposeActivity")
 
-                RouterConfig.QUESTION -> getClassByName("com.mpdc4gsr.module.user.activity.QuestionActivity")
-                RouterConfig.ELECTRONIC_MANUAL -> getClassByName("com.mpdc4gsr.module.user.activity.ElectronicManualActivity")
-                RouterConfig.STORAGE_SPACE -> getClassByName("com.mpdc4gsr.module.user.activity.StorageSpaceActivity")
-                RouterConfig.TC_MORE -> getClassByName("com.mpdc4gsr.module.user.activity.MoreActivity")
+                RouterConfig.QUESTION -> getClassByName("com.mpdc4gsr.module.user.activity.QuestionComposeActivity")
+                RouterConfig.ELECTRONIC_MANUAL -> getClassByName("com.mpdc4gsr.module.user.activity.ElectronicManualComposeActivity")
+                RouterConfig.STORAGE_SPACE -> getClassByName("com.mpdc4gsr.module.user.activity.StorageSpaceComposeActivity")
+                RouterConfig.TC_MORE -> getClassByName("com.mpdc4gsr.module.user.activity.MoreComposeActivity")
 
                 RouterConfig.GSR_MULTI_MODAL -> getClassByName("mpdc4gsr.gsr.MultiModalRecordingActivity")
                 RouterConfig.GSR_DEMO -> getClassByName("com.mpdc4gsr.component.gsr.activity.GSRDemoActivity")
@@ -159,18 +159,18 @@ object NavigationManager {
                 RouterConfig.IR_GALLERY_HOME -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.IRGalleryActivity")
                 RouterConfig.IR_CAMERA_SETTING -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.IRCameraSettingActivity")
 
-                RouterConfig.QUESTION_DETAILS -> getClassByName("com.mpdc4gsr.module.user.activity.QuestionDetailActivity")
+                RouterConfig.QUESTION_DETAILS -> getClassByName("com.mpdc4gsr.module.user.activity.QuestionDetailsComposeActivity")
 
                 RouterConfig.PDF -> getClassByName("com.mpdc4gsr.module.user.activity.PDFActivity")
 
-                RouterConfig.DEVICE_INFORMATION -> getClassByName("com.mpdc4gsr.module.user.activity.DeviceDetailsActivity")
-                RouterConfig.TISR -> getClassByName("com.mpdc4gsr.module.user.activity.TISRActivity")
-                RouterConfig.AUTO_SAVE -> getClassByName("com.mpdc4gsr.module.user.activity.AutoSaveActivity")
+                RouterConfig.DEVICE_INFORMATION -> getClassByName("com.mpdc4gsr.module.user.activity.DeviceDetailsComposeActivity")
+                RouterConfig.TISR -> getClassByName("com.mpdc4gsr.module.user.activity.TISRComposeActivity")
+                RouterConfig.AUTO_SAVE -> getClassByName("com.mpdc4gsr.module.user.activity.AutoSaveComposeActivity")
 
                 RouterConfig.IR_CORRECTION_TWO -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.IRCorrectionTwoActivity")
                 RouterConfig.IR_GALLERY_DETAIL_01 -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.IRGalleryDetail01Activity")
                 RouterConfig.REPORT_PICK_IMG -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.ReportPickImgActivity")
-                RouterConfig.UNIT -> getClassByName("com.mpdc4gsr.module.user.activity.UnitActivity")
+                RouterConfig.UNIT -> getClassByName("com.mpdc4gsr.module.user.activity.UnitComposeActivity")
 
                 else -> {
                     throw IllegalArgumentException("Unknown route: $route")
