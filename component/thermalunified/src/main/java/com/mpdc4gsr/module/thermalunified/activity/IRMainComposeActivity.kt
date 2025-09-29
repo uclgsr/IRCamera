@@ -94,12 +94,22 @@ class IRMainComposeActivity : BaseComposeActivity<IRMainActivityViewModel>() {
 
 @Composable
 private fun ThermalTabContent() {
-    // Embed existing thermal fragment using AndroidView
+    val context = LocalContext.current
+    val activity = context as? IRMainComposeActivity
+    
+    // Embed existing thermal fragment using AndroidView with proper FragmentManager integration
     AndroidView(
         factory = { context ->
-            val fragment = IRThermalFragment()
             androidx.fragment.app.FragmentContainerView(context).apply {
                 id = androidx.core.R.id.accessibility_custom_action_0
+            }
+        },
+        update = { view ->
+            activity?.let {
+                val fragment = IRThermalFragment()
+                it.supportFragmentManager.beginTransaction()
+                    .replace(view.id, fragment)
+                    .commitAllowingStateLoss()
             }
         },
         modifier = Modifier.fillMaxSize()
@@ -108,12 +118,22 @@ private fun ThermalTabContent() {
 
 @Composable
 private fun GalleryTabContent() {
-    // Embed existing gallery fragment using AndroidView
+    val context = LocalContext.current
+    val activity = context as? IRMainComposeActivity
+    
+    // Embed existing gallery fragment using AndroidView with proper FragmentManager integration
     AndroidView(
         factory = { context ->
-            val fragment = IRGalleryTabFragment()
             androidx.fragment.app.FragmentContainerView(context).apply {
                 id = androidx.core.R.id.accessibility_custom_action_1
+            }
+        },
+        update = { view ->
+            activity?.let {
+                val fragment = IRGalleryTabFragment()
+                it.supportFragmentManager.beginTransaction()
+                    .replace(view.id, fragment)
+                    .commitAllowingStateLoss()
             }
         },
         modifier = Modifier.fillMaxSize()
@@ -122,12 +142,22 @@ private fun GalleryTabContent() {
 
 @Composable
 private fun AbilityTabContent() {
-    // Embed existing ability fragment using AndroidView
+    val context = LocalContext.current
+    val activity = context as? IRMainComposeActivity
+    
+    // Embed existing ability fragment using AndroidView with proper FragmentManager integration
     AndroidView(
         factory = { context ->
-            val fragment = AbilityFragment()
             androidx.fragment.app.FragmentContainerView(context).apply {
                 id = androidx.core.R.id.accessibility_custom_action_2
+            }
+        },
+        update = { view ->
+            activity?.let {
+                val fragment = AbilityFragment()
+                it.supportFragmentManager.beginTransaction()
+                    .replace(view.id, fragment)
+                    .commitAllowingStateLoss()
             }
         },
         modifier = Modifier.fillMaxSize()
@@ -136,12 +166,22 @@ private fun AbilityTabContent() {
 
 @Composable
 private fun PDFTabContent() {
-    // Embed existing PDF fragment using AndroidView
+    val context = LocalContext.current
+    val activity = context as? IRMainComposeActivity
+    
+    // Embed existing PDF fragment using AndroidView with proper FragmentManager integration
     AndroidView(
         factory = { context ->
-            val fragment = PDFListFragment()
             androidx.fragment.app.FragmentContainerView(context).apply {
                 id = androidx.core.R.id.accessibility_custom_action_3
+            }
+        },
+        update = { view ->
+            activity?.let {
+                val fragment = PDFListFragment()
+                it.supportFragmentManager.beginTransaction()
+                    .replace(view.id, fragment)
+                    .commitAllowingStateLoss()
             }
         },
         modifier = Modifier.fillMaxSize()
@@ -150,12 +190,22 @@ private fun PDFTabContent() {
 
 @Composable
 private fun MoreTabContent() {
-    // Embed existing more fragment using AndroidView
+    val context = LocalContext.current
+    val activity = context as? IRMainComposeActivity
+    
+    // Embed existing more fragment using AndroidView with proper FragmentManager integration
     AndroidView(
         factory = { context ->
-            val fragment = MoreFragment()
             androidx.fragment.app.FragmentContainerView(context).apply {
                 id = androidx.core.R.id.accessibility_custom_action_4
+            }
+        },
+        update = { view ->
+            activity?.let {
+                val fragment = MoreFragment()
+                it.supportFragmentManager.beginTransaction()
+                    .replace(view.id, fragment)
+                    .commitAllowingStateLoss()
             }
         },
         modifier = Modifier.fillMaxSize()
