@@ -211,8 +211,15 @@ dependencies {
     // Compose dependencies for shared base classes
     api(platform(libs.compose.bom))
     api(libs.compose.ui)
+    api(libs.compose.ui.tooling.preview)
     api(libs.compose.material3)
     api(libs.compose.activity)
+    api(libs.compose.material.icons.core)
+    api(libs.compose.material.icons.extended)
+    
+    // Compose debug dependencies
+    debugApi(libs.compose.ui.tooling)
+    debugApi(libs.compose.ui.test.manifest)
 
     testImplementation("org.robolectric:robolectric:4.10.3")
     testImplementation("junit:junit:4.13.2")

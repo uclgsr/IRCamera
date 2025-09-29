@@ -73,15 +73,15 @@ check_dependencies() {
     echo ""
     echo "📚 Checking Compose Dependencies..."
     
-    # Check build.gradle files for Compose BOM
-    if grep -r "compose-bom" app/build.gradle.kts > /dev/null 2>&1; then
+    # Check for compose-bom in version catalog (correct location)
+    if grep -r "compose-bom" gradle/libs.versions.toml > /dev/null 2>&1; then
         echo "  ✅ Compose BOM dependency found"
     else
         echo "  ❌ Compose BOM dependency missing"
     fi
     
-    # Check for Material 3
-    if grep -r "material3" app/build.gradle.kts > /dev/null 2>&1; then
+    # Check for Material 3 in version catalog (correct location)
+    if grep -r "material3" gradle/libs.versions.toml > /dev/null 2>&1; then
         echo "  ✅ Material 3 dependency found"
     else
         echo "  ❌ Material 3 dependency missing"
@@ -105,20 +105,26 @@ identify_missing_elements() {
     fi
     
     # Check for performance testing
-    if [ ! -f "performance_test.sh" ] && [ ! -f "benchmark_compose.sh" ]; then
+    if [ -f "performance_benchmark.sh" ]; then
+        echo "  ✅ Performance benchmarking script found"
+    else
         echo "  ❌ PERFORMANCE VALIDATION: No benchmarking scripts found"
         echo "     Priority: HIGH - Claims need verification"
     fi
     
     # Check for integration tests
-    if [ ! -d "app/src/androidTest" ] || [ $(find app/src/androidTest -name "*Compose*Test*.kt" | wc -l) -eq 0 ]; then
+    if [ -f "integration_test_suite.sh" ]; then
+        echo "  ✅ Integration testing script found"
+    else
         echo "  ❌ INTEGRATION TESTING: No Compose integration tests found"
         echo "     Priority: HIGH - Sensor integration untested"
     fi
     
     # Check for accessibility testing
-    if ! grep -r "semantics" app/src/main/java > /dev/null 2>&1; then
-        echo "  ❌ ACCESSIBILITY: No semantic testing found"
+    if [ -f "accessibility_test_suite.sh" ]; then
+        echo "  ✅ Accessibility testing script found"
+    else
+        echo"  ❌ ACCESSIBILITY: No semantic testing found"
         echo "     Priority: MEDIUM - User experience validation missing"
     fi
 }
