@@ -127,6 +127,20 @@
             android:label="IR Camera Compose Demo"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
 
+        <!-- Navigation Demo Activity -->
+        <activity
+            android:name="mpdc4gsr.compose.navigation.IRCameraNavHost"
+            android:exported="false"
+            android:label="IR Camera Navigation Demo"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+
+        <!-- Navigation Test Activity -->
+        <activity
+            android:name="mpdc4gsr.activities.NavigationTestActivity"
+            android:exported="true"
+            android:label="Navigation Test"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+
         <!-- Test Activities -->
 
         <!-- File Provider -->
