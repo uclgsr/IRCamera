@@ -346,6 +346,34 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                     }
                 )
 
+                LauncherCard(
+                    title = "Network Client Test (Compose)",
+                    subtitle = "Test Wi-Fi and Bluetooth network connections",
+                    icon = Icons.Default.NetworkWifi,
+                    onClick = {
+                        startActivity(
+                            Intent(
+                                this@ComposeMigrationLauncherActivity,
+                                NetworkClientTestActivityCompose::class.java
+                            )
+                        )
+                    }
+                )
+
+                LauncherCard(
+                    title = "USB Device Handler (Compose)",
+                    subtitle = "Modern USB device attachment handling",
+                    icon = Icons.Default.Usb,
+                    onClick = {
+                        startActivity(
+                            Intent(
+                                this@ComposeMigrationLauncherActivity,
+                                BlankDevActivityCompose::class.java
+                            )
+                        )
+                    }
+                )
+
                 // New GSR Sensor Activities Section
                 Text(
                     text = "GSR Sensor Activities (High Priority)",
