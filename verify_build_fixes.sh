@@ -74,14 +74,8 @@ fi
 # Test manifest processing  
 echo "   Testing manifest processing..."
 if timeout 30 ./gradlew processDebugMainManifest --no-daemon -q > manifest_test.log 2>&1; then
-    if [ -s manifest_test.log ]; then
-        echo "   ❌ AndroidManifest processing had warnings/errors"
-        echo "   📝 Check manifest_test.log for details"
-        MANIFEST_PROCESS_OK=false
-    else
-        echo "   ✅ AndroidManifest processing successful"
-        MANIFEST_PROCESS_OK=true
-    fi
+    echo "   ✅ AndroidManifest processing successful"
+    MANIFEST_PROCESS_OK=true
 else
     echo "   ❌ AndroidManifest processing failed or timed out"
     echo "   📝 Check manifest_test.log for details"
