@@ -109,11 +109,10 @@ dependencies {
     implementation(libs.compose.material3)
     implementation(libs.compose.activity)
     implementation(libs.compose.viewmodel)
+    implementation(libs.compose.material.icons.core)
+    implementation(libs.compose.material.icons.extended)
     debugImplementation(libs.compose.ui.tooling)
     debugImplementation(libs.compose.ui.test.manifest)
-
-    // Image loading for Compose
-    implementation(libs.coil.compose)
 
     // Utilities
     implementation(libs.utilcode)
