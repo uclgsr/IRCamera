@@ -325,11 +325,7 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name="mpdc4gsr.compose.activity.ComposeUnifiedDemoActivity"
-            android:exported="true"
-            android:label="IR Camera Compose Demo"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
+
 
         <!-- Navigation Demo Activity -->
         <activity
@@ -345,12 +341,7 @@
             android:label="Navigation Test"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
 
-        <!-- Unified Navigation Demo Activity -->
-        <activity
-            android:name="mpdc4gsr.activities.UnifiedNavigationDemoActivity"
-            android:exported="true"
-            android:label="Navigation System Demo"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
+
 
         <!-- Comprehensive Integration Test Activity -->
         <activity
@@ -392,15 +383,7 @@
             android:exported="false"
             android:label="Dual Mode Camera (Compose)" />
 
-        <activity
-            android:name="mpdc4gsr.activities.CameraNetworkDemoActivity"
-            android:exported="true"
-            android:label="Camera &amp; Network Demo">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+
 
         <activity
             android:name="mpdc4gsr.sensors.gsr.RawCaptureTestActivity"
@@ -454,24 +437,9 @@
 
         <!-- Duplicate entry removed - SettingsComposeActivity already declared above -->
 
-        <activity
-            android:name="mpdc4gsr.activities.ComposeDemoActivity"
-            android:exported="true"
-            android:label="Compose Infrastructure Demo"
-            android:screenOrientation="userPortrait"
-            android:theme="@style/AppTheme" />
 
-        <activity
-            android:name="mpdc4gsr.activities.FullMigrationDemoActivity"
-            android:exported="true"
-            android:label="Full Migration Demo"
-            android:screenOrientation="userPortrait"
-            android:theme="@style/AppTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
+
+
 
         <activity
             android:name="mpdc4gsr.activities.ComposeMigrationLauncherActivity"

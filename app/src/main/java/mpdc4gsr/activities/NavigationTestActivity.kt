@@ -75,8 +75,7 @@ fun NavigationTestScreen() {
                     "Device Pairing" to UnifiedRoute.DevicePairing.route,
                     "Permission Request" to UnifiedRoute.PermissionRequest.route,
                     "Settings" to UnifiedRoute.Settings.route,
-                    "About" to UnifiedRoute.About.route,
-                    "Modernization Progress" to UnifiedRoute.ModernizationProgress.route
+                    "About" to UnifiedRoute.About.route
                 )
                 
                 items(routes) { (name, route) ->
