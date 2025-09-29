@@ -28,9 +28,12 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.Dispatchers
 import mpdc4gsr.compose.base.BaseComposeActivity
 import mpdc4gsr.compose.theme.IRCameraTheme
 import mpdc4gsr.viewmodel.BaseViewModel
+import androidx.lifecycle.viewModelScope
 
 /**
  * GSRDeviceManagementActivityCompose - Enhanced Compose GSR Device Management
@@ -548,6 +551,8 @@ data class GSRDeviceManagementUiState(
 class GSRDeviceManagementViewModel : BaseViewModel() {
     private val _uiState = androidx.compose.runtime.mutableStateOf(GSRDeviceManagementUiState())
     val uiState: androidx.compose.runtime.State<GSRDeviceManagementUiState> = _uiState
+    
+    private var scanningJob: Job? = null
 
     fun checkPermissions(context: Context) {
         val hasPermissions = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
@@ -569,8 +574,11 @@ class GSRDeviceManagementViewModel : BaseViewModel() {
     fun startScanning(context: Context) {
         _uiState.value = _uiState.value.copy(isScanning = true)
         
-        // Simulate device discovery
-        kotlinx.coroutines.GlobalScope.launch {
+        // Cancel any existing scanning job
+        scanningJob?.cancel()
+        
+        // Simulate device discovery on main dispatcher
+        scanningJob = viewModelScope.launch(Dispatchers.Main) {
             delay(2000)
             val mockDevices = listOf(
                 GSRDevice("00:11:22:33:44:55", "Shimmer GSR #1", batteryLevel = 85),
@@ -586,6 +594,13 @@ class GSRDeviceManagementViewModel : BaseViewModel() {
 
     fun stopScanning() {
         _uiState.value = _uiState.value.copy(isScanning = false)
+        scanningJob?.cancel()
+        scanningJob = null
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        scanningJob?.cancel()
     }
 
     fun connectDevice(device: GSRDevice) {

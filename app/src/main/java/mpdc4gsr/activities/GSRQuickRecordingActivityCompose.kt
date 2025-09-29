@@ -17,9 +17,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.Dispatchers
 import mpdc4gsr.compose.base.BaseComposeActivity
 import mpdc4gsr.compose.theme.IRCameraTheme
 import mpdc4gsr.viewmodel.BaseViewModel
+import androidx.lifecycle.viewModelScope
 
 /**
  * GSRQuickRecordingActivityCompose - Enhanced Quick GSR Recording
@@ -521,6 +524,8 @@ data class GSRQuickRecordingUiState(
 class GSRQuickRecordingViewModel : BaseViewModel() {
     private val _uiState = androidx.compose.runtime.mutableStateOf(GSRQuickRecordingUiState())
     val uiState: androidx.compose.runtime.State<GSRQuickRecordingUiState> = _uiState
+    
+    private var recordingJob: Job? = null
 
     fun initializeQuickRecording() {
         val mockSessions = listOf(
@@ -535,8 +540,11 @@ class GSRQuickRecordingViewModel : BaseViewModel() {
     fun startQuickRecording() {
         _uiState.value = _uiState.value.copy(isRecording = true)
         
-        // Simulate recording
-        kotlinx.coroutines.GlobalScope.launch {
+        // Cancel any existing recording job
+        recordingJob?.cancel()
+        
+        // Start recording simulation on main dispatcher
+        recordingJob = viewModelScope.launch(Dispatchers.Main) {
             while (_uiState.value.isRecording) {
                 delay(1000)
                 val currentState = _uiState.value
@@ -553,6 +561,13 @@ class GSRQuickRecordingViewModel : BaseViewModel() {
 
     fun stopQuickRecording() {
         _uiState.value = _uiState.value.copy(isRecording = false)
+        recordingJob?.cancel()
+        recordingJob = null
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        recordingJob?.cancel()
     }
 
     fun setSampleRate(rate: Int) {
