@@ -30,17 +30,16 @@ sealed class UnifiedRoute(val route: String) {
 
     // GSR Sensor Routes
     object GSRSettings : UnifiedRoute("gsr_settings")
-    object GSRModernizationDemo : UnifiedRoute("gsr_modernization_demo")
+    object GSRDemo : UnifiedRoute("gsr_demo")
     object GSRPlot : UnifiedRoute("gsr_plot/{sessionId}") {
         fun createRoute(sessionId: String) = "gsr_plot/$sessionId"
     }
-
-    object GSRDataView : UnifiedRoute("gsr_data_view/{filePath}") {
-        fun createRoute(filePath: String) = "gsr_data_view/$filePath"
+    object GSRDataView : UnifiedRoute("gsr_data_view") {
+        // File paths should be passed via arguments, not URL parameters
+        fun createRoute() = "gsr_data_view"
     }
-
-    object SessionDetail : UnifiedRoute("session_detail/{sessionId}") {
-        fun createRoute(sessionId: String) = "session_detail/$sessionId"
+    object GSRSessionDetail : UnifiedRoute("gsr_session_detail/{sessionId}") {
+        fun createRoute(sessionId: String) = "gsr_session_detail/$sessionId"
     }
 
     // Camera Integration Routes
@@ -52,9 +51,9 @@ sealed class UnifiedRoute(val route: String) {
     object DevicePairing : UnifiedRoute("device_pairing")
     object PermissionRequest : UnifiedRoute("permission_request")
 
-    // Thermal Camera Routes
+    // Thermal Camera Routes (consistent naming)
     object ThermalMain : UnifiedRoute("thermal_main")
-    object ThermalGallery : UnifiedRoute("thermal_gallery")
+    object ThermalGallery : UnifiedRoute("thermal_gallery") 
     object ThermalReport : UnifiedRoute("thermal_report")
     object ThermalCamera : UnifiedRoute("thermal_camera")
     object ThermalSettings : UnifiedRoute("thermal_settings")
@@ -130,17 +129,17 @@ fun UnifiedNavHost(
             )
         }
 
-        composable(UnifiedRoute.GSRModernizationDemo.route) {
+        composable(UnifiedRoute.GSRDemo.route) {
             GSRModernizationDemoScreen(
                 onBackClick = { navController.popBackStack() },
                 onNavigateToSettings = { navController.navigate(UnifiedRoute.GSRSettings.route) },
                 onNavigateToSessionDetail = { sessionId ->
-                    navController.navigate(UnifiedRoute.SessionDetail.createRoute(sessionId))
+                    navController.navigate(UnifiedRoute.GSRSessionDetail.createRoute(sessionId))
                 }
             )
         }
 
-        composable(UnifiedRoute.SessionDetail.route) { backStackEntry ->
+        composable(UnifiedRoute.GSRSessionDetail.route) { backStackEntry ->
             val sessionId = backStackEntry.arguments?.getString("sessionId") ?: "unknown"
             SessionDetailScreen(
                 sessionId = sessionId,
@@ -163,10 +162,10 @@ fun UnifiedNavHost(
             )
         }
 
-        composable(UnifiedRoute.GSRDataView.route) { backStackEntry ->
-            val filePath = backStackEntry.arguments?.getString("filePath") ?: ""
+        composable(UnifiedRoute.GSRDataView.route) {
+            // File path should be passed via savedStateHandle or ViewModel
             GSRDataViewScreen(
-                filePath = filePath,
+                filePath = "", // Get from savedStateHandle or arguments
                 onBackClick = { navController.popBackStack() }
             )
         }
@@ -297,7 +296,7 @@ fun UnifiedNavHost(
         // Development and Demo Routes
         composable(UnifiedRoute.ModernizationProgress.route) {
             ModernizationProgressScreen(
-                onNavigateToGSRDemo = { navController.navigate(UnifiedRoute.GSRModernizationDemo.route) },
+                onNavigateToGSRDemo = { navController.navigate(UnifiedRoute.GSRDemo.route) },
                 onNavigateToCameraDemo = { navController.navigate(UnifiedRoute.CameraDashboard.route) },
                 onNavigateToThermalDemo = { navController.navigate(UnifiedRoute.ThermalMain.route) },
                 onNavigateToComponentShowcase = { navController.navigate(UnifiedRoute.ComponentShowcase.route) }
@@ -358,7 +357,7 @@ object NavigationHelper {
     }
 
     fun navigateToSessionDetail(navController: NavHostController, sessionId: String) {
-        navController.navigate(UnifiedRoute.SessionDetail.createRoute(sessionId))
+        navController.navigate(UnifiedRoute.GSRSessionDetail.createRoute(sessionId))
     }
 
     fun navigateToCamera(navController: NavHostController) {
