@@ -41,12 +41,12 @@ class AlgorithmImageComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         var isProcessing by remember { mutableStateOf(false) }
         var processingProgress by remember { mutableFloatStateOf(0f) }
         val coroutineScope = rememberCoroutineScope()
-        
+
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
                     TopAppBar(
-                        title = { 
+                        title = {
                             Text(
                                 "Algorithm Processing",
                                 fontWeight = FontWeight.Bold,
@@ -56,7 +56,7 @@ class AlgorithmImageComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         navigationIcon = {
                             IconButton(onClick = { finish() }) {
                                 Icon(
-                                    Icons.Default.ArrowBack, 
+                                    Icons.Default.ArrowBack,
                                     contentDescription = "Back",
                                     tint = Color.White
                                 )
@@ -95,7 +95,7 @@ class AlgorithmImageComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             selectedAlgorithm = selectedAlgorithm,
                             modifier = Modifier.fillMaxSize()
                         )
-                        
+
                         // Processing indicator
                         if (isProcessing) {
                             ProcessingOverlay(
@@ -103,7 +103,7 @@ class AlgorithmImageComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 modifier = Modifier.align(Alignment.Center)
                             )
                         }
-                        
+
                         // Algorithm info overlay
                         AlgorithmInfoOverlay(
                             selectedAlgorithm = selectedAlgorithm,
@@ -112,7 +112,7 @@ class AlgorithmImageComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 .padding(16.dp)
                         )
                     }
-                    
+
                     // Control panel
                     Column(
                         modifier = Modifier
@@ -126,7 +126,7 @@ class AlgorithmImageComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             selectedAlgorithm = selectedAlgorithm,
                             onAlgorithmSelected = { selectedAlgorithm = it }
                         )
-                        
+
                         // Processing controls
                         ProcessingControls(
                             isProcessing = isProcessing,
@@ -218,14 +218,14 @@ private fun ProcessingOverlay(
                 color = Color(0xFFFF6B35),
                 modifier = Modifier.size(48.dp)
             )
-            
+
             Text(
                 "Processing...",
                 color = Color.White,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Text(
                 "${(progress * 100).toInt()}%",
                 color = Color(0xFFFF6B35),
@@ -271,7 +271,7 @@ private fun AlgorithmSelector(
     onAlgorithmSelected: (String) -> Unit
 ) {
     val algorithms = getAlgorithmOptions()
-    
+
     Card(
         colors = CardDefaults.cardColors(
             containerColor = Color(0xFF21262D)
@@ -289,9 +289,9 @@ private fun AlgorithmSelector(
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             LazyRow(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
@@ -315,7 +315,7 @@ private fun AlgorithmChip(
 ) {
     FilterChip(
         onClick = onClick,
-        label = { 
+        label = {
             Text(
                 algorithm.name,
                 fontSize = 12.sp
@@ -384,7 +384,7 @@ private fun ProcessingControls(
                     Text("Stop", fontSize = 14.sp)
                 }
             }
-            
+
             OutlinedButton(
                 onClick = { /* Reset image */ },
                 colors = ButtonDefaults.outlinedButtonColors(

@@ -163,7 +163,7 @@ class ReportPickImgComposeActivity : BaseComposeActivity<ReportPickImgViewModel>
                         color = Color(0xFF1976D2)
                     )
                     Spacer(modifier = Modifier.height(8.dp))
-                    
+
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {

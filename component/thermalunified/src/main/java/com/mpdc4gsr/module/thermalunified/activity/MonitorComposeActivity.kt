@@ -5,7 +5,7 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons  
+import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material3.*
@@ -44,12 +44,12 @@ class MonitorComposeActivity : BaseComposeActivity<MonitorViewModel>() {
         var monitorState by remember { mutableIntStateOf(MonitorViewModel.STATS_START) }
         var selectedType by remember { mutableIntStateOf(1) }
         var recordingTime by remember { mutableLongStateOf(0L) }
-        
+
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
                     TopAppBar(
-                        title = { 
+                        title = {
                             Text(
                                 "Thermal Monitor",
                                 fontWeight = FontWeight.Bold,
@@ -59,7 +59,7 @@ class MonitorComposeActivity : BaseComposeActivity<MonitorViewModel>() {
                         navigationIcon = {
                             IconButton(onClick = { finish() }) {
                                 Icon(
-                                    Icons.Default.ArrowBack, 
+                                    Icons.Default.ArrowBack,
                                     contentDescription = "Back",
                                     tint = Color.White
                                 )
@@ -84,7 +84,7 @@ class MonitorComposeActivity : BaseComposeActivity<MonitorViewModel>() {
                             .fillMaxWidth()
                             .weight(0.85f)
                     )
-                    
+
                     // Control panel (15% of screen)  
                     MonitorControlPanel(
                         monitorState = monitorState,
@@ -109,7 +109,7 @@ class MonitorComposeActivity : BaseComposeActivity<MonitorViewModel>() {
                         onMonitorTypeSelected = { type ->
                             selectedType = type
                             monitorState = MonitorViewModel.STATS_FINISH
-                            
+
                             // Send thermal action event based on selection
                             val action = when (type) {
                                 1 -> 2001 // Point monitoring
@@ -125,7 +125,7 @@ class MonitorComposeActivity : BaseComposeActivity<MonitorViewModel>() {
                 }
             }
         }
-        
+
         // Handle time updates for recording display
         LaunchedEffect(monitorState) {
             if (monitorState == MonitorViewModel.STATS_MONITOR) {
@@ -178,11 +178,13 @@ private fun MonitorControlPanel(
                     onCreateChart = onCreateChart
                 )
             }
+
             MonitorViewModel.STATS_MONITOR -> {
                 MonitorTypeSelectionView(
                     onTypeSelected = onMonitorTypeSelected
                 )
             }
+
             MonitorViewModel.STATS_FINISH -> {
                 StartMonitoringView(
                     recordingTime = recordingTime,
@@ -193,7 +195,7 @@ private fun MonitorControlPanel(
     }
 }
 
-@Composable  
+@Composable
 private fun InitialControlsView(
     onQueryLog: () -> Unit,
     onCreateChart: () -> Unit
@@ -219,9 +221,9 @@ private fun InitialControlsView(
                 fontSize = 14.sp
             )
         }
-        
+
         Spacer(modifier = Modifier.weight(0.2f))
-        
+
         Button(
             onClick = onCreateChart,
             modifier = Modifier.weight(0.4f),
@@ -264,7 +266,7 @@ private fun MonitorTypeSelectionView(
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -275,14 +277,14 @@ private fun MonitorTypeSelectionView(
                     onClick = { onTypeSelected(1) },
                     modifier = Modifier.weight(1f)
                 )
-                
+
                 MonitorTypeButton(
-                    text = "Line", 
+                    text = "Line",
                     icon = Icons.Default.Place,
                     onClick = { onTypeSelected(2) },
                     modifier = Modifier.weight(1f)
                 )
-                
+
                 MonitorTypeButton(
                     text = "Area",
                     icon = Icons.Default.Place,
@@ -350,7 +352,7 @@ private fun StartMonitoringView(
             val minutes = recordingTime / 60 % 60
             val seconds = recordingTime % 60
             val timeText = String.format("%02d:%02d", minutes, seconds)
-            
+
             Text(
                 if (recordingTime > 0) timeText else "Start",
                 fontSize = 16.sp,

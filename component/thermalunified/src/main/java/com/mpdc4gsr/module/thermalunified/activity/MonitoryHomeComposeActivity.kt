@@ -42,12 +42,12 @@ class MonitoryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         val scope = rememberCoroutineScope()
         var selectedTab by remember { mutableIntStateOf(0) }
         var isRecording by remember { mutableStateOf(false) }
-        
+
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
                     TopAppBar(
-                        title = { 
+                        title = {
                             Text(
                                 "Monitor Dashboard",
                                 fontWeight = FontWeight.Bold,
@@ -57,7 +57,7 @@ class MonitoryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         navigationIcon = {
                             IconButton(onClick = { finish() }) {
                                 Icon(
-                                    Icons.Default.ArrowBack, 
+                                    Icons.Default.ArrowBack,
                                     contentDescription = "Back",
                                     tint = Color.White
                                 )
@@ -86,7 +86,7 @@ class MonitoryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                 },
                 floatingActionButton = {
                     ExtendedFloatingActionButton(
-                        onClick = { 
+                        onClick = {
                             isRecording = !isRecording
                         },
                         containerColor = if (isRecording) Color.Red else Color(0xFFFF6B35),
@@ -117,7 +117,7 @@ class MonitoryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             modifier = Modifier.fillMaxWidth()
                         )
                     }
-                    
+
                     // Tab selector
                     MonitorTabRow(
                         selectedTab = selectedTab,
@@ -129,7 +129,7 @@ class MonitoryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         },
                         modifier = Modifier.fillMaxWidth()
                     )
-                    
+
                     // Content pager
                     HorizontalPager(
                         state = pagerState,
@@ -143,7 +143,7 @@ class MonitoryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                 }
             }
         }
-        
+
         // Sync pager with tabs
         LaunchedEffect(pagerState.currentPage) {
             selectedTab = pagerState.currentPage
@@ -212,7 +212,7 @@ private fun MonitorTabRow(
                 onClick = { onTabSelected(0) },
                 modifier = Modifier.weight(1f)
             )
-            
+
             MonitorTab(
                 text = "Real-time",
                 icon = Icons.Default.ShowChart,
@@ -276,7 +276,7 @@ private fun MonitorHistoryTab() {
             },
             modifier = Modifier.fillMaxSize()
         )
-        
+
         // History stats overlay
         HistoryStatsOverlay(
             modifier = Modifier
@@ -345,7 +345,7 @@ private fun MonitorRealTimeTab(
             },
             modifier = Modifier.fillMaxSize()
         )
-        
+
         // Real-time monitor overlay
         RealTimeMonitorOverlay(
             isRecording = isRecording,
@@ -353,7 +353,7 @@ private fun MonitorRealTimeTab(
                 .align(Alignment.TopStart)
                 .padding(16.dp)
         )
-        
+
         // Quick controls
         QuickControlsOverlay(
             modifier = Modifier
@@ -369,7 +369,7 @@ private fun RealTimeMonitorOverlay(
     modifier: Modifier = Modifier
 ) {
     var recordingTime by remember { mutableIntStateOf(0) }
-    
+
     Card(
         modifier = modifier,
         colors = CardDefaults.cardColors(
@@ -400,7 +400,7 @@ private fun RealTimeMonitorOverlay(
                     fontWeight = FontWeight.Bold
                 )
             }
-            
+
             if (isRecording) {
                 Text(
                     "Duration: ${recordingTime}s",
@@ -408,7 +408,7 @@ private fun RealTimeMonitorOverlay(
                     fontSize = 9.sp
                 )
             }
-            
+
             Text(
                 "Live: 35.2°C",
                 color = Color(0xFFFF6B35),
@@ -417,7 +417,7 @@ private fun RealTimeMonitorOverlay(
             )
         }
     }
-    
+
     // Simulate recording timer
     LaunchedEffect(isRecording) {
         if (isRecording) {
@@ -451,7 +451,7 @@ private fun QuickControlsOverlay(
                 modifier = Modifier.size(18.dp)
             )
         }
-        
+
         FloatingActionButton(
             onClick = { /* Zoom */ },
             modifier = Modifier.size(40.dp),
@@ -464,7 +464,7 @@ private fun QuickControlsOverlay(
                 modifier = Modifier.size(18.dp)
             )
         }
-        
+
         FloatingActionButton(
             onClick = { /* Adjust */ },
             modifier = Modifier.size(40.dp),

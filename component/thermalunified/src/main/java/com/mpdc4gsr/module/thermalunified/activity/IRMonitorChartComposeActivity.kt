@@ -40,12 +40,12 @@ class IRMonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         var minTemp by remember { mutableFloatStateOf(20.0f) }
         var avgTemp by remember { mutableFloatStateOf(22.5f) }
         var showTemperatureOverlay by remember { mutableStateOf(true) }
-        
+
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
                     TopAppBar(
-                        title = { 
+                        title = {
                             Text(
                                 "Monitor Chart",
                                 fontWeight = FontWeight.Bold,
@@ -55,7 +55,7 @@ class IRMonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         navigationIcon = {
                             IconButton(onClick = { finish() }) {
                                 Icon(
-                                    Icons.Default.ArrowBack, 
+                                    Icons.Default.ArrowBack,
                                     contentDescription = "Back",
                                     tint = Color.White
                                 )
@@ -93,7 +93,7 @@ class IRMonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         ThermalCameraView(
                             modifier = Modifier.fillMaxSize()
                         )
-                        
+
                         // Temperature overlay
                         if (showTemperatureOverlay) {
                             TemperatureOverlay(
@@ -105,7 +105,7 @@ class IRMonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                     .padding(16.dp)
                             )
                         }
-                        
+
                         // Recording indicator
                         if (isRecording) {
                             RecordingIndicator(
@@ -116,7 +116,7 @@ class IRMonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             )
                         }
                     }
-                    
+
                     // Control panel and chart data
                     LazyColumn(
                         modifier = Modifier
@@ -129,13 +129,13 @@ class IRMonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         item {
                             RecordingControls(
                                 isRecording = isRecording,
-                                onStartStop = { 
+                                onStartStop = {
                                     isRecording = !isRecording
                                     if (!isRecording) recordingTime = 0L
                                 }
                             )
                         }
-                        
+
                         // Temperature statistics
                         item {
                             TemperatureStatsCard(
@@ -144,7 +144,7 @@ class IRMonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 avgTemp = avgTemp
                             )
                         }
-                        
+
                         // Chart controls
                         item {
                             ChartControlsCard()
@@ -153,7 +153,7 @@ class IRMonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                 }
             }
         }
-        
+
         // Recording timer
         LaunchedEffect(isRecording) {
             if (isRecording) {
@@ -219,7 +219,7 @@ private fun TemperatureOverlay(
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold
             )
-            
+
             TemperatureItem("Max", maxTemp, Color(0xFFFF4444))
             TemperatureItem("Min", minTemp, Color(0xFF4444FF))
             TemperatureItem("Avg", avgTemp, Color(0xFFFFAA00))
@@ -274,7 +274,7 @@ private fun RecordingIndicator(
                 tint = Color.White,
                 modifier = Modifier.size(16.dp)
             )
-            
+
             val minutes = recordingTime / 60
             val seconds = recordingTime % 60
             Text(
@@ -323,7 +323,7 @@ private fun RecordingControls(
                     fontWeight = FontWeight.Bold
                 )
             }
-            
+
             Button(
                 onClick = { /* Save chart */ },
                 colors = ButtonDefaults.buttonColors(
@@ -366,9 +366,9 @@ private fun TemperatureStatsCard(
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
@@ -423,9 +423,9 @@ private fun ChartControlsCard() {
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
@@ -439,7 +439,7 @@ private fun ChartControlsCard() {
                 ) {
                     Text("Export", fontSize = 12.sp)
                 }
-                
+
                 OutlinedButton(
                     onClick = { /* Clear data */ },
                     colors = ButtonDefaults.outlinedButtonColors(
@@ -449,7 +449,7 @@ private fun ChartControlsCard() {
                 ) {
                     Text("Clear", fontSize = 12.sp)
                 }
-                
+
                 OutlinedButton(
                     onClick = { /* Settings */ },
                     colors = ButtonDefaults.outlinedButtonColors(

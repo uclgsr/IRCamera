@@ -34,7 +34,7 @@ import java.util.*
 
 /**
  * Compose migration of GalleryFragment
- * 
+ *
  * This fragment demonstrates:
  * - Complete migration of gallery UI to Compose
  * - Grid and list view switching
@@ -78,6 +78,7 @@ class GalleryFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
                             modifier = Modifier.fillMaxSize()
                         )
                     }
+
                     isGridView -> {
                         GridGalleryView(
                             mediaItems = mediaItems,
@@ -97,6 +98,7 @@ class GalleryFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
                             }
                         )
                     }
+
                     else -> {
                         ListGalleryView(
                             mediaItems = mediaItems,
@@ -230,13 +232,13 @@ class GalleryFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
                 .aspectRatio(1f)
                 .fillMaxWidth(),
             colors = CardDefaults.cardColors(
-                containerColor = if (isSelected) 
-                    MaterialTheme.colorScheme.primaryContainer 
-                else 
+                containerColor = if (isSelected)
+                    MaterialTheme.colorScheme.primaryContainer
+                else
                     MaterialTheme.colorScheme.surface
             ),
-            border = if (isSelected) 
-                androidx.compose.foundation.BorderStroke(2.dp, MaterialTheme.colorScheme.primary) 
+            border = if (isSelected)
+                androidx.compose.foundation.BorderStroke(2.dp, MaterialTheme.colorScheme.primary)
             else null
         ) {
             Box(modifier = Modifier.fillMaxSize()) {
@@ -317,9 +319,9 @@ class GalleryFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
             onClick = onClick,
             modifier = Modifier.fillMaxWidth(),
             colors = CardDefaults.cardColors(
-                containerColor = if (isSelected) 
-                    MaterialTheme.colorScheme.primaryContainer 
-                else 
+                containerColor = if (isSelected)
+                    MaterialTheme.colorScheme.primaryContainer
+                else
                     MaterialTheme.colorScheme.surface
             )
         ) {
@@ -394,13 +396,13 @@ class GalleryFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
                     modifier = Modifier.size(64.dp),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-                
+
                 Text(
                     text = "No Media Files",
                     style = MaterialTheme.typography.headlineSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-                
+
                 Text(
                     text = "Capture photos or videos with the thermal camera to see them here",
                     style = MaterialTheme.typography.bodyMedium,
@@ -414,12 +416,12 @@ class GalleryFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
         val units = arrayOf("B", "KB", "MB", "GB")
         var size = bytes.toDouble()
         var unitIndex = 0
-        
+
         while (size >= 1024 && unitIndex < units.size - 1) {
             size /= 1024
             unitIndex++
         }
-        
+
         return "%.1f %s".format(size, units[unitIndex])
     }
 }

@@ -30,9 +30,9 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
-/**  
+/**
  * Compose migration of GalleryPictureFragment
- * 
+ *
  * This fragment demonstrates:
  * - Complete migration of picture gallery UI to Compose
  * - Modern grid-based image display with adaptive columns
@@ -50,7 +50,7 @@ class GalleryPictureFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
     @Composable
     override fun Content(viewModel: GalleryViewModel) {
         val context = LocalContext.current
-        
+
         // Observe ViewModel state
         val galleryItems by viewModel.galleryItems.collectAsStateWithLifecycle()
         val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
@@ -66,11 +66,11 @@ class GalleryPictureFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
                     SelectionToolbar(
                         selectedCount = selectedItems.size,
                         onClearSelection = { viewModel.clearSelection() },
-                        onShareSelected = { 
+                        onShareSelected = {
                             shareSelectedImages(context, selectedItems.toList())
                         },
                         onDeleteSelected = { viewModel.deleteSelectedItems() },
-                        onExportSelected = { 
+                        onExportSelected = {
                             exportSelectedImages(context, selectedItems.toList())
                         }
                     )
@@ -84,11 +84,13 @@ class GalleryPictureFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
                         isLoading -> {
                             LoadingState()
                         }
+
                         galleryItems.isEmpty() -> {
                             EmptyGalleryState(
                                 onRefresh = { viewModel.refreshGallery() }
                             )
                         }
+
                         else -> {
                             PictureGrid(
                                 pictures = galleryItems,
@@ -206,20 +208,20 @@ class GalleryPictureFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
                     modifier = Modifier.size(64.dp),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-                
+
                 Text(
                     text = "No Pictures Found",
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-                
+
                 Text(
                     text = "Capture thermal images to see them here",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-                
+
                 Button(onClick = onRefresh) {
                     Icon(Icons.Default.Refresh, contentDescription = null)
                     Spacer(modifier = Modifier.width(8.dp))
@@ -239,7 +241,7 @@ class GalleryPictureFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
     ) {
         // Adaptive grid columns based on screen size
         val columns = remember { mutableIntStateOf(3) }
-        
+
         LazyVerticalGrid(
             columns = GridCells.Fixed(columns.intValue),
             contentPadding = PaddingValues(8.dp),
@@ -272,13 +274,13 @@ class GalleryPictureFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
                 .aspectRatio(1f)
                 .fillMaxWidth(),
             colors = CardDefaults.cardColors(
-                containerColor = if (isSelected) 
-                    MaterialTheme.colorScheme.primaryContainer 
-                else 
+                containerColor = if (isSelected)
+                    MaterialTheme.colorScheme.primaryContainer
+                else
                     MaterialTheme.colorScheme.surface
             ),
-            border = if (isSelected) 
-                androidx.compose.foundation.BorderStroke(2.dp, MaterialTheme.colorScheme.primary) 
+            border = if (isSelected)
+                androidx.compose.foundation.BorderStroke(2.dp, MaterialTheme.colorScheme.primary)
             else null,
             shape = RoundedCornerShape(12.dp)
         ) {
@@ -410,7 +412,7 @@ class GalleryPictureFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
                     File(path)
                 )
             }
-            
+
             val intent = Intent().apply {
                 if (uris.size == 1) {
                     action = Intent.ACTION_SEND
@@ -422,7 +424,7 @@ class GalleryPictureFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
                 type = "image/*"
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             }
-            
+
             context.startActivity(Intent.createChooser(intent, "Share Images"))
         } catch (e: Exception) {
             // Handle error
@@ -438,12 +440,12 @@ class GalleryPictureFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
         val units = arrayOf("B", "KB", "MB", "GB")
         var size = bytes.toDouble()
         var unitIndex = 0
-        
+
         while (size >= 1024 && unitIndex < units.size - 1) {
             size /= 1024
             unitIndex++
         }
-        
+
         return "%.1f %s".format(size, units[unitIndex])
     }
 

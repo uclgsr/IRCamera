@@ -89,7 +89,7 @@ class SessionManagerComposeActivity : BaseComposeActivity<SessionManagerViewMode
                 },
                 floatingActionButton = {
                     FloatingActionButton(
-                        onClick = { 
+                        onClick = {
                             // Start new recording session
                             MultiModalRecordingComposeActivity.startActivity(this@SessionManagerComposeActivity)
                         }
@@ -173,8 +173,8 @@ private fun SessionManagerContent(
                 SessionInfo("session_3", "Multi-modal Recording", Date(), Date(), "processing")
             )
 
-            items(mockSessions.filter { 
-                it.name.contains(searchQuery, ignoreCase = true) 
+            items(mockSessions.filter {
+                it.name.contains(searchQuery, ignoreCase = true)
             }) { session ->
                 SessionCard(
                     session = session,
@@ -229,7 +229,7 @@ private fun SessionStatisticsCard(
                     color = MaterialTheme.colorScheme.onPrimaryContainer
                 )
             }
-            
+
             if (selectedCount > 0) {
                 Column(horizontalAlignment = Alignment.End) {
                     Text(
@@ -258,15 +258,15 @@ private fun SessionCard(
     modifier: Modifier = Modifier
 ) {
     val dateFormatter = SimpleDateFormat("MMM dd, yyyy HH:mm", Locale.getDefault())
-    
+
     Card(
         modifier = modifier
             .fillMaxWidth()
             .clickable { onClick() },
         colors = CardDefaults.cardColors(
-            containerColor = if (isSelected) 
-                MaterialTheme.colorScheme.tertiaryContainer 
-            else 
+            containerColor = if (isSelected)
+                MaterialTheme.colorScheme.tertiaryContainer
+            else
                 MaterialTheme.colorScheme.surface
         )
     ) {
@@ -278,9 +278,9 @@ private fun SessionCard(
                 checked = isSelected,
                 onCheckedChange = onSelectionChange
             )
-            
+
             Spacer(modifier = Modifier.width(12.dp))
-            
+
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = session.name,
@@ -292,7 +292,7 @@ private fun SessionCard(
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-                
+
                 // Status chip
                 Surface(
                     shape = RoundedCornerShape(12.dp),
@@ -312,7 +312,7 @@ private fun SessionCard(
                     )
                 }
             }
-            
+
             IconButton(onClick = { /* More options for this session */ }) {
                 Icon(Icons.Default.MoreVert, contentDescription = "Session options")
             }

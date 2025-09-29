@@ -42,12 +42,12 @@ class IRMonitorComposeActivity : BaseComposeActivity<IRMonitorViewModel>() {
         var selectedType by remember { mutableIntStateOf(1) }
         var isMonitoring by remember { mutableStateOf(false) }
         var monitoringTime by remember { mutableLongStateOf(0L) }
-        
+
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
                     TopAppBar(
-                        title = { 
+                        title = {
                             Text(
                                 "IR Monitor",
                                 fontWeight = FontWeight.Bold,
@@ -57,7 +57,7 @@ class IRMonitorComposeActivity : BaseComposeActivity<IRMonitorViewModel>() {
                         navigationIcon = {
                             IconButton(onClick = { finish() }) {
                                 Icon(
-                                    Icons.Default.ArrowBack, 
+                                    Icons.Default.ArrowBack,
                                     contentDescription = "Back",
                                     tint = Color.White
                                 )
@@ -79,7 +79,7 @@ class IRMonitorComposeActivity : BaseComposeActivity<IRMonitorViewModel>() {
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    
+
                     // Monitor Status Card
                     MonitorStatusCard(
                         monitorState = monitorState,
@@ -88,9 +88,9 @@ class IRMonitorComposeActivity : BaseComposeActivity<IRMonitorViewModel>() {
                         monitoringTime = monitoringTime,
                         modifier = Modifier.fillMaxWidth()
                     )
-                    
+
                     Spacer(modifier = Modifier.height(32.dp))
-                    
+
                     // Control Buttons
                     when (monitorState) {
                         0 -> {
@@ -114,7 +114,7 @@ class IRMonitorComposeActivity : BaseComposeActivity<IRMonitorViewModel>() {
                                 )
                             }
                         }
-                        
+
                         1 -> {
                             // Selection state - show type selection
                             MonitorTypeSelection(
@@ -132,7 +132,7 @@ class IRMonitorComposeActivity : BaseComposeActivity<IRMonitorViewModel>() {
                                 }
                             )
                         }
-                        
+
                         2 -> {
                             // Ready to start monitoring
                             Button(
@@ -162,7 +162,7 @@ class IRMonitorComposeActivity : BaseComposeActivity<IRMonitorViewModel>() {
                 }
             }
         }
-        
+
         // Timer effect for monitoring state
         LaunchedEffect(isMonitoring) {
             if (isMonitoring) {
@@ -202,9 +202,9 @@ private fun MonitorStatusCard(
                 tint = Color(0xFFFF6B35),
                 modifier = Modifier.size(48.dp)
             )
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             Text(
                 when (monitorState) {
                     0 -> "Ready to Monitor"
@@ -216,7 +216,7 @@ private fun MonitorStatusCard(
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
             )
-            
+
             if (monitorState >= 2) {
                 Spacer(modifier = Modifier.height(8.dp))
                 val typeText = when (selectedType) {
@@ -230,7 +230,7 @@ private fun MonitorStatusCard(
                     fontSize = 14.sp
                 )
             }
-            
+
             if (isMonitoring && monitoringTime > 0) {
                 Spacer(modifier = Modifier.height(8.dp))
                 val minutes = monitoringTime / 60
@@ -267,7 +267,7 @@ private fun MonitorTypeSelection(
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
             )
-            
+
             MonitorTypeButton(
                 text = "Point Monitoring",
                 description = "Monitor temperature at specific points",
@@ -275,15 +275,15 @@ private fun MonitorTypeSelection(
                 isSelected = selectedType == 1,
                 onClick = { onTypeSelected(1) }
             )
-            
+
             MonitorTypeButton(
-                text = "Line Monitoring", 
+                text = "Line Monitoring",
                 description = "Monitor temperature along a line",
                 icon = Icons.Default.Timeline,
                 isSelected = selectedType == 2,
                 onClick = { onTypeSelected(2) }
             )
-            
+
             MonitorTypeButton(
                 text = "Area Monitoring",
                 description = "Monitor temperature in a region",
@@ -328,7 +328,7 @@ private fun MonitorTypeButton(
                     modifier = Modifier.size(24.dp)
                 )
             }
-            
+
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text,
@@ -342,7 +342,7 @@ private fun MonitorTypeButton(
                     fontSize = 12.sp
                 )
             }
-            
+
             if (isSelected) {
                 Icon(
                     Icons.Default.Check,

@@ -111,9 +111,9 @@ class ImagePickIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() 
                             tint = Color(0xFFFFD700),
                             modifier = Modifier.size(24.dp)
                         )
-                        
+
                         Spacer(modifier = Modifier.width(8.dp))
-                        
+
                         Text(
                             "AI Recommendations",
                             color = Color.White,
@@ -121,9 +121,9 @@ class ImagePickIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() 
                             fontWeight = FontWeight.Bold
                         )
                     }
-                    
+
                     Spacer(modifier = Modifier.height(12.dp))
-                    
+
                     Text(
                         "• Best quality images detected automatically",
                         color = Color(0xFF7D8590),
@@ -141,11 +141,11 @@ class ImagePickIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() 
                     )
                 }
             }
-            
+
             // Live Preview Area
             Card(
                 modifier = Modifier
-                    .fillMaxWidth() 
+                    .fillMaxWidth()
                     .weight(1f),
                 colors = CardDefaults.cardColors(containerColor = Color(0xFF21262D)),
                 shape = RoundedCornerShape(12.dp)
@@ -163,24 +163,24 @@ class ImagePickIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() 
                             tint = Color(0xFFFFD700),
                             modifier = Modifier.size(64.dp)
                         )
-                        
+
                         Spacer(modifier = Modifier.height(16.dp))
-                        
+
                         Text(
                             "AI-Enhanced Live Preview",
                             color = Color.White,
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold
                         )
-                        
+
                         Text(
                             "Real-time quality scoring and recommendations",
                             color = Color(0xFF7D8590),
                             fontSize = 14.sp
                         )
-                        
+
                         Spacer(modifier = Modifier.height(16.dp))
-                        
+
                         // Quality Score Display
                         Card(
                             colors = CardDefaults.cardColors(
@@ -199,7 +199,7 @@ class ImagePickIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() 
                     }
                 }
             }
-            
+
             // Plus Features Panel
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -213,9 +213,9 @@ class ImagePickIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() 
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
-                    
+
                     Spacer(modifier = Modifier.height(16.dp))
-                    
+
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
@@ -226,7 +226,7 @@ class ImagePickIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() 
                             color = Color(0xFF7D8590),
                             fontSize = 14.sp
                         )
-                        
+
                         Switch(
                             checked = aiEnhancement,
                             onCheckedChange = { aiEnhancement = it },
@@ -236,15 +236,15 @@ class ImagePickIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() 
                             )
                         )
                     }
-                    
+
                     Spacer(modifier = Modifier.height(12.dp))
-                    
+
                     Text(
                         "Quality Filter: ${qualityFilter}%",
                         color = Color(0xFF7D8590),
                         fontSize = 14.sp
                     )
-                    
+
                     Slider(
                         value = qualityFilter.toFloat(),
                         onValueChange = { qualityFilter = it.toInt() },
@@ -256,7 +256,7 @@ class ImagePickIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() 
                     )
                 }
             }
-            
+
             // Capture Mode Selection
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -270,9 +270,9 @@ class ImagePickIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() 
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
-                    
+
                     Spacer(modifier = Modifier.height(12.dp))
-                    
+
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -284,7 +284,7 @@ class ImagePickIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() 
                     }
                 }
             }
-            
+
             // Action Buttons
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -301,7 +301,7 @@ class ImagePickIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() 
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Recent (10)")
                 }
-                
+
                 Button(
                     onClick = { /* AI batch process */ },
                     modifier = Modifier.weight(1f),

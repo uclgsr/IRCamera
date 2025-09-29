@@ -103,7 +103,7 @@ class ResearchTemplateComposeActivity : BaseComposeActivity<BaseViewModel>() {
             ) { paddingValues ->
                 ResearchTemplateContent(
                     selectedTemplate = selectedTemplate,
-                    onTemplateSelect = { 
+                    onTemplateSelect = {
                         selectedTemplate = it
                         showTemplateDetails = true
                     },
@@ -192,7 +192,7 @@ private fun CategoryFilterRow(
     modifier: Modifier = Modifier
 ) {
     val categories = listOf("All", "Psychology", "Physiology", "User Study", "Clinical", "Custom")
-    
+
     LazyColumn(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         modifier = modifier
@@ -222,9 +222,9 @@ private fun TemplateCard(
             .fillMaxWidth()
             .clickable { onClick() },
         colors = CardDefaults.cardColors(
-            containerColor = if (isSelected) 
-                MaterialTheme.colorScheme.primaryContainer 
-            else 
+            containerColor = if (isSelected)
+                MaterialTheme.colorScheme.primaryContainer
+            else
                 MaterialTheme.colorScheme.surface
         ),
         elevation = CardDefaults.cardElevation(
@@ -246,7 +246,7 @@ private fun TemplateCard(
                     modifier = Modifier.size(32.dp),
                     tint = MaterialTheme.colorScheme.primary
                 )
-                
+
                 Surface(
                     shape = RoundedCornerShape(12.dp),
                     color = getCategoryColor(template.category),
@@ -260,9 +260,9 @@ private fun TemplateCard(
                     )
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             // Template name and description
             Text(
                 text = template.name,
@@ -271,7 +271,7 @@ private fun TemplateCard(
                 maxLines = 2,
                 modifier = Modifier.padding(bottom = 4.dp)
             )
-            
+
             Text(
                 text = template.description,
                 style = MaterialTheme.typography.bodySmall,
@@ -279,7 +279,7 @@ private fun TemplateCard(
                 maxLines = 3,
                 modifier = Modifier.padding(bottom = 12.dp)
             )
-            
+
             // Template details
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -297,7 +297,7 @@ private fun TemplateCard(
                         fontWeight = FontWeight.Medium
                     )
                 }
-                
+
                 Column(horizontalAlignment = Alignment.End) {
                     Text(
                         text = "Sensors",
@@ -323,7 +323,7 @@ private fun TemplateDetailsDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { 
+        title = {
             Text(
                 text = template.name,
                 style = MaterialTheme.typography.headlineSmall
@@ -338,14 +338,14 @@ private fun TemplateDetailsDialog(
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
-                
+
                 Text(
                     text = "Configuration",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
-                
+
                 Card(
                     colors = CardDefaults.cardColors(
                         containerColor = MaterialTheme.colorScheme.surfaceVariant
@@ -361,7 +361,7 @@ private fun TemplateDetailsDialog(
                             Text("Duration:", style = MaterialTheme.typography.bodySmall)
                             Text("${template.duration} minutes", style = MaterialTheme.typography.bodySmall)
                         }
-                        
+
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween
@@ -369,7 +369,7 @@ private fun TemplateDetailsDialog(
                             Text("Sensors:", style = MaterialTheme.typography.bodySmall)
                             Text(template.sensors.joinToString(", "), style = MaterialTheme.typography.bodySmall)
                         }
-                        
+
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween
@@ -422,7 +422,7 @@ private fun CreateTemplateDialog(
                         .fillMaxWidth()
                         .padding(bottom = 8.dp)
                 )
-                
+
                 OutlinedTextField(
                     value = templateDescription,
                     onValueChange = { templateDescription = it },

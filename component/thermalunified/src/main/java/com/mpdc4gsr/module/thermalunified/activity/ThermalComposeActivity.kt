@@ -43,12 +43,12 @@ class ThermalComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         var selectedTabIndex by remember { mutableIntStateOf(0) }
         var selectedToolIndex by remember { mutableIntStateOf(-1) }
         var showToolbar by remember { mutableStateOf(false) }
-        
+
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
                     TopAppBar(
-                        title = { 
+                        title = {
                             Text(
                                 "Thermal Processing",
                                 fontWeight = FontWeight.Bold,
@@ -58,7 +58,7 @@ class ThermalComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         navigationIcon = {
                             IconButton(onClick = { finish() }) {
                                 Icon(
-                                    Icons.Default.ArrowBack, 
+                                    Icons.Default.ArrowBack,
                                     contentDescription = "Back",
                                     tint = Color.White
                                 )
@@ -83,7 +83,7 @@ class ThermalComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             .fillMaxWidth()
                             .weight(1f)
                     )
-                    
+
                     // Tool selection menu (shown when tab is selected)
                     if (showToolbar) {
                         ThermalToolsMenu(
@@ -99,7 +99,7 @@ class ThermalComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 .padding(horizontal = 16.dp, vertical = 8.dp)
                         )
                     }
-                    
+
                     // Main navigation tabs
                     ThermalNavigationTabs(
                         selectedIndex = selectedTabIndex,
@@ -141,7 +141,7 @@ private fun ThermalNavigationTabs(
     modifier: Modifier = Modifier
 ) {
     val tabs = getThermalTabs()
-    
+
     LazyRow(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -198,7 +198,7 @@ private fun ThermalToolsMenu(
     modifier: Modifier = Modifier
 ) {
     val tools = getThermalTools(selectedTabIndex)
-    
+
     if (tools.isNotEmpty()) {
         Card(
             modifier = modifier,
@@ -236,7 +236,7 @@ private fun ThermalToolButton(
             contentColor = if (isSelected) Color.White else Color(0xFF7D8590)
         ),
         border = androidx.compose.foundation.BorderStroke(
-            1.dp, 
+            1.dp,
             if (isSelected) Color(0xFFFF6B35) else Color(0xFF7D8590)
         ),
         shape = RoundedCornerShape(8.dp)
@@ -288,22 +288,26 @@ private fun getThermalTools(tabIndex: Int): List<ThermalTool> {
             ThermalTool("Rectangle", Icons.Default.CropFree, 1003),
             ThermalTool("Circle", Icons.Default.RadioButtonUnchecked, 1004)
         )
+
         2 -> listOf( // Analysis tools
             ThermalTool("Histogram", Icons.Default.BarChart, 2001),
             ThermalTool("Profile", Icons.Default.ShowChart, 2002),
             ThermalTool("Report", Icons.Default.Description, 2003)
         )
+
         3 -> listOf( // Palette tools
             ThermalTool("Iron", Icons.Default.Palette, 3001),
             ThermalTool("Rainbow", Icons.Default.ColorLens, 3002),
             ThermalTool("Gray", Icons.Default.InvertColors, 3003),
             ThermalTool("Hot", Icons.Default.LocalFireDepartment, 3004)
         )
+
         4 -> listOf( // Settings tools
             ThermalTool("Emissivity", Icons.Default.Tune, 4001),
             ThermalTool("Temperature", Icons.Default.Thermostat, 4002),
             ThermalTool("Distance", Icons.Outlined.Straighten, 4003)
         )
+
         else -> emptyList()
     }
 }

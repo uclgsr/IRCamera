@@ -141,16 +141,19 @@ private fun ReportCreationContent(
                 onTemplateSelect = onTemplateSelect,
                 modifier = Modifier.weight(1f)
             )
+
             1 -> ReportInfoStep(
                 reportData = reportData,
                 onReportDataChange = onReportDataChange,
                 modifier = Modifier.weight(1f)
             )
+
             2 -> ThermalDataStep(
                 reportData = reportData,
                 onReportDataChange = onReportDataChange,
                 modifier = Modifier.weight(1f)
             )
+
             3 -> ReviewStep(
                 reportData = reportData,
                 template = selectedTemplate,
@@ -194,9 +197,9 @@ private fun ReportCreationProgress(
                         modifier = Modifier
                             .size(32.dp)
                             .background(
-                                color = if (index <= currentStep) 
-                                    MaterialTheme.colorScheme.primary 
-                                else 
+                                color = if (index <= currentStep)
+                                    MaterialTheme.colorScheme.primary
+                                else
                                     MaterialTheme.colorScheme.outline,
                                 shape = RoundedCornerShape(16.dp)
                             ),
@@ -221,16 +224,16 @@ private fun ReportCreationProgress(
                     Text(
                         text = stepName,
                         style = MaterialTheme.typography.labelSmall,
-                        color = if (index <= currentStep) 
-                            MaterialTheme.colorScheme.primary 
-                        else 
+                        color = if (index <= currentStep)
+                            MaterialTheme.colorScheme.primary
+                        else
                             MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(top = 4.dp)
                     )
                 }
             }
         }
-        
+
         LinearProgressIndicator(
             progress = { (currentStep + 1).toFloat() / totalSteps },
             modifier = Modifier
@@ -279,9 +282,9 @@ private fun ReportTemplateCard(
         modifier = modifier
             .fillMaxWidth(),
         colors = CardDefaults.cardColors(
-            containerColor = if (isSelected) 
-                MaterialTheme.colorScheme.primaryContainer 
-            else 
+            containerColor = if (isSelected)
+                MaterialTheme.colorScheme.primaryContainer
+            else
                 MaterialTheme.colorScheme.surface
         ),
         onClick = onSelect
@@ -296,9 +299,9 @@ private fun ReportTemplateCard(
                 modifier = Modifier.size(32.dp),
                 tint = MaterialTheme.colorScheme.primary
             )
-            
+
             Spacer(modifier = Modifier.width(16.dp))
-            
+
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = template.name,
@@ -311,7 +314,7 @@ private fun ReportTemplateCard(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-            
+
             if (isSelected) {
                 Icon(
                     Icons.Default.CheckCircle,
@@ -408,7 +411,7 @@ private fun ThermalDataStep(
                     fontWeight = FontWeight.Medium,
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
-                
+
                 Button(
                     onClick = { /* Select thermal images */ },
                     modifier = Modifier.fillMaxWidth()
@@ -442,33 +445,33 @@ private fun ThermalDataStep(
                     ) {
                         Checkbox(
                             checked = reportData.includeTemperatureAnalysis,
-                            onCheckedChange = { 
+                            onCheckedChange = {
                                 onReportDataChange(reportData.copy(includeTemperatureAnalysis = it))
                             }
                         )
                         Text("Include temperature analysis")
                     }
-                    
+
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Checkbox(
                             checked = reportData.includeHotspotDetection,
-                            onCheckedChange = { 
+                            onCheckedChange = {
                                 onReportDataChange(reportData.copy(includeHotspotDetection = it))
                             }
                         )
                         Text("Include hotspot detection")
                     }
-                    
+
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Checkbox(
                             checked = reportData.includeStatistics,
-                            onCheckedChange = { 
+                            onCheckedChange = {
                                 onReportDataChange(reportData.copy(includeStatistics = it))
                             }
                         )
@@ -510,7 +513,7 @@ private fun ReviewStep(
                     fontWeight = FontWeight.Medium,
                     modifier = Modifier.padding(bottom = 12.dp)
                 )
-                
+
                 ReportSummaryItem("Template", template?.name ?: "None selected")
                 ReportSummaryItem("Title", reportData.title)
                 ReportSummaryItem("Author", reportData.author)
@@ -529,7 +532,7 @@ private fun ReviewStep(
                     fontWeight = FontWeight.Medium,
                     modifier = Modifier.padding(bottom = 12.dp)
                 )
-                
+
                 val exportFormats = listOf("PDF", "Word", "HTML")
                 exportFormats.forEach { format ->
                     TextButton(
@@ -710,8 +713,18 @@ data class ReportData(
 )
 
 private fun getReportTemplates() = listOf(
-    ReportTemplate("inspection", "Building Inspection", "Comprehensive building thermal inspection template", "inspection"),
-    ReportTemplate("maintenance", "Maintenance Report", "Equipment maintenance and thermal analysis template", "maintenance"),
+    ReportTemplate(
+        "inspection",
+        "Building Inspection",
+        "Comprehensive building thermal inspection template",
+        "inspection"
+    ),
+    ReportTemplate(
+        "maintenance",
+        "Maintenance Report",
+        "Equipment maintenance and thermal analysis template",
+        "maintenance"
+    ),
     ReportTemplate("research", "Research Study", "Academic research and analysis template", "research"),
     ReportTemplate("compliance", "Compliance Report", "Regulatory compliance and audit template", "compliance")
 )

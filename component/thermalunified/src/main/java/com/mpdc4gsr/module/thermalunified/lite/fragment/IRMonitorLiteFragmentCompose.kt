@@ -26,7 +26,7 @@ import java.util.*
 
 /**
  * Compose migration of IRMonitorLiteFragment
- * 
+ *
  * This fragment demonstrates:
  * - Complete migration of lite monitoring interface to Compose
  * - Simplified thermal monitoring for basic use cases
@@ -259,13 +259,13 @@ class IRMonitorLiteFragmentCompose : BaseComposeFragment<IRMonitorLiteViewModel>
                     temperature = "${data.currentTemp}°C",
                     isMain = true
                 )
-                
+
                 LiteTemperatureCard(
                     label = "Max",
                     temperature = "${data.maxTemp}°C",
                     color = Color.Red
                 )
-                
+
                 LiteTemperatureCard(
                     label = "Min",
                     temperature = "${data.minTemp}°C",
@@ -284,9 +284,9 @@ class IRMonitorLiteFragmentCompose : BaseComposeFragment<IRMonitorLiteViewModel>
     ) {
         Card(
             colors = CardDefaults.cardColors(
-                containerColor = if (isMain) 
-                    MaterialTheme.colorScheme.primaryContainer 
-                else 
+                containerColor = if (isMain)
+                    MaterialTheme.colorScheme.primaryContainer
+                else
                     MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.9f)
             ),
             shape = RoundedCornerShape(6.dp)
@@ -302,9 +302,9 @@ class IRMonitorLiteFragmentCompose : BaseComposeFragment<IRMonitorLiteViewModel>
                 )
                 Text(
                     text = temperature,
-                    style = if (isMain) 
-                        MaterialTheme.typography.titleSmall 
-                    else 
+                    style = if (isMain)
+                        MaterialTheme.typography.titleSmall
+                    else
                         MaterialTheme.typography.bodySmall,
                     fontWeight = FontWeight.Bold,
                     color = color

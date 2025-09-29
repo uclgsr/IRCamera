@@ -37,7 +37,7 @@ class ThermalCameraComposeActivity : BaseComposeActivity<ThermalFragmentViewMode
             Scaffold(
                 topBar = {
                     TopAppBar(
-                        title = { 
+                        title = {
                             Text(
                                 "Thermal Camera",
                                 fontWeight = FontWeight.Bold
@@ -48,15 +48,15 @@ class ThermalCameraComposeActivity : BaseComposeActivity<ThermalFragmentViewMode
                                 Icon(Icons.Default.ArrowBack, contentDescription = "Back")
                             }
                         }
-                        )
-                    }
-                ) { paddingValues ->
-                    ThermalCameraContent(
-                        viewModel = viewModel,
-                        modifier = Modifier.padding(paddingValues)
                     )
                 }
+            ) { paddingValues ->
+                ThermalCameraContent(
+                    viewModel = viewModel,
+                    modifier = Modifier.padding(paddingValues)
+                )
             }
+        }
     }
 
     @Composable

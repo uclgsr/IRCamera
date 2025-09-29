@@ -39,12 +39,12 @@ class IRGalleryDetail01ComposeActivity : BaseComposeActivity<IRGalleryEditViewMo
         var showEditTools by remember { mutableStateOf(false) }
         var selectedTool by remember { mutableStateOf("") }
         var imageInfo by remember { mutableStateOf(ImageInfo()) }
-        
+
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
                     TopAppBar(
-                        title = { 
+                        title = {
                             Text(
                                 "Gallery Detail",
                                 fontWeight = FontWeight.Bold,
@@ -54,7 +54,7 @@ class IRGalleryDetail01ComposeActivity : BaseComposeActivity<IRGalleryEditViewMo
                         navigationIcon = {
                             IconButton(onClick = { finish() }) {
                                 Icon(
-                                    Icons.Default.ArrowBack, 
+                                    Icons.Default.ArrowBack,
                                     contentDescription = "Back",
                                     tint = Color.White
                                 )
@@ -99,7 +99,7 @@ class IRGalleryDetail01ComposeActivity : BaseComposeActivity<IRGalleryEditViewMo
                         GalleryImageView(
                             modifier = Modifier.fillMaxSize()
                         )
-                        
+
                         // Image info overlay
                         ImageInfoOverlay(
                             imageInfo = imageInfo,
@@ -108,7 +108,7 @@ class IRGalleryDetail01ComposeActivity : BaseComposeActivity<IRGalleryEditViewMo
                                 .padding(16.dp)
                         )
                     }
-                    
+
                     // Edit tools and controls
                     Column(
                         modifier = Modifier
@@ -124,10 +124,10 @@ class IRGalleryDetail01ComposeActivity : BaseComposeActivity<IRGalleryEditViewMo
                                 onToolSelected = { selectedTool = it }
                             )
                         }
-                        
+
                         // Image information
                         ImageInfoCard(imageInfo = imageInfo)
-                        
+
                         // Action buttons
                         ImageActionButtons(
                             onExport = { /* Export image */ },
@@ -199,7 +199,7 @@ private fun EditToolsPanel(
     onToolSelected: (String) -> Unit
 ) {
     val tools = getEditTools()
-    
+
     Card(
         colors = CardDefaults.cardColors(
             containerColor = Color(0xFF21262D)
@@ -217,9 +217,9 @@ private fun EditToolsPanel(
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             LazyRow(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
@@ -243,7 +243,7 @@ private fun EditToolChip(
 ) {
     FilterChip(
         onClick = onClick,
-        label = { 
+        label = {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -289,9 +289,9 @@ private fun ImageInfoCard(
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             InfoItem("Resolution", "${imageInfo.width} x ${imageInfo.height}")
             InfoItem("File size", imageInfo.fileSize)
             InfoItem("Max Temperature", "${imageInfo.maxTemp}°C")
@@ -351,7 +351,7 @@ private fun ImageActionButtons(
             Spacer(modifier = Modifier.width(4.dp))
             Text("Export", fontSize = 12.sp)
         }
-        
+
         Button(
             onClick = onReport,
             modifier = Modifier.weight(1f),
@@ -367,7 +367,7 @@ private fun ImageActionButtons(
             Spacer(modifier = Modifier.width(4.dp))
             Text("Report", fontSize = 12.sp)
         }
-        
+
         OutlinedButton(
             onClick = onDelete,
             modifier = Modifier.weight(1f),

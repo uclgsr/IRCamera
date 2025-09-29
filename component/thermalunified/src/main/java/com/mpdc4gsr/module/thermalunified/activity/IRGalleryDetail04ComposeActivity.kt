@@ -103,19 +103,19 @@ class IRGalleryDetail04ComposeActivity : BaseComposeActivity<ThermalViewModel>()
                             tint = Color(0xFFFF6B35),
                             modifier = Modifier.size(64.dp)
                         )
-                        
+
                         Spacer(modifier = Modifier.height(16.dp))
-                        
+
                         Text(
                             "Thermal Image Analysis",
                             color = Color.White,
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold
                         )
-                        
+
                         if (showAnalysis) {
                             Spacer(modifier = Modifier.height(8.dp))
-                            
+
                             Card(
                                 colors = CardDefaults.cardColors(
                                     containerColor = Color(0xFFFF6B35).copy(alpha = 0.1f)
@@ -135,7 +135,7 @@ class IRGalleryDetail04ComposeActivity : BaseComposeActivity<ThermalViewModel>()
                     }
                 }
             }
-            
+
             // Analysis Controls
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -149,24 +149,24 @@ class IRGalleryDetail04ComposeActivity : BaseComposeActivity<ThermalViewModel>()
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
-                    
+
                     Spacer(modifier = Modifier.height(16.dp))
-                    
+
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceEvenly
                     ) {
                         AnalysisButton(Icons.Default.CropFree, "Crop", false)
                         AnalysisButton(Icons.Default.RotateLeft, "Rotate", false)
-                        AnalysisButton(Icons.Default.Analytics, "Analyze", showAnalysis) { 
-                            showAnalysis = !showAnalysis 
+                        AnalysisButton(Icons.Default.Analytics, "Analyze", showAnalysis) {
+                            showAnalysis = !showAnalysis
                         }
                         AnalysisButton(Icons.Default.Straighten, "Measure", false)
                         AnalysisButton(Icons.Default.FilterAlt, "Filter", false)
                     }
                 }
             }
-            
+
             // Image Information
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -180,9 +180,9 @@ class IRGalleryDetail04ComposeActivity : BaseComposeActivity<ThermalViewModel>()
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
-                    
+
                     Spacer(modifier = Modifier.height(12.dp))
-                    
+
                     InfoRow("Resolution", "384 x 288")
                     InfoRow("File Size", "2.1 MB")
                     InfoRow("Date", "2024-01-15 14:30")
@@ -190,7 +190,7 @@ class IRGalleryDetail04ComposeActivity : BaseComposeActivity<ThermalViewModel>()
                     InfoRow("Emissivity", "0.95")
                 }
             }
-            
+
             // Action Buttons
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -207,7 +207,7 @@ class IRGalleryDetail04ComposeActivity : BaseComposeActivity<ThermalViewModel>()
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Export")
                 }
-                
+
                 Button(
                     onClick = { /* Generate Report */ },
                     modifier = Modifier.weight(1f),
@@ -219,7 +219,7 @@ class IRGalleryDetail04ComposeActivity : BaseComposeActivity<ThermalViewModel>()
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Report")
                 }
-                
+
                 IconButton(
                     onClick = { /* Delete */ },
                     colors = IconButtonDefaults.iconButtonColors(
@@ -254,7 +254,7 @@ class IRGalleryDetail04ComposeActivity : BaseComposeActivity<ThermalViewModel>()
             ) {
                 Icon(icon, contentDescription = label)
             }
-            
+
             Text(
                 label,
                 color = if (isActive) Color(0xFFFF6B35) else Color(0xFF7D8590),
@@ -279,7 +279,7 @@ class IRGalleryDetail04ComposeActivity : BaseComposeActivity<ThermalViewModel>()
                 color = Color(0xFF7D8590),
                 fontSize = 14.sp
             )
-            
+
             Text(
                 value,
                 color = Color.White,

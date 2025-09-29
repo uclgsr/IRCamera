@@ -125,7 +125,7 @@ private fun ThermalLiteContent(
                 .fillMaxWidth()
                 .weight(1f)
         )
-        
+
         // Quick controls
         ThermalLiteControls(
             isCapturing = isCapturing,
@@ -158,7 +158,7 @@ private fun ThermalLitePreview(
             },
             modifier = Modifier.fillMaxSize()
         )
-        
+
         // Minimal temperature display
         Card(
             modifier = Modifier
@@ -176,7 +176,7 @@ private fun ThermalLitePreview(
                 modifier = Modifier.padding(12.dp)
             )
         }
-        
+
         // Capture indicator
         if (isCapturing) {
             Box(
@@ -196,7 +196,7 @@ private fun ThermalLitePreview(
                 )
             }
         }
-        
+
         // Center crosshair
         Icon(
             Icons.Default.MyLocation,
@@ -206,7 +206,7 @@ private fun ThermalLitePreview(
                 .align(Alignment.Center)
                 .size(32.dp)
         )
-        
+
         // Quick temperature range
         Card(
             modifier = Modifier
@@ -268,7 +268,7 @@ private fun ThermalLiteControls(
                 )
             }
         }
-        
+
         // Main controls
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -285,7 +285,7 @@ private fun ThermalLiteControls(
                     contentDescription = "Gallery"
                 )
             }
-            
+
             // Main capture button
             Button(
                 onClick = onCaptureToggle,
@@ -307,7 +307,7 @@ private fun ThermalLiteControls(
                     fontWeight = FontWeight.Bold
                 )
             }
-            
+
             // Quick settings
             OutlinedButton(
                 onClick = { /* Quick settings */ },
@@ -319,7 +319,7 @@ private fun ThermalLiteControls(
                 )
             }
         }
-        
+
         // Quick info bar
         Card(
             modifier = Modifier
@@ -407,7 +407,7 @@ private fun ThermalLiteSettingsDialog(
                     style = MaterialTheme.typography.labelMedium,
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
-                
+
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
@@ -419,9 +419,9 @@ private fun ThermalLiteSettingsDialog(
                         )
                     }
                 }
-                
+
                 Spacer(modifier = Modifier.height(16.dp))
-                
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
@@ -435,15 +435,15 @@ private fun ThermalLiteSettingsDialog(
                         style = MaterialTheme.typography.bodyMedium
                     )
                 }
-                
+
                 Spacer(modifier = Modifier.height(16.dp))
-                
+
                 Text(
                     text = "Temperature Unit",
                     style = MaterialTheme.typography.labelMedium,
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
-                
+
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
@@ -460,11 +460,13 @@ private fun ThermalLiteSettingsDialog(
         confirmButton = {
             TextButton(
                 onClick = {
-                    onSaveSettings(mapOf(
-                        "imageQuality" to imageQuality,
-                        "autoSave" to autoSave,
-                        "temperatureUnit" to temperatureUnit
-                    ))
+                    onSaveSettings(
+                        mapOf(
+                            "imageQuality" to imageQuality,
+                            "autoSave" to autoSave,
+                            "temperatureUnit" to temperatureUnit
+                        )
+                    )
                 }
             ) {
                 Text("Save")

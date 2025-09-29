@@ -37,12 +37,12 @@ class ManualStep1ComposeActivity : BaseComposeActivity<ThermalViewModel>() {
     override fun Content(viewModel: ThermalViewModel) {
         val context = LocalContext.current
         var currentStep by remember { mutableIntStateOf(1) }
-        
+
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
                     TopAppBar(
-                        title = { 
+                        title = {
                             Text(
                                 "Manual Setup - Step 1",
                                 fontWeight = FontWeight.Bold,
@@ -52,7 +52,7 @@ class ManualStep1ComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         navigationIcon = {
                             IconButton(onClick = { finish() }) {
                                 Icon(
-                                    Icons.Default.ArrowBack, 
+                                    Icons.Default.ArrowBack,
                                     contentDescription = "Back",
                                     tint = Color.White
                                 )
@@ -74,16 +74,16 @@ class ManualStep1ComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    
+
                     // Progress indicator
                     SetupProgressIndicator(
                         currentStep = 1,
                         totalSteps = 2,
                         modifier = Modifier.fillMaxWidth()
                     )
-                    
+
                     Spacer(modifier = Modifier.height(32.dp))
-                    
+
                     // Main setup card
                     ManualSetupCard(
                         step = currentStep,
@@ -123,9 +123,9 @@ private fun SetupProgressIndicator(
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             // Progress bar
             LinearProgressIndicator(
                 progress = currentStep.toFloat() / totalSteps.toFloat(),
@@ -135,9 +135,9 @@ private fun SetupProgressIndicator(
                 color = Color(0xFFFF6B35),
                 trackColor = Color(0xFF16131E)
             )
-            
+
             Spacer(modifier = Modifier.height(8.dp))
-            
+
             Text(
                 "Step $currentStep of $totalSteps",
                 color = Color(0xFF7D8590),
@@ -172,7 +172,7 @@ private fun ManualSetupCard(
                 tint = Color(0xFFFF6B35),
                 modifier = Modifier.size(64.dp)
             )
-            
+
             // Title
             Text(
                 "Thermal Camera Setup",
@@ -181,13 +181,13 @@ private fun ManualSetupCard(
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center
             )
-            
+
             // Instructions
             SetupInstructions()
-            
+
             // Setup checklist
             SetupChecklist()
-            
+
             // Continue button
             Button(
                 onClick = onNextStep,
@@ -226,17 +226,17 @@ private fun SetupInstructions() {
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold
         )
-        
+
         InstructionItem(
             step = "1",
             instruction = "Ensure your thermal camera device is powered on and ready"
         )
-        
+
         InstructionItem(
-            step = "2", 
+            step = "2",
             instruction = "Check that Bluetooth is enabled on your mobile device"
         )
-        
+
         InstructionItem(
             step = "3",
             instruction = "Place the thermal camera within 3 meters of your phone"
@@ -269,7 +269,7 @@ private fun InstructionItem(
                 fontWeight = FontWeight.Bold
             )
         }
-        
+
         Text(
             instruction,
             color = Color(0xFF7D8590),
@@ -284,7 +284,7 @@ private fun SetupChecklist() {
     var devicePowered by remember { mutableStateOf(false) }
     var bluetoothEnabled by remember { mutableStateOf(false) }
     var cameraInRange by remember { mutableStateOf(false) }
-    
+
     Card(
         colors = CardDefaults.cardColors(
             containerColor = Color(0xFF16131E)
@@ -303,19 +303,19 @@ private fun SetupChecklist() {
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold
             )
-            
+
             ChecklistItem(
                 text = "Thermal camera powered on",
                 checked = devicePowered,
                 onCheckedChange = { devicePowered = it }
             )
-            
+
             ChecklistItem(
                 text = "Bluetooth enabled",
                 checked = bluetoothEnabled,
                 onCheckedChange = { bluetoothEnabled = it }
             )
-            
+
             ChecklistItem(
                 text = "Camera within range",
                 checked = cameraInRange,
@@ -345,7 +345,7 @@ private fun ChecklistItem(
                 checkmarkColor = Color.White
             )
         )
-        
+
         Text(
             text,
             color = if (checked) Color.White else Color(0xFF7D8590),

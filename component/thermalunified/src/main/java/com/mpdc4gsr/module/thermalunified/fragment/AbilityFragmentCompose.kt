@@ -29,7 +29,7 @@ import com.mpdc4gsr.module.thermalunified.activity.MonitoryHomeActivity
 
 /**
  * Compose migration of AbilityFragment
- * 
+ *
  * This fragment demonstrates:
  * - Complete migration of ability/features UI to Compose
  * - Modern grid-based layout for feature discovery
@@ -243,28 +243,33 @@ class AbilityFragmentCompose : SimpleComposeFragment() {
                 org.greenrobot.eventbus.EventBus.getDefault()
                     .post(com.mpdc4gsr.libunified.app.bean.event.WinterClickEvent())
             }
+
             "monitoring" -> {
                 // Navigate to monitoring home
                 val intent = Intent(context, MonitoryHomeActivity::class.java)
                 context.startActivity(intent)
             }
+
             "residential" -> {
                 // Navigate to residential thermal analysis
                 NavigationManager.getInstance()
                     .build(RouterConfig.IR_RESIDENTIAL)
                     .navigation(context)
             }
+
             "automotive" -> {
                 // Navigate to automotive thermal analysis
                 NavigationManager.getInstance()
                     .build(RouterConfig.IR_AUTOMOTIVE)
                     .navigation(context)
             }
+
             "night_vision" -> {
                 // Navigate to night vision thermal mode
                 val intent = Intent(context, IRThermalNightActivity::class.java)
                 context.startActivity(intent)
             }
+
             "thermal_plus" -> {
                 // Navigate to thermal plus features
                 val intent = Intent(context, IRThermalPlusActivity::class.java)

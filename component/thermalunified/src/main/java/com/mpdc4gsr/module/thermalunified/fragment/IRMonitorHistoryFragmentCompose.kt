@@ -23,7 +23,7 @@ import java.util.*
 
 /**
  * Compose migration of IRMonitorHistoryFragment
- * 
+ *
  * This fragment demonstrates:
  * - Complete migration of IR monitor history interface to Compose
  * - Modern history management with filtering capabilities
@@ -78,12 +78,14 @@ class IRMonitorHistoryFragmentCompose : BaseComposeFragment<IRMonitorHistoryView
                         isLoading -> {
                             LoadingState()
                         }
+
                         historyItems.isEmpty() -> {
                             EmptyHistoryState(
                                 filter = selectedFilter,
                                 onRefresh = { viewModel.refreshHistory() }
                             )
                         }
+
                         else -> {
                             HistoryList(
                                 historyItems = historyItems,
@@ -147,7 +149,7 @@ class IRMonitorHistoryFragmentCompose : BaseComposeFragment<IRMonitorHistoryView
                             color = MaterialTheme.colorScheme.onPrimaryContainer
                         )
                     }
-                    
+
                     Icon(
                         Icons.Default.History,
                         contentDescription = "History",
@@ -163,7 +165,7 @@ class IRMonitorHistoryFragmentCompose : BaseComposeFragment<IRMonitorHistoryView
                     HistoryFilter.values().forEach { filter ->
                         FilterChip(
                             onClick = { onFilterChange(filter) },
-                            label = { 
+                            label = {
                                 Text(
                                     text = filter.displayName,
                                     style = MaterialTheme.typography.labelMedium
@@ -272,7 +274,7 @@ class IRMonitorHistoryFragmentCompose : BaseComposeFragment<IRMonitorHistoryView
                     modifier = Modifier.size(64.dp),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-                
+
                 Text(
                     text = when (filter) {
                         HistoryFilter.ALL -> "No History Found"
@@ -284,13 +286,13 @@ class IRMonitorHistoryFragmentCompose : BaseComposeFragment<IRMonitorHistoryView
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-                
+
                 Text(
                     text = "Monitor thermal sessions to see history here",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-                
+
                 Button(onClick = onRefresh) {
                     Icon(Icons.Default.Refresh, contentDescription = null)
                     Spacer(modifier = Modifier.width(8.dp))
@@ -336,13 +338,13 @@ class IRMonitorHistoryFragmentCompose : BaseComposeFragment<IRMonitorHistoryView
             onClick = onClick,
             modifier = Modifier.fillMaxWidth(),
             colors = CardDefaults.cardColors(
-                containerColor = if (isSelected) 
-                    MaterialTheme.colorScheme.primaryContainer 
-                else 
+                containerColor = if (isSelected)
+                    MaterialTheme.colorScheme.primaryContainer
+                else
                     MaterialTheme.colorScheme.surface
             ),
-            border = if (isSelected) 
-                androidx.compose.foundation.BorderStroke(2.dp, MaterialTheme.colorScheme.primary) 
+            border = if (isSelected)
+                androidx.compose.foundation.BorderStroke(2.dp, MaterialTheme.colorScheme.primary)
             else null,
             shape = RoundedCornerShape(12.dp)
         ) {
@@ -382,7 +384,7 @@ class IRMonitorHistoryFragmentCompose : BaseComposeFragment<IRMonitorHistoryView
                         fontWeight = FontWeight.Medium,
                         maxLines = 1
                     )
-                    
+
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(12.dp),
                         verticalAlignment = Alignment.CenterVertically
@@ -402,7 +404,7 @@ class IRMonitorHistoryFragmentCompose : BaseComposeFragment<IRMonitorHistoryView
                             color = getSessionTypeColor(item.sessionType)
                         )
                     }
-                    
+
                     Text(
                         text = SimpleDateFormat("MMM dd, yyyy HH:mm", Locale.getDefault()).format(Date(item.startTime)),
                         style = MaterialTheme.typography.bodySmall,
@@ -481,7 +483,7 @@ class IRMonitorHistoryFragmentCompose : BaseComposeFragment<IRMonitorHistoryView
         val seconds = durationMs / 1000
         val minutes = seconds / 60
         val hours = minutes / 60
-        
+
         return when {
             hours > 0 -> "${hours}h ${minutes % 60}m"
             minutes > 0 -> "${minutes}m ${seconds % 60}s"
@@ -525,7 +527,7 @@ class IRMonitorHistoryFragmentCompose : BaseComposeFragment<IRMonitorHistoryView
     }
 
     enum class HistoryFilter(
-        val displayName: String, 
+        val displayName: String,
         val icon: androidx.compose.ui.graphics.vector.ImageVector
     ) {
         ALL("All", Icons.Default.ViewList),

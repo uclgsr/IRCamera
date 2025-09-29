@@ -36,12 +36,12 @@ class BaseIRComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         var connectionStatus by remember { mutableStateOf("Disconnected") }
         var cameraReady by remember { mutableStateOf(false) }
         var thermalMode by remember { mutableIntStateOf(1) }
-        
+
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
                     TopAppBar(
-                        title = { 
+                        title = {
                             Text(
                                 "Thermal Base Control",
                                 fontWeight = FontWeight.Bold,
@@ -51,7 +51,7 @@ class BaseIRComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         navigationIcon = {
                             IconButton(onClick = { finish() }) {
                                 Icon(
-                                    Icons.Default.ArrowBack, 
+                                    Icons.Default.ArrowBack,
                                     contentDescription = "Back",
                                     tint = Color.White
                                 )
@@ -85,7 +85,7 @@ class BaseIRComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         cameraReady = cameraReady,
                         modifier = Modifier.fillMaxWidth()
                     )
-                    
+
                     // Main thermal view
                     Box(
                         modifier = Modifier
@@ -96,7 +96,7 @@ class BaseIRComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         ThermalCameraSurface(
                             modifier = Modifier.fillMaxSize()
                         )
-                        
+
                         // Control overlay
                         ThermalControlOverlay(
                             thermalMode = thermalMode,
@@ -109,7 +109,7 @@ class BaseIRComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                 }
             }
         }
-        
+
         // Initialize camera connection
         LaunchedEffect(Unit) {
             kotlinx.coroutines.delay(2000L)
@@ -157,7 +157,7 @@ private fun ThermalStatusBar(
                     fontWeight = FontWeight.Medium
                 )
             }
-            
+
             // Camera info
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -258,7 +258,7 @@ private fun ThermalControlOverlay(
                 selectedMode = thermalMode,
                 onModeSelected = onModeChange
             )
-            
+
             // Quick actions
             QuickActionButtons()
         }
@@ -271,7 +271,7 @@ private fun ThermalModeSelector(
     onModeSelected: (Int) -> Unit
 ) {
     val modes = getThermalModes()
-    
+
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
@@ -281,7 +281,7 @@ private fun ThermalModeSelector(
             fontSize = 14.sp,
             fontWeight = FontWeight.Bold
         )
-        
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -315,21 +315,21 @@ private fun QuickActionButtons() {
             onClick = { /* Capture */ },
             modifier = Modifier.weight(1f)
         )
-        
+
         QuickActionButton(
             icon = Icons.Default.Videocam,
             text = "Record",
             onClick = { /* Record */ },
             modifier = Modifier.weight(1f)
         )
-        
+
         QuickActionButton(
             icon = Icons.Default.Palette,
             text = "Palette",
             onClick = { /* Change palette */ },
             modifier = Modifier.weight(1f)
         )
-        
+
         QuickActionButton(
             icon = Icons.Default.Tune,
             text = "Adjust",

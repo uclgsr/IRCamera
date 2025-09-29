@@ -93,7 +93,7 @@ class GSRDeviceManagementComposeActivity : BaseComposeActivity<BaseViewModel>() 
                 GSRDeviceManagementContent(
                     isScanning = isScanning,
                     selectedDevice = selectedDevice,
-                    onDeviceSelect = { 
+                    onDeviceSelect = {
                         selectedDevice = it
                         showDeviceDetails = true
                     },
@@ -107,7 +107,7 @@ class GSRDeviceManagementComposeActivity : BaseComposeActivity<BaseViewModel>() 
             DeviceDetailsDialog(
                 device = selectedDevice!!,
                 onDismiss = { showDeviceDetails = false },
-                onConfigure = { 
+                onConfigure = {
                     ShimmerConfigComposeActivity.startActivity(this@GSRDeviceManagementComposeActivity)
                     showDeviceDetails = false
                 }
@@ -220,7 +220,7 @@ private fun DeviceStatusOverview(
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold
                 )
-                
+
                 if (isScanning) {
                     CircularProgressIndicator(
                         modifier = Modifier.size(20.dp),
@@ -228,9 +228,9 @@ private fun DeviceStatusOverview(
                     )
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -320,7 +320,7 @@ private fun GSRDeviceCard(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
-                
+
                 // Status indicator
                 Surface(
                     shape = RoundedCornerShape(12.dp),
@@ -335,9 +335,9 @@ private fun GSRDeviceCard(
                     )
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             // Device metrics
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -359,9 +359,9 @@ private fun GSRDeviceCard(
                     icon = Icons.Default.Timeline
                 )
             }
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             // Device actions
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -378,7 +378,7 @@ private fun GSRDeviceCard(
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Details")
                 }
-                
+
                 if (device.status == "connected") {
                     Button(
                         onClick = onDisconnect,
@@ -452,8 +452,8 @@ private fun DeviceDetailsDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { 
-            Text(device.name) 
+        title = {
+            Text(device.name)
         },
         text = {
             Column(
@@ -465,7 +465,7 @@ private fun DeviceDetailsDialog(
                 DeviceDetailItem("Signal Strength", "${device.signalStrength} dBm")
                 DeviceDetailItem("Sampling Rate", "${device.samplingRate} Hz")
                 DeviceDetailItem("Last Seen", device.lastSeen)
-                
+
                 if (device.status == "connected") {
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
@@ -531,7 +531,7 @@ private fun BulkActionsDialog(
             Column {
                 Text("Select an action to perform on all devices:")
                 Spacer(modifier = Modifier.height(16.dp))
-                
+
                 listOf(
                     "Disconnect All" to "disconnect_all",
                     "Update Firmware" to "update_firmware",

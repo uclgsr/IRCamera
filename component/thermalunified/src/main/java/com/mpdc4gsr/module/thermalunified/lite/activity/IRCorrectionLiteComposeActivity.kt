@@ -55,7 +55,7 @@ class IRCorrectionLiteComposeActivity : BaseComposeActivity<BaseViewModel>() {
     @Composable
     override fun Content(viewModel: BaseViewModel) {
         val imagePath = intent.getStringExtra(KEY_IMAGE_PATH) ?: ""
-        
+
         var correctionMode by remember { mutableStateOf("Auto") }
         var showBeforeAfter by remember { mutableStateOf(false) }
         var temperature by remember { mutableStateOf(25.0f) }
@@ -137,7 +137,7 @@ private fun IRCorrectionContent(
                 .fillMaxWidth()
                 .weight(1f)
         )
-        
+
         // Correction controls
         CorrectionControlsPanel(
             correctionMode = correctionMode,
@@ -193,7 +193,7 @@ private fun ThermalImageDisplay(
                         )
                     }
                 }
-                
+
                 // Divider
                 Box(
                     modifier = Modifier
@@ -201,7 +201,7 @@ private fun ThermalImageDisplay(
                         .fillMaxHeight()
                         .background(Color.White.copy(alpha = 0.3f))
                 )
-                
+
                 // After image
                 Box(
                     modifier = Modifier
@@ -239,7 +239,7 @@ private fun ThermalImageDisplay(
                 modifier = Modifier.fillMaxSize()
             )
         }
-        
+
         // Temperature overlay
         Card(
             modifier = Modifier
@@ -266,7 +266,7 @@ private fun ThermalImageDisplay(
                 )
             }
         }
-        
+
         // Status indicator
         Surface(
             modifier = Modifier
@@ -308,7 +308,7 @@ private fun CorrectionControlsPanel(
             fontWeight = FontWeight.Medium,
             modifier = Modifier.padding(bottom = 8.dp)
         )
-        
+
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -325,7 +325,7 @@ private fun CorrectionControlsPanel(
                 )
             }
         }
-        
+
         // Correction parameters
         CorrectionParameterCard(
             title = "Temperature Correction",
@@ -335,9 +335,9 @@ private fun CorrectionControlsPanel(
             unit = "°C",
             description = "Ambient temperature for correction"
         )
-        
+
         Spacer(modifier = Modifier.height(12.dp))
-        
+
         CorrectionParameterCard(
             title = "Emissivity",
             value = emissivity,
@@ -346,9 +346,9 @@ private fun CorrectionControlsPanel(
             unit = "ε",
             description = "Material emissivity coefficient"
         )
-        
+
         Spacer(modifier = Modifier.height(12.dp))
-        
+
         CorrectionParameterCard(
             title = "Distance",
             value = distance,
@@ -357,9 +357,9 @@ private fun CorrectionControlsPanel(
             unit = "m",
             description = "Distance from target"
         )
-        
+
         Spacer(modifier = Modifier.height(16.dp))
-        
+
         // Action buttons
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -377,7 +377,7 @@ private fun CorrectionControlsPanel(
                 Spacer(modifier = Modifier.width(4.dp))
                 Text("Reset")
             }
-            
+
             Button(
                 onClick = { /* Apply corrections */ },
                 modifier = Modifier.weight(1f)
@@ -430,14 +430,14 @@ private fun CorrectionParameterCard(
                     color = MaterialTheme.colorScheme.primary
                 )
             }
-            
+
             Text(
                 text = description,
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
-            
+
             Slider(
                 value = value,
                 onValueChange = onValueChange,

@@ -104,11 +104,11 @@ private fun SensorDashboardContent(
             modifier = Modifier.weight(1f)
         ) {
             val sensors = getMockSensors()
-            
+
             items(sensors) { sensor ->
                 SensorCard(
                     sensor = sensor,
-                    onClick = { 
+                    onClick = {
                         selectedSensor = sensor
                         showSensorDetails = true
                     }
@@ -121,7 +121,7 @@ private fun SensorDashboardContent(
         SensorDetailsDialog(
             sensor = selectedSensor!!,
             onDismiss = { showSensorDetails = false },
-            onConfigure = { 
+            onConfigure = {
                 // Navigate to sensor configuration
                 showSensorDetails = false
             }
@@ -219,9 +219,9 @@ private fun SensorCard(
                 modifier = Modifier.size(32.dp),
                 tint = getSensorColor(sensor.type)
             )
-            
+
             Spacer(modifier = Modifier.width(16.dp))
-            
+
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = sensor.name,
@@ -233,7 +233,7 @@ private fun SensorCard(
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-                
+
                 // Sensor metrics
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -259,7 +259,7 @@ private fun SensorCard(
                     )
                 }
             }
-            
+
             IconButton(onClick = { /* Quick actions */ }) {
                 Icon(
                     Icons.Default.MoreVert,
@@ -278,8 +278,8 @@ private fun SensorDetailsDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { 
-            Text(sensor.name) 
+        title = {
+            Text(sensor.name)
         },
         text = {
             Column(
@@ -290,7 +290,7 @@ private fun SensorDetailsDialog(
                 SensorDetailItem("Current Value", sensor.currentValue)
                 SensorDetailItem("Last Update", sensor.lastUpdate)
                 SensorDetailItem("Sample Rate", sensor.sampleRate)
-                
+
                 if (sensor.status == "active") {
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
@@ -299,7 +299,7 @@ private fun SensorDetailsDialog(
                         fontWeight = FontWeight.Medium,
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
-                    
+
                     Card(
                         colors = CardDefaults.cardColors(
                             containerColor = MaterialTheme.colorScheme.surfaceVariant
@@ -313,11 +313,13 @@ private fun SensorDetailsDialog(
                                     Text("GSR: 2.45 µS", style = MaterialTheme.typography.bodySmall)
                                     Text("PPG: 1024, 1028", style = MaterialTheme.typography.bodySmall)
                                 }
+
                                 "Thermal" -> {
                                     Text("Center: 36.8°C", style = MaterialTheme.typography.bodySmall)
                                     Text("Max: 42.1°C", style = MaterialTheme.typography.bodySmall)
                                     Text("Min: 28.3°C", style = MaterialTheme.typography.bodySmall)
                                 }
+
                                 "Camera" -> {
                                     Text("Resolution: 1920x1080", style = MaterialTheme.typography.bodySmall)
                                     Text("FPS: 30", style = MaterialTheme.typography.bodySmall)
@@ -399,23 +401,23 @@ data class SensorInfo(
 
 private fun getMockSensors() = listOf(
     SensorInfo(
-        "gsr1", "Shimmer3 GSR+ #001", "GSR", 
-        "Galvanic skin response sensor", "active", 
+        "gsr1", "Shimmer3 GSR+ #001", "GSR",
+        "Galvanic skin response sensor", "active",
         "2.45 µS", "Just now", "128 Hz"
     ),
     SensorInfo(
-        "thermal1", "TOPDON TC001", "Thermal", 
-        "Thermal imaging camera", "active", 
+        "thermal1", "TOPDON TC001", "Thermal",
+        "Thermal imaging camera", "active",
         "36.8°C", "2 sec ago", "25 FPS"
     ),
     SensorInfo(
-        "camera1", "RGB Camera", "Camera", 
-        "Device RGB camera", "active", 
+        "camera1", "RGB Camera", "Camera",
+        "Device RGB camera", "active",
         "1920x1080", "1 sec ago", "30 FPS"
     ),
     SensorInfo(
-        "gsr2", "Shimmer3 GSR+ #002", "GSR", 
-        "Secondary GSR sensor", "inactive", 
+        "gsr2", "Shimmer3 GSR+ #002", "GSR",
+        "Secondary GSR sensor", "inactive",
         "N/A", "5 min ago", "N/A"
     )
 )

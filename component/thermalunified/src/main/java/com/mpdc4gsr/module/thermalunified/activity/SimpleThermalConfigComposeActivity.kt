@@ -93,9 +93,9 @@ class SimpleThermalConfigComposeActivity : BaseComposeActivity<ThermalViewModel>
                             tint = Color(0xFFFF6B35),
                             modifier = Modifier.size(24.dp)
                         )
-                        
+
                         Spacer(modifier = Modifier.width(8.dp))
-                        
+
                         Text(
                             "Quick Thermal Setup",
                             color = Color.White,
@@ -103,9 +103,9 @@ class SimpleThermalConfigComposeActivity : BaseComposeActivity<ThermalViewModel>
                             fontWeight = FontWeight.Bold
                         )
                     }
-                    
+
                     Spacer(modifier = Modifier.height(8.dp))
-                    
+
                     Text(
                         "Simplified configuration for quick thermal imaging setup",
                         color = Color(0xFF7D8590),
@@ -113,7 +113,7 @@ class SimpleThermalConfigComposeActivity : BaseComposeActivity<ThermalViewModel>
                     )
                 }
             }
-            
+
             // Profile Selection
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -127,9 +127,9 @@ class SimpleThermalConfigComposeActivity : BaseComposeActivity<ThermalViewModel>
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
-                    
+
                     Spacer(modifier = Modifier.height(16.dp))
-                    
+
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         ProfileOption(
                             "Indoor",
@@ -137,21 +137,21 @@ class SimpleThermalConfigComposeActivity : BaseComposeActivity<ThermalViewModel>
                             Icons.Default.Home,
                             selectedProfile == "Indoor"
                         ) { selectedProfile = "Indoor" }
-                        
+
                         ProfileOption(
-                            "Outdoor", 
+                            "Outdoor",
                             "Configured for outdoor thermal analysis",
                             Icons.Default.Landscape,
                             selectedProfile == "Outdoor"
                         ) { selectedProfile = "Outdoor" }
-                        
+
                         ProfileOption(
                             "Balanced",
                             "General purpose thermal configuration",
                             Icons.Default.Balance,
                             selectedProfile == "Balanced"
                         ) { selectedProfile = "Balanced" }
-                        
+
                         ProfileOption(
                             "High Precision",
                             "Maximum accuracy for detailed analysis",
@@ -161,7 +161,7 @@ class SimpleThermalConfigComposeActivity : BaseComposeActivity<ThermalViewModel>
                     }
                 }
             }
-            
+
             // Auto Settings
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -175,18 +175,18 @@ class SimpleThermalConfigComposeActivity : BaseComposeActivity<ThermalViewModel>
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
-                    
+
                     Spacer(modifier = Modifier.height(16.dp))
-                    
+
                     SettingToggle(
                         "Auto Adjust",
                         "Automatically adjust settings based on conditions",
                         Icons.Default.AutoMode,
                         autoAdjust
                     ) { autoAdjust = it }
-                    
+
                     Spacer(modifier = Modifier.height(12.dp))
-                    
+
                     SettingToggle(
                         "Simplified Mode",
                         "Hide advanced options for easier operation",
@@ -195,7 +195,7 @@ class SimpleThermalConfigComposeActivity : BaseComposeActivity<ThermalViewModel>
                     ) { simplifiedMode = it }
                 }
             }
-            
+
             // Current Settings Preview
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -209,25 +209,28 @@ class SimpleThermalConfigComposeActivity : BaseComposeActivity<ThermalViewModel>
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
-                    
+
                     Spacer(modifier = Modifier.height(12.dp))
-                    
+
                     when (selectedProfile) {
                         "Indoor" -> {
                             SettingItem("Temperature Range", "-5°C to 40°C")
                             SettingItem("Distance", "0.5m - 3m")
                             SettingItem("Emissivity", "0.95 (Human/Building)")
                         }
+
                         "Outdoor" -> {
                             SettingItem("Temperature Range", "-20°C to 60°C")
                             SettingItem("Distance", "1m - 10m")
                             SettingItem("Emissivity", "0.90 (Mixed materials)")
                         }
+
                         "Balanced" -> {
                             SettingItem("Temperature Range", "-10°C to 50°C")
                             SettingItem("Distance", "0.3m - 5m")
                             SettingItem("Emissivity", "0.95 (Auto-detect)")
                         }
+
                         "High Precision" -> {
                             SettingItem("Temperature Range", "0°C to 100°C")
                             SettingItem("Distance", "0.2m - 2m")
@@ -236,9 +239,9 @@ class SimpleThermalConfigComposeActivity : BaseComposeActivity<ThermalViewModel>
                     }
                 }
             }
-            
+
             Spacer(modifier = Modifier.weight(1f))
-            
+
             // Action Buttons
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -255,7 +258,7 @@ class SimpleThermalConfigComposeActivity : BaseComposeActivity<ThermalViewModel>
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Reset")
                 }
-                
+
                 Button(
                     onClick = { /* Apply settings */ },
                     modifier = Modifier.weight(1f),
@@ -299,9 +302,9 @@ class SimpleThermalConfigComposeActivity : BaseComposeActivity<ThermalViewModel>
                     tint = if (selected) Color(0xFFFF6B35) else Color(0xFF7D8590),
                     modifier = Modifier.size(20.dp)
                 )
-                
+
                 Spacer(modifier = Modifier.width(12.dp))
-                
+
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         title,
@@ -309,14 +312,14 @@ class SimpleThermalConfigComposeActivity : BaseComposeActivity<ThermalViewModel>
                         fontSize = 14.sp,
                         fontWeight = if (selected) FontWeight.Medium else FontWeight.Normal
                     )
-                    
+
                     Text(
                         description,
                         color = Color(0xFF7D8590),
                         fontSize = 12.sp
                     )
                 }
-                
+
                 if (selected) {
                     Icon(
                         Icons.Default.CheckCircle,
@@ -347,9 +350,9 @@ class SimpleThermalConfigComposeActivity : BaseComposeActivity<ThermalViewModel>
                 tint = Color(0xFF7D8590),
                 modifier = Modifier.size(20.dp)
             )
-            
+
             Spacer(modifier = Modifier.width(12.dp))
-            
+
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     title,
@@ -357,14 +360,14 @@ class SimpleThermalConfigComposeActivity : BaseComposeActivity<ThermalViewModel>
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Medium
                 )
-                
+
                 Text(
                     description,
                     color = Color(0xFF7D8590),
                     fontSize = 12.sp
                 )
             }
-            
+
             Switch(
                 checked = checked,
                 onCheckedChange = onCheckedChange,
@@ -392,7 +395,7 @@ class SimpleThermalConfigComposeActivity : BaseComposeActivity<ThermalViewModel>
                 color = Color(0xFF7D8590),
                 fontSize = 14.sp
             )
-            
+
             Text(
                 value,
                 color = Color.White,

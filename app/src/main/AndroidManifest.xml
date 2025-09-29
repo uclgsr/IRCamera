@@ -5,20 +5,41 @@
     <!-- Essential permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30" />
-    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" android:usesPermissionFlags="neverForLocation" tools:targetApi="31" />
-    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" tools:targetApi="31" />
+    <uses-permission
+        android:name="android.permission.BLUETOOTH"
+        android:maxSdkVersion="30" />
+    <uses-permission
+        android:name="android.permission.BLUETOOTH_ADMIN"
+        android:maxSdkVersion="30" />
+    <uses-permission
+        android:name="android.permission.BLUETOOTH_SCAN"
+        android:usesPermissionFlags="neverForLocation"
+        tools:targetApi="31" />
+    <uses-permission
+        android:name="android.permission.BLUETOOTH_CONNECT"
+        tools:targetApi="31" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
 
     <!-- Hardware features -->
-    <uses-feature android:name="android.hardware.camera" android:required="true" />
-    <uses-feature android:name="android.hardware.bluetooth" android:required="false" />
-    <uses-feature android:name="android.hardware.bluetooth_le" android:required="false" />
-    <uses-feature android:name="android.hardware.usb.host" android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+    <uses-feature
+        android:name="android.hardware.bluetooth"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.bluetooth_le"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.usb.host"
+        android:required="false" />
 
     <application
         android:name="mpdc4gsr.core.App"
@@ -56,10 +77,11 @@
         <!-- Essential Activities -->
         <activity android:name="mpdc4gsr.activities.PolicyActivity" />
         <activity android:name="mpdc4gsr.activities.VersionActivity" />
-        <activity android:name="mpdc4gsr.activities.SettingsComposeActivity" 
-                  android:exported="false"
-                  android:label="Settings (Compose)"
-                  android:theme="@style/AppTheme" />
+        <activity
+            android:name="mpdc4gsr.activities.SettingsComposeActivity"
+            android:exported="false"
+            android:label="Settings (Compose)"
+            android:theme="@style/AppTheme" />
 
         <!-- USB Receiver -->
         <receiver

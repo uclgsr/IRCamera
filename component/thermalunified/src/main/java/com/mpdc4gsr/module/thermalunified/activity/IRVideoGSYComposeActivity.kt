@@ -156,7 +156,9 @@ class IRVideoGSYComposeActivity : BaseComposeActivity<IRVideoGSYViewModel>() {
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Text(
-                                "${(currentTime / 60).toInt()}:${(currentTime % 60).toInt().toString().padStart(2, '0')}",
+                                "${(currentTime / 60).toInt()}:${
+                                    (currentTime % 60).toInt().toString().padStart(2, '0')
+                                }",
                                 style = MaterialTheme.typography.bodySmall
                             )
                             Text(
@@ -255,7 +257,7 @@ class IRVideoGSYComposeActivity : BaseComposeActivity<IRVideoGSYViewModel>() {
                         fontWeight = FontWeight.Bold,
                         color = Color(0xFFFF6B35)
                     )
-                    
+
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceEvenly

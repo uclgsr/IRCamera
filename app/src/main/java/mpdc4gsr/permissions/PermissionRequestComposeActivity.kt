@@ -96,7 +96,7 @@ class PermissionRequestComposeActivity : BaseComposeActivity<BaseViewModel>() {
             PermissionDetailDialog(
                 permission = permission,
                 onDismiss = { selectedPermission = null },
-                onRequestPermission = { 
+                onRequestPermission = {
                     // Request specific permission
                     selectedPermission = null
                 }
@@ -181,7 +181,7 @@ private fun PermissionStatusOverview(
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 12.dp)
             )
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -260,9 +260,9 @@ private fun PermissionCard(
                 modifier = Modifier.size(32.dp),
                 tint = getPermissionStatusColor(permission.status)
             )
-            
+
             Spacer(modifier = Modifier.width(16.dp))
-            
+
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = permission.name,
@@ -275,7 +275,7 @@ private fun PermissionCard(
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(top = 2.dp)
                 )
-                
+
                 // Status indicator
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -295,7 +295,7 @@ private fun PermissionCard(
                     )
                 }
             }
-            
+
             // Action button
             when (permission.status) {
                 PermissionStatus.GRANTED -> {
@@ -305,11 +305,13 @@ private fun PermissionCard(
                         tint = Color(0xFF4CAF50)
                     )
                 }
+
                 PermissionStatus.DENIED -> {
                     OutlinedButton(onClick = onSelect) {
                         Text("Grant")
                     }
                 }
+
                 PermissionStatus.PENDING -> {
                     Button(onClick = onSelect) {
                         Text("Request")
@@ -349,8 +351,8 @@ private fun PermissionDetailDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { 
-            Text(permission.name) 
+        title = {
+            Text(permission.name)
         },
         text = {
             Column {
@@ -359,14 +361,14 @@ private fun PermissionDetailDialog(
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
-                
+
                 Text(
                     text = "Why this permission is needed:",
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.Medium,
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
-                
+
                 Text(
                     text = permission.reasoning,
                     style = MaterialTheme.typography.bodySmall,
@@ -393,8 +395,8 @@ private fun PermissionEducationDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { 
-            Text("Why Permissions Matter") 
+        title = {
+            Text("Why Permissions Matter")
         },
         text = {
             Column(
@@ -405,25 +407,25 @@ private fun PermissionEducationDialog(
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
-                
+
                 PermissionEducationItem(
                     icon = Icons.Default.Camera,
                     title = "Camera Access",
                     description = "Capture thermal and RGB images for analysis"
                 )
-                
+
                 PermissionEducationItem(
                     icon = Icons.Default.Bluetooth,
                     title = "Bluetooth",
                     description = "Connect to GSR sensors and thermal cameras"
                 )
-                
+
                 PermissionEducationItem(
                     icon = Icons.Default.LocationOn,
                     title = "Location",
                     description = "Required for Bluetooth device discovery"
                 )
-                
+
                 PermissionEducationItem(
                     icon = Icons.Default.Storage,
                     title = "Storage",
@@ -458,9 +460,9 @@ private fun PermissionEducationItem(
             modifier = Modifier.size(24.dp),
             tint = MaterialTheme.colorScheme.primary
         )
-        
+
         Spacer(modifier = Modifier.width(12.dp))
-        
+
         Column {
             Text(
                 text = title,

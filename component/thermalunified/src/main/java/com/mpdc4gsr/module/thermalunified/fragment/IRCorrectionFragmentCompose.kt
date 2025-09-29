@@ -25,7 +25,7 @@ import com.mpdc4gsr.module.thermalunified.viewmodel.IRCorrectionViewModel
 
 /**
  * Compose migration of IRCorrectionFragment
- * 
+ *
  * This fragment demonstrates:
  * - Complete migration of IR temperature correction tools to Compose
  * - Advanced calibration and correction interface
@@ -218,13 +218,13 @@ class IRCorrectionFragmentCompose : BaseComposeFragment<IRCorrectionViewModel>()
                     temperature = "${data.currentTemp}°C",
                     isMain = true
                 )
-                
+
                 TemperatureCard(
                     label = "Corrected",
                     temperature = "${data.correctedTemp}°C",
                     color = Color.Green
                 )
-                
+
                 TemperatureCard(
                     label = "Offset",
                     temperature = "${data.offsetValue}°C",
@@ -243,9 +243,9 @@ class IRCorrectionFragmentCompose : BaseComposeFragment<IRCorrectionViewModel>()
     ) {
         Card(
             colors = CardDefaults.cardColors(
-                containerColor = if (isMain) 
-                    MaterialTheme.colorScheme.primaryContainer 
-                else 
+                containerColor = if (isMain)
+                    MaterialTheme.colorScheme.primaryContainer
+                else
                     MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.9f)
             ),
             shape = RoundedCornerShape(6.dp)
@@ -261,9 +261,9 @@ class IRCorrectionFragmentCompose : BaseComposeFragment<IRCorrectionViewModel>()
                 )
                 Text(
                     text = temperature,
-                    style = if (isMain) 
-                        MaterialTheme.typography.titleSmall 
-                    else 
+                    style = if (isMain)
+                        MaterialTheme.typography.titleSmall
+                    else
                         MaterialTheme.typography.bodySmall,
                     fontWeight = FontWeight.Bold,
                     color = color
@@ -357,10 +357,10 @@ class IRCorrectionFragmentCompose : BaseComposeFragment<IRCorrectionViewModel>()
                 text = "Correction Offset: ${String.format("%.1f", sliderValue)}°C",
                 style = MaterialTheme.typography.bodyMedium
             )
-            
+
             Slider(
                 value = sliderValue,
-                onValueChange = { 
+                onValueChange = {
                     sliderValue = it
                     onValueChange(it)
                 },

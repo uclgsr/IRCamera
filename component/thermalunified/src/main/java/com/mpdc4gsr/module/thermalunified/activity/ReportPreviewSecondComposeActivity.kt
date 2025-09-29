@@ -149,7 +149,7 @@ class ReportPreviewSecondComposeActivity : BaseComposeActivity<ReportPreviewSeco
                         color = Color(0xFF1976D2)
                     )
                     Spacer(modifier = Modifier.height(8.dp))
-                    
+
                     LazyColumn(
                         modifier = Modifier.height(200.dp),
                         verticalArrangement = Arrangement.spacedBy(4.dp)
@@ -189,7 +189,7 @@ class ReportPreviewSecondComposeActivity : BaseComposeActivity<ReportPreviewSeco
                             fontWeight = FontWeight.Bold,
                             color = Color(0xFF1976D2)
                         )
-                        
+
                         if (selectedSection != null) {
                             IconButton(
                                 onClick = { /* Edit section */ }
@@ -289,7 +289,7 @@ class ReportPreviewSecondComposeActivity : BaseComposeActivity<ReportPreviewSeco
                         color = if (isSelected) Color.White.copy(alpha = 0.8f) else Color(0xFF666666)
                     )
                 }
-                
+
                 if (section.hasContent) {
                     Text(
                         "✓",
@@ -315,11 +315,14 @@ class ReportPreviewSecondComposeActivity : BaseComposeActivity<ReportPreviewSeco
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    "Project: Industrial Equipment Inspection\nDate: ${java.text.SimpleDateFormat("yyyy-MM-dd").format(java.util.Date())}\nOperator: Thermal Analysis Team",
+                    "Project: Industrial Equipment Inspection\nDate: ${
+                        java.text.SimpleDateFormat("yyyy-MM-dd").format(java.util.Date())
+                    }\nOperator: Thermal Analysis Team",
                     style = MaterialTheme.typography.bodyMedium,
                     color = Color(0xFF666666)
                 )
             }
+
             "Header" -> {
                 Text(
                     "Report Header Section",
@@ -331,6 +334,7 @@ class ReportPreviewSecondComposeActivity : BaseComposeActivity<ReportPreviewSeco
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
+
             "Thermal Analysis" -> {
                 Text(
                     "Thermal Analysis Results",
@@ -342,6 +346,7 @@ class ReportPreviewSecondComposeActivity : BaseComposeActivity<ReportPreviewSeco
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
+
             else -> {
                 Text(
                     "$section Content",

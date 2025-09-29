@@ -27,7 +27,7 @@ import java.util.*
 
 /**
  * Compose migration of IRMonitorCaptureFragment
- * 
+ *
  * This fragment demonstrates:
  * - Complete migration of IR monitor capture interface to Compose
  * - Modern capture management with real-time preview
@@ -269,13 +269,13 @@ class IRMonitorCaptureFragmentCompose : BaseComposeFragment<IRMonitorCaptureView
                     temperature = "${data.centerTemp}°C",
                     isMain = true
                 )
-                
+
                 CaptureTemperatureCard(
                     label = "Max",
                     temperature = "${data.maxTemp}°C",
                     color = Color.Red
                 )
-                
+
                 CaptureTemperatureCard(
                     label = "Min",
                     temperature = "${data.minTemp}°C",
@@ -294,9 +294,9 @@ class IRMonitorCaptureFragmentCompose : BaseComposeFragment<IRMonitorCaptureView
     ) {
         Card(
             colors = CardDefaults.cardColors(
-                containerColor = if (isMain) 
-                    MaterialTheme.colorScheme.primaryContainer 
-                else 
+                containerColor = if (isMain)
+                    MaterialTheme.colorScheme.primaryContainer
+                else
                     MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.9f)
             ),
             shape = RoundedCornerShape(6.dp)
@@ -312,9 +312,9 @@ class IRMonitorCaptureFragmentCompose : BaseComposeFragment<IRMonitorCaptureView
                 )
                 Text(
                     text = temperature,
-                    style = if (isMain) 
-                        MaterialTheme.typography.titleSmall 
-                    else 
+                    style = if (isMain)
+                        MaterialTheme.typography.titleSmall
+                    else
                         MaterialTheme.typography.bodySmall,
                     fontWeight = FontWeight.Bold,
                     color = color
@@ -359,7 +359,7 @@ class IRMonitorCaptureFragmentCompose : BaseComposeFragment<IRMonitorCaptureView
                 // Continuous capture toggle
                 FilterChip(
                     onClick = onContinuousToggle,
-                    label = { 
+                    label = {
                         Text(
                             if (captureState == CaptureState.CONTINUOUS) "Stop Auto" else "Auto Capture",
                             style = MaterialTheme.typography.labelMedium
@@ -408,7 +408,7 @@ class IRMonitorCaptureFragmentCompose : BaseComposeFragment<IRMonitorCaptureView
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
-                    
+
                     Text(
                         text = "${captureHistory.size} captures",
                         style = MaterialTheme.typography.bodySmall,

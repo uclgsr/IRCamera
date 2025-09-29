@@ -30,7 +30,7 @@ import com.infisense.usbir.view.CameraView
 
 /**
  * IRMonitorThermalFragmentCompose - Advanced thermal monitoring fragment with Compose UI
- * 
+ *
  * This fragment provides comprehensive thermal monitoring capabilities with:
  * - Real-time thermal data monitoring with temperature overlays
  * - Advanced monitoring controls and region selection
@@ -49,12 +49,12 @@ class IRMonitorThermalFragmentCompose : BaseComposeFragment<ThermalFragmentViewM
     override fun Content(viewModel: ThermalFragmentViewModel) {
         val context = LocalContext.current
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-        
+
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
                     TopAppBar(
-                        title = { 
+                        title = {
                             Text(
                                 "IR Thermal Monitor",
                                 fontWeight = FontWeight.Bold
@@ -96,7 +96,7 @@ class IRMonitorThermalFragmentCompose : BaseComposeFragment<ThermalFragmentViewM
                     .fillMaxWidth()
                     .height(300.dp)
             )
-            
+
             // Monitoring controls
             MonitoringControlsSection(
                 onStartMonitoring = { viewModel.startMonitoring() },
@@ -104,7 +104,7 @@ class IRMonitorThermalFragmentCompose : BaseComposeFragment<ThermalFragmentViewM
                 onConfigureRegions = { viewModel.configureRegions() },
                 isMonitoring = uiState.isMonitoring
             )
-            
+
             // Temperature data display
             TemperatureDataSection(
                 currentTemp = uiState.currentTemperature,
@@ -112,7 +112,7 @@ class IRMonitorThermalFragmentCompose : BaseComposeFragment<ThermalFragmentViewM
                 maxTemp = uiState.maxTemperature,
                 avgTemp = uiState.averageTemperature
             )
-            
+
             // Monitoring status and alerts
             MonitoringStatusSection(
                 isConnected = uiState.isDeviceConnected,
@@ -146,7 +146,7 @@ class IRMonitorThermalFragmentCompose : BaseComposeFragment<ThermalFragmentViewM
                     },
                     modifier = Modifier.fillMaxSize()
                 )
-                
+
                 // Overlay for camera integration status
                 if (true) { // Replace with actual camera status
                     Surface(
@@ -204,7 +204,7 @@ class IRMonitorThermalFragmentCompose : BaseComposeFragment<ThermalFragmentViewM
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )
-                
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -213,9 +213,9 @@ class IRMonitorThermalFragmentCompose : BaseComposeFragment<ThermalFragmentViewM
                         onClick = if (isMonitoring) onStopMonitoring else onStartMonitoring,
                         modifier = Modifier.weight(1f),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = if (isMonitoring) 
-                                MaterialTheme.colorScheme.error 
-                            else 
+                            containerColor = if (isMonitoring)
+                                MaterialTheme.colorScheme.error
+                            else
                                 MaterialTheme.colorScheme.primary
                         )
                     ) {
@@ -227,7 +227,7 @@ class IRMonitorThermalFragmentCompose : BaseComposeFragment<ThermalFragmentViewM
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(if (isMonitoring) "Stop" else "Start")
                     }
-                    
+
                     OutlinedButton(
                         onClick = onConfigureRegions,
                         modifier = Modifier.weight(1f)
@@ -259,7 +259,7 @@ class IRMonitorThermalFragmentCompose : BaseComposeFragment<ThermalFragmentViewM
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )
-                
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly
@@ -322,19 +322,19 @@ class IRMonitorThermalFragmentCompose : BaseComposeFragment<ThermalFragmentViewM
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )
-                
+
                 StatusRow(
                     "Device Connected",
                     isConnected,
                     if (isConnected) Color.Green else Color.Red
                 )
-                
+
                 StatusRow(
                     "Recording",
                     isRecording,
                     if (isRecording) Color.Red else Color.Gray
                 )
-                
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -343,9 +343,9 @@ class IRMonitorThermalFragmentCompose : BaseComposeFragment<ThermalFragmentViewM
                     Text("Alerts", style = MaterialTheme.typography.bodyMedium)
                     Surface(
                         shape = RoundedCornerShape(12.dp),
-                        color = if (alertCount > 0) 
-                            MaterialTheme.colorScheme.error.copy(alpha = 0.2f) 
-                        else 
+                        color = if (alertCount > 0)
+                            MaterialTheme.colorScheme.error.copy(alpha = 0.2f)
+                        else
                             MaterialTheme.colorScheme.surfaceVariant
                     ) {
                         Text(
@@ -353,9 +353,9 @@ class IRMonitorThermalFragmentCompose : BaseComposeFragment<ThermalFragmentViewM
                             modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                             style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.Bold,
-                            color = if (alertCount > 0) 
-                                MaterialTheme.colorScheme.error 
-                            else 
+                            color = if (alertCount > 0)
+                                MaterialTheme.colorScheme.error
+                            else
                                 MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }

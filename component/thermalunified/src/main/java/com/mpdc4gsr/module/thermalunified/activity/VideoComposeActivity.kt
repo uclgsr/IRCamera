@@ -54,12 +54,12 @@ class VideoComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         var duration by remember { mutableLongStateOf(100000L) }
         var showControls by remember { mutableStateOf(true) }
         var playbackSpeed by remember { mutableFloatStateOf(1.0f) }
-        
+
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
                     TopAppBar(
-                        title = { 
+                        title = {
                             Text(
                                 "Thermal Video",
                                 fontWeight = FontWeight.Bold,
@@ -69,7 +69,7 @@ class VideoComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         navigationIcon = {
                             IconButton(onClick = { finish() }) {
                                 Icon(
-                                    Icons.Default.ArrowBack, 
+                                    Icons.Default.ArrowBack,
                                     contentDescription = "Back",
                                     tint = Color.White
                                 )
@@ -104,7 +104,7 @@ class VideoComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         currentPosition = currentPosition,
                         modifier = Modifier.fillMaxSize()
                     )
-                    
+
                     // Video controls overlay
                     if (showControls) {
                         VideoControlsOverlay(
@@ -120,7 +120,7 @@ class VideoComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 .fillMaxWidth()
                         )
                     }
-                    
+
                     // Thermal analysis overlay
                     ThermalAnalysisOverlay(
                         modifier = Modifier
@@ -130,7 +130,7 @@ class VideoComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                 }
             }
         }
-        
+
         // Update current position periodically if playing
         LaunchedEffect(isPlaying) {
             if (isPlaying) {
@@ -198,7 +198,7 @@ private fun VideoControlsOverlay(
                         inactiveTrackColor = Color(0xFF21262D)
                     )
                 )
-                
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
@@ -215,7 +215,7 @@ private fun VideoControlsOverlay(
                     )
                 }
             }
-            
+
             // Control buttons
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -231,7 +231,7 @@ private fun VideoControlsOverlay(
                         modifier = Modifier.size(32.dp)
                     )
                 }
-                
+
                 // Play/Pause
                 IconButton(
                     onClick = onPlayPause,
@@ -247,7 +247,7 @@ private fun VideoControlsOverlay(
                         modifier = Modifier.size(32.dp)
                     )
                 }
-                
+
                 // Skip forward
                 IconButton(onClick = { onSeek(minOf(duration, currentPosition + 10000)) }) {
                     Icon(
@@ -258,7 +258,7 @@ private fun VideoControlsOverlay(
                     )
                 }
             }
-            
+
             // Speed and additional controls
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -303,7 +303,7 @@ private fun VideoControlsOverlay(
                         )
                     )
                 }
-                
+
                 // Additional controls
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -349,14 +349,14 @@ private fun ThermalAnalysisOverlay(
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold
             )
-            
+
             // Temperature readings
             AnalysisItem("Max", "45.2°C", Color(0xFFFF4444))
             AnalysisItem("Min", "18.7°C", Color(0xFF4444FF))
             AnalysisItem("Avg", "32.1°C", Color(0xFFFFAA00))
-            
+
             Divider(color = Color(0xFF21262D), thickness = 1.dp)
-            
+
             // Analysis tools
             IconButton(
                 onClick = { /* Point analysis */ },
@@ -402,7 +402,7 @@ private fun formatTime(timeMs: Long): String {
     val seconds = (timeMs / 1000) % 60
     val minutes = (timeMs / (1000 * 60)) % 60
     val hours = (timeMs / (1000 * 60 * 60)) % 24
-    
+
     return if (hours > 0) {
         String.format("%d:%02d:%02d", hours, minutes, seconds)
     } else {

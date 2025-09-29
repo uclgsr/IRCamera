@@ -22,10 +22,11 @@ Sensing Platform.
 
 ### Android Application
 
-- *
-  *[app/src/main/java/mpdc4gsr/permissions/README.md](app/src/main/java/mpdc4gsr/permissions/README.md)
-  ** - Permissions
-  handling system
+-
+    *
+*[app/src/main/java/mpdc4gsr/permissions/README.md](app/src/main/java/mpdc4gsr/permissions/README.md)
+** - Permissions
+handling system
 - **[SENSOR_DASHBOARD_FRAGMENT_CHANGES.md](SENSOR_DASHBOARD_FRAGMENT_CHANGES.md)** - UI
   implementation details
 
@@ -66,31 +67,35 @@ Sensing Platform.
 
 ### Thesis Documentation
 
-- *
-  *[docs/thesis-diagrams/android-architecture-diagram.md](docs/thesis-diagrams/android-architecture-diagram.md)
-  ** -
-  Android app internal architecture
+-
+    *
+*[docs/thesis-diagrams/android-architecture-diagram.md](docs/thesis-diagrams/android-architecture-diagram.md)
+** -
+Android app internal architecture
 - **[docs/thesis-diagrams/enhanced-data-flow.md](docs/thesis-diagrams/enhanced-data-flow.md)** -
   System data flow
   pipeline
-- *
-  *[docs/thesis-diagrams/session-sequence-diagram.md](docs/thesis-diagrams/session-sequence-diagram.md)
-  ** - PC-Android
-  interaction sequences
+-
+    *
+*[docs/thesis-diagrams/session-sequence-diagram.md](docs/thesis-diagrams/session-sequence-diagram.md)
+** - PC-Android
+interaction sequences
 - **[docs/thesis-diagrams/state-machine-diagram.md](docs/thesis-diagrams/state-machine-diagram.md)
   ** - Session control
   state machine
-- *
-  *[docs/thesis-diagrams/performance-test-tables.md](docs/thesis-diagrams/performance-test-tables.md)
-  ** - Performance
-  and test results
+-
+    *
+*[docs/thesis-diagrams/performance-test-tables.md](docs/thesis-diagrams/performance-test-tables.md)
+** - Performance
+and test results
 - **[docs/thesis-diagrams/time-sync-timeline.md](docs/thesis-diagrams/time-sync-timeline.md)** -
   Time synchronization
   mechanism
-- *
-  *[docs/thesis-diagrams/system-configuration-tables.md](docs/thesis-diagrams/system-configuration-tables.md)
-  ** -
-  System configuration specifications
+-
+    *
+*[docs/thesis-diagrams/system-configuration-tables.md](docs/thesis-diagrams/system-configuration-tables.md)
+** -
+System configuration specifications
 
 ## Testing and Validation
 

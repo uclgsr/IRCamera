@@ -41,16 +41,20 @@ fun DevicePairingScreen(
                 is DevicePairingViewModel.PairingEvent.ShowError -> {
                     // Show error toast/snackbar
                 }
+
                 is DevicePairingViewModel.PairingEvent.ShowSuccess -> {
                     // Show success toast/snackbar
                 }
+
                 is DevicePairingViewModel.PairingEvent.NavigateToSession -> {
                     // Navigate to recording activity
                     MultiModalRecordingActivity.startRecording(context, event.sessionInfo)
                 }
+
                 is DevicePairingViewModel.PairingEvent.ShowConnectionDialog -> {
                     // Handle connection dialog
                 }
+
                 DevicePairingViewModel.PairingEvent.NavigateBack -> {
                     onBackClick()
                 }
@@ -276,7 +280,8 @@ private fun ControllerItem(
     modifier: Modifier = Modifier
 ) {
     Card(
-        onClick = if (enabled) onClick else { },
+        onClick = if (enabled) onClick else {
+        },
         modifier = modifier.fillMaxWidth(),
         enabled = enabled,
         colors = CardDefaults.cardColors(

@@ -140,7 +140,7 @@ class IRLogMPChartComposeActivity : BaseComposeActivity<IRLogMPChartViewModel>()
                         color = Color(0xFFFF6B35)
                     )
                     Spacer(modifier = Modifier.height(8.dp))
-                    
+
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
@@ -180,7 +180,7 @@ class IRLogMPChartComposeActivity : BaseComposeActivity<IRLogMPChartViewModel>()
                         color = Color(0xFFFF6B35)
                     )
                     Spacer(modifier = Modifier.height(8.dp))
-                    
+
                     // Chart placeholder
                     Box(
                         modifier = Modifier
@@ -228,7 +228,7 @@ class IRLogMPChartComposeActivity : BaseComposeActivity<IRLogMPChartViewModel>()
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
-                    
+
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceEvenly

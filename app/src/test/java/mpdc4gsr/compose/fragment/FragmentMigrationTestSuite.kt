@@ -15,7 +15,7 @@ import mpdc4gsr.ui_components.*
 
 /**
  * Comprehensive test suite for Fragment-to-Compose migrations
- * 
+ *
  * This test suite validates:
  * - UI component rendering
  * - State management integration
@@ -91,7 +91,7 @@ class FragmentMigrationTestSuite {
         composeTestRule.onNodeWithText("All Sensors Connected & Ready").assertExists()
         composeTestRule.onNodeWithText("Start Recording").assertExists()
         composeTestRule.onNodeWithText("Sensors (4)").assertExists()
-        
+
         // Verify individual sensors
         composeTestRule.onNodeWithText("TC001 Thermal Camera").assertExists()
         composeTestRule.onNodeWithText("RGB Camera").assertExists()
@@ -107,7 +107,7 @@ class FragmentMigrationTestSuite {
 
         // Start recording
         composeTestRule.onNodeWithText("Start Recording").performClick()
-        
+
         // Verify recording state changes
         composeTestRule.waitForIdle()
         composeTestRule.onNodeWithText("Stop Recording").assertExists()
@@ -133,7 +133,7 @@ class FragmentMigrationTestSuite {
         // Verify accessibility content descriptions
         composeTestRule.onNodeWithContentDescription("Add Device").assertExists()
         composeTestRule.onNodeWithContentDescription("GSR Recording").assertExists()
-        
+
         // Test accessibility actions
         composeTestRule.onAllNodesWithContentDescription("Add Device")[0].assertHasClickAction()
         composeTestRule.onAllNodesWithContentDescription("GSR Recording")[0].assertHasClickAction()

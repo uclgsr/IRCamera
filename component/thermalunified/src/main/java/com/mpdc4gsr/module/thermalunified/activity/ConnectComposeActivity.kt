@@ -38,12 +38,12 @@ class ConnectComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         var isConnected by remember { mutableStateOf(DeviceTools.isConnect()) }
         var isConnecting by remember { mutableStateOf(false) }
         val coroutineScope = rememberCoroutineScope()
-        
+
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
                     TopAppBar(
-                        title = { 
+                        title = {
                             Text(
                                 "Device Connection",
                                 fontWeight = FontWeight.Bold,
@@ -53,7 +53,7 @@ class ConnectComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         navigationIcon = {
                             IconButton(onClick = { finish() }) {
                                 Icon(
-                                    Icons.Default.ArrowBack, 
+                                    Icons.Default.ArrowBack,
                                     contentDescription = "Back",
                                     tint = Color.White
                                 )
@@ -75,16 +75,16 @@ class ConnectComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    
+
                     // Connection Status Card
                     ConnectionStatusCard(
                         isConnected = isConnected,
                         isConnecting = isConnecting,
                         modifier = Modifier.fillMaxWidth()
                     )
-                    
+
                     Spacer(modifier = Modifier.height(32.dp))
-                    
+
                     // Connection Controls
                     ConnectionControls(
                         isConnected = isConnected,
@@ -103,9 +103,9 @@ class ConnectComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             isConnecting = false
                         }
                     )
-                    
+
                     Spacer(modifier = Modifier.height(24.dp))
-                    
+
                     // Device Information
                     if (isConnected) {
                         DeviceInfoCard(
@@ -145,6 +145,7 @@ private fun ConnectionStatusCard(
                         modifier = Modifier.size(48.dp)
                     )
                 }
+
                 isConnected -> {
                     Icon(
                         Icons.Default.CheckCircle,
@@ -153,6 +154,7 @@ private fun ConnectionStatusCard(
                         modifier = Modifier.size(48.dp)
                     )
                 }
+
                 else -> {
                     Icon(
                         Icons.Default.Error,
@@ -162,9 +164,9 @@ private fun ConnectionStatusCard(
                     )
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             // Status Text
             Text(
                 when {
@@ -176,9 +178,9 @@ private fun ConnectionStatusCard(
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Spacer(modifier = Modifier.height(8.dp))
-            
+
             Text(
                 when {
                     isConnecting -> "Establishing connection to thermal camera"
@@ -230,7 +232,7 @@ private fun ConnectionControls(
                 }
             }
         }
-        
+
         if (isConnected) {
             OutlinedButton(
                 onClick = onDisconnect,
@@ -285,9 +287,9 @@ private fun DeviceInfoCard(
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             DeviceInfoItem("Model", "TC007 Thermal Camera")
             DeviceInfoItem("Status", "Ready")
             DeviceInfoItem("Connection", "Bluetooth")

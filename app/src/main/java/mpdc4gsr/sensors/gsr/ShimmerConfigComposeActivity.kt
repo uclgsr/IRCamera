@@ -154,7 +154,7 @@ private fun ShimmerConfigContent(
                     isSelected = selectedDevice?.deviceId == device.deviceId,
                     onSelect = { onDeviceSelect(device) },
                     onConnect = { /* Connect to device */ },
-                    onConfigure = { 
+                    onConfigure = {
                         onDeviceSelect(device)
                         onConfigureDevice()
                     }
@@ -181,9 +181,9 @@ private fun ScanningStatusCard(
     Card(
         modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
-            containerColor = if (isScanning) 
+            containerColor = if (isScanning)
                 MaterialTheme.colorScheme.primaryContainer
-            else 
+            else
                 MaterialTheme.colorScheme.surface
         )
     ) {
@@ -206,7 +206,7 @@ private fun ScanningStatusCard(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-            
+
             if (isScanning) {
                 CircularProgressIndicator(
                     modifier = Modifier.size(24.dp),
@@ -235,9 +235,9 @@ private fun DeviceCard(
     Card(
         modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
-            containerColor = if (isSelected) 
-                MaterialTheme.colorScheme.tertiaryContainer 
-            else 
+            containerColor = if (isSelected)
+                MaterialTheme.colorScheme.tertiaryContainer
+            else
                 MaterialTheme.colorScheme.surface
         )
     ) {
@@ -260,7 +260,7 @@ private fun DeviceCard(
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
-                    
+
                     // Status and signal strength
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -286,9 +286,9 @@ private fun DeviceCard(
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
-                        
+
                         Spacer(modifier = Modifier.width(12.dp))
-                        
+
                         // Signal strength
                         Icon(
                             Icons.Default.Wifi,
@@ -307,7 +307,7 @@ private fun DeviceCard(
                         )
                     }
                 }
-                
+
                 IconButton(onClick = onSelect) {
                     Icon(
                         if (isSelected) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
@@ -315,10 +315,10 @@ private fun DeviceCard(
                     )
                 }
             }
-            
+
             if (isSelected) {
                 HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp))
-                
+
                 // Device actions
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -335,7 +335,7 @@ private fun DeviceCard(
                         Spacer(modifier = Modifier.width(4.dp))
                         Text("Connect")
                     }
-                    
+
                     Button(
                         onClick = onConfigure,
                         modifier = Modifier.weight(1f)
@@ -375,20 +375,20 @@ private fun SelectedDevicePanel(
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
-            
+
             Text(
                 text = device.name,
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Medium
             )
-            
+
             Text(
                 text = "Status: ${device.status.replaceFirstChar { it.uppercaseChar() }}",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onPrimaryContainer,
                 modifier = Modifier.padding(bottom = 12.dp)
             )
-            
+
             Button(
                 onClick = onConfigure,
                 modifier = Modifier.fillMaxWidth()
@@ -417,8 +417,8 @@ private fun DeviceConfigurationDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { 
-            Text("Configure ${device.name}") 
+        title = {
+            Text("Configure ${device.name}")
         },
         text = {
             Column {
@@ -438,13 +438,13 @@ private fun DeviceConfigurationDialog(
                     style = MaterialTheme.typography.bodySmall,
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
-                
+
                 Text(
                     text = "GSR Range",
                     style = MaterialTheme.typography.labelMedium,
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
-                
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
@@ -463,11 +463,13 @@ private fun DeviceConfigurationDialog(
         confirmButton = {
             TextButton(
                 onClick = {
-                    onSaveConfiguration(mapOf(
-                        "samplingRate" to samplingRate.toInt(),
-                        "gsrRange" to gsrRange,
-                        "enablePPG" to enablePPG
-                    ))
+                    onSaveConfiguration(
+                        mapOf(
+                            "samplingRate" to samplingRate.toInt(),
+                            "gsrRange" to gsrRange,
+                            "enablePPG" to enablePPG
+                        )
+                    )
                 }
             ) {
                 Text("Save")

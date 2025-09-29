@@ -125,6 +125,7 @@ private fun MonitoringContent(
             isMonitoring = isMonitoring,
             modifier = modifier
         )
+
         1 -> ThermalAnalyticsTab(modifier = modifier)
         2 -> AlertsHistoryTab(modifier = modifier)
         3 -> MonitoringSettingsTab(modifier = modifier)
@@ -206,9 +207,9 @@ private fun MonitoringStatusCard(
     Card(
         modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
-            containerColor = if (isMonitoring) 
+            containerColor = if (isMonitoring)
                 Color(0xFF4CAF50).copy(alpha = 0.1f)
-            else 
+            else
                 MaterialTheme.colorScheme.surfaceVariant
         )
     ) {
@@ -232,7 +233,7 @@ private fun MonitoringStatusCard(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-            
+
             if (isMonitoring) {
                 Box(
                     modifier = Modifier
@@ -272,9 +273,9 @@ private fun TemperatureZoneCard(
                     .clip(CircleShape)
                     .background(getZoneStatusColor(zone.status))
             )
-            
+
             Spacer(modifier = Modifier.width(12.dp))
-            
+
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = zone.name,
@@ -287,7 +288,7 @@ private fun TemperatureZoneCard(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-            
+
             Column(
                 horizontalAlignment = Alignment.End
             ) {
@@ -341,9 +342,9 @@ private fun AlertCard(
                 },
                 modifier = Modifier.size(24.dp)
             )
-            
+
             Spacer(modifier = Modifier.width(12.dp))
-            
+
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = alert.message,
@@ -460,7 +461,7 @@ private fun MonitoringNavigationBar(
             "Alerts" to Icons.Default.Notifications,
             "Settings" to Icons.Default.Settings
         )
-        
+
         tabs.forEachIndexed { index, (label, icon) ->
             NavigationBarItem(
                 selected = selectedTab == index,
@@ -498,9 +499,9 @@ private fun AlertConfigurationDialog(
                     onValueChange = { highTempThreshold = it },
                     valueRange = 30f..150f
                 )
-                
+
                 Spacer(modifier = Modifier.height(16.dp))
-                
+
                 Text(
                     text = "Low Temperature Alert: ${lowTempThreshold.toInt()}°C",
                     style = MaterialTheme.typography.labelMedium,
@@ -511,9 +512,9 @@ private fun AlertConfigurationDialog(
                     onValueChange = { lowTempThreshold = it },
                     valueRange = -20f..30f
                 )
-                
+
                 Spacer(modifier = Modifier.height(16.dp))
-                
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
@@ -532,11 +533,13 @@ private fun AlertConfigurationDialog(
         confirmButton = {
             TextButton(
                 onClick = {
-                    onSaveAlerts(mapOf(
-                        "highThreshold" to highTempThreshold,
-                        "lowThreshold" to lowTempThreshold,
-                        "notifications" to enableNotifications
-                    ))
+                    onSaveAlerts(
+                        mapOf(
+                            "highThreshold" to highTempThreshold,
+                            "lowThreshold" to lowTempThreshold,
+                            "notifications" to enableNotifications
+                        )
+                    )
                 }
             ) {
                 Text("Save")

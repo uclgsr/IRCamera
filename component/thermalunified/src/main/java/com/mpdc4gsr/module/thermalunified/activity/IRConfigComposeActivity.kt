@@ -50,12 +50,12 @@ class IRConfigComposeActivity : BaseComposeActivity<IRConfigViewModel>() {
         var distance by remember { mutableFloatStateOf(1.0f) }
         var emissivity by remember { mutableFloatStateOf(0.95f) }
         var selectedMaterial by remember { mutableStateOf<MaterialPreset?>(null) }
-        
+
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
                     TopAppBar(
-                        title = { 
+                        title = {
                             Text(
                                 "Model Configuration",
                                 fontWeight = FontWeight.Bold,
@@ -65,7 +65,7 @@ class IRConfigComposeActivity : BaseComposeActivity<IRConfigViewModel>() {
                         navigationIcon = {
                             IconButton(onClick = { finish() }) {
                                 Icon(
-                                    Icons.Default.ArrowBack, 
+                                    Icons.Default.ArrowBack,
                                     contentDescription = "Back",
                                     tint = Color.White
                                 )
@@ -93,7 +93,7 @@ class IRConfigComposeActivity : BaseComposeActivity<IRConfigViewModel>() {
                             onSelectionChange = { useDefaultModel = it }
                         )
                     }
-                    
+
                     // Environment Temperature
                     item {
                         ConfigurationCard(
@@ -104,7 +104,7 @@ class IRConfigComposeActivity : BaseComposeActivity<IRConfigViewModel>() {
                             onClick = { /* Show temperature dialog */ }
                         )
                     }
-                    
+
                     // Distance Configuration  
                     item {
                         ConfigurationCard(
@@ -115,7 +115,7 @@ class IRConfigComposeActivity : BaseComposeActivity<IRConfigViewModel>() {
                             onClick = { /* Show distance dialog */ }
                         )
                     }
-                    
+
                     // Emissivity Configuration
                     item {
                         ConfigurationCard(
@@ -126,7 +126,7 @@ class IRConfigComposeActivity : BaseComposeActivity<IRConfigViewModel>() {
                             onClick = { /* Show emissivity dialog */ }
                         )
                     }
-                    
+
                     // Material Presets Section
                     item {
                         Text(
@@ -137,7 +137,7 @@ class IRConfigComposeActivity : BaseComposeActivity<IRConfigViewModel>() {
                             modifier = Modifier.padding(vertical = 8.dp)
                         )
                     }
-                    
+
                     items(getMaterialPresets()) { material ->
                         MaterialPresetCard(
                             material = material,
@@ -189,7 +189,7 @@ private fun DefaultModelCard(
                     fontSize = 14.sp
                 )
             }
-            
+
             RadioButton(
                 selected = isSelected,
                 onClick = { onSelectionChange(!isSelected) },
@@ -236,7 +236,7 @@ private fun ConfigurationCard(
                     tint = Color(0xFFFF6B35),
                     modifier = Modifier.size(24.dp)
                 )
-                
+
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         title,
@@ -251,7 +251,7 @@ private fun ConfigurationCard(
                     )
                 }
             }
-            
+
             Text(
                 value,
                 color = Color(0xFFFF6B35),
@@ -297,7 +297,7 @@ private fun MaterialPresetCard(
                     tint = if (isSelected) Color(0xFFFF6B35) else Color(0xFF7D8590),
                     modifier = Modifier.size(24.dp)
                 )
-                
+
                 Column {
                     Text(
                         material.name,
@@ -312,7 +312,7 @@ private fun MaterialPresetCard(
                     )
                 }
             }
-            
+
             if (isSelected) {
                 Icon(
                     Icons.Default.Check,
