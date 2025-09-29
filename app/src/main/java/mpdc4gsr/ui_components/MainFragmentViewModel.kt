@@ -58,7 +58,11 @@ class MainFragmentViewModel : BaseViewModel() {
     )
 
     sealed class NavigationEvent {
-        data class Navigate(val route: String, val isTC007: Boolean = false, val isTS004: Boolean = false) :
+        data class Navigate(
+            val route: String,
+            val isTC007: Boolean = false,
+            val isTS004: Boolean = false
+        ) :
             NavigationEvent()
 
         data class ShowDeviceSelection(val availableDevices: List<ConnectType>) : NavigationEvent()

@@ -27,7 +27,7 @@ import mpdc4gsr.ui_components.SensorDashboardFragment
  * Tests the SensorDashboardFragment integration and scrollable behavior
  */
 class SensorDashboardTestComposeActivity : ComponentActivity() {
-    
+
     companion object {
         private const val TAG = "SensorDashboardTestCompose"
     }
@@ -53,7 +53,7 @@ class SensorDashboardTestComposeActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         setContent {
             LibUnifiedTheme {
                 SensorDashboardTestScreen()
@@ -106,7 +106,7 @@ class SensorDashboardTestComposeActivity : ComponentActivity() {
                     description = "Test multi-device status display"
                 )
             )
-            
+
             sensorStates = listOf(
                 SensorState(
                     sensorId = "thermal_camera",
@@ -116,7 +116,7 @@ class SensorDashboardTestComposeActivity : ComponentActivity() {
                 ),
                 SensorState(
                     sensorId = "rgb_camera",
-                    name = "RGB Camera", 
+                    name = "RGB Camera",
                     status = SensorStatus.STREAMING,
                     statusMessage = "1080p @ 30fps"
                 ),
@@ -134,7 +134,7 @@ class SensorDashboardTestComposeActivity : ComponentActivity() {
                     isSimulated = true
                 )
             )
-            
+
             multiDeviceState = MultiDeviceState(
                 connectedDevices = 2,
                 activeDevices = 1,
@@ -170,9 +170,9 @@ class SensorDashboardTestComposeActivity : ComponentActivity() {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     colors = CardDefaults.cardColors(
-                        containerColor = if (recordingStatus) 
-                            MaterialTheme.colorScheme.primaryContainer 
-                        else 
+                        containerColor = if (recordingStatus)
+                            MaterialTheme.colorScheme.primaryContainer
+                        else
                             MaterialTheme.colorScheme.surfaceVariant
                     )
                 ) {
@@ -198,7 +198,7 @@ class SensorDashboardTestComposeActivity : ComponentActivity() {
                                     fontWeight = FontWeight.Medium
                                 )
                             }
-                            
+
                             if (recordingStatus) {
                                 Row(verticalAlignment = Alignment.CenterVertically) {
                                     Icon(
@@ -215,7 +215,7 @@ class SensorDashboardTestComposeActivity : ComponentActivity() {
                                 }
                             }
                         }
-                        
+
                         if (sessionId.isNotEmpty()) {
                             Spacer(modifier = Modifier.height(8.dp))
                             Text(
@@ -237,7 +237,7 @@ class SensorDashboardTestComposeActivity : ComponentActivity() {
                             fontWeight = FontWeight.Medium
                         )
                         Spacer(modifier = Modifier.height(8.dp))
-                        
+
                         sensorStates.forEach { sensor ->
                             SensorStateItem(sensor = sensor)
                             Spacer(modifier = Modifier.height(8.dp))
@@ -256,7 +256,7 @@ class SensorDashboardTestComposeActivity : ComponentActivity() {
                             fontWeight = FontWeight.Medium
                         )
                         Spacer(modifier = Modifier.height(8.dp))
-                        
+
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween
@@ -319,7 +319,7 @@ class SensorDashboardTestComposeActivity : ComponentActivity() {
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Button(
-                        onClick = { 
+                        onClick = {
                             isTestRunning = true
                             lifecycleScope.launch { runAllDashboardTests() }
                         },
@@ -339,9 +339,9 @@ class SensorDashboardTestComposeActivity : ComponentActivity() {
                             Text("Run All Tests")
                         }
                     }
-                    
+
                     OutlinedButton(
-                        onClick = { 
+                        onClick = {
                             lifecycleScope.launch { simulateSensorUpdates() }
                         },
                         enabled = !isTestRunning,
@@ -360,7 +360,7 @@ class SensorDashboardTestComposeActivity : ComponentActivity() {
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     OutlinedButton(
-                        onClick = { 
+                        onClick = {
                             recordingStatus = !recordingStatus
                             sessionId = if (recordingStatus) "TEST_SESSION_001" else ""
                         },
@@ -373,9 +373,9 @@ class SensorDashboardTestComposeActivity : ComponentActivity() {
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(if (recordingStatus) "Stop Recording" else "Start Recording")
                     }
-                    
+
                     OutlinedButton(
-                        onClick = { 
+                        onClick = {
                             lifecycleScope.launch { testScrollableBehavior() }
                         },
                         enabled = !isTestRunning,
@@ -435,7 +435,7 @@ class SensorDashboardTestComposeActivity : ComponentActivity() {
                         Spacer(modifier = Modifier.width(4.dp))
                         AssistChip(
                             onClick = { },
-                            label = { 
+                            label = {
                                 Text(
                                     "SIM",
                                     style = MaterialTheme.typography.labelSmall
@@ -453,7 +453,7 @@ class SensorDashboardTestComposeActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-            
+
             Text(
                 text = sensor.status.name,
                 style = MaterialTheme.typography.bodySmall,
@@ -485,42 +485,43 @@ class SensorDashboardTestComposeActivity : ComponentActivity() {
 
     private suspend fun runAllDashboardTests() {
         Log.i(TAG, "Running all sensor dashboard tests")
-        
+
         val startTime = System.currentTimeMillis()
         val metrics = mutableMapOf<String, Any>()
-        
+
         try {
             // Test fragment integration
             testFragmentIntegration()
             delay(1000)
-            
+
             // Test sensor status updates
             simulateSensorUpdates()
             delay(2000)
-            
+
             // Test scrollable behavior
             testScrollableBehavior()
             delay(1000)
-            
+
             // Test recording status
             testRecordingStatus()
             delay(1000)
-            
+
             // Test simulation warnings
             testSimulationWarnings()
             delay(1000)
-            
+
             // Test multi-device status
             testMultiDeviceStatus()
-            
+
             // Calculate metrics
             metrics["Sensors Tested"] = sensorStates.size
-            metrics["Connected Sensors"] = sensorStates.count { it.status == SensorStatus.CONNECTED || it.status == SensorStatus.STREAMING }
+            metrics["Connected Sensors"] =
+                sensorStates.count { it.status == SensorStatus.CONNECTED || it.status == SensorStatus.STREAMING }
             metrics["Simulated Sensors"] = sensorStates.count { it.isSimulated }
             metrics["Test Duration"] = "${System.currentTimeMillis() - startTime}ms"
-            
+
             testMetrics = metrics
-            
+
         } catch (e: Exception) {
             Log.e(TAG, "Dashboard tests failed: ${e.message}")
         } finally {
@@ -533,29 +534,31 @@ class SensorDashboardTestComposeActivity : ComponentActivity() {
         try {
             // Simulate sensor status changes
             delay(1000)
-            
+
             sensorStates = sensorStates.map { sensor ->
                 when (sensor.sensorId) {
                     "thermal_camera" -> sensor.copy(
                         status = SensorStatus.STREAMING,
                         statusMessage = "Recording thermal data @ 9fps"
                     )
+
                     "shimmer_gsr" -> sensor.copy(
                         status = SensorStatus.CONNECTED,
                         statusMessage = "GSR device reconnected"
                     )
+
                     else -> sensor
                 }
             }
-            
+
             delay(2000)
-            
+
             // Simulate more updates
             multiDeviceState = multiDeviceState.copy(
                 connectedDevices = 3,
                 activeDevices = 2
             )
-            
+
             Log.d(TAG, "Sensor updates simulation completed")
         } catch (e: Exception) {
             Log.e(TAG, "Sensor updates simulation failed: ${e.message}")

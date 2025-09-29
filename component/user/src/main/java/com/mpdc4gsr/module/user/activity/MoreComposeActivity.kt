@@ -23,7 +23,7 @@ import com.mpdc4gsr.module.user.viewmodel.MoreViewModel
 
 /**
  * User Management Module - More (Settings Hub) Compose Activity
- * 
+ *
  * Central settings hub with navigation to all User Management features.
  * Features:
  * - Complete settings menu
@@ -42,16 +42,16 @@ class MoreComposeActivity : BaseComposeActivity<MoreViewModel>() {
     override fun Content(viewModel: MoreViewModel) {
         val settingsItems by viewModel.settingsItems.collectAsState()
         val isUpgradeAvailable by viewModel.isUpgradeAvailable.collectAsState()
-        
+
         // Check for updates on start
         LaunchedEffect(Unit) {
             viewModel.checkForUpdates()
         }
-        
+
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { 
+                    title = {
                         Text(
                             text = "More Settings",
                             fontWeight = FontWeight.Bold
@@ -82,13 +82,14 @@ class MoreComposeActivity : BaseComposeActivity<MoreViewModel>() {
             }
         }
     }
-    
+
     private fun handleSettingsClick(action: MoreViewModel.SettingsAction) {
         when (action) {
             MoreViewModel.SettingsAction.DEVICE_INFORMATION -> {
                 // Navigate to device details - for now just finish, would need router setup
                 finish()
             }
+
             MoreViewModel.SettingsAction.TISR -> {
                 // Navigate to TISR Compose Activity (would need to be registered in router)
                 // For now, use the original activity
@@ -96,30 +97,36 @@ class MoreComposeActivity : BaseComposeActivity<MoreViewModel>() {
                     .build(RouterConfig.TISR)
                     .navigation(this)
             }
+
             MoreViewModel.SettingsAction.STORAGE_SPACE -> {
                 NavigationManager.getInstance()
                     .build(RouterConfig.STORAGE_SPACE)
                     .navigation(this)
             }
+
             MoreViewModel.SettingsAction.AUTO_SAVE -> {
                 NavigationManager.getInstance()
                     .build(RouterConfig.AUTO_SAVE)
                     .navigation(this)
             }
+
             MoreViewModel.SettingsAction.UNIT -> {
                 NavigationManager.getInstance()
                     .build(RouterConfig.UNIT)
                     .navigation(this)
             }
+
             MoreViewModel.SettingsAction.VERSION -> {
                 NavigationManager.getInstance()
                     .build(RouterConfig.VERSION)
                     .navigation(this)
             }
+
             MoreViewModel.SettingsAction.DISCONNECT -> {
                 // Handle disconnect logic
                 finish()
             }
+
             MoreViewModel.SettingsAction.RESET -> {
                 // Handle reset confirmation dialog
                 // Original implementation had complex reset logic
@@ -161,9 +168,9 @@ private fun SettingsMenuItem(
                     tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(24.dp)
                 )
-                
+
                 Spacer(modifier = Modifier.width(16.dp))
-                
+
                 Column {
                     Text(
                         text = item.title,
@@ -178,7 +185,7 @@ private fun SettingsMenuItem(
                     )
                 }
             }
-            
+
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -194,7 +201,7 @@ private fun SettingsMenuItem(
                         )
                     }
                 }
-                
+
                 Icon(
                     Icons.AutoMirrored.Filled.KeyboardArrowRight,
                     contentDescription = "Navigate",

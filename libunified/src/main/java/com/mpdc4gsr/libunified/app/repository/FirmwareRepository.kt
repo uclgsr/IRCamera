@@ -66,18 +66,19 @@ class FirmwareRepository(
     /**
      * Get firmware info from local assets
      */
-    suspend fun getFirmwareFromAssets(isTC007: Boolean): BaseRepository.Result<FirmwareInfo> = safeCall {
-        val version = if (isTC007) TC007_FIRMWARE_VERSION else TS004_FIRMWARE_VERSION
-        val fileName = if (isTC007) TC007_FIRMWARE_NAME else TS004_FIRMWARE_NAME
+    suspend fun getFirmwareFromAssets(isTC007: Boolean): BaseRepository.Result<FirmwareInfo> =
+        safeCall {
+            val version = if (isTC007) TC007_FIRMWARE_VERSION else TS004_FIRMWARE_VERSION
+            val fileName = if (isTC007) TC007_FIRMWARE_NAME else TS004_FIRMWARE_NAME
 
-        FirmwareInfo(
-            version = version,
-            updateDescription = "Local firmware update available",
-            downloadUrl = "asset://$fileName",
-            size = getAssetFileSize(fileName),
-            isUpdateAvailable = true
-        )
-    }
+            FirmwareInfo(
+                version = version,
+                updateDescription = "Local firmware update available",
+                downloadUrl = "asset://$fileName",
+                size = getAssetFileSize(fileName),
+                isUpdateAvailable = true
+            )
+        }
 
     private suspend fun performFirmwareCheck(
         isTC007: Boolean,
@@ -85,7 +86,8 @@ class FirmwareRepository(
     ): FirmwareInfo? {
         // Simplified implementation - compare with hardcoded versions
         val latestVersion = if (isTC007) TC007_FIRMWARE_VERSION else TS004_FIRMWARE_VERSION
-        val isUpdateAvailable = compareVersions(latestVersion, deviceInfo.currentFirmwareVersion) > 0
+        val isUpdateAvailable =
+            compareVersions(latestVersion, deviceInfo.currentFirmwareVersion) > 0
 
         return if (isUpdateAvailable) {
             FirmwareInfo(

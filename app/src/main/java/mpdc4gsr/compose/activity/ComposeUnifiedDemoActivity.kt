@@ -36,7 +36,7 @@ class ComposeUnifiedDemoActivity : ComponentActivity() {
 @Composable
 fun ComposeUnifiedDemo() {
     val navController = rememberNavController()
-    
+
     NavHost(
         navController = navController,
         startDestination = "demo_home"
@@ -52,7 +52,7 @@ fun ComposeUnifiedDemo() {
                 onNavigateToRGBCamera = { navController.navigate("rgb_camera") }
             )
         }
-        
+
         composable("connect") {
             ConnectScreen(
                 onDeviceSelected = { device ->
@@ -62,7 +62,7 @@ fun ComposeUnifiedDemo() {
                 onBackClick = { navController.popBackStack() }
             )
         }
-        
+
         composable("monitor") {
             ThermalMonitorScreen(
                 onBackClick = { navController.popBackStack() },
@@ -74,7 +74,7 @@ fun ComposeUnifiedDemo() {
                 }
             )
         }
-        
+
         composable("calibrate") {
             CalibrateScreen(
                 onBackClick = { navController.popBackStack() },
@@ -85,7 +85,7 @@ fun ComposeUnifiedDemo() {
                 onCalibrationCancel = { navController.popBackStack() }
             )
         }
-        
+
         composable("annotate") {
             AnnotateScreen(
                 onBackClick = { navController.popBackStack() },
@@ -97,7 +97,7 @@ fun ComposeUnifiedDemo() {
                 }
             )
         }
-        
+
         composable("unified_dashboard") {
             UnifiedSensorDashboard(
                 onBackClick = { navController.popBackStack() },
@@ -113,7 +113,7 @@ fun ComposeUnifiedDemo() {
                 }
             )
         }
-        
+
         composable("gsr_sensor") {
             GSRSensorScreen(
                 onBackClick = { navController.popBackStack() },
@@ -125,7 +125,7 @@ fun ComposeUnifiedDemo() {
                 }
             )
         }
-        
+
         composable("rgb_camera") {
             RGBCameraScreen(
                 onBackClick = { navController.popBackStack() },
@@ -175,7 +175,7 @@ private fun DemoNavigationScreen(
         }
 
         Spacer(modifier = Modifier.height(16.dp))
-        
+
         // Navigation items
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -211,9 +211,9 @@ private fun NavigationItemCard(
                 tint = Color.Blue,
                 modifier = Modifier.size(32.dp)
             )
-            
+
             Spacer(modifier = Modifier.width(16.dp))
-            
+
             Column(
                 modifier = Modifier.weight(1f)
             ) {
@@ -229,7 +229,7 @@ private fun NavigationItemCard(
                     fontSize = 14.sp
                 )
             }
-            
+
             Icon(
                 imageVector = Icons.Default.ArrowForward,
                 contentDescription = null,
@@ -262,7 +262,7 @@ private fun getAllNavigationItems(): List<NavigationItem> {
             icon = Icons.Default.Dashboard,
             route = "unified_dashboard"
         ),
-        
+
         // Core Thermal Screens
         NavigationItem(
             title = "Device Connection",
@@ -283,12 +283,12 @@ private fun getAllNavigationItems(): List<NavigationItem> {
             route = "calibrate"
         ),
         NavigationItem(
-            title = "Annotation & Report",  
+            title = "Annotation & Report",
             description = "Temperature measurement annotation",
             icon = Icons.Default.Edit,
             route = "annotate"
         ),
-        
+
         // Individual Sensors
         NavigationItem(
             title = "GSR Sensor",
@@ -302,7 +302,7 @@ private fun getAllNavigationItems(): List<NavigationItem> {
             icon = Icons.Default.Camera,
             route = "rgb_camera"
         ),
-        
+
         // Data & Media
         NavigationItem(
             title = "Gallery",
@@ -328,7 +328,7 @@ private fun getAllNavigationItems(): List<NavigationItem> {
             icon = Icons.Default.PlayCircle,
             route = "gsr_video"
         ),
-        
+
         // Recording & Reports
         NavigationItem(
             title = "Multi-Modal Recording",
@@ -342,7 +342,7 @@ private fun getAllNavigationItems(): List<NavigationItem> {
             icon = Icons.Default.Description,
             route = "report_creation"
         ),
-        
+
         // Settings & Profile
         NavigationItem(
             title = "Settings",
@@ -382,159 +382,159 @@ private fun getAllNavigationItems(): List<NavigationItem> {
         )
     )
 }
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(32.dp),
-        verticalArrangement = Arrangement.spacedBy(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+Column(
+modifier = modifier
+.fillMaxSize()
+.padding(32.dp),
+verticalArrangement = Arrangement.spacedBy(24.dp),
+horizontalAlignment = Alignment.CenterHorizontally
+) {
+    Text(
+        text = "IR Camera Compose UI Demo",
+        style = MaterialTheme.typography.headlineMedium,
+        color = MaterialTheme.colorScheme.onBackground
+    )
+
+    Text(
+        text = "Unified Multi-Modal Sensor UI",
+        style = MaterialTheme.typography.bodyLarge,
+        color = MaterialTheme.colorScheme.onBackground
+    )
+
+    Spacer(modifier = Modifier.height(32.dp))
+
+    // Unified dashboard button (featured)
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.primary
+        )
     ) {
-        Text(
-            text = "IR Camera Compose UI Demo",
-            style = MaterialTheme.typography.headlineMedium,
-            color = MaterialTheme.colorScheme.onBackground
-        )
-        
-        Text(
-            text = "Unified Multi-Modal Sensor UI",
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onBackground
-        )
-        
-        Spacer(modifier = Modifier.height(32.dp))
-        
-        // Unified dashboard button (featured)
-        Card(
+        Button(
+            onClick = onNavigateToUnifiedDashboard,
             modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.primary
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color.Transparent
             )
         ) {
-            Button(
-                onClick = onNavigateToUnifiedDashboard,
-                modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Transparent
-                )
-            ) {
-                Text(
-                    "🚀 Unified Sensor Dashboard",
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-        }
-        
-        Spacer(modifier = Modifier.height(16.dp))
-        
-        // Individual sensor screens
-        Text(
-            text = "Individual Sensor Screens:",
-            style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.onBackground
-        )
-        
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Button(
-                onClick = onNavigateToGSR,
-                modifier = Modifier.weight(1f)
-            ) {
-                Text("GSR Sensor", fontSize = 12.sp)
-            }
-            Button(
-                onClick = onNavigateToRGBCamera,
-                modifier = Modifier.weight(1f)
-            ) {
-                Text("RGB Camera", fontSize = 12.sp)
-            }
-        }
-        
-        Spacer(modifier = Modifier.height(16.dp))
-        
-        // Original thermal camera screens
-        Text(
-            text = "Thermal Camera Screens:",
-            style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.onBackground
-        )
-        
-        // Demo navigation buttons
-        Button(
-            onClick = onNavigateToConnect,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Connect Screen")
-        }
-        
-        Button(
-            onClick = onNavigateToMonitor,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Thermal Monitor Screen")
-        }
-        
-        Button(
-            onClick = onNavigateToCalibrate,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Calibration Screen")
-        }
-        
-        Button(
-            onClick = onNavigateToAnnotate,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Annotation Screen")
-        }
-        
-        Spacer(modifier = Modifier.height(32.dp))
-        
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surfaceVariant
+            Text(
+                "🚀 Unified Sensor Dashboard",
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold
             )
+        }
+    }
+
+    Spacer(modifier = Modifier.height(16.dp))
+
+    // Individual sensor screens
+    Text(
+        text = "Individual Sensor Screens:",
+        style = MaterialTheme.typography.titleMedium,
+        color = MaterialTheme.colorScheme.onBackground
+    )
+
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Button(
+            onClick = onNavigateToGSR,
+            modifier = Modifier.weight(1f)
         ) {
-            Column(
-                modifier = Modifier.padding(16.dp)
-            ) {
+            Text("GSR Sensor", fontSize = 12.sp)
+        }
+        Button(
+            onClick = onNavigateToRGBCamera,
+            modifier = Modifier.weight(1f)
+        ) {
+            Text("RGB Camera", fontSize = 12.sp)
+        }
+    }
+
+    Spacer(modifier = Modifier.height(16.dp))
+
+    // Original thermal camera screens
+    Text(
+        text = "Thermal Camera Screens:",
+        style = MaterialTheme.typography.titleMedium,
+        color = MaterialTheme.colorScheme.onBackground
+    )
+
+    // Demo navigation buttons
+    Button(
+        onClick = onNavigateToConnect,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Text("Connect Screen")
+    }
+
+    Button(
+        onClick = onNavigateToMonitor,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Text("Thermal Monitor Screen")
+    }
+
+    Button(
+        onClick = onNavigateToCalibrate,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Text("Calibration Screen")
+    }
+
+    Button(
+        onClick = onNavigateToAnnotate,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Text("Annotation Screen")
+    }
+
+    Spacer(modifier = Modifier.height(32.dp))
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant
+        )
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Text(
+                text = "Features Implemented:",
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            val features = listOf(
+                "✅ Unified Multi-Modal Sensor Dashboard",
+                "✅ GSR (Galvanic Skin Response) Sensor Screen",
+                "✅ RGB Camera Control and Recording Screen",
+                "✅ Thermal IR Camera with Temperature Overlays",
+                "✅ TitleBar component replacing TitleView",
+                "✅ ConnectScreen with device list (LazyColumn)",
+                "✅ ThermalMonitorScreen with camera preview",
+                "✅ CalibrateScreen with dual-camera alignment",
+                "✅ AnnotateScreen with report functionality",
+                "✅ Real-time sensor data visualization",
+                "✅ Consistent dark theme matching reference",
+                "✅ Complete navigation between all screens"
+            )
+
+            features.forEach { feature ->
                 Text(
-                    text = "Features Implemented:",
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    text = feature,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(vertical = 2.dp)
                 )
-                
-                Spacer(modifier = Modifier.height(8.dp))
-                
-                val features = listOf(
-                    "✅ Unified Multi-Modal Sensor Dashboard",
-                    "✅ GSR (Galvanic Skin Response) Sensor Screen",
-                    "✅ RGB Camera Control and Recording Screen", 
-                    "✅ Thermal IR Camera with Temperature Overlays",
-                    "✅ TitleBar component replacing TitleView",
-                    "✅ ConnectScreen with device list (LazyColumn)",
-                    "✅ ThermalMonitorScreen with camera preview",
-                    "✅ CalibrateScreen with dual-camera alignment",
-                    "✅ AnnotateScreen with report functionality",
-                    "✅ Real-time sensor data visualization",
-                    "✅ Consistent dark theme matching reference",
-                    "✅ Complete navigation between all screens"
-                )
-                
-                features.forEach { feature ->
-                    Text(
-                        text = feature,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.padding(vertical = 2.dp)
-                    )
-                }
             }
         }
     }
+}
 }
 
 @Preview(showBackground = true)

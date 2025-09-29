@@ -314,7 +314,13 @@ class TestingPatternsViewModel : BaseViewModel() {
                 TestCategory.UNIT,
                 300
             ),
-            TestCase("unit_003", "Error Handling", "Test ViewModel error handling", TestCategory.UNIT, 400),
+            TestCase(
+                "unit_003",
+                "Error Handling",
+                "Test ViewModel error handling",
+                TestCategory.UNIT,
+                400
+            ),
             TestCase(
                 "integration_001",
                 "Sensor Data Repository",
@@ -322,9 +328,27 @@ class TestingPatternsViewModel : BaseViewModel() {
                 TestCategory.INTEGRATION,
                 1000
             ),
-            TestCase("integration_002", "Network Client", "Test network connectivity", TestCategory.INTEGRATION, 1500),
-            TestCase("ui_001", "Fragment Navigation", "Test fragment navigation", TestCategory.UI, 2000),
-            TestCase("ui_002", "StateFlow UI Updates", "Test UI updates via StateFlow", TestCategory.UI, 1200),
+            TestCase(
+                "integration_002",
+                "Network Client",
+                "Test network connectivity",
+                TestCategory.INTEGRATION,
+                1500
+            ),
+            TestCase(
+                "ui_001",
+                "Fragment Navigation",
+                "Test fragment navigation",
+                TestCategory.UI,
+                2000
+            ),
+            TestCase(
+                "ui_002",
+                "StateFlow UI Updates",
+                "Test UI updates via StateFlow",
+                TestCategory.UI,
+                1200
+            ),
             TestCase(
                 "performance_001",
                 "Large Dataset Processing",
@@ -332,7 +356,13 @@ class TestingPatternsViewModel : BaseViewModel() {
                 TestCategory.PERFORMANCE,
                 3000
             ),
-            TestCase("performance_002", "Memory Usage", "Test memory efficiency", TestCategory.PERFORMANCE, 2500),
+            TestCase(
+                "performance_002",
+                "Memory Usage",
+                "Test memory efficiency",
+                TestCategory.PERFORMANCE,
+                2500
+            ),
             TestCase(
                 "stress_001",
                 "Concurrent Operations",

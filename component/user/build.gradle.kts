@@ -57,7 +57,7 @@ android {
         dataBinding = true
         compose = true
     }
-    
+
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
@@ -101,7 +101,7 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
-    
+
     // Compose BOM and dependencies
     implementation(platform(libs.compose.bom))
     implementation(libs.compose.ui)
@@ -111,7 +111,7 @@ dependencies {
     implementation(libs.compose.viewmodel)
     debugImplementation(libs.compose.ui.tooling)
     debugImplementation(libs.compose.ui.test.manifest)
-    
+
     // Image loading for Compose
     implementation(libs.coil.compose)
 

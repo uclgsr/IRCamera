@@ -33,7 +33,7 @@ import java.util.*
 
 /**
  * MultiModalRecordingActivityCompose - Enhanced Compose Multi-Modal Recording
- * 
+ *
  * Advanced interface for coordinated multi-sensor recording with:
  * - Real-time sensor status monitoring and synchronization
  * - Session management with live statistics and duration tracking
@@ -58,7 +58,7 @@ class MultiModalRecordingActivityCompose : BaseComposeActivity<MultiModalRecordi
 fun MultiModalRecordingScreen(viewModel: MultiModalRecordingViewModel) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
-    
+
     var showSessionDialog by remember { mutableStateOf(false) }
     var showProtocolSelector by remember { mutableStateOf(false) }
 
@@ -178,7 +178,7 @@ fun SessionHeader(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
             containerColor = if (isRecording) Color(0xFFF44336).copy(alpha = 0.1f)
-                           else MaterialTheme.colorScheme.surface
+            else MaterialTheme.colorScheme.surface
         )
     ) {
         Column(
@@ -194,7 +194,7 @@ fun SessionHeader(
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold
                 )
-                
+
                 Row {
                     IconButton(onClick = onSelectProtocol) {
                         Icon(
@@ -210,16 +210,16 @@ fun SessionHeader(
                     }
                 }
             }
-            
+
             if (sessionInfo != null) {
                 Spacer(modifier = Modifier.height(8.dp))
-                
+
                 Text(
                     text = "Session: ${sessionInfo.name}",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold
                 )
-                
+
                 if (sessionInfo.participantId.isNotEmpty()) {
                     Text(
                         text = "Participant: ${sessionInfo.participantId}",
@@ -227,7 +227,7 @@ fun SessionHeader(
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                     )
                 }
-                
+
                 if (sessionInfo.protocol.isNotEmpty()) {
                     Text(
                         text = "Protocol: ${sessionInfo.protocol}",
@@ -255,7 +255,7 @@ fun RecordingControlsCard(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
             containerColor = if (isRecording) Color(0xFFF44336).copy(alpha = 0.1f)
-                           else MaterialTheme.colorScheme.surface
+            else MaterialTheme.colorScheme.surface
         )
     ) {
         Column(
@@ -273,7 +273,7 @@ fun RecordingControlsCard(
                         fontWeight = FontWeight.SemiBold,
                         color = if (isRecording) Color(0xFFF44336) else MaterialTheme.colorScheme.onSurface
                     )
-                    
+
                     if (isRecording) {
                         Text(
                             text = formatDuration(sessionDuration),
@@ -287,7 +287,7 @@ fun RecordingControlsCard(
                         )
                     }
                 }
-                
+
                 if (isRecording) {
                     AnimatedVisibility(
                         visible = true,
@@ -307,9 +307,9 @@ fun RecordingControlsCard(
                     }
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -344,7 +344,7 @@ fun RecordingControlsCard(
                         Spacer(modifier = Modifier.width(8.dp))
                         Text("Pause")
                     }
-                    
+
                     Button(
                         onClick = onStopRecording,
                         modifier = Modifier.weight(1f),
@@ -388,12 +388,12 @@ fun SensorStatusCard(
                 },
                 contentDescription = null,
                 tint = if (sensorState.isEnabled && sensorState.isConnected) Color(0xFF4CAF50)
-                       else if (sensorState.isEnabled) Color(0xFFFF9800)
-                       else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+                else if (sensorState.isEnabled) Color(0xFFFF9800)
+                else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
             )
-            
+
             Spacer(modifier = Modifier.width(12.dp))
-            
+
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = sensorState.name,
@@ -421,13 +421,13 @@ fun SensorStatusCard(
                     )
                 }
             }
-            
+
             Column {
                 Switch(
                     checked = sensorState.isEnabled,
                     onCheckedChange = { onToggleEnabled() }
                 )
-                
+
                 if (sensorState.isEnabled) {
                     TextButton(onClick = onConfigure) {
                         Text("Configure")
@@ -451,9 +451,9 @@ fun CameraPreviewCard() {
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold
             )
-            
+
             Spacer(modifier = Modifier.height(8.dp))
-            
+
             // Placeholder for camera preview
             Box(
                 modifier = Modifier
@@ -487,9 +487,9 @@ fun SessionStatisticsCard(
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold
             )
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
@@ -552,9 +552,9 @@ fun DataQualityCard(
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold
             )
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             qualityMetrics.forEach { metric ->
                 QualityMetricItem(metric = metric)
                 Spacer(modifier = Modifier.height(8.dp))
@@ -574,7 +574,7 @@ fun QualityMetricItem(metric: QualityMetric) {
             style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier.weight(1f)
         )
-        
+
         LinearProgressIndicator(
             progress = metric.quality / 100f,
             modifier = Modifier.weight(2f),
@@ -584,7 +584,7 @@ fun QualityMetricItem(metric: QualityMetric) {
                 else -> Color(0xFFF44336)
             }
         )
-        
+
         Text(
             text = "${metric.quality}%",
             style = MaterialTheme.typography.bodySmall,
@@ -612,9 +612,9 @@ fun NewSessionDialog(
                     label = { Text("Session Name") },
                     modifier = Modifier.fillMaxWidth()
                 )
-                
+
                 Spacer(modifier = Modifier.height(8.dp))
-                
+
                 OutlinedTextField(
                     value = participantId,
                     onValueChange = { participantId = it },
@@ -761,23 +761,47 @@ data class MultiModalRecordingUiState(
 class MultiModalRecordingViewModel : BaseViewModel() {
     private val _uiState = androidx.compose.runtime.mutableStateOf(MultiModalRecordingUiState())
     val uiState: androidx.compose.runtime.State<MultiModalRecordingUiState> = _uiState
-    
+
     private var recordingJob: Job? = null
 
     fun initializeSensors() {
         val sensors = listOf(
-            SensorState(SensorType.GSR, "Shimmer GSR", isEnabled = true, isConnected = true, sampleRate = 256),
-            SensorState(SensorType.THERMAL_CAMERA, "Thermal Camera", isEnabled = true, isConnected = true, sampleRate = 30),
-            SensorState(SensorType.RGB_CAMERA, "RGB Camera", isEnabled = false, isConnected = true, sampleRate = 30),
-            SensorState(SensorType.AUDIO, "Audio Recorder", isEnabled = false, isConnected = true, sampleRate = 44100)
+            SensorState(
+                SensorType.GSR,
+                "Shimmer GSR",
+                isEnabled = true,
+                isConnected = true,
+                sampleRate = 256
+            ),
+            SensorState(
+                SensorType.THERMAL_CAMERA,
+                "Thermal Camera",
+                isEnabled = true,
+                isConnected = true,
+                sampleRate = 30
+            ),
+            SensorState(
+                SensorType.RGB_CAMERA,
+                "RGB Camera",
+                isEnabled = false,
+                isConnected = true,
+                sampleRate = 30
+            ),
+            SensorState(
+                SensorType.AUDIO,
+                "Audio Recorder",
+                isEnabled = false,
+                isConnected = true,
+                sampleRate = 44100
+            )
         )
-        
+
         val protocols = listOf(
             ResearchProtocol("Stress Response", "Baseline + stress task + recovery", "30 min"),
             ResearchProtocol("Cognitive Load", "Math tasks with increasing difficulty", "20 min"),
             ResearchProtocol("Emotion Recognition", "Video stimuli with rating tasks", "45 min")
         )
-        
+
         _uiState.value = _uiState.value.copy(
             sensorStates = sensors,
             availableProtocols = protocols,
@@ -787,10 +811,10 @@ class MultiModalRecordingViewModel : BaseViewModel() {
 
     fun startRecording() {
         _uiState.value = _uiState.value.copy(isRecording = true)
-        
+
         // Cancel any existing recording job
         recordingJob?.cancel()
-        
+
         // Start recording statistics updates on main dispatcher
         recordingJob = viewModelScope.launch(Dispatchers.Main) {
             while (_uiState.value.isRecording) {
@@ -822,39 +846,39 @@ class MultiModalRecordingViewModel : BaseViewModel() {
         super.onCleared()
         recordingJob?.cancel()
     }
-        _uiState.value = _uiState.value.copy(isRecording = false)
-    }
+    _uiState.value = _uiState.value .copy(isRecording = false)
+}
 
-    fun pauseRecording() {
-        // Implementation for pause
-    }
+fun pauseRecording() {
+    // Implementation for pause
+}
 
-    fun resumeRecording() {
-        // Implementation for resume
-    }
+fun resumeRecording() {
+    // Implementation for resume
+}
 
-    fun toggleSensor(sensorType: SensorType) {
-        val updatedSensors = _uiState.value.sensorStates.map { sensor ->
-            if (sensor.type == sensorType) {
-                sensor.copy(isEnabled = !sensor.isEnabled)
-            } else sensor
-        }
-        _uiState.value = _uiState.value.copy(sensorStates = updatedSensors)
+fun toggleSensor(sensorType: SensorType) {
+    val updatedSensors = _uiState.value.sensorStates.map { sensor ->
+        if (sensor.type == sensorType) {
+            sensor.copy(isEnabled = !sensor.isEnabled)
+        } else sensor
     }
+    _uiState.value = _uiState.value.copy(sensorStates = updatedSensors)
+}
 
-    fun configureSensor(sensorType: SensorType) {
-        // Implementation for sensor configuration
-    }
+fun configureSensor(sensorType: SensorType) {
+    // Implementation for sensor configuration
+}
 
-    fun createNewSession(sessionName: String, participantId: String) {
-        _uiState.value = _uiState.value.copy(
-            currentSession = SessionInfo(sessionName, participantId)
-        )
-    }
+fun createNewSession(sessionName: String, participantId: String) {
+    _uiState.value = _uiState.value.copy(
+        currentSession = SessionInfo(sessionName, participantId)
+    )
+}
 
-    fun selectProtocol(protocol: ResearchProtocol) {
-        _uiState.value = _uiState.value.copy(
-            currentSession = _uiState.value.currentSession?.copy(protocol = protocol.name)
-        )
-    }
+fun selectProtocol(protocol: ResearchProtocol) {
+    _uiState.value = _uiState.value.copy(
+        currentSession = _uiState.value.currentSession?.copy(protocol = protocol.name)
+    )
+}
 }

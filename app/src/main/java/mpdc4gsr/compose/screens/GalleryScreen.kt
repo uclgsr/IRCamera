@@ -36,7 +36,7 @@ fun GalleryScreen(
 ) {
     var selectedTab by remember { mutableIntStateOf(0) }
     var searchQuery by remember { mutableStateOf("") }
-    
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -54,7 +54,7 @@ fun GalleryScreen(
                 onClick = { /* Search functionality */ }
             )
         }
-        
+
         // Tab selector
         TabRow(
             selectedTabIndex = selectedTab,
@@ -77,7 +77,7 @@ fun GalleryScreen(
                 text = { Text("Data Exports") }
             )
         }
-        
+
         // Content based on selected tab
         Box(
             modifier = Modifier
@@ -105,13 +105,15 @@ private fun ThermalImagesGrid(
             ThermalImage(
                 id = index,
                 name = "Thermal_${index.toString().padStart(3, '0')}.jpg",
-                timestamp = "2024-01-${(index % 28 + 1).toString().padStart(2, '0')} 14:${(index * 3 % 60).toString().padStart(2, '0')}",
+                timestamp = "2024-01-${
+                    (index % 28 + 1).toString().padStart(2, '0')
+                } 14:${(index * 3 % 60).toString().padStart(2, '0')}",
                 maxTemp = 35.0f + (index * 2.5f),
                 minTemp = 18.0f + (index * 1.2f)
             )
         }
     }
-    
+
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -142,7 +144,7 @@ private fun RecordingsGrid(
             )
         }
     }
-    
+
     LazyVerticalGrid(
         columns = GridCells.Fixed(1),
         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -170,7 +172,7 @@ private fun DataExportsGrid(
             DataExport("Thermal_Report_005.pdf", "3.5MB", "Report")
         )
     }
-    
+
     LazyVerticalGrid(
         columns = GridCells.Fixed(1),
         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -213,14 +215,14 @@ private fun ThermalImageCard(
                     // Draw thermal pattern
                     val width = size.width
                     val height = size.height
-                    
+
                     // Hot spot
                     drawCircle(
                         color = Color.Red.copy(alpha = 0.8f),
                         radius = width * 0.15f,
                         center = Offset(width * 0.6f, height * 0.4f)
                     )
-                    
+
                     // Cool spot
                     drawCircle(
                         color = Color.Blue.copy(alpha = 0.8f),
@@ -228,7 +230,7 @@ private fun ThermalImageCard(
                         center = Offset(width * 0.3f, height * 0.7f)
                     )
                 }
-                
+
                 // Temperature overlay
                 Column(
                     modifier = Modifier
@@ -260,7 +262,7 @@ private fun ThermalImageCard(
                     }
                 }
             }
-            
+
             // Image info
             Column(
                 modifier = Modifier.padding(8.dp)
@@ -307,9 +309,9 @@ private fun RecordingCard(
                 tint = Color.Blue,
                 modifier = Modifier.size(48.dp)
             )
-            
+
             Spacer(modifier = Modifier.width(16.dp))
-            
+
             Column(
                 modifier = Modifier.weight(1f)
             ) {
@@ -360,9 +362,9 @@ private fun DataExportCard(
                 tint = Color.Green,
                 modifier = Modifier.size(48.dp)
             )
-            
+
             Spacer(modifier = Modifier.width(16.dp))
-            
+
             Column(
                 modifier = Modifier.weight(1f)
             ) {

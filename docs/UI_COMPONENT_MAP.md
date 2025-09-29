@@ -4,11 +4,14 @@
 **Total Layouts:** 220+ layout files across modules  
 **Architecture:** Hybrid XML/Compose with active migration to Jetpack Compose
 
-The IRCamera Multi-Modal Thermal Sensing Platform combines traditional Android XML layouts with modern Jetpack Compose implementations. This comprehensive map documents all UI elements, components, patterns, and architectural decisions across the entire application ecosystem.
+The IRCamera Multi-Modal Thermal Sensing Platform combines traditional Android XML layouts with
+modern Jetpack Compose implementations. This comprehensive map documents all UI elements,
+components, patterns, and architectural decisions across the entire application ecosystem.
 
 ## 📋 Documentation Overview
 
 This document provides complete coverage of:
+
 - **Standard Android Components** (TextView, ImageView, Button, etc.) with Compose equivalents
 - **Custom Thermal Components** (TemperatureView, ThermalOverlay, etc.) with specialized patterns
 - **GSR Sensor Components** (Multi-modal recording, device management, real-time data display)
@@ -20,6 +23,7 @@ This document provides complete coverage of:
 ## 🏗️ Repository Architecture Overview
 
 ### **Module Structure (Post-Consolidation)**
+
 ```
 IRCamera/
 ├── app/ (30 layouts) - Main application interfaces
@@ -39,9 +43,11 @@ IRCamera/
 ```
 
 ### **Compose Integration Status**
+
 The application is actively migrating from XML to Jetpack Compose:
 
 **Completed Compose Implementations:**
+
 - `MainComposeActivity` - Unified entry point with navigation
 - `SensorDashboardComposeActivity` - Real-time sensor dashboard
 - `SettingsComposeActivity` - Complete settings screens
@@ -49,12 +55,15 @@ The application is actively migrating from XML to Jetpack Compose:
 - `BaseComposeActivity` - Foundation for new Compose screens
 
 **Hybrid Integration Patterns:**
+
 - `ThermalComposeIntegration` - Thermal camera + Compose interop
 - `ComposeInterop` - XML-Compose bridge utilities
 - `BaseComposeFragment` - Fragment-based Compose integration
 
 ### **Layout Consolidation Impact**
+
 Recent architectural improvements:
+
 - **35 legacy layouts** moved to backup directory
 - **10 consolidated templates** replace specialized layouts
 - **Enhanced data binding** across all new implementations
@@ -63,9 +72,11 @@ Recent architectural improvements:
 ## 📱 Standard Layout Containers
 
 ### **ConstraintLayout (XML) → ConstraintLayout (Compose)**
+
 - **Usage:** Root container for most screens (activities/fragments) and complex positioning
 - **XML Examples:** `activity_ir_monitor.xml`, `fragment_thermal_ir.xml`
 - **Compose Implementation:**
+
 ```kotlin
 @Composable
 fun ThermalMonitorScreen() {
@@ -102,9 +113,11 @@ fun ThermalMonitorScreen() {
 ```
 
 ### **LinearLayout (XML) → Column/Row (Compose)**
+
 - **Usage:** Simple vertical or horizontal grouping of elements
 - **XML Examples:** `ll_seek_bar` in `activity_manual_step2.xml`
 - **Compose Implementation:**
+
 ```kotlin
 @Composable
 fun AlignmentControls() {
@@ -139,9 +152,11 @@ fun AlignmentSlider() {
 ```
 
 ### **FrameLayout (XML) → Box (Compose)**
-- **Usage:** Stack views (camera preview + overlays) or host fragments dynamically  
+
+- **Usage:** Stack views (camera preview + overlays) or host fragments dynamically
 - **XML Examples:** `thermal_lay` stacking CameraView and TemperatureView
 - **Compose Implementation:**
+
 ```kotlin
 @Composable
 fun ThermalCameraPreview() {
@@ -177,13 +192,15 @@ fun ThermalCameraPreview() {
 ## 🎯 Standard Widgets & Modern Implementations
 
 ### **TextView (ID prefix: `tv_`) → Text (Compose)**
+
 - **XML Usage:** Labels, titles, and button-like text
 - **XML Examples:** `tv_tips`, `tv_content`, `tv_correction`, `tv_open_thermal`
 - **XML Attributes:**
-  - `textColor="@color/white"` for dark backgrounds
-  - `textSize="16sp"` for body text, `17sp` for buttons
-  - `drawableEnd` for arrow indicators
+    - `textColor="@color/white"` for dark backgrounds
+    - `textSize="16sp"` for body text, `17sp` for buttons
+    - `drawableEnd` for arrow indicators
 - **Compose Implementation:**
+
 ```kotlin
 @Composable
 fun ThermalInstructions() {
@@ -210,10 +227,12 @@ fun ThermalInstructions() {
 ```
 
 ### **ImageView (ID prefix: `iv_`) → Image/Icon (Compose)**
+
 - **XML Usage:** Icons, illustrations, device status indicators
 - **XML Examples:** `iv_tips`, `iv_sketch_map`, `iv_open_thermal`
 - **XML Sources:** Vector drawables (SVG), PNG assets, selector drawables
 - **Compose Implementation:**
+
 ```kotlin
 @Composable
 fun DeviceStatusIcon(
@@ -246,13 +265,15 @@ fun DeviceStatusIcon(
 ```
 
 ### **Button → Button/TextButton (Compose)**
+
 - **XML Usage:** Clickable actions with consistent theming
 - **XML Examples:** `motion_btn`, `motion_start_btn`
 - **XML Styling:**
-  - `background="@drawable/bg_corners05_solid_theme"` (active)
-  - `background="@drawable/bg_corners05_solid_50_theme"` (disabled)
-  - `textColor="@color/color_img_calibration_button"`
+    - `background="@drawable/bg_corners05_solid_theme"` (active)
+    - `background="@drawable/bg_corners05_solid_50_theme"` (disabled)
+    - `textColor="@color/color_img_calibration_button"`
 - **Compose Implementation:**
+
 ```kotlin
 @Composable
 fun ThermalActionButtons(
@@ -292,9 +313,11 @@ fun ThermalActionButtons(
 ```
 
 ### **SeekBar (XML) → Slider (Compose)**
+
 - **XML Usage:** Temperature adjustment, alignment offset control
 - **XML Example:** `seek_bar` with "-10°" and "10°" labels
 - **Compose Implementation:**
+
 ```kotlin
 @Composable
 fun TemperatureAdjustmentSlider(
@@ -333,9 +356,11 @@ fun TemperatureAdjustmentSlider(
 ```
 
 ### **EditText (XML) → TextField (Compose)**
+
 - **XML Usage:** Numeric inputs, calibration fields, device configuration
 - **XML Examples:** `min`, `max`, `ooc`, `b`, `singlepoint`, `lowpoint`
 - **Compose Implementation:**
+
 ```kotlin
 @Composable
 fun CalibrationInputs(
@@ -375,47 +400,55 @@ fun CalibrationInputs(
     }
 }
 ```
+
 - **Examples:** `motion_btn`, `motion_start_btn` in monitor screen
 - **XML Styling:**
-  - `background="@drawable/bg_corners05_solid_theme"` (active state)
-  - `background="@drawable/bg_corners05_solid_50_theme"` (disabled state)
-  - `textColor="#55272F"` or `@color/color_img_calibration_button`
-  - `layout_constraintWidth_percent="0.4"` for consistent sizing
+    - `background="@drawable/bg_corners05_solid_theme"` (active state)
+    - `background="@drawable/bg_corners05_solid_50_theme"` (disabled state)
+    - `textColor="#55272F"` or `@color/color_img_calibration_button`
+    - `layout_constraintWidth_percent="0.4"` for consistent sizing
 - **Compose Equivalent:** `Button` composable
 
 ### **ToggleButton**
+
 - **Usage:** On/off settings
 - **Example:** `automode` in shutter popup layout
 - **Compose Equivalent:** `Switch` or `ToggleButton` composable
 
 ### **EditText**
+
 - **Usage:** Input fields for numeric inputs and calibration fields
-- **Examples:** `min`, `max`, `ooc`, `b` in shutter settings; `singlepoint`, `lowpoint` in calibration
+- **Examples:** `min`, `max`, `ooc`, `b` in shutter settings; `singlepoint`, `lowpoint` in
+  calibration
 - **Compose Equivalent:** `TextField` or `OutlinedTextField`
 
 ### **SeekBar**
+
 - **Usage:** Slider input
 - **Example:** `seek_bar` with labels "-10°" and "10°" in alignment offset slider
 - **Compose Equivalent:** `Slider` composable
 - **Custom Styling:** `progressDrawable`, `thumb` attributes for appearance
 
 ### **SurfaceView / TextureView**
+
 - **Usage:** Camera preview display
-- **Example:** `dualTextureView` in thermal layouts, `cameraView` (CameraView) in monitor fragment  
+- **Example:** `dualTextureView` in thermal layouts, `cameraView` (CameraView) in monitor fragment
 - **Compose Equivalent:** `AndroidView` wrapping the surface view
 - **Key Pattern:** Full-screen camera feed with overlay views
 
 ## 🔧 Custom Wrapper Components & Modern Implementations
 
 ### **TitleView (XML) → TopAppBar (Compose)**
+
 - **XML Class:** `com.mpdc4gsr.libunified.app.view.TitleView`
 - **XML Usage:** Consistent top app bar on all screens
 - **XML Components:** Left icon (back arrow), centered title text, optional right-side icons/buttons
 - **XML Attributes:**
-  - `app:titleText` for title
-  - `app:isTitleCenter` for centered vs left-aligned titles
-  - Built-in back navigation handling
+    - `app:titleText` for title
+    - `app:isTitleCenter` for centered vs left-aligned titles
+    - Built-in back navigation handling
 - **Compose Implementation:**
+
 ```kotlin
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -450,11 +483,13 @@ fun IRCameraTitleBar(
 ```
 
 ### **TemperatureView (XML) → Custom Canvas (Compose)**
+
 - **XML Class:** `com.mpdc4gsr.libunified.ir.view.TemperatureView`
 - **XML Usage:** Custom view overlay for thermal data readouts
 - **XML Features:** Temperature metrics for selected regions (point/line/area)
 - **XML API:** `temperatureRegionMode`, `setImageSize()`, visibility toggles via EventBus
 - **Compose Implementation:**
+
 ```kotlin
 @Composable
 fun TemperatureOverlay(
@@ -513,10 +548,12 @@ fun TemperatureOverlay(
 ```
 
 ### **MoveImageView (XML) → Draggable Composable (Compose)**
+
 - **XML Class:** `com.mpdc4gsr.module.thermalunified.view.MoveImageView`
 - **XML Usage:** Drag gestures for image alignment in dual-light correction
 - **XML Pattern:** Stacked on top of camera preview SurfaceView inside FrameLayout
 - **Compose Implementation:**
+
 ```kotlin
 @Composable
 fun DraggableAlignmentOverlay(
@@ -553,10 +590,12 @@ fun DraggableAlignmentOverlay(
 ```
 
 ### **ImageEditView (XML) → Drawing Canvas (Compose)**
+
 - **XML Class:** `com.mpdc4gsr.libunified.app.view.ImageEditView`
 - **XML Usage:** Drawing annotations on captured images (circles, rectangles, arrows)
 - **XML Pattern:** Toggles visible after photo capture in image pick screen
 - **Compose Implementation:**
+
 ```kotlin
 @Composable
 fun ImageAnnotationCanvas(
@@ -617,10 +656,12 @@ fun ImageAnnotationCanvas(
 ```
 
 ### **CameraView (XML) → AndroidView Integration (Compose)**
+
 - **XML Class:** `com.infisense.usbir.view.CameraView`
 - **XML Usage:** IR camera preview display
 - **XML Integration:** Tied to thermal data through `SynchronizedBitmap`
 - **Compose Implementation:**
+
 ```kotlin
 @Composable
 fun ThermalCameraView(
@@ -647,6 +688,7 @@ fun ThermalCameraView(
 ## 🔔 Modern Dialog and Popup Systems
 
 ### **Material3 Dialog Implementation**
+
 The application now uses Material3 dialogs with consistent theming:
 
 ```kotlin
@@ -698,6 +740,7 @@ fun ThermalCalibrationDialog(
 ```
 
 ### **Auto Shutter Settings Dialog**
+
 Modern implementation of the legacy `layout_shut.xml`:
 
 ```kotlin
@@ -791,6 +834,7 @@ fun ShutterSettingsDialog(
 ```
 
 ### **Tip Dialog System**
+
 Modernized tip dialogs with Material3 design:
 
 ```kotlin
@@ -849,15 +893,17 @@ fun ThermalTipDialog(
 ## 🎨 Third-Party Widgets & Modern Alternatives
 
 ### **LottieAnimationView (XML) → Lottie Compose**
+
 - **XML Usage:** Animated indicators on connection screen (loading/searching animation)
 - **XML Implementation:** Shows looping animation while device connection is being established
 - **XML Example:** `animation_view` in `fragment_thermal_ir.xml` with `TDAnimationJSON.json`
 - **XML Attributes:**
-  - `app:lottie_fileName="TDAnimationJSON.json"`
-  - `app:lottie_imageAssetsFolder="images/"`
-  - `app:lottie_autoPlay="true"`
-  - `app:lottie_loop="true"`
+    - `app:lottie_fileName="TDAnimationJSON.json"`
+    - `app:lottie_imageAssetsFolder="images/"`
+    - `app:lottie_autoPlay="true"`
+    - `app:lottie_loop="true"`
 - **Compose Implementation:**
+
 ```kotlin
 @Composable
 fun ConnectionLoadingAnimation(
@@ -887,10 +933,12 @@ fun ConnectionLoadingAnimation(
 ```
 
 ### **RecyclerView/Chart Components → LazyColumn + Charts**
+
 - **XML Usage:** Data visualization and list display
 - **XML Library:** MPAndroidChart components like `Legend` (referenced in `libui` module)
 - **XML Examples:** Chart views for temperature monitoring (`monitor_create_chart` string)
 - **Compose Implementation:**
+
 ```kotlin
 @Composable
 fun ThermalDataChart(
@@ -953,13 +1001,17 @@ fun DeviceListScreen(
 ```
 
 ### **Custom Dialog Classes (Legacy)**
+
 - **TipDialog, ColorSelectDialog:** Use small XML layouts with `dialog_` prefix
 - **Examples:** `dialog_msg.xml`, `dialog_config_guide.xml`
 - **Compose Equivalent:** `AlertDialog` or custom `Dialog` composables
 
 ### **Auto Shutter Settings Popup** (`layout_shut.xml`)
+
 A small ConstraintLayout panel for configuring camera shutter timing with:
-- **Four numeric input fields:** "Min Interval", "Max Interval", "OOC", and "B" (temperature thresholds)
+
+- **Four numeric input fields:** "Min Interval", "Max Interval", "OOC", and "B" (temperature
+  thresholds)
 - **ToggleButton:** For Auto mode enabling/disabling
 - **Layout Pattern:** One row per parameter with labels above fields using constraints
 - **ID Naming:** Concise naming (`min`, `max`, `ooc`, `b` with corresponding `mintext`, etc.)
@@ -967,26 +1019,33 @@ A small ConstraintLayout panel for configuring camera shutter timing with:
 - **Compose Equivalent:** `AlertDialog` with `Column` of `OutlinedTextField` and `Switch` components
 
 ### **Temperature Calibration Popup** (`layout_calibration.xml`)
+
 A comprehensive vertical LinearLayout containing multiple calibration sections:
 
 **Single-Point Calibration:**
+
 - EditText input field + "Calibrate" Button
 
 **Double-Point Calibration:**
-- Two EditTexts for low/high temperature 
+
+- Two EditTexts for low/high temperature
 - Two-step submit process: `doiblepointsumit` then `endpointsumit`
 
 **Calibration Management:**
+
 - Cancel button to reset calibration
 - Revise/Recover section with `gain` input and "Ready"/"Begin" buttons
 
 **Bad Pixel Correction:**
+
 - X/Y coordinate inputs + "Submit"/"Cancel" buttons for pixel management
 
 **Configuration Management:**
+
 - Save/Restore buttons (`savecfg`, `restorecfg`) for factory settings
 
 **Compose Migration Pattern:**
+
 ```kotlin
 @Composable
 fun CalibrationDialog(onDismiss: () -> Unit) {
@@ -1007,55 +1066,67 @@ fun CalibrationDialog(onDismiss: () -> Unit) {
 ## Third-Party Widgets
 
 ### **LottieAnimationView**
-- **Usage:** Used on the connection screen to show animated indicators (loading or searching animation)
+
+- **Usage:** Used on the connection screen to show animated indicators (loading or searching
+  animation)
 - **Implementation:** Shows looping animation while device connection is being established
 - **Example:** `animation_view` in `fragment_thermal_ir.xml` with `TDAnimationJSON.json`
-- **Attributes:** 
-  - `app:lottie_fileName="TDAnimationJSON.json"`
-  - `app:lottie_imageAssetsFolder="images/"`
-  - `app:lottie_autoPlay="true"`
-  - `app:lottie_loop="true"`
+- **Attributes:**
+    - `app:lottie_fileName="TDAnimationJSON.json"`
+    - `app:lottie_imageAssetsFolder="images/"`
+    - `app:lottie_autoPlay="true"`
+    - `app:lottie_loop="true"`
 - **Compose Equivalent:** `LottieComposition` with Lottie Compose library
 
 ### **RecyclerView/Chart Components**
+
 - **Usage:** Data visualization and list display
 - **Chart Library:** MPAndroidChart components like `Legend` (referenced in `libui` module)
 - **List Usage:** Device lists, session management, gallery views
-- **Examples:** Chart views for temperature monitoring (`monitor_create_chart` string suggests chart integration)
-- **Compose Equivalent:** 
-  - `LazyColumn`/`LazyRow` for lists
-  - Custom composables with `Canvas` for charts
-  - Third-party chart libraries like `compose-charts`
+- **Examples:** Chart views for temperature monitoring (`monitor_create_chart` string suggests chart
+  integration)
+- **Compose Equivalent:**
+    - `LazyColumn`/`LazyRow` for lists
+    - Custom composables with `Canvas` for charts
+    - Third-party chart libraries like `compose-charts`
 
 ## State Management and Behavior Patterns
 
 ### **EventBus Integration**
+
 - **ThermalActionEvent:** Used for thermal overlay mode switching (point/line/area selection)
 - **Device Events:** USB connect/disconnect handling for camera state
 - **Event Codes:** Standardized action codes (e.g., 2001 for point mode, 2002 for line mode)
-- **Fragment Communication:** Decoupled state flow where UI reacts to events rather than direct callbacks
+- **Fragment Communication:** Decoupled state flow where UI reacts to events rather than direct
+  callbacks
 
 ### **Two-State UI Patterns**
+
 Common pattern across multiple screens:
 
 **Image Pick/Edit Screen:**
+
 - **Preview State:** Fragment preview + capture button visible
 - **Edit State:** Static image + annotation tools visible
 - **Toggle Mechanism:** `switchPhotoState(true/false)` controls visibility
 
 **Connection Screens:**
+
 - **Disconnected State:** `cl_not_connect` visible with Lottie animation
 - **Connected State:** `cl_connect` visible with "Open Thermal" button
 - **State Switching:** Based on device connection events
 
 **Monitor Screen:**
+
 - **Setup State:** "Create Chart" button visible
 - **Active State:** "Start" button replaces chart button
 
 ### **Overlay Patterns**
+
 Stacking pattern used throughout the app:
 
 **Camera + Temperature Overlay:**
+
 ```xml
 <FrameLayout>
     <CameraView /> <!-- Base camera feed -->
@@ -1064,6 +1135,7 @@ Stacking pattern used throughout the app:
 ```
 
 **Camera + Alignment Overlay:**
+
 ```xml
 <FrameLayout>
     <SurfaceView /> <!-- Thermal preview -->
@@ -1072,6 +1144,7 @@ Stacking pattern used throughout the app:
 ```
 
 **Image + Annotation Overlay:**
+
 ```xml
 <ConstraintLayout>
     <FragmentContainerView /> <!-- Live preview (initial) -->
@@ -1082,6 +1155,7 @@ Stacking pattern used throughout the app:
 ## Naming Conventions
 
 ### **ID Prefixes**
+
 - `tv_` for TextViews (e.g. `tv_tips`, `tv_open_thermal`)
 - `iv_` for ImageViews (e.g. `iv_tips`, `iv_open_thermal`)
 - `btn_` or `_btn` suffix for Buttons (e.g. `motion_btn`, `motion_start_btn`)
@@ -1089,6 +1163,7 @@ Stacking pattern used throughout the app:
 - `cl_` for ConstraintLayout groups (e.g. `cl_dual`, `cl_connect`)
 
 ### **Resource Naming**
+
 - **Strings:** Token-like naming (e.g. `dual_light_correction_tips_2`)
 - **Colors:** Descriptive purpose (e.g. `color_img_calibration_button`)
 - **Dimensions:** Standard sizing (e.g. `app_btn_big_height`)
@@ -1177,20 +1252,23 @@ Activity ImagePickIR (ConstraintLayout root, background=#16131e)
 ## Styling Tokens (Colors, Dimensions, Drawables)
 
 ### **Key Colors** (`colors.xml`)
+
 - `color_16131E` (#16131E) – Primary dark background
-- `white` – Text color on dark backgrounds  
+- `white` – Text color on dark backgrounds
 - `color_img_calibration_button` – Button text color (brownish #55272F equivalent)
 - `colorAccent` (#FF2B79D8) – Theme accent blue
 - `color_FFBA42` (#FFFFBA42) – Warm orange for gradients
 - `color_E74380` (#FFE74380) – Pink accent for gradients
 
 ### **Key Dimensions** (`dimens.xml`)
+
 - `app_btn_big_height` (48dp) – Standard large button height
 - `app_small_font` (14sp) – Button text size
 - `app_font` (16sp) – Body text size
 - Standard margins: 16dp, 8dp for spacing
 
 ### **Key Drawables**
+
 - `bg_corners05_solid_theme` – Rounded rectangle (5dp radius) with theme gradient
 - `bg_corners05_solid_50_theme` – Semi-transparent version for disabled state
 - `bg_open_thermal` – Special gradient background for "Open Thermal" button
@@ -1198,9 +1276,11 @@ Activity ImagePickIR (ConstraintLayout root, background=#16131e)
 - `ic_back_white_svg` – Back arrow for TitleView
 
 ### **Gradient System**
+
 The app uses a consistent gradient theming system:
 
 **Active State Gradient:**
+
 ```xml
 <!-- bg_corners05_solid_theme equivalent -->
 <gradient
@@ -1210,6 +1290,7 @@ The app uses a consistent gradient theming system:
 ```
 
 **Disabled State Gradient:**
+
 ```xml
 <!-- bg_corners05_solid_50_theme equivalent -->
 <gradient
@@ -1219,29 +1300,35 @@ The app uses a consistent gradient theming system:
 ```
 
 **Special Backgrounds:**
+
 - `bg_open_thermal`: Orange-to-pink gradient for prominent actions
 - `bg_camera_setting`: Context-specific backgrounds for camera controls
 - Shape variations: `bg_corners50_solid_*` for more rounded elements
 
 ### **Icon System**
+
 Consistent iconography across the app:
 
 **Navigation Icons:**
+
 - `ic_back_white_svg` – Universal back navigation
 - `ic_main_arrow` – Forward/next navigation
 - Arrow variants: `svg_arrow_right_ff`, `ir_svg_arrow_right_ff`
 
 **Function Icons:**
+
 - `ic_camera_grey_svg` – Camera/capture actions
 - `ic_main_tips` – Help/information indicators
 - `ic_main_connect_bg` – Connection status illustrations
 
 **Tool Icons (Image Editing):**
+
 - `svg_image_pick_color` – Color picker tool
 - `svg_image_pick_clear` – Clear/erase tool
 - `selector_image_pick_*` – State-aware tool selectors (circle, rect, arrow)
 
 ### **State-Aware Drawables**
+
 Many drawables use selector patterns for interactive states:
 
 ```xml
@@ -1256,24 +1343,29 @@ Many drawables use selector patterns for interactive states:
 ## Thermal Camera Specific Components
 
 ### **Temperature Region Modes**
+
 The `TemperatureView` supports multiple measurement modes:
 
 **Point Mode (Action Code 2001):**
+
 - Single point temperature measurement
 - Crosshair display at selected location
 - Real-time temperature readout
 
 **Line Mode (Action Code 2002):**
+
 - Line-based temperature measurement
 - Min/max temperature along the line
 - Visual line indicator with endpoint markers
 
 **Area/Rectangle Mode (Action Code 2003):**
+
 - Rectangular region temperature analysis
 - Average, min, max temperature display
 - Draggable rectangle selection
 
 **Implementation Pattern:**
+
 ```kotlin
 // Event-driven mode switching
 @Subscribe(threadMode = ThreadMode.MAIN)
@@ -1297,16 +1389,19 @@ fun action(event: ThermalActionEvent) {
 
 **Dual Camera Alignment:**
 For devices with both thermal and visible light cameras:
+
 - `MoveImageView` provides drag functionality for alignment
 - `SeekBar` for fine angle adjustment (-10° to +10°)
 - Real-time preview overlay for alignment verification
 
 **Thermal Data Processing:**
+
 - `SynchronizedBitmap` mechanism for frame synchronization
 - Temperature data extraction from IR sensor
 - Color mapping and pseudocolor display modes
 
 **State Persistence:**
+
 - `isPick` flag for image capture mode vs live preview
 - Device connection state management
 - Temperature calibration data storage
@@ -1314,6 +1409,7 @@ For devices with both thermal and visible light cameras:
 ### **Compose Migration for Thermal Components**
 
 **TemperatureView → Custom Canvas:**
+
 ```kotlin
 @Composable
 fun TemperatureOverlay(
@@ -1332,6 +1428,7 @@ fun TemperatureOverlay(
 ```
 
 **MoveImageView → Draggable Composable:**
+
 ```kotlin
 @Composable
 fun DraggableAlignmentOverlay(
@@ -1354,37 +1451,46 @@ fun DraggableAlignmentOverlay(
 
 ## Agent Prompt Guidelines
 
-**When expanding or modifying the IRCamera UI, AI agents should follow these comprehensive guidelines to maintain consistency and architectural integrity:**
+**When expanding or modifying the IRCamera UI, AI agents should follow these comprehensive
+guidelines to maintain consistency and architectural integrity:**
 
 ### **Structure Rules**
+
 1. **Mirror Layout Hierarchy:** Always use ConstraintLayout root with TitleView at top
 2. **Reuse Wrapper Components:** Use `TitleView` for app bars, not plain TextViews
 3. **Follow Naming Conventions:** Proper ID prefixes (`tv_`, `iv_`, `btn_`, etc.)
 4. **Match Styling Tokens:** Use existing colors/dimens, never hardcode existing values
 
 ### **Layout Behavior**
+
 1. **Maintain Constraints:** Respect existing layout flows and aspect ratios
 2. **State Management:** Hook into EventBus patterns for UI updates
 3. **Navigation:** Use ARouter for screen transitions
 
 ### **Compose Migration Guidelines**
+
 1. **TopAppBar** replaces TitleView with navigationIcon and actions
-2. **Column/Row** replace LinearLayouts  
+2. **Column/Row** replace LinearLayouts
 3. **Box** replaces FrameLayout for stacking
 4. **AndroidView** wraps surface views and custom views
 5. **Custom Canvas** composables replace drawing views
 
 ### **Thermal-Specific Guidelines**
-1. **Temperature Overlays:** Always use `TemperatureView` for thermal data display, not custom overlays
-2. **Event Integration:** Connect thermal UI changes to `ThermalActionEvent` with proper action codes
+
+1. **Temperature Overlays:** Always use `TemperatureView` for thermal data display, not custom
+   overlays
+2. **Event Integration:** Connect thermal UI changes to `ThermalActionEvent` with proper action
+   codes
 3. **Camera Stacking:** Maintain camera + overlay pattern using FrameLayout or Box in Compose
 4. **State Synchronization:** Use `isPick` flags and visibility toggles for mode switching
 5. **Device Connection:** Implement two-state UIs for connected/disconnected device states
 
 ### **Expansion Patterns**
+
 When adding new screens or components:
 
 **New Thermal Screen Template:**
+
 ```xml
 <androidx.constraintlayout.widget.ConstraintLayout
     android:background="@color/color_16131E">
@@ -1409,6 +1515,7 @@ When adding new screens or components:
 ```
 
 **New Dialog Template:**
+
 ```xml
 <LinearLayout 
     android:orientation="vertical"
@@ -1430,6 +1537,7 @@ When adding new screens or components:
 ```
 
 ### **Migration Strategy**
+
 For converting existing XML to Compose:
 
 1. **Preserve State Logic:** Maintain existing EventBus integration and state management
@@ -1439,13 +1547,15 @@ For converting existing XML to Compose:
 5. **Testing Approach:** Maintain parallel XML/Compose implementations during transition
 
 ### **Component Patterns**
+
 - **Two-state UIs:** Preview mode vs editing mode (like image annotation)
-- **Overlay patterns:** Camera + temperature/annotation overlays  
+- **Overlay patterns:** Camera + temperature/annotation overlays
 - **Button clusters:** Consistent styling with theme backgrounds
 - **Form inputs:** Label + EditText + Button mini-patterns
 - **Reusable Clusters:** Common UI patterns that can be modularized
 
 **Label + Input + Button Pattern:**
+
 ```xml
 <!-- Recurring pattern in calibration forms -->
 <LinearLayout android:orientation="horizontal">
@@ -1456,6 +1566,7 @@ For converting existing XML to Compose:
 ```
 
 **Coordinate Input Pattern:**
+
 ```xml
 <!-- X/Y input for pixel coordinates -->
 <LinearLayout android:orientation="horizontal">
@@ -1465,6 +1576,7 @@ For converting existing XML to Compose:
 ```
 
 **Action Button Row Pattern:**
+
 ```xml
 <!-- Bottom action buttons in popups -->
 <LinearLayout android:orientation="horizontal">
@@ -1475,6 +1587,7 @@ For converting existing XML to Compose:
 ```
 
 **Compose Modularization:**
+
 ```kotlin
 @Composable
 fun LabeledInput(
@@ -1580,11 +1693,14 @@ fun ThermalCameraPreview() {
 }
 ```
 
-This comprehensive mapping provides a complete reference for understanding the IRCamera UI architecture and serves as a blueprint for both maintaining the existing XML-based UI and migrating to Jetpack Compose.
+This comprehensive mapping provides a complete reference for understanding the IRCamera UI
+architecture and serves as a blueprint for both maintaining the existing XML-based UI and migrating
+to Jetpack Compose.
 
 ## Summary and Best Practices
 
 ### **Key Architectural Principles**
+
 1. **Consistency:** All screens follow the same TitleView + Content + Actions pattern
 2. **Modularity:** Reusable components (TitleView, TemperatureView) ensure uniform behavior
 3. **State Management:** EventBus-driven updates allow decoupled UI reactions
@@ -1592,14 +1708,16 @@ This comprehensive mapping provides a complete reference for understanding the I
 5. **Thermal Integration:** Specialized components handle IR camera data and user interactions
 
 ### **Critical Success Factors for UI Expansion**
+
 - **Always** use existing wrapper components rather than creating new ones
-- **Follow** established naming conventions for consistency across the codebase  
+- **Follow** established naming conventions for consistency across the codebase
 - **Leverage** the gradient theming system for visual consistency
 - **Maintain** the overlay patterns for camera-based screens
 - **Integrate** with EventBus for thermal functionality
 - **Test** with actual thermal hardware when modifying camera components
 
 ### **Migration Roadmap**
+
 For teams planning Compose migration:
 
 1. **Phase 1:** Convert static screens (settings, about, help)
@@ -1608,14 +1726,17 @@ For teams planning Compose migration:
 4. **Phase 4:** Tackle camera preview screens with AndroidView wrappers
 5. **Phase 5:** Implement full Compose thermal overlays and drawing components
 
-This documentation serves as the definitive guide for maintaining architectural consistency while enabling modern UI development practices in the IRCamera application.
+This documentation serves as the definitive guide for maintaining architectural consistency while
+enabling modern UI development practices in the IRCamera application.
 
 ## Extended UI Patterns and Modern Components
 
 ### **Data Binding Layouts**
+
 The IRCamera app extensively uses Android Data Binding for dynamic UI updates:
 
 **Multi-Modal Recording Pattern:**
+
 ```xml
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
     <data>
@@ -1628,12 +1749,17 @@ The IRCamera app extensively uses Android Data Binding for dynamic UI updates:
 ```
 
 **Key Data Binding Patterns:**
+
 - **Conditional Visibility:** `android:visibility="@{isRecording ? View.VISIBLE : View.GONE}"`
-- **Dynamic Text:** `android:text="@{isRecording ? @string/stop_recording : @string/start_recording}"`
-- **Color Binding:** `android:backgroundTint="@{isConnected ? @color/status_connected : @color/status_disconnected}"`
-- **Resource Selection:** `android:src="@{deviceType.equals(@string/gsr_sensor_type) ? @drawable/ic_gsr_pulse : @drawable/ic_sensor_generic}"`
+- **Dynamic Text:**
+  `android:text="@{isRecording ? @string/stop_recording : @string/start_recording}"`
+- **Color Binding:**
+  `android:backgroundTint="@{isConnected ? @color/status_connected : @color/status_disconnected}"`
+- **Resource Selection:**
+  `android:src="@{deviceType.equals(@string/gsr_sensor_type) ? @drawable/ic_gsr_pulse : @drawable/ic_sensor_generic}"`
 
 **Compose Equivalent:**
+
 ```kotlin
 @Composable
 fun MultiModalRecording(
@@ -1659,12 +1785,14 @@ fun MultiModalRecording(
 ### **Material3 Component Integration**
 
 **CardView-Based Layouts:**
+
 - **Pattern:** Dark-themed cards (`#FF2A2A2A`) with 8dp corner radius
 - **Usage:** System status, recording controls, session information sections
 - **Padding:** Consistent 16dp internal padding for card content
 - **Structure:** CardView → LinearLayout → Content sections
 
 **ChipGroup for Sensor Selection:**
+
 ```xml
 <com.google.android.material.chip.ChipGroup
     android:id="@+id/sensor_chip_group"
@@ -1673,11 +1801,13 @@ fun MultiModalRecording(
 ```
 
 **Material3 Button Styles:**
+
 - **TextButton:** `style="@style/Widget.Material3.Button.TextButton"`
 - **Color Usage:** `textColor="@color/primary_color"` for primary actions
 - **Sizing:** Consistent 12sp text size for compact controls
 
 **Compose Migration:**
+
 ```kotlin
 @Composable
 fun SensorSelectionChips(
@@ -1705,6 +1835,7 @@ fun SensorSelectionChips(
 ### **Advanced List Item Patterns**
 
 **Device Item Template** (`item_device_consolidated.xml`):
+
 ```
 CardView (8dp corner radius, 2dp elevation)
 └── ConstraintLayout (16dp padding)
@@ -1715,12 +1846,14 @@ CardView (8dp corner radius, 2dp elevation)
 ```
 
 **Key Patterns:**
+
 - **Device Icons:** Dynamic based on device type (thermal/GSR/generic)
 - **Status Colors:** Connected/disconnected state coloring throughout item
 - **Monospace Font:** Device IDs use `fontFamily="monospace"`
 - **Button Layout:** Horizontal LinearLayout with weighted TextButtons
 
 **Compose Equivalent:**
+
 ```kotlin
 @Composable
 fun DeviceItem(
@@ -1784,6 +1917,7 @@ fun DeviceItem(
 ### **Complex Layout Hierarchies**
 
 **Multi-Modal Recording Activity Structure:**
+
 ```
 ScrollView (fillViewport, vertical scrollbars)
 └── LinearLayout (vertical, 16dp padding)
@@ -1804,6 +1938,7 @@ ScrollView (fillViewport, vertical scrollbars)
 ### **Bottom Navigation Pattern**
 
 **IRCamera Style Navigation:**
+
 ```xml
 <ConstraintLayout (56dp height, #16131e background)
     ├── ImageView (background image, fitXY scaling)
@@ -1817,12 +1952,14 @@ ScrollView (fillViewport, vertical scrollbars)
 ```
 
 **Key Features:**
+
 - **Aspect Ratio:** Background uses `layout_constraintDimensionRatio="1125:255"`
 - **Selector Drawables:** State-aware icons (`selector_gallery`, `selector_mine`)
 - **Text Styling:** `app_font_11` dimension, `tab_text` color
 - **Spacing:** 4dp margin between icon and text
 
 **Compose Equivalent:**
+
 ```kotlin
 @Composable
 fun IRCameraBottomNavigation(
@@ -1866,18 +2003,21 @@ fun IRCameraBottomNavigation(
 ### **GSR and Multi-Sensor UI Patterns**
 
 **Real-Time Data Display:**
+
 - **Container:** ScrollView with fixed height (200dp) and dark background (`#FF1A1A1A`)
 - **Content:** Monospace font for data consistency
 - **Pattern:** Dynamic LinearLayout container for sensor data streams
 - **Styling:** 12sp white text on dark background for readability
 
 **Sensor Status Integration:**
+
 - **Dynamic Containers:** FrameLayout containers populated programmatically
 - **Status Colors:** Consistent green/red for connected/disconnected states
 - **Icon System:** Device-type specific icons (thermal, GSR, generic sensors)
 - **Battery Indicators:** Percentage display with color coding
 
 **Session Management:**
+
 - **Information Cards:** Consistent CardView styling for session metadata
 - **Action Patterns:** Horizontal button layouts for session navigation
 - **Data Persistence:** Integration with session storage and retrieval systems
@@ -1885,9 +2025,11 @@ fun IRCameraBottomNavigation(
 ## Testing and Implementation Guidance
 
 ### **Fragment Container Testing**
+
 The app includes specialized testing layouts for validating UI behavior:
 
 **Sensor Dashboard Test Pattern:**
+
 ```xml
 <NestedScrollView (fillViewport, vertical scrollbars)
 └── LinearLayout (vertical, dark background)
@@ -1897,6 +2039,7 @@ The app includes specialized testing layouts for validating UI behavior:
 ```
 
 **Key Testing Features:**
+
 - **Nested Scrolling:** `NestedScrollView` with `fillViewport="true"`
 - **Fragment Integration:** Dedicated container for fragment testing
 - **Behavior Validation:** Instructions for testing scrolling behavior
@@ -1905,6 +2048,7 @@ The app includes specialized testing layouts for validating UI behavior:
 ### **Layout Validation Patterns**
 
 **Responsive Design Testing:**
+
 - **Weight-Based Containers:** Fragment containers use `layout_weight="1"` for flexibility
 - **Scroll Behavior:** Instructions text guides expected user interactions
 - **Color Consistency:** Test layouts maintain production color schemes
@@ -1913,18 +2057,21 @@ The app includes specialized testing layouts for validating UI behavior:
 ### **Development Best Practices**
 
 **Data Binding Implementation:**
+
 1. **Variable Declaration:** Always include proper type declarations in `<data>` section
 2. **Null Safety:** Use null coalescing (`??`) for default values
 3. **Resource References:** Prefer string resources over hardcoded text
 4. **Boolean Logic:** Use ternary operators for conditional attributes
 
 **CardView Consistency:**
+
 1. **Background Color:** Use `#FF2A2A2A` for dark theme cards
 2. **Corner Radius:** Standard 8dp for card corners
 3. **Elevation:** 2dp elevation for subtle depth
 4. **Padding:** 16dp internal padding for content spacing
 
 **Color System Implementation:**
+
 ```xml
 <!-- Status Colors -->
 <color name="status_connected">#FF4CAF50</color>
@@ -1945,11 +2092,13 @@ The app includes specialized testing layouts for validating UI behavior:
 ### **Accessibility Implementation**
 
 **Content Descriptions:**
+
 - **Icons:** Always include meaningful `contentDescription` attributes
-- **Status Indicators:** Describe connection states and signal levels  
+- **Status Indicators:** Describe connection states and signal levels
 - **Interactive Elements:** Clear descriptions for buttons and controls
 
 **Text Sizing:**
+
 - **Scalable Units:** Use `sp` for text sizes to respect user font preferences
 - **Size Hierarchy:** Maintain consistent size relationships (24sp/18sp/16sp/14sp/12sp/11sp/10sp)
 - **Readability:** Ensure adequate contrast with background colors
@@ -1957,12 +2106,14 @@ The app includes specialized testing layouts for validating UI behavior:
 ### **Performance Considerations**
 
 **Efficient Layouts:**
+
 - **ConstraintLayout:** Prefer over nested LinearLayouts for complex positioning
 - **RecyclerView:** Use for dynamic lists instead of ScrollView + LinearLayout
 - **ViewBinding:** Combine with data binding for optimal performance
 - **Image Loading:** Use appropriate drawable types (vector vs bitmap)
 
 **Memory Management:**
+
 - **Fragment Containers:** Properly manage fragment lifecycle in dynamic containers
 - **Data Binding:** Avoid memory leaks with proper lifecycle awareness
 - **Large Datasets:** Implement pagination for extensive sensor data
@@ -1972,6 +2123,7 @@ The app includes specialized testing layouts for validating UI behavior:
 ### **Cross-Module Communication**
 
 **EventBus Integration with Modern UI:**
+
 ```kotlin
 // Traditional XML + EventBus
 @Subscribe(threadMode = ThreadMode.MAIN)
@@ -2006,6 +2158,7 @@ fun SensorDashboard() {
 ### **Modern Architecture Integration**
 
 **MVVM with Data Binding:**
+
 ```kotlin
 // ViewModel
 class MultiModalRecordingViewModel : ViewModel() {
@@ -2029,6 +2182,7 @@ class MultiModalRecordingFragment : Fragment() {
 ```
 
 **Compose Integration:**
+
 ```kotlin
 @Composable
 fun MultiModalRecordingScreen(viewModel: MultiModalRecordingViewModel) {
@@ -2051,26 +2205,31 @@ fun MultiModalRecordingScreen(viewModel: MultiModalRecordingViewModel) {
 **Phase-by-Phase Approach:**
 
 **Phase 1: Static Content Migration**
+
 - Convert CardViews to Card composables
 - Migrate TextViews and ImageViews
 - Implement basic styling and spacing
 
 **Phase 2: Interactive Elements**
+
 - Convert Buttons to Compose buttons with proper styling
 - Implement ChipGroup as FilterChip components
 - Add click handlers and state management
 
 **Phase 3: Data Binding Integration**
+
 - Replace XML data binding with Compose state
 - Implement conditional visibility with Compose
 - Add dynamic content updates
 
 **Phase 4: Complex Layouts**
+
 - Convert ConstraintLayouts to Compose equivalents
 - Implement ScrollView as LazyColumn where appropriate
 - Add proper layout behavior and constraints
 
 **Phase 5: Complete Integration**
+
 - Connect to existing ViewModels and data sources
 - Implement EventBus integration patterns
 - Add comprehensive testing and validation
@@ -2078,8 +2237,10 @@ fun MultiModalRecordingScreen(viewModel: MultiModalRecordingViewModel) {
 ## 🚀 Final Implementation Status & Roadmap
 
 ### **Current Migration Status**
+
 - **✅ Completed:** Standard widgets (TextView, ImageView, Button) → Text, Image, Button
-- **✅ Completed:** Layout containers (ConstraintLayout, LinearLayout, FrameLayout) → ConstraintLayout, Column/Row, Box
+- **✅ Completed:** Layout containers (ConstraintLayout, LinearLayout, FrameLayout) →
+  ConstraintLayout, Column/Row, Box
 - **✅ Completed:** Custom components (TitleView) → TopAppBar with full feature parity
 - **✅ Completed:** Dialog systems → Material3 AlertDialog with enhanced UX
 - **✅ Completed:** Third-party widgets (Lottie, Charts) → Compose alternatives
@@ -2088,6 +2249,7 @@ fun MultiModalRecordingScreen(viewModel: MultiModalRecordingViewModel) {
 - **📋 Planned:** Complete EventBus → Compose state management migration
 
 ### **Architecture Excellence Metrics**
+
 - **Total Layouts:** 220+ layouts across 3 modules (reduced from 270+ through consolidation)
 - **Compose Coverage:** 15+ major activities converted with hybrid integration
 - **Code Reusability:** 85% through consolidated layout templates and shared components
@@ -2095,6 +2257,7 @@ fun MultiModalRecordingScreen(viewModel: MultiModalRecordingViewModel) {
 - **Maintainability:** 60% reduction in UI code complexity through modern patterns
 
 ### **Critical Success Factors for Future Development**
+
 1. **Consistency:** All new UI must follow documented patterns and architectural decisions
 2. **Integration:** Maintain hybrid XML/Compose compatibility during transition period
 3. **Performance:** Leverage Compose lazy loading and state optimization patterns
@@ -2104,18 +2267,21 @@ fun MultiModalRecordingScreen(viewModel: MultiModalRecordingViewModel) {
 ### **Advanced Development Guidelines**
 
 **For New Feature Development:**
+
 - Start with Compose implementation for all new screens
 - Use hybrid integration patterns for existing screen modifications
 - Follow documented state management and EventBus integration patterns
 - Implement Material3 design system consistently
 
 **For Legacy Code Maintenance:**
+
 - Preserve existing XML functionality while planning Compose migration
 - Use documented conversion patterns for incremental migration
 - Maintain backward compatibility with thermal camera hardware integration
 - Follow established naming conventions and resource management
 
 **For Architecture Evolution:**
+
 - Continue consolidating similar layouts into reusable templates
 - Expand Compose integration while maintaining XML compatibility
 - Enhance state management with modern reactive patterns
@@ -2125,17 +2291,24 @@ fun MultiModalRecordingScreen(viewModel: MultiModalRecordingViewModel) {
 
 **🎯 Conclusion**
 
-This documentation serves as the definitive guide for the IRCamera Multi-Modal Thermal Sensing Platform UI architecture, providing complete coverage for development, maintenance, and modernization of one of the most advanced thermal camera applications in the Android ecosystem.
+This documentation serves as the definitive guide for the IRCamera Multi-Modal Thermal Sensing
+Platform UI architecture, providing complete coverage for development, maintenance, and
+modernization of one of the most advanced thermal camera applications in the Android ecosystem.
 
 **Key Achievements:**
+
 - **2,100+ lines** of comprehensive UI documentation
-- **220+ layout files** documented across all modules  
+- **220+ layout files** documented across all modules
 - **Complete migration paths** from XML to Jetpack Compose
 - **Advanced thermal camera integration** patterns and examples
 - **Modern Material3 design system** implementation guidance
 - **Cross-platform compatibility** with GSR sensor integration
 - **Performance optimization** strategies and best practices
 
-This living document will continue to evolve as the IRCamera platform advances, serving developers, researchers, and engineers working on cutting-edge thermal imaging and multi-modal sensing applications.
+This living document will continue to evolve as the IRCamera platform advances, serving developers,
+researchers, and engineers working on cutting-edge thermal imaging and multi-modal sensing
+applications.
 
-This comprehensive documentation now covers the complete UI architecture of the IRCamera application, from basic components to advanced modern patterns, providing developers with all necessary guidance for maintenance, expansion, and modernization.
+This comprehensive documentation now covers the complete UI architecture of the IRCamera
+application, from basic components to advanced modern patterns, providing developers with all
+necessary guidance for maintenance, expansion, and modernization.

@@ -15,7 +15,7 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 
 /**
  * Modernization Progress Screen - Comprehensive Showcase
- * 
+ *
  * Central hub that demonstrates the complete modernization journey:
  * - Infrastructure improvements overview
  * - Activity migration progress
@@ -35,7 +35,7 @@ fun ModernizationProgressScreen(
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { 
+                    title = {
                         Text(
                             "Compose Modernization",
                             fontWeight = FontWeight.Bold
@@ -72,13 +72,13 @@ private fun ModernizationProgressContent(
     ) {
         // Overview Card
         OverviewCard()
-        
+
         // Infrastructure Achievements
         InfrastructureAchievementsCard()
-        
+
         // Migration Progress
         MigrationProgressCard()
-        
+
         // Interactive Demos
         InteractiveDemosCard(
             onNavigateToGSRDemo = onNavigateToGSRDemo,
@@ -86,10 +86,10 @@ private fun ModernizationProgressContent(
             onNavigateToThermalDemo = onNavigateToThermalDemo,
             onNavigateToComponentShowcase = onNavigateToComponentShowcase
         )
-        
+
         // Next Steps
         NextStepsCard()
-        
+
         // Technical Metrics
         TechnicalMetricsCard()
     }
@@ -124,15 +124,15 @@ private fun OverviewCard() {
                     fontWeight = FontWeight.Bold
                 )
             }
-            
+
             Text(
                 "Comprehensive migration from traditional Android Views to modern Jetpack Compose, " +
-                "with cross-module infrastructure and unified navigation system.",
+                        "with cross-module infrastructure and unified navigation system.",
                 style = MaterialTheme.typography.bodyLarge
             )
-            
+
             Divider()
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
@@ -198,33 +198,33 @@ private fun InfrastructureAchievementsCard() {
                     fontWeight = FontWeight.Bold
                 )
             }
-            
+
             Divider()
-            
+
             AchievementItem(
                 title = "Cross-Module Compose Infrastructure",
                 description = "BaseComposeActivity moved to libunified for universal access",
                 status = AchievementStatus.COMPLETE
             )
-            
+
             AchievementItem(
                 title = "Unified Theme System",
                 description = "LibUnifiedTheme provides consistent styling across modules",
                 status = AchievementStatus.COMPLETE
             )
-            
+
             AchievementItem(
                 title = "MainActivity Consolidation",
                 description = "Rationalized from 4 conflicting implementations to 3 clear purposes",
                 status = AchievementStatus.COMPLETE
             )
-            
+
             AchievementItem(
                 title = "Build System Stabilization",
                 description = "Resolved dependency conflicts and plugin issues",
                 status = AchievementStatus.COMPLETE
             )
-            
+
             AchievementItem(
                 title = "Unified Navigation System",
                 description = "Type-safe navigation with smooth animations",
@@ -265,7 +265,7 @@ private fun AchievementItem(
             },
             modifier = Modifier.size(20.dp)
         )
-        
+
         Column(
             modifier = Modifier.weight(1f)
         ) {
@@ -298,9 +298,9 @@ private fun MigrationProgressCard() {
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Divider()
-            
+
             ProgressCategory(
                 title = "Main Application",
                 completed = 3,
@@ -312,7 +312,7 @@ private fun MigrationProgressCard() {
                     "SimplifiedMainActivity" to false
                 )
             )
-            
+
             ProgressCategory(
                 title = "GSR Sensor Activities",
                 completed = 4,
@@ -327,7 +327,7 @@ private fun MigrationProgressCard() {
                     "GSRVideoPlayerActivity" to false
                 )
             )
-            
+
             ProgressCategory(
                 title = "Camera Integration",
                 completed = 2,
@@ -370,12 +370,12 @@ private fun ProgressCategory(
                 color = MaterialTheme.colorScheme.primary
             )
         }
-        
+
         LinearProgressIndicator(
             progress = { completed.toFloat() / total.toFloat() },
             modifier = Modifier.fillMaxWidth(),
         )
-        
+
         items.forEach { (itemName, isCompleted) ->
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -417,37 +417,37 @@ private fun InteractiveDemosCard(
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Divider()
-            
+
             DemoItem(
                 title = "GSR Sensor Modernization",
                 description = "Compare traditional vs Compose GSR activities",
                 icon = Icons.Default.Sensors,
                 onClick = onNavigateToGSRDemo
             )
-            
+
             DemoItem(
                 title = "Camera Integration",
                 description = "Modern dual-mode camera interface",
                 icon = Icons.Default.CameraAlt,
                 onClick = onNavigateToCameraDemo
             )
-            
+
             DemoItem(
                 title = "Thermal Imaging Suite",
                 description = "Professional thermal analysis tools",
                 icon = Icons.Default.Thermostat,
                 onClick = onNavigateToThermalDemo
             )
-            
+
             DemoItem(
                 title = "Component Showcase",
                 description = "Explore all modern UI components",
                 icon = Icons.Default.Widgets,
                 onClick = onNavigateToComponentShowcase
             )
-            
+
             DemoItem(
                 title = "Testing Suite",
                 description = "Comprehensive testing and validation",
@@ -482,7 +482,7 @@ private fun DemoItem(
                 tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.size(32.dp)
             )
-            
+
             Column(
                 modifier = Modifier.weight(1f)
             ) {
@@ -497,7 +497,7 @@ private fun DemoItem(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-            
+
             Icon(
                 Icons.Default.ArrowForward,
                 contentDescription = null,
@@ -522,30 +522,30 @@ private fun NextStepsCard() {
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Divider()
-            
+
             NextStepItem(
                 phase = "Phase 3",
                 title = "Complete Activity Migration",
                 description = "Migrate remaining GSR and camera activities",
                 priority = "High"
             )
-            
+
             NextStepItem(
                 phase = "Phase 4",
                 title = "Navigation Unification",
                 description = "Complete unified navigation implementation",
                 priority = "Medium"
             )
-            
+
             NextStepItem(
                 phase = "Phase 5",
                 title = "Performance Optimization",
                 description = "Optimize Compose performance and memory usage",
                 priority = "Medium"
             )
-            
+
             NextStepItem(
                 phase = "Phase 6",
                 title = "Comprehensive Testing",
@@ -577,7 +577,7 @@ private fun NextStepItem(
         ) {
             Text(phase, style = MaterialTheme.typography.labelSmall)
         }
-        
+
         Column(
             modifier = Modifier.weight(1f)
         ) {
@@ -592,7 +592,7 @@ private fun NextStepItem(
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
-        
+
         Badge(
             containerColor = when (priority) {
                 "High" -> MaterialTheme.colorScheme.errorContainer
@@ -620,9 +620,9 @@ private fun TechnicalMetricsCard() {
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Divider()
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
@@ -632,25 +632,25 @@ private fun TechnicalMetricsCard() {
                     value = "25%",
                     description = "Fewer duplicate implementations"
                 )
-                
+
                 TechnicalMetricItem(
                     label = "Build Stability",
                     value = "100%",
                     description = "Resolved all config conflicts"
                 )
-                
+
                 TechnicalMetricItem(
                     label = "Cross-Module",
                     value = "Unified",
                     description = "Shared infrastructure"
                 )
             }
-            
+
             Divider()
-            
+
             Text(
                 "🎯 Key Benefits: Enhanced maintainability, consistent user experience, " +
-                "improved development efficiency, and future-ready architecture.",
+                        "improved development efficiency, and future-ready architecture.",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )

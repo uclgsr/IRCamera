@@ -53,10 +53,10 @@ class RgbCameraTestComposeActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         permissionManager = PermissionManager(this)
         checkPermissions()
-        
+
         setContent {
             LibUnifiedTheme {
                 RgbCameraTestScreen()
@@ -71,7 +71,7 @@ class RgbCameraTestComposeActivity : ComponentActivity() {
         var isTestRunning by remember { mutableStateOf(false) }
         var cameraCapabilities by remember { mutableStateOf(mapOf<String, Any>()) }
         var recordingStatus by remember { mutableStateOf("Ready") }
-        
+
         // Initialize test cases
         LaunchedEffect(Unit) {
             testResults = listOf(
@@ -106,7 +106,7 @@ class RgbCameraTestComposeActivity : ComponentActivity() {
                     description = "Test RAW image capture capability"
                 )
             )
-            
+
             // Load camera capabilities
             initializeCameraCapabilities()
         }
@@ -160,7 +160,7 @@ class RgbCameraTestComposeActivity : ComponentActivity() {
                                 fontWeight = FontWeight.Medium
                             )
                         }
-                        
+
                         if (cameraCapabilities.isNotEmpty()) {
                             Spacer(modifier = Modifier.height(8.dp))
                             Text(
@@ -198,7 +198,7 @@ class RgbCameraTestComposeActivity : ComponentActivity() {
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Button(
-                        onClick = { 
+                        onClick = {
                             lifecycleScope.launch { runAllCameraTests() }
                         },
                         enabled = !isTestRunning && !isRecording,
@@ -208,9 +208,9 @@ class RgbCameraTestComposeActivity : ComponentActivity() {
                         Spacer(modifier = Modifier.width(4.dp))
                         Text("Run All")
                     }
-                    
+
                     OutlinedButton(
-                        onClick = { 
+                        onClick = {
                             if (isRecording) {
                                 stopRecording()
                             } else {
@@ -248,7 +248,7 @@ class RgbCameraTestComposeActivity : ComponentActivity() {
             Manifest.permission.RECORD_AUDIO,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
         )
-        
+
         permissionLauncher.launch(requiredPermissions)
     }
 
@@ -265,7 +265,7 @@ class RgbCameraTestComposeActivity : ComponentActivity() {
         try {
             // Simulate loading camera capabilities
             delay(1000)
-            
+
             // This would be populated with real camera capabilities
             val capabilities = mapOf(
                 "Max Resolution" to "4K (3840x2160)",
@@ -275,7 +275,7 @@ class RgbCameraTestComposeActivity : ComponentActivity() {
                 "RAW Support" to "DNG Format",
                 "Video Codecs" to "H.264, H.265"
             )
-            
+
             Log.d(TAG, "Camera capabilities loaded: $capabilities")
         } catch (e: Exception) {
             Log.e(TAG, "Failed to load camera capabilities: ${e.message}")
@@ -284,25 +284,25 @@ class RgbCameraTestComposeActivity : ComponentActivity() {
 
     private suspend fun runAllCameraTests() {
         Log.i(TAG, "Starting comprehensive camera tests")
-        
+
         try {
             runPermissionsTest()
             delay(1000)
-            
+
             runCapabilityTest()
             delay(1000)
-            
+
             run4KRecordingTest()
             delay(2000)
-            
+
             runTapFocusTest()
             delay(1000)
-            
+
             runManualControlsTest()
             delay(1000)
-            
+
             runRawCaptureTest()
-            
+
             Log.i(TAG, "All camera tests completed")
         } catch (e: Exception) {
             Log.e(TAG, "Camera tests failed: ${e.message}")

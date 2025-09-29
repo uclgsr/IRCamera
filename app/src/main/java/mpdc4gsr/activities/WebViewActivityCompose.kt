@@ -64,7 +64,7 @@ class WebViewActivityCompose : BaseComposeActivity<WebViewViewModel>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         val url = intent.extras?.getString(ExtraKeyConfig.URL) ?: ""
         viewModels<WebViewViewModel>().value.setUrl(url)
     }
@@ -97,11 +97,11 @@ class WebViewActivityCompose : BaseComposeActivity<WebViewViewModel>() {
                         ComposeWebView(
                             url = url,
                             onLoadStart = { viewModel.setLoading(true) },
-                            onLoadFinish = { 
+                            onLoadFinish = {
                                 viewModel.setLoading(false)
                                 viewModel.setError(false)
                             },
-                            onError = { 
+                            onError = {
                                 viewModel.setLoading(false)
                                 viewModel.setError(true)
                             },

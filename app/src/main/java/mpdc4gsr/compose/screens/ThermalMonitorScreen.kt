@@ -43,7 +43,7 @@ fun ThermalMonitorScreen(
     var minTemp by remember { mutableStateOf(18.9f) }
     var isConnected by remember { mutableStateOf(true) }
     var showAdvancedControls by remember { mutableStateOf(false) }
-    
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -61,7 +61,7 @@ fun ThermalMonitorScreen(
                 onClick = onSettingsClick
             )
         }
-        
+
         // Main content area using ConstraintLayout for precise positioning
         ConstraintLayout(
             modifier = Modifier
@@ -69,7 +69,7 @@ fun ThermalMonitorScreen(
                 .padding(8.dp)
         ) {
             val (preview, overlay, controls, statusPanel) = createRefs()
-            
+
             // Thermal camera preview area
             ThermalCameraPreview(
                 modifier = Modifier
@@ -81,7 +81,7 @@ fun ThermalMonitorScreen(
                         height = Dimension.ratio("4:3") // Match thermal camera aspect ratio
                     }
             )
-            
+
             // Temperature overlay on top of preview
             TemperatureOverlay(
                 currentTemp = currentTemp,
@@ -97,7 +97,7 @@ fun ThermalMonitorScreen(
                         height = Dimension.fillToConstraints
                     }
             )
-            
+
             // Status panel for connection and sensor info
             StatusPanel(
                 isConnected = isConnected,
@@ -108,11 +108,11 @@ fun ThermalMonitorScreen(
                         end.linkTo(parent.end)
                     }
             )
-            
+
             // Recording and control buttons
             ControlPanel(
                 isRecording = isRecording,
-                onRecordClick = { 
+                onRecordClick = {
                     isRecording = !isRecording
                     onRecordClick()
                 },
@@ -125,7 +125,7 @@ fun ThermalMonitorScreen(
                     }
             )
         }
-        
+
         // Advanced controls overlay
         if (showAdvancedControls) {
             AdvancedControlsPanel(
@@ -156,7 +156,7 @@ private fun ThermalCameraPreview(
             color = Color.White,
             fontSize = 16.sp
         )
-        
+
         // Sample thermal visualization
         Canvas(
             modifier = Modifier.fillMaxSize()
@@ -202,7 +202,7 @@ private fun TemperatureOverlay(
                 modifier = Modifier.padding(12.dp)
             )
         }
-        
+
         // Max temperature (top-right)
         Surface(
             modifier = Modifier
@@ -229,7 +229,7 @@ private fun TemperatureOverlay(
                 )
             }
         }
-        
+
         // Min temperature (bottom-left)
         Surface(
             modifier = Modifier
@@ -279,13 +279,13 @@ private fun StatusPanel(
             isActive = isConnected,
             color = if (isConnected) Color.Green else Color.Gray
         )
-        
+
         StatusIndicator(
             label = "Recording",
             isActive = false, // Will be connected to actual recording state
             color = Color.Red
         )
-        
+
         StatusIndicator(
             label = "Storage",
             isActive = true,
@@ -348,7 +348,7 @@ private fun ControlPanel(
                 tint = Color.White
             )
         }
-        
+
         // Advanced controls button
         Button(
             onClick = onAdvancedClick,
@@ -391,9 +391,9 @@ private fun AdvancedControlsPanel(
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             // Sample controls - will be replaced with actual thermal camera controls
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -405,7 +405,7 @@ private fun AdvancedControlsPanel(
                     onCheckedChange = { }
                 )
             }
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -416,9 +416,9 @@ private fun AdvancedControlsPanel(
                     onCheckedChange = { }
                 )
             }
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             Button(
                 onClick = onDismiss,
                 modifier = Modifier.align(Alignment.End)

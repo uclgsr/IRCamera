@@ -131,7 +131,8 @@ class DevicePairingActivity : BaseViewModelActivity<DevicePairingViewModel>(),
             try {
                 val resourceId = resources.getIdentifier("scan_results_count", "id", packageName)
                 if (resourceId != 0) {
-                    val scanResultsCount = binding.root.findViewById<android.widget.TextView>(resourceId)
+                    val scanResultsCount =
+                        binding.root.findViewById<android.widget.TextView>(resourceId)
                     scanResultsCount?.text = "${state.discoveredCount} device(s) found"
                 }
             } catch (e: Exception) {
@@ -147,7 +148,8 @@ class DevicePairingActivity : BaseViewModelActivity<DevicePairingViewModel>(),
         try {
             val resourceId = resources.getIdentifier("connection_status", "id", packageName)
             if (resourceId != 0) {
-                val connectionStatus = binding.root.findViewById<android.widget.TextView>(resourceId)
+                val connectionStatus =
+                    binding.root.findViewById<android.widget.TextView>(resourceId)
                 connectionStatus?.let { textView ->
                     when (state) {
                         is DevicePairingViewModel.ConnectionState.Connected -> {
@@ -192,7 +194,11 @@ class DevicePairingActivity : BaseViewModelActivity<DevicePairingViewModel>(),
             }
 
             is DevicePairingViewModel.PairingEvent.ShowConnectionDialog -> {
-                Toast.makeText(this, "Connecting to ${event.controller.name}...", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this,
+                    "Connecting to ${event.controller.name}...",
+                    Toast.LENGTH_SHORT
+                ).show()
                 binding.disconnectButton.isVisible = true
             }
 

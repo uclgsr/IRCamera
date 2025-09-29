@@ -29,7 +29,7 @@ fun TitleBar(
     actions: @Composable RowScope.() -> Unit = {}
 ) {
     val context = LocalContext.current
-    
+
     TopAppBar(
         title = {
             Text(

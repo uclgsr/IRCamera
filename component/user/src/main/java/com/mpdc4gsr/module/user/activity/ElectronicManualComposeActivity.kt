@@ -22,7 +22,7 @@ import com.mpdc4gsr.module.user.viewmodel.ElectronicManualViewModel
 
 /**
  * User Management Module - Electronic Manual Compose Activity
- * 
+ *
  * Electronic Manual/FAQ selection screen.
  * Features:
  * - Device model selection (TS001/TS004)
@@ -41,19 +41,19 @@ class ElectronicManualComposeActivity : BaseComposeActivity<ElectronicManualView
         val title by viewModel.title.collectAsState()
         val options by viewModel.options.collectAsState()
         val productType by viewModel.productType.collectAsState()
-        
+
         // Get product type from intent
         val intentProductType = intent.getIntExtra(Constants.SETTING_TYPE, 0)
-        
+
         // Load options on start
         LaunchedEffect(Unit) {
             viewModel.loadManualOptions(intentProductType)
         }
-        
+
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { 
+                    title = {
                         Text(
                             text = title,
                             fontWeight = FontWeight.Bold
@@ -86,7 +86,7 @@ class ElectronicManualComposeActivity : BaseComposeActivity<ElectronicManualView
             }
         }
     }
-    
+
     private fun handleOptionClick(isTS001: Boolean, isBookMode: Boolean) {
         if (isTS001) {
             if (isBookMode) {
@@ -148,7 +148,7 @@ private fun ManualOptionItem(
                     fontWeight = FontWeight.Medium,
                     color = MaterialTheme.colorScheme.onSurface
                 )
-                
+
                 Text(
                     text = if (isBookMode) "User Manual" else "Frequently Asked Questions",
                     style = MaterialTheme.typography.bodyMedium,
@@ -156,7 +156,7 @@ private fun ManualOptionItem(
                     modifier = Modifier.padding(top = 4.dp)
                 )
             }
-            
+
             Icon(
                 Icons.AutoMirrored.Filled.KeyboardArrowRight,
                 contentDescription = "Select",

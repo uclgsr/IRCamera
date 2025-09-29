@@ -52,9 +52,10 @@ class GSRPlotActivity : BaseBindingActivity<ActivityMultiModalConsolidatedBindin
     }
 
     private fun navigateToMainActivity(pageIndex: Int) {
-        val intent = android.content.Intent(this, mpdc4gsr.activities.MainActivity::class.java).apply {
-            putExtra("page", pageIndex)
-        }
+        val intent =
+            android.content.Intent(this, mpdc4gsr.activities.MainActivity::class.java).apply {
+                putExtra("page", pageIndex)
+            }
         startActivity(intent)
         finish()
     }

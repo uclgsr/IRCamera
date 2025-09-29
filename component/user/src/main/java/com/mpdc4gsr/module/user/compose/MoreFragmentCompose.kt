@@ -21,7 +21,7 @@ import com.mpdc4gsr.libunified.R as RCore
 
 /**
  * Compose equivalent of MoreFragment.kt
- * 
+ *
  * Device settings and configuration screen
  */
 @Composable
@@ -32,12 +32,12 @@ fun MoreFragmentCompose(
 ) {
     val context = LocalContext.current
     val deviceSettings by viewModel.deviceSettings.collectAsState()
-    
+
     // Initialize ViewModel with device type
     LaunchedEffect(isTC007) {
         viewModel.initialize(isTC007)
     }
-    
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -64,7 +64,7 @@ fun MoreFragmentCompose(
                     color = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.padding(bottom = 12.dp)
                 )
-                
+
                 // Save Setting Switch
                 Row(
                     modifier = Modifier
@@ -88,7 +88,7 @@ fun MoreFragmentCompose(
                             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                         )
                     }
-                    
+
                     Switch(
                         checked = deviceSettings.isSaveSettingEnabled,
                         onCheckedChange = { viewModel.updateSaveSetting(it) }
@@ -96,7 +96,7 @@ fun MoreFragmentCompose(
                 }
             }
         }
-        
+
         // Settings Options
         Card(
             modifier = Modifier.fillMaxWidth(),
@@ -117,7 +117,7 @@ fun MoreFragmentCompose(
                         // Model settings navigation
                     }
                 )
-                
+
                 ListItemComponent(
                     leftText = "Correction Settings",
                     leftIcon = Icons.Default.Tune,
@@ -126,7 +126,7 @@ fun MoreFragmentCompose(
                         // Correction settings navigation
                     }
                 )
-                
+
                 ListItemComponent(
                     leftText = "Dual Mode",
                     leftIcon = Icons.Default.Apps,
@@ -135,7 +135,7 @@ fun MoreFragmentCompose(
                         // Dual mode navigation
                     }
                 )
-                
+
                 ListItemComponent(
                     leftText = stringResource(RCore.string.setting_unit),
                     leftIcon = Icons.Default.Speed,
@@ -146,7 +146,7 @@ fun MoreFragmentCompose(
                             .navigation(context)
                     }
                 )
-                
+
                 ListItemComponent(
                     leftText = stringResource(RCore.string.app_version),
                     leftIcon = Icons.Default.Info,
@@ -158,7 +158,7 @@ fun MoreFragmentCompose(
                             .navigation(context)
                     }
                 )
-                
+
                 ListItemComponent(
                     leftText = stringResource(RCore.string.more_device_info),
                     leftIcon = Icons.Default.Devices,
@@ -169,7 +169,7 @@ fun MoreFragmentCompose(
                             .navigation(context)
                     }
                 )
-                
+
                 ListItemComponent(
                     leftText = "Factory Reset",
                     leftIcon = Icons.Default.Refresh,

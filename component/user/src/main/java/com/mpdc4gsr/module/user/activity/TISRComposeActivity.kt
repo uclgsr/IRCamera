@@ -18,7 +18,7 @@ import com.mpdc4gsr.libunified.R as RCore
 
 /**
  * User Management Module - TISR Settings Compose Activity
- * 
+ *
  * TISR (Temperature Image Super Resolution) toggle settings screen.
  * Demonstrates:
  * - Socket communication with device
@@ -35,11 +35,11 @@ class TISRComposeActivity : BaseComposeActivity<TISRViewModel>() {
     @Composable
     override fun Content(viewModel: TISRViewModel) {
         val isTISREnabled by viewModel.isTISREnabled.collectAsState()
-        
+
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { 
+                    title = {
                         Text(
                             text = "TISR",
                             fontWeight = FontWeight.Bold
@@ -79,7 +79,7 @@ class TISRComposeActivity : BaseComposeActivity<TISRViewModel>() {
                             color = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.padding(bottom = 12.dp)
                         )
-                        
+
                         // TISR Switch Item
                         Card(
                             modifier = Modifier.fillMaxWidth(),
@@ -105,16 +105,16 @@ class TISRComposeActivity : BaseComposeActivity<TISRViewModel>() {
                                         color = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
                                 }
-                                
+
                                 Switch(
                                     checked = isTISREnabled,
                                     onCheckedChange = { viewModel.updateTISRState(it) }
                                 )
                             }
                         }
-                        
+
                         Spacer(modifier = Modifier.height(8.dp))
-                        
+
                         // Info Text
                         Text(
                             text = stringResource(RCore.string.ts004_tisr_tips),

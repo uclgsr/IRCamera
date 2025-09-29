@@ -202,7 +202,7 @@ compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-mani
 compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 compose-foundation = { group = "androidx.compose.foundation", name = "foundation" }
 compose-material3 = { group = "androidx.compose.material3", name = "material3" }
-compose-material3-window-size = { group = "androidx.compose.material3", name = "material3-window-size-class" }  
+compose-material3-window-size = { group = "androidx.compose.material3", name = "material3-window-size-class" }
 compose-material-icons-core = { group = "androidx.compose.material", name = "material-icons-core" }
 compose-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended" }
 compose-activity = { group = "androidx.activity", name = "activity-compose", version.ref = "compose-activity" }
@@ -408,7 +408,7 @@ identity-jvm = { group = "com.android.identity", name = "identity-jvm", version.
 # Jetpack Compose bundles
 compose-core = ["compose-ui", "compose-ui-tooling-preview", "compose-foundation", "compose-material3", "compose-activity", "compose-viewmodel", "compose-runtime-livedata"]
 compose-navigation-bundle = ["compose-navigation", "compose-animation"]
-compose-icons = ["compose-material-icons-core", "compose-material-icons-extended"] 
+compose-icons = ["compose-material-icons-core", "compose-material-icons-extended"]
 compose-debug = ["compose-ui-tooling", "compose-ui-test-manifest"]
 compose-test = ["compose-ui-test-junit4"]
 

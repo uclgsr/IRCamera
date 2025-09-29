@@ -37,381 +37,381 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <!-- Title -->
-            <TextView
-                android:id="@+id/title_text"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:padding="8dp"
-                android:text="@{cameraType + @string/camera_test_suffix ?? @string/camera_test_title}"
-                android:textColor="@color/white"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                tools:text="RGB Camera Test Activity" />
+                android:orientation="vertical">
 
-            <!-- Status Card -->
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="#FF2A2A2A"
-                app:cardCornerRadius="8dp">
-
-                <LinearLayout
+                <!-- Title -->
+                <TextView
+                    android:id="@+id/title_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
+                    android:gravity="center"
+                    android:padding="8dp"
+                    android:text="@{cameraType + @string/camera_test_suffix ?? @string/camera_test_title}"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    tools:text="RGB Camera Test Activity" />
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
-                        android:text="Camera Status"
-                        android:textColor="@color/white"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/status_text"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="#FF1A1A1A"
-                        android:padding="8dp"
-                        android:text="Status: Initializing..."
-                        android:textColor="@color/white"
-                        android:textSize="14sp" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <!-- Camera Preview Card -->
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="#FF2A2A2A"
-                app:cardCornerRadius="8dp">
-
-                <LinearLayout
+                <!-- Status Card -->
+                <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
+                    android:layout_marginBottom="16dp"
+                    app:cardBackgroundColor="#FF2A2A2A"
+                    app:cardCornerRadius="8dp">
 
-                    <TextView
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
-                        android:text="Camera Preview"
-                        android:textColor="@color/white"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
+                        android:orientation="vertical"
+                        android:padding="16dp">
 
-                    <!-- Camera Preview Container -->
-                    <FrameLayout
-                        android:id="@+id/preview_container"
-                        android:layout_width="match_parent"
-                        android:layout_height="200dp"
-                        android:background="@android:color/black">
-
-                        <!-- Placeholder for dynamic PreviewView insertion -->
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:text="Camera Preview Loading..."
+                            android:layout_marginBottom="8dp"
+                            android:text="Camera Status"
+                            android:textColor="@color/white"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/status_text"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="#FF1A1A1A"
+                            android:padding="8dp"
+                            android:text="Status: Initializing..."
                             android:textColor="@color/white"
                             android:textSize="14sp" />
-                    </FrameLayout>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
 
-                    <!-- Recording Control -->
-                    <Button
-                        android:id="@+id/record_button"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:backgroundTint="@{isRecording ? @color/red : @color/fab_gsr_background}"
-                        android:text="@{isRecording ? @string/stop_recording : @string/start_recording}"
-                        android:textColor="@color/white"
-                        android:textSize="16sp"
-                        tools:text="Start Recording" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <!-- Device Capabilities Card -->
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="#FF2A2A2A"
-                app:cardCornerRadius="8dp">
-
-                <LinearLayout
+                <!-- Camera Preview Card -->
+                <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
+                    android:layout_marginBottom="16dp"
+                    app:cardBackgroundColor="#FF2A2A2A"
+                    app:cardCornerRadius="8dp">
 
-                    <TextView
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
-                        android:text="Device Capabilities"
-                        android:textColor="@color/white"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
+                        android:orientation="vertical"
+                        android:padding="16dp">
 
-                    <TextView
-                        android:id="@+id/capabilities_text"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="#FF1A1A1A"
-                        android:fontFamily="monospace"
-                        android:padding="8dp"
-                        android:text="Loading capabilities..."
-                        android:textColor="@color/white"
-                        android:textSize="12sp" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:text="Camera Preview"
+                            android:textColor="@color/white"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
 
-            <!-- Manual Controls Card -->
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:visibility="@{hasManualControls ? View.VISIBLE : View.GONE}"
-                app:cardBackgroundColor="#FF2A2A2A"
-                app:cardCornerRadius="8dp">
+                        <!-- Camera Preview Container -->
+                        <FrameLayout
+                            android:id="@+id/preview_container"
+                            android:layout_width="match_parent"
+                            android:layout_height="200dp"
+                            android:background="@android:color/black">
 
-                <LinearLayout
+                            <!-- Placeholder for dynamic PreviewView insertion -->
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="Camera Preview Loading..."
+                                android:textColor="@color/white"
+                                android:textSize="14sp" />
+                        </FrameLayout>
+
+                        <!-- Recording Control -->
+                        <Button
+                            android:id="@+id/record_button"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:backgroundTint="@{isRecording ? @color/red : @color/fab_gsr_background}"
+                            android:text="@{isRecording ? @string/stop_recording : @string/start_recording}"
+                            android:textColor="@color/white"
+                            android:textSize="16sp"
+                            tools:text="Start Recording" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!-- Device Capabilities Card -->
+                <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
+                    android:layout_marginBottom="16dp"
+                    app:cardBackgroundColor="#FF2A2A2A"
+                    app:cardCornerRadius="8dp">
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
-                        android:text="Manual Camera Controls"
-                        android:textColor="@color/white"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-
-                    <!-- Exposure Controls -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
+                        android:orientation="vertical"
+                        android:padding="16dp">
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginEnd="8dp"
-                            android:text="Manual Exposure:"
-                            android:textColor="@color/white" />
-
-                        <com.google.android.material.switchmaterial.SwitchMaterial
-                            android:id="@+id/manual_exposure_switch"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
-                        android:orientation="vertical">
+                            android:layout_marginBottom="8dp"
+                            android:text="Device Capabilities"
+                            android:textColor="@color/white"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
 
                         <TextView
-                            android:id="@+id/exposure_value_text"
+                            android:id="@+id/capabilities_text"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Exposure: 0.0 EV"
-                            android:textColor="@color/white" />
-
-                        <SeekBar
-                            android:id="@+id/exposure_compensation_seekbar"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:max="200"
-                            android:progress="100" />
-                    </LinearLayout>
-
-                    <!-- Focus Controls -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="8dp"
-                            android:text="Manual Focus:"
-                            android:textColor="@color/white" />
-
-                        <com.google.android.material.switchmaterial.SwitchMaterial
-                            android:id="@+id/manual_focus_switch"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/focus_distance_text"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Focus: Infinity"
-                            android:textColor="@color/white" />
-
-                        <SeekBar
-                            android:id="@+id/focus_distance_seekbar"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:enabled="false"
-                            android:max="100"
-                            android:progress="0" />
-                    </LinearLayout>
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <!-- Feature Tests Card -->
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="#FF2A2A2A"
-                app:cardCornerRadius="8dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
-                        android:text="Feature Tests"
-                        android:textColor="@color/white"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
-                        android:orientation="horizontal">
-
-                        <Button
-                            android:id="@+id/test_4k_button"
-                            style="@style/Widget.Material3.Button.TextButton"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="4dp"
-                            android:layout_weight="1"
-                            android:text="Test 4K"
-                            android:textColor="@color/primary_color"
-                            android:textSize="12sp" />
-
-                        <Button
-                            android:id="@+id/test_raw_button"
-                            style="@style/Widget.Material3.Button.TextButton"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="4dp"
-                            android:layout_weight="1"
-                            android:text="Test RAW"
-                            android:textColor="@color/primary_color"
-                            android:textSize="12sp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <Button
-                            android:id="@+id/test_manual_controls_button"
-                            style="@style/Widget.Material3.Button.TextButton"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="4dp"
-                            android:layout_weight="1"
-                            android:text="Manual Controls"
-                            android:textColor="@color/primary_color"
-                            android:textSize="12sp" />
-
-                        <Button
-                            android:id="@+id/test_tap_to_focus_button"
-                            style="@style/Widget.Material3.Button.TextButton"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="4dp"
-                            android:layout_weight="1"
-                            android:text="Tap-to-Focus"
-                            android:textColor="@color/primary_color"
-                            android:textSize="12sp" />
-                    </LinearLayout>
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <!-- Test Results Card -->
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardBackgroundColor="#FF2A2A2A"
-                app:cardCornerRadius="8dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
-                        android:text="Test Results"
-                        android:textColor="@color/white"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-
-                    <ScrollView
-                        android:layout_width="match_parent"
-                        android:layout_height="200dp"
-                        android:background="#FF1A1A1A">
-
-                        <TextView
-                            android:id="@+id/test_results_text"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:background="#FF1A1A1A"
                             android:fontFamily="monospace"
                             android:padding="8dp"
-                            android:text="Test results will appear here...\n"
+                            android:text="Loading capabilities..."
                             android:textColor="@color/white"
                             android:textSize="12sp" />
-                    </ScrollView>
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-        </LinearLayout>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!-- Manual Controls Card -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:visibility="@{hasManualControls ? View.VISIBLE : View.GONE}"
+                    app:cardBackgroundColor="#FF2A2A2A"
+                    app:cardCornerRadius="8dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="16dp"
+                            android:text="Manual Camera Controls"
+                            android:textColor="@color/white"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <!-- Exposure Controls -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="16dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="8dp"
+                                android:text="Manual Exposure:"
+                                android:textColor="@color/white" />
+
+                            <com.google.android.material.switchmaterial.SwitchMaterial
+                                android:id="@+id/manual_exposure_switch"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="16dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/exposure_value_text"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Exposure: 0.0 EV"
+                                android:textColor="@color/white" />
+
+                            <SeekBar
+                                android:id="@+id/exposure_compensation_seekbar"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:max="200"
+                                android:progress="100" />
+                        </LinearLayout>
+
+                        <!-- Focus Controls -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="16dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="8dp"
+                                android:text="Manual Focus:"
+                                android:textColor="@color/white" />
+
+                            <com.google.android.material.switchmaterial.SwitchMaterial
+                                android:id="@+id/manual_focus_switch"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/focus_distance_text"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Focus: Infinity"
+                                android:textColor="@color/white" />
+
+                            <SeekBar
+                                android:id="@+id/focus_distance_seekbar"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:enabled="false"
+                                android:max="100"
+                                android:progress="0" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!-- Feature Tests Card -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:cardBackgroundColor="#FF2A2A2A"
+                    app:cardCornerRadius="8dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="16dp"
+                            android:text="Feature Tests"
+                            android:textColor="@color/white"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:orientation="horizontal">
+
+                            <Button
+                                android:id="@+id/test_4k_button"
+                                style="@style/Widget.Material3.Button.TextButton"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="4dp"
+                                android:layout_weight="1"
+                                android:text="Test 4K"
+                                android:textColor="@color/primary_color"
+                                android:textSize="12sp" />
+
+                            <Button
+                                android:id="@+id/test_raw_button"
+                                style="@style/Widget.Material3.Button.TextButton"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="4dp"
+                                android:layout_weight="1"
+                                android:text="Test RAW"
+                                android:textColor="@color/primary_color"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <Button
+                                android:id="@+id/test_manual_controls_button"
+                                style="@style/Widget.Material3.Button.TextButton"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="4dp"
+                                android:layout_weight="1"
+                                android:text="Manual Controls"
+                                android:textColor="@color/primary_color"
+                                android:textSize="12sp" />
+
+                            <Button
+                                android:id="@+id/test_tap_to_focus_button"
+                                style="@style/Widget.Material3.Button.TextButton"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="4dp"
+                                android:layout_weight="1"
+                                android:text="Tap-to-Focus"
+                                android:textColor="@color/primary_color"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!-- Test Results Card -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardBackgroundColor="#FF2A2A2A"
+                    app:cardCornerRadius="8dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:text="Test Results"
+                            android:textColor="@color/white"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <ScrollView
+                            android:layout_width="match_parent"
+                            android:layout_height="200dp"
+                            android:background="#FF1A1A1A">
+
+                            <TextView
+                                android:id="@+id/test_results_text"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="monospace"
+                                android:padding="8dp"
+                                android:text="Test results will appear here...\n"
+                                android:textColor="@color/white"
+                                android:textSize="12sp" />
+                        </ScrollView>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+            </LinearLayout>
         </ScrollView>
 
         <!-- Bottom Navigation following original IRCamera architecture -->
@@ -420,32 +420,32 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="#16131e"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="375:56"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent">
+            app:layout_constraintStart_toStartOf="parent">
 
             <ImageView
                 android:id="@+id/iv_bottom_main_bg"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
+                android:contentDescription="@null"
                 android:scaleType="fitXY"
                 android:src="@drawable/ic_main_bg_not_select"
-                android:contentDescription="@null"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintDimensionRatio="1125:255"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+                app:layout_constraintStart_toStartOf="parent" />
 
             <View
                 android:id="@+id/view_main_center"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                app:layout_constraintWidth_percent="0.28"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent" />
+                app:layout_constraintWidth_percent="0.28" />
 
             <!-- Gallery Tab -->
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -454,41 +454,41 @@
                 android:layout_height="0dp"
                 android:clickable="true"
                 android:focusable="true"
-                app:layout_constraintWidth_percent="0.28"
-                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/view_main_center">
-                
+                app:layout_constraintEnd_toStartOf="@id/view_main_center"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintWidth_percent="0.28">
+
                 <ImageView
                     android:id="@+id/iv_nav_gallery"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:src="@drawable/selector_gallery"
                     android:contentDescription="@string/tc_local_album"
-                    app:layout_constraintWidth_percent="0.17"
+                    android:src="@drawable/selector_gallery"
+                    app:layout_constraintBottom_toTopOf="@+id/tv_nav_gallery"
                     app:layout_constraintDimensionRatio="1:1"
-                    app:layout_constraintVertical_chainStyle="packed"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toTopOf="@+id/tv_nav_gallery" />
-                
+                    app:layout_constraintVertical_chainStyle="packed"
+                    app:layout_constraintWidth_percent="0.17" />
+
                 <TextView
                     android:id="@+id/tv_nav_gallery"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
                     android:paddingStart="4dp"
                     android:paddingEnd="4dp"
-                    android:maxLines="1"
-                    android:ellipsize="end"
                     android:text="@string/tc_local_album"
-                    android:textSize="@dimen/app_font_11"
                     android:textColor="@color/tab_text"
-                    app:layout_constraintStart_toStartOf="parent"
+                    android:textSize="@dimen/app_font_11"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/iv_nav_gallery"
-                    app:layout_constraintBottom_toBottomOf="parent" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/iv_nav_gallery" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <!-- Mine Tab -->
@@ -498,41 +498,41 @@
                 android:layout_height="0dp"
                 android:clickable="true"
                 android:focusable="true"
-                app:layout_constraintWidth_percent="0.28"
-                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@id/view_main_center">
-                
+                app:layout_constraintStart_toEndOf="@id/view_main_center"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintWidth_percent="0.28">
+
                 <ImageView
                     android:id="@+id/iv_nav_mine"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:src="@drawable/selector_mine"
                     android:contentDescription="@string/main_mine"
-                    app:layout_constraintWidth_percent="0.17"
+                    android:src="@drawable/selector_mine"
+                    app:layout_constraintBottom_toTopOf="@+id/tv_nav_mine"
                     app:layout_constraintDimensionRatio="1:1"
-                    app:layout_constraintVertical_chainStyle="packed"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toTopOf="@+id/tv_nav_mine" />
-                
+                    app:layout_constraintVertical_chainStyle="packed"
+                    app:layout_constraintWidth_percent="0.17" />
+
                 <TextView
                     android:id="@+id/tv_nav_mine"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
                     android:paddingStart="4dp"
                     android:paddingEnd="4dp"
-                    android:maxLines="1"
-                    android:ellipsize="end"
                     android:text="@string/main_mine"
-                    android:textSize="@dimen/app_font_11"
                     android:textColor="@color/tab_text"
-                    app:layout_constraintStart_toStartOf="parent"
+                    android:textSize="@dimen/app_font_11"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/iv_nav_mine"
-                    app:layout_constraintBottom_toBottomOf="parent" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/iv_nav_mine" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 

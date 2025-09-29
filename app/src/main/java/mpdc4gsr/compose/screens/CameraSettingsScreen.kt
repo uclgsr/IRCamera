@@ -33,7 +33,7 @@ fun CameraSettingsScreen(
     var autoExposure by remember { mutableStateOf(true) }
     var stabilization by remember { mutableStateOf(false) }
     var gridLines by remember { mutableStateOf(true) }
-    
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -44,7 +44,7 @@ fun CameraSettingsScreen(
             showBackButton = true,
             onBackClick = onBackClick
         )
-        
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -71,7 +71,7 @@ fun CameraSettingsScreen(
                     unit = "fps"
                 )
             }
-            
+
             // Camera Features
             SettingsCard(
                 title = "Camera Features",
@@ -96,7 +96,7 @@ fun CameraSettingsScreen(
                     onCheckedChange = { stabilization = it }
                 )
             }
-            
+
             // Interface Options
             SettingsCard(
                 title = "Interface",

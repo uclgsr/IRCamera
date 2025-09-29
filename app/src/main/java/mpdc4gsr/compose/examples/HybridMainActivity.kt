@@ -20,7 +20,7 @@ import mpdc4gsr.viewmodel.ConnectionState
  * - Uses Compose for some UI components (status cards, controls)
  * - Retains existing Views for complex components (thermal camera surface)
  * - Maintains full backward compatibility
- * 
+ *
  * This can serve as a pattern for migrating other Activities
  */
 class HybridMainActivity : BaseComposeActivity<MainActivityViewModel>() {
@@ -37,7 +37,7 @@ class HybridMainActivity : BaseComposeActivity<MainActivityViewModel>() {
         val isRecording by viewModel.isRecording.observeAsState(false)
         val thermalData by viewModel.thermalData.observeAsState()
         val connectionStates by viewModel.connectionStates.observeAsState()
-        
+
         Scaffold(
             topBar = {
                 TopAppBar(
@@ -60,7 +60,7 @@ class HybridMainActivity : BaseComposeActivity<MainActivityViewModel>() {
                         bleConnectionState = states.bleConnection
                     )
                 }
-                
+
                 thermalData?.let { data ->
                     ThermalVisualizationCard(
                         centerTemp = data.centerTemp,
@@ -73,7 +73,7 @@ class HybridMainActivity : BaseComposeActivity<MainActivityViewModel>() {
                         }
                     )
                 }
-                
+
                 // Embed existing thermal camera surface view
                 Card(
                     modifier = Modifier
@@ -93,7 +93,7 @@ class HybridMainActivity : BaseComposeActivity<MainActivityViewModel>() {
                         // This can handle state changes from the ViewModel
                     }
                 }
-                
+
                 // Compose-based recording controls
                 RecordingControls(
                     isRecording = isRecording,
@@ -133,14 +133,14 @@ class HybridMainActivity : BaseComposeActivity<MainActivityViewModel>() {
                         Text("Start Recording")
                     }
                 }
-                
+
                 OutlinedButton(onClick = { /* Open settings */ }) {
                     Text("Settings")
                 }
             }
         }
     }
-    
+
     // Placeholder for creating thermal camera surface view
     // This would use existing thermal camera implementation
     private fun createThermalCameraSurfaceView(context: android.content.Context): android.view.View {

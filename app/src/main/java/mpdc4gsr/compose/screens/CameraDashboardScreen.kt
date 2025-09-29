@@ -15,7 +15,7 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 
 /**
  * Camera Dashboard Screen - Modern Compose Implementation
- * 
+ *
  * Centralizes camera functionality with modern UI:
  * - RGB camera controls and preview
  * - Dual-mode camera integration
@@ -34,7 +34,7 @@ fun CameraDashboardScreen(
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { 
+                    title = {
                         Text(
                             "Camera Dashboard",
                             fontWeight = FontWeight.Bold
@@ -75,18 +75,18 @@ private fun CameraDashboardContent(
     ) {
         // Camera Status Card
         CameraStatusCard()
-        
+
         // Camera Modes Card
         CameraModesCard(
             onNavigateToDualMode = onNavigateToDualMode
         )
-        
+
         // Recording Controls Card
         RecordingControlsCard()
-        
+
         // Camera Settings Card
         CameraSettingsCard()
-        
+
         // Preview and Gallery Card
         PreviewGalleryCard()
     }
@@ -117,14 +117,14 @@ private fun CameraStatusCard() {
                     fontWeight = FontWeight.Bold
                 )
             }
-            
+
             Divider()
-            
+
             // Camera availability indicators
             CameraStatusRow("Front Camera", true)
             CameraStatusRow("Back Camera", true)
             CameraStatusRow("External Camera", false)
-            
+
             // Current camera info
             CameraInfoRow("Active Camera", "Back Camera")
             CameraInfoRow("Resolution", "1920x1080")
@@ -148,7 +148,7 @@ private fun CameraStatusRow(
             text = cameraName,
             style = MaterialTheme.typography.bodyMedium
         )
-        
+
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(4.dp)
@@ -208,9 +208,9 @@ private fun CameraModesCard(
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Divider()
-            
+
             // Single Camera Mode
             CameraModeItem(
                 title = "Single Camera Mode",
@@ -219,7 +219,7 @@ private fun CameraModesCard(
                 isActive = false,
                 onClick = { /* Navigate to single camera */ }
             )
-            
+
             // Dual Camera Mode
             CameraModeItem(
                 title = "Dual Camera Mode",
@@ -228,7 +228,7 @@ private fun CameraModesCard(
                 isActive = true,
                 onClick = onNavigateToDualMode
             )
-            
+
             // Time-lapse Mode
             CameraModeItem(
                 title = "Time-lapse Mode",
@@ -270,7 +270,7 @@ private fun CameraModeItem(
                 contentDescription = null,
                 tint = if (isActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
             )
-            
+
             Column(
                 modifier = Modifier.weight(1f)
             ) {
@@ -285,7 +285,7 @@ private fun CameraModeItem(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-            
+
             if (isActive) {
                 Badge {
                     Text("Active")
@@ -298,7 +298,7 @@ private fun CameraModeItem(
 @Composable
 private fun RecordingControlsCard() {
     var isRecording by remember { mutableStateOf(false) }
-    
+
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
@@ -312,9 +312,9 @@ private fun RecordingControlsCard() {
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Divider()
-            
+
             // Recording status
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -325,7 +325,7 @@ private fun RecordingControlsCard() {
                     "Recording Status",
                     style = MaterialTheme.typography.bodyMedium
                 )
-                
+
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(4.dp)
@@ -343,7 +343,7 @@ private fun RecordingControlsCard() {
                     )
                 }
             }
-            
+
             // Control buttons
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -371,7 +371,7 @@ private fun RecordingControlsCard() {
                         Text("Record")
                     }
                 }
-                
+
                 OutlinedButton(
                     onClick = { /* Take photo */ },
                     modifier = Modifier.weight(1f)
@@ -400,23 +400,23 @@ private fun CameraSettingsCard() {
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Divider()
-            
+
             // Flash setting
             SettingRow(
                 title = "Flash",
                 value = "Auto",
                 icon = Icons.Default.FlashOn
             )
-            
+
             // Quality setting
             SettingRow(
                 title = "Video Quality",
                 value = "1080p",
                 icon = Icons.Default.HighQuality
             )
-            
+
             // Storage location
             SettingRow(
                 title = "Storage",
@@ -443,13 +443,13 @@ private fun SettingRow(
             contentDescription = null,
             tint = MaterialTheme.colorScheme.primary
         )
-        
+
         Text(
             title,
             style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier.weight(1f)
         )
-        
+
         Text(
             value,
             style = MaterialTheme.typography.bodyMedium,
@@ -474,9 +474,9 @@ private fun PreviewGalleryCard() {
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Divider()
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -489,7 +489,7 @@ private fun PreviewGalleryCard() {
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Preview")
                 }
-                
+
                 OutlinedButton(
                     onClick = { /* Open gallery */ },
                     modifier = Modifier.weight(1f)

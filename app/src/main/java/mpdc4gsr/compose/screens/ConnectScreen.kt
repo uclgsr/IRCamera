@@ -27,7 +27,7 @@ fun ConnectScreen(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-    
+
     // Sample device types - will be replaced with actual device data
     val deviceTypes = remember {
         listOf(
@@ -35,7 +35,7 @@ fun ConnectScreen(
             DeviceType("TC007", "TOPDON TC007 Thermal Camera", false)
         )
     }
-    
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -47,7 +47,7 @@ fun ConnectScreen(
             showBackButton = true,
             onBackClick = onBackClick
         )
-        
+
         // Tips text with matching margins and styling
         Text(
             text = "Select your thermal camera device to connect", // Match @string/tc_connect_tips 
@@ -60,7 +60,7 @@ fun ConnectScreen(
                     top = 30.dp // Match layout_marginTop
                 )
         )
-        
+
         // Device list replacing RecyclerView
         LazyColumn(
             modifier = Modifier
@@ -119,7 +119,7 @@ private fun DeviceItem(
                     modifier = Modifier.padding(top = 4.dp)
                 )
             }
-            
+
             // Connection status indicator
             Surface(
                 modifier = Modifier.size(12.dp),

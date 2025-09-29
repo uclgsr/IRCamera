@@ -31,7 +31,7 @@ import mpdc4gsr.sensors.gsr.MultiModalRecordingActivity
 
 /**
  * Device Pairing Activity - Compose Implementation
- * 
+ *
  * Modern Compose implementation of network device pairing functionality:
  * - Uses existing DevicePairingViewModel for business logic
  * - Maintains compatibility with existing navigation patterns
@@ -49,7 +49,7 @@ class DevicePairingActivityCompose : BaseComposeActivity<DevicePairingViewModel>
     }
 
     override fun createViewModel(): DevicePairingViewModel {
-        return viewModels<DevicePairingViewModel>().value.also { 
+        return viewModels<DevicePairingViewModel>().value.also {
             it.initialize(this)
         }
     }
@@ -58,7 +58,7 @@ class DevicePairingActivityCompose : BaseComposeActivity<DevicePairingViewModel>
     @Composable
     override fun Content(viewModel: DevicePairingViewModel) {
         val context = LocalContext.current
-        
+
         // Collect state
         val discoveredControllers by viewModel.discoveredControllers.collectAsState()
         val connectedController by viewModel.connectedController.collectAsState()
@@ -66,7 +66,7 @@ class DevicePairingActivityCompose : BaseComposeActivity<DevicePairingViewModel>
         val scanState by viewModel.scanState.collectAsState()
         val statusMessage by viewModel.statusMessage.collectAsState()
         val pairingScreenState by viewModel.pairingScreenState.collectAsState()
-        
+
         // Handle events
         LaunchedEffect(viewModel) {
             viewModel.events.collect { event ->
@@ -74,15 +74,23 @@ class DevicePairingActivityCompose : BaseComposeActivity<DevicePairingViewModel>
                     is DevicePairingViewModel.PairingEvent.ShowError -> {
                         Toast.makeText(context, event.message, Toast.LENGTH_LONG).show()
                     }
+
                     is DevicePairingViewModel.PairingEvent.ShowSuccess -> {
                         Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
                     }
+
                     is DevicePairingViewModel.PairingEvent.NavigateToSession -> {
                         MultiModalRecordingActivity.startRecording(context, event.sessionInfo)
                     }
+
                     is DevicePairingViewModel.PairingEvent.ShowConnectionDialog -> {
-                        Toast.makeText(context, "Connecting to ${event.controller.name}...", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            context,
+                            "Connecting to ${event.controller.name}...",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
+
                     is DevicePairingViewModel.PairingEvent.NavigateBack -> {
                         finish()
                     }
@@ -94,7 +102,7 @@ class DevicePairingActivityCompose : BaseComposeActivity<DevicePairingViewModel>
             Scaffold(
                 topBar = {
                     TopAppBar(
-                        title = { 
+                        title = {
                             Text(
                                 "Device Pairing",
                                 fontWeight = FontWeight.Bold
@@ -106,7 +114,7 @@ class DevicePairingActivityCompose : BaseComposeActivity<DevicePairingViewModel>
                             }
                         },
                         actions = {
-                            IconButton(onClick = { 
+                            IconButton(onClick = {
                                 if (scanState == DevicePairingViewModel.ScanState.SCANNING) {
                                     viewModel.stopControllerScan()
                                 } else {
@@ -114,9 +122,9 @@ class DevicePairingActivityCompose : BaseComposeActivity<DevicePairingViewModel>
                                 }
                             }) {
                                 Icon(
-                                    if (scanState == DevicePairingViewModel.ScanState.SCANNING) 
-                                        Icons.Default.Stop 
-                                    else 
+                                    if (scanState == DevicePairingViewModel.ScanState.SCANNING)
+                                        Icons.Default.Stop
+                                    else
                                         Icons.Default.Refresh,
                                     contentDescription = "Scan"
                                 )
@@ -139,7 +147,7 @@ class DevicePairingActivityCompose : BaseComposeActivity<DevicePairingViewModel>
                         statusMessage = statusMessage,
                         onDisconnect = { viewModel.disconnectFromController() }
                     )
-                    
+
                     // Scan Controls Card
                     ScanControlsCard(
                         scanState = scanState,
@@ -147,7 +155,7 @@ class DevicePairingActivityCompose : BaseComposeActivity<DevicePairingViewModel>
                         onStartScan = { viewModel.startControllerScan() },
                         onStopScan = { viewModel.stopControllerScan() }
                     )
-                    
+
                     // Discovered Devices List
                     DiscoveredDevicesCard(
                         controllers = discoveredControllers,
@@ -172,10 +180,12 @@ class DevicePairingActivityCompose : BaseComposeActivity<DevicePairingViewModel>
             shape = RoundedCornerShape(12.dp),
             colors = CardDefaults.cardColors(
                 containerColor = when (connectionState) {
-                    is DevicePairingViewModel.ConnectionState.Connected -> 
+                    is DevicePairingViewModel.ConnectionState.Connected ->
                         MaterialTheme.colorScheme.primaryContainer
-                    is DevicePairingViewModel.ConnectionState.Failed -> 
+
+                    is DevicePairingViewModel.ConnectionState.Failed ->
                         MaterialTheme.colorScheme.errorContainer
+
                     else -> MaterialTheme.colorScheme.surfaceVariant
                 }
             )
@@ -194,10 +204,10 @@ class DevicePairingActivityCompose : BaseComposeActivity<DevicePairingViewModel>
                         style = MaterialTheme.typography.headlineSmall,
                         fontWeight = FontWeight.Bold
                     )
-                    
+
                     ConnectionStatusIndicator(connectionState)
                 }
-                
+
                 when (connectionState) {
                     is DevicePairingViewModel.ConnectionState.Connected -> {
                         connectedController?.let { controller ->
@@ -214,7 +224,7 @@ class DevicePairingActivityCompose : BaseComposeActivity<DevicePairingViewModel>
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
-                                
+
                                 Button(
                                     onClick = onDisconnect,
                                     colors = ButtonDefaults.buttonColors(
@@ -228,6 +238,7 @@ class DevicePairingActivityCompose : BaseComposeActivity<DevicePairingViewModel>
                             }
                         }
                     }
+
                     is DevicePairingViewModel.ConnectionState.Connecting -> {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
@@ -240,6 +251,7 @@ class DevicePairingActivityCompose : BaseComposeActivity<DevicePairingViewModel>
                             Text("Connecting...")
                         }
                     }
+
                     is DevicePairingViewModel.ConnectionState.Failed -> {
                         Text(
                             text = "Connection failed: ${connectionState.message}",
@@ -247,6 +259,7 @@ class DevicePairingActivityCompose : BaseComposeActivity<DevicePairingViewModel>
                             color = MaterialTheme.colorScheme.error
                         )
                     }
+
                     else -> {
                         Text(
                             text = "Not connected",
@@ -255,7 +268,7 @@ class DevicePairingActivityCompose : BaseComposeActivity<DevicePairingViewModel>
                         )
                     }
                 }
-                
+
                 if (statusMessage.isNotEmpty()) {
                     Text(
                         text = statusMessage,
@@ -270,16 +283,19 @@ class DevicePairingActivityCompose : BaseComposeActivity<DevicePairingViewModel>
     @Composable
     private fun ConnectionStatusIndicator(connectionState: DevicePairingViewModel.ConnectionState) {
         val (color, icon) = when (connectionState) {
-            is DevicePairingViewModel.ConnectionState.Connected -> 
+            is DevicePairingViewModel.ConnectionState.Connected ->
                 Pair(MaterialTheme.colorScheme.primary, Icons.Default.CheckCircle)
-            is DevicePairingViewModel.ConnectionState.Connecting -> 
+
+            is DevicePairingViewModel.ConnectionState.Connecting ->
                 Pair(MaterialTheme.colorScheme.tertiary, Icons.Default.Refresh)
-            is DevicePairingViewModel.ConnectionState.Failed -> 
+
+            is DevicePairingViewModel.ConnectionState.Failed ->
                 Pair(MaterialTheme.colorScheme.error, Icons.Default.Error)
-            else -> 
+
+            else ->
                 Pair(MaterialTheme.colorScheme.outline, Icons.Default.Circle)
         }
-        
+
         Icon(
             imageVector = icon,
             contentDescription = null,
@@ -308,7 +324,7 @@ class DevicePairingActivityCompose : BaseComposeActivity<DevicePairingViewModel>
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold
                 )
-                
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -329,7 +345,7 @@ class DevicePairingActivityCompose : BaseComposeActivity<DevicePairingViewModel>
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
-                    
+
                     if (scanState == DevicePairingViewModel.ScanState.SCANNING) {
                         Button(
                             onClick = onStopScan,
@@ -349,7 +365,7 @@ class DevicePairingActivityCompose : BaseComposeActivity<DevicePairingViewModel>
                         }
                     }
                 }
-                
+
                 if (scanState == DevicePairingViewModel.ScanState.SCANNING) {
                     LinearProgressIndicator(
                         modifier = Modifier.fillMaxWidth()
@@ -377,7 +393,7 @@ class DevicePairingActivityCompose : BaseComposeActivity<DevicePairingViewModel>
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold
                 )
-                
+
                 if (controllers.isEmpty()) {
                     Box(
                         modifier = Modifier
@@ -450,7 +466,7 @@ class DevicePairingActivityCompose : BaseComposeActivity<DevicePairingViewModel>
                     modifier = Modifier.size(40.dp),
                     tint = MaterialTheme.colorScheme.primary
                 )
-                
+
                 Column(
                     modifier = Modifier.weight(1f),
                     verticalArrangement = Arrangement.spacedBy(4.dp)
@@ -466,7 +482,7 @@ class DevicePairingActivityCompose : BaseComposeActivity<DevicePairingViewModel>
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
-                
+
                 Icon(
                     Icons.Default.KeyboardArrowRight,
                     contentDescription = null,
@@ -503,8 +519,8 @@ class DevicePairingActivityCompose : BaseComposeActivity<DevicePairingViewModel>
     override fun onTimeSynchronized(offsetNanoseconds: Long) {
         runOnUiThread {
             Toast.makeText(
-                this, 
-                "Time synchronized (offset: ${offsetNanoseconds / 1_000_000}ms)", 
+                this,
+                "Time synchronized (offset: ${offsetNanoseconds / 1_000_000}ms)",
                 Toast.LENGTH_SHORT
             ).show()
         }

@@ -1,6 +1,7 @@
 # Documentation Update Summary - Comprehensive Audit and Corrections
 
-This document summarizes the major updates made to all IRCamera documentation to address significant mismatches and
+This document summarizes the major updates made to all IRCamera documentation to address significant
+mismatches and
 inconsistencies discovered during the comprehensive audit.
 
 ## Issues Identified and Resolved
@@ -158,5 +159,6 @@ Extensive testing framework discovered:
 
 ---
 
-This comprehensive update ensures the IRCamera documentation accurately reflects the sophisticated, multi-module
+This comprehensive update ensures the IRCamera documentation accurately reflects the sophisticated,
+multi-module
 architecture of this research-focused thermal imaging and physiological sensing platform.

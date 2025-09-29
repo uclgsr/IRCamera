@@ -39,7 +39,7 @@ fun SettingsScreen(
             showBackButton = true,
             onBackClick = onBackClick
         )
-        
+
         // Settings content
         Column(
             modifier = Modifier
@@ -71,7 +71,7 @@ fun SettingsScreen(
                     onClick = { /* Navigate to camera settings */ }
                 )
             }
-            
+
             // Recording Settings Section
             SettingsSection(
                 title = "Recording & Data"
@@ -95,7 +95,7 @@ fun SettingsScreen(
                     onClick = { /* Navigate to sync settings */ }
                 )
             }
-            
+
             // Application Settings Section
             SettingsSection(
                 title = "Application"
@@ -103,7 +103,7 @@ fun SettingsScreen(
                 var darkMode by remember { mutableStateOf(true) }
                 var notifications by remember { mutableStateOf(true) }
                 var autoConnect by remember { mutableStateOf(false) }
-                
+
                 SettingsSwitchItem(
                     icon = Icons.Default.DarkMode,
                     title = "Dark Mode",
@@ -126,7 +126,7 @@ fun SettingsScreen(
                     onCheckedChange = { autoConnect = it }
                 )
             }
-            
+
             // Advanced Settings Section
             SettingsSection(
                 title = "Advanced"
@@ -150,7 +150,7 @@ fun SettingsScreen(
                     onClick = { /* Navigate to diagnostics */ }
                 )
             }
-            
+
             // About Section
             SettingsSection(
                 title = "About"
@@ -197,7 +197,7 @@ private fun SettingsSection(
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(bottom = 8.dp)
         )
-        
+
         Card(
             modifier = Modifier.fillMaxWidth(),
             colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
@@ -240,9 +240,9 @@ private fun SettingsItem(
                 tint = Color.Blue,
                 modifier = Modifier.size(24.dp)
             )
-            
+
             Spacer(modifier = Modifier.width(16.dp))
-            
+
             Column(
                 modifier = Modifier.weight(1f)
             ) {
@@ -258,7 +258,7 @@ private fun SettingsItem(
                     fontSize = 14.sp
                 )
             }
-            
+
             Icon(
                 imageVector = Icons.Default.ChevronRight,
                 contentDescription = null,
@@ -293,9 +293,9 @@ private fun SettingsSwitchItem(
             tint = Color.Blue,
             modifier = Modifier.size(24.dp)
         )
-        
+
         Spacer(modifier = Modifier.width(16.dp))
-        
+
         Column(
             modifier = Modifier.weight(1f)
         ) {
@@ -311,7 +311,7 @@ private fun SettingsSwitchItem(
                 fontSize = 14.sp
             )
         }
-        
+
         Switch(
             checked = checked,
             onCheckedChange = onCheckedChange,

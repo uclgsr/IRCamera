@@ -26,7 +26,7 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         setContent {
             IRCameraTheme {
                 MigrationLauncherScreen()
@@ -40,7 +40,7 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { 
+                    title = {
                         Text(
                             "IRCamera Compose Migration",
                             fontWeight = FontWeight.Bold
@@ -95,17 +95,27 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                     title = "Enhanced Main Dashboard",
                     subtitle = "Updated with consolidated layout integration",
                     icon = Icons.Default.Dashboard,
-                    onClick = { 
-                        startActivity(Intent(this@ComposeMigrationLauncherActivity, MainActivityAlternative::class.java))
+                    onClick = {
+                        startActivity(
+                            Intent(
+                                this@ComposeMigrationLauncherActivity,
+                                MainActivityAlternative::class.java
+                            )
+                        )
                     }
                 )
 
                 LauncherCard(
-                    title = "Enhanced Sensor Dashboard", 
+                    title = "Enhanced Sensor Dashboard",
                     subtitle = "Multi-modal sensor integration with consolidated patterns",
                     icon = Icons.Default.Analytics,
-                    onClick = { 
-                        startActivity(Intent(this@ComposeMigrationLauncherActivity, SensorDashboardComposeEnhanced::class.java))
+                    onClick = {
+                        startActivity(
+                            Intent(
+                                this@ComposeMigrationLauncherActivity,
+                                SensorDashboardComposeEnhanced::class.java
+                            )
+                        )
                     }
                 )
 
@@ -121,8 +131,13 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                     title = "Task A: Main Dashboard",
                     subtitle = "Original hybrid MainActivity with modern Compose UI",
                     icon = Icons.Default.Dashboard,
-                    onClick = { 
-                        startActivity(Intent(this@ComposeMigrationLauncherActivity, MainActivity::class.java))
+                    onClick = {
+                        startActivity(
+                            Intent(
+                                this@ComposeMigrationLauncherActivity,
+                                MainActivity::class.java
+                            )
+                        )
                     }
                 )
 
@@ -130,11 +145,13 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                     title = "Task B: Thermal Camera",
                     subtitle = "Enhanced thermal UI with preserved functionality",
                     icon = Icons.Default.Camera,
-                    onClick = { 
-                        startActivity(Intent(
-                            this@ComposeMigrationLauncherActivity, 
-                            com.mpdc4gsr.module.thermalunified.activity.ThermalCameraComposeActivity::class.java
-                        ))
+                    onClick = {
+                        startActivity(
+                            Intent(
+                                this@ComposeMigrationLauncherActivity,
+                                com.mpdc4gsr.module.thermalunified.activity.ThermalCameraComposeActivity::class.java
+                            )
+                        )
                     }
                 )
 
@@ -142,8 +159,13 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                     title = "Task C: Sensor Dashboard",
                     subtitle = "Real-time GSR visualization and monitoring",
                     icon = Icons.Default.Analytics,
-                    onClick = { 
-                        startActivity(Intent(this@ComposeMigrationLauncherActivity, SensorDashboardComposeActivity::class.java))
+                    onClick = {
+                        startActivity(
+                            Intent(
+                                this@ComposeMigrationLauncherActivity,
+                                SensorDashboardComposeActivity::class.java
+                            )
+                        )
                     }
                 )
 
@@ -151,8 +173,13 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                     title = "Task D: Settings Migration",
                     subtitle = "Complete Compose-based settings screens",
                     icon = Icons.Default.Settings,
-                    onClick = { 
-                        startActivity(Intent(this@ComposeMigrationLauncherActivity, SettingsComposeActivity::class.java))
+                    onClick = {
+                        startActivity(
+                            Intent(
+                                this@ComposeMigrationLauncherActivity,
+                                SettingsComposeActivity::class.java
+                            )
+                        )
                     }
                 )
 
@@ -160,8 +187,13 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                     title = "Task E: Navigation Demo",
                     subtitle = "Unified navigation system showcase",
                     icon = Icons.Default.Navigation,
-                    onClick = { 
-                        startActivity(Intent(this@ComposeMigrationLauncherActivity, FullMigrationDemoActivity::class.java))
+                    onClick = {
+                        startActivity(
+                            Intent(
+                                this@ComposeMigrationLauncherActivity,
+                                FullMigrationDemoActivity::class.java
+                            )
+                        )
                     }
                 )
 
@@ -169,8 +201,13 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                     title = "Testing Suite Hub",
                     subtitle = "Comprehensive testing dashboard with 14+ test activities",
                     icon = Icons.Default.BugReport,
-                    onClick = { 
-                        startActivity(Intent(this@ComposeMigrationLauncherActivity, mpdc4gsr.compose.testing.TestingSuiteHubActivity::class.java))
+                    onClick = {
+                        startActivity(
+                            Intent(
+                                this@ComposeMigrationLauncherActivity,
+                                mpdc4gsr.compose.testing.TestingSuiteHubActivity::class.java
+                            )
+                        )
                     }
                 )
 
@@ -187,8 +224,11 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                     title = "WebView Activity (Compose)",
                     subtitle = "Modern WebView implementation with error handling",
                     icon = Icons.Default.Web,
-                    onClick = { 
-                        val intent = Intent(this@ComposeMigrationLauncherActivity, WebViewActivityCompose::class.java)
+                    onClick = {
+                        val intent = Intent(
+                            this@ComposeMigrationLauncherActivity,
+                            WebViewActivityCompose::class.java
+                        )
                         intent.putExtra("URL", "https://github.com/uclgsr/IRCamera")
                         startActivity(intent)
                     }
@@ -198,8 +238,13 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                     title = "Version Info (Compose)",
                     subtitle = "Complete app version information with modern UI",
                     icon = Icons.Default.Info,
-                    onClick = { 
-                        startActivity(Intent(this@ComposeMigrationLauncherActivity, VersionActivityCompose::class.java))
+                    onClick = {
+                        startActivity(
+                            Intent(
+                                this@ComposeMigrationLauncherActivity,
+                                VersionActivityCompose::class.java
+                            )
+                        )
                     }
                 )
 
@@ -207,8 +252,11 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                     title = "Policy Viewer (Compose)",
                     subtitle = "Privacy policy and terms with rich content display",
                     icon = Icons.Default.Policy,
-                    onClick = { 
-                        val intent = Intent(this@ComposeMigrationLauncherActivity, PolicyActivityCompose::class.java)
+                    onClick = {
+                        val intent = Intent(
+                            this@ComposeMigrationLauncherActivity,
+                            PolicyActivityCompose::class.java
+                        )
                         intent.putExtra(PolicyActivityCompose.KEY_THEME_TYPE, 2) // Privacy Policy
                         startActivity(intent)
                     }
@@ -218,8 +266,13 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                     title = "Device Type Selection (Compose)",
                     subtitle = "Modern device selection with enhanced UX",
                     icon = Icons.Default.DeviceHub,
-                    onClick = { 
-                        startActivity(Intent(this@ComposeMigrationLauncherActivity, DeviceTypeActivityCompose::class.java))
+                    onClick = {
+                        startActivity(
+                            Intent(
+                                this@ComposeMigrationLauncherActivity,
+                                DeviceTypeActivityCompose::class.java
+                            )
+                        )
                     }
                 )
 
@@ -227,8 +280,11 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                     title = "Help & Support (Compose)",
                     subtitle = "Interactive help guide with actionable steps",
                     icon = Icons.Default.Help,
-                    onClick = { 
-                        val intent = Intent(this@ComposeMigrationLauncherActivity, MoreHelpActivityCompose::class.java)
+                    onClick = {
+                        val intent = Intent(
+                            this@ComposeMigrationLauncherActivity,
+                            MoreHelpActivityCompose::class.java
+                        )
                         intent.putExtra("SETTING_CONNECTION_TYPE", 1) // Connection help
                         startActivity(intent)
                     }
@@ -238,8 +294,11 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                     title = "PDF Manual Viewer (Compose)",
                     subtitle = "Enhanced manual viewer with modern UI",
                     icon = Icons.Default.PictureAsPdf,
-                    onClick = { 
-                        val intent = Intent(this@ComposeMigrationLauncherActivity, PdfActivityCompose::class.java)
+                    onClick = {
+                        val intent = Intent(
+                            this@ComposeMigrationLauncherActivity,
+                            PdfActivityCompose::class.java
+                        )
                         intent.putExtra("isTS001", true) // TC001 manual
                         startActivity(intent)
                     }
@@ -249,8 +308,13 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                     title = "Terms & Conditions (Compose)",
                     subtitle = "Modern agreement screen with interactive elements",
                     icon = Icons.Default.Assignment,
-                    onClick = { 
-                        startActivity(Intent(this@ComposeMigrationLauncherActivity, ClauseActivityCompose::class.java))
+                    onClick = {
+                        startActivity(
+                            Intent(
+                                this@ComposeMigrationLauncherActivity,
+                                ClauseActivityCompose::class.java
+                            )
+                        )
                     }
                 )
 
@@ -258,8 +322,13 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                     title = "Network Configuration (Compose)",
                     subtitle = "Advanced network setup with device discovery",
                     icon = Icons.Default.NetworkCheck,
-                    onClick = { 
-                        startActivity(Intent(this@ComposeMigrationLauncherActivity, NetworkConfigActivityCompose::class.java))
+                    onClick = {
+                        startActivity(
+                            Intent(
+                                this@ComposeMigrationLauncherActivity,
+                                NetworkConfigActivityCompose::class.java
+                            )
+                        )
                     }
                 )
 
@@ -267,8 +336,13 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                     title = "Unified Sensor Control (Compose)",
                     subtitle = "Comprehensive sensor management and monitoring",
                     icon = Icons.Default.Sensors,
-                    onClick = { 
-                        startActivity(Intent(this@ComposeMigrationLauncherActivity, UnifiedSensorActivityCompose::class.java))
+                    onClick = {
+                        startActivity(
+                            Intent(
+                                this@ComposeMigrationLauncherActivity,
+                                UnifiedSensorActivityCompose::class.java
+                            )
+                        )
                     }
                 )
 
@@ -285,8 +359,13 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                     title = "Fault-Tolerant Recording (Compose)",
                     subtitle = "Enhanced recording with automatic error recovery",
                     icon = Icons.Default.HighQuality,
-                    onClick = { 
-                        startActivity(Intent(this@ComposeMigrationLauncherActivity, FaultTolerantRecordingActivityCompose::class.java))
+                    onClick = {
+                        startActivity(
+                            Intent(
+                                this@ComposeMigrationLauncherActivity,
+                                FaultTolerantRecordingActivityCompose::class.java
+                            )
+                        )
                     }
                 )
 
@@ -294,8 +373,13 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                     title = "Simplified Interface (Compose)",
                     subtitle = "Clean and streamlined user interface",
                     icon = Icons.Default.Tune,
-                    onClick = { 
-                        startActivity(Intent(this@ComposeMigrationLauncherActivity, SimplifiedMainActivityCompose::class.java))
+                    onClick = {
+                        startActivity(
+                            Intent(
+                                this@ComposeMigrationLauncherActivity,
+                                SimplifiedMainActivityCompose::class.java
+                            )
+                        )
                     }
                 )
 
@@ -303,8 +387,13 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                     title = "Thermal Image Editor (Compose)",
                     subtitle = "Advanced thermal image editing and analysis",
                     icon = Icons.Default.PhotoFilter,
-                    onClick = { 
-                        startActivity(Intent(this@ComposeMigrationLauncherActivity, IRGalleryEditActivityCompose::class.java))
+                    onClick = {
+                        startActivity(
+                            Intent(
+                                this@ComposeMigrationLauncherActivity,
+                                IRGalleryEditActivityCompose::class.java
+                            )
+                        )
                     }
                 )
 
@@ -321,8 +410,13 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                     title = "Shimmer GSR Testing (Compose)",
                     subtitle = "Advanced GSR sensor testing with real-time data monitoring",
                     icon = Icons.Default.Sensors,
-                    onClick = { 
-                        startActivity(Intent(this@ComposeMigrationLauncherActivity, ShimmerMvpActivityCompose::class.java))
+                    onClick = {
+                        startActivity(
+                            Intent(
+                                this@ComposeMigrationLauncherActivity,
+                                ShimmerMvpActivityCompose::class.java
+                            )
+                        )
                     }
                 )
 
@@ -330,8 +424,13 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                     title = "Sensor Dashboard Test (Compose)",
                     subtitle = "Comprehensive sensor dashboard testing interface",
                     icon = Icons.Default.Dashboard,
-                    onClick = { 
-                        startActivity(Intent(this@ComposeMigrationLauncherActivity, SensorDashboardTestActivityCompose::class.java))
+                    onClick = {
+                        startActivity(
+                            Intent(
+                                this@ComposeMigrationLauncherActivity,
+                                SensorDashboardTestActivityCompose::class.java
+                            )
+                        )
                     }
                 )
 
@@ -339,8 +438,13 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                     title = "Network Test Interface (Compose)",
                     subtitle = "PC Remote Control and bidirectional telemetry testing",
                     icon = Icons.Default.NetworkCheck,
-                    onClick = { 
-                        startActivity(Intent(this@ComposeMigrationLauncherActivity, SimpleNetworkTestActivityCompose::class.java))
+                    onClick = {
+                        startActivity(
+                            Intent(
+                                this@ComposeMigrationLauncherActivity,
+                                SimpleNetworkTestActivityCompose::class.java
+                            )
+                        )
                     }
                 )
 
@@ -357,8 +461,13 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                     title = "Compose Components Showcase",
                     subtitle = "Interactive showcase of modernized UI components with enhanced functionality",
                     icon = Icons.Default.AutoAwesome,
-                    onClick = { 
-                        startActivity(Intent(this@ComposeMigrationLauncherActivity, ComposeComponentsShowcaseActivity::class.java))
+                    onClick = {
+                        startActivity(
+                            Intent(
+                                this@ComposeMigrationLauncherActivity,
+                                ComposeComponentsShowcaseActivity::class.java
+                            )
+                        )
                     }
                 )
 
@@ -375,8 +484,13 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                     title = "GSR Device Management (Compose)",
                     subtitle = "Enhanced GSR device discovery, connection, and real-time monitoring",
                     icon = Icons.Default.DeviceHub,
-                    onClick = { 
-                        startActivity(Intent(this@ComposeMigrationLauncherActivity, GSRDeviceManagementActivityCompose::class.java))
+                    onClick = {
+                        startActivity(
+                            Intent(
+                                this@ComposeMigrationLauncherActivity,
+                                GSRDeviceManagementActivityCompose::class.java
+                            )
+                        )
                     }
                 )
 
@@ -384,8 +498,13 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                     title = "Multi-Modal Recording (Compose)",
                     subtitle = "Advanced coordinated multi-sensor recording with live statistics",
                     icon = Icons.Default.RecordVoiceOver,
-                    onClick = { 
-                        startActivity(Intent(this@ComposeMigrationLauncherActivity, MultiModalRecordingActivityCompose::class.java))
+                    onClick = {
+                        startActivity(
+                            Intent(
+                                this@ComposeMigrationLauncherActivity,
+                                MultiModalRecordingActivityCompose::class.java
+                            )
+                        )
                     }
                 )
 
@@ -393,8 +512,13 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                     title = "Session Manager (Compose)",
                     subtitle = "Comprehensive session management with filtering and export capabilities",
                     icon = Icons.Default.Folder,
-                    onClick = { 
-                        startActivity(Intent(this@ComposeMigrationLauncherActivity, SessionManagerActivityCompose::class.java))
+                    onClick = {
+                        startActivity(
+                            Intent(
+                                this@ComposeMigrationLauncherActivity,
+                                SessionManagerActivityCompose::class.java
+                            )
+                        )
                     }
                 )
 
@@ -419,23 +543,33 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                             style = MaterialTheme.typography.bodyMedium
                         )
                         Spacer(modifier = Modifier.height(12.dp))
-                        
+
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                             Button(
-                                onClick = { 
-                                    startActivity(Intent(this@ComposeMigrationLauncherActivity, MainActivity::class.java))
+                                onClick = {
+                                    startActivity(
+                                        Intent(
+                                            this@ComposeMigrationLauncherActivity,
+                                            MainActivity::class.java
+                                        )
+                                    )
                                 },
                                 modifier = Modifier.weight(1f)
                             ) {
                                 Text("Original UI")
                             }
-                            
+
                             OutlinedButton(
-                                onClick = { 
-                                    startActivity(Intent(this@ComposeMigrationLauncherActivity, ComposeDemoActivity::class.java))
+                                onClick = {
+                                    startActivity(
+                                        Intent(
+                                            this@ComposeMigrationLauncherActivity,
+                                            ComposeDemoActivity::class.java
+                                        )
+                                    )
                                 },
                                 modifier = Modifier.weight(1f)
                             ) {

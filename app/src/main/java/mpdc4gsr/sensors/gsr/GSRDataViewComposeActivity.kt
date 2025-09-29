@@ -24,7 +24,7 @@ import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 
 /**
  * GSRDataViewComposeActivity - Advanced Data Processing & Analytics
- * 
+ *
  * Modern implementation of GSR data viewing with:
  * - Tabular data display with sorting and filtering
  * - Real-time data processing and analysis
@@ -61,12 +61,12 @@ class GSRDataViewComposeActivity : BaseComposeActivity<GSRDataViewViewModel>() {
     override fun Content(viewModel: GSRDataViewViewModel) {
         val filePath = intent.getStringExtra(EXTRA_FILE_PATH) ?: ""
         val sessionId = intent.getStringExtra(EXTRA_SESSION_ID)
-        
+
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
                     TopAppBar(
-                        title = { 
+                        title = {
                             Text(
                                 "GSR Data Viewer",
                                 fontWeight = FontWeight.Bold
@@ -111,13 +111,13 @@ private fun GSRDataViewContent(
     modifier: Modifier = Modifier
 ) {
     var selectedTab by remember { mutableIntStateOf(0) }
-    
+
     Column(
         modifier = modifier.fillMaxSize()
     ) {
         // Data Info Header
         DataInfoCard(filePath = filePath, sessionId = sessionId)
-        
+
         // Tab Selection
         ScrollableTabRow(
             selectedTabIndex = selectedTab,
@@ -149,7 +149,7 @@ private fun GSRDataViewContent(
                 text = { Text("Events") }
             )
         }
-        
+
         // Tab Content
         when (selectedTab) {
             0 -> RawDataView()
@@ -186,16 +186,16 @@ private fun DataInfoCard(
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )
-                
+
                 Badge(
                     containerColor = MaterialTheme.colorScheme.primary
                 ) {
                     Text("Loaded")
                 }
             }
-            
+
             Divider()
-            
+
             DataInfoRow("File Path", filePath.substringAfterLast("/"))
             DataInfoRow("Session ID", sessionId ?: "N/A")
             DataInfoRow("File Size", "2.3 MB")
@@ -237,7 +237,7 @@ private fun RawDataView() {
     val sampleData = remember {
         generateSampleGSRDataRows(1000)
     }
-    
+
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -260,7 +260,7 @@ private fun RawDataView() {
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-                
+
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
@@ -273,7 +273,7 @@ private fun RawDataView() {
                 }
             }
         }
-        
+
         // Data Table Header
         Card(
             modifier = Modifier
@@ -313,7 +313,7 @@ private fun RawDataView() {
                 )
             }
         }
-        
+
         // Data Rows
         LazyColumn(
             modifier = Modifier
@@ -411,13 +411,13 @@ private fun ProcessingOptionsCard() {
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Divider()
-            
+
             var smoothingEnabled by remember { mutableStateOf(true) }
             var artifactRemoval by remember { mutableStateOf(false) }
             var normalizeData by remember { mutableStateOf(true) }
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -429,7 +429,7 @@ private fun ProcessingOptionsCard() {
                     onCheckedChange = { smoothingEnabled = it }
                 )
             }
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -441,7 +441,7 @@ private fun ProcessingOptionsCard() {
                     onCheckedChange = { artifactRemoval = it }
                 )
             }
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -453,7 +453,7 @@ private fun ProcessingOptionsCard() {
                     onCheckedChange = { normalizeData = it }
                 )
             }
-            
+
             Button(
                 onClick = { /* Apply processing */ },
                 modifier = Modifier.fillMaxWidth()
@@ -481,15 +481,15 @@ private fun ProcessedDataPreviewCard() {
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Divider()
-            
+
             Text(
                 "Processing Status: Complete",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.primary
             )
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
@@ -539,9 +539,9 @@ private fun ProcessingResultsCard() {
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Divider()
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -554,7 +554,7 @@ private fun ProcessingResultsCard() {
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("View Data")
                 }
-                
+
                 OutlinedButton(
                     onClick = { /* Export processed */ },
                     modifier = Modifier.weight(1f)
@@ -598,9 +598,9 @@ private fun DescriptiveStatisticsCard() {
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Divider()
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
@@ -609,7 +609,7 @@ private fun DescriptiveStatisticsCard() {
                 StatisticItem("Median", "11.87 μS")
                 StatisticItem("Mode", "11.2 μS")
             }
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
@@ -618,7 +618,7 @@ private fun DescriptiveStatisticsCard() {
                 StatisticItem("Variance", "10.3")
                 StatisticItem("Range", "12.8 μS")
             }
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
@@ -646,9 +646,9 @@ private fun DistributionAnalysisCard() {
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Divider()
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
@@ -658,7 +658,7 @@ private fun DistributionAnalysisCard() {
                 StatisticItem("Q3", "14.8 μS")
                 StatisticItem("IQR", "5.6 μS")
             }
-            
+
             Text(
                 "Distribution Type: Normal (p=0.023)",
                 style = MaterialTheme.typography.bodyMedium,
@@ -683,9 +683,9 @@ private fun TimeSeriesAnalysisCard() {
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Divider()
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
@@ -694,7 +694,7 @@ private fun TimeSeriesAnalysisCard() {
                 StatisticItem("Seasonality", "None")
                 StatisticItem("Stationarity", "Non-stationary")
             }
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
@@ -737,9 +737,9 @@ private fun OverallQualityCard() {
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Divider()
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
@@ -749,7 +749,7 @@ private fun OverallQualityCard() {
                     "Quality Score",
                     style = MaterialTheme.typography.titleMedium
                 )
-                
+
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -767,7 +767,7 @@ private fun OverallQualityCard() {
                     }
                 }
             }
-            
+
             LinearProgressIndicator(
                 progress = { 0.92f },
                 modifier = Modifier.fillMaxWidth(),
@@ -791,9 +791,9 @@ private fun SignalQualityCard() {
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Divider()
-            
+
             QualityMetric("Signal-to-Noise Ratio", 0.89f, "High")
             QualityMetric("Baseline Stability", 0.95f, "Excellent")
             QualityMetric("Motion Artifacts", 0.78f, "Good")
@@ -830,7 +830,7 @@ private fun QualityMetric(
                 }
             )
         }
-        
+
         LinearProgressIndicator(
             progress = { score },
             modifier = Modifier.fillMaxWidth(),
@@ -858,9 +858,9 @@ private fun DataIntegrityCard() {
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Divider()
-            
+
             IntegrityCheck("Missing Data Points", false, "0.1%")
             IntegrityCheck("Timestamp Gaps", false, "None")
             IntegrityCheck("Value Range Violations", true, "3 instances")
@@ -895,7 +895,7 @@ private fun IntegrityCheck(
                 style = MaterialTheme.typography.bodyMedium
             )
         }
-        
+
         Text(
             details,
             style = MaterialTheme.typography.bodySmall,
@@ -924,7 +924,7 @@ private fun EventsView() {
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold
                 )
-                
+
                 Text(
                     "24 events detected during recording session",
                     style = MaterialTheme.typography.bodyMedium,
@@ -932,7 +932,7 @@ private fun EventsView() {
                 )
             }
         }
-        
+
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -974,7 +974,7 @@ private fun EventItem(event: GSREventModel) {
                     else -> MaterialTheme.colorScheme.onSurface
                 }
             )
-            
+
             Column(
                 modifier = Modifier.weight(1f)
             ) {
@@ -989,7 +989,7 @@ private fun EventItem(event: GSREventModel) {
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-            
+
             Text(
                 event.value,
                 style = MaterialTheme.typography.bodySmall,
@@ -1018,7 +1018,9 @@ data class GSREventModel(
 private fun generateSampleGSRDataRows(count: Int): List<GSRDataRowModel> {
     return (0 until count).map { i ->
         GSRDataRowModel(
-            timestamp = "00:${(i / 60).toString().padStart(2, '0')}:${(i % 60).toString().padStart(2, '0')}.${(i % 1000).toString().padStart(3, '0')}",
+            timestamp = "00:${(i / 60).toString().padStart(2, '0')}:${
+                (i % 60).toString().padStart(2, '0')
+            }.${(i % 1000).toString().padStart(3, '0')}",
             gsrValue = 8.0f + kotlin.random.Random.nextFloat() * 12.0f,
             quality = 0.5f + kotlin.random.Random.nextFloat() * 0.5f,
             flags = if (kotlin.random.Random.nextFloat() < 0.1f) "ARTIFACT" else ""

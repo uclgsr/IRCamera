@@ -51,20 +51,21 @@ class ClauseViewModel : BaseViewModel() {
     suspend fun confirmInitApp(context: android.content.Context): Boolean {
         return try {
             _isLoading.value = true
-            
+
             // Simulate initialization process
             delay(2000)
-            
+
             // Initialize app components
             if (BaseApplication.instance.isDomestic()) {
                 SharedManager.setAppName(context.getString(R.string.app_name))
                 SharedManager.setVersionName(UnifiedVersionUtils.getVersion())
-                
+
                 // Set network status
-                val networkStatus = if (NetworkUtil.isNetworkAvailable(context)) "Connected" else "Disconnected"
+                val networkStatus =
+                    if (NetworkUtil.isNetworkAvailable(context)) "Connected" else "Disconnected"
                 SharedManager.setNetworkStatus(networkStatus)
             }
-            
+
             _isLoading.value = false
             true
         } catch (e: Exception) {
@@ -216,17 +217,18 @@ class ClauseActivityCompose : BaseComposeActivity<ClauseViewModel>() {
                             ) {
                                 Text("Disagree & Exit")
                             }
-                            
+
                             Button(
                                 onClick = {
-                                    kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.Main).launch {
-                                        val success = viewModel.confirmInitApp(context)
-                                        if (success) {
-                                            NavigationManager.build(RouterConfig.MAIN)
-                                                .navigation(context as ClauseActivityCompose)
-                                            finish()
+                                    kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.Main)
+                                        .launch {
+                                            val success = viewModel.confirmInitApp(context)
+                                            if (success) {
+                                                NavigationManager.build(RouterConfig.MAIN)
+                                                    .navigation(context as ClauseActivityCompose)
+                                                finish()
+                                            }
                                         }
-                                    }
                                 },
                                 enabled = agreementAccepted && !isLoading,
                                 modifier = Modifier.weight(1f)

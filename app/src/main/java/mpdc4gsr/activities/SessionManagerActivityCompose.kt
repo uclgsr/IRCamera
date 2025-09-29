@@ -32,7 +32,7 @@ import java.util.*
 
 /**
  * SessionManagerActivityCompose - Enhanced Compose Session Management
- * 
+ *
  * Comprehensive interface for managing recording sessions with:
  * - Session browsing with search and filtering capabilities
  * - Detailed session information and statistics display
@@ -57,7 +57,7 @@ class SessionManagerActivityCompose : BaseComposeActivity<SessionManagerViewMode
 fun SessionManagerScreen(viewModel: SessionManagerViewModel) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
-    
+
     var searchQuery by remember { mutableStateOf("") }
     var selectedSession by remember { mutableStateOf<RecordingSession?>(null) }
     var showExportDialog by remember { mutableStateOf(false) }
@@ -75,7 +75,7 @@ fun SessionManagerScreen(viewModel: SessionManagerViewModel) {
         // Header with Search
         SessionManagerHeader(
             searchQuery = searchQuery,
-            onSearchChange = { 
+            onSearchChange = {
                 searchQuery = it
                 viewModel.filterSessions(it, uiState.currentFilter)
             },
@@ -106,7 +106,7 @@ fun SessionManagerScreen(viewModel: SessionManagerViewModel) {
                 item {
                     EmptySessionsState(
                         hasSearch = searchQuery.isNotEmpty(),
-                        onClearSearch = { 
+                        onClearSearch = {
                             searchQuery = ""
                             viewModel.filterSessions("", uiState.currentFilter)
                         }
@@ -117,9 +117,9 @@ fun SessionManagerScreen(viewModel: SessionManagerViewModel) {
                     SessionCard(
                         session = session,
                         onViewDetails = { selectedSession = session },
-                        onExport = { 
+                        onExport = {
                             selectedSession = session
-                            showExportDialog = true 
+                            showExportDialog = true
                         },
                         onDelete = { viewModel.deleteSession(session) }
                     )
@@ -134,8 +134,8 @@ fun SessionManagerScreen(viewModel: SessionManagerViewModel) {
             SessionDetailsDialog(
                 session = session,
                 onDismiss = { selectedSession = null },
-                onExport = { 
-                    showExportDialog = true 
+                onExport = {
+                    showExportDialog = true
                 }
             )
         }
@@ -145,7 +145,7 @@ fun SessionManagerScreen(viewModel: SessionManagerViewModel) {
     if (showExportDialog && selectedSession != null) {
         ExportSessionDialog(
             session = selectedSession!!,
-            onDismiss = { 
+            onDismiss = {
                 showExportDialog = false
                 selectedSession = null
             },
@@ -189,17 +189,17 @@ fun SessionManagerHeader(
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Text(
                 text = if (totalSessions == filteredSessions) "$totalSessions sessions"
-                       else "$filteredSessions of $totalSessions sessions",
+                else "$filteredSessions of $totalSessions sessions",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
             )
         }
-        
+
         Spacer(modifier = Modifier.height(12.dp))
-        
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
@@ -220,9 +220,9 @@ fun SessionManagerHeader(
                 },
                 modifier = Modifier.weight(1f)
             )
-            
+
             Spacer(modifier = Modifier.width(8.dp))
-            
+
             IconButton(onClick = onShowFilter) {
                 Icon(Icons.Default.FilterList, contentDescription = "Filter")
             }
@@ -246,9 +246,9 @@ fun SessionStatisticsSummary(
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold
             )
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
@@ -313,24 +313,24 @@ fun EmptySessionsState(
                 modifier = Modifier.size(64.dp),
                 tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
             )
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             Text(
                 text = if (hasSearch) "No sessions found" else "No recording sessions",
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.SemiBold
             )
-            
+
             Spacer(modifier = Modifier.height(8.dp))
-            
+
             Text(
                 text = if (hasSearch) "Try adjusting your search criteria"
-                       else "Start recording to create your first session",
+                else "Start recording to create your first session",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
             )
-            
+
             if (hasSearch) {
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(onClick = onClearSearch) {
@@ -368,7 +368,7 @@ fun SessionCard(
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.SemiBold
                     )
-                    
+
                     if (session.participantId.isNotEmpty()) {
                         Text(
                             text = "Participant: ${session.participantId}",
@@ -376,7 +376,7 @@ fun SessionCard(
                             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                         )
                     }
-                    
+
                     Text(
                         text = SimpleDateFormat("MMM dd, yyyy 'at' HH:mm", Locale.getDefault())
                             .format(Date(session.startTime)),
@@ -384,7 +384,7 @@ fun SessionCard(
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
                     )
                 }
-                
+
                 Row {
                     IconButton(onClick = onExport) {
                         Icon(Icons.Default.Download, contentDescription = "Export")
@@ -398,9 +398,9 @@ fun SessionCard(
                     }
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -423,10 +423,10 @@ fun SessionCard(
                     value = formatDataSize(session.dataSize)
                 )
             }
-            
+
             if (session.protocol.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(8.dp))
-                
+
                 Card(
                     colors = CardDefaults.cardColors(
                         containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
@@ -506,14 +506,21 @@ fun SessionDetailsDialog(
         text = {
             LazyColumn {
                 item {
-                    SessionDetailItem("Participant ID", session.participantId.ifEmpty { "Not specified" })
-                    SessionDetailItem("Start Time", SimpleDateFormat("MMM dd, yyyy 'at' HH:mm:ss", Locale.getDefault()).format(Date(session.startTime)))
+                    SessionDetailItem(
+                        "Participant ID",
+                        session.participantId.ifEmpty { "Not specified" })
+                    SessionDetailItem(
+                        "Start Time",
+                        SimpleDateFormat("MMM dd, yyyy 'at' HH:mm:ss", Locale.getDefault()).format(
+                            Date(session.startTime)
+                        )
+                    )
                     SessionDetailItem("Duration", formatDuration(session.duration))
                     SessionDetailItem("Protocol", session.protocol.ifEmpty { "None" })
                     SessionDetailItem("Sensor Count", session.sensorCount.toString())
                     SessionDetailItem("Data Quality", "${session.dataQuality}%")
                     SessionDetailItem("Data Size", formatDataSize(session.dataSize))
-                    
+
                     if (session.notes.isNotEmpty()) {
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
@@ -577,9 +584,9 @@ fun ExportSessionDialog(
         text = {
             Column {
                 Text("Select export format for session '${session.name}':")
-                
+
                 Spacer(modifier = Modifier.height(12.dp))
-                
+
                 ExportFormat.values().forEach { format ->
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -635,9 +642,9 @@ fun FilterSessionsDialog(
             Column {
                 Text("Date Range:")
                 // Date range selector would go here
-                
+
                 Spacer(modifier = Modifier.height(12.dp))
-                
+
                 Text("Minimum Quality:")
                 Slider(
                     value = filter.minQuality.toFloat(),
@@ -646,9 +653,9 @@ fun FilterSessionsDialog(
                     steps = 10
                 )
                 Text("${filter.minQuality}%")
-                
+
                 Spacer(modifier = Modifier.height(12.dp))
-                
+
                 Text("Has Protocol:")
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Checkbox(
@@ -741,19 +748,19 @@ data class SessionManagerUiState(
 class SessionManagerViewModel : BaseViewModel() {
     private val _uiState = androidx.compose.runtime.mutableStateOf(SessionManagerUiState())
     val uiState: androidx.compose.runtime.State<SessionManagerUiState> = _uiState
-    
+
     private var loadingJob: Job? = null
 
     fun loadSessions() {
         _uiState.value = _uiState.value.copy(isLoading = true)
-        
+
         // Cancel any existing loading job
         loadingJob?.cancel()
-        
+
         // Simulate loading sessions on main dispatcher
         loadingJob = viewModelScope.launch(Dispatchers.Main) {
             delay(1000)
-            
+
             val mockSessions = listOf(
                 RecordingSession(
                     "1", "Stress Response Session", "P001", "Stress Protocol",
@@ -769,14 +776,14 @@ class SessionManagerViewModel : BaseViewModel() {
                     System.currentTimeMillis() - 259200000, 2700000, 4, 92, 2048 * 1024
                 )
             )
-            
+
             val statistics = SessionStatistics(
                 totalSessions = mockSessions.size,
                 totalDuration = mockSessions.sumOf { it.duration },
                 totalDataSize = mockSessions.sumOf { it.dataSize },
                 averageQuality = mockSessions.map { it.dataQuality }.average().toInt()
             )
-            
+
             _uiState.value = _uiState.value.copy(
                 sessions = mockSessions,
                 filteredSessions = mockSessions,
@@ -788,17 +795,17 @@ class SessionManagerViewModel : BaseViewModel() {
 
     fun filterSessions(query: String, filter: SessionFilter) {
         val filtered = _uiState.value.sessions.filter { session ->
-            val matchesQuery = query.isEmpty() || 
-                session.name.contains(query, ignoreCase = true) ||
-                session.participantId.contains(query, ignoreCase = true) ||
-                session.protocol.contains(query, ignoreCase = true)
-            
+            val matchesQuery = query.isEmpty() ||
+                    session.name.contains(query, ignoreCase = true) ||
+                    session.participantId.contains(query, ignoreCase = true) ||
+                    session.protocol.contains(query, ignoreCase = true)
+
             val matchesQuality = session.dataQuality >= filter.minQuality
             val matchesProtocol = !filter.hasProtocol || session.protocol.isNotEmpty()
-            
+
             matchesQuery && matchesQuality && matchesProtocol
         }
-        
+
         _uiState.value = _uiState.value.copy(
             filteredSessions = filtered,
             currentFilter = filter
@@ -818,7 +825,7 @@ class SessionManagerViewModel : BaseViewModel() {
     fun exportSession(session: RecordingSession, format: ExportFormat) {
         // Implementation for exporting session data
     }
-    
+
     override fun onCleared() {
         super.onCleared()
         loadingJob?.cancel()

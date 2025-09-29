@@ -1,10 +1,12 @@
 # MVVM Modernization Guide
 
-This document outlines the modernization and consolidation of the MVVM architecture in the IRCamera project.
+This document outlines the modernization and consolidation of the MVVM architecture in the IRCamera
+project.
 
 ## Overview
 
-The MVVM architecture has been modernized to use current Android development best practices, focusing on:
+The MVVM architecture has been modernized to use current Android development best practices,
+focusing on:
 
 - StateFlow instead of LiveData for reactive UI
 - Repository pattern for data management
@@ -443,5 +445,6 @@ The modernized MVVM architecture provides:
 - Type-safe state management
 - Comprehensive error recovery mechanisms
 
-This modernization maintains backward compatibility where possible while providing a clear path forward for new
+This modernization maintains backward compatibility where possible while providing a clear path
+forward for new
 development and establishes patterns that scale well with application growth.

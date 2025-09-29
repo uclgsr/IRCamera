@@ -91,7 +91,7 @@ class UnifiedSensorViewModel : BaseViewModel() {
         kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
             // Simulate connection process
             delay(2000)
-            
+
             _sensorStatuses.value = _sensorStatuses.value.map { status ->
                 if (status.type == sensorType) {
                     status.copy(
@@ -128,7 +128,7 @@ class UnifiedSensorViewModel : BaseViewModel() {
         kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
             _isRecording.value = true
             _sessionInfo.value = _sessionInfo.value.copy(status = SessionStatus.RECORDING)
-            
+
             // Update sensor recording status
             _sensorStatuses.value = _sensorStatuses.value.map { status ->
                 if (status.isConnected) {
@@ -146,7 +146,7 @@ class UnifiedSensorViewModel : BaseViewModel() {
                 val secs = seconds % 60
                 val duration = String.format("%02d:%02d:%02d", hours, minutes, secs)
                 val dataSize = "${(seconds * 0.5).toInt()} MB" // Simulate growing data
-                
+
                 _sessionInfo.value = _sessionInfo.value.copy(
                     duration = duration,
                     dataSize = dataSize
@@ -170,7 +170,8 @@ class UnifiedSensorViewModel : BaseViewModel() {
 
 class UnifiedSensorActivityCompose : BaseComposeActivity<UnifiedSensorViewModel>() {
 
-    override fun createViewModel(): UnifiedSensorViewModel = viewModels<UnifiedSensorViewModel>().value
+    override fun createViewModel(): UnifiedSensorViewModel =
+        viewModels<UnifiedSensorViewModel>().value
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -203,9 +204,9 @@ class UnifiedSensorActivityCompose : BaseComposeActivity<UnifiedSensorViewModel>
                             .fillMaxWidth()
                             .padding(bottom = 16.dp),
                         colors = CardDefaults.cardColors(
-                            containerColor = if (isRecording) 
-                                MaterialTheme.colorScheme.errorContainer 
-                            else 
+                            containerColor = if (isRecording)
+                                MaterialTheme.colorScheme.errorContainer
+                            else
                                 MaterialTheme.colorScheme.surface
                         )
                     ) {
@@ -219,9 +220,9 @@ class UnifiedSensorActivityCompose : BaseComposeActivity<UnifiedSensorViewModel>
                                 Icon(
                                     imageVector = if (isRecording) Icons.Default.FiberManualRecord else Icons.Default.Stop,
                                     contentDescription = null,
-                                    tint = if (isRecording) 
-                                        MaterialTheme.colorScheme.error 
-                                    else 
+                                    tint = if (isRecording)
+                                        MaterialTheme.colorScheme.error
+                                    else
                                         MaterialTheme.colorScheme.onSurface,
                                     modifier = Modifier.size(24.dp)
                                 )
@@ -282,9 +283,10 @@ class UnifiedSensorActivityCompose : BaseComposeActivity<UnifiedSensorViewModel>
                                 },
                                 modifier = Modifier.fillMaxSize()
                             )
-                            
+
                             // Overlay when camera is not connected
-                            val rgbCameraStatus = sensorStatuses.find { it.type == SensorType.RGB_CAMERA }
+                            val rgbCameraStatus =
+                                sensorStatuses.find { it.type == SensorType.RGB_CAMERA }
                             if (rgbCameraStatus?.isConnected != true) {
                                 Surface(
                                     modifier = Modifier.fillMaxSize(),
@@ -353,7 +355,7 @@ class UnifiedSensorActivityCompose : BaseComposeActivity<UnifiedSensorViewModel>
                                 fontWeight = FontWeight.SemiBold,
                                 modifier = Modifier.padding(bottom = 12.dp)
                             )
-                            
+
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -368,7 +370,7 @@ class UnifiedSensorActivityCompose : BaseComposeActivity<UnifiedSensorViewModel>
                                 ) {
                                     Text("Connect All")
                                 }
-                                
+
                                 OutlinedButton(
                                     onClick = {
                                         SensorType.values().forEach { type ->
@@ -468,9 +470,9 @@ private fun SensorStatusCard(
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                     )
                 }
-                
+
                 Spacer(modifier = Modifier.height(8.dp))
-                
+
                 if (sensorStatus.isConnected) {
                     OutlinedButton(
                         onClick = { onDisconnect(sensorStatus.type) },

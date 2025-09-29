@@ -8,7 +8,7 @@ import mpdc4gsr.compose.navigation.UnifiedNavHost
 
 /**
  * Unified Compose Activity - Modern Navigation Entry Point
- * 
+ *
  * This activity demonstrates the culmination of the modernization effort:
  * - Uses shared BaseComposeActivity from libunified
  * - Implements unified navigation system

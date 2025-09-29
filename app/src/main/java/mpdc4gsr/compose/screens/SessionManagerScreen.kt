@@ -47,7 +47,7 @@ fun SessionManagerScreen(
     var selectedTab by remember { mutableStateOf(0) }
     var searchQuery by remember { mutableStateOf("") }
     val sessions = remember { getSampleSessions() }
-    
+
     val filteredSessions = sessions.filter { session ->
         when (selectedTab) {
             0 -> true // All
@@ -59,9 +59,9 @@ fun SessionManagerScreen(
     }.filter { session ->
         if (searchQuery.isBlank()) true
         else session.title.contains(searchQuery, ignoreCase = true) ||
-             session.participantId.contains(searchQuery, ignoreCase = true)
+                session.participantId.contains(searchQuery, ignoreCase = true)
     }
-    
+
     IRCameraTheme {
         Column(
             modifier = Modifier
@@ -78,7 +78,7 @@ fun SessionManagerScreen(
                     ) { onCreateNewSession() }
                 )
             )
-            
+
             Column(
                 modifier = Modifier.fillMaxSize()
             ) {
@@ -107,7 +107,7 @@ fun SessionManagerScreen(
                         cursorColor = Color(0xFF6B73FF)
                     )
                 )
-                
+
                 // Tab Row
                 TabRow(
                     selectedTabIndex = selectedTab,
@@ -127,7 +127,7 @@ fun SessionManagerScreen(
                         Tab(
                             selected = selectedTab == index,
                             onClick = { selectedTab = index },
-                            text = { 
+                            text = {
                                 Text(
                                     title,
                                     color = if (selectedTab == index) Color(0xFF6B73FF) else Color.White
@@ -136,13 +136,13 @@ fun SessionManagerScreen(
                         )
                     }
                 }
-                
+
                 // Session Statistics
                 SessionStatsCard(
                     sessions = sessions,
                     modifier = Modifier.padding(16.dp)
                 )
-                
+
                 // Sessions List
                 LazyColumn(
                     contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
@@ -154,7 +154,7 @@ fun SessionManagerScreen(
                             onClick = { onViewSession(session) }
                         )
                     }
-                    
+
                     if (filteredSessions.isEmpty()) {
                         item {
                             EmptySessionsState(
@@ -178,7 +178,7 @@ fun SessionStatsCard(
     val activeSessions = sessions.count { it.status == SessionStatus.IN_PROGRESS }
     val totalDuration = sessions.filter { it.status == SessionStatus.COMPLETED }
         .sumOf { parseDuration(it.duration) }
-    
+
     Card(
         modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
@@ -255,12 +255,12 @@ fun SessionItem(
                     color = Color.White,
                     modifier = Modifier.weight(1f)
                 )
-                
+
                 SessionStatusBadge(status = session.status)
             }
-            
+
             Spacer(modifier = Modifier.height(8.dp))
-            
+
             // Session Info
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -277,9 +277,9 @@ fun SessionItem(
                     color = Color(0xFFCCFFFFFF)
                 )
             }
-            
+
             Spacer(modifier = Modifier.height(8.dp))
-            
+
             // Progress Bar (for in-progress sessions)
             if (session.status == SessionStatus.IN_PROGRESS) {
                 LinearProgressIndicator(
@@ -288,10 +288,10 @@ fun SessionItem(
                     color = Color(0xFF6B73FF),
                     trackColor = Color(0xFF404040)
                 )
-                
+
                 Spacer(modifier = Modifier.height(8.dp))
             }
-            
+
             // Bottom Row
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -313,9 +313,9 @@ fun SessionItem(
                         fontSize = 12.sp,
                         color = Color(0xFFCCFFFFFF)
                     )
-                    
+
                     Spacer(modifier = Modifier.width(16.dp))
-                    
+
                     Icon(
                         imageVector = Icons.Default.Storage,
                         contentDescription = null,
@@ -329,7 +329,7 @@ fun SessionItem(
                         color = Color(0xFFCCFFFFFF)
                     )
                 }
-                
+
                 // Sensor Type Icons
                 Row {
                     session.sensorTypes.forEach { sensorType ->
@@ -367,7 +367,7 @@ fun SessionStatusBadge(status: SessionStatus) {
         SessionStatus.FAILED -> Color(0xFFFF6B6B) to "Failed"
         SessionStatus.SCHEDULED -> Color(0xFF9E9E9E) to "Scheduled"
     }
-    
+
     Surface(
         color = color.copy(alpha = 0.2f),
         shape = MaterialTheme.shapes.small
@@ -399,30 +399,30 @@ fun EmptySessionsState(
             tint = Color(0xFF6B73FF),
             modifier = Modifier.size(64.dp)
         )
-        
+
         Spacer(modifier = Modifier.height(16.dp))
-        
+
         Text(
             text = if (searchQuery.isBlank()) "No sessions yet" else "No sessions found",
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold,
             color = Color.White
         )
-        
+
         Spacer(modifier = Modifier.height(8.dp))
-        
+
         Text(
-            text = if (searchQuery.isBlank()) 
-                "Create your first research session to get started" 
-            else 
+            text = if (searchQuery.isBlank())
+                "Create your first research session to get started"
+            else
                 "Try adjusting your search criteria",
             fontSize = 14.sp,
             color = Color(0xFFCCFFFFFF)
         )
-        
+
         if (searchQuery.isBlank()) {
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             Button(
                 onClick = onCreateNew,
                 colors = ButtonDefaults.buttonColors(

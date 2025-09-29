@@ -159,7 +159,8 @@ class DualModeCameraViewModel : BaseViewModel() {
     }
 
     fun onPermissionDenied(isPermanent: Boolean = false) {
-        _permissionState.value = if (isPermanent) PermissionState.PERMANENTLY_DENIED else PermissionState.DENIED
+        _permissionState.value =
+            if (isPermanent) PermissionState.PERMANENTLY_DENIED else PermissionState.DENIED
         viewModelScope.launch {
             val message = if (isPermanent) {
                 "Camera permission permanently denied. Please enable in settings."
@@ -277,12 +278,13 @@ class DualModeCameraViewModel : BaseViewModel() {
     }
 
     private suspend fun handleRawModeSwitch() {
-        val message = if (enableSamsungOptimizations && SamsungDeviceCompatibility.isStage3Compatible()) {
-            "RAW Mode: Samsung Stage3/Level3 DNG Enabled"
-        } else {
-            val deviceInfo = SamsungDeviceCompatibility.getDeviceInfo()
-            "RAW Mode: Standard DNG ($deviceInfo)"
-        }
+        val message =
+            if (enableSamsungOptimizations && SamsungDeviceCompatibility.isStage3Compatible()) {
+                "RAW Mode: Samsung Stage3/Level3 DNG Enabled"
+            } else {
+                val deviceInfo = SamsungDeviceCompatibility.getDeviceInfo()
+                "RAW Mode: Standard DNG ($deviceInfo)"
+            }
 
         _cameraState.value = _cameraState.value.copy(
             currentResolution = "4000x3000",

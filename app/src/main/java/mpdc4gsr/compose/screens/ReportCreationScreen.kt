@@ -36,9 +36,9 @@ fun ReportCreationScreen(
     var includeAnnotations by remember { mutableStateOf(true) }
     var reportFormat by remember { mutableStateOf(ReportFormat.PDF) }
     var currentStep by remember { mutableIntStateOf(0) }
-    
+
     val steps = listOf("Basic Info", "Content", "Format", "Preview")
-    
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -56,7 +56,7 @@ fun ReportCreationScreen(
                 )
             )
         )
-        
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -68,7 +68,7 @@ fun ReportCreationScreen(
                 steps = steps,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
-            
+
             // Step Content
             when (currentStep) {
                 0 -> BasicInfoStep(
@@ -77,6 +77,7 @@ fun ReportCreationScreen(
                     description = description,
                     onDescriptionChange = { description = it }
                 )
+
                 1 -> ContentStep(
                     observations = observations,
                     onObservationsChange = { observations = it },
@@ -84,13 +85,15 @@ fun ReportCreationScreen(
                     onMetadataChange = { includeMetadata = it },
                     includeTemperatureData = includeTemperatureData,
                     onTemperatureDataChange = { includeTemperatureData = it },
-                    includeAnnotations = includeAnnotations,  
+                    includeAnnotations = includeAnnotations,
                     onAnnotationsChange = { includeAnnotations = it }
                 )
+
                 2 -> FormatStep(
                     selectedFormat = reportFormat,
                     onFormatChange = { reportFormat = it }
                 )
+
                 3 -> PreviewStep(
                     title = reportTitle,
                     description = description,
@@ -98,9 +101,9 @@ fun ReportCreationScreen(
                     format = reportFormat
                 )
             }
-            
+
             Spacer(modifier = Modifier.weight(1f))
-            
+
             // Navigation Buttons
             ReportNavigationButtons(
                 currentStep = currentStep,
@@ -132,9 +135,9 @@ private fun ReportProgressIndicator(
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Spacer(modifier = Modifier.height(8.dp))
-            
+
             LinearProgressIndicator(
                 progress = { (currentStep + 1).toFloat() / steps.size },
                 modifier = Modifier.fillMaxWidth(),
@@ -172,7 +175,7 @@ private fun BasicInfoStep(
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
-                
+
                 OutlinedTextField(
                     value = title,
                     onValueChange = onTitleChange,
@@ -187,9 +190,9 @@ private fun BasicInfoStep(
                         unfocusedLabelColor = Color.Gray
                     )
                 )
-                
+
                 Spacer(modifier = Modifier.height(16.dp))
-                
+
                 OutlinedTextField(
                     value = description,
                     onValueChange = onDescriptionChange,
@@ -209,7 +212,7 @@ private fun BasicInfoStep(
                 )
             }
         }
-        
+
         // Metadata Card
         MetadataInfoCard()
     }
@@ -246,7 +249,7 @@ private fun ContentStep(
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
-                
+
                 OutlinedTextField(
                     value = observations,
                     onValueChange = onObservationsChange,
@@ -266,7 +269,7 @@ private fun ContentStep(
                 )
             }
         }
-        
+
         Card(
             modifier = Modifier.fillMaxWidth(),
             colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
@@ -281,21 +284,21 @@ private fun ContentStep(
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
-                
+
                 ContentToggleItem(
                     label = "Image Metadata",
                     description = "Include capture date, settings, and device info",
                     checked = includeMetadata,
                     onCheckedChange = onMetadataChange
                 )
-                
+
                 ContentToggleItem(
                     label = "Temperature Data",
                     description = "Include temperature measurements and statistics",
                     checked = includeTemperatureData,
                     onCheckedChange = onTemperatureDataChange
                 )
-                
+
                 ContentToggleItem(
                     label = "Annotations",
                     description = "Include all measurement points and areas",
@@ -326,7 +329,7 @@ private fun FormatStep(
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
-            
+
             ReportFormat.entries.forEach { format ->
                 ReportFormatOption(
                     format = format,
@@ -362,7 +365,7 @@ private fun PreviewStep(
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
-            
+
             // Report Preview Content
             Text(
                 text = title,
@@ -371,7 +374,7 @@ private fun PreviewStep(
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
-            
+
             if (description.isNotEmpty()) {
                 Text(
                     text = description,
@@ -380,7 +383,7 @@ private fun PreviewStep(
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
             }
-            
+
             if (observations.isNotEmpty()) {
                 Text(
                     text = "Observations:",
@@ -396,7 +399,7 @@ private fun PreviewStep(
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
             }
-            
+
             Text(
                 text = "Export Format: ${format.displayName}",
                 color = Color.Blue,
@@ -423,7 +426,7 @@ private fun MetadataInfoCard() {
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
-            
+
             val metadata = listOf(
                 "Capture Date" to "2024-01-15 14:30:22",
                 "Device" to "TOPDON TC001",
@@ -431,7 +434,7 @@ private fun MetadataInfoCard() {
                 "Temperature Range" to "-20°C to 120°C",
                 "Emissivity" to "0.95"
             )
-            
+
             metadata.forEach { (label, value) ->
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -474,7 +477,7 @@ private fun ContentToggleItem(
                 fontSize = 12.sp
             )
         }
-        
+
         Switch(
             checked = checked,
             onCheckedChange = onCheckedChange,
@@ -515,9 +518,9 @@ private fun ReportFormatOption(
                     unselectedColor = Color.Gray
                 )
             )
-            
+
             Spacer(modifier = Modifier.width(12.dp))
-            
+
             Column {
                 Text(
                     text = format.displayName,
@@ -561,7 +564,7 @@ private fun ReportNavigationButtons(
         } else {
             Spacer(modifier = Modifier.width(1.dp))
         }
-        
+
         if (currentStep < totalSteps - 1) {
             Button(
                 onClick = onNext,

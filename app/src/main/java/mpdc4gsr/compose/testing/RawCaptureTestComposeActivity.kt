@@ -30,7 +30,7 @@ import kotlin.system.measureTimeMillis
  * Tests RAW image capture functionality and Stage 3/Level 3 DNG capabilities
  */
 class RawCaptureTestComposeActivity : ComponentActivity() {
-    
+
     companion object {
         private const val TAG = "RawCaptureTestCompose"
     }
@@ -55,9 +55,9 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         initializeCamera()
-        
+
         setContent {
             LibUnifiedTheme {
                 RawCaptureTestScreen()
@@ -110,7 +110,7 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
                     description = "Test RAW capture speed and efficiency"
                 )
             )
-            
+
             captureFormats = listOf(
                 CaptureFormat(
                     name = "DNG",
@@ -131,18 +131,18 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
                     fileExtension = ".jpg+.dng"
                 )
             )
-            
+
             captureSettings = mapOf(
                 "Manual Focus" to false,
                 "Manual Exposure" to false,
                 "Stage 3 Processing" to SamsungDeviceCompatibility.isStage3Compatible(),
                 "Metadata Embedding" to true
             )
-            
+
             // Load device compatibility info
             val isStage3Compatible = SamsungDeviceCompatibility.isStage3Compatible()
             val deviceInfo = SamsungDeviceCompatibility.getDeviceInfo()
-            
+
             deviceCompatibility = mapOf(
                 "Device Model" to deviceInfo,
                 "Stage 3 Compatible" to isStage3Compatible,
@@ -181,9 +181,9 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     colors = CardDefaults.cardColors(
-                        containerColor = if (SamsungDeviceCompatibility.isStage3Compatible()) 
-                            MaterialTheme.colorScheme.primaryContainer 
-                        else 
+                        containerColor = if (SamsungDeviceCompatibility.isStage3Compatible())
+                            MaterialTheme.colorScheme.primaryContainer
+                        else
                             MaterialTheme.colorScheme.secondaryContainer
                     )
                 ) {
@@ -194,9 +194,9 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Icon(
-                                imageVector = if (SamsungDeviceCompatibility.isStage3Compatible()) 
-                                    Icons.Default.Verified 
-                                else 
+                                imageVector = if (SamsungDeviceCompatibility.isStage3Compatible())
+                                    Icons.Default.Verified
+                                else
                                     Icons.Default.Info,
                                 contentDescription = null,
                                 tint = MaterialTheme.colorScheme.primary,
@@ -204,9 +204,9 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
-                                text = if (SamsungDeviceCompatibility.isStage3Compatible()) 
-                                    "Stage 3/Level 3 DNG Capture Available" 
-                                else 
+                                text = if (SamsungDeviceCompatibility.isStage3Compatible())
+                                    "Stage 3/Level 3 DNG Capture Available"
+                                else
                                     "Standard RAW Capture Available",
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Medium
@@ -240,7 +240,7 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
                             fontWeight = FontWeight.Medium
                         )
                         Spacer(modifier = Modifier.height(8.dp))
-                        
+
                         captureFormats.forEach { format ->
                             CaptureFormatItem(
                                 format = format,
@@ -263,7 +263,7 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
                             fontWeight = FontWeight.Medium
                         )
                         Spacer(modifier = Modifier.height(8.dp))
-                        
+
                         captureSettings.forEach { (setting, enabled) ->
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
@@ -276,7 +276,7 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
                                 )
                                 Switch(
                                     checked = enabled,
-                                    onCheckedChange = { 
+                                    onCheckedChange = {
                                         captureSettings = captureSettings + (setting to it)
                                     },
                                     enabled = setting != "Stage 3 Processing" // This depends on device
@@ -305,7 +305,7 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Button(
-                        onClick = { 
+                        onClick = {
                             isTestRunning = true
                             lifecycleScope.launch { runAllCaptureTests() }
                         },
@@ -325,9 +325,9 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
                             Text("Run All Tests")
                         }
                     }
-                    
+
                     OutlinedButton(
-                        onClick = { 
+                        onClick = {
                             lifecycleScope.launch { captureRawImage(selectedFormat) }
                         },
                         enabled = !isTestRunning,
@@ -353,7 +353,7 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
                 // Capture Results
                 if (captureResults.isNotEmpty()) {
                     Spacer(modifier = Modifier.height(16.dp))
-                    
+
                     Card {
                         Column(modifier = Modifier.padding(16.dp)) {
                             Text(
@@ -362,7 +362,7 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
                                 fontWeight = FontWeight.Medium
                             )
                             Spacer(modifier = Modifier.height(8.dp))
-                            
+
                             captureResults.forEach { result ->
                                 CaptureResultItem(result = result)
                                 Spacer(modifier = Modifier.height(8.dp))
@@ -397,7 +397,7 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-            
+
             Row(verticalAlignment = Alignment.CenterVertically) {
                 if (format.supported) {
                     RadioButton(
@@ -444,7 +444,7 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-            
+
             Column(horizontalAlignment = Alignment.End) {
                 Text(
                     text = "${result.fileSizeMB} MB",
@@ -469,30 +469,30 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
 
     private suspend fun runAllCaptureTests() {
         Log.i(TAG, "Running all RAW capture tests")
-        
+
         val results = mutableListOf<CaptureResult>()
-        
+
         try {
             // Test DNG capture
             val dngResult = captureRawImage("DNG")
             if (dngResult != null) results.add(dngResult)
-            
+
             delay(2000)
-            
+
             // Test RAW capture if supported
             if (SamsungDeviceCompatibility.isStage3Compatible()) {
                 val rawResult = captureRawImage("RAW")
                 if (rawResult != null) results.add(rawResult)
             }
-            
+
             delay(2000)
-            
+
             // Test JPEG + RAW
             val combinedResult = captureRawImage("JPEG + RAW")
             if (combinedResult != null) results.add(combinedResult)
-            
+
             captureResults = results
-            
+
         } catch (e: Exception) {
             Log.e(TAG, "All capture tests failed: ${e.message}")
         } finally {
@@ -502,12 +502,12 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
 
     private suspend fun captureRawImage(format: String): CaptureResult? {
         Log.d(TAG, "Capturing RAW image in $format format")
-        
+
         return try {
             val captureDuration = measureTimeMillis {
                 delay(3000) // Simulate capture time
             }
-            
+
             // Simulate different file sizes and success rates
             val success = when (format) {
                 "DNG" -> true
@@ -515,14 +515,14 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
                 "JPEG + RAW" -> true
                 else -> false
             }
-            
+
             val fileSizeMB = when (format) {
                 "DNG" -> 25.6
                 "RAW" -> 32.1
                 "JPEG + RAW" -> 28.3
                 else -> 0.0
             }
-            
+
             CaptureResult(
                 format = format,
                 success = success,
@@ -530,7 +530,7 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
                 captureDurationMs = captureDuration,
                 details = if (success) "Capture completed successfully" else "Format not supported on this device"
             )
-            
+
         } catch (e: Exception) {
             Log.e(TAG, "$format capture failed: ${e.message}")
             CaptureResult(

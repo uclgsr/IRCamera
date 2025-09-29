@@ -11,7 +11,7 @@ import java.text.DecimalFormat
  * Manages storage information display and format operations
  */
 class StorageSpaceViewModel : BaseViewModel() {
-    
+
     companion object {
         // Mock data constants for improved maintainability
         private const val MOCK_TOTAL_SPACE = 32_000_000_000L // 32 GB
@@ -21,7 +21,7 @@ class StorageSpaceViewModel : BaseViewModel() {
         private const val MOCK_VIDEO_SPACE = 6_000_000_000L  // 6 GB
         private const val MOCK_SYSTEM_SPACE = 1_000_000_000L // 1 GB
     }
-    
+
     data class StorageInfo(
         val totalSpace: Long = 0L,
         val usedSpace: Long = 0L,
@@ -30,10 +30,10 @@ class StorageSpaceViewModel : BaseViewModel() {
         val videoSpace: Long = 0L,
         val systemSpace: Long = 0L
     )
-    
+
     private val _storageInfo = MutableStateFlow(StorageInfo())
     val storageInfo: StateFlow<StorageInfo> = _storageInfo.asStateFlow()
-    
+
     fun loadStorageInfo() {
         launchWithErrorHandling {
             // Original TS004Repository functionality removed - use mock data
@@ -48,7 +48,7 @@ class StorageSpaceViewModel : BaseViewModel() {
             _storageInfo.value = mockStorageInfo
         }
     }
-    
+
     fun getUsagePercentage(): Float {
         val info = _storageInfo.value
         return if (info.totalSpace > 0) {
@@ -57,7 +57,7 @@ class StorageSpaceViewModel : BaseViewModel() {
             0f
         }
     }
-    
+
     fun formatFileSize(fileSize: Long): String {
         return when {
             fileSize == 0L -> "0 B"
@@ -67,7 +67,7 @@ class StorageSpaceViewModel : BaseViewModel() {
             else -> DecimalFormat("#.0").format(fileSize.toDouble() / 1073741824) + " GB"
         }
     }
-    
+
     fun formatStorage() {
         launchWithErrorHandling {
             // Original format storage operation removed - just show confirmation

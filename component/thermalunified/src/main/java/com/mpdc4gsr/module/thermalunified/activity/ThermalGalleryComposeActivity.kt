@@ -28,7 +28,7 @@ import com.mpdc4gsr.libunified.app.viewmodel.BaseViewModel
  * Professional thermal image management with advanced filtering
  */
 class ThermalGalleryComposeActivity : BaseComposeActivity<ThermalGalleryViewModel>() {
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -49,7 +49,7 @@ private fun ThermalGalleryScreen(
 ) {
     var viewMode by remember { mutableStateOf(ViewMode.GRID) }
     var selectedFilter by remember { mutableStateOf(FilterType.ALL) }
-    
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -79,8 +79,8 @@ private fun ThermalGalleryScreen(
                 }
             },
             actions = {
-                IconButton(onClick = { 
-                    viewMode = if (viewMode == ViewMode.GRID) ViewMode.LIST else ViewMode.GRID 
+                IconButton(onClick = {
+                    viewMode = if (viewMode == ViewMode.GRID) ViewMode.LIST else ViewMode.GRID
                 }) {
                     Icon(
                         if (viewMode == ViewMode.GRID) Icons.Default.ViewList else Icons.Default.GridView,
@@ -97,13 +97,13 @@ private fun ThermalGalleryScreen(
                 }
             }
         )
-        
+
         // Filter Bar
         ThermalFilterBar(
             selectedFilter = selectedFilter,
             onFilterSelected = { selectedFilter = it }
         )
-        
+
         // Gallery Content
         Box(
             modifier = Modifier
@@ -214,9 +214,9 @@ private fun ThermalImageCard(image: ThermalImage) {
                     modifier = Modifier.size(32.dp)
                 )
             }
-            
+
             Spacer(modifier = Modifier.height(8.dp))
-            
+
             // Image info
             Text(
                 image.name,
@@ -269,9 +269,9 @@ private fun ThermalImageListItem(image: ThermalImage) {
                     modifier = Modifier.size(24.dp)
                 )
             }
-            
+
             Spacer(modifier = Modifier.width(12.dp))
-            
+
             // Image details
             Column(
                 modifier = Modifier.weight(1f)
@@ -293,7 +293,7 @@ private fun ThermalImageListItem(image: ThermalImage) {
                     fontSize = 10.sp
                 )
             }
-            
+
             // Actions
             IconButton(onClick = { /* More options */ }) {
                 Icon(

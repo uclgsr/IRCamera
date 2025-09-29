@@ -84,9 +84,10 @@ class SensorDataRepository(
     /**
      * Get thermal sensor data stream
      */
-    fun getThermalDataStream(deviceId: String): Flow<BaseRepository.Result<ThermalSensorData>> = safeFlow {
-        simulateThermalDataStream(deviceId)
-    }
+    fun getThermalDataStream(deviceId: String): Flow<BaseRepository.Result<ThermalSensorData>> =
+        safeFlow {
+            simulateThermalDataStream(deviceId)
+        }
 
     /**
      * Get device status with caching

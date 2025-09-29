@@ -26,7 +26,7 @@ import mpdc4gsr.sensors.gsr.SessionDetailComposeActivity
 
 /**
  * GSRModernizationDemoActivity - Demonstrates Compose Migration Progress
- * 
+ *
  * This activity showcases the ongoing modernization effort by providing
  * side-by-side comparison of traditional vs Compose implementations.
  * It demonstrates the benefits of the architectural improvements made.
@@ -44,7 +44,7 @@ class GSRModernizationDemoActivity : BaseComposeActivity<GSRModernizationViewMod
             Scaffold(
                 topBar = {
                     TopAppBar(
-                        title = { 
+                        title = {
                             Text(
                                 "GSR Modernization Demo",
                                 fontWeight = FontWeight.Bold
@@ -71,7 +71,7 @@ private fun ModernizationDemoContent(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-    
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -81,7 +81,7 @@ private fun ModernizationDemoContent(
     ) {
         // Introduction Card
         IntroductionCard()
-        
+
         // GSR Settings Comparison
         ComparisonCard(
             title = "GSR Settings",
@@ -93,7 +93,7 @@ private fun ModernizationDemoContent(
                 GSRSettingsComposeActivity.startActivity(context)
             }
         )
-        
+
         // Session Detail Comparison
         ComparisonCard(
             title = "Session Details",
@@ -105,7 +105,7 @@ private fun ModernizationDemoContent(
                 SessionDetailComposeActivity.startActivity(context, "demo_session_123")
             }
         )
-        
+
         // Progress Summary Card
         ProgressSummaryCard()
     }
@@ -139,14 +139,14 @@ private fun IntroductionCard() {
                     fontWeight = FontWeight.Bold
                 )
             }
-            
+
             Text(
                 "This demo showcases the ongoing modernization of GSR sensor activities " +
-                "from traditional Android Views to modern Jetpack Compose. Compare the " +
-                "user experience, visual design, and functionality improvements.",
+                        "from traditional Android Views to modern Jetpack Compose. Compare the " +
+                        "user experience, visual design, and functionality improvements.",
                 style = MaterialTheme.typography.bodyMedium
             )
-            
+
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
@@ -197,15 +197,15 @@ private fun ComparisonCard(
                     fontWeight = FontWeight.Bold
                 )
             }
-            
+
             Text(
                 description,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
-            
+
             Divider()
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -224,7 +224,7 @@ private fun ComparisonCard(
                         )
                     }
                 }
-                
+
                 Button(
                     onClick = onLaunchCompose,
                     modifier = Modifier.weight(1f)
@@ -259,18 +259,18 @@ private fun ProgressSummaryCard() {
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Divider()
-            
+
             ProgressIndicatorWithLabel("Infrastructure Setup", 1.0f)
             ProgressIndicatorWithLabel("MainActivity Consolidation", 1.0f)
             ProgressIndicatorWithLabel("GSR Activities Migration", 0.3f)
             ProgressIndicatorWithLabel("Camera Activities Migration", 0.1f)
             ProgressIndicatorWithLabel("Navigation Unification", 0.2f)
-            
+
             Text(
                 "🎯 Next Steps: Continue migrating remaining sensor activities, " +
-                "implement unified navigation, and conduct comprehensive testing.",
+                        "implement unified navigation, and conduct comprehensive testing.",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )

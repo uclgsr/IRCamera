@@ -162,6 +162,7 @@ private fun AbilityTabContent() {
         },
         modifier = Modifier.fillMaxSize()
     )
+
 }
 
 @Composable

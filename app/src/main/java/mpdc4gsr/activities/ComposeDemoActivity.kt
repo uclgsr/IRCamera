@@ -35,7 +35,7 @@ class ComposeDemoActivity : BaseComposeActivity<MainActivityViewModel>() {
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { 
+                    title = {
                         Text(
                             "Task A: Compose Infrastructure Demo",
                             fontWeight = FontWeight.Bold
@@ -59,7 +59,7 @@ class ComposeDemoActivity : BaseComposeActivity<MainActivityViewModel>() {
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary
                 )
-                
+
                 Text(
                     text = "This demo showcases the hybrid Compose infrastructure enabling gradual migration while preserving all existing functionality.",
                     style = MaterialTheme.typography.bodyMedium,
@@ -147,7 +147,7 @@ class ComposeDemoActivity : BaseComposeActivity<MainActivityViewModel>() {
                             color = MaterialTheme.colorScheme.onPrimaryContainer
                         )
                         Spacer(modifier = Modifier.height(12.dp))
-                        
+
                         val features = listOf(
                             "✅ BaseComposeActivity with EventBus integration",
                             "✅ IRCameraTheme with thermal imaging colors",
@@ -157,7 +157,7 @@ class ComposeDemoActivity : BaseComposeActivity<MainActivityViewModel>() {
                             "✅ Preserved all existing functionality",
                             "✅ Zero breaking changes"
                         )
-                        
+
                         features.forEach { feature ->
                             Text(
                                 text = feature,

@@ -40,7 +40,7 @@ fun ThermalSensorCard(
     var maxTemp by remember { mutableFloatStateOf(45.2f) }
     var minTemp by remember { mutableFloatStateOf(18.9f) }
     var deviceType by remember { mutableStateOf("TC001") }
-    
+
     // Simulate thermal data updates
     LaunchedEffect(state) {
         if (state == SensorState.Streaming) {
@@ -52,7 +52,7 @@ fun ThermalSensorCard(
             }
         }
     }
-    
+
     Card(
         onClick = onClick,
         modifier = modifier.fillMaxWidth(),
@@ -97,7 +97,7 @@ fun ThermalSensorCard(
                         )
                     }
                 }
-                
+
                 Surface(
                     color = getStatusColor(state).copy(alpha = 0.2f),
                     shape = RoundedCornerShape(16.dp)
@@ -110,7 +110,7 @@ fun ThermalSensorCard(
                     )
                 }
             }
-            
+
             // Thermal preview visualization
             if (state == SensorState.Streaming || state == SensorState.Connected) {
                 ThermalPreviewVisualization(
@@ -120,7 +120,7 @@ fun ThermalSensorCard(
                     isStreaming = state == SensorState.Streaming
                 )
             }
-            
+
             // Temperature metrics
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -147,7 +147,7 @@ fun ThermalSensorCard(
                     color = Color.Cyan
                 )
             }
-            
+
             // Control buttons
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -162,6 +162,7 @@ fun ThermalSensorCard(
                             Text("Connect")
                         }
                     }
+
                     SensorState.Connected -> {
                         Button(
                             onClick = { onAction(ThermalAction.StartPreview) },
@@ -178,6 +179,7 @@ fun ThermalSensorCard(
                             Text("Calibrate")
                         }
                     }
+
                     SensorState.Streaming -> {
                         Button(
                             onClick = { onAction(ThermalAction.StopPreview) },
@@ -197,6 +199,7 @@ fun ThermalSensorCard(
                             )
                         }
                     }
+
                     SensorState.Error -> {
                         Button(
                             onClick = { onAction(ThermalAction.Connect) },
@@ -205,6 +208,7 @@ fun ThermalSensorCard(
                             Text("Retry")
                         }
                     }
+
                     else -> {}
                 }
             }
@@ -239,44 +243,44 @@ private fun ThermalPreviewVisualization(
                 ) {
                     val width = size.width
                     val height = size.height
-                    
+
                     // Draw thermal background pattern
                     drawRect(
                         color = Color(0xFF1A1A2E),
                         size = size
                     )
-                    
+
                     // Draw thermal hotspots based on temperature data
                     val hotspotRadius = 30f
-                    
+
                     // Max temperature hotspot (red)
                     drawCircle(
                         color = Color.Red.copy(alpha = 0.8f),
                         radius = hotspotRadius,
                         center = Offset(width * 0.7f, height * 0.3f)
                     )
-                    
+
                     // Min temperature spot (blue)
                     drawCircle(
                         color = Color.Blue.copy(alpha = 0.8f),
                         radius = hotspotRadius * 0.7f,
                         center = Offset(width * 0.3f, height * 0.7f)
                     )
-                    
+
                     // Center temperature area (gradient)
                     val centerColor = when {
                         centerTemp > 30f -> Color.Yellow
                         centerTemp > 20f -> Color.Green
                         else -> Color.Cyan
                     }
-                    
+
                     drawCircle(
                         color = centerColor.copy(alpha = 0.6f),
                         radius = hotspotRadius * 0.8f,
                         center = Offset(width * 0.5f, height * 0.5f)
                     )
                 }
-                
+
                 // Temperature overlays
                 Box(
                     modifier = Modifier.fillMaxSize()
@@ -296,7 +300,7 @@ private fun ThermalPreviewVisualization(
                             modifier = Modifier.padding(4.dp)
                         )
                     }
-                    
+
                     // Min temp indicator
                     Surface(
                         modifier = Modifier
@@ -312,7 +316,7 @@ private fun ThermalPreviewVisualization(
                             modifier = Modifier.padding(4.dp)
                         )
                     }
-                    
+
                     // Center crosshair
                     Canvas(
                         modifier = Modifier.fillMaxSize()
@@ -320,7 +324,7 @@ private fun ThermalPreviewVisualization(
                         val centerX = size.width / 2
                         val centerY = size.height / 2
                         val crosshairSize = 15f
-                        
+
                         // Draw crosshair
                         drawLine(
                             color = Color.Yellow,

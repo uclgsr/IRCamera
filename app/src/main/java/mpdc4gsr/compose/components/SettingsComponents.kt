@@ -87,7 +87,7 @@ fun SettingsToggle(
                 fontSize = 14.sp
             )
         }
-        
+
         Switch(
             checked = checked,
             onCheckedChange = onCheckedChange,
@@ -136,9 +136,9 @@ fun SettingsSlider(
                 fontWeight = FontWeight.Bold
             )
         }
-        
+
         Spacer(modifier = Modifier.height(8.dp))
-        
+
         Slider(
             value = value,
             onValueChange = onValueChange,
@@ -165,7 +165,7 @@ fun SettingsDropdown(
     modifier: Modifier = Modifier
 ) {
     var expanded by remember { mutableStateOf(false) }
-    
+
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -178,7 +178,7 @@ fun SettingsDropdown(
             fontWeight = FontWeight.Medium,
             modifier = Modifier.padding(bottom = 8.dp)
         )
-        
+
         ExposedDropdownMenuBox(
             expanded = expanded,
             onExpandedChange = { expanded = !expanded }
@@ -205,7 +205,7 @@ fun SettingsDropdown(
                     .menuAnchor()
                     .fillMaxWidth()
             )
-            
+
             ExposedDropdownMenu(
                 expanded = expanded,
                 onDismissRequest = { expanded = false }

@@ -46,7 +46,7 @@ fun FragmentContainer(
         factory = { context ->
             FragmentContainerView(context).apply {
                 id = containerId
-                
+
                 // Add the fragment to the container
                 val fragment = fragmentFactory()
                 fragmentManager.beginTransaction()

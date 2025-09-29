@@ -11,23 +11,23 @@ import kotlinx.coroutines.flow.asStateFlow
  * Manages user profile and settings navigation
  */
 class MineFragmentViewModel : BaseViewModel() {
-    
+
     data class UserProfileState(
         val username: String = "Guest",
         val avatarUrl: String? = null,
         val isLoggedIn: Boolean = false
     )
-    
+
     private val _userProfile = MutableStateFlow(UserProfileState())
     val userProfile: StateFlow<UserProfileState> = _userProfile.asStateFlow()
-    
+
     private val _showWinterPoint = MutableStateFlow(false)
     val showWinterPoint: StateFlow<Boolean> = _showWinterPoint.asStateFlow()
-    
+
     init {
         loadUserProfile()
     }
-    
+
     private fun loadUserProfile() {
         launchWithErrorHandling {
             val userInfo = UserInfoManager.getUserInfo()
@@ -38,18 +38,18 @@ class MineFragmentViewModel : BaseViewModel() {
             )
         }
     }
-    
+
     fun refreshUserProfile() {
         loadUserProfile()
     }
-    
+
     fun clearCache() {
         launchWithErrorHandling {
             // Clear cache implementation
             // Original implementation used CleanUtils.cleanInternalCache()
         }
     }
-    
+
     fun onWinterEggClick() {
         _showWinterPoint.value = !_showWinterPoint.value
     }

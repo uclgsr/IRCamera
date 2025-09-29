@@ -41,11 +41,11 @@ class BLEIntegrationTestComposeActivity : FragmentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         // Initialize components
         permissionController = PermissionController(this)
         initializeRecorder()
-        
+
         setContent {
             LibUnifiedTheme {
                 BLEIntegrationTestScreen(
@@ -75,13 +75,13 @@ class BLEIntegrationTestComposeActivity : FragmentActivity() {
                     description = "Test BLE and location permissions"
                 ),
                 TestCase(
-                    id = "discovery", 
+                    id = "discovery",
                     name = "Device Discovery",
                     description = "Test Shimmer device discovery"
                 ),
                 TestCase(
                     id = "connection",
-                    name = "Device Connection", 
+                    name = "Device Connection",
                     description = "Test connection to Shimmer GSR device"
                 ),
                 TestCase(
@@ -138,7 +138,7 @@ class BLEIntegrationTestComposeActivity : FragmentActivity() {
 
                 // Run All Tests Button
                 Button(
-                    onClick = { 
+                    onClick = {
                         if (!isTestRunning) {
                             lifecycleScope.launch { runAllTests() }
                         }
@@ -173,7 +173,7 @@ class BLEIntegrationTestComposeActivity : FragmentActivity() {
 
                 if (logMessages.isNotEmpty()) {
                     Spacer(modifier = Modifier.height(16.dp))
-                    
+
                     Card {
                         Column(modifier = Modifier.padding(16.dp)) {
                             Text(
@@ -182,7 +182,7 @@ class BLEIntegrationTestComposeActivity : FragmentActivity() {
                                 fontWeight = FontWeight.Medium
                             )
                             Spacer(modifier = Modifier.height(8.dp))
-                            
+
                             logMessages.forEach { message ->
                                 Text(
                                     text = message,
@@ -210,7 +210,7 @@ class BLEIntegrationTestComposeActivity : FragmentActivity() {
 
     private suspend fun runAllTests() {
         Log.i(TAG, "Starting comprehensive BLE integration tests")
-        
+
         // Run each test sequentially
         runPermissionsTest()
         delay(1000)
@@ -221,7 +221,7 @@ class BLEIntegrationTestComposeActivity : FragmentActivity() {
         runStreamingTest()
         delay(1000)
         runReconnectionTest()
-        
+
         Log.i(TAG, "BLE integration tests completed")
     }
 
@@ -297,7 +297,10 @@ class BLEIntegrationTestComposeActivity : FragmentActivity() {
                 delay(2000)
                 recorder.stopRecording()
                 tempDir.deleteRecursively()
-                Log.d(TAG, "Reconnection test result: initial=$initialResult, reconnect=$reconnectResult")
+                Log.d(
+                    TAG,
+                    "Reconnection test result: initial=$initialResult, reconnect=$reconnectResult"
+                )
             }
         } catch (e: Exception) {
             Log.e(TAG, "Reconnection test failed: ${e.message}")

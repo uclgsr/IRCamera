@@ -17,7 +17,7 @@ import com.mpdc4gsr.libunified.R as RCore
 
 /**
  * Compose equivalent of DownloadProDialog.kt
- * 
+ *
  * Download progress dialog with progress bar and file size display
  */
 @Composable
@@ -60,18 +60,22 @@ fun DownloadProgressDialog(
                         color = MaterialTheme.colorScheme.onSurface,
                         textAlign = TextAlign.Center
                     )
-                    
+
                     // File size info
-                    val sizeText = "${stringResource(RCore.string.detail_len)}: ${formatFileSize(currentBytes)}/${formatFileSize(totalBytes)}"
+                    val sizeText =
+                        "${stringResource(RCore.string.detail_len)}: ${formatFileSize(currentBytes)}/${
+                            formatFileSize(totalBytes)
+                        }"
                     Text(
                         text = sizeText,
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
                         textAlign = TextAlign.Center
                     )
-                    
+
                     // Progress bar
-                    val progress = if (totalBytes > 0) (currentBytes.toFloat() / totalBytes.toFloat()) else 0f
+                    val progress =
+                        if (totalBytes > 0) (currentBytes.toFloat() / totalBytes.toFloat()) else 0f
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
@@ -83,9 +87,9 @@ fun DownloadProgressDialog(
                             color = MaterialTheme.colorScheme.primary,
                             trackColor = MaterialTheme.colorScheme.surfaceVariant,
                         )
-                        
+
                         Spacer(modifier = Modifier.height(8.dp))
-                        
+
                         Text(
                             text = "${(progress * 100).toInt()}%",
                             style = MaterialTheme.typography.bodyMedium,

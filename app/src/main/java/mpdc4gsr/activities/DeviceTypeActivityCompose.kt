@@ -36,8 +36,18 @@ enum class IRDeviceType(
     val icon: ImageVector,
     val isTS004: Boolean
 ) {
-    TS004("TS004 Thermal Camera", "High-precision thermal imaging device", Icons.Default.Thermostat, true),
-    TC007("TC007 Thermal Camera", "Compact thermal imaging solution", Icons.Default.CameraAlt, false)
+    TS004(
+        "TS004 Thermal Camera",
+        "High-precision thermal imaging device",
+        Icons.Default.Thermostat,
+        true
+    ),
+    TC007(
+        "TC007 Thermal Camera",
+        "Compact thermal imaging solution",
+        Icons.Default.CameraAlt,
+        false
+    )
 }
 
 class DeviceTypeViewModel : BaseViewModel() {
@@ -141,6 +151,7 @@ class DeviceTypeActivityCompose : BaseComposeActivity<DeviceTypeViewModel>() {
                                                 .withBoolean("isTS004", true)
                                                 .navigation(context as DeviceTypeActivityCompose)
                                         }
+
                                         IRDeviceType.TC007 -> {
                                             NavigationManager.getInstance()
                                                 .build(RouterConfig.IR_DEVICE_ADD)
@@ -209,9 +220,9 @@ private fun DeviceTypeCard(
             .clip(RoundedCornerShape(12.dp))
             .clickable { onDeviceClick(device) },
         colors = CardDefaults.cardColors(
-            containerColor = if (isSelected) 
-                MaterialTheme.colorScheme.primaryContainer 
-            else 
+            containerColor = if (isSelected)
+                MaterialTheme.colorScheme.primaryContainer
+            else
                 MaterialTheme.colorScheme.surface
         ),
         elevation = CardDefaults.cardElevation(
@@ -228,9 +239,9 @@ private fun DeviceTypeCard(
             Surface(
                 modifier = Modifier.size(56.dp),
                 shape = RoundedCornerShape(12.dp),
-                color = if (isSelected) 
-                    MaterialTheme.colorScheme.primary 
-                else 
+                color = if (isSelected)
+                    MaterialTheme.colorScheme.primary
+                else
                     MaterialTheme.colorScheme.primaryContainer
             ) {
                 Icon(
@@ -239,9 +250,9 @@ private fun DeviceTypeCard(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(12.dp),
-                    tint = if (isSelected) 
-                        MaterialTheme.colorScheme.onPrimary 
-                    else 
+                    tint = if (isSelected)
+                        MaterialTheme.colorScheme.onPrimary
+                    else
                         MaterialTheme.colorScheme.onPrimaryContainer
                 )
             }
@@ -256,18 +267,18 @@ private fun DeviceTypeCard(
                     text = device.displayName,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold,
-                    color = if (isSelected) 
-                        MaterialTheme.colorScheme.onPrimaryContainer 
-                    else 
+                    color = if (isSelected)
+                        MaterialTheme.colorScheme.onPrimaryContainer
+                    else
                         MaterialTheme.colorScheme.onSurface
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = device.description,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = if (isSelected) 
+                    color = if (isSelected)
                         MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f)
-                    else 
+                    else
                         MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }

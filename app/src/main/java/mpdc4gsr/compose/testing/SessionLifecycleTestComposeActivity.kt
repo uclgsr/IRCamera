@@ -45,7 +45,7 @@ class SessionLifecycleTestComposeActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         setContent {
             LibUnifiedTheme {
                 SessionLifecycleTestScreen()
@@ -152,7 +152,7 @@ class SessionLifecycleTestComposeActivity : ComponentActivity() {
                                 fontWeight = FontWeight.Medium
                             )
                         }
-                        
+
                         if (sessionEvents.isNotEmpty()) {
                             Spacer(modifier = Modifier.height(8.dp))
                             Text(
@@ -190,7 +190,7 @@ class SessionLifecycleTestComposeActivity : ComponentActivity() {
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Button(
-                        onClick = { 
+                        onClick = {
                             isTestRunning = true
                             lifecycleScope.launch { runFullLifecycleTest() }
                         },
@@ -210,9 +210,9 @@ class SessionLifecycleTestComposeActivity : ComponentActivity() {
                             Text("Full Test")
                         }
                     }
-                    
+
                     OutlinedButton(
-                        onClick = { 
+                        onClick = {
                             lifecycleScope.launch { simulateSession() }
                         },
                         enabled = !isTestRunning,
@@ -238,7 +238,7 @@ class SessionLifecycleTestComposeActivity : ComponentActivity() {
                 // Session Events Log
                 if (sessionEvents.isNotEmpty()) {
                     Spacer(modifier = Modifier.height(16.dp))
-                    
+
                     Card {
                         Column(modifier = Modifier.padding(16.dp)) {
                             Row(
@@ -257,9 +257,9 @@ class SessionLifecycleTestComposeActivity : ComponentActivity() {
                                     Text("Clear")
                                 }
                             }
-                            
+
                             Spacer(modifier = Modifier.height(8.dp))
-                            
+
                             sessionEvents.takeLast(10).forEach { event ->
                                 SessionEventItem(event = event)
                                 Spacer(modifier = Modifier.height(4.dp))
@@ -292,7 +292,7 @@ class SessionLifecycleTestComposeActivity : ComponentActivity() {
                     )
                 }
             }
-            
+
             Column(horizontalAlignment = Alignment.End) {
                 if (event.duration > 0) {
                     Text(
@@ -303,9 +303,9 @@ class SessionLifecycleTestComposeActivity : ComponentActivity() {
                 Icon(
                     imageVector = if (event.success) Icons.Default.CheckCircle else Icons.Default.Error,
                     contentDescription = null,
-                    tint = if (event.success) 
-                        MaterialTheme.colorScheme.primary 
-                    else 
+                    tint = if (event.success)
+                        MaterialTheme.colorScheme.primary
+                    else
                         MaterialTheme.colorScheme.error,
                     modifier = Modifier.size(16.dp)
                 )
@@ -327,37 +327,38 @@ class SessionLifecycleTestComposeActivity : ComponentActivity() {
 
     private suspend fun runFullLifecycleTest() {
         Log.i(TAG, "Starting full session lifecycle test")
-        
+
         val testMetrics = mutableMapOf<String, Any>()
-        
+
         try {
             // Session Creation Test
             val creationTime = testSessionCreation()
             testMetrics["Creation Time"] = "${creationTime}ms"
-            
+
             // Multi-sensor Start Test
             val startTime = testMultiSensorStart()
             testMetrics["Start Time"] = "${startTime}ms"
-            
+
             // Session Operation (simulate 5 seconds)
             currentSessionState = SessionState.ACTIVE
             delay(5000)
-            
+
             // Pause/Resume Test
             val pauseResumeTime = testPauseResume()
             testMetrics["Pause/Resume Time"] = "${pauseResumeTime}ms"
-            
+
             // Graceful Stop Test
             val stopTime = testGracefulStop()
             testMetrics["Stop Time"] = "${stopTime}ms"
-            
+
             // Update metrics
             testMetrics["Total Events"] = sessionEvents.size
-            testMetrics["Success Rate"] = "${sessionEvents.count { it.success } * 100 / sessionEvents.size}%"
-            
+            testMetrics["Success Rate"] =
+                "${sessionEvents.count { it.success } * 100 / sessionEvents.size}%"
+
             sessionMetrics = testMetrics
             currentSessionState = SessionState.COMPLETED
-            
+
         } catch (e: Exception) {
             Log.e(TAG, "Full lifecycle test failed: ${e.message}")
             currentSessionState = SessionState.ERROR
@@ -368,11 +369,11 @@ class SessionLifecycleTestComposeActivity : ComponentActivity() {
 
     private suspend fun testSessionCreation(): Long {
         Log.d(TAG, "Testing session creation")
-        
+
         return measureTimeMillis {
             currentSessionState = SessionState.INITIALIZING
             delay(1000) // Simulate session initialization
-            
+
             sessionEvents = sessionEvents + SessionEvent(
                 eventType = "Session Created",
                 timestamp = System.currentTimeMillis(),
@@ -385,7 +386,7 @@ class SessionLifecycleTestComposeActivity : ComponentActivity() {
 
     private suspend fun testMultiSensorStart(): Long {
         Log.d(TAG, "Testing multi-sensor start")
-        
+
         return measureTimeMillis {
             // Simulate starting GSR sensor
             delay(500)
@@ -395,7 +396,7 @@ class SessionLifecycleTestComposeActivity : ComponentActivity() {
                 duration = 500,
                 success = true
             )
-            
+
             // Simulate starting thermal camera
             delay(800)
             sessionEvents = sessionEvents + SessionEvent(
@@ -404,7 +405,7 @@ class SessionLifecycleTestComposeActivity : ComponentActivity() {
                 duration = 800,
                 success = true
             )
-            
+
             // Simulate starting RGB camera
             delay(600)
             sessionEvents = sessionEvents + SessionEvent(
@@ -418,7 +419,7 @@ class SessionLifecycleTestComposeActivity : ComponentActivity() {
 
     private suspend fun testPauseResume(): Long {
         Log.d(TAG, "Testing pause/resume functionality")
-        
+
         return measureTimeMillis {
             // Test pause
             currentSessionState = SessionState.PAUSED
@@ -429,7 +430,7 @@ class SessionLifecycleTestComposeActivity : ComponentActivity() {
                 duration = 1000,
                 success = true
             )
-            
+
             // Test resume
             delay(500)
             currentSessionState = SessionState.ACTIVE
@@ -444,10 +445,10 @@ class SessionLifecycleTestComposeActivity : ComponentActivity() {
 
     private suspend fun testGracefulStop(): Long {
         Log.d(TAG, "Testing graceful session stop")
-        
+
         return measureTimeMillis {
             currentSessionState = SessionState.STOPPING
-            
+
             // Stop each sensor gracefully
             delay(400)
             sessionEvents = sessionEvents + SessionEvent(
@@ -456,7 +457,7 @@ class SessionLifecycleTestComposeActivity : ComponentActivity() {
                 duration = 400,
                 success = true
             )
-            
+
             delay(600)
             sessionEvents = sessionEvents + SessionEvent(
                 eventType = "Thermal Stopped",
@@ -464,7 +465,7 @@ class SessionLifecycleTestComposeActivity : ComponentActivity() {
                 duration = 600,
                 success = true
             )
-            
+
             delay(300)
             sessionEvents = sessionEvents + SessionEvent(
                 eventType = "RGB Stopped",
@@ -472,7 +473,7 @@ class SessionLifecycleTestComposeActivity : ComponentActivity() {
                 duration = 300,
                 success = true
             )
-            
+
             delay(200)
             sessionEvents = sessionEvents + SessionEvent(
                 eventType = "Session Terminated",
@@ -486,18 +487,18 @@ class SessionLifecycleTestComposeActivity : ComponentActivity() {
 
     private suspend fun simulateSession() {
         Log.d(TAG, "Simulating quick session")
-        
+
         currentSessionState = SessionState.INITIALIZING
         delay(1000)
-        
+
         currentSessionState = SessionState.ACTIVE
         delay(3000)
-        
+
         currentSessionState = SessionState.STOPPING
         delay(1000)
-        
+
         currentSessionState = SessionState.COMPLETED
-        
+
         sessionEvents = sessionEvents + SessionEvent(
             eventType = "Simulation Complete",
             timestamp = System.currentTimeMillis(),

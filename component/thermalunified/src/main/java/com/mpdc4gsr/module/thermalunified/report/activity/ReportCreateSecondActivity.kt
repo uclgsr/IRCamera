@@ -73,10 +73,14 @@ class ReportCreateSecondActivity : BaseActivity(), View.OnClickListener {
             intent.getParcelableExtra<ImageTempBean>(ExtraKeyConfig.IMAGE_TEMP_BEAN)
         }
         reportIRList = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            intent.getParcelableArrayListExtra(ExtraKeyConfig.REPORT_IR_LIST, ReportIRBean::class.java) ?: ArrayList(10)
+            intent.getParcelableArrayListExtra(
+                ExtraKeyConfig.REPORT_IR_LIST,
+                ReportIRBean::class.java
+            ) ?: ArrayList(10)
         } else {
             @Suppress("DEPRECATION")
-            intent.getParcelableArrayListExtra<ReportIRBean>(ExtraKeyConfig.REPORT_IR_LIST) ?: ArrayList(10)
+            intent.getParcelableArrayListExtra<ReportIRBean>(ExtraKeyConfig.REPORT_IR_LIST)
+                ?: ArrayList(10)
         }
 
         refreshImg(currentFilePath)
@@ -190,13 +194,19 @@ class ReportCreateSecondActivity : BaseActivity(), View.OnClickListener {
                 val reportIRBeanList = ArrayList<ReportIRBean>(reportIRList)
                 reportIRBeanList.add(buildReportIr(currentFilePath))
                 val reportInfo = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    intent.getParcelableExtra(ExtraKeyConfig.REPORT_INFO, ReportInfoBean::class.java)
+                    intent.getParcelableExtra(
+                        ExtraKeyConfig.REPORT_INFO,
+                        ReportInfoBean::class.java
+                    )
                 } else {
                     @Suppress("DEPRECATION")
                     intent.getParcelableExtra<ReportInfoBean>(ExtraKeyConfig.REPORT_INFO)
                 }
                 val reportCondition = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    intent.getParcelableExtra(ExtraKeyConfig.REPORT_CONDITION, ReportConditionBean::class.java)
+                    intent.getParcelableExtra(
+                        ExtraKeyConfig.REPORT_CONDITION,
+                        ReportConditionBean::class.java
+                    )
                 } else {
                     @Suppress("DEPRECATION")
                     intent.getParcelableExtra<ReportConditionBean>(ExtraKeyConfig.REPORT_CONDITION)
@@ -218,18 +228,26 @@ class ReportCreateSecondActivity : BaseActivity(), View.OnClickListener {
             tvPreview -> {
                 val appLanguage = ConstantLanguages.ENGLISH
                 val sdkVersion = "1.2.8_23050619"
-                val reportInfoBean: ReportInfoBean? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    intent.getParcelableExtra(ExtraKeyConfig.REPORT_INFO, ReportInfoBean::class.java)
-                } else {
-                    @Suppress("DEPRECATION")
-                    intent.getParcelableExtra<ReportInfoBean>(ExtraKeyConfig.REPORT_INFO)
-                }
-                val conditionBean: ReportConditionBean? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    intent.getParcelableExtra(ExtraKeyConfig.REPORT_CONDITION, ReportConditionBean::class.java)
-                } else {
-                    @Suppress("DEPRECATION")
-                    intent.getParcelableExtra<ReportConditionBean>(ExtraKeyConfig.REPORT_CONDITION)
-                }
+                val reportInfoBean: ReportInfoBean? =
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        intent.getParcelableExtra(
+                            ExtraKeyConfig.REPORT_INFO,
+                            ReportInfoBean::class.java
+                        )
+                    } else {
+                        @Suppress("DEPRECATION")
+                        intent.getParcelableExtra<ReportInfoBean>(ExtraKeyConfig.REPORT_INFO)
+                    }
+                val conditionBean: ReportConditionBean? =
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        intent.getParcelableExtra(
+                            ExtraKeyConfig.REPORT_CONDITION,
+                            ReportConditionBean::class.java
+                        )
+                    } else {
+                        @Suppress("DEPRECATION")
+                        intent.getParcelableExtra<ReportConditionBean>(ExtraKeyConfig.REPORT_CONDITION)
+                    }
                 val reportIRBeanList = ArrayList<ReportIRBean>(reportIRList)
                 reportIRBeanList.add(buildReportIr(currentFilePath))
                 val reportBean = ReportBean(

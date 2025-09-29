@@ -111,16 +111,16 @@ class ShimmerMvpViewModel : BaseViewModel() {
             _connectionState.value = ShimmerConnectionState.SCANNING
             _statusMessage.value = "Scanning for Shimmer devices..."
             _availableDevices.value = emptyList()
-            
+
             delay(2000)
-            
+
             // Simulate discovering Shimmer devices
             val mockDevices = listOf(
                 ShimmerDevice("Shimmer3-GSR-001", "00:06:66:6C:E9:01", signalStrength = 85),
                 ShimmerDevice("Shimmer3-GSR-002", "00:06:66:6C:E9:02", signalStrength = 72),
                 ShimmerDevice("ShimmerBT-GSR", "00:06:66:6C:E9:03", signalStrength = 91)
             )
-            
+
             delay(3000) // Simulate scanning time
             _availableDevices.value = mockDevices
             _connectionState.value = ShimmerConnectionState.DISCONNECTED
@@ -132,12 +132,12 @@ class ShimmerMvpViewModel : BaseViewModel() {
         kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
             _connectionState.value = ShimmerConnectionState.CONNECTING
             _statusMessage.value = "Connecting to ${device.name}..."
-            
+
             delay(3000) // Simulate connection time
-            
+
             // Simulate successful connection (90% success rate)
             val isConnected = kotlin.random.Random.nextFloat() > 0.1f
-            
+
             if (isConnected) {
                 _connectedDevice.value = device.copy(isConnected = true)
                 _connectionState.value = ShimmerConnectionState.CONNECTED
@@ -164,22 +164,22 @@ class ShimmerMvpViewModel : BaseViewModel() {
         kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
             while (_connectionState.value == ShimmerConnectionState.CONNECTED) {
                 delay(50) // 20 Hz sampling rate
-                
+
                 if (_isRecording.value) {
                     val timestamp = System.currentTimeMillis()
                     val rawValue = kotlin.random.Random.nextDouble(200.0, 4000.0)
                     val gsrValue = GSRCalculationUtils.calculateGSRFromRaw(rawValue)
                     val quality = determineQuality(rawValue, gsrValue)
-                    
+
                     val sample = GSRData(timestamp, rawValue, gsrValue, quality)
-                    
+
                     val currentData = _gsrData.value.toMutableList()
                     currentData.add(sample)
                     if (currentData.size > 200) { // Keep last 200 samples
                         currentData.removeAt(0)
                     }
                     _gsrData.value = currentData
-                    
+
                     _currentGSRValue.value = gsrValue
                     _currentQuality.value = quality
                     _samplesCollected.value = _samplesCollected.value + 1
@@ -192,7 +192,7 @@ class ShimmerMvpViewModel : BaseViewModel() {
         if (_connectionState.value == ShimmerConnectionState.CONNECTED) {
             _isRecording.value = true
             _statusMessage.value = "Recording GSR data..."
-            
+
             kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
                 var seconds = 0
                 while (_isRecording.value) {
@@ -320,6 +320,7 @@ class ShimmerMvpActivityCompose : BaseComposeActivity<ShimmerMvpViewModel>() {
                                         strokeWidth = 2.dp
                                     )
                                 }
+
                                 ShimmerConnectionState.CONNECTED -> {
                                     Icon(
                                         imageVector = Icons.Default.CheckCircle,
@@ -328,6 +329,7 @@ class ShimmerMvpActivityCompose : BaseComposeActivity<ShimmerMvpViewModel>() {
                                         modifier = Modifier.size(24.dp)
                                     )
                                 }
+
                                 ShimmerConnectionState.ERROR -> {
                                     Icon(
                                         imageVector = Icons.Default.Error,
@@ -336,6 +338,7 @@ class ShimmerMvpActivityCompose : BaseComposeActivity<ShimmerMvpViewModel>() {
                                         modifier = Modifier.size(24.dp)
                                     )
                                 }
+
                                 else -> {
                                     Icon(
                                         imageVector = Icons.Default.Bluetooth,
@@ -345,12 +348,13 @@ class ShimmerMvpActivityCompose : BaseComposeActivity<ShimmerMvpViewModel>() {
                                     )
                                 }
                             }
-                            
+
                             Spacer(modifier = Modifier.width(12.dp))
-                            
+
                             Column(modifier = Modifier.weight(1f)) {
                                 Text(
-                                    text = connectionState.name.lowercase().replaceFirstChar { it.uppercase() },
+                                    text = connectionState.name.lowercase()
+                                        .replaceFirstChar { it.uppercase() },
                                     style = MaterialTheme.typography.titleMedium,
                                     fontWeight = FontWeight.Bold
                                 )
@@ -360,7 +364,7 @@ class ShimmerMvpActivityCompose : BaseComposeActivity<ShimmerMvpViewModel>() {
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             }
-                            
+
                             if (connectedDevice != null) {
                                 OutlinedButton(
                                     onClick = { viewModel.disconnect() }
@@ -404,12 +408,15 @@ class ShimmerMvpActivityCompose : BaseComposeActivity<ShimmerMvpViewModel>() {
                                         text = currentQuality.displayName,
                                         style = MaterialTheme.typography.labelMedium,
                                         color = Color.White,
-                                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp)
+                                        modifier = Modifier.padding(
+                                            horizontal = 12.dp,
+                                            vertical = 4.dp
+                                        )
                                     )
                                 }
-                                
+
                                 Spacer(modifier = Modifier.height(16.dp))
-                                
+
                                 Row(
                                     modifier = Modifier.fillMaxWidth(),
                                     horizontalArrangement = Arrangement.SpaceEvenly
@@ -481,7 +488,7 @@ class ShimmerMvpActivityCompose : BaseComposeActivity<ShimmerMvpViewModel>() {
                                 }
                             }
                         }
-                        
+
                         // Recent GSR data
                         if (gsrData.isNotEmpty()) {
                             Text(
@@ -490,7 +497,7 @@ class ShimmerMvpActivityCompose : BaseComposeActivity<ShimmerMvpViewModel>() {
                                 fontWeight = FontWeight.Bold,
                                 modifier = Modifier.padding(bottom = 12.dp)
                             )
-                            
+
                             Card(
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -659,7 +666,7 @@ private fun GSRDataRow(
     modifier: Modifier = Modifier
 ) {
     val timeFormat = SimpleDateFormat("HH:mm:ss.SSS", Locale.getDefault())
-    
+
     Row(
         modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
@@ -669,17 +676,17 @@ private fun GSRDataRow(
             style = MaterialTheme.typography.bodySmall,
             modifier = Modifier.width(80.dp)
         )
-        
+
         Spacer(modifier = Modifier.width(8.dp))
-        
+
         Text(
             text = String.format("%.2f µS", sample.gsrValue),
             style = MaterialTheme.typography.bodySmall,
             modifier = Modifier.width(70.dp)
         )
-        
+
         Spacer(modifier = Modifier.width(8.dp))
-        
+
         Surface(
             shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp),
             color = sample.quality.color.copy(alpha = 0.2f)

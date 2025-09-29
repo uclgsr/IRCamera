@@ -181,7 +181,11 @@ class GSRVideoPlayerViewModel : BaseViewModel() {
         }
     }
 
-    fun shareVideo(videoPath: String, packageName: String, context: android.content.Context? = null) {
+    fun shareVideo(
+        videoPath: String,
+        packageName: String,
+        context: android.content.Context? = null
+    ) {
         launchWithErrorHandling {
             createShareUri(videoPath, packageName, context)?.let { uri ->
                 _videoEvents.emit(VideoEvent.ShareVideo(uri))
