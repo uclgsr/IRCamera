@@ -187,7 +187,7 @@ private fun ThermalListView() {
 }
 
 @Composable
-private fun ThermalImageCard(image: ThermalImage) {
+private fun ThermalImageCard(image: GalleryThermalImage) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -242,7 +242,7 @@ private fun ThermalImageCard(image: ThermalImage) {
 }
 
 @Composable
-private fun ThermalImageListItem(image: ThermalImage) {
+private fun ThermalImageListItem(image: GalleryThermalImage) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = Color(0xFF21262D)),
@@ -308,9 +308,9 @@ private fun ThermalImageListItem(image: ThermalImage) {
     }
 }
 
-private fun generateSampleThermalImages(): List<ThermalImage> {
+private fun generateSampleThermalImages(): List<GalleryThermalImage> {
     return (1..20).map { index ->
-        ThermalImage(
+        GalleryThermalImage(
             id = index,
             name = "thermal_image_$index.tiff",
             temperature = (20..80).random(),
@@ -321,7 +321,7 @@ private fun generateSampleThermalImages(): List<ThermalImage> {
     }
 }
 
-private data class ThermalImage(
+private data class GalleryThermalImage(
     val id: Int,
     val name: String,
     val temperature: Int,

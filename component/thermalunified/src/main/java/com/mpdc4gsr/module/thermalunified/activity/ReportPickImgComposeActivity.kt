@@ -86,7 +86,7 @@ class ReportPickImgComposeActivity : BaseComposeActivity<ReportPickImgViewModel>
 
         val thermalImages = remember {
             (1..20).map { index ->
-                ThermalImage(
+                ReportThermalImage(
                     id = index,
                     name = "Thermal_IMG_$index.jpg",
                     temperature = (25.0 + index * 2.5),
@@ -264,7 +264,7 @@ class ReportPickImgComposeActivity : BaseComposeActivity<ReportPickImgViewModel>
 
     @Composable
     private fun ThermalImageCard(
-        image: ThermalImage,
+        image: ReportThermalImage,
         isSelected: Boolean,
         showRecommendation: Boolean,
         onSelectionChange: (Boolean) -> Unit
@@ -364,7 +364,7 @@ class ReportPickImgComposeActivity : BaseComposeActivity<ReportPickImgViewModel>
     }
 }
 
-private data class ThermalImage(
+private data class ReportThermalImage(
     val id: Int,
     val name: String,
     val temperature: Double,

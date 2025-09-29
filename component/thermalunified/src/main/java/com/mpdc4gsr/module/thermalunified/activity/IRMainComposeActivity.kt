@@ -286,7 +286,7 @@ private fun ThermalBottomNavigation(
 
 @Composable
 private fun ThermalTabButton(
-    tab: ThermalTab,
+    tab: MainThermalTab,
     isSelected: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -325,17 +325,17 @@ private fun ThermalTabButton(
 }
 
 // Data class for tab configuration
-private data class ThermalTab(
+internal data class MainThermalTab(
     val title: String,
     val icon: ImageVector
 )
 
-private fun getThermalTabs(): List<ThermalTab> {
+private fun getThermalTabs(): List<MainThermalTab> {
     return listOf(
-        ThermalTab("Thermal", Icons.Default.Thermostat),
-        ThermalTab("Gallery", Icons.Default.Photo),
-        ThermalTab("Ability", Icons.Default.Build),
-        ThermalTab("PDF", Icons.Default.Description),
-        ThermalTab("More", Icons.Default.MoreVert)
+        MainThermalTab("Thermal", Icons.Default.Videocam),
+        MainThermalTab("Gallery", Icons.Default.Photo),
+        MainThermalTab("Ability", Icons.Default.Build),
+        MainThermalTab("PDF", Icons.Default.Description),
+        MainThermalTab("More", Icons.Default.MoreVert)
     )
 }
