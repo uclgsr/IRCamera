@@ -1,20 +1,17 @@
 package mpdc4gsr.compose.navigation
 
+import android.content.Intent
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import mpdc4gsr.activities.*
-import mpdc4gsr.sensors.gsr.GSRSettingsComposeActivity
-import mpdc4gsr.sensors.gsr.SessionDetailComposeActivity
 import mpdc4gsr.compose.screens.*
 import mpdc4gsr.compose.testing.TestResultsScreen
-import mpdc4gsr.network.DevicePairingComposeActivity
-import mpdc4gsr.permissions.PermissionRequestComposeActivity
 
 /**
  * Unified Navigation System - Phase 2 Implementation
@@ -33,17 +30,16 @@ sealed class UnifiedRoute(val route: String) {
 
     // GSR Sensor Routes
     object GSRSettings : UnifiedRoute("gsr_settings")
-    object GSRModernizationDemo : UnifiedRoute("gsr_modernization_demo")
+    object GSRDemo : UnifiedRoute("gsr_demo")
     object GSRPlot : UnifiedRoute("gsr_plot/{sessionId}") {
         fun createRoute(sessionId: String) = "gsr_plot/$sessionId"
     }
-
-    object GSRDataView : UnifiedRoute("gsr_data_view/{filePath}") {
-        fun createRoute(filePath: String) = "gsr_data_view/$filePath"
+    object GSRDataView : UnifiedRoute("gsr_data_view") {
+        // File paths should be passed via arguments, not URL parameters
+        fun createRoute() = "gsr_data_view"
     }
-
-    object SessionDetail : UnifiedRoute("session_detail/{sessionId}") {
-        fun createRoute(sessionId: String) = "session_detail/$sessionId"
+    object GSRSessionDetail : UnifiedRoute("gsr_session_detail/{sessionId}") {
+        fun createRoute(sessionId: String) = "gsr_session_detail/$sessionId"
     }
 
     // Camera Integration Routes
@@ -55,13 +51,12 @@ sealed class UnifiedRoute(val route: String) {
     object DevicePairing : UnifiedRoute("device_pairing")
     object PermissionRequest : UnifiedRoute("permission_request")
 
-    // Thermal Camera Routes
+    // Thermal Camera Routes (consistent naming)
     object ThermalMain : UnifiedRoute("thermal_main")
-    object ThermalGallery : UnifiedRoute("thermal_gallery")
+    object ThermalGallery : UnifiedRoute("thermal_gallery") 
     object ThermalReport : UnifiedRoute("thermal_report")
     object ThermalCamera : UnifiedRoute("thermal_camera")
     object ThermalSettings : UnifiedRoute("thermal_settings")
-    object ThermalGallery : UnifiedRoute("thermal_gallery")
 
     // System Routes
     object Settings : UnifiedRoute("settings")
@@ -134,17 +129,17 @@ fun UnifiedNavHost(
             )
         }
 
-        composable(UnifiedRoute.GSRModernizationDemo.route) {
+        composable(UnifiedRoute.GSRDemo.route) {
             GSRModernizationDemoScreen(
                 onBackClick = { navController.popBackStack() },
                 onNavigateToSettings = { navController.navigate(UnifiedRoute.GSRSettings.route) },
                 onNavigateToSessionDetail = { sessionId ->
-                    navController.navigate(UnifiedRoute.SessionDetail.createRoute(sessionId))
+                    navController.navigate(UnifiedRoute.GSRSessionDetail.createRoute(sessionId))
                 }
             )
         }
 
-        composable(UnifiedRoute.SessionDetail.route) { backStackEntry ->
+        composable(UnifiedRoute.GSRSessionDetail.route) { backStackEntry ->
             val sessionId = backStackEntry.arguments?.getString("sessionId") ?: "unknown"
             SessionDetailScreen(
                 sessionId = sessionId,
@@ -167,10 +162,10 @@ fun UnifiedNavHost(
             )
         }
 
-        composable(UnifiedRoute.GSRDataView.route) { backStackEntry ->
-            val filePath = backStackEntry.arguments?.getString("filePath") ?: ""
+        composable(UnifiedRoute.GSRDataView.route) {
+            // File path should be passed via savedStateHandle or ViewModel
             GSRDataViewScreen(
-                filePath = filePath,
+                filePath = "", // Get from savedStateHandle or arguments
                 onBackClick = { navController.popBackStack() }
             )
         }
@@ -204,15 +199,24 @@ fun UnifiedNavHost(
         composable(UnifiedRoute.DevicePairing.route) {
             LaunchedEffect(Unit) {
                 try {
-                    DevicePairingComposeActivity.start(context)
-                } catch (e: Exception) {
-                    // Fallback to legacy activity
                     context.startActivity(
                         Intent(
                             context,
-                            Class.forName("mpdc4gsr.network.DevicePairingActivity")
+                            Class.forName("mpdc4gsr.network.DevicePairingComposeActivity")
                         )
                     )
+                } catch (e: Exception) {
+                    // Fallback to activities package
+                    try {
+                        context.startActivity(
+                            Intent(
+                                context,
+                                Class.forName("mpdc4gsr.activities.DevicePairingActivityCompose")
+                            )
+                        )
+                    } catch (e2: Exception) {
+                        // Final fallback - just show loading screen
+                    }
                 }
             }
             ThermalLoadingScreen("Loading Device Pairing...")
@@ -292,7 +296,7 @@ fun UnifiedNavHost(
         // Development and Demo Routes
         composable(UnifiedRoute.ModernizationProgress.route) {
             ModernizationProgressScreen(
-                onNavigateToGSRDemo = { navController.navigate(UnifiedRoute.GSRModernizationDemo.route) },
+                onNavigateToGSRDemo = { navController.navigate(UnifiedRoute.GSRDemo.route) },
                 onNavigateToCameraDemo = { navController.navigate(UnifiedRoute.CameraDashboard.route) },
                 onNavigateToThermalDemo = { navController.navigate(UnifiedRoute.ThermalMain.route) },
                 onNavigateToComponentShowcase = { navController.navigate(UnifiedRoute.ComponentShowcase.route) }
@@ -315,15 +319,14 @@ fun UnifiedNavHost(
         composable(UnifiedRoute.PermissionRequest.route) {
             LaunchedEffect(Unit) {
                 try {
-                    PermissionRequestComposeActivity.start(context)
-                } catch (e: Exception) {
-                    // Fallback to legacy activity
                     context.startActivity(
                         Intent(
                             context,
-                            Class.forName("mpdc4gsr.permissions.PermissionRequestActivity")
+                            Class.forName("mpdc4gsr.permissions.PermissionRequestComposeActivity")
                         )
                     )
+                } catch (e: Exception) {
+                    // Fallback - just show loading screen
                 }
             }
             ThermalLoadingScreen("Loading Permission Manager...")
@@ -354,7 +357,7 @@ object NavigationHelper {
     }
 
     fun navigateToSessionDetail(navController: NavHostController, sessionId: String) {
-        navController.navigate(UnifiedRoute.SessionDetail.createRoute(sessionId))
+        navController.navigate(UnifiedRoute.GSRSessionDetail.createRoute(sessionId))
     }
 
     fun navigateToCamera(navController: NavHostController) {

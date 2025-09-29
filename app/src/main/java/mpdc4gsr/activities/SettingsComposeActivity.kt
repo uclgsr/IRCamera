@@ -14,7 +14,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import mpdc4gsr.compose.components.settings.*
-import mpdc4gsr.viewmodel.MainActivityViewModel
+import mpdc4gsr.viewmodel.BaseViewModel
 
 /**
  * Task D: Complete Settings Activity using Compose
@@ -26,15 +26,15 @@ import mpdc4gsr.viewmodel.MainActivityViewModel
  * - Display options
  * - Data export preferences
  */
-class SettingsComposeActivity : BaseComposeActivity<MainActivityViewModel>() {
+class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
 
-    override fun createViewModel(): MainActivityViewModel {
-        return viewModels<MainActivityViewModel>().value
+    override fun createViewModel(): SettingsViewModel {
+        return viewModels<SettingsViewModel>().value
     }
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    override fun Content(viewModel: MainActivityViewModel) {
+    override fun Content(viewModel: SettingsViewModel) {
         // Settings state
         var thermalCameraEnabled by remember { mutableStateOf(true) }
         var gsrSensorEnabled by remember { mutableStateOf(true) }
@@ -287,4 +287,19 @@ class SettingsComposeActivity : BaseComposeActivity<MainActivityViewModel>() {
             }
         }
     }
+}
+
+/**
+ * SettingsViewModel - Manages settings state
+ */
+class SettingsViewModel : BaseViewModel() {
+    // Settings-specific state management
+    private val _settingsState = mutableStateOf(SettingsState())
+    val settingsState: State<SettingsState> = _settingsState
+
+    data class SettingsState(
+        val darkModeEnabled: Boolean = false,
+        val networkDiscoveryEnabled: Boolean = true,
+        val autoSaveEnabled: Boolean = true
+    )
 }

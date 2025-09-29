@@ -172,11 +172,21 @@ private fun ThermalImageGridItem(item: ThermalMediaItem) {
         colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
     ) {
         Box {
-            // Thermal image placeholder
+            // Thermal image with realistic thermal gradient
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color.Red.copy(alpha = 0.3f))
+                    .background(
+                        androidx.compose.ui.graphics.Brush.radialGradient(
+                            colors = listOf(
+                                Color.Yellow,
+                                Color.Red,
+                                Color(0xFF8B0000),
+                                Color.Blue
+                            ),
+                            radius = 200f
+                        )
+                    )
             ) {
                 Icon(
                     Icons.Default.Thermostat,
@@ -296,11 +306,22 @@ private fun ThermalVideoGridItem(item: ThermalMediaItem) {
         colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
     ) {
         Box {
-            // Video thumbnail placeholder
+            // Video thumbnail with thermal pattern
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color.Blue.copy(alpha = 0.3f))
+                    .background(
+                        androidx.compose.ui.graphics.Brush.linearGradient(
+                            colors = listOf(
+                                Color(0xFF4A0080),
+                                Color.Blue,
+                                Color.Cyan,
+                                Color.Green,
+                                Color.Yellow,
+                                Color.Red
+                            )
+                        )
+                    )
             ) {
                 Icon(
                     Icons.Default.PlayArrow,

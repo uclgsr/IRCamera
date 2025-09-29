@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import mpdc4gsr.compose.theme.IRCameraTheme
+import com.mpdc4gsr.libunified.app.compose.theme.LibTheme
 
 /**
  * Demo Navigation Screen showcasing all completed Tasks
@@ -33,7 +33,7 @@ fun DemoNavigationScreen(
     onNavigateToSettings: () -> Unit,
     onNavigateToOriginalMain: () -> Unit
 ) {
-    IRCameraTheme {
+    LibTheme {
         Scaffold(
             topBar = {
                 TopAppBar(
