@@ -5,6 +5,7 @@ import java.util.Locale
 plugins {
     id("com.android.application")
     kotlin("android")
+    id("kotlin-parcelize")
     alias(libs.plugins.kotlin.compose)
     id("com.google.devtools.ksp")
 }
