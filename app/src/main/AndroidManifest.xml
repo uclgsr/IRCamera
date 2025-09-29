@@ -64,15 +64,6 @@
         </activity>
 
         <!-- Main Launcher Activity -->
-        <activity
-            android:name="mpdc4gsr.activities.MainActivity"
-            android:exported="true"
-            android:launchMode="singleTask">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
 
         <!-- Essential Activities -->
         <activity android:name="mpdc4gsr.activities.PolicyActivity" />

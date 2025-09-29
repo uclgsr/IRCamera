@@ -9,61 +9,18 @@
         android:name="android.permission.READ_MEDIA_VISUAL_USER_SELECTED"
         tools:targetApi="34" />
 
-
     <application>
-        <activity
-            android:name=".activity.IRThermalNightActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:exported="true"
-            android:launchMode="singleTask"
-            android:maxAspectRatio="2.4"
-            android:requestLegacyExternalStorage="true"
-            android:screenOrientation="userPortrait"
-            android:windowSoftInputMode="adjustPan"></activity>
-        <activity
-            android:name=".activity.IRCameraSettingActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="userPortrait" />
-        <activity
-            android:name=".activity.IRMainActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="userPortrait" />
+
         <activity
             android:name=".activity.IRMonitorActivity"
             android:launchMode="singleTop"
             android:screenOrientation="userPortrait" />
-        <activity
-            android:name=".activity.IRMonitorChartActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="userPortrait" />
+        
         <activity
             android:name=".activity.IRLogMPChartActivity"
             android:launchMode="singleTop"
             android:screenOrientation="userPortrait" />
-        <activity
-            android:name=".activity.ReportPickImgActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="userPortrait" />
-        <activity
-            android:name=".activity.IREmissivityActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="userPortrait" />
-        <activity
-            android:name=".activity.IRGalleryDetail01Activity"
-            android:launchMode="singleTop"
-            android:screenOrientation="userPortrait" />
-        <activity
-            android:name=".activity.IRGalleryDetail04Activity"
-            android:launchMode="singleTop"
-            android:screenOrientation="userPortrait" />
-        <activity
-            android:name=".activity.IRGalleryHomeActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="userPortrait" />
-        <activity
-            android:name=".activity.IRVideoGSYActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="fullUser" />
+
         <activity
             android:name=".activity.IRConfigActivity"
             android:launchMode="singleTop"
@@ -89,72 +46,14 @@
             android:screenOrientation="userPortrait" />
 
         <activity
-            android:name=".activity.IRCorrectionActivity"
-            android:screenOrientation="userPortrait" />
-        <activity
-            android:name=".activity.IRCorrectionTwoActivity"
-            android:screenOrientation="userPortrait" />
-        <activity
             android:name=".activity.IRCorrectionThreeActivity"
             android:screenOrientation="userPortrait" />
-        <activity
-            android:name=".activity.IRCorrectionFourActivity"
-            android:screenOrientation="userPortrait" />
 
-        <activity
-            android:name=".activity.AlgorithmImageActivity"
-            android:screenOrientation="userPortrait" />
-        <activity
-            android:name=".activity.IRThermalPlusActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:exported="true"
-            android:launchMode="singleTask"
-            android:maxAspectRatio="2.4"
-            android:requestLegacyExternalStorage="true"
-            android:screenOrientation="userPortrait"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".activity.ManualStep1Activity"
-            android:screenOrientation="userPortrait" />
-        <activity
-            android:name=".activity.ManualStep2Activity"
-            android:screenOrientation="userPortrait" />
-
-        <activity
-            android:name=".activity.MonitoryHomeActivity"
-            android:screenOrientation="userPortrait" />
         <activity
             android:name=".activity.ReportPreviewActivity"
             android:screenOrientation="userPortrait" />
-        <activity
-            android:name=".activity.ImagePickIRPlushActivity"
-            android:screenOrientation="userPortrait" />
-        <activity
-            android:name=".activity.ImagePickIRActivity"
-            android:screenOrientation="userPortrait" />
 
         <!-- Activities from thermal module -->
-        <activity
-            android:name=".activity.ThermalActivity"
-            android:screenOrientation="behind" />
-        <activity
-            android:name=".activity.MonitorActivity"
-            android:screenOrientation="behind" />
-        <activity
-            android:name=".activity.ConnectActivity"
-            android:screenOrientation="behind" />
-        <activity
-            android:name=".activity.GalleryActivity"
-            android:screenOrientation="behind" />
-        <activity
-            android:name=".activity.VideoActivity"
-            android:screenOrientation="behind" />
-        <activity
-            android:name=".activity.MonitorChartActivity"
-            android:screenOrientation="behind" />
-        <activity
-            android:name=".activity.LogMPChartActivity"
-            android:screenOrientation="behind" />
 
         <!-- Activities from thermal-lite module -->
         <activity android:name=".lite.activity.IRMonitorLiteActivity" />
@@ -175,9 +74,7 @@
             android:windowSoftInputMode="adjustPan" />
 
         <!-- Missing base activities -->
-        <activity
-            android:name=".activity.BaseIRActivity"
-            android:screenOrientation="userPortrait" />
+        
         <activity
             android:name=".activity.BaseIRPlushActivity"
             android:screenOrientation="userPortrait" />
