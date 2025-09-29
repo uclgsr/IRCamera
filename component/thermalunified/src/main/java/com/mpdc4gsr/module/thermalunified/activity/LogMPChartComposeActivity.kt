@@ -68,7 +68,7 @@ class LogMPChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             }
                             IconButton(onClick = { /* Chart settings */ }) {
                                 Icon(
-                                    Icons.Default.Settings,
+                                    Icons.Default.MoreVert,
                                     contentDescription = "Settings",
                                     tint = Color.White
                                 )

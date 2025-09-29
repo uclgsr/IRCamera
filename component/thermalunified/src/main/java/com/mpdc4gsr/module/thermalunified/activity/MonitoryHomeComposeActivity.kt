@@ -73,7 +73,7 @@ class MonitoryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             }
                             IconButton(onClick = { /* Settings */ }) {
                                 Icon(
-                                    Icons.Default.Settings,
+                                    Icons.Default.MoreVert,
                                     contentDescription = "Settings",
                                     tint = Color.White
                                 )

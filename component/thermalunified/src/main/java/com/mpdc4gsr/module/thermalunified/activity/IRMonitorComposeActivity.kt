@@ -197,7 +197,7 @@ private fun MonitorStatusCard(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Icon(
-                Icons.Default.Settings,
+                Icons.Default.MonitorHeart,
                 contentDescription = "Monitor Status",
                 tint = Color(0xFFFF6B35),
                 modifier = Modifier.size(48.dp)
@@ -279,7 +279,7 @@ private fun MonitorTypeSelection(
             MonitorTypeButton(
                 text = "Line Monitoring", 
                 description = "Monitor temperature along a line",
-                icon = Icons.Default.Settings,
+                icon = Icons.Default.Timeline,
                 isSelected = selectedType == 2,
                 onClick = { onTypeSelected(2) }
             )
@@ -287,7 +287,7 @@ private fun MonitorTypeSelection(
             MonitorTypeButton(
                 text = "Area Monitoring",
                 description = "Monitor temperature in a region",
-                icon = Icons.Default.Settings,
+                icon = Icons.Default.CropFree,
                 isSelected = selectedType == 3,
                 onClick = { onTypeSelected(3) }
             )

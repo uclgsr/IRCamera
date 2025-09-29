@@ -83,7 +83,7 @@ class SimpleThermalConfigActivity : BaseComposeActivity<ThermalViewModel>() {
                         SettingCard(
                             title = "Environment Temperature",
                             value = "${environmentTemp.toInt()}°C",
-                            icon = Icons.Default.Settings,
+                            icon = Icons.Default.Thermostat,
                             onClick = { /* Handle temperature change */ }
                         )
                     }
@@ -93,7 +93,7 @@ class SimpleThermalConfigActivity : BaseComposeActivity<ThermalViewModel>() {
                         SettingCard(
                             title = "Measurement Distance", 
                             value = "${distance}m",
-                            icon = Icons.Default.Settings,
+                            icon = Icons.Default.Straighten,
                             onClick = { /* Handle distance change */ }
                         )
                     }
@@ -103,7 +103,7 @@ class SimpleThermalConfigActivity : BaseComposeActivity<ThermalViewModel>() {
                         SettingCard(
                             title = "Emissivity",
                             value = String.format("%.2f", emissivity),
-                            icon = Icons.Default.Settings,
+                            icon = Icons.Default.Tune,
                             onClick = { /* Handle emissivity change */ }
                         )
                     }

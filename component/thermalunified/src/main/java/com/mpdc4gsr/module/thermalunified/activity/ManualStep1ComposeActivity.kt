@@ -167,7 +167,7 @@ private fun ManualSetupCard(
         ) {
             // Setup icon
             Icon(
-                Icons.Default.Settings,
+                Icons.Default.Build,
                 contentDescription = "Setup",
                 tint = Color(0xFFFF6B35),
                 modifier = Modifier.size(64.dp)

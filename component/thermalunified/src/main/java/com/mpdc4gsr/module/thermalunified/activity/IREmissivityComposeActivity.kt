@@ -149,7 +149,7 @@ private fun CurrentSelectionCard(
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    Icons.Default.Settings,
+                    Icons.Default.Tune,
                     contentDescription = "Emissivity",
                     tint = Color.White,
                     modifier = Modifier.size(24.dp)
