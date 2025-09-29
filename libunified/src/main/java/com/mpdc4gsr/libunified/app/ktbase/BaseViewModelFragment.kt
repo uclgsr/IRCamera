@@ -71,7 +71,7 @@ abstract class BaseViewModelFragment<VM : BaseViewModel> : BaseFragment() {
             is BaseViewModel.UiEvent.ShowError -> showError(event.message)
             is BaseViewModel.UiEvent.ShowMessage -> showMessage(event.message)
             is BaseViewModel.UiEvent.NavigateBack -> {
-                activity?.onBackPressed()
+                activity?.onBackPressedDispatcher?.onBackPressed()
             }
         }
     }

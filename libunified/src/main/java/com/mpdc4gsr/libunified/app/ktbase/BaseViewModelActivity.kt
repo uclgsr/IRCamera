@@ -67,7 +67,7 @@ abstract class BaseViewModelActivity<VM : BaseViewModel> : BaseActivity() {
         when (event) {
             is BaseViewModel.UiEvent.ShowError -> showError(event.message)
             is BaseViewModel.UiEvent.ShowMessage -> showMessage(event.message)
-            is BaseViewModel.UiEvent.NavigateBack -> onBackPressed()
+            is BaseViewModel.UiEvent.NavigateBack -> onBackPressedDispatcher.onBackPressed()
         }
     }
 
