@@ -317,7 +317,7 @@ private fun DeviceCard(
             }
             
             if (isSelected) {
-                Divider(modifier = Modifier.padding(vertical = 12.dp))
+                HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp))
                 
                 // Device actions
                 Row(
