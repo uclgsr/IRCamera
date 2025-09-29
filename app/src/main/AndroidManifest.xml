@@ -85,9 +85,13 @@
             android:exported="false"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
 
-        <!-- Essential Activities -->
-        <activity android:name="mpdc4gsr.activities.PolicyActivity" />
-        <activity android:name="mpdc4gsr.activities.VersionActivity" />
+        <!-- Essential Activities - Migrated to Compose -->
+        <activity android:name="mpdc4gsr.activities.PolicyActivityCompose" />
+        <activity android:name="mpdc4gsr.activities.VersionActivityCompose" />
+        
+        <!-- Legacy Activities (deprecated - use Compose versions above) -->
+        <!-- <activity android:name="mpdc4gsr.activities.PolicyActivity" /> -->
+        <!-- <activity android:name="mpdc4gsr.activities.VersionActivity" /> -->
         <activity
             android:name="mpdc4gsr.activities.SettingsComposeActivity"
             android:exported="false"
