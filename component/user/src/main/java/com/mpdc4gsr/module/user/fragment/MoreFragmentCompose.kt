@@ -516,12 +516,27 @@ class MoreFragmentCompose : BaseComposeFragment<MoreFragmentComposeViewModel>() 
         when (action.id) {
             "calibrate" -> {
                 // Quick calibration logic can be added to ViewModel later
+                android.widget.Toast.makeText(
+                    context,
+                    "Calibration feature is not yet implemented.",
+                    android.widget.Toast.LENGTH_SHORT
+                ).show()
             }
             "export" -> {
                 // Export data logic can be added to ViewModel later
+                android.widget.Toast.makeText(
+                    context,
+                    "Export feature is not yet implemented.",
+                    android.widget.Toast.LENGTH_SHORT
+                ).show()
             }
             "share" -> {
                 // Share analysis logic can be added to ViewModel later
+                android.widget.Toast.makeText(
+                    context,
+                    "Share feature is not yet implemented.",
+                    android.widget.Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
