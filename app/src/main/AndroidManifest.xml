@@ -64,6 +64,26 @@
         </activity>
 
         <!-- Main Launcher Activity -->
+        <activity
+            android:name="mpdc4gsr.activities.MainActivity"
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Alternative MainActivity implementations -->
+        <activity
+            android:name="mpdc4gsr.activities.MainActivityLegacy"
+            android:exported="false"
+            android:theme="@style/AppTheme" />
+
+        <activity
+            android:name="mpdc4gsr.activities.MainActivityAlternative"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
 
         <!-- Essential Activities -->
 

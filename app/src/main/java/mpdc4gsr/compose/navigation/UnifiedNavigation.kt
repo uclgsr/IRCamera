@@ -1,8 +1,10 @@
 package mpdc4gsr.compose.navigation
 
+import android.content.Intent
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -61,7 +63,6 @@ sealed class UnifiedRoute(val route: String) {
     object ThermalReport : UnifiedRoute("thermal_report")
     object ThermalCamera : UnifiedRoute("thermal_camera")
     object ThermalSettings : UnifiedRoute("thermal_settings")
-    object ThermalGallery : UnifiedRoute("thermal_gallery")
 
     // System Routes
     object Settings : UnifiedRoute("settings")
