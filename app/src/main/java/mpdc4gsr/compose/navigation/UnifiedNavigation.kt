@@ -30,7 +30,6 @@ sealed class UnifiedRoute(val route: String) {
 
     // GSR Sensor Routes
     object GSRSettings : UnifiedRoute("gsr_settings")
-    object GSRDemo : UnifiedRoute("gsr_demo")
     object GSRPlot : UnifiedRoute("gsr_plot/{sessionId}") {
         fun createRoute(sessionId: String) = "gsr_plot/$sessionId"
     }
@@ -64,7 +63,6 @@ sealed class UnifiedRoute(val route: String) {
     object NetworkConfig : UnifiedRoute("network_config")
 
     // Development and Demo Routes
-    object ModernizationProgress : UnifiedRoute("modernization_progress")
     object ComponentShowcase : UnifiedRoute("component_showcase")
     object TestingSuite : UnifiedRoute("testing_suite")
 }
@@ -72,7 +70,7 @@ sealed class UnifiedRoute(val route: String) {
 @Composable
 fun UnifiedNavHost(
     navController: NavHostController = rememberNavController(),
-    startDestination: String = UnifiedRoute.ModernizationProgress.route
+    startDestination: String = UnifiedRoute.Home.route
 ) {
     val context = LocalContext.current
 
@@ -129,15 +127,7 @@ fun UnifiedNavHost(
             )
         }
 
-        composable(UnifiedRoute.GSRDemo.route) {
-            GSRModernizationDemoScreen(
-                onBackClick = { navController.popBackStack() },
-                onNavigateToSettings = { navController.navigate(UnifiedRoute.GSRSettings.route) },
-                onNavigateToSessionDetail = { sessionId ->
-                    navController.navigate(UnifiedRoute.GSRSessionDetail.createRoute(sessionId))
-                }
-            )
-        }
+
 
         composable(UnifiedRoute.GSRSessionDetail.route) { backStackEntry ->
             val sessionId = backStackEntry.arguments?.getString("sessionId") ?: "unknown"
@@ -293,15 +283,7 @@ fun UnifiedNavHost(
             )
         }
 
-        // Development and Demo Routes
-        composable(UnifiedRoute.ModernizationProgress.route) {
-            ModernizationProgressScreen(
-                onNavigateToGSRDemo = { navController.navigate(UnifiedRoute.GSRDemo.route) },
-                onNavigateToCameraDemo = { navController.navigate(UnifiedRoute.CameraDashboard.route) },
-                onNavigateToThermalDemo = { navController.navigate(UnifiedRoute.ThermalMain.route) },
-                onNavigateToComponentShowcase = { navController.navigate(UnifiedRoute.ComponentShowcase.route) }
-            )
-        }
+
 
         composable(UnifiedRoute.ComponentShowcase.route) {
             ComponentShowcaseScreen(

@@ -184,14 +184,14 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                 )
 
                 LauncherCard(
-                    title = "Task E: Navigation Demo",
-                    subtitle = "Unified navigation system showcase",
+                    title = "Task E: Navigation System",
+                    subtitle = "Unified navigation system testing",
                     icon = Icons.Default.Navigation,
                     onClick = {
                         startActivity(
                             Intent(
                                 this@ComposeMigrationLauncherActivity,
-                                FullMigrationDemoActivity::class.java
+                                NavigationTestActivity::class.java
                             )
                         )
                     }
@@ -879,13 +879,13 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                                     startActivity(
                                         Intent(
                                             this@ComposeMigrationLauncherActivity,
-                                            ComposeDemoActivity::class.java
+                                            ComposeComponentsShowcaseActivity::class.java
                                         )
                                     )
                                 },
                                 modifier = Modifier.weight(1f)
                             ) {
-                                Text("Demo Showcase")
+                                Text("Component Showcase")
                             }
                         }
                     }

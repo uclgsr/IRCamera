@@ -73,7 +73,6 @@ sealed class IRCameraScreen(val route: String) {
 
     object Settings : IRCameraScreen("settings")
     object SettingsCompose : IRCameraScreen("settings_compose")
-    object Demo : IRCameraScreen("demo")
     object About : IRCameraScreen("about")
 }
 
@@ -88,27 +87,7 @@ fun IRCameraNavHost(
         navController = navController,
         startDestination = startDestination
     ) {
-        // Demo screen - showcases all Compose implementations
-        composable(IRCameraScreen.Demo.route) {
-            DemoNavigationScreen(
-                onNavigateToMainCompose = {
-                    navController.navigate(IRCameraScreen.MainCompose.route)
-                },
-                onNavigateToThermalCompose = {
-                    navController.navigate(IRCameraScreen.ThermalCameraCompose.route)
-                },
-                onNavigateToSensorDashboard = {
-                    navController.navigate(IRCameraScreen.SensorDashboardCompose.route)
-                },
-                onNavigateToSettings = {
-                    navController.navigate(IRCameraScreen.SettingsCompose.route)
-                },
-                onNavigateToOriginalMain = {
-                    // Launch original MainActivity as separate activity
-                    context.startActivity(Intent(context, MainActivity::class.java))
-                }
-            )
-        }
+
 
         // Main dashboard screens
         composable(IRCameraScreen.Main.route) {

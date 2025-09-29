@@ -68,7 +68,6 @@ class IntegrationTestViewModel : BaseViewModel() {
         TestItem("ThermalGalleryScreen", "Enhanced thermal image display", true, TestCategory.COMPOSE_SCREENS),
         TestItem("CalibrateScreen", "Realistic camera preview simulation", true, TestCategory.COMPOSE_SCREENS),
         TestItem("AnnotateScreen", "Enhanced thermal annotation tools", true, TestCategory.COMPOSE_SCREENS),
-        TestItem("GSRModernizationDemoScreen", "GSR sensor interface", true, TestCategory.COMPOSE_SCREENS),
         TestItem("AboutScreen", "Application information display", true, TestCategory.COMPOSE_SCREENS),
         
         // Thermal Stubs
