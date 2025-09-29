@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-import com.mpdc4gsr.libunified.app.viewmodel.BaseViewModel
+import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 
 /**
  * Plus Mode Thermal - Premium features with AI enhancement
@@ -168,7 +168,7 @@ class IRThermalPlusComposeActivity : BaseComposeActivity<IRThermalPlusViewModel>
                 ) {
                     Column(
                         modifier = Modifier.padding(12.dp),
-                        horizontAlignment = Alignment.CenterHorizontally
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
                             "CENTER",
@@ -192,7 +192,7 @@ class IRThermalPlusComposeActivity : BaseComposeActivity<IRThermalPlusViewModel>
                 ) {
                     Column(
                         modifier = Modifier.padding(12.dp),
-                        horizontAlignment = Alignment.CenterHorizontally
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
                             "MIN",
@@ -223,7 +223,7 @@ class IRThermalPlusComposeActivity : BaseComposeActivity<IRThermalPlusViewModel>
                     contentAlignment = Alignment.Center
                 ) {
                     Column(
-                        horizontAlignment = Alignment.CenterHorizontally,
+                        horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
                         Icon(

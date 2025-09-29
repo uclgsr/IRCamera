@@ -1,7 +1,9 @@
 package com.mpdc4gsr.module.thermalunified.activity
 
 import android.os.Bundle
+import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
@@ -36,15 +38,22 @@ import kotlinx.coroutines.launch
  * Modern Compose implementation of thermal main hub activity
  * Preserves the 5-tab ViewPager structure with enhanced Material 3 UI
  */
-class IRMainComposeActivity : BaseComposeActivity<IRMainActivityViewModel>() {
+class IRMainComposeActivity : AppCompatActivity() {
 
-    override fun createViewModel(): IRMainActivityViewModel {
-        return viewModels<IRMainActivityViewModel>().value
+    private val viewModel: IRMainActivityViewModel by viewModels()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        
+        setContent {
+            LibUnifiedTheme {
+                MainContent()
+            }
+        }
     }
 
-    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    override fun Content(viewModel: IRMainActivityViewModel) {
+    private fun MainContent() {
         val pagerState = rememberPagerState(pageCount = { 5 })
         val scope = rememberCoroutineScope()
         
@@ -249,7 +258,7 @@ private fun ThermalBottomNavigation(
 
 @Composable
 private fun ThermalTabButton(
-    tab: ThermalTab,
+    tab: MainThermalTab,
     isSelected: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -288,17 +297,17 @@ private fun ThermalTabButton(
 }
 
 // Data class for tab configuration
-data class ThermalTab(
+internal data class MainThermalTab(
     val title: String,
     val icon: ImageVector
 )
 
-private fun getThermalTabs(): List<ThermalTab> {
+private fun getThermalTabs(): List<MainThermalTab> {
     return listOf(
-        ThermalTab("Thermal", Icons.Default.Thermostat),
-        ThermalTab("Gallery", Icons.Default.Photo),
-        ThermalTab("Ability", Icons.Default.Build),
-        ThermalTab("PDF", Icons.Default.Description),
-        ThermalTab("More", Icons.Default.MoreVert)
+        MainThermalTab("Thermal", Icons.Default.Videocam),
+        MainThermalTab("Gallery", Icons.Default.Photo),
+        MainThermalTab("Ability", Icons.Default.Build),
+        MainThermalTab("PDF", Icons.Default.Description),
+        MainThermalTab("More", Icons.Default.MoreVert)
     )
 }
