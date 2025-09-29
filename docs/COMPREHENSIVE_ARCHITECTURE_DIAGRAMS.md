@@ -85,16 +85,16 @@ graph TB
     end
     
     subgraph "Android Modules"
-        AppModule[app/<br/>Main Android Application]
-        BleModuleDir[BleModule/<br/>Bluetooth Low Energy]
-        ComponentDir[component/<br/>Feature Components]
-        LibUnified[libunified/<br/>Unified Library]
+        AppModule[app/<br/>Main Android Application<br/>92 activities, 31 layouts]
+        BleModuleDir[BleModule/<br/>Bluetooth Low Energy<br/>Legacy Integration]
+        ComponentDir[component/<br/>Feature Components<br/>111 activities, 121 layouts total]
+        LibUnified[libunified/<br/>Unified Library<br/>7 activities, 69 layouts]
     end
     
     subgraph "Component Modules"
-        GSRRecording[component/gsr-recording/<br/>GSR Data Collection]
-        ThermalUnified[component/thermalunified/<br/>Thermal Processing]
-        UserModule[component/user/<br/>User Management]
+        GSRRecording[component/gsr-recording/<br/>GSR Data Collection<br/>0 activities, 0 layouts]
+        ThermalUnified[component/thermalunified/<br/>Thermal Processing<br/>93 activities, 103 layouts]
+        UserModule[component/user/<br/>User Management<br/>18 activities, 18 layouts]
     end
     
     subgraph "PC Controller"
@@ -123,6 +123,45 @@ graph TB
     
     PCRoot --> LegacyImpl
     PCRoot --> MVPFiles
+```
+
+---
+
+## 2.5. Module Statistics Overview
+
+```mermaid
+graph TB
+    subgraph "IRCamera Repository Statistics"
+        TotalStats[Total: 210 Activities, 221 Layouts<br/>4 Main Modules<br/>Multi-Modal Platform]
+    end
+    
+    subgraph "App Module"
+        AppStats[app/<br/>92 Activities (44%)<br/>31 Layouts (14%)<br/>Core Infrastructure]
+    end
+    
+    subgraph "Component thermalunified"
+        ThermalStats[thermalunified/<br/>93 Activities (44%)<br/>103 Layouts (47%)<br/>Thermal Imaging System]
+    end
+    
+    subgraph "Component user"
+        UserStats[user/<br/>18 Activities (9%)<br/>18 Layouts (8%)<br/>User Management]
+    end
+    
+    subgraph "LibUnified"
+        LibStats[libunified/<br/>7 Activities (3%)<br/>69 Layouts (31%)<br/>Shared Utilities]
+    end
+    
+    TotalStats --> AppStats
+    TotalStats --> ThermalStats
+    TotalStats --> UserStats
+    TotalStats --> LibStats
+    
+    %% Styling
+    classDef totalBox fill:#ff6b6b,stroke:#333,stroke-width:3px,color:#fff
+    classDef moduleBox fill:#4ecdc4,stroke:#333,stroke-width:2px,color:#fff
+    
+    class TotalStats totalBox
+    class AppStats,ThermalStats,UserStats,LibStats moduleBox
 ```
 
 ---
