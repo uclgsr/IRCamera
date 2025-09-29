@@ -198,6 +198,31 @@
             android:exported="false"
             android:label="Research Templates (Compose)"
             android:theme="@style/AppTheme" />
+
+        <!-- Network & Device Management Compose Activities -->
+        <activity
+            android:name="mpdc4gsr.network.DevicePairingComposeActivity"
+            android:exported="false"
+            android:label="Device Pairing (Compose)"
+            android:theme="@style/AppTheme" />
+
+        <activity
+            android:name="mpdc4gsr.permissions.PermissionRequestComposeActivity"
+            android:exported="false"
+            android:label="Permission Manager (Compose)"
+            android:theme="@style/AppTheme" />
+
+        <activity
+            android:name="mpdc4gsr.camera.integration.DualModeCameraComposeActivity"
+            android:exported="false"
+            android:label="Dual Mode Camera (Compose)"
+            android:theme="@style/AppTheme" />
+
+        <activity
+            android:name="mpdc4gsr.sensors.gsr.GSRDeviceManagementComposeActivity"
+            android:exported="false"
+            android:label="GSR Device Management (Compose)"
+            android:theme="@style/AppTheme" />
         <activity
             android:name="mpdc4gsr.sensors.gsr.GSRRawImageViewActivity"
             android:exported="false"

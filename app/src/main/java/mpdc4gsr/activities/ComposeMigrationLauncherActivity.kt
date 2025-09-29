@@ -439,6 +439,80 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                     }
                 )
 
+                // Network & Device Management Section
+                Text(
+                    text = "Network & Device Management (Priority 2)",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.secondary,
+                    modifier = Modifier.padding(top = 16.dp)
+                )
+
+                LauncherCard(
+                    title = "Device Pairing (Compose)",
+                    subtitle = "Advanced BLE device discovery and pairing with diagnostics",
+                    icon = Icons.Default.BluetoothConnected,
+                    onClick = {
+                        startActivity(
+                            Intent(
+                                this@ComposeMigrationLauncherActivity,
+                                mpdc4gsr.network.DevicePairingComposeActivity::class.java
+                            )
+                        )
+                    }
+                )
+
+                LauncherCard(
+                    title = "Permission Manager (Compose)",
+                    subtitle = "Interactive permission management with educational content",
+                    icon = Icons.Default.Security,
+                    onClick = {
+                        startActivity(
+                            Intent(
+                                this@ComposeMigrationLauncherActivity,
+                                mpdc4gsr.permissions.PermissionRequestComposeActivity::class.java
+                            )
+                        )
+                    }
+                )
+
+                LauncherCard(
+                    title = "GSR Device Management (Compose)",
+                    subtitle = "Comprehensive GSR device monitoring and configuration",
+                    icon = Icons.Default.DeviceHub,
+                    onClick = {
+                        startActivity(
+                            Intent(
+                                this@ComposeMigrationLauncherActivity,
+                                mpdc4gsr.sensors.gsr.GSRDeviceManagementComposeActivity::class.java
+                            )
+                        )
+                    }
+                )
+
+                // Camera Integration Section
+                Text(
+                    text = "Camera Integration Activities (Priority 2)",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.secondary,
+                    modifier = Modifier.padding(top = 16.dp)
+                )
+
+                LauncherCard(
+                    title = "Dual Mode Camera (Compose)",
+                    subtitle = "Advanced dual camera recording with thermal and RGB sync",
+                    icon = Icons.Default.CameraAlt,
+                    onClick = {
+                        startActivity(
+                            Intent(
+                                this@ComposeMigrationLauncherActivity,
+                                mpdc4gsr.camera.integration.DualModeCameraComposeActivity::class.java
+                            )
+                        )
+                    }
+                )
+
                 // Advanced Features Section
                 Text(
                     text = "Advanced Features",
