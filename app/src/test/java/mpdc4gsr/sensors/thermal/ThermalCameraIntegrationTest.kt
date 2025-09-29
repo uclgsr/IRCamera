@@ -8,7 +8,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 import org.junit.Assert.*
-import java.io.File
+import mpdc4gsr.permissions.PermissionController
 
 /**
  * MVP-focused unit tests for Topdon TC001 thermal camera integration
@@ -75,7 +75,7 @@ class ThermalCameraIntegrationTest {
     fun `should validate USB permission request flow`() {
         // Test USB device permission handling for Topdon TC001
 
-        val permissionAction = "mpdc4gsr.USB_PERMISSION"
+        val permissionAction = PermissionController.ACTION_USB_PERMISSION
         val hasPendingPermission = false
 
         // Mock USB permission status

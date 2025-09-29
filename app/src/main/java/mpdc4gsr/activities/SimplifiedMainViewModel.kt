@@ -1,6 +1,6 @@
 package mpdc4gsr.activities
 
-import android.app.Application
+// import android.app.Application
 import android.content.Intent
 import androidx.lifecycle.viewModelScope
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
@@ -17,9 +17,7 @@ import java.util.*
  * ViewModel for Simplified Main Activity
  * Manages simplified interface state and system monitoring
  */
-class SimplifiedMainViewModel(
-    private val application: Application
-) : BaseViewModel() {
+class SimplifiedMainViewModel : BaseViewModel() {
 
     data class UiState(
         val isLoading: Boolean = false,
