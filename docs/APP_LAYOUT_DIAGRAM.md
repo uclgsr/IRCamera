@@ -9,13 +9,37 @@ with a sophisticated multi-module architecture.
 From our comprehensive analysis, the app contains:
 
 - **App Module**: 31 layout files - Main application layouts
-- **Component thermalunified Module**: 154 layout files - Thermal imaging system layouts
-- **Component user Module**: 140 layout files - User management system layouts  
+- **Component thermalunified Module**: 103 layout files - Thermal imaging system layouts
+- **Component user Module**: 18 layout files - User management system layouts  
 - **LibUnified Module**: 69 layout files - Shared utilities and common component layouts
 - **10 Consolidated layouts** - Unified layout templates replacing multiple specialized layouts
 - **51 Backup layouts** - Legacy layouts moved to backup/layouts/ directory
 
 **Total: 221 layouts** (updated count)
+
+```mermaid
+graph TB
+    subgraph "Layout Distribution Overview"
+        TotalLayouts[Total: 221 Layouts<br/>4 Modules<br/>Multi-Modal UI System]
+        
+        AppLayouts[App Module<br/>31 Layouts (14%)<br/>Core UI]
+        ThermalLayouts[Thermal Module<br/>103 Layouts (47%)<br/>Imaging UI]
+        UserLayouts[User Module<br/>18 Layouts (8%)<br/>Management UI]
+        LibLayouts[LibUnified<br/>69 Layouts (31%)<br/>Shared UI]
+        
+        TotalLayouts --> AppLayouts
+        TotalLayouts --> ThermalLayouts
+        TotalLayouts --> UserLayouts
+        TotalLayouts --> LibLayouts
+    end
+    
+    %% Styling
+    classDef totalBox fill:#ff6b6b,stroke:#333,stroke-width:3px,color:#fff
+    classDef moduleBox fill:#4ecdc4,stroke:#333,stroke-width:2px,color:#fff
+    
+    class TotalLayouts totalBox
+    class AppLayouts,ThermalLayouts,UserLayouts,LibLayouts moduleBox
+```
 
 ## Module-Specific Breakdown
 
@@ -26,7 +50,7 @@ From our comprehensive analysis, the app contains:
 - Testing and development layouts
 - Primary sensor coordination layouts
 
-### Component thermalunified Module Layouts (154) - LARGEST MODULE
+### Component thermalunified Module Layouts (103) - LARGEST MODULE
 
 - Complete thermal imaging interface system
 - Thermal camera control layouts
@@ -34,7 +58,7 @@ From our comprehensive analysis, the app contains:
 - Temperature measurement tools
 - Thermal-specific UI components and dialogs
 
-### Component user Module Layouts (140) - USER MANAGEMENT SYSTEM
+### Component user Module Layouts (18) - USER MANAGEMENT SYSTEM
 
 - User authentication interfaces
 - Profile management layouts

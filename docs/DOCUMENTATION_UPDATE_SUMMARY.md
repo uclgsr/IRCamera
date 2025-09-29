@@ -23,8 +23,8 @@ state of the repository discovered during the comprehensive audit.
 **Corrected**: 221 layouts with proper module breakdown:
 
 - App Module: 31 layouts
-- Component thermalunified Module: 154 layouts (MAJOR ADDITION) 
-- Component user Module: 140 layouts (MAJOR ADDITION)
+- Component thermalunified Module: 103 layouts (MAJOR ADDITION) 
+- Component user Module: 18 layouts (MAJOR ADDITION)
 - LibUnified Module: 69 layouts
 
 ### 3. Module Architecture Documentation - RESOLVED
@@ -52,7 +52,7 @@ state of the repository discovered during the comprehensive audit.
 ### 2. `docs/APP_LAYOUT_DIAGRAM.md` - MAJOR UPDATE
 
 - Corrected total layout count to 221
-- Added module-specific breakdown (app: 31, thermalunified: 154, user: 140, libunified: 69)
+- Added module-specific breakdown (app: 31, thermalunified: 103, user: 18, libunified: 69)
 - Updated consolidated layout documentation
 - Added complete module architecture section
 

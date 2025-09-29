@@ -23,6 +23,30 @@ Dedicated user management system handling authentication, profile management, us
 ### LibUnified Module (7 Activities)
 Shared utilities module providing common components, cross-module functionality, and reusable infrastructure components.
 
+```mermaid
+graph TB
+    subgraph "Module Overview"
+        Total[Total: 210 Activities<br/>4 Modules<br/>Multi-Modal Platform]
+        
+        App[App Module<br/>92 Activities (44%)<br/>Core Infrastructure]
+        Thermal[Thermal Module<br/>93 Activities (44%)<br/>Imaging System]
+        User[User Module<br/>18 Activities (9%)<br/>Management]
+        Lib[LibUnified<br/>7 Activities (3%)<br/>Utilities]
+        
+        Total --> App
+        Total --> Thermal
+        Total --> User
+        Total --> Lib
+    end
+    
+    %% Styling
+    classDef totalBox fill:#ff6b6b,stroke:#333,stroke-width:3px,color:#fff
+    classDef moduleBox fill:#4ecdc4,stroke:#333,stroke-width:2px,color:#fff
+    
+    class Total totalBox
+    class App,Thermal,User,Lib moduleBox
+```
+
 ## Simplified Navigation Overview
 
 For a high-level understanding, here's a simplified version of the key navigation flows:

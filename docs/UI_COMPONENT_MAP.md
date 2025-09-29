@@ -31,9 +31,9 @@ IRCamera/
 │   ├── Multi-modal recording interfaces  
 │   ├── Testing and development layouts
 │   └── Sensor coordination layouts
-├── component/ (294 layouts total) - Specialized functionality modules
-│   ├── thermalunified/ (154 layouts) - Complete thermal imaging system
-│   ├── user/ (140 layouts) - User management and authentication
+├── component/ (121 layouts total) - Specialized functionality modules
+│   ├── thermalunified/ (103 layouts) - Complete thermal imaging system
+│   ├── user/ (18 layouts) - User management and authentication
 │   └── gsr-recording/ (0 layouts) - GSR sensor integration (logic only)
 ├── libunified/ (69 layouts) - Shared utilities and common components
 │   ├── Common dialog layouts

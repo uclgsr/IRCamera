@@ -41,8 +41,8 @@ graph TB
     
     subgraph "Unified Core Libraries"
         LibUnified[libunified Module<br/>7 activities, 69 layouts<br/>Core Functionality<br/>UI Components]
-        ComponentThermal[thermalunified Module<br/>93 activities, 154 layouts<br/>Complete Thermal System<br/>Image Processing]
-        ComponentUser[user Module<br/>18 activities, 140 layouts<br/>User Management<br/>Authentication System]
+        ComponentThermal[thermalunified Module<br/>93 activities, 103 layouts<br/>Complete Thermal System<br/>Image Processing]
+        ComponentUser[user Module<br/>18 activities, 18 layouts<br/>User Management<br/>Authentication System]
         AppModule[app Module<br/>92 activities, 31 layouts<br/>Core Infrastructure<br/>Main Controllers]
     end
     

@@ -18,8 +18,8 @@ mismatches and inconsistencies between documentation and actual implementation.
 ### Distribution by Module
 
 - **App Module**: 31 layouts, 92 activities
-- **Component thermalunified Module**: 154 layouts, 93 activities
-- **Component user Module**: 140 layouts, 18 activities  
+- **Component thermalunified Module**: 103 layouts, 93 activities
+- **Component user Module**: 18 layouts, 18 activities  
 - **LibUnified Module**: 69 layouts, 7 activities
 
 ## Major Discrepancies Found
@@ -312,8 +312,8 @@ flows
 **Reality**: Accurate module separation with:
 
 - App module (92 activities, 31 layouts)
-- Component thermalunified module (93 activities, 154 layouts)
-- Component user module (18 activities, 140 layouts)
+- Component thermalunified module (93 activities, 103 layouts)
+- Component user module (18 activities, 18 layouts)
 - LibUnified module (7 activities, 69 layouts)
 
 **Status**: Inter-module navigation documentation updated
