@@ -263,43 +263,7 @@
             android:label="GSR Device Management (Compose)"
             android:theme="@style/AppTheme" />
 
-        <!-- Thermal Camera Module Compose Activities -->
-        <activity
-            android:name="com.mpdc4gsr.module.thermalunified.activity.ThermalGalleryComposeActivity"
-            android:exported="false"
-            android:label="Thermal Gallery (Compose)"
-            android:theme="@style/AppTheme" />
-
-        <activity
-            android:name="com.mpdc4gsr.module.thermalunified.report.activity.ThermalReportCreationComposeActivity"
-            android:exported="false"
-            android:label="Thermal Report Creation (Compose)"
-            android:theme="@style/AppTheme" />
-
-        <!-- Additional Thermal Camera Module Compose Activities -->
-        <activity
-            android:name="com.mpdc4gsr.module.thermalunified.activity.ThermalVideoComposeActivity"
-            android:exported="false"
-            android:label="Thermal Video Player (Compose)"
-            android:theme="@style/AppTheme" />
-
-        <activity
-            android:name="com.mpdc4gsr.module.thermalunified.lite.activity.IRThermalLiteComposeActivity"
-            android:exported="false"
-            android:label="IR Thermal Lite (Compose)"
-            android:theme="@style/AppTheme" />
-
-        <activity
-            android:name="com.mpdc4gsr.module.thermalunified.activity.ThermalMonitoringComposeActivity"
-            android:exported="false"
-            android:label="Thermal Monitoring (Compose)"
-            android:theme="@style/AppTheme" />
-
-        <activity
-            android:name="com.mpdc4gsr.module.thermalunified.lite.activity.IRCorrectionLiteComposeActivity"
-            android:exported="false"
-            android:label="IR Correction Lite (Compose)"
-            android:theme="@style/AppTheme" />
+        <!-- Note: Thermal Camera Module Compose Activities are declared in component/thermalunified/src/main/AndroidManifest.xml -->
         <activity
             android:name="mpdc4gsr.sensors.gsr.GSRRawImageViewActivity"
             android:exported="false"

@@ -9,6 +9,9 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -67,7 +70,7 @@ fun BaseConfigScreen(
                 navigationIcon = {
                     IconButton(onClick = onBackPressed) {
                         Icon(
-                            imageVector = androidx.compose.material.icons.Icons.Default.ArrowBack,
+                            imageVector = Icons.Default.ArrowBack,
                             contentDescription = "Back"
                         )
                     }
@@ -75,7 +78,7 @@ fun BaseConfigScreen(
                 actions = {
                     IconButton(onClick = { viewModel.exportConfig() }) {
                         Icon(
-                            imageVector = androidx.compose.material.icons.Icons.Default.Share,
+                            imageVector = Icons.Default.Share,
                             contentDescription = "Export"
                         )
                     }

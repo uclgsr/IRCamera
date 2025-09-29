@@ -123,33 +123,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.IRCamera" />
 
-        <!-- New Component Module Compose Activities -->
-        <activity
-            android:name=".lite.activity.IRThermalLiteComposeActivity"
-            android:exported="false"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:launchMode="singleTask"
-            android:maxAspectRatio="2.4"
-            android:screenOrientation="landscape"
-            android:theme="@style/Theme.IRCamera" />
-
-        <activity
-            android:name=".lite.activity.IRMonitorLiteComposeActivity"
-            android:exported="false"
-            android:screenOrientation="landscape"
-            android:theme="@style/Theme.IRCamera" />
-
-        <activity
-            android:name=".lite.activity.ImagePickIRLiteComposeActivity"
-            android:exported="false"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.IRCamera" />
-
-        <activity
-            android:name=".report.activity.ReportCreateComposeActivity"
-            android:exported="false"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.IRCamera" />
+        <!-- Note: Component Module Compose Activities declared earlier in manifest to avoid duplicates -->
     </application>
 
 </manifest>

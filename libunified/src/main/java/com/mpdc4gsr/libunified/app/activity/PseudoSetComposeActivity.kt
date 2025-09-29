@@ -6,9 +6,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -68,7 +72,7 @@ fun PseudoSetScreen(
                 navigationIcon = {
                     IconButton(onClick = onBackPressed) {
                         Icon(
-                            imageVector = androidx.compose.material.icons.Icons.Default.ArrowBack,
+                            imageVector = Icons.Default.ArrowBack,
                             contentDescription = "Back"
                         )
                     }
@@ -273,7 +277,7 @@ fun PaletteItem(
             
             if (isSelected) {
                 Icon(
-                    imageVector = androidx.compose.material.icons.Icons.Default.Check,
+                    imageVector = Icons.Default.Check,
                     contentDescription = "Selected",
                     tint = MaterialTheme.colorScheme.primary
                 )
