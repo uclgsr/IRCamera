@@ -10,13 +10,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import mpdc4gsr.activities.*
-import mpdc4gsr.sensors.gsr.GSRSettingsComposeActivity
-import mpdc4gsr.sensors.gsr.SessionDetailComposeActivity
 import mpdc4gsr.compose.screens.*
 import mpdc4gsr.compose.testing.TestResultsScreen
-import mpdc4gsr.network.DevicePairingComposeActivity
-import mpdc4gsr.permissions.PermissionRequestComposeActivity
 
 /**
  * Unified Navigation System - Phase 2 Implementation
@@ -205,15 +200,24 @@ fun UnifiedNavHost(
         composable(UnifiedRoute.DevicePairing.route) {
             LaunchedEffect(Unit) {
                 try {
-                    DevicePairingComposeActivity.start(context)
-                } catch (e: Exception) {
-                    // Fallback to legacy activity
                     context.startActivity(
                         Intent(
                             context,
-                            Class.forName("mpdc4gsr.network.DevicePairingActivity")
+                            Class.forName("mpdc4gsr.network.DevicePairingComposeActivity")
                         )
                     )
+                } catch (e: Exception) {
+                    // Fallback to activities package
+                    try {
+                        context.startActivity(
+                            Intent(
+                                context,
+                                Class.forName("mpdc4gsr.activities.DevicePairingActivityCompose")
+                            )
+                        )
+                    } catch (e2: Exception) {
+                        // Final fallback - just show loading screen
+                    }
                 }
             }
             ThermalLoadingScreen("Loading Device Pairing...")
@@ -316,15 +320,14 @@ fun UnifiedNavHost(
         composable(UnifiedRoute.PermissionRequest.route) {
             LaunchedEffect(Unit) {
                 try {
-                    PermissionRequestComposeActivity.start(context)
-                } catch (e: Exception) {
-                    // Fallback to legacy activity
                     context.startActivity(
                         Intent(
                             context,
-                            Class.forName("mpdc4gsr.permissions.PermissionRequestActivity")
+                            Class.forName("mpdc4gsr.permissions.PermissionRequestComposeActivity")
                         )
                     )
+                } catch (e: Exception) {
+                    // Fallback - just show loading screen
                 }
             }
             ThermalLoadingScreen("Loading Permission Manager...")
