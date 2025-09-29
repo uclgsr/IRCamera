@@ -12,23 +12,23 @@ import kotlinx.coroutines.flow.asStateFlow
  * Manages device settings and configuration options
  */
 class MoreFragmentComposeViewModel : BaseViewModel() {
-    
+
     companion object {
         // Mock data constants for improved maintainability
         private const val DEFAULT_VERSION = "1.0.0"
         private const val DEFAULT_UPGRADE_AVAILABLE = false
     }
-    
+
     data class DeviceSettingsState(
         val isTC007: Boolean = false,
         val isSaveSettingEnabled: Boolean = false,
         val hasUpgrade: Boolean = false,
         val versionText: String = ""
     )
-    
+
     private val _deviceSettings = MutableStateFlow(DeviceSettingsState())
     val deviceSettings: StateFlow<DeviceSettingsState> = _deviceSettings.asStateFlow()
-    
+
     fun initialize(isTC007: Boolean) {
         launchWithErrorHandling {
             val isSaveEnabled = if (isTC007) {
@@ -36,7 +36,7 @@ class MoreFragmentComposeViewModel : BaseViewModel() {
             } else {
                 SaveSettingUtil.isSaveSetting
             }
-            
+
             _deviceSettings.value = DeviceSettingsState(
                 isTC007 = isTC007,
                 isSaveSettingEnabled = isSaveEnabled,
@@ -45,7 +45,7 @@ class MoreFragmentComposeViewModel : BaseViewModel() {
             )
         }
     }
-    
+
     fun updateSaveSetting(enabled: Boolean) {
         launchWithErrorHandling {
             val currentState = _deviceSettings.value
@@ -54,13 +54,13 @@ class MoreFragmentComposeViewModel : BaseViewModel() {
             } else {
                 SaveSettingUtil.isSaveSetting = enabled
             }
-            
+
             _deviceSettings.value = currentState.copy(
                 isSaveSettingEnabled = enabled
             )
         }
     }
-    
+
     fun performFactoryReset() {
         launchWithErrorHandling {
             // Factory reset implementation

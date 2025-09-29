@@ -48,7 +48,8 @@ class MoreFragmentViewModel : BaseViewModel() {
         object Checking : FirmwareState()
         data class Available(val data: FirmwareViewModel.FirmwareData) : FirmwareState()
         object UpToDate : FirmwareState()
-        data class Failed(val isBindError: Boolean, val errorMessage: String? = null) : FirmwareState()
+        data class Failed(val isBindError: Boolean, val errorMessage: String? = null) :
+            FirmwareState()
     }
 
     data class DeviceTypeState(

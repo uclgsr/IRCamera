@@ -10,13 +10,13 @@ import kotlinx.coroutines.flow.asStateFlow
  * Manages the settings menu options and navigation
  */
 class MoreViewModel : BaseViewModel() {
-    
+
     data class SettingsItem(
         val title: String,
         val subtitle: String,
         val action: SettingsAction
     )
-    
+
     enum class SettingsAction {
         DEVICE_INFORMATION,
         TISR,
@@ -27,17 +27,17 @@ class MoreViewModel : BaseViewModel() {
         DISCONNECT,
         RESET
     }
-    
+
     private val _settingsItems = MutableStateFlow<List<SettingsItem>>(emptyList())
     val settingsItems: StateFlow<List<SettingsItem>> = _settingsItems.asStateFlow()
-    
+
     private val _isUpgradeAvailable = MutableStateFlow(false)
     val isUpgradeAvailable: StateFlow<Boolean> = _isUpgradeAvailable.asStateFlow()
-    
+
     init {
         loadSettingsItems()
     }
-    
+
     private fun loadSettingsItems() {
         launchWithErrorHandling {
             val items = listOf(
@@ -85,7 +85,7 @@ class MoreViewModel : BaseViewModel() {
             _settingsItems.value = items
         }
     }
-    
+
     fun checkForUpdates() {
         launchWithErrorHandling {
             // Mock update check - in real implementation would check for firmware updates

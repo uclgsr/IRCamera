@@ -22,7 +22,7 @@ import com.mpdc4gsr.module.user.viewmodel.QuestionViewModel
 
 /**
  * User Management Module - FAQ Questions Compose Activity
- * 
+ *
  * FAQ questions list screen demonstrating RecyclerView → LazyColumn migration.
  * Features:
  * - Lazy scrolling list of FAQ items
@@ -39,19 +39,19 @@ class QuestionComposeActivity : BaseComposeActivity<QuestionViewModel>() {
     @Composable
     override fun Content(viewModel: QuestionViewModel) {
         val questions by viewModel.questions.collectAsState()
-        
+
         // Get isTS001 from intent extras
         val isTS001 = intent.getBooleanExtra("isTS001", false)
-        
+
         // Load questions on start
         LaunchedEffect(Unit) {
             viewModel.loadQuestions(isTS001)
         }
-        
+
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { 
+                    title = {
                         Text(
                             text = "FAQ",
                             fontWeight = FontWeight.Bold
@@ -118,7 +118,7 @@ private fun QuestionItem(
                 color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.weight(1f)
             )
-            
+
             Icon(
                 Icons.AutoMirrored.Filled.KeyboardArrowRight,
                 contentDescription = "View Answer",

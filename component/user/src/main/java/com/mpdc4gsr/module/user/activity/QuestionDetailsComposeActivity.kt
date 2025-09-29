@@ -17,7 +17,7 @@ import com.mpdc4gsr.module.user.viewmodel.QuestionDetailsViewModel
 
 /**
  * User Management Module - FAQ Question Details Compose Activity
- * 
+ *
  * Question details screen showing question and answer.
  * Features:
  * - Scrollable content for long answers
@@ -35,18 +35,18 @@ class QuestionDetailsComposeActivity : BaseComposeActivity<QuestionDetailsViewMo
     override fun Content(viewModel: QuestionDetailsViewModel) {
         val question by viewModel.question.collectAsState()
         val answer by viewModel.answer.collectAsState()
-        
+
         // Load question details from intent
         LaunchedEffect(Unit) {
             val questionText = intent.getStringExtra("question")
             val answerText = intent.getStringExtra("answer")
             viewModel.loadQuestionDetails(questionText, answerText)
         }
-        
+
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { 
+                    title = {
                         Text(
                             text = "FAQ Details",
                             fontWeight = FontWeight.Bold
@@ -87,7 +87,7 @@ class QuestionDetailsComposeActivity : BaseComposeActivity<QuestionDetailsViewMo
                             color = MaterialTheme.colorScheme.onPrimaryContainer,
                             modifier = Modifier.padding(bottom = 8.dp)
                         )
-                        
+
                         Text(
                             text = question,
                             style = MaterialTheme.typography.bodyLarge,
@@ -95,7 +95,7 @@ class QuestionDetailsComposeActivity : BaseComposeActivity<QuestionDetailsViewMo
                         )
                     }
                 }
-                
+
                 // Answer Card
                 Card(
                     modifier = Modifier.fillMaxWidth(),
@@ -115,7 +115,7 @@ class QuestionDetailsComposeActivity : BaseComposeActivity<QuestionDetailsViewMo
                             color = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.padding(bottom = 8.dp)
                         )
-                        
+
                         Text(
                             text = answer,
                             style = MaterialTheme.typography.bodyMedium,

@@ -20,7 +20,7 @@ import com.mpdc4gsr.libunified.R as RCore
 
 /**
  * User Management Module - Unit Settings Compose Activity
- * 
+ *
  * Temperature unit selection screen (Celsius/Fahrenheit).
  * Demonstrates:
  * - Radio button selection pattern
@@ -37,11 +37,11 @@ class UnitComposeActivity : BaseComposeActivity<UnitViewModel>() {
     @Composable
     override fun Content(viewModel: UnitViewModel) {
         val selectedUnit by viewModel.selectedUnit.collectAsState()
-        
+
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { 
+                    title = {
                         Text(
                             text = stringResource(RCore.string.setting_unit),
                             fontWeight = FontWeight.Bold
@@ -111,7 +111,7 @@ class UnitComposeActivity : BaseComposeActivity<UnitViewModel>() {
                                 MaterialTheme.colorScheme.onSurface
                             }
                         )
-                        
+
                         if (selectedUnit == UnitViewModel.CELSIUS) {
                             Icon(
                                 Icons.Default.Check,
@@ -121,7 +121,7 @@ class UnitComposeActivity : BaseComposeActivity<UnitViewModel>() {
                         }
                     }
                 }
-                
+
                 // Fahrenheit Option
                 Card(
                     modifier = Modifier
@@ -157,7 +157,7 @@ class UnitComposeActivity : BaseComposeActivity<UnitViewModel>() {
                                 MaterialTheme.colorScheme.onSurface
                             }
                         )
-                        
+
                         if (selectedUnit == UnitViewModel.FAHRENHEIT) {
                             Icon(
                                 Icons.Default.Check,

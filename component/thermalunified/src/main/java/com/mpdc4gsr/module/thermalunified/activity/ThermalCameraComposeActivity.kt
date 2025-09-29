@@ -17,7 +17,7 @@ import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalFragmentViewModel
 
 /**
  * Task B: Complete Thermal Camera Activity using Compose
- * 
+ *
  * This activity demonstrates:
  * - Complete migration of thermal camera UI to Compose
  * - Uses shared BaseComposeActivity from libunified module
@@ -31,7 +31,7 @@ class ThermalCameraComposeActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         setContent {
             MaterialTheme {
                 ThermalCameraContent()
@@ -45,7 +45,7 @@ class ThermalCameraComposeActivity : ComponentActivity() {
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { 
+                    title = {
                         Text(
                             "Thermal Camera",
                             fontWeight = FontWeight.Bold
@@ -55,15 +55,15 @@ class ThermalCameraComposeActivity : ComponentActivity() {
                         IconButton(onClick = { finish() }) {
                             Icon(Icons.Default.ArrowBack, contentDescription = "Back")
                         }
+                        )
+                    }
+                ) { paddingValues ->
+                    ThermalCameraContent(
+                        viewModel = viewModel,
+                        modifier = Modifier.padding(paddingValues)
                     )
                 }
-            ) { paddingValues ->
-                ThermalCameraContent(
-                    viewModel = viewModel,
-                    modifier = Modifier.padding(paddingValues)
-                )
             }
-        }
     }
 
     @Composable
@@ -94,7 +94,7 @@ class ThermalCameraComposeActivity : ComponentActivity() {
                     )
                 }
             }
-            
+
             // Camera controls
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -106,7 +106,7 @@ class ThermalCameraComposeActivity : ComponentActivity() {
                 ) {
                     Text("Capture")
                 }
-                
+
                 Button(
                     onClick = { /* Handle record */ },
                     modifier = Modifier.weight(1f)

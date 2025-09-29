@@ -31,16 +31,20 @@ class ReportPreviewFirstActivity : BaseActivity() {
             finish()
         }
 
-        val reportInfoBean: ReportInfoBean? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            intent.getParcelableExtra(ExtraKeyConfig.REPORT_INFO, ReportInfoBean::class.java)
-        } else {
-            @Suppress("DEPRECATION")
-            intent.getParcelableExtra<ReportInfoBean>(ExtraKeyConfig.REPORT_INFO)
-        }
+        val reportInfoBean: ReportInfoBean? =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                intent.getParcelableExtra(ExtraKeyConfig.REPORT_INFO, ReportInfoBean::class.java)
+            } else {
+                @Suppress("DEPRECATION")
+                intent.getParcelableExtra<ReportInfoBean>(ExtraKeyConfig.REPORT_INFO)
+            }
         reportInfoView.refreshInfo(reportInfoBean)
         reportInfoView.refreshCondition(
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                intent.getParcelableExtra(ExtraKeyConfig.REPORT_CONDITION, ReportConditionBean::class.java)
+                intent.getParcelableExtra(
+                    ExtraKeyConfig.REPORT_CONDITION,
+                    ReportConditionBean::class.java
+                )
             } else {
                 @Suppress("DEPRECATION")
                 intent.getParcelableExtra<ReportConditionBean>(ExtraKeyConfig.REPORT_CONDITION)

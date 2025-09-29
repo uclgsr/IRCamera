@@ -26,7 +26,7 @@ import com.mpdc4gsr.module.thermalunified.viewmodel.IRMainActivityViewModel
  * Demonstrates successful cross-module integration using shared BaseComposeActivity
  */
 class IRMainComposeActivity : BaseComposeActivity<IRMainActivityViewModel>() {
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -42,7 +42,7 @@ private fun ThermalMainScreen(
     viewModel: IRMainActivityViewModel = viewModel()
 ) {
     var selectedTab by remember { mutableIntStateOf(0) }
-    
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -72,7 +72,7 @@ private fun ThermalMainScreen(
                 }
             }
         )
-        
+
         // Main Content
         Box(
             modifier = Modifier
@@ -86,7 +86,7 @@ private fun ThermalMainScreen(
                 3 -> ThermalReportsTab()
             }
         }
-        
+
         // Bottom Navigation
         ThermalBottomNavigation(
             selectedTab = selectedTab,
@@ -106,7 +106,7 @@ private fun ThermalBottomNavigation(
         ThermalTab("Analysis", Icons.Default.Analytics),
         ThermalTab("Reports", Icons.Default.Description)
     )
-    
+
     NavigationBar(
         containerColor = Color(0xFF161B22),
         contentColor = Color.White
@@ -186,9 +186,9 @@ private fun ThermalCameraTab() {
                 }
             }
         }
-        
+
         Spacer(modifier = Modifier.height(24.dp))
-        
+
         // Control Buttons
         Row(
             horizontalArrangement = Arrangement.spacedBy(16.dp)

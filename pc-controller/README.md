@@ -1,13 +1,17 @@
 # IRCamera PC Controller - Complete Guide
 
-The PC Controller serves as the central **Hub** in the IRCamera Multi-Modal Thermal Sensing Platform's Hub-and-Spoke
+The PC Controller serves as the central **Hub** in the IRCamera Multi-Modal Thermal Sensing
+Platform's Hub-and-Spoke
 architecture, coordinating distributed Android sensor nodes for scientific data collection.
 
 ## Overview
 
-This comprehensive desktop application orchestrates multi-modal recording sessions with Android devices, providing
-real-time data visualization, session management, and high-performance data processing capabilities. The implementation
-represents the unified result of multiple controller iterations, combining the best features from previous versions.
+This comprehensive desktop application orchestrates multi-modal recording sessions with Android
+devices, providing
+real-time data visualization, session management, and high-performance data processing capabilities.
+The implementation
+represents the unified result of multiple controller iterations, combining the best features from
+previous versions.
 
 ## Unified Implementation
 

@@ -18,7 +18,7 @@ import com.mpdc4gsr.libunified.R as RCore
 
 /**
  * User Management Module - AutoSave Settings Compose Activity
- * 
+ *
  * Simple settings screen that allows users to toggle auto-save functionality.
  * Demonstrates modern Compose migration from XML with:
  * - Material 3 components
@@ -35,11 +35,11 @@ class AutoSaveComposeActivity : BaseComposeActivity<AutoSaveViewModel>() {
     @Composable
     override fun Content(viewModel: AutoSaveViewModel) {
         val isAutoSaveEnabled by viewModel.isAutoSaveEnabled.collectAsState()
-        
+
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { 
+                    title = {
                         Text(
                             text = stringResource(RCore.string.ts004_auto_save),
                             fontWeight = FontWeight.Bold
@@ -79,7 +79,7 @@ class AutoSaveComposeActivity : BaseComposeActivity<AutoSaveViewModel>() {
                             color = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.padding(bottom = 12.dp)
                         )
-                        
+
                         // Switch Item
                         Card(
                             modifier = Modifier.fillMaxWidth(),
@@ -107,10 +107,12 @@ class AutoSaveComposeActivity : BaseComposeActivity<AutoSaveViewModel>() {
                                     Text(
                                         text = stringResource(RCore.string.ts004_save_tips),
                                         style = MaterialTheme.typography.bodySmall,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(
+                                            alpha = 0.7f
+                                        )
                                     )
                                 }
-                                
+
                                 Switch(
                                     checked = isAutoSaveEnabled,
                                     onCheckedChange = { viewModel.updateAutoSaveState(it) }

@@ -50,7 +50,9 @@ class ModernPdfViewModel : BaseViewModel() {
     sealed class ReportDataState {
         object Idle : ReportDataState()
         object Loading : ReportDataState()
-        data class Success(val data: ReportData, val isLoadMore: Boolean = false) : ReportDataState()
+        data class Success(val data: ReportData, val isLoadMore: Boolean = false) :
+            ReportDataState()
+
         data class Error(val message: String, val code: Int = -1) : ReportDataState()
         object NoNetwork : ReportDataState()
     }

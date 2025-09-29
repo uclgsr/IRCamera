@@ -24,7 +24,7 @@ import com.mpdc4gsr.libunified.R as RCore
 
 /**
  * User Management Module - Device Details Compose Activity
- * 
+ *
  * Displays device information (Serial Number, Model) with copy functionality.
  * Demonstrates:
  * - Device information display
@@ -45,19 +45,19 @@ class DeviceDetailsComposeActivity : BaseComposeActivity<DeviceDetailsViewModel>
         val serialNumber by viewModel.serialNumber.collectAsState()
         val deviceModel by viewModel.deviceModel.collectAsState()
         val isLoading by viewModel.isLoading.collectAsState()
-        
+
         // Get isTC007 from intent extras
         val isTC007 = intent.getBooleanExtra(ExtraKeyConfig.IS_TC007, false)
-        
+
         // Load device details on start
         LaunchedEffect(Unit) {
             viewModel.loadDeviceDetails(isTC007)
         }
-        
+
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { 
+                    title = {
                         Text(
                             text = stringResource(RCore.string.more_device_info),
                             fontWeight = FontWeight.Bold
@@ -105,7 +105,7 @@ class DeviceDetailsComposeActivity : BaseComposeActivity<DeviceDetailsViewModel>
                                 fontWeight = FontWeight.SemiBold,
                                 color = MaterialTheme.colorScheme.primary
                             )
-                            
+
                             // Serial Number Row
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
@@ -124,12 +124,12 @@ class DeviceDetailsComposeActivity : BaseComposeActivity<DeviceDetailsViewModel>
                                     color = MaterialTheme.colorScheme.onSurface
                                 )
                             }
-                            
+
                             HorizontalDivider(
                                 thickness = 0.5.dp,
                                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
                             )
-                            
+
                             // Device Model Row
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
@@ -148,12 +148,12 @@ class DeviceDetailsComposeActivity : BaseComposeActivity<DeviceDetailsViewModel>
                                     color = MaterialTheme.colorScheme.onSurface
                                 )
                             }
-                            
+
                             HorizontalDivider(
                                 thickness = 0.5.dp,
                                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
                             )
-                            
+
                             // Copy Button
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
@@ -165,12 +165,14 @@ class DeviceDetailsComposeActivity : BaseComposeActivity<DeviceDetailsViewModel>
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onSurface
                                 )
-                                
+
                                 IconButton(
                                     onClick = {
                                         val copyText = viewModel.getCopyText()
-                                        val clipboardManager = context.getSystemService(android.content.Context.CLIPBOARD_SERVICE) as ClipboardManager
-                                        val clipData = ClipData.newPlainText("Device Info", copyText)
+                                        val clipboardManager =
+                                            context.getSystemService(android.content.Context.CLIPBOARD_SERVICE) as ClipboardManager
+                                        val clipData =
+                                            ClipData.newPlainText("Device Info", copyText)
                                         clipboardManager.setPrimaryClip(clipData)
                                         TToast.shortToast(context, RCore.string.ts004_copy_success)
                                     }

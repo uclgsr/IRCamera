@@ -26,7 +26,7 @@ import com.mpdc4gsr.libunified.R as RCore
 
 /**
  * User Management Module - Storage Space Compose Activity
- * 
+ *
  * Storage management screen with usage visualization and format functionality.
  * Features:
  * - Storage usage progress indicator
@@ -45,16 +45,16 @@ class StorageSpaceComposeActivity : BaseComposeActivity<StorageSpaceViewModel>()
     override fun Content(viewModel: StorageSpaceViewModel) {
         val storageInfo by viewModel.storageInfo.collectAsState()
         val usagePercentage = viewModel.getUsagePercentage()
-        
+
         // Load storage info on start
         LaunchedEffect(Unit) {
             viewModel.loadStorageInfo()
         }
-        
+
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { 
+                    title = {
                         Text(
                             text = stringResource(RCore.string.ts004_storage_space),
                             fontWeight = FontWeight.Bold
@@ -95,7 +95,7 @@ class StorageSpaceComposeActivity : BaseComposeActivity<StorageSpaceViewModel>()
                             color = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.padding(bottom = 16.dp)
                         )
-                        
+
                         // Usage Progress
                         Text(
                             text = "Storage Usage",
@@ -104,7 +104,7 @@ class StorageSpaceComposeActivity : BaseComposeActivity<StorageSpaceViewModel>()
                             color = MaterialTheme.colorScheme.onSurface,
                             modifier = Modifier.padding(bottom = 8.dp)
                         )
-                        
+
                         LinearProgressIndicator(
                             progress = { usagePercentage },
                             modifier = Modifier
@@ -113,7 +113,7 @@ class StorageSpaceComposeActivity : BaseComposeActivity<StorageSpaceViewModel>()
                             color = MaterialTheme.colorScheme.primary,
                             trackColor = MaterialTheme.colorScheme.surfaceVariant,
                         )
-                        
+
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -133,7 +133,7 @@ class StorageSpaceComposeActivity : BaseComposeActivity<StorageSpaceViewModel>()
                         }
                     }
                 }
-                
+
                 // Storage Breakdown
                 Card(
                     modifier = Modifier.fillMaxWidth(),
@@ -153,28 +153,28 @@ class StorageSpaceComposeActivity : BaseComposeActivity<StorageSpaceViewModel>()
                             color = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.padding(bottom = 16.dp)
                         )
-                        
+
                         StorageItem(
                             icon = Icons.Default.Add,
                             title = "Photos",
                             size = viewModel.formatFileSize(storageInfo.photoSpace),
                             color = MaterialTheme.colorScheme.secondary
                         )
-                        
+
                         StorageItem(
                             icon = Icons.Default.Info,
                             title = "Videos",
                             size = viewModel.formatFileSize(storageInfo.videoSpace),
                             color = MaterialTheme.colorScheme.tertiary
                         )
-                        
+
                         StorageItem(
                             icon = Icons.Default.Settings,
                             title = "System",
                             size = viewModel.formatFileSize(storageInfo.systemSpace),
                             color = MaterialTheme.colorScheme.outline
                         )
-                        
+
                         StorageItem(
                             icon = Icons.Default.Build,
                             title = "Free Space",
@@ -183,7 +183,7 @@ class StorageSpaceComposeActivity : BaseComposeActivity<StorageSpaceViewModel>()
                         )
                     }
                 }
-                
+
                 // Format Storage Card
                 Card(
                     modifier = Modifier.fillMaxWidth(),
@@ -217,7 +217,7 @@ class StorageSpaceComposeActivity : BaseComposeActivity<StorageSpaceViewModel>()
                                     modifier = Modifier.padding(top = 4.dp)
                                 )
                             }
-                            
+
                             Button(
                                 onClick = { viewModel.formatStorage() },
                                 colors = ButtonDefaults.buttonColors(
@@ -271,7 +271,7 @@ private fun StorageItem(
                 color = MaterialTheme.colorScheme.onSurface
             )
         }
-        
+
         Text(
             text = size,
             style = MaterialTheme.typography.bodyMedium,

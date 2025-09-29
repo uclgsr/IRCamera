@@ -39,19 +39,20 @@ class ThermalDataRepository : BaseRepository() {
     )
 
     // Real-time thermal data stream
-    fun getThermalDataStream(deviceId: String): Flow<BaseRepository.Result<ThermalFrameData>> = flow {
-        emit(BaseRepository.Result.Loading)
-        try {
-            while (true) {
-                delay(100) // 10 FPS simulation
+    fun getThermalDataStream(deviceId: String): Flow<BaseRepository.Result<ThermalFrameData>> =
+        flow {
+            emit(BaseRepository.Result.Loading)
+            try {
+                while (true) {
+                    delay(100) // 10 FPS simulation
 
-                val frame = generateThermalFrame(deviceId)
-                emit(BaseRepository.Result.Success(frame))
+                    val frame = generateThermalFrame(deviceId)
+                    emit(BaseRepository.Result.Success(frame))
+                }
+            } catch (e: Exception) {
+                emit(BaseRepository.Result.Error(e))
             }
-        } catch (e: Exception) {
-            emit(BaseRepository.Result.Error(e))
-        }
-    }.flowOn(Dispatchers.IO)
+        }.flowOn(Dispatchers.IO)
 
     // Historical thermal data with caching
     fun getHistoricalThermalData(
