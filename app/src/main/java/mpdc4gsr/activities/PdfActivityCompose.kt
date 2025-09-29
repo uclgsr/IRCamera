@@ -21,7 +21,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.csl.irCamera.R
 import kotlinx.coroutines.delay
-import mpdc4gsr.compose.base.BaseComposeActivity
+import com.mpdc4gsr.libunified.app.compose.base.BaseScreenActivity
 import mpdc4gsr.compose.components.TitleBar
 import mpdc4gsr.compose.theme.IRCameraTheme
 import mpdc4gsr.viewmodel.BaseViewModel
@@ -125,25 +125,23 @@ class PdfViewModel : BaseViewModel() {
     }
 }
 
-class PdfActivityCompose : BaseComposeActivity<PdfViewModel>() {
+class PdfActivityCompose : BaseScreenActivity() {
 
-    override fun createViewModel(): PdfViewModel = viewModels<PdfViewModel>().value
+    private val viewModel: PdfViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val isTS001 = intent.getBooleanExtra("isTS001", false)
-        viewModels<PdfViewModel>().value.loadPdf(isTS001, this)
+        viewModel.loadPdf(isTS001, this)
     }
 
-    override fun onResume() {
-        super.onResume()
-        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-    }
+    // onResume method is now handled by BaseScreenActivity  
+    // This eliminates the duplicate lifecycle pattern found in 7+ activities
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    override fun Content(viewModel: PdfViewModel) {
+    override fun ScreenContent() {
         IRCameraTheme {
             val context = LocalContext.current
             val isLoading by viewModel.isLoading

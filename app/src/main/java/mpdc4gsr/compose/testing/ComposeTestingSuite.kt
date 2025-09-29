@@ -1,20 +1,13 @@
 package mpdc4gsr.compose.testing
 
 import android.util.Log
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import kotlinx.coroutines.delay
 import kotlin.system.measureTimeMillis
+import mpdc4gsr.compose.common.ComposeImports.*
+import mpdc4gsr.compose.common.ComposeLayouts.*
+import mpdc4gsr.compose.common.ComposeDimens
 
 /**
  * Compose Testing Suite - Phase 4 Comprehensive Validation

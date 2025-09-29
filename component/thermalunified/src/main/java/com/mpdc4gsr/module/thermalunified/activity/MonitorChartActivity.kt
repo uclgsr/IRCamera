@@ -14,7 +14,7 @@ import com.mpdc4gsr.libunified.app.bean.tools.ThermalBean
 import com.mpdc4gsr.libunified.app.common.SharedManager
 import com.mpdc4gsr.libunified.app.db.AppDatabase
 import com.mpdc4gsr.libunified.app.db.entity.ThermalEntity
-import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
+import com.mpdc4gsr.libunified.app.ktbase.BaseScreenActivity
 import com.mpdc4gsr.libunified.app.tools.NumberTools
 import com.mpdc4gsr.libunified.app.tools.TimeTool
 import com.mpdc4gsr.libunified.ui.charts.LineChart
@@ -38,7 +38,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
-class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueSelectedListener {
+class MonitorChartActivity : BaseScreenActivity(), View.OnClickListener, OnChartValueSelectedListener {
     private val viewModel: LogViewModel by viewModels()
 
     private val timeAdapter: SettingTimeAdapter by lazy { SettingTimeAdapter(this) }
@@ -90,15 +90,8 @@ class MonitorChartActivity : BaseActivity(), View.OnClickListener, OnChartValueS
     override fun initData() {
     }
 
-    override fun onResume() {
-        super.onResume()
-        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-    }
+    // onResume and onPause methods are now handled by BaseScreenActivity
+    // This eliminates the duplicate lifecycle pattern found in 7+ activities
 
     override fun onDestroy() {
         super.onDestroy()

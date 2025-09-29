@@ -18,6 +18,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import com.mpdc4gsr.libunified.utils.CommonUtils
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -358,7 +359,7 @@ class SensorDashboardFragmentCompose : SimpleComposeFragment() {
         val hours = (elapsedMs / (1000 * 60 * 60))
 
         return if (hours > 0) {
-            String.format("%02d:%02d:%02d", hours, minutes, seconds)
+            CommonUtils.formatTime(hours.toInt(), minutes.toInt(), seconds.toInt())
         } else {
             String.format("%02d:%02d", minutes, seconds)
         }

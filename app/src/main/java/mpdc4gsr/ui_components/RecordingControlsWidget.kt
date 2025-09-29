@@ -14,6 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import com.mpdc4gsr.libunified.utils.CommonUtils
 
 /**
  * Recording Controls Widget with Local and Remote Trigger Support
@@ -269,7 +270,7 @@ class RecordingControlsWidget @JvmOverloads constructor(
         val hours = (milliseconds / (1000 * 60 * 60))
 
         return if (hours > 0) {
-            String.format("%02d:%02d:%02d", hours, minutes, seconds)
+            CommonUtils.formatTime(hours.toInt(), minutes.toInt(), seconds.toInt())
         } else {
             String.format("%02d:%02d", minutes, seconds)
         }

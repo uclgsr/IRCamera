@@ -6,23 +6,16 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import mpdc4gsr.permissions.PermissionManager
+import mpdc4gsr.compose.common.ComposeImports.*
+import mpdc4gsr.compose.common.ComposeLayouts.*
+import mpdc4gsr.compose.common.ComposeDimens
 import mpdc4gsr.sensors.RgbCameraRecorder
 import kotlin.system.measureTimeMillis
 

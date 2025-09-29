@@ -376,11 +376,8 @@ public class HorizontalBarChartRenderer extends BarChartRenderer {
         }
     }
 
-    @Override
-    public void drawValue(Canvas c, String valueText, float x, float y, int color) {
-        mValuePaint.setColor(color);
-        c.drawText(valueText, x, y, mValuePaint);
-    }
+    // drawValue method is now inherited from BaseChartRenderer
+    // This eliminates the duplication found in 8+ chart renderer files
 
     @Override
     protected void prepareBarHighlight(float x, float y1, float y2, float barWidthHalf, Transformer trans) {
