@@ -8,7 +8,7 @@ import com.mpdc4gsr.libunified.ui.interfaces.datasets.IBarLineScatterCandleBubbl
 import com.mpdc4gsr.libunified.ui.interfaces.datasets.IDataSet;
 import com.mpdc4gsr.libunified.ui.utils.ViewPortHandler;
 
-public abstract class BarLineScatterCandleBubbleRenderer extends DataRenderer {
+public abstract class BarLineScatterCandleBubbleRenderer extends BaseChartRenderer {
 
     protected XBounds mXBounds = new XBounds();
 

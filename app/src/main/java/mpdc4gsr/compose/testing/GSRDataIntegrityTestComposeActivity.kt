@@ -4,18 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import kotlinx.coroutines.delay
@@ -24,6 +13,9 @@ import mpdc4gsr.controller.RecordingController
 import mpdc4gsr.sensors.gsr.GSRSensorRecorder
 import kotlin.math.abs
 import kotlin.system.measureTimeMillis
+import mpdc4gsr.compose.common.ComposeImports.*
+import mpdc4gsr.compose.common.ComposeLayouts.*
+import mpdc4gsr.compose.common.ComposeDimens
 
 /**
  * Compose version of GSR Data Integrity Test Activity

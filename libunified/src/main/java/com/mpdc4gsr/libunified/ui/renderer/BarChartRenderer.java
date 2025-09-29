@@ -419,11 +419,8 @@ public class BarChartRenderer extends BarLineScatterCandleBubbleRenderer {
         }
     }
 
-    @Override
-    public void drawValue(Canvas c, String valueText, float x, float y, int color) {
-        mValuePaint.setColor(color);
-        c.drawText(valueText, x, y, mValuePaint);
-    }
+    // drawValue method is now inherited from BaseChartRenderer
+    // This eliminates the duplication found in 8+ chart renderer files
 
     @Override
     public void drawHighlighted(Canvas c, Highlight[] indices) {

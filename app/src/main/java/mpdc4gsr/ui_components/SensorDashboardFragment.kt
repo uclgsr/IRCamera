@@ -18,6 +18,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.mpdc4gsr.libunified.utils.CommonUtils
 import androidx.lifecycle.lifecycleScope
 import com.csl.irCamera.R
 import kotlinx.coroutines.Job
@@ -336,7 +337,7 @@ class SensorDashboardFragment : Fragment() {
         val hours = (elapsedMs / (1000 * 60 * 60))
 
         return if (hours > 0) {
-            String.format("%02d:%02d:%02d", hours, minutes, seconds)
+            CommonUtils.formatTime(hours.toInt(), minutes.toInt(), seconds.toInt())
         } else {
             String.format("%02d:%02d", minutes, seconds)
         }

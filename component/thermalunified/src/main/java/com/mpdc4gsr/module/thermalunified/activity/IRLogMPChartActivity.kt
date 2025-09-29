@@ -19,7 +19,7 @@ import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
 import com.mpdc4gsr.libunified.app.config.FileConfig
 import com.mpdc4gsr.libunified.app.db.entity.ThermalEntity
 import com.mpdc4gsr.libunified.app.dialog.TipDialog
-import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
+import com.mpdc4gsr.libunified.app.ktbase.BaseScreenActivity
 import com.mpdc4gsr.libunified.app.tools.FileTools
 import com.mpdc4gsr.libunified.app.tools.ToastTools
 import com.mpdc4gsr.module.thermalunified.R
@@ -31,7 +31,7 @@ import java.io.File
 import com.mpdc4gsr.libunified.R as LibR
 
 
-class IRLogMPChartActivity : BaseActivity() {
+class IRLogMPChartActivity : BaseScreenActivity() {
     private val viewModel: IRMonitorViewModel by viewModels()
 
     private var startTime = 0L
@@ -164,13 +164,6 @@ class IRLogMPChartActivity : BaseActivity() {
     override fun initData() {
     }
 
-    override fun onResume() {
-        super.onResume()
-        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-    }
+    // onResume and onPause methods are now handled by BaseScreenBindingActivity
+    // This eliminates the duplicate lifecycle pattern found in 7+ activities
 }

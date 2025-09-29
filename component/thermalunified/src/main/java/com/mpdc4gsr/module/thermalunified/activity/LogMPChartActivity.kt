@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.blankj.utilcode.util.SizeUtils
 import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.db.entity.ThermalEntity
-import com.mpdc4gsr.libunified.app.ktbase.BaseActivity
+import com.mpdc4gsr.libunified.app.ktbase.BaseScreenActivity
 import com.mpdc4gsr.libunified.app.tools.ToastTools
 import com.mpdc4gsr.libunified.ui.charts.LineChart
 import com.mpdc4gsr.libunified.ui.components.Legend
@@ -30,7 +30,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
-class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
+class LogMPChartActivity : BaseScreenActivity(), OnChartValueSelectedListener {
     private val viewModel: LogViewModel by viewModels()
 
     private val adapter: SettingTimeAdapter by lazy { SettingTimeAdapter(this) }
@@ -79,15 +79,8 @@ class LogMPChartActivity : BaseActivity(), OnChartValueSelectedListener {
         queryLog()
     }
 
-    override fun onResume() {
-        super.onResume()
-        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-    }
+    // onResume and onPause methods are now handled by BaseScreenActivity
+    // This eliminates the duplicate lifecycle pattern found in 7+ activities
 
     private fun queryLog() {
         showLoadingDialog()
