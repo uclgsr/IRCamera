@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.location.Address
 import android.location.Geocoder
 import android.location.LocationManager
 import android.os.Build
@@ -14,8 +15,10 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.hjq.permissions.Permission
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import java.util.Locale
+import kotlin.coroutines.resume
 
 /**
  *
@@ -37,11 +40,27 @@ object LocationUtil {
             return@withContext null
         }
         try {
-            val resultList = Geocoder(context, Locale.getDefault()).getFromLocation(
-                location.latitude,
-                location.longitude,
-                1
-            )
+            val geocoder = Geocoder(context, Locale.getDefault())
+            val resultList = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                // Use the new API for Android 13+
+                suspendCancellableCoroutine<List<Address>?> { continuation ->
+                    geocoder.getFromLocation(
+                        location.latitude,
+                        location.longitude,
+                        1
+                    ) { addresses ->
+                        continuation.resume(addresses)
+                    }
+                }
+            } else {
+                // Use the deprecated API for older versions
+                @Suppress("DEPRECATION")
+                geocoder.getFromLocation(
+                    location.latitude,
+                    location.longitude,
+                    1
+                )
+            }
             if (resultList.isNullOrEmpty()) {
                 return@withContext null
             }
