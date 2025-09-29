@@ -346,6 +346,99 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                     }
                 )
 
+                // New GSR Sensor Activities Section
+                Text(
+                    text = "GSR Sensor Activities (High Priority)",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.padding(top = 16.dp)
+                )
+
+                LauncherCard(
+                    title = "Session Manager (Compose)",
+                    subtitle = "Modern session management with search and batch operations",
+                    icon = Icons.Default.FolderOpen,
+                    onClick = {
+                        startActivity(
+                            Intent(
+                                this@ComposeMigrationLauncherActivity,
+                                mpdc4gsr.sensors.gsr.SessionManagerComposeActivity::class.java
+                            )
+                        )
+                    }
+                )
+
+                LauncherCard(
+                    title = "Multi-Modal Recording (Compose)",
+                    subtitle = "Advanced multi-sensor recording with real-time monitoring",
+                    icon = Icons.Default.RadioButtonChecked,
+                    onClick = {
+                        startActivity(
+                            Intent(
+                                this@ComposeMigrationLauncherActivity,
+                                mpdc4gsr.sensors.gsr.MultiModalRecordingComposeActivity::class.java
+                            )
+                        )
+                    }
+                )
+
+                LauncherCard(
+                    title = "Shimmer Configuration (Compose)",
+                    subtitle = "Device discovery and configuration with modern UI",
+                    icon = Icons.Default.BluetoothConnected,
+                    onClick = {
+                        startActivity(
+                            Intent(
+                                this@ComposeMigrationLauncherActivity,
+                                mpdc4gsr.sensors.gsr.ShimmerConfigComposeActivity::class.java
+                            )
+                        )
+                    }
+                )
+
+                LauncherCard(
+                    title = "Research Templates (Compose)",
+                    subtitle = "Interactive template gallery with creation wizard",
+                    icon = Icons.Default.Science,
+                    onClick = {
+                        startActivity(
+                            Intent(
+                                this@ComposeMigrationLauncherActivity,
+                                mpdc4gsr.sensors.gsr.ResearchTemplateComposeActivity::class.java
+                            )
+                        )
+                    }
+                )
+
+                LauncherCard(
+                    title = "GSR Video Player (Compose)",
+                    subtitle = "Enhanced video playback with synchronized sensor data",
+                    icon = Icons.Default.PlayCircle,
+                    onClick = {
+                        startActivity(
+                            Intent(
+                                this@ComposeMigrationLauncherActivity,
+                                mpdc4gsr.sensors.gsr.GSRVideoPlayerComposeActivity::class.java
+                            )
+                        )
+                    }
+                )
+
+                LauncherCard(
+                    title = "GSR Data Plot (Compose)",
+                    subtitle = "Modern data visualization with interactive charts",
+                    icon = Icons.Default.Timeline,
+                    onClick = {
+                        startActivity(
+                            Intent(
+                                this@ComposeMigrationLauncherActivity,
+                                mpdc4gsr.sensors.gsr.GSRPlotComposeActivity::class.java
+                            )
+                        )
+                    }
+                )
+
                 // Advanced Features Section
                 Text(
                     text = "Advanced Features",
