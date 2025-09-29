@@ -294,7 +294,7 @@ data class ThermalTab(
 
 private fun getThermalTabs(): List<ThermalTab> {
     return listOf(
-        ThermalTab("Thermal", Icons.Default.Settings),
+        ThermalTab("Thermal", Icons.Default.Thermostat),
         ThermalTab("Gallery", Icons.Default.Photo),
         ThermalTab("Ability", Icons.Default.Build),
         ThermalTab("PDF", Icons.Default.Description),

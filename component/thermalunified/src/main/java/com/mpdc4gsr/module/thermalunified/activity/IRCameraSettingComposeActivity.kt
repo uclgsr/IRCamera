@@ -80,7 +80,7 @@ class IRCameraSettingComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                     item {
                         SettingsCategoryCard(
                             title = "Image Settings",
-                            icon = Icons.Default.Settings
+                            icon = Icons.Default.Image
                         ) {
                             SettingsDropdownItem(
                                 title = "Color Palette",
@@ -110,7 +110,7 @@ class IRCameraSettingComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                     item {
                         SettingsCategoryCard(
                             title = "Camera Features",
-                            icon = Icons.Default.Settings
+                            icon = Icons.Default.CameraAlt
                         ) {
                             SettingsSwitchItem(
                                 title = "Auto Shutter",
@@ -132,7 +132,7 @@ class IRCameraSettingComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                     item {
                         SettingsCategoryCard(
                             title = "Temperature Settings",
-                            icon = Icons.Default.Settings
+                            icon = Icons.Default.Thermostat
                         ) {
                             SettingsDropdownItem(
                                 title = "Temperature Unit",
@@ -147,7 +147,7 @@ class IRCameraSettingComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                     item {
                         SettingsCategoryCard(
                             title = "Advanced Settings",
-                            icon = Icons.Default.Settings
+                            icon = Icons.Default.Tune
                         ) {
                             AdvancedSettingItem(
                                 title = "Calibration",
@@ -408,7 +408,7 @@ private fun AdvancedSettingItem(
             }
             
             Icon(
-                Icons.Default.Settings,
+                Icons.Default.ArrowForward,
                 contentDescription = "Navigate",
                 tint = Color(0xFF7D8590),
                 modifier = Modifier.size(20.dp)

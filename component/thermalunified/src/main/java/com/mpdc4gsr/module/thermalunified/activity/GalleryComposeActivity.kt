@@ -72,7 +72,7 @@ class GalleryComposeActivity : BaseComposeActivity<GalleryActivityViewModel>() {
                             }
                             IconButton(onClick = { /* Gallery settings */ }) {
                                 Icon(
-                                    Icons.Default.Settings,
+                                    Icons.Default.MoreVert,
                                     contentDescription = "Settings",
                                     tint = Color.White
                                 )

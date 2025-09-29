@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -271,10 +272,10 @@ data class ThermalTool(
 
 private fun getThermalTabs(): List<ThermalTab> {
     return listOf(
-        ThermalTab("Camera", Icons.Default.Settings),
-        ThermalTab("Measure", Icons.Default.Settings),
-        ThermalTab("Analysis", Icons.Default.Settings),
-        ThermalTab("Palette", Icons.Default.Settings),
+        ThermalTab("Camera", Icons.Default.CameraAlt),
+        ThermalTab("Measure", Icons.Default.Straighten),
+        ThermalTab("Analysis", Icons.Default.Analytics),
+        ThermalTab("Palette", Icons.Default.Palette),
         ThermalTab("Settings", Icons.Default.Settings)
     )
 }
@@ -283,25 +284,25 @@ private fun getThermalTools(tabIndex: Int): List<ThermalTool> {
     return when (tabIndex) {
         1 -> listOf( // Measure tools
             ThermalTool("Point", Icons.Default.Place, 1001),
-            ThermalTool("Line", Icons.Default.Settings, 1002),
-            ThermalTool("Rectangle", Icons.Default.Settings, 1003),
-            ThermalTool("Circle", Icons.Default.Settings, 1004)
+            ThermalTool("Line", Icons.Default.Timeline, 1002),
+            ThermalTool("Rectangle", Icons.Default.CropFree, 1003),
+            ThermalTool("Circle", Icons.Default.RadioButtonUnchecked, 1004)
         )
         2 -> listOf( // Analysis tools
-            ThermalTool("Histogram", Icons.Default.Settings, 2001),
-            ThermalTool("Profile", Icons.Default.Settings, 2002),
-            ThermalTool("Report", Icons.Default.Settings, 2003)
+            ThermalTool("Histogram", Icons.Default.BarChart, 2001),
+            ThermalTool("Profile", Icons.Default.ShowChart, 2002),
+            ThermalTool("Report", Icons.Default.Description, 2003)
         )
         3 -> listOf( // Palette tools
-            ThermalTool("Iron", Icons.Default.Settings, 3001),
-            ThermalTool("Rainbow", Icons.Default.Settings, 3002),
-            ThermalTool("Gray", Icons.Default.Settings, 3003),
-            ThermalTool("Hot", Icons.Default.Settings, 3004)
+            ThermalTool("Iron", Icons.Default.Palette, 3001),
+            ThermalTool("Rainbow", Icons.Default.ColorLens, 3002),
+            ThermalTool("Gray", Icons.Default.InvertColors, 3003),
+            ThermalTool("Hot", Icons.Default.LocalFireDepartment, 3004)
         )
         4 -> listOf( // Settings tools
-            ThermalTool("Emissivity", Icons.Default.Settings, 4001),
-            ThermalTool("Temperature", Icons.Default.Settings, 4002),
-            ThermalTool("Distance", Icons.Default.Settings, 4003)
+            ThermalTool("Emissivity", Icons.Default.Tune, 4001),
+            ThermalTool("Temperature", Icons.Default.Thermostat, 4002),
+            ThermalTool("Distance", Icons.Outlined.Straighten, 4003)
         )
         else -> emptyList()
     }

@@ -8,6 +8,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -77,7 +78,7 @@ class VideoComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         actions = {
                             IconButton(onClick = { showControls = !showControls }) {
                                 Icon(
-                                    if (showControls) Icons.Default.Settings else Icons.Default.Settings,
+                                    if (showControls) Icons.Default.VisibilityOff else Icons.Default.Visibility,
                                     contentDescription = "Toggle Controls",
                                     tint = Color.White
                                 )
@@ -224,7 +225,7 @@ private fun VideoControlsOverlay(
                 // Skip backward
                 IconButton(onClick = { onSeek(maxOf(0, currentPosition - 10000)) }) {
                     Icon(
-                        Icons.Default.Settings,
+                        Icons.Outlined.Replay10,
                         contentDescription = "Skip back 10s",
                         tint = Color.White,
                         modifier = Modifier.size(32.dp)
@@ -250,7 +251,7 @@ private fun VideoControlsOverlay(
                 // Skip forward
                 IconButton(onClick = { onSeek(minOf(duration, currentPosition + 10000)) }) {
                     Icon(
-                        Icons.Default.Settings,
+                        Icons.Outlined.Forward10,
                         contentDescription = "Skip forward 10s",
                         tint = Color.White,
                         modifier = Modifier.size(32.dp)
