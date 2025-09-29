@@ -1,5 +1,7 @@
 package mpdc4gsr.compose.utils
 
+import android.content.Intent
+import android.os.Bundle
 import android.view.View
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable

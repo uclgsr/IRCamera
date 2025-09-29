@@ -384,10 +384,10 @@ class SensorDashboardFragmentCompose : SimpleComposeFragment() {
         THERMAL, RGB, GSR, AUDIO;
         
         fun getIconRes(): Int = when (this) {
-            THERMAL -> R.drawable.ic_thermal_camera
-            RGB -> R.drawable.ic_camera
-            GSR -> R.drawable.ic_gsr_sensor
-            AUDIO -> R.drawable.ic_microphone
+            THERMAL -> com.mpdc4gsr.libunified.R.drawable.ic_menu_thermal6001  // Using libunified thermal icon
+            RGB -> R.drawable.ic_camera_alt            // Using existing camera icon
+            GSR -> R.drawable.ic_gsr_pulse             // Using existing GSR icon
+            AUDIO -> R.drawable.ic_camera_alt          // Fallback to camera icon for now
         }
     }
 

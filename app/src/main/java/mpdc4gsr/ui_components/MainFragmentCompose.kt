@@ -117,7 +117,7 @@ class MainFragmentCompose : BaseComposeFragment<MainFragmentViewModel>() {
                     containerColor = MaterialTheme.colorScheme.tertiary
                 ) {
                     Icon(
-                        painter = painterResource(id = R.drawable.ic_gsr_sensor),
+                        painter = painterResource(id = R.drawable.ic_gsr_pulse),
                         contentDescription = "GSR Recording"
                     )
                 }
