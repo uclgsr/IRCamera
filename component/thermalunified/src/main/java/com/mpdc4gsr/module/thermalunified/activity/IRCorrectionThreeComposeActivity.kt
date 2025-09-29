@@ -37,18 +37,18 @@ class IRCorrectionThreeComposeActivity : BaseComposeActivity<ThermalViewModel>()
                         title = {
                             Text(
                                 "Correction Step 3",
-                                color = Color.White,
+                                color = MaterialTheme.colorScheme.onSurface,
                                 fontSize = 20.sp,
                                 fontWeight = FontWeight.Medium
                             )
                         },
                         navigationIcon = {
                             IconButton(onClick = { finish() }) {
-                                Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = Color.White)
+                                Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = MaterialTheme.colorScheme.onSurface)
                             }
                         },
                         colors = TopAppBarDefaults.topAppBarColors(
-                            containerColor = Color(0xFF0D1117)
+                            containerColor = MaterialTheme.colorScheme.surface
                         )
                     )
                 }
@@ -72,20 +72,20 @@ class IRCorrectionThreeComposeActivity : BaseComposeActivity<ThermalViewModel>()
         Column(
             modifier = modifier
                 .fillMaxSize()
-                .background(Color(0xFF0D1117))
+                .background(MaterialTheme.colorScheme.background)
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             // Color Calibration Section
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFF21262D)),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
                 shape = RoundedCornerShape(12.dp)
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(
                         "Color Calibration",
-                        color = Color.White,
+                        color = MaterialTheme.colorScheme.onSurface,
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
@@ -94,7 +94,7 @@ class IRCorrectionThreeComposeActivity : BaseComposeActivity<ThermalViewModel>()
 
                     Text(
                         "Color Temperature: ${colorTemperature.toInt()}K",
-                        color = Color(0xFF7D8590),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontSize = 14.sp
                     )
 

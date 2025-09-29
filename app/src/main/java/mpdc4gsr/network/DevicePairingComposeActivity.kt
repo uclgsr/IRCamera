@@ -227,7 +227,7 @@ private fun ScanningStatusCard(
                 Icon(
                     Icons.Default.CheckCircle,
                     contentDescription = "Scan complete",
-                    tint = Color(0xFF4CAF50),
+                    tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(24.dp)
                 )
             }
