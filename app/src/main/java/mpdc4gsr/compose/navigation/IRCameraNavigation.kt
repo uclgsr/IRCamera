@@ -64,6 +64,8 @@ sealed class IRCameraScreen(val route: String) {
     object IRMonitorCaptureFragmentCompose : IRCameraScreen("ir_monitor_capture_fragment_compose")
     object IRMonitorHistoryFragment : IRCameraScreen("ir_monitor_history_fragment")
     object IRMonitorHistoryFragmentCompose : IRCameraScreen("ir_monitor_history_fragment_compose")
+    object IRMonitorThermalFragment : IRCameraScreen("ir_monitor_thermal_fragment")
+    object IRMonitorThermalFragmentCompose : IRCameraScreen("ir_monitor_thermal_fragment_compose")
     
     object Settings : IRCameraScreen("settings")
     object SettingsCompose : IRCameraScreen("settings_compose")
