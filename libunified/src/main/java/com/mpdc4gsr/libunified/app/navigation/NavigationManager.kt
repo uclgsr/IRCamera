@@ -128,22 +128,22 @@ object NavigationManager {
                 RouterConfig.MONITOR_CHART -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.MonitorChartActivity")
                 RouterConfig.LOG_MP_CHART -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.LogMPChartActivity")
 
-                RouterConfig.IR_TCLITE -> getClassByName("com.mpdc4gsr.module.thermalunified.lite.activity.IRThermalLiteActivity")
-                RouterConfig.IR_THERMAL_MONITOR_LITE -> getClassByName("com.mpdc4gsr.module.thermalunified.lite.activity.IRMonitorLiteActivity")
-                RouterConfig.IR_IMG_PICK_LITE -> getClassByName("com.mpdc4gsr.module.thermalunified.lite.activity.ImagePickIRLiteActivity")
-                RouterConfig.IR_MONITOR_CHART_LITE -> getClassByName("com.mpdc4gsr.module.thermalunified.lite.activity.IRMonitorChartLiteActivity")
-                RouterConfig.IR_CORRECTION_THREE_LITE -> getClassByName("com.mpdc4gsr.module.thermalunified.lite.activity.IRCorrectionLiteThreeActivity")
-                RouterConfig.IR_CORRECTION_FOUR_LITE -> getClassByName("com.mpdc4gsr.module.thermalunified.lite.activity.IRCorrectionLiteFourActivity")
+                RouterConfig.IR_TCLITE -> getClassByName("com.mpdc4gsr.module.thermalunified.lite.activity.IRThermalLiteComposeActivity")
+                RouterConfig.IR_THERMAL_MONITOR_LITE -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.IRMonitorComposeActivity")
+                RouterConfig.IR_IMG_PICK_LITE -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.ImagePickIRComposeActivity")
+                RouterConfig.IR_MONITOR_CHART_LITE -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.IRLogMPChartComposeActivity")
+                RouterConfig.IR_CORRECTION_THREE_LITE -> getClassByName("com.mpdc4gsr.module.thermalunified.lite.activity.IRCorrectionLiteThreeComposeActivity")
+                RouterConfig.IR_CORRECTION_FOUR_LITE -> getClassByName("com.mpdc4gsr.module.thermalunified.lite.activity.IRCorrectionLiteFourComposeActivity")
 
-                RouterConfig.REPORT_CREATE_FIRST -> getClassByName("com.mpdc4gsr.module.thermalunified.report.activity.ReportCreateFirstActivity")
+                RouterConfig.REPORT_CREATE_FIRST -> getClassByName("com.mpdc4gsr.module.thermalunified.report.activity.ThermalReportCreationComposeActivity")
                 RouterConfig.REPORT_CREATE_SECOND ->
                     getClassByName(
-                        "com.mpdc4gsr.module.thermalunified.report.activity.ReportCreateSecondActivity",
+                        "com.mpdc4gsr.module.thermalunified.report.activity.ThermalReportCreationComposeActivity",
                     )
 
                 RouterConfig.REPORT_PREVIEW_SECOND ->
                     getClassByName(
-                        "com.mpdc4gsr.module.thermalunified.report.activity.ReportPreviewSecondActivity",
+                        "com.mpdc4gsr.module.thermalunified.activity.ReportPreviewSecondComposeActivity",
                     )
 
                 RouterConfig.REPORT_PICK_IMG -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.ReportPickImgActivity")

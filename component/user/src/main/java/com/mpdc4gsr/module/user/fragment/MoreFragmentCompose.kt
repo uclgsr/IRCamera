@@ -1,59 +1,33 @@
 package com.mpdc4gsr.module.user.fragment
 
-import android.content.Intent
-import android.net.Uri
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeFragment
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-import com.mpdc4gsr.libunified.app.lms.feedback.activity.FeedbackActivity
-import com.mpdc4gsr.libunified.app.navigation.NavigationManager
-import com.mpdc4gsr.libunified.app.config.RouterConfig
-import com.mpdc4gsr.module.user.viewmodel.MoreViewModel
+import com.mpdc4gsr.module.user.viewmodel.MoreFragmentComposeViewModel
 
 /**
- * Compose migration of MoreFragment
- *
- * This fragment demonstrates:
- * - Complete migration of additional features UI to Compose
- * - Enhanced help and support section
- * - Better organization of utility features
- * - Modern Material 3 design with improved UX
- * - Integration with external apps and services
+ * Compose migration of MoreFragment - Minimal working version
  */
-class MoreFragmentCompose : BaseComposeFragment<MoreViewModel>() {
+class MoreFragmentCompose : BaseComposeFragment<MoreFragmentComposeViewModel>() {
 
-    override fun createViewModel(): MoreViewModel {
-        return viewModels<MoreViewModel>().value
+    override fun createViewModel(): MoreFragmentComposeViewModel {
+        return viewModels<MoreFragmentComposeViewModel>().value
     }
 
-    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    override fun Content(viewModel: MoreViewModel) {
-        val context = LocalContext.current
-
-        // Observe ViewModel state
-        val quickActions by viewModel.quickActions.collectAsStateWithLifecycle()
-        val helpResources by viewModel.helpResources.collectAsStateWithLifecycle()
-        val communityLinks by viewModel.communityLinks.collectAsStateWithLifecycle()
-
+    override fun Content(viewModel: MoreFragmentComposeViewModel) {
         LibUnifiedTheme {
-            LazyColumn(
+            Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(16.dp),
@@ -170,190 +144,21 @@ class MoreFragmentCompose : BaseComposeFragment<MoreViewModel>() {
                     modifier = Modifier.size(32.dp),
                     tint = action.iconTint
                 )
-
-                Spacer(modifier = Modifier.width(16.dp))
-
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = action.title,
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = action.textColor
-                    )
-                    Text(
-                        text = action.description,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = action.textColor.copy(alpha = 0.8f)
-                    )
-                }
-
-                if (action.badge.isNotEmpty()) {
-                    Card(
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.primary
-                        ),
-                        shape = RoundedCornerShape(12.dp)
+                
+                Card(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Column(
+                        modifier = Modifier.padding(16.dp)
                     ) {
                         Text(
-                            text = action.badge,
-                            style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.onPrimary,
-                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                            text = "Additional Features",
+                            style = MaterialTheme.typography.titleMedium
                         )
-                    }
-                }
-            }
-        }
-    }
-
-    @Composable
-    private fun HelpSupportCard(
-        item: HelpSupportItem,
-        onClick: () -> Unit
-    ) {
-        Card(
-            onClick = onClick,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    imageVector = item.icon,
-                    contentDescription = item.title,
-                    modifier = Modifier.size(24.dp),
-                    tint = MaterialTheme.colorScheme.primary
-                )
-
-                Spacer(modifier = Modifier.width(16.dp))
-
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = item.title,
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Medium
-                    )
-                    Text(
-                        text = item.description,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-
-                Icon(
-                    Icons.Default.ChevronRight,
-                    contentDescription = "Navigate",
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-        }
-    }
-
-    @Composable
-    private fun CommunityCard(
-        item: CommunityItem,
-        onClick: () -> Unit
-    ) {
-        Card(
-            onClick = onClick,
-            modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.tertiaryContainer
-            )
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    imageVector = item.icon,
-                    contentDescription = item.title,
-                    modifier = Modifier.size(24.dp),
-                    tint = MaterialTheme.colorScheme.onTertiaryContainer
-                )
-
-                Spacer(modifier = Modifier.width(16.dp))
-
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = item.title,
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Medium,
-                        color = MaterialTheme.colorScheme.onTertiaryContainer
-                    )
-                    Text(
-                        text = item.description,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onTertiaryContainer.copy(alpha = 0.8f)
-                    )
-                }
-
-                Icon(
-                    Icons.Default.OpenInNew,
-                    contentDescription = "Open External",
-                    tint = MaterialTheme.colorScheme.onTertiaryContainer
-                )
-            }
-        }
-    }
-
-    @Composable
-    private fun AdvancedToolCard(
-        tool: AdvancedToolItem,
-        onClick: () -> Unit
-    ) {
-        Card(
-            onClick = onClick,
-            modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.secondaryContainer
-            )
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        imageVector = tool.icon,
-                        contentDescription = tool.title,
-                        modifier = Modifier.size(24.dp),
-                        tint = MaterialTheme.colorScheme.onSecondaryContainer
-                    )
-
-                    Spacer(modifier = Modifier.width(12.dp))
-
-                    Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = tool.title,
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onSecondaryContainer
+                            text = "Explore more tools and settings",
+                            style = MaterialTheme.typography.bodyMedium
                         )
-                    }
-
-                    if (tool.isExperimental) {
-                        Card(
-                            colors = CardDefaults.cardColors(
-                                containerColor = MaterialTheme.colorScheme.error
-                            ),
-                            shape = RoundedCornerShape(8.dp)
-                        ) {
-                            Text(
-                                text = "BETA",
-                                style = MaterialTheme.typography.labelSmall,
-                                color = MaterialTheme.colorScheme.onError,
-                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
-                            )
-                        }
                     }
                 }
 
@@ -517,80 +322,6 @@ class MoreFragmentCompose : BaseComposeFragment<MoreViewModel>() {
                     .build(RouterConfig.USER_GUIDE)
                     .navigation(context)
             }
-
-            "faq" -> {
-                NavigationManager.getInstance()
-                    .build(RouterConfig.FAQ)
-                    .navigation(context)
-            }
-
-            "troubleshooting" -> {
-                NavigationManager.getInstance()
-                    .build(RouterConfig.TROUBLESHOOTING)
-                    .navigation(context)
-            }
-
-            "contact_support" -> {
-                val intent = Intent(context, FeedbackActivity::class.java)
-                context.startActivity(intent)
-            }
         }
     }
-
-    private fun handleCommunityClick(
-        context: android.content.Context,
-        item: CommunityItem,
-        viewModel: MoreViewModel
-    ) {
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(item.url))
-        context.startActivity(intent)
-    }
-
-    private fun handleAdvancedToolClick(
-        context: android.content.Context,
-        tool: AdvancedToolItem,
-        viewModel: MoreViewModel
-    ) {
-        when (tool.id) {
-            "thermal_analysis" -> viewModel.openAdvancedAnalysis()
-            "batch_processing" -> viewModel.openBatchProcessing()
-            "ai_detection" -> viewModel.openAIDetection()
-        }
-    }
-
-    // Data classes
-    data class QuickActionItem(
-        val id: String,
-        val title: String,
-        val description: String,
-        val icon: ImageVector,
-        val backgroundColor: Color,
-        val iconTint: Color,
-        val textColor: Color,
-        val badge: String = ""
-    )
-
-    data class HelpSupportItem(
-        val id: String,
-        val title: String,
-        val description: String,
-        val icon: ImageVector
-    )
-
-    data class CommunityItem(
-        val id: String,
-        val title: String,
-        val description: String,
-        val icon: ImageVector,
-        val url: String
-    )
-
-    data class AdvancedToolItem(
-        val id: String,
-        val title: String,
-        val description: String,
-        val icon: ImageVector,
-        val requirements: String,
-        val isExperimental: Boolean
-    )
 }
