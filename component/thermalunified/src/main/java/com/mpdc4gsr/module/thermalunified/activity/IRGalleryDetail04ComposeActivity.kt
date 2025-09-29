@@ -161,7 +161,7 @@ class IRGalleryDetail04ComposeActivity : BaseComposeActivity<ThermalViewModel>()
                         AnalysisButton(Icons.Default.Analytics, "Analyze", showAnalysis) { 
                             showAnalysis = !showAnalysis 
                         }
-                        AnalysisButton(Icons.Default.StraightenOutlined, "Measure", false)
+                        AnalysisButton(Icons.Default.Straighten, "Measure", false)
                         AnalysisButton(Icons.Default.FilterAlt, "Filter", false)
                     }
                 }

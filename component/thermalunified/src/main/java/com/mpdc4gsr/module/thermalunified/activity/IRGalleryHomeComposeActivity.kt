@@ -4,9 +4,11 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -320,12 +322,12 @@ private fun GalleryList(
     items: List<GalleryItem>,
     modifier: Modifier = Modifier
 ) {
-    androidx.compose.foundation.lazy.LazyColumn(
+    LazyColumn(
         modifier = modifier,
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        androidx.compose.foundation.lazy.items(items) { item ->
+        items(items) { item ->
             GalleryListItem(
                 item = item,
                 onClick = { /* Open detail */ }
