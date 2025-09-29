@@ -1,3 +1,12 @@
+/*
+ * TODO: Fix MineFragmentCompose similar to MoreFragmentCompose fixes
+ * - Convert Column to LazyColumn  
+ * - Add missing data classes and composable functions
+ * - Fix ViewModel references
+ *
+ * Temporarily simplified to allow build success for MoreFragmentCompose fixes
+ */
+
 package com.mpdc4gsr.module.user.fragment
 
 import android.content.Context
@@ -20,7 +29,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeFragment
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.app.config.RouterConfig
@@ -31,6 +39,7 @@ import com.mpdc4gsr.module.user.viewmodel.MineViewModel
 
 /**
  * Compose migration of MineFragment - Minimal working version
+ * TEMPORARILY SIMPLIFIED - needs similar fixes to MoreFragmentCompose
  */
 class MineFragmentCompose : BaseComposeFragment<MineFragmentViewModel>() {
 
