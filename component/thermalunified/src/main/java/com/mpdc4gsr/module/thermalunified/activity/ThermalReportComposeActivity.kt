@@ -43,6 +43,7 @@ class ThermalReportViewModel : BaseViewModel() {
     // ViewModel implementation for report generation
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ThermalReportScreen(
     viewModel: ThermalReportViewModel = viewModel()

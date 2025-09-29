@@ -93,7 +93,7 @@ class SimpleThermalConfigActivity : BaseComposeActivity<ThermalViewModel>() {
                         SettingCard(
                             title = "Measurement Distance", 
                             value = "${distance}m",
-                            icon = Icons.Default.RotateRight,
+                            icon = Icons.Default.Settings,
                             onClick = { /* Handle distance change */ }
                         )
                     }

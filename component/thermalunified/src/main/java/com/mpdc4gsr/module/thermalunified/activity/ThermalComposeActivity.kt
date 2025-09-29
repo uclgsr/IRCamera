@@ -273,7 +273,7 @@ data class ThermalTool(
 private fun getThermalTabs(): List<ThermalComposeTab> {
     return listOf(
         ThermalComposeTab("Camera", Icons.Default.CameraAlt),
-        ThermalComposeTab("Measure", Icons.Default.RotateRight),
+        ThermalComposeTab("Measure", Icons.Default.Settings),
         ThermalComposeTab("Analysis", Icons.Default.Analytics),
         ThermalComposeTab("Palette", Icons.Default.Palette),
         ThermalComposeTab("Settings", Icons.Default.Settings)
