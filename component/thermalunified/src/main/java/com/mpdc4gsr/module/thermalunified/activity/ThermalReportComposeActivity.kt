@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-import com.mpdc4gsr.libunified.app.viewmodel.BaseViewModel
+import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 
 /**
  * Professional thermal report generation with Compose
@@ -28,13 +28,14 @@ import com.mpdc4gsr.libunified.app.viewmodel.BaseViewModel
  */
 class ThermalReportComposeActivity : BaseComposeActivity<ThermalReportViewModel>() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            LibUnifiedTheme {
-                ThermalReportScreen()
-            }
-        }
+    override fun createViewModel(): ThermalReportViewModel {
+        return ThermalReportViewModel()
+    }
+
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    override fun Content(viewModel: ThermalReportViewModel) {
+        ThermalReportScreen()
     }
 }
 
@@ -42,6 +43,7 @@ class ThermalReportViewModel : BaseViewModel() {
     // ViewModel implementation for report generation
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ThermalReportScreen(
     viewModel: ThermalReportViewModel = viewModel()

@@ -224,6 +224,7 @@ private fun SettingsCategoryCard(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SettingsDropdownItem(
     title: String,

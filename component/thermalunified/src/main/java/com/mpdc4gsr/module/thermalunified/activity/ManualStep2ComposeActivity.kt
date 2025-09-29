@@ -19,6 +19,8 @@ import androidx.compose.ui.unit.sp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 /**
  * Modern Compose implementation of manual setup step 2 activity
@@ -37,6 +39,7 @@ class ManualStep2ComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         var isConnected by remember { mutableStateOf(false) }
         var isCalibrating by remember { mutableStateOf(false) }
         var calibrationProgress by remember { mutableFloatStateOf(0f) }
+        val coroutineScope = rememberCoroutineScope()
         
         LibUnifiedTheme {
             Scaffold(
@@ -93,8 +96,8 @@ class ManualStep2ComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         onConnect = {
                             isConnecting = true
                             // Simulate connection
-                            kotlinx.coroutines.DelicateCoroutinesApi.GlobalScope.launch {
-                                kotlinx.coroutines.delay(3000L)
+                            coroutineScope.launch {
+                                delay(3000L)
                                 isConnecting = false
                                 isConnected = true
                             }
@@ -103,9 +106,9 @@ class ManualStep2ComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             isCalibrating = true
                             calibrationProgress = 0f
                             // Simulate calibration
-                            kotlinx.coroutines.DelicateCoroutinesApi.GlobalScope.launch {
+                            coroutineScope.launch {
                                 for (i in 1..100) {
-                                    kotlinx.coroutines.delay(50L)
+                                    delay(50L)
                                     calibrationProgress = i / 100f
                                 }
                                 isCalibrating = false

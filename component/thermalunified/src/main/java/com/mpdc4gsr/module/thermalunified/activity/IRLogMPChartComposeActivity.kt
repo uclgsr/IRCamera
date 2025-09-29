@@ -14,7 +14,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-import com.mpdc4gsr.libunified.app.viewmodel.BaseViewModel
+import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 
 /**
  * MP Chart Logging - Professional thermal data visualization
@@ -94,7 +94,7 @@ class IRLogMPChartComposeActivity : BaseComposeActivity<IRLogMPChartViewModel>()
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
-                        if (isLogging) Icons.Default.Fiber_manual_record else Icons.Default.Stop,
+                        if (isLogging) Icons.Default.FiberManualRecord else Icons.Default.Stop,
                         contentDescription = null,
                         tint = if (isLogging) Color(0xFF4CAF50) else Color(0xFF666666),
                         modifier = Modifier.size(24.dp)

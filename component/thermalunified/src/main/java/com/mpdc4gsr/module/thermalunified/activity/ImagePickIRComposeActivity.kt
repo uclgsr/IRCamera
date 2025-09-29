@@ -22,6 +22,8 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.fragment.IRMonitorThermalFragment
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 /**
  * Modern Compose implementation of thermal image picker activity
@@ -40,6 +42,7 @@ class ImagePickIRComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         var selectedImages by remember { mutableStateOf(setOf<String>()) }
         var isCapturing by remember { mutableStateOf(false) }
         val recentImages = remember { getRecentImages() }
+        val coroutineScope = rememberCoroutineScope()
         
         LibUnifiedTheme {
             Scaffold(
@@ -84,8 +87,8 @@ class ImagePickIRComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         onClick = { 
                             isCapturing = true
                             // Simulate capture
-                            kotlinx.coroutines.DelicateCoroutinesApi.GlobalScope.launch {
-                                kotlinx.coroutines.delay(2000L)
+                            coroutineScope.launch {
+                                delay(2000L)
                                 isCapturing = false
                             }
                         },

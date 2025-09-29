@@ -251,7 +251,7 @@ class ReportPreviewComposeActivity : BaseComposeActivity<ThermalViewModel>() {
     }
 
     @Composable
-    private fun FormatButton(
+    private fun RowScope.FormatButton(
         label: String,
         icon: androidx.compose.ui.graphics.vector.ImageVector,
         selected: Boolean
