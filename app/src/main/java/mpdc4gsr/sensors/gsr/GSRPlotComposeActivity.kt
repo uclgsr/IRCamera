@@ -29,7 +29,7 @@ import kotlin.math.sin
 
 /**
  * GSRPlotComposeActivity - Advanced Data Visualization with Compose
- * 
+ *
  * Modern implementation of GSR data plotting with:
  * - Interactive charts with zoom and pan capabilities
  * - Real-time data analysis and statistics
@@ -65,12 +65,12 @@ class GSRPlotComposeActivity : BaseComposeActivity<GSRPlotViewModel>() {
     override fun Content(viewModel: GSRPlotViewModel) {
         val sessionId = intent.getStringExtra(EXTRA_SESSION_ID) ?: "unknown"
         val dataPath = intent.getStringExtra(EXTRA_DATA_PATH)
-        
+
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
                     TopAppBar(
-                        title = { 
+                        title = {
                             Text(
                                 "GSR Data Analysis",
                                 fontWeight = FontWeight.Bold
@@ -114,7 +114,7 @@ private fun GSRPlotContent(
     var selectedVisualization by remember { mutableStateOf(VisualizationType.LINE_CHART) }
     var timeRange by remember { mutableStateOf(TimeRange.ALL) }
     var showStatistics by remember { mutableStateOf(true) }
-    
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -129,22 +129,22 @@ private fun GSRPlotContent(
             onVisualizationChange = { selectedVisualization = it },
             onTimeRangeChange = { timeRange = it }
         )
-        
+
         // Main Plot Area
         MainPlotCard(
             visualizationType = selectedVisualization,
             timeRange = timeRange,
             sessionId = sessionId
         )
-        
+
         // Statistics Panel
         if (showStatistics) {
             StatisticsCard(sessionId = sessionId)
         }
-        
+
         // Data Analysis Tools
         DataAnalysisToolsCard()
-        
+
         // Export Options
         ExportOptionsCard()
     }
@@ -185,16 +185,16 @@ private fun VisualizationControlsCard(
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Divider()
-            
+
             // Visualization Type Selection
             Text(
                 "Chart Type",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Medium
             )
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -202,7 +202,7 @@ private fun VisualizationControlsCard(
                 VisualizationType.values().take(2).forEach { type ->
                     FilterChip(
                         onClick = { onVisualizationChange(type) },
-                        label = { 
+                        label = {
                             Text(
                                 when (type) {
                                     VisualizationType.LINE_CHART -> "Line Chart"
@@ -210,14 +210,14 @@ private fun VisualizationControlsCard(
                                     VisualizationType.HISTOGRAM -> "Histogram"
                                     VisualizationType.HEATMAP -> "Heatmap"
                                 }
-                            ) 
+                            )
                         },
                         selected = selectedVisualization == type,
                         modifier = Modifier.weight(1f)
                     )
                 }
             }
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -225,7 +225,7 @@ private fun VisualizationControlsCard(
                 VisualizationType.values().drop(2).forEach { type ->
                     FilterChip(
                         onClick = { onVisualizationChange(type) },
-                        label = { 
+                        label = {
                             Text(
                                 when (type) {
                                     VisualizationType.LINE_CHART -> "Line Chart"
@@ -233,21 +233,21 @@ private fun VisualizationControlsCard(
                                     VisualizationType.HISTOGRAM -> "Histogram"
                                     VisualizationType.HEATMAP -> "Heatmap"
                                 }
-                            ) 
+                            )
                         },
                         selected = selectedVisualization == type,
                         modifier = Modifier.weight(1f)
                     )
                 }
             }
-            
+
             // Time Range Selection
             Text(
                 "Time Range",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Medium
             )
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -255,7 +255,7 @@ private fun VisualizationControlsCard(
                 TimeRange.values().take(3).forEach { range ->
                     FilterChip(
                         onClick = { onTimeRangeChange(range) },
-                        label = { 
+                        label = {
                             Text(
                                 when (range) {
                                     TimeRange.ALL -> "All"
@@ -264,7 +264,7 @@ private fun VisualizationControlsCard(
                                     TimeRange.LAST_10_MINUTES -> "10m"
                                     TimeRange.CUSTOM -> "Custom"
                                 }
-                            ) 
+                            )
                         },
                         selected = selectedTimeRange == range,
                         modifier = Modifier.weight(1f)
@@ -299,7 +299,7 @@ private fun MainPlotCard(
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold
                 )
-                
+
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
@@ -314,9 +314,9 @@ private fun MainPlotCard(
                     }
                 }
             }
-            
+
             Divider()
-            
+
             // Plot Area
             when (visualizationType) {
                 VisualizationType.LINE_CHART -> {
@@ -326,6 +326,7 @@ private fun MainPlotCard(
                             .height(300.dp)
                     )
                 }
+
                 VisualizationType.SCATTER_PLOT -> {
                     GSRScatterPlot(
                         modifier = Modifier
@@ -333,6 +334,7 @@ private fun MainPlotCard(
                             .height(300.dp)
                     )
                 }
+
                 VisualizationType.HISTOGRAM -> {
                     GSRHistogram(
                         modifier = Modifier
@@ -340,6 +342,7 @@ private fun MainPlotCard(
                             .height(300.dp)
                     )
                 }
+
                 VisualizationType.HEATMAP -> {
                     GSRHeatmap(
                         modifier = Modifier
@@ -348,7 +351,7 @@ private fun MainPlotCard(
                     )
                 }
             }
-            
+
             // Plot Legend
             PlotLegend()
         }
@@ -373,7 +376,7 @@ private fun drawGSRLineChart(drawScope: DrawScope) {
         val width = size.width
         val height = size.height
         val padding = 40f
-        
+
         // Draw axes
         drawLine(
             color = Color.Gray,
@@ -381,41 +384,41 @@ private fun drawGSRLineChart(drawScope: DrawScope) {
             end = Offset(width - padding, height - padding),
             strokeWidth = 2f
         )
-        
+
         drawLine(
             color = Color.Gray,
             start = Offset(padding, padding),
             end = Offset(padding, height - padding),
             strokeWidth = 2f
         )
-        
+
         // Generate sample GSR data
         val dataPoints = generateSampleGSRData(100)
         val path = Path()
-        
+
         dataPoints.forEachIndexed { index, value ->
             val x = padding + (index.toFloat() / (dataPoints.size - 1)) * (width - 2 * padding)
             val y = height - padding - (value * (height - 2 * padding))
-            
+
             if (index == 0) {
                 path.moveTo(x, y)
             } else {
                 path.lineTo(x, y)
             }
         }
-        
+
         // Draw the GSR signal line
         drawPath(
             path = path,
             color = Color(0xFF457B9D),
             style = Stroke(width = 3f)
         )
-        
+
         // Draw data points
         dataPoints.forEachIndexed { index, value ->
             val x = padding + (index.toFloat() / (dataPoints.size - 1)) * (width - 2 * padding)
             val y = height - padding - (value * (height - 2 * padding))
-            
+
             drawCircle(
                 color = Color(0xFFFF6B35),
                 radius = 3f,
@@ -443,7 +446,7 @@ private fun drawGSRScatterPlot(drawScope: DrawScope) {
         val width = size.width
         val height = size.height
         val padding = 40f
-        
+
         // Draw axes
         drawLine(
             color = Color.Gray,
@@ -451,24 +454,24 @@ private fun drawGSRScatterPlot(drawScope: DrawScope) {
             end = Offset(width - padding, height - padding),
             strokeWidth = 2f
         )
-        
+
         drawLine(
             color = Color.Gray,
             start = Offset(padding, padding),
             end = Offset(padding, height - padding),
             strokeWidth = 2f
         )
-        
+
         // Generate sample scatter data
         val dataPoints = generateSampleGSRData(50)
-        
+
         dataPoints.forEachIndexed { index, value ->
             val x = padding + (index.toFloat() / (dataPoints.size - 1)) * (width - 2 * padding)
             val y = height - padding - (value * (height - 2 * padding))
-            
+
             // Vary point size based on value
             val radius = 3f + (value * 5f)
-            
+
             drawCircle(
                 color = Color(0xFF457B9D).copy(alpha = 0.7f),
                 radius = radius,
@@ -496,7 +499,7 @@ private fun drawGSRHistogram(drawScope: DrawScope) {
         val width = size.width
         val height = size.height
         val padding = 40f
-        
+
         // Draw axes
         drawLine(
             color = Color.Gray,
@@ -504,23 +507,23 @@ private fun drawGSRHistogram(drawScope: DrawScope) {
             end = Offset(width - padding, height - padding),
             strokeWidth = 2f
         )
-        
+
         drawLine(
             color = Color.Gray,
             start = Offset(padding, padding),
             end = Offset(padding, height - padding),
             strokeWidth = 2f
         )
-        
+
         // Generate histogram data
         val binCount = 15
         val binWidth = (width - 2 * padding) / binCount
         val histogramData = generateHistogramData(binCount)
-        
+
         histogramData.forEachIndexed { index, value ->
             val x = padding + index * binWidth
             val barHeight = value * (height - 2 * padding)
-            
+
             drawRect(
                 color = Color(0xFF457B9D).copy(alpha = 0.8f),
                 topLeft = Offset(x, height - padding - barHeight),
@@ -550,12 +553,12 @@ private fun drawGSRHeatmap(drawScope: DrawScope) {
         val cellSize = 20f
         val cols = (width / cellSize).toInt()
         val rows = (height / cellSize).toInt()
-        
+
         for (row in 0 until rows) {
             for (col in 0 until cols) {
                 val intensity = (sin((row + col) * 0.3) + 1) / 2
                 val color = Color(0xFF457B9D).copy(alpha = intensity.toFloat())
-                
+
                 drawRect(
                     color = color,
                     topLeft = Offset(col * cellSize, row * cellSize),
@@ -614,9 +617,9 @@ private fun StatisticsCard(sessionId: String) {
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Divider()
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
@@ -626,7 +629,7 @@ private fun StatisticsCard(sessionId: String) {
                 StatisticItem("Min", "8.1 μS")
                 StatisticItem("Max", "18.9 μS")
             }
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
@@ -677,9 +680,9 @@ private fun DataAnalysisToolsCard() {
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Divider()
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -692,7 +695,7 @@ private fun DataAnalysisToolsCard() {
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Filter")
                 }
-                
+
                 OutlinedButton(
                     onClick = { /* Smooth data */ },
                     modifier = Modifier.weight(1f)
@@ -702,7 +705,7 @@ private fun DataAnalysisToolsCard() {
                     Text("Smooth")
                 }
             }
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -715,7 +718,7 @@ private fun DataAnalysisToolsCard() {
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Peaks")
                 }
-                
+
                 OutlinedButton(
                     onClick = { /* Analyze trends */ },
                     modifier = Modifier.weight(1f)
@@ -744,9 +747,9 @@ private fun ExportOptionsCard() {
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Divider()
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -759,7 +762,7 @@ private fun ExportOptionsCard() {
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Export CSV")
                 }
-                
+
                 OutlinedButton(
                     onClick = { /* Save plot */ },
                     modifier = Modifier.weight(1f)

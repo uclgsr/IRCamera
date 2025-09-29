@@ -35,14 +35,14 @@ abstract class BaseComposeActivity<VM : BaseViewModel> : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         EventBus.getDefault().register(this)
-        
+
         setContent {
             LibUnifiedTheme {
                 val viewModel = createViewModel()
                 Content(viewModel)
-                
+
                 // Handle connection state changes in Compose
                 HandleConnectionEvents(viewModel)
             }

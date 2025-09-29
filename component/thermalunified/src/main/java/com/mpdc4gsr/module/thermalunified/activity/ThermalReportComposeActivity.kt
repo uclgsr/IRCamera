@@ -20,21 +20,22 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-import com.mpdc4gsr.libunified.app.viewmodel.BaseViewModel
+import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 
 /**
  * Professional thermal report generation with Compose
  * Advanced PDF creation and thermal analysis reporting
  */
 class ThermalReportComposeActivity : BaseComposeActivity<ThermalReportViewModel>() {
-    
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            LibUnifiedTheme {
-                ThermalReportScreen()
-            }
-        }
+
+    override fun createViewModel(): ThermalReportViewModel {
+        return ThermalReportViewModel()
+    }
+
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    override fun Content(viewModel: ThermalReportViewModel) {
+        ThermalReportScreen()
     }
 }
 
@@ -42,6 +43,7 @@ class ThermalReportViewModel : BaseViewModel() {
     // ViewModel implementation for report generation
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ThermalReportScreen(
     viewModel: ThermalReportViewModel = viewModel()
@@ -49,7 +51,7 @@ private fun ThermalReportScreen(
     var selectedTemplate by remember { mutableStateOf(ReportTemplate.STANDARD) }
     var reportTitle by remember { mutableStateOf("Thermal Analysis Report") }
     var isGenerating by remember { mutableStateOf(false) }
-    
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -88,7 +90,7 @@ private fun ThermalReportScreen(
                 }
             }
         )
-        
+
         // Content
         Column(
             modifier = Modifier
@@ -104,16 +106,16 @@ private fun ThermalReportScreen(
                 selectedTemplate = selectedTemplate,
                 onTemplateChange = { selectedTemplate = it }
             )
-            
+
             // Data Selection
             DataSelectionSection()
-            
+
             // Analysis Options
             AnalysisOptionsSection()
-            
+
             // Export Settings
             ExportSettingsSection()
-            
+
             // Generate Button
             Button(
                 onClick = { isGenerating = true },
@@ -175,7 +177,7 @@ private fun ReportConfigurationSection(
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
             )
-            
+
             // Report Title
             OutlinedTextField(
                 value = reportTitle,
@@ -189,14 +191,14 @@ private fun ReportConfigurationSection(
                     unfocusedBorderColor = Color(0xFF7D8590)
                 )
             )
-            
+
             // Template Selection
             Text(
                 "Report Template",
                 color = Color(0xFF7D8590),
                 fontSize = 14.sp
             )
-            
+
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
@@ -240,7 +242,7 @@ private fun DataSelectionSection() {
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
             )
-            
+
             // Sample data selection items
             DataSelectionItem("Thermal Images (15)", true)
             DataSelectionItem("Temperature Measurements (45)", true)
@@ -290,7 +292,7 @@ private fun AnalysisOptionsSection() {
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
             )
-            
+
             AnalysisOptionItem("Statistical Summary", Icons.Default.BarChart)
             AnalysisOptionItem("Temperature Trends", Icons.Default.TrendingUp)
             AnalysisOptionItem("Thermal Mapping", Icons.Default.Map)
@@ -300,7 +302,10 @@ private fun AnalysisOptionsSection() {
 }
 
 @Composable
-private fun AnalysisOptionItem(title: String, icon: androidx.compose.ui.graphics.vector.ImageVector) {
+private fun AnalysisOptionItem(
+    title: String,
+    icon: androidx.compose.ui.graphics.vector.ImageVector
+) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
@@ -337,7 +342,7 @@ private fun ExportSettingsSection() {
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {

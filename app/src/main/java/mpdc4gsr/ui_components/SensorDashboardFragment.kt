@@ -173,7 +173,8 @@ class SensorDashboardFragment : Fragment() {
         val targetHeight = sensorsContainer.measuredHeight
 
         // Fallback to wrap content if measurement fails
-        val finalTargetHeight = if (targetHeight > 0) targetHeight else ViewGroup.LayoutParams.WRAP_CONTENT
+        val finalTargetHeight =
+            if (targetHeight > 0) targetHeight else ViewGroup.LayoutParams.WRAP_CONTENT
 
         val animator = if (finalTargetHeight == ViewGroup.LayoutParams.WRAP_CONTENT) {
             // If we can't measure, animate alpha as a fallback for visual consistency

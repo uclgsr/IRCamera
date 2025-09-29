@@ -13,10 +13,12 @@ import mpdc4gsr.sensors.gsr.GSRSettingsComposeActivity
 import mpdc4gsr.sensors.gsr.SessionDetailComposeActivity
 import mpdc4gsr.compose.screens.*
 import mpdc4gsr.compose.testing.TestResultsScreen
+import mpdc4gsr.network.DevicePairingComposeActivity
+import mpdc4gsr.permissions.PermissionRequestComposeActivity
 
 /**
  * Unified Navigation System - Phase 2 Implementation
- * 
+ *
  * This comprehensive navigation system provides:
  * - Type-safe navigation with sealed class routes
  * - Smooth animations between screens
@@ -28,25 +30,31 @@ sealed class UnifiedRoute(val route: String) {
     // Main Application Routes
     object Home : UnifiedRoute("home")
     object Dashboard : UnifiedRoute("dashboard")
-    
+
     // GSR Sensor Routes
     object GSRSettings : UnifiedRoute("gsr_settings")
     object GSRModernizationDemo : UnifiedRoute("gsr_modernization_demo")
     object GSRPlot : UnifiedRoute("gsr_plot/{sessionId}") {
         fun createRoute(sessionId: String) = "gsr_plot/$sessionId"
     }
+
     object GSRDataView : UnifiedRoute("gsr_data_view/{filePath}") {
         fun createRoute(filePath: String) = "gsr_data_view/$filePath"
     }
+
     object SessionDetail : UnifiedRoute("session_detail/{sessionId}") {
         fun createRoute(sessionId: String) = "session_detail/$sessionId"
     }
-    
+
     // Camera Integration Routes
     object CameraDashboard : UnifiedRoute("camera_dashboard")
     object DualModeCamera : UnifiedRoute("dual_mode_camera")
     object CameraSettings : UnifiedRoute("camera_settings")
-    
+
+    // Network Routes
+    object DevicePairing : UnifiedRoute("device_pairing")
+    object PermissionRequest : UnifiedRoute("permission_request")
+
     // Thermal Camera Routes
     object ThermalMain : UnifiedRoute("thermal_main")
     object ThermalGallery : UnifiedRoute("thermal_gallery")
@@ -54,12 +62,12 @@ sealed class UnifiedRoute(val route: String) {
     object ThermalCamera : UnifiedRoute("thermal_camera")
     object ThermalSettings : UnifiedRoute("thermal_settings")
     object ThermalGallery : UnifiedRoute("thermal_gallery")
-    
+
     // System Routes
     object Settings : UnifiedRoute("settings")
     object About : UnifiedRoute("about")
     object NetworkConfig : UnifiedRoute("network_config")
-    
+
     // Development and Demo Routes
     object ModernizationProgress : UnifiedRoute("modernization_progress")
     object ComponentShowcase : UnifiedRoute("component_showcase")
@@ -72,7 +80,7 @@ fun UnifiedNavHost(
     startDestination: String = UnifiedRoute.ModernizationProgress.route
 ) {
     val context = LocalContext.current
-    
+
     NavHost(
         navController = navController,
         startDestination = startDestination,
@@ -109,7 +117,7 @@ fun UnifiedNavHost(
                 onNavigateToSettings = { navController.navigate(UnifiedRoute.Settings.route) }
             )
         }
-        
+
         composable(UnifiedRoute.Dashboard.route) {
             UnifiedSensorDashboard(
                 onBackClick = { navController.popBackStack() },
@@ -118,14 +126,14 @@ fun UnifiedNavHost(
                 onNavigateToThermal = { navController.navigate(UnifiedRoute.ThermalCamera.route) }
             )
         }
-        
+
         // GSR Sensor Routes
         composable(UnifiedRoute.GSRSettings.route) {
             GSRSettingsScreen(
                 onBackClick = { navController.popBackStack() }
             )
         }
-        
+
         composable(UnifiedRoute.GSRModernizationDemo.route) {
             GSRModernizationDemoScreen(
                 onBackClick = { navController.popBackStack() },
@@ -135,16 +143,22 @@ fun UnifiedNavHost(
                 }
             )
         }
-        
+
         composable(UnifiedRoute.SessionDetail.route) { backStackEntry ->
             val sessionId = backStackEntry.arguments?.getString("sessionId") ?: "unknown"
             SessionDetailScreen(
                 sessionId = sessionId,
                 onBackClick = { navController.popBackStack() },
-                onNavigateToGSRPlot = { navController.navigate(UnifiedRoute.GSRPlot.createRoute(sessionId)) }
+                onNavigateToGSRPlot = {
+                    navController.navigate(
+                        UnifiedRoute.GSRPlot.createRoute(
+                            sessionId
+                        )
+                    )
+                }
             )
         }
-        
+
         composable(UnifiedRoute.GSRPlot.route) { backStackEntry ->
             val sessionId = backStackEntry.arguments?.getString("sessionId") ?: "unknown"
             GSRPlotScreen(
@@ -152,7 +166,7 @@ fun UnifiedNavHost(
                 onBackClick = { navController.popBackStack() }
             )
         }
-        
+
         composable(UnifiedRoute.GSRDataView.route) { backStackEntry ->
             val filePath = backStackEntry.arguments?.getString("filePath") ?: ""
             GSRDataViewScreen(
@@ -160,7 +174,7 @@ fun UnifiedNavHost(
                 onBackClick = { navController.popBackStack() }
             )
         }
-        
+
         // Camera Integration Routes
         composable(UnifiedRoute.CameraDashboard.route) {
             CameraDashboardScreen(
@@ -169,20 +183,50 @@ fun UnifiedNavHost(
                 onNavigateToSettings = { navController.navigate(UnifiedRoute.CameraSettings.route) }
             )
         }
-        
+
         composable(UnifiedRoute.DualModeCamera.route) {
-            DualModeCameraScreen(
-                onBackClick = { navController.popBackStack() },
-                onNavigateToSettings = { navController.navigate(UnifiedRoute.CameraSettings.route) }
-            )
+            LaunchedEffect(Unit) {
+                try {
+                    context.startActivity(
+                        Intent(
+                            context,
+                            Class.forName("mpdc4gsr.activities.DualModeCameraActivityCompose")
+                        )
+                    )
+                } catch (e: Exception) {
+                    // Fallback to screen
+                    navController.navigate("dual_mode_camera_screen")
+                }
+            }
+            ThermalLoadingScreen("Loading Dual Mode Camera...")
         }
-        
+
+        composable(UnifiedRoute.DevicePairing.route) {
+            LaunchedEffect(Unit) {
+                try {
+                    DevicePairingComposeActivity.start(context)
+                } catch (e: Exception) {
+                    // Fallback to legacy activity
+                    context.startActivity(
+                        Intent(
+                            context,
+                            Class.forName("mpdc4gsr.network.DevicePairingActivity")
+                        )
+                    )
+                }
+            }
+            ThermalLoadingScreen("Loading Device Pairing...")
+        }
+
         // Thermal Camera Routes
         composable(UnifiedRoute.ThermalMain.route) {
             LaunchedEffect(Unit) {
                 try {
                     context.startActivity(
-                        Intent(context, Class.forName("com.mpdc4gsr.module.thermalunified.activity.IRMainComposeActivity"))
+                        Intent(
+                            context,
+                            Class.forName("com.mpdc4gsr.module.thermalunified.activity.IRMainComposeActivity")
+                        )
                     )
                 } catch (e: Exception) {
                     // Fallback to placeholder
@@ -190,12 +234,15 @@ fun UnifiedNavHost(
             }
             ThermalLoadingScreen("Loading Thermal Main...")
         }
-        
+
         composable(UnifiedRoute.ThermalGallery.route) {
             LaunchedEffect(Unit) {
                 try {
                     context.startActivity(
-                        Intent(context, Class.forName("com.mpdc4gsr.module.thermalunified.activity.ThermalGalleryComposeActivity"))
+                        Intent(
+                            context,
+                            Class.forName("com.mpdc4gsr.module.thermalunified.activity.ThermalGalleryComposeActivity")
+                        )
                     )
                 } catch (e: Exception) {
                     // Fallback to placeholder
@@ -203,12 +250,15 @@ fun UnifiedNavHost(
             }
             ThermalLoadingScreen("Loading Thermal Gallery...")
         }
-        
+
         composable(UnifiedRoute.ThermalReport.route) {
             LaunchedEffect(Unit) {
                 try {
                     context.startActivity(
-                        Intent(context, Class.forName("com.mpdc4gsr.module.thermalunified.activity.ThermalReportComposeActivity"))
+                        Intent(
+                            context,
+                            Class.forName("com.mpdc4gsr.module.thermalunified.activity.ThermalReportComposeActivity")
+                        )
                     )
                 } catch (e: Exception) {
                     // Fallback to placeholder
@@ -216,7 +266,7 @@ fun UnifiedNavHost(
             }
             ThermalLoadingScreen("Loading Thermal Reports...")
         }
-        
+
         composable(UnifiedRoute.ThermalCamera.route) {
             ThermalCameraScreen(
                 onBackClick = { navController.popBackStack() },
@@ -224,7 +274,7 @@ fun UnifiedNavHost(
                 onNavigateToGallery = { navController.navigate(UnifiedRoute.ThermalGallery.route) }
             )
         }
-        
+
         // Settings and System Routes
         composable(UnifiedRoute.Settings.route) {
             SettingsScreen(
@@ -232,13 +282,13 @@ fun UnifiedNavHost(
                 onNavigateToNetworkConfig = { navController.navigate(UnifiedRoute.NetworkConfig.route) }
             )
         }
-        
+
         composable(UnifiedRoute.About.route) {
             AboutScreen(
                 onBackClick = { navController.popBackStack() }
             )
         }
-        
+
         // Development and Demo Routes
         composable(UnifiedRoute.ModernizationProgress.route) {
             ModernizationProgressScreen(
@@ -248,16 +298,48 @@ fun UnifiedNavHost(
                 onNavigateToComponentShowcase = { navController.navigate(UnifiedRoute.ComponentShowcase.route) }
             )
         }
-        
+
         composable(UnifiedRoute.ComponentShowcase.route) {
             ComponentShowcaseScreen(
                 onBackClick = { navController.popBackStack() }
             )
         }
-        
+
         composable(UnifiedRoute.TestingSuite.route) {
             TestResultsScreen(
                 onBackClick = { navController.popBackStack() }
+            )
+        }
+
+        // Network & Device Management Routes
+        composable(UnifiedRoute.PermissionRequest.route) {
+            LaunchedEffect(Unit) {
+                try {
+                    PermissionRequestComposeActivity.start(context)
+                } catch (e: Exception) {
+                    // Fallback to legacy activity
+                    context.startActivity(
+                        Intent(
+                            context,
+                            Class.forName("mpdc4gsr.permissions.PermissionRequestActivity")
+                        )
+                    )
+                }
+            }
+            ThermalLoadingScreen("Loading Permission Manager...")
+        }
+
+        // Fallback routes for screens when activities fail to launch
+        composable("dual_mode_camera_screen") {
+            DualModeCameraScreen(
+                onBackClick = { navController.popBackStack() },
+                onNavigateToSettings = { navController.navigate(UnifiedRoute.CameraSettings.route) }
+            )
+        }
+
+        composable("device_pairing_screen") {
+            DevicePairingScreen(
+                onNavigateBack = { navController.popBackStack() }
             )
         }
     }
@@ -270,15 +352,23 @@ object NavigationHelper {
     fun navigateToGSRSettings(navController: NavHostController) {
         navController.navigate(UnifiedRoute.GSRSettings.route)
     }
-    
+
     fun navigateToSessionDetail(navController: NavHostController, sessionId: String) {
         navController.navigate(UnifiedRoute.SessionDetail.createRoute(sessionId))
     }
-    
+
     fun navigateToCamera(navController: NavHostController) {
         navController.navigate(UnifiedRoute.CameraDashboard.route)
     }
     
+    fun navigateToDevicePairing(navController: NavHostController) {
+        navController.navigate(UnifiedRoute.DevicePairing.route)
+    }
+    
+    fun navigateToPermissionRequest(navController: NavHostController) {
+        navController.navigate(UnifiedRoute.PermissionRequest.route)
+    }
+
     fun navigateWithPopUp(
         navController: NavHostController,
         destination: String,

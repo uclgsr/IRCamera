@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:background="@android:color/white" android:orientation="vertical"
-    android:padding="32dp">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="@android:color/white" android:orientation="vertical" android:padding="32dp">
 
 
-    <TextView android:id="@+id/tvTitle" android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:paddingBottom="24dp" android:text="RAW Image Capture Demo - MPDC4GSR"
-        android:textColor="@android:color/black" android:textSize="18sp" android:textStyle="bold" />
+    <TextView android:id="@+id/tvTitle" android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:paddingBottom="24dp"
+        android:text="RAW Image Capture Demo - MPDC4GSR" android:textColor="@android:color/black"
+        android:textSize="18sp" android:textStyle="bold" />
 
 
     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
@@ -14,34 +15,40 @@
 
         <TextView android:id="@+id/tvCameraTitle" android:layout_width="match_parent"
             android:layout_height="wrap_content" android:text="📹 RGB Camera Preview"
-            android:textColor="@android:color/black" android:textSize="16sp" android:textStyle="bold" />
+            android:textColor="@android:color/black" android:textSize="16sp"
+            android:textStyle="bold" />
 
-        <androidx.camera.view.PreviewView android:id="@+id/previewView" android:layout_width="match_parent"
-            android:layout_height="200dp" android:background="@android:color/darker_gray" />
+        <androidx.camera.view.PreviewView android:id="@+id/previewView"
+            android:layout_width="match_parent" android:layout_height="200dp"
+            android:background="@android:color/darker_gray" />
 
         <TextView android:id="@+id/cameraStatusText" android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:layout_marginTop="8dp" android:gravity="center"
-            android:text="Camera: Initializing..." android:textColor="@android:color/black" android:textSize="14sp" />
+            android:layout_height="wrap_content" android:layout_marginTop="8dp"
+            android:gravity="center" android:text="Camera: Initializing..."
+            android:textColor="@android:color/black" android:textSize="14sp" />
 
     </LinearLayout>
 
 
-    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:background="#F5F5F5"
-        android:orientation="vertical" android:padding="16dp">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:background="#F5F5F5" android:orientation="vertical" android:padding="16dp">
 
         <TextView android:id="@+id/tvOptionsTitle" android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:paddingBottom="16dp" android:text="🎥 Recording Options"
-            android:textColor="@android:color/black" android:textSize="16sp" android:textStyle="bold" />
+            android:layout_height="wrap_content" android:paddingBottom="16dp"
+            android:text="🎥 Recording Options" android:textColor="@android:color/black"
+            android:textSize="16sp" android:textStyle="bold" />
 
 
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
             android:orientation="horizontal" android:padding="8dp">
 
-            <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
-                android:text="📹 Record Video" android:textColor="@android:color/black" android:textSize="14sp" />
+            <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1" android:text="📹 Record Video"
+                android:textColor="@android:color/black" android:textSize="14sp" />
 
             <Switch android:id="@+id/enableVideoSwitch" android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:checked="true" android:scaleX="1.2" android:scaleY="1.2" />
+                android:layout_height="wrap_content" android:checked="true" android:scaleX="1.2"
+                android:scaleY="1.2" />
 
         </LinearLayout>
 
@@ -49,9 +56,9 @@
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
             android:orientation="horizontal" android:padding="8dp">
 
-            <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
-                android:text="🎯 4K Recording (3840×2160)" android:textColor="@android:color/black"
-                android:textSize="14sp" />
+            <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1" android:text="🎯 4K Recording (3840×2160)"
+                android:textColor="@android:color/black" android:textSize="14sp" />
 
             <Switch android:id="@+id/enable4KSwitch" android:layout_width="wrap_content"
                 android:layout_height="wrap_content" android:checked="false" android:scaleX="1.2"
@@ -63,12 +70,13 @@
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
             android:background="#E3F2FD" android:orientation="horizontal" android:padding="8dp">
 
-            <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
-                android:text="📸 RAW Image Capture (DNG)" android:textColor="#1976D2" android:textSize="14sp"
-                android:textStyle="bold" />
+            <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1" android:text="📸 RAW Image Capture (DNG)"
+                android:textColor="#1976D2" android:textSize="14sp" android:textStyle="bold" />
 
             <Switch android:id="@+id/enableRawCaptureSwitch" android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:checked="true" android:scaleX="1.2" android:scaleY="1.2" />
+                android:layout_height="wrap_content" android:checked="true" android:scaleX="1.2"
+                android:scaleY="1.2" />
 
         </LinearLayout>
 
@@ -77,8 +85,9 @@
             android:background="#E3F2FD" android:orientation="horizontal" android:padding="8dp"
             android:paddingStart="16dp">
 
-            <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
-                android:text="⚡ RAW Frame Rate" android:textColor="#1976D2" android:textSize="14sp" />
+            <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1" android:text="⚡ RAW Frame Rate"
+                android:textColor="#1976D2" android:textSize="14sp" />
 
             <Spinner android:id="@+id/rawFrameRateSpinner" android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
@@ -91,33 +100,36 @@
     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
         android:orientation="vertical" android:paddingTop="16dp" android:paddingBottom="16dp">
 
-        <TextView android:id="@+id/tvSessionId" android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:text="📋 Session ID: MultiModal_20250101_143022" android:textColor="@android:color/darker_gray"
-            android:textSize="12sp" />
+        <TextView android:id="@+id/tvSessionId" android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="📋 Session ID: MultiModal_20250101_143022"
+            android:textColor="@android:color/darker_gray" android:textSize="12sp" />
 
     </LinearLayout>
 
 
-    <Button android:id="@+id/startStopButton" android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:background="#4CAF50" android:paddingTop="20dp" android:paddingBottom="20dp"
-        android:text="▶️ Start Multi-Modal Recording" android:textColor="@android:color/white" android:textSize="16sp"
-        android:textStyle="bold" />
+    <Button android:id="@+id/startStopButton" android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:background="#4CAF50" android:paddingTop="20dp"
+        android:paddingBottom="20dp" android:text="▶️ Start Multi-Modal Recording"
+        android:textColor="@android:color/white" android:textSize="16sp" android:textStyle="bold" />
 
 
-    <TextView android:id="@+id/statusText" android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:paddingTop="16dp" android:text="Ready to record: 4K60FPS Video + 30fps RAW Images + 128Hz GSR"
+    <TextView android:id="@+id/statusText" android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:paddingTop="16dp"
+        android:text="Ready to record: 4K60FPS Video + 30fps RAW Images + 128Hz GSR"
         android:textColor="#1976D2" android:textSize="14sp" />
 
 
-    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:background="#FFF3E0"
-        android:orientation="vertical" android:padding="16dp">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:background="#FFF3E0" android:orientation="vertical" android:padding="16dp">
 
         <TextView android:id="@+id/tvFeaturesTitle" android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:text="🎯 New RAW Capture Features:" android:textColor="#E65100"
-            android:textSize="14sp" android:textStyle="bold" />
+            android:layout_height="wrap_content" android:text="🎯 New RAW Capture Features:"
+            android:textColor="#E65100" android:textSize="14sp" android:textStyle="bold" />
 
         <TextView android:id="@+id/tvFeaturesList" android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:paddingStart="16dp" android:paddingTop="8dp"
+            android:layout_height="wrap_content" android:paddingStart="16dp"
+            android:paddingTop="8dp"
             android:text="• Samsung Level 3 RAW DNG images at configurable frame rates\n• Ground truth timing from Exynos/Snapdragon CPU\n• Parallel recording with 4K video and GSR data\n• Full sensor resolution (4032×3024 on Samsung S22)\n• Synchronized timestamps across all modalities"
             android:textColor="#BF360C" android:textSize="12sp" />
 

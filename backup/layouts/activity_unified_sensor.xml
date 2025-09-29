@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:background="#f5f5f5">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="#f5f5f5">
 
     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
         android:orientation="vertical" android:padding="16dp">
@@ -13,35 +14,40 @@
 
 
         <!-- Live Camera Preview Card -->
-        <androidx.cardview.widget.CardView android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp" android:elevation="4dp">
+        <androidx.cardview.widget.CardView android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:layout_marginBottom="16dp"
+            android:elevation="4dp">
 
             <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                 android:orientation="vertical" android:padding="16dp">
 
                 <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp" android:text="RGB Camera Preview" android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:layout_marginBottom="8dp" android:text="RGB Camera Preview"
+                    android:textSize="18sp" android:textStyle="bold" />
 
                 <!-- Camera Preview -->
-                <androidx.camera.view.PreviewView android:id="@+id/previewView" android:layout_width="match_parent"
-                    android:layout_height="200dp" android:layout_marginBottom="8dp" android:background="#000000" />
+                <androidx.camera.view.PreviewView android:id="@+id/previewView"
+                    android:layout_width="match_parent" android:layout_height="200dp"
+                    android:layout_marginBottom="8dp" android:background="#000000" />
 
                 <TextView android:id="@+id/cameraStatusText" android:layout_width="match_parent"
                     android:layout_height="wrap_content" android:text="Camera: Initializing..."
                     android:textSize="14sp" />
 
                 <!-- Camera Controls -->
-                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp" android:gravity="center" android:orientation="horizontal">
+                <LinearLayout android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:layout_marginTop="8dp"
+                    android:gravity="center" android:orientation="horizontal">
 
-                    <Button android:id="@+id/switchCameraButton" android:layout_width="0dp" android:layout_height="36dp"
-                        android:layout_marginEnd="4dp" android:layout_weight="1" android:backgroundTint="#2196F3"
+                    <Button android:id="@+id/switchCameraButton" android:layout_width="0dp"
+                        android:layout_height="36dp" android:layout_marginEnd="4dp"
+                        android:layout_weight="1" android:backgroundTint="#2196F3"
                         android:text="Switch Camera" android:textSize="12sp" />
 
                     <TextView android:id="@+id/cameraTypeText" android:layout_width="0dp"
-                        android:layout_height="wrap_content" android:layout_marginStart="4dp" android:layout_weight="1"
-                        android:gravity="center" android:text="Back Camera" android:textSize="12sp" />
+                        android:layout_height="wrap_content" android:layout_marginStart="4dp"
+                        android:layout_weight="1" android:gravity="center"
+                        android:text="Back Camera" android:textSize="12sp" />
 
                 </LinearLayout>
 
@@ -49,23 +55,25 @@
         </androidx.cardview.widget.CardView>
 
 
-        <androidx.cardview.widget.CardView android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp" android:elevation="4dp">
+        <androidx.cardview.widget.CardView android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:layout_marginBottom="16dp"
+            android:elevation="4dp">
 
             <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                 android:orientation="vertical" android:padding="16dp">
 
                 <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp" android:text="System Status" android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:layout_marginBottom="8dp" android:text="System Status"
+                    android:textSize="18sp" android:textStyle="bold" />
 
                 <TextView android:id="@+id/statusText" android:layout_width="match_parent"
                     android:layout_height="wrap_content" android:layout_marginBottom="8dp"
                     android:text="Initializing..." />
 
-                <ProgressBar android:id="@+id/qualityIndicator" style="?android:attr/progressBarStyleHorizontal"
-                    android:layout_width="match_parent" android:layout_height="wrap_content" android:max="100"
-                    android:progress="0" android:visibility="invisible" />
+                <ProgressBar android:id="@+id/qualityIndicator"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:max="100" android:progress="0" android:visibility="invisible" />
 
                 <TextView android:id="@+id/gsrStatusText" android:layout_width="match_parent"
                     android:layout_height="wrap_content" android:layout_marginTop="8dp"
@@ -81,73 +89,81 @@
         </androidx.cardview.widget.CardView>
 
 
-        <androidx.cardview.widget.CardView android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp" android:elevation="4dp">
-
-            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:orientation="vertical" android:padding="16dp">
-
-                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp" android:text="Shimmer Devices" android:textSize="18sp"
-                    android:textStyle="bold" />
-
-                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp" android:orientation="horizontal">
-
-                    <Button android:id="@+id/discoverButton" android:layout_width="0dp"
-                        android:layout_height="wrap_content" android:layout_marginEnd="8dp" android:layout_weight="1"
-                        android:text="Discover Devices" />
-
-                    <Button android:id="@+id/connectButton" android:layout_width="0dp"
-                        android:layout_height="wrap_content" android:layout_weight="1" android:text="Connect" />
-
-                </LinearLayout>
-
-                <androidx.recyclerview.widget.RecyclerView android:id="@+id/deviceRecyclerView"
-                    android:layout_width="match_parent" android:layout_height="150dp" android:background="#fafafa" />
-
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
-
-        <androidx.cardview.widget.CardView android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp" android:elevation="4dp">
-
-            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:orientation="vertical" android:padding="16dp">
-
-                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp" android:text="PC Controllers" android:textSize="18sp"
-                    android:textStyle="bold" />
-
-                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp" android:orientation="horizontal">
-
-                    <Button android:id="@+id/discoverPCButton" android:layout_width="0dp"
-                        android:layout_height="wrap_content" android:layout_marginEnd="8dp" android:layout_weight="1"
-                        android:text="Discover PCs" />
-
-                    <Button android:id="@+id/connectPCButton" android:layout_width="0dp"
-                        android:layout_height="wrap_content" android:layout_weight="1" android:text="Connect PC" />
-
-                </LinearLayout>
-
-                <androidx.recyclerview.widget.RecyclerView android:id="@+id/pcRecyclerView"
-                    android:layout_width="match_parent" android:layout_height="120dp" android:background="#fafafa" />
-
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
-
-        <androidx.cardview.widget.CardView android:layout_width="match_parent" android:layout_height="wrap_content"
+        <androidx.cardview.widget.CardView android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:layout_marginBottom="16dp"
             android:elevation="4dp">
 
             <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                 android:orientation="vertical" android:padding="16dp">
 
                 <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp" android:text="Session Control" android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:layout_marginBottom="8dp" android:text="Shimmer Devices"
+                    android:textSize="18sp" android:textStyle="bold" />
+
+                <LinearLayout android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:layout_marginBottom="8dp"
+                    android:orientation="horizontal">
+
+                    <Button android:id="@+id/discoverButton" android:layout_width="0dp"
+                        android:layout_height="wrap_content" android:layout_marginEnd="8dp"
+                        android:layout_weight="1" android:text="Discover Devices" />
+
+                    <Button android:id="@+id/connectButton" android:layout_width="0dp"
+                        android:layout_height="wrap_content" android:layout_weight="1"
+                        android:text="Connect" />
+
+                </LinearLayout>
+
+                <androidx.recyclerview.widget.RecyclerView android:id="@+id/deviceRecyclerView"
+                    android:layout_width="match_parent" android:layout_height="150dp"
+                    android:background="#fafafa" />
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+
+        <androidx.cardview.widget.CardView android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:layout_marginBottom="16dp"
+            android:elevation="4dp">
+
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="vertical" android:padding="16dp">
+
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp" android:text="PC Controllers"
+                    android:textSize="18sp" android:textStyle="bold" />
+
+                <LinearLayout android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:layout_marginBottom="8dp"
+                    android:orientation="horizontal">
+
+                    <Button android:id="@+id/discoverPCButton" android:layout_width="0dp"
+                        android:layout_height="wrap_content" android:layout_marginEnd="8dp"
+                        android:layout_weight="1" android:text="Discover PCs" />
+
+                    <Button android:id="@+id/connectPCButton" android:layout_width="0dp"
+                        android:layout_height="wrap_content" android:layout_weight="1"
+                        android:text="Connect PC" />
+
+                </LinearLayout>
+
+                <androidx.recyclerview.widget.RecyclerView android:id="@+id/pcRecyclerView"
+                    android:layout_width="match_parent" android:layout_height="120dp"
+                    android:background="#fafafa" />
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+
+        <androidx.cardview.widget.CardView android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:elevation="4dp">
+
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="vertical" android:padding="16dp">
+
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp" android:text="Session Control"
+                    android:textSize="18sp" android:textStyle="bold" />
 
                 <EditText android:id="@+id/sessionNameEdit" android:layout_width="match_parent"
                     android:layout_height="wrap_content" android:layout_marginBottom="8dp"
@@ -157,21 +173,24 @@
                     android:layout_height="wrap_content" android:layout_marginBottom="16dp"
                     android:hint="Participant ID" />
 
-                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp" android:orientation="horizontal">
+                <LinearLayout android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:layout_marginBottom="8dp"
+                    android:orientation="horizontal">
 
                     <Button android:id="@+id/startSessionButton" android:layout_width="0dp"
-                        android:layout_height="wrap_content" android:layout_marginEnd="4dp" android:layout_weight="1"
-                        android:backgroundTint="#4CAF50" android:text="Start Session" />
+                        android:layout_height="wrap_content" android:layout_marginEnd="4dp"
+                        android:layout_weight="1" android:backgroundTint="#4CAF50"
+                        android:text="Start Session" />
 
                     <Button android:id="@+id/stopSessionButton" android:layout_width="0dp"
                         android:layout_height="wrap_content" android:layout_marginStart="4dp"
-                        android:layout_marginEnd="4dp" android:layout_weight="1" android:backgroundTint="#f44336"
-                        android:text="Stop Session" />
+                        android:layout_marginEnd="4dp" android:layout_weight="1"
+                        android:backgroundTint="#f44336" android:text="Stop Session" />
 
                     <Button android:id="@+id/addMarkerButton" android:layout_width="0dp"
-                        android:layout_height="wrap_content" android:layout_marginStart="4dp" android:layout_weight="1"
-                        android:backgroundTint="#FF9800" android:text="Sync Marker" />
+                        android:layout_height="wrap_content" android:layout_marginStart="4dp"
+                        android:layout_weight="1" android:backgroundTint="#FF9800"
+                        android:text="Sync Marker" />
 
                 </LinearLayout>
 

@@ -5,6 +5,7 @@ import java.util.Locale
 plugins {
     id("com.android.application")
     kotlin("android")
+    id("kotlin-parcelize")
     alias(libs.plugins.kotlin.compose)
     id("com.google.devtools.ksp")
 }
@@ -295,10 +296,10 @@ dependencies {
     implementation(libs.bundles.compose.core)
     implementation(libs.bundles.compose.navigation.bundle)
     implementation(libs.bundles.compose.icons)
-    
+
     // Compose debug tools - only in debug builds
     debugImplementation(libs.bundles.compose.debug)
-    
+
     // Compose testing
     androidTestImplementation(libs.bundles.compose.test)
 
@@ -357,18 +358,18 @@ dependencies {
     testImplementation("androidx.test:core:1.5.0")
     testImplementation("androidx.test.ext:junit:1.1.5")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
-    
+
     // Compose testing dependencies
     androidTestImplementation(platform(libs.compose.bom))
     androidTestImplementation(libs.bundles.compose.test)
     debugImplementation(libs.bundles.compose.debug)
-    
+
     androidTestImplementation(libs.test.ext.junit)
     androidTestImplementation(libs.test.espresso.core)
 
 
     implementation(libs.bundles.camerax)
-    
+
     testImplementation(libs.junit)
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.hamcrest)

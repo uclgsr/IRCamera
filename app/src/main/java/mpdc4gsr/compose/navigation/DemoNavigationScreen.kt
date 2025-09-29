@@ -16,7 +16,7 @@ import mpdc4gsr.compose.theme.IRCameraTheme
 
 /**
  * Demo Navigation Screen showcasing all completed Tasks
- * 
+ *
  * This screen demonstrates the complete Compose migration with:
  * - Task A: Main Dashboard Migration ✅
  * - Task B: Thermal Camera Enhancement ✅
@@ -37,7 +37,7 @@ fun DemoNavigationScreen(
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { 
+                    title = {
                         Text(
                             "IRCamera Compose Migration - Complete",
                             fontWeight = FontWeight.Bold
@@ -79,10 +79,10 @@ fun DemoNavigationScreen(
                         )
                     }
                 }
-                
+
                 // Task completion overview
                 TaskCompletionOverview()
-                
+
                 // Navigation options
                 Text(
                     text = "Explore Completed Tasks",
@@ -90,7 +90,7 @@ fun DemoNavigationScreen(
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary
                 )
-                
+
                 // Task A: Main Dashboard
                 NavigationCard(
                     title = "Task A: Main Dashboard",
@@ -99,16 +99,16 @@ fun DemoNavigationScreen(
                     status = "✅ COMPLETE",
                     onClick = onNavigateToMainCompose
                 )
-                
+
                 // Task B: Thermal Camera
                 NavigationCard(
                     title = "Task B: Thermal Camera",
                     subtitle = "Enhanced thermal UI with preserved functionality",
                     icon = Icons.Default.Camera,
-                    status = "✅ COMPLETE", 
+                    status = "✅ COMPLETE",
                     onClick = onNavigateToThermalCompose
                 )
-                
+
                 // Task C: Sensor Dashboard
                 NavigationCard(
                     title = "Task C: Sensor Dashboard",
@@ -117,7 +117,7 @@ fun DemoNavigationScreen(
                     status = "✅ COMPLETE",
                     onClick = onNavigateToSensorDashboard
                 )
-                
+
                 // Task D: Settings Migration
                 NavigationCard(
                     title = "Task D: Settings Migration",
@@ -126,7 +126,7 @@ fun DemoNavigationScreen(
                     status = "✅ COMPLETE",
                     onClick = onNavigateToSettings
                 )
-                
+
                 // Task E: Navigation Integration (this screen demonstrates it)
                 Card(
                     modifier = Modifier.fillMaxWidth(),
@@ -168,7 +168,7 @@ fun DemoNavigationScreen(
                         )
                     }
                 }
-                
+
                 // Comparison option
                 Card(
                     modifier = Modifier.fillMaxWidth(),
@@ -220,16 +220,16 @@ private fun TaskCompletionOverview() {
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 12.dp)
             )
-            
+
             val tasks = listOf(
                 "✅ Infrastructure Setup" to "Base classes, theme, components",
                 "✅ Task A: Main Dashboard" to "Hybrid MainActivity implementation",
                 "✅ Task B: Thermal Camera" to "Enhanced thermal UI with controls",
-                "✅ Task C: Sensor Dashboard" to "GSR visualization and monitoring", 
+                "✅ Task C: Sensor Dashboard" to "GSR visualization and monitoring",
                 "✅ Task D: Settings Migration" to "Complete Compose settings",
                 "✅ Task E: Navigation Integration" to "Unified navigation system"
             )
-            
+
             tasks.forEach { (title, subtitle) ->
                 Row(
                     modifier = Modifier

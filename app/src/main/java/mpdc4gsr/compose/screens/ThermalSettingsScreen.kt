@@ -33,7 +33,7 @@ fun ThermalSettingsScreen(
     var autoScale by remember { mutableStateOf(true) }
     var showCrosshair by remember { mutableStateOf(true) }
     var temperatureRange by remember { mutableStateOf("Auto") }
-    
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -44,7 +44,7 @@ fun ThermalSettingsScreen(
             showBackButton = true,
             onBackClick = onBackClick
         )
-        
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -76,7 +76,7 @@ fun ThermalSettingsScreen(
                     onValueChange = { temperatureRange = it }
                 )
             }
-            
+
             // Measurement Settings
             SettingsCard(
                 title = "Measurement",
@@ -102,7 +102,7 @@ fun ThermalSettingsScreen(
                     onCheckedChange = { showCrosshair = it }
                 )
             }
-            
+
             // Calibration Controls
             SettingsCard(
                 title = "Calibration",

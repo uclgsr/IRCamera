@@ -78,6 +78,7 @@ dependencies {
     // Jetpack Compose
     implementation(platform(libs.compose.bom))
     implementation(libs.bundles.compose.core)
+    implementation("androidx.compose.material:material-icons-extended")
     debugImplementation(libs.bundles.compose.debug)
 
     // Core Android libraries

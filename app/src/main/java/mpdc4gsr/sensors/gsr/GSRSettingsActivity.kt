@@ -176,7 +176,6 @@ class GSRSettingsActivity : BaseViewModelActivity<GSRSettingsViewModel>() {
     }
 
 
-
     private fun setupObservers() {
         // Settings state observers
         viewModel.gsrSettings.observe(this) { settings ->

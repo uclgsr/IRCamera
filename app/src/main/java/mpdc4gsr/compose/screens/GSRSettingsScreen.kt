@@ -32,7 +32,7 @@ fun GSRSettingsScreen(
     var dataLogging by remember { mutableStateOf(true) }
     var batteryWarning by remember { mutableStateOf(false) }
     var deviceId by remember { mutableStateOf("Shimmer3_001") }
-    
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -43,7 +43,7 @@ fun GSRSettingsScreen(
             showBackButton = true,
             onBackClick = onBackClick
         )
-        
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -74,7 +74,7 @@ fun GSRSettingsScreen(
                     onCheckedChange = { autoConnect = it }
                 )
             }
-            
+
             // Data Collection
             SettingsCard(
                 title = "Data Collection",
@@ -93,7 +93,7 @@ fun GSRSettingsScreen(
                     onCheckedChange = { batteryWarning = it }
                 )
             }
-            
+
             // Calibration
             SettingsCard(
                 title = "Calibration",

@@ -19,11 +19,14 @@ import kotlinx.coroutines.launch
 class DevicePairingViewModel : BaseViewModel(), NetworkClient.NetworkEventListener {
 
     // StateFlow for reactive state management
-    private val _discoveredControllers = MutableStateFlow<List<NetworkClient.ControllerInfo>>(emptyList())
-    val discoveredControllers: StateFlow<List<NetworkClient.ControllerInfo>> = _discoveredControllers.asStateFlow()
+    private val _discoveredControllers =
+        MutableStateFlow<List<NetworkClient.ControllerInfo>>(emptyList())
+    val discoveredControllers: StateFlow<List<NetworkClient.ControllerInfo>> =
+        _discoveredControllers.asStateFlow()
 
     private val _connectedController = MutableStateFlow<NetworkClient.ControllerInfo?>(null)
-    val connectedController: StateFlow<NetworkClient.ControllerInfo?> = _connectedController.asStateFlow()
+    val connectedController: StateFlow<NetworkClient.ControllerInfo?> =
+        _connectedController.asStateFlow()
 
     private val _connectionState = MutableStateFlow(ConnectionState.DISCONNECTED)
     val connectionState: StateFlow<ConnectionState> = _connectionState.asStateFlow()
@@ -68,7 +71,9 @@ class DevicePairingViewModel : BaseViewModel(), NetworkClient.NetworkEventListen
         data class ShowError(val message: String) : PairingEvent()
         data class ShowSuccess(val message: String) : PairingEvent()
         data class NavigateToSession(val sessionInfo: SessionInfo) : PairingEvent()
-        data class ShowConnectionDialog(val controller: NetworkClient.ControllerInfo) : PairingEvent()
+        data class ShowConnectionDialog(val controller: NetworkClient.ControllerInfo) :
+            PairingEvent()
+
         object NavigateBack : PairingEvent()
     }
 

@@ -23,7 +23,7 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 
 /**
  * GSRSettingsComposeActivity - Compose Migration Demonstration
- * 
+ *
  * This demonstrates the next phase of modernization:
  * - Migration from traditional BaseViewModelActivity to shared BaseComposeActivity
  * - Modern Compose UI with Material 3 components
@@ -51,7 +51,7 @@ class GSRSettingsComposeActivity : BaseComposeActivity<GSRSettingsViewModel>() {
             Scaffold(
                 topBar = {
                     TopAppBar(
-                        title = { 
+                        title = {
                             Text(
                                 "GSR Settings",
                                 fontWeight = FontWeight.Bold
@@ -80,11 +80,11 @@ private fun GSRSettingsContent(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-    
+
     // Observe ViewModel states (these would need to be implemented in the ViewModel)
     // val settingsState by viewModel.settingsState.collectAsState()
     // val bluetoothState by viewModel.bluetoothState.collectAsState()
-    
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -97,19 +97,19 @@ private fun GSRSettingsContent(
             onScanClick = { /* viewModel.startBluetoothScan() */ },
             onPermissionRequest = { /* viewModel.requestBluetoothPermissions() */ }
         )
-        
+
         // Device Connection Card
         DeviceConnectionCard(
             onConnectClick = { /* viewModel.connectToDevice(it) */ },
             onDisconnectClick = { /* viewModel.disconnectDevice() */ }
         )
-        
+
         // Recording Settings Card
         RecordingSettingsCard(
             onSampleRateChange = { /* viewModel.updateSampleRate(it) */ },
             onSessionTimeoutChange = { /* viewModel.updateSessionTimeout(it) */ }
         )
-        
+
         // Export Settings Card
         ExportSettingsCard(
             onExportFormatChange = { /* viewModel.updateExportFormat(it) */ },
@@ -146,13 +146,13 @@ private fun BluetoothSettingsCard(
                     fontWeight = FontWeight.Bold
                 )
             }
-            
+
             Text(
                 "Configure Bluetooth connection for GSR sensors",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
-            
+
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
@@ -162,7 +162,7 @@ private fun BluetoothSettingsCard(
                 ) {
                     Text("Scan Devices")
                 }
-                
+
                 OutlinedButton(
                     onClick = onPermissionRequest,
                     modifier = Modifier.weight(1f)
@@ -192,7 +192,7 @@ private fun DeviceConnectionCard(
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-            
+
             // Connection status indicator
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -208,7 +208,7 @@ private fun DeviceConnectionCard(
                     style = MaterialTheme.typography.bodySmall
                 )
             }
-            
+
             Button(
                 onClick = { onConnectClick("mock_device") },
                 modifier = Modifier.fillMaxWidth()
@@ -226,7 +226,7 @@ private fun RecordingSettingsCard(
 ) {
     var sampleRate by remember { mutableIntStateOf(128) }
     var sessionTimeout by remember { mutableIntStateOf(30) }
-    
+
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
@@ -240,7 +240,7 @@ private fun RecordingSettingsCard(
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-            
+
             // Sample Rate Setting
             Column {
                 Text(
@@ -249,7 +249,7 @@ private fun RecordingSettingsCard(
                 )
                 Slider(
                     value = sampleRate.toFloat(),
-                    onValueChange = { 
+                    onValueChange = {
                         sampleRate = it.toInt()
                         onSampleRateChange(sampleRate)
                     },
@@ -258,7 +258,7 @@ private fun RecordingSettingsCard(
                     modifier = Modifier.fillMaxWidth()
                 )
             }
-            
+
             // Session Timeout Setting
             Column {
                 Text(
@@ -267,7 +267,7 @@ private fun RecordingSettingsCard(
                 )
                 Slider(
                     value = sessionTimeout.toFloat(),
-                    onValueChange = { 
+                    onValueChange = {
                         sessionTimeout = it.toInt()
                         onSessionTimeoutChange(sessionTimeout)
                     },
@@ -287,7 +287,7 @@ private fun ExportSettingsCard(
 ) {
     var selectedFormat by remember { mutableStateOf("CSV") }
     val exportFormats = listOf("CSV", "JSON", "Excel")
-    
+
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
@@ -311,20 +311,20 @@ private fun ExportSettingsCard(
                     fontWeight = FontWeight.Bold
                 )
             }
-            
+
             // Export Format Selection
             Text(
                 "Export Format",
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Medium
             )
-            
+
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 exportFormats.forEach { format ->
                     FilterChip(
-                        onClick = { 
+                        onClick = {
                             selectedFormat = format
                             onExportFormatChange(format)
                         },
@@ -333,7 +333,7 @@ private fun ExportSettingsCard(
                     )
                 }
             }
-            
+
             OutlinedButton(
                 onClick = { onExportLocationChange("downloads") },
                 modifier = Modifier.fillMaxWidth()

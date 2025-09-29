@@ -2,8 +2,10 @@
 
 ## Overview
 
-This document provides complete testing procedures and coverage analysis for the IRCamera Multi-Modal Physiological
-Sensing Platform. The testing strategy focuses on **MVP functionality** with **no stub implementations**, ensuring real
+This document provides complete testing procedures and coverage analysis for the IRCamera
+Multi-Modal Physiological
+Sensing Platform. The testing strategy focuses on **MVP functionality** with **no stub
+implementations**, ensuring real
 hardware validation and evidence collection for thesis evaluation.
 
 ## Testing Philosophy
@@ -36,13 +38,15 @@ hardware validation and evidence collection for thesis evaluation.
 1. **GSRDeviceDiscoveryTest.kt**
     - **Purpose**: Shimmer3 GSR+ device discovery and connection validation
     - **Test Methods**: 8 comprehensive test methods
-    - **Coverage**: BLE permissions, device characteristics, connection retry logic, resource cleanup
+    - **Coverage**: BLE permissions, device characteristics, connection retry logic, resource
+      cleanup
     - **Hardware Focus**: Real Shimmer3 GSR+ integration patterns
 
 2. **ThermalCameraIntegrationTest.kt**
     - **Purpose**: Topdon TC001 thermal camera USB integration testing
     - **Test Methods**: 9 comprehensive test methods
-    - **Coverage**: USB permissions, thermal data processing, hot-plugging scenarios, performance metrics
+    - **Coverage**: USB permissions, thermal data processing, hot-plugging scenarios, performance
+      metrics
     - **Hardware Focus**: Real Topdon TC001 integration patterns
 
 3. **MultiSensorCoordinationTest.kt**
@@ -348,7 +352,8 @@ python real_integration_tests.py
 
 ### Reproducibility
 
-All tests are designed for reproducibility across different hardware configurations and environments, supporting the
+All tests are designed for reproducibility across different hardware configurations and
+environments, supporting the
 thesis research requirements for scientific validation.
 
 ## Status: Production Ready Testing Framework
@@ -358,5 +363,6 @@ thesis research requirements for scientific validation.
 **Research Ready**: SCIENTIFIC GRADE
 **Production Status**: DEPLOYMENT READY
 
-The comprehensive testing framework validates all critical functionality and provides quantitative evidence for thesis
+The comprehensive testing framework validates all critical functionality and provides quantitative
+evidence for thesis
 Chapter 5 evaluation and research publication requirements.

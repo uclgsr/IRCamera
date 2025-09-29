@@ -21,21 +21,22 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-import com.mpdc4gsr.libunified.app.viewmodel.BaseViewModel
+import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 
 /**
  * Modern Compose thermal gallery implementation
  * Professional thermal image management with advanced filtering
  */
 class ThermalGalleryComposeActivity : BaseComposeActivity<ThermalGalleryViewModel>() {
-    
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            LibUnifiedTheme {
-                ThermalGalleryScreen()
-            }
-        }
+
+    override fun createViewModel(): ThermalGalleryViewModel {
+        return ThermalGalleryViewModel()
+    }
+
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    override fun Content(viewModel: ThermalGalleryViewModel) {
+        ThermalGalleryScreen()
     }
 }
 
@@ -43,13 +44,14 @@ class ThermalGalleryViewModel : BaseViewModel() {
     // ViewModel implementation
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ThermalGalleryScreen(
     viewModel: ThermalGalleryViewModel = viewModel()
 ) {
     var viewMode by remember { mutableStateOf(ViewMode.GRID) }
     var selectedFilter by remember { mutableStateOf(FilterType.ALL) }
-    
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -79,8 +81,8 @@ private fun ThermalGalleryScreen(
                 }
             },
             actions = {
-                IconButton(onClick = { 
-                    viewMode = if (viewMode == ViewMode.GRID) ViewMode.LIST else ViewMode.GRID 
+                IconButton(onClick = {
+                    viewMode = if (viewMode == ViewMode.GRID) ViewMode.LIST else ViewMode.GRID
                 }) {
                     Icon(
                         if (viewMode == ViewMode.GRID) Icons.Default.ViewList else Icons.Default.GridView,
@@ -97,13 +99,13 @@ private fun ThermalGalleryScreen(
                 }
             }
         )
-        
+
         // Filter Bar
         ThermalFilterBar(
             selectedFilter = selectedFilter,
             onFilterSelected = { selectedFilter = it }
         )
-        
+
         // Gallery Content
         Box(
             modifier = Modifier
@@ -185,7 +187,7 @@ private fun ThermalListView() {
 }
 
 @Composable
-private fun ThermalImageCard(image: ThermalImage) {
+private fun ThermalImageCard(image: GalleryThermalImage) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -214,9 +216,9 @@ private fun ThermalImageCard(image: ThermalImage) {
                     modifier = Modifier.size(32.dp)
                 )
             }
-            
+
             Spacer(modifier = Modifier.height(8.dp))
-            
+
             // Image info
             Text(
                 image.name,
@@ -240,7 +242,7 @@ private fun ThermalImageCard(image: ThermalImage) {
 }
 
 @Composable
-private fun ThermalImageListItem(image: ThermalImage) {
+private fun ThermalImageListItem(image: GalleryThermalImage) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = Color(0xFF21262D)),
@@ -269,9 +271,9 @@ private fun ThermalImageListItem(image: ThermalImage) {
                     modifier = Modifier.size(24.dp)
                 )
             }
-            
+
             Spacer(modifier = Modifier.width(12.dp))
-            
+
             // Image details
             Column(
                 modifier = Modifier.weight(1f)
@@ -293,7 +295,7 @@ private fun ThermalImageListItem(image: ThermalImage) {
                     fontSize = 10.sp
                 )
             }
-            
+
             // Actions
             IconButton(onClick = { /* More options */ }) {
                 Icon(
@@ -306,9 +308,9 @@ private fun ThermalImageListItem(image: ThermalImage) {
     }
 }
 
-private fun generateSampleThermalImages(): List<ThermalImage> {
+private fun generateSampleThermalImages(): List<GalleryThermalImage> {
     return (1..20).map { index ->
-        ThermalImage(
+        GalleryThermalImage(
             id = index,
             name = "thermal_image_$index.tiff",
             temperature = (20..80).random(),
@@ -319,7 +321,7 @@ private fun generateSampleThermalImages(): List<ThermalImage> {
     }
 }
 
-private data class ThermalImage(
+private data class GalleryThermalImage(
     val id: Int,
     val name: String,
     val temperature: Int,

@@ -59,7 +59,11 @@ class ReportRepository : BaseRepository() {
         reports
     }
 
-    private fun generateSampleReports(isTC007: Boolean, page: Int, pageSize: Int): List<ReportData> {
+    private fun generateSampleReports(
+        isTC007: Boolean,
+        page: Int,
+        pageSize: Int
+    ): List<ReportData> {
         val deviceType = if (isTC007) "TC007" else "TS004"
         return (1..pageSize).map { index ->
             val id = "${page * pageSize + index}"

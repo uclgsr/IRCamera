@@ -37,7 +37,7 @@ fun GSRDataViewerScreen(
     // Sample GSR data - in real app, this would come from ViewModel
     val gsrData = remember { generateSampleGSRData() }
     var selectedAnalysis by remember { mutableStateOf(AnalysisType.RAW_SIGNAL) }
-    
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -55,7 +55,7 @@ fun GSRDataViewerScreen(
                 )
             )
         )
-        
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -65,13 +65,13 @@ fun GSRDataViewerScreen(
         ) {
             // Session Info Card
             SessionInfoCard(sessionId = sessionId)
-            
+
             // Analysis Type Selector
             AnalysisTypeSelector(
                 selectedType = selectedAnalysis,
                 onTypeSelected = { selectedAnalysis = it }
             )
-            
+
             // Data Visualization
             when (selectedAnalysis) {
                 AnalysisType.RAW_SIGNAL -> {
@@ -81,6 +81,7 @@ fun GSRDataViewerScreen(
                         color = Color.Cyan
                     )
                 }
+
                 AnalysisType.FILTERED -> {
                     GSRSignalChart(
                         title = "Filtered Signal",
@@ -88,14 +89,16 @@ fun GSRDataViewerScreen(
                         color = Color.Green
                     )
                 }
+
                 AnalysisType.FEATURES -> {
                     GSRFeaturesCard(gsrData)
                 }
+
                 AnalysisType.STATISTICS -> {
                     GSRStatisticsCard(gsrData)
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(16.dp))
         }
     }
@@ -117,7 +120,7 @@ private fun SessionInfoCard(sessionId: String) {
                 fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.height(8.dp))
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -162,7 +165,7 @@ private fun AnalysisTypeSelector(
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 12.dp)
             )
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -170,11 +173,11 @@ private fun AnalysisTypeSelector(
                 AnalysisType.entries.forEach { type ->
                     FilterChip(
                         onClick = { onTypeSelected(type) },
-                        label = { 
+                        label = {
                             Text(
                                 type.displayName,
                                 fontSize = 12.sp
-                            ) 
+                            )
                         },
                         selected = selectedType == type,
                         colors = FilterChipDefaults.filterChipColors(
@@ -210,7 +213,7 @@ private fun GSRSignalChart(
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 12.dp)
             )
-            
+
             Canvas(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -219,25 +222,25 @@ private fun GSRSignalChart(
                 val width = size.width
                 val height = size.height
                 val pointSpacing = width / data.size
-                
+
                 val path = Path()
                 data.forEachIndexed { index, value ->
                     val x = index * pointSpacing
                     val y = height - (value * height)
-                    
+
                     if (index == 0) {
                         path.moveTo(x, y)
                     } else {
                         path.lineTo(x, y)
                     }
                 }
-                
+
                 drawPath(
                     path = path,
                     color = color,
                     style = Stroke(width = 3.dp.toPx())
                 )
-                
+
                 // Draw grid lines
                 for (i in 0..4) {
                     val y = (height / 4) * i
@@ -269,7 +272,7 @@ private fun GSRFeaturesCard(data: List<Float>) {
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 12.dp)
             )
-            
+
             val features = listOf(
                 "Skin Conductance Response (SCR) Count" to "23",
                 "Average SCR Amplitude" to "0.15 μS",
@@ -277,7 +280,7 @@ private fun GSRFeaturesCard(data: List<Float>) {
                 "Arousal Index" to "High",
                 "Stress Level" to "Moderate"
             )
-            
+
             features.forEach { (label, value) ->
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -308,15 +311,18 @@ private fun GSRStatisticsCard(data: List<Float>) {
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 12.dp)
             )
-            
+
             val stats = listOf(
                 "Mean" to String.format("%.3f μS", data.average()),
                 "Standard Deviation" to "0.045 μS",
                 "Min Value" to String.format("%.3f μS", data.minOrNull() ?: 0f),
                 "Max Value" to String.format("%.3f μS", data.maxOrNull() ?: 0f),
-                "Range" to String.format("%.3f μS", (data.maxOrNull() ?: 0f) - (data.minOrNull() ?: 0f))
+                "Range" to String.format(
+                    "%.3f μS",
+                    (data.maxOrNull() ?: 0f) - (data.minOrNull() ?: 0f)
+                )
             )
-            
+
             stats.forEach { (label, value) ->
                 Row(
                     modifier = Modifier.fillMaxWidth(),

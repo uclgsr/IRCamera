@@ -1,12 +1,15 @@
 # IRCamera Multi-Modal Physiological Sensing Platform
 
-A production-ready Android application for synchronized multi-sensor data collection combining thermal imaging, galvanic
+A production-ready Android application for synchronized multi-sensor data collection combining
+thermal imaging, galvanic
 skin response (GSR), and RGB video capture for physiological computing research.
 
 ## Project Overview
 
-The IRCamera platform implements a hub-and-spoke architecture where Android devices act as sensor nodes coordinated by a
-desktop PC controller. The system provides precise temporal synchronization across multiple sensor modalities for
+The IRCamera platform implements a hub-and-spoke architecture where Android devices act as sensor
+nodes coordinated by a
+desktop PC controller. The system provides precise temporal synchronization across multiple sensor
+modalities for
 scientific data collection.
 
 ### Key Features
@@ -89,22 +92,26 @@ python run_evaluation.py
 ### Quick Navigation
 
 - **[DOCUMENTATION_INDEX.md](DOCUMENTATION_INDEX.md)** - Master index to all documentation
-- **[COMPREHENSIVE_TESTING_GUIDE.md](COMPREHENSIVE_TESTING_GUIDE.md)** - Complete testing and validation guide
+- **[COMPREHENSIVE_TESTING_GUIDE.md](COMPREHENSIVE_TESTING_GUIDE.md)** - Complete testing and
+  validation guide
 - **[pc-controller/README.md](pc-controller/README.md)** - Desktop application setup and usage
 
 ### Implementation Status
 
 - **[DELIVERY_STATUS.md](DELIVERY_STATUS.md)** - Complete implementation summary and achievements
-- **[testing-suite/TESTING_RESULTS_SUMMARY.md](testing-suite/TESTING_RESULTS_SUMMARY.md)** - Consolidated testing
+- **[testing-suite/TESTING_RESULTS_SUMMARY.md](testing-suite/TESTING_RESULTS_SUMMARY.md)** -
+  Consolidated testing
   results and validation
 - **[BACKLOG.md](BACKLOG.md)** - Current development status and roadmap
 
 ### System Architecture
 
-- **[docs/COMPREHENSIVE_ARCHITECTURE_DIAGRAMS.md](docs/COMPREHENSIVE_ARCHITECTURE_DIAGRAMS.md)** - Complete system
+- **[docs/COMPREHENSIVE_ARCHITECTURE_DIAGRAMS.md](docs/COMPREHENSIVE_ARCHITECTURE_DIAGRAMS.md)** -
+  Complete system
   design overview
 - **[docs/thesis-diagrams/](docs/thesis-diagrams/)** - Generated figures and tables for thesis
-- **[docs/BACKGROUND_DEVICE_SCANNING.md](docs/BACKGROUND_DEVICE_SCANNING.md)** - BLE device discovery implementation
+- **[docs/BACKGROUND_DEVICE_SCANNING.md](docs/BACKGROUND_DEVICE_SCANNING.md)** - BLE device
+  discovery implementation
 
 ## Development Status
 
@@ -129,7 +136,8 @@ python run_evaluation.py
 
 ## Contributing
 
-This is a master's thesis project following MVP principles. All implementations are production-ready with no stub or
+This is a master's thesis project following MVP principles. All implementations are production-ready
+with no stub or
 placeholder code.
 
 ### Code Standards
@@ -148,7 +156,8 @@ placeholder code.
 
 ## License
 
-This project is part of academic research at UCL. See individual component licenses for specific terms.
+This project is part of academic research at UCL. See individual component licenses for specific
+terms.
 
 ## Citation
 
@@ -161,4 +170,5 @@ UCL Master's Thesis Project, 2024
 
 ## Contact
 
-For technical questions or collaboration opportunities, please refer to the project issues or documentation.
+For technical questions or collaboration opportunities, please refer to the project issues or
+documentation.

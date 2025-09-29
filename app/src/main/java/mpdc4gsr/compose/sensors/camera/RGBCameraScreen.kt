@@ -46,11 +46,11 @@ fun RGBCameraScreen(
     var iso by remember { mutableIntStateOf(200) }
     var focusMode by remember { mutableStateOf("Auto") }
     var whiteBalance by remember { mutableStateOf("Auto") }
-    
+
     // Recording statistics
     var recordingDuration by remember { mutableIntStateOf(0) }
     var capturedFrames by remember { mutableIntStateOf(0) }
-    
+
     // Simulate recording duration
     LaunchedEffect(isRecording) {
         if (isRecording) {
@@ -64,7 +64,7 @@ fun RGBCameraScreen(
             capturedFrames = 0
         }
     }
-    
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -87,7 +87,7 @@ fun RGBCameraScreen(
                 onClick = onSettingsClick
             )
         }
-        
+
         // Scrollable content
         Column(
             modifier = Modifier
@@ -103,7 +103,7 @@ fun RGBCameraScreen(
                 resolution = resolution,
                 frameRate = frameRate
             )
-            
+
             // Camera status and metrics
             CameraStatusCard(
                 isPreviewActive = isPreviewActive,
@@ -115,7 +115,7 @@ fun RGBCameraScreen(
                 focusMode = focusMode,
                 whiteBalance = whiteBalance
             )
-            
+
             // Recording controls
             RecordingControlsCard(
                 isRecording = isRecording,
@@ -126,7 +126,7 @@ fun RGBCameraScreen(
                 onTogglePreview = { isPreviewActive = !isPreviewActive },
                 onCapturePhoto = onCapturePhoto
             )
-            
+
             // Camera settings
             CameraSettingsCard(
                 resolution = resolution,
@@ -173,13 +173,13 @@ private fun RGBCameraPreview(
                 ) {
                     val width = size.width
                     val height = size.height
-                    
+
                     // Draw camera background
                     drawRect(
                         color = Color(0xFF2E2E2E),
                         size = size
                     )
-                    
+
                     // Simulate camera scene
                     // Background gradient
                     drawRect(
@@ -187,24 +187,24 @@ private fun RGBCameraPreview(
                         topLeft = Offset(0f, height * 0.6f),
                         size = Size(width, height * 0.4f)
                     )
-                    
+
                     // Simulated objects
                     drawCircle(
                         color = Color(0xFF6A6A6A),
                         radius = width * 0.1f,
                         center = Offset(width * 0.3f, height * 0.4f)
                     )
-                    
+
                     drawRect(
                         color = Color(0xFF5A5A5A),
                         topLeft = Offset(width * 0.6f, height * 0.2f),
                         size = Size(width * 0.25f, height * 0.4f)
                     )
-                    
+
                     // Grid lines (rule of thirds)
                     val strokeWidth = 1.dp.toPx()
                     val gridColor = Color.White.copy(alpha = 0.3f)
-                    
+
                     // Vertical lines
                     drawLine(
                         color = gridColor,
@@ -218,7 +218,7 @@ private fun RGBCameraPreview(
                         end = Offset(width * 2f / 3f, height),
                         strokeWidth = strokeWidth
                     )
-                    
+
                     // Horizontal lines
                     drawLine(
                         color = gridColor,
@@ -232,20 +232,20 @@ private fun RGBCameraPreview(
                         end = Offset(width, height * 2f / 3f),
                         strokeWidth = strokeWidth
                     )
-                    
+
                     // Focus indicator (center)
                     val centerX = width / 2
                     val centerY = height / 2
                     val focusSize = 30.dp.toPx()
-                    
+
                     drawRect(
                         color = Color.White,
-                        topLeft = Offset(centerX - focusSize/2, centerY - focusSize/2),
+                        topLeft = Offset(centerX - focusSize / 2, centerY - focusSize / 2),
                         size = Size(focusSize, focusSize),
                         style = androidx.compose.ui.graphics.drawscope.Stroke(width = 2.dp.toPx())
                     )
                 }
-                
+
                 // Overlay indicators
                 Column(
                     modifier = Modifier
@@ -265,9 +265,9 @@ private fun RGBCameraPreview(
                             modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                         )
                     }
-                    
+
                     Spacer(modifier = Modifier.height(8.dp))
-                    
+
                     // Resolution indicator
                     Surface(
                         color = Color.Black.copy(alpha = 0.7f),
@@ -281,7 +281,7 @@ private fun RGBCameraPreview(
                         )
                     }
                 }
-                
+
                 // Frame rate indicator
                 Surface(
                     modifier = Modifier
@@ -366,7 +366,7 @@ private fun CameraStatusCard(
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
                 )
-                
+
                 Surface(
                     color = when {
                         isRecording -> Color.Red.copy(alpha = 0.2f)
@@ -392,7 +392,7 @@ private fun CameraStatusCard(
                     )
                 }
             }
-            
+
             // Camera metrics grid
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -401,7 +401,7 @@ private fun CameraStatusCard(
                 MetricItem("Resolution", resolution, Color.White)
                 MetricItem("Frame Rate", "${frameRate}fps", Color.Green)
             }
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
@@ -409,7 +409,7 @@ private fun CameraStatusCard(
                 MetricItem("Exposure", exposureTime, Color.Yellow)
                 MetricItem("ISO", iso.toString(), Color.Cyan)
             }
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
@@ -451,7 +451,7 @@ private fun RecordingControlsCard(
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
             )
-            
+
             if (isRecording) {
                 // Recording stats
                 Row(
@@ -459,23 +459,23 @@ private fun RecordingControlsCard(
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
                     MetricItem(
-                        "Duration", 
-                        "${recordingDuration}s", 
+                        "Duration",
+                        "${recordingDuration}s",
                         Color.Red
                     )
                     MetricItem(
-                        "Frames", 
-                        capturedFrames.toString(), 
+                        "Frames",
+                        capturedFrames.toString(),
                         Color.Green
                     )
                     MetricItem(
-                        "File Size", 
-                        "${(recordingDuration * 2.5f).toInt()}MB", 
+                        "File Size",
+                        "${(recordingDuration * 2.5f).toInt()}MB",
                         Color.Cyan
                     )
                 }
             }
-            
+
             // Control buttons
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -489,7 +489,7 @@ private fun RecordingControlsCard(
                 ) {
                     Text(if (isPreviewActive) "Stop Preview" else "Start Preview")
                 }
-                
+
                 Button(
                     onClick = onToggleRecording,
                     enabled = isPreviewActive,
@@ -504,7 +504,7 @@ private fun RecordingControlsCard(
                     Spacer(Modifier.width(4.dp))
                     Text(if (isRecording) "Stop" else "Record")
                 }
-                
+
                 Button(
                     onClick = onCapturePhoto,
                     enabled = isPreviewActive && !isRecording,
@@ -554,7 +554,7 @@ private fun CameraSettingsCard(
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
             )
-            
+
             // Quick setting buttons
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -569,9 +569,9 @@ private fun CameraSettingsCard(
                 ) {
                     Text("1080p", fontSize = 10.sp)
                 }
-                
+
                 Spacer(modifier = Modifier.width(4.dp))
-                
+
                 Button(
                     onClick = { onResolutionChange("1280×720") },
                     colors = ButtonDefaults.buttonColors(
@@ -581,9 +581,9 @@ private fun CameraSettingsCard(
                 ) {
                     Text("720p", fontSize = 10.sp)
                 }
-                
+
                 Spacer(modifier = Modifier.width(4.dp))
-                
+
                 Button(
                     onClick = { onFrameRateChange(if (frameRate == 30) 60 else 30) },
                     colors = ButtonDefaults.buttonColors(containerColor = Color.Green),
@@ -592,7 +592,7 @@ private fun CameraSettingsCard(
                     Text("${frameRate}fps", fontSize = 10.sp)
                 }
             }
-            
+
             // Advanced settings info
             Text(
                 text = "Advanced settings available in camera settings menu",

@@ -103,7 +103,11 @@ class SimpleNetworkTestActivity : AppCompatActivity() {
 
         connectBluetoothButton.setOnClickListener {
             if (BuildConfig.DEBUG) Log.d(TAG, "Connect Bluetooth button clicked")
-            Toast.makeText(this, "Bluetooth button clicked! (Not implemented yet)", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                this,
+                "Bluetooth button clicked! (Not implemented yet)",
+                Toast.LENGTH_SHORT
+            ).show()
         }
 
         disconnectButton.setOnClickListener {

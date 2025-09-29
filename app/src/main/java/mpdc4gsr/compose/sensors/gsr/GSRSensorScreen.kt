@@ -43,10 +43,10 @@ fun GSRSensorScreen(
     var skinConductance by remember { mutableFloatStateOf(0.82f) }
     var deviceBattery by remember { mutableIntStateOf(87) }
     var samplingRate by remember { mutableIntStateOf(128) }
-    
+
     // Historical data for plotting
     var gsrHistory by remember { mutableStateOf(generateInitialGSRData()) }
-    
+
     // Simulate real-time GSR updates
     LaunchedEffect(isConnected) {
         if (isConnected) {
@@ -54,13 +54,13 @@ fun GSRSensorScreen(
                 kotlinx.coroutines.delay(100)
                 currentGSR = 2.0f + kotlin.random.Random.nextFloat() * 1.5f
                 skinConductance = 0.5f + kotlin.random.Random.nextFloat() * 0.8f
-                
+
                 // Update history
                 gsrHistory = gsrHistory.drop(1) + currentGSR
             }
         }
     }
-    
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -83,7 +83,7 @@ fun GSRSensorScreen(
                 onClick = onSettingsClick
             )
         }
-        
+
         // Scrollable content
         Column(
             modifier = Modifier
@@ -99,21 +99,21 @@ fun GSRSensorScreen(
                 samplingRate = samplingRate,
                 onConnectionToggle = { isConnected = !isConnected }
             )
-            
+
             // Real-time GSR metrics
             GSRMetricsCard(
                 currentGSR = currentGSR,
                 skinConductance = skinConductance,
                 isRecording = isRecording
             )
-            
+
             // GSR waveform visualization
             GSRWaveformCard(
                 gsrHistory = gsrHistory,
                 isStreaming = isConnected,
                 currentValue = currentGSR
             )
-            
+
             // Recording controls
             GSRRecordingControls(
                 isRecording = isRecording,
@@ -121,7 +121,7 @@ fun GSRSensorScreen(
                 onRecordingToggle = { isRecording = !isRecording },
                 onExportData = onSaveData
             )
-            
+
             // GSR analysis summary
             if (isRecording || gsrHistory.isNotEmpty()) {
                 GSRAnalysisCard(
@@ -174,7 +174,7 @@ private fun GSRConnectionCard(
                         fontSize = 14.sp
                     )
                 }
-                
+
                 Switch(
                     checked = isConnected,
                     onCheckedChange = { onConnectionToggle() },
@@ -184,7 +184,7 @@ private fun GSRConnectionCard(
                     )
                 )
             }
-            
+
             if (isConnected) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -230,7 +230,7 @@ private fun GSRMetricsCard(
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold
                 )
-                
+
                 if (isRecording) {
                     Surface(
                         color = Color.Red.copy(alpha = 0.2f),
@@ -246,7 +246,7 @@ private fun GSRMetricsCard(
                     }
                 }
             }
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
@@ -294,7 +294,7 @@ private fun GSRWaveformCard(
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Canvas(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -305,7 +305,7 @@ private fun GSRWaveformCard(
                 val padding = 20.dp.toPx()
                 val graphWidth = width - 2 * padding
                 val graphHeight = height - 2 * padding
-                
+
                 // Draw axes
                 drawLine(
                     color = Color.Gray,
@@ -319,33 +319,33 @@ private fun GSRWaveformCard(
                     end = Offset(padding, height - padding),
                     strokeWidth = 1.dp.toPx()
                 )
-                
+
                 // Draw GSR waveform
                 if (gsrHistory.isNotEmpty()) {
                     val path = Path()
                     val minGSR = gsrHistory.minOrNull() ?: 0f
                     val maxGSR = gsrHistory.maxOrNull() ?: 5f
                     val range = maxGSR - minGSR
-                    
+
                     gsrHistory.forEachIndexed { index, value ->
                         val x = padding + (index.toFloat() / (gsrHistory.size - 1)) * graphWidth
                         val normalizedValue = if (range > 0) (value - minGSR) / range else 0.5f
                         val y = height - padding - normalizedValue * graphHeight
-                        
+
                         if (index == 0) {
                             path.moveTo(x, y)
                         } else {
                             path.lineTo(x, y)
                         }
                     }
-                    
+
                     drawPath(
                         path = path,
                         color = Color.Cyan,
                         style = androidx.compose.ui.graphics.drawscope.Stroke(width = 2.dp.toPx())
                     )
                 }
-                
+
                 // Draw current value indicator
                 if (isStreaming) {
                     drawCircle(
@@ -355,14 +355,18 @@ private fun GSRWaveformCard(
                     )
                 }
             }
-            
+
             // Value scale indicators
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text("0 μS", color = Color.Gray, fontSize = 10.sp)
-                Text("${String.format("%.1f", currentValue)} μS", color = Color.Cyan, fontSize = 10.sp)
+                Text(
+                    "${String.format("%.1f", currentValue)} μS",
+                    color = Color.Cyan,
+                    fontSize = 10.sp
+                )
                 Text("5 μS", color = Color.Gray, fontSize = 10.sp)
             }
         }
@@ -396,7 +400,7 @@ private fun GSRRecordingControls(
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
@@ -410,7 +414,7 @@ private fun GSRRecordingControls(
                 ) {
                     Text(if (isRecording) "Stop Recording" else "Start Recording")
                 }
-                
+
                 Button(
                     onClick = onExportData,
                     enabled = !isRecording,
@@ -433,12 +437,12 @@ private fun GSRAnalysisCard(
     modifier: Modifier = Modifier
 ) {
     if (gsrData.isEmpty()) return
-    
+
     val avgGSR = gsrData.average().toFloat()
     val maxGSR = gsrData.maxOrNull() ?: 0f
     val minGSR = gsrData.minOrNull() ?: 0f
     val stdDev = kotlin.math.sqrt(gsrData.map { (it - avgGSR) * (it - avgGSR) }.average()).toFloat()
-    
+
     Card(
         modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
@@ -455,7 +459,7 @@ private fun GSRAnalysisCard(
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
@@ -535,7 +539,7 @@ private fun MetricItem(
  * Generate initial GSR data for demonstration
  */
 private fun generateInitialGSRData(): List<Float> {
-    return (0..99).map { 
+    return (0..99).map {
         2.0f + kotlin.math.sin(it * 0.1f).toFloat() * 0.5f + kotlin.random.Random.nextFloat() * 0.2f
     }
 }

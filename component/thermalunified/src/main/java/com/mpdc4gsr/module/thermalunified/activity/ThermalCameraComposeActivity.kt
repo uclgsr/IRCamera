@@ -4,18 +4,19 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalFragmentViewModel
 
 /**
  * Task B: Complete Thermal Camera Activity using Compose
- * 
+ *
  * This activity demonstrates:
  * - Complete migration of thermal camera UI to Compose
  * - Uses shared BaseComposeActivity from libunified module
@@ -47,15 +48,15 @@ class ThermalCameraComposeActivity : BaseComposeActivity<ThermalFragmentViewMode
                                 Icon(Icons.Default.ArrowBack, contentDescription = "Back")
                             }
                         }
+                        )
+                    }
+                ) { paddingValues ->
+                    ThermalCameraContent(
+                        viewModel = viewModel,
+                        modifier = Modifier.padding(paddingValues)
                     )
                 }
-            ) { paddingValues ->
-                ThermalCameraContent(
-                    viewModel = viewModel,
-                    modifier = Modifier.padding(paddingValues)
-                )
             }
-        }
     }
 
     @Composable
@@ -86,8 +87,7 @@ class ThermalCameraComposeActivity : BaseComposeActivity<ThermalFragmentViewMode
                     )
                 }
             }
-            
-            // Camera controls
+            // Camera controls with proper icons
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -96,28 +96,20 @@ class ThermalCameraComposeActivity : BaseComposeActivity<ThermalFragmentViewMode
                     onClick = { /* Handle capture */ },
                     modifier = Modifier.weight(1f)
                 ) {
+                    Icon(Icons.Default.CameraAlt, contentDescription = "Capture")
+                    Spacer(modifier = Modifier.width(8.dp))
                     Text("Capture")
                 }
-                
+
                 Button(
                     onClick = { /* Handle record */ },
                     modifier = Modifier.weight(1f)
                 ) {
+                    Icon(Icons.Default.VideoCall, contentDescription = "Record")
+                    Spacer(modifier = Modifier.width(8.dp))
                     Text("Record")
                 }
             }
         }
-    }
-
-    override fun onDeviceConnected() {
-        super.onDeviceConnected()
-        // Handle thermal camera connection
-        // This integrates with existing thermal camera connection logic
-    }
-
-    override fun onDeviceDisconnected() {
-        super.onDeviceDisconnected()
-        // Handle thermal camera disconnection
-        // This integrates with existing thermal camera disconnection logic
     }
 }

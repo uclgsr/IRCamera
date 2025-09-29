@@ -259,7 +259,10 @@ class SessionManagerViewModel : BaseViewModel() {
         if (currentSearchQuery.isNotEmpty()) {
             filtered = filtered.filter { session ->
                 session.sessionId.contains(currentSearchQuery, ignoreCase = true) ||
-                        session.participantId?.contains(currentSearchQuery, ignoreCase = true) == true ||
+                        session.participantId?.contains(
+                            currentSearchQuery,
+                            ignoreCase = true
+                        ) == true ||
                         session.studyName?.contains(currentSearchQuery, ignoreCase = true) == true
             }
         }
@@ -294,10 +297,12 @@ class SessionManagerViewModel : BaseViewModel() {
 
             if (success) {
                 // Remove from local list and update UI
-                val updatedSessions = _allSessions.value.filter { it.sessionId != session.sessionId }
+                val updatedSessions =
+                    _allSessions.value.filter { it.sessionId != session.sessionId }
                 _allSessions.value = updatedSessions
                 applyCurrentFilters()
-                _sessionUiState.value = _sessionUiState.value.copy(sessionCount = updatedSessions.size)
+                _sessionUiState.value =
+                    _sessionUiState.value.copy(sessionCount = updatedSessions.size)
 
                 _sessionEvents.emit(
                     SessionEvent.DeletedSuccess(
@@ -325,7 +330,12 @@ class SessionManagerViewModel : BaseViewModel() {
                     )
                 )
             } else {
-                _sessionEvents.emit(SessionEvent.ExportFailed(session, "Failed to export session ${session.sessionId}"))
+                _sessionEvents.emit(
+                    SessionEvent.ExportFailed(
+                        session,
+                        "Failed to export session ${session.sessionId}"
+                    )
+                )
             }
         }
     }

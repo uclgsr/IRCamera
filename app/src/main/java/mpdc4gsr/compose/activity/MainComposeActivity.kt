@@ -31,7 +31,7 @@ class MainComposeActivity : ComponentActivity() {
 @Composable
 fun MainApp() {
     val navController = rememberNavController()
-    
+
     NavHost(
         navController = navController,
         startDestination = "main"
@@ -45,7 +45,7 @@ fun MainApp() {
                 onNavigateToProfile = { navController.navigate("profile") }
             )
         }
-        
+
         // Unified sensor dashboard
         composable("unified_dashboard") {
             UnifiedSensorDashboard(
@@ -60,7 +60,7 @@ fun MainApp() {
                 }
             )
         }
-        
+
         // Individual sensor screens
         composable("gsr_sensor") {
             GSRSensorScreen(
@@ -71,7 +71,7 @@ fun MainApp() {
                 }
             )
         }
-        
+
         composable("rgb_camera") {
             RGBCameraScreen(
                 onBackClick = { navController.popBackStack() },
@@ -81,7 +81,7 @@ fun MainApp() {
                 }
             )
         }
-        
+
         // Thermal camera workflow
         composable("thermal_connect") {
             ConnectScreen(
@@ -91,7 +91,7 @@ fun MainApp() {
                 onBackClick = { navController.popBackStack() }
             )
         }
-        
+
         composable("thermal_monitor") {
             ThermalMonitorScreen(
                 onBackClick = { navController.popBackStack() },
@@ -101,7 +101,7 @@ fun MainApp() {
                 }
             )
         }
-        
+
         composable("thermal_calibrate") {
             CalibrateScreen(
                 onBackClick = { navController.popBackStack() },
@@ -111,7 +111,7 @@ fun MainApp() {
                 onCalibrationCancel = { navController.popBackStack() }
             )
         }
-        
+
         composable("thermal_annotate") {
             AnnotateScreen(
                 onBackClick = { navController.popBackStack() },
@@ -123,39 +123,39 @@ fun MainApp() {
                 }
             )
         }
-        
+
         // Additional screens
         composable("gallery") {
             GalleryScreen(
                 onBackClick = { navController.popBackStack() }
             )
         }
-        
+
         composable("settings") {
             SettingsScreen(
                 onBackClick = { navController.popBackStack() }
             )
         }
-        
+
         composable("profile") {
             ProfileScreen(
                 onBackClick = { navController.popBackStack() }
             )
         }
-        
+
         // Settings screens
         composable("gsr_settings") {
             GSRSettingsScreen(
                 onBackClick = { navController.popBackStack() }
             )
         }
-        
+
         composable("camera_settings") {
             CameraSettingsScreen(
                 onBackClick = { navController.popBackStack() }
             )
         }
-        
+
         composable("thermal_settings") {
             ThermalSettingsScreen(
                 onBackClick = { navController.popBackStack() }

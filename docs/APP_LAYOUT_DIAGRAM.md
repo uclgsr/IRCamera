@@ -1,7 +1,9 @@
 # IRCamera App Layout Architecture
 
-This document provides a comprehensive overview of the layout structure and UI components used throughout the IRCamera
-Android application. Following a major consolidation effort, the app now contains **220 layout files** with a
+This document provides a comprehensive overview of the layout structure and UI components used
+throughout the IRCamera
+Android application. Following a major consolidation effort, the app now contains **220 layout files
+** with a
 streamlined and efficient architecture.
 
 ## Layout Overview by Type - CORRECTED
@@ -265,7 +267,8 @@ The app now features a streamlined layout architecture with consolidated templat
 
 - **`fragment_main.xml`** - Main dashboard fragment displaying device connections and controls
 - **`fragment_sensor_dashboard.xml`** - Real-time sensor status monitoring with scrollable interface
-- **`fragment_gsr_*.xml`** - GSR-specific UI components for session management, data display, and video playback
+- **`fragment_gsr_*.xml`** - GSR-specific UI components for session management, data display, and
+  video playback
 
 ### 3. **Thermal Camera Interface Layouts**
 
@@ -365,5 +368,7 @@ Main Container
 Sensor Input → Dashboard Fragment → Activity Container → Navigation Destination
 ```
 
-This comprehensive layout architecture enables the IRCamera app to provide a sophisticated multi-modal physiological
-sensing interface while maintaining usability and performance across different Android devices and screen sizes.
+This comprehensive layout architecture enables the IRCamera app to provide a sophisticated
+multi-modal physiological
+sensing interface while maintaining usability and performance across different Android devices and
+screen sizes.

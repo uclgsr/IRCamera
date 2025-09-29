@@ -12,7 +12,7 @@ import mpdc4gsr.compose.utils.FragmentContainer
 
 /**
  * Task E: Complete Navigation Integration
- * 
+ *
  * Unified navigation system that bridges Compose and Fragment navigation:
  * - Seamless transitions between Compose and Fragment screens
  * - Deep linking support
@@ -22,10 +22,51 @@ import mpdc4gsr.compose.utils.FragmentContainer
 sealed class IRCameraScreen(val route: String) {
     object Main : IRCameraScreen("main")
     object MainCompose : IRCameraScreen("main_compose")
+    object MainFragment : IRCameraScreen("main_fragment")
+    object MainFragmentCompose : IRCameraScreen("main_fragment_compose")
+    
     object ThermalCamera : IRCameraScreen("thermal_camera")
     object ThermalCameraCompose : IRCameraScreen("thermal_camera_compose")
+    object ThermalFragment : IRCameraScreen("thermal_fragment")
+    object ThermalFragmentCompose : IRCameraScreen("thermal_fragment_compose")
+    
     object SensorDashboard : IRCameraScreen("sensor_dashboard")
     object SensorDashboardCompose : IRCameraScreen("sensor_dashboard_compose")
+    object SensorDashboardFragment : IRCameraScreen("sensor_dashboard_fragment")
+    object SensorDashboardFragmentCompose : IRCameraScreen("sensor_dashboard_fragment_compose")
+    
+    object Gallery : IRCameraScreen("gallery")
+    object GalleryFragment : IRCameraScreen("gallery_fragment")
+    object GalleryFragmentCompose : IRCameraScreen("gallery_fragment_compose")
+    
+    // Priority 3: Specialized Thermal Fragments
+    object IRCorrectionFragment : IRCameraScreen("ir_correction_fragment")
+    object IRCorrectionFragmentCompose : IRCameraScreen("ir_correction_fragment_compose")
+    object MonitorThermalFragment : IRCameraScreen("monitor_thermal_fragment")
+    object MonitorThermalFragmentCompose : IRCameraScreen("monitor_thermal_fragment_compose")
+
+    // Priority 4: Additional Gallery and Lite Fragments
+    object IRGalleryTabFragment : IRCameraScreen("ir_gallery_tab_fragment")
+    object IRGalleryTabFragmentCompose : IRCameraScreen("ir_gallery_tab_fragment_compose")
+    object GalleryPictureFragment : IRCameraScreen("gallery_picture_fragment")
+    object GalleryPictureFragmentCompose : IRCameraScreen("gallery_picture_fragment_compose")
+    object IRPlushFragment : IRCameraScreen("ir_plush_fragment")
+    object IRPlushFragmentCompose : IRCameraScreen("ir_plush_fragment_compose")
+    object IRMonitorLiteFragment : IRCameraScreen("ir_monitor_lite_fragment")
+    object IRMonitorLiteFragmentCompose : IRCameraScreen("ir_monitor_lite_fragment_compose")
+
+    // Priority 5: Final Specialized Fragments
+    object GalleryVideoFragment : IRCameraScreen("gallery_video_fragment")
+    object GalleryVideoFragmentCompose : IRCameraScreen("gallery_video_fragment_compose")
+    object PDFListFragment : IRCameraScreen("pdf_list_fragment")
+    object PDFListFragmentCompose : IRCameraScreen("pdf_list_fragment_compose")
+    object IRMonitorCaptureFragment : IRCameraScreen("ir_monitor_capture_fragment")
+    object IRMonitorCaptureFragmentCompose : IRCameraScreen("ir_monitor_capture_fragment_compose")
+    object IRMonitorHistoryFragment : IRCameraScreen("ir_monitor_history_fragment")
+    object IRMonitorHistoryFragmentCompose : IRCameraScreen("ir_monitor_history_fragment_compose")
+    object IRMonitorThermalFragment : IRCameraScreen("ir_monitor_thermal_fragment")
+    object IRMonitorThermalFragmentCompose : IRCameraScreen("ir_monitor_thermal_fragment_compose")
+    
     object Settings : IRCameraScreen("settings")
     object SettingsCompose : IRCameraScreen("settings_compose")
     object Demo : IRCameraScreen("demo")
@@ -38,7 +79,7 @@ fun IRCameraNavHost(
     startDestination: String = IRCameraScreen.Demo.route
 ) {
     val context = LocalContext.current
-    
+
     NavHost(
         navController = navController,
         startDestination = startDestination
@@ -64,18 +105,18 @@ fun IRCameraNavHost(
                 }
             )
         }
-        
+
         // Main dashboard screens
         composable(IRCameraScreen.Main.route) {
             // Could embed original MainActivity using AndroidView if needed
             // For now, launch as separate activity
             LaunchActivityScreen(MainActivity::class.java)
         }
-        
+
         composable(IRCameraScreen.MainCompose.route) {
             LaunchActivityScreen(MainActivity::class.java)
         }
-        
+
         // Thermal camera screens
         composable(IRCameraScreen.ThermalCamera.route) {
             // Could embed existing thermal fragment using FragmentContainer
@@ -83,13 +124,13 @@ fun IRCameraNavHost(
                 onNavigateBack = { navController.popBackStack() }
             )
         }
-        
+
         composable(IRCameraScreen.ThermalCameraCompose.route) {
             LaunchActivityScreen(
                 activityClass = com.mpdc4gsr.module.thermalunified.activity.ThermalCameraComposeActivity::class.java
             )
         }
-        
+
         // Sensor dashboard screens
         composable(IRCameraScreen.SensorDashboard.route) {
             // Could embed existing sensor dashboard fragment
@@ -97,11 +138,11 @@ fun IRCameraNavHost(
                 onNavigateBack = { navController.popBackStack() }
             )
         }
-        
+
         composable(IRCameraScreen.SensorDashboardCompose.route) {
             LaunchActivityScreen(SensorDashboardComposeActivity::class.java)
         }
-        
+
         // Settings screens
         composable(IRCameraScreen.Settings.route) {
             // Could embed existing settings fragment
@@ -109,11 +150,11 @@ fun IRCameraNavHost(
                 onNavigateBack = { navController.popBackStack() }
             )
         }
-        
+
         composable(IRCameraScreen.SettingsCompose.route) {
             LaunchActivityScreen(SettingsComposeActivity::class.java)
         }
-        
+
         // About screen
         composable(IRCameraScreen.About.route) {
             AboutScreen(
@@ -126,7 +167,7 @@ fun IRCameraNavHost(
 @Composable
 private fun LaunchActivityScreen(activityClass: Class<*>) {
     val context = LocalContext.current
-    
+
     // Launch activity and finish current one
     androidx.compose.runtime.LaunchedEffect(Unit) {
         context.startActivity(Intent(context, activityClass))
@@ -134,7 +175,7 @@ private fun LaunchActivityScreen(activityClass: Class<*>) {
             context.finish()
         }
     }
-    
+
     // Show loading indicator while launching
     androidx.compose.foundation.layout.Box(
         modifier = androidx.compose.ui.Modifier.fillMaxSize(),

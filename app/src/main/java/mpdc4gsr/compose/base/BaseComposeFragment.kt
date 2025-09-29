@@ -35,7 +35,7 @@ abstract class BaseComposeFragment<VM : BaseViewModel> : Fragment() {
         return ComposeView(requireContext()).apply {
             // Dispose composition when the view's LifecycleOwner is destroyed
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-            
+
             setContent {
                 IRCameraTheme {
                     val viewModel = createViewModel()
@@ -61,7 +61,7 @@ abstract class SimpleComposeFragment : Fragment() {
     ): View {
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-            
+
             setContent {
                 IRCameraTheme {
                     Content()

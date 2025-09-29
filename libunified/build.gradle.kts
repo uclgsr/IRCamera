@@ -76,7 +76,7 @@ android {
         viewBinding = true
         compose = true
     }
-    
+
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
@@ -207,7 +207,7 @@ dependencies {
 
     // UI-specific dependencies
     api(libs.bundles.ui.common)
-    
+
     // Compose dependencies for shared base classes
     api(platform(libs.compose.bom))
     api(libs.compose.ui)

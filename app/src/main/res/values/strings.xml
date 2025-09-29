@@ -45,6 +45,25 @@
     <string name="app_got_it">Got it</string>
     <string name="app_save_image">Save Image</string>
 
+    <!-- New Compose Activity Strings -->
+    <string name="web_content">Web Content</string>
+    <string name="version_info">Version Information</string>
+    <string name="network_error">Network Error</string>
+    <string name="retry">Retry</string>
+    <string name="device_type_selection">Device Type Selection</string>
+    <string name="connection_help">Connection Help</string>
+    <string name="disconnection_troubleshooting">Troubleshooting Guide</string>
+    <string name="terms_and_conditions">Terms and Conditions</string>
+    <string name="network_configuration">Network Configuration</string>
+    <string name="unified_sensor_control">Unified Sensor Control</string>
+    <string name="fault_tolerant_recording">Fault-Tolerant Recording</string>
+    <string name="simplified_interface">Simplified Interface</string>
+    <string name="thermal_image_editor">Thermal Image Editor</string>
+    <string name="shimmer_gsr_testing">Shimmer GSR Testing</string>
+    <string name="sensor_dashboard_test">Sensor Dashboard Test</string>
+    <string name="network_test_interface">Network Test Interface</string>
+    <string name="compose_components_showcase">Compose Components Showcase</string>
+
     <string name="version_code">1.0</string>
     <string name="top_infrared_up_case">MPDC4GSR</string>
     <string name="see_more_than">See More Than</string>
@@ -129,5 +148,120 @@
     <string name="app_gallery">Gallery</string>
     <string name="vehicle_function">Main</string>
     <string name="search_learn_more">Mine</string>
+
+    <!-- GSR Sensor Suite Activities -->
+    <string name="gsr_device_management_compose_title">GSR Device Management</string>
+    <string name="gsr_device_management_compose_subtitle">Enhanced GSR device discovery, connection, and real-time monitoring</string>
+    <string name="multi_modal_recording_compose_title">Multi-Modal Recording</string>
+    <string name="multi_modal_recording_compose_subtitle">Advanced coordinated multi-sensor recording with live statistics</string>
+    <string name="session_manager_compose_title">Session Manager</string>
+    <string name="session_manager_compose_subtitle">Comprehensive session management with filtering and export capabilities</string>
+
+    <!-- GSR Device Management -->
+    <string name="gsr_bluetooth_permissions_required">Bluetooth Permissions Required</string>
+    <string name="gsr_bluetooth_permissions_explanation">GSR device management requires Bluetooth permissions to discover and connect to nearby sensors. This enables real-time physiological monitoring capabilities.</string>
+    <string name="gsr_permissions_granted">Permissions Granted</string>
+    <string name="gsr_permissions_required">Permissions Required</string>
+    <string name="gsr_bluetooth_scanning_enabled">Bluetooth scanning is enabled</string>
+    <string name="gsr_bluetooth_permissions_needed">Bluetooth permissions needed for device discovery</string>
+    <string name="gsr_bluetooth_enabled">Bluetooth Enabled</string>
+    <string name="gsr_bluetooth_disabled">Bluetooth Disabled</string>
+    <string name="gsr_ready_for_discovery">Ready for device discovery</string>
+    <string name="gsr_enable_bluetooth_message">Enable Bluetooth to discover GSR devices</string>
+    <string name="gsr_scanning_for_devices">Scanning for Devices</string>
+    <string name="gsr_devices_found">%d devices found</string>
+    <string name="gsr_no_devices_found">No GSR Devices Found</string>
+    <string name="gsr_start_scanning_message">Start scanning to discover nearby GSR sensors</string>
+    <string name="gsr_enable_permissions_bluetooth">Enable permissions and Bluetooth to discover devices</string>
+    <string name="gsr_start_scanning">Start Scanning</string>
+    <string name="gsr_stop_scanning">Stop</string>
+    <string name="gsr_connect">Connect</string>
+    <string name="gsr_disconnect">Disconnect</string>
+    <string name="gsr_device_details">Details</string>
+    <string name="gsr_connected_devices">Connected Devices</string>
+    <string name="gsr_discovered_devices">Discovered Devices</string>
+    <string name="gsr_device_battery">Battery: %d%%</string>
+    <string name="gsr_device_signal">Signal: %d dBm</string>
+    <string name="gsr_unknown_device">Unknown Device</string>
+
+    <!-- Multi-Modal Recording -->
+    <string name="multimodal_recording_active">Recording Active</string>
+    <string name="multimodal_recording_controls">Recording Controls</string>
+    <string name="multimodal_session_duration">Duration: %s</string>
+    <string name="multimodal_data_size">Data: %s</string>
+    <string name="multimodal_start_recording">Start Recording</string>
+    <string name="multimodal_stop_recording">Stop</string>
+    <string name="multimodal_pause_recording">Pause</string>
+    <string name="multimodal_resume_recording">Resume</string>
+    <string name="multimodal_sensor_status">Sensor Status</string>
+    <string name="multimodal_sensor_disabled">Disabled</string>
+    <string name="multimodal_sensor_not_connected">Not Connected</string>
+    <string name="multimodal_sensor_connected">Connected - %d Hz</string>
+    <string name="multimodal_sensor_recording">Recording: %d samples</string>
+    <string name="multimodal_camera_preview">RGB Camera Preview</string>
+    <string name="multimodal_session_statistics">Session Statistics</string>
+    <string name="multimodal_total_samples">Total Samples</string>
+    <string name="multimodal_data_rate">Data Rate</string>
+    <string name="multimodal_data_quality">Quality</string>
+    <string name="multimodal_data_quality_monitoring">Data Quality Monitoring</string>
+    <string name="multimodal_new_session">New Recording Session</string>
+    <string name="multimodal_session_name">Session Name</string>
+    <string name="multimodal_participant_id">Participant ID</string>
+    <string name="multimodal_select_protocol">Select Research Protocol</string>
+    <string name="multimodal_protocol_duration">Duration: %s</string>
+    <string name="multimodal_session_prefix">Session: %s</string>
+    <string name="multimodal_participant_prefix">Participant: %s</string>
+    <string name="multimodal_protocol_prefix">Protocol: %s</string>
+
+    <!-- Session Manager -->
+    <string name="session_manager_title">Session Manager</string>
+    <string name="session_manager_sessions_count">%d sessions</string>
+    <string name="session_manager_sessions_filtered">%d of %d sessions</string>
+    <string name="session_manager_search_hint">Search sessions...</string>
+    <string name="session_manager_statistics_summary">Statistics Summary</string>
+    <string name="session_manager_total_sessions">Total Sessions</string>
+    <string name="session_manager_total_duration">Total Duration</string>
+    <string name="session_manager_total_data">Total Data</string>
+    <string name="session_manager_avg_quality">Avg Quality</string>
+    <string name="session_manager_loading">Loading sessions...</string>
+    <string name="session_manager_no_sessions_found">No sessions found</string>
+    <string name="session_manager_no_recording_sessions">No recording sessions</string>
+    <string name="session_manager_adjust_search">Try adjusting your search criteria</string>
+    <string name="session_manager_start_recording_message">Start recording to create your first session</string>
+    <string name="session_manager_clear_search">Clear Search</string>
+    <string name="session_manager_participant_prefix">Participant: %s</string>
+    <string name="session_manager_protocol_prefix">Protocol: %s</string>
+    <string name="session_manager_duration_label">Duration</string>
+    <string name="session_manager_sensors_label">Sensors</string>
+    <string name="session_manager_quality_label">Quality</string>
+    <string name="session_manager_size_label">Size</string>
+    <string name="session_manager_delete_session">Delete Session</string>
+    <string name="session_manager_delete_confirmation">Are you sure you want to delete session \'%s\'? This action cannot be undone.</string>
+    <string name="session_manager_export_session">Export Session</string>
+    <string name="session_manager_export_format_prompt">Select export format for session \'%s\':</string>
+    <string name="session_manager_filter_sessions">Filter Sessions</string>
+    <string name="session_manager_date_range">Date Range:</string>
+    <string name="session_manager_minimum_quality">Minimum Quality:</string>
+    <string name="session_manager_has_protocol">Has Protocol:</string>
+    <string name="session_manager_protocol_only">Only sessions with research protocol</string>
+    <string name="session_manager_participant_id_label">Participant ID</string>
+    <string name="session_manager_start_time_label">Start Time</string>
+    <string name="session_manager_protocol_label">Protocol</string>
+    <string name="session_manager_sensor_count_label">Sensor Count</string>
+    <string name="session_manager_data_quality_label">Data Quality</string>
+    <string name="session_manager_data_size_label">Data Size</string>
+    <string name="session_manager_notes_label">Notes</string>
+    <string name="session_manager_not_specified">Not specified</string>
+    <string name="session_manager_none">None</string>
+
+    <!-- Export Formats -->
+    <string name="export_format_csv">CSV</string>
+    <string name="export_format_csv_desc">Comma-separated values for spreadsheet analysis</string>
+    <string name="export_format_json">JSON</string>
+    <string name="export_format_json_desc">Structured data format for programmatic analysis</string>
+    <string name="export_format_matlab">MATLAB</string>
+    <string name="export_format_matlab_desc">Format compatible with MATLAB analysis tools</string>
+    <string name="export_format_edf">EDF+</string>
+    <string name="export_format_edf_desc">European Data Format for clinical applications</string>
 
 </resources>

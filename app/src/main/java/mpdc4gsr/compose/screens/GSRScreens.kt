@@ -114,7 +114,7 @@ fun SessionDetailScreen(
                     )
                     Text("Session ID: $sessionId")
                     Text("Use SessionDetailComposeActivity for full functionality")
-                    
+
                     Button(onClick = onNavigateToGSRPlot) {
                         Text("View Plot")
                     }

@@ -69,7 +69,7 @@ fun UnifiedSensorStatus(
                         fontSize = 14.sp
                     )
                 }
-                
+
                 Surface(
                     color = getSystemStatusColor(systemState).copy(alpha = 0.2f),
                     shape = RoundedCornerShape(20.dp)
@@ -83,23 +83,23 @@ fun UnifiedSensorStatus(
                     )
                 }
             }
-            
+
             // Sensor status visualization
             SensorStatusVisualization(
                 sensors = activeSensors,
                 systemState = systemState
             )
-            
+
             // System metrics
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                val connectedSensors = activeSensors.count { 
-                    it.state == SensorState.Connected || it.state == SensorState.Streaming 
+                val connectedSensors = activeSensors.count {
+                    it.state == SensorState.Connected || it.state == SensorState.Streaming
                 }
                 val streamingSensors = activeSensors.count { it.state == SensorState.Streaming }
-                
+
                 MetricItem(
                     label = "Connected",
                     value = "$connectedSensors/${activeSensors.size}",
@@ -116,7 +116,7 @@ fun UnifiedSensorStatus(
                     color = if (systemState == UnifiedSystemState.Active) Color.Green else Color.Gray
                 )
             }
-            
+
             // System control buttons
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -133,6 +133,7 @@ fun UnifiedSensorStatus(
                             Text("Sync All")
                         }
                     }
+
                     UnifiedSystemState.Active -> {
                         Button(
                             onClick = { onSystemAction(SystemAction.StartRecording) },
@@ -151,6 +152,7 @@ fun UnifiedSensorStatus(
                             Text("Re-sync")
                         }
                     }
+
                     UnifiedSystemState.Recording -> {
                         Button(
                             onClick = { onSystemAction(SystemAction.StopRecording) },
@@ -174,6 +176,7 @@ fun UnifiedSensorStatus(
                             fontSize = 14.sp
                         )
                     }
+
                     UnifiedSystemState.Error -> {
                         Button(
                             onClick = { onSystemAction(SystemAction.Synchronize) },
@@ -212,11 +215,11 @@ private fun SensorStatusVisualization(
                 val width = size.width
                 val height = size.height
                 val centerY = height / 2
-                
+
                 // Draw connection lines between sensors
                 if (sensors.size > 1) {
                     val sensorSpacing = width / (sensors.size + 1)
-                    
+
                     for (i in 0 until sensors.size - 1) {
                         val startX = sensorSpacing * (i + 1)
                         val endX = sensorSpacing * (i + 2)
@@ -225,7 +228,7 @@ private fun SensorStatusVisualization(
                         } else {
                             Color.Gray
                         }
-                        
+
                         drawLine(
                             color = connectionColor,
                             start = Offset(startX, centerY),
@@ -234,7 +237,7 @@ private fun SensorStatusVisualization(
                         )
                     }
                 }
-                
+
                 // Draw sensor nodes
                 sensors.forEachIndexed { index, sensor ->
                     val x = width / (sensors.size + 1) * (index + 1)
@@ -246,21 +249,21 @@ private fun SensorStatusVisualization(
                         SensorState.Connecting -> Color.Yellow
                         SensorState.Simulation -> Color.Magenta
                     }
-                    
+
                     // Draw sensor node
                     drawCircle(
                         color = nodeColor,
                         radius = 12.dp.toPx(),
                         center = Offset(x, centerY)
                     )
-                    
+
                     // Draw sensor type indicator
                     val innerColor = when (sensor.type) {
                         SensorType.GSR -> Color.Cyan
                         SensorType.ThermalIR -> Color.Red
                         SensorType.RGBCamera -> Color.White
                     }
-                    
+
                     drawCircle(
                         color = innerColor,
                         radius = 6.dp.toPx(),
@@ -268,7 +271,7 @@ private fun SensorStatusVisualization(
                     )
                 }
             }
-            
+
             // Sensor labels
             Row(
                 modifier = Modifier

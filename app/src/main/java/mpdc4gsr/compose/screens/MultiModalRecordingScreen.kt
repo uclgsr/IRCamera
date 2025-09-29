@@ -39,7 +39,7 @@ fun MultiModalRecordingScreen(
     var thermalEnabled by remember { mutableStateOf(true) }
     var rgbEnabled by remember { mutableStateOf(true) }
     var syncStatus by remember { mutableStateOf(SyncStatus.SYNCED) }
-    
+
     // Recording timer
     LaunchedEffect(isRecording) {
         if (isRecording) {
@@ -49,7 +49,7 @@ fun MultiModalRecordingScreen(
             }
         }
     }
-    
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -67,7 +67,7 @@ fun MultiModalRecordingScreen(
                 )
             )
         )
-        
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -81,7 +81,7 @@ fun MultiModalRecordingScreen(
                 duration = recordingDuration,
                 syncStatus = syncStatus
             )
-            
+
             // Sensor Status Cards
             SensorStatusSection(
                 gsrEnabled = gsrEnabled,
@@ -92,22 +92,22 @@ fun MultiModalRecordingScreen(
                 onRgbToggle = { rgbEnabled = it },
                 isRecording = isRecording
             )
-            
+
             // Live Data Preview
             if (isRecording) {
                 LiveDataPreviewSection()
             }
-            
+
             // Recording Controls
             RecordingControlsSection(
                 isRecording = isRecording,
-                onStartStop = { 
+                onStartStop = {
                     isRecording = !isRecording
                     if (!isRecording) recordingDuration = 0
                 },
                 canRecord = gsrEnabled || thermalEnabled || rgbEnabled
             )
-            
+
             Spacer(modifier = Modifier.height(16.dp))
         }
     }
@@ -139,7 +139,7 @@ private fun RecordingStatusCard(
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
                 )
-                
+
                 if (isRecording) {
                     Box(
                         modifier = Modifier
@@ -148,9 +148,9 @@ private fun RecordingStatusCard(
                     )
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(8.dp))
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -160,7 +160,7 @@ private fun RecordingStatusCard(
                     color = Color.Gray,
                     fontSize = 14.sp
                 )
-                
+
                 Text(
                     text = "Sync: ${syncStatus.displayName}",
                     color = syncStatus.color,
@@ -196,7 +196,7 @@ private fun SensorStatusSection(
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
-            
+
             SensorToggleItem(
                 name = "GSR Sensor",
                 description = "Galvanic Skin Response (Shimmer3)",
@@ -206,7 +206,7 @@ private fun SensorStatusSection(
                 isRecording = isRecording,
                 status = "Connected • 128 Hz"
             )
-            
+
             SensorToggleItem(
                 name = "Thermal Camera",
                 description = "TOPDON TC001 Thermal Imaging",
@@ -216,7 +216,7 @@ private fun SensorStatusSection(
                 isRecording = isRecording,
                 status = "Connected • 256×192"
             )
-            
+
             SensorToggleItem(
                 name = "RGB Camera",
                 description = "Built-in Camera",
@@ -254,9 +254,9 @@ private fun SensorToggleItem(
                     androidx.compose.foundation.shape.CircleShape
                 )
         )
-        
+
         Spacer(modifier = Modifier.width(12.dp))
-        
+
         Column(
             modifier = Modifier.weight(1f)
         ) {
@@ -277,10 +277,12 @@ private fun SensorToggleItem(
                 fontSize = 11.sp
             )
         }
-        
+
         Switch(
             checked = enabled,
-            onCheckedChange = if (!isRecording) onToggle else { {} },
+            onCheckedChange = if (!isRecording) onToggle else {
+                {}
+            },
             enabled = !isRecording,
             colors = SwitchDefaults.colors(
                 checkedThumbColor = color,
@@ -308,7 +310,7 @@ private fun LiveDataPreviewSection() {
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
-            
+
             // GSR Waveform
             Text(
                 text = "GSR Signal",
@@ -317,15 +319,15 @@ private fun LiveDataPreviewSection() {
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
-            
+
             LiveGSRWaveform(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(80.dp)
             )
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             // Sensor Metrics
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -342,26 +344,26 @@ private fun LiveDataPreviewSection() {
 @Composable
 private fun LiveGSRWaveform(modifier: Modifier = Modifier) {
     var phase by remember { mutableFloatStateOf(0f) }
-    
+
     LaunchedEffect(Unit) {
         while (true) {
             delay(50)
             phase += 0.2f
         }
     }
-    
+
     Canvas(modifier = modifier) {
         val width = size.width
         val height = size.height
         val centerY = height / 2
         val amplitude = height * 0.3f
-        
+
         val points = (0..100).map { i ->
             val x = (i / 100f) * width
             val y = centerY + amplitude * sin((i * 0.2f) + phase + Random.nextFloat() * 0.1f)
             Offset(x, y)
         }
-        
+
         for (i in 0 until points.size - 1) {
             drawLine(
                 color = Color.Cyan,
@@ -370,7 +372,7 @@ private fun LiveGSRWaveform(modifier: Modifier = Modifier) {
                 strokeWidth = 2.dp.toPx()
             )
         }
-        
+
         // Grid lines
         for (i in 0..4) {
             val y = (height / 4) * i
@@ -428,7 +430,7 @@ private fun RecordingControlsSection(
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
-            
+
             // Main Record Button
             FloatingActionButton(
                 onClick = onStartStop,
@@ -442,16 +444,16 @@ private fun RecordingControlsSection(
                     modifier = Modifier.size(32.dp)
                 )
             }
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             Text(
                 text = if (isRecording) "Tap to stop recording" else "Tap to start synchronized recording",
                 color = Color.Gray,
                 fontSize = 14.sp,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
-            
+
             if (!canRecord && !isRecording) {
                 Text(
                     text = "Enable at least one sensor to record",
@@ -459,7 +461,7 @@ private fun RecordingControlsSection(
                     fontSize = 12.sp
                 )
             }
-            
+
             // Additional Controls
             Row(
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
@@ -472,7 +474,7 @@ private fun RecordingControlsSection(
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Pause")
                 }
-                
+
                 OutlinedButton(
                     onClick = { /* Add marker */ },
                     enabled = isRecording
@@ -497,7 +499,7 @@ private fun formatDuration(seconds: Int): String {
     val hours = seconds / 3600
     val minutes = (seconds % 3600) / 60
     val remainingSeconds = seconds % 60
-    
+
     return if (hours > 0) {
         String.format("%d:%02d:%02d", hours, minutes, remainingSeconds)
     } else {
