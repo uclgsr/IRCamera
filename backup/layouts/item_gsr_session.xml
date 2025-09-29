@@ -1,42 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent"
-    android:layout_height="wrap_content" android:layout_margin="8dp"
-    app:cardBackgroundColor="#2a2a2a" app:cardCornerRadius="8dp" app:cardElevation="2dp">
+    android:layout_height="wrap_content" android:layout_margin="8dp" app:cardBackgroundColor="#2a2a2a"
+    app:cardCornerRadius="8dp" app:cardElevation="2dp">
 
     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
         android:orientation="horizontal" android:padding="16dp">
 
 
-        <ImageView android:id="@+id/session_icon" android:layout_width="56dp"
-            android:layout_height="56dp" android:layout_gravity="center_vertical"
-            android:background="@drawable/circle_background" android:padding="12dp"
-            android:src="@drawable/ic_folder_open" android:tint="@color/colorAccent" />
+        <ImageView android:id="@+id/session_icon" android:layout_width="56dp" android:layout_height="56dp"
+            android:layout_gravity="center_vertical" android:background="@drawable/circle_background"
+            android:padding="12dp" android:src="@drawable/ic_folder_open" android:tint="@color/colorAccent" />
 
 
-        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
-            android:layout_marginStart="16dp" android:layout_weight="1"
-            android:orientation="vertical">
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="16dp"
+            android:layout_weight="1" android:orientation="vertical">
 
             <TextView android:id="@+id/session_id" android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:ellipsize="end" android:maxLines="1"
-                android:text="session_20240115_143025" android:textColor="#ffffff"
-                android:textSize="16sp" android:textStyle="bold" />
+                android:text="session_20240115_143025" android:textColor="#ffffff" android:textSize="16sp"
+                android:textStyle="bold" />
 
             <TextView android:id="@+id/participant_info" android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:layout_marginTop="2dp"
-                android:text="Participant: P001" android:textColor="#ccffffff"
-                android:textSize="14sp" />
+                android:layout_height="wrap_content" android:layout_marginTop="2dp" android:text="Participant: P001"
+                android:textColor="#ccffffff" android:textSize="14sp" />
 
             <TextView android:id="@+id/study_info" android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:layout_marginTop="2dp"
-                android:text="Study: MultiModal GSR Study" android:textColor="#ccffffff"
-                android:textSize="14sp" />
+                android:text="Study: MultiModal GSR Study" android:textColor="#ccffffff" android:textSize="14sp" />
 
             <TextView android:id="@+id/file_count" android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:layout_marginTop="8dp"
-                android:text="GSR Data • Video • 45 RAW Images" android:textColor="#888888"
-                android:textSize="12sp" />
+                android:text="GSR Data • Video • 45 RAW Images" android:textColor="#888888" android:textSize="12sp" />
 
             <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                 android:layout_marginTop="4dp" android:orientation="horizontal">
@@ -49,8 +44,7 @@
 
                 <TextView android:id="@+id/start_time" android:layout_width="wrap_content"
                     android:layout_height="wrap_content" android:layout_gravity="center_vertical"
-                    android:text="2024-01-15 14:30:25" android:textColor="#aaffffff"
-                    android:textSize="12sp" />
+                    android:text="2024-01-15 14:30:25" android:textColor="#aaffffff" android:textSize="12sp" />
 
             </LinearLayout>
 

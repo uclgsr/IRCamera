@@ -41,12 +41,12 @@ class SimpleThermalConfigActivity : BaseComposeActivity<ThermalViewModel>() {
         var environmentTemp by remember { mutableFloatStateOf(25.0f) }
         var distance by remember { mutableFloatStateOf(1.0f) }
         var emissivity by remember { mutableFloatStateOf(0.95f) }
-        
+
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
                     TopAppBar(
-                        title = { 
+                        title = {
                             Text(
                                 "Thermal Settings",
                                 fontWeight = FontWeight.Bold,
@@ -56,7 +56,7 @@ class SimpleThermalConfigActivity : BaseComposeActivity<ThermalViewModel>() {
                         navigationIcon = {
                             IconButton(onClick = { finish() }) {
                                 Icon(
-                                    Icons.Default.ArrowBack, 
+                                    Icons.Default.ArrowBack,
                                     contentDescription = "Back",
                                     tint = Color.White
                                 )
@@ -77,7 +77,7 @@ class SimpleThermalConfigActivity : BaseComposeActivity<ThermalViewModel>() {
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                     contentPadding = PaddingValues(16.dp)
                 ) {
-                    
+
                     // Temperature Setting
                     item {
                         SettingCard(
@@ -87,17 +87,17 @@ class SimpleThermalConfigActivity : BaseComposeActivity<ThermalViewModel>() {
                             onClick = { /* Handle temperature change */ }
                         )
                     }
-                    
+
                     // Distance Setting
                     item {
                         SettingCard(
-                            title = "Measurement Distance", 
+                            title = "Measurement Distance",
                             value = "${distance}m",
                             icon = Icons.Default.Settings,
                             onClick = { /* Handle distance change */ }
                         )
                     }
-                    
+
                     // Emissivity Setting
                     item {
                         SettingCard(
@@ -107,7 +107,7 @@ class SimpleThermalConfigActivity : BaseComposeActivity<ThermalViewModel>() {
                             onClick = { /* Handle emissivity change */ }
                         )
                     }
-                    
+
                     // Material Presets
                     item {
                         Text(
@@ -118,7 +118,7 @@ class SimpleThermalConfigActivity : BaseComposeActivity<ThermalViewModel>() {
                             modifier = Modifier.padding(vertical = 8.dp)
                         )
                     }
-                    
+
                     item {
                         MaterialPresetCard(
                             name = "Human Skin",
@@ -128,7 +128,7 @@ class SimpleThermalConfigActivity : BaseComposeActivity<ThermalViewModel>() {
                             onClick = { emissivity = 0.98f }
                         )
                     }
-                    
+
                     item {
                         MaterialPresetCard(
                             name = "Metal",
@@ -138,7 +138,7 @@ class SimpleThermalConfigActivity : BaseComposeActivity<ThermalViewModel>() {
                             onClick = { emissivity = 0.85f }
                         )
                     }
-                    
+
                     item {
                         MaterialPresetCard(
                             name = "Concrete",
@@ -187,7 +187,7 @@ private fun SettingCard(
                     tint = Color(0xFFFF6B35),
                     modifier = Modifier.size(24.dp)
                 )
-                
+
                 Text(
                     title,
                     color = Color.White,
@@ -195,7 +195,7 @@ private fun SettingCard(
                     fontWeight = FontWeight.Medium
                 )
             }
-            
+
             Text(
                 value,
                 color = Color(0xFFFF6B35),
@@ -243,7 +243,7 @@ private fun MaterialPresetCard(
                     tint = if (isSelected) Color(0xFFFF6B35) else Color(0xFF7D8590),
                     modifier = Modifier.size(24.dp)
                 )
-                
+
                 Column {
                     Text(
                         name,

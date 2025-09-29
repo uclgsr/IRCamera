@@ -206,9 +206,9 @@ private fun RecordingStatusCard(
     Card(
         modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
-            containerColor = if (isRecording) 
+            containerColor = if (isRecording)
                 Color(0xFFE53E3E).copy(alpha = 0.1f)
-            else 
+            else
                 MaterialTheme.colorScheme.primaryContainer
         )
     ) {
@@ -232,7 +232,7 @@ private fun RecordingStatusCard(
                     color = if (isRecording) Color(0xFFE53E3E) else MaterialTheme.colorScheme.onPrimaryContainer
                 )
             }
-            
+
             if (isRecording) {
                 Box(
                     modifier = Modifier
@@ -259,9 +259,9 @@ private fun SensorCard(
     Card(
         modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
-            containerColor = if (isEnabled) 
-                MaterialTheme.colorScheme.tertiaryContainer 
-            else 
+            containerColor = if (isEnabled)
+                MaterialTheme.colorScheme.tertiaryContainer
+            else
                 MaterialTheme.colorScheme.surface
         )
     ) {
@@ -277,9 +277,9 @@ private fun SensorCard(
                 modifier = Modifier.size(32.dp),
                 tint = if (isEnabled) MaterialTheme.colorScheme.onTertiaryContainer else MaterialTheme.colorScheme.onSurfaceVariant
             )
-            
+
             Spacer(modifier = Modifier.width(16.dp))
-            
+
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = title,
@@ -291,7 +291,7 @@ private fun SensorCard(
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-                
+
                 // Connection status
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -313,7 +313,7 @@ private fun SensorCard(
                     )
                 }
             }
-            
+
             Switch(
                 checked = isEnabled,
                 onCheckedChange = { onToggle() },
@@ -356,7 +356,7 @@ private fun RecordingControls(
                 fontWeight = FontWeight.Bold
             )
         }
-        
+
         // Pause button (only show when recording)
         if (isRecording) {
             OutlinedButton(
@@ -392,7 +392,7 @@ private fun LiveDataPreview(
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 12.dp)
             )
-            
+
             selectedSensors.forEach { sensor ->
                 when (sensor) {
                     "gsr" -> {
@@ -402,6 +402,7 @@ private fun LiveDataPreview(
                             modifier = Modifier.padding(bottom = 4.dp)
                         )
                     }
+
                     "thermal" -> {
                         Text(
                             text = "Thermal: 36.8°C (Body temp detected)",
@@ -409,6 +410,7 @@ private fun LiveDataPreview(
                             modifier = Modifier.padding(bottom = 4.dp)
                         )
                     }
+
                     "rgb" -> {
                         Text(
                             text = "RGB: 1920x1080 @ 30fps",

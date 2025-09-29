@@ -26,7 +26,7 @@ import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalFragmentViewModel
 
 /**
  * Compose migration of ThermalFragment
- * 
+ *
  * This fragment demonstrates:
  * - Complete migration of thermal camera UI to Compose
  * - Integration with existing IrSurfaceView for camera display
@@ -192,14 +192,14 @@ class ThermalFragmentCompose : BaseComposeFragment<ThermalFragmentViewModel>() {
                     temperature = data.centerTemp,
                     isMain = true
                 )
-                
+
                 // Max temperature
                 TemperatureCard(
                     label = "Max",
                     temperature = data.maxTemp,
                     color = Color.Red
                 )
-                
+
                 // Min temperature
                 TemperatureCard(
                     label = "Min",
@@ -226,9 +226,9 @@ class ThermalFragmentCompose : BaseComposeFragment<ThermalFragmentViewModel>() {
     ) {
         Card(
             colors = CardDefaults.cardColors(
-                containerColor = if (isMain) 
-                    MaterialTheme.colorScheme.primaryContainer 
-                else 
+                containerColor = if (isMain)
+                    MaterialTheme.colorScheme.primaryContainer
+                else
                     MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.9f)
             ),
             shape = RoundedCornerShape(8.dp)
@@ -239,17 +239,17 @@ class ThermalFragmentCompose : BaseComposeFragment<ThermalFragmentViewModel>() {
             ) {
                 Text(
                     text = label,
-                    style = if (isMain) 
-                        MaterialTheme.typography.labelMedium 
-                    else 
+                    style = if (isMain)
+                        MaterialTheme.typography.labelMedium
+                    else
                         MaterialTheme.typography.labelSmall,
                     color = color
                 )
                 Text(
                     text = temperature,
-                    style = if (isMain) 
-                        MaterialTheme.typography.titleMedium 
-                    else 
+                    style = if (isMain)
+                        MaterialTheme.typography.titleMedium
+                    else
                         MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Bold,
                     color = color
@@ -294,9 +294,9 @@ class ThermalFragmentCompose : BaseComposeFragment<ThermalFragmentViewModel>() {
                 Button(
                     onClick = onToggleRecording,
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = if (isRecording) 
-                            MaterialTheme.colorScheme.error 
-                        else 
+                        containerColor = if (isRecording)
+                            MaterialTheme.colorScheme.error
+                        else
                             MaterialTheme.colorScheme.primary
                     )
                 ) {

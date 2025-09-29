@@ -164,7 +164,7 @@ private fun DevicePairingContent(
                     device = device,
                     isSelected = selectedDevice?.address == device.address,
                     onSelect = { onDeviceSelect(device) },
-                    onPair = { 
+                    onPair = {
                         onDeviceSelect(device)
                         onPairDevice()
                     }
@@ -192,9 +192,9 @@ private fun ScanningStatusCard(
     Card(
         modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
-            containerColor = if (isScanning) 
+            containerColor = if (isScanning)
                 MaterialTheme.colorScheme.primaryContainer
-            else 
+            else
                 MaterialTheme.colorScheme.surface
         )
     ) {
@@ -217,7 +217,7 @@ private fun ScanningStatusCard(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-            
+
             if (isScanning) {
                 CircularProgressIndicator(
                     modifier = Modifier.size(24.dp),
@@ -242,7 +242,7 @@ private fun DeviceFilterRow(
     modifier: Modifier = Modifier
 ) {
     val filters = listOf("All", "Thermal", "GSR", "Camera", "Unknown")
-    
+
     LazyColumn(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         modifier = modifier
@@ -273,9 +273,9 @@ private fun DeviceCard(
             .fillMaxWidth()
             .clickable { onSelect() },
         colors = CardDefaults.cardColors(
-            containerColor = if (isSelected) 
-                MaterialTheme.colorScheme.tertiaryContainer 
-            else 
+            containerColor = if (isSelected)
+                MaterialTheme.colorScheme.tertiaryContainer
+            else
                 MaterialTheme.colorScheme.surface
         )
     ) {
@@ -298,7 +298,7 @@ private fun DeviceCard(
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
-                    
+
                     // Device type and signal strength
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -317,7 +317,7 @@ private fun DeviceCard(
                                 modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
                             )
                         }
-                        
+
                         // Signal strength
                         Icon(
                             Icons.Default.Wifi,
@@ -333,7 +333,7 @@ private fun DeviceCard(
                         )
                     }
                 }
-                
+
                 // Connection status indicator
                 Box(
                     modifier = Modifier
@@ -349,10 +349,10 @@ private fun DeviceCard(
                         )
                 )
             }
-            
+
             if (isSelected) {
                 HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp))
-                
+
                 // Device actions
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -369,7 +369,7 @@ private fun DeviceCard(
                         Spacer(modifier = Modifier.width(4.dp))
                         Text("Connect")
                     }
-                    
+
                     Button(
                         onClick = onPair,
                         modifier = Modifier.weight(1f)
@@ -409,20 +409,20 @@ private fun ConnectionStatusFooter(
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
-            
+
             Text(
                 text = "${device.name} (${device.address})",
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(bottom = 4.dp)
             )
-            
+
             Text(
                 text = "Status: ${device.connectionStatus.replaceFirstChar { it.uppercaseChar() }}",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onPrimaryContainer,
                 modifier = Modifier.padding(bottom = 12.dp)
             )
-            
+
             Button(
                 onClick = onPair,
                 modifier = Modifier.fillMaxWidth()
@@ -449,15 +449,15 @@ private fun DevicePairingDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { 
-            Text("Pair with ${device.name}") 
+        title = {
+            Text("Pair with ${device.name}")
         },
         text = {
             Column {
                 Text(text = "Device Address: ${device.address}")
                 Text(text = "Device Type: ${device.type}")
                 Text(text = "Signal Strength: ${device.rssi} dBm")
-                
+
                 if (isPairing) {
                     Spacer(modifier = Modifier.height(16.dp))
                     Row(

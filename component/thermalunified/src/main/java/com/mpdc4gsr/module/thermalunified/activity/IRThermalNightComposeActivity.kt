@@ -217,7 +217,7 @@ class IRThermalNightComposeActivity : BaseComposeActivity<IRThermalNightViewMode
                         modes.forEach { mode ->
                             FilterChip(
                                 onClick = { nightMode = mode },
-                                label = { 
+                                label = {
                                     Text(
                                         mode,
                                         color = if (nightMode == mode) Color.White else Color(0xFF7D8590)

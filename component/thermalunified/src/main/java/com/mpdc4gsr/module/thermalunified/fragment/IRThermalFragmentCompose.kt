@@ -25,7 +25,7 @@ import com.mpdc4gsr.module.thermalunified.viewmodel.IRThermalFragmentViewModel
 
 /**
  * Compose migration of IRThermalFragment
- * 
+ *
  * This fragment demonstrates:
  * - Complete migration of IR thermal entry point to Compose
  * - Enhanced device connection status display
@@ -43,7 +43,7 @@ class IRThermalFragmentCompose : BaseComposeFragment<IRThermalFragmentViewModel>
     @Composable
     override fun Content(viewModel: IRThermalFragmentViewModel) {
         val context = LocalContext.current
-        
+
         // Observe ViewModel state
         val connectionStatus by viewModel.connectionStatus.collectAsStateWithLifecycle()
         val isTC007 by viewModel.isTC007.collectAsStateWithLifecycle()
@@ -151,7 +151,7 @@ class IRThermalFragmentCompose : BaseComposeFragment<IRThermalFragmentViewModel>
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
-                    
+
                     // Status indicator
                     Box(
                         modifier = Modifier

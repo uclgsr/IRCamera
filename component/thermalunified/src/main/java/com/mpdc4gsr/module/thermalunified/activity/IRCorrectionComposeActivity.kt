@@ -39,12 +39,12 @@ class IRCorrectionComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         var correctionProgress by remember { mutableFloatStateOf(0f) }
         var isProcessing by remember { mutableStateOf(false) }
         val coroutineScope = rememberCoroutineScope()
-        
+
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
                     TopAppBar(
-                        title = { 
+                        title = {
                             Text(
                                 "Thermal Correction",
                                 fontWeight = FontWeight.Bold,
@@ -54,7 +54,7 @@ class IRCorrectionComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         navigationIcon = {
                             IconButton(onClick = { finish() }) {
                                 Icon(
-                                    Icons.Default.ArrowBack, 
+                                    Icons.Default.ArrowBack,
                                     contentDescription = "Back",
                                     tint = Color.White
                                 )
@@ -91,7 +91,7 @@ class IRCorrectionComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             onCorrectionSelected = { selectedCorrection = it }
                         )
                     }
-                    
+
                     // Processing status
                     item {
                         ProcessingStatusCard(
@@ -100,19 +100,19 @@ class IRCorrectionComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             correctionType = getCorrectionTypes()[selectedCorrection]
                         )
                     }
-                    
+
                     // Correction parameters
                     item {
                         CorrectionParametersCard(
                             correctionType = selectedCorrection
                         )
                     }
-                    
+
                     // Comparison view
                     item {
                         CorrectionComparisonCard()
                     }
-                    
+
                     // Action buttons
                     item {
                         CorrectionActionButtons(
@@ -130,7 +130,7 @@ class IRCorrectionComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 }
                             },
                             onSaveCorrection = { /* Save */ },
-                            onDiscardChanges = { 
+                            onDiscardChanges = {
                                 correctionProgress = 0f
                                 isProcessing = false
                             }
@@ -148,7 +148,7 @@ private fun CorrectionTypeSelector(
     onCorrectionSelected: (Int) -> Unit
 ) {
     val correctionTypes = getCorrectionTypes()
-    
+
     Card(
         colors = CardDefaults.cardColors(
             containerColor = Color(0xFF21262D)
@@ -166,16 +166,16 @@ private fun CorrectionTypeSelector(
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             correctionTypes.forEachIndexed { index, correction ->
                 CorrectionTypeCard(
                     correction = correction,
                     isSelected = selectedCorrection == index,
                     onClick = { onCorrectionSelected(index) }
                 )
-                
+
                 if (index < correctionTypes.size - 1) {
                     Spacer(modifier = Modifier.height(8.dp))
                 }
@@ -210,7 +210,7 @@ private fun CorrectionTypeCard(
                 tint = if (isSelected) Color.White else Color(0xFFFF6B35),
                 modifier = Modifier.size(24.dp)
             )
-            
+
             Column(
                 modifier = Modifier.weight(1f)
             ) {
@@ -226,7 +226,7 @@ private fun CorrectionTypeCard(
                     fontSize = 12.sp
                 )
             }
-            
+
             if (isSelected) {
                 Icon(
                     Icons.Default.CheckCircle,
@@ -267,7 +267,7 @@ private fun ProcessingStatusCard(
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold
                 )
-                
+
                 if (isProcessing) {
                     CircularProgressIndicator(
                         progress = progress,
@@ -276,15 +276,15 @@ private fun ProcessingStatusCard(
                     )
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             Text(
                 if (isProcessing) "Applying ${correctionType.name}..." else "Ready for correction",
                 color = Color(0xFF7D8590),
                 fontSize = 14.sp
             )
-            
+
             if (isProcessing) {
                 Spacer(modifier = Modifier.height(8.dp))
                 LinearProgressIndicator(
@@ -311,7 +311,7 @@ private fun CorrectionParametersCard(
     var brightness by remember { mutableFloatStateOf(0f) }
     var contrast by remember { mutableFloatStateOf(0f) }
     var gamma by remember { mutableFloatStateOf(1f) }
-    
+
     Card(
         colors = CardDefaults.cardColors(
             containerColor = Color(0xFF21262D)
@@ -329,9 +329,9 @@ private fun CorrectionParametersCard(
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             // Brightness adjustment
             ParameterSlider(
                 label = "Brightness",
@@ -340,9 +340,9 @@ private fun CorrectionParametersCard(
                 valueRange = -100f..100f,
                 unit = "%"
             )
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             // Contrast adjustment
             ParameterSlider(
                 label = "Contrast",
@@ -351,9 +351,9 @@ private fun CorrectionParametersCard(
                 valueRange = -100f..100f,
                 unit = "%"
             )
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             // Gamma adjustment
             ParameterSlider(
                 label = "Gamma",
@@ -392,9 +392,9 @@ private fun ParameterSlider(
                 fontWeight = FontWeight.Bold
             )
         }
-        
+
         Spacer(modifier = Modifier.height(4.dp))
-        
+
         Slider(
             value = value,
             onValueChange = onValueChange,
@@ -427,9 +427,9 @@ private fun CorrectionComparisonCard() {
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -440,7 +440,7 @@ private fun CorrectionComparisonCard() {
                     description = "Original thermal image",
                     modifier = Modifier.weight(1f)
                 )
-                
+
                 // After image
                 ComparisonImageCard(
                     title = "After",
@@ -532,7 +532,7 @@ private fun CorrectionActionButtons(
                 Text("Apply Correction")
             }
         }
-        
+
         Button(
             onClick = onSaveCorrection,
             modifier = Modifier.weight(1f),
@@ -549,7 +549,7 @@ private fun CorrectionActionButtons(
             Spacer(modifier = Modifier.width(4.dp))
             Text("Save")
         }
-        
+
         OutlinedButton(
             onClick = onDiscardChanges,
             modifier = Modifier.weight(1f),

@@ -360,11 +360,11 @@ object NavigationHelper {
     fun navigateToCamera(navController: NavHostController) {
         navController.navigate(UnifiedRoute.CameraDashboard.route)
     }
-    
+
     fun navigateToDevicePairing(navController: NavHostController) {
         navController.navigate(UnifiedRoute.DevicePairing.route)
     }
-    
+
     fun navigateToPermissionRequest(navController: NavHostController) {
         navController.navigate(UnifiedRoute.PermissionRequest.route)
     }

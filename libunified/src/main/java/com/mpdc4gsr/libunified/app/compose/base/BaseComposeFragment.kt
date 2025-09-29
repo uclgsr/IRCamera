@@ -13,7 +13,7 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 
 /**
  * BaseComposeFragment - Foundation class for all Compose-based fragments
- * 
+ *
  * This class provides:
  * - Consistent Compose integration pattern
  * - Theme integration with LibUnifiedTheme
@@ -45,7 +45,7 @@ abstract class BaseComposeFragment<VM : ViewModel> : Fragment() {
             // Use ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
             // to ensure proper cleanup when fragment is destroyed
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-            
+
             setContent {
                 LibUnifiedTheme {
                     Content(createViewModel())

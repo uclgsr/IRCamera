@@ -40,12 +40,12 @@ class IRCameraSettingComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         var imageCorrection by remember { mutableStateOf(true) }
         var temperatureUnit by remember { mutableStateOf("Celsius") }
         var resolution by remember { mutableStateOf("384x288") }
-        
+
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
                     TopAppBar(
-                        title = { 
+                        title = {
                             Text(
                                 "Camera Settings",
                                 fontWeight = FontWeight.Bold,
@@ -55,7 +55,7 @@ class IRCameraSettingComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         navigationIcon = {
                             IconButton(onClick = { finish() }) {
                                 Icon(
-                                    Icons.Default.ArrowBack, 
+                                    Icons.Default.ArrowBack,
                                     contentDescription = "Back",
                                     tint = Color.White
                                 )
@@ -88,7 +88,7 @@ class IRCameraSettingComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 options = listOf("Iron", "Rainbow", "Grayscale", "Hot", "Cool"),
                                 onValueChange = { selectedPalette = it }
                             )
-                            
+
                             SettingsSliderItem(
                                 title = "Frame Rate",
                                 value = frameRate,
@@ -96,7 +96,7 @@ class IRCameraSettingComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 unit = "fps",
                                 onValueChange = { frameRate = it.toInt() }
                             )
-                            
+
                             SettingsDropdownItem(
                                 title = "Resolution",
                                 selectedValue = resolution,
@@ -105,7 +105,7 @@ class IRCameraSettingComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             )
                         }
                     }
-                    
+
                     // Camera Features
                     item {
                         SettingsCategoryCard(
@@ -118,7 +118,7 @@ class IRCameraSettingComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 checked = autoShutter,
                                 onCheckedChange = { autoShutter = it }
                             )
-                            
+
                             SettingsSwitchItem(
                                 title = "Image Correction",
                                 description = "Automatic image enhancement",
@@ -127,7 +127,7 @@ class IRCameraSettingComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             )
                         }
                     }
-                    
+
                     // Temperature Settings
                     item {
                         SettingsCategoryCard(
@@ -142,7 +142,7 @@ class IRCameraSettingComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             )
                         }
                     }
-                    
+
                     // Advanced Settings
                     item {
                         SettingsCategoryCard(
@@ -154,13 +154,13 @@ class IRCameraSettingComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 description = "Manual camera calibration",
                                 onClick = { /* Navigate to calibration */ }
                             )
-                            
+
                             AdvancedSettingItem(
                                 title = "Firmware Update",
                                 description = "Check for camera firmware updates",
                                 onClick = { /* Check firmware */ }
                             )
-                            
+
                             AdvancedSettingItem(
                                 title = "Factory Reset",
                                 description = "Reset camera to default settings",
@@ -168,7 +168,7 @@ class IRCameraSettingComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             )
                         }
                     }
-                    
+
                     // Save/Reset buttons
                     item {
                         SaveResetButtons(
@@ -216,9 +216,9 @@ private fun SettingsCategoryCard(
                     fontWeight = FontWeight.Bold
                 )
             }
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             content()
         }
     }
@@ -233,7 +233,7 @@ private fun SettingsDropdownItem(
     onValueChange: (String) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
-    
+
     Column {
         Text(
             title,
@@ -241,9 +241,9 @@ private fun SettingsDropdownItem(
             fontSize = 14.sp,
             fontWeight = FontWeight.Medium
         )
-        
+
         Spacer(modifier = Modifier.height(8.dp))
-        
+
         ExposedDropdownMenuBox(
             expanded = expanded,
             onExpandedChange = { expanded = !expanded }
@@ -265,7 +265,7 @@ private fun SettingsDropdownItem(
                     .fillMaxWidth()
                     .menuAnchor()
             )
-            
+
             ExposedDropdownMenu(
                 expanded = expanded,
                 onDismissRequest = { expanded = false }
@@ -281,7 +281,7 @@ private fun SettingsDropdownItem(
                 }
             }
         }
-        
+
         Spacer(modifier = Modifier.height(16.dp))
     }
 }
@@ -313,9 +313,9 @@ private fun SettingsSliderItem(
                 fontWeight = FontWeight.Bold
             )
         }
-        
+
         Spacer(modifier = Modifier.height(8.dp))
-        
+
         Slider(
             value = value.toFloat(),
             onValueChange = onValueChange,
@@ -326,7 +326,7 @@ private fun SettingsSliderItem(
                 inactiveTrackColor = Color(0xFF7D8590)
             )
         )
-        
+
         Spacer(modifier = Modifier.height(16.dp))
     }
 }
@@ -356,7 +356,7 @@ private fun SettingsSwitchItem(
                 fontSize = 12.sp
             )
         }
-        
+
         Switch(
             checked = checked,
             onCheckedChange = onCheckedChange,
@@ -368,7 +368,7 @@ private fun SettingsSwitchItem(
             )
         )
     }
-    
+
     Spacer(modifier = Modifier.height(16.dp))
 }
 
@@ -407,7 +407,7 @@ private fun AdvancedSettingItem(
                     fontSize = 12.sp
                 )
             }
-            
+
             Icon(
                 Icons.Default.ArrowForward,
                 contentDescription = "Navigate",
@@ -416,7 +416,7 @@ private fun AdvancedSettingItem(
             )
         }
     }
-    
+
     Spacer(modifier = Modifier.height(8.dp))
 }
 
@@ -439,7 +439,7 @@ private fun SaveResetButtons(
         ) {
             Text("Reset", fontWeight = FontWeight.Bold)
         }
-        
+
         Button(
             onClick = onSave,
             modifier = Modifier.weight(1f),

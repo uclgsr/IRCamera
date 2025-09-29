@@ -41,12 +41,12 @@ class IRGalleryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         var sortBy by remember { mutableStateOf("date") }
         var filterBy by remember { mutableStateOf("all") }
         val galleryItems = remember { getGalleryItems() }
-        
+
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
                     TopAppBar(
-                        title = { 
+                        title = {
                             Text(
                                 "Thermal Gallery",
                                 fontWeight = FontWeight.Bold,
@@ -56,7 +56,7 @@ class IRGalleryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         navigationIcon = {
                             IconButton(onClick = { finish() }) {
                                 Icon(
-                                    Icons.Default.ArrowBack, 
+                                    Icons.Default.ArrowBack,
                                     contentDescription = "Back",
                                     tint = Color.White
                                 )
@@ -70,7 +70,7 @@ class IRGalleryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                     tint = Color.White
                                 )
                             }
-                            IconButton(onClick = { 
+                            IconButton(onClick = {
                                 selectedView = if (selectedView == "grid") "list" else "grid"
                             }) {
                                 Icon(
@@ -113,7 +113,7 @@ class IRGalleryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         onFilterChange = { filterBy = it },
                         modifier = Modifier.fillMaxWidth()
                     )
-                    
+
                     // Gallery grid/list
                     if (selectedView == "grid") {
                         GalleryGrid(
@@ -165,7 +165,7 @@ private fun GalleryControls(
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Medium
                 )
-                
+
                 val sortOptions = listOf("date", "name", "size", "temperature")
                 sortOptions.forEach { option ->
                     FilterChip(
@@ -181,7 +181,7 @@ private fun GalleryControls(
                     )
                 }
             }
-            
+
             // Filter options
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -194,7 +194,7 @@ private fun GalleryControls(
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Medium
                 )
-                
+
                 val filterOptions = listOf("all", "images", "videos", "recent")
                 filterOptions.forEach { option ->
                     FilterChip(
@@ -267,7 +267,7 @@ private fun GalleryGridItem(
                     tint = Color(0xFFFF6B35),
                     modifier = Modifier.size(32.dp)
                 )
-                
+
                 // Temperature overlay
                 Box(
                     modifier = Modifier
@@ -287,7 +287,7 @@ private fun GalleryGridItem(
                     )
                 }
             }
-            
+
             // Item info
             Column(
                 modifier = Modifier
@@ -372,7 +372,7 @@ private fun GalleryListItem(
                     modifier = Modifier.size(24.dp)
                 )
             }
-            
+
             // Item details
             Column(
                 modifier = Modifier.weight(1f),
@@ -405,7 +405,7 @@ private fun GalleryListItem(
                     )
                 }
             }
-            
+
             // Actions
             IconButton(
                 onClick = { /* More options */ }

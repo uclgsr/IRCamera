@@ -35,9 +35,11 @@ fun PermissionRequestScreen(
                 is PermissionRequestViewModel.PermissionEvent.ShowError -> {
                     // Handle error display
                 }
+
                 is PermissionRequestViewModel.PermissionEvent.ShowSuccess -> {
                     // Handle success display
                 }
+
                 PermissionRequestViewModel.PermissionEvent.NavigateToRecording -> {
                     // Navigate to recording activity
                 }
@@ -287,7 +289,8 @@ private fun PermissionCard(
     }
 
     Card(
-        onClick = if (enabled && status != PermissionRequestViewModel.PermissionStatus.GRANTED) onClick else { },
+        onClick = if (enabled && status != PermissionRequestViewModel.PermissionStatus.GRANTED) onClick else {
+        },
         modifier = modifier,
         enabled = enabled && status != PermissionRequestViewModel.PermissionStatus.GRANTED,
         colors = CardDefaults.cardColors(containerColor = containerColor)

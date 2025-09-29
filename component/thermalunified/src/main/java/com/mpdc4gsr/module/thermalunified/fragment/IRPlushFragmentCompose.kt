@@ -24,7 +24,7 @@ import com.mpdc4gsr.module.thermalunified.viewmodel.IRPlushViewModel
 
 /**
  * Compose migration of IRPlushFragment
- * 
+ *
  * This fragment demonstrates:
  * - Complete migration of IR Plus features to Compose
  * - Advanced dual-camera thermal imaging interface
@@ -291,13 +291,13 @@ class IRPlushFragmentCompose : BaseComposeFragment<IRPlushViewModel>() {
                     temperature = "${data.irCenterTemp}°C",
                     isMain = true
                 )
-                
+
                 TemperatureCard(
                     label = "IR Max",
                     temperature = "${data.irMaxTemp}°C",
                     color = Color.Red
                 )
-                
+
                 TemperatureCard(
                     label = "IR Min",
                     temperature = "${data.irMinTemp}°C",
@@ -322,9 +322,9 @@ class IRPlushFragmentCompose : BaseComposeFragment<IRPlushViewModel>() {
     ) {
         Card(
             colors = CardDefaults.cardColors(
-                containerColor = if (isMain) 
-                    MaterialTheme.colorScheme.primaryContainer 
-                else 
+                containerColor = if (isMain)
+                    MaterialTheme.colorScheme.primaryContainer
+                else
                     MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.9f)
             ),
             shape = RoundedCornerShape(6.dp)
@@ -340,9 +340,9 @@ class IRPlushFragmentCompose : BaseComposeFragment<IRPlushViewModel>() {
                 )
                 Text(
                     text = temperature,
-                    style = if (isMain) 
-                        MaterialTheme.typography.titleSmall 
-                    else 
+                    style = if (isMain)
+                        MaterialTheme.typography.titleSmall
+                    else
                         MaterialTheme.typography.bodySmall,
                     fontWeight = FontWeight.Bold,
                     color = color
@@ -549,9 +549,9 @@ class IRPlushFragmentCompose : BaseComposeFragment<IRPlushViewModel>() {
                     Text(
                         text = feature,
                         style = MaterialTheme.typography.bodyMedium,
-                        color = if (enabled) 
-                            MaterialTheme.colorScheme.onSurface 
-                        else 
+                        color = if (enabled)
+                            MaterialTheme.colorScheme.onSurface
+                        else
                             MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Icon(

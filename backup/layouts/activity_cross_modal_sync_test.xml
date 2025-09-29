@@ -1,36 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent"
-    android:orientation="vertical" android:padding="16dp">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:orientation="vertical" android:padding="16dp">
 
     <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp" android:text="Cross-Modal Sync Testing"
-        android:textAlignment="center" android:textSize="20sp" android:textStyle="bold" />
+        android:layout_marginBottom="16dp" android:text="Cross-Modal Sync Testing" android:textAlignment="center"
+        android:textSize="20sp" android:textStyle="bold" />
 
     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
         android:layout_marginBottom="8dp" android:orientation="horizontal">
 
-        <Button android:id="@+id/start_sync_test_button" android:layout_width="0dp"
-            android:layout_height="wrap_content" android:layout_marginEnd="4dp"
-            android:layout_weight="1" android:text="Start Sync Test" />
+        <Button android:id="@+id/start_sync_test_button" android:layout_width="0dp" android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp" android:layout_weight="1" android:text="Start Sync Test" />
 
-        <Button android:id="@+id/generate_event_button" android:layout_width="0dp"
-            android:layout_height="wrap_content" android:layout_marginStart="4dp"
-            android:layout_weight="1" android:enabled="false" android:text="Generate Event" />
+        <Button android:id="@+id/generate_event_button" android:layout_width="0dp" android:layout_height="wrap_content"
+            android:layout_marginStart="4dp" android:layout_weight="1" android:enabled="false"
+            android:text="Generate Event" />
 
     </LinearLayout>
 
-    <Button android:id="@+id/analyze_button" android:layout_width="match_parent"
-        android:layout_height="wrap_content" android:layout_marginBottom="16dp"
-        android:enabled="false" android:text="Analyze Sync Data" />
+    <Button android:id="@+id/analyze_button" android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp" android:enabled="false" android:text="Analyze Sync Data" />
 
-    <ScrollView android:layout_width="match_parent" android:layout_height="0dp"
-        android:layout_weight="1">
+    <ScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
 
         <TextView android:id="@+id/result_text_view" android:layout_width="match_parent"
             android:layout_height="wrap_content" android:fontFamily="monospace"
-            android:text="Cross-modal synchronization test results will appear here..."
-            android:textSize="12sp" />
+            android:text="Cross-modal synchronization test results will appear here..." android:textSize="12sp" />
 
     </ScrollView>
 

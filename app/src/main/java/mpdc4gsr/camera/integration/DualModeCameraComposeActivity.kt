@@ -136,7 +136,7 @@ private fun DualModeCameraContent(
                 .fillMaxWidth()
                 .weight(1f)
         )
-        
+
         // Camera Controls
         CameraControlsSection(
             isRecording = isRecording,
@@ -175,7 +175,7 @@ private fun CameraPreviewSection(
                         ThermalCameraPreview(
                             modifier = Modifier.fillMaxSize()
                         )
-                        
+
                         // RGB camera PiP
                         Card(
                             modifier = Modifier
@@ -187,7 +187,7 @@ private fun CameraPreviewSection(
                                 modifier = Modifier.fillMaxSize()
                             )
                         }
-                        
+
                         // Temperature overlay
                         TemperatureOverlay(
                             centerTemp = 36.8f,
@@ -198,16 +198,19 @@ private fun CameraPreviewSection(
                     }
                 }
             }
+
             "Thermal" -> {
                 ThermalCameraPreview(
                     modifier = Modifier.fillMaxSize()
                 )
             }
+
             "RGB" -> {
                 RGBCameraPreview(
                     modifier = Modifier.fillMaxSize()
                 )
             }
+
             "Split" -> {
                 Row(
                     modifier = Modifier.fillMaxSize()
@@ -225,7 +228,7 @@ private fun CameraPreviewSection(
                 }
             }
         }
-        
+
         // Recording indicator
         if (isRecording) {
             RecordingIndicator(
@@ -234,7 +237,7 @@ private fun CameraPreviewSection(
                     .padding(16.dp)
             )
         }
-        
+
         // Camera mode indicator
         CameraModeIndicator(
             mode = cameraMode,
@@ -263,14 +266,14 @@ private fun CameraControlsSection(
             onModeChange = onCameraModeChange,
             modifier = Modifier.padding(bottom = 16.dp)
         )
-        
+
         // Recording status
         RecordingStatusCard(
             isRecording = isRecording,
             duration = recordingDuration,
             modifier = Modifier.padding(bottom = 16.dp)
         )
-        
+
         // Main controls
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -287,7 +290,7 @@ private fun CameraControlsSection(
                     contentDescription = "Gallery"
                 )
             }
-            
+
             // Record button
             Button(
                 onClick = onRecordingToggle,
@@ -309,7 +312,7 @@ private fun CameraControlsSection(
                     fontWeight = FontWeight.Bold
                 )
             }
-            
+
             // Capture button
             OutlinedButton(
                 onClick = { /* Take photo */ },
@@ -331,7 +334,7 @@ private fun CameraModeSelector(
     modifier: Modifier = Modifier
 ) {
     val modes = listOf("Dual", "Thermal", "RGB", "Split")
-    
+
     Row(
         modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -359,9 +362,9 @@ private fun RecordingStatusCard(
     Card(
         modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
-            containerColor = if (isRecording) 
+            containerColor = if (isRecording)
                 Color(0xFFE53E3E).copy(alpha = 0.1f)
-            else 
+            else
                 MaterialTheme.colorScheme.surfaceVariant
         )
     ) {
@@ -385,7 +388,7 @@ private fun RecordingStatusCard(
                     color = if (isRecording) Color(0xFFE53E3E) else MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-            
+
             if (isRecording) {
                 Box(
                     modifier = Modifier
@@ -574,7 +577,7 @@ private fun CameraSettingsDialog(
                     style = MaterialTheme.typography.labelMedium,
                     modifier = Modifier.padding(bottom = 4.dp)
                 )
-                
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -587,9 +590,9 @@ private fun CameraSettingsDialog(
                         )
                     }
                 }
-                
+
                 Spacer(modifier = Modifier.height(16.dp))
-                
+
                 Text(
                     text = "Frame Rate: ${frameRate.toInt()} fps",
                     style = MaterialTheme.typography.labelMedium,
@@ -601,9 +604,9 @@ private fun CameraSettingsDialog(
                     valueRange = 15f..60f,
                     steps = 8
                 )
-                
+
                 Spacer(modifier = Modifier.height(16.dp))
-                
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
@@ -622,11 +625,13 @@ private fun CameraSettingsDialog(
         confirmButton = {
             TextButton(
                 onClick = {
-                    onSaveSettings(mapOf(
-                        "quality" to videoQuality,
-                        "frameRate" to frameRate.toInt(),
-                        "stabilization" to enableStabilization
-                    ))
+                    onSaveSettings(
+                        mapOf(
+                            "quality" to videoQuality,
+                            "frameRate" to frameRate.toInt(),
+                            "stabilization" to enableStabilization
+                        )
+                    )
                 }
             ) {
                 Text("Save")

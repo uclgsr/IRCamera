@@ -35,7 +35,7 @@ import java.util.*
 
 /**
  * Compose migration of IRGalleryFragment
- * 
+ *
  * This fragment demonstrates:
  * - Complete migration of IR gallery UI to Compose
  * - Enhanced file management and organization
@@ -54,7 +54,7 @@ class IRGalleryFragmentCompose : BaseComposeFragment<IRGalleryViewModel>() {
     @Composable
     override fun Content(viewModel: IRGalleryViewModel) {
         val context = LocalContext.current
-        
+
         // Observe ViewModel state
         val galleryItems by viewModel.galleryItems.collectAsStateWithLifecycle()
         val currentDirType by viewModel.currentDirType.collectAsStateWithLifecycle()
@@ -90,12 +90,14 @@ class IRGalleryFragmentCompose : BaseComposeFragment<IRGalleryViewModel>() {
                         isLoading -> {
                             LoadingState()
                         }
+
                         galleryItems.isEmpty() -> {
                             EmptyGalleryState(
                                 dirType = currentDirType,
                                 onRefresh = { viewModel.refreshGallery() }
                             )
                         }
+
                         isGridView -> {
                             GridGalleryView(
                                 galleryItems = galleryItems,
@@ -116,6 +118,7 @@ class IRGalleryFragmentCompose : BaseComposeFragment<IRGalleryViewModel>() {
                                 onRefresh = { viewModel.refreshGallery() }
                             )
                         }
+
                         else -> {
                             ListGalleryView(
                                 galleryItems = galleryItems,
@@ -162,7 +165,7 @@ class IRGalleryFragmentCompose : BaseComposeFragment<IRGalleryViewModel>() {
                 } else {
                     // Directory selector dropdown
                     var expanded by remember { mutableStateOf(false) }
-                    
+
                     Box {
                         TextButton(onClick = { expanded = true }) {
                             Text(
@@ -175,7 +178,7 @@ class IRGalleryFragmentCompose : BaseComposeFragment<IRGalleryViewModel>() {
                             )
                             Icon(Icons.Default.ArrowDropDown, contentDescription = null)
                         }
-                        
+
                         DropdownMenu(
                             expanded = expanded,
                             onDismissRequest = { expanded = false }
@@ -264,19 +267,19 @@ class IRGalleryFragmentCompose : BaseComposeFragment<IRGalleryViewModel>() {
                     modifier = Modifier.size(64.dp),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-                
+
                 Text(
                     text = "No Files Found",
                     style = MaterialTheme.typography.headlineSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-                
+
                 Text(
                     text = "Capture thermal images with your ${getDirTypeName(dirType)} to see them here",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-                
+
                 Button(onClick = onRefresh) {
                     Icon(Icons.Default.Refresh, contentDescription = null)
                     Spacer(modifier = Modifier.width(8.dp))
@@ -352,13 +355,13 @@ class IRGalleryFragmentCompose : BaseComposeFragment<IRGalleryViewModel>() {
                 .aspectRatio(1f)
                 .fillMaxWidth(),
             colors = CardDefaults.cardColors(
-                containerColor = if (isSelected) 
-                    MaterialTheme.colorScheme.primaryContainer 
-                else 
+                containerColor = if (isSelected)
+                    MaterialTheme.colorScheme.primaryContainer
+                else
                     MaterialTheme.colorScheme.surface
             ),
-            border = if (isSelected) 
-                androidx.compose.foundation.BorderStroke(2.dp, MaterialTheme.colorScheme.primary) 
+            border = if (isSelected)
+                androidx.compose.foundation.BorderStroke(2.dp, MaterialTheme.colorScheme.primary)
             else null
         ) {
             Box(modifier = Modifier.fillMaxSize()) {
@@ -437,9 +440,9 @@ class IRGalleryFragmentCompose : BaseComposeFragment<IRGalleryViewModel>() {
             onClick = onClick,
             modifier = Modifier.fillMaxWidth(),
             colors = CardDefaults.cardColors(
-                containerColor = if (isSelected) 
-                    MaterialTheme.colorScheme.primaryContainer 
-                else 
+                containerColor = if (isSelected)
+                    MaterialTheme.colorScheme.primaryContainer
+                else
                     MaterialTheme.colorScheme.surface
             )
         ) {
@@ -506,12 +509,12 @@ class IRGalleryFragmentCompose : BaseComposeFragment<IRGalleryViewModel>() {
         val units = arrayOf("B", "KB", "MB", "GB")
         var size = bytes.toDouble()
         var unitIndex = 0
-        
+
         while (size >= 1024 && unitIndex < units.size - 1) {
             size /= 1024
             unitIndex++
         }
-        
+
         return "%.1f %s".format(size, units[unitIndex])
     }
 }

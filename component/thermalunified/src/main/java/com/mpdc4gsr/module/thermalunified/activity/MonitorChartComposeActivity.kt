@@ -59,7 +59,7 @@ class MonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                 },
                 floatingActionButton = {
                     var isRecording by remember { mutableStateOf(false) }
-                    
+
                     FloatingActionButton(
                         onClick = { isRecording = !isRecording },
                         containerColor = if (isRecording) Color(0xFFDC2626) else Color(0xFFFF6B35)
@@ -112,7 +112,7 @@ class MonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                     StatCard("Sensors", "4", Color(0xFF238636))
                 }
             }
-            
+
             // Chart Display Area
             Card(
                 modifier = Modifier
@@ -134,24 +134,24 @@ class MonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             tint = Color(0xFFFF6B35),
                             modifier = Modifier.size(64.dp)
                         )
-                        
+
                         Spacer(modifier = Modifier.height(16.dp))
-                        
+
                         Text(
                             "Real-time Temperature Chart",
                             color = Color.White,
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold
                         )
-                        
+
                         Text(
                             "Multi-sensor monitoring with threshold alerts",
                             color = Color(0xFF7D8590),
                             fontSize = 14.sp
                         )
-                        
+
                         Spacer(modifier = Modifier.height(16.dp))
-                        
+
                         // Chart legend
                         Row(
                             horizontalArrangement = Arrangement.spacedBy(16.dp)
@@ -164,7 +164,7 @@ class MonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                     }
                 }
             }
-            
+
             // Time Range Selection
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -178,9 +178,9 @@ class MonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Medium
                     )
-                    
+
                     Spacer(modifier = Modifier.height(12.dp))
-                    
+
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -193,7 +193,7 @@ class MonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                     }
                 }
             }
-            
+
             // Alert Settings
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -212,7 +212,7 @@ class MonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Medium
                         )
-                        
+
                         Switch(
                             checked = showAlerts,
                             onCheckedChange = { showAlerts = it },
@@ -222,16 +222,16 @@ class MonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             )
                         )
                     }
-                    
+
                     if (showAlerts) {
                         Spacer(modifier = Modifier.height(12.dp))
-                        
+
                         Text(
                             "Threshold: ${alertThreshold.toInt()}°C",
                             color = Color(0xFF7D8590),
                             fontSize = 14.sp
                         )
-                        
+
                         Slider(
                             value = alertThreshold,
                             onValueChange = { alertThreshold = it },
@@ -244,7 +244,7 @@ class MonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                     }
                 }
             }
-            
+
             // Chart Controls
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -261,7 +261,7 @@ class MonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Export")
                 }
-                
+
                 OutlinedButton(
                     onClick = { /* Clear data */ },
                     modifier = Modifier.weight(1f),
@@ -273,7 +273,7 @@ class MonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Clear")
                 }
-                
+
                 Button(
                     onClick = { /* Zoom to fit */ },
                     modifier = Modifier.weight(1f),
@@ -302,7 +302,7 @@ class MonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Text(
                 label,
                 color = Color(0xFF7D8590),
@@ -344,7 +344,7 @@ class MonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                     .size(12.dp)
                     .background(color, RoundedCornerShape(2.dp))
             )
-            
+
             Text(
                 label,
                 color = Color(0xFF7D8590),

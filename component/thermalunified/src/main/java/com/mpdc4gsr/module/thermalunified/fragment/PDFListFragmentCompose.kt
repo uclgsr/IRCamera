@@ -26,7 +26,7 @@ import java.util.*
 
 /**
  * Compose migration of PDFListFragment
- * 
+ *
  * This fragment demonstrates:
  * - Complete migration of PDF report list to Compose
  * - Modern list-based PDF document display
@@ -54,7 +54,7 @@ class PDFListFragmentCompose : BaseComposeFragment<PDFListViewModel>() {
     @Composable
     override fun Content(viewModel: PDFListViewModel) {
         val context = LocalContext.current
-        
+
         // Observe ViewModel state
         val pdfItems by viewModel.pdfItems.collectAsStateWithLifecycle()
         val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
@@ -76,11 +76,11 @@ class PDFListFragmentCompose : BaseComposeFragment<PDFListViewModel>() {
                     PDFSelectionToolbar(
                         selectedCount = selectedItems.size,
                         onClearSelection = { viewModel.clearSelection() },
-                        onShareSelected = { 
+                        onShareSelected = {
                             shareSelectedPDFs(context, selectedItems.toList())
                         },
                         onDeleteSelected = { viewModel.deleteSelectedItems() },
-                        onExportSelected = { 
+                        onExportSelected = {
                             exportSelectedPDFs(context, selectedItems.toList())
                         }
                     )
@@ -94,11 +94,13 @@ class PDFListFragmentCompose : BaseComposeFragment<PDFListViewModel>() {
                         isLoading -> {
                             LoadingState()
                         }
+
                         pdfItems.isEmpty() -> {
                             EmptyPDFState(
                                 onRefresh = { viewModel.refreshPDFList() }
                             )
                         }
+
                         else -> {
                             PDFList(
                                 pdfs = pdfItems,
@@ -166,7 +168,7 @@ class PDFListFragmentCompose : BaseComposeFragment<PDFListViewModel>() {
                         )
                     }
                 }
-                
+
                 Icon(
                     Icons.Default.PictureAsPdf,
                     contentDescription = "PDF Reports",
@@ -288,20 +290,20 @@ class PDFListFragmentCompose : BaseComposeFragment<PDFListViewModel>() {
                     modifier = Modifier.size(64.dp),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-                
+
                 Text(
                     text = "No Reports Found",
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-                
+
                 Text(
                     text = "Generate thermal analysis reports to see them here",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-                
+
                 Button(onClick = onRefresh) {
                     Icon(Icons.Default.Refresh, contentDescription = null)
                     Spacer(modifier = Modifier.width(8.dp))
@@ -347,13 +349,13 @@ class PDFListFragmentCompose : BaseComposeFragment<PDFListViewModel>() {
             onClick = onClick,
             modifier = Modifier.fillMaxWidth(),
             colors = CardDefaults.cardColors(
-                containerColor = if (isSelected) 
-                    MaterialTheme.colorScheme.primaryContainer 
-                else 
+                containerColor = if (isSelected)
+                    MaterialTheme.colorScheme.primaryContainer
+                else
                     MaterialTheme.colorScheme.surface
             ),
-            border = if (isSelected) 
-                androidx.compose.foundation.BorderStroke(2.dp, MaterialTheme.colorScheme.primary) 
+            border = if (isSelected)
+                androidx.compose.foundation.BorderStroke(2.dp, MaterialTheme.colorScheme.primary)
             else null,
             shape = RoundedCornerShape(12.dp)
         ) {
@@ -393,7 +395,7 @@ class PDFListFragmentCompose : BaseComposeFragment<PDFListViewModel>() {
                         fontWeight = FontWeight.Medium,
                         maxLines = 2
                     )
-                    
+
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(12.dp),
                         verticalAlignment = Alignment.CenterVertically
@@ -415,9 +417,12 @@ class PDFListFragmentCompose : BaseComposeFragment<PDFListViewModel>() {
                             )
                         }
                     }
-                    
+
                     Text(
-                        text = SimpleDateFormat("MMM dd, yyyy HH:mm", Locale.getDefault()).format(Date(item.dateModified)),
+                        text = SimpleDateFormat(
+                            "MMM dd, yyyy HH:mm",
+                            Locale.getDefault()
+                        ).format(Date(item.dateModified)),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -461,7 +466,7 @@ class PDFListFragmentCompose : BaseComposeFragment<PDFListViewModel>() {
                         context,
                         "${context.packageName}.fileprovider",
                         File(path)
-                    ), 
+                    ),
                     "application/pdf"
                 )
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
@@ -481,7 +486,7 @@ class PDFListFragmentCompose : BaseComposeFragment<PDFListViewModel>() {
                     File(path)
                 )
             }
-            
+
             val intent = Intent().apply {
                 if (uris.size == 1) {
                     action = Intent.ACTION_SEND
@@ -493,7 +498,7 @@ class PDFListFragmentCompose : BaseComposeFragment<PDFListViewModel>() {
                 type = "application/pdf"
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             }
-            
+
             context.startActivity(Intent.createChooser(intent, "Share Reports"))
         } catch (e: Exception) {
             // Handle error
@@ -509,12 +514,12 @@ class PDFListFragmentCompose : BaseComposeFragment<PDFListViewModel>() {
         val units = arrayOf("B", "KB", "MB", "GB")
         var size = bytes.toDouble()
         var unitIndex = 0
-        
+
         while (size >= 1024 && unitIndex < units.size - 1) {
             size /= 1024
             unitIndex++
         }
-        
+
         return "%.1f %s".format(size, units[unitIndex])
     }
 

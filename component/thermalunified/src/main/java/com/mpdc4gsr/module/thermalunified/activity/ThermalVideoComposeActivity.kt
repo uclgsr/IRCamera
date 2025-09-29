@@ -62,7 +62,7 @@ class ThermalVideoComposeActivity : BaseComposeActivity<BaseViewModel>() {
     override fun Content(viewModel: BaseViewModel) {
         val videoPath = intent.getStringExtra(KEY_PATH) ?: ""
         val videoTitle = intent.getStringExtra(KEY_TITLE) ?: "Thermal Video"
-        
+
         var isPlaying by remember { mutableStateOf(false) }
         var currentPosition by remember { mutableStateOf(0L) }
         var videoDuration by remember { mutableStateOf(0L) }
@@ -217,20 +217,20 @@ private fun ThermalVideoPlayer(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-    
+
     AndroidView(
         factory = { ctx ->
             android.widget.VideoView(ctx).apply {
                 val uri = Uri.parse(videoPath)
                 setVideoURI(uri)
-                
+
                 // Set up media controller
                 val mediaController = android.widget.MediaController(ctx)
                 setMediaController(mediaController)
                 mediaController.setAnchorView(this)
-                
+
                 setOnClickListener { onClick() }
-                
+
                 // Set up completion listener
                 setOnCompletionListener {
                     onPositionChange(0L)
@@ -325,7 +325,7 @@ private fun ThermalVideoControls(
                         activeTrackColor = Color(0xFFFF6B35)
                     )
                 )
-                
+
                 // Time indicators
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -343,9 +343,9 @@ private fun ThermalVideoControls(
                     )
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             // Control buttons
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -359,7 +359,7 @@ private fun ThermalVideoControls(
                         tint = Color.White
                     )
                 }
-                
+
                 // Play/Pause button
                 IconButton(
                     onClick = { onPlayingChange(!isPlaying) },
@@ -377,7 +377,7 @@ private fun ThermalVideoControls(
                         modifier = Modifier.size(32.dp)
                     )
                 }
-                
+
                 IconButton(onClick = { /* Next frame */ }) {
                     Icon(
                         Icons.Default.SkipNext,
@@ -386,9 +386,9 @@ private fun ThermalVideoControls(
                     )
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(8.dp))
-            
+
             // Additional controls
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -408,7 +408,7 @@ private fun ThermalVideoControls(
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Frame")
                 }
-                
+
                 OutlinedButton(
                     onClick = { /* Analyze */ },
                     colors = ButtonDefaults.outlinedButtonColors(
@@ -423,7 +423,7 @@ private fun ThermalVideoControls(
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Analyze")
                 }
-                
+
                 OutlinedButton(
                     onClick = { /* Settings */ },
                     colors = ButtonDefaults.outlinedButtonColors(

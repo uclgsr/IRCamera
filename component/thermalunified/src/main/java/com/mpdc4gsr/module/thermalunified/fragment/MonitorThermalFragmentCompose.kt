@@ -31,7 +31,7 @@ import java.util.*
 
 /**
  * Compose migration of MonitorThermalFragment
- * 
+ *
  * This fragment demonstrates:
  * - Complete migration of thermal monitoring interface to Compose
  * - Advanced thermal monitoring with real-time data analysis
@@ -182,9 +182,9 @@ class MonitorThermalFragmentCompose : BaseComposeFragment<MonitorThermalViewMode
                         )
                     ) {
                         Icon(
-                            if (recordingStatus == RecordingStatus.RECORDING) 
-                                Icons.Default.Stop 
-                            else 
+                            if (recordingStatus == RecordingStatus.RECORDING)
+                                Icons.Default.Stop
+                            else
                                 Icons.Default.FiberManualRecord,
                             contentDescription = "Toggle Recording",
                             tint = Color.White
@@ -289,13 +289,13 @@ class MonitorThermalFragmentCompose : BaseComposeFragment<MonitorThermalViewMode
                     isAlarm = data.isAlarmTriggered,
                     isMain = true
                 )
-                
+
                 TemperatureMonitorCard(
                     label = "Max",
                     temperature = "${data.maxTemp}°C",
                     color = Color.Red
                 )
-                
+
                 TemperatureMonitorCard(
                     label = "Min",
                     temperature = "${data.minTemp}°C",
@@ -340,9 +340,9 @@ class MonitorThermalFragmentCompose : BaseComposeFragment<MonitorThermalViewMode
                 )
                 Text(
                     text = temperature,
-                    style = if (isMain) 
-                        MaterialTheme.typography.titleSmall 
-                    else 
+                    style = if (isMain)
+                        MaterialTheme.typography.titleSmall
+                    else
                         MaterialTheme.typography.bodySmall,
                     fontWeight = FontWeight.Bold,
                     color = if (isAlarm) MaterialTheme.colorScheme.onErrorContainer else color
@@ -403,9 +403,9 @@ class MonitorThermalFragmentCompose : BaseComposeFragment<MonitorThermalViewMode
                         AlertSeverity.LOW -> MaterialTheme.colorScheme.onTertiaryContainer
                     }
                 )
-                
+
                 Spacer(modifier = Modifier.width(8.dp))
-                
+
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = alert.message,
@@ -518,7 +518,7 @@ class MonitorThermalFragmentCompose : BaseComposeFragment<MonitorThermalViewMode
             )
             Slider(
                 value = highThreshold,
-                onValueChange = { 
+                onValueChange = {
                     highThreshold = it
                     onThresholdChange(TemperatureThreshold(it, lowThreshold))
                 },
@@ -534,7 +534,7 @@ class MonitorThermalFragmentCompose : BaseComposeFragment<MonitorThermalViewMode
             )
             Slider(
                 value = lowThreshold,
-                onValueChange = { 
+                onValueChange = {
                     lowThreshold = it
                     onThresholdChange(TemperatureThreshold(highThreshold, it))
                 },
@@ -569,7 +569,7 @@ class MonitorThermalFragmentCompose : BaseComposeFragment<MonitorThermalViewMode
                 Text("Sound Alerts", style = MaterialTheme.typography.bodyMedium)
                 Switch(
                     checked = enableSound,
-                    onCheckedChange = { 
+                    onCheckedChange = {
                         enableSound = it
                         onAlertSettingsChange(AlertSettings(it, enableVibration))
                     }
@@ -584,7 +584,7 @@ class MonitorThermalFragmentCompose : BaseComposeFragment<MonitorThermalViewMode
                 Text("Vibration", style = MaterialTheme.typography.bodyMedium)
                 Switch(
                     checked = enableVibration,
-                    onCheckedChange = { 
+                    onCheckedChange = {
                         enableVibration = it
                         onAlertSettingsChange(AlertSettings(enableSound, it))
                     }
@@ -661,9 +661,9 @@ class MonitorThermalFragmentCompose : BaseComposeFragment<MonitorThermalViewMode
     )
 
     data class FenceData(val data: String)
-    
+
     data class TemperatureThreshold(val high: Float, val low: Float)
-    
+
     data class AlertSettings(val soundEnabled: Boolean, val vibrationEnabled: Boolean)
 
     data class MonitoringAlert(

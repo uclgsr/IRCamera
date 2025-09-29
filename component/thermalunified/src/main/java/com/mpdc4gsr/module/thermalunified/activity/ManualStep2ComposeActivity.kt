@@ -40,12 +40,12 @@ class ManualStep2ComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         var isCalibrating by remember { mutableStateOf(false) }
         var calibrationProgress by remember { mutableFloatStateOf(0f) }
         val coroutineScope = rememberCoroutineScope()
-        
+
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
                     TopAppBar(
-                        title = { 
+                        title = {
                             Text(
                                 "Manual Setup - Step 2",
                                 fontWeight = FontWeight.Bold,
@@ -55,7 +55,7 @@ class ManualStep2ComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         navigationIcon = {
                             IconButton(onClick = { finish() }) {
                                 Icon(
-                                    Icons.Default.ArrowBack, 
+                                    Icons.Default.ArrowBack,
                                     contentDescription = "Back",
                                     tint = Color.White
                                 )
@@ -77,16 +77,16 @@ class ManualStep2ComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    
+
                     // Progress indicator
                     SetupProgressIndicator(
                         currentStep = 2,
                         totalSteps = 2,
                         modifier = Modifier.fillMaxWidth()
                     )
-                    
+
                     Spacer(modifier = Modifier.height(32.dp))
-                    
+
                     // Connection and calibration card
                     ConnectionSetupCard(
                         isConnecting = isConnecting,
@@ -147,9 +147,9 @@ private fun SetupProgressIndicator(
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             // Progress bar
             LinearProgressIndicator(
                 progress = currentStep.toFloat() / totalSteps.toFloat(),
@@ -159,9 +159,9 @@ private fun SetupProgressIndicator(
                 color = Color(0xFFFF6B35),
                 trackColor = Color(0xFF16131E)
             )
-            
+
             Spacer(modifier = Modifier.height(8.dp))
-            
+
             Text(
                 "Step $currentStep of $totalSteps - Final Step",
                 color = Color(0xFF7D8590),
@@ -203,12 +203,14 @@ private fun ConnectionSetupCard(
                         modifier = Modifier.size(64.dp)
                     )
                 }
+
                 isConnecting -> {
                     CircularProgressIndicator(
                         color = Color(0xFFFF6B35),
                         modifier = Modifier.size(64.dp)
                     )
                 }
+
                 isConnected -> {
                     Icon(
                         Icons.Default.CheckCircle,
@@ -217,6 +219,7 @@ private fun ConnectionSetupCard(
                         modifier = Modifier.size(64.dp)
                     )
                 }
+
                 else -> {
                     Icon(
                         Icons.Default.Bluetooth,
@@ -226,7 +229,7 @@ private fun ConnectionSetupCard(
                     )
                 }
             }
-            
+
             // Title and status
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -244,7 +247,7 @@ private fun ConnectionSetupCard(
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center
                 )
-                
+
                 Text(
                     when {
                         isCalibrating -> "Please wait while the camera calibrates (${(calibrationProgress * 100).toInt()}%)"
@@ -257,17 +260,17 @@ private fun ConnectionSetupCard(
                     textAlign = TextAlign.Center
                 )
             }
-            
+
             // Connection steps
             if (!isConnected && !isConnecting) {
                 ConnectionSteps()
             }
-            
+
             // Calibration info
             if (isConnected && !isCalibrating && calibrationProgress == 0f) {
                 CalibrationInfo()
             }
-            
+
             // Action buttons
             ActionButtons(
                 isConnecting = isConnecting,
@@ -302,7 +305,7 @@ private fun ConnectionSteps() {
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold
             )
-            
+
             ConnectionStep("1", "Turn on thermal camera")
             ConnectionStep("2", "Enable camera pairing mode")
             ConnectionStep("3", "Tap connect to search for device")
@@ -335,7 +338,7 @@ private fun ConnectionStep(
                 fontWeight = FontWeight.Bold
             )
         }
-        
+
         Text(
             instruction,
             color = Color(0xFF7D8590),
@@ -364,7 +367,7 @@ private fun CalibrationInfo() {
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Text(
                 "Camera calibration ensures accurate temperature readings. This process takes about 30 seconds.",
                 color = Color(0xFF7D8590),
@@ -412,7 +415,7 @@ private fun ActionButtons(
                     )
                 }
             }
-            
+
             isConnected && !isCalibrating -> {
                 Button(
                     onClick = onCalibrate,
@@ -437,7 +440,7 @@ private fun ActionButtons(
                     )
                 }
             }
-            
+
             !isConnected && !isConnecting -> {
                 Button(
                     onClick = onConnect,
@@ -463,7 +466,7 @@ private fun ActionButtons(
                 }
             }
         }
-        
+
         // Cancel button (always available)
         if (!calibrationComplete) {
             OutlinedButton(

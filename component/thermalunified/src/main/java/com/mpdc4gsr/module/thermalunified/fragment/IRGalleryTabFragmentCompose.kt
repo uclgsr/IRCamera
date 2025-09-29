@@ -21,11 +21,11 @@ import kotlinx.coroutines.launch
 
 /**
  * Compose migration of IRGalleryTabFragment
- * 
+ *
  * This fragment demonstrates:
  * - Complete migration of gallery tab management to Compose
  * - Modern tab-based navigation with HorizontalPager
- * - Enhanced directory switching capabilities 
+ * - Enhanced directory switching capabilities
  * - Material 3 design with improved user experience
  * - Integration with gallery sub-fragments
  */
@@ -79,7 +79,7 @@ class IRGalleryTabFragmentCompose : BaseComposeFragment<IRGalleryTabViewModel>()
                             text = {
                                 Text(
                                     text = title,
-                                    fontWeight = if (pagerState.currentPage == index) 
+                                    fontWeight = if (pagerState.currentPage == index)
                                         FontWeight.Bold else FontWeight.Normal
                                 )
                             }
@@ -97,10 +97,12 @@ class IRGalleryTabFragmentCompose : BaseComposeFragment<IRGalleryTabViewModel>()
                             dirType = currentDirType,
                             modifier = Modifier.fillMaxSize()
                         )
+
                         1 -> GalleryVideoTab(
                             dirType = currentDirType,
                             modifier = Modifier.fillMaxSize()
                         )
+
                         2 -> GalleryReportsTab(
                             dirType = currentDirType,
                             modifier = Modifier.fillMaxSize()
@@ -130,7 +132,7 @@ class IRGalleryTabFragmentCompose : BaseComposeFragment<IRGalleryTabViewModel>()
                         text = "Gallery",
                         fontWeight = FontWeight.Bold
                     )
-                    
+
                     if (canSwitchDir) {
                         DirectorySwitcher(
                             currentDirType = currentDirType,
@@ -167,7 +169,7 @@ class IRGalleryTabFragmentCompose : BaseComposeFragment<IRGalleryTabViewModel>()
         Box {
             FilterChip(
                 onClick = { expanded = true },
-                label = { 
+                label = {
                     Text(
                         text = getDirTypeDisplayName(currentDirType),
                         style = MaterialTheme.typography.labelMedium
@@ -188,7 +190,7 @@ class IRGalleryTabFragmentCompose : BaseComposeFragment<IRGalleryTabViewModel>()
             ) {
                 DirType.values().forEach { dirType ->
                     DropdownMenuItem(
-                        text = { 
+                        text = {
                             Text(getDirTypeDisplayName(dirType))
                         },
                         onClick = {

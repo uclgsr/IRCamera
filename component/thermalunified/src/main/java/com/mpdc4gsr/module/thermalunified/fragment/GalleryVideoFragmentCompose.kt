@@ -32,7 +32,7 @@ import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * Compose migration of GalleryVideoFragment
- * 
+ *
  * This fragment demonstrates:
  * - Complete migration of video gallery UI to Compose
  * - Modern grid-based video display with thumbnails
@@ -50,7 +50,7 @@ class GalleryVideoFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
     @Composable
     override fun Content(viewModel: GalleryViewModel) {
         val context = LocalContext.current
-        
+
         // Observe ViewModel state
         val videoItems by viewModel.videoItems.collectAsStateWithLifecycle()
         val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
@@ -66,11 +66,11 @@ class GalleryVideoFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
                     VideoSelectionToolbar(
                         selectedCount = selectedItems.size,
                         onClearSelection = { viewModel.clearSelection() },
-                        onShareSelected = { 
+                        onShareSelected = {
                             shareSelectedVideos(context, selectedItems.toList())
                         },
                         onDeleteSelected = { viewModel.deleteSelectedItems() },
-                        onExportSelected = { 
+                        onExportSelected = {
                             exportSelectedVideos(context, selectedItems.toList())
                         }
                     )
@@ -84,11 +84,13 @@ class GalleryVideoFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
                         isLoading -> {
                             LoadingState()
                         }
+
                         videoItems.isEmpty() -> {
                             EmptyVideoGalleryState(
                                 onRefresh = { viewModel.refreshVideoGallery() }
                             )
                         }
+
                         else -> {
                             VideoGrid(
                                 videos = videoItems,
@@ -206,20 +208,20 @@ class GalleryVideoFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
                     modifier = Modifier.size(64.dp),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-                
+
                 Text(
                     text = "No Videos Found",
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-                
+
                 Text(
                     text = "Record thermal videos to see them here",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-                
+
                 Button(onClick = onRefresh) {
                     Icon(Icons.Default.Refresh, contentDescription = null)
                     Spacer(modifier = Modifier.width(8.dp))
@@ -239,7 +241,7 @@ class GalleryVideoFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
     ) {
         // Adaptive grid columns based on screen size
         val columns = remember { mutableIntStateOf(3) }
-        
+
         LazyVerticalGrid(
             columns = GridCells.Fixed(columns.intValue),
             contentPadding = PaddingValues(8.dp),
@@ -272,13 +274,13 @@ class GalleryVideoFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
                 .aspectRatio(16f / 9f)
                 .fillMaxWidth(),
             colors = CardDefaults.cardColors(
-                containerColor = if (isSelected) 
-                    MaterialTheme.colorScheme.primaryContainer 
-                else 
+                containerColor = if (isSelected)
+                    MaterialTheme.colorScheme.primaryContainer
+                else
                     MaterialTheme.colorScheme.surface
             ),
-            border = if (isSelected) 
-                androidx.compose.foundation.BorderStroke(2.dp, MaterialTheme.colorScheme.primary) 
+            border = if (isSelected)
+                androidx.compose.foundation.BorderStroke(2.dp, MaterialTheme.colorScheme.primary)
             else null,
             shape = RoundedCornerShape(12.dp)
         ) {
@@ -418,11 +420,13 @@ class GalleryVideoFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
     private fun playVideo(context: android.content.Context, path: String) {
         try {
             val intent = Intent(Intent.ACTION_VIEW).apply {
-                setDataAndType(androidx.core.content.FileProvider.getUriForFile(
-                    context,
-                    "${context.packageName}.fileprovider", 
-                    File(path)
-                ), "video/*")
+                setDataAndType(
+                    androidx.core.content.FileProvider.getUriForFile(
+                        context,
+                        "${context.packageName}.fileprovider",
+                        File(path)
+                    ), "video/*"
+                )
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             }
             context.startActivity(intent)
@@ -440,7 +444,7 @@ class GalleryVideoFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
                     File(path)
                 )
             }
-            
+
             val intent = Intent().apply {
                 if (uris.size == 1) {
                     action = Intent.ACTION_SEND
@@ -452,7 +456,7 @@ class GalleryVideoFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
                 type = "video/*"
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             }
-            
+
             context.startActivity(Intent.createChooser(intent, "Share Videos"))
         } catch (e: Exception) {
             // Handle error
@@ -468,7 +472,7 @@ class GalleryVideoFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
         val hours = durationMs / 3600000
         val minutes = (durationMs / 60000) % 60
         val seconds = (durationMs / 1000) % 60
-        
+
         return when {
             hours > 0 -> "%d:%02d:%02d".format(hours, minutes, seconds)
             else -> "%d:%02d".format(minutes, seconds)
@@ -479,12 +483,12 @@ class GalleryVideoFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
         val units = arrayOf("B", "KB", "MB", "GB")
         var size = bytes.toDouble()
         var unitIndex = 0
-        
+
         while (size >= 1024 && unitIndex < units.size - 1) {
             size /= 1024
             unitIndex++
         }
-        
+
         return "%.1f %s".format(size, units[unitIndex])
     }
 

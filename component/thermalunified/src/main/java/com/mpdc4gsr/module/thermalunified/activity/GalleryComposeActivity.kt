@@ -41,12 +41,12 @@ class GalleryComposeActivity : BaseComposeActivity<GalleryActivityViewModel>() {
         val pagerState = rememberPagerState(pageCount = { 2 })
         val scope = rememberCoroutineScope()
         var selectedTab by remember { mutableIntStateOf(0) }
-        
+
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
                     TopAppBar(
-                        title = { 
+                        title = {
                             Text(
                                 "Thermal Gallery",
                                 fontWeight = FontWeight.Bold,
@@ -56,7 +56,7 @@ class GalleryComposeActivity : BaseComposeActivity<GalleryActivityViewModel>() {
                         navigationIcon = {
                             IconButton(onClick = { finish() }) {
                                 Icon(
-                                    Icons.Default.ArrowBack, 
+                                    Icons.Default.ArrowBack,
                                     contentDescription = "Back",
                                     tint = Color.White
                                 )
@@ -102,7 +102,7 @@ class GalleryComposeActivity : BaseComposeActivity<GalleryActivityViewModel>() {
                         },
                         modifier = Modifier.fillMaxWidth()
                     )
-                    
+
                     // Content pager
                     HorizontalPager(
                         state = pagerState,
@@ -116,7 +116,7 @@ class GalleryComposeActivity : BaseComposeActivity<GalleryActivityViewModel>() {
                 }
             }
         }
-        
+
         // Sync pager with tabs
         LaunchedEffect(pagerState.currentPage) {
             selectedTab = pagerState.currentPage
@@ -150,7 +150,7 @@ private fun GalleryTabRow(
                 onClick = { onTabSelected(0) },
                 modifier = Modifier.weight(1f)
             )
-            
+
             GalleryTab(
                 text = "Videos",
                 icon = Icons.Default.VideoLibrary,

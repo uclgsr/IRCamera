@@ -34,7 +34,7 @@ import com.mpdc4gsr.module.user.viewmodel.MineViewModel
 
 /**
  * Compose migration of MineFragment
- * 
+ *
  * This fragment demonstrates:
  * - Complete migration of user profile UI to Compose
  * - Modern Material 3 design with user-friendly layout
@@ -52,7 +52,7 @@ class MineFragmentCompose : BaseComposeFragment<MineViewModel>() {
     @Composable
     override fun Content(viewModel: MineViewModel) {
         val context = LocalContext.current
-        
+
         // Observe ViewModel state
         val userInfo by viewModel.userInfo.collectAsStateWithLifecycle()
         val appInfo by viewModel.appInfo.collectAsStateWithLifecycle()
@@ -244,7 +244,7 @@ class MineFragmentCompose : BaseComposeFragment<MineViewModel>() {
                         isConnected = info.hasLineConnection,
                         batteryLevel = null
                     )
-                    
+
                     if (info.hasTC007) {
                         DeviceStatusIndicator(
                             deviceName = "TC007",
@@ -252,7 +252,7 @@ class MineFragmentCompose : BaseComposeFragment<MineViewModel>() {
                             batteryLevel = info.tc007Battery
                         )
                     }
-                    
+
                     if (info.hasTS004) {
                         DeviceStatusIndicator(
                             deviceName = "TS004",
@@ -289,21 +289,21 @@ class MineFragmentCompose : BaseComposeFragment<MineViewModel>() {
                     .size(12.dp)
                     .clip(CircleShape)
                     .background(
-                        if (isConnected) 
-                            androidx.compose.ui.graphics.Color.Green 
-                        else 
+                        if (isConnected)
+                            androidx.compose.ui.graphics.Color.Green
+                        else
                             androidx.compose.ui.graphics.Color.Gray
                     )
             )
-            
+
             Spacer(modifier = Modifier.width(8.dp))
-            
+
             Text(
                 text = deviceName,
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.weight(1f)
             )
-            
+
             // Battery level if available
             batteryLevel?.let { level ->
                 Row(
@@ -345,9 +345,9 @@ class MineFragmentCompose : BaseComposeFragment<MineViewModel>() {
                     modifier = Modifier.size(24.dp),
                     tint = item.iconTint
                 )
-                
+
                 Spacer(modifier = Modifier.width(16.dp))
-                
+
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = item.title,
@@ -362,7 +362,7 @@ class MineFragmentCompose : BaseComposeFragment<MineViewModel>() {
                         )
                     }
                 }
-                
+
                 Icon(
                     Icons.Default.ChevronRight,
                     contentDescription = "Navigate",
@@ -395,17 +395,17 @@ class MineFragmentCompose : BaseComposeFragment<MineViewModel>() {
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )
-                
+
                 Spacer(modifier = Modifier.height(12.dp))
-                
+
                 appInfo?.let { info ->
                     AppInfoRow("Version", info.version)
                     AppInfoRow("Build", info.buildNumber)
                     AppInfoRow("Cache Size", info.cacheSize)
                     AppInfoRow("Last Updated", info.lastUpdated)
-                    
+
                     Spacer(modifier = Modifier.height(16.dp))
-                    
+
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -416,7 +416,7 @@ class MineFragmentCompose : BaseComposeFragment<MineViewModel>() {
                         ) {
                             Text("View Logs")
                         }
-                        
+
                         OutlinedButton(
                             onClick = onClearCache,
                             modifier = Modifier.weight(1f)
@@ -424,9 +424,9 @@ class MineFragmentCompose : BaseComposeFragment<MineViewModel>() {
                             Text("Clear Cache")
                         }
                     }
-                    
+
                     Spacer(modifier = Modifier.height(8.dp))
-                    
+
                     Button(
                         onClick = onCheckUpdates,
                         modifier = Modifier.fillMaxWidth()
@@ -517,25 +517,30 @@ class MineFragmentCompose : BaseComposeFragment<MineViewModel>() {
                     .build(RouterConfig.GENERAL_SETTINGS)
                     .navigation(context)
             }
+
             "thermal" -> {
                 NavigationManager.getInstance()
                     .build(RouterConfig.THERMAL_SETTINGS)
                     .navigation(context)
             }
+
             "network" -> {
                 NavigationManager.getInstance()
                     .build(RouterConfig.NETWORK_SETTINGS)
                     .navigation(context)
             }
+
             "storage" -> {
                 NavigationManager.getInstance()
                     .build(RouterConfig.STORAGE_SETTINGS)
                     .navigation(context)
             }
+
             "feedback" -> {
                 val intent = Intent(context, FeedbackActivity::class.java)
                 context.startActivity(intent)
             }
+
             "about" -> {
                 NavigationManager.getInstance()
                     .build(RouterConfig.ABOUT)

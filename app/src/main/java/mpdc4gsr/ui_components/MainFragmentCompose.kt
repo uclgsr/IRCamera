@@ -27,10 +27,10 @@ import mpdc4gsr.ui_components.MainFragmentViewModel.*
 
 /**
  * Compose migration of MainFragment
- * 
+ *
  * This fragment demonstrates:
  * - Complete migration of MainFragment UI to Compose
- * - StateFlow integration for reactive UI updates  
+ * - StateFlow integration for reactive UI updates
  * - Material 3 design system implementation
  * - GSR sensor integration and dual-mode camera controls
  * - Seamless integration with existing navigation system
@@ -47,7 +47,7 @@ class MainFragmentCompose : BaseComposeFragment<MainFragmentViewModel>() {
         val context = LocalContext.current
         val deviceState by viewModel.deviceState.collectAsStateWithLifecycle()
         val batteryInfo by viewModel.batteryInfo.collectAsStateWithLifecycle()
-        
+
         // Handle navigation events
         LaunchedEffect(Unit) {
             viewModel.navigationEvents.collect { event ->
@@ -56,12 +56,15 @@ class MainFragmentCompose : BaseComposeFragment<MainFragmentViewModel>() {
                         // Handle navigation through existing NavigationManager
                         viewModel.handleNavigation(context, event.route, event.isTC007, event.isTS004)
                     }
+
                     is NavigationEvent.ShowError -> {
                         // Show error snackbar or dialog
                     }
+
                     is NavigationEvent.ShowDeviceSelection -> {
                         // Show device selection dialog
                     }
+
                     is NavigationEvent.ShowDeviceAddDialog -> {
                         // Navigate to device add screen
                         context.startActivity(Intent(context, DeviceTypeActivity::class.java))
@@ -79,11 +82,11 @@ class MainFragmentCompose : BaseComposeFragment<MainFragmentViewModel>() {
             // Header section with device status
             DeviceStatusHeader(
                 hasDevices = deviceState?.hasAnyDevice ?: false,
-                onAddDevice = { 
+                onAddDevice = {
                     context.startActivity(Intent(context, DeviceTypeActivity::class.java))
                 }
             )
-            
+
             // Device list or empty state
             if (deviceState?.hasAnyDevice == true) {
                 DeviceList(
@@ -133,9 +136,9 @@ class MainFragmentCompose : BaseComposeFragment<MainFragmentViewModel>() {
         Card(
             modifier = Modifier.fillMaxWidth(),
             colors = CardDefaults.cardColors(
-                containerColor = if (hasDevices) 
-                    MaterialTheme.colorScheme.primaryContainer 
-                else 
+                containerColor = if (hasDevices)
+                    MaterialTheme.colorScheme.primaryContainer
+                else
                     MaterialTheme.colorScheme.errorContainer
             )
         ) {
@@ -153,15 +156,15 @@ class MainFragmentCompose : BaseComposeFragment<MainFragmentViewModel>() {
                         fontWeight = FontWeight.Bold
                     )
                     Text(
-                        text = if (hasDevices) 
-                            "Tap device to connect or long-press to manage" 
-                        else 
+                        text = if (hasDevices)
+                            "Tap device to connect or long-press to manage"
+                        else
                             "Add a device to get started",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
-                
+
                 IconButton(onClick = onAddDevice) {
                     Icon(
                         Icons.Default.Add,
@@ -195,7 +198,7 @@ class MainFragmentCompose : BaseComposeFragment<MainFragmentViewModel>() {
                     )
                 }
             }
-            
+
             // TS004 and TC007 functionality commented out per original code
             /*
             if (deviceState.hasConnectTS004) {
@@ -237,9 +240,9 @@ class MainFragmentCompose : BaseComposeFragment<MainFragmentViewModel>() {
             onClick = { onClick(connectType) },
             modifier = Modifier.fillMaxWidth(),
             colors = CardDefaults.cardColors(
-                containerColor = if (isConnected) 
-                    MaterialTheme.colorScheme.primaryContainer 
-                else 
+                containerColor = if (isConnected)
+                    MaterialTheme.colorScheme.primaryContainer
+                else
                     MaterialTheme.colorScheme.surfaceVariant
             ),
             shape = RoundedCornerShape(12.dp)
@@ -254,30 +257,32 @@ class MainFragmentCompose : BaseComposeFragment<MainFragmentViewModel>() {
                 Icon(
                     painter = painterResource(
                         id = when (connectType) {
-                            ConnectType.LINE -> if (isConnected) 
-                                R.drawable.ic_main_device_line_connect 
-                            else 
+                            ConnectType.LINE -> if (isConnected)
+                                R.drawable.ic_main_device_line_connect
+                            else
                                 R.drawable.ic_main_device_line_disconnect
-                            ConnectType.TS004 -> if (isConnected) 
-                                R.drawable.ic_main_device_ts004_connect 
-                            else 
+
+                            ConnectType.TS004 -> if (isConnected)
+                                R.drawable.ic_main_device_ts004_connect
+                            else
                                 R.drawable.ic_main_device_ts004_disconnect
-                            ConnectType.TC007 -> if (isConnected) 
-                                R.drawable.ic_main_device_tc007_connect 
-                            else 
+
+                            ConnectType.TC007 -> if (isConnected)
+                                R.drawable.ic_main_device_tc007_connect
+                            else
                                 R.drawable.ic_main_device_tc007_disconnect
                         }
                     ),
                     contentDescription = connectType.name,
-                    tint = if (isConnected) 
-                        MaterialTheme.colorScheme.primary 
-                    else 
+                    tint = if (isConnected)
+                        MaterialTheme.colorScheme.primary
+                    else
                         MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.size(48.dp)
                 )
-                
+
                 Spacer(modifier = Modifier.width(16.dp))
-                
+
                 // Device info
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
@@ -288,12 +293,12 @@ class MainFragmentCompose : BaseComposeFragment<MainFragmentViewModel>() {
                     Text(
                         text = if (isConnected) "Online" else "Offline",
                         style = MaterialTheme.typography.bodyMedium,
-                        color = if (isConnected) 
-                            MaterialTheme.colorScheme.primary 
-                        else 
+                        color = if (isConnected)
+                            MaterialTheme.colorScheme.primary
+                        else
                             MaterialTheme.colorScheme.onSurfaceVariant
                     )
-                    
+
                     // Show battery info for TC007
                     if (connectType == ConnectType.TC007 && batteryInfo != null) {
                         Row(
@@ -301,9 +306,9 @@ class MainFragmentCompose : BaseComposeFragment<MainFragmentViewModel>() {
                         ) {
                             Icon(
                                 painter = painterResource(
-                                    id = if (batteryInfo.isCharging()) 
-                                        R.drawable.ic_battery_charging 
-                                    else 
+                                    id = if (batteryInfo.isCharging())
+                                        R.drawable.ic_battery_charging
+                                    else
                                         R.drawable.ic_battery
                                 ),
                                 contentDescription = "Battery",
@@ -317,7 +322,7 @@ class MainFragmentCompose : BaseComposeFragment<MainFragmentViewModel>() {
                         }
                     }
                 }
-                
+
                 // Connection status indicator
                 Box(
                     modifier = Modifier
@@ -362,19 +367,19 @@ class MainFragmentCompose : BaseComposeFragment<MainFragmentViewModel>() {
                     modifier = Modifier.size(64.dp),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-                
+
                 Text(
                     text = "No Devices Connected",
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold
                 )
-                
+
                 Text(
                     text = "Connect a thermal camera or add a new device to get started",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-                
+
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
@@ -386,7 +391,7 @@ class MainFragmentCompose : BaseComposeFragment<MainFragmentViewModel>() {
                         Spacer(modifier = Modifier.width(8.dp))
                         Text("Add Device")
                     }
-                    
+
                     OutlinedButton(
                         onClick = onGsrOptionsClick,
                         modifier = Modifier.weight(1f)

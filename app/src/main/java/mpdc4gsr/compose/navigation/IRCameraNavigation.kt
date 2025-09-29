@@ -24,21 +24,21 @@ sealed class IRCameraScreen(val route: String) {
     object MainCompose : IRCameraScreen("main_compose")
     object MainFragment : IRCameraScreen("main_fragment")
     object MainFragmentCompose : IRCameraScreen("main_fragment_compose")
-    
+
     object ThermalCamera : IRCameraScreen("thermal_camera")
     object ThermalCameraCompose : IRCameraScreen("thermal_camera_compose")
     object ThermalFragment : IRCameraScreen("thermal_fragment")
     object ThermalFragmentCompose : IRCameraScreen("thermal_fragment_compose")
-    
+
     object SensorDashboard : IRCameraScreen("sensor_dashboard")
     object SensorDashboardCompose : IRCameraScreen("sensor_dashboard_compose")
     object SensorDashboardFragment : IRCameraScreen("sensor_dashboard_fragment")
     object SensorDashboardFragmentCompose : IRCameraScreen("sensor_dashboard_fragment_compose")
-    
+
     object Gallery : IRCameraScreen("gallery")
     object GalleryFragment : IRCameraScreen("gallery_fragment")
     object GalleryFragmentCompose : IRCameraScreen("gallery_fragment_compose")
-    
+
     // Priority 3: Specialized Thermal Fragments
     object IRCorrectionFragment : IRCameraScreen("ir_correction_fragment")
     object IRCorrectionFragmentCompose : IRCameraScreen("ir_correction_fragment_compose")
@@ -66,7 +66,7 @@ sealed class IRCameraScreen(val route: String) {
     object IRMonitorHistoryFragmentCompose : IRCameraScreen("ir_monitor_history_fragment_compose")
     object IRMonitorThermalFragment : IRCameraScreen("ir_monitor_thermal_fragment")
     object IRMonitorThermalFragmentCompose : IRCameraScreen("ir_monitor_thermal_fragment_compose")
-    
+
     object Settings : IRCameraScreen("settings")
     object SettingsCompose : IRCameraScreen("settings_compose")
     object Demo : IRCameraScreen("demo")

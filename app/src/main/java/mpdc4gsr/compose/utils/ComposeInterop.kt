@@ -91,7 +91,7 @@ object StateFlowBridge {
  * for seamless migration support
  */
 object FragmentComposeUtils {
-    
+
     /**
      * Create a Compose wrapper for existing Fragment
      * Useful for gradual migration where you want to embed existing fragments
@@ -111,7 +111,7 @@ object FragmentComposeUtils {
             containerId = View.generateViewId()
         )
     }
-    
+
     /**
      * Navigation helper for Fragment to Compose transitions
      * Maintains back stack consistency
@@ -126,12 +126,12 @@ object FragmentComposeUtils {
             extras?.let { putExtras(it) }
         }
         fragment.startActivity(intent)
-        
+
         if (finishCurrent && fragment.activity != null) {
             fragment.activity?.finish()
         }
     }
-    
+
     /**
      * State preservation helper for Fragment-Compose migration
      * Ensures state is maintained across the transition

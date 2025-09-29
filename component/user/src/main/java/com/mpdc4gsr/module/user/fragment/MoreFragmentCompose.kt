@@ -28,7 +28,7 @@ import com.mpdc4gsr.module.user.viewmodel.MoreViewModel
 
 /**
  * Compose migration of MoreFragment
- * 
+ *
  * This fragment demonstrates:
  * - Complete migration of additional features UI to Compose
  * - Enhanced help and support section
@@ -46,7 +46,7 @@ class MoreFragmentCompose : BaseComposeFragment<MoreViewModel>() {
     @Composable
     override fun Content(viewModel: MoreViewModel) {
         val context = LocalContext.current
-        
+
         // Observe ViewModel state
         val quickActions by viewModel.quickActions.collectAsStateWithLifecycle()
         val helpResources by viewModel.helpResources.collectAsStateWithLifecycle()
@@ -78,7 +78,7 @@ class MoreFragmentCompose : BaseComposeFragment<MoreViewModel>() {
                 item {
                     SectionHeader("Quick Actions")
                 }
-                
+
                 items(getQuickActionItems()) { action ->
                     QuickActionCard(
                         action = action,
@@ -92,7 +92,7 @@ class MoreFragmentCompose : BaseComposeFragment<MoreViewModel>() {
                 item {
                     SectionHeader("Help & Support")
                 }
-                
+
                 items(getHelpSupportItems()) { item ->
                     HelpSupportCard(
                         item = item,
@@ -106,7 +106,7 @@ class MoreFragmentCompose : BaseComposeFragment<MoreViewModel>() {
                 item {
                     SectionHeader("Community")
                 }
-                
+
                 items(getCommunityItems()) { item ->
                     CommunityCard(
                         item = item,
@@ -120,7 +120,7 @@ class MoreFragmentCompose : BaseComposeFragment<MoreViewModel>() {
                 item {
                     SectionHeader("Advanced Tools")
                 }
-                
+
                 items(getAdvancedToolItems()) { tool ->
                     AdvancedToolCard(
                         tool = tool,
@@ -168,9 +168,9 @@ class MoreFragmentCompose : BaseComposeFragment<MoreViewModel>() {
                     modifier = Modifier.size(32.dp),
                     tint = action.iconTint
                 )
-                
+
                 Spacer(modifier = Modifier.width(16.dp))
-                
+
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = action.title,
@@ -184,7 +184,7 @@ class MoreFragmentCompose : BaseComposeFragment<MoreViewModel>() {
                         color = action.textColor.copy(alpha = 0.8f)
                     )
                 }
-                
+
                 if (action.badge.isNotEmpty()) {
                     Card(
                         colors = CardDefaults.cardColors(
@@ -225,9 +225,9 @@ class MoreFragmentCompose : BaseComposeFragment<MoreViewModel>() {
                     modifier = Modifier.size(24.dp),
                     tint = MaterialTheme.colorScheme.primary
                 )
-                
+
                 Spacer(modifier = Modifier.width(16.dp))
-                
+
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = item.title,
@@ -240,7 +240,7 @@ class MoreFragmentCompose : BaseComposeFragment<MoreViewModel>() {
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
-                
+
                 Icon(
                     Icons.Default.ChevronRight,
                     contentDescription = "Navigate",
@@ -274,9 +274,9 @@ class MoreFragmentCompose : BaseComposeFragment<MoreViewModel>() {
                     modifier = Modifier.size(24.dp),
                     tint = MaterialTheme.colorScheme.onTertiaryContainer
                 )
-                
+
                 Spacer(modifier = Modifier.width(16.dp))
-                
+
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = item.title,
@@ -290,7 +290,7 @@ class MoreFragmentCompose : BaseComposeFragment<MoreViewModel>() {
                         color = MaterialTheme.colorScheme.onTertiaryContainer.copy(alpha = 0.8f)
                     )
                 }
-                
+
                 Icon(
                     Icons.Default.OpenInNew,
                     contentDescription = "Open External",
@@ -326,9 +326,9 @@ class MoreFragmentCompose : BaseComposeFragment<MoreViewModel>() {
                         modifier = Modifier.size(24.dp),
                         tint = MaterialTheme.colorScheme.onSecondaryContainer
                     )
-                    
+
                     Spacer(modifier = Modifier.width(12.dp))
-                    
+
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
                             text = tool.title,
@@ -337,7 +337,7 @@ class MoreFragmentCompose : BaseComposeFragment<MoreViewModel>() {
                             color = MaterialTheme.colorScheme.onSecondaryContainer
                         )
                     }
-                    
+
                     if (tool.isExperimental) {
                         Card(
                             colors = CardDefaults.cardColors(
@@ -354,15 +354,15 @@ class MoreFragmentCompose : BaseComposeFragment<MoreViewModel>() {
                         }
                     }
                 }
-                
+
                 Spacer(modifier = Modifier.height(8.dp))
-                
+
                 Text(
                     text = tool.description,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.8f)
                 )
-                
+
                 if (tool.requirements.isNotEmpty()) {
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
@@ -515,16 +515,19 @@ class MoreFragmentCompose : BaseComposeFragment<MoreViewModel>() {
                     .build(RouterConfig.USER_GUIDE)
                     .navigation(context)
             }
+
             "faq" -> {
                 NavigationManager.getInstance()
                     .build(RouterConfig.FAQ)
                     .navigation(context)
             }
+
             "troubleshooting" -> {
                 NavigationManager.getInstance()
                     .build(RouterConfig.TROUBLESHOOTING)
                     .navigation(context)
             }
+
             "contact_support" -> {
                 val intent = Intent(context, FeedbackActivity::class.java)
                 context.startActivity(intent)

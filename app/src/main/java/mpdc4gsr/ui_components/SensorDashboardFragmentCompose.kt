@@ -29,11 +29,11 @@ import mpdc4gsr.compose.base.SimpleComposeFragment
 
 /**
  * Compose migration of SensorDashboardFragment
- * 
+ *
  * Enhanced Comprehensive Sensor Status Dashboard Fragment using Compose
  * Implements all TODO requirements:
  * - Clear UI indicators for each sensor's status (connected, streaming, error)
- * - Connection status indicators for each sensor  
+ * - Connection status indicators for each sensor
  * - Prominent recording indicator with timer
  * - Simulation mode warnings
  * - Real-time sensor error notifications
@@ -48,7 +48,7 @@ class SensorDashboardFragmentCompose : SimpleComposeFragment() {
         var recordingTime by remember { mutableStateOf(0L) }
         var isCollapsed by remember { mutableStateOf(false) }
         var currentSessionId by remember { mutableStateOf<String?>(null) }
-        
+
         // Simulate recording timer
         LaunchedEffect(isRecording) {
             if (isRecording) {
@@ -65,8 +65,10 @@ class SensorDashboardFragmentCompose : SimpleComposeFragment() {
             listOf(
                 SensorData("thermal_camera", "TC001 Thermal Camera", SensorType.THERMAL, SensorStatus.CONNECTED),
                 SensorData("rgb_camera", "RGB Camera", SensorType.RGB, SensorStatus.STREAMING),
-                SensorData("shimmer_gsr", "Shimmer GSR Sensor", SensorType.GSR, SensorStatus.CONNECTED, 
-                    multiDeviceInfo = MultiDeviceInfo(2, 1, 4)),
+                SensorData(
+                    "shimmer_gsr", "Shimmer GSR Sensor", SensorType.GSR, SensorStatus.CONNECTED,
+                    multiDeviceInfo = MultiDeviceInfo(2, 1, 4)
+                ),
                 SensorData("audio_recorder", "Audio Recorder", SensorType.AUDIO, SensorStatus.DISCONNECTED)
             )
         }
@@ -95,7 +97,7 @@ class SensorDashboardFragmentCompose : SimpleComposeFragment() {
                     activeSensorCount = sensors.count { it.isConnected() },
                     totalSensorCount = sensors.size,
                     errorSensorCount = sensors.count { it.hasError() },
-                    onToggleRecording = { 
+                    onToggleRecording = {
                         isRecording = !isRecording
                         currentSessionId = if (isRecording) "SESSION_${System.currentTimeMillis()}" else null
                     }
@@ -156,7 +158,7 @@ class SensorDashboardFragmentCompose : SimpleComposeFragment() {
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
-                        
+
                         if (isRecording) {
                             Text(
                                 text = "RECORDING: ${formatElapsedTime(recordingTime)}",
@@ -172,7 +174,7 @@ class SensorDashboardFragmentCompose : SimpleComposeFragment() {
                             )
                         }
                     }
-                    
+
                     // Recording indicator
                     Box(
                         modifier = Modifier
@@ -183,15 +185,15 @@ class SensorDashboardFragmentCompose : SimpleComposeFragment() {
                             )
                     )
                 }
-                
+
                 // Recording control button
                 Button(
                     onClick = onToggleRecording,
                     modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = if (isRecording) 
-                            MaterialTheme.colorScheme.error 
-                        else 
+                        containerColor = if (isRecording)
+                            MaterialTheme.colorScheme.error
+                        else
                             MaterialTheme.colorScheme.primary
                     )
                 ) {
@@ -232,7 +234,7 @@ class SensorDashboardFragmentCompose : SimpleComposeFragment() {
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold
                     )
-                    
+
                     IconButton(onClick = onToggleCollapse) {
                         Icon(
                             Icons.Default.ExpandMore,
@@ -241,7 +243,7 @@ class SensorDashboardFragmentCompose : SimpleComposeFragment() {
                         )
                     }
                 }
-                
+
                 // Sensors list (only shown when not collapsed)
                 if (!isCollapsed) {
                     Column(
@@ -252,7 +254,7 @@ class SensorDashboardFragmentCompose : SimpleComposeFragment() {
                             SensorStatusCard(sensor = sensor)
                         }
                     }
-                    
+
                     Spacer(modifier = Modifier.height(8.dp))
                 }
             }
@@ -283,9 +285,9 @@ class SensorDashboardFragmentCompose : SimpleComposeFragment() {
                             shape = CircleShape
                         )
                 )
-                
+
                 Spacer(modifier = Modifier.width(12.dp))
-                
+
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = sensor.displayName,
@@ -297,18 +299,19 @@ class SensorDashboardFragmentCompose : SimpleComposeFragment() {
                         style = MaterialTheme.typography.bodySmall,
                         color = sensor.status.getColor()
                     )
-                    
+
                     // Show additional info for specific sensors
                     when {
                         sensor.type == SensorType.GSR && sensor.multiDeviceInfo != null -> {
                             Text(
                                 text = "Multi-device: " +
-                                    "${sensor.multiDeviceInfo.connectedCount}/${sensor.multiDeviceInfo.maxDevices} connected, " +
-                                    "${sensor.multiDeviceInfo.streamingCount} streaming",
+                                        "${sensor.multiDeviceInfo.connectedCount}/${sensor.multiDeviceInfo.maxDevices} connected, " +
+                                        "${sensor.multiDeviceInfo.streamingCount} streaming",
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
+
                         sensor.isSimulation -> {
                             Row(
                                 verticalAlignment = Alignment.CenterVertically
@@ -327,6 +330,7 @@ class SensorDashboardFragmentCompose : SimpleComposeFragment() {
                                 )
                             }
                         }
+
                         sensor.errorMessage != null -> {
                             Text(
                                 text = "Error: ${sensor.errorMessage}",
@@ -336,7 +340,7 @@ class SensorDashboardFragmentCompose : SimpleComposeFragment() {
                         }
                     }
                 }
-                
+
                 // Sensor type icon
                 Icon(
                     painter = painterResource(id = sensor.type.getIconRes()),
@@ -382,7 +386,7 @@ class SensorDashboardFragmentCompose : SimpleComposeFragment() {
 
     enum class SensorType {
         THERMAL, RGB, GSR, AUDIO;
-        
+
         fun getIconRes(): Int = when (this) {
             THERMAL -> com.mpdc4gsr.libunified.R.drawable.ic_menu_thermal6001  // Using libunified thermal icon
             RGB -> R.drawable.ic_camera_alt            // Using existing camera icon
@@ -393,7 +397,7 @@ class SensorDashboardFragmentCompose : SimpleComposeFragment() {
 
     enum class SensorStatus {
         DISCONNECTED, CONNECTING, CONNECTED, STREAMING, ERROR, SIMULATION;
-        
+
         fun getColor(): Color = when (this) {
             DISCONNECTED -> Color.Gray
             CONNECTING -> Color(0xFFFFA500) // Orange
@@ -402,7 +406,7 @@ class SensorDashboardFragmentCompose : SimpleComposeFragment() {
             ERROR -> Color.Red
             SIMULATION -> Color(0xFFFFA500) // Orange
         }
-        
+
         fun getDisplayText(): String = when (this) {
             DISCONNECTED -> "Disconnected"
             CONNECTING -> "Connecting..."
