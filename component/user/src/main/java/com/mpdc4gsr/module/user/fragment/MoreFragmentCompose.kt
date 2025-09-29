@@ -384,9 +384,9 @@ class MoreFragmentCompose : BaseComposeFragment<MoreViewModel>() {
                 title = "Quick Calibration",
                 description = "Calibrate thermal camera quickly",
                 icon = Icons.Default.Tune,
-                backgroundColor = androidx.compose.ui.graphics.Color.Blue.copy(alpha = 0.1f),
-                iconTint = androidx.compose.ui.graphics.Color.Blue,
-                textColor = androidx.compose.ui.graphics.Color.Blue,
+                backgroundColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
+                iconTint = MaterialTheme.colorScheme.primary,
+                textColor = MaterialTheme.colorScheme.primary,
                 badge = "QUICK"
             ),
             QuickActionItem(
