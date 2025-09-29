@@ -1,40 +1,71 @@
 # IRCamera App Layout Architecture
 
 This document provides a comprehensive overview of the layout structure and UI components used
-throughout the IRCamera
-Android application. Following a major consolidation effort, the app now contains **220 layout files
-** with a
-streamlined and efficient architecture.
+throughout the IRCamera Android application. The app contains **221 layout files** across 4 modules
+with a sophisticated multi-module architecture.
 
-## Layout Overview by Type - CORRECTED
+## Layout Overview by Module - UPDATED
 
 From our comprehensive analysis, the app contains:
 
-- **App Module**: 30 layout files - Main application layouts
-- **Component Module**: 121 layout files - Thermal and user module layouts
-- **LibUnified Module**: 69 layout files - Base templates and utility layouts
-- **10 Consolidated layouts** - New unified layout templates replacing multiple specialized layouts
+- **App Module**: 31 layout files - Main application layouts
+- **Component thermalunified Module**: 103 layout files - Thermal imaging system layouts
+- **Component user Module**: 18 layout files - User management system layouts  
+- **LibUnified Module**: 69 layout files - Shared utilities and common component layouts
+- **10 Consolidated layouts** - Unified layout templates replacing multiple specialized layouts
 - **51 Backup layouts** - Legacy layouts moved to backup/layouts/ directory
 
-**Total: 220 layouts** (corrected from previous 219 count)
+**Total: 221 layouts** (updated count)
+
+```mermaid
+graph TB
+    subgraph "Layout Distribution Overview"
+        TotalLayouts[Total: 221 Layouts<br/>4 Modules<br/>Multi-Modal UI System]
+        
+        AppLayouts[App Module<br/>31 Layouts (14%)<br/>Core UI]
+        ThermalLayouts[Thermal Module<br/>103 Layouts (47%)<br/>Imaging UI]
+        UserLayouts[User Module<br/>18 Layouts (8%)<br/>Management UI]
+        LibLayouts[LibUnified<br/>69 Layouts (31%)<br/>Shared UI]
+        
+        TotalLayouts --> AppLayouts
+        TotalLayouts --> ThermalLayouts
+        TotalLayouts --> UserLayouts
+        TotalLayouts --> LibLayouts
+    end
+    
+    %% Styling
+    classDef totalBox fill:#ff6b6b,stroke:#333,stroke-width:3px,color:#fff
+    classDef moduleBox fill:#4ecdc4,stroke:#333,stroke-width:2px,color:#fff
+    
+    class TotalLayouts totalBox
+    class AppLayouts,ThermalLayouts,UserLayouts,LibLayouts moduleBox
+```
 
 ## Module-Specific Breakdown
 
-### App Module Layouts (30)
+### App Module Layouts (31)
 
 - Core application interfaces
-- GSR sensor layouts
+- Main activity layouts
 - Testing and development layouts
-- 10 new consolidated layouts
+- Primary sensor coordination layouts
 
-### Component Module Layouts (121) - PREVIOUSLY UNDERDOCUMENTED
+### Component thermalunified Module Layouts (103) - LARGEST MODULE
 
-- **Thermal Unified Module**: ~80 layouts
-- **User Module**: ~25 layouts
-- **Report Module**: ~16 layouts
-- This represents the largest portion of layouts and was severely underdocumented
+- Complete thermal imaging interface system
+- Thermal camera control layouts
+- Thermal analysis and processing layouts
+- Temperature measurement tools
+- Thermal-specific UI components and dialogs
 
-### LibUnified Module Layouts (69) - PREVIOUSLY UNDERDOCUMENTED
+### Component user Module Layouts (18) - USER MANAGEMENT SYSTEM
+
+- User authentication interfaces
+- Profile management layouts
+- User preference and configuration screens
+- User-specific functionality layouts
+
+### LibUnified Module Layouts (69) - SHARED UTILITIES
 
 - Base activity templates
 - Common dialog layouts

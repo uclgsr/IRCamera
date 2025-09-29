@@ -24,7 +24,9 @@ scientific data collection.
 
 ### Android Application (`app/`)
 
-- **Modular Design**: Dedicated managers for each sensor type
+- **Modular Design**: Comprehensive multi-module architecture with 4 distinct modules
+- **210+ Activities**: Extensive functionality across thermal, user, and core modules
+- **221 Layouts**: Rich UI components and responsive design elements
 - **Background Services**: Persistent data collection and device coordination
 - **MVVM Architecture**: Clean separation following Android best practices
 - **Repository Pattern**: Centralized data management with caching
@@ -38,11 +40,13 @@ scientific data collection.
 
 ### Key Components
 
-- `ThermalCameraManager.kt` - Topdon TC001 integration
+- `ThermalCameraManager.kt` - Topdon TC001 integration (93 thermal activities)
 - `GSRSensorService.kt` - Shimmer3 BLE management
 - `RgbCameraManager.kt` - Camera2 API handling
 - `TimeSyncManager.kt` - Cross-device synchronization
 - `CommandServer.kt` - PC-Android coordination protocol
+- `UserManagementModule` - Comprehensive user system (18 activities)
+- `LibUnified` - Shared utilities and common components (7 activities)
 
 ## Quick Start
 
