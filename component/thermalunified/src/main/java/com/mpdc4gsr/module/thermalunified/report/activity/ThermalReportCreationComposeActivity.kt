@@ -642,9 +642,32 @@ private fun ReportPreviewDialog(
         onDismissRequest = onDismiss,
         title = { Text("Report Preview") },
         text = {
-            Column {
-                Text("Preview will be available after implementation")
-                // TODO: Implement report preview
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                if (template != null) {
+                    Text(
+                        text = "Template: ${template.name}",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp
+                    )
+                    Text(
+                        text = template.description,
+                        fontSize = 14.sp,
+                        color = Color.Gray
+                    )
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+                Text("Title: ${reportData.title}", fontWeight = FontWeight.SemiBold)
+                Text("Author: ${reportData.author}")
+                Text("Description: ${reportData.description}")
+                Text("Location: ${reportData.location}")
+                if (reportData.thermalImages.isNotEmpty()) {
+                    Text("Thermal Images: ${reportData.thermalImages.size} attached")
+                } else {
+                    Text("No thermal images attached")
+                }
+                Text("Include Temperature Analysis: ${if (reportData.includeTemperatureAnalysis) "Yes" else "No"}")
+                Text("Include Hotspot Detection: ${if (reportData.includeHotspotDetection) "Yes" else "No"}")
+                Text("Include Statistics: ${if (reportData.includeStatistics) "Yes" else "No"}")
             }
         },
         confirmButton = {
