@@ -562,7 +562,12 @@ class MoreFragmentCompose : BaseComposeFragment<MoreFragmentComposeViewModel>() 
         viewModel: MoreFragmentComposeViewModel
     ) {
         // Community click logic can be implemented later
-        // For now, we'll just handle the click without action
+        // For now, show a placeholder message
+        android.widget.Toast.makeText(
+            context,
+            "Community feature not yet implemented.",
+            android.widget.Toast.LENGTH_SHORT
+        ).show()
     }
 
     private fun handleAdvancedToolClick(
