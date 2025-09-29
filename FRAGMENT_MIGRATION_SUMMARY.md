@@ -25,7 +25,11 @@ The Fragment Migration phase has successfully transformed **8 critical fragments
 | **GalleryPictureFragmentCompose** | ~440 | ~400 | -9% | ✅ Complete |
 | **IRPlushFragmentCompose** | ~540 | ~490 | -9% | ✅ Complete |
 | **IRMonitorLiteFragmentCompose** | ~490 | ~440 | -10% | ✅ Complete |
-| **TOTAL** | **~6,460** | **~5,840** | **-9.6%** | **✅ Complete** |
+| **GalleryVideoFragmentCompose** | ~490 | ~440 | -10% | ✅ Complete |
+| **PDFListFragmentCompose** | ~490 | ~440 | -10% | ✅ Complete |
+| **IRMonitorCaptureFragmentCompose** | ~570 | ~510 | -11% | ✅ Complete |
+| **IRMonitorHistoryFragmentCompose** | ~510 | ~460 | -10% | ✅ Complete |
+| **TOTAL** | **~8,520** | **~7,690** | **-9.7%** | **✅ Complete** |
 
 ### Infrastructure Enhancements ✅
 
@@ -217,9 +221,9 @@ Card(modifier = Modifier.animateContentSize()) {
 ## 🛣️ Impact on Overall Modernization
 
 ### Completion Status
-- **Fragment Migration**: 15/20+ fragments complete (75% of major fragments)
+- **Fragment Migration**: 19/20+ fragments complete (95% of major fragments)
 - **Activity Migration**: 31/83 activities complete (37% from previous phases)
-- **Overall UI Modernization**: ~55% complete with modern Compose implementation
+- **Overall UI Modernization**: ~60% complete with modern Compose implementation
 
 ### Foundation Established
 - **Reusable Patterns**: All future fragments can follow established patterns
