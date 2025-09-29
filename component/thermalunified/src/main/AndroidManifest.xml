@@ -27,21 +27,6 @@
             android:screenOrientation="userPortrait" />
         <activity android:name=".activity.TestRecordActivity" />
         <activity
-            android:name=".report.activity.ReportCreateFirstActivity"
-            android:screenOrientation="userPortrait" />
-        <activity
-            android:name=".report.activity.ReportCreateSecondActivity"
-            android:screenOrientation="userPortrait" />
-        <activity
-            android:name=".report.activity.ReportDetailActivity"
-            android:screenOrientation="userPortrait" />
-        <activity
-            android:name=".report.activity.ReportPreviewFirstActivity"
-            android:screenOrientation="userPortrait" />
-        <activity
-            android:name=".report.activity.ReportPreviewSecondActivity"
-            android:screenOrientation="userPortrait" />
-        <activity
             android:name=".report.activity.PDFListActivity"
             android:screenOrientation="userPortrait" />
 
@@ -56,23 +41,6 @@
         <!-- Activities from thermal module -->
 
         <!-- Activities from thermal-lite module -->
-        <activity android:name=".lite.activity.IRMonitorLiteActivity" />
-        <activity android:name=".lite.activity.IRMonitorChartLiteActivity" />
-        <activity android:name=".lite.activity.IRCorrectionLiteThreeActivity" />
-        <activity android:name=".lite.activity.IRCorrectionLiteFourActivity" />
-        <activity
-            android:name=".lite.activity.ImagePickIRLiteActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".lite.activity.IRThermalLiteActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:exported="true"
-            android:launchMode="singleTask"
-            android:maxAspectRatio="2.4"
-            android:requestLegacyExternalStorage="true"
-            android:screenOrientation="userPortrait"
-            android:windowSoftInputMode="adjustPan" />
-
         <!-- Missing base activities -->
         
         <activity
