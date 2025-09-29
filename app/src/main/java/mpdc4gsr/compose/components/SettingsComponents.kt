@@ -39,7 +39,7 @@ fun SettingsCard(
                 Icon(
                     imageVector = icon,
                     contentDescription = null,
-                    tint = Color.Blue,
+                    tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(24.dp)
                 )
                 Spacer(modifier = Modifier.width(12.dp))
@@ -92,9 +92,9 @@ fun SettingsToggle(
             checked = checked,
             onCheckedChange = onCheckedChange,
             colors = SwitchDefaults.colors(
-                checkedThumbColor = Color.Blue,
+                checkedThumbColor = MaterialTheme.colorScheme.primary,
                 uncheckedThumbColor = Color.Gray,
-                checkedTrackColor = Color.Blue.copy(alpha = 0.3f),
+                checkedTrackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
                 uncheckedTrackColor = Color.Gray.copy(alpha = 0.3f)
             )
         )
@@ -131,7 +131,7 @@ fun SettingsSlider(
             )
             Text(
                 text = "${value.toInt()} $unit",
-                color = Color.Blue,
+                color = MaterialTheme.colorScheme.primary,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -144,8 +144,8 @@ fun SettingsSlider(
             onValueChange = onValueChange,
             valueRange = valueRange,
             colors = SliderDefaults.colors(
-                thumbColor = Color.Blue,
-                activeTrackColor = Color.Blue,
+                thumbColor = MaterialTheme.colorScheme.primary,
+                activeTrackColor = MaterialTheme.colorScheme.primary,
                 inactiveTrackColor = Color.Gray.copy(alpha = 0.3f)
             )
         )
@@ -191,15 +191,15 @@ fun SettingsDropdown(
                     Icon(
                         Icons.Default.ExpandMore,
                         contentDescription = null,
-                        tint = Color.Blue
+                        tint = MaterialTheme.colorScheme.primary
                     )
                 },
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedTextColor = Color.White,
                     unfocusedTextColor = Color.White,
-                    focusedBorderColor = Color.Blue,
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
                     unfocusedBorderColor = Color.Gray,
-                    cursorColor = Color.Blue
+                    cursorColor = MaterialTheme.colorScheme.primary
                 ),
                 modifier = Modifier
                     .menuAnchor()
@@ -251,7 +251,7 @@ fun SettingsRow(
         )
         Text(
             text = value,
-            color = Color.Blue,
+            color = MaterialTheme.colorScheme.primary,
             fontSize = 14.sp,
             fontWeight = FontWeight.Bold
         )

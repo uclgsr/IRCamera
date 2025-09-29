@@ -153,7 +153,7 @@ fun GSRSensorCard(
                     SensorState.Connected -> {
                         Button(
                             onClick = { onAction(GSRAction.StartStream) },
-                            colors = ButtonDefaults.buttonColors(containerColor = Color.Blue)
+                            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
                         ) {
                             Icon(Icons.Default.PlayArrow, contentDescription = null)
                             Spacer(Modifier.width(4.dp))
@@ -316,7 +316,7 @@ private fun MetricItem(
 private fun getStatusColor(state: SensorState): Color {
     return when (state) {
         SensorState.Connected -> Color.Green
-        SensorState.Streaming -> Color.Blue
+        SensorState.Streaming -> MaterialTheme.colorScheme.primary
         SensorState.Error -> Color.Red
         SensorState.Disconnected -> Color.Gray
         SensorState.Connecting -> Color.Yellow

@@ -85,7 +85,7 @@ private fun UserProfileCard(
             Surface(
                 modifier = Modifier.size(80.dp),
                 shape = CircleShape,
-                color = Color.Blue
+                color = MaterialTheme.colorScheme.primary
             ) {
                 Box(
                     contentAlignment = Alignment.Center
@@ -115,7 +115,7 @@ private fun UserProfileCard(
             )
             Text(
                 text = "University Research Lab",
-                color = Color.Blue,
+                color = MaterialTheme.colorScheme.primary,
                 fontSize = 12.sp
             )
 
@@ -124,7 +124,7 @@ private fun UserProfileCard(
             // Edit profile button
             Button(
                 onClick = { /* Edit profile */ },
-                colors = ButtonDefaults.buttonColors(containerColor = Color.Blue)
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
             ) {
                 Icon(Icons.Default.Edit, contentDescription = null)
                 Spacer(Modifier.width(8.dp))
@@ -166,7 +166,7 @@ private fun ResearchStatsCard(
                 StatItem(
                     label = "Sessions",
                     value = "47",
-                    color = Color.Blue
+                    color = MaterialTheme.colorScheme.primary
                 )
                 StatItem(
                     label = "Hours Recorded",
@@ -384,7 +384,7 @@ private fun ActivityItem(
         Icon(
             imageVector = activity.icon,
             contentDescription = null,
-            tint = Color.Blue,
+            tint = MaterialTheme.colorScheme.primary,
             modifier = Modifier.size(20.dp)
         )
 
@@ -423,7 +423,7 @@ private fun QuickActionButton(
     ) {
         FloatingActionButton(
             onClick = onClick,
-            containerColor = Color.Blue,
+            containerColor = MaterialTheme.colorScheme.primary,
             modifier = Modifier.size(48.dp)
         ) {
             Icon(

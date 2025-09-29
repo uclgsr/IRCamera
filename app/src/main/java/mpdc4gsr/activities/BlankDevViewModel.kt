@@ -1,6 +1,6 @@
 package mpdc4gsr.activities
 
-import android.app.Application
+// import android.app.Application
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
@@ -19,9 +19,7 @@ import kotlinx.coroutines.launch
  * ViewModel for USB Device Handler Compose Activity
  * Manages USB device detection, connection, and permissions
  */
-class BlankDevViewModel(
-    private val application: Application
-) : BaseViewModel() {
+class BlankDevViewModel : BaseViewModel() {
 
     data class UiState(
         val isLoading: Boolean = false,
@@ -36,7 +34,7 @@ class BlankDevViewModel(
     private val _uiState = MutableStateFlow(UiState())
     val uiState: StateFlow<UiState> = _uiState.asStateFlow()
 
-    private val usbManager = application.getSystemService(Context.USB_SERVICE) as UsbManager
+    // private val usbManager = application.getSystemService(Context.USB_SERVICE) as UsbManager
     private var countdownJob: Job? = null
 
     companion object {
@@ -45,7 +43,7 @@ class BlankDevViewModel(
     }
 
     init {
-        refreshUsbDevices()
+        // refreshUsbDevices()
         startAutoNavigationCountdown()
     }
 
@@ -57,25 +55,25 @@ class BlankDevViewModel(
             _uiState.value = _uiState.value.copy(isLoading = true, error = null)
             
             try {
-                val deviceList = usbManager.deviceList
+                // val deviceList = usbManager.deviceList
                 val connectedDevices = mutableListOf<UsbDeviceInfo>()
                 val availableDevices = mutableListOf<UsbDeviceInfo>()
                 
-                deviceList.values.forEach { usbDevice ->
-                    val deviceInfo = UsbDeviceInfo(
-                        name = usbDevice.deviceName ?: "Unknown Device",
-                        productId = usbDevice.productId,
-                        vendorId = usbDevice.vendorId,
-                        deviceType = determineDeviceType(usbDevice),
-                        hasPermission = usbManager.hasPermission(usbDevice)
-                    )
-                    
-                    if (deviceInfo.hasPermission) {
-                        connectedDevices.add(deviceInfo)
-                    } else {
-                        availableDevices.add(deviceInfo)
-                    }
-                }
+                // deviceList.values.forEach { usbDevice ->
+                //     val deviceInfo = UsbDeviceInfo(
+                //         name = usbDevice.deviceName ?: "Unknown Device",
+                //         productId = usbDevice.productId,
+                //         vendorId = usbDevice.vendorId,
+                //         deviceType = determineDeviceType(usbDevice),
+                //         hasPermission = usbManager.hasPermission(usbDevice)
+                //     )
+                //     
+                //     if (deviceInfo.hasPermission) {
+                //         connectedDevices.add(deviceInfo)
+                //     } else {
+                //         availableDevices.add(deviceInfo)
+                //     }
+                // }
                 
                 _uiState.value = _uiState.value.copy(
                     isLoading = false,
@@ -99,12 +97,15 @@ class BlankDevViewModel(
     fun requestUsbPermissions() {
         viewModelScope.launch {
             try {
-                val deviceList = usbManager.deviceList
-                deviceList.values.forEach { usbDevice ->
-                    if (!usbManager.hasPermission(usbDevice)) {
-                        requestPermissionForUsbDevice(usbDevice)
-                    }
-                }
+                // val deviceList = usbManager.deviceList
+                // deviceList.values.forEach { usbDevice ->
+                //     if (!usbManager.hasPermission(usbDevice)) {
+                //         requestPermissionForUsbDevice(usbDevice)
+                //     }
+                // }
+                _uiState.value = _uiState.value.copy(
+                    error = "USB permissions functionality requires Activity context"
+                )
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(
                     error = "Failed to request USB permissions: ${e.message}"
@@ -119,12 +120,16 @@ class BlankDevViewModel(
     fun requestPermissionForDevice(device: UsbDeviceInfo) {
         viewModelScope.launch {
             try {
-                val deviceList = usbManager.deviceList
-                val usbDevice = deviceList.values.find { 
-                    it.productId == device.productId && it.vendorId == device.vendorId 
-                }
+                // val deviceList = usbManager.deviceList
+                // val usbDevice = deviceList.values.find { 
+                //     it.productId == device.productId && it.vendorId == device.vendorId 
+                // }
+                // 
+                // usbDevice?.let { requestPermissionForUsbDevice(it) }
                 
-                usbDevice?.let { requestPermissionForUsbDevice(it) }
+                _uiState.value = _uiState.value.copy(
+                    error = "Device permission request functionality requires Activity context"
+                )
                 
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(
@@ -253,15 +258,15 @@ class BlankDevViewModel(
      * Request permission for a USB device
      */
     private fun requestPermissionForUsbDevice(device: UsbDevice) {
-        val context = application.applicationContext
-        val permissionIntent = PendingIntent.getBroadcast(
-            context,
-            0,
-            Intent(ACTION_USB_PERMISSION),
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
-        
-        usbManager.requestPermission(device, permissionIntent)
+        // val context = application.applicationContext
+        // val permissionIntent = PendingIntent.getBroadcast(
+        //     context,
+        //     0,
+        //     Intent(ACTION_USB_PERMISSION),
+        //     PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        // )
+        // 
+        // usbManager.requestPermission(device, permissionIntent)
     }
 
     /**

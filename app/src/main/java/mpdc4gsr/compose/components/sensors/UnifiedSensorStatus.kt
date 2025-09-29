@@ -108,7 +108,7 @@ fun UnifiedSensorStatus(
                 MetricItem(
                     label = "Streaming",
                     value = streamingSensors.toString(),
-                    color = if (streamingSensors > 0) Color.Blue else Color.Gray
+                    color = if (streamingSensors > 0) MaterialTheme.colorScheme.primary else Color.Gray
                 )
                 MetricItem(
                     label = "Sync Status",
@@ -126,7 +126,7 @@ fun UnifiedSensorStatus(
                     UnifiedSystemState.Inactive -> {
                         Button(
                             onClick = { onSystemAction(SystemAction.Synchronize) },
-                            colors = ButtonDefaults.buttonColors(containerColor = Color.Blue)
+                            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
                         ) {
                             Icon(Icons.Default.Sync, contentDescription = null)
                             Spacer(Modifier.width(4.dp))
@@ -145,7 +145,7 @@ fun UnifiedSensorStatus(
                         }
                         Button(
                             onClick = { onSystemAction(SystemAction.Synchronize) },
-                            colors = ButtonDefaults.buttonColors(containerColor = Color.Blue)
+                            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
                         ) {
                             Icon(Icons.Default.Sync, contentDescription = null)
                             Spacer(Modifier.width(4.dp))
@@ -243,7 +243,7 @@ private fun SensorStatusVisualization(
                     val x = width / (sensors.size + 1) * (index + 1)
                     val nodeColor = when (sensor.state) {
                         SensorState.Connected -> Color.Green
-                        SensorState.Streaming -> Color.Blue
+                        SensorState.Streaming -> MaterialTheme.colorScheme.primary
                         SensorState.Error -> Color.Red
                         SensorState.Disconnected -> Color.Gray
                         SensorState.Connecting -> Color.Yellow

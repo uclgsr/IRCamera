@@ -191,7 +191,7 @@ private fun GSRConnectionCard(
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
                     MetricItem("Battery", "$deviceBattery%", Color.Green)
-                    MetricItem("Sampling", "${samplingRate}Hz", Color.Blue)
+                    MetricItem("Sampling", "${samplingRate}Hz", MaterialTheme.colorScheme.primary)
                     MetricItem("Status", "Streaming", Color.Cyan)
                 }
             }
@@ -418,7 +418,7 @@ private fun GSRRecordingControls(
                 Button(
                     onClick = onExportData,
                     enabled = !isRecording,
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.Blue)
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
                 ) {
                     Text("Export Data")
                 }
@@ -466,7 +466,7 @@ private fun GSRAnalysisCard(
             ) {
                 MetricItem("Average", String.format("%.2f μS", avgGSR), Color.Cyan)
                 MetricItem("Maximum", String.format("%.2f μS", maxGSR), Color.Red)
-                MetricItem("Minimum", String.format("%.2f μS", minGSR), Color.Blue)
+                MetricItem("Minimum", String.format("%.2f μS", minGSR), MaterialTheme.colorScheme.primary)
                 MetricItem("Std Dev", String.format("%.2f", stdDev), Color.Yellow)
             }
         }

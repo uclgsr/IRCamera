@@ -74,7 +74,7 @@ fun PolicyScreen(
                     contentAlignment = androidx.compose.ui.Alignment.Center
                 ) {
                     CircularProgressIndicator(
-                        color = Color.Blue
+                        color = MaterialTheme.colorScheme.primary
                     )
                 }
             }

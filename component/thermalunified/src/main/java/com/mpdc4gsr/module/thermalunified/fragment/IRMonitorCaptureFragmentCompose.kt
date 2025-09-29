@@ -279,7 +279,7 @@ class IRMonitorCaptureFragmentCompose : BaseComposeFragment<IRMonitorCaptureView
                 CaptureTemperatureCard(
                     label = "Min",
                     temperature = "${data.minTemp}°C",
-                    color = Color.Blue
+                    color = MaterialTheme.colorScheme.primary
                 )
             }
         }
@@ -565,7 +565,7 @@ class IRMonitorCaptureFragmentCompose : BaseComposeFragment<IRMonitorCaptureView
     private fun getCaptureStatusColor(state: CaptureState): Color = when (state) {
         CaptureState.INACTIVE -> Color.Gray
         CaptureState.ACTIVE -> Color.Green
-        CaptureState.CONTINUOUS -> Color.Blue
+        CaptureState.CONTINUOUS -> MaterialTheme.colorScheme.primary
         CaptureState.CAPTURING -> Color(0xFFFFA500)
     }
 

@@ -168,7 +168,7 @@ private fun ThermalCameraPreview(
                 center = Offset(size.width * 0.3f, size.height * 0.4f)
             )
             drawCircle(
-                color = Color.Blue,
+                color = MaterialTheme.colorScheme.primary,
                 radius = 20f,
                 center = Offset(size.width * 0.7f, size.height * 0.6f)
             )
@@ -235,7 +235,7 @@ private fun TemperatureOverlay(
             modifier = Modifier
                 .align(Alignment.BottomStart)
                 .padding(16.dp),
-            color = Color.Blue.copy(alpha = 0.8f),
+            color = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f),
             shape = CircleShape
         ) {
             Column(
@@ -340,7 +340,7 @@ private fun ControlPanel(
         // Record button
         FloatingActionButton(
             onClick = onRecordClick,
-            containerColor = if (isRecording) Color.Red else Color.Blue
+            containerColor = if (isRecording) Color.Red else MaterialTheme.colorScheme.primary
         ) {
             Icon(
                 imageVector = Icons.Default.VideoCall,

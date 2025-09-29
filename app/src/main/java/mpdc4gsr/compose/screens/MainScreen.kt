@@ -77,9 +77,9 @@ fun MainScreen(
                 selected = selectedTab == 0,
                 onClick = { selectedTab = 0 },
                 colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = Color.Blue,
+                    selectedIconColor = MaterialTheme.colorScheme.primary,
                     unselectedIconColor = Color.Gray,
-                    selectedTextColor = Color.Blue,
+                    selectedTextColor = MaterialTheme.colorScheme.primary,
                     unselectedTextColor = Color.Gray
                 )
             )
@@ -89,9 +89,9 @@ fun MainScreen(
                 selected = selectedTab == 1,
                 onClick = { selectedTab = 1 },
                 colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = Color.Blue,
+                    selectedIconColor = MaterialTheme.colorScheme.primary,
                     unselectedIconColor = Color.Gray,
-                    selectedTextColor = Color.Blue,
+                    selectedTextColor = MaterialTheme.colorScheme.primary,
                     unselectedTextColor = Color.Gray
                 )
             )
@@ -101,9 +101,9 @@ fun MainScreen(
                 selected = selectedTab == 2,
                 onClick = { selectedTab = 2 },
                 colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = Color.Blue,
+                    selectedIconColor = MaterialTheme.colorScheme.primary,
                     unselectedIconColor = Color.Gray,
-                    selectedTextColor = Color.Blue,
+                    selectedTextColor = MaterialTheme.colorScheme.primary,
                     unselectedTextColor = Color.Gray
                 )
             )
@@ -113,9 +113,9 @@ fun MainScreen(
                 selected = selectedTab == 3,
                 onClick = { selectedTab = 3 },
                 colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = Color.Blue,
+                    selectedIconColor = MaterialTheme.colorScheme.primary,
                     unselectedIconColor = Color.Gray,
-                    selectedTextColor = Color.Blue,
+                    selectedTextColor = MaterialTheme.colorScheme.primary,
                     unselectedTextColor = Color.Gray
                 )
             )
@@ -185,7 +185,7 @@ private fun SensorDashboardTab(
                 Button(
                     onClick = onNavigateToSensors,
                     modifier = Modifier.fillMaxWidth(),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.Blue)
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
                 ) {
                     Icon(Icons.Default.Dashboard, contentDescription = null)
                     Spacer(Modifier.width(8.dp))
@@ -226,7 +226,7 @@ private fun GalleryTab(
                 Icon(
                     Icons.Default.Photo,
                     contentDescription = null,
-                    tint = Color.Blue,
+                    tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(64.dp)
                 )
                 Spacer(modifier = Modifier.height(16.dp))
@@ -246,7 +246,7 @@ private fun GalleryTab(
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(
                     onClick = onNavigateToGallery,
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.Blue)
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
                 ) {
                     Text("Open Gallery")
                 }
@@ -282,7 +282,7 @@ private fun SettingsTab(
                 Icon(
                     Icons.Default.Settings,
                     contentDescription = null,
-                    tint = Color.Blue,
+                    tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(64.dp)
                 )
                 Spacer(modifier = Modifier.height(16.dp))
@@ -302,7 +302,7 @@ private fun SettingsTab(
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(
                     onClick = onNavigateToSettings,
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.Blue)
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
                 ) {
                     Text("Open Settings")
                 }
@@ -338,7 +338,7 @@ private fun ProfileTab(
                 Icon(
                     Icons.Default.Person,
                     contentDescription = null,
-                    tint = Color.Blue,
+                    tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(64.dp)
                 )
                 Spacer(modifier = Modifier.height(16.dp))
@@ -358,7 +358,7 @@ private fun ProfileTab(
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(
                     onClick = onNavigateToProfile,
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.Blue)
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
                 ) {
                     Text("View Profile")
                 }
@@ -396,7 +396,7 @@ private fun SystemStatusOverview(
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 StatusItem("GSR", "Connected", Color.Green)
-                StatusItem("Thermal", "Ready", Color.Blue)
+                StatusItem("Thermal", "Ready", MaterialTheme.colorScheme.primary)
                 StatusItem("RGB", "Active", Color.Green)
             }
         }

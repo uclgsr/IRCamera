@@ -269,7 +269,7 @@ class IRMonitorLiteFragmentCompose : BaseComposeFragment<IRMonitorLiteViewModel>
                 LiteTemperatureCard(
                     label = "Min",
                     temperature = "${data.minTemp}°C",
-                    color = Color.Blue
+                    color = MaterialTheme.colorScheme.primary
                 )
             }
         }

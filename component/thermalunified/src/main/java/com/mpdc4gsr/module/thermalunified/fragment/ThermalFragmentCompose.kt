@@ -204,7 +204,7 @@ class ThermalFragmentCompose : BaseComposeFragment<ThermalFragmentViewModel>() {
                 TemperatureCard(
                     label = "Min",
                     temperature = data.minTemp,
-                    color = Color.Blue
+                    color = MaterialTheme.colorScheme.primary
                 )
             } ?: run {
                 // Placeholder when no data

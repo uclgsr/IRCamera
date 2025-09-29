@@ -228,7 +228,7 @@ class IRCorrectionFragmentCompose : BaseComposeFragment<IRCorrectionViewModel>()
                 TemperatureCard(
                     label = "Offset",
                     temperature = "${data.offsetValue}°C",
-                    color = if (data.offsetValue >= 0) Color.Blue else Color.Red
+                    color = if (data.offsetValue >= 0) MaterialTheme.colorScheme.primary else Color.Red
                 )
             }
         }

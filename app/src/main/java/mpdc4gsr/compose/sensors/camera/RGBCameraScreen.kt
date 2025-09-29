@@ -414,7 +414,7 @@ private fun CameraStatusCard(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                MetricItem("Focus", focusMode, Color.Blue)
+                MetricItem("Focus", focusMode, MaterialTheme.colorScheme.primary)
                 MetricItem("White Balance", whiteBalance, Color.Magenta)
             }
         }
@@ -494,7 +494,7 @@ private fun RecordingControlsCard(
                     onClick = onToggleRecording,
                     enabled = isPreviewActive,
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = if (isRecording) Color.Red else Color.Blue
+                        containerColor = if (isRecording) Color.Red else MaterialTheme.colorScheme.primary
                     )
                 ) {
                     Icon(
@@ -563,7 +563,7 @@ private fun CameraSettingsCard(
                 Button(
                     onClick = { onResolutionChange("1920×1080") },
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = if (resolution == "1920×1080") Color.Blue else Color.Gray
+                        containerColor = if (resolution == "1920×1080") MaterialTheme.colorScheme.primary else Color.Gray
                     ),
                     modifier = Modifier.weight(1f)
                 ) {
@@ -575,7 +575,7 @@ private fun CameraSettingsCard(
                 Button(
                     onClick = { onResolutionChange("1280×720") },
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = if (resolution == "1280×720") Color.Blue else Color.Gray
+                        containerColor = if (resolution == "1280×720") MaterialTheme.colorScheme.primary else Color.Gray
                     ),
                     modifier = Modifier.weight(1f)
                 ) {
