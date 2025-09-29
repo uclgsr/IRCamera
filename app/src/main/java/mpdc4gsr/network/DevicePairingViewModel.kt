@@ -41,6 +41,10 @@ class DevicePairingViewModel : BaseViewModel(), NetworkClient.NetworkEventListen
     private val _events = MutableSharedFlow<PairingEvent>()
     val events: SharedFlow<PairingEvent> = _events.asSharedFlow()
 
+    // Flash overlay state
+    private val _flashState = MutableStateFlow(FlashState())
+    val flashState: StateFlow<FlashState> = _flashState.asStateFlow()
+
     // Combined state for complex UI scenarios
     private val _pairingScreenState = MutableStateFlow(PairingScreenState())
     val pairingScreenState: StateFlow<PairingScreenState> = _pairingScreenState.asStateFlow()
@@ -84,6 +88,11 @@ class DevicePairingViewModel : BaseViewModel(), NetworkClient.NetworkEventListen
         val showProgress: Boolean = false,
         val discoveredCount: Int = 0,
         val lastScanTime: Long? = null
+    )
+
+    data class FlashState(
+        val isVisible: Boolean = false,
+        val durationMs: Int = 0
     )
 
     init {
@@ -280,6 +289,14 @@ class DevicePairingViewModel : BaseViewModel(), NetworkClient.NetworkEventListen
     override fun onError(error: String) {
         viewModelScope.launch {
             _events.emit(PairingEvent.ShowError(error))
+        }
+    }
+
+    fun triggerSyncFlash(durationMs: Int) {
+        viewModelScope.launch {
+            _flashState.value = FlashState(isVisible = true, durationMs = durationMs)
+            kotlinx.coroutines.delay(durationMs.toLong())
+            _flashState.value = FlashState(isVisible = false, durationMs = 0)
         }
     }
 
