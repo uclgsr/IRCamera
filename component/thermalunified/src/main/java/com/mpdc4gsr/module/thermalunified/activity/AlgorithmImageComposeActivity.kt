@@ -21,6 +21,8 @@ import androidx.compose.ui.viewinterop.AndroidView
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 /**
  * Modern Compose implementation of algorithm image processing activity
@@ -38,6 +40,7 @@ class AlgorithmImageComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         var selectedAlgorithm by remember { mutableStateOf("Edge Detection") }
         var isProcessing by remember { mutableStateOf(false) }
         var processingProgress by remember { mutableFloatStateOf(0f) }
+        val coroutineScope = rememberCoroutineScope()
         
         LibUnifiedTheme {
             Scaffold(
@@ -132,9 +135,9 @@ class AlgorithmImageComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 isProcessing = true
                                 processingProgress = 0f
                                 // Simulate processing
-                                kotlinx.coroutines.DelicateCoroutinesApi.GlobalScope.launch {
+                                coroutineScope.launch {
                                     for (i in 1..100) {
-                                        kotlinx.coroutines.delay(50L)
+                                        delay(50L)
                                         processingProgress = i / 100f
                                     }
                                     isProcessing = false

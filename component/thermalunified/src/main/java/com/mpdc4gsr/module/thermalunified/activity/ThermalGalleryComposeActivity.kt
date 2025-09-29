@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-import com.mpdc4gsr.libunified.app.viewmodel.BaseViewModel
+import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 
 /**
  * Modern Compose thermal gallery implementation
@@ -29,13 +29,14 @@ import com.mpdc4gsr.libunified.app.viewmodel.BaseViewModel
  */
 class ThermalGalleryComposeActivity : BaseComposeActivity<ThermalGalleryViewModel>() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            LibUnifiedTheme {
-                ThermalGalleryScreen()
-            }
-        }
+    override fun createViewModel(): ThermalGalleryViewModel {
+        return ThermalGalleryViewModel()
+    }
+
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    override fun Content(viewModel: ThermalGalleryViewModel) {
+        ThermalGalleryScreen()
     }
 }
 

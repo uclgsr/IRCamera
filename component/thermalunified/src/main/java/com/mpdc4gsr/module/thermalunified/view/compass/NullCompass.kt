@@ -4,7 +4,7 @@ import com.kylecorry.andromeda.sense.compass.ICompass
 import com.kylecorry.sol.units.Bearing
 
 class NullCompass : NullSensor(), ICompass {
-    override val bearing: Bearing = Bearing(0f)
+    override val bearing: Bearing = Bearing.from(0f)
 
     override var declination: Float = 0f
 

@@ -17,11 +17,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.viewinterop.AndroidView
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.fragment.IRThermalFragment
@@ -94,123 +92,162 @@ class IRMainComposeActivity : BaseComposeActivity<IRMainActivityViewModel>() {
 
 @Composable
 private fun ThermalTabContent() {
-    val context = LocalContext.current
-    val activity = context as? IRMainComposeActivity
-    
-    // Embed existing thermal fragment using AndroidView with proper FragmentManager integration
-    AndroidView(
-        factory = { context ->
-            androidx.fragment.app.FragmentContainerView(context).apply {
-                id = androidx.core.R.id.accessibility_custom_action_0
-            }
-        },
-        update = { view ->
-            activity?.let {
-                val fragment = IRThermalFragment()
-                it.supportFragmentManager.beginTransaction()
-                    .replace(view.id, fragment)
-                    .commitAllowingStateLoss()
-            }
-        },
-        modifier = Modifier.fillMaxSize()
-    )
+    // Simplified thermal camera view for Compose
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Icon(
+                Icons.Default.Videocam,
+                contentDescription = "Thermal Camera",
+                tint = Color(0xFFFF6B35),
+                modifier = Modifier.size(64.dp)
+            )
+            Text(
+                "Thermal Camera",
+                color = Color.White,
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                "Live thermal imaging feed",
+                color = Color(0xFF7D8590),
+                fontSize = 16.sp
+            )
+        }
+    }
 }
 
 @Composable
 private fun GalleryTabContent() {
-    val context = LocalContext.current
-    val activity = context as? IRMainComposeActivity
-    
-    // Embed existing gallery fragment using AndroidView with proper FragmentManager integration
-    AndroidView(
-        factory = { context ->
-            androidx.fragment.app.FragmentContainerView(context).apply {
-                id = androidx.core.R.id.accessibility_custom_action_1
-            }
-        },
-        update = { view ->
-            activity?.let {
-                val fragment = IRGalleryTabFragment()
-                it.supportFragmentManager.beginTransaction()
-                    .replace(view.id, fragment)
-                    .commitAllowingStateLoss()
-            }
-        },
-        modifier = Modifier.fillMaxSize()
-    )
+    // Simplified gallery view for Compose
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Icon(
+                Icons.Default.Photo,
+                contentDescription = "Gallery",
+                tint = Color(0xFFFF6B35),
+                modifier = Modifier.size(64.dp)
+            )
+            Text(
+                "Thermal Gallery",
+                color = Color.White,
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                "View and manage thermal images",
+                color = Color(0xFF7D8590),
+                fontSize = 16.sp
+            )
+        }
+    }
 }
 
 @Composable
 private fun AbilityTabContent() {
-    val context = LocalContext.current
-    val activity = context as? IRMainComposeActivity
-    
-    // Embed existing ability fragment using AndroidView with proper FragmentManager integration
-    AndroidView(
-        factory = { context ->
-            androidx.fragment.app.FragmentContainerView(context).apply {
-                id = androidx.core.R.id.accessibility_custom_action_2
-            }
-        },
-        update = { view ->
-            activity?.let {
-                val fragment = AbilityFragment()
-                it.supportFragmentManager.beginTransaction()
-                    .replace(view.id, fragment)
-                    .commitAllowingStateLoss()
-            }
-        },
-        modifier = Modifier.fillMaxSize()
-    )
-
+    // Simplified ability view for Compose
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Icon(
+                Icons.Default.Analytics,
+                contentDescription = "Analysis",
+                tint = Color(0xFFFF6B35),
+                modifier = Modifier.size(64.dp)
+            )
+            Text(
+                "Thermal Analysis",
+                color = Color.White,
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                "Advanced thermal analysis tools",
+                color = Color(0xFF7D8590),
+                fontSize = 16.sp
+            )
+        }
+    }
 }
 
 @Composable
 private fun PDFTabContent() {
-    val context = LocalContext.current
-    val activity = context as? IRMainComposeActivity
-    
-    // Embed existing PDF fragment using AndroidView with proper FragmentManager integration
-    AndroidView(
-        factory = { context ->
-            androidx.fragment.app.FragmentContainerView(context).apply {
-                id = androidx.core.R.id.accessibility_custom_action_3
-            }
-        },
-        update = { view ->
-            activity?.let {
-                val fragment = PDFListFragment()
-                it.supportFragmentManager.beginTransaction()
-                    .replace(view.id, fragment)
-                    .commitAllowingStateLoss()
-            }
-        },
-        modifier = Modifier.fillMaxSize()
-    )
+    // Simplified PDF view for Compose
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Icon(
+                Icons.Default.PictureAsPdf,
+                contentDescription = "Reports",
+                tint = Color(0xFFFF6B35),
+                modifier = Modifier.size(64.dp)
+            )
+            Text(
+                "Thermal Reports",
+                color = Color.White,
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                "Generate and manage thermal reports",
+                color = Color(0xFF7D8590),
+                fontSize = 16.sp
+            )
+        }
+    }
 }
 
 @Composable
 private fun MoreTabContent() {
-    val context = LocalContext.current
-    val activity = context as? IRMainComposeActivity
-    
-    // Embed existing more fragment using AndroidView with proper FragmentManager integration
-    AndroidView(
-        factory = { context ->
-            androidx.fragment.app.FragmentContainerView(context).apply {
-                id = androidx.core.R.id.accessibility_custom_action_4
-            }
-        },
-        update = { view ->
-            activity?.let {
-                val fragment = MoreFragment()
-                it.supportFragmentManager.beginTransaction()
-                    .replace(view.id, fragment)
-                    .commitAllowingStateLoss()
-            }
-        },
-        modifier = Modifier.fillMaxSize()
-    )
+    // Simplified more options view for Compose
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Icon(
+                Icons.Default.Settings,
+                contentDescription = "Settings",
+                tint = Color(0xFFFF6B35),
+                modifier = Modifier.size(64.dp)
+            )
+            Text(
+                "Settings & More",
+                color = Color.White,
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                "Application settings and preferences",
+                color = Color(0xFF7D8590),
+                fontSize = 16.sp
+            )
+        }
+    }
 }
 
 @Composable

@@ -83,7 +83,7 @@ class SimpleThermalConfigActivity : BaseComposeActivity<ThermalViewModel>() {
                         SettingCard(
                             title = "Environment Temperature",
                             value = "${environmentTemp.toInt()}°C",
-                            icon = Icons.Default.Thermostat,
+                            icon = Icons.Default.DeviceThermostat,
                             onClick = { /* Handle temperature change */ }
                         )
                     }

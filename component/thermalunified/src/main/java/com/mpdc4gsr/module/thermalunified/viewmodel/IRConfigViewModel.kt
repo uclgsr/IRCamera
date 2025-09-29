@@ -1,8 +1,8 @@
 package com.mpdc4gsr.module.thermalunified.viewmodel
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import com.mpdc4gsr.libunified.app.utils.SingleLiveEvent
 import com.mpdc4gsr.module.thermalunified.bean.DataBean
 import com.mpdc4gsr.module.thermalunified.bean.ModelBean
@@ -10,7 +10,7 @@ import com.mpdc4gsr.module.thermalunified.repository.ConfigRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class IRConfigViewModel(application: Application) : AndroidViewModel(application) {
+class IRConfigViewModel(private val application: Application) : BaseViewModel() {
     val configLiveData = SingleLiveEvent<ModelBean>()
 
     fun getConfig(isTC007: Boolean) {
