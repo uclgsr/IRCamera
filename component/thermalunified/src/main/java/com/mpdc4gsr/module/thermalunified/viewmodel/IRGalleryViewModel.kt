@@ -11,18 +11,117 @@ import com.mpdc4gsr.libunified.app.repository.TS004Repository
 import com.mpdc4gsr.libunified.app.tools.TimeTool
 import com.mpdc4gsr.module.thermalunified.utils.WriteTools
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.io.File
 
 class IRGalleryViewModel : BaseViewModel() {
     companion object {
-
         const val PAGE_COUNT = 20
     }
 
+    // Existing LiveData properties
     val sourceListLD: MutableLiveData<ArrayList<GalleryBean>> = MutableLiveData()
-
     val showListLD: MutableLiveData<ArrayList<GalleryBean>> = MutableLiveData()
+    val pageListLD: MutableLiveData<ArrayList<GalleryBean>?> = MutableLiveData()
+    val deleteResultLD: MutableLiveData<Boolean> = MutableLiveData()
+
+    // StateFlow properties for Compose
+    private val _galleryItems = MutableStateFlow<List<GalleryBean>>(emptyList())
+    val galleryItems: StateFlow<List<GalleryBean>> = _galleryItems.asStateFlow()
+
+    private val _currentDirType = MutableStateFlow(GalleryRepository.DirType.LINE)
+    val currentDirType: StateFlow<GalleryRepository.DirType> = _currentDirType.asStateFlow()
+
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
+
+    private val _selectedItems = MutableStateFlow<Set<String>>(emptySet())
+    val selectedItems: StateFlow<Set<String>> = _selectedItems.asStateFlow()
+
+    private val _isSelectionMode = MutableStateFlow(false)
+    val isSelectionMode: StateFlow<Boolean> = _isSelectionMode.asStateFlow()
+
+    private val _isGridView = MutableStateFlow(true)
+    val isGridView: StateFlow<Boolean> = _isGridView.asStateFlow()
+
+    // Compose-related methods
+    fun changeDirType(dirType: GalleryRepository.DirType) {
+        _currentDirType.value = dirType
+        refreshGallery()
+    }
+
+    fun toggleViewMode() {
+        _isGridView.value = !_isGridView.value
+    }
+
+    fun refreshGallery() {
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                val items = GalleryRepository.loadAllReportImg(_currentDirType.value)
+                _galleryItems.value = items
+            } catch (e: Exception) {
+                _galleryItems.value = emptyList()
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+
+    fun toggleItemSelection(item: GalleryBean) {
+        val currentSelected = _selectedItems.value.toMutableSet()
+        val itemPath = item.path ?: return
+        
+        if (currentSelected.contains(itemPath)) {
+            currentSelected.remove(itemPath)
+        } else {
+            currentSelected.add(itemPath)
+        }
+        _selectedItems.value = currentSelected
+        
+        if (currentSelected.isEmpty()) {
+            _isSelectionMode.value = false
+        }
+    }
+
+    fun enterSelectionMode(item: GalleryBean) {
+        _isSelectionMode.value = true
+        val itemPath = item.path ?: return
+        _selectedItems.value = setOf(itemPath)
+    }
+
+    fun exitSelectionMode() {
+        _isSelectionMode.value = false
+        _selectedItems.value = emptySet()
+    }
+
+    fun deleteSelectedItems() {
+        val selectedPaths = _selectedItems.value
+        if (selectedPaths.isEmpty()) return
+        
+        viewModelScope.launch {
+            val itemsToDelete = _galleryItems.value.filter { selectedPaths.contains(it.path) }
+            delete(itemsToDelete, _currentDirType.value, true)
+            exitSelectionMode()
+            refreshGallery()
+        }
+    }
+
+    fun shareSelectedItems() {
+        // Implementation for sharing selected items would go here
+        // For now, just exit selection mode
+        exitSelectionMode()
+    }
+
+    fun openGalleryItem(item: GalleryBean) {
+        // Implementation for opening gallery item would go here
+        // This would typically navigate to a detail view
+    }
+
+    var hasLoadPage = 0
 
     fun queryAllReportImg(dirType: GalleryRepository.DirType) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -42,11 +141,6 @@ class IRGalleryViewModel : BaseViewModel() {
             showListLD.postValue(showList)
         }
     }
-
-    var hasLoadPage = 0
-
-
-    val pageListLD: MutableLiveData<ArrayList<GalleryBean>?> = MutableLiveData()
 
     fun queryGalleryByPage(
         isVideo: Boolean,
@@ -86,8 +180,6 @@ class IRGalleryViewModel : BaseViewModel() {
             }
         }
     }
-
-    val deleteResultLD: MutableLiveData<Boolean> = MutableLiveData()
 
     fun delete(
         deleteList: List<GalleryBean>,
