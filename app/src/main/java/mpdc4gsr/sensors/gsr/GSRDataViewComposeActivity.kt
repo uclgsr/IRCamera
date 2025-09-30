@@ -1039,6 +1039,25 @@ private fun generateSampleEvents(): List<GSREventModel> {
     )
 }
 
+@Composable
+private fun StatisticItem(label: String, value: String) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.padding(8.dp)
+    ) {
+        Text(
+            text = value,
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Bold
+        )
+        Text(
+            text = label,
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+    }
+}
+
 class GSRDataViewViewModel : BaseViewModel() {
     // ViewModel implementation for managing data loading, processing, filtering, etc.
     // Future implementation would include:
