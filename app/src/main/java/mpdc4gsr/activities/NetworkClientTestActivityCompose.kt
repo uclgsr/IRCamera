@@ -512,7 +512,7 @@ private fun ActionButtonsCard(
                     modifier = Modifier.weight(1f),
                     enabled = connectionState == CommandConnection.ConnectionState.CONNECTED
                 ) {
-                    Icon(Icons.Default.Send, contentDescription = null)
+                    Icon(Icons.AutoMirrored.Filled.Send, contentDescription = null)
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Test Ping")
                 }

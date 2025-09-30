@@ -147,7 +147,7 @@ class GSRDataIntegrityTestComposeActivity : ComponentActivity() {
                         ) {
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 Icon(
-                                    imageVector = if (isTestRunning) Icons.Default.GraphicEq else Icons.Default.ShowChart,
+                                    imageVector = if (isTestRunning) Icons.Default.GraphicEq else Icons.AutoMirrored.Filled.ShowChart,
                                     contentDescription = null,
                                     tint = if (isTestRunning) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline,
                                     modifier = Modifier.size(24.dp)
@@ -226,8 +226,7 @@ class GSRDataIntegrityTestComposeActivity : ComponentActivity() {
                                 Spacer(modifier = Modifier.height(8.dp))
                                 val progress =
                                     (samplesCollected.toFloat() / EXPECTED_SAMPLES).coerceAtMost(1f)
-                                LinearProgressIndicator(
-                progress = { progress },
+                                LinearProgressIndicator(progress = { progress },
                                     modifier = Modifier.fillMaxWidth()
                                 )
                             }

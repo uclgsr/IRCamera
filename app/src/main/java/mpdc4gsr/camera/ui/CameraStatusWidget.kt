@@ -41,8 +41,7 @@ class CameraStatusWidget @JvmOverloads constructor(
         statusText = TextView(context).apply {
             text = "Camera Status: Not Initialized"
             textSize = 16f
-@Suppress("DEPRECATION")
-                        setTextColor(ContextCompat.getColor(context, android.R.color.primary_text_dark))
+            setTextColor(Color.WHITE)
             gravity = Gravity.CENTER
             setPadding(0, 0, 0, 8)
         }
@@ -64,8 +63,7 @@ class CameraStatusWidget @JvmOverloads constructor(
         statsText = TextView(context).apply {
             text = "Camera Statistics:\nNot Available"
             textSize = 12f
-@Suppress("DEPRECATION")
-                        setTextColor(ContextCompat.getColor(context, android.R.color.secondary_text_dark))
+            setTextColor(Color.LTGRAY)
             gravity = Gravity.START
             setPadding(0, 8, 0, 0)
         }
@@ -138,10 +136,7 @@ class CameraStatusWidget @JvmOverloads constructor(
             status.contains("Recording") -> Color.BLUE
             status.contains("Ready") || status.contains("Initialized") -> Color.GREEN
             status.contains("Permission") -> Color.MAGENTA
-            else -> {
-                @Suppress("DEPRECATION")
-                ContextCompat.getColor(context, android.R.color.primary_text_dark)
-            }
+            else -> Color.WHITE
         }
     }
 

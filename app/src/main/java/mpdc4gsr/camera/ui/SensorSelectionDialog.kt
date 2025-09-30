@@ -2,6 +2,7 @@ package mpdc4gsr.camera.ui
 
 import android.app.Dialog
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -226,9 +227,9 @@ class SensorSelectionDialog(
                 textSize = 12f
                 setTextColor(
                     if (availableSensors.contains(sensorType)) {
-                        ContextCompat.getColor(context, android.R.color.darker_gray)
+                        Color.DKGRAY
                     } else {
-                        ContextCompat.getColor(context, android.R.color.tertiary_text_dark)
+                        Color.LTGRAY
                     },
                 )
                 setPadding(32, 0, 0, 0)

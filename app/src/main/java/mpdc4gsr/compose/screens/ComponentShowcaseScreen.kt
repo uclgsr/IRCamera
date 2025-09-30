@@ -468,7 +468,7 @@ private fun CardLayoutsShowcase() {
                     }
 
                     Icon(
-                        Icons.Default.ArrowForward,
+                        Icons.AutoMirrored.Filled.ArrowForward,
                         contentDescription = null,
                         tint = MaterialTheme.colorScheme.outline
                     )

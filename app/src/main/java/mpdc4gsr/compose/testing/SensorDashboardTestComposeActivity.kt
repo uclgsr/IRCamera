@@ -383,7 +383,7 @@ class SensorDashboardTestComposeActivity : ComponentActivity() {
                         enabled = !isTestRunning,
                         modifier = Modifier.weight(1f)
                     ) {
-                        Icon(Icons.Default.ViewList, contentDescription = null)
+                        Icon(Icons.AutoMirrored.Filled.ViewList, contentDescription = null)
                         Spacer(modifier = Modifier.width(4.dp))
                         Text("Test Scrolling")
                     }

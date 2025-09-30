@@ -91,8 +91,7 @@ class ComposeTestingSuiteActivity : ComponentActivity() {
                         Spacer(modifier = Modifier.height(16.dp))
 
                         if (isTestRunning) {
-                            LinearProgressIndicator(
-                progress = { testProgress },
+                            LinearProgressIndicator(progress = { testProgress },
                                 modifier = Modifier.fillMaxWidth()
                             )
                             Spacer(modifier = Modifier.height(8.dp))

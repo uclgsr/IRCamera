@@ -10,6 +10,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -72,7 +73,7 @@ class ThermalReportCreationComposeActivity : BaseComposeActivity<BaseViewModel>(
                         },
                         navigationIcon = {
                             IconButton(onClick = { finish() }) {
-                                Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                             }
                         },
                         actions = {
@@ -599,7 +600,7 @@ private fun ReportNavigationButtons(
                 onClick = { onStepChange(currentStep - 1) }
             ) {
                 Icon(
-                    Icons.Default.ArrowBack,
+                    Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = "Previous",
                     modifier = Modifier.size(18.dp)
                 )
@@ -618,7 +619,7 @@ private fun ReportNavigationButtons(
                 Text("Next")
                 Spacer(modifier = Modifier.width(4.dp))
                 Icon(
-                    Icons.Default.ArrowForward,
+                    Icons.AutoMirrored.Filled.ArrowForward,
                     contentDescription = "Next",
                     modifier = Modifier.size(18.dp)
                 )

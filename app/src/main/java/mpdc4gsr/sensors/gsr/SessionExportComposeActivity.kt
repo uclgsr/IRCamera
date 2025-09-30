@@ -383,8 +383,7 @@ private fun ExportProgressCard(
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                CircularProgressIndicator(
-                    progress = { progress },
+                CircularProgressIndicator(progress = { progress },
                     modifier = Modifier.size(24.dp)
                 )
                 Spacer(modifier = Modifier.width(12.dp))
@@ -397,8 +396,7 @@ private fun ExportProgressCard(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            LinearProgressIndicator(
-                progress = { progress },
+            LinearProgressIndicator(progress = { progress },
                 modifier = Modifier.fillMaxWidth()
             )
 

@@ -356,8 +356,7 @@ private fun TestProgressCard(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            LinearProgressIndicator(
-                progress = { progress },
+            LinearProgressIndicator(progress = { progress },
                 modifier = Modifier.fillMaxWidth()
             )
 

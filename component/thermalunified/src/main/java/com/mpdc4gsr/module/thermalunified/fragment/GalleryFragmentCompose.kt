@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.ViewList
 import androidx.compose.material.icons.filled.GridView
@@ -160,7 +161,7 @@ class GalleryFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
                 } else {
                     IconButton(onClick = onToggleView) {
                         Icon(
-                            if (isGridView) Icons.Default.ViewList else Icons.Default.GridView,
+                            if (isGridView) Icons.AutoMirrored.Filled.ViewList else Icons.Default.GridView,
                             contentDescription = if (isGridView) "List View" else "Grid View"
                         )
                     }

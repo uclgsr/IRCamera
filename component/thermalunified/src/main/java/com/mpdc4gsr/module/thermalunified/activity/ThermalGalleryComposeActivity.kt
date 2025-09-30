@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -74,7 +75,7 @@ private fun ThermalGalleryScreen(
             navigationIcon = {
                 IconButton(onClick = { /* Navigate back */ }) {
                     Icon(
-                        Icons.Default.ArrowBack,
+                        Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Back",
                         tint = Color.White
                     )
@@ -85,7 +86,7 @@ private fun ThermalGalleryScreen(
                     viewMode = if (viewMode == ViewMode.GRID) ViewMode.LIST else ViewMode.GRID
                 }) {
                     Icon(
-                        if (viewMode == ViewMode.GRID) Icons.Default.ViewList else Icons.Default.GridView,
+                        if (viewMode == ViewMode.GRID) Icons.AutoMirrored.Filled.ViewList else Icons.Default.GridView,
                         contentDescription = "Toggle View",
                         tint = Color(0xFFFF6B35)
                     )

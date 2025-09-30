@@ -80,7 +80,7 @@ class ShimmerConfigComposeActivity : BaseComposeActivity<ShimmerConfigViewModel>
                                 )
                             }
                             IconButton(onClick = { /* Help */ }) {
-                                Icon(Icons.Default.Help, contentDescription = "Help")
+                                Icon(Icons.AutoMirrored.Filled.Help, contentDescription = "Help")
                             }
                         }
                     )

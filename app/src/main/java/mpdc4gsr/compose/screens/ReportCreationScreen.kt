@@ -575,7 +575,7 @@ private fun ReportNavigationButtons(
             ) {
                 Text("Next")
                 Spacer(modifier = Modifier.width(8.dp))
-                Icon(Icons.Default.ArrowForward, contentDescription = null)
+                Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null)
             }
         } else {
             Button(

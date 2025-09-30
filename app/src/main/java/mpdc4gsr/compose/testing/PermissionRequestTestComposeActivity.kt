@@ -509,7 +509,7 @@ class PermissionRequestTestComposeActivity : FragmentActivity() {
         return when (status) {
             PermissionStatus.GRANTED -> Icons.Default.CheckCircle
             PermissionStatus.DENIED -> Icons.Default.Block
-            PermissionStatus.NOT_REQUESTED -> Icons.Default.HelpOutline
+            PermissionStatus.NOT_REQUESTED -> Icons.AutoMirrored.Filled.HelpOutline
             PermissionStatus.REQUESTING -> Icons.Default.HourglassEmpty
         }
     }

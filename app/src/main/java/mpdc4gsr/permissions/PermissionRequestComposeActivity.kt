@@ -71,7 +71,7 @@ class PermissionRequestComposeActivity : BaseComposeActivity<BaseViewModel>() {
                         },
                         actions = {
                             IconButton(onClick = { showEducationalDialog = true }) {
-                                Icon(Icons.Default.Help, contentDescription = "Help")
+                                Icon(Icons.AutoMirrored.Filled.Help, contentDescription = "Help")
                             }
                             IconButton(onClick = { /* Open system settings */ }) {
                                 Icon(Icons.Default.Settings, contentDescription = "System Settings")

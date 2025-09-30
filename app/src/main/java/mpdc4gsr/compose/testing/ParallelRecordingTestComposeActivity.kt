@@ -355,8 +355,7 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
 
                     if (sensor.bufferUtilization > 0) {
                         Spacer(modifier = Modifier.height(4.dp))
-                        LinearProgressIndicator(
-                progress = { sensor.bufferUtilization },
+                        LinearProgressIndicator(progress = { sensor.bufferUtilization },
                             modifier = Modifier.fillMaxWidth()
                         )
                         Text(

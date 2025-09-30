@@ -85,7 +85,7 @@ class GSRDeviceManagementComposeActivity : BaseComposeActivity<BaseViewModel>() 
                                 Icon(Icons.Default.SelectAll, contentDescription = "Bulk Actions")
                             }
                             IconButton(onClick = { /* Device help */ }) {
-                                Icon(Icons.Default.Help, contentDescription = "Help")
+                                Icon(Icons.AutoMirrored.Filled.Help, contentDescription = "Help")
                             }
                         }
                     )

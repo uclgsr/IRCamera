@@ -313,7 +313,7 @@ class IRCorrectionFragmentCompose : BaseComposeFragment<IRCorrectionViewModel>()
                     enabled = correctionState == CorrectionState.ACTIVE
                 )
 
-                Divider()
+                HorizontalDivider()
 
                 // Calibration section
                 CalibrationSection(
@@ -322,7 +322,7 @@ class IRCorrectionFragmentCompose : BaseComposeFragment<IRCorrectionViewModel>()
                     enabled = correctionState != CorrectionState.CALIBRATING
                 )
 
-                Divider()
+                HorizontalDivider()
 
                 // Temperature regions
                 TemperatureRegionsSection()

@@ -8,12 +8,15 @@ import android.hardware.camera2.CameraCharacteristics
 import android.hardware.camera2.CameraDevice
 import android.hardware.camera2.CameraManager
 import android.hardware.camera2.CaptureRequest
+import android.hardware.camera2.params.OutputConfiguration
+import android.hardware.camera2.params.SessionConfiguration
 import android.os.Build
 import android.os.Handler
 import android.os.HandlerThread
 import android.util.Log
 import android.util.Size
 import android.view.Surface
+import java.util.concurrent.Executor
 import java.util.concurrent.Semaphore
 import java.util.concurrent.TimeUnit
 
@@ -75,7 +78,24 @@ class CameraController(private val context: Context) {
                 captureSession = null
 
                 Log.i(TAG, "Creating capture session with ${surfaces.size} surfaces")
-                device.createCaptureSession(surfaces, callback, backgroundHandler)
+                
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    val outputConfigs = surfaces.map { OutputConfiguration(it) }
+                    val sessionConfig = SessionConfiguration(
+                        SessionConfiguration.SESSION_REGULAR,
+                        outputConfigs,
+                        object : Executor {
+                            override fun execute(command: Runnable) {
+                                backgroundHandler?.post(command)
+                            }
+                        },
+                        callback
+                    )
+                    device.createCaptureSession(sessionConfig)
+                } else {
+                    @Suppress("DEPRECATION")
+                    device.createCaptureSession(surfaces, callback, backgroundHandler)
+                }
             } catch (e: CameraAccessException) {
                 Log.e(TAG, "Failed to create capture session", e)
                 onCameraError?.invoke("Failed to create capture session: ${e.message}")

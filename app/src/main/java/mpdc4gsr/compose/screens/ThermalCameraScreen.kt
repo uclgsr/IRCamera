@@ -551,7 +551,7 @@ private fun ThermalAnalysisToolsCard() {
                     onClick = { /* Temperature profile */ },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Icon(Icons.Default.ShowChart, contentDescription = null)
+                    Icon(Icons.AutoMirrored.Filled.ShowChart, contentDescription = null)
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Profile")
                 }

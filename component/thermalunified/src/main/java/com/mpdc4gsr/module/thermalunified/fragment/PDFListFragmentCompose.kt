@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -290,7 +291,7 @@ class PDFListFragmentCompose : BaseComposeFragment<PDFListViewModel>() {
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Icon(
-                    Icons.Default.Assignment,
+                    Icons.AutoMirrored.Filled.Assignment,
                     contentDescription = "No reports",
                     modifier = Modifier.size(64.dp),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant

@@ -418,7 +418,7 @@ class IRPlushFragmentCompose : BaseComposeFragment<IRPlushViewModel>() {
                     enabled = dualViewState == DualViewState.ACTIVE
                 )
 
-                Divider()
+                HorizontalDivider()
 
                 // Calibration section
                 CalibrationSection(
@@ -427,7 +427,7 @@ class IRPlushFragmentCompose : BaseComposeFragment<IRPlushViewModel>() {
                     enabled = dualViewState != DualViewState.CALIBRATING
                 )
 
-                Divider()
+                HorizontalDivider()
 
                 // Plus features
                 PlusFeaturesSection()

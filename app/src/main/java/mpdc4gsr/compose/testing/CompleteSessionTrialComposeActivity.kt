@@ -209,8 +209,7 @@ class CompleteSessionTrialComposeActivity : ComponentActivity() {
 
                         if (isRecording) {
                             Spacer(modifier = Modifier.height(12.dp))
-                            LinearProgressIndicator(
-                                progress = { sessionProgress },
+                            LinearProgressIndicator(progress = { sessionProgress },
                                 modifier = Modifier.fillMaxWidth()
                             )
                             Spacer(modifier = Modifier.height(8.dp))

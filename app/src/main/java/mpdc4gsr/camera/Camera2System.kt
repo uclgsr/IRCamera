@@ -34,7 +34,7 @@ class Camera2System(
     }
 
     private val cameraController = CameraController(context)
-    private val videoEngine = VideoEngine()
+    private val videoEngine = VideoEngine(context)
     private val rawEngine = RawEngine(context)
     private val modeManager = ModeManager()
     private val uiBridge = UiBridge(textureView)

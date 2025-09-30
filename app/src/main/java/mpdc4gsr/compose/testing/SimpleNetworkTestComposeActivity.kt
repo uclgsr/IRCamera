@@ -319,7 +319,7 @@ class SimpleNetworkTestComposeActivity : ComponentActivity() {
                         enabled = connectionStatus == ConnectionStatus.CONNECTED,
                         modifier = Modifier.weight(1f)
                     ) {
-                        Icon(Icons.Default.Send, contentDescription = null)
+                        Icon(Icons.AutoMirrored.Filled.Send, contentDescription = null)
                         Spacer(modifier = Modifier.width(4.dp))
                         Text("Test Commands")
                     }

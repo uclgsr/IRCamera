@@ -64,7 +64,7 @@ constructor(
         sensorsText =
             TextView(context).apply {
                 textSize = 10f
-                setTextColor(ContextCompat.getColor(context, android.R.color.tertiary_text_dark))
+                setTextColor(Color.LTGRAY)
                 gravity = Gravity.CENTER
             }
         addView(sensorsText)

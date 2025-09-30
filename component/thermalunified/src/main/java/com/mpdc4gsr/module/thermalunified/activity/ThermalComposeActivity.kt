@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -58,7 +59,7 @@ class ThermalComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         navigationIcon = {
                             IconButton(onClick = { finish() }) {
                                 Icon(
-                                    Icons.Default.ArrowBack,
+                                    Icons.AutoMirrored.Filled.ArrowBack,
                                     contentDescription = "Back",
                                     tint = Color.White
                                 )
@@ -291,7 +292,7 @@ private fun getThermalTools(tabIndex: Int): List<ThermalTool> {
 
         2 -> listOf( // Analysis tools
             ThermalTool("Histogram", Icons.Default.BarChart, 2001),
-            ThermalTool("Profile", Icons.Default.ShowChart, 2002),
+            ThermalTool("Profile", Icons.AutoMirrored.Filled.ShowChart, 2002),
             ThermalTool("Report", Icons.Default.Description, 2003)
         )
 

@@ -2,6 +2,7 @@ package com.mpdc4gsr.module.thermalunified.viewmodel
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.*
 import androidx.lifecycle.viewModelScope
 import com.mpdc4gsr.libunified.app.db.AppDatabase
 import com.mpdc4gsr.libunified.app.db.dao.ThermalDao
@@ -48,7 +49,7 @@ class IRMonitorHistoryViewModel : BaseViewModel() {
         val displayName: String,
         val icon: androidx.compose.ui.graphics.vector.ImageVector
     ) {
-        ALL("All", Icons.Default.ViewList),
+        ALL("All", Icons.AutoMirrored.Filled.ViewList),
         TODAY("Today", Icons.Default.Today),
         WEEK("This Week", Icons.Default.DateRange),
         MONTH("This Month", Icons.Default.CalendarMonth)
