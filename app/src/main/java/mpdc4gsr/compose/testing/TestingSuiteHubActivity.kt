@@ -202,15 +202,16 @@ class TestingSuiteHubActivity : ComponentActivity() {
                     legacyActivity = null,
                     category = TestCategory.USER_INTERFACE
                 ),
-                TestingModule(
-                    id = "simple_network",
-                    title = "Simple Network Test",
-                    description = "Test PC remote control and networking",
-                    icon = Icons.Default.NetworkCheck,
-                    composeActivity = SimpleNetworkTestComposeActivity::class.java,
-                    legacyActivity = null,
-                    category = TestCategory.NETWORK
-                ),
+                // MOVED TO BACKUP: SimpleNetworkTestComposeActivity
+                // TestingModule(
+                //     id = "simple_network",
+                //     title = "Simple Network Test",
+                //     description = "Test PC remote control and networking",
+                //     icon = Icons.Default.NetworkCheck,
+                //     composeActivity = SimpleNetworkTestComposeActivity::class.java,
+                //     legacyActivity = null,
+                //     category = TestCategory.NETWORK
+                // ),
                 TestingModule(
                     id = "permission_request",
                     title = "Permission Request Test",

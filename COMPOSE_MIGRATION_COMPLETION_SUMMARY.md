@@ -44,7 +44,7 @@ modernized with 100% migration coverage across user-facing functionality.
 ### Utility & Development Activities
 
 1. **BlankDevActivity → BlankDevActivityCompose** - USB device handler 
-2. **SimplifiedMainActivity → SimplifiedMainActivityCompose** - Simplified interface 
+2. **SimplifiedMainActivity → SimplifiedMainActivityCompose** - Simplified interface (MOVED TO BACKUP)
 3. **SettingsActivity → SettingsActivityCompose** - Application settings 
 4. **SensorDashboardComposeActivity** - Enhanced sensor dashboard 
 

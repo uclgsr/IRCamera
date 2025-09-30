@@ -681,19 +681,20 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                     }
                 )
 
-                LauncherCard(
-                    title = "Simplified Interface (Compose)",
-                    subtitle = "Clean and streamlined user interface",
-                    icon = Icons.Default.Tune,
-                    onClick = {
-                        startActivity(
-                            Intent(
-                                this@ComposeMigrationLauncherActivity,
-                                SimplifiedMainActivityCompose::class.java
-                            )
-                        )
-                    }
-                )
+                // MOVED TO BACKUP: SimplifiedMainActivityCompose
+                // LauncherCard(
+                //     title = "Simplified Interface (Compose)",
+                //     subtitle = "Clean and streamlined user interface",
+                //     icon = Icons.Default.Tune,
+                //     onClick = {
+                //         startActivity(
+                //             Intent(
+                //                 this@ComposeMigrationLauncherActivity,
+                //                 SimplifiedMainActivityCompose::class.java
+                //             )
+                //         )
+                //     }
+                // )
 
                 LauncherCard(
                     title = "Thermal Image Editor (Compose)",
@@ -746,19 +747,20 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                     }
                 )
 
-                LauncherCard(
-                    title = "Network Test Interface (Compose)",
-                    subtitle = "PC Remote Control and bidirectional telemetry testing",
-                    icon = Icons.Default.NetworkCheck,
-                    onClick = {
-                        startActivity(
-                            Intent(
-                                this@ComposeMigrationLauncherActivity,
-                                SimpleNetworkTestActivityCompose::class.java
-                            )
-                        )
-                    }
-                )
+                // MOVED TO BACKUP: SimpleNetworkTestActivityCompose
+                // LauncherCard(
+                //     title = "Network Test Interface (Compose)",
+                //     subtitle = "PC Remote Control and bidirectional telemetry testing",
+                //     icon = Icons.Default.NetworkCheck,
+                //     onClick = {
+                //         startActivity(
+                //             Intent(
+                //                 this@ComposeMigrationLauncherActivity,
+                //                 SimpleNetworkTestActivityCompose::class.java
+                //             )
+                //         )
+                //     }
+                // )
 
                 // UI Components Section
                 Text(

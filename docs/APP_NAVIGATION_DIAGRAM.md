@@ -338,7 +338,7 @@ graph TB
     MainTab --> NetworkConfigActivity
     MainTab --> SimpleNetworkTestActivity
     MainTab --> NetworkClientTestActivity
-    MainTab --> SimplifiedMainActivity
+    %% MainTab --> SimplifiedMainActivity (MOVED TO BACKUP)
     MainTab --> DeviceTypeActivity
     
     %% Key Navigation Managers

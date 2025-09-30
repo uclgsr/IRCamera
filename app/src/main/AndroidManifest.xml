@@ -318,12 +318,12 @@
             android:label="BLE Integration Test (Compose)" />
 
 
-        <!-- Simplified Main Activity -->
-        <activity
+        <!-- Simplified Main Activity - MOVED TO BACKUP -->
+        <!-- <activity
             android:name="mpdc4gsr.activities.SimplifiedMainActivity"
             android:exported="false"
             android:label="Simplified Main"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme" /> -->
 
         <!-- Jetpack Compose Activities -->
         <activity
