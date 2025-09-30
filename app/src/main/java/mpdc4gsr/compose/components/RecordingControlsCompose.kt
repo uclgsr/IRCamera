@@ -438,8 +438,8 @@ private fun getStatusMessage(session: RecordingSession): String {
 fun RecordingControlsDemo(
     modifier: Modifier = Modifier
 ) {
-    var session by remember {
     val scope = rememberCoroutineScope()
+    var session by remember {
         mutableStateOf(
             RecordingSession(
                 state = RecordingState.IDLE,
