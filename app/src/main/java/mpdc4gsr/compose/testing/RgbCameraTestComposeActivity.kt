@@ -254,7 +254,7 @@ class RgbCameraTestComposeActivity : ComponentActivity() {
 
     private fun initializeCamera() {
         try {
-            cameraRecorder = RgbCameraRecorder(this)
+            cameraRecorder = RgbCameraRecorder(this, this)
             Log.d(TAG, "Camera recorder initialized successfully")
         } catch (e: Exception) {
             Log.e(TAG, "Failed to initialize camera: ${e.message}")

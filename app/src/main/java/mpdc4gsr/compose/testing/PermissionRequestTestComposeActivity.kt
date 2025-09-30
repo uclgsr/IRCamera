@@ -525,7 +525,7 @@ class PermissionRequestTestComposeActivity : ComponentActivity() {
 
     private fun initializePermissionSystem() {
         permissionController = PermissionController(this)
-        permissionManager = PermissionManager(this)
+        permissionManager = PermissionManager(this, permissionController)
     }
 
     private fun getPermissionStatus(permission: String): PermissionStatus {
