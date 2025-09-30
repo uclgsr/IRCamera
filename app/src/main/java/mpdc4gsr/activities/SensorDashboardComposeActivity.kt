@@ -97,9 +97,9 @@ class SensorDashboardComposeActivity : BaseComposeActivity<MainActivityViewModel
                 )
 
                 SensorStatusCard(
-                    thermalCameraState = mapSensorStateToConnectionState(thermalCameraState),
-                    gsrSensorState = mapSensorStateToConnectionState(gsrSensorState),
-                    bleConnectionState = mapGSRConnectionToConnectionState(gsrConnectionState)
+                    thermalCameraState = thermalCameraState,
+                    gsrSensorState = gsrSensorState,
+                    bleConnectionState = gsrConnectionState
                 )
 
                 // GSR Sensor detailed visualization
@@ -113,9 +113,9 @@ class SensorDashboardComposeActivity : BaseComposeActivity<MainActivityViewModel
                 GSRVisualizationCard(
                     gsrData = gsrData,
                     connectionState = GSRConnectionState(
-                        isConnected = gsrConnectionState != MainActivityViewModel.GSRConnectionState.DISCONNECTED,
+                        isConnected = gsrConnectionState is ConnectionState.Connected,
                         deviceName = "Shimmer3-GSR",
-                        connectionStrength = if (gsrConnectionState == MainActivityViewModel.GSRConnectionState.CONNECTED) 85 else 0
+                        connectionStrength = if (gsrConnectionState is ConnectionState.Connected) 85 else 0
                     )
                 )
 

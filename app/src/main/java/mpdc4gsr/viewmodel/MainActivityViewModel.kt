@@ -29,6 +29,20 @@ class MainActivityViewModel : BaseViewModel() {
         ERROR
     }
     
+    // Sensor state data class
+    data class SensorState(
+        val status: SensorStatus = SensorStatus.DISCONNECTED,
+        val deviceInfo: String? = null,
+        val lastUpdate: Long = System.currentTimeMillis()
+    )
+    
+    // Session state data class
+    data class SessionState(
+        val isRecording: Boolean = false,
+        val sessionId: String? = null,
+        val duration: Long = 0
+    )
+    
     // Thermal camera state
     private val _thermalCameraState = MutableStateFlow<ConnectionState>(ConnectionState.Disconnected)
     val thermalCameraState: StateFlow<ConnectionState> = _thermalCameraState.asStateFlow()
