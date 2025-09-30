@@ -18,6 +18,8 @@ import mpdc4gsr.compose.components.sensor.GSRVisualizationCard
 import mpdc4gsr.compose.components.sensor.GSRData
 import mpdc4gsr.compose.components.sensor.GSRConnectionState
 import mpdc4gsr.viewmodel.ConnectionState
+import mpdc4gsr.viewmodel.AppError
+import mpdc4gsr.viewmodel.MainActivityViewModel
 // Note: MainActivityViewModel was moved to backup during cleanup
 // Using modern Compose ViewModels instead
 import mpdc4gsr.viewmodel.BaseViewModel
@@ -270,10 +272,10 @@ class SensorDashboardComposeActivity : BaseComposeActivity<MainActivityViewModel
         return when (sensorState.status) {
             MainActivityViewModel.SensorStatus.DISCONNECTED -> ConnectionState.Disconnected
             MainActivityViewModel.SensorStatus.CONNECTING -> ConnectionState.Connecting
-            MainActivityViewModel.SensorStatus.CONNECTED -> ConnectionState.Connected
-            MainActivityViewModel.SensorStatus.STREAMING -> ConnectionState.Connected
-            MainActivityViewModel.SensorStatus.ERROR -> ConnectionState.Error("Sensor Error")
-            MainActivityViewModel.SensorStatus.SIMULATION -> ConnectionState.Connected
+            MainActivityViewModel.SensorStatus.CONNECTED -> ConnectionState.Connected()
+            MainActivityViewModel.SensorStatus.STREAMING -> ConnectionState.Connected()
+            MainActivityViewModel.SensorStatus.ERROR -> ConnectionState.Error(AppError.SensorError("ThermalCamera", "Sensor Error"))
+            MainActivityViewModel.SensorStatus.SIMULATION -> ConnectionState.Connected()
         }
     }
 
@@ -281,9 +283,9 @@ class SensorDashboardComposeActivity : BaseComposeActivity<MainActivityViewModel
         return when (gsrState) {
             MainActivityViewModel.GSRConnectionState.DISCONNECTED -> ConnectionState.Disconnected
             MainActivityViewModel.GSRConnectionState.CONNECTING -> ConnectionState.Connecting
-            MainActivityViewModel.GSRConnectionState.CONNECTED -> ConnectionState.Connected
-            MainActivityViewModel.GSRConnectionState.STREAMING -> ConnectionState.Connected
-            MainActivityViewModel.GSRConnectionState.ERROR -> ConnectionState.Error("GSR Error")
+            MainActivityViewModel.GSRConnectionState.CONNECTED -> ConnectionState.Connected()
+            MainActivityViewModel.GSRConnectionState.STREAMING -> ConnectionState.Connected()
+            MainActivityViewModel.GSRConnectionState.ERROR -> ConnectionState.Error(AppError.SensorError("GSR", "GSR Error"))
         }
     }
 

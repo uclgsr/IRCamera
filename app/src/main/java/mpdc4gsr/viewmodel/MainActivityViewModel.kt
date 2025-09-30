@@ -10,6 +10,25 @@ import kotlinx.coroutines.flow.asStateFlow
  */
 class MainActivityViewModel : BaseViewModel() {
     
+    // Sensor status enum
+    enum class SensorStatus {
+        DISCONNECTED,
+        CONNECTING,
+        CONNECTED,
+        STREAMING,
+        ERROR,
+        SIMULATION
+    }
+    
+    // GSR connection state enum
+    enum class GSRConnectionState {
+        DISCONNECTED,
+        CONNECTING,
+        CONNECTED,
+        STREAMING,
+        ERROR
+    }
+    
     // Thermal camera state
     private val _thermalCameraState = MutableStateFlow<ConnectionState>(ConnectionState.Disconnected)
     val thermalCameraState: StateFlow<ConnectionState> = _thermalCameraState.asStateFlow()
