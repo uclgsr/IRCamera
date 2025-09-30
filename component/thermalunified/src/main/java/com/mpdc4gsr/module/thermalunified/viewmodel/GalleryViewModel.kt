@@ -11,9 +11,16 @@ import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import com.mpdc4gsr.libunified.app.utils.SingleLiveEvent
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.File
 
 class GalleryViewModel : BaseViewModel() {
+    
+    companion object {
+        private const val TAG = "GalleryViewModel"
+    }
+    
     val galleryLiveData = SingleLiveEvent<ArrayList<String>>()
 
     // Data class for media items
@@ -55,15 +62,17 @@ class GalleryViewModel : BaseViewModel() {
 
     // Load media items and update different flows
     private fun loadMediaItems() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             _isLoading.value = true
             try {
                 val items = getMediaItemsList()
-                _mediaItems.value = items
-                _galleryItems.value = items.filter { !it.isVideo }
-                _videoItems.value = items.filter { it.isVideo }
+                withContext(Dispatchers.Main) {
+                    _mediaItems.value = items
+                    _galleryItems.value = items.filter { !it.isVideo }
+                    _videoItems.value = items.filter { it.isVideo }
+                }
             } catch (e: Exception) {
-                Log.e("GalleryViewModel", "Error loading media items", e)
+                Log.e(TAG, "Error loading media items", e)
             } finally {
                 _isLoading.value = false
             }
@@ -113,16 +122,20 @@ class GalleryViewModel : BaseViewModel() {
         val selectedIds = _selectedItems.value
         val itemsToDelete = _mediaItems.value.filter { selectedIds.contains(it.id) }
         
-        itemsToDelete.forEach { item ->
-            try {
-                File(item.path).delete()
-            } catch (e: Exception) {
-                Log.e("GalleryViewModel", "Error deleting file: ${item.path}", e)
+        viewModelScope.launch(Dispatchers.IO) {
+            itemsToDelete.forEach { item ->
+                try {
+                    File(item.path).delete()
+                } catch (e: Exception) {
+                    Log.e(TAG, "Error deleting file: ${item.path}", e)
+                }
+            }
+            
+            withContext(Dispatchers.Main) {
+                exitSelectionMode()
+                loadMediaItems() // Refresh the list
             }
         }
-        
-        exitSelectionMode()
-        loadMediaItems() // Refresh the list
     }
 
     fun shareSelectedItems() {
@@ -132,13 +145,13 @@ class GalleryViewModel : BaseViewModel() {
         if (itemsToShare.isNotEmpty()) {
             // Implementation would depend on context being available
             // For now, just log the action
-            Log.d("GalleryViewModel", "Sharing ${itemsToShare.size} items")
+            Log.d(TAG, "Sharing ${itemsToShare.size} items")
         }
     }
 
     fun openMediaItem(item: MediaItem) {
         // Implementation for opening media item
-        Log.d("GalleryViewModel", "Opening media item: ${item.name}")
+        Log.d(TAG, "Opening media item: ${item.name}")
     }
 
     // Refresh methods
@@ -155,7 +168,7 @@ class GalleryViewModel : BaseViewModel() {
         viewModelScope.launch {
             getGalleryList().collect { it ->
                 if (it.size == 0) {
-                    Log.w("123", "[ph][ph][ph][ph][ph]")
+                    Log.w(TAG, "No gallery items found")
                 } else {
                     galleryLiveData.postValue(it)
                 }
@@ -167,7 +180,7 @@ class GalleryViewModel : BaseViewModel() {
         viewModelScope.launch {
             getVideoList().collect { it ->
                 if (it.size == 0) {
-                    Log.w("123", "[ph][ph][ph][ph][ph]")
+                    Log.w(TAG, "No video items found")
                 } else {
                     galleryLiveData.postValue(it)
                 }
