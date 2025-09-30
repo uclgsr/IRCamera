@@ -74,18 +74,7 @@
             </intent-filter>
         </activity>
 
-        <!-- Alternative MainActivity implementations -->
-        <activity
-            android:name="mpdc4gsr.activities.MainActivityLegacy"
-            android:exported="false"
-            android:theme="@style/AppTheme" />
-
-        <activity
-            android:name="mpdc4gsr.activities.MainActivityAlternative"
-            android:exported="false"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
-
-        <!-- Essential Activities - Migrated to Compose -->
+        <!-- Jetpack Compose Activities -->
         <activity android:name="mpdc4gsr.activities.PolicyActivityCompose" />
         <activity android:name="mpdc4gsr.activities.VersionActivityCompose" />
 
