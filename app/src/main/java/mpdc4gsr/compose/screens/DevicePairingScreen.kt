@@ -51,12 +51,13 @@ fun DevicePairingScreen(
         ) {
             TitleBar(
                 title = "Device Pairing",
-                onNavigationClick = onNavigateBack,
-                actions = listOf(
-                    TitleBar.TitleBarAction(
-                        icon = if (isScanning) Icons.Default.Stop else Icons.Default.Search,
-                        contentDescription = if (isScanning) "Stop scanning" else "Start scanning"
-                    ) {
+                showBackButton = true,
+                onBackClick = onNavigateBack
+            ) {
+                TitleBarAction(
+                    icon = if (isScanning) Icons.Default.Stop else Icons.Default.Search,
+                    contentDescription = if (isScanning) "Stop scanning" else "Start scanning",
+                    onClick = {
                         isScanning = !isScanning
                         // Simulate device discovery
                         if (isScanning) {
@@ -69,7 +70,7 @@ fun DevicePairingScreen(
                         }
                     }
                 )
-            )
+            }
 
             Column(
                 modifier = Modifier
@@ -210,10 +211,10 @@ fun DevicePairingItem(
                         Spacer(modifier = Modifier.width(8.dp))
                         Icon(
                             imageVector = when {
-                                device.signalStrength > 75 -> Icons.Default.SignalWifi4Bar
-                                device.signalStrength > 50 -> Icons.Default.SignalWifi3Bar
-                                device.signalStrength > 25 -> Icons.Default.SignalWifi2Bar
-                                else -> Icons.Default.SignalWifi1Bar
+                                device.signalStrength > 75 -> Icons.Default.SignalCellularAlt
+                                device.signalStrength > 50 -> Icons.Default.SignalCellularAlt
+                                device.signalStrength > 25 -> Icons.Default.SignalCellularAlt
+                                else -> Icons.Default.SignalCellularAlt
                             },
                             contentDescription = "Signal strength",
                             tint = Color(0xFF4ECDC4),

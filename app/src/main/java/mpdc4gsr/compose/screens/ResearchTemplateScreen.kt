@@ -71,14 +71,15 @@ fun ResearchTemplateScreen(
         ) {
             TitleBar(
                 title = "Research Templates",
-                onNavigationClick = onNavigateBack,
-                actions = listOf(
-                    TitleBar.TitleBarAction(
-                        icon = Icons.Default.Add,
-                        contentDescription = "Create custom template"
-                    ) { onCreateCustomTemplate() }
+                showBackButton = true,
+                onBackClick = onNavigateBack
+            ) {
+                TitleBarAction(
+                    icon = Icons.Default.Add,
+                    contentDescription = "Create custom template",
+                    onClick = onCreateCustomTemplate
                 )
-            )
+            }
 
             Column(
                 modifier = Modifier.fillMaxSize()

@@ -87,18 +87,19 @@ fun GSRQuickRecordingScreen(
         ) {
             TitleBar(
                 title = "Quick GSR Recording",
-                onNavigationClick = onNavigateBack,
-                actions = listOf(
-                    TitleBar.TitleBarAction(
-                        icon = Icons.Default.Save,
-                        contentDescription = "Save recording"
-                    ) {
+                showBackButton = true,
+                onBackClick = onNavigateBack
+            ) {
+                TitleBarAction(
+                    icon = Icons.Default.Save,
+                    contentDescription = "Save recording",
+                    onClick = {
                         if (recordingState == RecordingState.COMPLETED && gsrReadings.isNotEmpty()) {
                             onSaveRecording()
                         }
                     }
                 )
-            )
+            }
 
             Column(
                 modifier = Modifier
@@ -234,7 +235,7 @@ fun DeviceStatusCard(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
-                            imageVector = Icons.Default.SignalWifi4Bar,
+                            imageVector = Icons.Default.SignalCellularAlt,
                             contentDescription = "Signal",
                             tint = when (signalQuality) {
                                 SignalQuality.EXCELLENT -> Color(0xFF4ECDC4)

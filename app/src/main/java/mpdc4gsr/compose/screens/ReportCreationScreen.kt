@@ -47,15 +47,14 @@ fun ReportCreationScreen(
         TitleBar(
             title = "Create Report",
             showBackButton = true,
-            onBackClick = onBackClick,
-            actions = listOf(
-                TitleBar.TitleBarAction(
-                    icon = Icons.Default.Save,
-                    contentDescription = "Save Draft",
-                    onClick = { /* Save draft */ }
-                )
+            onBackClick = onBackClick
+        ) {
+            TitleBarAction(
+                icon = Icons.Default.Save,
+                contentDescription = "Save Draft",
+                onClick = { /* Save draft */ }
             )
-        )
+        }
 
         Column(
             modifier = Modifier

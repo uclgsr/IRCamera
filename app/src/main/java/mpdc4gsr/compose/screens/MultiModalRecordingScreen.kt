@@ -58,15 +58,14 @@ fun MultiModalRecordingScreen(
         TitleBar(
             title = "Multi-Modal Recording",
             showBackButton = true,
-            onBackClick = onBackClick,
-            actions = listOf(
-                TitleBar.TitleBarAction(
-                    icon = Icons.Default.Settings,
-                    contentDescription = "Recording Settings",
-                    onClick = { /* Open settings */ }
-                )
+            onBackClick = onBackClick
+        ) {
+            TitleBarAction(
+                icon = Icons.Default.Settings,
+                contentDescription = "Recording Settings",
+                onClick = { /* Open settings */ }
             )
-        )
+        }
 
         Column(
             modifier = Modifier

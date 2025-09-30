@@ -45,15 +45,14 @@ fun GSRVideoPlayerScreen(
         TitleBar(
             title = "GSR Video Player",
             showBackButton = true,
-            onBackClick = onBackClick,
-            actions = listOf(
-                TitleBar.TitleBarAction(
-                    icon = Icons.Default.Visibility,
-                    contentDescription = "Toggle GSR Overlay",
-                    onClick = { showGSROverlay = !showGSROverlay }
-                )
+            onBackClick = onBackClick
+        ) {
+            TitleBarAction(
+                icon = Icons.Default.Visibility,
+                contentDescription = "Toggle GSR Overlay",
+                onClick = { showGSROverlay = !showGSROverlay }
             )
-        )
+        }
 
         Column(
             modifier = Modifier
