@@ -49,6 +49,13 @@ class NetworkClientTestViewModel : BaseViewModel() {
     enum class TestStatus { PASS, FAIL, WARNING, PENDING }
     enum class NetworkTestType { CONNECTION, LATENCY, THROUGHPUT, RELIABILITY }
     
+    data class NetworkConfiguration(
+        val serverAddress: String = "192.168.1.100",
+        val port: Int = 8080,
+        val timeoutMs: Long = 5000,
+        val retryAttempts: Int = 3
+    )
+    
     data class NetworkTestCategory(
         val name: String,
         val description: String,
@@ -73,7 +80,7 @@ class NetworkClientTestViewModel : BaseViewModel() {
         val networkStatus: String = "Disconnected",
         val testCategories: List<NetworkTestCategory> = emptyList(),
         val testResults: List<NetworkTestResult> = emptyList(),
-        val networkConfiguration: String = ""
+        val networkConfiguration: NetworkConfiguration = NetworkConfiguration()
     )
     
     private val _networkTestUiState = MutableStateFlow(NetworkTestUiState())
@@ -127,8 +134,11 @@ class NetworkClientTestViewModel : BaseViewModel() {
         // Stub implementation
     }
     
-    fun updateNetworkConfiguration(config: String) {
+    fun updateNetworkConfiguration(config: NetworkConfiguration) {
         _networkTestUiState.value = _networkTestUiState.value.copy(networkConfiguration = config)
+        // Update IP and port from configuration
+        _ipAddress.value = config.serverAddress
+        _port.value = config.port.toString()
     }
 }
 

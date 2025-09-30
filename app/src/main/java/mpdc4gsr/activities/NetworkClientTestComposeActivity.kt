@@ -155,14 +155,9 @@ fun NetworkClientTestScreen(
             // Network Configuration
             item {
                 NetworkConfigurationCard(
-                    configuration = NetworkConfiguration(
-                        serverAddress = "192.168.1.100",
-                        port = 8080,
-                        timeoutMs = 5000,
-                        retryAttempts = 3
-                    ),
+                    configuration = uiState.networkConfiguration,
                     onUpdateConfiguration = { config -> 
-                        viewModel.updateNetworkConfiguration("${config.serverAddress}:${config.port}")
+                        viewModel.updateNetworkConfiguration(config)
                     }
                 )
             }
@@ -713,6 +708,7 @@ typealias NetworkTestCategory = NetworkClientTestViewModel.NetworkTestCategory
 typealias NetworkTestResult = NetworkClientTestViewModel.NetworkTestResult
 typealias TestStatus = NetworkClientTestViewModel.TestStatus
 typealias NetworkTestType = NetworkClientTestViewModel.NetworkTestType
+typealias NetworkConfiguration = NetworkClientTestViewModel.NetworkConfiguration
 
 // Data classes specific to this activity
 data class NetworkTestStatus(
@@ -721,11 +717,4 @@ data class NetworkTestStatus(
     val bandwidth: Float,
     val packetLoss: Float,
     val connectedDevices: Int
-)
-
-data class NetworkConfiguration(
-    val serverAddress: String,
-    val port: Int,
-    val timeoutMs: Long,
-    val retryAttempts: Int
 )
