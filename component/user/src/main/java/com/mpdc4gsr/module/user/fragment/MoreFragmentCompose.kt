@@ -24,42 +24,6 @@ import com.mpdc4gsr.libunified.app.config.RouterConfig
 import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import com.mpdc4gsr.module.user.viewmodel.MoreFragmentComposeViewModel
 
-// Data classes for the fragment
-data class QuickActionItem(
-    val id: String,
-    val title: String,
-    val description: String,
-    val icon: ImageVector,
-    val backgroundColor: Color = Color.Transparent,
-    val iconTint: Color = Color.Black,
-    val textColor: Color = Color.Black,
-    val badge: String? = null
-)
-
-data class HelpSupportItem(
-    val id: String,
-    val title: String,
-    val description: String,
-    val icon: ImageVector
-)
-
-data class CommunityItem(
-    val id: String,
-    val title: String,
-    val description: String,
-    val icon: ImageVector,
-    val url: String
-)
-
-data class AdvancedToolItem(
-    val id: String,
-    val title: String,
-    val description: String,
-    val icon: ImageVector,
-    val requirements: String = "",
-    val isExperimental: Boolean = false
-)
-
 /**
  * Compose migration of MoreFragment - Minimal working version
  */
@@ -109,8 +73,8 @@ class MoreFragmentCompose : BaseComposeFragment<MoreFragmentComposeViewModel>() 
         val context = LocalContext.current
         val quickActionItems = remember { getQuickActionItems() }
         val helpSupportItems = remember { getHelpSupportItems() }
-        val communityItems = remember { getCommunityItems() }
-        val advancedToolItems = remember { getAdvancedToolItems() }
+        val communityItems: List<CommunityItem> = remember { getCommunityItems() }
+        val advancedToolItems: List<AdvancedToolItem> = remember { getAdvancedToolItems() }
 
         LibUnifiedTheme {
             LazyColumn(
@@ -143,7 +107,7 @@ class MoreFragmentCompose : BaseComposeFragment<MoreFragmentComposeViewModel>() 
                     QuickActionCard(
                         action = action,
                         onClick = {
-                            handleQuickActionClick(context, action)
+                            handleQuickActionClick(context, action, viewModel)
                         }
                     )
                 }
@@ -412,29 +376,6 @@ class MoreFragmentCompose : BaseComposeFragment<MoreFragmentComposeViewModel>() 
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onTertiaryContainer.copy(alpha = 0.8f)
                 )
-                
-                Spacer(modifier = Modifier.width(16.dp))
-                
-                Column(
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Text(
-                        text = item.title,
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Medium
-                    )
-                    Text(
-                        text = item.description,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-                
-                Icon(
-                    Icons.Default.ChevronRight,
-                    contentDescription = "Navigate",
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
-                )
             }
         }
     }
@@ -585,5 +526,60 @@ class MoreFragmentCompose : BaseComposeFragment<MoreFragmentComposeViewModel>() 
     ) {
         // Advanced tool click logic can be implemented later
         // For now, we'll just handle the click without action
+    }
+
+    private fun getCommunityItems(): List<CommunityItem> {
+        return listOf(
+            CommunityItem(
+                id = "forum",
+                title = "Community Forum",
+                description = "Join discussions with other thermal imaging professionals",
+                icon = Icons.Default.Forum,
+                url = "https://example.com/forum"
+            ),
+            CommunityItem(
+                id = "tutorials",
+                title = "Video Tutorials",
+                description = "Learn from expert-created video content",
+                icon = Icons.Default.VideoLibrary,
+                url = "https://example.com/tutorials"
+            ),
+            CommunityItem(
+                id = "github",
+                title = "Open Source",
+                description = "Contribute to thermal imaging software development",
+                icon = Icons.Default.Code,
+                url = "https://github.com/uclgsr/IRCamera"
+            )
+        )
+    }
+
+    private fun getAdvancedToolItems(): List<AdvancedToolItem> {
+        return listOf(
+            AdvancedToolItem(
+                id = "batch_analysis",
+                title = "Batch Analysis",
+                description = "Process multiple thermal images simultaneously",
+                icon = Icons.Default.DynamicFeed,
+                requirements = "Professional license required",
+                isExperimental = false
+            ),
+            AdvancedToolItem(
+                id = "ai_detection",
+                title = "AI Anomaly Detection",
+                description = "Automatically detect thermal anomalies using machine learning",
+                icon = Icons.Default.Psychology,
+                requirements = "GPU acceleration recommended",
+                isExperimental = true
+            ),
+            AdvancedToolItem(
+                id = "data_export",
+                title = "Advanced Data Export",
+                description = "Export raw thermal data in multiple formats",
+                icon = Icons.Default.GetApp,
+                requirements = "Storage space required",
+                isExperimental = false
+            )
+        )
     }
 }
