@@ -138,8 +138,10 @@ class CameraStatusWidget @JvmOverloads constructor(
             status.contains("Recording") -> Color.BLUE
             status.contains("Ready") || status.contains("Initialized") -> Color.GREEN
             status.contains("Permission") -> Color.MAGENTA
-@Suppress("DEPRECATION")
-                        else -> ContextCompat.getColor(context, android.R.color.primary_text_dark)
+            else -> {
+                @Suppress("DEPRECATION")
+                ContextCompat.getColor(context, android.R.color.primary_text_dark)
+            }
         }
     }
 

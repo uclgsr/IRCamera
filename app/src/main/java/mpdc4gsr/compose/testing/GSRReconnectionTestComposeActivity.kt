@@ -9,6 +9,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -256,7 +257,7 @@ class GSRReconnectionTestComposeActivity : ComponentActivity() {
                         if (isTestRunning) {
                             Spacer(modifier = Modifier.height(12.dp))
                             LinearProgressIndicator(
-                progress = { elapsedTime.toFloat( }) / RECONNECTION_TEST_DURATION,
+                                progress = { elapsedTime.toFloat() / RECONNECTION_TEST_DURATION },
                                 modifier = Modifier.fillMaxWidth()
                             )
                         }

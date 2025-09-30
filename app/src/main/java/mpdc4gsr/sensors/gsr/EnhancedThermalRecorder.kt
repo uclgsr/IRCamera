@@ -126,7 +126,7 @@ class EnhancedThermalRecorder(private val context: Context) {
         try {
             closeSyncEventsFile()
 
-            kotlinx.coroutines.@OptIn(kotlinx.coroutines.DelicateCoroutinesApi::class)
+            @OptIn(kotlinx.coroutines.DelicateCoroutinesApi::class)
             GlobalScope.launch {
                 thermalCameraRecorder.cleanup()
             }

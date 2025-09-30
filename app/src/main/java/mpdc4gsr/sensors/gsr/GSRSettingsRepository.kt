@@ -2,7 +2,6 @@ package mpdc4gsr.sensors.gsr
 
 import android.content.Context
 import android.content.SharedPreferences
-@Suppress("DEPRECATION")
 import android.preference.PreferenceManager
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
