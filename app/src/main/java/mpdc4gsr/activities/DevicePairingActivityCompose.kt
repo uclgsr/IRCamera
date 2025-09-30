@@ -90,7 +90,7 @@ class DevicePairingActivityCompose : BaseComposeActivity<DevicePairingViewModel>
                     is DevicePairingViewModel.PairingEvent.ShowConnectionDialog -> {
                         Toast.makeText(
                             context,
-                            "Connecting to ${event.controller.deviceId}...",
+                            "Connecting to ${event.controller.deviceName}...",
                             Toast.LENGTH_SHORT
                         ).show()
                     }
@@ -191,7 +191,7 @@ class DevicePairingActivityCompose : BaseComposeActivity<DevicePairingViewModel>
         }
 
         @Composable
-        private fun ConnectionStatusCard(
+        fun ConnectionStatusCard(
             connectionState: DevicePairingViewModel.ConnectionState,
             connectedController: NetworkClient.ControllerInfo?,
             statusMessage: String,

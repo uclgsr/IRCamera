@@ -16,7 +16,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
-import com.mpdc4gsr.libunified.app.compose.theme.LibTheme
+import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import mpdc4gsr.compose.navigation.UnifiedNavHost
 import mpdc4gsr.compose.navigation.UnifiedRoute
 
@@ -32,7 +32,7 @@ class NavigationTestActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            LibTheme {
+            LibUnifiedTheme {
                 NavigationTestScreen()
             }
         }

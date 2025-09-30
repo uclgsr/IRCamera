@@ -56,7 +56,7 @@ class MultiModalRecordingActivityCompose : BaseComposeActivity<MultiModalRecordi
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MultiModalRecordingScreen(viewModel: MultiModalRecordingViewModel) {
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.multiModalUiState
     val context = LocalContext.current
 
     var showSessionDialog by remember { mutableStateOf(false) }
@@ -759,8 +759,8 @@ data class MultiModalRecordingUiState(
 
 // ViewModel placeholder
 class MultiModalRecordingViewModel : BaseViewModel() {
-    private val _uiState = androidx.compose.runtime.mutableStateOf(MultiModalRecordingUiState())
-    val uiState: androidx.compose.runtime.State<MultiModalRecordingUiState> = _uiState
+    private val _multiModalUiState = androidx.compose.runtime.mutableStateOf(MultiModalRecordingUiState())
+    val multiModalUiState: androidx.compose.runtime.State<MultiModalRecordingUiState> = _multiModalUiState
 
     private var recordingJob: Job? = null
 
@@ -802,7 +802,7 @@ class MultiModalRecordingViewModel : BaseViewModel() {
             ResearchProtocol("Emotion Recognition", "Video stimuli with rating tasks", "45 min")
         )
 
-        _uiState.value = _uiState.value.copy(
+        _multiModalUiState.value = _multiModalUiState.value.copy(
             sensorStates = sensors,
             availableProtocols = protocols,
             canStartRecording = sensors.any { it.isEnabled && it.isConnected }
@@ -810,20 +810,20 @@ class MultiModalRecordingViewModel : BaseViewModel() {
     }
 
     fun startRecording() {
-        _uiState.value = _uiState.value.copy(isRecording = true)
+        _multiModalUiState.value = _multiModalUiState.value.copy(isRecording = true)
 
         // Cancel any existing recording job
         recordingJob?.cancel()
 
         // Start recording statistics updates on main dispatcher
         recordingJob = viewModelScope.launch(Dispatchers.Main) {
-            while (_uiState.value.isRecording) {
+            while (_multiModalUiState.value.isRecording) {
                 delay(1000)
-                _uiState.value = _uiState.value.copy(
-                    sessionDuration = _uiState.value.sessionDuration + 1000,
-                    totalDataSize = _uiState.value.totalDataSize + 1024,
-                    sessionStatistics = _uiState.value.sessionStatistics.copy(
-                        totalSamples = _uiState.value.sessionStatistics.totalSamples + 256,
+                _multiModalUiState.value = _multiModalUiState.value.copy(
+                    sessionDuration = _multiModalUiState.value.sessionDuration + 1000,
+                    totalDataSize = _multiModalUiState.value.totalDataSize + 1024,
+                    sessionStatistics = _multiModalUiState.value.sessionStatistics.copy(
+                        totalSamples = _multiModalUiState.value.sessionStatistics.totalSamples + 256,
                         dataRate = 256,
                         dataQuality = (85..98).random()
                     ),
@@ -837,7 +837,7 @@ class MultiModalRecordingViewModel : BaseViewModel() {
     }
 
     fun stopRecording() {
-        _uiState.value = _uiState.value.copy(isRecording = false)
+        _multiModalUiState.value = _multiModalUiState.value.copy(isRecording = false)
         recordingJob?.cancel()
         recordingJob = null
     }
@@ -848,20 +848,20 @@ class MultiModalRecordingViewModel : BaseViewModel() {
     }
 
     fun pauseRecording() {
-        _uiState.value = _uiState.value.copy(isRecording = false)
+        _multiModalUiState.value = _multiModalUiState.value.copy(isRecording = false)
     }
 
     fun resumeRecording() {
-        _uiState.value = _uiState.value.copy(isRecording = true)
+        _multiModalUiState.value = _multiModalUiState.value.copy(isRecording = true)
     }
 
     fun toggleSensor(sensorType: SensorType) {
-        val updatedSensors = _uiState.value.sensorStates.map { sensor ->
+        val updatedSensors = _multiModalUiState.value.sensorStates.map { sensor ->
             if (sensor.type == sensorType) {
                 sensor.copy(isEnabled = !sensor.isEnabled)
             } else sensor
         }
-        _uiState.value = _uiState.value.copy(sensorStates = updatedSensors)
+        _multiModalUiState.value = _multiModalUiState.value.copy(sensorStates = updatedSensors)
     }
 
     fun configureSensor(sensorType: SensorType) {
@@ -869,15 +869,14 @@ class MultiModalRecordingViewModel : BaseViewModel() {
     }
 
     fun createNewSession(sessionName: String, participantId: String) {
-        _uiState.value = _uiState.value.copy(
+        _multiModalUiState.value = _multiModalUiState.value.copy(
             currentSession = SessionInfo(sessionName, participantId)
         )
     }
 
     fun selectProtocol(protocol: ResearchProtocol) {
-        _uiState.value = _uiState.value.copy(
-            currentSession = _uiState.value.currentSession?.copy(protocol = protocol.name)
+        _multiModalUiState.value = _multiModalUiState.value.copy(
+            currentSession = _multiModalUiState.value.currentSession?.copy(protocol = protocol.name)
         )
     }
-}
 }

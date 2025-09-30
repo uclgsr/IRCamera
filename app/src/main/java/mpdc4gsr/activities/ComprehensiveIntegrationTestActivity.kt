@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -14,7 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.mpdc4gsr.libunified.app.compose.theme.LibTheme
+import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import mpdc4gsr.compose.base.BaseComposeActivity
 import mpdc4gsr.compose.navigation.UnifiedNavigation
 import mpdc4gsr.compose.navigation.UnifiedRoute
@@ -38,7 +39,7 @@ class ComprehensiveIntegrationTestActivity : BaseComposeActivity<IntegrationTest
 
     @Composable
     override fun Content(viewModel: IntegrationTestViewModel) {
-        LibTheme {
+        LibUnifiedTheme {
             IntegrationTestScreen(viewModel = viewModel)
         }
     }
@@ -168,7 +169,7 @@ fun IntegrationTestScreen(viewModel: IntegrationTestViewModel) {
                     label = { Text("All") }
                 )
             }
-            items(IntegrationTestViewModel.TestCategory.values()) { category ->
+            items(IntegrationTestViewModel.TestCategory.entries.toTypedArray()) { category ->
                 FilterChip(
                     selected = selectedCategory == category,
                     onClick = { selectedCategory = category },
@@ -228,7 +229,7 @@ private fun TestItemCard(item: IntegrationTestViewModel.TestItem) {
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-            Chip(
+            AssistChip(
                 onClick = { },
                 label = {
                     Text(
