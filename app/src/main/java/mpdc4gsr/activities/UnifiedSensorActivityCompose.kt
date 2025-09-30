@@ -45,7 +45,6 @@ enum class UnifiedSensorType(
     THERMAL("Thermal Camera", Icons.Default.Thermostat, "TC001/TS004 thermal imaging sensors"),
     GSR("GSR Sensor", Icons.Default.Sensors, "Galvanic skin response monitoring"),
     RGB_CAMERA("RGB Camera", Icons.Default.Camera, "High-resolution RGB camera recording"),
-    THERMAL_CAMERA("Thermal Camera", Icons.Default.Thermostat, "TC001/TS004 thermal imaging sensors"),
     AUDIO("Audio", Icons.Default.Audiotrack, "Audio recording"),
     NETWORK("Network", Icons.Default.NetworkCheck, "Network connectivity and data transmission")
 }
