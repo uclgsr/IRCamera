@@ -275,6 +275,7 @@ class FileUploadService(private val context: Context) {
     }
 
     private fun startUploadProcessor() {
+        @OptIn(kotlinx.coroutines.DelicateCoroutinesApi::class)
         GlobalScope.launch {
             while (this@FileUploadService.isActive.get()) {
                 try {

@@ -6,6 +6,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -557,7 +558,7 @@ private fun ReportNavigationButtons(
                     contentColor = Color.White
                 )
             ) {
-                Icon(Icons.Default.ArrowBack, contentDescription = null)
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
                 Spacer(modifier = Modifier.width(8.dp))
                 Text("Previous")
             }
@@ -574,7 +575,7 @@ private fun ReportNavigationButtons(
             ) {
                 Text("Next")
                 Spacer(modifier = Modifier.width(8.dp))
-                Icon(Icons.Default.ArrowForward, contentDescription = null)
+                Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null)
             }
         } else {
             Button(

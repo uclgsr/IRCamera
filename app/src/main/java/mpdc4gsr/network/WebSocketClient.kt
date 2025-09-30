@@ -325,9 +325,11 @@ class WebSocketClient(private val context: Context) {
                 }
 
                 override fun onServiceResolved(serviceInfo: NsdServiceInfo) {
+                    @Suppress("DEPRECATION")
+                    val hostAddress = serviceInfo.host.hostAddress ?: "unknown"
                     Log.i(
                         TAG,
-                        "Service resolved: ${serviceInfo.serviceName} at ${serviceInfo.host}:${serviceInfo.port}"
+                        "Service resolved: ${serviceInfo.serviceName} at $hostAddress:${serviceInfo.port}"
                     )
 
                     val attributes = serviceInfo.attributes
@@ -339,7 +341,7 @@ class WebSocketClient(private val context: Context) {
                     val serverInfo =
                         ServerInfo(
                             name = serviceInfo.serviceName,
-                            host = serviceInfo.host.hostAddress ?: "unknown",
+                            host = hostAddress,
                             port = serviceInfo.port,
                             usesTLS = usesTLS,
                             protocolVersion = protocolVersion,
@@ -355,6 +357,7 @@ class WebSocketClient(private val context: Context) {
                 }
             }
 
+        @Suppress("DEPRECATION")
         nsdManager.resolveService(serviceInfo, resolveListener)
     }
 
@@ -1029,6 +1032,7 @@ class WebSocketClient(private val context: Context) {
     }
 
     private fun performCrossDeviceSync(devices: List<SessionManager.DeviceInfo>) {
+        @OptIn(kotlinx.coroutines.DelicateCoroutinesApi::class)
         GlobalScope.launch {
             try {
                 logger.log(

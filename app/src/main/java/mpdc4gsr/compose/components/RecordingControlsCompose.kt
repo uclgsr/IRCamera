@@ -274,7 +274,7 @@ private fun RecordingControls(
 @Composable
 private fun SessionDetails(session: RecordingSession) {
     Column {
-        Divider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.3f))
+        HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.3f))
 
         Spacer(modifier = Modifier.height(12.dp))
 

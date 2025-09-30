@@ -140,6 +140,7 @@ class SessionManager(
 
         isRunning.set(true)
 
+        @OptIn(kotlinx.coroutines.DelicateCoroutinesApi::class)
         sessionJob.set(
             GlobalScope.launch {
                 logger.log(
@@ -317,6 +318,7 @@ class SessionManager(
         onSyncRequired?.invoke(recordingCapableDevices)
 
 
+        @OptIn(kotlinx.coroutines.DelicateCoroutinesApi::class)
         GlobalScope.launch {
             delay(2000)
 

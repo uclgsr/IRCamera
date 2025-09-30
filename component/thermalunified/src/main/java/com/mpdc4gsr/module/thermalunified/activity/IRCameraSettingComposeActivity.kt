@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -55,7 +56,7 @@ class IRCameraSettingComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         navigationIcon = {
                             IconButton(onClick = { finish() }) {
                                 Icon(
-                                    Icons.Default.ArrowBack,
+                                    Icons.AutoMirrored.Filled.ArrowBack,
                                     contentDescription = "Back",
                                     tint = Color.White
                                 )
@@ -409,7 +410,7 @@ private fun AdvancedSettingItem(
             }
 
             Icon(
-                Icons.Default.ArrowForward,
+                Icons.AutoMirrored.Filled.ArrowForward,
                 contentDescription = "Navigate",
                 tint = Color(0xFF7D8590),
                 modifier = Modifier.size(20.dp)

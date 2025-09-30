@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -44,7 +45,7 @@ class IRCorrectionFourComposeActivity : BaseComposeActivity<ThermalViewModel>() 
                         },
                         navigationIcon = {
                             IconButton(onClick = { finish() }) {
-                                Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = Color.White)
+                                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = Color.White)
                             }
                         },
                         colors = TopAppBarDefaults.topAppBarColors(
@@ -134,7 +135,7 @@ class IRCorrectionFourComposeActivity : BaseComposeActivity<ThermalViewModel>() 
                     verticalArrangement = Arrangement.Center
                 ) {
                     Icon(
-                        Icons.Default.CompareArrows,
+                        Icons.AutoMirrored.Filled.CompareArrows,
                         contentDescription = "Compare",
                         tint = Color(0xFF7D8590),
                         modifier = Modifier.size(48.dp)

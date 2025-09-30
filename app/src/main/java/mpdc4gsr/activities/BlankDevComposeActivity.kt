@@ -3,6 +3,7 @@ package mpdc4gsr.activities
 import android.content.Intent
 import android.hardware.usb.UsbDevice
 import android.hardware.usb.UsbManager
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -11,7 +12,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -54,17 +57,32 @@ class BlankDevComposeActivity : BaseComposeActivity<BlankDevViewModel>() {
         intent?.let { intent ->
             when (intent.action) {
                 UsbManager.ACTION_USB_DEVICE_ATTACHED -> {
-                    val device = intent.getParcelableExtra<UsbDevice>(UsbManager.EXTRA_DEVICE)
+                    val device = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        intent.getParcelableExtra(UsbManager.EXTRA_DEVICE, UsbDevice::class.java)
+                    } else {
+                        @Suppress("DEPRECATION")
+                        intent.getParcelableExtra<UsbDevice>(UsbManager.EXTRA_DEVICE)
+                    }
                     device?.let { createViewModel().handleUsbDeviceAttached(it) }
                 }
 
                 UsbManager.ACTION_USB_DEVICE_DETACHED -> {
-                    val device = intent.getParcelableExtra<UsbDevice>(UsbManager.EXTRA_DEVICE)
+                    val device = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        intent.getParcelableExtra(UsbManager.EXTRA_DEVICE, UsbDevice::class.java)
+                    } else {
+                        @Suppress("DEPRECATION")
+                        intent.getParcelableExtra<UsbDevice>(UsbManager.EXTRA_DEVICE)
+                    }
                     device?.let { createViewModel().handleUsbDeviceDetached(it) }
                 }
 
                 BlankDevViewModel.ACTION_USB_PERMISSION -> {
-                    val device = intent.getParcelableExtra<UsbDevice>(UsbManager.EXTRA_DEVICE)
+                    val device = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        intent.getParcelableExtra(UsbManager.EXTRA_DEVICE, UsbDevice::class.java)
+                    } else {
+                        @Suppress("DEPRECATION")
+                        intent.getParcelableExtra<UsbDevice>(UsbManager.EXTRA_DEVICE)
+                    }
                     val granted = intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)
                     device?.let { createViewModel().handleUsbPermissionResult(it, granted) }
                 }
@@ -92,7 +110,7 @@ fun BlankDevScreen(
             navigationIcon = {
                 IconButton(onClick = onNavigateBack) {
                     Icon(
-                        imageVector = Icons.Default.ArrowBack,
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Navigate back"
                     )
                 }
@@ -112,7 +130,7 @@ fun BlankDevScreen(
                     )
                 }
             },
-            colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+            colors = TopAppBarDefaults.topAppBarColors(
                 containerColor = MaterialTheme.colorScheme.primaryContainer,
                 titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
             )
@@ -553,7 +571,7 @@ private fun AutoNavigationCard(
                 Spacer(modifier = Modifier.height(12.dp))
 
                 LinearProgressIndicator(
-                    progress = (10 - countdown) / 10f,
+                    progress = { (10 - countdown) / 10f },
                     modifier = Modifier.fillMaxWidth()
                 )
 

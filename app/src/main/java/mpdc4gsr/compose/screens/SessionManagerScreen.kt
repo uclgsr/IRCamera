@@ -7,6 +7,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -123,17 +124,15 @@ fun SessionManagerScreen(
                 )
 
                 // Tab Row
-                TabRow(
+                PrimaryTabRow(
                     selectedTabIndex = selectedTab,
                     containerColor = Color.Transparent,
                     contentColor = Color.White,
-                    indicator = { tabPositions ->
-                        if (selectedTab < tabPositions.size) {
-                            TabRowDefaults.SecondaryIndicator(
-                                Modifier.fillMaxWidth(),
-                                color = Color(0xFF6B73FF)
-                            )
-                        }
+                    indicator = {
+                        TabRowDefaults.SecondaryIndicator(
+                            Modifier.tabIndicatorOffset(selectedTab),
+                            color = Color(0xFF6B73FF)
+                        )
                     }
                 ) {
                     val tabs = listOf("All", "Completed", "Active", "Scheduled")
@@ -296,8 +295,7 @@ fun SessionItem(
 
             // Progress Bar (for in-progress sessions)
             if (session.status == SessionStatus.IN_PROGRESS) {
-                LinearProgressIndicator(
-                    progress = session.progress,
+                LinearProgressIndicator(progress = { session.progress },
                     modifier = Modifier.fillMaxWidth(),
                     color = Color(0xFF6B73FF),
                     trackColor = Color(0xFF404040)
@@ -408,7 +406,7 @@ fun EmptySessionsState(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Icon(
-            imageVector = if (searchQuery.isBlank()) Icons.Default.Assignment else Icons.Default.SearchOff,
+            imageVector = if (searchQuery.isBlank()) Icons.AutoMirrored.Filled.Assignment else Icons.Default.SearchOff,
             contentDescription = null,
             tint = Color(0xFF6B73FF),
             modifier = Modifier.size(64.dp)

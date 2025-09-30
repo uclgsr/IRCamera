@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -55,7 +56,7 @@ class ManualStep2ComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         navigationIcon = {
                             IconButton(onClick = { finish() }) {
                                 Icon(
-                                    Icons.Default.ArrowBack,
+                                    Icons.AutoMirrored.Filled.ArrowBack,
                                     contentDescription = "Back",
                                     tint = Color.White
                                 )
@@ -152,7 +153,7 @@ private fun SetupProgressIndicator(
 
             // Progress bar
             LinearProgressIndicator(
-                progress = currentStep.toFloat() / totalSteps.toFloat(),
+                progress = { currentStep.toFloat() / totalSteps.toFloat() },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(8.dp),
@@ -197,8 +198,7 @@ private fun ConnectionSetupCard(
             // Status icon
             when {
                 isCalibrating -> {
-                    CircularProgressIndicator(
-                        progress = calibrationProgress,
+                    CircularProgressIndicator(progress = { calibrationProgress },
                         color = Color(0xFFFF6B35),
                         modifier = Modifier.size(64.dp)
                     )

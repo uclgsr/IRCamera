@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.*
@@ -46,7 +47,7 @@ class IRCorrectionLiteThreeComposeActivity : BaseComposeActivity<IRCorrectionLit
                         navigationIcon = {
                             IconButton(onClick = { finish() }) {
                                 Icon(
-                                    Icons.Default.ArrowBack,
+                                    Icons.AutoMirrored.Filled.ArrowBack,
                                     contentDescription = "Back",
                                     tint = MaterialTheme.colorScheme.onPrimary
                                 )
@@ -135,8 +136,7 @@ class IRCorrectionLiteThreeComposeActivity : BaseComposeActivity<IRCorrectionLit
                             fontWeight = FontWeight.Bold
                         )
                         Spacer(modifier = Modifier.height(8.dp))
-                        LinearProgressIndicator(
-                            progress = progress,
+                        LinearProgressIndicator(progress = { progress },
                             modifier = Modifier.fillMaxWidth(),
                             color = Color(0xFF4A90E2)
                         )

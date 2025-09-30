@@ -300,6 +300,7 @@ class NetworkClient(private val context: Context) {
             try {
                 val wifiManager =
                     context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+                @Suppress("DEPRECATION")
                 val dhcpInfo = wifiManager.dhcpInfo
 
                 if (dhcpInfo.gateway == 0) {
@@ -923,6 +924,7 @@ class NetworkClient(private val context: Context) {
         try {
             val wifiManager =
                 context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+            @Suppress("DEPRECATION")
             val dhcpInfo = wifiManager.dhcpInfo
             return intToIp(dhcpInfo.ipAddress)
         } catch (e: Exception) {

@@ -83,6 +83,7 @@ data class SessionMetadata(
         companion object {
             private fun getDeviceSerial(): String {
                 return try {
+                    @Suppress("DEPRECATION")
                     android.os.Build.SERIAL.takeIf { it != "unknown" } ?: getPersistentDeviceId()
                 } catch (e: Exception) {
                     "SN-UNAVAILABLE"

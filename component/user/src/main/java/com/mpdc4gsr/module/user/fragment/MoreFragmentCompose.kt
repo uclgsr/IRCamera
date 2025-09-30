@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -419,7 +420,7 @@ class MoreFragmentCompose : BaseComposeFragment<MoreFragmentComposeViewModel>() 
                 id = "user_guide",
                 title = "User Guide",
                 description = "Complete thermal imaging guide",
-                icon = Icons.Default.MenuBook
+                icon = Icons.AutoMirrored.Filled.MenuBook
             ),
             HelpSupportItem(
                 id = "faq",
@@ -437,7 +438,7 @@ class MoreFragmentCompose : BaseComposeFragment<MoreFragmentComposeViewModel>() 
                 id = "contact_support",
                 title = "Contact Support",
                 description = "Get help from our team",
-                icon = Icons.Default.ContactSupport
+                icon = Icons.AutoMirrored.Filled.ContactSupport
             )
         )
     }

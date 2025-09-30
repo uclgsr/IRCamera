@@ -413,7 +413,7 @@ class IRMonitorLiteFragmentCompose : BaseComposeFragment<IRMonitorLiteViewModel>
                 }
 
                 item {
-                    Divider()
+                    HorizontalDivider()
                 }
 
                 item {

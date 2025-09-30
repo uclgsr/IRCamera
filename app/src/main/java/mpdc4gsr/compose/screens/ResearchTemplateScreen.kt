@@ -7,6 +7,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -501,7 +502,7 @@ fun EmptyTemplatesState(
     ) {
         Icon(
             imageVector = if (searchQuery.isBlank() && selectedCategory == null)
-                Icons.Default.Assignment else Icons.Default.SearchOff,
+                Icons.AutoMirrored.Filled.Assignment else Icons.Default.SearchOff,
             contentDescription = null,
             tint = Color(0xFF6B73FF),
             modifier = Modifier.size(64.dp)
