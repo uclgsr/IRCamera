@@ -20,6 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.csl.irCamera.R
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import mpdc4gsr.compose.base.BaseComposeActivity
@@ -55,7 +56,7 @@ class PdfViewModel : BaseViewModel() {
     fun loadPdf(isTS001: Boolean, context: android.content.Context) {
         val pdfType = if (isTS001) PdfType.TC001 else PdfType.TS004
 
-        launchWithErrorHandling {
+        viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO + exceptionHandler) {
             try {
                 _isLoading.value = true
                 _error.value = null
@@ -63,7 +64,14 @@ class PdfViewModel : BaseViewModel() {
                 // Simulate loading delay
                 delay(1000)
 
-                val pdfDir = File(context.getExternalFilesDir("pdf"))
+                val externalDir = context.getExternalFilesDir("pdf")
+                if (externalDir == null) {
+                    _error.value = "External storage not available"
+                    _isLoading.value = false
+                    return@launch
+                }
+
+                val pdfDir = externalDir
                 if (!pdfDir.exists()) {
                     pdfDir.mkdirs()
                 }

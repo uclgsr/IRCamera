@@ -137,8 +137,8 @@ class SensorDashboardComposeActivity : BaseComposeActivity<MainActivityViewModel
 
     @Composable
     private fun AdditionalSensorInfo(
-        thermalCameraState: MainActivityViewModel.SensorState,
-        gsrSensorState: MainActivityViewModel.SensorState
+        thermalCameraState: ConnectionState,
+        gsrSensorState: ConnectionState
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -172,7 +172,12 @@ class SensorDashboardComposeActivity : BaseComposeActivity<MainActivityViewModel
                         color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.8f)
                     )
                     Text(
-                        text = "Status: ${thermalCameraState.status}",
+                        text = "Status: ${when(thermalCameraState) {
+                            is ConnectionState.Connected -> "Connected"
+                            is ConnectionState.Connecting -> "Connecting"
+                            is ConnectionState.Disconnected -> "Disconnected"
+                            is ConnectionState.Error -> "Error"
+                        }}",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.8f)
                     )
@@ -207,7 +212,12 @@ class SensorDashboardComposeActivity : BaseComposeActivity<MainActivityViewModel
                         color = MaterialTheme.colorScheme.onTertiaryContainer.copy(alpha = 0.8f)
                     )
                     Text(
-                        text = "Status: ${gsrSensorState.status}",
+                        text = "Status: ${when(gsrSensorState) {
+                            is ConnectionState.Connected -> "Connected"
+                            is ConnectionState.Connecting -> "Connecting"
+                            is ConnectionState.Disconnected -> "Disconnected"
+                            is ConnectionState.Error -> "Error"
+                        }}",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onTertiaryContainer.copy(alpha = 0.8f)
                     )
