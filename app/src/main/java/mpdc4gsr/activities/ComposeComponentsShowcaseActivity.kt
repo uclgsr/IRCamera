@@ -28,8 +28,8 @@ class ComposeComponentsShowcaseViewModel : BaseViewModel() {
     private val _showSensorDialog = mutableStateOf(false)
     val showSensorDialog: State<Boolean> = _showSensorDialog
 
-    private val _selectedSensors = mutableStateOf<Set<SensorType>>(emptySet())
-    val selectedSensors: State<Set<SensorType>> = _selectedSensors
+    private val _selectedSensors = mutableStateOf<Set<mpdc4gsr.compose.components.SensorType>>(emptySet())
+    val selectedSensors: State<Set<mpdc4gsr.compose.components.SensorType>> = _selectedSensors
 
     fun showSensorSelection() {
         _showSensorDialog.value = true
@@ -39,7 +39,7 @@ class ComposeComponentsShowcaseViewModel : BaseViewModel() {
         _showSensorDialog.value = false
     }
 
-    fun updateSelectedSensors(sensors: Set<SensorType>) {
+    fun updateSelectedSensors(sensors: Set<mpdc4gsr.compose.components.SensorType>) {
         _selectedSensors.value = sensors
     }
 }
@@ -51,8 +51,10 @@ class ComposeComponentsShowcaseViewModel : BaseViewModel() {
 class ComposeComponentsShowcaseActivity :
     BaseComposeActivity<ComposeComponentsShowcaseViewModel>() {
 
+    private val showcaseVM: ComposeComponentsShowcaseViewModel by viewModels()
+
     override fun createViewModel(): ComposeComponentsShowcaseViewModel =
-        viewModels<ComposeComponentsShowcaseViewModel>().value
+        showcaseVM
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -69,8 +71,7 @@ class ComposeComponentsShowcaseActivity :
             ) {
                 TitleBar(
                     title = "Compose Components",
-                    onBackClick = { finish() },
-                    subtitle = "Enhanced UI Component Showcase"
+                    onBackClick = { finish() }
                 )
 
                 Column(
@@ -302,4 +303,29 @@ private fun ComponentSection(
 
         content()
     }
+}
+
+private fun getSampleSensorAvailability(): List<mpdc4gsr.compose.components.SensorAvailability> {
+    return listOf(
+        mpdc4gsr.compose.components.SensorAvailability(
+            sensorType = mpdc4gsr.compose.components.SensorType.THERMAL,
+            isAvailable = true,
+            isSelected = false
+        ),
+        mpdc4gsr.compose.components.SensorAvailability(
+            sensorType = mpdc4gsr.compose.components.SensorType.GSR,
+            isAvailable = true,
+            isSelected = false
+        ),
+        mpdc4gsr.compose.components.SensorAvailability(
+            sensorType = mpdc4gsr.compose.components.SensorType.RGB,
+            isAvailable = true,
+            isSelected = false
+        ),
+        mpdc4gsr.compose.components.SensorAvailability(
+            sensorType = mpdc4gsr.compose.components.SensorType.AUDIO,
+            isAvailable = true,
+            isSelected = false
+        )
+    )
 }
