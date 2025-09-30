@@ -10,6 +10,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -21,6 +22,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import androidx.lifecycle.viewModelScope
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -435,6 +438,7 @@ private fun getStatusMessage(session: RecordingSession): String {
 fun RecordingControlsDemo(
     modifier: Modifier = Modifier
 ) {
+    val scope = rememberCoroutineScope()
     var session by remember {
         mutableStateOf(
             RecordingSession(
@@ -474,7 +478,7 @@ fun RecordingControlsDemo(
             )
 
             // Simulate start delay
-            kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.Main).launch {
+            scope.launch {
                 delay(2000)
                 session = session.copy(state = RecordingState.RECORDING)
             }
@@ -483,7 +487,7 @@ fun RecordingControlsDemo(
             session = session.copy(state = RecordingState.STOPPING)
 
             // Simulate stop delay
-            kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.Main).launch {
+            scope.launch {
                 delay(1500)
                 session = RecordingSession(
                     state = RecordingState.IDLE,

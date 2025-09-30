@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import com.csl.irCamera.BuildConfig
 import com.csl.irCamera.R
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import mpdc4gsr.compose.base.BaseComposeActivity
 import mpdc4gsr.compose.components.TitleBar
 import mpdc4gsr.compose.theme.IRCameraTheme
@@ -130,7 +131,7 @@ class SimplifiedMainActivityViewModel : BaseViewModel() {
     }
 
     private fun beginRecording() {
-        kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
+        viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
             _isRecording.value = true
             var seconds = 0
 
@@ -152,7 +153,7 @@ class SimplifiedMainActivityViewModel : BaseViewModel() {
     }
 
     fun connectDevices(onComplete: () -> Unit = {}) {
-        kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
+        viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
             _connectionStatus.value = "Connecting to devices..."
 
             // Simulate device connection process

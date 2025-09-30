@@ -43,7 +43,7 @@ fun SimplifiedMainScreen(
     viewModel: SimplifiedMainViewModel = viewModel(),
     onNavigateBack: () -> Unit = {}
 ) {
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.viewState.collectAsState()
     val scrollState = rememberScrollState()
 
     Column(
@@ -120,7 +120,7 @@ fun SimplifiedMainScreen(
             uiState.error?.let { error ->
                 ErrorCard(
                     error = error,
-                    onDismiss = { viewModel.clearError() }
+                    onDismiss = { viewModel.clearViewError() }
                 )
             }
         }
@@ -584,27 +584,4 @@ private fun ErrorCard(
             }
         }
     }
-}
-
-// Data classes
-data class SystemStatus(
-    val overallHealth: HealthStatus,
-    val isRecording: Boolean
-)
-
-data class ConnectionStatus(
-    val thermalCameraConnected: Boolean,
-    val gsrSensorConnected: Boolean
-)
-
-data class RecentSession(
-    val id: String,
-    val name: String,
-    val date: String
-)
-
-enum class HealthStatus(val displayName: String) {
-    HEALTHY("Healthy"),
-    WARNING("Warning"),
-    ERROR("Error")
 }

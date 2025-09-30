@@ -55,7 +55,7 @@ class SessionManagerActivityCompose : BaseComposeActivity<SessionManagerViewMode
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SessionManagerScreen(viewModel: SessionManagerViewModel) {
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.sessionState.collectAsState()
     val context = LocalContext.current
 
     var searchQuery by remember { mutableStateOf("") }
@@ -746,13 +746,13 @@ data class SessionManagerUiState(
 
 // ViewModel placeholder
 class SessionManagerViewModel : BaseViewModel() {
-    private val _uiState = androidx.compose.runtime.mutableStateOf(SessionManagerUiState())
-    val uiState: androidx.compose.runtime.State<SessionManagerUiState> = _uiState
+    private val _sessionState = androidx.compose.runtime.mutableStateOf(SessionManagerUiState())
+    val sessionState: androidx.compose.runtime.State<SessionManagerUiState> = _sessionState
 
     private var loadingJob: Job? = null
 
     fun loadSessions() {
-        _uiState.value = _uiState.value.copy(isLoading = true)
+        _sessionState.value = _sessionState.value.copy(isLoading = true)
 
         // Cancel any existing loading job
         loadingJob?.cancel()
@@ -784,7 +784,7 @@ class SessionManagerViewModel : BaseViewModel() {
                 averageQuality = mockSessions.map { it.dataQuality }.average().toInt()
             )
 
-            _uiState.value = _uiState.value.copy(
+            _sessionState.value = _sessionState.value.copy(
                 sessions = mockSessions,
                 filteredSessions = mockSessions,
                 statistics = statistics,
@@ -794,7 +794,7 @@ class SessionManagerViewModel : BaseViewModel() {
     }
 
     fun filterSessions(query: String, filter: SessionFilter) {
-        val filtered = _uiState.value.sessions.filter { session ->
+        val filtered = _sessionState.value.sessions.filter { session ->
             val matchesQuery = query.isEmpty() ||
                     session.name.contains(query, ignoreCase = true) ||
                     session.participantId.contains(query, ignoreCase = true) ||
@@ -806,18 +806,18 @@ class SessionManagerViewModel : BaseViewModel() {
             matchesQuery && matchesQuality && matchesProtocol
         }
 
-        _uiState.value = _uiState.value.copy(
+        _sessionState.value = _sessionState.value.copy(
             filteredSessions = filtered,
             currentFilter = filter
         )
     }
 
     fun deleteSession(session: RecordingSession) {
-        val updatedSessions = _uiState.value.sessions.filter { it.id != session.id }
-        _uiState.value = _uiState.value.copy(
+        val updatedSessions = _sessionState.value.sessions.filter { it.id != session.id }
+        _sessionState.value = _sessionState.value.copy(
             sessions = updatedSessions,
             filteredSessions = updatedSessions.filter { session ->
-                _uiState.value.filteredSessions.contains(session)
+                _sessionState.value.filteredSessions.contains(session)
             }
         )
     }

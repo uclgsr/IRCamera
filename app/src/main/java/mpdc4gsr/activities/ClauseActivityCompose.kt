@@ -29,6 +29,8 @@ import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import com.mpdc4gsr.libunified.app.utils.CommUtils
 import com.mpdc4gsr.libunified.app.utils.UnifiedVersionUtils
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import androidx.lifecycle.viewModelScope
 import mpdc4gsr.compose.base.BaseComposeActivity
 import mpdc4gsr.compose.components.TitleBar
 import mpdc4gsr.compose.theme.IRCameraTheme
@@ -88,6 +90,7 @@ class ClauseActivityCompose : BaseComposeActivity<ClauseViewModel>() {
     override fun Content(viewModel: ClauseViewModel) {
         IRCameraTheme {
             val context = LocalContext.current
+    val scope = rememberCoroutineScope()
             val isLoading by viewModel.isLoading
             val currentYear by viewModel.currentYear
             val agreementAccepted by viewModel.agreementAccepted

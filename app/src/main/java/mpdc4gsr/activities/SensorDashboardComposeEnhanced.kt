@@ -172,13 +172,13 @@ class SensorDashboardComposeEnhanced : BaseComposeActivity<MainActivityViewModel
                             color = MaterialTheme.colorScheme.onPrimaryContainer
                         )
                         Text(
-                            text = if (sessionState.isRecording) "Recording Active" else "Ready to Record",
+                            text = if (sessionState == MainActivityViewModel.SessionState.RECORDING) "Recording Active" else "Ready to Record",
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f)
                         )
                     }
 
-                    if (sessionState.isRecording) {
+                    if (sessionState == MainActivityViewModel.SessionState.RECORDING) {
                         Card(
                             colors = CardDefaults.cardColors(
                                 containerColor = Color.Red
@@ -228,9 +228,9 @@ class SensorDashboardComposeEnhanced : BaseComposeActivity<MainActivityViewModel
 
                     SensorStatusIndicator(
                         title = "Session",
-                        status = if (sessionState.isRecording) "Active" else "Idle",
+                        status = if (sessionState == MainActivityViewModel.SessionState.RECORDING) "Active" else "Idle",
                         icon = Icons.Default.Storage,
-                        isActive = sessionState.isRecording
+                        isActive = sessionState == MainActivityViewModel.SessionState.RECORDING
                     )
                 }
             }
@@ -410,7 +410,7 @@ class SensorDashboardComposeEnhanced : BaseComposeActivity<MainActivityViewModel
                     modifier = Modifier.padding(bottom = 12.dp)
                 )
 
-                if (sessionState.isRecording) {
+                if (sessionState == MainActivityViewModel.SessionState.RECORDING) {
                     Text(
                         text = "Recording in progress - data will be available after session ends",
                         style = MaterialTheme.typography.bodySmall,
@@ -425,7 +425,7 @@ class SensorDashboardComposeEnhanced : BaseComposeActivity<MainActivityViewModel
                 ) {
                     Button(
                         onClick = onExportSession,
-                        enabled = !sessionState.isRecording,
+                        enabled = sessionState != MainActivityViewModel.SessionState.RECORDING,
                         modifier = Modifier.weight(1f)
                     ) {
                         Icon(Icons.Default.FileDownload, contentDescription = null)

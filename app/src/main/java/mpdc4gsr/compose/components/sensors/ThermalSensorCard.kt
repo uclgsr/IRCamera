@@ -174,7 +174,7 @@ fun ThermalSensorCard(
                         }
                         Button(
                             onClick = { onAction(ThermalAction.Calibrate) },
-                            colors = ButtonDefaults.buttonColors(containerColor = Color.Orange)
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFA500))
                         ) {
                             Text("Calibrate")
                         }
@@ -203,7 +203,7 @@ fun ThermalSensorCard(
                     SensorState.Error -> {
                         Button(
                             onClick = { onAction(ThermalAction.Connect) },
-                            colors = ButtonDefaults.buttonColors(containerColor = Color.Orange)
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFA500))
                         ) {
                             Text("Retry")
                         }

@@ -76,8 +76,8 @@ data class GSRData(
 )
 
 class ShimmerMvpViewModel : BaseViewModel() {
-    private val _connectionState = mutableStateOf(ShimmerConnectionState.DISCONNECTED)
-    val connectionState: State<ShimmerConnectionState> = _connectionState
+    private val _shimmerConnectionState = mutableStateOf(ShimmerConnectionState.DISCONNECTED)
+    val shimmerConnectionState: State<ShimmerConnectionState> = _shimmerConnectionState
 
     private val _availableDevices = mutableStateOf<List<ShimmerDevice>>(emptyList())
     val availableDevices: State<List<ShimmerDevice>> = _availableDevices
@@ -256,7 +256,7 @@ class ShimmerMvpActivityCompose : BaseComposeActivity<ShimmerMvpViewModel>() {
     override fun Content(viewModel: ShimmerMvpViewModel) {
         IRCameraTheme {
             val context = LocalContext.current
-            val connectionState by viewModel.connectionState
+            val connectionState by viewModel.shimmerConnectionState
             val availableDevices by viewModel.availableDevices
             val connectedDevice by viewModel.connectedDevice
             val gsrData by viewModel.gsrData

@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.csl.irCamera.R
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import mpdc4gsr.compose.base.BaseComposeActivity
 import mpdc4gsr.compose.components.TitleBar
 import mpdc4gsr.compose.theme.IRCameraTheme
@@ -89,7 +90,7 @@ class UnifiedSensorViewModel : BaseViewModel() {
     val connectedDevices: State<List<DeviceInfo>> = _connectedDevices
 
     fun connectSensor(sensorType: UnifiedSensorType) {
-        kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
+        viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
             // Simulate connection process
             delay(2000)
 
@@ -127,7 +128,7 @@ class UnifiedSensorViewModel : BaseViewModel() {
     }
 
     fun startRecording() {
-        kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
+        viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
             _isRecording.value = true
             _sessionInfo.value = _sessionInfo.value.copy(status = SessionStatus.RECORDING)
 

@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.camera.view.PreviewView
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
-import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
+import mpdc4gsr.viewmodel.BaseViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -45,6 +45,7 @@ class DualModeCameraViewModel : BaseViewModel() {
 
     private var rgbCameraRecorder: RgbCameraRecorder? = null
     private var enableSamsungOptimizations: Boolean = true
+    private var appContext: Context? = null
 
     // Enhanced data classes
     data class CameraState(
@@ -193,6 +194,7 @@ class DualModeCameraViewModel : BaseViewModel() {
     ) {
         launchWithLoading {
             try {
+                appContext = context.applicationContext
                 rgbCameraRecorder = RgbCameraRecorder(
                     context = context,
                     lifecycleOwner = lifecycleOwner,
@@ -308,7 +310,8 @@ class DualModeCameraViewModel : BaseViewModel() {
 
             try {
                 val fileName = "recording_${System.currentTimeMillis()}"
-                rgbCameraRecorder?.startRecording()
+                val sessionDir = appContext?.getExternalFilesDir("recordings")?.absolutePath ?: ""
+                rgbCameraRecorder?.startRecording(sessionDir)
 
                 _recordingState.value = _recordingState.value.copy(
                     isRecording = true,
@@ -390,67 +393,4 @@ class DualModeCameraViewModel : BaseViewModel() {
     companion object {
         private const val TAG = "DualModeCameraViewModel"
     }
-}
-}
-
-viewModelScope.launch {
-    try {
-        // Implement recording logic through RgbCameraRecorder
-        _cameraState.value = _cameraState.value?.copy(isRecording = true)
-        _statusMessage.value = "Recording started"
-    } catch (e: Exception) {
-        _error.value = "Failed to start recording: ${e.message}"
-    }
-}
-}
-
-fun stopRecording() {
-    viewModelScope.launch {
-        try {
-            // Implement stop recording logic
-            _cameraState.value = _cameraState.value?.copy(isRecording = false)
-            _statusMessage.value = "Recording stopped"
-        } catch (e: Exception) {
-            _error.value = "Failed to stop recording: ${e.message}"
-        }
-    }
-}
-
-fun cleanup() {
-    viewModelScope.launch {
-        try {
-            rgbCameraRecorder?.cleanup()
-            _cameraState.value = CameraState(
-                isInitialized = false,
-                isRecording = false
-            )
-        } catch (e: Exception) {
-            _error.value = "Cleanup error: ${e.message}"
-        }
-    }
-}
-
-fun clearError() {
-    _error.value = null
-}
-
-fun clearStatusMessage() {
-    _statusMessage.value = null
-}
-
-fun getSamsungOptimizationStatus(): String {
-    return if (enableSamsungOptimizations) {
-        if (SamsungDeviceCompatibility.isStage3Compatible()) {
-            "Samsung Stage3/Level3 optimizations enabled"
-        } else {
-            "Samsung optimizations enabled (${SamsungDeviceCompatibility.getDeviceInfo()})"
-        }
-    } else {
-        "Samsung optimizations disabled"
-    }
-}
-
-companion object {
-    private const val TAG = "DualModeCameraViewModel"
-}
 }

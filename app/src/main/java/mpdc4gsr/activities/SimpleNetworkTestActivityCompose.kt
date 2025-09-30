@@ -22,7 +22,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.csl.irCamera.BuildConfig
 import com.csl.irCamera.R
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import mpdc4gsr.compose.base.BaseComposeActivity
 import mpdc4gsr.compose.components.TitleBar
 import mpdc4gsr.compose.theme.IRCameraTheme
@@ -121,7 +123,7 @@ class SimpleNetworkTestViewModel : BaseViewModel() {
     }
 
     fun connect() {
-        kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
+        viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
             _connectionStatus.value = ConnectionStatus.CONNECTING
             _statusMessage.value = "Connecting to ${_ipAddress.value}:${_port.value}..."
 
@@ -149,7 +151,7 @@ class SimpleNetworkTestViewModel : BaseViewModel() {
     fun runAllTests() {
         if (_connectionStatus.value != ConnectionStatus.CONNECTED) return
 
-        kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
+        viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
             _isRunningTests.value = true
             _testResults.value = emptyList()
             _statusMessage.value = "Running automated test suite..."
@@ -186,7 +188,7 @@ class SimpleNetworkTestViewModel : BaseViewModel() {
     fun runSingleTest(command: NetworkTestCommand) {
         if (_connectionStatus.value != ConnectionStatus.CONNECTED) return
 
-        kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
+        viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
             _statusMessage.value = "Testing: ${command.name}"
 
             delay(1000)

@@ -190,7 +190,7 @@ fun GSRSensorCard(
                     SensorState.Error -> {
                         Button(
                             onClick = { onAction(GSRAction.Connect) },
-                            colors = ButtonDefaults.buttonColors(containerColor = Color.Orange)
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFA500))
                         ) {
                             Text("Retry")
                         }

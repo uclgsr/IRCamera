@@ -193,7 +193,7 @@ fun RGBCameraSensorCard(
                     SensorState.Error -> {
                         Button(
                             onClick = { onAction(CameraAction.Connect) },
-                            colors = ButtonDefaults.buttonColors(containerColor = Color.Orange)
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFA500))
                         ) {
                             Text("Retry")
                         }
