@@ -269,7 +269,7 @@ class GalleryFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
                                 tint = MaterialTheme.colorScheme.primary,
                                 modifier = Modifier
                                     .background(
-                                        Color.White,
+                                        color = Color.White,
                                         shape = androidx.compose.foundation.shape.CircleShape
                                     )
                                     .padding(4.dp)

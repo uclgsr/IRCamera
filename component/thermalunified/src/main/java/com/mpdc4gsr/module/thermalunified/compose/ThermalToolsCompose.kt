@@ -29,6 +29,7 @@ import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.graphics.drawscope.translate
@@ -99,10 +100,10 @@ fun FenceCompose(
                     onDragEnd = {
                         dragIndex = -1
                     }
-                ) { change, _ ->
+                ) { change, dragAmount ->
                     if (dragIndex >= 0) {
                         val newBounds = bounds.toMutableList()
-                        newBounds[dragIndex] = bounds[dragIndex] + change
+                        newBounds[dragIndex] = bounds[dragIndex] + dragAmount
                         onBoundsChanged(newBounds)
                     }
                 }

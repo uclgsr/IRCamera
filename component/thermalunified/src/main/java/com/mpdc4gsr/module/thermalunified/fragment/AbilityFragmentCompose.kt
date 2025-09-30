@@ -18,14 +18,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.viewModels
-import com.mpdc4gsr.libunified.app.compose.base.SimpleComposeFragment
+import mpdc4gsr.compose.base.SimpleComposeFragment
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import com.mpdc4gsr.libunified.app.config.RouterConfig
 import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.module.thermalunified.activity.IRThermalNightActivity
-import com.mpdc4gsr.module.thermalunified.activity.IRThermalPlusActivity
-import com.mpdc4gsr.module.thermalunified.activity.MonitoryHomeActivity
+import com.mpdc4gsr.module.thermalunified.activity.IRThermalPlusComposeActivity
+import com.mpdc4gsr.module.thermalunified.activity.MonitoryHomeComposeActivity
 
 /**
  * Compose migration of AbilityFragment
@@ -173,7 +173,7 @@ class AbilityFragmentCompose : SimpleComposeFragment() {
                 id = "winter",
                 title = "Winter Mode",
                 description = "Enhanced cold weather detection",
-                iconRes = R.drawable.ic_winter,
+                iconRes = R.drawable.ic_ir_winter_bg,
                 containerColor = androidx.compose.ui.graphics.Color(0xFF2196F3),
                 iconTint = androidx.compose.ui.graphics.Color.White,
                 textColor = androidx.compose.ui.graphics.Color.White,
@@ -246,21 +246,21 @@ class AbilityFragmentCompose : SimpleComposeFragment() {
 
             "monitoring" -> {
                 // Navigate to monitoring home
-                val intent = Intent(context, MonitoryHomeActivity::class.java)
+                val intent = Intent(context, MonitoryHomeComposeActivity::class.java)
                 context.startActivity(intent)
             }
 
             "residential" -> {
                 // Navigate to residential thermal analysis
                 NavigationManager.getInstance()
-                    .build(RouterConfig.IR_RESIDENTIAL)
+                    .build("IR_RESIDENTIAL")
                     .navigation(context)
             }
 
             "automotive" -> {
                 // Navigate to automotive thermal analysis
                 NavigationManager.getInstance()
-                    .build(RouterConfig.IR_AUTOMOTIVE)
+                    .build("IR_AUTOMOTIVE")
                     .navigation(context)
             }
 
@@ -272,7 +272,7 @@ class AbilityFragmentCompose : SimpleComposeFragment() {
 
             "thermal_plus" -> {
                 // Navigate to thermal plus features
-                val intent = Intent(context, IRThermalPlusActivity::class.java)
+                val intent = Intent(context, IRThermalPlusComposeActivity::class.java)
                 context.startActivity(intent)
             }
         }

@@ -320,6 +320,7 @@ private fun ConfigSliderRow(
     Spacer(modifier = Modifier.height(12.dp))
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ConfigDropdownRow(
     label: String,

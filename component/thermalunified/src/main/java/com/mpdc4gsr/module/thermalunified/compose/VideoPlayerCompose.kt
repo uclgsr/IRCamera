@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.drawText
@@ -411,8 +412,8 @@ private fun VideoBottomControlsCompose(
 fun ThermalImageLoaderCompose(
     url: String?,
     contentDescription: String? = null,
-    placeholder: ImageVector = Icons.Default.Image,
-    error: ImageVector = Icons.Default.BrokenImage,
+    placeholderIcon: ImageVector = Icons.Default.Image,
+    errorIcon: ImageVector = Icons.Default.BrokenImage,
     modifier: Modifier = Modifier,
     onImageLoad: (() -> Unit)? = null,
     onImageError: (() -> Unit)? = null
@@ -426,32 +427,8 @@ fun ThermalImageLoaderCompose(
         modifier = modifier,
         onSuccess = { onImageLoad?.invoke() },
         onError = { onImageError?.invoke() },
-        placeholder = {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = placeholder,
-                    contentDescription = "Loading",
-                    modifier = Modifier.size(48.dp),
-                    tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
-                )
-            }
-        },
-        error = {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = error,
-                    contentDescription = "Error",
-                    modifier = Modifier.size(48.dp),
-                    tint = MaterialTheme.colorScheme.error.copy(alpha = 0.6f)
-                )
-            }
-        }
+        placeholder = painterResource(android.R.drawable.ic_menu_gallery),
+        error = painterResource(android.R.drawable.ic_menu_close_clear_cancel)
     )
 }
 

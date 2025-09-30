@@ -67,7 +67,7 @@ fun TemperatureEditCompose(
                                 TemperatureMode.POINT -> {
                                     val temp = simulateTemperatureReading(offset)
                                     val measurement = TemperatureMeasurementResult.Point(
-                                        id = java.util.UUID.randomUUID().toString(),
+                                        pointId = java.util.UUID.randomUUID().toString(),
                                         position = offset,
                                         temperature = temp
                                     )
@@ -83,7 +83,7 @@ fun TemperatureEditCompose(
                                         val temp1 = simulateTemperatureReading(drawStart!!)
                                         val temp2 = simulateTemperatureReading(offset)
                                         val measurement = TemperatureMeasurementResult.Line(
-                                            id = UUID.randomUUID().toString(),
+                                            lineId = UUID.randomUUID().toString(),
                                             start = drawStart!!,
                                             end = offset,
                                             temperatureMax = maxOf(temp1, temp2),
@@ -105,7 +105,7 @@ fun TemperatureEditCompose(
                                         val rect = Rect(drawStart!!, offset)
                                         val temp = simulateAreaTemperatureReading(rect)
                                         val measurement = TemperatureMeasurementResult.Rectangle(
-                                            id = UUID.randomUUID().toString(),
+                                            rectId = UUID.randomUUID().toString(),
                                             rect = rect,
                                             temperatureMax = temp + 5f,
                                             temperatureMin = temp - 5f,
