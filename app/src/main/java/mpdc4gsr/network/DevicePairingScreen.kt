@@ -48,7 +48,7 @@ fun DevicePairingScreen(
 
                 is DevicePairingViewModel.PairingEvent.NavigateToSession -> {
                     // Navigate to recording activity
-                    MultiModalRecordingComposeActivity.start(context, event.sessionInfo)
+                    MultiModalRecordingComposeActivity.startRecording(context, event.sessionInfo)
                 }
 
                 is DevicePairingViewModel.PairingEvent.ShowConnectionDialog -> {
