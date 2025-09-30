@@ -140,9 +140,9 @@ object ViewModelStateBridge {
         batteryLevelFlow: StateFlow<Int>,
         connectionStateFlow: StateFlow<Boolean>
     ): State<ComposeGSRData> {
-        val currentValue = currentValueFlow.collectAsState()
-        val batteryLevel = batteryLevelFlow.collectAsState()
-        val isConnected = connectionStateFlow.collectAsState()
+        val currentValue by currentValueFlow.collectAsState()
+        val batteryLevel by batteryLevelFlow.collectAsState()
+        val isConnected by connectionStateFlow.collectAsState()
 
         return androidx.compose.runtime.derivedStateOf {
             ComposeGSRData.fromShimmerData(
