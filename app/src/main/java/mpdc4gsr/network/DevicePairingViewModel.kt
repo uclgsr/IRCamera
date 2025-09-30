@@ -241,16 +241,8 @@ class DevicePairingViewModel : BaseViewModel(), NetworkClient.NetworkEventListen
         launchWithErrorHandling {
             val currentController = _connectedController.value
             if (currentController != null && _connectionState.value == ConnectionState.CONNECTED) {
-                try {
-                    val success = networkClient.startSession(sessionInfo)
-                    if (success) {
-                        _events.emit(PairingEvent.NavigateToSession(sessionInfo))
-                    } else {
-                        _events.emit(PairingEvent.ShowError("Failed to start session"))
-                    }
-                } catch (e: Exception) {
-                    _events.emit(PairingEvent.ShowError("Session start error: ${e.message}"))
-                }
+                // Navigate to session directly - NetworkClient handles data streaming
+                _events.emit(PairingEvent.NavigateToSession(sessionInfo))
             } else {
                 _events.emit(PairingEvent.ShowError("No active connection"))
             }

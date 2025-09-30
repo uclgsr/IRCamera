@@ -91,10 +91,10 @@ class PermissionRequestViewModel : BaseViewModel() {
         }
     }
 
-    fun initialize(context: Context) {
+    fun initialize(activity: androidx.fragment.app.FragmentActivity) {
         launchWithErrorHandling {
-            permissionController = PermissionController(context)
-            permissionManager = PermissionManager(context, permissionController)
+            permissionController = PermissionController(activity)
+            permissionManager = PermissionManager(activity, permissionController)
 
             addLog("Permission System initialized.")
             updatePermissionStatus()
@@ -185,7 +185,7 @@ class PermissionRequestViewModel : BaseViewModel() {
             _screenState.value = _screenState.value.copy(isRequestingPermissions = true)
 
             try {
-                val granted = permissionManager.requestLocationPermissions()
+                val granted = permissionManager.requestBluetoothPermissions() // Bluetooth requires location
                 addLog(if (granted) "Location permissions granted" else "Location permissions denied")
                 updatePermissionStatus()
 
@@ -206,7 +206,7 @@ class PermissionRequestViewModel : BaseViewModel() {
             _screenState.value = _screenState.value.copy(isRequestingPermissions = true)
 
             try {
-                val granted = permissionManager.requestStoragePermissions()
+                val granted = permissionManager.requestAllCriticalPermissions()
                 addLog(if (granted) "Storage permissions granted" else "Storage permissions denied")
                 updatePermissionStatus()
 

@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mpdc4gsr.gsr.model.SessionInfo
 import kotlinx.coroutines.flow.collectLatest
-import mpdc4gsr.sensors.gsr.MultiModalRecordingActivity
+import mpdc4gsr.sensors.gsr.MultiModalRecordingComposeActivity
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -48,7 +48,7 @@ fun DevicePairingScreen(
 
                 is DevicePairingViewModel.PairingEvent.NavigateToSession -> {
                     // Navigate to recording activity
-                    MultiModalRecordingActivity.startRecording(context, event.sessionInfo)
+                    MultiModalRecordingComposeActivity.start(context, event.sessionInfo)
                 }
 
                 is DevicePairingViewModel.PairingEvent.ShowConnectionDialog -> {
@@ -280,8 +280,7 @@ private fun ControllerItem(
     modifier: Modifier = Modifier
 ) {
     Card(
-        onClick = if (enabled) onClick else {
-        },
+        onClick = if (enabled) onClick else { {} },
         modifier = modifier.fillMaxWidth(),
         enabled = enabled,
         colors = CardDefaults.cardColors(
