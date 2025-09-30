@@ -15,8 +15,7 @@ This comprehensive index provides quick navigation to all documentation across t
 - **[docs/consolidated/ARCHITECTURE_AND_UI.md](docs/consolidated/ARCHITECTURE_AND_UI.md)** - System architecture, UI structure, and component reference
 - **[docs/consolidated/IMPLEMENTATION_STATUS.md](docs/consolidated/IMPLEMENTATION_STATUS.md)** - Complete implementation history and current status
 - **[docs/consolidated/TESTING_GUIDE.md](docs/consolidated/TESTING_GUIDE.md)** - Comprehensive testing procedures and validation
-- **[docs/consolidated/COMPOSE_MIGRATION.md](docs/consolidated/COMPOSE_MIGRATION.md)** - Jetpack Compose migration history and implementation
-- **[COMPOSE_MIGRATION_STATUS_REPORT.md](COMPOSE_MIGRATION_STATUS_REPORT.md)** - Current migration status with code metrics (95% complete, production ready)
+- **[docs/consolidated/COMPOSE_MIGRATION.md](docs/consolidated/COMPOSE_MIGRATION.md)** - Jetpack Compose migration details
 
 ### Project Management
 

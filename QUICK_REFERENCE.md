@@ -7,9 +7,11 @@ This quick reference helps you find the right documentation quickly after the co
 ## Common Questions
 
 ### "Where is the Compose migration documentation?"
-**Answer**: 
-- `COMPOSE_MIGRATION_STATUS_REPORT.md` - Current status with metrics (95% complete, production ready)
-- `docs/consolidated/COMPOSE_MIGRATION.md` - Complete migration history and implementation details
+**Answer**: `docs/consolidated/COMPOSE_MIGRATION.md`
+- Complete Compose migration details
+- Task breakdown and status
+- Legacy files information
+- Navigation improvements
 
 ### "Where can I find implementation status?"
 **Answer**: `docs/consolidated/IMPLEMENTATION_STATUS.md`
