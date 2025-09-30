@@ -86,7 +86,8 @@ class NetworkClientTestViewModel : BaseViewModel() {
         val networkStatus: String = "Disconnected",
         val testCategories: List<NetworkTestCategory> = emptyList(),
         val testResults: List<NetworkTestResult> = emptyList(),
-        val networkConfiguration: NetworkConfiguration = NetworkConfiguration()
+        val networkConfiguration: NetworkConfiguration = NetworkConfiguration(),
+        val error: String? = null
     )
     
     private val _networkTestUiState = MutableStateFlow(NetworkTestUiState())
@@ -145,6 +146,10 @@ class NetworkClientTestViewModel : BaseViewModel() {
         // Update IP and port from configuration
         _ipAddress.value = config.serverAddress
         _port.value = config.port.toString()
+    }
+    
+    override fun clearError() {
+        _networkTestUiState.value = _networkTestUiState.value.copy(error = null)
     }
 }
 

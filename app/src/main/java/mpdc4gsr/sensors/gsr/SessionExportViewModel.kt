@@ -214,7 +214,7 @@ class SessionExportViewModel(
         }
 
         // Sort by modification date (newest first)
-        return sessions.sortedByDescending { File(it.filePath).lastModified() }
+        return sessions.sortedByDescending { it.lastModified }
     }
 
     /**
