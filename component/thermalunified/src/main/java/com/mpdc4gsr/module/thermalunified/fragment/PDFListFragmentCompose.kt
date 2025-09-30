@@ -1,6 +1,8 @@
 package com.mpdc4gsr.module.thermalunified.fragment
 
 import android.content.Intent
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -23,6 +25,9 @@ import com.mpdc4gsr.module.thermalunified.viewmodel.PDFListViewModel
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
+
+// Type alias for cleaner code
+typealias PDFItem = PDFListViewModel.PDFItem
 
 /**
  * Compose migration of PDFListFragment
@@ -522,14 +527,4 @@ class PDFListFragmentCompose : BaseComposeFragment<PDFListViewModel>() {
 
         return "%.1f %s".format(size, units[unitIndex])
     }
-
-    // Data class for PDF items
-    data class PDFItem(
-        val path: String,
-        val name: String,
-        val size: Long,
-        val pageCount: Int,
-        val dateModified: Long,
-        val isAnalysisReport: Boolean = false
-    )
 }
