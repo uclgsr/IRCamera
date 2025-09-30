@@ -8,25 +8,26 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
 // Shared theme colors that can be used across modules
-private val thermalOrange = Color(0xFFFF6B35)
-private val thermalRed = Color(0xFFE63946)
-private val thermalBlue = Color(0xFF457B9D)
-private val thermalDark = Color(0xFF1D3557)
+// These colors are now public for use in Compose components
+val ThermalOrange = Color(0xFFFF6B35)
+val ThermalRed = Color(0xFFE63946)
+val ThermalBlue = Color(0xFF457B9D)
+val ThermalDark = Color(0xFF1D3557)
 
 private val LightColorScheme = lightColorScheme(
-    primary = thermalBlue,
-    secondary = thermalOrange,
-    tertiary = thermalRed,
+    primary = ThermalBlue,
+    secondary = ThermalOrange,
+    tertiary = ThermalRed,
     background = Color(0xFFFFFBFE),
     surface = Color(0xFFFFFBFE)
 )
 
 private val DarkColorScheme = darkColorScheme(
-    primary = thermalBlue,
-    secondary = thermalOrange,
-    tertiary = thermalRed,
-    background = thermalDark,
-    surface = thermalDark
+    primary = ThermalBlue,
+    secondary = ThermalOrange,
+    tertiary = ThermalRed,
+    background = ThermalDark,
+    surface = ThermalDark
 )
 
 /**
