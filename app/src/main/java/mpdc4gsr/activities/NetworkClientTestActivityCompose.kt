@@ -45,6 +45,40 @@ class NetworkClientTestViewModel : BaseViewModel() {
     private val _connectionInfo = MutableStateFlow("")
     val connectionInfo: StateFlow<String> = _connectionInfo.asStateFlow()
 
+    // Data classes for network testing (shared with NetworkClientTestComposeActivity)
+    enum class TestStatus { PASS, FAIL, WARNING, PENDING }
+    enum class NetworkTestType { CONNECTION, LATENCY, THROUGHPUT, RELIABILITY }
+    
+    data class NetworkTestCategory(
+        val name: String,
+        val description: String,
+        val type: NetworkTestType,
+        val testCount: Int,
+        val lastResult: TestStatus
+    )
+    
+    data class NetworkTestResult(
+        val testName: String,
+        val status: TestStatus,
+        val timestamp: String,
+        val duration: Long,
+        val details: String
+    )
+
+    // UI State for NetworkClientTestComposeActivity
+    data class UiState(
+        val isTestRunning: Boolean = false,
+        val currentTest: String = "",
+        val testProgress: Float = 0f,
+        val networkStatus: String = "Disconnected",
+        val testCategories: List<NetworkTestCategory> = emptyList(),
+        val testResults: List<NetworkTestResult> = emptyList(),
+        val networkConfiguration: String = ""
+    )
+    
+    private val _uiState = MutableStateFlow(UiState())
+    val uiState: StateFlow<UiState> = _uiState.asStateFlow()
+
     fun updateConnectionState(state: CommandConnection.ConnectionState) {
         _networkConnectionState.value = state
     }
@@ -59,6 +93,42 @@ class NetworkClientTestViewModel : BaseViewModel() {
 
     fun updateConnectionInfo(info: String) {
         _connectionInfo.value = info
+    }
+    
+    // Methods for NetworkClientTestComposeActivity
+    fun startComprehensiveTest() {
+        _uiState.value = _uiState.value.copy(isTestRunning = true)
+    }
+    
+    fun stopTest() {
+        _uiState.value = _uiState.value.copy(isTestRunning = false)
+    }
+    
+    fun refreshNetworkStatus() {
+        _uiState.value = _uiState.value.copy(
+            networkStatus = when (_networkConnectionState.value) {
+                CommandConnection.ConnectionState.CONNECTED -> "Connected"
+                CommandConnection.ConnectionState.CONNECTING -> "Connecting"
+                CommandConnection.ConnectionState.ERROR -> "Error"
+                else -> "Disconnected"
+            }
+        )
+    }
+    
+    fun runQuickNetworkTest() {
+        // Stub implementation
+    }
+    
+    fun runCategoryTest(category: NetworkTestCategory) {
+        // Stub implementation
+    }
+    
+    fun viewTestDetails(result: NetworkTestResult) {
+        // Stub implementation
+    }
+    
+    fun updateNetworkConfiguration(config: String) {
+        _uiState.value = _uiState.value.copy(networkConfiguration = config)
     }
 }
 
