@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
 import mpdc4gsr.compose.components.TitleBar
+import mpdc4gsr.compose.components.TitleBarAction
 import mpdc4gsr.compose.theme.IRCameraTheme
 import kotlin.math.*
 
@@ -352,7 +353,7 @@ fun GSRDisplayCard(
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.Baseline
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     text = String.format("%.2f", currentValue),
