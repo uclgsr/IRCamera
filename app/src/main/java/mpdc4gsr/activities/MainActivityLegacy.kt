@@ -117,7 +117,8 @@ class MainActivityLegacy : BaseBindingActivity<ActivityMainBinding>(), View.OnCl
             // Demo functionality removed - commented out to avoid compilation errors
             // launchThermalCamera() 
         }
-        binding.faultTolerantRecordingAccess.setOnClickListener { launchFaultTolerantRecording() }
+        // Fault tolerant recording access button not in current layout
+        // binding.faultTolerantRecordingAccess.setOnClickListener { launchFaultTolerantRecording() }
         binding.viewMain.setOnLongClickListener {
             launchShimmerMvp()
             true
@@ -238,6 +239,8 @@ class MainActivityLegacy : BaseBindingActivity<ActivityMainBinding>(), View.OnCl
     // --- Helper and Legacy Methods ---
 
     private fun initializeEnhancedUIComponents() {
+        // Optional UI components - commented out as containers are not in current layout
+        /*
         // Replace widget with fragment for better lifecycle management and scrollability
         val sensorDashboardFragment = SensorDashboardFragment.newInstance()
         supportFragmentManager.beginTransaction()
@@ -302,6 +305,7 @@ class MainActivityLegacy : BaseBindingActivity<ActivityMainBinding>(), View.OnCl
                 }
             }
         }
+        */
     }
 
     /**
