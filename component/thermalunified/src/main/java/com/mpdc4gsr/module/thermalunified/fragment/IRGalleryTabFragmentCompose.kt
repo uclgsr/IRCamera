@@ -43,6 +43,18 @@ class IRGalleryTabFragmentCompose : BaseComposeFragment<IRGalleryTabViewModel>()
         val canSwitchDir by viewModel.canSwitchDir.collectAsStateWithLifecycle()
         val hasBackIcon by viewModel.hasBackIcon.collectAsStateWithLifecycle()
 
+        // Handle UI events from ViewModel
+        LaunchedEffect(Unit) {
+            viewModel.uiEvents.collect { event ->
+                when (event) {
+                    is com.mpdc4gsr.libunified.app.ktbase.BaseViewModel.UiEvent.NavigateBack -> {
+                        requireActivity().finish()
+                    }
+                    else -> {} // Handle other events if needed
+                }
+            }
+        }
+
         // Tab configuration
         val tabTitles = listOf("Pictures", "Videos", "Reports")
         val pagerState = rememberPagerState(pageCount = { tabTitles.size })

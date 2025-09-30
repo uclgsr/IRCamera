@@ -1,11 +1,13 @@
 package com.mpdc4gsr.module.thermalunified.viewmodel
 
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import com.mpdc4gsr.libunified.app.repository.GalleryRepository.DirType
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
 class IRGalleryTabViewModel : BaseViewModel() {
 
@@ -39,8 +41,10 @@ class IRGalleryTabViewModel : BaseViewModel() {
     }
 
     fun navigateBack() {
-        // Handle back navigation - this would typically call a callback or event
-        // For now, just implement basic back functionality
-        // This can be extended based on navigation requirements
+        // Emit navigation back event to be handled by the fragment/activity
+        // The fragment should observe uiEvents and finish the activity when NavigateBack is received
+        viewModelScope.launch {
+            _uiEvents.emit(UiEvent.NavigateBack)
+        }
     }
 }
