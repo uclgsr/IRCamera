@@ -42,7 +42,7 @@ import com.mpdc4gsr.libunified.app.bean.event.device.DevicePermissionEvent
 import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
 import com.mpdc4gsr.libunified.app.dialog.TipDialog
 import com.mpdc4gsr.module.thermalunified.fragment.IRGalleryTabFragment
-import com.mpdc4gsr.module.user.fragment.MineFragment
+// import com.mpdc4gsr.module.user.fragment.MineFragment
 import com.mpdc4gsr.module.user.fragment.MoreFragment
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -51,7 +51,7 @@ import mpdc4gsr.compose.components.SensorStatusCard
 import mpdc4gsr.compose.components.ThermalVisualizationCard
 import mpdc4gsr.core.RecordingService
 import mpdc4gsr.core.permissions.PermissionController
-import mpdc4gsr.fragments.MainFragment
+// import mpdc4gsr.fragments.MainFragment
 import mpdc4gsr.viewmodel.ConnectionState
 import mpdc4gsr.viewmodel.MainActivityViewModel
 import org.greenrobot.eventbus.EventBus
@@ -84,10 +84,10 @@ class MainActivityAlternative : BaseComposeActivity<MainActivityViewModel>() {
 
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-            val binder = service as RecordingService.LocalBinder
+            val binder = service as RecordingService.RecordingServiceBinder
             recordingService = binder.getService()
             bound = true
-            viewModel.onServiceConnected(recordingService!!)
+            viewModel.onServiceConnected(binder)
             Log.i(TAG, "RecordingService connected.")
         }
 
@@ -148,7 +148,7 @@ class MainActivityAlternative : BaseComposeActivity<MainActivityViewModel>() {
                 EnhancedBottomNavigation(
                     currentPage = currentPage,
                     onPageSelected = { page ->
-                        viewModel.setCurrentPage(page)
+                        viewModel.onNavigationItemSelected(page)
                         // Trigger page change in ViewPager2
                     },
                     gsrConnectionState = gsrConnectionState,
@@ -189,7 +189,7 @@ class MainActivityAlternative : BaseComposeActivity<MainActivityViewModel>() {
                                     ViewPager2.OnPageChangeCallback() {
                                     override fun onPageSelected(position: Int) {
                                         super.onPageSelected(position)
-                                        viewModel.setCurrentPage(position)
+                                        viewModel.onNavigationItemSelected(position)
                                     }
                                 })
                             }
@@ -206,7 +206,7 @@ class MainActivityAlternative : BaseComposeActivity<MainActivityViewModel>() {
                     if (sessionState.isRecording) {
                         RecordingStatusOverlay(
                             sessionState = sessionState,
-                            onStopRecording = { viewModel.stopAllRecording() },
+                            onStopRecording = { viewModel.stopRecordingSession() },
                             modifier = Modifier
                                 .align(Alignment.TopEnd)
                                 .padding(16.dp)
@@ -530,18 +530,19 @@ class MainActivityAlternative : BaseComposeActivity<MainActivityViewModel>() {
 
         override fun createFragment(position: Int): Fragment {
             return when (position) {
-                0 -> MainFragment().apply {
-                    // Enhanced with consolidated layout support
-                    arguments = Bundle().apply {
-                        putBoolean("enhanced_mode", true)
-                        putBoolean("multi_modal_support", true)
-                    }
-                }
+                // 0 -> MainFragment().apply {
+                //     // Enhanced with consolidated layout support
+                //     arguments = Bundle().apply {
+                //         putBoolean("enhanced_mode", true)
+                //         putBoolean("multi_modal_support", true)
+                //     }
+                // }
 
                 1 -> IRGalleryTabFragment()
                 2 -> MoreFragment()
-                3 -> MineFragment()
-                else -> MainFragment()
+                // 3 -> MineFragment()
+                // else -> MainFragment()
+                else -> IRGalleryTabFragment()
             }
         }
     }
@@ -557,11 +558,11 @@ class MainActivityAlternative : BaseComposeActivity<MainActivityViewModel>() {
     }
 
     private fun launchFaultTolerantRecording() {
-        startActivity(Intent(this, mpdc4gsr.activities.FaultTolerantRecordingActivity::class.java))
+        startActivity(Intent(this, mpdc4gsr.activities.FaultTolerantRecordingActivityCompose::class.java))
     }
 
     private fun launchNetworkConfig() {
-        startActivity(Intent(this, mpdc4gsr.activities.NetworkConfigActivity::class.java))
+        startActivity(Intent(this, mpdc4gsr.activities.NetworkConfigActivityCompose::class.java))
     }
 
     private fun launchSensorConfig(sensorType: String) {
@@ -574,12 +575,12 @@ class MainActivityAlternative : BaseComposeActivity<MainActivityViewModel>() {
             )
 
             "gsr" -> startActivity(Intent(this, SensorDashboardComposeActivity::class.java))
-            "rgb" -> startActivity(Intent(this, mpdc4gsr.test.RgbCameraTestActivity::class.java))
+            // "rgb" -> startActivity(Intent(this, mpdc4gsr.test.RgbCameraTestActivity::class.java))
         }
     }
 
     private fun launchQuickRecord() {
-        startActivity(Intent(this, mpdc4gsr.sensors.gsr.GSRQuickRecordingActivity::class.java))
+        startActivity(Intent(this, mpdc4gsr.activities.GSRQuickRecordingActivityCompose::class.java))
     }
 
     // Preserved original methods
@@ -624,7 +625,7 @@ class MainActivityAlternative : BaseComposeActivity<MainActivityViewModel>() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onWinterClickEvent(event: WinterClickEvent) {
         // Handle winter click events
-        viewModel.handleWinterClick()
+        // viewModel.handleWinterClick()
     }
 
     override fun onDestroy() {
@@ -638,7 +639,7 @@ class MainActivityAlternative : BaseComposeActivity<MainActivityViewModel>() {
     override fun onBackPressed() {
         // Preserve original back button behavior
         if (viewModel.currentPage.value != 0) {
-            viewModel.setCurrentPage(0)
+            viewModel.onNavigationItemSelected(0)
         } else {
             super.onBackPressed()
         }
@@ -649,7 +650,7 @@ class MainActivityAlternative : BaseComposeActivity<MainActivityViewModel>() {
         return when (keyCode) {
             KeyEvent.KEYCODE_BACK -> {
                 if (viewModel.currentPage.value != 0) {
-                    viewModel.setCurrentPage(0)
+                    viewModel.onNavigationItemSelected(0)
                     true
                 } else {
                     super.onKeyDown(keyCode, event)
