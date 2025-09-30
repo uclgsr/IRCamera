@@ -19,6 +19,16 @@ class IRThermalFragmentViewModel : BaseViewModel() {
     private val _deviceConnectionState = MutableStateFlow(DeviceConnectionState())
     val deviceConnectionState: StateFlow<DeviceConnectionState> =
         _deviceConnectionState.asStateFlow()
+    
+    // Individual state flows required by the Compose fragment
+    private val _connectionStatus = MutableStateFlow(ConnectionStatus.DISCONNECTED)
+    val connectionStatus: StateFlow<ConnectionStatus> = _connectionStatus.asStateFlow()
+    
+    private val _isTC007 = MutableStateFlow(false)
+    val isTC007: StateFlow<Boolean> = _isTC007.asStateFlow()
+    
+    private val _deviceInfo = MutableStateFlow<String?>(null)
+    val deviceInfo: StateFlow<String?> = _deviceInfo.asStateFlow()
 
     // Navigation events
     private val _navigationEvent = MutableLiveData<NavigationEvent>()
@@ -47,6 +57,18 @@ class IRThermalFragmentViewModel : BaseViewModel() {
                 _deviceConnectionState,
                 _thermalUiState
             ) { connectionState, uiState ->
+                // Update individual state flows
+                _connectionStatus.value = when {
+                    connectionState.hasConnection -> ConnectionStatus.CONNECTED
+                    else -> ConnectionStatus.DISCONNECTED
+                }
+                _isTC007.value = connectionState.isTC007Device
+                _deviceInfo.value = if (connectionState.hasConnection) {
+                    if (connectionState.isTC007Device) "TC007 Connected" else "Device Connected"
+                } else {
+                    if (connectionState.hasUsbDevice) "USB Device Available" else "No Device Detected"
+                }
+                
                 uiState.copy(
                     isConnected = connectionState.hasConnection,
                     isTC007Connected = connectionState.isTC007Connected,
@@ -73,6 +95,15 @@ class IRThermalFragmentViewModel : BaseViewModel() {
             hasUsbDevice = hasUsbDevice,
             isTC007Device = isTC007
         )
+        
+        // Update individual state flows
+        _connectionStatus.value = if (hasConnection) ConnectionStatus.CONNECTED else ConnectionStatus.DISCONNECTED
+        _isTC007.value = isTC007
+        _deviceInfo.value = when {
+            hasConnection -> if (isTC007) "TC007 Connected" else "Device Connected"
+            hasUsbDevice -> "USB Device Available"
+            else -> "No Device Detected"
+        }
     }
 
     fun onDeviceConnected(isTC007Device: Boolean) {
@@ -82,14 +113,16 @@ class IRThermalFragmentViewModel : BaseViewModel() {
 
         _deviceConnectionState.value = _deviceConnectionState.value.copy(
             hasConnection = true,
-            isTC007Connected = isTC007Device
+            isTC007Connected = isTC007Device,
+            isTC007Device = isTC007Device
         )
     }
 
     fun onDeviceDisconnected() {
         _deviceConnectionState.value = _deviceConnectionState.value.copy(
             hasConnection = false,
-            isTC007Connected = false
+            isTC007Connected = false,
+            isTC007Device = false
         )
     }
 
@@ -97,7 +130,8 @@ class IRThermalFragmentViewModel : BaseViewModel() {
         if (isTC007Device && !isTS004) {
             _deviceConnectionState.value = _deviceConnectionState.value.copy(
                 hasConnection = true,
-                isTC007Connected = true
+                isTC007Connected = true,
+                isTC007Device = true
             )
         }
     }
@@ -106,7 +140,8 @@ class IRThermalFragmentViewModel : BaseViewModel() {
         if (isTC007Device && !isTS004) {
             _deviceConnectionState.value = _deviceConnectionState.value.copy(
                 hasConnection = false,
-                isTC007Connected = false
+                isTC007Connected = false,
+                isTC007Device = false
             )
         }
     }
@@ -157,6 +192,41 @@ class IRThermalFragmentViewModel : BaseViewModel() {
         }
     }
 
+    // Methods required by the Compose fragment
+    fun retryConnection() {
+        _connectionStatus.value = ConnectionStatus.CONNECTING
+        viewModelScope.launch {
+            val isTC007Device = _isTC007.value
+            val hasConnection = if (isTC007Device) {
+                WebSocketProxy.getInstance().isTC007Connect()
+            } else {
+                DeviceTools.isConnect(isAutoRequest = false)
+            }
+            
+            if (hasConnection) {
+                _connectionStatus.value = ConnectionStatus.CONNECTED
+                onDeviceConnected(isTC007Device)
+            } else {
+                _connectionStatus.value = ConnectionStatus.ERROR
+            }
+        }
+    }
+    
+    fun openMainThermal() {
+        val isTC007Device = _isTC007.value
+        handleThermalOpen(isTC007Device)
+    }
+    
+    fun connectDevice() {
+        _connectionStatus.value = ConnectionStatus.CONNECTING
+        // This would typically trigger device connection logic
+        retryConnection()
+    }
+    
+    fun openDeviceSettings() {
+        _thermalAction.value = ThermalAction.ShowConnectTip
+    }
+
     // Data classes for state management
     data class DeviceConnectionState(
         val hasConnection: Boolean = false,
@@ -190,5 +260,9 @@ class IRThermalFragmentViewModel : BaseViewModel() {
         object RequestCameraPermission : PermissionState()
         object PermissionGranted : PermissionState()
         data class PermissionDenied(val doNotAskAgain: Boolean) : PermissionState()
+    }
+    
+    enum class ConnectionStatus {
+        DISCONNECTED, CONNECTING, CONNECTED, ERROR
     }
 }
