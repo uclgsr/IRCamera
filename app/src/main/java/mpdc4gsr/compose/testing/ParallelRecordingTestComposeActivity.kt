@@ -522,11 +522,13 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
 
     private suspend fun stopRecording(
         onStateUpdate: (RecordingState) -> Unit,
-        onSensorStatusesUpdate: (List<SensorStatus>) -> Unit
+        onSensorStatusesUpdate: (List<SensorStatus>) -> Unit,
+        currentStatuses: List<SensorStatus>
     ) {
-        // Get current sensor statuses - we need to read them from somewhere
-        // For now, just update state
         onStateUpdate(RecordingState.STOPPING)
+        // Update all sensors to not recording
+        val updatedStatuses = currentStatuses.map { it.copy(isRecording = false) }
+        onSensorStatusesUpdate(updatedStatuses)
         delay(1000)
         onStateUpdate(RecordingState.COMPLETED)
     }
