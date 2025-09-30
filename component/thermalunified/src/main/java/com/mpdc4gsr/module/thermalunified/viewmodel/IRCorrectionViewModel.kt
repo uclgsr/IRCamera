@@ -102,6 +102,8 @@ class IRCorrectionViewModel : BaseViewModel() {
                 
                 _calibrationStatus.value = CalibrationStatus.CALIBRATED
                 _correctionState.value = CorrectionState.ACTIVE
+                // Restart temperature monitoring after calibration completes
+                startTemperatureMonitoring()
             } catch (e: Exception) {
                 handleError(e)
                 _correctionState.value = CorrectionState.INACTIVE
@@ -142,7 +144,7 @@ class IRCorrectionViewModel : BaseViewModel() {
                 kotlinx.coroutines.delay(1000)
                 
                 // Show success message
-                _uiEvents.emit(UiEvent.ShowMessage("Correction settings saved successfully"))
+                _uiEvents.emit(BaseViewModel.UiEvent.ShowMessage("Correction settings saved successfully"))
             } catch (e: Exception) {
                 handleError(e)
             } finally {
