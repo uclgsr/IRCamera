@@ -658,8 +658,8 @@ class IRMonitorLiteViewModel : ViewModel() {
         val maximum = temperatures.maxOrNull() ?: 0f
         val minimum = temperatures.minOrNull() ?: 0f
 
-        val variance = temperatures.map { (it - average) * (it - average) }.average()
-        val standardDeviation = kotlin.math.sqrt(variance).toFloat()
+        val variance = temperatures.map { (it - average) * (it - average) }.average().toFloat()
+        val standardDeviation = kotlin.math.sqrt(variance.toDouble()).toFloat()
 
         return TemperatureStatistics(
             average = average,
