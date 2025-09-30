@@ -111,7 +111,7 @@ fun SessionManagerScreen(
                 )
 
                 // Tab Row
-                PrimaryTabRow(
+                TabRow(
                     selectedTabIndex = selectedTab,
                     containerColor = Color.Transparent,
                     contentColor = Color.White,
