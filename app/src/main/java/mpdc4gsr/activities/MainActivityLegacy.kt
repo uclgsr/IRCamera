@@ -43,6 +43,19 @@ import org.greenrobot.eventbus.ThreadMode
 import com.mpdc4gsr.module.thermalunified.fragment.IRGalleryTabFragment
 import com.mpdc4gsr.module.user.fragment.MoreFragment
 
+/**
+ * Legacy MainActivity Implementation
+ *
+ * @deprecated This activity is deprecated and will be removed in a future release.
+ * Use mpdc4gsr.feature.main.ui.MainActivity instead, which follows Clean Architecture principles.
+ *
+ * This legacy implementation is retained for backward compatibility during migration phase.
+ */
+@Deprecated(
+    message = "Use mpdc4gsr.feature.main.ui.MainActivity instead",
+    replaceWith = ReplaceWith("mpdc4gsr.feature.main.ui.MainActivity"),
+    level = DeprecationLevel.WARNING
+)
 class MainActivityLegacy : BaseBindingActivity<ActivityMainBinding>(), View.OnClickListener {
     companion object {
         private const val TAG = "MainActivityLegacy"

@@ -1,0 +1,553 @@
+package mpdc4gsr.compose.sensors.gsr
+
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Save
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import mpdc4gsr.compose.components.TitleBar
+import mpdc4gsr.compose.components.TitleBarAction
+import mpdc4gsr.compose.theme.IRCameraTheme
+import kotlin.math.sin
+
+/**
+ * GSR Sensor Screen - Dedicated interface for GSR data monitoring and recording
+ * Replaces GSR-related activities with unified Compose implementation
+ */
+@Composable
+fun GSRSensorScreen(
+    onBackClick: (() -> Unit)? = null,
+    onSettingsClick: () -> Unit = {},
+    onSaveData: () -> Unit = {},
+    modifier: Modifier = Modifier
+) {
+    // GSR sensor state
+    var isConnected by remember { mutableStateOf(true) }
+    var isRecording by remember { mutableStateOf(false) }
+    var currentGSR by remember { mutableFloatStateOf(2.45f) }
+    var skinConductance by remember { mutableFloatStateOf(0.82f) }
+    var deviceBattery by remember { mutableIntStateOf(87) }
+    var samplingRate by remember { mutableIntStateOf(128) }
+
+    // Historical data for plotting
+    var gsrHistory by remember { mutableStateOf(generateInitialGSRData()) }
+
+    // Simulate real-time GSR updates
+    LaunchedEffect(isConnected) {
+        if (isConnected) {
+            while (true) {
+                kotlinx.coroutines.delay(100)
+                currentGSR = 2.0f + kotlin.random.Random.nextFloat() * 1.5f
+                skinConductance = 0.5f + kotlin.random.Random.nextFloat() * 0.8f
+
+                // Update history
+                gsrHistory = gsrHistory.drop(1) + currentGSR
+            }
+        }
+    }
+
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .background(Color(0xFF16131e))
+    ) {
+        // Title bar with GSR-specific actions
+        TitleBar(
+            title = "GSR Sensor Monitor",
+            showBackButton = true,
+            onBackClick = onBackClick
+        ) {
+            TitleBarAction(
+                icon = Icons.Default.Save,
+                contentDescription = "Save GSR Data",
+                onClick = onSaveData
+            )
+            TitleBarAction(
+                icon = Icons.Default.Settings,
+                contentDescription = "GSR Settings",
+                onClick = onSettingsClick
+            )
+        }
+
+        // Scrollable content
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            // Connection status card
+            GSRConnectionCard(
+                isConnected = isConnected,
+                deviceBattery = deviceBattery,
+                samplingRate = samplingRate,
+                onConnectionToggle = { isConnected = !isConnected }
+            )
+
+            // Real-time GSR metrics
+            GSRMetricsCard(
+                currentGSR = currentGSR,
+                skinConductance = skinConductance,
+                isRecording = isRecording
+            )
+
+            // GSR waveform visualization
+            GSRWaveformCard(
+                gsrHistory = gsrHistory,
+                isStreaming = isConnected,
+                currentValue = currentGSR
+            )
+
+            // Recording controls
+            GSRRecordingControls(
+                isRecording = isRecording,
+                isConnected = isConnected,
+                onRecordingToggle = { isRecording = !isRecording },
+                onExportData = onSaveData
+            )
+
+            // GSR analysis summary
+            if (isRecording || gsrHistory.isNotEmpty()) {
+                GSRAnalysisCard(
+                    gsrData = gsrHistory,
+                    isRecording = isRecording
+                )
+            }
+        }
+    }
+}
+
+/**
+ * GSR connection status card
+ */
+@Composable
+private fun GSRConnectionCard(
+    isConnected: Boolean,
+    deviceBattery: Int,
+    samplingRate: Int,
+    onConnectionToggle: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = if (isConnected) Color(0xFF1A2A1A) else Color(0xFF2A1A1A)
+        )
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column {
+                    Text(
+                        text = "Shimmer3 GSR Device",
+                        color = Color.White,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = if (isConnected) "Connected via Bluetooth" else "Disconnected",
+                        color = if (isConnected) Color.Green else Color.Red,
+                        fontSize = 14.sp
+                    )
+                }
+
+                Switch(
+                    checked = isConnected,
+                    onCheckedChange = { onConnectionToggle() },
+                    colors = SwitchDefaults.colors(
+                        checkedThumbColor = Color.Green,
+                        uncheckedThumbColor = Color.Gray
+                    )
+                )
+            }
+
+            if (isConnected) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    MetricItem("Battery", "$deviceBattery%", Color.Green)
+                    MetricItem("Sampling", "${samplingRate}Hz", MaterialTheme.colorScheme.primary)
+                    MetricItem("Status", "Streaming", Color.Cyan)
+                }
+            }
+        }
+    }
+}
+
+/**
+ * GSR real-time metrics card
+ */
+@Composable
+private fun GSRMetricsCard(
+    currentGSR: Float,
+    skinConductance: Float,
+    isRecording: Boolean,
+    modifier: Modifier = Modifier
+) {
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Real-time GSR Metrics",
+                    color = Color.White,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold
+                )
+
+                if (isRecording) {
+                    Surface(
+                        color = Color.Red.copy(alpha = 0.2f),
+                        shape = RoundedCornerShape(12.dp)
+                    ) {
+                        Text(
+                            text = "RECORDING",
+                            color = Color.Red,
+                            fontSize = 10.sp,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                        )
+                    }
+                }
+            }
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                MetricCard(
+                    label = "GSR Value",
+                    value = String.format("%.2f μS", currentGSR),
+                    color = Color.Cyan,
+                    description = "Current resistance"
+                )
+                MetricCard(
+                    label = "Skin Conductance",
+                    value = String.format("%.2f μS", skinConductance),
+                    color = Color.Green,
+                    description = "Conductance level"
+                )
+            }
+        }
+    }
+}
+
+/**
+ * GSR waveform visualization card
+ */
+@Composable
+private fun GSRWaveformCard(
+    gsrHistory: List<Float>,
+    isStreaming: Boolean,
+    currentValue: Float,
+    modifier: Modifier = Modifier
+) {
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = Color.Black)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Text(
+                text = "GSR Waveform",
+                color = Color.White,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold
+            )
+
+            Canvas(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp)
+            ) {
+                val width = size.width
+                val height = size.height
+                val padding = 20.dp.toPx()
+                val graphWidth = width - 2 * padding
+                val graphHeight = height - 2 * padding
+
+                // Draw axes
+                drawLine(
+                    color = Color.Gray,
+                    start = Offset(padding, height - padding),
+                    end = Offset(width - padding, height - padding),
+                    strokeWidth = 1.dp.toPx()
+                )
+                drawLine(
+                    color = Color.Gray,
+                    start = Offset(padding, padding),
+                    end = Offset(padding, height - padding),
+                    strokeWidth = 1.dp.toPx()
+                )
+
+                // Draw GSR waveform
+                if (gsrHistory.isNotEmpty()) {
+                    val path = Path()
+                    val minGSR = gsrHistory.minOrNull() ?: 0f
+                    val maxGSR = gsrHistory.maxOrNull() ?: 5f
+                    val range = maxGSR - minGSR
+
+                    gsrHistory.forEachIndexed { index, value ->
+                        val x = padding + (index.toFloat() / (gsrHistory.size - 1)) * graphWidth
+                        val normalizedValue = if (range > 0) (value - minGSR) / range else 0.5f
+                        val y = height - padding - normalizedValue * graphHeight
+
+                        if (index == 0) {
+                            path.moveTo(x, y)
+                        } else {
+                            path.lineTo(x, y)
+                        }
+                    }
+
+                    drawPath(
+                        path = path,
+                        color = Color.Cyan,
+                        style = androidx.compose.ui.graphics.drawscope.Stroke(width = 2.dp.toPx())
+                    )
+                }
+
+                // Draw current value indicator
+                if (isStreaming) {
+                    drawCircle(
+                        color = Color.Yellow,
+                        radius = 4.dp.toPx(),
+                        center = Offset(width - padding - 10.dp.toPx(), height / 2)
+                    )
+                }
+            }
+
+            // Value scale indicators
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text("0 μS", color = Color.Gray, fontSize = 10.sp)
+                Text(
+                    "${String.format("%.1f", currentValue)} μS",
+                    color = Color.Cyan,
+                    fontSize = 10.sp
+                )
+                Text("5 μS", color = Color.Gray, fontSize = 10.sp)
+            }
+        }
+    }
+}
+
+/**
+ * GSR recording controls
+ */
+@Composable
+private fun GSRRecordingControls(
+    isRecording: Boolean,
+    isConnected: Boolean,
+    onRecordingToggle: () -> Unit,
+    onExportData: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Text(
+                text = "Recording Controls",
+                color = Color.White,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold
+            )
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                Button(
+                    onClick = onRecordingToggle,
+                    enabled = isConnected,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = if (isRecording) Color.Red else Color.Green
+                    )
+                ) {
+                    Text(if (isRecording) "Stop Recording" else "Start Recording")
+                }
+
+                Button(
+                    onClick = onExportData,
+                    enabled = !isRecording,
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
+                ) {
+                    Text("Export Data")
+                }
+            }
+        }
+    }
+}
+
+/**
+ * GSR analysis summary card
+ */
+@Composable
+private fun GSRAnalysisCard(
+    gsrData: List<Float>,
+    isRecording: Boolean,
+    modifier: Modifier = Modifier
+) {
+    if (gsrData.isEmpty()) return
+
+    val avgGSR = gsrData.average().toFloat()
+    val maxGSR = gsrData.maxOrNull() ?: 0f
+    val minGSR = gsrData.minOrNull() ?: 0f
+    val stdDev = kotlin.math.sqrt(gsrData.map { (it - avgGSR) * (it - avgGSR) }.average()).toFloat()
+
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Text(
+                text = "GSR Analysis",
+                color = Color.White,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold
+            )
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                MetricItem("Average", String.format("%.2f μS", avgGSR), Color.Cyan)
+                MetricItem("Maximum", String.format("%.2f μS", maxGSR), Color.Red)
+                MetricItem("Minimum", String.format("%.2f μS", minGSR), MaterialTheme.colorScheme.primary)
+                MetricItem("Std Dev", String.format("%.2f", stdDev), Color.Yellow)
+            }
+        }
+    }
+}
+
+/**
+ * Enhanced metric card with description
+ */
+@Composable
+private fun MetricCard(
+    label: String,
+    value: String,
+    color: Color,
+    description: String,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = value,
+            color = color,
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Bold
+        )
+        Text(
+            text = label,
+            color = Color.White,
+            fontSize = 12.sp
+        )
+        Text(
+            text = description,
+            color = Color.Gray,
+            fontSize = 10.sp
+        )
+    }
+}
+
+/**
+ * Simple metric item
+ */
+@Composable
+private fun MetricItem(
+    label: String,
+    value: String,
+    color: Color,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = value,
+            color = color,
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Bold
+        )
+        Text(
+            text = label,
+            color = Color.Gray,
+            fontSize = 10.sp
+        )
+    }
+}
+
+/**
+ * Generate initial GSR data for demonstration
+ */
+private fun generateInitialGSRData(): List<Float> {
+    return (0..99).map {
+        2.0f + kotlin.math.sin(it * 0.1f).toFloat() * 0.5f + kotlin.random.Random.nextFloat() * 0.2f
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun GSRSensorScreenPreview() {
+    IRCameraTheme {
+        GSRSensorScreen()
+    }
+}

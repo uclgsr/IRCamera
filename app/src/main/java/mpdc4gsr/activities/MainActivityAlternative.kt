@@ -44,7 +44,6 @@ import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
 import com.mpdc4gsr.libunified.app.dialog.TipDialog
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.fragment.IRGalleryTabFragment
-// import com.mpdc4gsr.module.user.fragment.MineFragment
 import com.mpdc4gsr.module.user.fragment.MoreFragment
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -52,7 +51,6 @@ import mpdc4gsr.compose.components.SensorStatusCard
 import mpdc4gsr.compose.components.ThermalVisualizationCard
 import mpdc4gsr.core.RecordingService
 import mpdc4gsr.permissions.PermissionController
-// import mpdc4gsr.fragments.MainFragment
 import mpdc4gsr.viewmodel.ConnectionState
 import mpdc4gsr.viewmodel.MainActivityViewModel
 import org.greenrobot.eventbus.EventBus
@@ -60,6 +58,12 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
 /**
+ * Alternative MainActivity Implementation
+ *
+ * @deprecated This activity is deprecated and will be removed in a future release.
+ * Use mpdc4gsr.feature.main.ui.MainActivity instead, which follows Clean Architecture principles.
+ *
+ * Legacy implementation retained for backward compatibility during migration phase.
  * Enhanced MainActivityCompose - Updated to leverage dev branch consolidated layouts
  *
  * This version integrates with the new consolidated layout system while maintaining
@@ -71,6 +75,11 @@ import org.greenrobot.eventbus.ThreadMode
  * - Enhanced multi-modal recording support
  * - Improved network status and device management
  */
+@Deprecated(
+    message = "Use mpdc4gsr.feature.main.ui.MainActivity instead",
+    replaceWith = ReplaceWith("mpdc4gsr.feature.main.ui.MainActivity"),
+    level = DeprecationLevel.WARNING
+)
 class MainActivityAlternative : FragmentActivity() {
 
     companion object {
