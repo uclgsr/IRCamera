@@ -185,7 +185,7 @@ class DevicePairingViewModel : BaseViewModel(), NetworkClient.NetworkEventListen
 
             try {
                 _connectionState.value = ConnectionState.CONNECTING
-                _statusMessage.value = "Connecting to ${controller.name}..."
+                _statusMessage.value = "Connecting to ${controller.deviceName}..."
 
                 // Show connection dialog
                 _events.emit(PairingEvent.ShowConnectionDialog(controller))
@@ -195,11 +195,11 @@ class DevicePairingViewModel : BaseViewModel(), NetworkClient.NetworkEventListen
                 if (success) {
                     _connectedController.value = controller
                     _connectionState.value = ConnectionState.CONNECTED
-                    _statusMessage.value = "Connected to ${controller.name}"
-                    _events.emit(PairingEvent.ShowSuccess("Successfully connected to ${controller.name}"))
+                    _statusMessage.value = "Connected to ${controller.deviceName}"
+                    _events.emit(PairingEvent.ShowSuccess("Successfully connected to ${controller.deviceName}"))
                 } else {
                     _connectionState.value = ConnectionState.CONNECTION_FAILED
-                    _statusMessage.value = "Failed to connect to ${controller.name}"
+                    _statusMessage.value = "Failed to connect to ${controller.deviceName}"
                     _events.emit(PairingEvent.ShowError("Connection failed"))
                 }
 
@@ -219,7 +219,7 @@ class DevicePairingViewModel : BaseViewModel(), NetworkClient.NetworkEventListen
                     networkClient.disconnect()
                     _connectedController.value = null
                     _connectionState.value = ConnectionState.DISCONNECTED
-                    _statusMessage.value = "Disconnected from ${currentController.name}"
+                    _statusMessage.value = "Disconnected from ${currentController.deviceName}"
                     _events.emit(PairingEvent.ShowSuccess("Disconnected successfully"))
                 } catch (e: Exception) {
                     _events.emit(PairingEvent.ShowError("Disconnect error: ${e.message}"))
@@ -268,16 +268,16 @@ class DevicePairingViewModel : BaseViewModel(), NetworkClient.NetworkEventListen
         }
     }
 
-    override fun onConnectionEstablished(controller: NetworkClient.ControllerInfo) {
+    override fun onConnected(controller: NetworkClient.ControllerInfo) {
         viewModelScope.launch {
             _connectedController.value = controller
             _connectionState.value = ConnectionState.CONNECTED
-            _statusMessage.value = "Connected to ${controller.name}"
+            _statusMessage.value = "Connected to ${controller.deviceName}"
             _events.emit(PairingEvent.ShowSuccess("Connection established"))
         }
     }
 
-    override fun onConnectionLost(reason: String) {
+    override fun onDisconnected(reason: String) {
         viewModelScope.launch {
             _connectedController.value = null
             _connectionState.value = ConnectionState.DISCONNECTED
@@ -286,9 +286,37 @@ class DevicePairingViewModel : BaseViewModel(), NetworkClient.NetworkEventListen
         }
     }
 
-    override fun onError(error: String) {
+    override fun onRemoteMeasurementRequest(sessionInfo: SessionInfo) {
         viewModelScope.launch {
-            _events.emit(PairingEvent.ShowError(error))
+            _events.emit(PairingEvent.NavigateToSession(sessionInfo))
+        }
+    }
+
+    override fun onSyncFlash(durationMs: Int) {
+        triggerSyncFlash(durationMs)
+    }
+
+    override fun onTimeSynchronized(offsetNanoseconds: Long) {
+        viewModelScope.launch {
+            _statusMessage.value = "Time synchronized (offset: ${offsetNanoseconds}ns)"
+        }
+    }
+
+    override fun onDataStreamingStarted() {
+        viewModelScope.launch {
+            _statusMessage.value = "Data streaming started"
+        }
+    }
+
+    override fun onDataStreamingStopped() {
+        viewModelScope.launch {
+            _statusMessage.value = "Data streaming stopped"
+        }
+    }
+
+    override fun onError(operation: String, error: String) {
+        viewModelScope.launch {
+            _events.emit(PairingEvent.ShowError("$operation: $error"))
         }
     }
 

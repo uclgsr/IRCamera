@@ -22,7 +22,7 @@ import androidx.fragment.app.FragmentManager
  */
 @Composable
 fun AndroidViewWrapper(
-    viewFactory: () -> View,
+    viewFactory: (Context) -> View,
     modifier: Modifier = Modifier,
     update: (View) -> Unit = {}
 ) {
