@@ -57,7 +57,7 @@ class ResearchTemplateComposeActivity : BaseComposeActivity<BaseViewModel>() {
     @Composable
     override fun Content(viewModel: BaseViewModel) {
         var selectedTemplate by remember { mutableStateOf<ResearchTemplate?>(null) }
-        var selectedCategory by remember { mutableStateOf("All") }
+        var selectedCategory by remember { mutableStateOf<ResearchTemplate.TemplateCategory?>(null) }
         var showTemplateDetails by remember { mutableStateOf(false) }
         var showCreateDialog by remember { mutableStateOf(false) }
 
@@ -162,11 +162,11 @@ private fun ResearchTemplateContent(
         )
 
         // Template Grid
-        val mockTemplates = getMockTemplates()
-        val filteredTemplates = if (selectedCategory == "All") {
-            mockTemplates
+        val templates = ResearchTemplate.PREDEFINED_TEMPLATES
+        val filteredTemplates = if (selectedCategory == null) {
+            templates
         } else {
-            mockTemplates.filter { it.category == selectedCategory }
+            templates.filter { it.category == selectedCategory }
         }
 
         LazyVerticalGrid(
@@ -187,21 +187,24 @@ private fun ResearchTemplateContent(
 
 @Composable
 private fun CategoryFilterRow(
-    selectedCategory: String,
-    onCategoryChange: (String) -> Unit,
+    selectedCategory: ResearchTemplate.TemplateCategory?,
+    onCategoryChange: (ResearchTemplate.TemplateCategory?) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val categories = listOf("All", "Psychology", "Physiology", "User Study", "Clinical", "Custom")
+    val categories = listOf(null) + ResearchTemplate.TemplateCategory.values().toList()
 
-    LazyColumn(
+    Row(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         modifier = modifier
     ) {
-        items(categories) { category ->
+        categories.forEach { category ->
+            val displayName = category?.name?.replace("_", " ")?.lowercase()
+                ?.replaceFirstChar { it.uppercase() } ?: "All"
+            
             FilterChip(
                 selected = selectedCategory == category,
                 onClick = { onCategoryChange(category) },
-                label = { Text(category) },
+                label = { Text(displayName) },
                 leadingIcon = if (selectedCategory == category) {
                     { Icon(Icons.Default.Check, contentDescription = "Selected", modifier = Modifier.size(16.dp)) }
                 } else null
@@ -253,7 +256,7 @@ private fun TemplateCard(
                     modifier = Modifier.padding(start = 8.dp)
                 ) {
                     Text(
-                        text = template.category,
+                        text = template.category.name.replace("_", " "),
                         style = MaterialTheme.typography.labelSmall,
                         color = Color.White,
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
@@ -292,7 +295,7 @@ private fun TemplateCard(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Text(
-                        text = "${template.duration} min",
+                        text = template.duration?.let { "${it / (60 * 1000)} min" } ?: "Variable",
                         style = MaterialTheme.typography.bodySmall,
                         fontWeight = FontWeight.Medium
                     )
@@ -374,8 +377,8 @@ private fun TemplateDetailsDialog(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Text("Sampling Rate:", style = MaterialTheme.typography.bodySmall)
-                            Text("${template.samplingRate} Hz", style = MaterialTheme.typography.bodySmall)
+                            Text("GSR Sampling Rate:", style = MaterialTheme.typography.bodySmall)
+                            Text("${template.gsrSamplingRate} Hz", style = MaterialTheme.typography.bodySmall)
                         }
                     }
                 }
@@ -461,59 +464,21 @@ private fun CreateTemplateDialog(
     )
 }
 
-private fun getTemplateIcon(category: String) = when (category) {
-    "Psychology" -> Icons.Default.Psychology
-    "Physiology" -> Icons.Default.MonitorHeart
-    "User Study" -> Icons.Default.Groups
-    "Clinical" -> Icons.Default.LocalHospital
-    "Custom" -> Icons.Default.Build
-    else -> Icons.Default.Science
+private fun getTemplateIcon(category: ResearchTemplate.TemplateCategory) = when (category) {
+    ResearchTemplate.TemplateCategory.STRESS_RESPONSE -> Icons.Default.Psychology
+    ResearchTemplate.TemplateCategory.COGNITIVE_LOAD -> Icons.Default.Psychology
+    ResearchTemplate.TemplateCategory.EMOTION_RECOGNITION -> Icons.Default.Psychology
+    ResearchTemplate.TemplateCategory.PHYSIOLOGICAL_MONITORING -> Icons.Default.MonitorHeart
+    ResearchTemplate.TemplateCategory.BEHAVIORAL_ANALYSIS -> Icons.Default.Groups
+    ResearchTemplate.TemplateCategory.CUSTOM -> Icons.Default.Build
 }
 
-private fun getCategoryColor(category: String) = when (category) {
-    "Psychology" -> Color(0xFF9C27B0)
-    "Physiology" -> Color(0xFF4CAF50)
-    "User Study" -> Color(0xFF2196F3)
-    "Clinical" -> Color(0xFFE53E3E)
-    "Custom" -> Color(0xFFFF9800)
-    else -> Color(0xFF607D8B)
+private fun getCategoryColor(category: ResearchTemplate.TemplateCategory) = when (category) {
+    ResearchTemplate.TemplateCategory.STRESS_RESPONSE -> Color(0xFF9C27B0)
+    ResearchTemplate.TemplateCategory.COGNITIVE_LOAD -> Color(0xFF2196F3)
+    ResearchTemplate.TemplateCategory.EMOTION_RECOGNITION -> Color(0xFFE91E63)
+    ResearchTemplate.TemplateCategory.PHYSIOLOGICAL_MONITORING -> Color(0xFF4CAF50)
+    ResearchTemplate.TemplateCategory.BEHAVIORAL_ANALYSIS -> Color(0xFF00BCD4)
+    ResearchTemplate.TemplateCategory.CUSTOM -> Color(0xFFFF9800)
 }
-
-private fun getMockTemplates() = listOf(
-    ResearchTemplate(
-        id = "psych_stress_1",
-        name = "Stress Response Study",
-        description = "Measure physiological response to stress-inducing tasks",
-        category = "Psychology",
-        duration = 45,
-        sensors = listOf("GSR", "Thermal"),
-        samplingRate = 128
-    ),
-    ResearchTemplate(
-        id = "phys_exercise_1",
-        name = "Exercise Monitoring",
-        description = "Track physiological changes during physical activity",
-        category = "Physiology",
-        duration = 60,
-        sensors = listOf("GSR", "Thermal", "RGB"),
-        samplingRate = 256
-    ),
-    ResearchTemplate(
-        id = "user_interaction_1",
-        name = "UI Interaction Study",
-        description = "Analyze user responses to different interface designs",
-        category = "User Study",
-        duration = 30,
-        sensors = listOf("GSR", "RGB"),
-        samplingRate = 128
-    ),
-    ResearchTemplate(
-        id = "clinical_assessment_1",
-        name = "Clinical Assessment",
-        description = "Comprehensive physiological assessment for clinical use",
-        category = "Clinical",
-        duration = 120,
-        sensors = listOf("GSR", "Thermal", "RGB"),
-        samplingRate = 512
-    )
-)
+}

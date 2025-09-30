@@ -168,13 +168,31 @@ private fun SessionManagerContent(
         ) {
             // Mock sessions - replace with actual data from viewModel
             val mockSessions = listOf(
-                SessionInfo("session_1", "GSR Study Session", Date(), Date(), "active"),
-                SessionInfo("session_2", "Thermal Analysis", Date(), Date(), "completed"),
-                SessionInfo("session_3", "Multi-modal Recording", Date(), Date(), "processing")
+                com.mpdc4gsr.gsr.model.SessionInfo(
+                    sessionId = "session_1",
+                    startTime = System.currentTimeMillis(),
+                    endTime = System.currentTimeMillis(),
+                    participantId = "P001",
+                    studyName = "GSR Study Session"
+                ),
+                com.mpdc4gsr.gsr.model.SessionInfo(
+                    sessionId = "session_2",
+                    startTime = System.currentTimeMillis() - 86400000,
+                    endTime = System.currentTimeMillis() - 82800000,
+                    participantId = "P002",
+                    studyName = "Thermal Analysis"
+                ),
+                com.mpdc4gsr.gsr.model.SessionInfo(
+                    sessionId = "session_3",
+                    startTime = System.currentTimeMillis() - 172800000,
+                    endTime = null,
+                    participantId = "P003",
+                    studyName = "Multi-modal Recording"
+                )
             )
 
             items(mockSessions.filter {
-                it.name.contains(searchQuery, ignoreCase = true)
+                (it.studyName ?: "").contains(searchQuery, ignoreCase = true)
             }) { session ->
                 SessionCard(
                     session = session,
