@@ -200,6 +200,7 @@ private fun SensorStatusVisualization(
     systemState: UnifiedSystemState,
     modifier: Modifier = Modifier
 ) {
+    val primaryColor = MaterialTheme.colorScheme.primary
     Card(
         modifier = modifier
             .fillMaxWidth()
@@ -243,7 +244,7 @@ private fun SensorStatusVisualization(
                     val x = width / (sensors.size + 1) * (index + 1)
                     val nodeColor = when (sensor.state) {
                         SensorState.Connected -> Color.Green
-                        SensorState.Streaming -> MaterialTheme.colorScheme.primary
+                        SensorState.Streaming -> primaryColor
                         SensorState.Error -> Color.Red
                         SensorState.Disconnected -> Color.Gray
                         SensorState.Connecting -> Color.Yellow

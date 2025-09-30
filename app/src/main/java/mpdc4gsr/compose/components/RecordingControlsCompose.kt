@@ -220,7 +220,7 @@ private fun RecordingControls(
                 OutlinedButton(
                     onClick = onEmergencyStop,
                     modifier = Modifier.width(120.dp),
-                    colors = OutlinedButtonDefaults.outlinedButtonColors(
+                    colors = ButtonDefaults.outlinedButtonColors(
                         contentColor = MaterialTheme.colorScheme.error
                     )
                 ) {

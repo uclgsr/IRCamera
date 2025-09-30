@@ -3,6 +3,7 @@ package mpdc4gsr.activities
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -38,6 +39,7 @@ class SimplifiedMainComposeActivity : BaseComposeActivity<SimplifiedMainViewMode
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SimplifiedMainScreen(
     viewModel: SimplifiedMainViewModel = viewModel(),
