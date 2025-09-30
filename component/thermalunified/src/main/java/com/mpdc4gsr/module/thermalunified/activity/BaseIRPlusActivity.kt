@@ -42,7 +42,7 @@ import java.io.IOException
 import java.io.InputStream
 
 
-abstract class BaseIRPlushActivity : IRThermalNightActivity(), OnUSBConnectListener,
+abstract class BaseIRPlusActivity : IRThermalNightActivity(), OnUSBConnectListener,
     IIRFrameCallback {
 
     private var snStr = ""
@@ -159,11 +159,11 @@ abstract class BaseIRPlushActivity : IRThermalNightActivity(), OnUSBConnectListe
                     dismissCameraLoading()
                 } else if (msg.what == Const.SHOW_RESTART_MESSAGE) {
                     Toast.makeText(
-                        this@BaseIRPlushActivity,
+                        this@BaseIRPlusActivity,
                         "please restart app or reinsert device",
                         Toast.LENGTH_SHORT
                     )?.show()
-                    this@BaseIRPlushActivity.finish()
+                    this@BaseIRPlusActivity.finish()
                 }
             }
         }
@@ -406,8 +406,8 @@ abstract class BaseIRPlushActivity : IRThermalNightActivity(), OnUSBConnectListe
                     SupHelp.getInstance().initA4KCPP()
                 } catch (e: UnsatisfiedLinkError) {
                     SupHelp.getInstance().loadOpenclSuccess = false
-                    this@BaseIRPlushActivity.runOnUiThread {
-                        TipDialog.Builder(this@BaseIRPlushActivity)
+                    this@BaseIRPlusActivity.runOnUiThread {
+                        TipDialog.Builder(this@BaseIRPlusActivity)
                             .setMessage(com.mpdc4gsr.libunified.R.string.tips_tisr_fail)
                             .setPositiveListener(com.mpdc4gsr.libunified.R.string.app_got_it) { }
                             .create().show()
@@ -422,7 +422,7 @@ abstract class BaseIRPlushActivity : IRThermalNightActivity(), OnUSBConnectListe
             dualView?.isOpenAmplify = isOpenAmplify
 
             val titleView =
-                this@BaseIRPlushActivity.findViewById<com.mpdc4gsr.libunified.app.view.TitleView>(
+                this@BaseIRPlusActivity.findViewById<com.mpdc4gsr.libunified.app.view.TitleView>(
                     com.mpdc4gsr.libunified.R.id.title_view
                 )
             titleView?.setRight2Drawable(if (isOpenAmplify) R.drawable.svg_tisr_on else R.drawable.svg_tisr_off)
@@ -438,7 +438,7 @@ abstract class BaseIRPlushActivity : IRThermalNightActivity(), OnUSBConnectListe
     override fun initAmplify(show: Boolean) {
         lifecycleScope.launch {
             val titleView =
-                this@BaseIRPlushActivity.findViewById<com.mpdc4gsr.libunified.app.view.TitleView>(
+                this@BaseIRPlusActivity.findViewById<com.mpdc4gsr.libunified.app.view.TitleView>(
                     com.mpdc4gsr.libunified.R.id.title_view
                 )
             titleView?.setRight2Drawable(if (isOpenAmplify) R.drawable.svg_tisr_on else R.drawable.svg_tisr_off)

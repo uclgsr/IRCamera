@@ -54,7 +54,7 @@ import java.io.IOException
 import java.io.InputStream
 
 
-abstract class BaseIRPlushFragment :
+abstract class BaseIRPlusFragment :
     BaseFragment(),
     OnUSBConnectListener,
     ITsTempListener,
@@ -464,7 +464,7 @@ abstract class BaseIRPlushFragment :
     }
 
     open fun setUVCCameraICMD(ircmd: IRCMD) {
-        this@BaseIRPlushFragment.ircmd = ircmd
+        this@BaseIRPlusFragment.ircmd = ircmd
         snStr = getSNStr(ircmd)
         isConfigWait = false
         Log.i(
