@@ -1,0 +1,98 @@
+========================================
+Anti-Pattern Detection Report
+Generated: 2025-09-30 11:56:35
+========================================
+
+1. Checking for GlobalScope usage (CRITICAL)...
+   Files:
+      app/src/main/java/mpdc4gsr/core/SessionManager.kt
+      app/src/main/java/mpdc4gsr/network/FileUploadService.kt
+      app/src/main/java/mpdc4gsr/network/WebSocketClient.kt
+      app/src/main/java/mpdc4gsr/security/CertificateManager.kt
+      app/src/main/java/mpdc4gsr/sensors/gsr/EnhancedThermalRecorder.kt
+      libunified/src/main/java/com/mpdc4gsr/libunified/app/tools/ToastTools.kt
+
+2. Checking for generic exception catching (CRITICAL)...
+   Total: 1200
+   Top 10 files with most occurrences:
+           69 app/src/main/java/mpdc4gsr/sensors/thermal/ThermalCameraRecorder.kt
+           59 app/src/main/java/mpdc4gsr/sensors/gsr/GSRSensorRecorder.kt
+           52 app/src/main/java/mpdc4gsr/core/RecordingService.kt
+           50 app/src/main/java/mpdc4gsr/sensors/RgbCameraRecorder.kt
+           48 app/src/main/java/mpdc4gsr/sensors/unified/UnifiedSessionManager.kt
+           26 app/src/main/java/mpdc4gsr/controller/ComprehensiveRecordingController.kt
+           25 app/src/main/java/mpdc4gsr/controller/RecordingController.kt
+           24 app/src/main/java/mpdc4gsr/network/NetworkClient.kt
+           23 app/src/main/java/mpdc4gsr/sensors/unified/RealShimmerDeviceFactory.kt
+           20 app/src/main/java/mpdc4gsr/sensors/unified/Shimmer3GSRRecorder.kt
+
+3. Checking for Context retention in ViewModels (CRITICAL)...
+   Files:
+      app/src/main/java/mpdc4gsr/sensors/gsr/GSRSettingsViewModel.kt
+      app/src/main/java/mpdc4gsr/sensors/gsr/MultiModalRecordingViewModel.kt
+      app/src/main/java/mpdc4gsr/sensors/gsr/ShimmerConfigViewModel.kt
+
+4. Checking for reflection usage (HIGH)...
+   Files:
+      BleModule/src/main/java/com/topdon/ble/AbstractScanner.java
+      BleModule/src/main/java/com/topdon/ble/ConnectionImpl.java
+      BleModule/src/main/java/com/topdon/ble/EasyBLE.java
+      BleModule/src/main/java/com/topdon/commons/base/AppHolder.java
+      BleModule/src/main/java/com/topdon/commons/observer/ObserverMethodHelper.java
+      BleModule/src/main/java/com/topdon/commons/poster/PosterDispatcher.java
+      app/src/main/java/mpdc4gsr/camera/integration/Camera2SystemValidator.kt
+      app/src/main/java/mpdc4gsr/compose/navigation/UnifiedNavigation.kt
+      app/src/main/java/mpdc4gsr/sensors/thermal/ThermalCameraRecorder.kt
+      app/src/main/java/mpdc4gsr/ui_components/MainFragment.kt
+      libunified/src/main/java/com/mpdc4gsr/libunified/app/navigation/NavigationManager.kt
+      libunified/src/main/java/com/mpdc4gsr/libunified/ir/CrashHandler.java
+      libunified/src/main/java/com/mpdc4gsr/libunified/ir/utils/JNITool.java
+      libunified/src/main/java/com/mpdc4gsr/libunified/ir/utils/ScreenUtils.java
+
+5. Checking for God Classes (>1000 lines) (HIGH)...
+   Top God Classes:
+         3742 app/src/main/java/mpdc4gsr/sensors/thermal/ThermalCameraRecorder.kt
+         2474 app/src/main/java/mpdc4gsr/sensors/RgbCameraRecorder.kt
+         2446 app/src/main/java/mpdc4gsr/core/RecordingService.kt
+         2320 app/src/main/java/mpdc4gsr/controller/RecordingController.kt
+         2008 app/src/main/java/mpdc4gsr/sensors/gsr/GSRSensorRecorder.kt
+         1948 app/src/main/java/mpdc4gsr/sensors/unified/UnifiedSessionManager.kt
+         1581 app/src/main/java/mpdc4gsr/network/WebSocketClient.kt
+         1556 libunified/src/main/java/com/mpdc4gsr/libunified/ir/view/TemperatureViewOld.java
+         1554 libunified/src/main/java/com/mpdc4gsr/libunified/ir/utils/OpencvTools.java
+         1407 libunified/src/main/java/com/mpdc4gsr/libunified/ir/view/TemperatureView.java
+         1275 libunified/src/main/java/com/mpdc4gsr/libunified/ui/widget/seekbar/RangeSeekBar.java
+         1262 app/src/main/java/mpdc4gsr/controller/ComprehensiveRecordingController.kt
+         1234 libunified/src/main/java/com/mpdc4gsr/libunified/ui/gzuliyujiang/wheelview/widget/WheelView.java
+         1145 app/src/main/java/mpdc4gsr/network/DataManagementService.kt
+
+6. Checking for MainActivity variants (HIGH)...
+   Files:
+      app/src/main/java/mpdc4gsr/viewmodel/MainActivityViewModel.kt
+      app/src/main/java/mpdc4gsr/activities/SimplifiedMainActivityCompose.kt
+      app/src/main/java/mpdc4gsr/activities/MainActivity.kt
+      app/src/main/java/mpdc4gsr/activities/MainActivityAlternative.kt
+      app/src/main/java/mpdc4gsr/activities/MainActivityLegacy.kt
+
+7. Checking for test activities in production source (MEDIUM)...
+   Files:
+      app/src/main/java/mpdc4gsr/compose/testing/TestingSuiteHubActivity.kt
+      app/src/main/java/mpdc4gsr/compose/testing/GSRDataIntegrityTestComposeActivity.kt
+      app/src/main/java/mpdc4gsr/compose/testing/RgbCameraTestComposeActivity.kt
+      app/src/main/java/mpdc4gsr/compose/testing/RawCaptureTestComposeActivity.kt
+      app/src/main/java/mpdc4gsr/compose/testing/PermissionRequestTestComposeActivity.kt
+      app/src/main/java/mpdc4gsr/compose/testing/SensorDashboardTestComposeActivity.kt
+      app/src/main/java/mpdc4gsr/compose/testing/SessionLifecycleTestComposeActivity.kt
+      app/src/main/java/mpdc4gsr/compose/testing/BLEIntegrationTestComposeActivity.kt
+      app/src/main/java/mpdc4gsr/compose/testing/GSRReconnectionTestComposeActivity.kt
+      app/src/main/java/mpdc4gsr/compose/testing/CrossModalSyncTestComposeActivity.kt
+      app/src/main/java/mpdc4gsr/compose/testing/GSRBenchTestComposeActivity.kt
+      app/src/main/java/mpdc4gsr/compose/testing/TimeSynchronizationTestComposeActivity.kt
+      app/src/main/java/mpdc4gsr/compose/testing/ParallelRecordingTestComposeActivity.kt
+      app/src/main/java/mpdc4gsr/compose/testing/SimpleNetworkTestComposeActivity.kt
+      app/src/main/java/mpdc4gsr/compose/testing/ComposeTestingSuiteActivity.kt
+      app/src/main/java/mpdc4gsr/activities/NavigationTestActivity.kt
+      app/src/main/java/mpdc4gsr/activities/NetworkClientTestComposeActivity.kt
+      app/src/main/java/mpdc4gsr/activities/ComprehensiveIntegrationTestActivity.kt
+
+8. Checking for mutable static state (MEDIUM)...
