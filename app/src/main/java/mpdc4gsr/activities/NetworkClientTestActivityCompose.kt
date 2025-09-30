@@ -33,8 +33,8 @@ import mpdc4gsr.network.NetworkManager
 import mpdc4gsr.viewmodel.BaseViewModel
 
 class NetworkClientTestViewModel : BaseViewModel() {
-    private val _connectionState = MutableStateFlow(CommandConnection.ConnectionState.DISCONNECTED)
-    val connectionState: StateFlow<CommandConnection.ConnectionState> = _connectionState.asStateFlow()
+    private val _networkConnectionState = MutableStateFlow(CommandConnection.ConnectionState.DISCONNECTED)
+    val networkConnectionState: StateFlow<CommandConnection.ConnectionState> = _networkConnectionState.asStateFlow()
 
     private val _ipAddress = MutableStateFlow("192.168.1.100")
     val ipAddress: StateFlow<String> = _ipAddress.asStateFlow()
@@ -46,7 +46,7 @@ class NetworkClientTestViewModel : BaseViewModel() {
     val connectionInfo: StateFlow<String> = _connectionInfo.asStateFlow()
 
     fun updateConnectionState(state: CommandConnection.ConnectionState) {
-        _connectionState.value = state
+        _networkConnectionState.value = state
     }
 
     fun updateIpAddress(ip: String) {
@@ -131,7 +131,7 @@ class NetworkClientTestActivityCompose : BaseComposeActivity<NetworkClientTestVi
 
     private fun updateConnectionInfo() {
         val info = networkManager?.let { manager ->
-            when (val state = viewModel.connectionState.value) {
+            when (val state = viewModel.networkConnectionState.value) {
                 CommandConnection.ConnectionState.CONNECTED -> {
                     "Connected to ${viewModel.ipAddress.value}:${viewModel.port.value}"
                 }
@@ -180,7 +180,7 @@ class NetworkClientTestActivityCompose : BaseComposeActivity<NetworkClientTestVi
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: NetworkClientTestViewModel) {
-        val connectionState by viewModel.connectionState.collectAsState()
+        val connectionState by viewModel.networkConnectionState.collectAsState()
         val ipAddress by viewModel.ipAddress.collectAsState()
         val port by viewModel.port.collectAsState()
         val connectionInfo by viewModel.connectionInfo.collectAsState()
