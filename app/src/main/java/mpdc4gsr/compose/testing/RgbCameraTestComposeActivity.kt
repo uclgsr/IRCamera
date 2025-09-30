@@ -1,6 +1,7 @@
 package mpdc4gsr.compose.testing
 
 import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -24,6 +25,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import mpdc4gsr.permissions.PermissionManager
 import mpdc4gsr.sensors.RgbCameraRecorder
+import java.io.File
 import kotlin.system.measureTimeMillis
 
 /**
@@ -312,7 +314,9 @@ class RgbCameraTestComposeActivity : ComponentActivity() {
     private suspend fun runPermissionsTest() {
         Log.d(TAG, "Testing camera permissions")
         try {
-            val hasPermissions = permissionManager?.hasCameraPermissions() ?: false
+            // Check camera permission using Android API
+            val hasPermissions = checkSelfPermission(Manifest.permission.CAMERA) == 
+                PackageManager.PERMISSION_GRANTED
             Log.d(TAG, "Camera permissions check: $hasPermissions")
         } catch (e: Exception) {
             Log.e(TAG, "Permissions test failed: ${e.message}")
@@ -390,23 +394,34 @@ class RgbCameraTestComposeActivity : ComponentActivity() {
     }
 
     private fun startTestRecording() {
-        try {
-            isRecording = true
-            cameraRecorder?.startRecording()
-            Log.d(TAG, "Test recording started")
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to start recording: ${e.message}")
-            isRecording = false
+        lifecycleScope.launch {
+            try {
+                isRecording = true
+                val externalFilesDir = getExternalFilesDir(null)
+                if (externalFilesDir == null) {
+                    Log.e(TAG, "External files directory is not available. Cannot start recording.")
+                    isRecording = false
+                    return@launch
+                }
+                val testDir = File(externalFilesDir, "test_recordings").absolutePath
+                cameraRecorder?.startRecording(testDir)
+                Log.d(TAG, "Test recording started")
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to start recording: ${e.message}")
+                isRecording = false
+            }
         }
     }
 
     private fun stopRecording() {
-        try {
-            isRecording = false
-            cameraRecorder?.stopRecording()
-            Log.d(TAG, "Test recording stopped")
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to stop recording: ${e.message}")
+        lifecycleScope.launch {
+            try {
+                isRecording = false
+                cameraRecorder?.stopRecording()
+                Log.d(TAG, "Test recording stopped")
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to stop recording: ${e.message}")
+            }
         }
     }
 }

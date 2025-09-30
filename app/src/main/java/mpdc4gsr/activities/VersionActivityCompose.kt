@@ -38,6 +38,11 @@ import mpdc4gsr.viewmodel.BaseViewModel
 import java.util.Calendar
 
 class VersionViewModel : BaseViewModel() {
+    
+    companion object {
+        private const val DEFAULT_VERSION = "1.0.0"
+    }
+    
     data class VersionInfo(
         val appVersion: String,
         val buildCode: String,
@@ -52,16 +57,16 @@ class VersionViewModel : BaseViewModel() {
             appVersion = BuildConfig.VERSION_NAME,
             buildCode = BuildConfig.VERSION_CODE.toString(),
             buildTime = BuildConfig.BUILD_TYPE,
-            unifiedVersion = UnifiedVersionUtils.getVersion(),
-            thermalVersion = "1.0.0", // placeholder
-            gsrVersion = "1.0.0" // placeholder
+            unifiedVersion = DEFAULT_VERSION,
+            thermalVersion = DEFAULT_VERSION,
+            gsrVersion = DEFAULT_VERSION
         )
     )
     val versionInfo: State<VersionInfo> = _versionInfo
 
-    fun updateVersionInfo() {
+    fun updateVersionInfo(context: android.content.Context) {
         _versionInfo.value = _versionInfo.value.copy(
-            unifiedVersion = UnifiedVersionUtils.getVersion()
+            unifiedVersion = UnifiedVersionUtils.getVersionName(context)
         )
     }
 }
@@ -72,7 +77,7 @@ class VersionActivityCompose : BaseComposeActivity<VersionViewModel>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModels<VersionViewModel>().value.updateVersionInfo()
+        viewModels<VersionViewModel>().value.updateVersionInfo(this)
     }
 
     @OptIn(ExperimentalMaterial3Api::class)
