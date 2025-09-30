@@ -589,7 +589,7 @@ class ThermalFragmentViewModel : BaseViewModel() {
                 
                 // Emit action to update UI
                 _thermalProcessingAction.postValue(
-                    ThermalProcessingAction.RegionConfigured(nextFenceType.name.lowercase())
+                    ThermalProcessingAction.RegionConfigured(nextFenceType)
                 )
             } catch (e: Exception) {
                 handleError(e)
