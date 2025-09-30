@@ -107,7 +107,7 @@ class ShimmerMvpViewModel : BaseViewModel() {
     val isRecording: State<Boolean> = _isRecording
 
     fun startScanning() {
-        kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
+        viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
             _shimmerConnectionState.value = ShimmerConnectionState.SCANNING
             _statusMessage.value = "Scanning for Shimmer devices..."
             _availableDevices.value = emptyList()
