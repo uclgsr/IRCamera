@@ -48,8 +48,10 @@ class DevicePairingActivityCompose : BaseComposeActivity<DevicePairingViewModel>
         }
     }
 
+    private val pairing: DevicePairingViewModel by viewModels()
+
     override fun createViewModel(): DevicePairingViewModel {
-        return DevicePairingViewModel().also {
+        return pairing.also {
             it.initialize(this)
         }
     }
@@ -155,8 +157,8 @@ class DevicePairingActivityCompose : BaseComposeActivity<DevicePairingViewModel>
                         ScanControlsCard(
                             scanState = scanState,
                             discoveredCount = discoveredControllers.size,
-                            onStartScan = { viewModel.startControllerScan() }
-                            // onStopScan = { viewModel.stopControllerScan() }
+                            onStartScan = { viewModel.startControllerScan() },
+                            onStopScan = { /* Stop not implemented yet */ }
                         )
 
                         // Discovered Devices List

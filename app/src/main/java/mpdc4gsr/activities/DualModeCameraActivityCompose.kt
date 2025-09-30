@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -43,20 +44,20 @@ import mpdc4gsr.compose.components.TitleBar
  */
 class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewModel>() {
 
+    private val cameraVM: DualModeCameraViewModel by viewModels()
+
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
         if (isGranted) {
-            viewModel?.onPermissionGranted()
+            cameraVM.onPermissionGranted()
         } else {
-            viewModel?.onPermissionDenied()
+            cameraVM.onPermissionDenied()
         }
     }
 
-    private var viewModel: DualModeCameraViewModel? = null
-
     override fun createViewModel(): DualModeCameraViewModel {
-        return DualModeCameraViewModel().also { viewModel = it }
+        return cameraVM
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,9 +67,7 @@ class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewMode
         val enableSamsungOptimizations =
             intent.getBooleanExtra("ENABLE_SAMSUNG_OPTIMIZATIONS", true)
 
-        createViewModel().apply {
-            initialize(initialMode, enableSamsungOptimizations)
-        }
+        cameraVM.initialize(initialMode, enableSamsungOptimizations)
 
         checkCameraPermission()
     }
@@ -297,11 +296,10 @@ class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewMode
     private fun RecordingControlsCard(
         recordingState: DualModeCameraViewModel.RecordingState,
         onStartRecording: () -> Unit,
-        onStopRecording: () -> Unit,
-        onToggleMode: () -> Unit
+        onStopRecording: () -> Unit
     ) {
         Card(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxSize(),
             shape = RoundedCornerShape(12.dp)
         ) {
             Column(
@@ -339,15 +337,6 @@ class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewMode
                             Spacer(modifier = Modifier.width(8.dp))
                             Text("Start Recording")
                         }
-                    }
-
-                    OutlinedButton(
-                        onClick = onToggleMode,
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Icon(Icons.Default.Refresh, contentDescription = null)
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text("Mode")
                     }
                 }
 
@@ -472,6 +461,6 @@ class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewMode
 
     override fun onDestroy() {
         super.onDestroy()
-        viewModel?.cleanup()
+        cameraVM.cleanup()
     }
 }

@@ -51,8 +51,10 @@ class ComposeComponentsShowcaseViewModel : BaseViewModel() {
 class ComposeComponentsShowcaseActivity :
     BaseComposeActivity<ComposeComponentsShowcaseViewModel>() {
 
+    private val showcaseVM: ComposeComponentsShowcaseViewModel by viewModels()
+
     override fun createViewModel(): ComposeComponentsShowcaseViewModel =
-        ComposeComponentsShowcaseViewModel()
+        showcaseVM
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -303,11 +305,27 @@ private fun ComponentSection(
     }
 }
 
-private fun getSampleSensorAvailability(): Set<mpdc4gsr.compose.components.SensorType> {
-    return setOf(
-        mpdc4gsr.compose.components.SensorType.THERMAL,
-        mpdc4gsr.compose.components.SensorType.GSR,
-        mpdc4gsr.compose.components.SensorType.RGB,
-        mpdc4gsr.compose.components.SensorType.AUDIO
+private fun getSampleSensorAvailability(): List<mpdc4gsr.compose.components.SensorAvailability> {
+    return listOf(
+        mpdc4gsr.compose.components.SensorAvailability(
+            sensorType = mpdc4gsr.compose.components.SensorType.THERMAL,
+            isAvailable = true,
+            isSelected = false
+        ),
+        mpdc4gsr.compose.components.SensorAvailability(
+            sensorType = mpdc4gsr.compose.components.SensorType.GSR,
+            isAvailable = true,
+            isSelected = false
+        ),
+        mpdc4gsr.compose.components.SensorAvailability(
+            sensorType = mpdc4gsr.compose.components.SensorType.RGB,
+            isAvailable = true,
+            isSelected = false
+        ),
+        mpdc4gsr.compose.components.SensorAvailability(
+            sensorType = mpdc4gsr.compose.components.SensorType.AUDIO,
+            isAvailable = true,
+            isSelected = false
+        )
     )
 }

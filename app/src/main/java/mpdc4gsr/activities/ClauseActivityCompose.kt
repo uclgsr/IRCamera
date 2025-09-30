@@ -77,7 +77,9 @@ class ClauseViewModel : BaseViewModel() {
 
 class ClauseActivityCompose : BaseComposeActivity<ClauseViewModel>() {
 
-    override fun createViewModel(): ClauseViewModel = ClauseViewModel()
+    private val clauseVM: ClauseViewModel by viewModels()
+
+    override fun createViewModel(): ClauseViewModel = clauseVM
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
