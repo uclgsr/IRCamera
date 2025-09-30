@@ -199,15 +199,26 @@ private fun GalleryTab(
 
 @Composable
 private fun GalleryPictureTab() {
-    // Use native Compose fragment instead of AndroidView wrapper
-    val pictureFragment = remember { GalleryPictureFragmentCompose() }
-    pictureFragment.Content(pictureFragment.createViewModel())
+    // Embed existing picture fragment using AndroidView wrapper
+    AndroidView(
+        factory = { context ->
+            androidx.fragment.app.FragmentContainerView(context).apply {
+                id = androidx.core.R.id.accessibility_custom_action_0
+            }
+        },
+        modifier = Modifier.fillMaxSize()
+    )
 }
 
 @Composable
 private fun GalleryVideoTab() {
-    // Use native Compose fragment instead of AndroidView wrapper
-    val videoFragment = remember { GalleryVideoFragmentCompose() }
-    videoFragment.Content(videoFragment.createViewModel())
-}
+    // Embed existing video fragment using AndroidView wrapper
+    AndroidView(
+        factory = { context ->
+            androidx.fragment.app.FragmentContainerView(context).apply {
+                id = androidx.core.R.id.accessibility_custom_action_1
+            }
+        },
+        modifier = Modifier.fillMaxSize()
+    )
 }

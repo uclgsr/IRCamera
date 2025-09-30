@@ -18,7 +18,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.lifecycle.lifecycleScope
 import com.hjq.permissions.OnPermissionCallback
 import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
@@ -63,7 +64,7 @@ class IRLogMPChartComposeActivity : BaseComposeActivity<IRMonitorViewModel>() {
         val scrollState = rememberScrollState()
 
         // Collect thermal data from ViewModel
-        val thermalData by viewModel.thermalEntityList.collectAsStateWithLifecycle()
+        val thermalData by viewModel.detailListLD.observeAsState(emptyList())
         var isLoading by remember { mutableStateOf(false) }
         var showExportDialog by remember { mutableStateOf(false) }
 

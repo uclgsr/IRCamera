@@ -2,6 +2,7 @@ package com.mpdc4gsr.module.thermalunified.compose
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -151,7 +152,7 @@ fun ChartInfoPanel(
             ChartInfoItem(
                 label = "Avg",
                 value = averageValue,
-                color = Color.Orange,
+                color = Color(0xFFFF6600),
                 icon = Icons.Default.Timeline
             )
         }
