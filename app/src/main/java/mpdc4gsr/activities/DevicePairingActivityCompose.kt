@@ -49,7 +49,7 @@ class DevicePairingActivityCompose : BaseComposeActivity<DevicePairingViewModel>
     }
 
     override fun createViewModel(): DevicePairingViewModel {
-        return viewModels<DevicePairingViewModel>().value.also {
+        return DevicePairingViewModel().also {
             it.initialize(this)
         }
     }
@@ -81,13 +81,14 @@ class DevicePairingActivityCompose : BaseComposeActivity<DevicePairingViewModel>
                     }
 
                     is DevicePairingViewModel.PairingEvent.NavigateToSession -> {
-                        MultiModalRecordingActivity.startRecording(context, event.sessionInfo)
+                        // MultiModalRecordingActivity.startRecording(context, event.sessionInfo)
+                        Toast.makeText(context, "Navigate to session", Toast.LENGTH_SHORT).show()
                     }
 
                     is DevicePairingViewModel.PairingEvent.ShowConnectionDialog -> {
                         Toast.makeText(
                             context,
-                            "Connecting to ${event.controller.name}...",
+                            "Connecting to ${event.controller.deviceId}...",
                             Toast.LENGTH_SHORT
                         ).show()
                     }
@@ -118,7 +119,7 @@ class DevicePairingActivityCompose : BaseComposeActivity<DevicePairingViewModel>
                             actions = {
                                 IconButton(onClick = {
                                     if (scanState == DevicePairingViewModel.ScanState.SCANNING) {
-                                        viewModel.stopControllerScan()
+                                        // viewModel.stopControllerScan()
                                     } else {
                                         viewModel.startControllerScan()
                                     }
@@ -154,8 +155,8 @@ class DevicePairingActivityCompose : BaseComposeActivity<DevicePairingViewModel>
                         ScanControlsCard(
                             scanState = scanState,
                             discoveredCount = discoveredControllers.size,
-                            onStartScan = { viewModel.startControllerScan() },
-                            onStopScan = { viewModel.stopControllerScan() }
+                            onStartScan = { viewModel.startControllerScan() }
+                            // onStopScan = { viewModel.stopControllerScan() }
                         )
 
                         // Discovered Devices List
@@ -188,7 +189,7 @@ class DevicePairingActivityCompose : BaseComposeActivity<DevicePairingViewModel>
         }
 
         @Composable
-        private fun ConnectionStatusCard(
+        fun ConnectionStatusCard(
             connectionState: DevicePairingViewModel.ConnectionState,
             connectedController: NetworkClient.ControllerInfo?,
             statusMessage: String,
@@ -199,10 +200,10 @@ class DevicePairingActivityCompose : BaseComposeActivity<DevicePairingViewModel>
                 shape = RoundedCornerShape(12.dp),
                 colors = CardDefaults.cardColors(
                     containerColor = when (connectionState) {
-                        is DevicePairingViewModel.ConnectionState.Connected ->
+                        DevicePairingViewModel.ConnectionState.CONNECTED ->
                             MaterialTheme.colorScheme.primaryContainer
 
-                        is DevicePairingViewModel.ConnectionState.Failed ->
+                        DevicePairingViewModel.ConnectionState.CONNECTION_FAILED ->
                             MaterialTheme.colorScheme.errorContainer
 
                         else -> MaterialTheme.colorScheme.surfaceVariant
@@ -228,7 +229,7 @@ class DevicePairingActivityCompose : BaseComposeActivity<DevicePairingViewModel>
                     }
 
                     when (connectionState) {
-                        is DevicePairingViewModel.ConnectionState.Connected -> {
+                        DevicePairingViewModel.ConnectionState.CONNECTED -> {
                             connectedController?.let { controller ->
                                 Column(
                                     verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -258,7 +259,7 @@ class DevicePairingActivityCompose : BaseComposeActivity<DevicePairingViewModel>
                             }
                         }
 
-                        is DevicePairingViewModel.ConnectionState.Connecting -> {
+                        DevicePairingViewModel.ConnectionState.CONNECTING -> {
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -271,9 +272,9 @@ class DevicePairingActivityCompose : BaseComposeActivity<DevicePairingViewModel>
                             }
                         }
 
-                        is DevicePairingViewModel.ConnectionState.Failed -> {
+                        DevicePairingViewModel.ConnectionState.CONNECTION_FAILED -> {
                             Text(
-                                text = "Connection failed: ${connectionState.message}",
+                                text = "Connection failed: ${statusMessage}",
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.error
                             )
@@ -300,15 +301,15 @@ class DevicePairingActivityCompose : BaseComposeActivity<DevicePairingViewModel>
         }
 
         @Composable
-        private fun ConnectionStatusIndicator(connectionState: DevicePairingViewModel.ConnectionState) {
+        fun ConnectionStatusIndicator(connectionState: DevicePairingViewModel.ConnectionState) {
             val (color, icon) = when (connectionState) {
-                is DevicePairingViewModel.ConnectionState.Connected ->
+                DevicePairingViewModel.ConnectionState.CONNECTED ->
                     Pair(MaterialTheme.colorScheme.primary, Icons.Default.CheckCircle)
 
-                is DevicePairingViewModel.ConnectionState.Connecting ->
+                DevicePairingViewModel.ConnectionState.CONNECTING ->
                     Pair(MaterialTheme.colorScheme.tertiary, Icons.Default.Refresh)
 
-                is DevicePairingViewModel.ConnectionState.Failed ->
+                DevicePairingViewModel.ConnectionState.CONNECTION_FAILED ->
                     Pair(MaterialTheme.colorScheme.error, Icons.Default.Error)
 
                 else ->
@@ -324,7 +325,7 @@ class DevicePairingActivityCompose : BaseComposeActivity<DevicePairingViewModel>
         }
 
         @Composable
-        private fun ScanControlsCard(
+        fun ScanControlsCard(
             scanState: DevicePairingViewModel.ScanState,
             discoveredCount: Int,
             onStartScan: () -> Unit,
@@ -395,7 +396,7 @@ class DevicePairingActivityCompose : BaseComposeActivity<DevicePairingViewModel>
         }
 
         @Composable
-        private fun DiscoveredDevicesCard(
+        fun DiscoveredDevicesCard(
             controllers: List<NetworkClient.ControllerInfo>,
             onControllerClick: (NetworkClient.ControllerInfo) -> Unit
         ) {
@@ -460,7 +461,7 @@ class DevicePairingActivityCompose : BaseComposeActivity<DevicePairingViewModel>
         }
 
         @Composable
-        private fun DeviceItem(
+        fun DeviceItem(
             controller: NetworkClient.ControllerInfo,
             onClick: () -> Unit
         ) {
@@ -510,56 +511,57 @@ class DevicePairingActivityCompose : BaseComposeActivity<DevicePairingViewModel>
                 }
             }
         }
+    }
 
-        // NetworkClient.NetworkEventListener implementation
-        override fun onControllerDiscovered(controller: NetworkClient.ControllerInfo) {
-            // ViewModel handles this through its own NetworkEventListener implementation
+    // NetworkClient.NetworkEventListener implementation
+    override fun onControllerDiscovered(controller: NetworkClient.ControllerInfo) {
+        // ViewModel handles this through its own NetworkEventListener implementation
+    }
+
+    override fun onConnected(controller: NetworkClient.ControllerInfo) {
+        // ViewModel handles this through its own NetworkEventListener implementation
+    }
+
+    override fun onDisconnected(reason: String) {
+        // ViewModel handles this through its own NetworkEventListener implementation
+    }
+
+    override fun onRemoteMeasurementRequest(sessionInfo: SessionInfo) {
+        // ViewModel handles this through its own NetworkEventListener implementation
+    }
+
+    override fun onSyncFlash(durationMs: Int) {
+        runOnUiThread {
+            // Trigger flash overlay through ViewModel
+            viewModel.triggerSyncFlash(durationMs)
         }
+    }
 
-        override fun onConnected(controller: NetworkClient.ControllerInfo) {
-            // ViewModel handles this through its own NetworkEventListener implementation
+    override fun onTimeSynchronized(offsetNanoseconds: Long) {
+        runOnUiThread {
+            Toast.makeText(
+                this,
+                "Time synchronized (offset: ${offsetNanoseconds / 1_000_000}ms)",
+                Toast.LENGTH_SHORT
+            ).show()
         }
+    }
 
-        override fun onDisconnected(reason: String) {
-            // ViewModel handles this through its own NetworkEventListener implementation
+    override fun onDataStreamingStarted() {
+        runOnUiThread {
+            Toast.makeText(this, "Data streaming started", Toast.LENGTH_SHORT).show()
         }
+    }
 
-        override fun onRemoteMeasurementRequest(sessionInfo: SessionInfo) {
-            // ViewModel handles this through its own NetworkEventListener implementation
+    override fun onDataStreamingStopped() {
+        runOnUiThread {
+            Toast.makeText(this, "Data streaming stopped", Toast.LENGTH_SHORT).show()
         }
+    }
 
-        override fun onSyncFlash(durationMs: Int) {
-            runOnUiThread {
-                // Trigger flash overlay through ViewModel
-                viewModel.triggerSyncFlash(durationMs)
-            }
+    override fun onError(operation: String, error: String) {
+        runOnUiThread {
+            Toast.makeText(this, "Network error: $error", Toast.LENGTH_LONG).show()
         }
-
-        override fun onTimeSynchronized(offsetNanoseconds: Long) {
-            runOnUiThread {
-                Toast.makeText(
-                    this,
-                    "Time synchronized (offset: ${offsetNanoseconds / 1_000_000}ms)",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        }
-
-        override fun onDataStreamingStarted() {
-            runOnUiThread {
-                Toast.makeText(this, "Data streaming started", Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        override fun onDataStreamingStopped() {
-            runOnUiThread {
-                Toast.makeText(this, "Data streaming stopped", Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        override fun onError(operation: String, error: String) {
-            runOnUiThread {
-                Toast.makeText(this, "Network error: $error", Toast.LENGTH_LONG).show()
-            }
         }
     }
