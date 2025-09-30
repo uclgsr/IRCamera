@@ -38,6 +38,11 @@ import mpdc4gsr.viewmodel.BaseViewModel
 import java.util.Calendar
 
 class VersionViewModel : BaseViewModel() {
+    
+    companion object {
+        private const val DEFAULT_VERSION = "1.0.0"
+    }
+    
     data class VersionInfo(
         val appVersion: String,
         val buildCode: String,
@@ -52,9 +57,9 @@ class VersionViewModel : BaseViewModel() {
             appVersion = BuildConfig.VERSION_NAME,
             buildCode = BuildConfig.VERSION_CODE.toString(),
             buildTime = BuildConfig.BUILD_TYPE,
-            unifiedVersion = "1.0.0",
-            thermalVersion = "1.0.0", // placeholder
-            gsrVersion = "1.0.0" // placeholder
+            unifiedVersion = DEFAULT_VERSION,
+            thermalVersion = DEFAULT_VERSION,
+            gsrVersion = DEFAULT_VERSION
         )
     )
     val versionInfo: State<VersionInfo> = _versionInfo

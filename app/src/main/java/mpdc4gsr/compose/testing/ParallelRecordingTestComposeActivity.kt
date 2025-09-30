@@ -520,16 +520,17 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
         }
     }
 
-private suspend fun stopRecording(
-    currentStatuses: List<SensorStatus>,
-    onStateUpdate: (RecordingState) -> Unit,
-    onSensorStatusesUpdate: (List<SensorStatus>) -> Unit
-) {
-    onStateUpdate(RecordingState.STOPPING)
-    val updatedStatuses = stopParallelRecording(currentStatuses)
-    onSensorStatusesUpdate(updatedStatuses)
-    delay(1000)
-    onStateUpdate(RecordingState.COMPLETED)
+    private suspend fun stopRecording(
+        currentStatuses: List<SensorStatus>,
+        onStateUpdate: (RecordingState) -> Unit,
+        onSensorStatusesUpdate: (List<SensorStatus>) -> Unit
+    ) {
+        onStateUpdate(RecordingState.STOPPING)
+        val updatedStatuses = stopParallelRecording(currentStatuses)
+        onSensorStatusesUpdate(updatedStatuses)
+        delay(1000)
+        onStateUpdate(RecordingState.COMPLETED)
+    }
 
     private fun runIndividualTest(testId: String) {
         lifecycleScope.launch {

@@ -386,10 +386,10 @@ class DualModeCameraViewModel : BaseViewModel() {
     }
 
     override fun onCleared() {
-        super.onCleared()
         viewModelScope.launch {
             rgbCameraRecorder?.cleanup()
         }
+        super.onCleared()
     }
 
     companion object {

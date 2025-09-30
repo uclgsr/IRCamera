@@ -1,6 +1,7 @@
 package mpdc4gsr.compose.testing
 
 import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -24,6 +25,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import mpdc4gsr.permissions.PermissionManager
 import mpdc4gsr.sensors.RgbCameraRecorder
+import java.io.File
 import kotlin.system.measureTimeMillis
 
 /**
@@ -313,8 +315,8 @@ class RgbCameraTestComposeActivity : ComponentActivity() {
         Log.d(TAG, "Testing camera permissions")
         try {
             // Check camera permission using Android API
-            val hasPermissions = checkSelfPermission(android.Manifest.permission.CAMERA) == 
-                android.content.pm.PackageManager.PERMISSION_GRANTED
+            val hasPermissions = checkSelfPermission(Manifest.permission.CAMERA) == 
+                PackageManager.PERMISSION_GRANTED
             Log.d(TAG, "Camera permissions check: $hasPermissions")
         } catch (e: Exception) {
             Log.e(TAG, "Permissions test failed: ${e.message}")
@@ -401,7 +403,7 @@ class RgbCameraTestComposeActivity : ComponentActivity() {
                     isRecording = false
                     return@launch
                 }
-                val testDir = externalFilesDir.absolutePath + "/test_recordings"
+                val testDir = File(externalFilesDir, "test_recordings").absolutePath
                 cameraRecorder?.startRecording(testDir)
                 Log.d(TAG, "Test recording started")
             } catch (e: Exception) {
