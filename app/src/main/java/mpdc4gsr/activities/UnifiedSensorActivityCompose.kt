@@ -102,7 +102,6 @@ class UnifiedSensorViewModel : BaseViewModel() {
                             UnifiedSensorType.THERMAL -> "125 KB/s"
                             UnifiedSensorType.GSR -> "2 KB/s"
                             UnifiedSensorType.RGB_CAMERA -> "1.2 MB/s"
-                            UnifiedSensorType.THERMAL_CAMERA -> "125 KB/s"
                             UnifiedSensorType.AUDIO -> "64 KB/s"
                             UnifiedSensorType.NETWORK -> "10 MB/s"
                         },
@@ -113,7 +112,7 @@ class UnifiedSensorViewModel : BaseViewModel() {
         }
     }
 
-    fun disconnectSensor(sensorType: SensorType) {
+    fun disconnectSensor(sensorType: UnifiedSensorType) {
         _sensorStatuses.value = _sensorStatuses.value.map { status ->
             if (status.type == sensorType) {
                 status.copy(
@@ -396,8 +395,8 @@ class UnifiedSensorActivityCompose : BaseComposeActivity<UnifiedSensorViewModel>
 @Composable
 private fun SensorStatusCard(
     sensorStatus: SensorStatus,
-    onConnect: (SensorType) -> Unit,
-    onDisconnect: (SensorType) -> Unit,
+    onConnect: (UnifiedSensorType) -> Unit,
+    onDisconnect: (UnifiedSensorType) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
