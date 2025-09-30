@@ -38,7 +38,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
-import com.mpdc4gsr.libunified.compose.theme.IRCameraTheme
+import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -59,7 +59,7 @@ class ImagePickIRLiteComposeActivity : ComponentActivity() {
         viewModel = ViewModelProvider(this)[ImagePickIRLiteViewModel::class.java]
 
         setContent {
-            IRCameraTheme {
+            LibUnifiedTheme {
                 ImagePickIRLiteScreen(
                     viewModel = viewModel,
                     onNavigateBack = {

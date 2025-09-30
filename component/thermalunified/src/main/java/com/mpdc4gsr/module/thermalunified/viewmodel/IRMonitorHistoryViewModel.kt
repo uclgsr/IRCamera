@@ -70,12 +70,12 @@ class IRMonitorHistoryViewModel : BaseViewModel() {
     private val _isSelectionMode = MutableStateFlow(false)
     val isSelectionMode: StateFlow<Boolean> = _isSelectionMode.asStateFlow()
 
-    // UI events channel for one-time events
-    private val _uiEvents = MutableSharedFlow<UiEvent>()
-    val uiEvents: SharedFlow<UiEvent> = _uiEvents.asSharedFlow()
-
     // Internal data storage
     private var allHistoryItems: List<HistoryItem> = emptyList()
+
+    // Custom UI events for history-specific actions
+    private val _historyUiEvents = MutableSharedFlow<HistoryUiEvent>()
+    val historyUiEvents: SharedFlow<HistoryUiEvent> = _historyUiEvents.asSharedFlow()
 
     init {
         refreshHistory()
@@ -96,7 +96,7 @@ class IRMonitorHistoryViewModel : BaseViewModel() {
         launchWithErrorHandling {
             val selectedList = _selectedItems.value
             if (selectedList.isEmpty()) {
-                _uiEvents.emit(UiEvent.ShowMessage("No items selected for export"))
+                _historyUiEvents.emit(HistoryUiEvent.ShowMessage("No items selected for export"))
                 return@launchWithErrorHandling
             }
             
@@ -104,10 +104,10 @@ class IRMonitorHistoryViewModel : BaseViewModel() {
             val exportData = historyItems.value.filter { selectedList.contains(it.id) }
             
             // Emit export event with data
-            _uiEvents.emit(UiEvent.ExportData(exportData))
+            _historyUiEvents.emit(HistoryUiEvent.ExportData(exportData))
             
             // Show success message and clear selection
-            _uiEvents.emit(UiEvent.ShowMessage("Exported ${exportData.size} items"))
+            _historyUiEvents.emit(HistoryUiEvent.ShowMessage("Exported ${exportData.size} items"))
             clearSelection()
         }
     }
@@ -172,7 +172,7 @@ class IRMonitorHistoryViewModel : BaseViewModel() {
                                 "area" -> SessionType.CAPTURE
                                 else -> SessionType.MONITORING
                             },
-                            dataFilePath = detailList.firstOrNull()?.irImagePath ?: "" // Use image path from first entity if available
+                            dataFilePath = "" // TODO: Add image path when available
                         )
                     }
                 }
@@ -205,7 +205,7 @@ class IRMonitorHistoryViewModel : BaseViewModel() {
         // Implement navigation to details screen with history item data
         launchWithErrorHandling {
             // Emit navigation event with the selected item
-            _uiEvents.emit(UiEvent.NavigateToDetails(item))
+            _historyUiEvents.emit(HistoryUiEvent.NavigateToDetails(item))
         }
     }
 
@@ -269,11 +269,10 @@ class IRMonitorHistoryViewModel : BaseViewModel() {
         return allHistoryItems.filter { it.startTime in monthStart until monthEnd }
     }
 
-    // UI Event sealed class for one-time events
-    sealed class UiEvent {
-        data class ShowMessage(val message: String) : UiEvent()
-        data class ExportData(val items: List<HistoryItem>) : UiEvent()
-        data class NavigateToDetails(val item: HistoryItem) : UiEvent()
+    // History UI Event sealed class for one-time events
+    sealed class HistoryUiEvent {
+        data class ShowMessage(val message: String) : HistoryUiEvent()
+        data class ExportData(val items: List<HistoryItem>) : HistoryUiEvent()
+        data class NavigateToDetails(val item: HistoryItem) : HistoryUiEvent()
     }
-}
 }

@@ -1,6 +1,7 @@
 package com.mpdc4gsr.module.thermalunified.fragment
 
 import android.content.Intent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -98,7 +99,7 @@ class GalleryVideoFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
                                 isSelectionMode = isSelectionMode,
                                 onItemClick = { item ->
                                     if (isSelectionMode) {
-                                        viewModel.toggleItemSelection(item.path)
+                                        viewModel.toggleItemSelection(item)
                                     } else {
                                         playVideo(context, item.path)
                                     }
@@ -106,7 +107,7 @@ class GalleryVideoFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
                                 onItemLongClick = { item ->
                                     if (!isSelectionMode) {
                                         viewModel.enterSelectionMode()
-                                        viewModel.toggleItemSelection(item.path)
+                                        viewModel.toggleItemSelection(item)
                                     }
                                 }
                             )
@@ -233,11 +234,11 @@ class GalleryVideoFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
 
     @Composable
     private fun VideoGrid(
-        videos: List<VideoItem>,
+        videos: List<GalleryViewModel.MediaItem>,
         selectedItems: Set<String>,
         isSelectionMode: Boolean,
-        onItemClick: (VideoItem) -> Unit,
-        onItemLongClick: (VideoItem) -> Unit
+        onItemClick: (GalleryViewModel.MediaItem) -> Unit,
+        onItemLongClick: (GalleryViewModel.MediaItem) -> Unit
     ) {
         // Adaptive grid columns based on screen size
         val columns = remember { mutableIntStateOf(3) }
@@ -251,7 +252,7 @@ class GalleryVideoFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
             items(videos) { item ->
                 VideoGridItem(
                     item = item,
-                    isSelected = selectedItems.contains(item.path),
+                    isSelected = selectedItems.contains(item.id),
                     isSelectionMode = isSelectionMode,
                     onClick = { onItemClick(item) },
                     onLongClick = { onItemLongClick(item) }
@@ -262,7 +263,7 @@ class GalleryVideoFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
 
     @Composable
     private fun VideoGridItem(
-        item: VideoItem,
+        item: GalleryViewModel.MediaItem,
         isSelected: Boolean,
         isSelectionMode: Boolean,
         onClick: () -> Unit,
@@ -318,7 +319,7 @@ class GalleryVideoFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
                 }
 
                 // Thermal video indicator
-                if (item.isThermalVideo) {
+                if (item.isVideo) {
                     Card(
                         modifier = Modifier
                             .align(Alignment.TopStart)
@@ -395,11 +396,6 @@ class GalleryVideoFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
                             horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                             Text(
-                                text = formatDuration(item.duration),
-                                style = MaterialTheme.typography.labelSmall,
-                                color = Color.White.copy(alpha = 0.8f)
-                            )
-                            Text(
                                 text = formatFileSize(item.size),
                                 style = MaterialTheme.typography.labelSmall,
                                 color = Color.White.copy(alpha = 0.8f)
@@ -468,17 +464,6 @@ class GalleryVideoFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
         // This would typically involve copying files to a user-accessible location
     }
 
-    private fun formatDuration(durationMs: Long): String {
-        val hours = durationMs / 3600000
-        val minutes = (durationMs / 60000) % 60
-        val seconds = (durationMs / 1000) % 60
-
-        return when {
-            hours > 0 -> "%d:%02d:%02d".format(hours, minutes, seconds)
-            else -> "%d:%02d".format(minutes, seconds)
-        }
-    }
-
     private fun formatFileSize(bytes: Long): String {
         val units = arrayOf("B", "KB", "MB", "GB")
         var size = bytes.toDouble()
@@ -491,15 +476,4 @@ class GalleryVideoFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
 
         return "%.1f %s".format(size, units[unitIndex])
     }
-
-    // Data class for video items
-    data class VideoItem(
-        val path: String,
-        val name: String,
-        val size: Long,
-        val duration: Long,
-        val dateModified: Long,
-        val thumbnailPath: String? = null,
-        val isThermalVideo: Boolean = false
-    )
 }

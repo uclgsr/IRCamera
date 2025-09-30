@@ -145,14 +145,14 @@ class IRMonitorLiteViewModel : ViewModel() {
 
                 // Update temperature data
                 _temperatureData.value = TemperatureData(
-                    currentTemp = currentTemp,
-                    maxTemp = maxTemp,
-                    minTemp = minTemp
+                    currentTemp = currentTemp.toFloat(),
+                    maxTemp = maxTemp.toFloat(),
+                    minTemp = minTemp.toFloat()
                 )
 
                 // Update monitoring data
                 sampleCount++
-                temperatureSum += currentTemp
+                temperatureSum += currentTemp.toFloat()
                 val averageTemp = (temperatureSum / sampleCount)
                 val currentTime = System.currentTimeMillis()
                 val duration = formatDuration(currentTime - startTime)

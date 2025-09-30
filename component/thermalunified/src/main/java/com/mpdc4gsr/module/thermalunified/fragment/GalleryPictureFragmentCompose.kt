@@ -2,6 +2,7 @@ package com.mpdc4gsr.module.thermalunified.fragment
 
 import android.content.Intent
 import android.net.Uri
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -98,7 +99,7 @@ class GalleryPictureFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
                                 isSelectionMode = isSelectionMode,
                                 onItemClick = { item ->
                                     if (isSelectionMode) {
-                                        viewModel.toggleItemSelection(item.path)
+                                        viewModel.toggleItemSelection(item)
                                     } else {
                                         previewPicture(context, item.path)
                                     }
@@ -106,7 +107,7 @@ class GalleryPictureFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
                                 onItemLongClick = { item ->
                                     if (!isSelectionMode) {
                                         viewModel.enterSelectionMode()
-                                        viewModel.toggleItemSelection(item.path)
+                                        viewModel.toggleItemSelection(item)
                                     }
                                 }
                             )
@@ -233,11 +234,11 @@ class GalleryPictureFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
 
     @Composable
     private fun PictureGrid(
-        pictures: List<GalleryItem>,
+        pictures: List<GalleryViewModel.MediaItem>,
         selectedItems: Set<String>,
         isSelectionMode: Boolean,
-        onItemClick: (GalleryItem) -> Unit,
-        onItemLongClick: (GalleryItem) -> Unit
+        onItemClick: (GalleryViewModel.MediaItem) -> Unit,
+        onItemLongClick: (GalleryViewModel.MediaItem) -> Unit
     ) {
         // Adaptive grid columns based on screen size
         val columns = remember { mutableIntStateOf(3) }
@@ -251,7 +252,7 @@ class GalleryPictureFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
             items(pictures) { item ->
                 PictureGridItem(
                     item = item,
-                    isSelected = selectedItems.contains(item.path),
+                    isSelected = selectedItems.contains(item.id),
                     isSelectionMode = isSelectionMode,
                     onClick = { onItemClick(item) },
                     onLongClick = { onItemLongClick(item) }
@@ -262,7 +263,7 @@ class GalleryPictureFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
 
     @Composable
     private fun PictureGridItem(
-        item: GalleryItem,
+        item: GalleryViewModel.MediaItem,
         isSelected: Boolean,
         isSelectionMode: Boolean,
         onClick: () -> Unit,
@@ -301,7 +302,7 @@ class GalleryPictureFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
                 )
 
                 // Thermal image overlay indicator
-                if (item.isThermalImage) {
+                if (!item.isVideo) {
                     Card(
                         modifier = Modifier
                             .align(Alignment.TopStart)
@@ -448,13 +449,4 @@ class GalleryPictureFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
 
         return "%.1f %s".format(size, units[unitIndex])
     }
-
-    // Data class for gallery items
-    data class GalleryItem(
-        val path: String,
-        val name: String,
-        val size: Long,
-        val dateModified: Long,
-        val isThermalImage: Boolean = false
-    )
 }
