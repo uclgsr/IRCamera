@@ -60,7 +60,7 @@ class PolicyViewModel : BaseViewModel() {
         }
     }
 
-    fun setLoading(loading: Boolean) {
+    fun updateLoadingState(loading: Boolean) {
         _isLoading.value = loading
     }
 

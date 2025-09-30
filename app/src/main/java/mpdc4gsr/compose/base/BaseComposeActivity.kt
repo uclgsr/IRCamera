@@ -2,12 +2,12 @@ package mpdc4gsr.compose.base
 
 import android.content.Context
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mpdc4gsr.libunified.app.bean.event.SocketStateEvent
 import com.mpdc4gsr.libunified.app.bean.event.device.DeviceConnectEvent
@@ -27,7 +27,7 @@ import org.greenrobot.eventbus.ThreadMode
  * - Connection state handling
  * - ViewModel integration patterns
  */
-abstract class BaseComposeActivity<VM : BaseViewModel> : ComponentActivity() {
+abstract class BaseComposeActivity<VM : BaseViewModel> : FragmentActivity() {
 
     protected abstract fun createViewModel(): VM
 
