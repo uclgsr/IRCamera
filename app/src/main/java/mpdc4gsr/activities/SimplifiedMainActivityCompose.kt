@@ -33,6 +33,20 @@ import mpdc4gsr.viewmodel.BaseViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
+/**
+ * @deprecated This MainActivity variant is deprecated and should not be used.
+ * Use [MainActivity] instead which uses the unified navigation system.
+ * This class will be removed in a future release.
+ * 
+ * Deprecation reason: Multiple MainActivity variants cause confusion and maintenance overhead.
+ * This was created for testing purposes and is no longer needed.
+ */
+@Deprecated(
+    message = "Use MainActivity instead - this was for testing only",
+    replaceWith = ReplaceWith("MainActivity", "mpdc4gsr.activities.MainActivity"),
+    level = DeprecationLevel.WARNING
+)
+
 enum class AppFeature(
     val displayName: String,
     val description: String,

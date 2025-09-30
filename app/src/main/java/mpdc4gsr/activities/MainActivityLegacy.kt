@@ -38,6 +38,16 @@ import mpdc4gsr.ui_components.MineFragment
 import mpdc4gsr.ui_components.RecordingControlsWidget
 import mpdc4gsr.ui_components.SensorDashboardFragment
 import mpdc4gsr.viewmodel.MainActivityViewModel
+
+/**
+ * Legacy MainActivity implementation using fragments.
+ * 
+ * NOTE: This is kept as a backup/fallback implementation for compatibility.
+ * The primary entry point is [MainActivity] which uses Compose and unified navigation.
+ * 
+ * This implementation uses the older Fragment-based UI and should only be used
+ * if there are specific requirements that cannot be met by the Compose version.
+ */
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import com.mpdc4gsr.module.thermalunified.fragment.IRGalleryTabFragment

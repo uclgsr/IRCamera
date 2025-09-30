@@ -55,10 +55,37 @@ public class AppHolder implements Application.ActivityLifecycleCallbacks {
         Holder.INSTANCE.application = application;
     }
 
+    /**
+     * Attempt to get Application instance using reflection on private Android APIs.
+     * 
+     * WARNING: This method uses reflection to access private Android APIs which is an anti-pattern.
+     * Issues:
+     * - Uses internal Android APIs (android.app.ActivityThread) that may change
+     * - May break on different Android versions
+     * - Violates Android's API stability guidelines
+     * 
+     * RECOMMENDED: Always call AppHolder.initialize(application) explicitly from your
+     * Application class instead of relying on this reflection-based fallback.
+     * 
+     * Example proper initialization:
+     * <pre>
+     * class MyApp : Application() {
+     *     override fun onCreate() {
+     *         super.onCreate()
+     *         AppHolder.initialize(this)  // Proper initialization
+     *     }
+     * }
+     * </pre>
+     * 
+     * @return Application instance if found via reflection, null otherwise
+     * @deprecated This reflection approach should not be relied upon. Always use initialize(Application).
+     */
+    @Deprecated
     @SuppressLint("PrivateApi")
     @Nullable
     private Application tryGetApplication() {
         try {
+            // WARNING: Accessing private Android API - may break in future Android versions
             Class<?> cls = Class.forName("android.app.ActivityThread");
             Method catMethod = cls.getMethod("currentActivityThread");
             catMethod.setAccessible(true);
@@ -66,6 +93,8 @@ public class AppHolder implements Application.ActivityLifecycleCallbacks {
             Method method = aThread.getClass().getMethod("getApplication");
             return (Application) method.invoke(aThread);
         } catch (Exception e) {
+            // Reflection failed - this is expected on some Android versions
+            // Ensure initialize(Application) is called explicitly
             return null;
         }
     }

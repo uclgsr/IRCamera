@@ -38,6 +38,20 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.csl.irCamera.R
 import com.mpdc4gsr.libunified.app.bean.event.TS004ResetEvent
+
+/**
+ * @deprecated This MainActivity variant is deprecated and should not be used.
+ * Use [MainActivity] instead which uses the unified navigation system.
+ * This class will be removed in a future release.
+ * 
+ * Deprecation reason: Multiple MainActivity variants cause confusion and maintenance overhead.
+ * The primary MainActivity.kt provides all necessary functionality with better architecture.
+ */
+@Deprecated(
+    message = "Use MainActivity instead",
+    replaceWith = ReplaceWith("MainActivity", "mpdc4gsr.activities.MainActivity"),
+    level = DeprecationLevel.WARNING
+)
 import com.mpdc4gsr.libunified.app.bean.event.WinterClickEvent
 import com.mpdc4gsr.libunified.app.bean.event.device.DevicePermissionEvent
 import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig

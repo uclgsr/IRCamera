@@ -5,9 +5,33 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
+import android.util.Log
 import com.mpdc4gsr.libunified.app.config.RouterConfig
 import com.mpdc4gsr.libunified.app.tools.DeviceTools
 
+/**
+ * Legacy Navigation Manager using string-based routing and reflection.
+ * 
+ * WARNING: This class uses Class.forName() for dynamic class loading which is an anti-pattern.
+ * Reasons for current implementation:
+ * - Module separation: libunified cannot directly reference app module classes
+ * - String-based routing allows decoupling between modules
+ * 
+ * RECOMMENDED: Use UnifiedNavigation with Compose Navigation instead.
+ * See: app/src/main/java/mpdc4gsr/compose/navigation/UnifiedNavigation.kt
+ * 
+ * TODO: Refactor to use a proper dependency injection or service locator pattern
+ * that doesn't require reflection. Consider:
+ * 1. Navigation component with deep links
+ * 2. Router interface with module-specific implementations
+ * 3. Centralized activity registry without reflection
+ * 
+ * @deprecated Use UnifiedNavigation with Compose Navigation for new code
+ */
+@Deprecated(
+    message = "Use UnifiedNavigation with Compose Navigation instead",
+    replaceWith = ReplaceWith("UnifiedNavHost()", "mpdc4gsr.compose.navigation.UnifiedNavHost")
+)
 object NavigationManager {
 
 
@@ -198,11 +222,23 @@ object NavigationManager {
             .navigation(activity, 101)
     }
 
+    /**
+     * Get activity class by name using reflection.
+     * 
+     * WARNING: This method uses Class.forName() which is an anti-pattern.
+     * It's kept for backward compatibility with the string-based routing system.
+     * 
+     * @param className Fully qualified class name
+     * @return Class object for the activity
+     * @throws IllegalArgumentException if the class is not found
+     */
     private fun getClassByName(className: String): Class<*> {
         return try {
+            Log.d("NavigationManager", "Loading class via reflection: $className")
             Class.forName(className)
         } catch (e: ClassNotFoundException) {
-            throw IllegalArgumentException("Activity class not found: $className", e)
+            Log.e("NavigationManager", "Activity class not found: $className", e)
+            throw IllegalArgumentException("Activity class not found: $className. Consider using UnifiedNavigation instead.", e)
         }
     }
 }
