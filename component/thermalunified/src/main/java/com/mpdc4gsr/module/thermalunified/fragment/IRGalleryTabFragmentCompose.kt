@@ -330,7 +330,9 @@ class IRGalleryTabFragmentCompose : BaseComposeFragment<IRGalleryTabViewModel>()
 
     private fun getDirTypeDisplayName(dirType: DirType): String = when (dirType) {
         DirType.LINE -> "LINE Device"
-        DirType.TS004 -> "TS004 Device"
+        DirType.TS004_LOCALE -> "TS004 Local"
+        DirType.TS004_REMOTE -> "TS004 Remote"
+        DirType.TC007 -> "TC007 Device"
         else -> "All Devices"
     }
 }

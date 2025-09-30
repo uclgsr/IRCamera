@@ -94,6 +94,12 @@ class IRMonitorLiteViewModel : ViewModel() {
         temperatureSum = 0f
     }
 
+    fun setRegionMode(mode: String) {
+        // Implementation for setting region mode
+        // This would typically control measurement region configuration
+        // For now, just a placeholder implementation
+    }
+
     private fun simulateDeviceConnection() {
         viewModelScope.launch {
             _deviceConnectionState.value = DeviceConnectionState.CONNECTING
