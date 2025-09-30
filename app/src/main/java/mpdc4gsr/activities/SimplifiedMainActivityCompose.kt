@@ -62,7 +62,7 @@ data class PermissionStatus(
     val description: String
 )
 
-class SimplifiedMainViewModel : BaseViewModel() {
+class SimplifiedMainActivityViewModel : BaseViewModel() {
     private val _isRecording = mutableStateOf(false)
     val isRecording: State<Boolean> = _isRecording
 
@@ -186,7 +186,7 @@ class SimplifiedMainViewModel : BaseViewModel() {
     }
 }
 
-class SimplifiedMainActivityCompose : BaseComposeActivity<SimplifiedMainViewModel>() {
+class SimplifiedMainActivityCompose : BaseComposeActivity<SimplifiedMainActivityViewModel>() {
 
     private val requiredPermissions = arrayOf(
         Manifest.permission.CAMERA,
@@ -201,11 +201,11 @@ class SimplifiedMainActivityCompose : BaseComposeActivity<SimplifiedMainViewMode
     private val permissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
-        viewModels<SimplifiedMainViewModel>().value.updatePermissionStatuses(permissions)
+        viewModels<SimplifiedMainActivityViewModel>().value.updatePermissionStatuses(permissions)
     }
 
-    override fun createViewModel(): SimplifiedMainViewModel =
-        viewModels<SimplifiedMainViewModel>().value
+    override fun createViewModel(): SimplifiedMainActivityViewModel =
+        viewModels<SimplifiedMainActivityViewModel>().value
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -215,7 +215,7 @@ class SimplifiedMainActivityCompose : BaseComposeActivity<SimplifiedMainViewMode
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    override fun Content(viewModel: SimplifiedMainViewModel) {
+    override fun Content(viewModel: SimplifiedMainActivityViewModel) {
         IRCameraTheme {
             val context = LocalContext.current
             val isRecording by viewModel.isRecording

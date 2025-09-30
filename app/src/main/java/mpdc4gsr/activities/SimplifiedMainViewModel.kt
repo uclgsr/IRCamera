@@ -340,3 +340,26 @@ class SimplifiedMainViewModel : BaseViewModel() {
         recordingTimerJob?.cancel()
     }
 }
+
+// Data classes for SimplifiedMainViewModel
+data class SystemStatus(
+    val overallHealth: HealthStatus,
+    val isRecording: Boolean
+)
+
+data class ConnectionStatus(
+    val thermalCameraConnected: Boolean,
+    val gsrSensorConnected: Boolean
+)
+
+data class RecentSession(
+    val id: String,
+    val name: String,
+    val date: String
+)
+
+enum class HealthStatus(val displayName: String) {
+    HEALTHY("Healthy"),
+    WARNING("Warning"),
+    ERROR("Error")
+}

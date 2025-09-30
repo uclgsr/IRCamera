@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
  */
 class BlankDevViewModel : BaseViewModel() {
 
-    data class UiState(
+    data class BlankDevUiState(
         val isLoading: Boolean = false,
         val error: String? = null,
         val hasUsbPermission: Boolean = false,
@@ -31,14 +31,14 @@ class BlankDevViewModel : BaseViewModel() {
         val navigationCountdown: Int? = null
     )
 
-    private val _uiState = MutableStateFlow(UiState())
-    val uiState: StateFlow<UiState> = _uiState.asStateFlow()
+    private val _blankDevUiState = MutableStateFlow(BlankDevUiState())
+    val blankDevUiState: StateFlow<BlankDevUiState> = _blankDevUiState.asStateFlow()
 
     // private val usbManager = application.getSystemService(Context.USB_SERVICE) as UsbManager
     private var countdownJob: Job? = null
 
     companion object {
-        private const val ACTION_USB_PERMISSION = "mpdc4gsr.USB_PERMISSION"
+        const val ACTION_USB_PERMISSION = "mpdc4gsr.USB_PERMISSION"
         private const val AUTO_NAVIGATE_DELAY = 10 // seconds
     }
 
@@ -52,7 +52,7 @@ class BlankDevViewModel : BaseViewModel() {
      */
     fun refreshUsbDevices() {
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isLoading = true, error = null)
+            _blankDevUiState.value = _blankDevUiState.value.copy(isLoading = true, error = null)
 
             try {
                 // val deviceList = usbManager.deviceList
@@ -75,7 +75,7 @@ class BlankDevViewModel : BaseViewModel() {
                 //     }
                 // }
 
-                _uiState.value = _uiState.value.copy(
+                _blankDevUiState.value = _blankDevUiState.value.copy(
                     isLoading = false,
                     connectedDevices = connectedDevices,
                     availableDevices = availableDevices,
@@ -83,7 +83,7 @@ class BlankDevViewModel : BaseViewModel() {
                 )
 
             } catch (e: Exception) {
-                _uiState.value = _uiState.value.copy(
+                _blankDevUiState.value = _blankDevUiState.value.copy(
                     isLoading = false,
                     error = "Failed to refresh USB devices: ${e.message}"
                 )
@@ -103,11 +103,11 @@ class BlankDevViewModel : BaseViewModel() {
                 //         requestPermissionForUsbDevice(usbDevice)
                 //     }
                 // }
-                _uiState.value = _uiState.value.copy(
+                _blankDevUiState.value = _blankDevUiState.value.copy(
                     error = "USB permissions functionality requires Activity context"
                 )
             } catch (e: Exception) {
-                _uiState.value = _uiState.value.copy(
+                _blankDevUiState.value = _blankDevUiState.value.copy(
                     error = "Failed to request USB permissions: ${e.message}"
                 )
             }
@@ -127,12 +127,12 @@ class BlankDevViewModel : BaseViewModel() {
                 // 
                 // usbDevice?.let { requestPermissionForUsbDevice(it) }
 
-                _uiState.value = _uiState.value.copy(
+                _blankDevUiState.value = _blankDevUiState.value.copy(
                     error = "Device permission request functionality requires Activity context"
                 )
 
             } catch (e: Exception) {
-                _uiState.value = _uiState.value.copy(
+                _blankDevUiState.value = _blankDevUiState.value.copy(
                     error = "Failed to request permission for device: ${e.message}"
                 )
             }
@@ -157,7 +157,7 @@ class BlankDevViewModel : BaseViewModel() {
                 refreshUsbDevices()
 
             } catch (e: Exception) {
-                _uiState.value = _uiState.value.copy(
+                _blankDevUiState.value = _blankDevUiState.value.copy(
                     error = "Failed to disconnect device: ${e.message}"
                 )
             }
@@ -193,11 +193,11 @@ class BlankDevViewModel : BaseViewModel() {
     fun handleUsbPermissionResult(device: UsbDevice, granted: Boolean) {
         viewModelScope.launch {
             if (granted) {
-                _uiState.value = _uiState.value.copy(
+                _blankDevUiState.value = _blankDevUiState.value.copy(
                     error = "USB permission granted for ${device.deviceName ?: "device"}"
                 )
             } else {
-                _uiState.value = _uiState.value.copy(
+                _blankDevUiState.value = _blankDevUiState.value.copy(
                     error = "USB permission denied for ${device.deviceName ?: "device"}"
                 )
             }
@@ -210,8 +210,8 @@ class BlankDevViewModel : BaseViewModel() {
      * Toggle auto-navigation to main
      */
     fun toggleAutoNavigation() {
-        val newAutoNavigate = !_uiState.value.autoNavigateToMain
-        _uiState.value = _uiState.value.copy(autoNavigateToMain = newAutoNavigate)
+        val newAutoNavigate = !_blankDevUiState.value.autoNavigateToMain
+        _blankDevUiState.value = _blankDevUiState.value.copy(autoNavigateToMain = newAutoNavigate)
 
         if (newAutoNavigate) {
             startAutoNavigationCountdown()
@@ -221,28 +221,28 @@ class BlankDevViewModel : BaseViewModel() {
     }
 
     /**
-     * Clear error message
+     * Clear BlankDev-specific error message
      */
-    fun clearError() {
-        _uiState.value = _uiState.value.copy(error = null)
+    fun clearBlankDevError() {
+        _blankDevUiState.value = _blankDevUiState.value.copy(error = null)
     }
 
     /**
      * Start auto-navigation countdown
      */
     private fun startAutoNavigationCountdown() {
-        if (!_uiState.value.autoNavigateToMain) return
+        if (!_blankDevUiState.value.autoNavigateToMain) return
 
         countdownJob?.cancel()
         countdownJob = viewModelScope.launch {
             for (i in AUTO_NAVIGATE_DELAY downTo 1) {
-                _uiState.value = _uiState.value.copy(navigationCountdown = i)
+                _blankDevUiState.value = _blankDevUiState.value.copy(navigationCountdown = i)
                 delay(1000)
             }
 
             // Auto-navigate would happen here in a real implementation
             // For now, just clear the countdown
-            _uiState.value = _uiState.value.copy(navigationCountdown = null)
+            _blankDevUiState.value = _blankDevUiState.value.copy(navigationCountdown = null)
         }
     }
 
@@ -251,7 +251,7 @@ class BlankDevViewModel : BaseViewModel() {
      */
     private fun stopAutoNavigationCountdown() {
         countdownJob?.cancel()
-        _uiState.value = _uiState.value.copy(navigationCountdown = null)
+        _blankDevUiState.value = _blankDevUiState.value.copy(navigationCountdown = null)
     }
 
     /**
@@ -301,9 +301,9 @@ class BlankDevViewModel : BaseViewModel() {
      */
     private fun isKnownSensorDevice(device: UsbDevice): Boolean {
         // Add known sensor device vendor/product IDs
-        val knownSensorDevices = listOf(
+        val knownSensorDevices = emptyList<Pair<Int, Int>>()
             // Add known sensor device IDs if any use USB
-        )
+        
 
         return knownSensorDevices.any { (vendorId, productId) ->
             device.vendorId == vendorId && device.productId == productId
