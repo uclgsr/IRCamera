@@ -177,7 +177,7 @@ private fun DrawScope.drawTrendChart(
         var isFirstPoint = true
         
         dataPoints.forEachIndexed { index, value ->
-            val x = padding + (chartWidth * index / (dataPoints.size - 1))
+            val x = if (dataPoints.size > 1) padding + (chartWidth * index / (dataPoints.size - 1)) else padding + chartWidth / 2f
             val normalizedValue = ((value - minValue) / valueRange).coerceIn(0f, 1f)
             val y = padding + chartHeight - (normalizedValue * chartHeight)
             
