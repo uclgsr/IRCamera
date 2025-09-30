@@ -360,6 +360,8 @@ private fun MainPlotCard(
 
 @Composable
 private fun GSRLineChart(modifier: Modifier = Modifier) {
+    val primaryColor = MaterialTheme.colorScheme.primary
+    val secondaryColor = MaterialTheme.colorScheme.secondary
     Canvas(
         modifier = modifier
             .background(
@@ -367,11 +369,11 @@ private fun GSRLineChart(modifier: Modifier = Modifier) {
                 RoundedCornerShape(8.dp)
             )
     ) {
-        drawGSRLineChart(this)
+        drawGSRLineChart(this, primaryColor, secondaryColor)
     }
 }
 
-private fun drawGSRLineChart(drawScope: DrawScope) {
+private fun drawGSRLineChart(drawScope: DrawScope, primaryColor: Color, secondaryColor: Color) {
     with(drawScope) {
         val width = size.width
         val height = size.height
@@ -410,7 +412,7 @@ private fun drawGSRLineChart(drawScope: DrawScope) {
         // Draw the GSR signal line
         drawPath(
             path = path,
-            color = Color(0xFF457B9D),
+            color = primaryColor,
             style = Stroke(width = 3f)
         )
 
@@ -420,7 +422,7 @@ private fun drawGSRLineChart(drawScope: DrawScope) {
             val y = height - padding - (value * (height - 2 * padding))
 
             drawCircle(
-                color = Color(0xFFFF6B35),
+                color = secondaryColor,
                 radius = 3f,
                 center = Offset(x, y)
             )
@@ -430,6 +432,7 @@ private fun drawGSRLineChart(drawScope: DrawScope) {
 
 @Composable
 private fun GSRScatterPlot(modifier: Modifier = Modifier) {
+    val primaryColor = MaterialTheme.colorScheme.primary
     Canvas(
         modifier = modifier
             .background(
@@ -437,11 +440,11 @@ private fun GSRScatterPlot(modifier: Modifier = Modifier) {
                 RoundedCornerShape(8.dp)
             )
     ) {
-        drawGSRScatterPlot(this)
+        drawGSRScatterPlot(this, primaryColor)
     }
 }
 
-private fun drawGSRScatterPlot(drawScope: DrawScope) {
+private fun drawGSRScatterPlot(drawScope: DrawScope, primaryColor: Color) {
     with(drawScope) {
         val width = size.width
         val height = size.height
@@ -473,7 +476,7 @@ private fun drawGSRScatterPlot(drawScope: DrawScope) {
             val radius = 3f + (value * 5f)
 
             drawCircle(
-                color = Color(0xFF457B9D).copy(alpha = 0.7f),
+                color = primaryColor.copy(alpha = 0.7f),
                 radius = radius,
                 center = Offset(x, y)
             )
@@ -483,6 +486,7 @@ private fun drawGSRScatterPlot(drawScope: DrawScope) {
 
 @Composable
 private fun GSRHistogram(modifier: Modifier = Modifier) {
+    val primaryColor = MaterialTheme.colorScheme.primary
     Canvas(
         modifier = modifier
             .background(
@@ -490,11 +494,11 @@ private fun GSRHistogram(modifier: Modifier = Modifier) {
                 RoundedCornerShape(8.dp)
             )
     ) {
-        drawGSRHistogram(this)
+        drawGSRHistogram(this, primaryColor)
     }
 }
 
-private fun drawGSRHistogram(drawScope: DrawScope) {
+private fun drawGSRHistogram(drawScope: DrawScope, primaryColor: Color) {
     with(drawScope) {
         val width = size.width
         val height = size.height
@@ -525,7 +529,7 @@ private fun drawGSRHistogram(drawScope: DrawScope) {
             val barHeight = value * (height - 2 * padding)
 
             drawRect(
-                color = Color(0xFF457B9D).copy(alpha = 0.8f),
+                color = primaryColor.copy(alpha = 0.8f),
                 topLeft = Offset(x, height - padding - barHeight),
                 size = androidx.compose.ui.geometry.Size(binWidth * 0.8f, barHeight)
             )
@@ -535,6 +539,7 @@ private fun drawGSRHistogram(drawScope: DrawScope) {
 
 @Composable
 private fun GSRHeatmap(modifier: Modifier = Modifier) {
+    val primaryColor = MaterialTheme.colorScheme.primary
     Canvas(
         modifier = modifier
             .background(
@@ -542,11 +547,11 @@ private fun GSRHeatmap(modifier: Modifier = Modifier) {
                 RoundedCornerShape(8.dp)
             )
     ) {
-        drawGSRHeatmap(this)
+        drawGSRHeatmap(this, primaryColor)
     }
 }
 
-private fun drawGSRHeatmap(drawScope: DrawScope) {
+private fun drawGSRHeatmap(drawScope: DrawScope, primaryColor: Color) {
     with(drawScope) {
         val width = size.width
         val height = size.height
@@ -557,7 +562,7 @@ private fun drawGSRHeatmap(drawScope: DrawScope) {
         for (row in 0 until rows) {
             for (col in 0 until cols) {
                 val intensity = (sin((row + col) * 0.3) + 1) / 2
-                val color = Color(0xFF457B9D).copy(alpha = intensity.toFloat())
+                val color = primaryColor.copy(alpha = intensity.toFloat())
 
                 drawRect(
                     color = color,
@@ -575,9 +580,9 @@ private fun PlotLegend() {
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-        LegendItem("GSR Signal", Color(0xFF457B9D))
-        LegendItem("Data Points", Color(0xFFFF6B35))
-        LegendItem("Threshold", Color(0xFFE63946))
+        LegendItem("GSR Signal", MaterialTheme.colorScheme.primary)
+        LegendItem("Data Points", MaterialTheme.colorScheme.secondary)
+        LegendItem("Threshold", MaterialTheme.colorScheme.tertiary)
     }
 }
 
