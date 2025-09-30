@@ -43,12 +43,13 @@ class GSRRawImageViewComposeActivity : BaseComposeActivity<GSRRawImageViewViewMo
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GSRRawImageViewScreen(
     viewModel: GSRRawImageViewViewModel = viewModel(),
     onNavigateBack: () -> Unit = {}
 ) {
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.imageViewState.collectAsState()
 
     Column(
         modifier = Modifier.fillMaxSize()
@@ -91,8 +92,9 @@ fun GSRRawImageViewScreen(
             }
 
             uiState.error != null -> {
+                val errorMessage = uiState.error ?: "Unknown error"
                 ErrorContent(
-                    error = uiState.error,
+                    error = errorMessage,
                     onRetry = { viewModel.loadImages() }
                 )
             }
