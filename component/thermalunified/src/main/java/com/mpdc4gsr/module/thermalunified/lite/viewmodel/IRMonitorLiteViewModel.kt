@@ -2,6 +2,7 @@ package com.mpdc4gsr.module.thermalunified.lite.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -11,12 +12,26 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.cos
 import kotlin.math.sin
+import kotlin.random.Random
 
 /**
  * ViewModel for IR Monitor Lite Fragment Compose
  * Manages the state for thermal monitoring in lite mode
  */
 class IRMonitorLiteViewModel : ViewModel() {
+
+    companion object {
+        // Temperature simulation constants
+        private const val BASE_TEMPERATURE = 25f
+        private const val SINE_FREQUENCY = 0.1
+        private const val SINE_AMPLITUDE = 5f
+        private const val COSINE_FREQUENCY = 0.05
+        private const val COSINE_AMPLITUDE = 2f
+        private const val NOISE_RANGE = 1f
+        private const val TEMP_VARIATION_RANGE = 3f
+        private const val SAMPLING_INTERVAL_MS = 1000L
+        private const val CONNECTION_DELAY_MS = 2000L
+    }
 
     // State flows for the fragment
     private val _monitoringState = MutableStateFlow(MonitoringState.INACTIVE)
@@ -35,6 +50,7 @@ class IRMonitorLiteViewModel : ViewModel() {
     private var startTime: Long = 0
     private var sampleCount: Int = 0
     private var temperatureSum: Float = 0f
+    private var monitoringJob: Job? = null
 
     init {
         // Initialize with simulated device connection
@@ -55,6 +71,9 @@ class IRMonitorLiteViewModel : ViewModel() {
             return
         }
 
+        // Cancel any existing monitoring job before starting a new one
+        monitoringJob?.cancel()
+        
         _monitoringState.value = MonitoringState.ACTIVE
         startTime = System.currentTimeMillis()
         sampleCount = 0
@@ -64,6 +83,7 @@ class IRMonitorLiteViewModel : ViewModel() {
     }
 
     fun stopMonitoring() {
+        monitoringJob?.cancel()
         _monitoringState.value = MonitoringState.INACTIVE
     }
 
@@ -77,22 +97,24 @@ class IRMonitorLiteViewModel : ViewModel() {
     private fun simulateDeviceConnection() {
         viewModelScope.launch {
             _deviceConnectionState.value = DeviceConnectionState.CONNECTING
-            delay(2000) // Simulate connection time
+            delay(CONNECTION_DELAY_MS)
             _deviceConnectionState.value = DeviceConnectionState.CONNECTED
         }
     }
 
     private fun startTemperatureMonitoring() {
-        viewModelScope.launch {
+        monitoringJob = viewModelScope.launch {
             var timeStep = 0
 
             while (_monitoringState.value == MonitoringState.ACTIVE) {
-                // Simulate temperature reading
-                val baseTemp = 25f + sin(timeStep * 0.1) * 5f + cos(timeStep * 0.05) * 2f
-                val noise = (-1f..1f).random()
+                // Simulate temperature reading with constants
+                val baseTemp = BASE_TEMPERATURE + 
+                    sin(timeStep * SINE_FREQUENCY) * SINE_AMPLITUDE + 
+                    cos(timeStep * COSINE_FREQUENCY) * COSINE_AMPLITUDE
+                val noise = Random.nextFloat() * (NOISE_RANGE * 2) - NOISE_RANGE
                 val currentTemp = baseTemp + noise
-                val maxTemp = currentTemp + (1f..3f).random()
-                val minTemp = currentTemp - (1f..3f).random()
+                val maxTemp = currentTemp + Random.nextFloat() * TEMP_VARIATION_RANGE
+                val minTemp = currentTemp - Random.nextFloat() * TEMP_VARIATION_RANGE
 
                 // Update temperature data
                 _temperatureData.value = TemperatureData(
@@ -116,7 +138,7 @@ class IRMonitorLiteViewModel : ViewModel() {
                 )
 
                 timeStep++
-                delay(1000) // Sample every second
+                delay(SAMPLING_INTERVAL_MS)
             }
         }
     }
@@ -135,6 +157,7 @@ class IRMonitorLiteViewModel : ViewModel() {
 
     override fun onCleared() {
         super.onCleared()
+        monitoringJob?.cancel()
         stopMonitoring()
     }
 }
@@ -168,7 +191,4 @@ enum class MonitoringState {
     INACTIVE, ACTIVE, ERROR
 }
 
-// Helper extension for range generation
-private fun ClosedRange<Float>.random(): Float {
-    return start + (Math.random() * (endInclusive - start)).toFloat()
-}
+// Remove the helper extension as we're now using kotlin.random.Random

@@ -42,6 +42,8 @@ class IRMonitorLiteFragmentCompose : BaseComposeFragment<IRMonitorLiteViewModel>
 
     private val viewModel: IRMonitorLiteViewModel by viewModels()
 
+    // Note: This method is required by BaseComposeFragment architecture
+    // Consider base class simplification to eliminate this redundancy
     override fun createViewModel(): IRMonitorLiteViewModel {
         return viewModel
     }
