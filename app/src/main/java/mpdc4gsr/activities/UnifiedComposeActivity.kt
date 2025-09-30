@@ -4,7 +4,7 @@ import androidx.activity.viewModels
 import androidx.compose.runtime.Composable
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
-import mpdc4gsr.compose.navigation.UnifiedNavHost
+import mpdc4gsr.core.ui.navigation.UnifiedNavHost
 
 /**
  * Unified Compose Activity - Modern Navigation Entry Point

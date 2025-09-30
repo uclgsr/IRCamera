@@ -6,6 +6,7 @@ package mpdc4gsr.compose.navigation
  * while new code uses the core.ui.navigation package
  */
 
-// Type aliases for backward compatibility
-typealias UnifiedNavHost = mpdc4gsr.core.ui.navigation.UnifiedNavHost
-typealias UnifiedRoute = mpdc4gsr.core.ui.navigation.UnifiedRoute
+// Import and re-export for backward compatibility
+import mpdc4gsr.core.ui.navigation.UnifiedNavHost
+import mpdc4gsr.core.ui.navigation.UnifiedRoute
+
