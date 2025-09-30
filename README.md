@@ -93,29 +93,25 @@ python run_evaluation.py
 
 ## Documentation
 
+### Essential Documentation
+
+- **[docs/consolidated/ARCHITECTURE_AND_UI.md](docs/consolidated/ARCHITECTURE_AND_UI.md)** - Complete system architecture and UI reference
+- **[docs/consolidated/IMPLEMENTATION_STATUS.md](docs/consolidated/IMPLEMENTATION_STATUS.md)** - Implementation history and current status
+- **[docs/consolidated/TESTING_GUIDE.md](docs/consolidated/TESTING_GUIDE.md)** - Comprehensive testing procedures and validation
+- **[docs/consolidated/COMPOSE_MIGRATION.md](docs/consolidated/COMPOSE_MIGRATION.md)** - Jetpack Compose migration details
+
 ### Quick Navigation
 
-- **[DOCUMENTATION_INDEX.md](DOCUMENTATION_INDEX.md)** - Master index to all documentation
-- **[COMPREHENSIVE_TESTING_GUIDE.md](COMPREHENSIVE_TESTING_GUIDE.md)** - Complete testing and
-  validation guide
-- **[pc-controller/README.md](pc-controller/README.md)** - Desktop application setup and usage
+- **[BACKLOG.md](BACKLOG.md)** - Current development priorities and roadmap
+- **[pc-controller/README.md](pc-controller/README.md)** - Desktop controller setup and usage
+- **[MVVM_MODERNIZATION_GUIDE.md](MVVM_MODERNIZATION_GUIDE.md)** - MVVM architecture patterns
 
-### Implementation Status
+### Additional Resources
 
-- **[DELIVERY_STATUS.md](DELIVERY_STATUS.md)** - Complete implementation summary and achievements
-- **[testing-suite/TESTING_RESULTS_SUMMARY.md](testing-suite/TESTING_RESULTS_SUMMARY.md)** -
-  Consolidated testing
-  results and validation
-- **[BACKLOG.md](BACKLOG.md)** - Current development status and roadmap
-
-### System Architecture
-
-- **[docs/COMPREHENSIVE_ARCHITECTURE_DIAGRAMS.md](docs/COMPREHENSIVE_ARCHITECTURE_DIAGRAMS.md)** -
-  Complete system
-  design overview
+- **[docs/COMPREHENSIVE_ARCHITECTURE_DIAGRAMS.md](docs/COMPREHENSIVE_ARCHITECTURE_DIAGRAMS.md)** - Detailed system diagrams
 - **[docs/thesis-diagrams/](docs/thesis-diagrams/)** - Generated figures and tables for thesis
-- **[docs/BACKGROUND_DEVICE_SCANNING.md](docs/BACKGROUND_DEVICE_SCANNING.md)** - BLE device
-  discovery implementation
+- **[docs/BACKGROUND_DEVICE_SCANNING.md](docs/BACKGROUND_DEVICE_SCANNING.md)** - BLE implementation details
+- **[testing-suite/](testing-suite/)** - Test framework and results
 
 ## Development Status
 
