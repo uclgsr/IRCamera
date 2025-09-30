@@ -116,17 +116,17 @@ object ViewModelStateBridge {
         minTempLiveData: LiveData<Float>,
         isRecordingLiveData: LiveData<Boolean>
     ): State<ComposeThermalData?> {
-        val centerTemp by centerTempLiveData.observeAsState(0f)
-        val maxTemp by maxTempLiveData.observeAsState(0f)
-        val minTemp by minTempLiveData.observeAsState(0f)
-        val isRecording by isRecordingLiveData.observeAsState(false)
+        val centerTemp = centerTempLiveData.observeAsState(0f)
+        val maxTemp = maxTempLiveData.observeAsState(0f)
+        val minTemp = minTempLiveData.observeAsState(0f)
+        val isRecording = isRecordingLiveData.observeAsState(false)
 
         return androidx.compose.runtime.derivedStateOf {
             ComposeThermalData.fromExistingData(
-                center = centerTemp,
-                max = maxTemp,
-                min = minTemp,
-                recording = isRecording
+                center = centerTemp.value,
+                max = maxTemp.value,
+                min = minTemp.value,
+                recording = isRecording.value
             )
         }
     }
@@ -140,15 +140,15 @@ object ViewModelStateBridge {
         batteryLevelFlow: StateFlow<Int>,
         connectionStateFlow: StateFlow<Boolean>
     ): State<ComposeGSRData> {
-        val currentValue by currentValueFlow.collectAsState()
-        val batteryLevel by batteryLevelFlow.collectAsState()
-        val isConnected by connectionStateFlow.collectAsState()
+        val currentValue = currentValueFlow.collectAsState()
+        val batteryLevel = batteryLevelFlow.collectAsState()
+        val isConnected = connectionStateFlow.collectAsState()
 
         return androidx.compose.runtime.derivedStateOf {
             ComposeGSRData.fromShimmerData(
-                value = currentValue,
-                battery = batteryLevel,
-                connected = isConnected
+                value = currentValue.value,
+                battery = batteryLevel.value,
+                connected = isConnected.value
             )
         }
     }

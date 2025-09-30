@@ -110,7 +110,7 @@ fun SessionExportScreen(
 
 @Composable
 private fun ExportContent(
-    uiState: SessionExportViewModel.UiState,
+    uiState: SessionExportViewModel.SessionExportState,
     onSessionToggle: (GSRSession) -> Unit,
     onExportFormatChange: (ExportFormat) -> Unit,
     onExportDestinationChange: (ExportDestination) -> Unit,

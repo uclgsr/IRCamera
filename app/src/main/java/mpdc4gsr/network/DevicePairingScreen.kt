@@ -31,7 +31,7 @@ fun DevicePairingScreen(
     val pairingState by viewModel.pairingScreenState.collectAsStateWithLifecycle()
     val discoveredControllers by viewModel.discoveredControllers.collectAsStateWithLifecycle()
     val connectedController by viewModel.connectedController.collectAsStateWithLifecycle()
-    val connectionState by viewModel.connectionState.collectAsStateWithLifecycle()
+    val connectionState by viewModel.pairingConnectionState.collectAsStateWithLifecycle()
     val statusMessage by viewModel.statusMessage.collectAsStateWithLifecycle()
 
     // Handle one-time events

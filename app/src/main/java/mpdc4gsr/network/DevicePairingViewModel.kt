@@ -28,8 +28,8 @@ class DevicePairingViewModel : BaseViewModel(), NetworkClient.NetworkEventListen
     val connectedController: StateFlow<NetworkClient.ControllerInfo?> =
         _connectedController.asStateFlow()
 
-    private val _connectionState = MutableStateFlow(ConnectionState.DISCONNECTED)
-    val connectionState: StateFlow<ConnectionState> = _connectionState.asStateFlow()
+    private val _pairingConnectionState = MutableStateFlow(ConnectionState.DISCONNECTED)
+    val pairingConnectionState: StateFlow<ConnectionState> = _pairingConnectionState.asStateFlow()
 
     private val _scanState = MutableStateFlow(ScanState.IDLE)
     val scanState: StateFlow<ScanState> = _scanState.asStateFlow()
@@ -100,7 +100,7 @@ class DevicePairingViewModel : BaseViewModel(), NetworkClient.NetworkEventListen
         viewModelScope.launch {
             combine(
                 _scanState,
-                _connectionState,
+                _pairingConnectionState,
                 _discoveredControllers
             ) { scanState, connectionState, controllers ->
                 PairingScreenState(
@@ -122,7 +122,7 @@ class DevicePairingViewModel : BaseViewModel(), NetworkClient.NetworkEventListen
             networkClient = NetworkClient(context)
             networkClient.setEventListener(this@DevicePairingViewModel)
 
-            _connectionState.value = ConnectionState.DISCONNECTED
+            _pairingConnectionState.value = ConnectionState.DISCONNECTED
             _scanState.value = ScanState.IDLE
             _statusMessage.value = "Ready to scan for PC Controllers"
             _discoveredControllers.value = emptyList()
@@ -178,13 +178,13 @@ class DevicePairingViewModel : BaseViewModel(), NetworkClient.NetworkEventListen
 
     fun connectToController(controller: NetworkClient.ControllerInfo) {
         launchWithLoading {
-            val currentConnectionState = _connectionState.value
+            val currentConnectionState = _pairingConnectionState.value
             if (currentConnectionState == ConnectionState.CONNECTING) {
                 return@launchWithLoading // Already connecting
             }
 
             try {
-                _connectionState.value = ConnectionState.CONNECTING
+                _pairingConnectionState.value = ConnectionState.CONNECTING
                 _statusMessage.value = "Connecting to ${controller.deviceName}..."
 
                 // Show connection dialog
@@ -197,17 +197,17 @@ class DevicePairingViewModel : BaseViewModel(), NetworkClient.NetworkEventListen
 
                 if (success) {
                     _connectedController.value = controller
-                    _connectionState.value = ConnectionState.CONNECTED
+                    _pairingConnectionState.value = ConnectionState.CONNECTED
                     _statusMessage.value = "Connected to ${controller.deviceName}"
                     _events.emit(PairingEvent.ShowSuccess("Successfully connected to ${controller.deviceName}"))
                 } else {
-                    _connectionState.value = ConnectionState.CONNECTION_FAILED
+                    _pairingConnectionState.value = ConnectionState.CONNECTION_FAILED
                     _statusMessage.value = "Failed to connect to ${controller.deviceName}"
                     _events.emit(PairingEvent.ShowError("Connection failed"))
                 }
 
             } catch (e: Exception) {
-                _connectionState.value = ConnectionState.CONNECTION_FAILED
+                _pairingConnectionState.value = ConnectionState.CONNECTION_FAILED
                 _statusMessage.value = "Connection error: ${e.message}"
                 _events.emit(PairingEvent.ShowError("Connection error: ${e.message}"))
             }
@@ -221,7 +221,7 @@ class DevicePairingViewModel : BaseViewModel(), NetworkClient.NetworkEventListen
                 try {
                     networkClient.disconnect()
                     _connectedController.value = null
-                    _connectionState.value = ConnectionState.DISCONNECTED
+                    _pairingConnectionState.value = ConnectionState.DISCONNECTED
                     _statusMessage.value = "Disconnected from ${currentController.deviceName}"
                     _events.emit(PairingEvent.ShowSuccess("Disconnected successfully"))
                 } catch (e: Exception) {
@@ -243,7 +243,7 @@ class DevicePairingViewModel : BaseViewModel(), NetworkClient.NetworkEventListen
     fun startSession(sessionInfo: SessionInfo) {
         launchWithErrorHandling {
             val currentController = _connectedController.value
-            if (currentController != null && _connectionState.value == ConnectionState.CONNECTED) {
+            if (currentController != null && _pairingConnectionState.value == ConnectionState.CONNECTED) {
                 // Navigate to session directly - NetworkClient handles data streaming
                 _events.emit(PairingEvent.NavigateToSession(sessionInfo))
             } else {
@@ -266,7 +266,7 @@ class DevicePairingViewModel : BaseViewModel(), NetworkClient.NetworkEventListen
     override fun onConnected(controller: NetworkClient.ControllerInfo) {
         viewModelScope.launch {
             _connectedController.value = controller
-            _connectionState.value = ConnectionState.CONNECTED
+            _pairingConnectionState.value = ConnectionState.CONNECTED
             _statusMessage.value = "Connected to ${controller.deviceName}"
             _events.emit(PairingEvent.ShowSuccess("Connection established"))
         }
@@ -275,7 +275,7 @@ class DevicePairingViewModel : BaseViewModel(), NetworkClient.NetworkEventListen
     override fun onDisconnected(reason: String) {
         viewModelScope.launch {
             _connectedController.value = null
-            _connectionState.value = ConnectionState.DISCONNECTED
+            _pairingConnectionState.value = ConnectionState.DISCONNECTED
             _statusMessage.value = "Connection lost: $reason"
             _events.emit(PairingEvent.ShowError("Connection lost: $reason"))
         }
