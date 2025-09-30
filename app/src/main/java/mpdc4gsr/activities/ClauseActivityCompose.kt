@@ -57,13 +57,13 @@ class ClauseViewModel : BaseViewModel() {
 
             // Initialize app components
             if (BaseApplication.instance.isDomestic()) {
-                SharedManager.setAppName(context.getString(R.string.app_name))
-                SharedManager.setVersionName(UnifiedVersionUtils.getVersion())
+                // SharedManager.setAppName(context.getString(R.string.app_name))
+                // SharedManager.setVersionName(UnifiedVersionUtils.getVersion())
 
                 // Set network status
                 val networkStatus =
-                    if (NetworkUtil.isNetworkAvailable(context)) "Connected" else "Disconnected"
-                SharedManager.setNetworkStatus(networkStatus)
+                    if (NetworkUtil.isNetworkAvailable()) "Connected" else "Disconnected"
+                // SharedManager.setNetworkStatus(networkStatus)
             }
 
             _isLoading.value = false
@@ -77,7 +77,7 @@ class ClauseViewModel : BaseViewModel() {
 
 class ClauseActivityCompose : BaseComposeActivity<ClauseViewModel>() {
 
-    override fun createViewModel(): ClauseViewModel = viewModels<ClauseViewModel>().value
+    override fun createViewModel(): ClauseViewModel = ClauseViewModel()
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
