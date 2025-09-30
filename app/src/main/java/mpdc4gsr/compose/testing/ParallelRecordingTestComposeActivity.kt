@@ -560,7 +560,12 @@ private suspend fun stopRecording(
     private suspend fun testSynchronizedStart() {
         Log.d(TAG, "Testing synchronized start")
         try {
-            startParallelRecording()
+            val sensorStatuses = listOf(
+                SensorStatus(sensorName = "GSR Sensor"),
+                SensorStatus(sensorName = "Thermal Camera"),
+                SensorStatus(sensorName = "RGB Camera")
+            )
+            startParallelRecording(sensorStatuses)
             delay(2000)
             Log.d(TAG, "Synchronized start test completed")
         } catch (e: Exception) {
@@ -601,7 +606,12 @@ private suspend fun stopRecording(
     private suspend fun testSynchronizedStop() {
         Log.d(TAG, "Testing synchronized stop")
         try {
-            stopParallelRecording()
+            val sensorStatuses = listOf(
+                SensorStatus(sensorName = "GSR Sensor", isRecording = true),
+                SensorStatus(sensorName = "Thermal Camera", isRecording = true),
+                SensorStatus(sensorName = "RGB Camera", isRecording = true)
+            )
+            stopParallelRecording(sensorStatuses)
             delay(2000)
             Log.d(TAG, "Synchronized stop test completed")
         } catch (e: Exception) {
