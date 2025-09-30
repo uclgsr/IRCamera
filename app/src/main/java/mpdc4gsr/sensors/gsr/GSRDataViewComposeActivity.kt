@@ -120,7 +120,7 @@ private fun GSRDataViewContent(
         DataInfoCard(filePath = filePath, sessionId = sessionId)
 
         // Tab Selection
-        ScrollableTabRow(
+        PrimaryScrollableTabRow(
             selectedTabIndex = selectedTab,
             modifier = Modifier.fillMaxWidth()
         ) {

@@ -273,6 +273,7 @@ class CertificateManager(
     }
 
     private fun startCertificateRotationMonitoring() {
+        @OptIn(kotlinx.coroutines.DelicateCoroutinesApi::class)
         GlobalScope.launch {
             while (true) {
                 try {

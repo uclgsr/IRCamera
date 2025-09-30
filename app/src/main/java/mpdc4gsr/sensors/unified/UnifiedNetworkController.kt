@@ -135,7 +135,9 @@ class UnifiedNetworkController(
             isDiscovering.set(true)
             discoveredControllers.clear()
 
+            @Suppress("DEPRECATION")
             val wifiInfo = wifiManager.connectionInfo
+            @Suppress("DEPRECATION")
             val ipAddress = wifiInfo.ipAddress
             val inetAddress = InetAddress.getByAddress(
                 byteArrayOf(
@@ -349,6 +351,7 @@ class UnifiedNetworkController(
     }
 
     fun getNetworkMetrics(): Map<String, Any> {
+        @Suppress("DEPRECATION")
         val wifiInfo = wifiManager.connectionInfo
 
         return mapOf(
@@ -541,6 +544,7 @@ class UnifiedNetworkController(
 
     private fun updateWifiSignalStrength() {
         try {
+            @Suppress("DEPRECATION")
             val wifiInfo = wifiManager.connectionInfo
             _wifiSignalStrength.value = wifiInfo.rssi
         } catch (e: Exception) {
