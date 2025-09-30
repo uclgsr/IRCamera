@@ -400,7 +400,6 @@ class DevicePairingActivityCompose : BaseComposeActivity<DevicePairingViewModel>
         }
 
         @Composable
-        @Composable
         fun DiscoveredDevicesCard(
             controllers: List<NetworkClient.ControllerInfo>,
             onControllerClick: (NetworkClient.ControllerInfo) -> Unit
