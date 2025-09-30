@@ -43,7 +43,7 @@ fun SimplifiedMainScreen(
     viewModel: SimplifiedMainViewModel = viewModel(),
     onNavigateBack: () -> Unit = {}
 ) {
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.viewState.collectAsState()
     val scrollState = rememberScrollState()
 
     Column(
@@ -120,7 +120,7 @@ fun SimplifiedMainScreen(
             uiState.error?.let { error ->
                 ErrorCard(
                     error = error,
-                    onDismiss = { viewModel.clearError() }
+                    onDismiss = { viewModel.clearViewError() }
                 )
             }
         }

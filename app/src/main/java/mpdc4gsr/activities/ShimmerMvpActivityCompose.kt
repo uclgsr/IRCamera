@@ -256,7 +256,7 @@ class ShimmerMvpActivityCompose : BaseComposeActivity<ShimmerMvpViewModel>() {
     override fun Content(viewModel: ShimmerMvpViewModel) {
         IRCameraTheme {
             val context = LocalContext.current
-            val connectionState by viewModel.connectionState
+            val connectionState by viewModel.shimmerConnectionState
             val availableDevices by viewModel.availableDevices
             val connectedDevice by viewModel.connectedDevice
             val gsrData by viewModel.gsrData

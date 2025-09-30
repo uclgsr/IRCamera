@@ -44,7 +44,7 @@ class WebViewViewModel : BaseViewModel() {
         _url.value = url
     }
 
-    fun setLoading(loading: Boolean) {
+    fun setWebViewLoading(loading: Boolean) {
         _isLoading.value = loading
     }
 
@@ -96,13 +96,13 @@ class WebViewActivityCompose : BaseComposeActivity<WebViewViewModel>() {
                     if (url.isNotEmpty()) {
                         ComposeWebView(
                             url = url,
-                            onLoadStart = { viewModel.setLoading(true) },
+                            onLoadStart = { viewModel.setWebViewLoading(true) },
                             onLoadFinish = {
-                                viewModel.setLoading(false)
+                                viewModel.setWebViewLoading(false)
                                 viewModel.setError(false)
                             },
                             onError = {
-                                viewModel.setLoading(false)
+                                viewModel.setWebViewLoading(false)
                                 viewModel.setError(true)
                             },
                             onReload = { viewModel.reload() }
