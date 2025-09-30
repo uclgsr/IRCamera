@@ -137,15 +137,15 @@ fun MainApp() {
                 onNavigateToGSRSettings = { navController.navigate("gsr_settings") },
                 onNavigateToThermalSettings = { navController.navigate("thermal_settings") },
                 onNavigateToCameraSettings = { navController.navigate("camera_settings") },
-                onNavigateToRecordingSettings = { /* TODO: Add recording settings screen */ },
-                onNavigateToStorageSettings = { /* TODO: Add storage settings screen */ },
-                onNavigateToSyncSettings = { /* TODO: Add sync settings screen */ },
-                onNavigateToCalibration = { /* TODO: Add calibration screen */ },
-                onNavigateToNetworkSettings = { /* TODO: Add network settings screen */ },
-                onNavigateToDiagnostics = { /* TODO: Add diagnostics screen */ },
-                onNavigateToAppInfo = { /* TODO: Add app info screen */ },
-                onNavigateToPrivacyPolicy = { /* TODO: Add privacy policy screen */ },
-                onNavigateToHelp = { /* TODO: Add help screen */ }
+                onNavigateToRecordingSettings = { navController.navigate("recording_settings") },
+                onNavigateToStorageSettings = { navController.navigate("storage_settings") },
+                onNavigateToSyncSettings = { navController.navigate("sync_settings") },
+                onNavigateToCalibration = { navController.navigate("calibration") },
+                onNavigateToNetworkSettings = { navController.navigate("network_settings") },
+                onNavigateToDiagnostics = { navController.navigate("diagnostics") },
+                onNavigateToAppInfo = { navController.navigate("app_info") },
+                onNavigateToPrivacyPolicy = { navController.navigate("privacy_policy") },
+                onNavigateToHelp = { navController.navigate("help") }
             )
         }
 
@@ -170,6 +170,60 @@ fun MainApp() {
 
         composable("thermal_settings") {
             ThermalSettingsScreen(
+                onBackClick = { navController.popBackStack() }
+            )
+        }
+
+        composable("recording_settings") {
+            RecordingSettingsScreen(
+                onBackClick = { navController.popBackStack() }
+            )
+        }
+
+        composable("storage_settings") {
+            StorageSettingsScreen(
+                onBackClick = { navController.popBackStack() }
+            )
+        }
+
+        composable("sync_settings") {
+            SyncSettingsScreen(
+                onBackClick = { navController.popBackStack() }
+            )
+        }
+
+        composable("calibration") {
+            CalibrationScreen(
+                onBackClick = { navController.popBackStack() }
+            )
+        }
+
+        composable("network_settings") {
+            NetworkSettingsScreen(
+                onBackClick = { navController.popBackStack() }
+            )
+        }
+
+        composable("diagnostics") {
+            DiagnosticsScreen(
+                onBackClick = { navController.popBackStack() }
+            )
+        }
+
+        composable("app_info") {
+            AppInfoScreen(
+                onBackClick = { navController.popBackStack() }
+            )
+        }
+
+        composable("privacy_policy") {
+            PrivacyPolicyScreen(
+                onBackClick = { navController.popBackStack() }
+            )
+        }
+
+        composable("help") {
+            HelpScreen(
                 onBackClick = { navController.popBackStack() }
             )
         }
