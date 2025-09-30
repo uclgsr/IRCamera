@@ -465,7 +465,6 @@ class DevicePairingActivityCompose : BaseComposeActivity<DevicePairingViewModel>
         }
 
         @Composable
-        @Composable
         fun DeviceItem(
             controller: NetworkClient.ControllerInfo,
             onClick: () -> Unit
