@@ -199,7 +199,13 @@ class CrossModalSyncTestComposeActivity : ComponentActivity() {
                     Button(
                         onClick = {
                             isTestRunning = true
-                            lifecycleScope.launch { runAllSyncTests() }
+                            lifecycleScope.launch {
+                                runAllSyncTests(
+                                    onSyncResults = { results -> syncResults = results },
+                                    onStatusUpdate = { status -> overallSyncStatus = status },
+                                    onComplete = { isTestRunning = false }
+                                )
+                            }
                         },
                         enabled = !isTestRunning,
                         modifier = Modifier.weight(1f)
@@ -323,7 +329,11 @@ class CrossModalSyncTestComposeActivity : ComponentActivity() {
         }
     }
 
-    private suspend fun runAllSyncTests() {
+    private suspend fun runAllSyncTests(
+        onSyncResults: (List<SyncResult>) -> Unit,
+        onStatusUpdate: (String) -> Unit,
+        onComplete: () -> Unit
+    ) {
         Log.i(TAG, "Starting comprehensive cross-modal sync tests")
 
         val newSyncResults = mutableListOf<SyncResult>()
@@ -349,17 +359,17 @@ class CrossModalSyncTestComposeActivity : ComponentActivity() {
             newSyncResults.add(tripleSync)
 
             // Update sync results
-            syncResults = newSyncResults
+            onSyncResults(newSyncResults)
 
             // Determine overall sync status
             val allSynced = newSyncResults.all { it.isSynchronized }
-            overallSyncStatus = if (allSynced) "Synchronized" else "Out of Sync"
+            onStatusUpdate(if (allSynced) "Synchronized" else "Out of Sync")
 
         } catch (e: Exception) {
             Log.e(TAG, "Sync tests failed: ${e.message}")
-            overallSyncStatus = "Test Failed"
+            onStatusUpdate("Test Failed")
         } finally {
-            isTestRunning = false
+            onComplete()
         }
     }
 

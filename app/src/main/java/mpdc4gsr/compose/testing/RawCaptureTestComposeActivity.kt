@@ -460,7 +460,7 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
 
     private fun initializeCamera() {
         try {
-            rgbCameraRecorder = RgbCameraRecorder(this)
+            rgbCameraRecorder = RgbCameraRecorder(this, this)
             Log.d(TAG, "RAW capture camera initialized successfully")
         } catch (e: Exception) {
             Log.e(TAG, "Failed to initialize camera: ${e.message}")

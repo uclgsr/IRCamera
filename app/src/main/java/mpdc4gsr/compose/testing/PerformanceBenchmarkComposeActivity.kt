@@ -10,6 +10,9 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -74,7 +77,7 @@ fun PerformanceBenchmarkScreen(
                 navigationIcon = {
                     IconButton(onClick = onBackPressed) {
                         Icon(
-                            imageVector = androidx.compose.material.icons.Icons.Default.ArrowBack,
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back"
                         )
                     }
@@ -82,7 +85,7 @@ fun PerformanceBenchmarkScreen(
                 actions = {
                     IconButton(onClick = { viewModel.exportResults() }) {
                         Icon(
-                            imageVector = androidx.compose.material.icons.Icons.Default.Share,
+                            imageVector = Icons.Default.Share,
                             contentDescription = "Export Results"
                         )
                     }
@@ -229,6 +232,9 @@ fun PerformanceChartCard(
     chartData: List<PerformanceDataPoint>,
     title: String
 ) {
+    val primaryColor = MaterialTheme.colorScheme.primary
+    val errorColor = MaterialTheme.colorScheme.error
+    
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
@@ -249,7 +255,7 @@ fun PerformanceChartCard(
                     .height(200.dp)
             ) {
                 if (chartData.isNotEmpty()) {
-                    drawPerformanceChart(chartData, size.width, size.height)
+                    drawPerformanceChart(chartData, size.width, size.height, primaryColor, errorColor)
                 }
             }
         }
@@ -259,7 +265,9 @@ fun PerformanceChartCard(
 fun DrawScope.drawPerformanceChart(
     data: List<PerformanceDataPoint>,
     width: Float,
-    height: Float
+    height: Float,
+    primaryColor: Color,
+    errorColor: Color
 ) {
     if (data.isEmpty()) return
 
@@ -280,7 +288,7 @@ fun DrawScope.drawPerformanceChart(
 
     drawPath(
         fpsPath,
-        MaterialTheme.colorScheme.primary,
+        primaryColor,
         style = androidx.compose.ui.graphics.drawscope.Stroke(width = 3.dp.toPx())
     )
 
@@ -296,7 +304,7 @@ fun DrawScope.drawPerformanceChart(
         }
     }
 
-    drawPath(memoryPath, Color.Red, style = androidx.compose.ui.graphics.drawscope.Stroke(width = 3.dp.toPx()))
+    drawPath(memoryPath, errorColor, style = androidx.compose.ui.graphics.drawscope.Stroke(width = 3.dp.toPx()))
 }
 
 @Composable

@@ -5,6 +5,11 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
+// Standard color constants for buttons and UI elements
+val Orange = Color(0xFFFF9800)
+val Green = Color(0xFF4CAF50)
+val Purple = Color(0xFF9C27B0)
+
 // Color scheme for IRCamera app - based on thermal imaging colors
 private val DarkColorScheme = darkColorScheme(
     primary = Color(0xFF6B73FF), // Blue-purple for thermal UI

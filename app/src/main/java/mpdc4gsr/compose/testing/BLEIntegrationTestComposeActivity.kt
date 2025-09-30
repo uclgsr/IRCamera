@@ -200,8 +200,8 @@ class BLEIntegrationTestComposeActivity : FragmentActivity() {
     private fun initializeRecorder() {
         try {
             // Initialize GSR recorder and device manager
-            gsrRecorder = UnifiedGSRRecorder(this)
-            deviceManager = ShimmerDeviceManager(this)
+            gsrRecorder = UnifiedGSRRecorder(this, this)
+            deviceManager = ShimmerDeviceManager(this, this)
             Log.d(TAG, "BLE components initialized successfully")
         } catch (e: Exception) {
             Log.e(TAG, "Failed to initialize BLE components: ${e.message}")
