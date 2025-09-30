@@ -161,7 +161,7 @@ class ShimmerMvpViewModel : BaseViewModel() {
     }
 
     private fun startDataSimulation() {
-        kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
+        viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
             while (_shimmerConnectionState.value == ShimmerConnectionState.CONNECTED) {
                 delay(50) // 20 Hz sampling rate
 
