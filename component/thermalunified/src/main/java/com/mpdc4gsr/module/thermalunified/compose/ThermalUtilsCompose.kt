@@ -1,7 +1,9 @@
 package com.mpdc4gsr.module.thermalunified.compose
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,6 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.mpdc4gsr.libunified.app.utils.UnifiedMathUtils
 import kotlin.math.roundToInt
 
 /**
@@ -40,7 +43,12 @@ fun TemperatureIndicator(
     modifier: Modifier = Modifier
 ) {
     val normalizedTemp = ((temperature - minTemp) / (maxTemp - minTemp)).coerceIn(0f, 1f)
-    val backgroundColor = Color.lerp(coldColor, hotColor, normalizedTemp)
+    val backgroundColor = Color(
+        UnifiedMathUtils.lerp(coldColor.red, hotColor.red, normalizedTemp),
+        UnifiedMathUtils.lerp(coldColor.green, hotColor.green, normalizedTemp),
+        UnifiedMathUtils.lerp(coldColor.blue, hotColor.blue, normalizedTemp),
+        UnifiedMathUtils.lerp(coldColor.alpha, hotColor.alpha, normalizedTemp)
+    )
     val textColor = if (normalizedTemp > 0.5f) Color.White else Color.Black
 
     Card(
@@ -120,9 +128,22 @@ fun ThermalGradientBar(
  */
 @Composable
 fun ThermalStatusIndicator(
-    status: ThermalStatus,
+    level: ThermalStatusLevel,
+    message: String,
     modifier: Modifier = Modifier
 ) {
+    val statusColor = when (level) {
+        ThermalStatusLevel.NORMAL -> Color.Green
+        ThermalStatusLevel.WARNING -> Color(0xFFFF9800) // Orange
+        ThermalStatusLevel.CRITICAL -> Color.Red
+    }
+    
+    val statusIcon = when (level) {
+        ThermalStatusLevel.NORMAL -> Icons.Default.CheckCircle
+        ThermalStatusLevel.WARNING -> Icons.Default.Warning
+        ThermalStatusLevel.CRITICAL -> Icons.Default.Error
+    }
+
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
@@ -132,18 +153,18 @@ fun ThermalStatusIndicator(
             modifier = Modifier
                 .size(12.dp)
                 .clip(CircleShape)
-                .background(status.color)
+                .background(statusColor)
         )
 
         Icon(
-            imageVector = status.icon,
-            contentDescription = status.text,
-            tint = status.color,
+            imageVector = statusIcon,
+            contentDescription = message,
+            tint = statusColor,
             modifier = Modifier.size(16.dp)
         )
 
         Text(
-            text = status.text,
+            text = message,
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurface
         )
@@ -219,7 +240,7 @@ fun ThermalToolbar(
             .padding(horizontal = 8.dp),
         horizontalArrangement = Arrangement.spacedBy(4.dp)
     ) {
-        ThermalTool.values().forEach { tool ->
+        ThermalTool.entries.forEach { tool ->
             val isSelected = selectedTool == tool
 
             FilterChip(
@@ -246,19 +267,6 @@ fun ThermalToolbar(
 }
 
 // Data classes and enums for the utilities
-
-enum class ThermalStatus(
-    val text: String,
-    val color: Color,
-    val icon: ImageVector
-) {
-    CONNECTED("Connected", Color.Green, Icons.Default.CheckCircle),
-    DISCONNECTED("Disconnected", Color.Red, Icons.Default.Error),
-    SCANNING("Scanning", Color.Blue, Icons.Default.Search),
-    CALIBRATING("Calibrating", Color.Orange, Icons.Default.Settings),
-    RECORDING("Recording", Color.Red, Icons.Default.FiberManualRecord),
-    READY("Ready", Color.Green, Icons.Default.Done)
-}
 
 enum class ThermalTool(
     val displayName: String,
@@ -304,9 +312,18 @@ fun ThermalUtilsComposePreview() {
 
         // Status indicators
         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-            ThermalStatus.values().forEach { status ->
-                ThermalStatusIndicator(status = status)
-            }
+            ThermalStatusIndicator(
+                level = ThermalStatusLevel.NORMAL,
+                message = "Connected"
+            )
+            ThermalStatusIndicator(
+                level = ThermalStatusLevel.WARNING,
+                message = "High Temperature"
+            )
+            ThermalStatusIndicator(
+                level = ThermalStatusLevel.CRITICAL,
+                message = "Critical Temperature"
+            )
         }
 
         // Measurement points
