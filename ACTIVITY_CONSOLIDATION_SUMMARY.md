@@ -143,7 +143,26 @@ Note: Some pre-existing compilation errors exist in other test activities (not r
 - `ACTIVITY_CONSOLIDATION_PLAN.md` - Planning document
 - `ACTIVITY_CONSOLIDATION_SUMMARY.md` - This file
 
+## Additional Findings: Compose Naming Convention Inconsistencies
+
+During consolidation, identified **two different naming patterns** for Compose activities:
+- **OLD Pattern**: `*ActivityCompose.kt` (24 files)
+- **NEW/CORRECT Pattern**: `*ComposeActivity.kt` (38 files)
+
+This includes **7 clear duplicates** where both patterns exist for the same functionality. See `COMPOSE_NAMING_VARIANTS.md` for detailed analysis.
+
+### Already Addressed
+- ✅ SimplifiedMainActivityCompose → SimplifiedMainComposeActivity
+- ✅ NetworkClientTestActivityCompose → NetworkClientTestComposeActivity
+- ✅ GSR activities consolidated to sensors/gsr/ with ComposeActivity pattern
+
+### Remaining Work (Future Consolidation)
+- [ ] 4 additional same-package duplicates
+- [ ] 4 cross-package duplicates (DevicePairing, DualModeCamera, SessionManager, MultiModalRecording)
+- [ ] Standardize remaining 20 *ActivityCompose files to *ComposeActivity pattern
+
 ## Related Documentation
 - `ACTIVITY_CONSOLIDATION_PLAN.md` - Original planning document
 - `COMPOSE_MODERNIZATION_SUMMARY.md` - Overall Compose migration context
 - `NAVIGATION_ARCHITECTURE_ANALYSIS.md` - Navigation system analysis
+- `COMPOSE_NAMING_VARIANTS.md` - Compose naming convention analysis (NEW)
