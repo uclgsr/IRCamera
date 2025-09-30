@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -53,7 +54,7 @@ fun ThermalGalleryScreen(
             onBackClick = onBackClick
         ) {
             TitleBarAction(
-                icon = if (viewMode == ViewMode.GRID) Icons.Default.List else Icons.Default.GridView,
+                icon = if (viewMode == ViewMode.GRID) Icons.AutoMirrored.Filled.List else Icons.Default.GridView,
                 contentDescription = "Toggle View Mode",
                 onClick = {
                     viewMode = if (viewMode == ViewMode.GRID) ViewMode.LIST else ViewMode.GRID
@@ -67,7 +68,7 @@ fun ThermalGalleryScreen(
         }
 
         // Tab Row
-        TabRow(
+        PrimaryTabRow(
             selectedTabIndex = selectedTab,
             containerColor = Color(0xFF2A2A2A),
             contentColor = Color.White

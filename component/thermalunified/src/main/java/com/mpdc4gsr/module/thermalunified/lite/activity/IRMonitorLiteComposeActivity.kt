@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -90,12 +91,12 @@ fun IRMonitorLiteScreen(
                 title = { Text("Thermal Monitor") },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 },
                 actions = {
                     IconButton(onClick = onNavigateToChart) {
-                        Icon(Icons.Default.ShowChart, contentDescription = "Show Chart")
+                        Icon(Icons.AutoMirrored.Filled.ShowChart, contentDescription = "Show Chart")
                     }
                     IconButton(onClick = { viewModel.toggleMonitoring() }) {
                         Icon(

@@ -472,7 +472,7 @@ class MonitorThermalFragmentCompose : BaseComposeFragment<MonitorThermalViewMode
                 }
 
                 item {
-                    Divider()
+                    HorizontalDivider()
                 }
 
                 item {
@@ -482,7 +482,7 @@ class MonitorThermalFragmentCompose : BaseComposeFragment<MonitorThermalViewMode
                 }
 
                 item {
-                    Divider()
+                    HorizontalDivider()
                 }
 
                 item {

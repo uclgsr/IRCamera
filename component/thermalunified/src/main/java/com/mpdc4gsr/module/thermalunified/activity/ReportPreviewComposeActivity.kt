@@ -8,6 +8,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -46,7 +47,7 @@ class ReportPreviewComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         },
                         navigationIcon = {
                             IconButton(onClick = { finish() }) {
-                                Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = Color.White)
+                                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = Color.White)
                             }
                         },
                         actions = {
@@ -123,7 +124,7 @@ class ReportPreviewComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             enabled = currentPage < totalPages
                         ) {
                             Icon(
-                                Icons.Default.NavigateNext,
+                                Icons.AutoMirrored.Filled.NavigateNext,
                                 contentDescription = "Next",
                                 tint = if (currentPage < totalPages) Color.White else Color(0xFF7D8590)
                             )

@@ -420,7 +420,7 @@ class IRMonitorCaptureFragmentCompose : BaseComposeFragment<IRMonitorCaptureView
                     )
                 }
 
-                Divider()
+                HorizontalDivider()
 
                 // Capture list
                 if (captureHistory.isEmpty()) {

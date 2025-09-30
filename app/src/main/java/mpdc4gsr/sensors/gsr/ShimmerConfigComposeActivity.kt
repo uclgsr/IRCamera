@@ -13,6 +13,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -68,7 +69,7 @@ class ShimmerConfigComposeActivity : BaseComposeActivity<ShimmerConfigViewModel>
                         },
                         navigationIcon = {
                             IconButton(onClick = { finish() }) {
-                                Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                             }
                         },
                         actions = {
@@ -79,7 +80,7 @@ class ShimmerConfigComposeActivity : BaseComposeActivity<ShimmerConfigViewModel>
                                 )
                             }
                             IconButton(onClick = { /* Help */ }) {
-                                Icon(Icons.Default.Help, contentDescription = "Help")
+                                Icon(Icons.AutoMirrored.Filled.Help, contentDescription = "Help")
                             }
                         }
                     )

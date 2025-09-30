@@ -8,6 +8,7 @@ import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -33,7 +34,7 @@ enum class SensorType(
     GSR("GSR Sensor", "Galvanic skin response via Shimmer3", Icons.Default.Sensors, true, true),
     AUDIO("Audio Recorder", "High-quality audio capture", Icons.Default.Mic, true, true),
     ACCELEROMETER("Accelerometer", "Motion and orientation sensor", Icons.Default.Speed, true),
-    GYROSCOPE("Gyroscope", "Angular velocity sensor", Icons.Default.RotateRight, true),
+    GYROSCOPE("Gyroscope", "Angular velocity sensor", Icons.AutoMirrored.Filled.RotateRight, true),
     MAGNETOMETER("Magnetometer", "Magnetic field sensor", Icons.Default.Explore, true),
     HEART_RATE("Heart Rate", "Optical heart rate monitor", Icons.Default.Favorite, false),
     TEMPERATURE("Temperature", "Ambient temperature sensor", Icons.Default.DeviceThermostat, true),

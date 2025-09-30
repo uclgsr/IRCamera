@@ -314,8 +314,7 @@ fun GSRDeviceStatusCard(
 
             if (deviceStatus == "Connected") {
                 Spacer(modifier = Modifier.height(12.dp))
-                LinearProgressIndicator(
-                    progress = signalQuality / 100f,
+                LinearProgressIndicator(progress = { signalQuality / 100f },
                     modifier = Modifier.fillMaxWidth(),
                     color = when {
                         signalQuality > 80 -> Color(0xFF4CAF50)

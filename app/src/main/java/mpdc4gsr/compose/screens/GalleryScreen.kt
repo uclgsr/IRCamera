@@ -56,7 +56,7 @@ fun GalleryScreen(
         }
 
         // Tab selector
-        TabRow(
+        PrimaryTabRow(
             selectedTabIndex = selectedTab,
             containerColor = Color(0xFF2A2A2A),
             contentColor = Color.White

@@ -1,11 +1,13 @@
 package mpdc4gsr.camera.core
 
+import android.content.Context
 import android.media.MediaRecorder
+import android.os.Build
 import android.util.Log
 import android.util.Size
 import java.io.File
 
-class VideoEngine {
+class VideoEngine(private val context: Context? = null) {
     companion object {
         private const val TAG = "VideoEngine"
     }
@@ -26,8 +28,12 @@ class VideoEngine {
         try {
             release()
 
-            mediaRecorder =
-                MediaRecorder().apply {
+            mediaRecorder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && context != null) {
+                MediaRecorder(context)
+            } else {
+                @Suppress("DEPRECATION")
+                MediaRecorder()
+            }.apply {
                     if (audioEnabled) {
                         setAudioSource(MediaRecorder.AudioSource.MIC)
                     }

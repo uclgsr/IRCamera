@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.Share
@@ -46,7 +47,7 @@ class IRCorrectionLiteFourComposeActivity : BaseComposeActivity<IRCorrectionLite
                         },
                         navigationIcon = {
                             IconButton(onClick = { finish() }) {
-                                Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = Color.White)
+                                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = Color.White)
                             }
                         },
                         colors = TopAppBarDefaults.topAppBarColors(
@@ -145,8 +146,7 @@ class IRCorrectionLiteFourComposeActivity : BaseComposeActivity<IRCorrectionLite
                         )
                     }
 
-                    LinearProgressIndicator(
-                        progress = qualityScore / 100f,
+                    LinearProgressIndicator(progress = { qualityScore / 100f },
                         modifier = Modifier.fillMaxWidth(),
                         color = when {
                             qualityScore >= 80 -> Color(0xFF4CAF50)

@@ -389,7 +389,7 @@ fun GuideStubsCompose(
         ) {
             // Progress indicator
             LinearProgressIndicator(
-                progress = (currentStep + 1f) / guideSteps.size,
+                progress = { (currentStep + 1f) / guideSteps.size },
                 modifier = Modifier.fillMaxWidth(),
                 color = MaterialTheme.colorScheme.primary
             )
