@@ -42,7 +42,6 @@ graph TB
     end
     
     subgraph "PC Controller Hub"
-        PCSimple[MVP Simple Controller<br/>mvp_simple.py]
         PCAdvanced[Advanced Controller<br/>advanced_pc_controller.py]
         UnifiedController[Unified Controller<br/>run_unified_controller.py]
         LegacyFramework[Legacy Framework<br/>ircamera_pc/]
@@ -61,11 +60,10 @@ graph TB
     MainApp --> GSRComponent
     MainApp --> UserComponent
     
-    MainApp -->|Network/WiFi| PCSimple
     MainApp -->|Network/WiFi| PCAdvanced
     MainApp -->|Network/WiFi| UnifiedController
     
-    PCSimple --> LocalFiles
+    PCAdvanced --> LocalFiles
     PCAdvanced --> LocalFiles
     UnifiedController --> LocalFiles
     PCAdvanced --> RemoteStorage
@@ -228,12 +226,6 @@ graph TB
 
 ```mermaid
 graph TB
-    subgraph "MVP Simple Controller"
-        MVPSimple[mvp_simple.py<br/>Single File Implementation<br/>Basic Hub Functionality]
-        SimpleServer[Simple TCP Server<br/>Device Communication]
-        SimpleLogger[Basic Logging<br/>Console Output]
-    end
-    
     subgraph "Advanced Controller"
         AdvancedMain[advanced_pc_controller.py<br/>Full Featured Controller]
         DeviceManager[Device Manager<br/>Multi-device Handling]
@@ -255,13 +247,10 @@ graph TB
     end
     
     subgraph "Supporting Tools"
-        SystemTest[test_system.py<br/>System Testing]
+        SystemTest[test_comprehensive_integration.py<br/>System Testing]
         CommandClient[command_client.py<br/>CLI Interface]
         SetupScript[setup.py<br/>Installation Script]
     end
-    
-    MVPSimple --> SimpleServer
-    MVPSimple --> SimpleLogger
     
     AdvancedMain --> DeviceManager
     AdvancedMain --> SessionManager
@@ -275,7 +264,6 @@ graph TB
     AdvancedMain --> CoreFramework
     DeviceManager --> UtilsModule
     
-    SystemTest --> MVPSimple
     SystemTest --> AdvancedMain
     CommandClient --> UnifiedMain
 ```

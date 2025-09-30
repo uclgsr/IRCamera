@@ -69,9 +69,7 @@ hardware validation and evidence collection for thesis evaluation.
 
 #### Test Modules
 
-1. **test_mvp.py** - Comprehensive PC controller testing
-2. **test_mvp_simple.py** - Basic functionality validation
-3. **test_comprehensive_integration.py** - End-to-end system testing
+1. **test_comprehensive_integration.py** - End-to-end system testing
 
 ## Detailed Testing Procedures
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Comprehensive integration tests for PC Controller MVP
+Comprehensive integration tests for PC Controller
 Tests real communication protocols, device discovery, and data processing
 NO STUB IMPLEMENTATIONS - validates actual PC-Android integration
 """
@@ -15,12 +15,9 @@ from unittest.mock import MagicMock, patch, Mock
 import sys
 import os
 
-# Add src directory to path for imports
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
-
 class PCControllerIntegrationTest(unittest.TestCase):
     """
-    MVP-focused integration tests for PC Controller functionality
+    Integration tests for PC Controller functionality
     Tests hub-and-spoke architecture with real Android communication
     """
     
