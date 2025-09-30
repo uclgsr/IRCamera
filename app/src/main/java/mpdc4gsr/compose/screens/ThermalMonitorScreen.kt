@@ -19,8 +19,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.compose.Dimension
 import mpdc4gsr.compose.components.TitleBar
 import mpdc4gsr.compose.components.TitleBarAction
 import mpdc4gsr.compose.theme.IRCameraTheme
@@ -62,52 +60,41 @@ fun ThermalMonitorScreen(
             )
         }
 
-        // Main content area using ConstraintLayout for precise positioning
-        ConstraintLayout(
+        // Main content area using Column/Box for layout
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(8.dp)
         ) {
-            val (preview, overlay, controls, statusPanel) = createRefs()
-
-            // Thermal camera preview area
-            ThermalCameraPreview(
+            // Thermal camera preview area with overlay
+            Box(
                 modifier = Modifier
-                    .constrainAs(preview) {
-                        top.linkTo(parent.top)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                        width = Dimension.fillToConstraints
-                        height = Dimension.ratio("4:3") // Match thermal camera aspect ratio
-                    }
-            )
+                    .fillMaxWidth()
+                    .aspectRatio(4f / 3f)
+            ) {
+                // Thermal camera preview area
+                ThermalCameraPreview(
+                    modifier = Modifier.fillMaxSize()
+                )
 
-            // Temperature overlay on top of preview
-            TemperatureOverlay(
-                currentTemp = currentTemp,
-                maxTemp = maxTemp,
-                minTemp = minTemp,
-                modifier = Modifier
-                    .constrainAs(overlay) {
-                        top.linkTo(preview.top)
-                        start.linkTo(preview.start)
-                        end.linkTo(preview.end)
-                        bottom.linkTo(preview.bottom)
-                        width = Dimension.fillToConstraints
-                        height = Dimension.fillToConstraints
-                    }
-            )
+                // Temperature overlay on top of preview
+                TemperatureOverlay(
+                    currentTemp = currentTemp,
+                    maxTemp = maxTemp,
+                    minTemp = minTemp,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
 
             // Status panel for connection and sensor info
             StatusPanel(
                 isConnected = isConnected,
-                modifier = Modifier
-                    .constrainAs(statusPanel) {
-                        top.linkTo(preview.bottom, margin = 16.dp)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                    }
+                modifier = Modifier.fillMaxWidth()
             )
+
+            Spacer(modifier = Modifier.height(16.dp))
 
             // Recording and control buttons
             ControlPanel(
@@ -117,12 +104,7 @@ fun ThermalMonitorScreen(
                     onRecordClick()
                 },
                 onAdvancedClick = { showAdvancedControls = !showAdvancedControls },
-                modifier = Modifier
-                    .constrainAs(controls) {
-                        top.linkTo(statusPanel.bottom, margin = 16.dp)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                    }
+                modifier = Modifier.fillMaxWidth()
             )
         }
 
@@ -143,6 +125,8 @@ fun ThermalMonitorScreen(
 private fun ThermalCameraPreview(
     modifier: Modifier = Modifier
 ) {
+    val primaryColor = MaterialTheme.colorScheme.primary
+    
     // Placeholder for actual thermal camera preview
     // In production, this would use AndroidView to host the IrSurfaceView
     Box(
@@ -168,7 +152,7 @@ private fun ThermalCameraPreview(
                 center = Offset(size.width * 0.3f, size.height * 0.4f)
             )
             drawCircle(
-                color = MaterialTheme.colorScheme.primary,
+                color = primaryColor,
                 radius = 20f,
                 center = Offset(size.width * 0.7f, size.height * 0.6f)
             )

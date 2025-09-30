@@ -15,6 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import mpdc4gsr.compose.components.TitleBar
+import mpdc4gsr.compose.components.TitleBarAction
 import mpdc4gsr.compose.theme.IRCameraTheme
 
 data class ResearchSession(
@@ -70,14 +71,15 @@ fun SessionManagerScreen(
         ) {
             TitleBar(
                 title = "Session Manager",
-                onNavigationClick = onNavigateBack,
-                actions = listOf(
-                    TitleBar.TitleBarAction(
-                        icon = Icons.Default.Add,
-                        contentDescription = "New session"
-                    ) { onCreateNewSession() }
+                showBackButton = true,
+                onBackClick = onNavigateBack
+            ) {
+                TitleBarAction(
+                    icon = Icons.Default.Add,
+                    contentDescription = "New session",
+                    onClick = onCreateNewSession
                 )
-            )
+            }
 
             Column(
                 modifier = Modifier.fillMaxSize()
@@ -115,8 +117,8 @@ fun SessionManagerScreen(
                     contentColor = Color.White,
                     indicator = { tabPositions ->
                         if (selectedTab < tabPositions.size) {
-                            TabRowDefaults.Indicator(
-                                Modifier.tabIndicatorOffset(tabPositions[selectedTab]),
+                            TabRowDefaults.SecondaryIndicator(
+                                Modifier.fillMaxWidth(),
                                 color = Color(0xFF6B73FF)
                             )
                         }
@@ -207,7 +209,7 @@ fun SessionStatsCard(
 }
 
 @Composable
-fun StatItem(
+private fun StatItem(
     label: String,
     value: String,
     color: Color

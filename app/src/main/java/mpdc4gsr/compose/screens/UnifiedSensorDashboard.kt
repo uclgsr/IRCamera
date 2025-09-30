@@ -101,6 +101,7 @@ fun UnifiedSensorDashboard(
                         is GSRAction.Disconnect -> gsrState = SensorState.Disconnected
                         is GSRAction.StartStream -> gsrState = SensorState.Streaming
                         is GSRAction.StopStream -> gsrState = SensorState.Connected
+                        is GSRAction.ConfigureDevice -> { /* Handle device configuration */ }
                     }
                 }
             )
@@ -115,6 +116,7 @@ fun UnifiedSensorDashboard(
                         is ThermalAction.Disconnect -> thermalState = SensorState.Disconnected
                         is ThermalAction.StartPreview -> thermalState = SensorState.Streaming
                         is ThermalAction.StopPreview -> thermalState = SensorState.Connected
+                        is ThermalAction.Calibrate -> { /* Handle calibration */ }
                     }
                 }
             )
@@ -129,6 +131,7 @@ fun UnifiedSensorDashboard(
                         is CameraAction.Disconnect -> rgbState = SensorState.Disconnected
                         is CameraAction.StartPreview -> rgbState = SensorState.Streaming
                         is CameraAction.StopPreview -> rgbState = SensorState.Connected
+                        is CameraAction.SetResolution -> { /* Handle resolution change */ }
                     }
                 }
             )
