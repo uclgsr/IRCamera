@@ -123,10 +123,10 @@ object ViewModelStateBridge {
 
         return androidx.compose.runtime.derivedStateOf {
             ComposeThermalData.fromExistingData(
-                center = centerTemp.value,
-                max = maxTemp.value,
-                min = minTemp.value,
-                recording = isRecording.value
+                center = centerTemp,
+                max = maxTemp,
+                min = minTemp,
+                recording = isRecording
             )
         }
     }
