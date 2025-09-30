@@ -409,6 +409,7 @@ private fun MetricItem(
 /**
  * Get status color based on sensor state
  */
+@Composable
 private fun getStatusColor(state: SensorState): Color {
     return when (state) {
         SensorState.Connected -> Color.Green
