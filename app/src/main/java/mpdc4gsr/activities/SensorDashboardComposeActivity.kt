@@ -97,9 +97,9 @@ class SensorDashboardComposeActivity : BaseComposeActivity<MainActivityViewModel
                 )
 
                 SensorStatusCard(
-                    thermalCameraState = thermalCameraState,
-                    gsrSensorState = gsrSensorState,
-                    bleConnectionState = gsrConnectionState
+                    thermalCameraState = mapSensorStateToConnectionState(thermalCameraState),
+                    gsrSensorState = mapSensorStateToConnectionState(gsrSensorState),
+                    bleConnectionState = mapGSRConnectionToConnectionState(gsrConnectionState)
                 )
 
                 // GSR Sensor detailed visualization
@@ -113,16 +113,16 @@ class SensorDashboardComposeActivity : BaseComposeActivity<MainActivityViewModel
                 GSRVisualizationCard(
                     gsrData = gsrData,
                     connectionState = GSRConnectionState(
-                        isConnected = gsrConnectionState is ConnectionState.Connected,
+                        isConnected = gsrConnectionState == MainActivityViewModel.GSRConnectionState.CONNECTED,
                         deviceName = "Shimmer3-GSR",
-                        connectionStrength = if (gsrConnectionState is ConnectionState.Connected) 85 else 0
+                        connectionStrength = if (gsrConnectionState == MainActivityViewModel.GSRConnectionState.CONNECTED) 85 else 0
                     )
                 )
 
                 // Additional sensor information cards
                 AdditionalSensorInfo(
-                    thermalCameraState = thermalCameraState,
-                    gsrSensorState = gsrSensorState
+                    thermalCameraState = mapSensorStateToConnectionState(thermalCameraState),
+                    gsrSensorState = mapSensorStateToConnectionState(gsrSensorState)
                 )
 
                 // Data export and management section
@@ -292,9 +292,9 @@ class SensorDashboardComposeActivity : BaseComposeActivity<MainActivityViewModel
     private fun mapGSRConnectionToConnectionState(gsrState: MainActivityViewModel.GSRConnectionState): ConnectionState {
         return when (gsrState) {
             MainActivityViewModel.GSRConnectionState.DISCONNECTED -> ConnectionState.Disconnected
+            MainActivityViewModel.GSRConnectionState.DISCOVERING -> ConnectionState.Connecting
             MainActivityViewModel.GSRConnectionState.CONNECTING -> ConnectionState.Connecting
             MainActivityViewModel.GSRConnectionState.CONNECTED -> ConnectionState.Connected()
-            MainActivityViewModel.GSRConnectionState.STREAMING -> ConnectionState.Connected()
             MainActivityViewModel.GSRConnectionState.ERROR -> ConnectionState.Error(AppError.SensorError("GSR", "GSR Error"))
         }
     }

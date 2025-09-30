@@ -111,7 +111,7 @@ class SensorDashboardTestViewModel : BaseViewModel() {
                     1 -> {
                         // Warning state
                         Triple(
-                            SensorDashboardFragment.SensorStatus.WARNING,
+                            SensorDashboardFragment.SensorStatus.ERROR,
                             "Connected with issues",
                             "Reduced rate"
                         )
@@ -442,7 +442,7 @@ private fun SensorTestCard(
         colors = CardDefaults.cardColors(
             containerColor = when (sensorStatus.status) {
                 SensorDashboardFragment.SensorStatus.CONNECTED -> MaterialTheme.colorScheme.primaryContainer
-                SensorDashboardFragment.SensorStatus.WARNING -> Color(0xFFFFF3E0)
+                SensorDashboardFragment.SensorStatus.ERROR -> Color(0xFFFFF3E0)
                 SensorDashboardFragment.SensorStatus.ERROR -> MaterialTheme.colorScheme.errorContainer
                 SensorDashboardFragment.SensorStatus.CONNECTING -> MaterialTheme.colorScheme.surfaceVariant
                 else -> MaterialTheme.colorScheme.surface
@@ -468,7 +468,7 @@ private fun SensorTestCard(
                     modifier = Modifier.size(32.dp),
                     tint = when (sensorStatus.status) {
                         SensorDashboardFragment.SensorStatus.CONNECTED -> MaterialTheme.colorScheme.primary
-                        SensorDashboardFragment.SensorStatus.WARNING -> Color(0xFFFF9800)
+                        SensorDashboardFragment.SensorStatus.ERROR -> Color(0xFFFF9800)
                         SensorDashboardFragment.SensorStatus.ERROR -> MaterialTheme.colorScheme.error
                         else -> MaterialTheme.colorScheme.onSurfaceVariant
                     }
@@ -511,7 +511,7 @@ private fun SensorTestCard(
                     shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp),
                     color = when (sensorStatus.status) {
                         SensorDashboardFragment.SensorStatus.CONNECTED -> MaterialTheme.colorScheme.primary
-                        SensorDashboardFragment.SensorStatus.WARNING -> Color(0xFFFF9800)
+                        SensorDashboardFragment.SensorStatus.ERROR -> Color(0xFFFF9800)
                         SensorDashboardFragment.SensorStatus.ERROR -> MaterialTheme.colorScheme.error
                         SensorDashboardFragment.SensorStatus.CONNECTING -> MaterialTheme.colorScheme.surfaceVariant
                         else -> MaterialTheme.colorScheme.surfaceVariant
@@ -523,7 +523,7 @@ private fun SensorTestCard(
                         style = MaterialTheme.typography.labelSmall,
                         color = when (sensorStatus.status) {
                             SensorDashboardFragment.SensorStatus.CONNECTED -> MaterialTheme.colorScheme.onPrimary
-                            SensorDashboardFragment.SensorStatus.WARNING -> Color.White
+                            SensorDashboardFragment.SensorStatus.ERROR -> Color.White
                             SensorDashboardFragment.SensorStatus.ERROR -> MaterialTheme.colorScheme.onError
                             else -> MaterialTheme.colorScheme.onSurfaceVariant
                         },
