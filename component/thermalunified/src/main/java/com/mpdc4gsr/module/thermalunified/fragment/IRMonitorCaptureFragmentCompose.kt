@@ -213,7 +213,7 @@ class IRMonitorCaptureFragmentCompose : BaseComposeFragment<IRMonitorCaptureView
                         factory = { context ->
                             TemperatureView(context).apply {
                                 // Configure for capture mode
-                                temperatureRegionMode = 1 // Rectangle mode
+                                temperatureRegionMode = TemperatureView.REGION_MODE_RECTANGLE
                             }
                         },
                         modifier = Modifier.fillMaxSize()
