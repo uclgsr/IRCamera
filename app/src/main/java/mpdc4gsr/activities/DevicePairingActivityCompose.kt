@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -27,7 +28,6 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import mpdc4gsr.compose.base.BaseComposeActivity
 import mpdc4gsr.network.DevicePairingViewModel
 import mpdc4gsr.network.NetworkClient
-import mpdc4gsr.sensors.gsr.MultiModalRecordingActivity
 
 /**
  * Device Pairing Activity - Compose Implementation

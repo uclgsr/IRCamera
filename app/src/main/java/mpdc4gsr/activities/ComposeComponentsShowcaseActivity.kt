@@ -28,8 +28,8 @@ class ComposeComponentsShowcaseViewModel : BaseViewModel() {
     private val _showSensorDialog = mutableStateOf(false)
     val showSensorDialog: State<Boolean> = _showSensorDialog
 
-    private val _selectedSensors = mutableStateOf<Set<SensorType>>(emptySet())
-    val selectedSensors: State<Set<SensorType>> = _selectedSensors
+    private val _selectedSensors = mutableStateOf<Set<mpdc4gsr.compose.components.SensorType>>(emptySet())
+    val selectedSensors: State<Set<mpdc4gsr.compose.components.SensorType>> = _selectedSensors
 
     fun showSensorSelection() {
         _showSensorDialog.value = true
@@ -39,7 +39,7 @@ class ComposeComponentsShowcaseViewModel : BaseViewModel() {
         _showSensorDialog.value = false
     }
 
-    fun updateSelectedSensors(sensors: Set<SensorType>) {
+    fun updateSelectedSensors(sensors: Set<mpdc4gsr.compose.components.SensorType>) {
         _selectedSensors.value = sensors
     }
 }
@@ -52,7 +52,7 @@ class ComposeComponentsShowcaseActivity :
     BaseComposeActivity<ComposeComponentsShowcaseViewModel>() {
 
     override fun createViewModel(): ComposeComponentsShowcaseViewModel =
-        viewModels<ComposeComponentsShowcaseViewModel>().value
+        ComposeComponentsShowcaseViewModel()
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -69,8 +69,7 @@ class ComposeComponentsShowcaseActivity :
             ) {
                 TitleBar(
                     title = "Compose Components",
-                    onBackClick = { finish() },
-                    subtitle = "Enhanced UI Component Showcase"
+                    onBackClick = { finish() }
                 )
 
                 Column(
@@ -302,4 +301,13 @@ private fun ComponentSection(
 
         content()
     }
+}
+
+private fun getSampleSensorAvailability(): Set<mpdc4gsr.compose.components.SensorType> {
+    return setOf(
+        mpdc4gsr.compose.components.SensorType.THERMAL,
+        mpdc4gsr.compose.components.SensorType.GSR,
+        mpdc4gsr.compose.components.SensorType.RGB,
+        mpdc4gsr.compose.components.SensorType.AUDIO
+    )
 }
