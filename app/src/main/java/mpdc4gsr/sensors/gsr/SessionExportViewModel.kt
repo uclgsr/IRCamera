@@ -144,14 +144,6 @@ class SessionExportViewModel(
     }
 
     /**
-     * Clear error state
-     */
-    override fun clearError() {
-        super.clearError()
-        _exportState.value = _exportState.value.copy(error = null)
-    }
-
-    /**
      * Get available GSR sessions from storage
      */
     private fun getAvailableSessions(): List<GSRSession> {

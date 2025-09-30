@@ -245,7 +245,7 @@ private fun TemplateCard(
             ) {
                 Icon(
                     imageVector = getTemplateIcon(template.category),
-                    contentDescription = template.category,
+                    contentDescription = template.category.name,
                     modifier = Modifier.size(32.dp),
                     tint = MaterialTheme.colorScheme.primary
                 )
@@ -443,10 +443,10 @@ private fun CreateTemplateDialog(
                             id = "custom_${System.currentTimeMillis()}",
                             name = templateName,
                             description = templateDescription,
-                            category = selectedCategory,
+                            category = ResearchTemplate.TemplateCategory.valueOf(selectedCategory),
                             duration = 30,
-                            sensors = listOf("GSR", "Thermal"),
-                            samplingRate = 128
+                            sensors = setOf(ResearchTemplate.SensorType.GSR, ResearchTemplate.SensorType.THERMAL_CAMERA),
+                            gsrSamplingRate = 128
                         )
                         onCreateTemplate(newTemplate)
                     }

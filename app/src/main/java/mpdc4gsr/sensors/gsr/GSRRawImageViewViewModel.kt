@@ -140,14 +140,6 @@ class GSRRawImageViewViewModel(
     }
 
     /**
-     * Clear error state
-     */
-    override fun clearError() {
-        super.clearError()
-        _imageViewState.value = _imageViewState.value.copy(error = null)
-    }
-
-    /**
      * Get GSR image files from various possible directories
      */
     private fun getGSRImageFiles(): List<File> {
