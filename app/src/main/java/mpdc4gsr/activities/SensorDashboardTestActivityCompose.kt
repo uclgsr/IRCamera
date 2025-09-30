@@ -21,6 +21,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.csl.irCamera.R
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import mpdc4gsr.compose.base.BaseComposeActivity
 import mpdc4gsr.compose.components.TitleBar
 import mpdc4gsr.compose.theme.IRCameraTheme
@@ -70,7 +71,7 @@ class SensorDashboardTestViewModel : BaseViewModel() {
     val testMessage: State<String> = _testMessage
 
     fun runCompleteTest() {
-        kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
+        launchWithErrorHandling {
             _isRunningTest.value = true
             _testProgress.value = 0f
 
@@ -153,7 +154,7 @@ class SensorDashboardTestViewModel : BaseViewModel() {
     }
 
     fun testIndividualSensor(sensorType: TestSensorType) {
-        kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
+        launchWithErrorHandling {
             _testMessage.value = "Testing ${sensorType.displayName}..."
 
             updateSensorStatus(
