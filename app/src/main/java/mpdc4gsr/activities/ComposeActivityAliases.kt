@@ -11,6 +11,10 @@ typealias GSRQuickRecordingActivityCompose = mpdc4gsr.feature.gsr.ui.GSRQuickRec
 typealias SensorDashboardComposeActivity = mpdc4gsr.feature.gsr.ui.SensorDashboardComposeActivity
 typealias SensorDashboardComposeEnhanced = mpdc4gsr.feature.gsr.ui.SensorDashboardComposeEnhanced
 typealias UnifiedSensorActivityCompose = mpdc4gsr.feature.gsr.ui.UnifiedSensorActivityCompose
+typealias ShimmerConfigComposeActivity = mpdc4gsr.feature.gsr.ui.ShimmerConfigComposeActivity
+typealias GSRDeviceManagementActivityCompose = mpdc4gsr.feature.gsr.ui.GSRDeviceManagementComposeActivity
+typealias MultiModalRecordingActivityCompose = mpdc4gsr.feature.gsr.ui.MultiModalRecordingComposeActivity
+typealias SessionManagerActivityCompose = mpdc4gsr.feature.gsr.ui.SessionManagerComposeActivity
 
 // Network Feature Activities
 typealias NetworkClientTestActivityCompose = mpdc4gsr.feature.network.ui.NetworkClientTestActivityCompose
@@ -39,6 +43,7 @@ typealias ComposeMigrationLauncherActivity = mpdc4gsr.feature.testing.ui.Compose
 // Main Feature Activities
 typealias UnifiedComposeActivity = mpdc4gsr.feature.main.ui.UnifiedComposeActivity
 typealias DeviceTypeActivityCompose = mpdc4gsr.feature.main.ui.DeviceTypeActivityCompose
+typealias MainActivity = mpdc4gsr.feature.main.ui.MainActivity
 
 // Device Feature Activities
 typealias BlankDevActivityCompose = mpdc4gsr.feature.device.ui.BlankDevActivityCompose

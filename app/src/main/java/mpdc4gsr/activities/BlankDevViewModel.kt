@@ -15,6 +15,19 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
+// Data classes for USB device information
+data class UsbDeviceInfo(
+    val name: String,
+    val productId: Int,
+    val vendorId: Int,
+    val deviceType: UsbDeviceType,
+    val hasPermission: Boolean
+)
+
+enum class UsbDeviceType {
+    CAMERA, SENSOR, UNKNOWN
+}
+
 /**
  * ViewModel for USB Device Handler Compose Activity
  * Manages USB device detection, connection, and permissions
@@ -223,7 +236,7 @@ class BlankDevViewModel : BaseViewModel() {
     /**
      * Clear BlankDev-specific error message
      */
-    fun clearBlankDevError() {
+    fun clearError() {
         _blankDevUiState.value = _blankDevUiState.value.copy(error = null)
     }
 

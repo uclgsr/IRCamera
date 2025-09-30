@@ -25,6 +25,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import mpdc4gsr.compose.base.BaseComposeActivity
 import mpdc4gsr.compose.theme.IRCameraTheme
+import mpdc4gsr.activities.BlankDevViewModel
+import mpdc4gsr.activities.UsbDeviceInfo
+import mpdc4gsr.activities.UsbDeviceType
 
 /**
  * Modern Compose implementation of USB Device Handler
@@ -594,17 +597,4 @@ private fun AutoNavigationCard(
             }
         }
     }
-}
-
-// Data classes
-data class UsbDeviceInfo(
-    val name: String,
-    val productId: Int,
-    val vendorId: Int,
-    val deviceType: UsbDeviceType,
-    val hasPermission: Boolean
-)
-
-enum class UsbDeviceType {
-    CAMERA, SENSOR, UNKNOWN
 }
