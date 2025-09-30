@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 import com.csl.irCamera.R
 import com.csl.irCamera.databinding.FragmentMainBinding
 import com.mpdc4gsr.libunified.app.bean.event.SocketMsgEvent
-import com.mpdc4gsr.libunified.app.comm.navigation.NavigationManager
+import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import com.mpdc4gsr.libunified.app.common.SharedManager
 import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
 import com.mpdc4gsr.libunified.app.config.RouterConfig
@@ -35,7 +35,7 @@ import com.mpdc4gsr.libunified.app.tools.ConstantLanguages
 import com.mpdc4gsr.libunified.app.utils.NetWorkUtils
 import com.mpdc4gsr.libunified.app.utils.WsCmdConstants
 import com.mpdc4gsr.libunified.ui.widget.BatteryView
-import mpdc4gsr.activities.DeviceTypeActivity
+import mpdc4gsr.activities.DeviceTypeActivityCompose
 import mpdc4gsr.ui_components.MainFragmentViewModel.ConnectType
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -57,16 +57,16 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
         binding.ivAdd.setOnClickListener(this)
 
         binding.tvNoDeviceTitle.setOnLongClickListener {
-            showGSROptions()
+            viewModel.showGSROptions()
             true
         }
         binding.tvHasDeviceTitle.setOnLongClickListener {
-            showGSROptions()
+            viewModel.showGSROptions()
             true
         }
 
         binding.fabGsrRecording.setOnClickListener {
-            showGSROptions()
+            viewModel.showGSROptions()
         }
 
         // Initialize device state
@@ -133,6 +133,14 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
                         is MainFragmentViewModel.NavigationEvent.ShowDeviceAddDialog -> {
                             showDeviceAddDialog()
                         }
+
+                        is MainFragmentViewModel.NavigationEvent.ShowDeviceDeleteDialog -> {
+                            showDeviceDeleteDialog(event.connectType)
+                        }
+
+                        is MainFragmentViewModel.NavigationEvent.ShowGSROptions -> {
+                            showGSROptions()
+                        }
                     }
                 }
             }
@@ -176,6 +184,18 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
     private fun showDeviceAddDialog() {
         // Show device add dialog
         // Implementation depends on your dialog framework
+    }
+
+    private fun showDeviceDeleteDialog(connectType: MainFragmentViewModel.ConnectType) {
+        // Show device delete confirmation dialog
+        TipDialog.Builder(requireContext())
+            .setTitleMessage("Delete Device")
+            .setMessage("Are you sure you want to delete this device?")
+            .setPositiveListener("Delete") {
+                viewModel.onDeviceDeleted(connectType)
+            }
+            .setCancelListener("Cancel") { }
+            .create().show()
     }
 
     private fun setupLifecycleObserver() {
@@ -233,7 +253,7 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
     override fun onClick(v: View?) {
         when (v) {
             binding.tvConnectDevice, binding.ivAdd -> {
-                startActivity(Intent(requireContext(), DeviceTypeActivity::class.java))
+                startActivity(Intent(requireContext(), DeviceTypeActivityCompose::class.java))
             }
         }
     }
@@ -444,6 +464,9 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
             }
     }
 
+    // Close MyAdapter class
+    }
+
     private fun showGSROptions() {
         TipDialog.Builder(requireContext())
             .setTitleMessage("GSR Multi-modal Recording")
@@ -491,13 +514,12 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
         try {
             val intent = Intent(
                 requireContext(),
-                mpdc4gsr.camera.integration.DualModeCameraActivity::class.java
+                mpdc4gsr.camera.integration.DualModeCameraComposeActivity::class.java
             )
             intent.putExtra("INITIAL_MODE", initialMode)
             intent.putExtra("ENABLE_SAMSUNG_OPTIMIZATIONS", true)
             startActivity(intent)
         } catch (e: Exception) {
-
             Toast.makeText(
                 requireContext(),
                 "Launching dual-mode camera integration example...",

@@ -9,6 +9,7 @@ import android.os.IBinder
 import android.util.Log
 import android.view.KeyEvent
 import android.widget.Toast
+import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.compose.foundation.background
@@ -41,16 +42,16 @@ import com.mpdc4gsr.libunified.app.bean.event.WinterClickEvent
 import com.mpdc4gsr.libunified.app.bean.event.device.DevicePermissionEvent
 import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
 import com.mpdc4gsr.libunified.app.dialog.TipDialog
+import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.fragment.IRGalleryTabFragment
 // import com.mpdc4gsr.module.user.fragment.MineFragment
 import com.mpdc4gsr.module.user.fragment.MoreFragment
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import mpdc4gsr.compose.components.SensorStatusCard
 import mpdc4gsr.compose.components.ThermalVisualizationCard
 import mpdc4gsr.core.RecordingService
-import mpdc4gsr.core.permissions.PermissionController
+import mpdc4gsr.permissions.PermissionController
 // import mpdc4gsr.fragments.MainFragment
 import mpdc4gsr.viewmodel.ConnectionState
 import mpdc4gsr.viewmodel.MainActivityViewModel
@@ -70,7 +71,7 @@ import org.greenrobot.eventbus.ThreadMode
  * - Enhanced multi-modal recording support
  * - Improved network status and device management
  */
-class MainActivityAlternative : BaseComposeActivity<MainActivityViewModel>() {
+class MainActivityAlternative : FragmentActivity() {
 
     companion object {
         private const val TAG = "MainActivityAlternative"
@@ -99,28 +100,34 @@ class MainActivityAlternative : BaseComposeActivity<MainActivityViewModel>() {
         }
     }
 
-    override fun createViewModel(): MainActivityViewModel {
+    fun createViewModel(): MainActivityViewModel {
         return viewModels<MainActivityViewModel>().value
     }
 
     private lateinit var viewModel: MainActivityViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        
         viewModel = viewModels<MainActivityViewModel>().value
 
         // Get device type from intent (preserved from original)
         isTC007 = intent.getBooleanExtra(ExtraKeyConfig.IS_TC007, false)
 
-        super.onCreate(savedInstanceState)
-
         permissionController = PermissionController(this)
         requestAllPermissions()
         bindRecordingService()
+        
+        setContent {
+            LibUnifiedTheme {
+                Content(viewModel)
+            }
+        }
     }
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    override fun Content(viewModel: MainActivityViewModel) {
+    fun Content(viewModel: MainActivityViewModel) {
         val context = LocalContext.current
 
         // Observe ViewModel state
@@ -181,7 +188,7 @@ class MainActivityAlternative : BaseComposeActivity<MainActivityViewModel>() {
                     AndroidView(
                         factory = { context ->
                             ViewPager2(context).apply {
-                                adapter = EnhancedPagerAdapter(context as FragmentActivity)
+                                adapter = EnhancedPagerAdapter(this@MainActivityAlternative)
                                 offscreenPageLimit = 4
 
                                 // Preserve existing page change logic
@@ -203,7 +210,7 @@ class MainActivityAlternative : BaseComposeActivity<MainActivityViewModel>() {
                     }
 
                     // Overlay recording status (consolidated layout pattern)
-                    if (sessionState.isRecording) {
+                    if (sessionState == MainActivityViewModel.SessionState.RECORDING) {
                         RecordingStatusOverlay(
                             sessionState = sessionState,
                             onStopRecording = { viewModel.stopRecordingSession() },
@@ -219,7 +226,7 @@ class MainActivityAlternative : BaseComposeActivity<MainActivityViewModel>() {
 
     @Composable
     private fun EnhancedNetworkStatusBar(
-        connectionState: ConnectionState,
+        connectionState: MainActivityViewModel.NetworkConnectionState,
         sessionState: MainActivityViewModel.SessionState,
         onThermalQuickAccess: () -> Unit,
         onFaultTolerantAccess: () -> Unit,
@@ -290,7 +297,7 @@ class MainActivityAlternative : BaseComposeActivity<MainActivityViewModel>() {
                         modifier = Modifier.size(16.dp)
                     )
 
-                    if (sessionState.isRecording) {
+                    if (sessionState == MainActivityViewModel.SessionState.RECORDING) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
@@ -574,7 +581,11 @@ class MainActivityAlternative : BaseComposeActivity<MainActivityViewModel>() {
 
     // Preserved original methods
     private fun requestAllPermissions() {
-        permissionController.requestAllPermissions()
+        permissionController.ensureAll { isGranted, denied ->
+            if (!isGranted) {
+                Log.w(TAG, "Permissions denied: $denied")
+            }
+        }
     }
 
     private fun bindRecordingService() {
@@ -595,10 +606,8 @@ class MainActivityAlternative : BaseComposeActivity<MainActivityViewModel>() {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onDevicePermissionEvent(event: DevicePermissionEvent) {
-        // Handle device permission events
-        if (event.isGranted) {
-            Toast.makeText(this, "Device permissions granted", Toast.LENGTH_SHORT).show()
-        }
+        // Handle device permission events - permission granted for device
+        Toast.makeText(this, "Device permissions granted for ${event.device.deviceName}", Toast.LENGTH_SHORT).show()
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

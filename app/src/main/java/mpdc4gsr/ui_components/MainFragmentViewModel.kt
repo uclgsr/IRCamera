@@ -66,8 +66,10 @@ class MainFragmentViewModel : BaseViewModel() {
             NavigationEvent()
 
         data class ShowDeviceSelection(val availableDevices: List<ConnectType>) : NavigationEvent()
+        data class ShowDeviceDeleteDialog(val connectType: ConnectType) : NavigationEvent()
         data class ShowError(val message: String) : NavigationEvent()
         object ShowDeviceAddDialog : NavigationEvent()
+        object ShowGSROptions : NavigationEvent()
     }
 
     // Local data class to replace removed TC007 BatteryInfo
@@ -303,6 +305,31 @@ class MainFragmentViewModel : BaseViewModel() {
             } else {
                 _navigationEvents.emit(NavigationEvent.ShowDeviceAddDialog)
             }
+        }
+    }
+
+    /**
+     * Handle navigation to different screens
+     */
+    fun handleNavigation(context: android.content.Context, route: String, isTC007: Boolean, isTS004: Boolean) {
+        // Stub implementation - navigate based on route
+    }
+
+    /**
+     * Show device delete confirmation dialog
+     */
+    fun showDeviceDeleteDialog(connectType: ConnectType) {
+        launchWithErrorHandling {
+            _navigationEvents.emit(NavigationEvent.ShowDeviceDeleteDialog(connectType))
+        }
+    }
+
+    /**
+     * Show GSR sensor options menu
+     */
+    fun showGSROptions() {
+        launchWithErrorHandling {
+            _navigationEvents.emit(NavigationEvent.ShowGSROptions)
         }
     }
 

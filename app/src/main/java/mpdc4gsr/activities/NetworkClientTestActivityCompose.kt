@@ -45,6 +45,40 @@ class NetworkClientTestViewModel : BaseViewModel() {
     private val _connectionInfo = MutableStateFlow("")
     val connectionInfo: StateFlow<String> = _connectionInfo.asStateFlow()
 
+    // Data classes for network testing (shared with NetworkClientTestComposeActivity)
+    enum class TestStatus { PASS, FAIL, WARNING, PENDING }
+    enum class NetworkTestType { CONNECTION, LATENCY, THROUGHPUT, RELIABILITY }
+    
+    data class NetworkTestCategory(
+        val name: String,
+        val description: String,
+        val type: NetworkTestType,
+        val testCount: Int,
+        val lastResult: TestStatus
+    )
+    
+    data class NetworkTestResult(
+        val testName: String,
+        val status: TestStatus,
+        val timestamp: String,
+        val duration: Long,
+        val details: String
+    )
+
+    // UI State for NetworkClientTestComposeActivity
+    data class UiState(
+        val isTestRunning: Boolean = false,
+        val currentTest: String = "",
+        val testProgress: Float = 0f,
+        val networkStatus: String = "Disconnected",
+        val testCategories: List<NetworkTestCategory> = emptyList(),
+        val testResults: List<NetworkTestResult> = emptyList(),
+        val networkConfiguration: String = ""
+    )
+    
+    private val _uiState = MutableStateFlow(UiState())
+    val uiState: StateFlow<UiState> = _uiState.asStateFlow()
+
     fun updateConnectionState(state: CommandConnection.ConnectionState) {
         _networkConnectionState.value = state
     }
@@ -59,6 +93,42 @@ class NetworkClientTestViewModel : BaseViewModel() {
 
     fun updateConnectionInfo(info: String) {
         _connectionInfo.value = info
+    }
+    
+    // Methods for NetworkClientTestComposeActivity
+    fun startComprehensiveTest() {
+        _uiState.value = _uiState.value.copy(isTestRunning = true)
+    }
+    
+    fun stopTest() {
+        _uiState.value = _uiState.value.copy(isTestRunning = false)
+    }
+    
+    fun refreshNetworkStatus() {
+        _uiState.value = _uiState.value.copy(
+            networkStatus = when (_networkConnectionState.value) {
+                CommandConnection.ConnectionState.CONNECTED -> "Connected"
+                CommandConnection.ConnectionState.CONNECTING -> "Connecting"
+                CommandConnection.ConnectionState.ERROR -> "Error"
+                else -> "Disconnected"
+            }
+        )
+    }
+    
+    fun runQuickNetworkTest() {
+        // Stub implementation
+    }
+    
+    fun runCategoryTest(category: NetworkTestCategory) {
+        // Stub implementation
+    }
+    
+    fun viewTestDetails(result: NetworkTestResult) {
+        // Stub implementation
+    }
+    
+    fun updateNetworkConfiguration(config: String) {
+        _uiState.value = _uiState.value.copy(networkConfiguration = config)
     }
 }
 
@@ -76,6 +146,7 @@ class NetworkClientTestActivityCompose : BaseComposeActivity<NetworkClientTestVi
         private const val DEFAULT_PC_PORT = 8080
     }
 
+    private lateinit var testViewModel: NetworkClientTestViewModel
     private var recordingService: RecordingService? = null
     private var networkManager: NetworkManager? = null
     private var isBound = false
@@ -99,7 +170,10 @@ class NetworkClientTestActivityCompose : BaseComposeActivity<NetworkClientTestVi
         }
     }
 
-    override fun createViewModel(): NetworkClientTestViewModel = NetworkClientTestViewModel()
+    override fun createViewModel(): NetworkClientTestViewModel {
+        testViewModel = NetworkClientTestViewModel()
+        return testViewModel
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -122,7 +196,7 @@ class NetworkClientTestActivityCompose : BaseComposeActivity<NetworkClientTestVi
             lifecycleScope.launch {
                 manager.connectionState.collect { state ->
                     Log.i(TAG, "Connection state changed: $state")
-                    viewModel.updateConnectionState(state)
+                    testViewModel.updateConnectionState(state)
                     updateConnectionInfo()
                 }
             }
@@ -131,24 +205,24 @@ class NetworkClientTestActivityCompose : BaseComposeActivity<NetworkClientTestVi
 
     private fun updateConnectionInfo() {
         val info = networkManager?.let { manager ->
-            when (val state = viewModel.networkConnectionState.value) {
+            when (val state = testViewModel.networkConnectionState.value) {
                 CommandConnection.ConnectionState.CONNECTED -> {
-                    "Connected to ${viewModel.ipAddress.value}:${viewModel.port.value}"
+                    "Connected to ${testViewModel.ipAddress.value}:${testViewModel.port.value}"
                 }
 
                 CommandConnection.ConnectionState.CONNECTING -> {
-                    "Connecting to ${viewModel.ipAddress.value}:${viewModel.port.value}..."
+                    "Connecting to ${testViewModel.ipAddress.value}:${testViewModel.port.value}..."
                 }
 
                 CommandConnection.ConnectionState.ERROR -> {
-                    "Connection failed to ${viewModel.ipAddress.value}:${viewModel.port.value}"
+                    "Connection failed to ${testViewModel.ipAddress.value}:${testViewModel.port.value}"
                 }
 
                 else -> "Not connected"
             }
         } ?: "Service not available"
 
-        viewModel.updateConnectionInfo(info)
+        testViewModel.updateConnectionInfo(info)
     }
 
     private fun testWifiConnection(ip: String, port: Int) {
@@ -157,7 +231,7 @@ class NetworkClientTestActivityCompose : BaseComposeActivity<NetworkClientTestVi
                 networkManager?.connectToHost(ip, port)
             } catch (e: Exception) {
                 Log.e(TAG, "WiFi connection failed", e)
-                viewModel.updateConnectionState(CommandConnection.ConnectionState.ERROR)
+                testViewModel.updateConnectionState(CommandConnection.ConnectionState.ERROR)
             }
         }
     }
@@ -180,9 +254,9 @@ class NetworkClientTestActivityCompose : BaseComposeActivity<NetworkClientTestVi
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: NetworkClientTestViewModel) {
-        val connectionState by viewModel.networkConnectionState.collectAsState()
-        val ipAddress by viewModel.ipAddress.collectAsState()
-        val port by viewModel.port.collectAsState()
+        val connectionState by testViewModel.networkConnectionState.collectAsState()
+        val ipAddress by testViewModel.ipAddress.collectAsState()
+        val port by testViewModel.port.collectAsState()
         val connectionInfo by viewModel.connectionInfo.collectAsState()
 
         val scrollState = rememberScrollState()

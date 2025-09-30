@@ -1,6 +1,8 @@
 package mpdc4gsr.activities
 
 import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -13,7 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
+import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import mpdc4gsr.compose.components.SensorStatusCard
 import mpdc4gsr.compose.components.sensor.GSRVisualizationCard
 import mpdc4gsr.compose.components.sensor.GSRData
@@ -30,15 +32,24 @@ import mpdc4gsr.viewmodel.MainActivityViewModel
  * - Enhanced multi-modal recording support
  * - Improved device management from consolidated patterns
  */
-class SensorDashboardComposeEnhanced : BaseComposeActivity<MainActivityViewModel>() {
+class SensorDashboardComposeEnhanced : ComponentActivity() {
 
-    override fun createViewModel(): MainActivityViewModel {
-        return viewModels<MainActivityViewModel>().value
+    private lateinit var dashboardViewModel: MainActivityViewModel
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        dashboardViewModel = viewModels<MainActivityViewModel>().value
+        
+        setContent {
+            LibUnifiedTheme {
+                Content(dashboardViewModel)
+            }
+        }
     }
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    override fun Content(viewModel: MainActivityViewModel) {
+    fun Content(viewModel: MainActivityViewModel) {
         // Observe sensor states
         val thermalCameraState by viewModel.thermalCameraState.collectAsState()
         val gsrSensorState by viewModel.gsrSensorState.collectAsState()
