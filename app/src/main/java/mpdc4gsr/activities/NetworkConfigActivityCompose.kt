@@ -29,6 +29,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.csl.irCamera.R
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import mpdc4gsr.compose.base.BaseComposeActivity
 import mpdc4gsr.compose.components.TitleBar
 import mpdc4gsr.compose.theme.IRCameraTheme
@@ -78,7 +79,7 @@ class NetworkConfigViewModel : BaseViewModel() {
     }
 
     private fun startDeviceDiscovery() {
-        kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
+        launchWithErrorHandling {
             _isScanning.value = true
             _availableDevices.value = emptyList()
 
@@ -168,7 +169,7 @@ class NetworkConfigViewModel : BaseViewModel() {
     }
 
     fun connectToDevice(device: NetworkDevice) {
-        kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
+        launchWithErrorHandling {
             _connectionStatus.value = "Connecting..."
             delay(3000) // Simulate connection time
 
@@ -315,6 +316,7 @@ class NetworkConfigActivityCompose : BaseComposeActivity<NetworkConfigViewModel>
                         }
                     } else {
                         // Device discovery and connection
+                        val currentConnectionType = selectedConnectionType
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -322,20 +324,20 @@ class NetworkConfigActivityCompose : BaseComposeActivity<NetworkConfigViewModel>
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Icon(
-                                imageVector = selectedConnectionType.icon,
+                                imageVector = currentConnectionType.icon,
                                 contentDescription = null,
                                 tint = MaterialTheme.colorScheme.primary,
                                 modifier = Modifier.size(24.dp)
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
-                                text = selectedConnectionType.displayName,
+                                text = currentConnectionType.displayName,
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold,
                                 modifier = Modifier.weight(1f)
                             )
                             TextButton(
-                                onClick = { viewModel.selectConnectionType(selectedConnectionType) }
+                                onClick = { viewModel.selectConnectionType(currentConnectionType) }
                             ) {
                                 Text("Refresh")
                             }
