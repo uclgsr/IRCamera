@@ -129,7 +129,7 @@ class ShimmerMvpViewModel : BaseViewModel() {
     }
 
     fun connectToDevice(device: ShimmerDevice) {
-        kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
+        viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
             _shimmerConnectionState.value = ShimmerConnectionState.CONNECTING
             _statusMessage.value = "Connecting to ${device.name}..."
 
