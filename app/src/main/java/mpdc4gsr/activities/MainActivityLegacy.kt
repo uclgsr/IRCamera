@@ -343,9 +343,9 @@ class MainActivityLegacy : BaseBindingActivity<ActivityMainBinding>(), View.OnCl
     private fun launchShimmerMvp() {
         AlertDialog.Builder(this)
             .setTitle("Developer Sensor Access")
-            .setItems(arrayOf("Shimmer GSR MVP", "Unified Sensor Platform")) { _, which ->
+            .setItems(arrayOf("Shimmer GSR Configuration", "Unified Sensor Platform")) { _, which ->
                 val activityClass = when (which) {
-                    0 -> mpdc4gsr.activities.ShimmerMvpActivityCompose::class.java
+                    0 -> mpdc4gsr.feature.gsr.ui.ShimmerConfigComposeActivity::class.java
                     else -> mpdc4gsr.activities.UnifiedSensorActivityCompose::class.java
                 }
                 startActivity(Intent(this, activityClass))

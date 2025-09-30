@@ -682,14 +682,14 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                 )
 
                 LauncherCard(
-                    title = "Simplified Interface (Compose)",
-                    subtitle = "Clean and streamlined user interface",
+                    title = "Main Interface (Compose)",
+                    subtitle = "Unified main interface with all features",
                     icon = Icons.Default.Tune,
                     onClick = {
                         startActivity(
                             Intent(
                                 this@ComposeMigrationLauncherActivity,
-                                SimplifiedMainActivityCompose::class.java
+                                mpdc4gsr.feature.main.ui.MainActivity::class.java
                             )
                         )
                     }
@@ -719,14 +719,14 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                 )
 
                 LauncherCard(
-                    title = "Shimmer GSR Testing (Compose)",
-                    subtitle = "Advanced GSR sensor testing with real-time data monitoring",
+                    title = "Shimmer GSR Configuration (Compose)",
+                    subtitle = "Advanced GSR device configuration and testing with real-time data monitoring",
                     icon = Icons.Default.Sensors,
                     onClick = {
                         startActivity(
                             Intent(
                                 this@ComposeMigrationLauncherActivity,
-                                ShimmerMvpActivityCompose::class.java
+                                mpdc4gsr.feature.gsr.ui.ShimmerConfigComposeActivity::class.java
                             )
                         )
                     }

@@ -318,13 +318,6 @@
             android:label="BLE Integration Test (Compose)" />
 
 
-        <!-- Simplified Main Activity -->
-        <activity
-            android:name="mpdc4gsr.activities.SimplifiedMainActivity"
-            android:exported="false"
-            android:label="Simplified Main"
-            android:theme="@style/AppTheme" />
-
         <!-- Jetpack Compose Activities -->
         <activity
             android:name="mpdc4gsr.activities.SensorDashboardComposeActivity"
