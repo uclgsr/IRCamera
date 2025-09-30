@@ -186,6 +186,18 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
         // Implementation depends on your dialog framework
     }
 
+    private fun showDeviceDeleteDialog(connectType: MainFragmentViewModel.ConnectType) {
+        // Show device delete confirmation dialog
+        TipDialog.Builder(requireContext())
+            .setTitleMessage("Delete Device")
+            .setMessage("Are you sure you want to delete this device?")
+            .setPositiveListener("Delete") {
+                viewModel.onDeviceDeleted(connectType)
+            }
+            .setCancelListener("Cancel") { }
+            .create().show()
+    }
+
     private fun setupLifecycleObserver() {
         viewLifecycleOwner.lifecycle.addObserver(
             object : DefaultLifecycleObserver {
