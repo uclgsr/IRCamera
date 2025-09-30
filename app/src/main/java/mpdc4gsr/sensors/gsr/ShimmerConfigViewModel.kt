@@ -43,8 +43,8 @@ class ShimmerConfigViewModel : BaseViewModel() {
     private val _discoveredDevices = MutableStateFlow<List<DeviceInfo>>(emptyList())
     val discoveredDevices: StateFlow<List<DeviceInfo>> = _discoveredDevices.asStateFlow()
 
-    private val _connectionState = MutableStateFlow<ConnectionState>(ConnectionState.Disconnected)
-    val connectionState: StateFlow<ConnectionState> = _connectionState.asStateFlow()
+    private val _shimmerConnectionState = MutableStateFlow<ConnectionState>(ConnectionState.Disconnected)
+    val shimmerConnectionState: StateFlow<ConnectionState> = _shimmerConnectionState.asStateFlow()
 
     // Permission management StateFlow
     private val _permissionState = MutableStateFlow(PermissionState(false, emptyList()))
@@ -199,7 +199,7 @@ class ShimmerConfigViewModel : BaseViewModel() {
             shimmerDeviceManager?.connectionEvents?.collectLatest { event ->
                 when (event.state) {
                     ShimmerDeviceManager.ConnectionState.CONNECTING -> {
-                        _connectionState.value = ConnectionState.Connecting
+                        _shimmerConnectionState.value = ConnectionState.Connecting
                         _shimmerUiState.value = _shimmerUiState.value.copy(
                             statusMessage = "Connecting to Shimmer device...",
                             isLoading = true
@@ -212,7 +212,7 @@ class ShimmerConfigViewModel : BaseViewModel() {
                         device?.let {
                             connectedDevice = it
                             connectedDeviceAddress = event.deviceAddress
-                            _connectionState.value = ConnectionState.Connected(it)
+                            _shimmerConnectionState.value = ConnectionState.Connected(it)
                             _shimmerUiState.value = _shimmerUiState.value.copy(
                                 statusMessage = "Successfully connected to ${it.name ?: event.deviceAddress}",
                                 isLoading = false
@@ -227,7 +227,7 @@ class ShimmerConfigViewModel : BaseViewModel() {
 
                     ShimmerDeviceManager.ConnectionState.DISCONNECTED -> {
                         connectedDevice = null
-                        _connectionState.value = ConnectionState.Disconnected
+                        _shimmerConnectionState.value = ConnectionState.Disconnected
                         _shimmerUiState.value = _shimmerUiState.value.copy(
                             statusMessage = "Shimmer device disconnected",
                             isLoading = false
@@ -236,7 +236,7 @@ class ShimmerConfigViewModel : BaseViewModel() {
                     }
 
                     ShimmerDeviceManager.ConnectionState.FAILED -> {
-                        _connectionState.value = ConnectionState.Failed(
+                        _shimmerConnectionState.value = ConnectionState.Failed(
                             event.message ?: "Unknown error"
                         )
                         _shimmerUiState.value = _shimmerUiState.value.copy(
@@ -250,7 +250,7 @@ class ShimmerConfigViewModel : BaseViewModel() {
                     }
 
                     ShimmerDeviceManager.ConnectionState.TIMEOUT -> {
-                        _connectionState.value = ConnectionState.Timeout(
+                        _shimmerConnectionState.value = ConnectionState.Timeout(
                             "Connection timeout"
                         )
                         _shimmerUiState.value = _shimmerUiState.value.copy(
@@ -348,7 +348,7 @@ class ShimmerConfigViewModel : BaseViewModel() {
         viewModelScope.launch {
             try {
                 // manager.connectToDevice(device.address)
-                _connectionState.value = ConnectionState.Connecting
+                _shimmerConnectionState.value = ConnectionState.Connecting
             } catch (e: Exception) {
                 _shimmerUiState.value = _shimmerUiState.value.copy(
                     statusMessage = "Connection error: ${e.message}"
@@ -409,7 +409,7 @@ class ShimmerConfigViewModel : BaseViewModel() {
                 }
                 connectedDevice = null
                 connectedDeviceAddress = null
-                _connectionState.value = ConnectionState.Disconnected
+                _shimmerConnectionState.value = ConnectionState.Disconnected
                 _shimmerUiState.value = _shimmerUiState.value.copy(
                     statusMessage = "Device disconnected"
                 )
