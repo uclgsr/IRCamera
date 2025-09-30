@@ -26,12 +26,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mpdc4gsr.libunified.compose.theme.IRCameraTheme
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlin.math.sin
 import kotlin.math.cos
+import kotlin.random.Random
 
 /**
  * Modern Compose version of IRMonitorLiteActivity
@@ -572,15 +574,36 @@ fun Float.format(decimals: Int): String = "%.${decimals}f".format(this)
  */
 class IRMonitorLiteViewModel : ViewModel() {
 
+    companion object {
+        // Temperature simulation constants
+        private const val BASE_TEMPERATURE = 25f
+        private const val SIN_AMPLITUDE = 5f
+        private const val COS_AMPLITUDE = 2f
+        private const val SIN_FREQUENCY = 0.1
+        private const val COS_FREQUENCY = 0.05
+        private const val NOISE_RANGE = 1f
+        private const val MAX_TEMPERATURE_HISTORY = 50
+    }
+
     private val _uiState = MutableStateFlow(IRMonitorUiState())
     val uiState: StateFlow<IRMonitorUiState> = _uiState.asStateFlow()
+    
+    // Job reference for monitoring coroutine management
+    private var monitoringJob: Job? = null
 
     fun startMonitoring() {
+        // Cancel any existing monitoring job before starting a new one
+        monitoringJob?.cancel()
+        
         _uiState.value = _uiState.value.copy(isMonitoring = true)
         startTemperatureMonitoring()
     }
 
     fun stopMonitoring() {
+        // Cancel the monitoring job when stopping
+        monitoringJob?.cancel()
+        monitoringJob = null
+        
         _uiState.value = _uiState.value.copy(isMonitoring = false)
     }
 
@@ -593,19 +616,19 @@ class IRMonitorLiteViewModel : ViewModel() {
     }
 
     private fun startTemperatureMonitoring() {
-        viewModelScope.launch {
+        monitoringJob = viewModelScope.launch {
             var timeStep = 0
 
             while (_uiState.value.isMonitoring) {
                 val currentState = _uiState.value
 
-                // Simulate temperature reading with some variation
-                val baseTemp = 25f + sin(timeStep * 0.1) * 5f + cos(timeStep * 0.05) * 2f
-                val noise = (-1f..1f).random()
+                // Simulate temperature reading with some variation using extracted constants
+                val baseTemp = BASE_TEMPERATURE + sin(timeStep * SIN_FREQUENCY) * SIN_AMPLITUDE + cos(timeStep * COS_FREQUENCY) * COS_AMPLITUDE
+                val noise = Random.nextFloat() * (2 * NOISE_RANGE) - NOISE_RANGE
                 val currentTemp = baseTemp + noise
 
                 // Update temperature history
-                val newHistory = (currentState.temperatureHistory + currentTemp).takeLast(50)
+                val newHistory = (currentState.temperatureHistory + currentTemp).takeLast(MAX_TEMPERATURE_HISTORY)
 
                 // Calculate statistics
                 val newStatistics = calculateStatistics(newHistory)
@@ -708,6 +731,12 @@ class IRMonitorLiteViewModel : ViewModel() {
     fun setSamplingRate(rate: Int) {
         _uiState.value = _uiState.value.copy(samplingRate = rate)
     }
+    
+    override fun onCleared() {
+        super.onCleared()
+        // Cancel monitoring job when ViewModel is destroyed
+        monitoringJob?.cancel()
+    }
 }
 
 data class IRMonitorUiState(
@@ -739,7 +768,7 @@ enum class AlertSeverity {
     LOW, MEDIUM, HIGH
 }
 
-// Helper extension for range generation
+// Helper extension for range generation using Kotlin Random
 fun ClosedRange<Float>.random(): Float {
-    return start + Math.random().toFloat() * (endInclusive - start)
+    return start + Random.nextFloat() * (endInclusive - start)
 }
