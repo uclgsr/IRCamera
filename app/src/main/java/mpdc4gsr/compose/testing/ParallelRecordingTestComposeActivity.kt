@@ -530,9 +530,6 @@ private suspend fun stopRecording(
     onSensorStatusesUpdate(updatedStatuses)
     delay(1000)
     onStateUpdate(RecordingState.COMPLETED)
-}
-        onStateUpdate(RecordingState.COMPLETED)
-    }
 
     private fun runIndividualTest(testId: String) {
         lifecycleScope.launch {
