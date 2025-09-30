@@ -288,7 +288,7 @@ class IRLogMPChartComposeActivity : BaseComposeActivity<IRMonitorViewModel>() {
                             try {
                                 val filePath = withContext(Dispatchers.IO) {
                                     ExcelUtil.exportExcel(
-                                        thermalData as ArrayList<ThermalEntity>,
+                                        ArrayList(thermalData),
                                         "point" == thermalData[0].type
                                     )
                                 }
