@@ -395,7 +395,13 @@ class RgbCameraTestComposeActivity : ComponentActivity() {
         lifecycleScope.launch {
             try {
                 isRecording = true
-                val testDir = getExternalFilesDir(null)?.absolutePath + "/test_recordings"
+                val externalFilesDir = getExternalFilesDir(null)
+                if (externalFilesDir == null) {
+                    Log.e(TAG, "External files directory is not available. Cannot start recording.")
+                    isRecording = false
+                    return@launch
+                }
+                val testDir = externalFilesDir.absolutePath + "/test_recordings"
                 cameraRecorder?.startRecording(testDir)
                 Log.d(TAG, "Test recording started")
             } catch (e: Exception) {
