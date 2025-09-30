@@ -66,7 +66,7 @@ fun TemperatureEditCompose(
                                 TemperatureMode.POINT -> {
                                     val temp = simulateTemperatureReading(offset)
                                     val measurement = TemperatureMeasurementResult.Point(
-                                        id = System.currentTimeMillis().toString(),
+                                        id = java.util.UUID.randomUUID().toString(),
                                         position = offset,
                                         temperature = temp
                                     )
