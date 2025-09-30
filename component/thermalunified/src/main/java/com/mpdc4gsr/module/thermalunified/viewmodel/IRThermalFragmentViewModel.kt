@@ -113,14 +113,16 @@ class IRThermalFragmentViewModel : BaseViewModel() {
 
         _deviceConnectionState.value = _deviceConnectionState.value.copy(
             hasConnection = true,
-            isTC007Connected = isTC007Device
+            isTC007Connected = isTC007Device,
+            isTC007Device = isTC007Device
         )
     }
 
     fun onDeviceDisconnected() {
         _deviceConnectionState.value = _deviceConnectionState.value.copy(
             hasConnection = false,
-            isTC007Connected = false
+            isTC007Connected = false,
+            isTC007Device = false
         )
     }
 
@@ -128,7 +130,8 @@ class IRThermalFragmentViewModel : BaseViewModel() {
         if (isTC007Device && !isTS004) {
             _deviceConnectionState.value = _deviceConnectionState.value.copy(
                 hasConnection = true,
-                isTC007Connected = true
+                isTC007Connected = true,
+                isTC007Device = true
             )
         }
     }
@@ -137,7 +140,8 @@ class IRThermalFragmentViewModel : BaseViewModel() {
         if (isTC007Device && !isTS004) {
             _deviceConnectionState.value = _deviceConnectionState.value.copy(
                 hasConnection = false,
-                isTC007Connected = false
+                isTC007Connected = false,
+                isTC007Device = false
             )
         }
     }
