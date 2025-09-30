@@ -52,20 +52,20 @@ class SimplifiedMainViewModel : BaseViewModel() {
     fun refreshStatus() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true, error = null)
-            
+
             try {
                 // Simulate system status check
                 delay(1000) // Simulate checking time
-                
+
                 val thermalConnected = checkThermalCameraConnection()
                 val gsrConnected = checkGSRSensorConnection()
-                
+
                 val overallHealth = when {
                     !thermalConnected && !gsrConnected -> HealthStatus.ERROR
                     !thermalConnected || !gsrConnected -> HealthStatus.WARNING
                     else -> HealthStatus.HEALTHY
                 }
-                
+
                 _uiState.value = _uiState.value.copy(
                     isLoading = false,
                     systemStatus = SystemStatus(
@@ -77,7 +77,7 @@ class SimplifiedMainViewModel : BaseViewModel() {
                         gsrSensorConnected = gsrConnected
                     )
                 )
-                
+
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(
                     isLoading = false,
@@ -105,14 +105,14 @@ class SimplifiedMainViewModel : BaseViewModel() {
         viewModelScope.launch {
             try {
                 recordingStartTime = System.currentTimeMillis()
-                
+
                 _uiState.value = _uiState.value.copy(
                     isRecording = true,
                     systemStatus = _uiState.value.systemStatus.copy(isRecording = true)
                 )
-                
+
                 startRecordingTimer()
-                
+
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(
                     error = "Failed to start recording: ${e.message}"
@@ -128,16 +128,16 @@ class SimplifiedMainViewModel : BaseViewModel() {
         viewModelScope.launch {
             try {
                 recordingTimerJob?.cancel()
-                
+
                 _uiState.value = _uiState.value.copy(
                     isRecording = false,
                     recordingDuration = "00:00:00",
                     systemStatus = _uiState.value.systemStatus.copy(isRecording = false)
                 )
-                
+
                 // Simulate saving session
                 saveRecordingSession()
-                
+
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(
                     error = "Failed to stop recording: ${e.message}"
@@ -156,7 +156,7 @@ class SimplifiedMainViewModel : BaseViewModel() {
                 _uiState.value = _uiState.value.copy(
                     error = "Thermal camera functionality would be launched here"
                 )
-                
+
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(
                     error = "Failed to launch thermal camera: ${e.message}"
@@ -175,7 +175,7 @@ class SimplifiedMainViewModel : BaseViewModel() {
                 _uiState.value = _uiState.value.copy(
                     error = "GSR sensor functionality would be launched here"
                 )
-                
+
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(
                     error = "Failed to launch GSR sensor: ${e.message}"
@@ -194,7 +194,7 @@ class SimplifiedMainViewModel : BaseViewModel() {
                 _uiState.value = _uiState.value.copy(
                     error = "Settings would be launched here"
                 )
-                
+
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(
                     error = "Failed to launch settings: ${e.message}"
@@ -213,7 +213,7 @@ class SimplifiedMainViewModel : BaseViewModel() {
                 _uiState.value = _uiState.value.copy(
                     error = "Session '${session.name}' would be opened here"
                 )
-                
+
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(
                     error = "Failed to open session: ${e.message}"
@@ -243,7 +243,7 @@ class SimplifiedMainViewModel : BaseViewModel() {
                         date = "Jan 15, 2024 14:30"
                     ),
                     RecentSession(
-                        id = "2", 
+                        id = "2",
                         name = "Thermal Recording",
                         date = "Jan 14, 2024 16:45"
                     ),
@@ -253,9 +253,9 @@ class SimplifiedMainViewModel : BaseViewModel() {
                         date = "Jan 13, 2024 09:15"
                     )
                 )
-                
+
                 _uiState.value = _uiState.value.copy(recentSessions = sessions)
-                
+
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(
                     error = "Failed to load recent sessions: ${e.message}"
@@ -272,9 +272,9 @@ class SimplifiedMainViewModel : BaseViewModel() {
             while (_uiState.value.isRecording) {
                 val elapsed = System.currentTimeMillis() - recordingStartTime
                 val duration = formatDuration(elapsed)
-                
+
                 _uiState.value = _uiState.value.copy(recordingDuration = duration)
-                
+
                 delay(1000) // Update every second
             }
         }
@@ -286,16 +286,17 @@ class SimplifiedMainViewModel : BaseViewModel() {
     private fun saveRecordingSession() {
         viewModelScope.launch {
             try {
-                val sessionName = "Recording ${SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(Date())}"
+                val sessionName =
+                    "Recording ${SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(Date())}"
                 val newSession = RecentSession(
                     id = System.currentTimeMillis().toString(),
                     name = sessionName,
                     date = SimpleDateFormat("MMM dd, yyyy HH:mm", Locale.getDefault()).format(Date())
                 )
-                
+
                 val updatedSessions = listOf(newSession) + _uiState.value.recentSessions
                 _uiState.value = _uiState.value.copy(recentSessions = updatedSessions)
-                
+
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(
                     error = "Failed to save session: ${e.message}"
@@ -330,7 +331,7 @@ class SimplifiedMainViewModel : BaseViewModel() {
         val hours = seconds / 3600
         val minutes = (seconds % 3600) / 60
         val remainingSeconds = seconds % 60
-        
+
         return String.format(Locale.getDefault(), "%02d:%02d:%02d", hours, minutes, remainingSeconds)
     }
 

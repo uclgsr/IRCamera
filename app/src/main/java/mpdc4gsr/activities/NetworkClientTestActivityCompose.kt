@@ -35,28 +35,28 @@ import mpdc4gsr.viewmodel.BaseViewModel
 class NetworkClientTestViewModel : BaseViewModel() {
     private val _connectionState = MutableStateFlow(CommandConnection.ConnectionState.DISCONNECTED)
     val connectionState: StateFlow<CommandConnection.ConnectionState> = _connectionState.asStateFlow()
-    
+
     private val _ipAddress = MutableStateFlow("192.168.1.100")
     val ipAddress: StateFlow<String> = _ipAddress.asStateFlow()
-    
+
     private val _port = MutableStateFlow("8080")
     val port: StateFlow<String> = _port.asStateFlow()
-    
+
     private val _connectionInfo = MutableStateFlow("")
     val connectionInfo: StateFlow<String> = _connectionInfo.asStateFlow()
-    
+
     fun updateConnectionState(state: CommandConnection.ConnectionState) {
         _connectionState.value = state
     }
-    
+
     fun updateIpAddress(ip: String) {
         _ipAddress.value = ip
     }
-    
+
     fun updatePort(port: String) {
         _port.value = port
     }
-    
+
     fun updateConnectionInfo(info: String) {
         _connectionInfo.value = info
     }
@@ -64,7 +64,7 @@ class NetworkClientTestViewModel : BaseViewModel() {
 
 /**
  * Compose version of NetworkClientTestActivity
- * 
+ *
  * Test activity for demonstrating bidirectional command/control networking functionality.
  * Shows how Android app can connect as client to PC server via Wi-Fi or Bluetooth.
  */
@@ -135,16 +135,19 @@ class NetworkClientTestActivityCompose : BaseComposeActivity<NetworkClientTestVi
                 CommandConnection.ConnectionState.CONNECTED -> {
                     "Connected to ${viewModel.ipAddress.value}:${viewModel.port.value}"
                 }
+
                 CommandConnection.ConnectionState.CONNECTING -> {
                     "Connecting to ${viewModel.ipAddress.value}:${viewModel.port.value}..."
                 }
+
                 CommandConnection.ConnectionState.ERROR -> {
                     "Connection failed to ${viewModel.ipAddress.value}:${viewModel.port.value}"
                 }
+
                 else -> "Not connected"
             }
         } ?: "Service not available"
-        
+
         viewModel.updateConnectionInfo(info)
     }
 
@@ -181,7 +184,7 @@ class NetworkClientTestActivityCompose : BaseComposeActivity<NetworkClientTestVi
         val ipAddress by viewModel.ipAddress.collectAsState()
         val port by viewModel.port.collectAsState()
         val connectionInfo by viewModel.connectionInfo.collectAsState()
-        
+
         val scrollState = rememberScrollState()
 
         Scaffold(
@@ -257,10 +260,12 @@ private fun ConnectionStatusCard(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
             containerColor = when (connectionState) {
-                CommandConnection.ConnectionState.CONNECTED -> 
+                CommandConnection.ConnectionState.CONNECTED ->
                     MaterialTheme.colorScheme.primaryContainer
-                CommandConnection.ConnectionState.ERROR -> 
+
+                CommandConnection.ConnectionState.ERROR ->
                     MaterialTheme.colorScheme.errorContainer
+
                 else -> MaterialTheme.colorScheme.surfaceVariant
             }
         )
@@ -288,7 +293,7 @@ private fun ConnectionStatusCard(
                         else -> Color.Gray
                     }
                 )
-                
+
                 Text(
                     text = when (connectionState) {
                         CommandConnection.ConnectionState.CONNECTED -> "Connected"
@@ -300,7 +305,7 @@ private fun ConnectionStatusCard(
                     fontWeight = FontWeight.SemiBold
                 )
             }
-            
+
             if (connectionInfo.isNotEmpty()) {
                 Text(
                     text = connectionInfo,
@@ -331,7 +336,7 @@ private fun ConnectionConfigCard(
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold
             )
-            
+
             OutlinedTextField(
                 value = ipAddress,
                 onValueChange = onIpAddressChange,
@@ -341,7 +346,7 @@ private fun ConnectionConfigCard(
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true
             )
-            
+
             OutlinedTextField(
                 value = port,
                 onValueChange = onPortChange,
@@ -376,7 +381,7 @@ private fun ActionButtonsCard(
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold
             )
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -390,7 +395,7 @@ private fun ActionButtonsCard(
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("WiFi")
                 }
-                
+
                 Button(
                     onClick = onConnectBluetooth,
                     modifier = Modifier.weight(1f),
@@ -401,7 +406,7 @@ private fun ActionButtonsCard(
                     Text("Bluetooth")
                 }
             }
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -415,7 +420,7 @@ private fun ActionButtonsCard(
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Test Ping")
                 }
-                
+
                 Button(
                     onClick = onDisconnect,
                     modifier = Modifier.weight(1f),
@@ -450,7 +455,7 @@ private fun TestInfoCard() {
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold
             )
-            
+
             Text(
                 text = "This activity tests bidirectional network communication between the Android app and PC server. " +
                         "Use WiFi for high-speed data transfer or Bluetooth for reliable short-range communication.",

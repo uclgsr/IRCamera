@@ -102,14 +102,14 @@ object RouterConfig {
     const val VIDEO = "/thermal/video"
     const val MONITOR_CHART = "/thermal/monitor/chart"
     const val LOG_MP_CHART = "/thermal/log/mp/chart"
-    
+
     // Settings routes
     const val GENERAL_SETTINGS = "/$GROUP_USER/settings/general"
     const val THERMAL_SETTINGS = "/$GROUP_USER/settings/thermal"
     const val NETWORK_SETTINGS = "/$GROUP_USER/settings/network"
     const val STORAGE_SETTINGS = "/$GROUP_USER/settings/storage"
     const val ABOUT = "/$GROUP_USER/about"
-    
+
     // Help and support routes
     const val USER_GUIDE = "/$GROUP_USER/help/guide"
     const val FAQ = "/$GROUP_USER/help/faq"

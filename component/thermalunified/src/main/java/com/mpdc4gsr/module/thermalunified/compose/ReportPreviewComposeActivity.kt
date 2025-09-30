@@ -40,12 +40,12 @@ import kotlinx.coroutines.launch
 class ReportPreviewComposeActivity : ComponentActivity() {
 
     private var reportId: Long = 0L
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         reportId = intent.getLongExtra(ExtraKeyConfig.reportId, 0L)
-        
+
         setContent {
             LibUnifiedTheme {
                 ReportPreviewScreen(
@@ -66,7 +66,7 @@ fun ReportPreviewScreen(
     val context = LocalContext.current as ComponentActivity
     var reportData by remember { mutableStateOf<HouseReportPreviewData?>(null) }
     var isLoading by remember { mutableStateOf(true) }
-    
+
     // Load report data
     LaunchedEffect(reportId) {
         context.lifecycleScope.launch(Dispatchers.IO) {
@@ -86,7 +86,7 @@ fun ReportPreviewScreen(
             }
         }
     }
-    
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -127,12 +127,14 @@ fun ReportPreviewScreen(
                         CircularProgressIndicator()
                     }
                 }
+
                 reportData != null -> {
                     ReportPreviewContent(
                         reportData = reportData!!,
                         modifier = Modifier.fillMaxSize()
                     )
                 }
+
                 else -> {
                     EmptyStateComponent(
                         title = "Report Not Found",
@@ -159,7 +161,7 @@ private fun ReportPreviewContent(
         item {
             ReportHeaderCard(reportData = reportData)
         }
-        
+
         // Report sections
         items(reportData.sections) { section ->
             ReportSectionCard(section = section)
@@ -190,10 +192,10 @@ private fun ReportHeaderCard(
                         .clip(RoundedCornerShape(8.dp)),
                     contentScale = ContentScale.Crop
                 )
-                
+
                 Spacer(modifier = Modifier.height(16.dp))
             }
-            
+
             // Report title
             Text(
                 text = reportData.houseName.ifEmpty { "Thermal Inspection Report" },
@@ -202,9 +204,9 @@ private fun ReportHeaderCard(
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()
             )
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             // Report details
             ReportInfoRow("Address", reportData.houseAddress)
             ReportInfoRow("Detection Time", reportData.detectTime)
@@ -234,15 +236,15 @@ private fun ReportSectionCard(
                 fontWeight = FontWeight.SemiBold,
                 color = MaterialTheme.colorScheme.primary
             )
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             // Project items
             section.projectItems.forEach { projectItem ->
                 ProjectItemRow(projectItem = projectItem)
                 Spacer(modifier = Modifier.height(8.dp))
             }
-            
+
             // Album items (thermal images)
             if (section.albumItems.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(8.dp))
@@ -267,7 +269,7 @@ private fun ProjectItemRow(
             style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier.weight(1f)
         )
-        
+
         Text(
             text = projectItem.value,
             style = MaterialTheme.typography.bodyMedium,
@@ -294,7 +296,7 @@ private fun ThermalImageGrid(
             fontWeight = FontWeight.Medium,
             modifier = Modifier.padding(bottom = 8.dp)
         )
-        
+
         // Grid layout for thermal images
         val chunkedItems = albumItems.chunked(2)
         chunkedItems.forEach { rowItems ->
@@ -316,7 +318,7 @@ private fun ThermalImageGrid(
                                     .height(120.dp),
                                 contentScale = ContentScale.Crop
                             )
-                            
+
                             if (item.title.isNotEmpty()) {
                                 Text(
                                     text = item.title,
@@ -328,13 +330,13 @@ private fun ThermalImageGrid(
                         }
                     }
                 }
-                
+
                 // Fill empty space if odd number of items
                 if (rowItems.size == 1) {
                     Spacer(modifier = Modifier.weight(1f))
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(8.dp))
         }
     }

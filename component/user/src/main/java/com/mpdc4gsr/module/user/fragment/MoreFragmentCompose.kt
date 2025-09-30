@@ -192,9 +192,9 @@ class MoreFragmentCompose : BaseComposeFragment<MoreFragmentComposeViewModel>() 
                     modifier = Modifier.size(32.dp),
                     tint = action.iconTint
                 )
-                
+
                 Spacer(modifier = Modifier.width(16.dp))
-                
+
                 Column(
                     modifier = Modifier.weight(1f)
                 ) {
@@ -210,7 +210,7 @@ class MoreFragmentCompose : BaseComposeFragment<MoreFragmentComposeViewModel>() 
                         color = action.textColor.copy(alpha = 0.8f)
                     )
                 }
-                
+
                 action.badge?.let { badge ->
                     Badge {
                         Text(text = badge)
@@ -245,9 +245,9 @@ class MoreFragmentCompose : BaseComposeFragment<MoreFragmentComposeViewModel>() 
                     modifier = Modifier.size(24.dp),
                     tint = MaterialTheme.colorScheme.primary
                 )
-                
+
                 Spacer(modifier = Modifier.width(16.dp))
-                
+
                 Column(
                     modifier = Modifier.weight(1f)
                 ) {
@@ -291,9 +291,9 @@ class MoreFragmentCompose : BaseComposeFragment<MoreFragmentComposeViewModel>() 
                     modifier = Modifier.size(24.dp),
                     tint = MaterialTheme.colorScheme.onSecondaryContainer
                 )
-                
+
                 Spacer(modifier = Modifier.width(16.dp))
-                
+
                 Column(
                     modifier = Modifier.weight(1f)
                 ) {
@@ -338,9 +338,9 @@ class MoreFragmentCompose : BaseComposeFragment<MoreFragmentComposeViewModel>() 
                         modifier = Modifier.size(24.dp),
                         tint = MaterialTheme.colorScheme.onTertiaryContainer
                     )
-                    
+
                     Spacer(modifier = Modifier.width(16.dp))
-                    
+
                     Column(
                         modifier = Modifier.weight(1f)
                     ) {
@@ -353,7 +353,7 @@ class MoreFragmentCompose : BaseComposeFragment<MoreFragmentComposeViewModel>() 
                                 fontWeight = FontWeight.Medium,
                                 color = MaterialTheme.colorScheme.onTertiaryContainer
                             )
-                            
+
                             if (tool.isExperimental) {
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Badge(
@@ -368,7 +368,7 @@ class MoreFragmentCompose : BaseComposeFragment<MoreFragmentComposeViewModel>() 
                         }
                     }
                 }
-                
+
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
@@ -456,6 +456,7 @@ class MoreFragmentCompose : BaseComposeFragment<MoreFragmentComposeViewModel>() 
                     android.widget.Toast.LENGTH_SHORT
                 ).show()
             }
+
             "export" -> {
                 // Export data logic can be added to ViewModel later
                 android.widget.Toast.makeText(
@@ -464,6 +465,7 @@ class MoreFragmentCompose : BaseComposeFragment<MoreFragmentComposeViewModel>() 
                     android.widget.Toast.LENGTH_SHORT
                 ).show()
             }
+
             "share" -> {
                 // Share analysis logic can be added to ViewModel later
                 android.widget.Toast.makeText(
@@ -486,16 +488,19 @@ class MoreFragmentCompose : BaseComposeFragment<MoreFragmentComposeViewModel>() 
                     .build(RouterConfig.VERSION)
                     .navigation(context)
             }
+
             "faq" -> {
                 NavigationManager.getInstance()
                     .build(RouterConfig.VERSION)
                     .navigation(context)
             }
+
             "troubleshooting" -> {
                 NavigationManager.getInstance()
                     .build(RouterConfig.VERSION)
                     .navigation(context)
             }
+
             "contact_support" -> {
                 NavigationManager.getInstance()
                     .build(RouterConfig.VERSION)

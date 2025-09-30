@@ -475,7 +475,11 @@ private fun ThermalReportItem(item: ThermalMediaItem) {
 
             Row {
                 IconButton(onClick = { /* View */ }) {
-                    Icon(Icons.Default.Visibility, contentDescription = "View", tint = MaterialTheme.colorScheme.primary)
+                    Icon(
+                        Icons.Default.Visibility,
+                        contentDescription = "View",
+                        tint = MaterialTheme.colorScheme.primary
+                    )
                 }
                 IconButton(onClick = { /* Share */ }) {
                     Icon(Icons.Default.Share, contentDescription = "Share", tint = Color.Gray)

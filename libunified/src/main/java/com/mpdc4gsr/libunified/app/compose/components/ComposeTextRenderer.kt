@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.sp
 /**
  * Demonstrates the idiomatic Compose way to render text using TextMeasurer and drawText
  * instead of native Paint and Canvas.drawText
- * 
+ *
  * This could replace native Paint-based text rendering in legacy components
  * when migrating to Compose-based implementations.
  */
@@ -33,7 +33,7 @@ fun ComposeLegendTextDemo(
         fontSize = 12.sp,
         color = MaterialTheme.colorScheme.onSurface
     )
-    
+
     Canvas(
         modifier = modifier.size(200.dp, 100.dp)
     ) {
@@ -53,19 +53,19 @@ private fun DrawScope.drawComposeLegendText(
 ) {
     val legendItems = listOf(
         "GSR Signal",
-        "Data Points", 
+        "Data Points",
         "Threshold"
     )
-    
+
     legendItems.forEachIndexed { index, text ->
         val textLayoutResult = textMeasurer.measure(
             text = text,
             style = textStyle
         )
-        
+
         val x = 20f
         val y = 20f + (index * 25f)
-        
+
         // Using Compose's drawText instead of Canvas.drawText with Paint
         drawText(
             textLayoutResult = textLayoutResult,

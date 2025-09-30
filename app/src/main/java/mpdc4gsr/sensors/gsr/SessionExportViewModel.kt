@@ -49,7 +49,7 @@ class SessionExportViewModel(
     fun loadSessions() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true, error = null)
-            
+
             try {
                 val sessions = getAvailableSessions()
                 _uiState.value = _uiState.value.copy(
@@ -75,7 +75,7 @@ class SessionExportViewModel(
         } else {
             currentSelection + session
         }
-        
+
         _uiState.value = _uiState.value.copy(selectedSessions = newSelection)
     }
 
@@ -113,13 +113,13 @@ class SessionExportViewModel(
             try {
                 val exportFiles = mutableListOf<File>()
                 val totalSessions = selectedSessions.size
-                
+
                 selectedSessions.forEachIndexed { index, session ->
                     _uiState.value = _uiState.value.copy(
                         currentExportFile = session.name,
                         exportProgress = (index.toFloat() / totalSessions)
                     )
-                    
+
                     val exportedFile = exportSession(session)
                     exportFiles.add(exportedFile)
                 }
@@ -155,7 +155,7 @@ class SessionExportViewModel(
      */
     private fun getAvailableSessions(): List<GSRSession> {
         val sessions = mutableListOf<GSRSession>()
-        
+
         // Check multiple possible session directories
         val possibleDirectories = listOf(
             File(Environment.getExternalStorageDirectory(), "GSR/Sessions"),
@@ -163,7 +163,7 @@ class SessionExportViewModel(
             File(application.getExternalFilesDir(null), "gsr_sessions"),
             File(application.filesDir, "gsr_sessions")
         )
-        
+
         for (directory in possibleDirectories) {
             if (directory.exists() && directory.isDirectory) {
                 directory.listFiles { file ->
@@ -181,7 +181,7 @@ class SessionExportViewModel(
                 }
             }
         }
-        
+
         // Sort by modification date (newest first)
         return sessions.sortedByDescending { File(it.filePath).lastModified() }
     }
@@ -215,11 +215,11 @@ class SessionExportViewModel(
     private fun exportToCSV(session: GSRSession, outputFile: File) {
         val sessionFile = File(session.filePath)
         val writer = FileWriter(outputFile)
-        
+
         writer.use { w ->
             // Write CSV header
             w.write("Timestamp,GSR_Value,Resistance,Conductance,Status\n")
-            
+
             // Read and convert session data
             sessionFile.readLines().forEach { line ->
                 if (line.isNotBlank() && !line.startsWith("#")) {
@@ -236,16 +236,22 @@ class SessionExportViewModel(
     private fun exportToJSON(session: GSRSession, outputFile: File) {
         val sessionFile = File(session.filePath)
         val writer = FileWriter(outputFile)
-        
+
         writer.use { w ->
             w.write("{\n")
             w.write("  \"session\": {\n")
             w.write("    \"name\": \"${session.name}\",\n")
             w.write("    \"duration\": \"${session.duration}\",\n")
             w.write("    \"dataPointCount\": ${session.dataPointCount},\n")
-            w.write("    \"exportedAt\": \"${SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault()).format(Date())}\",\n")
+            w.write(
+                "    \"exportedAt\": \"${
+                    SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault()).format(
+                        Date()
+                    )
+                }\",\n"
+            )
             w.write("    \"data\": [\n")
-            
+
             val lines = sessionFile.readLines().filter { it.isNotBlank() && !it.startsWith("#") }
             lines.forEachIndexed { index, line ->
                 val jsonLine = convertDataLineToJSON(line)
@@ -253,7 +259,7 @@ class SessionExportViewModel(
                 if (index < lines.size - 1) w.write(",")
                 w.write("\n")
             }
-            
+
             w.write("    ]\n")
             w.write("  }\n")
             w.write("}\n")
@@ -266,7 +272,7 @@ class SessionExportViewModel(
     private fun exportToXML(session: GSRSession, outputFile: File) {
         val sessionFile = File(session.filePath)
         val writer = FileWriter(outputFile)
-        
+
         writer.use { w ->
             w.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
             w.write("<gsrSession>\n")
@@ -274,17 +280,24 @@ class SessionExportViewModel(
             w.write("    <name>${session.name}</name>\n")
             w.write("    <duration>${session.duration}</duration>\n")
             w.write("    <dataPointCount>${session.dataPointCount}</dataPointCount>\n")
-            w.write("    <exportedAt>${SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault()).format(Date())}</exportedAt>\n")
+            w.write(
+                "    <exportedAt>${
+                    SimpleDateFormat(
+                        "yyyy-MM-dd'T'HH:mm:ss'Z'",
+                        Locale.getDefault()
+                    ).format(Date())
+                }</exportedAt>\n"
+            )
             w.write("  </metadata>\n")
             w.write("  <data>\n")
-            
+
             sessionFile.readLines().forEach { line ->
                 if (line.isNotBlank() && !line.startsWith("#")) {
                     val xmlLine = convertDataLineToXML(line)
                     w.write("    $xmlLine\n")
                 }
             }
-            
+
             w.write("  </data>\n")
             w.write("</gsrSession>\n")
         }
@@ -312,7 +325,7 @@ class SessionExportViewModel(
                         error = "Export completed! Files saved to Downloads folder."
                     )
                 }
-                
+
                 ExportDestination.EXTERNAL_STORAGE -> {
                     // Files are already in external storage
                     _uiState.value = _uiState.value.copy(
@@ -320,11 +333,11 @@ class SessionExportViewModel(
                         error = "Export completed! Files saved to external storage."
                     )
                 }
-                
+
                 ExportDestination.SHARE -> {
                     shareFiles(exportFiles)
                 }
-                
+
                 ExportDestination.EMAIL -> {
                     emailFiles(exportFiles)
                 }
@@ -346,16 +359,16 @@ class SessionExportViewModel(
             val uris = files.map { file ->
                 FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", file)
             }
-            
+
             val intent = Intent(Intent.ACTION_SEND_MULTIPLE).apply {
                 type = "*/*"
                 putParcelableArrayListExtra(Intent.EXTRA_STREAM, ArrayList(uris))
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             }
-            
+
             context.startActivity(Intent.createChooser(intent, "Share GSR Export"))
-            
+
             _uiState.value = _uiState.value.copy(
                 isExporting = false,
                 error = "Export completed! Sharing files..."
@@ -377,7 +390,7 @@ class SessionExportViewModel(
             val uris = files.map { file ->
                 FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", file)
             }
-            
+
             val intent = Intent(Intent.ACTION_SEND_MULTIPLE).apply {
                 type = "message/rfc822"
                 putExtra(Intent.EXTRA_SUBJECT, "GSR Session Export")
@@ -386,9 +399,9 @@ class SessionExportViewModel(
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             }
-            
+
             context.startActivity(Intent.createChooser(intent, "Email GSR Export"))
-            
+
             _uiState.value = _uiState.value.copy(
                 isExporting = false,
                 error = "Export completed! Opening email client..."
@@ -402,11 +415,19 @@ class SessionExportViewModel(
     }
 
     // Utility functions
-    
+
     private fun getExportDirectory(): File {
         return when (_uiState.value.exportDestination) {
-            ExportDestination.DOWNLOADS -> File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "GSR_Exports")
-            ExportDestination.EXTERNAL_STORAGE -> File(Environment.getExternalStorageDirectory(), "IRCamera/GSR_Exports")
+            ExportDestination.DOWNLOADS -> File(
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+                "GSR_Exports"
+            )
+
+            ExportDestination.EXTERNAL_STORAGE -> File(
+                Environment.getExternalStorageDirectory(),
+                "IRCamera/GSR_Exports"
+            )
+
             else -> File(application.getExternalFilesDir(null), "exports")
         }
     }

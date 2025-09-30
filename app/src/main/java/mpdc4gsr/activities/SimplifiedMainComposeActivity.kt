@@ -23,10 +23,10 @@ import mpdc4gsr.compose.theme.IRCameraTheme
  * Provides a streamlined interface with essential functionality
  */
 class SimplifiedMainComposeActivity : BaseComposeActivity<SimplifiedMainViewModel>() {
-    
-    override fun createViewModel(): SimplifiedMainViewModel = 
+
+    override fun createViewModel(): SimplifiedMainViewModel =
         viewModels<SimplifiedMainViewModel>().value
-    
+
     @Composable
     override fun Content(viewModel: SimplifiedMainViewModel) {
         IRCameraTheme {
@@ -45,7 +45,7 @@ fun SimplifiedMainScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val scrollState = rememberScrollState()
-    
+
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -73,7 +73,7 @@ fun SimplifiedMainScreen(
                 titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
             )
         )
-        
+
         // Content
         Column(
             modifier = Modifier
@@ -87,19 +87,19 @@ fun SimplifiedMainScreen(
                 systemStatus = uiState.systemStatus,
                 onToggleRecording = { viewModel.toggleRecording() }
             )
-            
+
             // Quick Actions
             QuickActionsCard(
                 onThermalCamera = { viewModel.launchThermalCamera() },
                 onGSRSensor = { viewModel.launchGSRSensor() },
                 onSettings = { viewModel.launchSettings() }
             )
-            
+
             // Connection Status
             ConnectionStatusCard(
                 connectionStatus = uiState.connectionStatus
             )
-            
+
             // Recording Status
             if (uiState.isRecording) {
                 RecordingStatusCard(
@@ -107,7 +107,7 @@ fun SimplifiedMainScreen(
                     onStopRecording = { viewModel.stopRecording() }
                 )
             }
-            
+
             // Recent Sessions (if any)
             if (uiState.recentSessions.isNotEmpty()) {
                 RecentSessionsCard(
@@ -115,7 +115,7 @@ fun SimplifiedMainScreen(
                     onSessionClick = { session -> viewModel.openSession(session) }
                 )
             }
-            
+
             // Error display
             uiState.error?.let { error ->
                 ErrorCard(
@@ -160,7 +160,7 @@ private fun SystemStatusCard(
                             HealthStatus.ERROR -> MaterialTheme.colorScheme.onErrorContainer
                         }
                     )
-                    
+
                     Text(
                         text = systemStatus.overallHealth.displayName,
                         style = MaterialTheme.typography.bodySmall,
@@ -171,7 +171,7 @@ private fun SystemStatusCard(
                         }
                     )
                 }
-                
+
                 Icon(
                     imageVector = when (systemStatus.overallHealth) {
                         HealthStatus.HEALTHY -> Icons.Default.CheckCircle
@@ -187,9 +187,9 @@ private fun SystemStatusCard(
                     }
                 )
             }
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             // Quick recording toggle
             Button(
                 onClick = onToggleRecording,
@@ -225,9 +225,9 @@ private fun QuickActionsCard(
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurface
             )
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -258,7 +258,7 @@ private fun QuickActionsCard(
                         )
                     }
                 }
-                
+
                 // GSR Sensor
                 Card(
                     onClick = onGSRSensor,
@@ -285,7 +285,7 @@ private fun QuickActionsCard(
                         )
                     }
                 }
-                
+
                 // Settings
                 Card(
                     onClick = onSettings,
@@ -332,9 +332,9 @@ private fun ConnectionStatusCard(
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurface
             )
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             // Thermal Camera Status
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -357,12 +357,12 @@ private fun ConnectionStatusCard(
                         color = MaterialTheme.colorScheme.onSurface
                     )
                 }
-                
+
                 ConnectionStatusIndicator(isConnected = connectionStatus.thermalCameraConnected)
             }
-            
+
             Spacer(modifier = Modifier.height(8.dp))
-            
+
             // GSR Sensor Status
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -385,7 +385,7 @@ private fun ConnectionStatusCard(
                         color = MaterialTheme.colorScheme.onSurface
                     )
                 }
-                
+
                 ConnectionStatusIndicator(isConnected = connectionStatus.gsrSensorConnected)
             }
         }
@@ -455,7 +455,7 @@ private fun RecordingStatusCard(
                     )
                 }
             }
-            
+
             Button(
                 onClick = onStopRecording,
                 colors = ButtonDefaults.buttonColors(
@@ -491,9 +491,9 @@ private fun RecentSessionsCard(
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurface
             )
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             sessions.take(3).forEach { session ->
                 Card(
                     onClick = { onSessionClick(session) },
@@ -565,16 +565,16 @@ private fun ErrorCard(
                 contentDescription = "Error",
                 tint = MaterialTheme.colorScheme.onErrorContainer
             )
-            
+
             Spacer(modifier = Modifier.width(12.dp))
-            
+
             Text(
                 text = error,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onErrorContainer,
                 modifier = Modifier.weight(1f)
             )
-            
+
             IconButton(onClick = onDismiss) {
                 Icon(
                     imageVector = Icons.Default.Close,

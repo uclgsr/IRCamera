@@ -228,7 +228,7 @@ private fun ThermalCameraView(
                 color = Color(0xFF1A1A2E),
                 size = size
             )
-            
+
             // Draw thermal hotspots
             drawCircle(
                 color = Color.Red,
@@ -237,7 +237,7 @@ private fun ThermalCameraView(
             )
             drawCircle(
                 color = Color.Yellow,
-                radius = 20f, 
+                radius = 20f,
                 center = Offset(size.width * 0.7f, size.height * 0.6f)
             )
             drawCircle(
@@ -245,7 +245,7 @@ private fun ThermalCameraView(
                 radius = 15f,
                 center = Offset(size.width * 0.5f, size.height * 0.2f)
             )
-            
+
             // Draw crosshair
             val centerX = size.width / 2
             val centerY = size.height / 2
@@ -315,7 +315,7 @@ private fun RGBCameraView(
                 color = Color(0xFF4A4A4A),
                 size = size
             )
-            
+
             // Draw some sample objects
             drawRoundRect(
                 color = Color(0xFF6A6A6A),
@@ -328,7 +328,7 @@ private fun RGBCameraView(
                 radius = 25f,
                 center = Offset(size.width * 0.8f, size.height * 0.3f)
             )
-            
+
             // Draw calibration crosshair
             val centerX = size.width / 2
             val centerY = size.height / 2

@@ -410,15 +410,15 @@ fun `test repository caching`() = runTest {
 ```kotlin
 @Test
 fun `test combined data flow`() = runTest {
-    val repository = MyRepository()
-    
-    repository.getCombinedData(listOf("device1", "device2"))
-        .test {
-            val emission = awaitItem()
-            assertTrue(emission is Result.Success)
-            assertEquals(2, emission.data.devices.size)
-        }
-}
+        val repository = MyRepository()
+
+        repository.getCombinedData(listOf("device1", "device2"))
+            .test {
+                val emission = awaitItem()
+                assertTrue(emission is Result.Success)
+                assertEquals(2, emission.data.devices.size)
+            }
+    }
 ```
 
 ## Future Enhancements

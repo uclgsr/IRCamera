@@ -107,7 +107,7 @@ class IRMonitorHistoryViewModel : BaseViewModel() {
                         }
                     }
                 }
-                
+
                 // Refresh the data after deletion
                 refreshHistory()
                 clearSelection()
@@ -122,21 +122,21 @@ class IRMonitorHistoryViewModel : BaseViewModel() {
                 val historyItems = withContext(Dispatchers.IO) {
                     val recordList: List<ThermalDao.Record> =
                         AppDatabase.getInstance().thermalDao().queryRecordList()
-                    
+
                     // Convert database records to HistoryItem objects
                     recordList.mapIndexed { index, record ->
                         // Query additional details for temperature statistics
                         val detailList = AppDatabase.getInstance().thermalDao().queryDetail(record.startTime)
-                        
+
                         // Calculate temperature statistics from detail data
                         val temperatures = detailList.map { it.thermal }
                         val maxTemperatures = detailList.map { it.thermalMax }
                         val minTemperatures = detailList.map { it.thermalMin }
-                        
+
                         val avgTemp = if (temperatures.isNotEmpty()) temperatures.average().toFloat() else 0f
                         val maxTemp = maxTemperatures.maxOrNull() ?: 0f
                         val minTemp = minTemperatures.minOrNull() ?: 0f
-                        
+
                         HistoryItem(
                             id = record.startTime.toString(),
                             sessionName = "Session ${index + 1}",
@@ -156,7 +156,7 @@ class IRMonitorHistoryViewModel : BaseViewModel() {
                         )
                     }
                 }
-                
+
                 // Update the data on main thread
                 allHistoryItems = historyItems
                 applyFilter()
@@ -174,7 +174,7 @@ class IRMonitorHistoryViewModel : BaseViewModel() {
             currentSelected.add(id)
         }
         _selectedItems.value = currentSelected
-        
+
         // Exit selection mode if no items are selected
         if (currentSelected.isEmpty()) {
             _isSelectionMode.value = false
@@ -211,11 +211,11 @@ class IRMonitorHistoryViewModel : BaseViewModel() {
             set(Calendar.SECOND, 0)
             set(Calendar.MILLISECOND, 0)
         }.timeInMillis
-        
+
         val tomorrow = calendar.apply {
             add(Calendar.DAY_OF_MONTH, 1)
         }.timeInMillis
-        
+
         return allHistoryItems.filter { it.startTime in today until tomorrow }
     }
 
@@ -227,10 +227,10 @@ class IRMonitorHistoryViewModel : BaseViewModel() {
         calendar.set(Calendar.SECOND, 0)
         calendar.set(Calendar.MILLISECOND, 0)
         val weekStart = calendar.timeInMillis
-        
+
         calendar.add(Calendar.WEEK_OF_YEAR, 1)
         val weekEnd = calendar.timeInMillis
-        
+
         return allHistoryItems.filter { it.startTime in weekStart until weekEnd }
     }
 
@@ -242,10 +242,10 @@ class IRMonitorHistoryViewModel : BaseViewModel() {
         calendar.set(Calendar.SECOND, 0)
         calendar.set(Calendar.MILLISECOND, 0)
         val monthStart = calendar.timeInMillis
-        
+
         calendar.add(Calendar.MONTH, 1)
         val monthEnd = calendar.timeInMillis
-        
+
         return allHistoryItems.filter { it.startTime in monthStart until monthEnd }
     }
 }

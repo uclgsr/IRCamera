@@ -16,7 +16,7 @@
             android:name=".activity.IRMonitorComposeActivity"
             android:launchMode="singleTop"
             android:screenOrientation="userPortrait" />
-        
+
         <activity
             android:name=".activity.IRLogMPChartComposeActivity"
             android:launchMode="singleTop"
@@ -28,7 +28,7 @@
             android:screenOrientation="userPortrait" />
         <!-- Test utility activity (deprecated - Java-based utility) -->
         <!-- <activity android:name=".activity.TestRecordActivity" /> -->
-        
+
         <!-- Report Activities - Migrated to Compose -->
         <activity
             android:name=".report.activity.ReportCreateComposeActivity"
@@ -76,7 +76,7 @@
             android:requestLegacyExternalStorage="true"
             android:screenOrientation="userPortrait"
             android:windowSoftInputMode="adjustPan" />
-        
+
         <!-- Legacy Activities (deprecated - use Compose versions above) -->
         <!-- <activity android:name=".lite.activity.IRMonitorLiteActivity" /> -->
         <!-- <activity android:name=".lite.activity.IRMonitorChartLiteActivity" /> -->
@@ -86,7 +86,7 @@
         <!-- <activity android:name=".lite.activity.IRThermalLiteActivity" android:configChanges="orientation|screenSize|keyboardHidden" android:exported="true" android:launchMode="singleTask" android:maxAspectRatio="2.4" android:requestLegacyExternalStorage="true" android:screenOrientation="userPortrait" android:windowSoftInputMode="adjustPan" /> -->
 
         <!-- Missing base activities -->
-        
+
         <activity
             android:name=".activity.BaseIRPlusActivity"
             android:screenOrientation="userPortrait" />

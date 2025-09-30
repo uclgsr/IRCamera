@@ -135,431 +135,431 @@ class DevicePairingActivityCompose : BaseComposeActivity<DevicePairingViewModel>
                         )
                     }
                 ) { paddingValues ->
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues)
-                        .padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    // Connection Status Card
-                    ConnectionStatusCard(
-                        connectionState = connectionState,
-                        connectedController = connectedController,
-                        statusMessage = statusMessage,
-                        onDisconnect = { viewModel.disconnectFromController() }
-                    )
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(paddingValues)
+                            .padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        // Connection Status Card
+                        ConnectionStatusCard(
+                            connectionState = connectionState,
+                            connectedController = connectedController,
+                            statusMessage = statusMessage,
+                            onDisconnect = { viewModel.disconnectFromController() }
+                        )
 
-                    // Scan Controls Card
-                    ScanControlsCard(
-                        scanState = scanState,
-                        discoveredCount = discoveredControllers.size,
-                        onStartScan = { viewModel.startControllerScan() },
-                        onStopScan = { viewModel.stopControllerScan() }
-                    )
+                        // Scan Controls Card
+                        ScanControlsCard(
+                            scanState = scanState,
+                            discoveredCount = discoveredControllers.size,
+                            onStartScan = { viewModel.startControllerScan() },
+                            onStopScan = { viewModel.stopControllerScan() }
+                        )
 
-                    // Discovered Devices List
-                    DiscoveredDevicesCard(
-                        controllers = discoveredControllers,
-                        onControllerClick = { controller ->
-                            viewModel.connectToController(controller)
-                        }
-                    )
+                        // Discovered Devices List
+                        DiscoveredDevicesCard(
+                            controllers = discoveredControllers,
+                            onControllerClick = { controller ->
+                                viewModel.connectToController(controller)
+                            }
+                        )
+                    }
                 }
-            }
 
-            // Flash overlay for sync flash
-            if (flashState.isVisible) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(Color.White.copy(alpha = 0.8f))
-                ) {
-                    Text(
-                        text = "SYNC FLASH",
-                        modifier = Modifier.align(Alignment.Center),
-                        style = MaterialTheme.typography.headlineLarge,
-                        color = Color.Black,
-                        fontWeight = FontWeight.Bold
-                    )
+                // Flash overlay for sync flash
+                if (flashState.isVisible) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(Color.White.copy(alpha = 0.8f))
+                    ) {
+                        Text(
+                            text = "SYNC FLASH",
+                            modifier = Modifier.align(Alignment.Center),
+                            style = MaterialTheme.typography.headlineLarge,
+                            color = Color.Black,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
                 }
             }
         }
-    }
 
-    @Composable
-    private fun ConnectionStatusCard(
-        connectionState: DevicePairingViewModel.ConnectionState,
-        connectedController: NetworkClient.ControllerInfo?,
-        statusMessage: String,
-        onDisconnect: () -> Unit
-    ) {
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(12.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = when (connectionState) {
-                    is DevicePairingViewModel.ConnectionState.Connected ->
-                        MaterialTheme.colorScheme.primaryContainer
-
-                    is DevicePairingViewModel.ConnectionState.Failed ->
-                        MaterialTheme.colorScheme.errorContainer
-
-                    else -> MaterialTheme.colorScheme.surfaceVariant
-                }
-            )
+        @Composable
+        private fun ConnectionStatusCard(
+            connectionState: DevicePairingViewModel.ConnectionState,
+            connectedController: NetworkClient.ControllerInfo?,
+            statusMessage: String,
+            onDisconnect: () -> Unit
         ) {
-            Column(
-                modifier = Modifier.padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(12.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = when (connectionState) {
+                        is DevicePairingViewModel.ConnectionState.Connected ->
+                            MaterialTheme.colorScheme.primaryContainer
+
+                        is DevicePairingViewModel.ConnectionState.Failed ->
+                            MaterialTheme.colorScheme.errorContainer
+
+                        else -> MaterialTheme.colorScheme.surfaceVariant
+                    }
+                )
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+                Column(
+                    modifier = Modifier.padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    Text(
-                        text = "Connection Status",
-                        style = MaterialTheme.typography.headlineSmall,
-                        fontWeight = FontWeight.Bold
-                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Connection Status",
+                            style = MaterialTheme.typography.headlineSmall,
+                            fontWeight = FontWeight.Bold
+                        )
 
-                    ConnectionStatusIndicator(connectionState)
-                }
+                        ConnectionStatusIndicator(connectionState)
+                    }
 
-                when (connectionState) {
-                    is DevicePairingViewModel.ConnectionState.Connected -> {
-                        connectedController?.let { controller ->
-                            Column(
-                                verticalArrangement = Arrangement.spacedBy(8.dp)
-                            ) {
-                                Text(
-                                    text = "Connected to: ${controller.deviceName}",
-                                    style = MaterialTheme.typography.bodyLarge,
-                                    fontWeight = FontWeight.Medium
-                                )
-                                Text(
-                                    text = "${controller.ipAddress}:${controller.port}",
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-
-                                Button(
-                                    onClick = onDisconnect,
-                                    colors = ButtonDefaults.buttonColors(
-                                        containerColor = MaterialTheme.colorScheme.error
-                                    )
+                    when (connectionState) {
+                        is DevicePairingViewModel.ConnectionState.Connected -> {
+                            connectedController?.let { controller ->
+                                Column(
+                                    verticalArrangement = Arrangement.spacedBy(8.dp)
                                 ) {
-                                    Icon(Icons.Default.Close, contentDescription = null)
-                                    Spacer(modifier = Modifier.width(8.dp))
-                                    Text("Disconnect")
+                                    Text(
+                                        text = "Connected to: ${controller.deviceName}",
+                                        style = MaterialTheme.typography.bodyLarge,
+                                        fontWeight = FontWeight.Medium
+                                    )
+                                    Text(
+                                        text = "${controller.ipAddress}:${controller.port}",
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+
+                                    Button(
+                                        onClick = onDisconnect,
+                                        colors = ButtonDefaults.buttonColors(
+                                            containerColor = MaterialTheme.colorScheme.error
+                                        )
+                                    ) {
+                                        Icon(Icons.Default.Close, contentDescription = null)
+                                        Spacer(modifier = Modifier.width(8.dp))
+                                        Text("Disconnect")
+                                    }
                                 }
                             }
                         }
-                    }
 
-                    is DevicePairingViewModel.ConnectionState.Connecting -> {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            CircularProgressIndicator(
-                                modifier = Modifier.size(20.dp),
-                                strokeWidth = 2.dp
+                        is DevicePairingViewModel.ConnectionState.Connecting -> {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                CircularProgressIndicator(
+                                    modifier = Modifier.size(20.dp),
+                                    strokeWidth = 2.dp
+                                )
+                                Text("Connecting...")
+                            }
+                        }
+
+                        is DevicePairingViewModel.ConnectionState.Failed -> {
+                            Text(
+                                text = "Connection failed: ${connectionState.message}",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.error
                             )
-                            Text("Connecting...")
+                        }
+
+                        else -> {
+                            Text(
+                                text = "Not connected",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
                         }
                     }
 
-                    is DevicePairingViewModel.ConnectionState.Failed -> {
+                    if (statusMessage.isNotEmpty()) {
                         Text(
-                            text = "Connection failed: ${connectionState.message}",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.error
-                        )
-                    }
-
-                    else -> {
-                        Text(
-                            text = "Not connected",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                }
-
-                if (statusMessage.isNotEmpty()) {
-                    Text(
-                        text = statusMessage,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            }
-        }
-    }
-
-    @Composable
-    private fun ConnectionStatusIndicator(connectionState: DevicePairingViewModel.ConnectionState) {
-        val (color, icon) = when (connectionState) {
-            is DevicePairingViewModel.ConnectionState.Connected ->
-                Pair(MaterialTheme.colorScheme.primary, Icons.Default.CheckCircle)
-
-            is DevicePairingViewModel.ConnectionState.Connecting ->
-                Pair(MaterialTheme.colorScheme.tertiary, Icons.Default.Refresh)
-
-            is DevicePairingViewModel.ConnectionState.Failed ->
-                Pair(MaterialTheme.colorScheme.error, Icons.Default.Error)
-
-            else ->
-                Pair(MaterialTheme.colorScheme.outline, Icons.Default.Circle)
-        }
-
-        Icon(
-            imageVector = icon,
-            contentDescription = null,
-            tint = color,
-            modifier = Modifier.size(24.dp)
-        )
-    }
-
-    @Composable
-    private fun ScanControlsCard(
-        scanState: DevicePairingViewModel.ScanState,
-        discoveredCount: Int,
-        onStartScan: () -> Unit,
-        onStopScan: () -> Unit
-    ) {
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(12.dp)
-        ) {
-            Column(
-                modifier = Modifier.padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                Text(
-                    text = "Device Discovery",
-                    style = MaterialTheme.typography.headlineSmall,
-                    fontWeight = FontWeight.Bold
-                )
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column {
-                        Text(
-                            text = "Found $discoveredCount device(s)",
-                            style = MaterialTheme.typography.bodyLarge
-                        )
-                        Text(
-                            text = when (scanState) {
-                                DevicePairingViewModel.ScanState.SCANNING -> "Scanning..."
-                                DevicePairingViewModel.ScanState.COMPLETED -> "Scan completed"
-                                else -> "Ready to scan"
-                            },
+                            text = statusMessage,
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
-
-                    if (scanState == DevicePairingViewModel.ScanState.SCANNING) {
-                        Button(
-                            onClick = onStopScan,
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = MaterialTheme.colorScheme.error
-                            )
-                        ) {
-                            Icon(Icons.Default.Stop, contentDescription = null)
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text("Stop")
-                        }
-                    } else {
-                        Button(onClick = onStartScan) {
-                            Icon(Icons.Default.Search, contentDescription = null)
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text("Scan")
-                        }
-                    }
-                }
-
-                if (scanState == DevicePairingViewModel.ScanState.SCANNING) {
-                    LinearProgressIndicator(
-                        modifier = Modifier.fillMaxWidth()
-                    )
                 }
             }
         }
-    }
 
-    @Composable
-    private fun DiscoveredDevicesCard(
-        controllers: List<NetworkClient.ControllerInfo>,
-        onControllerClick: (NetworkClient.ControllerInfo) -> Unit
-    ) {
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(12.dp)
-        ) {
-            Column(
-                modifier = Modifier.padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                Text(
-                    text = "Discovered Devices",
-                    style = MaterialTheme.typography.headlineSmall,
-                    fontWeight = FontWeight.Bold
-                )
+        @Composable
+        private fun ConnectionStatusIndicator(connectionState: DevicePairingViewModel.ConnectionState) {
+            val (color, icon) = when (connectionState) {
+                is DevicePairingViewModel.ConnectionState.Connected ->
+                    Pair(MaterialTheme.colorScheme.primary, Icons.Default.CheckCircle)
 
-                if (controllers.isEmpty()) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(120.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            Icon(
-                                Icons.Default.DeviceHub,
-                                contentDescription = null,
-                                modifier = Modifier.size(48.dp),
-                                tint = MaterialTheme.colorScheme.outline
-                            )
-                            Text(
-                                text = "No devices found",
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                            Text(
-                                text = "Start scanning to discover devices",
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.outline
-                            )
-                        }
-                    }
-                } else {
-                    LazyColumn(
-                        modifier = Modifier.heightIn(max = 300.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        items(controllers) { controller ->
-                            DeviceItem(
-                                controller = controller,
-                                onClick = { onControllerClick(controller) }
-                            )
-                        }
-                    }
-                }
+                is DevicePairingViewModel.ConnectionState.Connecting ->
+                    Pair(MaterialTheme.colorScheme.tertiary, Icons.Default.Refresh)
+
+                is DevicePairingViewModel.ConnectionState.Failed ->
+                    Pair(MaterialTheme.colorScheme.error, Icons.Default.Error)
+
+                else ->
+                    Pair(MaterialTheme.colorScheme.outline, Icons.Default.Circle)
             }
+
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                tint = color,
+                modifier = Modifier.size(24.dp)
+            )
         }
-    }
 
-    @Composable
-    private fun DeviceItem(
-        controller: NetworkClient.ControllerInfo,
-        onClick: () -> Unit
-    ) {
-        Card(
-            onClick = onClick,
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(8.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surface,
-                contentColor = MaterialTheme.colorScheme.onSurface
-            ),
-            border = CardDefaults.outlinedCardBorder()
+        @Composable
+        private fun ScanControlsCard(
+            scanState: DevicePairingViewModel.ScanState,
+            discoveredCount: Int,
+            onStartScan: () -> Unit,
+            onStopScan: () -> Unit
         ) {
-            Row(
-                modifier = Modifier.padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(12.dp)
             ) {
-                Icon(
-                    Icons.Default.DeviceHub,
-                    contentDescription = null,
-                    modifier = Modifier.size(40.dp),
-                    tint = MaterialTheme.colorScheme.primary
-                )
-
                 Column(
-                    modifier = Modifier.weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                    modifier = Modifier.padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     Text(
-                        text = controller.deviceName,
-                        style = MaterialTheme.typography.bodyLarge,
-                        fontWeight = FontWeight.Medium
+                        text = "Device Discovery",
+                        style = MaterialTheme.typography.headlineSmall,
+                        fontWeight = FontWeight.Bold
                     )
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column {
+                            Text(
+                                text = "Found $discoveredCount device(s)",
+                                style = MaterialTheme.typography.bodyLarge
+                            )
+                            Text(
+                                text = when (scanState) {
+                                    DevicePairingViewModel.ScanState.SCANNING -> "Scanning..."
+                                    DevicePairingViewModel.ScanState.COMPLETED -> "Scan completed"
+                                    else -> "Ready to scan"
+                                },
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+
+                        if (scanState == DevicePairingViewModel.ScanState.SCANNING) {
+                            Button(
+                                onClick = onStopScan,
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = MaterialTheme.colorScheme.error
+                                )
+                            ) {
+                                Icon(Icons.Default.Stop, contentDescription = null)
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text("Stop")
+                            }
+                        } else {
+                            Button(onClick = onStartScan) {
+                                Icon(Icons.Default.Search, contentDescription = null)
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text("Scan")
+                            }
+                        }
+                    }
+
+                    if (scanState == DevicePairingViewModel.ScanState.SCANNING) {
+                        LinearProgressIndicator(
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
+                }
+            }
+        }
+
+        @Composable
+        private fun DiscoveredDevicesCard(
+            controllers: List<NetworkClient.ControllerInfo>,
+            onControllerClick: (NetworkClient.ControllerInfo) -> Unit
+        ) {
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Column(
+                    modifier = Modifier.padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
                     Text(
-                        text = "${controller.ipAddress}:${controller.port}",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        text = "Discovered Devices",
+                        style = MaterialTheme.typography.headlineSmall,
+                        fontWeight = FontWeight.Bold
+                    )
+
+                    if (controllers.isEmpty()) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(120.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                Icon(
+                                    Icons.Default.DeviceHub,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(48.dp),
+                                    tint = MaterialTheme.colorScheme.outline
+                                )
+                                Text(
+                                    text = "No devices found",
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                                Text(
+                                    text = "Start scanning to discover devices",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.outline
+                                )
+                            }
+                        }
+                    } else {
+                        LazyColumn(
+                            modifier = Modifier.heightIn(max = 300.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            items(controllers) { controller ->
+                                DeviceItem(
+                                    controller = controller,
+                                    onClick = { onControllerClick(controller) }
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        @Composable
+        private fun DeviceItem(
+            controller: NetworkClient.ControllerInfo,
+            onClick: () -> Unit
+        ) {
+            Card(
+                onClick = onClick,
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(8.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    contentColor = MaterialTheme.colorScheme.onSurface
+                ),
+                border = CardDefaults.outlinedCardBorder()
+            ) {
+                Row(
+                    modifier = Modifier.padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    Icon(
+                        Icons.Default.DeviceHub,
+                        contentDescription = null,
+                        modifier = Modifier.size(40.dp),
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+
+                    Column(
+                        modifier = Modifier.weight(1f),
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        Text(
+                            text = controller.deviceName,
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontWeight = FontWeight.Medium
+                        )
+                        Text(
+                            text = "${controller.ipAddress}:${controller.port}",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+
+                    Icon(
+                        Icons.Default.KeyboardArrowRight,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.outline
                     )
                 }
+            }
+        }
 
-                Icon(
-                    Icons.Default.KeyboardArrowRight,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.outline
-                )
+        // NetworkClient.NetworkEventListener implementation
+        override fun onControllerDiscovered(controller: NetworkClient.ControllerInfo) {
+            // ViewModel handles this through its own NetworkEventListener implementation
+        }
+
+        override fun onConnected(controller: NetworkClient.ControllerInfo) {
+            // ViewModel handles this through its own NetworkEventListener implementation
+        }
+
+        override fun onDisconnected(reason: String) {
+            // ViewModel handles this through its own NetworkEventListener implementation
+        }
+
+        override fun onRemoteMeasurementRequest(sessionInfo: SessionInfo) {
+            // ViewModel handles this through its own NetworkEventListener implementation
+        }
+
+        override fun onSyncFlash(durationMs: Int) {
+            runOnUiThread {
+                // Trigger flash overlay through ViewModel
+                viewModel.triggerSyncFlash(durationMs)
+            }
+        }
+
+        override fun onTimeSynchronized(offsetNanoseconds: Long) {
+            runOnUiThread {
+                Toast.makeText(
+                    this,
+                    "Time synchronized (offset: ${offsetNanoseconds / 1_000_000}ms)",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+
+        override fun onDataStreamingStarted() {
+            runOnUiThread {
+                Toast.makeText(this, "Data streaming started", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        override fun onDataStreamingStopped() {
+            runOnUiThread {
+                Toast.makeText(this, "Data streaming stopped", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        override fun onError(operation: String, error: String) {
+            runOnUiThread {
+                Toast.makeText(this, "Network error: $error", Toast.LENGTH_LONG).show()
             }
         }
     }
-
-    // NetworkClient.NetworkEventListener implementation
-    override fun onControllerDiscovered(controller: NetworkClient.ControllerInfo) {
-        // ViewModel handles this through its own NetworkEventListener implementation
-    }
-
-    override fun onConnected(controller: NetworkClient.ControllerInfo) {
-        // ViewModel handles this through its own NetworkEventListener implementation
-    }
-
-    override fun onDisconnected(reason: String) {
-        // ViewModel handles this through its own NetworkEventListener implementation
-    }
-
-    override fun onRemoteMeasurementRequest(sessionInfo: SessionInfo) {
-        // ViewModel handles this through its own NetworkEventListener implementation
-    }
-
-    override fun onSyncFlash(durationMs: Int) {
-        runOnUiThread {
-            // Trigger flash overlay through ViewModel
-            viewModel.triggerSyncFlash(durationMs)
-        }
-    }
-
-    override fun onTimeSynchronized(offsetNanoseconds: Long) {
-        runOnUiThread {
-            Toast.makeText(
-                this,
-                "Time synchronized (offset: ${offsetNanoseconds / 1_000_000}ms)",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
-    }
-
-    override fun onDataStreamingStarted() {
-        runOnUiThread {
-            Toast.makeText(this, "Data streaming started", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    override fun onDataStreamingStopped() {
-        runOnUiThread {
-            Toast.makeText(this, "Data streaming stopped", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    override fun onError(operation: String, error: String) {
-        runOnUiThread {
-            Toast.makeText(this, "Network error: $error", Toast.LENGTH_LONG).show()
-        }
-    }
-}

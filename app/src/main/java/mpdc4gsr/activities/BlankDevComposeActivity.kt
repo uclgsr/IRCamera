@@ -27,17 +27,17 @@ import mpdc4gsr.compose.theme.IRCameraTheme
  * Manages USB device connections and permissions with Material 3 UI
  */
 class BlankDevComposeActivity : BaseComposeActivity<BlankDevViewModel>() {
-    
-    override fun createViewModel(): BlankDevViewModel = 
+
+    override fun createViewModel(): BlankDevViewModel =
         viewModels<BlankDevViewModel>().value
-    
+
     @Composable
     override fun Content(viewModel: BlankDevViewModel) {
         IRCameraTheme {
             BlankDevScreen(
                 viewModel = viewModel,
                 onNavigateBack = { finish() },
-                onNavigateToMain = { 
+                onNavigateToMain = {
                     val intent = Intent(this@BlankDevComposeActivity, MainActivity::class.java)
                     startActivity(intent)
                     finish()
@@ -45,10 +45,10 @@ class BlankDevComposeActivity : BaseComposeActivity<BlankDevViewModel>() {
             )
         }
     }
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         // Handle USB device intent
         intent?.let { intent ->
             when (intent.action) {
@@ -56,10 +56,12 @@ class BlankDevComposeActivity : BaseComposeActivity<BlankDevViewModel>() {
                     val device = intent.getParcelableExtra<UsbDevice>(UsbManager.EXTRA_DEVICE)
                     device?.let { createViewModel().handleUsbDeviceAttached(it) }
                 }
+
                 UsbManager.ACTION_USB_DEVICE_DETACHED -> {
                     val device = intent.getParcelableExtra<UsbDevice>(UsbManager.EXTRA_DEVICE)
                     device?.let { createViewModel().handleUsbDeviceDetached(it) }
                 }
+
                 BlankDevViewModel.ACTION_USB_PERMISSION -> {
                     val device = intent.getParcelableExtra<UsbDevice>(UsbManager.EXTRA_DEVICE)
                     val granted = intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)
@@ -78,7 +80,7 @@ fun BlankDevScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
-    
+
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -100,7 +102,7 @@ fun BlankDevScreen(
                         contentDescription = "Refresh devices"
                     )
                 }
-                
+
                 IconButton(onClick = onNavigateToMain) {
                     Icon(
                         imageVector = Icons.Default.Home,
@@ -113,7 +115,7 @@ fun BlankDevScreen(
                 titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
             )
         )
-        
+
         // Content
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
@@ -128,7 +130,7 @@ fun BlankDevScreen(
                     onRequestPermission = { viewModel.requestUsbPermissions() }
                 )
             }
-            
+
             // Connected Devices
             if (uiState.connectedDevices.isNotEmpty()) {
                 item {
@@ -138,7 +140,7 @@ fun BlankDevScreen(
                         color = MaterialTheme.colorScheme.onSurface
                     )
                 }
-                
+
                 items(uiState.connectedDevices) { device ->
                     UsbDeviceCard(
                         device = device,
@@ -147,7 +149,7 @@ fun BlankDevScreen(
                     )
                 }
             }
-            
+
             // Available Devices
             if (uiState.availableDevices.isNotEmpty()) {
                 item {
@@ -157,7 +159,7 @@ fun BlankDevScreen(
                         color = MaterialTheme.colorScheme.onSurface
                     )
                 }
-                
+
                 items(uiState.availableDevices) { device ->
                     AvailableUsbDeviceCard(
                         device = device,
@@ -165,14 +167,14 @@ fun BlankDevScreen(
                     )
                 }
             }
-            
+
             // Empty State
             if (uiState.connectedDevices.isEmpty() && uiState.availableDevices.isEmpty()) {
                 item {
                     EmptyDevicesCard()
                 }
             }
-            
+
             // Error Display
             uiState.error?.let { error ->
                 item {
@@ -182,7 +184,7 @@ fun BlankDevScreen(
                     )
                 }
             }
-            
+
             // Auto-navigation section
             item {
                 AutoNavigationCard(
@@ -230,7 +232,7 @@ private fun UsbStatusCard(
                             MaterialTheme.colorScheme.onErrorContainer
                         }
                     )
-                    
+
                     Text(
                         text = if (hasPermission) "Granted" else "Not Granted",
                         style = MaterialTheme.typography.bodySmall,
@@ -241,7 +243,7 @@ private fun UsbStatusCard(
                         }
                     )
                 }
-                
+
                 Icon(
                     imageVector = if (hasPermission) Icons.Default.CheckCircle else Icons.Default.Error,
                     contentDescription = if (hasPermission) "Permission granted" else "Permission needed",
@@ -249,7 +251,7 @@ private fun UsbStatusCard(
                     modifier = Modifier.size(32.dp)
                 )
             }
-            
+
             if (!hasPermission) {
                 Spacer(modifier = Modifier.height(12.dp))
                 Button(
@@ -265,7 +267,7 @@ private fun UsbStatusCard(
                     Text("Request USB Permission")
                 }
             }
-            
+
             if (hasPermission) {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
@@ -308,9 +310,9 @@ private fun UsbDeviceCard(
                 modifier = Modifier.size(32.dp),
                 tint = MaterialTheme.colorScheme.onSecondaryContainer
             )
-            
+
             Spacer(modifier = Modifier.width(12.dp))
-            
+
             // Device Info
             Column(
                 modifier = Modifier.weight(1f)
@@ -320,13 +322,13 @@ private fun UsbDeviceCard(
                     style = MaterialTheme.typography.titleSmall,
                     color = MaterialTheme.colorScheme.onSecondaryContainer
                 )
-                
+
                 Text(
                     text = "PID: ${device.productId} VID: ${device.vendorId}",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSecondaryContainer
                 )
-                
+
                 // Connection Status
                 Row(
                     verticalAlignment = Alignment.CenterVertically
@@ -347,7 +349,7 @@ private fun UsbDeviceCard(
                     )
                 }
             }
-            
+
             // Actions
             if (!device.hasPermission) {
                 IconButton(onClick = onRequestPermission) {
@@ -358,7 +360,7 @@ private fun UsbDeviceCard(
                     )
                 }
             }
-            
+
             IconButton(onClick = onDisconnect) {
                 Icon(
                     imageVector = Icons.Default.Close,
@@ -396,9 +398,9 @@ private fun AvailableUsbDeviceCard(
                 modifier = Modifier.size(32.dp),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
-            
+
             Spacer(modifier = Modifier.width(12.dp))
-            
+
             Column(
                 modifier = Modifier.weight(1f)
             ) {
@@ -407,14 +409,14 @@ private fun AvailableUsbDeviceCard(
                     style = MaterialTheme.typography.titleSmall,
                     color = MaterialTheme.colorScheme.onSurface
                 )
-                
+
                 Text(
                     text = "PID: ${device.productId} VID: ${device.vendorId}",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-            
+
             Icon(
                 imageVector = Icons.Default.Add,
                 contentDescription = "Connect",
@@ -441,17 +443,17 @@ private fun EmptyDevicesCard() {
                 modifier = Modifier.size(64.dp),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             Text(
                 text = "No USB Devices Detected",
                 style = MaterialTheme.typography.headlineSmall,
                 color = MaterialTheme.colorScheme.onSurface
             )
-            
+
             Spacer(modifier = Modifier.height(8.dp))
-            
+
             Text(
                 text = "Connect a USB device to get started",
                 style = MaterialTheme.typography.bodyMedium,
@@ -483,16 +485,16 @@ private fun ErrorCard(
                 contentDescription = "Error",
                 tint = MaterialTheme.colorScheme.onErrorContainer
             )
-            
+
             Spacer(modifier = Modifier.width(12.dp))
-            
+
             Text(
                 text = error,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onErrorContainer,
                 modifier = Modifier.weight(1f)
             )
-            
+
             IconButton(onClick = onDismiss) {
                 Icon(
                     imageVector = Icons.Default.Close,
@@ -531,38 +533,38 @@ private fun AutoNavigationCard(
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.onTertiaryContainer
                     )
-                    
+
                     Text(
                         text = if (autoNavigateEnabled) "Enabled" else "Disabled",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onTertiaryContainer
                     )
                 }
-                
+
                 Switch(
                     checked = autoNavigateEnabled,
                     onCheckedChange = { onToggleAutoNavigate() }
                 )
             }
-            
+
             if (autoNavigateEnabled && countdown != null) {
                 Spacer(modifier = Modifier.height(12.dp))
-                
+
                 LinearProgressIndicator(
                     progress = (10 - countdown) / 10f,
                     modifier = Modifier.fillMaxWidth()
                 )
-                
+
                 Spacer(modifier = Modifier.height(8.dp))
-                
+
                 Text(
                     text = "Navigating to main in ${countdown}s",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onTertiaryContainer
                 )
-                
+
                 Spacer(modifier = Modifier.height(8.dp))
-                
+
                 Button(
                     onClick = onNavigateNow,
                     modifier = Modifier.fillMaxWidth()

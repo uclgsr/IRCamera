@@ -22,15 +22,15 @@ import mpdc4gsr.compose.navigation.UnifiedRoute
 
 /**
  * Navigation Test Activity
- * 
+ *
  * This activity provides a test interface for all navigation routes to verify
  * that the navigation system works correctly after the updates.
  */
 class NavigationTestActivity : ComponentActivity() {
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         setContent {
             LibTheme {
                 NavigationTestScreen()
@@ -44,7 +44,7 @@ class NavigationTestActivity : ComponentActivity() {
 fun NavigationTestScreen() {
     val navController = rememberNavController()
     var showRouteList by remember { mutableStateOf(true) }
-    
+
     if (showRouteList) {
         Column(
             modifier = Modifier.fillMaxSize()
@@ -59,7 +59,7 @@ fun NavigationTestScreen() {
                     }
                 }
             )
-            
+
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
@@ -77,7 +77,7 @@ fun NavigationTestScreen() {
                     "Settings" to UnifiedRoute.Settings.route,
                     "About" to UnifiedRoute.About.route
                 )
-                
+
                 items(routes) { (name, route) ->
                     Card(
                         modifier = Modifier.fillMaxWidth(),

@@ -40,12 +40,12 @@ import kotlin.math.*
  * Provides advanced thermal analysis with multi-point correction and isothermal analysis
  */
 class IRCorrectionLiteFourComposeActivity : ComponentActivity() {
-    
+
     private val viewModel: IRCorrectionLiteFourViewModel by viewModels()
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         setContent {
             ThermalTheme {
                 IRCorrectionLiteFourScreen(
@@ -61,34 +61,34 @@ class IRCorrectionLiteFourComposeActivity : ComponentActivity() {
  * ViewModel for IR Correction Lite Four with advanced thermal analysis
  */
 class IRCorrectionLiteFourViewModel : ViewModel() {
-    
+
     private val _uiState = MutableStateFlow(IRCorrectionFourUiState())
     val uiState: StateFlow<IRCorrectionFourUiState> = _uiState.asStateFlow()
-    
+
     private val _analysisData = MutableStateFlow(ThermalAnalysisData())
     val analysisData: StateFlow<ThermalAnalysisData> = _analysisData.asStateFlow()
-    
+
     private val _isothermalLines = MutableStateFlow<List<IsothermalLine>>(emptyList())
     val isothermalLines: StateFlow<List<IsothermalLine>> = _isothermalLines.asStateFlow()
-    
+
     private val _analysisPoints = MutableStateFlow<List<AnalysisPoint>>(emptyList())
     val analysisPoints: StateFlow<List<AnalysisPoint>> = _analysisPoints.asStateFlow()
-    
+
     init {
         initializeAnalysis()
     }
-    
+
     fun startAdvancedAnalysis() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isAnalyzing = true)
-            
+
             // Simulate advanced thermal analysis
             generateIsothermalLines()
             generateAnalysisPoints()
             calculateStatistics()
-            
+
             kotlinx.coroutines.delay(1500) // Simulation delay
-            
+
             _uiState.value = _uiState.value.copy(
                 isAnalyzing = false,
                 analysisComplete = true,
@@ -96,7 +96,7 @@ class IRCorrectionLiteFourViewModel : ViewModel() {
             )
         }
     }
-    
+
     fun addAnalysisPoint(x: Float, y: Float) {
         val currentPoints = _analysisPoints.value.toMutableList()
         val newPoint = AnalysisPoint(
@@ -108,27 +108,27 @@ class IRCorrectionLiteFourViewModel : ViewModel() {
         )
         currentPoints.add(newPoint)
         _analysisPoints.value = currentPoints
-        
+
         updateStatistics()
     }
-    
+
     fun removeAnalysisPoint(pointId: Int) {
         val updatedPoints = _analysisPoints.value.filter { it.id != pointId }
         _analysisPoints.value = updatedPoints
         updateStatistics()
     }
-    
+
     fun updateIsothermalThreshold(temperature: Float) {
         generateIsothermalLines(temperature)
     }
-    
+
     fun resetAnalysis() {
         _uiState.value = IRCorrectionFourUiState()
         _analysisPoints.value = emptyList()
         _isothermalLines.value = emptyList()
         initializeAnalysis()
     }
-    
+
     private fun initializeAnalysis() {
         _analysisData.value = ThermalAnalysisData(
             minTemperature = 18.5f,
@@ -137,41 +137,43 @@ class IRCorrectionLiteFourViewModel : ViewModel() {
             standardDeviation = 5.2f
         )
     }
-    
+
     private fun generateIsothermalLines(threshold: Float = 30f) {
         val lines = mutableListOf<IsothermalLine>()
-        
+
         // Generate isothermal lines at different temperature levels
         for (temp in 20..40 step 5) {
             if (abs(temp - threshold) <= 2) {
-                lines.add(IsothermalLine(
-                    temperature = temp.toFloat(),
-                    points = generateLinePoints(temp.toFloat()),
-                    color = when {
-                        temp < 25 -> MaterialTheme.colorScheme.primary
-                        temp < 35 -> Color.Green
-                        else -> Color.Red
-                    }
-                ))
+                lines.add(
+                    IsothermalLine(
+                        temperature = temp.toFloat(),
+                        points = generateLinePoints(temp.toFloat()),
+                        color = when {
+                            temp < 25 -> MaterialTheme.colorScheme.primary
+                            temp < 35 -> Color.Green
+                            else -> Color.Red
+                        }
+                    )
+                )
             }
         }
-        
+
         _isothermalLines.value = lines
     }
-    
+
     private fun generateLinePoints(temperature: Float): List<androidx.compose.ui.geometry.Offset> {
         val points = mutableListOf<androidx.compose.ui.geometry.Offset>()
-        
+
         // Generate curved isothermal line based on temperature
         for (i in 0..100) {
             val x = i / 100f
             val y = 0.5f + 0.3f * sin(x * PI * 2 + temperature / 10).toFloat()
             points.add(androidx.compose.ui.geometry.Offset(x, y))
         }
-        
+
         return points
     }
-    
+
     private fun generateAnalysisPoints() {
         val points = listOf(
             AnalysisPoint(1, 0.2f, 0.3f, 24.5f, "Hot Spot 1"),
@@ -181,24 +183,24 @@ class IRCorrectionLiteFourViewModel : ViewModel() {
         )
         _analysisPoints.value = points
     }
-    
+
     private fun calculateTemperatureAtPoint(x: Float, y: Float): Float {
         // Simulate temperature calculation based on position
         val baseTemp = 20f
         val variation = 20f * (x * y + 0.5f * sin(x * PI * 4).toFloat())
         return baseTemp + variation
     }
-    
+
     private fun calculateStatistics() {
         val points = _analysisPoints.value
         if (points.isEmpty()) return
-        
+
         val temps = points.map { it.temperature }
         val avg = temps.average().toFloat()
         val min = temps.minOrNull() ?: 0f
         val max = temps.maxOrNull() ?: 0f
         val stdDev = sqrt(temps.map { (it - avg).pow(2) }.average()).toFloat()
-        
+
         _analysisData.value = _analysisData.value.copy(
             minTemperature = min,
             maxTemperature = max,
@@ -206,7 +208,7 @@ class IRCorrectionLiteFourViewModel : ViewModel() {
             standardDeviation = stdDev
         )
     }
-    
+
     private fun updateStatistics() {
         calculateStatistics()
     }
@@ -225,11 +227,11 @@ fun IRCorrectionLiteFourScreen(
     val analysisData by viewModel.analysisData.collectAsState()
     val isothermalLines by viewModel.isothermalLines.collectAsState()
     val analysisPoints by viewModel.analysisPoints.collectAsState()
-    
+
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { 
+                title = {
                     Text(
                         "IR Correction Lite IV",
                         fontWeight = FontWeight.Bold
@@ -268,7 +270,7 @@ fun IRCorrectionLiteFourScreen(
                     analysisData = analysisData
                 )
             }
-            
+
             // Advanced Thermal Visualization
             item {
                 AdvancedThermalVisualizationCard(
@@ -278,7 +280,7 @@ fun IRCorrectionLiteFourScreen(
                     isAnalyzing = uiState.isAnalyzing
                 )
             }
-            
+
             // Analysis Points List
             item {
                 AnalysisPointsCard(
@@ -286,21 +288,21 @@ fun IRCorrectionLiteFourScreen(
                     onRemovePoint = viewModel::removeAnalysisPoint
                 )
             }
-            
+
             // Isothermal Controls
             item {
                 IsothermalControlsCard(
                     onThresholdChanged = viewModel::updateIsothermalThreshold
                 )
             }
-            
+
             // Statistics Summary
             item {
                 StatisticsSummaryCard(
                     analysisData = analysisData
                 )
             }
-            
+
             // Control Actions
             item {
                 AdvancedControlActionsCard(
@@ -355,14 +357,14 @@ fun AnalysisStatusCard(
                     fontWeight = FontWeight.Medium
                 )
             }
-            
+
             if (uiState.isAnalyzing) {
                 Spacer(modifier = Modifier.height(12.dp))
                 LinearProgressIndicator(
                     modifier = Modifier.fillMaxWidth()
                 )
             }
-            
+
             if (uiState.statusMessage.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
@@ -393,9 +395,9 @@ fun AdvancedThermalVisualizationCard(
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Medium
             )
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -418,7 +420,7 @@ fun AdvancedThermalVisualizationCard(
                     )
                 }
             }
-            
+
             if (analysisPoints.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
@@ -457,18 +459,18 @@ fun drawAdvancedThermalVisualization(
     with(drawScope) {
         val width = size.width
         val height = size.height
-        
+
         // Draw thermal background gradient
         for (x in 0 until width.toInt() step 8) {
             for (y in 0 until height.toInt() step 8) {
                 val normalizedX = x / width
                 val normalizedY = y / height
-                
-                val temperature = 20f + (normalizedX * normalizedY * 25f) + 
-                                 5f * sin(normalizedX * PI * 3).toFloat()
-                
+
+                val temperature = 20f + (normalizedX * normalizedY * 25f) +
+                        5f * sin(normalizedX * PI * 3).toFloat()
+
                 val color = advancedTemperatureToColor(temperature)
-                
+
                 drawRect(
                     color = color,
                     topLeft = androidx.compose.ui.geometry.Offset(x.toFloat(), y.toFloat()),
@@ -476,12 +478,12 @@ fun drawAdvancedThermalVisualization(
                 )
             }
         }
-        
+
         // Draw isothermal lines
         isothermalLines.forEach { line ->
             drawIsothermalLine(line, width, height)
         }
-        
+
         // Draw analysis points
         analysisPoints.forEach { point ->
             drawAnalysisPoint(point, width, height)
@@ -495,14 +497,14 @@ fun DrawScope.drawIsothermalLine(
     canvasHeight: Float
 ) {
     if (line.points.size < 2) return
-    
+
     val scaledPoints = line.points.map { point ->
         androidx.compose.ui.geometry.Offset(
             point.x * canvasWidth,
             point.y * canvasHeight
         )
     }
-    
+
     for (i in 0 until scaledPoints.size - 1) {
         drawLine(
             color = line.color,
@@ -520,20 +522,20 @@ fun DrawScope.drawAnalysisPoint(
 ) {
     val x = point.x * canvasWidth
     val y = point.y * canvasHeight
-    
+
     // Draw point circle
     drawCircle(
         color = Color.White,
         radius = 12f,
         center = androidx.compose.ui.geometry.Offset(x, y)
     )
-    
+
     drawCircle(
         color = Color.Red,
         radius = 8f,
         center = androidx.compose.ui.geometry.Offset(x, y)
     )
-    
+
     // Draw temperature label
     // Note: Text drawing in Canvas would require more complex implementation
     // This is a simplified version
@@ -571,7 +573,7 @@ fun AnalysisPointsCard(
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Medium
                 )
-                
+
                 if (analysisPoints.isNotEmpty()) {
                     Text(
                         text = "${analysisPoints.size} points",
@@ -580,7 +582,7 @@ fun AnalysisPointsCard(
                     )
                 }
             }
-            
+
             if (analysisPoints.isEmpty()) {
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
@@ -590,7 +592,7 @@ fun AnalysisPointsCard(
                 )
             } else {
                 Spacer(modifier = Modifier.height(12.dp))
-                
+
                 LazyRow(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
@@ -632,9 +634,9 @@ fun AnalysisPointChip(
                     color = MaterialTheme.colorScheme.primary
                 )
             }
-            
+
             Spacer(modifier = Modifier.width(8.dp))
-            
+
             IconButton(
                 onClick = onRemove,
                 modifier = Modifier.size(24.dp)
@@ -654,7 +656,7 @@ fun IsothermalControlsCard(
     onThresholdChanged: (Float) -> Unit
 ) {
     var threshold by remember { mutableFloatStateOf(30f) }
-    
+
     Card(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -666,9 +668,9 @@ fun IsothermalControlsCard(
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Medium
             )
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -685,10 +687,10 @@ fun IsothermalControlsCard(
                     color = MaterialTheme.colorScheme.primary
                 )
             }
-            
+
             Slider(
                 value = threshold,
-                onValueChange = { 
+                onValueChange = {
                     threshold = it
                     onThresholdChanged(it)
                 },
@@ -717,9 +719,9 @@ fun StatisticsSummaryCard(
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Medium
             )
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceAround
@@ -809,7 +811,7 @@ fun AdvancedControlActionsCard(
                         text = if (isAnalyzing) "Analyzing..." else "Start Analysis"
                     )
                 }
-                
+
                 OutlinedButton(
                     onClick = onReset,
                     enabled = !isAnalyzing,
@@ -824,10 +826,10 @@ fun AdvancedControlActionsCard(
                     Text("Reset")
                 }
             }
-            
+
             if (analysisComplete) {
                 Spacer(modifier = Modifier.height(12.dp))
-                
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -847,7 +849,7 @@ fun AdvancedControlActionsCard(
                         Spacer(modifier = Modifier.width(4.dp))
                         Text("Export Data")
                     }
-                    
+
                     OutlinedButton(
                         onClick = { /* Handle generate report */ },
                         modifier = Modifier.weight(1f)

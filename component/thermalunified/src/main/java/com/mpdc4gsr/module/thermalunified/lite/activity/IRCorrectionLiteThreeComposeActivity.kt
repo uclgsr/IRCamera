@@ -39,12 +39,12 @@ import kotlinx.coroutines.launch
  * Provides advanced thermal image correction with real-time preview
  */
 class IRCorrectionLiteThreeComposeActivity : ComponentActivity() {
-    
+
     private val viewModel: IRCorrectionLiteThreeViewModel by viewModels()
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         setContent {
             ThermalTheme {
                 IRCorrectionLiteThreeScreen(
@@ -60,30 +60,30 @@ class IRCorrectionLiteThreeComposeActivity : ComponentActivity() {
  * ViewModel for IR Correction Lite Three with StateFlow architecture
  */
 class IRCorrectionLiteThreeViewModel : ViewModel() {
-    
+
     private val _uiState = MutableStateFlow(IRCorrectionUiState())
     val uiState: StateFlow<IRCorrectionUiState> = _uiState.asStateFlow()
-    
+
     private val _thermalData = MutableStateFlow(ThermalCorrectionData())
     val thermalData: StateFlow<ThermalCorrectionData> = _thermalData.asStateFlow()
-    
+
     private val _correctionProgress = MutableStateFlow(0f)
     val correctionProgress: StateFlow<Float> = _correctionProgress.asStateFlow()
-    
+
     init {
         loadCorrectionData()
     }
-    
+
     fun startCorrection() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isProcessing = true)
-            
+
             // Simulate correction process with progress updates
             for (i in 0..100 step 5) {
                 _correctionProgress.value = i / 100f
                 kotlinx.coroutines.delay(50)
             }
-            
+
             _uiState.value = _uiState.value.copy(
                 isProcessing = false,
                 correctionComplete = true,
@@ -91,12 +91,12 @@ class IRCorrectionLiteThreeViewModel : ViewModel() {
             )
         }
     }
-    
+
     fun resetCorrection() {
         _uiState.value = IRCorrectionUiState()
         _correctionProgress.value = 0f
     }
-    
+
     fun updateCorrectionParameter(parameter: CorrectionParameter, value: Float) {
         val currentData = _thermalData.value
         val updatedData = when (parameter) {
@@ -108,7 +108,7 @@ class IRCorrectionLiteThreeViewModel : ViewModel() {
         }
         _thermalData.value = updatedData
     }
-    
+
     private fun loadCorrectionData() {
         // Initialize with default thermal correction parameters
         _thermalData.value = ThermalCorrectionData(
@@ -133,11 +133,11 @@ fun IRCorrectionLiteThreeScreen(
     val uiState by viewModel.uiState.collectAsState()
     val thermalData by viewModel.thermalData.collectAsState()
     val correctionProgress by viewModel.correctionProgress.collectAsState()
-    
+
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { 
+                title = {
                     Text(
                         "IR Correction Lite III",
                         fontWeight = FontWeight.Bold
@@ -173,7 +173,7 @@ fun IRCorrectionLiteThreeScreen(
                     correctionProgress = correctionProgress
                 )
             }
-            
+
             // Thermal Preview Card
             item {
                 ThermalPreviewCard(
@@ -181,7 +181,7 @@ fun IRCorrectionLiteThreeScreen(
                     isProcessing = uiState.isProcessing
                 )
             }
-            
+
             // Correction Parameters
             item {
                 CorrectionParametersCard(
@@ -190,7 +190,7 @@ fun IRCorrectionLiteThreeScreen(
                     enabled = !uiState.isProcessing
                 )
             }
-            
+
             // Control Buttons
             item {
                 ControlButtonsCard(
@@ -222,13 +222,13 @@ fun StatusCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
-                    imageVector = if (uiState.correctionComplete) Icons.Default.CheckCircle 
-                                 else if (uiState.isProcessing) Icons.Default.Settings
-                                 else Icons.Default.RadioButtonUnchecked,
+                    imageVector = if (uiState.correctionComplete) Icons.Default.CheckCircle
+                    else if (uiState.isProcessing) Icons.Default.Settings
+                    else Icons.Default.RadioButtonUnchecked,
                     contentDescription = null,
-                    tint = if (uiState.correctionComplete) Color.Green 
-                          else if (uiState.isProcessing) MaterialTheme.colorScheme.primary
-                          else MaterialTheme.colorScheme.onSurfaceVariant
+                    tint = if (uiState.correctionComplete) Color.Green
+                    else if (uiState.isProcessing) MaterialTheme.colorScheme.primary
+                    else MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
@@ -241,7 +241,7 @@ fun StatusCard(
                     fontWeight = FontWeight.Medium
                 )
             }
-            
+
             if (uiState.isProcessing) {
                 Spacer(modifier = Modifier.height(12.dp))
                 LinearProgressIndicator(
@@ -255,7 +255,7 @@ fun StatusCard(
                     modifier = Modifier.padding(top = 4.dp)
                 )
             }
-            
+
             if (uiState.statusMessage.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
@@ -284,9 +284,9 @@ fun ThermalPreviewCard(
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Medium
             )
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -305,9 +305,9 @@ fun ThermalPreviewCard(
                     ThermalVisualization(thermalData = thermalData)
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(8.dp))
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -340,19 +340,19 @@ fun drawThermalPattern(drawScope: DrawScope, thermalData: ThermalCorrectionData)
     with(drawScope) {
         val width = size.width
         val height = size.height
-        
+
         // Draw thermal gradient simulation
         for (x in 0 until width.toInt() step 10) {
             for (y in 0 until height.toInt() step 10) {
                 val normalizedX = x / width
                 val normalizedY = y / height
-                
+
                 val temperature = interpolateTemperature(
                     normalizedX, normalizedY, thermalData
                 )
-                
+
                 val color = temperatureToColor(temperature)
-                
+
                 drawRect(
                     color = color,
                     topLeft = androidx.compose.ui.geometry.Offset(x.toFloat(), y.toFloat()),
@@ -364,14 +364,14 @@ fun drawThermalPattern(drawScope: DrawScope, thermalData: ThermalCorrectionData)
 }
 
 fun interpolateTemperature(
-    x: Float, 
-    y: Float, 
+    x: Float,
+    y: Float,
     thermalData: ThermalCorrectionData
 ): Float {
     // Simple thermal pattern simulation
     val baseTemp = 20f + (x * y * 30f)
-    val correctedTemp = baseTemp * thermalData.emissivity + 
-                       thermalData.reflectedTemperature * (1 - thermalData.emissivity)
+    val correctedTemp = baseTemp * thermalData.emissivity +
+            thermalData.reflectedTemperature * (1 - thermalData.emissivity)
     return correctedTemp.coerceIn(thermalData.minTemperature, thermalData.maxTemperature)
 }
 
@@ -402,9 +402,9 @@ fun CorrectionParametersCard(
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Medium
             )
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             ParameterSlider(
                 label = "Emissivity",
                 value = thermalData.emissivity,
@@ -413,7 +413,7 @@ fun CorrectionParametersCard(
                 enabled = enabled,
                 valueFormat = "%.2f"
             )
-            
+
             ParameterSlider(
                 label = "Reflected Temperature (°C)",
                 value = thermalData.reflectedTemperature,
@@ -422,7 +422,7 @@ fun CorrectionParametersCard(
                 enabled = enabled,
                 valueFormat = "%.1f°C"
             )
-            
+
             ParameterSlider(
                 label = "Atmospheric Temperature (°C)",
                 value = thermalData.atmosphericTemperature,
@@ -431,7 +431,7 @@ fun CorrectionParametersCard(
                 enabled = enabled,
                 valueFormat = "%.1f°C"
             )
-            
+
             ParameterSlider(
                 label = "Distance (m)",
                 value = thermalData.distance,
@@ -440,7 +440,7 @@ fun CorrectionParametersCard(
                 enabled = enabled,
                 valueFormat = "%.1fm"
             )
-            
+
             ParameterSlider(
                 label = "Humidity (%)",
                 value = thermalData.humidity,
@@ -479,7 +479,7 @@ fun ParameterSlider(
                 color = MaterialTheme.colorScheme.primary
             )
         }
-        
+
         Slider(
             value = value,
             onValueChange = onValueChange,
@@ -490,7 +490,7 @@ fun ParameterSlider(
                 activeTrackColor = MaterialTheme.colorScheme.primary
             )
         )
-        
+
         Spacer(modifier = Modifier.height(8.dp))
     }
 }
@@ -532,7 +532,7 @@ fun ControlButtonsCard(
                         text = if (isProcessing) "Processing..." else "Start Correction"
                     )
                 }
-                
+
                 OutlinedButton(
                     onClick = onReset,
                     enabled = !isProcessing,
@@ -547,10 +547,10 @@ fun ControlButtonsCard(
                     Text("Reset")
                 }
             }
-            
+
             if (correctionComplete) {
                 Spacer(modifier = Modifier.height(12.dp))
-                
+
                 Button(
                     onClick = { /* Handle save */ },
                     modifier = Modifier.fillMaxWidth(),

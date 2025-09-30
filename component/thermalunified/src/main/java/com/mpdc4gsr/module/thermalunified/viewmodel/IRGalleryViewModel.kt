@@ -82,14 +82,14 @@ class IRGalleryViewModel : BaseViewModel() {
     fun toggleItemSelection(item: GalleryBean) {
         val currentSelected = _selectedItems.value.toMutableSet()
         val itemPath = item.path ?: return
-        
+
         if (currentSelected.contains(itemPath)) {
             currentSelected.remove(itemPath)
         } else {
             currentSelected.add(itemPath)
         }
         _selectedItems.value = currentSelected
-        
+
         if (currentSelected.isEmpty()) {
             _isSelectionMode.value = false
         }
@@ -109,7 +109,7 @@ class IRGalleryViewModel : BaseViewModel() {
     fun deleteSelectedItems() {
         val selectedPaths = _selectedItems.value
         if (selectedPaths.isEmpty()) return
-        
+
         viewModelScope.launch {
             val itemsToDelete = _galleryItems.value.filter { selectedPaths.contains(it.path) }
             delete(itemsToDelete, _currentDirType.value, true)

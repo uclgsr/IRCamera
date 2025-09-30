@@ -24,9 +24,11 @@ Sensing Platform.
 
 -
     *
+
 *[app/src/main/java/mpdc4gsr/permissions/README.md](app/src/main/java/mpdc4gsr/permissions/README.md)
 ** - Permissions
 handling system
+
 - **[SENSOR_DASHBOARD_FRAGMENT_CHANGES.md](SENSOR_DASHBOARD_FRAGMENT_CHANGES.md)** - UI
   implementation details
 
@@ -47,9 +49,10 @@ handling system
 
 ### System Architecture
 
-- **[docs/COMPREHENSIVE_ARCHITECTURE_DIAGRAMS.md](docs/COMPREHENSIVE_ARCHITECTURE_DIAGRAMS.md)** - 
+- **[docs/COMPREHENSIVE_ARCHITECTURE_DIAGRAMS.md](docs/COMPREHENSIVE_ARCHITECTURE_DIAGRAMS.md)** -
   Complete system design overview
-- **[docs/APP_NAVIGATION_DIAGRAM.md](docs/APP_NAVIGATION_DIAGRAM.md)** - Navigation flows across 210 activities in 4 modules
+- **[docs/APP_NAVIGATION_DIAGRAM.md](docs/APP_NAVIGATION_DIAGRAM.md)** - Navigation flows across 210 activities in 4
+  modules
 - **[docs/APP_LAYOUT_DIAGRAM.md](docs/APP_LAYOUT_DIAGRAM.md)** - UI layout architecture covering 221 layouts
 - **[docs/BACKGROUND_DEVICE_SCANNING.md](docs/BACKGROUND_DEVICE_SCANNING.md)** - BLE device discovery
 - **[docs/DOCUMENTATION_UPDATE_SUMMARY.md](docs/DOCUMENTATION_UPDATE_SUMMARY.md)** - Documentation audit and corrections
@@ -61,30 +64,37 @@ handling system
 
 -
     *
+
 *[docs/thesis-diagrams/android-architecture-diagram.md](docs/thesis-diagrams/android-architecture-diagram.md)
 ** -
 Android app internal architecture
+
 - **[docs/thesis-diagrams/enhanced-data-flow.md](docs/thesis-diagrams/enhanced-data-flow.md)** -
   System data flow
   pipeline
 -
     *
+
 *[docs/thesis-diagrams/session-sequence-diagram.md](docs/thesis-diagrams/session-sequence-diagram.md)
 ** - PC-Android
 interaction sequences
+
 - **[docs/thesis-diagrams/state-machine-diagram.md](docs/thesis-diagrams/state-machine-diagram.md)
   ** - Session control
   state machine
 -
     *
+
 *[docs/thesis-diagrams/performance-test-tables.md](docs/thesis-diagrams/performance-test-tables.md)
 ** - Performance
 and test results
+
 - **[docs/thesis-diagrams/time-sync-timeline.md](docs/thesis-diagrams/time-sync-timeline.md)** -
   Time synchronization
   mechanism
 -
     *
+
 *[docs/thesis-diagrams/system-configuration-tables.md](docs/thesis-diagrams/system-configuration-tables.md)
 ** -
 System configuration specifications

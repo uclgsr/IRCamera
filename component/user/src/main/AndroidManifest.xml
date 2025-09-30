@@ -40,7 +40,7 @@
             android:name=".activity.AutoSaveComposeActivity"
             android:launchMode="singleTop"
             android:screenOrientation="userPortrait" />
-            
+
         <!-- Legacy Activities (deprecated - use Compose versions above) -->
         <!-- <activity android:name=".activity.LanguageActivity" android:launchMode="singleTop" android:screenOrientation="userPortrait" /> (never implemented) -->
         <!-- <activity android:name=".activity.QuestionActivity" android:launchMode="singleTop" android:screenOrientation="userPortrait" /> -->

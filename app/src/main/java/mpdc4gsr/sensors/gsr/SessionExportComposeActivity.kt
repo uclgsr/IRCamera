@@ -23,10 +23,10 @@ import mpdc4gsr.compose.theme.IRCameraTheme
  * Provides export functionality for GSR session data with Material 3 UI
  */
 class SessionExportComposeActivity : BaseComposeActivity<SessionExportViewModel>() {
-    
-    override fun createViewModel(): SessionExportViewModel = 
+
+    override fun createViewModel(): SessionExportViewModel =
         viewModels<SessionExportViewModel>().value
-    
+
     @Composable
     override fun Content(viewModel: SessionExportViewModel) {
         IRCameraTheme {
@@ -44,7 +44,7 @@ fun SessionExportScreen(
     onNavigateBack: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    
+
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -75,24 +75,24 @@ fun SessionExportScreen(
                 titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
             )
         )
-        
+
         // Content
         when {
             uiState.isLoading -> {
                 LoadingContent()
             }
-            
+
             uiState.error != null -> {
                 ErrorContent(
                     error = uiState.error,
                     onRetry = { viewModel.loadSessions() }
                 )
             }
-            
+
             uiState.sessions.isEmpty() -> {
                 EmptyContent()
             }
-            
+
             else -> {
                 ExportContent(
                     uiState = uiState,
@@ -128,7 +128,7 @@ private fun ExportContent(
                 )
             }
         }
-        
+
         // Export Configuration
         item {
             ExportConfigurationCard(
@@ -138,7 +138,7 @@ private fun ExportContent(
                 onDestinationChange = onExportDestinationChange
             )
         }
-        
+
         // Session Selection Header
         item {
             Card(
@@ -164,7 +164,7 @@ private fun ExportContent(
                 }
             }
         }
-        
+
         // Session List
         items(uiState.sessions) { session ->
             SessionSelectionCard(
@@ -173,7 +173,7 @@ private fun ExportContent(
                 onToggle = { onSessionToggle(session) }
             )
         }
-        
+
         // Export Action
         if (!uiState.isExporting && uiState.selectedSessions.isNotEmpty()) {
             item {
@@ -223,9 +223,9 @@ private fun SessionSelectionCard(
                 checked = isSelected,
                 onCheckedChange = { onToggle() }
             )
-            
+
             Spacer(modifier = Modifier.width(12.dp))
-            
+
             Column(
                 modifier = Modifier.weight(1f)
             ) {
@@ -238,7 +238,7 @@ private fun SessionSelectionCard(
                         MaterialTheme.colorScheme.onSurface
                     }
                 )
-                
+
                 Text(
                     text = "Duration: ${session.duration}",
                     style = MaterialTheme.typography.bodySmall,
@@ -248,7 +248,7 @@ private fun SessionSelectionCard(
                         MaterialTheme.colorScheme.onSurfaceVariant
                     }
                 )
-                
+
                 Text(
                     text = "Data points: ${session.dataPointCount}",
                     style = MaterialTheme.typography.bodySmall,
@@ -259,7 +259,7 @@ private fun SessionSelectionCard(
                     }
                 )
             }
-            
+
             Icon(
                 imageVector = if (isSelected) Icons.Default.CheckCircle else Icons.Default.RadioButtonUnchecked,
                 contentDescription = if (isSelected) "Selected" else "Not selected",
@@ -291,18 +291,18 @@ private fun ExportConfigurationCard(
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurface
             )
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             // Export Format Selection
             Text(
                 text = "Export Format",
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
-            
+
             Spacer(modifier = Modifier.height(8.dp))
-            
+
             ExportFormat.values().forEach { format ->
                 Row(
                     modifier = Modifier
@@ -325,18 +325,18 @@ private fun ExportConfigurationCard(
                     )
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             // Export Destination Selection
             Text(
                 text = "Export Destination",
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
-            
+
             Spacer(modifier = Modifier.height(8.dp))
-            
+
             ExportDestination.values().forEach { destination ->
                 Row(
                     modifier = Modifier
@@ -391,14 +391,14 @@ private fun ExportProgressCard(
                     color = MaterialTheme.colorScheme.onTertiaryContainer
                 )
             }
-            
+
             Spacer(modifier = Modifier.height(8.dp))
-            
+
             LinearProgressIndicator(
                 progress = progress,
                 modifier = Modifier.fillMaxWidth()
             )
-            
+
             if (currentFile != null) {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
@@ -449,17 +449,17 @@ private fun ErrorContent(
                 modifier = Modifier.size(64.dp),
                 tint = MaterialTheme.colorScheme.error
             )
-            
+
             Text(
                 text = "Error loading sessions",
                 style = MaterialTheme.typography.headlineSmall
             )
-            
+
             Text(
                 text = error,
                 style = MaterialTheme.typography.bodyMedium
             )
-            
+
             Button(onClick = onRetry) {
                 Text("Retry")
             }
@@ -483,12 +483,12 @@ private fun EmptyContent() {
                 modifier = Modifier.size(64.dp),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
-            
+
             Text(
                 text = "No sessions available",
                 style = MaterialTheme.typography.headlineSmall
             )
-            
+
             Text(
                 text = "GSR sessions will appear here when available for export",
                 style = MaterialTheme.typography.bodyMedium

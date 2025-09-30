@@ -42,7 +42,7 @@ class GSRRawImageViewViewModel(
     fun loadImages() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true, error = null)
-            
+
             try {
                 val imageFiles = getGSRImageFiles()
                 _uiState.value = _uiState.value.copy(
@@ -70,15 +70,15 @@ class GSRRawImageViewViewModel(
                     "${context.packageName}.fileprovider",
                     imageFile
                 )
-                
+
                 val intent = Intent(Intent.ACTION_VIEW).apply {
                     setDataAndType(uri, "image/*")
                     addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                     addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 }
-                
+
                 context.startActivity(intent)
-                
+
                 _uiState.value = _uiState.value.copy(selectedImage = imageFile)
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(
@@ -100,14 +100,14 @@ class GSRRawImageViewViewModel(
                     "${context.packageName}.fileprovider",
                     imageFile
                 )
-                
+
                 val intent = Intent(Intent.ACTION_SEND).apply {
                     type = "image/*"
                     putExtra(Intent.EXTRA_STREAM, uri)
                     addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                     addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 }
-                
+
                 context.startActivity(Intent.createChooser(intent, "Share GSR Image"))
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(
@@ -151,20 +151,20 @@ class GSRRawImageViewViewModel(
      */
     private fun getGSRImageFiles(): List<File> {
         val imageFiles = mutableListOf<File>()
-        
+
         // Check multiple possible directories
         val possibleDirectories = listOf(
             // External storage directories
             File(Environment.getExternalStorageDirectory(), "GSR/Images"),
             File(Environment.getExternalStorageDirectory(), "IRCamera/GSR"),
             File(Environment.getExternalStorageDirectory(), "DCIM/GSR"),
-            
+
             // App-specific directories
             File(application.externalCacheDir, "gsr_images"),
             File(application.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "GSR"),
             File(application.filesDir, "gsr_images")
         )
-        
+
         for (directory in possibleDirectories) {
             if (directory.exists() && directory.isDirectory) {
                 directory.listFiles { file ->
@@ -174,7 +174,7 @@ class GSRRawImageViewViewModel(
                 }
             }
         }
-        
+
         // Sort by last modified (newest first)
         return imageFiles.sortedByDescending { it.lastModified() }
     }
@@ -192,28 +192,28 @@ class GSRRawImageViewViewModel(
      */
     fun getImageMetadata(imageFile: File): Map<String, String> {
         val metadata = mutableMapOf<String, String>()
-        
+
         try {
             metadata["Name"] = imageFile.name
             metadata["Size"] = formatFileSize(imageFile.length())
             metadata["Modified"] = formatDate(imageFile.lastModified())
             metadata["Path"] = imageFile.absolutePath
-            
+
             // Try to get image dimensions
             val options = android.graphics.BitmapFactory.Options().apply {
                 inJustDecodeBounds = true
             }
             android.graphics.BitmapFactory.decodeFile(imageFile.absolutePath, options)
-            
+
             if (options.outWidth > 0 && options.outHeight > 0) {
                 metadata["Dimensions"] = "${options.outWidth} x ${options.outHeight}"
                 metadata["Type"] = options.outMimeType ?: "Unknown"
             }
-            
+
         } catch (e: Exception) {
             metadata["Error"] = "Failed to read metadata: ${e.message}"
         }
-        
+
         return metadata
     }
 

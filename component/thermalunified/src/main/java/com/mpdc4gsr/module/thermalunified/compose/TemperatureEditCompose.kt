@@ -44,12 +44,12 @@ fun TemperatureEditCompose(
     var isDrawing by remember { mutableStateOf(false) }
     var drawStart by remember { mutableStateOf<Offset?>(null) }
     var drawEnd by remember { mutableStateOf<Offset?>(null) }
-    
+
     // Update measurements when prop changes
     LaunchedEffect(measurements) {
         currentMeasurements = measurements
     }
-    
+
     Row(
         modifier = modifier.fillMaxSize()
     ) {
@@ -73,6 +73,7 @@ fun TemperatureEditCompose(
                                     )
                                     onMeasurementAdded(measurement)
                                 }
+
                                 TemperatureMode.LINE -> {
                                     if (drawStart == null) {
                                         drawStart = offset
@@ -95,6 +96,7 @@ fun TemperatureEditCompose(
                                         isDrawing = false
                                     }
                                 }
+
                                 TemperatureMode.RECTANGLE -> {
                                     if (drawStart == null) {
                                         drawStart = offset
@@ -114,6 +116,7 @@ fun TemperatureEditCompose(
                                         isDrawing = false
                                     }
                                 }
+
                                 TemperatureMode.CLEAR -> {
                                     onMeasurementCleared()
                                 }
@@ -128,12 +131,12 @@ fun TemperatureEditCompose(
             ) {
                 // Draw thermal background pattern
                 drawThermalBackground()
-                
+
                 // Draw existing measurements
                 currentMeasurements.forEach { measurement ->
                     drawMeasurement(measurement, isShowName)
                 }
-                
+
                 // Draw current drawing operation
                 if (isDrawing && drawStart != null) {
                     when (mode) {
@@ -147,6 +150,7 @@ fun TemperatureEditCompose(
                                 )
                             }
                         }
+
                         TemperatureMode.RECTANGLE -> {
                             drawEnd?.let { end ->
                                 val rect = Rect(drawStart!!, end)
@@ -158,11 +162,12 @@ fun TemperatureEditCompose(
                                 )
                             }
                         }
+
                         else -> {}
                     }
                 }
             }
-            
+
             // Mode indicator
             TemperatureModeIndicator(
                 mode = mode,
@@ -171,7 +176,7 @@ fun TemperatureEditCompose(
                     .padding(8.dp)
             )
         }
-        
+
         // Measurement panel
         MeasurementPanel(
             measurements = currentMeasurements,
@@ -239,16 +244,16 @@ private fun MeasurementPanel(
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )
-                
+
                 if (measurements.isNotEmpty()) {
                     TextButton(onClick = onClearAll) {
                         Text("Clear All")
                     }
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(8.dp))
-            
+
             if (measurements.isEmpty()) {
                 Box(
                     modifier = Modifier
@@ -315,9 +320,9 @@ private fun MeasurementCard(
                     fontWeight = FontWeight.SemiBold
                 )
             }
-            
+
             Spacer(modifier = Modifier.height(4.dp))
-            
+
             when (measurement) {
                 is TemperatureMeasurementResult.Point -> {
                     Text(
@@ -327,6 +332,7 @@ private fun MeasurementCard(
                         color = measurement.color
                     )
                 }
+
                 is TemperatureMeasurementResult.Line -> {
                     Column {
                         Text("Max: ${measurement.temperatureMax.roundToInt()}°C", fontSize = 12.sp)
@@ -334,6 +340,7 @@ private fun MeasurementCard(
                         Text("Min: ${measurement.temperatureMin.roundToInt()}°C", fontSize = 12.sp)
                     }
                 }
+
                 is TemperatureMeasurementResult.Rectangle -> {
                     Column {
                         Text("Max: ${measurement.temperatureMax.roundToInt()}°C", fontSize = 12.sp)
@@ -351,16 +358,16 @@ private fun DrawScope.drawThermalBackground() {
     val colors = listOf(
         Color.Blue, Color.Green, Color.Yellow, Color.Orange, Color.Red
     )
-    
+
     val cellSize = 20.dp.toPx()
     val cols = (size.width / cellSize).toInt()
     val rows = (size.height / cellSize).toInt()
-    
+
     for (row in 0 until rows) {
         for (col in 0 until cols) {
             val colorIndex = ((row + col) % colors.size)
             val alpha = 0.1f + (kotlin.math.sin((row + col) * 0.5) * 0.1f).toFloat()
-            
+
             drawRect(
                 color = colors[colorIndex].copy(alpha = alpha),
                 topLeft = Offset(col * cellSize, row * cellSize),
@@ -390,18 +397,19 @@ private fun DrawScope.drawMeasurement(
                 end = Offset(measurement.position.x, measurement.position.y + crossSize),
                 strokeWidth = 2.dp.toPx()
             )
-            
+
             // Draw center circle
             drawCircle(
                 color = measurement.color,
                 radius = 4.dp.toPx(),
                 center = measurement.position
             )
-            
+
             if (showName) {
                 // Temperature label would go here in a real implementation
             }
         }
+
         is TemperatureMeasurementResult.Line -> {
             drawLine(
                 color = measurement.color,
@@ -409,7 +417,7 @@ private fun DrawScope.drawMeasurement(
                 end = measurement.end,
                 strokeWidth = 3.dp.toPx()
             )
-            
+
             // Draw endpoints
             drawCircle(
                 color = measurement.color,
@@ -422,6 +430,7 @@ private fun DrawScope.drawMeasurement(
                 center = measurement.end
             )
         }
+
         is TemperatureMeasurementResult.Rectangle -> {
             drawRect(
                 color = measurement.color,
@@ -438,10 +447,10 @@ private fun simulateTemperatureReading(position: Offset): Float {
     val centerX = 400f // Assume center of thermal image
     val centerY = 300f
     val distance = kotlin.math.sqrt(
-        (position.x - centerX) * (position.x - centerX) + 
-        (position.y - centerY) * (position.y - centerY)
+        (position.x - centerX) * (position.x - centerX) +
+                (position.y - centerY) * (position.y - centerY)
     ).toFloat()
-    
+
     return 25f + (100f - distance * 0.1f).coerceIn(15f, 45f)
 }
 
@@ -477,7 +486,7 @@ sealed class TemperatureMeasurementResult(
     ) : TemperatureMeasurementResult(
         pointId, "Point", Color(0xFF2196F3), Icons.Default.Place
     )
-    
+
     data class Line(
         val lineId: String,
         val start: Offset,
@@ -488,7 +497,7 @@ sealed class TemperatureMeasurementResult(
     ) : TemperatureMeasurementResult(
         lineId, "Line", Color(0xFF4CAF50), Icons.Default.Timeline
     )
-    
+
     data class Rectangle(
         val rectId: String,
         val rect: Rect,
@@ -507,7 +516,7 @@ sealed class TemperatureMeasurementResult(
 fun TemperatureEditComposePreview() {
     var mode by remember { mutableStateOf(TemperatureMode.POINT) }
     var measurements by remember { mutableStateOf(emptyList<TemperatureMeasurementResult>()) }
-    
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -534,7 +543,7 @@ fun TemperatureEditComposePreview() {
                 )
             }
         }
-        
+
         // Temperature edit interface
         TemperatureEditCompose(
             mode = mode,

@@ -32,12 +32,12 @@ import kotlinx.coroutines.launch
  * Provides unified configuration management for all modules
  */
 class BaseConfigComposeActivity : ComponentActivity() {
-    
+
     private val viewModel: BaseConfigViewModel by viewModels()
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         setContent {
             IRCameraTheme {
                 BaseConfigScreen(
@@ -47,7 +47,7 @@ class BaseConfigComposeActivity : ComponentActivity() {
             }
         }
     }
-    
+
     companion object {
         fun start(context: Context) {
             context.startActivity(Intent(context, BaseConfigComposeActivity::class.java))
@@ -62,7 +62,7 @@ fun BaseConfigScreen(
     onBackPressed: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -104,7 +104,7 @@ fun BaseConfigScreen(
                     onItemChange = { key, value -> viewModel.updateSystemConfig(key, value) }
                 )
             }
-            
+
             // Network Configuration
             item {
                 ConfigSection(
@@ -113,7 +113,7 @@ fun BaseConfigScreen(
                     onItemChange = { key, value -> viewModel.updateNetworkConfig(key, value) }
                 )
             }
-            
+
             // Camera Configuration
             item {
                 ConfigSection(
@@ -122,7 +122,7 @@ fun BaseConfigScreen(
                     onItemChange = { key, value -> viewModel.updateCameraConfig(key, value) }
                 )
             }
-            
+
             // Sensor Configuration
             item {
                 ConfigSection(
@@ -131,7 +131,7 @@ fun BaseConfigScreen(
                     onItemChange = { key, value -> viewModel.updateSensorConfig(key, value) }
                 )
             }
-            
+
             // Action Buttons
             item {
                 Row(
@@ -144,14 +144,14 @@ fun BaseConfigScreen(
                     ) {
                         Text("Reset All")
                     }
-                    
+
                     OutlinedButton(
                         onClick = { viewModel.importConfig() },
                         modifier = Modifier.weight(1f)
                     ) {
                         Text("Import")
                     }
-                    
+
                     Button(
                         onClick = { viewModel.saveConfiguration() },
                         modifier = Modifier.weight(1f)
@@ -161,7 +161,7 @@ fun BaseConfigScreen(
                 }
             }
         }
-        
+
         if (uiState.isLoading) {
             Box(
                 modifier = Modifier.fillMaxSize(),
@@ -192,7 +192,7 @@ fun ConfigSection(
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
             )
-            
+
             items.forEach { item ->
                 ConfigItemRow(
                     item = item,
@@ -227,7 +227,7 @@ fun ConfigItemRow(
                 )
             }
         }
-        
+
         when (item.type) {
             ConfigType.BOOLEAN -> {
                 Switch(
@@ -235,15 +235,17 @@ fun ConfigItemRow(
                     onCheckedChange = onValueChange
                 )
             }
+
             ConfigType.INTEGER -> {
                 OutlinedTextField(
                     value = (item.value as Int).toString(),
-                    onValueChange = { 
+                    onValueChange = {
                         it.toIntOrNull()?.let { value -> onValueChange(value) }
                     },
                     modifier = Modifier.width(100.dp)
                 )
             }
+
             ConfigType.STRING -> {
                 OutlinedTextField(
                     value = item.value as String,
@@ -251,10 +253,11 @@ fun ConfigItemRow(
                     modifier = Modifier.width(150.dp)
                 )
             }
+
             ConfigType.FLOAT -> {
                 OutlinedTextField(
                     value = (item.value as Float).toString(),
-                    onValueChange = { 
+                    onValueChange = {
                         it.toFloatOrNull()?.let { value -> onValueChange(value) }
                     },
                     modifier = Modifier.width(100.dp)
@@ -300,7 +303,14 @@ data class BaseConfigUiState(
     val sensorConfigs: List<ConfigItem> = listOf(
         ConfigItem("sample_rate", "Sample Rate (Hz)", "Sensor sampling frequency", 100, ConfigType.INTEGER, 100),
         ConfigItem("enable_filtering", "Enable Filtering", "Apply signal filtering", true, ConfigType.BOOLEAN, true),
-        ConfigItem("calibration_mode", "Calibration Mode", "Sensor calibration method", "AUTO", ConfigType.STRING, "AUTO"),
+        ConfigItem(
+            "calibration_mode",
+            "Calibration Mode",
+            "Sensor calibration method",
+            "AUTO",
+            ConfigType.STRING,
+            "AUTO"
+        ),
         ConfigItem("sensitivity", "Sensitivity", "Sensor sensitivity level", 1.0f, ConfigType.FLOAT, 1.0f)
     ),
     val isLoading: Boolean = false
@@ -310,51 +320,55 @@ data class BaseConfigUiState(
 class BaseConfigViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(BaseConfigUiState())
     val uiState: StateFlow<BaseConfigUiState> = _uiState.asStateFlow()
-    
+
     fun updateSystemConfig(key: String, value: Any) {
         updateConfigList("system", key, value)
     }
-    
+
     fun updateNetworkConfig(key: String, value: Any) {
         updateConfigList("network", key, value)
     }
-    
+
     fun updateCameraConfig(key: String, value: Any) {
         updateConfigList("camera", key, value)
     }
-    
+
     fun updateSensorConfig(key: String, value: Any) {
         updateConfigList("sensor", key, value)
     }
-    
+
     private fun updateConfigList(category: String, key: String, value: Any) {
         val currentState = _uiState.value
         val updatedState = when (category) {
             "system" -> currentState.copy(
-                systemConfigs = currentState.systemConfigs.map { 
+                systemConfigs = currentState.systemConfigs.map {
                     if (it.key == key) it.copy(value = value) else it
                 }
             )
+
             "network" -> currentState.copy(
-                networkConfigs = currentState.networkConfigs.map { 
+                networkConfigs = currentState.networkConfigs.map {
                     if (it.key == key) it.copy(value = value) else it
                 }
             )
+
             "camera" -> currentState.copy(
-                cameraConfigs = currentState.cameraConfigs.map { 
+                cameraConfigs = currentState.cameraConfigs.map {
                     if (it.key == key) it.copy(value = value) else it
                 }
             )
+
             "sensor" -> currentState.copy(
-                sensorConfigs = currentState.sensorConfigs.map { 
+                sensorConfigs = currentState.sensorConfigs.map {
                     if (it.key == key) it.copy(value = value) else it
                 }
             )
+
             else -> currentState
         }
         _uiState.value = updatedState
     }
-    
+
     fun resetToDefaults() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
@@ -362,7 +376,7 @@ class BaseConfigViewModel : ViewModel() {
             _uiState.value = BaseConfigUiState()
         }
     }
-    
+
     fun saveConfiguration() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
@@ -371,14 +385,14 @@ class BaseConfigViewModel : ViewModel() {
             _uiState.value = _uiState.value.copy(isLoading = false)
         }
     }
-    
+
     fun exportConfig() {
         viewModelScope.launch {
             // Export configuration as JSON or XML
             // Implementation would depend on specific export mechanism
         }
     }
-    
+
     fun importConfig() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)

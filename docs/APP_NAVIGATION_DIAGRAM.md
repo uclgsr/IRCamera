@@ -4,23 +4,31 @@ This document provides a comprehensive navigation structure overview of the IRCa
 application, covering all 210 activities across 4 modules.
 
 **Architecture Overview**: The IRCamera platform contains 4 major modules:
+
 - **App Module**: 92 activities - Core application infrastructure
-- **Component thermalunified Module**: 93 activities - Complete thermal imaging system  
+- **Component thermalunified Module**: 93 activities - Complete thermal imaging system
 - **Component user Module**: 18 activities - User management and authentication
 - **LibUnified Module**: 7 activities - Shared utilities and common components
 
 ## Module Distribution Overview
 
 ### App Module (92 Activities)
-The core application module containing main infrastructure, sensor coordination, UI frameworks, testing suites, and primary application entry points.
 
-### Component thermalunified Module (93 Activities)  
-The largest module containing complete thermal imaging functionality including camera integration, image processing, analysis tools, thermal-specific UI components, and advanced thermal workflows.
+The core application module containing main infrastructure, sensor coordination, UI frameworks, testing suites, and
+primary application entry points.
+
+### Component thermalunified Module (93 Activities)
+
+The largest module containing complete thermal imaging functionality including camera integration, image processing,
+analysis tools, thermal-specific UI components, and advanced thermal workflows.
 
 ### Component user Module (18 Activities)
-Dedicated user management system handling authentication, profile management, user preferences, and user-specific configurations.
+
+Dedicated user management system handling authentication, profile management, user preferences, and user-specific
+configurations.
 
 ### LibUnified Module (7 Activities)
+
 Shared utilities module providing common components, cross-module functionality, and reusable infrastructure components.
 
 ```mermaid

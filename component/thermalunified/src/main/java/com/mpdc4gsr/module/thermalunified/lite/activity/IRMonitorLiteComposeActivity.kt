@@ -45,11 +45,11 @@ class IRMonitorLiteComposeActivity : ComponentActivity() {
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-        
+
         viewModel = ViewModelProvider(this)[IRMonitorLiteViewModel::class.java]
-        
+
         setContent {
             IRCameraTheme {
                 IRMonitorLiteScreen(
@@ -59,14 +59,14 @@ class IRMonitorLiteComposeActivity : ComponentActivity() {
                 )
             }
         }
-        
+
         viewModel.startMonitoring()
     }
-    
+
     private fun navigateToChart() {
         // Navigate to chart activity
     }
-    
+
     override fun onDestroy() {
         super.onDestroy()
         viewModel.stopMonitoring()
@@ -81,7 +81,7 @@ fun IRMonitorLiteScreen(
     onNavigateToChart: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -135,7 +135,7 @@ fun IRMonitorLiteScreen(
                             style = MaterialTheme.typography.headlineSmall,
                             fontWeight = FontWeight.Bold
                         )
-                        
+
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Icon(
                                 imageVector = if (uiState.isMonitoring) Icons.Default.RadioButtonChecked else Icons.Default.RadioButtonUnchecked,
@@ -150,9 +150,9 @@ fun IRMonitorLiteScreen(
                             )
                         }
                     }
-                    
+
                     Spacer(modifier = Modifier.height(24.dp))
-                    
+
                     // Current temperature display
                     Card(
                         colors = CardDefaults.cardColors(
@@ -170,9 +170,9 @@ fun IRMonitorLiteScreen(
                                 style = MaterialTheme.typography.titleMedium,
                                 color = MaterialTheme.colorScheme.onPrimaryContainer
                             )
-                            
+
                             Spacer(modifier = Modifier.height(8.dp))
-                            
+
                             Text(
                                 text = "${uiState.currentTemperature.format(2)}°C",
                                 style = MaterialTheme.typography.displayMedium,
@@ -181,18 +181,18 @@ fun IRMonitorLiteScreen(
                             )
                         }
                     }
-                    
+
                     Spacer(modifier = Modifier.height(24.dp))
-                    
+
                     // Temperature trend chart
                     Text(
                         text = "Temperature Trend",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
-                    
+
                     Spacer(modifier = Modifier.height(12.dp))
-                    
+
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -206,9 +206,9 @@ fun IRMonitorLiteScreen(
                             drawTemperatureTrend(uiState.temperatureHistory)
                         }
                     }
-                    
+
                     Spacer(modifier = Modifier.height(16.dp))
-                    
+
                     // Control buttons
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -222,7 +222,7 @@ fun IRMonitorLiteScreen(
                             Spacer(modifier = Modifier.width(8.dp))
                             Text("Reset")
                         }
-                        
+
                         OutlinedButton(
                             onClick = { viewModel.exportData() },
                             modifier = Modifier.weight(1f)
@@ -234,7 +234,7 @@ fun IRMonitorLiteScreen(
                     }
                 }
             }
-            
+
             // Statistics and alerts panel
             Card(
                 modifier = Modifier
@@ -251,14 +251,14 @@ fun IRMonitorLiteScreen(
                             statistics = uiState.statistics
                         )
                     }
-                    
+
                     item {
                         MonitoringAlertsSection(
                             alerts = uiState.alerts,
                             onDismissAlert = { viewModel.dismissAlert(it) }
                         )
                     }
-                    
+
                     item {
                         MonitoringSettingsSection(
                             alertThreshold = uiState.alertThreshold,
@@ -284,9 +284,9 @@ fun TemperatureStatisticsSection(
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold
         )
-        
+
         Spacer(modifier = Modifier.height(12.dp))
-        
+
         Card {
             Column(
                 modifier = Modifier.padding(16.dp),
@@ -355,9 +355,9 @@ fun MonitoringAlertsSection(
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold
         )
-        
+
         Spacer(modifier = Modifier.height(12.dp))
-        
+
         if (alerts.isEmpty()) {
             Card {
                 Text(
@@ -398,7 +398,7 @@ fun MonitoringAlertsSection(
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
-                        
+
                         IconButton(
                             onClick = { onDismissAlert(alert) }
                         ) {
@@ -410,7 +410,7 @@ fun MonitoringAlertsSection(
                         }
                     }
                 }
-                
+
                 Spacer(modifier = Modifier.height(8.dp))
             }
         }
@@ -431,9 +431,9 @@ fun MonitoringSettingsSection(
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold
         )
-        
+
         Spacer(modifier = Modifier.height(12.dp))
-        
+
         Card {
             Column(
                 modifier = Modifier.padding(16.dp),
@@ -452,7 +452,7 @@ fun MonitoringSettingsSection(
                         valueRange = 30f..80f
                     )
                 }
-                
+
                 // Sampling rate
                 Column {
                     Text(
@@ -460,7 +460,7 @@ fun MonitoringSettingsSection(
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.Medium
                     )
-                    
+
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
@@ -480,15 +480,15 @@ fun MonitoringSettingsSection(
 
 fun DrawScope.drawTemperatureTrend(temperatureHistory: List<Float>) {
     if (temperatureHistory.size < 2) return
-    
+
     val width = size.width
     val height = size.height
     val pointSpacing = width / (temperatureHistory.size - 1)
-    
+
     val minTemp = temperatureHistory.minOrNull() ?: 0f
     val maxTemp = temperatureHistory.maxOrNull() ?: 100f
     val tempRange = (maxTemp - minTemp).coerceAtLeast(1f)
-    
+
     // Draw grid lines
     val gridColor = Color.Gray.copy(alpha = 0.3f)
     for (i in 0..4) {
@@ -500,15 +500,15 @@ fun DrawScope.drawTemperatureTrend(temperatureHistory: List<Float>) {
             strokeWidth = 1.dp.toPx()
         )
     }
-    
+
     // Draw temperature line
     val path = androidx.compose.ui.graphics.Path()
     var started = false
-    
+
     temperatureHistory.forEachIndexed { index, temp ->
         val x = index * pointSpacing
         val y = height - ((temp - minTemp) / tempRange * height)
-        
+
         if (!started) {
             path.moveTo(x, y)
             started = true
@@ -516,7 +516,7 @@ fun DrawScope.drawTemperatureTrend(temperatureHistory: List<Float>) {
             path.lineTo(x, y)
         }
     }
-    
+
     // Draw gradient fill
     val gradient = androidx.compose.ui.graphics.Brush.verticalGradient(
         colors = listOf(
@@ -526,37 +526,37 @@ fun DrawScope.drawTemperatureTrend(temperatureHistory: List<Float>) {
         startY = 0f,
         endY = height
     )
-    
+
     val fillPath = androidx.compose.ui.graphics.Path().apply {
         addPath(path)
         lineTo(width, height)
         lineTo(0f, height)
         close()
     }
-    
+
     drawPath(
         path = fillPath,
         brush = gradient
     )
-    
+
     // Draw line
     drawPath(
         path = path,
         color = Color(0xFF2196F3),
         style = androidx.compose.ui.graphics.drawscope.Stroke(width = 3.dp.toPx())
     )
-    
+
     // Draw data points
     temperatureHistory.forEachIndexed { index, temp ->
         val x = index * pointSpacing
         val y = height - ((temp - minTemp) / tempRange * height)
-        
+
         drawCircle(
             color = Color(0xFF2196F3),
             radius = 4.dp.toPx(),
             center = androidx.compose.ui.geometry.Offset(x, y)
         )
-        
+
         drawCircle(
             color = Color.White,
             radius = 2.dp.toPx(),
@@ -571,19 +571,19 @@ fun Float.format(decimals: Int): String = "%.${decimals}f".format(this)
  * ViewModel for IR Monitor Lite Compose Activity
  */
 class IRMonitorLiteViewModel : ViewModel() {
-    
+
     private val _uiState = MutableStateFlow(IRMonitorUiState())
     val uiState: StateFlow<IRMonitorUiState> = _uiState.asStateFlow()
-    
+
     fun startMonitoring() {
         _uiState.value = _uiState.value.copy(isMonitoring = true)
         startTemperatureMonitoring()
     }
-    
+
     fun stopMonitoring() {
         _uiState.value = _uiState.value.copy(isMonitoring = false)
     }
-    
+
     fun toggleMonitoring() {
         if (_uiState.value.isMonitoring) {
             stopMonitoring()
@@ -591,53 +591,53 @@ class IRMonitorLiteViewModel : ViewModel() {
             startMonitoring()
         }
     }
-    
+
     private fun startTemperatureMonitoring() {
         viewModelScope.launch {
             var timeStep = 0
-            
+
             while (_uiState.value.isMonitoring) {
                 val currentState = _uiState.value
-                
+
                 // Simulate temperature reading with some variation
                 val baseTemp = 25f + sin(timeStep * 0.1) * 5f + cos(timeStep * 0.05) * 2f
                 val noise = (-1f..1f).random()
                 val currentTemp = baseTemp + noise
-                
+
                 // Update temperature history
                 val newHistory = (currentState.temperatureHistory + currentTemp).takeLast(50)
-                
+
                 // Calculate statistics
                 val newStatistics = calculateStatistics(newHistory)
-                
+
                 // Check for alerts
                 val newAlerts = checkForAlerts(currentTemp, currentState.alertThreshold, currentState.alerts)
-                
+
                 _uiState.value = currentState.copy(
                     currentTemperature = currentTemp,
                     temperatureHistory = newHistory,
                     statistics = newStatistics,
                     alerts = newAlerts
                 )
-                
+
                 timeStep++
                 kotlinx.coroutines.delay((currentState.samplingRate * 1000).toLong())
             }
         }
     }
-    
+
     private fun calculateStatistics(temperatures: List<Float>): TemperatureStatistics {
         if (temperatures.isEmpty()) {
             return TemperatureStatistics()
         }
-        
+
         val average = temperatures.average().toFloat()
         val maximum = temperatures.maxOrNull() ?: 0f
         val minimum = temperatures.minOrNull() ?: 0f
-        
+
         val variance = temperatures.map { (it - average) * (it - average) }.average()
         val standardDeviation = kotlin.math.sqrt(variance).toFloat()
-        
+
         return TemperatureStatistics(
             average = average,
             maximum = maximum,
@@ -646,14 +646,14 @@ class IRMonitorLiteViewModel : ViewModel() {
             sampleCount = temperatures.size
         )
     }
-    
+
     private fun checkForAlerts(
         currentTemp: Float,
         threshold: Float,
         existingAlerts: List<MonitoringAlert>
     ): List<MonitoringAlert> {
         val alerts = existingAlerts.toMutableList()
-        
+
         if (currentTemp > threshold) {
             val alertMessage = "Temperature exceeded threshold: ${currentTemp.format(2)}°C > ${threshold.format(1)}°C"
             val newAlert = MonitoringAlert(
@@ -667,17 +667,19 @@ class IRMonitorLiteViewModel : ViewModel() {
                 timestamp = java.text.SimpleDateFormat("HH:mm:ss", java.util.Locale.getDefault())
                     .format(java.util.Date())
             )
-            
+
             // Don't add duplicate alerts for similar temperatures
-            if (!alerts.any { it.message.contains("exceeded threshold") && 
-                              System.currentTimeMillis() - it.id < 30000 }) {
+            if (!alerts.any {
+                    it.message.contains("exceeded threshold") &&
+                            System.currentTimeMillis() - it.id < 30000
+                }) {
                 alerts.add(newAlert)
             }
         }
-        
+
         return alerts.takeLast(10) // Keep only recent alerts
     }
-    
+
     fun resetData() {
         _uiState.value = _uiState.value.copy(
             temperatureHistory = emptyList(),
@@ -685,24 +687,24 @@ class IRMonitorLiteViewModel : ViewModel() {
             alerts = emptyList()
         )
     }
-    
+
     fun exportData() {
         // Implement data export functionality
         viewModelScope.launch {
             // Export temperature history to CSV or other format
         }
     }
-    
+
     fun dismissAlert(alert: MonitoringAlert) {
         _uiState.value = _uiState.value.copy(
             alerts = _uiState.value.alerts.filter { it.id != alert.id }
         )
     }
-    
+
     fun setAlertThreshold(threshold: Float) {
         _uiState.value = _uiState.value.copy(alertThreshold = threshold)
     }
-    
+
     fun setSamplingRate(rate: Int) {
         _uiState.value = _uiState.value.copy(samplingRate = rate)
     }

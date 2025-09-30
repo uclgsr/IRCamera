@@ -104,7 +104,7 @@ fun VideoPlayerCompose(
                 duration = duration,
                 volume = volume,
                 title = title,
-                onPlayPause = { 
+                onPlayPause = {
                     isPlaying = !isPlaying
                     onVideoCallback?.onPlayStateChanged(isPlaying)
                 },
@@ -183,7 +183,7 @@ private fun VideoSurfaceCompose(
                 tint = Color.White.copy(alpha = 0.8f)
             )
         }
-        
+
         // URL display for preview
         Text(
             text = "Video: ${url.takeLast(30)}",
@@ -496,8 +496,8 @@ private fun MediaFileItemCompose(
             .fillMaxWidth()
             .clickable { onSelect() },
         colors = CardDefaults.cardColors(
-            containerColor = if (isSelected) MaterialTheme.colorScheme.primaryContainer 
-                            else MaterialTheme.colorScheme.surface
+            containerColor = if (isSelected) MaterialTheme.colorScheme.primaryContainer
+            else MaterialTheme.colorScheme.surface
         )
     ) {
         Row(

@@ -42,7 +42,7 @@ fun TemperatureIndicator(
     val normalizedTemp = ((temperature - minTemp) / (maxTemp - minTemp)).coerceIn(0f, 1f)
     val backgroundColor = Color.lerp(coldColor, hotColor, normalizedTemp)
     val textColor = if (normalizedTemp > 0.5f) Color.White else Color.Black
-    
+
     Card(
         modifier = modifier,
         colors = CardDefaults.cardColors(containerColor = backgroundColor),
@@ -93,9 +93,9 @@ fun ThermalGradientBar(
                     RoundedCornerShape(10.dp)
                 )
         )
-        
+
         Spacer(modifier = Modifier.height(4.dp))
-        
+
         // Temperature labels
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -134,14 +134,14 @@ fun ThermalStatusIndicator(
                 .clip(CircleShape)
                 .background(status.color)
         )
-        
+
         Icon(
             imageVector = status.icon,
             contentDescription = status.text,
             tint = status.color,
             modifier = Modifier.size(16.dp)
         )
-        
+
         Text(
             text = status.text,
             style = MaterialTheme.typography.bodySmall,
@@ -190,7 +190,7 @@ fun MeasurementPoint(
                 },
                 fontWeight = FontWeight.Bold
             )
-            
+
             Text(
                 text = "${temperature.roundToInt()}$unit",
                 style = MaterialTheme.typography.bodyMedium,
@@ -221,13 +221,13 @@ fun ThermalToolbar(
     ) {
         ThermalTool.values().forEach { tool ->
             val isSelected = selectedTool == tool
-            
+
             FilterChip(
                 selected = isSelected,
-                onClick = { 
+                onClick = {
                     onToolSelected(if (isSelected) null else tool)
                 },
-                label = { 
+                label = {
                     Text(
                         text = tool.displayName,
                         fontSize = 12.sp
@@ -295,20 +295,20 @@ fun ThermalUtilsComposePreview() {
                 modifier = Modifier.weight(1f)
             )
         }
-        
+
         // Gradient bar
         ThermalGradientBar(
             minTemp = 0f,
             maxTemp = 100f
         )
-        
+
         // Status indicators
         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
             ThermalStatus.values().forEach { status ->
                 ThermalStatusIndicator(status = status)
             }
         }
-        
+
         // Measurement points
         Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -320,12 +320,12 @@ fun ThermalUtilsComposePreview() {
                 modifier = Modifier.weight(1f)
             )
             MeasurementPoint(
-                label = "P2", 
+                label = "P2",
                 temperature = 42.1f,
                 modifier = Modifier.weight(1f)
             )
         }
-        
+
         // Toolbar
         var selectedTool by remember { mutableStateOf<ThermalTool?>(null) }
         ThermalToolbar(

@@ -16,11 +16,11 @@ import kotlinx.coroutines.withContext
 import java.io.File
 
 class GalleryViewModel : BaseViewModel() {
-    
+
     companion object {
         private const val TAG = "GalleryViewModel"
     }
-    
+
     val galleryLiveData = SingleLiveEvent<ArrayList<String>>()
 
     // Data class for media items
@@ -110,7 +110,7 @@ class GalleryViewModel : BaseViewModel() {
             currentSelected.add(item.id)
         }
         _selectedItems.value = currentSelected
-        
+
         // Exit selection mode if no items selected
         if (currentSelected.isEmpty()) {
             _isSelectionMode.value = false
@@ -121,7 +121,7 @@ class GalleryViewModel : BaseViewModel() {
     fun deleteSelectedItems() {
         val selectedIds = _selectedItems.value
         val itemsToDelete = _mediaItems.value.filter { selectedIds.contains(it.id) }
-        
+
         viewModelScope.launch(Dispatchers.IO) {
             itemsToDelete.forEach { item ->
                 try {
@@ -130,7 +130,7 @@ class GalleryViewModel : BaseViewModel() {
                     Log.e(TAG, "Error deleting file: ${item.path}", e)
                 }
             }
-            
+
             withContext(Dispatchers.Main) {
                 exitSelectionMode()
                 loadMediaItems() // Refresh the list
@@ -141,7 +141,7 @@ class GalleryViewModel : BaseViewModel() {
     fun shareSelectedItems() {
         val selectedIds = _selectedItems.value
         val itemsToShare = _mediaItems.value.filter { selectedIds.contains(it.id) }
-        
+
         if (itemsToShare.isNotEmpty()) {
             // Implementation would depend on context being available
             // For now, just log the action
@@ -190,7 +190,7 @@ class GalleryViewModel : BaseViewModel() {
 
     private fun getMediaItemsList(): List<MediaItem> {
         val items = mutableListOf<MediaItem>()
-        
+
         // Load pictures
         val picturePath = Utils.getApp()
             .getExternalFilesDir("Pictures")!!.absolutePath + File.separator + "thermal"
@@ -212,7 +212,7 @@ class GalleryViewModel : BaseViewModel() {
                 }
             }
         }
-        
+
         // Load videos
         val videoPath = FileConfig.lineGalleryDir
         val videoDir = File(videoPath)
@@ -233,7 +233,7 @@ class GalleryViewModel : BaseViewModel() {
                 }
             }
         }
-        
+
         return items.sortedByDescending { it.dateModified }
     }
 

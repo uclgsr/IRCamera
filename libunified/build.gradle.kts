@@ -216,7 +216,7 @@ dependencies {
     api(libs.compose.activity)
     api(libs.compose.material.icons.core)
     api(libs.compose.material.icons.extended)
-    
+
     // Compose debug dependencies
     debugApi(libs.compose.ui.tooling)
     debugApi(libs.compose.ui.test.manifest)

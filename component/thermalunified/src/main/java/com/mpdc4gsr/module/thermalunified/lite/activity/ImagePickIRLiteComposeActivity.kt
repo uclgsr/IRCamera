@@ -55,16 +55,16 @@ class ImagePickIRLiteComposeActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         viewModel = ViewModelProvider(this)[ImagePickIRLiteViewModel::class.java]
-        
+
         setContent {
             IRCameraTheme {
                 ImagePickIRLiteScreen(
                     viewModel = viewModel,
-                    onNavigateBack = { 
+                    onNavigateBack = {
                         setResult(RESULT_CANCELED)
-                        finish() 
+                        finish()
                     },
                     onImageSelected = { imageUri ->
                         val resultIntent = Intent().apply {
@@ -76,7 +76,7 @@ class ImagePickIRLiteComposeActivity : ComponentActivity() {
                 )
             }
         }
-        
+
         viewModel.loadImages()
     }
 }
@@ -90,24 +90,24 @@ fun ImagePickIRLiteScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
-    
+
     // Image picker launchers
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri ->
         uri?.let { onImageSelected(it) }
     }
-    
+
     val cameraLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.TakePicturePreview()
     ) { bitmap ->
-        bitmap?.let { 
+        bitmap?.let {
             viewModel.processCameraBitmap(it) { uri ->
                 onImageSelected(uri)
             }
         }
     }
-    
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -124,7 +124,7 @@ fun ImagePickIRLiteScreen(
                             contentDescription = "Toggle View"
                         )
                     }
-                    
+
                     IconButton(onClick = { viewModel.refreshImages() }) {
                         Icon(Icons.Default.Refresh, contentDescription = "Refresh")
                     }
@@ -141,7 +141,7 @@ fun ImagePickIRLiteScreen(
                 ) {
                     Icon(Icons.Default.CameraAlt, contentDescription = "Take Photo")
                 }
-                
+
                 FloatingActionButton(
                     onClick = { galleryLauncher.launch("image/*") }
                 ) {
@@ -161,7 +161,7 @@ fun ImagePickIRLiteScreen(
                 onFilterSelected = { viewModel.setFilter(it) },
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
             )
-            
+
             if (uiState.isLoading) {
                 Box(
                     modifier = Modifier.fillMaxSize(),
@@ -222,7 +222,7 @@ fun ImagePickIRLiteScreen(
                 }
             }
         }
-        
+
         // Image details dialog
         if (uiState.selectedImageDetails != null) {
             ImageDetailsDialog(
@@ -247,7 +247,7 @@ fun ImageFilterTabs(
         ImageFilter.REGULAR to "Regular",
         ImageFilter.RECENT to "Recent"
     )
-    
+
     ScrollableTabRow(
         selectedTabIndex = filters.indexOfFirst { it.first == selectedFilter },
         modifier = modifier
@@ -306,7 +306,7 @@ fun ImageGridItem(
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop
             )
-            
+
             // Overlay for thermal images
             if (image.isThermal) {
                 Box(
@@ -326,7 +326,7 @@ fun ImageGridItem(
                     )
                 }
             }
-            
+
             // Date overlay
             Box(
                 modifier = Modifier
@@ -396,9 +396,9 @@ fun ImageListItem(
                     .clip(RoundedCornerShape(8.dp)),
                 contentScale = ContentScale.Crop
             )
-            
+
             Spacer(modifier = Modifier.width(16.dp))
-            
+
             Column(
                 modifier = Modifier.weight(1f)
             ) {
@@ -410,7 +410,7 @@ fun ImageListItem(
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Medium
                     )
-                    
+
                     if (image.isThermal) {
                         Spacer(modifier = Modifier.width(8.dp))
                         AssistChip(
@@ -422,22 +422,22 @@ fun ImageListItem(
                         )
                     }
                 }
-                
+
                 Spacer(modifier = Modifier.height(4.dp))
-                
+
                 Text(
                     text = image.sizeFormatted,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-                
+
                 Text(
                     text = image.dateFormatted,
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-            
+
             IconButton(onClick = onLongClick) {
                 Icon(
                     Icons.Default.MoreVert,
@@ -469,14 +469,14 @@ fun ImageDetailsDialog(
                         .clip(RoundedCornerShape(8.dp)),
                     contentScale = ContentScale.Crop
                 )
-                
+
                 Spacer(modifier = Modifier.height(16.dp))
-                
+
                 DetailRow("Name", imageDetails.name)
                 DetailRow("Size", imageDetails.sizeFormatted)
                 DetailRow("Date", imageDetails.dateFormatted)
                 DetailRow("Type", if (imageDetails.isThermal) "Thermal Image" else "Regular Image")
-                
+
                 if (imageDetails.isThermal) {
                     DetailRow("Temperature Range", "${imageDetails.minTemp}°C - ${imageDetails.maxTemp}°C")
                 }
@@ -497,7 +497,7 @@ fun ImageDetailsDialog(
                 ) {
                     Text("Delete")
                 }
-                
+
                 TextButton(onClick = onDismiss) {
                     Text("Cancel")
                 }
@@ -534,19 +534,19 @@ fun DetailRow(
  * ViewModel for Image Pick IR Lite Compose Activity
  */
 class ImagePickIRLiteViewModel : ViewModel() {
-    
+
     private val _uiState = MutableStateFlow(ImagePickUiState())
     val uiState: StateFlow<ImagePickUiState> = _uiState.asStateFlow()
-    
+
     fun loadImages() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
-            
+
             // Simulate loading images from storage
             kotlinx.coroutines.delay(1000)
-            
+
             val sampleImages = generateSampleImages()
-            
+
             _uiState.value = _uiState.value.copy(
                 isLoading = false,
                 allImages = sampleImages,
@@ -554,11 +554,11 @@ class ImagePickIRLiteViewModel : ViewModel() {
             )
         }
     }
-    
+
     fun refreshImages() {
         loadImages()
     }
-    
+
     fun setFilter(filter: ImageFilter) {
         val filteredImages = when (filter) {
             ImageFilter.ALL -> _uiState.value.allImages
@@ -566,31 +566,31 @@ class ImagePickIRLiteViewModel : ViewModel() {
             ImageFilter.REGULAR -> _uiState.value.allImages.filter { !it.isThermal }
             ImageFilter.RECENT -> _uiState.value.allImages.sortedByDescending { it.dateModified }.take(20)
         }
-        
+
         _uiState.value = _uiState.value.copy(
             selectedFilter = filter,
             filteredImages = filteredImages
         )
     }
-    
+
     fun toggleViewMode() {
         _uiState.value = _uiState.value.copy(
             isGridView = !_uiState.value.isGridView
         )
     }
-    
+
     fun showImageDetails(image: ThermalImageInfo) {
         _uiState.value = _uiState.value.copy(
             selectedImageDetails = image
         )
     }
-    
+
     fun hideImageDetails() {
         _uiState.value = _uiState.value.copy(
             selectedImageDetails = null
         )
     }
-    
+
     fun deleteImage(image: ThermalImageInfo) {
         val updatedImages = _uiState.value.allImages.filter { it.uri != image.uri }
         _uiState.value = _uiState.value.copy(
@@ -599,20 +599,20 @@ class ImagePickIRLiteViewModel : ViewModel() {
             selectedImageDetails = null
         )
     }
-    
+
     fun processCameraBitmap(bitmap: Bitmap, onResult: (Uri) -> Unit) {
         viewModelScope.launch {
             // Process the camera bitmap and save it
             // This would typically involve saving to storage and returning the URI
             // For now, we'll simulate this
             kotlinx.coroutines.delay(500)
-            
+
             // In a real implementation, you would save the bitmap and return the URI
             val mockUri = Uri.parse("content://media/external/images/media/12345")
             onResult(mockUri)
         }
     }
-    
+
     private fun generateSampleImages(): List<ThermalImageInfo> {
         return listOf(
             ThermalImageInfo(
@@ -677,7 +677,7 @@ data class ThermalImageInfo(
             size < 1024 * 1024 -> "${size / 1024} KB"
             else -> "${size / (1024 * 1024)} MB"
         }
-    
+
     val dateFormatted: String
         get() = java.text.SimpleDateFormat("MMM dd, yyyy HH:mm", java.util.Locale.getDefault())
             .format(java.util.Date(dateModified))

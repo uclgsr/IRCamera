@@ -75,7 +75,7 @@ fun ThermalNavigationDrawer(
                     )
                 }
             }
-            
+
             // Navigation items
             LazyColumn(
                 modifier = Modifier.weight(1f),
@@ -84,7 +84,7 @@ fun ThermalNavigationDrawer(
                 items(ThermalDestination.values()) { destination ->
                     NavigationDrawerItem(
                         label = { Text(destination.title) },
-                        icon = { 
+                        icon = {
                             Icon(
                                 imageVector = destination.icon,
                                 contentDescription = destination.title
@@ -99,7 +99,7 @@ fun ThermalNavigationDrawer(
                     )
                 }
             }
-            
+
             // Footer
             Divider()
             Row(
@@ -158,9 +158,9 @@ fun ThermalActionMenu(
                                 style = MaterialTheme.typography.bodyMedium
                             )
                         }
-                        
+
                         Spacer(modifier = Modifier.width(8.dp))
-                        
+
                         SmallFloatingActionButton(
                             onClick = {
                                 onActionSelected(action)
@@ -178,7 +178,7 @@ fun ThermalActionMenu(
                 }
             }
         }
-        
+
         // Main FAB
         FloatingActionButton(
             onClick = onToggle,
@@ -253,7 +253,7 @@ fun ThermalMenuGrid(
                         modifier = Modifier.weight(1f)
                     )
                 }
-                
+
                 // Fill empty space for odd number of items
                 if (rowItems.size == 1) {
                     Spacer(modifier = Modifier.weight(1f))
@@ -291,9 +291,9 @@ private fun ThermalMenuCard(
                 modifier = Modifier.size(48.dp),
                 tint = item.iconColor
             )
-            
+
             Spacer(modifier = Modifier.height(8.dp))
-            
+
             Text(
                 text = item.title,
                 style = MaterialTheme.typography.titleMedium,
@@ -303,7 +303,7 @@ private fun ThermalMenuCard(
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis
             )
-            
+
             if (item.subtitle.isNotEmpty()) {
                 Text(
                     text = item.subtitle,
@@ -356,14 +356,14 @@ fun ThermalStatusBar(
                         }
                     )
             )
-            
+
             // Status text
             Text(
                 text = status.message,
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.weight(1f)
             )
-            
+
             // Temperature display
             if (status.currentTemp != null) {
                 Text(
@@ -465,13 +465,13 @@ fun ThermalNavigationPreview() {
             textColor = Color(0xFF7B1FA2)
         )
     )
-    
+
     val sampleStatus = ThermalStatus(
         message = "Thermal camera connected and calibrated",
         level = ThermalStatusLevel.NORMAL,
         currentTemp = 25.4f
     )
-    
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -484,16 +484,16 @@ fun ThermalNavigationPreview() {
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold
         )
-        
+
         ThermalStatusBar(status = sampleStatus)
-        
+
         Text("Menu Grid:", style = MaterialTheme.typography.titleMedium)
         ThermalMenuGrid(
             menuItems = sampleMenuItems,
             onItemClick = { },
             modifier = Modifier.weight(1f)
         )
-        
+
         ThermalBottomNavigation(
             destinations = listOf(
                 ThermalDestination.CAMERA,

@@ -161,7 +161,7 @@ Jetpack Compose, establishing the foundation for complete UI modernization of th
 class FragmentViewModel : BaseViewModel() {
     private val _uiState = MutableStateFlow(UiState())
     val uiState: StateFlow<UiState> = _uiState.asStateFlow()
-    
+
     private val _navigationEvents = MutableSharedFlow<NavigationEvent>()
     val navigationEvents: SharedFlow<NavigationEvent> = _navigationEvents.asSharedFlow()
 }
@@ -170,7 +170,7 @@ class FragmentViewModel : BaseViewModel() {
 @Composable
 override fun Content(viewModel: FragmentViewModel) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    
+
     LaunchedEffect(Unit) {
         viewModel.navigationEvents.collect { event ->
             // Handle navigation with proper lifecycle awareness

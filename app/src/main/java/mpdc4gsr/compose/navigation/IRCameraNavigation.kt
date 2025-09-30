@@ -119,7 +119,10 @@ fun IRCameraNavHost(
             LaunchedEffect(Unit) {
                 try {
                     val intent = Intent().apply {
-                        setClassName(context, "com.mpdc4gsr.module.thermalunified.activity.ThermalCameraComposeActivity")
+                        setClassName(
+                            context,
+                            "com.mpdc4gsr.module.thermalunified.activity.ThermalCameraComposeActivity"
+                        )
                     }
                     context.startActivity(intent)
                 } catch (e: Exception) {

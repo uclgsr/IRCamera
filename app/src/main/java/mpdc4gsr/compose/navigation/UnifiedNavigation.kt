@@ -33,10 +33,12 @@ sealed class UnifiedRoute(val route: String) {
     object GSRPlot : UnifiedRoute("gsr_plot/{sessionId}") {
         fun createRoute(sessionId: String) = "gsr_plot/$sessionId"
     }
+
     object GSRDataView : UnifiedRoute("gsr_data_view") {
         // File paths should be passed via arguments, not URL parameters
         fun createRoute() = "gsr_data_view"
     }
+
     object GSRSessionDetail : UnifiedRoute("gsr_session_detail/{sessionId}") {
         fun createRoute(sessionId: String) = "gsr_session_detail/$sessionId"
     }
@@ -52,7 +54,7 @@ sealed class UnifiedRoute(val route: String) {
 
     // Thermal Camera Routes (consistent naming)
     object ThermalMain : UnifiedRoute("thermal_main")
-    object ThermalGallery : UnifiedRoute("thermal_gallery") 
+    object ThermalGallery : UnifiedRoute("thermal_gallery")
     object ThermalReport : UnifiedRoute("thermal_report")
     object ThermalCamera : UnifiedRoute("thermal_camera")
     object ThermalSettings : UnifiedRoute("thermal_settings")

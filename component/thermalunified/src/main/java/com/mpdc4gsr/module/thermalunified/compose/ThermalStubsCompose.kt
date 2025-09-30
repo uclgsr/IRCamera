@@ -28,10 +28,10 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 
 /**
  * Thermal Stubs Compose Components
- * 
+ *
  * Complete collection of stub/placeholder components for thermal module,
  * replacing various stub dialogs and UI widgets with modern Compose implementations.
- * 
+ *
  * Components:
  * - MonitorSelectDialogCompose: Monitor selection dialog
  * - TipDialogCompose: Information and tip dialogs
@@ -109,9 +109,9 @@ fun MonitorSelectDialogCompose(
                             )
                         }
                     }
-                    
+
                     Spacer(modifier = Modifier.height(16.dp))
-                    
+
                     // Options list
                     LazyColumn(
                         modifier = Modifier.fillMaxWidth(),
@@ -125,9 +125,9 @@ fun MonitorSelectDialogCompose(
                             )
                         }
                     }
-                    
+
                     Spacer(modifier = Modifier.height(16.dp))
-                    
+
                     // Action buttons
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -190,9 +190,9 @@ private fun MonitorOptionItem(
                 },
                 modifier = Modifier.size(24.dp)
             )
-            
+
             Spacer(modifier = Modifier.width(16.dp))
-            
+
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = option.name,
@@ -211,7 +211,7 @@ private fun MonitorOptionItem(
                     )
                 }
             }
-            
+
             if (isSelected) {
                 Icon(
                     Icons.Default.CheckCircle,
@@ -338,9 +338,9 @@ private fun FenceItemCompose(
                 tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.size(24.dp)
             )
-            
+
             Spacer(modifier = Modifier.width(12.dp))
-            
+
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = fence.name,
@@ -353,7 +353,7 @@ private fun FenceItemCompose(
                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
                 )
             }
-            
+
             IconButton(onClick = onDeleted) {
                 Icon(
                     Icons.Default.Delete,
@@ -392,50 +392,50 @@ fun GuideStubsCompose(
                 modifier = Modifier.fillMaxWidth(),
                 color = MaterialTheme.colorScheme.primary
             )
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             // Current step content
             if (currentStep < guideSteps.size) {
                 val step = guideSteps[currentStep]
-                
+
                 Text(
                     text = "Step ${currentStep + 1} of ${guideSteps.size}",
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.primary
                 )
-                
+
                 Spacer(modifier = Modifier.height(8.dp))
-                
+
                 Text(
                     text = step.title,
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold
                 )
-                
+
                 Spacer(modifier = Modifier.height(8.dp))
-                
+
                 Text(
                     text = step.description,
                     style = MaterialTheme.typography.bodyMedium
                 )
-                
+
                 Spacer(modifier = Modifier.height(16.dp))
-                
+
                 // Navigation buttons
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     TextButton(
-                        onClick = { 
+                        onClick = {
                             if (currentStep > 0) onStepChanged(currentStep - 1)
                         },
                         enabled = currentStep > 0
                     ) {
                         Text("Previous")
                     }
-                    
+
                     Button(
                         onClick = {
                             if (currentStep < guideSteps.size - 1) {
@@ -495,16 +495,16 @@ private fun WidgetItemCompose(
                     tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(24.dp)
                 )
-                
+
                 Spacer(modifier = Modifier.width(12.dp))
-                
+
                 Text(
                     text = widget.title,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Medium
                 )
             }
-            
+
             if (widget.description.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
@@ -548,7 +548,7 @@ private fun MonitorSelectDialogPreview() {
             MonitorOption(2, "Pressure Monitor", "Pressure level monitoring", Icons.Default.Speed),
             MonitorOption(3, "Humidity Monitor", "Humidity level tracking", Icons.Default.WaterDrop, false)
         )
-        
+
         MonitorSelectDialogCompose(
             showDialog = true,
             options = sampleOptions,
@@ -585,7 +585,7 @@ private fun FenceViewsPreview() {
             FenceData(1, "Temperature Zone 1", listOf(0f to 0f, 100f to 100f), 25.5f),
             FenceData(2, "Critical Area", listOf(50f to 50f, 150f to 150f), 85.2f)
         )
-        
+
         FenceViewsCompose(
             fences = sampleFences,
             onFenceSelected = {},

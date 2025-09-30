@@ -61,12 +61,12 @@ class IRLogMPChartComposeActivity : BaseComposeActivity<IRMonitorViewModel>() {
     override fun Content(viewModel: IRMonitorViewModel) {
         val context = LocalContext.current
         val scrollState = rememberScrollState()
-        
+
         // Collect thermal data from ViewModel
         val thermalData by viewModel.thermalEntityList.collectAsStateWithLifecycle()
         var isLoading by remember { mutableStateOf(false) }
         var showExportDialog by remember { mutableStateOf(false) }
-        
+
         // Load data when activity starts
         LaunchedEffect(startTime) {
             if (startTime > 0) {
@@ -112,7 +112,7 @@ class IRLogMPChartComposeActivity : BaseComposeActivity<IRMonitorViewModel>() {
                             .height(400.dp)
                             .padding(16.dp)
                     )
-                    
+
                     // Chart information panel
                     if (thermalData.isNotEmpty()) {
                         ChartInfoPanel(
@@ -123,9 +123,9 @@ class IRLogMPChartComposeActivity : BaseComposeActivity<IRMonitorViewModel>() {
                             modifier = Modifier.padding(horizontal = 16.dp)
                         )
                     }
-                    
+
                     Spacer(modifier = Modifier.height(16.dp))
-                    
+
                     // Export path information
                     Card(
                         modifier = Modifier
@@ -143,17 +143,17 @@ class IRLogMPChartComposeActivity : BaseComposeActivity<IRMonitorViewModel>() {
                                 style = MaterialTheme.typography.titleSmall,
                                 fontWeight = FontWeight.Bold
                             )
-                            
+
                             Spacer(modifier = Modifier.height(8.dp))
-                            
+
                             Text(
                                 text = "${stringResource(LibR.string.temp_export_path)}: ${FileConfig.excelDir}",
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
-                            
+
                             Spacer(modifier = Modifier.height(8.dp))
-                            
+
                             Text(
                                 text = "Data Points: ${thermalData.size}",
                                 style = MaterialTheme.typography.bodySmall,
@@ -161,12 +161,12 @@ class IRLogMPChartComposeActivity : BaseComposeActivity<IRMonitorViewModel>() {
                             )
                         }
                     }
-                    
+
                     Spacer(modifier = Modifier.height(32.dp))
                 }
             }
         }
-        
+
         // Export confirmation dialog
         if (showExportDialog) {
             AlertDialog(
@@ -190,7 +190,7 @@ class IRLogMPChartComposeActivity : BaseComposeActivity<IRMonitorViewModel>() {
                 }
             )
         }
-        
+
         // Loading indicator
         if (isLoading) {
             Box(
@@ -248,13 +248,13 @@ class IRLogMPChartComposeActivity : BaseComposeActivity<IRMonitorViewModel>() {
                         type = entity.type
                     )
                 }
-                
+
                 val chartType = when (thermalData.firstOrNull()?.type) {
                     "point" -> ThermalChartType.POINT
                     "line" -> ThermalChartType.LINE
                     else -> ThermalChartType.AREA
                 }
-                
+
                 ChartLogCompose(
                     thermalData = chartData,
                     chartType = chartType,
@@ -292,7 +292,7 @@ class IRLogMPChartComposeActivity : BaseComposeActivity<IRMonitorViewModel>() {
                                         "point" == thermalData[0].type
                                     )
                                 }
-                                
+
                                 if (filePath.isNullOrEmpty()) {
                                     ToastTools.showShort(LibR.string.liveData_save_error)
                                 } else {
@@ -324,7 +324,7 @@ class IRLogMPChartComposeActivity : BaseComposeActivity<IRMonitorViewModel>() {
                             ToastTools.showShort(getString(LibR.string.app_storage_content))
                             return
                         }
-                        
+
                         TipDialog.Builder(this@IRLogMPChartComposeActivity)
                             .setTitleMessage(getString(LibR.string.app_tip))
                             .setMessage(getString(LibR.string.app_storage_content))
@@ -338,21 +338,21 @@ class IRLogMPChartComposeActivity : BaseComposeActivity<IRMonitorViewModel>() {
                 }
             })
     }
-    
+
     private fun getCurrentTemperature(data: List<ThermalEntity>): String {
         return data.lastOrNull()?.thermal?.let { "${String.format("%.1f", it)}°C" } ?: "--"
     }
-    
+
     private fun getMaxTemperature(data: List<ThermalEntity>): String {
         val max = data.maxOfOrNull { it.thermal } ?: return "--"
         return "${String.format("%.1f", max)}°C"
     }
-    
+
     private fun getMinTemperature(data: List<ThermalEntity>): String {
         val min = data.minOfOrNull { it.thermal } ?: return "--"
         return "${String.format("%.1f", min)}°C"
     }
-    
+
     private fun getAverageTemperature(data: List<ThermalEntity>): String {
         if (data.isEmpty()) return "--"
         val avg = data.map { it.thermal }.average()

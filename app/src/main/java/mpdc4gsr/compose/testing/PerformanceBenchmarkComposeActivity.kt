@@ -36,12 +36,12 @@ import kotlin.random.Random
  * Comprehensive performance testing for the thermal camera application
  */
 class PerformanceBenchmarkComposeActivity : ComponentActivity() {
-    
+
     private val viewModel: PerformanceBenchmarkViewModel by viewModels()
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         setContent {
             IRCameraTheme {
                 PerformanceBenchmarkScreen(
@@ -51,7 +51,7 @@ class PerformanceBenchmarkComposeActivity : ComponentActivity() {
             }
         }
     }
-    
+
     companion object {
         fun start(context: Context) {
             context.startActivity(Intent(context, PerformanceBenchmarkComposeActivity::class.java))
@@ -66,7 +66,7 @@ fun PerformanceBenchmarkScreen(
     onBackPressed: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -107,7 +107,7 @@ fun PerformanceBenchmarkScreen(
                     isRunning = uiState.isRunning
                 )
             }
-            
+
             // Real-time Performance Chart
             item {
                 PerformanceChartCard(
@@ -115,7 +115,7 @@ fun PerformanceBenchmarkScreen(
                     title = "Real-time Performance Metrics"
                 )
             }
-            
+
             // Benchmark Controls
             item {
                 BenchmarkControlsCard(
@@ -125,18 +125,18 @@ fun PerformanceBenchmarkScreen(
                     isRunning = uiState.isRunning
                 )
             }
-            
+
             // Individual Benchmark Results
             items(uiState.benchmarkResults) { result ->
                 BenchmarkResultCard(result = result)
             }
-            
+
             // System Information
             item {
                 SystemInfoCard(systemInfo = uiState.systemInfo)
             }
         }
-        
+
         if (uiState.isLoading) {
             Box(
                 modifier = Modifier.fillMaxSize(),
@@ -157,8 +157,8 @@ fun PerformanceSummaryCard(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
         colors = CardDefaults.cardColors(
-            containerColor = if (isRunning) MaterialTheme.colorScheme.primaryContainer 
-                           else MaterialTheme.colorScheme.surface
+            containerColor = if (isRunning) MaterialTheme.colorScheme.primaryContainer
+            else MaterialTheme.colorScheme.surface
         )
     ) {
         Column(
@@ -175,7 +175,7 @@ fun PerformanceSummaryCard(
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold
                 )
-                
+
                 if (isRunning) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         CircularProgressIndicator(
@@ -187,7 +187,7 @@ fun PerformanceSummaryCard(
                     }
                 }
             }
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
@@ -242,7 +242,7 @@ fun PerformanceChartCard(
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
-            
+
             Canvas(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -262,10 +262,10 @@ fun DrawScope.drawPerformanceChart(
     height: Float
 ) {
     if (data.isEmpty()) return
-    
+
     val maxFps = data.maxOfOrNull { it.fps } ?: 60f
     val maxMemory = data.maxOfOrNull { it.memoryMB } ?: 100f
-    
+
     // Draw FPS line (blue)
     val fpsPath = Path()
     data.forEachIndexed { index, point ->
@@ -277,9 +277,13 @@ fun DrawScope.drawPerformanceChart(
             fpsPath.lineTo(x, y)
         }
     }
-    
-    drawPath(fpsPath, MaterialTheme.colorScheme.primary, style = androidx.compose.ui.graphics.drawscope.Stroke(width = 3.dp.toPx()))
-    
+
+    drawPath(
+        fpsPath,
+        MaterialTheme.colorScheme.primary,
+        style = androidx.compose.ui.graphics.drawscope.Stroke(width = 3.dp.toPx())
+    )
+
     // Draw Memory line (red)
     val memoryPath = Path()
     data.forEachIndexed { index, point ->
@@ -291,7 +295,7 @@ fun DrawScope.drawPerformanceChart(
             memoryPath.lineTo(x, y)
         }
     }
-    
+
     drawPath(memoryPath, Color.Red, style = androidx.compose.ui.graphics.drawscope.Stroke(width = 3.dp.toPx()))
 }
 
@@ -315,7 +319,7 @@ fun BenchmarkControlsCard(
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
@@ -327,7 +331,7 @@ fun BenchmarkControlsCard(
                 ) {
                     Text("Start")
                 }
-                
+
                 Button(
                     onClick = onStopBenchmark,
                     enabled = isRunning,
@@ -335,7 +339,7 @@ fun BenchmarkControlsCard(
                 ) {
                     Text("Stop")
                 }
-                
+
                 OutlinedButton(
                     onClick = onResetResults,
                     enabled = !isRunning,
@@ -363,7 +367,7 @@ fun BenchmarkResultCard(result: BenchmarkResult) {
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -372,7 +376,7 @@ fun BenchmarkResultCard(result: BenchmarkResult) {
                     Text("Duration", style = MaterialTheme.typography.bodySmall)
                     Text("${result.durationMs}ms", style = MaterialTheme.typography.bodyMedium)
                 }
-                
+
                 Column {
                     Text("Result", style = MaterialTheme.typography.bodySmall)
                     Text(
@@ -381,13 +385,13 @@ fun BenchmarkResultCard(result: BenchmarkResult) {
                         color = if (result.passed) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
                     )
                 }
-                
+
                 Column {
                     Text("Score", style = MaterialTheme.typography.bodySmall)
                     Text("${result.score}", style = MaterialTheme.typography.bodyMedium)
                 }
             }
-            
+
             if (result.notes.isNotEmpty()) {
                 Text(
                     text = result.notes,
@@ -414,7 +418,7 @@ fun SystemInfoCard(systemInfo: SystemInfo) {
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
             )
-            
+
             InfoRow("Device Model", systemInfo.deviceModel)
             InfoRow("Android Version", systemInfo.androidVersion)
             InfoRow("Available RAM", "${systemInfo.availableMemoryMB}MB")
@@ -487,22 +491,22 @@ data class PerformanceBenchmarkUiState(
 class PerformanceBenchmarkViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(PerformanceBenchmarkUiState())
     val uiState: StateFlow<PerformanceBenchmarkUiState> = _uiState.asStateFlow()
-    
+
     init {
         loadSystemInfo()
     }
-    
+
     fun startBenchmark() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isRunning = true)
             runBenchmarkSuite()
         }
     }
-    
+
     fun stopBenchmark() {
         _uiState.value = _uiState.value.copy(isRunning = false)
     }
-    
+
     fun resetResults() {
         _uiState.value = _uiState.value.copy(
             performanceData = emptyList(),
@@ -510,14 +514,14 @@ class PerformanceBenchmarkViewModel : ViewModel() {
             performanceSummary = PerformanceSummary()
         )
     }
-    
+
     fun exportResults() {
         viewModelScope.launch {
             // Export benchmark results to file
             // Implementation would depend on specific export mechanism
         }
     }
-    
+
     private suspend fun runBenchmarkSuite() {
         val tests = listOf(
             "Thermal Image Processing",
@@ -527,43 +531,43 @@ class PerformanceBenchmarkViewModel : ViewModel() {
             "Storage I/O Performance",
             "UI Rendering Performance"
         )
-        
+
         val results = mutableListOf<BenchmarkResult>()
-        
+
         tests.forEach { testName ->
             if (!_uiState.value.isRunning) return@forEach
-            
+
             val startTime = System.currentTimeMillis()
-            
+
             // Simulate test execution with random performance data
             repeat(50) {
                 if (!_uiState.value.isRunning) return@forEach
-                
+
                 val dataPoint = PerformanceDataPoint(
                     timestamp = System.currentTimeMillis(),
                     fps = Random.nextFloat() * 60f + 30f,
                     memoryMB = Random.nextFloat() * 200f + 100f,
                     cpuUsage = Random.nextFloat() * 80f + 20f
                 )
-                
+
                 val currentData = _uiState.value.performanceData.toMutableList()
                 currentData.add(dataPoint)
                 if (currentData.size > 100) {
                     currentData.removeFirst()
                 }
-                
+
                 _uiState.value = _uiState.value.copy(
                     performanceData = currentData,
                     performanceSummary = calculateSummary(currentData)
                 )
-                
+
                 delay(100)
             }
-            
+
             val duration = System.currentTimeMillis() - startTime
             val passed = Random.nextBoolean()
             val score = Random.nextFloat() * 100f
-            
+
             results.add(
                 BenchmarkResult(
                     testName = testName,
@@ -573,16 +577,16 @@ class PerformanceBenchmarkViewModel : ViewModel() {
                     notes = if (passed) "Test completed successfully" else "Performance below threshold"
                 )
             )
-            
+
             _uiState.value = _uiState.value.copy(benchmarkResults = results)
         }
-        
+
         _uiState.value = _uiState.value.copy(isRunning = false)
     }
-    
+
     private fun calculateSummary(data: List<PerformanceDataPoint>): PerformanceSummary {
         if (data.isEmpty()) return PerformanceSummary()
-        
+
         return PerformanceSummary(
             averageFps = data.map { it.fps }.average().toFloat(),
             memoryUsageMB = data.lastOrNull()?.memoryMB ?: 0f,
@@ -590,7 +594,7 @@ class PerformanceBenchmarkViewModel : ViewModel() {
             temperature = Random.nextFloat() * 20f + 40f // Simulated temperature
         )
     }
-    
+
     private fun loadSystemInfo() {
         _uiState.value = _uiState.value.copy(
             systemInfo = SystemInfo(

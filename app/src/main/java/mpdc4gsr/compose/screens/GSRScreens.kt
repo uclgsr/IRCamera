@@ -47,7 +47,6 @@ fun GSRSettingsScreen(
 }
 
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SessionDetailScreen(

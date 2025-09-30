@@ -61,7 +61,7 @@ fun ThermalCameraFragment(
                 viewType = "ThermalCameraSurface",
                 modifier = Modifier.fillMaxSize()
             )
-            
+
             // Temperature overlay
             if (currentTemperature > 0f) {
                 Card(
@@ -82,9 +82,9 @@ fun ThermalCameraFragment(
                 }
             }
         }
-        
+
         Spacer(modifier = Modifier.height(16.dp))
-        
+
         // Camera controls
         ThermalCameraControls(
             onCapturePhoto = onCapturePhoto,
@@ -92,7 +92,7 @@ fun ThermalCameraFragment(
             onStopRecording = onStopRecording,
             isRecording = isRecording
         )
-        
+
         // Temperature trend
         if (temperatureData.isNotEmpty()) {
             Spacer(modifier = Modifier.height(16.dp))
@@ -128,7 +128,7 @@ private fun ThermalCameraControls(
                 contentDescription = "Capture Photo"
             )
         }
-        
+
         // Record video button
         FloatingActionButton(
             onClick = if (isRecording) onStopRecording else onStartRecording,
@@ -139,7 +139,7 @@ private fun ThermalCameraControls(
                 contentDescription = if (isRecording) "Stop Recording" else "Start Recording"
             )
         }
-        
+
         // Settings button
         FloatingActionButton(
             onClick = { /* Open settings */ },
@@ -189,7 +189,7 @@ fun ThermalGalleryFragment(
                             modifier = Modifier.weight(1f)
                         )
                     }
-                    
+
                     // Fill empty space for odd number of items
                     if (rowItems.size == 1) {
                         Spacer(modifier = Modifier.weight(1f))
@@ -222,7 +222,7 @@ private fun ThermalGalleryItemCard(
                         .height(150.dp),
                     contentScale = ContentScale.Crop
                 )
-                
+
                 Column(
                     modifier = Modifier.padding(12.dp)
                 ) {
@@ -233,15 +233,15 @@ private fun ThermalGalleryItemCard(
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
-                    
+
                     Spacer(modifier = Modifier.height(4.dp))
-                    
+
                     Text(
                         text = item.timestamp,
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
-                    
+
                     if (item.temperature != null) {
                         Text(
                             text = "${String.format("%.1f", item.temperature)}°C",
@@ -252,7 +252,7 @@ private fun ThermalGalleryItemCard(
                     }
                 }
             }
-            
+
             // Delete button
             IconButton(
                 onClick = onDelete,
@@ -289,9 +289,9 @@ fun MonitorCaptureFragment(
             frameCount = capturedFrames.size,
             modifier = Modifier.fillMaxWidth()
         )
-        
+
         Spacer(modifier = Modifier.height(16.dp))
-        
+
         // Control buttons
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -311,7 +311,7 @@ fun MonitorCaptureFragment(
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(if (isMonitoring) "Stop Monitor" else "Start Monitor")
             }
-            
+
             Button(
                 onClick = onCaptureFrame,
                 enabled = isMonitoring,
@@ -325,9 +325,9 @@ fun MonitorCaptureFragment(
                 Text("Capture")
             }
         }
-        
+
         Spacer(modifier = Modifier.height(16.dp))
-        
+
         // Captured frames
         if (capturedFrames.isNotEmpty()) {
             Text(
@@ -336,7 +336,7 @@ fun MonitorCaptureFragment(
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
-            
+
             LazyRow(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
@@ -381,14 +381,14 @@ private fun MonitorStatusCard(
                         .clip(CircleShape)
                         .background(if (isMonitoring) Color.Green else Color.Gray)
                 )
-                
+
                 Text(
                     text = if (isMonitoring) "Monitoring Active" else "Monitoring Inactive",
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.Medium
                 )
             }
-            
+
             Text(
                 text = "$frameCount frames",
                 style = MaterialTheme.typography.bodyMedium,
@@ -416,7 +416,7 @@ private fun MonitorFrameCard(
                     .height(80.dp),
                 contentScale = ContentScale.Crop
             )
-            
+
             Column(
                 modifier = Modifier.padding(8.dp)
             ) {
@@ -426,7 +426,7 @@ private fun MonitorFrameCard(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
-                
+
                 if (frame.temperature != null) {
                     Text(
                         text = "${String.format("%.1f", frame.temperature)}°C",
@@ -509,13 +509,13 @@ fun ThermalFragmentPatternsPreview() {
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold
         )
-        
+
         // Monitor status example
         MonitorStatusCard(
             isMonitoring = true,
             frameCount = 15
         )
-        
+
         // Camera controls example
         ThermalCameraControls(
             onCapturePhoto = {},

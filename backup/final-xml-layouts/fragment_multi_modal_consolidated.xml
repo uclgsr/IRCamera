@@ -1,233 +1,137 @@
 <?xml version="1.0" encoding="utf-8"?><!-- Consolidated Multi-Modal Fragment - Replaces multiple GSR fragments -->
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<layout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
-        <variable
-            name="dataType"
-            type="String" />
+        <variable name="dataType" type="String" />
 
-        <variable
-            name="hasData"
-            type="Boolean" />
+        <variable name="hasData" type="Boolean" />
 
-        <variable
-            name="isLoading"
-            type="Boolean" />
+        <variable name="isLoading" type="Boolean" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/c_bg_white">
+    <androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent"
+        android:layout_height="match_parent" android:background="@color/c_bg_white">
 
         <!-- Loading Indicator -->
-        <ProgressBar
-            android:id="@+id/loading_indicator"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:indeterminate="true"
-            android:visibility="@{isLoading ? View.VISIBLE : View.GONE}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+        <ProgressBar android:id="@+id/loading_indicator" android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:indeterminate="true"
+            android:visibility="@{isLoading ? View.VISIBLE : View.GONE}" app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <!-- Main Content Container -->
-        <androidx.core.widget.NestedScrollView
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+        <androidx.core.widget.NestedScrollView android:layout_width="0dp" android:layout_height="0dp"
             android:visibility="@{!isLoading ? View.VISIBLE : View.GONE}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="vertical" android:padding="16dp">
 
                 <!-- Header Section -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    android:orientation="horizontal">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp" android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/data_type_title"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@{dataType ?? @string/sensor_data}"
-                        android:textColor="@color/white"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        tools:text="Sensor Data" />
+                    <TextView android:id="@+id/data_type_title" android:layout_width="0dp"
+                        android:layout_height="wrap_content" android:layout_weight="1"
+                        android:text="@{dataType ?? @string/sensor_data}" android:textColor="@color/white"
+                        android:textSize="20sp" android:textStyle="bold" tools:text="Sensor Data" />
 
-                    <ImageButton
-                        android:id="@+id/refresh_button"
-                        android:layout_width="wrap_content"
+                    <ImageButton android:id="@+id/refresh_button" android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="?android:attr/selectableItemBackgroundBorderless"
-                        android:contentDescription="Refresh"
-                        android:src="@android:drawable/ic_popup_sync"
+                        android:contentDescription="Refresh" android:src="@android:drawable/ic_popup_sync"
                         android:tint="@color/white" />
 
-                    <ImageButton
-                        android:id="@+id/export_button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
+                    <ImageButton android:id="@+id/export_button" android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:layout_marginStart="8dp"
                         android:background="?android:attr/selectableItemBackgroundBorderless"
-                        android:contentDescription="Export"
-                        android:enabled="@{hasData}"
-                        android:src="@android:drawable/ic_menu_share"
-                        android:tint="@color/white" />
+                        android:contentDescription="Export" android:enabled="@{hasData}"
+                        android:src="@android:drawable/ic_menu_share" android:tint="@color/white" />
                 </LinearLayout>
 
                 <!-- Filter/Search Section -->
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    android:hint="Search or filter data"
-                    app:boxBackgroundColor="#FF2A2A2A"
-                    app:boxBackgroundMode="filled"
-                    app:hintTextColor="@color/white">
+                <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:layout_marginBottom="16dp"
+                    android:hint="Search or filter data" app:boxBackgroundColor="#FF2A2A2A"
+                    app:boxBackgroundMode="filled" app:hintTextColor="@color/white">
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/search_edit_text"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                    <com.google.android.material.textfield.TextInputEditText android:id="@+id/search_edit_text"
+                        android:layout_width="match_parent" android:layout_height="wrap_content"
                         android:textColor="@color/white" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <!-- Dynamic Content Container -->
-                <FrameLayout
-                    android:id="@+id/content_container"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="300dp">
+                <FrameLayout android:id="@+id/content_container" android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:minHeight="300dp">
 
                     <!-- Empty State -->
-                    <LinearLayout
-                        android:id="@+id/empty_state"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:padding="32dp"
+                    <LinearLayout android:id="@+id/empty_state" android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:layout_gravity="center" android:gravity="center"
+                        android:orientation="vertical" android:padding="32dp"
                         android:visibility="@{!hasData ? View.VISIBLE : View.GONE}">
 
-                        <ImageView
-                            android:layout_width="64dp"
-                            android:layout_height="64dp"
-                            android:layout_marginBottom="16dp"
-                            android:alpha="0.5"
-                            android:src="@android:drawable/ic_menu_gallery"
-                            android:tint="@color/white" />
+                        <ImageView android:layout_width="64dp" android:layout_height="64dp"
+                            android:layout_marginBottom="16dp" android:alpha="0.5"
+                            android:src="@android:drawable/ic_menu_gallery" android:tint="@color/white" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp"
-                            android:text="No data available"
-                            android:textColor="@color/white"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp" android:text="No data available"
+                            android:textColor="@color/white" android:textSize="18sp" android:textStyle="bold" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="16dp"
-                            android:gravity="center"
-                            android:text="Start recording to see data here"
-                            android:textColor="@color/white"
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:layout_marginBottom="16dp" android:gravity="center"
+                            android:text="Start recording to see data here" android:textColor="@color/white"
                             android:textSize="14sp" />
 
-                        <Button
-                            android:id="@+id/start_recording_button"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:backgroundTint="@color/fab_gsr_background"
-                            android:text="Start Recording"
-                            android:textColor="@color/white" />
+                        <Button android:id="@+id/start_recording_button" android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" android:backgroundTint="@color/fab_gsr_background"
+                            android:text="Start Recording" android:textColor="@color/white" />
                     </LinearLayout>
 
                     <!-- Data Display Containers -->
                     <!-- RecyclerView for list data -->
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/data_recycler_view"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                    <androidx.recyclerview.widget.RecyclerView android:id="@+id/data_recycler_view"
+                        android:layout_width="match_parent" android:layout_height="wrap_content"
                         android:visibility="@{hasData &amp;&amp; dataType.contains(@string/list_data_type) ? View.VISIBLE : View.GONE}"
                         tools:listitem="@layout/item_sensor_data_consolidated" />
 
                     <!-- Chart container for graph data -->
-                    <FrameLayout
-                        android:id="@+id/chart_container"
-                        android:layout_width="match_parent"
-                        android:layout_height="300dp"
-                        android:background="#FF1A1A1A"
+                    <FrameLayout android:id="@+id/chart_container" android:layout_width="match_parent"
+                        android:layout_height="300dp" android:background="#FF1A1A1A"
                         android:visibility="@{hasData &amp;&amp; dataType.contains(@string/chart_data_type) ? View.VISIBLE : View.GONE}" />
 
                     <!-- Image/Video container for media data -->
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/media_recycler_view"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                    <androidx.recyclerview.widget.RecyclerView android:id="@+id/media_recycler_view"
+                        android:layout_width="match_parent" android:layout_height="wrap_content"
                         android:visibility="@{hasData &amp;&amp; dataType.contains(@string/media_data_type) ? View.VISIBLE : View.GONE}"
                         tools:listitem="@layout/item_media_consolidated" />
                 </FrameLayout>
 
                 <!-- Action Buttons -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:orientation="horizontal"
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp" android:orientation="horizontal"
                     android:visibility="@{hasData ? View.VISIBLE : View.GONE}">
 
-                    <Button
-                        android:id="@+id/view_details_button"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:layout_weight="1"
-                        android:backgroundTint="#FF424242"
-                        android:text="View Details"
+                    <Button android:id="@+id/view_details_button" android:layout_width="0dp"
+                        android:layout_height="wrap_content" android:layout_marginEnd="8dp" android:layout_weight="1"
+                        android:backgroundTint="#FF424242" android:text="View Details"
                         android:textColor="@color/white" />
 
-                    <Button
-                        android:id="@+id/analyze_button"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_weight="1"
-                        android:backgroundTint="#FF424242"
-                        android:text="Analyze"
-                        android:textColor="@color/white" />
+                    <Button android:id="@+id/analyze_button" android:layout_width="0dp"
+                        android:layout_height="wrap_content" android:layout_marginStart="8dp" android:layout_weight="1"
+                        android:backgroundTint="#FF424242" android:text="Analyze" android:textColor="@color/white" />
                 </LinearLayout>
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
 
         <!-- Floating Action Button -->
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab_action"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:contentDescription="Quick Action"
-            android:src="@android:drawable/ic_input_add"
-            app:backgroundTint="@color/fab_gsr_background"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:tint="@color/white" />
+        <com.google.android.material.floatingactionbutton.FloatingActionButton android:id="@+id/fab_action"
+            android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_margin="16dp"
+            android:contentDescription="Quick Action" android:src="@android:drawable/ic_input_add"
+            app:backgroundTint="@color/fab_gsr_background" app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" app:tint="@color/white" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

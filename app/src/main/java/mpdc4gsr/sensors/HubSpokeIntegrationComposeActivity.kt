@@ -23,10 +23,10 @@ import mpdc4gsr.compose.theme.IRCameraTheme
  * Manages network integration between multiple sensors and devices
  */
 class HubSpokeIntegrationComposeActivity : BaseComposeActivity<HubSpokeIntegrationViewModel>() {
-    
-    override fun createViewModel(): HubSpokeIntegrationViewModel = 
+
+    override fun createViewModel(): HubSpokeIntegrationViewModel =
         viewModels<HubSpokeIntegrationViewModel>().value
-    
+
     @Composable
     override fun Content(viewModel: HubSpokeIntegrationViewModel) {
         IRCameraTheme {
@@ -44,7 +44,7 @@ fun HubSpokeIntegrationScreen(
     onNavigateBack: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    
+
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -68,7 +68,7 @@ fun HubSpokeIntegrationScreen(
                         contentDescription = "Refresh connections"
                     )
                 }
-                
+
                 IconButton(
                     onClick = { viewModel.toggleHubMode() }
                 ) {
@@ -84,7 +84,7 @@ fun HubSpokeIntegrationScreen(
                 titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
             )
         )
-        
+
         // Content
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
@@ -100,7 +100,7 @@ fun HubSpokeIntegrationScreen(
                     onToggleHub = { viewModel.toggleHubMode() }
                 )
             }
-            
+
             // Network Configuration Card
             item {
                 NetworkConfigurationCard(
@@ -108,7 +108,7 @@ fun HubSpokeIntegrationScreen(
                     onConfigChange = { config -> viewModel.updateNetworkConfig(config) }
                 )
             }
-            
+
             // Connected Devices
             if (uiState.connectedDevices.isNotEmpty()) {
                 item {
@@ -118,7 +118,7 @@ fun HubSpokeIntegrationScreen(
                         color = MaterialTheme.colorScheme.onSurface
                     )
                 }
-                
+
                 items(uiState.connectedDevices) { device ->
                     DeviceConnectionCard(
                         device = device,
@@ -127,7 +127,7 @@ fun HubSpokeIntegrationScreen(
                     )
                 }
             }
-            
+
             // Available Devices for Connection
             if (uiState.availableDevices.isNotEmpty()) {
                 item {
@@ -137,7 +137,7 @@ fun HubSpokeIntegrationScreen(
                         color = MaterialTheme.colorScheme.onSurface
                     )
                 }
-                
+
                 items(uiState.availableDevices) { device ->
                     AvailableDeviceCard(
                         device = device,
@@ -145,7 +145,7 @@ fun HubSpokeIntegrationScreen(
                     )
                 }
             }
-            
+
             // Integration Status
             item {
                 IntegrationStatusCard(
@@ -192,7 +192,7 @@ private fun HubStatusCard(
                             MaterialTheme.colorScheme.onSurfaceVariant
                         }
                     )
-                    
+
                     Text(
                         text = if (isHubMode) "Active" else "Inactive",
                         style = MaterialTheme.typography.bodySmall,
@@ -203,16 +203,16 @@ private fun HubStatusCard(
                         }
                     )
                 }
-                
+
                 Switch(
                     checked = isHubMode,
                     onCheckedChange = { onToggleHub() }
                 )
             }
-            
+
             if (isHubMode && hubAddress != null) {
                 Spacer(modifier = Modifier.height(12.dp))
-                
+
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -229,7 +229,7 @@ private fun HubStatusCard(
                         color = MaterialTheme.colorScheme.onPrimaryContainer
                     )
                 }
-                
+
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -257,7 +257,7 @@ private fun NetworkConfigurationCard(
     onConfigChange: (NetworkConfig) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
-    
+
     Card(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -274,7 +274,7 @@ private fun NetworkConfigurationCard(
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurface
                 )
-                
+
                 IconButton(onClick = { expanded = !expanded }) {
                     Icon(
                         imageVector = if (expanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
@@ -282,21 +282,21 @@ private fun NetworkConfigurationCard(
                     )
                 }
             }
-            
+
             if (expanded) {
                 Spacer(modifier = Modifier.height(12.dp))
-                
+
                 // Network settings would go here
                 Text(
                     text = "Port: ${networkConfig.port}",
                     style = MaterialTheme.typography.bodyMedium
                 )
-                
+
                 Text(
                     text = "Protocol: ${networkConfig.protocol}",
                     style = MaterialTheme.typography.bodyMedium
                 )
-                
+
                 Text(
                     text = "Max Connections: ${networkConfig.maxConnections}",
                     style = MaterialTheme.typography.bodyMedium
@@ -338,9 +338,9 @@ private fun DeviceConnectionCard(
                 modifier = Modifier.size(32.dp),
                 tint = MaterialTheme.colorScheme.onSecondaryContainer
             )
-            
+
             Spacer(modifier = Modifier.width(12.dp))
-            
+
             // Device Info
             Column(
                 modifier = Modifier.weight(1f)
@@ -350,13 +350,13 @@ private fun DeviceConnectionCard(
                     style = MaterialTheme.typography.titleSmall,
                     color = MaterialTheme.colorScheme.onSecondaryContainer
                 )
-                
+
                 Text(
                     text = device.address,
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSecondaryContainer
                 )
-                
+
                 // Connection Status
                 Row(
                     verticalAlignment = Alignment.CenterVertically
@@ -381,7 +381,7 @@ private fun DeviceConnectionCard(
                     )
                 }
             }
-            
+
             // Disconnect Button
             IconButton(onClick = onDisconnect) {
                 Icon(
@@ -421,9 +421,9 @@ private fun AvailableDeviceCard(
                 modifier = Modifier.size(32.dp),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
-            
+
             Spacer(modifier = Modifier.width(12.dp))
-            
+
             Column(
                 modifier = Modifier.weight(1f)
             ) {
@@ -432,14 +432,14 @@ private fun AvailableDeviceCard(
                     style = MaterialTheme.typography.titleSmall,
                     color = MaterialTheme.colorScheme.onSurface
                 )
-                
+
                 Text(
                     text = device.address,
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-            
+
             Icon(
                 imageVector = Icons.Default.Add,
                 contentDescription = "Connect",
@@ -464,9 +464,9 @@ private fun IntegrationStatusCard(
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurface
             )
-            
+
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             integrationStatus.forEach { status ->
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -478,7 +478,7 @@ private fun IntegrationStatusCard(
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurface
                     )
-                    
+
                     Row(
                         verticalAlignment = Alignment.CenterVertically
                     ) {

@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.sp
  * IR command and configuration utilities
  */
 object ThermalOperationsCompose {
-    
+
     /**
      * IR configuration panel
      */
@@ -49,20 +49,20 @@ object ThermalOperationsCompose {
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )
-                
+
                 Spacer(modifier = Modifier.height(16.dp))
-                
+
                 // Display number configuration
                 ConfigSliderRow(
                     label = "Display Number",
                     value = currentConfig.displayNumber.toFloat(),
                     valueRange = 10f..60f,
-                    onValueChange = { 
+                    onValueChange = {
                         onConfigChange(currentConfig.copy(displayNumber = it.toInt()))
                     },
                     valueFormatter = { "${it.toInt()}" }
                 )
-                
+
                 // Fusion type selection
                 ConfigDropdownRow(
                     label = "Fusion Type",
@@ -72,28 +72,28 @@ object ThermalOperationsCompose {
                         onConfigChange(currentConfig.copy(fusionType = FusionType.values()[index]))
                     }
                 )
-                
+
                 // Camera parameters
                 ConfigSliderRow(
                     label = "VL Camera Width",
                     value = currentConfig.vlCameraWidth.toFloat(),
                     valueRange = 640f..1920f,
-                    onValueChange = { 
+                    onValueChange = {
                         onConfigChange(currentConfig.copy(vlCameraWidth = it.toInt()))
                     },
                     valueFormatter = { "${it.toInt()}px" }
                 )
-                
+
                 ConfigSliderRow(
-                    label = "VL Camera Height", 
+                    label = "VL Camera Height",
                     value = currentConfig.vlCameraHeight.toFloat(),
                     valueRange = 480f..1080f,
-                    onValueChange = { 
+                    onValueChange = {
                         onConfigChange(currentConfig.copy(vlCameraHeight = it.toInt()))
                     },
                     valueFormatter = { "${it.toInt()}px" }
                 )
-                
+
                 // IR processing options
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -104,10 +104,10 @@ object ThermalOperationsCompose {
                         text = "Use IR ISP",
                         style = MaterialTheme.typography.bodyMedium
                     )
-                    
+
                     Switch(
                         checked = currentConfig.useIRISP,
-                        onCheckedChange = { 
+                        onCheckedChange = {
                             onConfigChange(currentConfig.copy(useIRISP = it))
                         }
                     )
@@ -115,7 +115,7 @@ object ThermalOperationsCompose {
             }
         }
     }
-    
+
     /**
      * Calibration data display
      */
@@ -136,19 +136,23 @@ object ThermalOperationsCompose {
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )
-                
+
                 Spacer(modifier = Modifier.height(12.dp))
-                
+
                 CalibrationInfoRow("Product Type", calibrationData.productType)
                 CalibrationInfoRow("Serial Number", calibrationData.serialNumber)
-                CalibrationInfoRow("Calibration Status", 
-                    if (calibrationData.isCalibrated) "Calibrated" else "Not Calibrated")
-                CalibrationInfoRow("Temperature Range", 
-                    "${calibrationData.minTemp}°C - ${calibrationData.maxTemp}°C")
-                
+                CalibrationInfoRow(
+                    "Calibration Status",
+                    if (calibrationData.isCalibrated) "Calibrated" else "Not Calibrated"
+                )
+                CalibrationInfoRow(
+                    "Temperature Range",
+                    "${calibrationData.minTemp}°C - ${calibrationData.maxTemp}°C"
+                )
+
                 if (calibrationData.isCalibrated) {
                     Spacer(modifier = Modifier.height(8.dp))
-                    
+
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(4.dp)
@@ -170,7 +174,7 @@ object ThermalOperationsCompose {
             }
         }
     }
-    
+
     /**
      * Thermal data processing controls
      */
@@ -192,40 +196,45 @@ object ThermalOperationsCompose {
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )
-                
+
                 Spacer(modifier = Modifier.height(16.dp))
-                
+
                 // Temperature range
                 Text(
                     text = "Temperature Range",
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Medium
                 )
-                
+
                 RangeSlider(
                     value = processingState.tempRange,
-                    onValueChange = { 
+                    onValueChange = {
                         onProcessingChange(processingState.copy(tempRange = it))
                     },
                     valueRange = -40f..200f,
                     modifier = Modifier.fillMaxWidth()
                 )
-                
+
                 Text(
-                    text = "${String.format("%.1f", processingState.tempRange.start)}°C - ${String.format("%.1f", processingState.tempRange.endInclusive)}°C",
+                    text = "${String.format("%.1f", processingState.tempRange.start)}°C - ${
+                        String.format(
+                            "%.1f",
+                            processingState.tempRange.endInclusive
+                        )
+                    }°C",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-                
+
                 Spacer(modifier = Modifier.height(16.dp))
-                
+
                 // Palette selection
                 Text(
                     text = "Color Palette",
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Medium
                 )
-                
+
                 LazyColumn(
                     modifier = Modifier.height(120.dp),
                     verticalArrangement = Arrangement.spacedBy(4.dp)
@@ -257,9 +266,9 @@ object ThermalOperationsCompose {
                                         RoundedCornerShape(4.dp)
                                     )
                             )
-                            
+
                             Spacer(modifier = Modifier.width(8.dp))
-                            
+
                             Text(
                                 text = palette.displayName,
                                 style = MaterialTheme.typography.bodyMedium
@@ -299,7 +308,7 @@ private fun ConfigSliderRow(
                 color = MaterialTheme.colorScheme.primary
             )
         }
-        
+
         Slider(
             value = value,
             onValueChange = onValueChange,
@@ -307,7 +316,7 @@ private fun ConfigSliderRow(
             modifier = Modifier.fillMaxWidth()
         )
     }
-    
+
     Spacer(modifier = Modifier.height(12.dp))
 }
 
@@ -320,7 +329,7 @@ private fun ConfigDropdownRow(
     modifier: Modifier = Modifier
 ) {
     var expanded by remember { mutableStateOf(false) }
-    
+
     Column(
         modifier = modifier.fillMaxWidth()
     ) {
@@ -328,9 +337,9 @@ private fun ConfigDropdownRow(
             text = label,
             style = MaterialTheme.typography.bodyMedium
         )
-        
+
         Spacer(modifier = Modifier.height(4.dp))
-        
+
         ExposedDropdownMenuBox(
             expanded = expanded,
             onExpandedChange = { expanded = !expanded }
@@ -346,7 +355,7 @@ private fun ConfigDropdownRow(
                     .fillMaxWidth()
                     .menuAnchor()
             )
-            
+
             ExposedDropdownMenu(
                 expanded = expanded,
                 onDismissRequest = { expanded = false }
@@ -363,7 +372,7 @@ private fun ConfigDropdownRow(
             }
         }
     }
-    
+
     Spacer(modifier = Modifier.height(12.dp))
 }
 
@@ -388,7 +397,7 @@ private fun CalibrationInfoRow(
             fontWeight = FontWeight.Medium
         )
     }
-    
+
     Spacer(modifier = Modifier.height(4.dp))
 }
 
@@ -438,14 +447,14 @@ enum class ThermalPalette(val displayName: String, val primaryColor: Color) {
  */
 @Composable
 fun ThermalOperationsPreview() {
-    var config by remember { 
+    var config by remember {
         mutableStateOf(IRConfig())
     }
-    
+
     var processingState by remember {
         mutableStateOf(ProcessingState())
     }
-    
+
     val sampleCalibration = CalibrationData(
         productType = "TC001",
         serialNumber = "SN123456789",
@@ -454,7 +463,7 @@ fun ThermalOperationsPreview() {
         maxTemp = 150f,
         calibrationDate = "2024-01-15"
     )
-    
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -467,16 +476,16 @@ fun ThermalOperationsPreview() {
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold
         )
-        
+
         ThermalOperationsCompose.IRConfigurationPanel(
             currentConfig = config,
             onConfigChange = { config = it }
         )
-        
+
         ThermalOperationsCompose.CalibrationDataPanel(
             calibrationData = sampleCalibration
         )
-        
+
         ThermalOperationsCompose.ThermalProcessingControls(
             processingState = processingState,
             onProcessingChange = { processingState = it }

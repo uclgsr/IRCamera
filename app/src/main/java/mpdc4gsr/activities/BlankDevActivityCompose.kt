@@ -18,7 +18,7 @@ class BlankDevActivityComposeViewModel : BaseViewModel()
 
 /**
  * Compose version of BlankDevActivity
- * 
+ *
  * Minimal activity for USB device attachment handling with modern UI.
  * Shows a brief message before closing automatically.
  */
@@ -28,7 +28,7 @@ class BlankDevActivityCompose : BaseComposeActivity<BlankDevActivityComposeViewM
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         // Auto-close after 2 seconds like the original
         lifecycleScope.launch {
             kotlinx.coroutines.delay(2000)
@@ -57,27 +57,27 @@ class BlankDevActivityCompose : BaseComposeActivity<BlankDevActivityComposeViewM
                     modifier = Modifier.size(64.dp),
                     tint = MaterialTheme.colorScheme.primary
                 )
-                
+
                 Spacer(modifier = Modifier.height(16.dp))
-                
+
                 Text(
                     text = "USB Device Handler",
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center
                 )
-                
+
                 Spacer(modifier = Modifier.height(8.dp))
-                
+
                 Text(
                     text = "Processing USB device attachment...",
                     style = MaterialTheme.typography.bodyMedium,
                     textAlign = TextAlign.Center,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-                
+
                 Spacer(modifier = Modifier.height(24.dp))
-                
+
                 LinearProgressIndicator(
                     modifier = Modifier.fillMaxWidth(0.7f)
                 )

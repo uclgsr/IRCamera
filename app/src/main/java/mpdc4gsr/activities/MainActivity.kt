@@ -12,15 +12,15 @@ import mpdc4gsr.compose.navigation.UnifiedNavHost
 
 /**
  * Primary MainActivity implementation using Compose
- * 
+ *
  * This is the main entry point for the IRCamera application using the unified
  * navigation system and Compose UI framework.
  */
 class MainActivity : ComponentActivity() {
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         setContent {
             LibTheme {
                 Surface(

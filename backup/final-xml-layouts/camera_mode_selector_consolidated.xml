@@ -1,219 +1,118 @@
 <?xml version="1.0" encoding="utf-8"?><!-- Consolidated Camera Mode Selector - Enhanced for RGB, thermal, and multi-modal support -->
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<layout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
-        <variable
-            name="availableModes"
-            type="java.util.Set&lt;String&gt;" />
+        <variable name="availableModes" type="java.util.Set&lt;String&gt;" />
 
-        <variable
-            name="selectedMode"
-            type="String" />
+        <variable name="selectedMode" type="String" />
 
-        <variable
-            name="isRecording"
-            type="Boolean" />
+        <variable name="isRecording" type="Boolean" />
 
-        <variable
-            name="isSwitching"
-            type="Boolean" />
+        <variable name="isSwitching" type="Boolean" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/rounded_background"
-        android:padding="16dp">
+    <androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:background="@drawable/rounded_background" android:padding="16dp">
 
         <!-- Mode Title -->
-        <TextView
-            android:id="@+id/mode_title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="Camera Mode"
-            android:textColor="@color/text_primary"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        <TextView android:id="@+id/mode_title" android:layout_width="0dp" android:layout_height="wrap_content"
+            android:text="Camera Mode" android:textColor="@color/text_primary" android:textSize="18sp"
+            android:textStyle="bold" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent" />
 
         <!-- Mode Selection Chips -->
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/camera_mode_chip_group"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            app:chipSpacingHorizontal="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/mode_title"
-            app:singleSelection="true">
+        <com.google.android.material.chip.ChipGroup android:id="@+id/camera_mode_chip_group" android:layout_width="0dp"
+            android:layout_height="wrap_content" android:layout_marginTop="12dp" app:chipSpacingHorizontal="8dp"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/mode_title" app:singleSelection="true">
 
             <!-- RGB Mode Chip -->
-            <com.google.android.material.chip.Chip
-                android:id="@+id/rgb_mode_chip"
-                style="@style/Widget.Material3.Chip.Filter"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checkable="true"
-                android:enabled="@{!isRecording &amp;&amp; !isSwitching}"
-                android:text="RGB Camera"
+            <com.google.android.material.chip.Chip android:id="@+id/rgb_mode_chip"
+                style="@style/Widget.Material3.Chip.Filter" android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:checkable="true"
+                android:enabled="@{!isRecording &amp;&amp; !isSwitching}" android:text="RGB Camera"
                 android:textColor="@color/white"
                 android:visibility="@{availableModes.contains(@string/rgb_mode) ? View.VISIBLE : View.GONE}" />
 
             <!-- Thermal Mode Chip -->
-            <com.google.android.material.chip.Chip
-                android:id="@+id/thermal_mode_chip"
-                style="@style/Widget.Material3.Chip.Filter"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checkable="true"
-                android:enabled="@{!isRecording &amp;&amp; !isSwitching}"
-                android:text="Thermal"
+            <com.google.android.material.chip.Chip android:id="@+id/thermal_mode_chip"
+                style="@style/Widget.Material3.Chip.Filter" android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:checkable="true"
+                android:enabled="@{!isRecording &amp;&amp; !isSwitching}" android:text="Thermal"
                 android:textColor="@color/white"
                 android:visibility="@{availableModes.contains(@string/thermal_mode) ? View.VISIBLE : View.GONE}" />
 
             <!-- Dual Mode Chip -->
-            <com.google.android.material.chip.Chip
-                android:id="@+id/dual_mode_chip"
-                style="@style/Widget.Material3.Chip.Filter"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checkable="true"
-                android:enabled="@{!isRecording &amp;&amp; !isSwitching}"
-                android:text="Dual Mode"
+            <com.google.android.material.chip.Chip android:id="@+id/dual_mode_chip"
+                style="@style/Widget.Material3.Chip.Filter" android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:checkable="true"
+                android:enabled="@{!isRecording &amp;&amp; !isSwitching}" android:text="Dual Mode"
                 android:textColor="@color/white"
                 android:visibility="@{availableModes.contains(@string/dual_mode) ? View.VISIBLE : View.GONE}" />
 
             <!-- Multi-Modal Chip -->
-            <com.google.android.material.chip.Chip
-                android:id="@+id/multi_modal_chip"
-                style="@style/Widget.Material3.Chip.Filter"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checkable="true"
-                android:enabled="@{!isRecording &amp;&amp; !isSwitching}"
-                android:text="Multi-Modal"
+            <com.google.android.material.chip.Chip android:id="@+id/multi_modal_chip"
+                style="@style/Widget.Material3.Chip.Filter" android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:checkable="true"
+                android:enabled="@{!isRecording &amp;&amp; !isSwitching}" android:text="Multi-Modal"
                 android:textColor="@color/white"
                 android:visibility="@{availableModes.contains(@string/multi_modal_mode) ? View.VISIBLE : View.GONE}" />
         </com.google.android.material.chip.ChipGroup>
 
         <!-- Quality Controls for selected mode -->
-        <RadioGroup
-            android:id="@+id/quality_radio_group"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:orientation="horizontal"
+        <RadioGroup android:id="@+id/quality_radio_group" android:layout_width="0dp"
+            android:layout_height="wrap_content" android:layout_marginTop="12dp" android:orientation="horizontal"
             android:visibility="@{selectedMode != null ? View.VISIBLE : View.GONE}"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/camera_mode_chip_group">
 
-            <RadioButton
-                android:id="@+id/raw_mode_button"
-                android:layout_width="0dp"
-                android:layout_height="48dp"
-                android:layout_weight="1"
-                android:background="@drawable/segmented_button_left"
-                android:button="@null"
-                android:enabled="@{!isRecording &amp;&amp; !isSwitching}"
-                android:gravity="center"
-                android:padding="8dp"
-                android:text="RAW 50MP"
-                android:textColor="@color/segmented_button_text"
-                android:textSize="12sp" />
+            <RadioButton android:id="@+id/raw_mode_button" android:layout_width="0dp" android:layout_height="48dp"
+                android:layout_weight="1" android:background="@drawable/segmented_button_left" android:button="@null"
+                android:enabled="@{!isRecording &amp;&amp; !isSwitching}" android:gravity="center" android:padding="8dp"
+                android:text="RAW 50MP" android:textColor="@color/segmented_button_text" android:textSize="12sp" />
 
-            <RadioButton
-                android:id="@+id/video_mode_button"
-                android:layout_width="0dp"
-                android:layout_height="48dp"
-                android:layout_weight="1"
-                android:background="@drawable/segmented_button_middle"
-                android:button="@null"
-                android:enabled="@{!isRecording &amp;&amp; !isSwitching}"
-                android:gravity="center"
-                android:padding="8dp"
-                android:text="4K Video"
-                android:textColor="@color/segmented_button_text"
-                android:textSize="12sp" />
+            <RadioButton android:id="@+id/video_mode_button" android:layout_width="0dp" android:layout_height="48dp"
+                android:layout_weight="1" android:background="@drawable/segmented_button_middle" android:button="@null"
+                android:enabled="@{!isRecording &amp;&amp; !isSwitching}" android:gravity="center" android:padding="8dp"
+                android:text="4K Video" android:textColor="@color/segmented_button_text" android:textSize="12sp" />
 
-            <RadioButton
-                android:id="@+id/preview_mode_button"
-                android:layout_width="0dp"
-                android:layout_height="48dp"
-                android:layout_weight="1"
-                android:background="@drawable/segmented_button_right"
-                android:button="@null"
-                android:enabled="@{!isRecording &amp;&amp; !isSwitching}"
-                android:gravity="center"
-                android:padding="8dp"
-                android:text="Preview"
-                android:textColor="@color/segmented_button_text"
-                android:textSize="12sp" />
+            <RadioButton android:id="@+id/preview_mode_button" android:layout_width="0dp" android:layout_height="48dp"
+                android:layout_weight="1" android:background="@drawable/segmented_button_right" android:button="@null"
+                android:enabled="@{!isRecording &amp;&amp; !isSwitching}" android:gravity="center" android:padding="8dp"
+                android:text="Preview" android:textColor="@color/segmented_button_text" android:textSize="12sp" />
         </RadioGroup>
 
         <!-- Switching Progress -->
-        <ProgressBar
-            android:id="@+id/switching_progress_bar"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:indeterminate="true"
-            android:visibility="@{isSwitching ? View.VISIBLE : View.GONE}"
+        <ProgressBar android:id="@+id/switching_progress_bar" android:layout_width="24dp" android:layout_height="24dp"
+            android:indeterminate="true" android:visibility="@{isSwitching ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="@id/quality_radio_group"
             app:layout_constraintEnd_toEndOf="@id/quality_radio_group"
             app:layout_constraintStart_toStartOf="@id/quality_radio_group"
             app:layout_constraintTop_toTopOf="@id/quality_radio_group" />
 
         <!-- Mode Description -->
-        <TextView
-            android:id="@+id/mode_info_text"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:lineSpacingExtra="2dp"
-            android:textColor="@color/text_secondary"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/quality_radio_group"
+        <TextView android:id="@+id/mode_info_text" android:layout_width="0dp" android:layout_height="wrap_content"
+            android:layout_marginTop="12dp" android:lineSpacingExtra="2dp" android:textColor="@color/text_secondary"
+            android:textSize="14sp" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@id/quality_radio_group"
             tools:text="RGB Camera with 4K Video recording" />
 
         <!-- Performance Warning -->
-        <TextView
-            android:id="@+id/performance_warning"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:drawableStart="@drawable/ic_warning"
-            android:drawablePadding="4dp"
-            android:gravity="center_vertical"
-            android:textColor="@android:color/holo_orange_dark"
-            android:textSize="12sp"
-            android:textStyle="italic"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+        <TextView android:id="@+id/performance_warning" android:layout_width="0dp" android:layout_height="wrap_content"
+            android:layout_marginTop="8dp" android:drawableStart="@drawable/ic_warning" android:drawablePadding="4dp"
+            android:gravity="center_vertical" android:textColor="@android:color/holo_orange_dark"
+            android:textSize="12sp" android:textStyle="italic" android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/mode_info_text"
-            tools:text="Multi-modal recording uses significant resources"
-            tools:visibility="visible" />
+            tools:text="Multi-modal recording uses significant resources" tools:visibility="visible" />
 
         <!-- Device Compatibility Info -->
-        <TextView
-            android:id="@+id/device_compatibility_info"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:textColor="@color/text_tertiary"
-            android:textSize="11sp"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/performance_warning"
+        <TextView android:id="@+id/device_compatibility_info" android:layout_width="0dp"
+            android:layout_height="wrap_content" android:layout_marginTop="8dp" android:textColor="@color/text_tertiary"
+            android:textSize="11sp" android:visibility="gone" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@id/performance_warning"
             tools:text="Optimized for Samsung Galaxy devices" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

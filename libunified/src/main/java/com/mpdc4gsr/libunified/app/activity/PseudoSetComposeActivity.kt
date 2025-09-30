@@ -34,12 +34,12 @@ import kotlinx.coroutines.launch
  * Provides advanced pseudo-color temperature configuration for thermal cameras
  */
 class PseudoSetComposeActivity : ComponentActivity() {
-    
+
     private val viewModel: PseudoSetViewModel by viewModels()
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         setContent {
             IRCameraTheme {
                 PseudoSetScreen(
@@ -49,7 +49,7 @@ class PseudoSetComposeActivity : ComponentActivity() {
             }
         }
     }
-    
+
     companion object {
         fun start(context: Context) {
             context.startActivity(Intent(context, PseudoSetComposeActivity::class.java))
@@ -64,7 +64,7 @@ fun PseudoSetScreen(
     onBackPressed: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -104,7 +104,7 @@ fun PseudoSetScreen(
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
-                    
+
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
@@ -118,7 +118,7 @@ fun PseudoSetScreen(
                             modifier = Modifier.weight(1f).padding(horizontal = 16.dp)
                         )
                     }
-                    
+
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
@@ -134,7 +134,7 @@ fun PseudoSetScreen(
                     }
                 }
             }
-            
+
             // Color Palette Selection
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -149,7 +149,7 @@ fun PseudoSetScreen(
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
-                    
+
                     LazyColumn(
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
@@ -163,7 +163,7 @@ fun PseudoSetScreen(
                     }
                 }
             }
-            
+
             // Advanced Settings
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -178,7 +178,7 @@ fun PseudoSetScreen(
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
-                    
+
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
@@ -190,7 +190,7 @@ fun PseudoSetScreen(
                             onCheckedChange = { viewModel.toggleAutoRange(it) }
                         )
                     }
-                    
+
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
@@ -204,9 +204,9 @@ fun PseudoSetScreen(
                     }
                 }
             }
-            
+
             Spacer(modifier = Modifier.weight(1f))
-            
+
             // Action Buttons
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -218,7 +218,7 @@ fun PseudoSetScreen(
                 ) {
                     Text("Reset")
                 }
-                
+
                 Button(
                     onClick = { viewModel.applySettings() },
                     modifier = Modifier.weight(1f)
@@ -242,9 +242,9 @@ fun PaletteItem(
             .height(60.dp),
         onClick = onSelect,
         colors = CardDefaults.cardColors(
-            containerColor = if (isSelected) 
-                MaterialTheme.colorScheme.primaryContainer 
-            else 
+            containerColor = if (isSelected)
+                MaterialTheme.colorScheme.primaryContainer
+            else
                 MaterialTheme.colorScheme.surface
         )
     ) {
@@ -268,13 +268,13 @@ fun PaletteItem(
                     )
                 }
             }
-            
+
             Text(
                 text = palette.name,
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.weight(1f)
             )
-            
+
             if (isSelected) {
                 Icon(
                     imageVector = Icons.Default.Check,
@@ -295,8 +295,10 @@ data class ThermalPalette(
 data class PseudoSetUiState(
     val minTemp: Float = -20f,
     val maxTemp: Float = 120f,
-    val selectedPalette: ThermalPalette = ThermalPalette("Iron", 
-        listOf(Color.Blue, Color.Cyan, Color.Yellow, Color.Red)),
+    val selectedPalette: ThermalPalette = ThermalPalette(
+        "Iron",
+        listOf(Color.Blue, Color.Cyan, Color.Yellow, Color.Red)
+    ),
     val availablePalettes: List<ThermalPalette> = listOf(
         ThermalPalette("Iron", listOf(Color.Blue, Color.Cyan, Color.Yellow, Color.Red)),
         ThermalPalette("Rainbow", listOf(Color.Blue, Color.Green, Color.Yellow, Color.Red, Color.Magenta)),
@@ -313,31 +315,31 @@ data class PseudoSetUiState(
 class PseudoSetViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(PseudoSetUiState())
     val uiState: StateFlow<PseudoSetUiState> = _uiState.asStateFlow()
-    
+
     fun updateMinTemp(temp: Float) {
         _uiState.value = _uiState.value.copy(minTemp = temp)
     }
-    
+
     fun updateMaxTemp(temp: Float) {
         _uiState.value = _uiState.value.copy(maxTemp = temp)
     }
-    
+
     fun selectPalette(palette: ThermalPalette) {
         _uiState.value = _uiState.value.copy(selectedPalette = palette)
     }
-    
+
     fun toggleAutoRange(enabled: Boolean) {
         _uiState.value = _uiState.value.copy(autoRange = enabled)
     }
-    
+
     fun toggleLockRange(enabled: Boolean) {
         _uiState.value = _uiState.value.copy(lockRange = enabled)
     }
-    
+
     fun resetToDefaults() {
         _uiState.value = PseudoSetUiState()
     }
-    
+
     fun applySettings() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)

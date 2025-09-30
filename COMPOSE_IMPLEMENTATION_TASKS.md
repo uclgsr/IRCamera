@@ -183,7 +183,7 @@ fun ThermalCameraScreen(viewModel: ThermalFragmentViewModel) {
     Column {
         // Status card with connection info
         ThermalCameraStatusCard(...)
-        
+
         // Embedded IrSurfaceView (preserve existing functionality)
         AndroidView(
             factory = { context ->
@@ -193,10 +193,10 @@ fun ThermalCameraScreen(viewModel: ThermalFragmentViewModel) {
                 }
             }
         )
-        
+
         // Modern temperature readings
         ThermalReadingsCard(...)
-        
+
         // Enhanced control panel
         ThermalControlPanel(...)
     }

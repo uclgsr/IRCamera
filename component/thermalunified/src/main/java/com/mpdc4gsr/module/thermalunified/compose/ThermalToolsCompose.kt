@@ -73,7 +73,7 @@ fun FenceCompose(
 ) {
     val textMeasurer = rememberTextMeasurer()
     val density = LocalDensity.current
-    
+
     var dragIndex by remember { mutableIntStateOf(-1) }
     val animatedAlpha by animateFloatAsState(
         targetValue = if (isActive) 1f else 0.6f,
@@ -134,9 +134,10 @@ fun FenceCompose(
 
             // Draw control points
             bounds.forEachIndexed { index, point ->
-                val pointColor = if (index == dragIndex) fenceColor.copy(alpha = 0.8f) else fenceColor.copy(alpha = 0.6f)
+                val pointColor =
+                    if (index == dragIndex) fenceColor.copy(alpha = 0.8f) else fenceColor.copy(alpha = 0.6f)
                 val pointSize = if (index == dragIndex) 12.dp.toPx() else 8.dp.toPx()
-                
+
                 drawCircle(
                     color = pointColor,
                     radius = pointSize,
@@ -152,8 +153,8 @@ fun FenceCompose(
 
             // Draw temperature info
             if (bounds.isNotEmpty()) {
-                val centerPoint = bounds.reduce { acc, point -> 
-                    Offset(acc.x + point.x, acc.y + point.y) 
+                val centerPoint = bounds.reduce { acc, point ->
+                    Offset(acc.x + point.x, acc.y + point.y)
                 } / bounds.size.toFloat()
 
                 val tempText = "${currentTemp.roundToInt()}°C"
@@ -278,7 +279,7 @@ private fun ThermalToolItemCompose(
         targetValue = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant,
         animationSpec = tween(200), label = "tool_background"
     )
-    
+
     val iconColor by animateColorAsState(
         targetValue = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
         animationSpec = tween(200), label = "tool_icon"
@@ -348,7 +349,7 @@ fun FenceToolCompose(
                 ThermalFenceStatus.WARNING -> Color.Yellow
                 ThermalFenceStatus.ALARM -> Color.Red
             }
-            
+
             drawFence(
                 bounds = fence.bounds,
                 color = fenceColor,
@@ -381,7 +382,7 @@ fun FenceToolCompose(
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Button(
-            onClick = { 
+            onClick = {
                 isCreatingFence = !isCreatingFence
                 if (!isCreatingFence) {
                     newFencePoints = emptyList()
@@ -500,8 +501,8 @@ private fun DrawScope.drawFence(
 
     // Draw label and temperature
     if (bounds.isNotEmpty()) {
-        val centerPoint = bounds.reduce { acc, point -> 
-            Offset(acc.x + point.x, acc.y + point.y) 
+        val centerPoint = bounds.reduce { acc, point ->
+            Offset(acc.x + point.x, acc.y + point.y)
         } / bounds.size.toFloat()
 
         val infoText = "$label\n${temperature.roundToInt()}°C"

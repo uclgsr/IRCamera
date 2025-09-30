@@ -88,7 +88,7 @@
         <!-- Essential Activities - Migrated to Compose -->
         <activity android:name="mpdc4gsr.activities.PolicyActivityCompose" />
         <activity android:name="mpdc4gsr.activities.VersionActivityCompose" />
-        
+
         <!-- Legacy Activities (deprecated - use Compose versions above) -->
         <!-- <activity android:name="mpdc4gsr.activities.PolicyActivity" /> -->
         <!-- <activity android:name="mpdc4gsr.activities.VersionActivity" /> -->
@@ -227,7 +227,6 @@
         </activity>
 
 
-
         <!-- Navigation Demo Activity -->
         <activity
             android:name="mpdc4gsr.compose.navigation.IRCameraNavHost"
@@ -241,7 +240,6 @@
             android:exported="true"
             android:label="Navigation Test"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
-
 
 
         <!-- Comprehensive Integration Test Activity -->
@@ -283,7 +281,6 @@
             android:name="mpdc4gsr.activities.DualModeCameraActivityCompose"
             android:exported="false"
             android:label="Dual Mode Camera (Compose)" />
-
 
 
         <activity
@@ -337,9 +334,6 @@
             android:theme="@style/AppTheme" />
 
         <!-- Duplicate entry removed - SettingsComposeActivity already declared above -->
-
-
-
 
 
         <activity

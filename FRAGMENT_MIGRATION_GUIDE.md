@@ -37,10 +37,10 @@ fragments.
 ```kotlin
 abstract class BaseComposeFragment<VM : BaseViewModel> : Fragment() {
     protected abstract fun createViewModel(): VM
-    
+
     @Composable
     protected abstract fun Content(viewModel: VM)
-    
+
     // Automatic theme integration and lifecycle management
 }
 ```

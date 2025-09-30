@@ -13,100 +13,51 @@
     - Dividers between sensor items for visual separation
 -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fillViewport="true"
-    android:overScrollMode="always"
-    android:scrollbarStyle="outsideOverlay"
-    android:scrollbars="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:fillViewport="true" android:overScrollMode="always"
+    android:scrollbarStyle="outsideOverlay" android:scrollbars="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="300dp"
-        android:orientation="vertical"
-        android:padding="16dp">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="300dp"
+        android:orientation="vertical" android:padding="16dp">
 
         <!-- Title Section -->
-        <TextView
-            android:id="@+id/titleText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="8dp"
-            android:text="Multi-Modal Sensor Dashboard"
-            android:textColor="@android:color/primary_text_dark"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+        <TextView android:id="@+id/titleText" android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:gravity="center" android:padding="8dp" android:text="Multi-Modal Sensor Dashboard"
+            android:textColor="@android:color/primary_text_dark" android:textSize="18sp" android:textStyle="bold" />
 
         <!-- Overall Status Section -->
-        <TextView
-            android:id="@+id/overallStatusText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="8dp"
-            android:text="System Status: Initializing..."
-            android:textColor="@android:color/secondary_text_dark"
+        <TextView android:id="@+id/overallStatusText" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:gravity="center" android:padding="8dp"
+            android:text="System Status: Initializing..." android:textColor="@android:color/secondary_text_dark"
             android:textSize="14sp" />
 
         <!-- Recording Status Section with interactive background -->
-        <LinearLayout
-            android:id="@+id/recordingSection"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="4dp"
-            android:background="?android:attr/selectableItemBackground"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:padding="8dp">
+        <LinearLayout android:id="@+id/recordingSection" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:layout_marginVertical="4dp"
+            android:background="?android:attr/selectableItemBackground" android:gravity="center"
+            android:orientation="horizontal" android:padding="8dp">
 
-            <ImageView
-                android:id="@+id/recordingIndicator"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginEnd="8dp"
-                android:background="@android:color/darker_gray"
+            <ImageView android:id="@+id/recordingIndicator" android:layout_width="24dp" android:layout_height="24dp"
+                android:layout_marginEnd="8dp" android:background="@android:color/darker_gray"
                 android:contentDescription="Recording status indicator" />
 
-            <TextView
-                android:id="@+id/recordingTimer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Ready to Record"
-                android:textColor="@android:color/primary_text_dark"
-                android:textSize="14sp" />
+            <TextView android:id="@+id/recordingTimer" android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:text="Ready to Record"
+                android:textColor="@android:color/primary_text_dark" android:textSize="14sp" />
 
         </LinearLayout>
 
         <!-- Sensors Title with Collapse/Expand Toggle -->
-        <LinearLayout
-            android:id="@+id/sensorsTitleContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?android:attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true"
-            android:orientation="horizontal"
-            android:padding="8dp">
+        <LinearLayout android:id="@+id/sensorsTitleContainer" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:background="?android:attr/selectableItemBackground"
+            android:clickable="true" android:focusable="true" android:orientation="horizontal" android:padding="8dp">
 
-            <TextView
-                android:id="@+id/sensorsTitle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Sensor Connections"
-                android:textColor="@android:color/primary_text_dark"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+            <TextView android:id="@+id/sensorsTitle" android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1" android:text="Sensor Connections"
+                android:textColor="@android:color/primary_text_dark" android:textSize="16sp" android:textStyle="bold" />
 
-            <ImageView
-                android:id="@+id/collapseExpandIcon"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_gravity="center_vertical"
-                android:contentDescription="Expand/Collapse sensors"
+            <ImageView android:id="@+id/collapseExpandIcon" android:layout_width="24dp" android:layout_height="24dp"
+                android:layout_gravity="center_vertical" android:contentDescription="Expand/Collapse sensors"
                 android:src="@android:drawable/arrow_down_float" />
 
         </LinearLayout>
@@ -116,14 +67,9 @@
             The parent ScrollView handles all scrolling - no nested scrolling issues
             Dividers provide visual separation between sensor items
         -->
-        <LinearLayout
-            android:id="@+id/sensorsContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:divider="@android:drawable/divider_horizontal_bright"
-            android:minHeight="200dp"
-            android:orientation="vertical"
-            android:padding="8dp"
+        <LinearLayout android:id="@+id/sensorsContainer" android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:divider="@android:drawable/divider_horizontal_bright"
+            android:minHeight="200dp" android:orientation="vertical" android:padding="8dp"
             android:showDividers="middle">
 
             <!-- Individual sensor status views will be added programmatically -->
@@ -131,9 +77,7 @@
         </LinearLayout>
 
         <!-- Extra spacing to ensure proper scrolling and touch area at bottom -->
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="100dp" />
+        <Space android:layout_width="match_parent" android:layout_height="100dp" />
 
     </LinearLayout>
 

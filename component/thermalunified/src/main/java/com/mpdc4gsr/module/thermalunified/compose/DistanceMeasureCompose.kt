@@ -26,12 +26,12 @@ fun DistanceMeasureCompose(
     modifier: Modifier = Modifier
 ) {
     val density = LocalDensity.current
-    
+
     var line1Y by remember { mutableFloatStateOf(0f) }
     var line2Y by remember { mutableFloatStateOf(0f) }
     var canvasHeight by remember { mutableFloatStateOf(0f) }
     var isInitialized by remember { mutableStateOf(false) }
-    
+
     // Initialize line positions when canvas size is known
     LaunchedEffect(canvasHeight) {
         if (canvasHeight > 0 && !isInitialized) {
@@ -43,14 +43,14 @@ fun DistanceMeasureCompose(
             onDistanceChanged(lineHeight)
         }
     }
-    
+
     Canvas(
         modifier = modifier
             .fillMaxSize()
             .pointerInput(Unit) {
                 detectDragGestures { change, _ ->
                     val newY = change.position.y.coerceIn(0f, canvasHeight)
-                    
+
                     // Determine which line is closer to touch point
                     if (abs(newY - line1Y) < abs(newY - line2Y)) {
                         // Moving line1
@@ -63,7 +63,7 @@ fun DistanceMeasureCompose(
                         line2Y = newY
                         line1Y -= difference
                     }
-                    
+
                     // Update distance
                     val distance = abs(line2Y - line1Y)
                     onDistanceChanged(distance)
@@ -71,7 +71,7 @@ fun DistanceMeasureCompose(
             }
     ) {
         canvasHeight = size.height
-        
+
         if (isInitialized) {
             drawDistanceLines(line1Y, line2Y)
         }
@@ -83,7 +83,7 @@ private fun DrawScope.drawDistanceLines(line1Y: Float, line2Y: Float) {
     val dashEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 0f)
     val lineColor = Color.Green
     val margin = 50.dp.toPx()
-    
+
     // Draw first dashed line
     drawLine(
         color = lineColor,
@@ -92,7 +92,7 @@ private fun DrawScope.drawDistanceLines(line1Y: Float, line2Y: Float) {
         strokeWidth = strokeWidth,
         pathEffect = dashEffect
     )
-    
+
     // Draw second dashed line
     drawLine(
         color = lineColor,
@@ -109,7 +109,7 @@ private fun DrawScope.drawDistanceLines(line1Y: Float, line2Y: Float) {
 @Composable
 fun DistanceMeasureComposePreview() {
     var distance by remember { mutableFloatStateOf(0f) }
-    
+
     Column(
         modifier = Modifier.background(Color.Black)
     ) {
@@ -119,7 +119,7 @@ fun DistanceMeasureComposePreview() {
                 .fillMaxWidth()
                 .height(300.dp)
         )
-        
+
         // Show distance value for testing
         androidx.compose.material3.Text(
             text = "Distance: ${distance.toInt()}px",

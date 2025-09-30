@@ -53,12 +53,12 @@ class BlankDevViewModel : BaseViewModel() {
     fun refreshUsbDevices() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true, error = null)
-            
+
             try {
                 // val deviceList = usbManager.deviceList
                 val connectedDevices = mutableListOf<UsbDeviceInfo>()
                 val availableDevices = mutableListOf<UsbDeviceInfo>()
-                
+
                 // deviceList.values.forEach { usbDevice ->
                 //     val deviceInfo = UsbDeviceInfo(
                 //         name = usbDevice.deviceName ?: "Unknown Device",
@@ -74,14 +74,14 @@ class BlankDevViewModel : BaseViewModel() {
                 //         availableDevices.add(deviceInfo)
                 //     }
                 // }
-                
+
                 _uiState.value = _uiState.value.copy(
                     isLoading = false,
                     connectedDevices = connectedDevices,
                     availableDevices = availableDevices,
                     hasUsbPermission = connectedDevices.isNotEmpty()
                 )
-                
+
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(
                     isLoading = false,
@@ -126,11 +126,11 @@ class BlankDevViewModel : BaseViewModel() {
                 // }
                 // 
                 // usbDevice?.let { requestPermissionForUsbDevice(it) }
-                
+
                 _uiState.value = _uiState.value.copy(
                     error = "Device permission request functionality requires Activity context"
                 )
-                
+
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(
                     error = "Failed to request permission for device: ${e.message}"
@@ -155,7 +155,7 @@ class BlankDevViewModel : BaseViewModel() {
                 // For USB devices, we can't actually "disconnect" them,
                 // but we can stop using them and refresh the list
                 refreshUsbDevices()
-                
+
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(
                     error = "Failed to disconnect device: ${e.message}"
@@ -170,7 +170,7 @@ class BlankDevViewModel : BaseViewModel() {
     fun handleUsbDeviceAttached(device: UsbDevice) {
         viewModelScope.launch {
             refreshUsbDevices()
-            
+
             // Automatically request permission for known device types
             if (isKnownThermalDevice(device)) {
                 requestPermissionForUsbDevice(device)
@@ -201,7 +201,7 @@ class BlankDevViewModel : BaseViewModel() {
                     error = "USB permission denied for ${device.deviceName ?: "device"}"
                 )
             }
-            
+
             refreshUsbDevices()
         }
     }
@@ -212,7 +212,7 @@ class BlankDevViewModel : BaseViewModel() {
     fun toggleAutoNavigation() {
         val newAutoNavigate = !_uiState.value.autoNavigateToMain
         _uiState.value = _uiState.value.copy(autoNavigateToMain = newAutoNavigate)
-        
+
         if (newAutoNavigate) {
             startAutoNavigationCountdown()
         } else {
@@ -232,14 +232,14 @@ class BlankDevViewModel : BaseViewModel() {
      */
     private fun startAutoNavigationCountdown() {
         if (!_uiState.value.autoNavigateToMain) return
-        
+
         countdownJob?.cancel()
         countdownJob = viewModelScope.launch {
             for (i in AUTO_NAVIGATE_DELAY downTo 1) {
                 _uiState.value = _uiState.value.copy(navigationCountdown = i)
                 delay(1000)
             }
-            
+
             // Auto-navigate would happen here in a real implementation
             // For now, just clear the countdown
             _uiState.value = _uiState.value.copy(navigationCountdown = null)
@@ -290,7 +290,7 @@ class BlankDevViewModel : BaseViewModel() {
             Pair(0x289D, 0x0011), // Example Topdon variant
             // Add more known thermal camera IDs
         )
-        
+
         return knownThermalDevices.any { (vendorId, productId) ->
             device.vendorId == vendorId && device.productId == productId
         }
@@ -304,7 +304,7 @@ class BlankDevViewModel : BaseViewModel() {
         val knownSensorDevices = listOf(
             // Add known sensor device IDs if any use USB
         )
-        
+
         return knownSensorDevices.any { (vendorId, productId) ->
             device.vendorId == vendorId && device.productId == productId
         }

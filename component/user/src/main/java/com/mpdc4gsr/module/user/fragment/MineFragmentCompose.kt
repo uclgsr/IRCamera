@@ -99,25 +99,30 @@ class MineFragmentCompose : BaseComposeFragment<MineFragmentViewModel>() {
                                         .build(RouterConfig.VERSION)
                                         .navigation(context)
                                 }
+
                                 "thermal" -> {
                                     NavigationManager.getInstance()
                                         .build(RouterConfig.IR_SETTING)
                                         .navigation(context)
                                 }
+
                                 "network" -> {
                                     NavigationManager.getInstance()
                                         .build(RouterConfig.VERSION)
                                         .navigation(context)
                                 }
+
                                 "storage" -> {
                                     NavigationManager.getInstance()
                                         .build(RouterConfig.VERSION)
                                         .navigation(context)
                                 }
+
                                 "feedback" -> {
                                     val intent = Intent(context, FeedbackActivity::class.java)
                                     context.startActivity(intent)
                                 }
+
                                 "about" -> {
                                     NavigationManager.getInstance()
                                         .build(RouterConfig.VERSION)
@@ -194,7 +199,7 @@ class MineFragmentCompose : BaseComposeFragment<MineFragmentViewModel>() {
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
-                
+
                 Button(
                     onClick = onEditProfile,
                     modifier = Modifier.wrapContentWidth()
@@ -228,9 +233,9 @@ class MineFragmentCompose : BaseComposeFragment<MineFragmentViewModel>() {
                     modifier = Modifier.size(24.dp),
                     tint = item.iconTint
                 )
-                
+
                 Spacer(modifier = Modifier.width(16.dp))
-                
+
                 Column(
                     modifier = Modifier.weight(1f)
                 ) {
@@ -245,7 +250,7 @@ class MineFragmentCompose : BaseComposeFragment<MineFragmentViewModel>() {
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
-                
+
                 Icon(
                     Icons.Default.ChevronRight,
                     contentDescription = "Navigate",
@@ -273,13 +278,13 @@ class MineFragmentCompose : BaseComposeFragment<MineFragmentViewModel>() {
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
-                
+
                 AppInfoRow("Version", "1.10.000")
                 AppInfoRow("Build", "1100")
                 AppInfoRow("Cache Size", "0 MB")
-                
+
                 Spacer(modifier = Modifier.height(16.dp))
-                
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -290,14 +295,14 @@ class MineFragmentCompose : BaseComposeFragment<MineFragmentViewModel>() {
                     ) {
                         Text("Logs")
                     }
-                    
+
                     OutlinedButton(
                         onClick = onClearCache,
                         modifier = Modifier.weight(1f)
                     ) {
                         Text("Clear Cache")
                     }
-                    
+
                     Button(
                         onClick = onCheckUpdates,
                         modifier = Modifier.weight(1f)
@@ -308,6 +313,7 @@ class MineFragmentCompose : BaseComposeFragment<MineFragmentViewModel>() {
             }
         }
     }
+
     @Composable
     private fun AppInfoRow(label: String, value: String) {
         Row(

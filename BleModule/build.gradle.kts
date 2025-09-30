@@ -43,18 +43,18 @@ android {
 dependencies {
     implementation(libs.identity.jvm)
     coreLibraryDesugaring(libs.desugar.jdk.libs)
-    
+
     // Compose dependencies for BLE module
     implementation(platform(libs.compose.bom))
     implementation(libs.compose.ui)
     implementation(libs.compose.ui.tooling.preview)
     implementation(libs.compose.material3)
     implementation(libs.compose.activity)
-    
+
     // Debug Compose dependencies
     debugImplementation(libs.compose.ui.tooling)
     debugImplementation(libs.compose.ui.test.manifest)
-    
+
     api("androidx.appcompat:appcompat:1.2.0")
     api("org.greenrobot:eventbus:3.2.0")
     api("com.blankj:utilcodex:1.31.1")

@@ -44,7 +44,11 @@ class IRCorrectionThreeComposeActivity : BaseComposeActivity<ThermalViewModel>()
                         },
                         navigationIcon = {
                             IconButton(onClick = { finish() }) {
-                                Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = MaterialTheme.colorScheme.onSurface)
+                                Icon(
+                                    Icons.Default.ArrowBack,
+                                    contentDescription = "Back",
+                                    tint = MaterialTheme.colorScheme.onSurface
+                                )
                             }
                         },
                         colors = TopAppBarDefaults.topAppBarColors(
