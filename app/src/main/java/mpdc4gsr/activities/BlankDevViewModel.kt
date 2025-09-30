@@ -301,9 +301,9 @@ class BlankDevViewModel : BaseViewModel() {
      */
     private fun isKnownSensorDevice(device: UsbDevice): Boolean {
         // Add known sensor device vendor/product IDs
-        val knownSensorDevices = listOf<Pair<Int, Int>>(
+        val knownSensorDevices = emptyList<Pair<Int, Int>>()
             // Add known sensor device IDs if any use USB
-        )
+        
 
         return knownSensorDevices.any { (vendorId, productId) ->
             device.vendorId == vendorId && device.productId == productId
