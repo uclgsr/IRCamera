@@ -26,6 +26,14 @@ import com.mpdc4gsr.module.thermalunified.stubs.FenceView
 import com.mpdc4gsr.module.thermalunified.stubs.FencePointView
 import com.mpdc4gsr.module.thermalunified.stubs.FenceLineView
 import com.mpdc4gsr.module.thermalunified.viewmodel.MonitorThermalViewModel
+import com.mpdc4gsr.module.thermalunified.viewmodel.MonitorThermalViewModel.ThermalData
+import com.mpdc4gsr.module.thermalunified.viewmodel.MonitorThermalViewModel.FenceData
+import com.mpdc4gsr.module.thermalunified.viewmodel.MonitorThermalViewModel.TemperatureThreshold
+import com.mpdc4gsr.module.thermalunified.viewmodel.MonitorThermalViewModel.AlertSettings
+import com.mpdc4gsr.module.thermalunified.viewmodel.MonitorThermalViewModel.MonitoringAlert
+import com.mpdc4gsr.module.thermalunified.viewmodel.MonitorThermalViewModel.MonitoringState
+import com.mpdc4gsr.module.thermalunified.viewmodel.MonitorThermalViewModel.RecordingStatus
+import com.mpdc4gsr.module.thermalunified.viewmodel.MonitorThermalViewModel.AlertSeverity
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -247,9 +255,16 @@ class MonitorThermalFragmentCompose : BaseComposeFragment<MonitorThermalViewMode
                 AndroidView(
                     factory = { context ->
                         FenceView(context).apply {
-                            setOnFenceUpdateListener { fence ->
-                                // Convert to FenceData and notify viewmodel
-                                onFenceUpdate(FenceData(fence.toString()))
+                            listener = object : FenceView.CallBack {
+                                override fun callback(
+                                    startPoint: IntArray,
+                                    endPoint: IntArray,
+                                    srcRect: IntArray
+                                ) {
+                                    // Convert fence callback data to FenceData and notify viewmodel
+                                    val fenceData = "start:${startPoint.contentToString()},end:${endPoint.contentToString()},rect:${srcRect.contentToString()}"
+                                    onFenceUpdate(FenceData(fenceData))
+                                }
                             }
                         }
                     },
@@ -647,40 +662,5 @@ class MonitorThermalFragmentCompose : BaseComposeFragment<MonitorThermalViewMode
         MonitoringState.STOPPED -> Color.Gray
     }
 
-    // Data classes and enums
-    data class ThermalData(
-        val currentTemp: Float,
-        val maxTemp: Float,
-        val minTemp: Float,
-        val avgTemp: Float,
-        val isAlarmTriggered: Boolean,
-        val sessionDuration: String,
-        val sampleCount: Int,
-        val alertCount: Int,
-        val dataSize: String
-    )
 
-    data class FenceData(val data: String)
-
-    data class TemperatureThreshold(val high: Float, val low: Float)
-
-    data class AlertSettings(val soundEnabled: Boolean, val vibrationEnabled: Boolean)
-
-    data class MonitoringAlert(
-        val message: String,
-        val severity: AlertSeverity,
-        val timestamp: Date
-    )
-
-    enum class MonitoringState {
-        STOPPED, ACTIVE, PAUSED
-    }
-
-    enum class RecordingStatus {
-        IDLE, RECORDING
-    }
-
-    enum class AlertSeverity {
-        LOW, MEDIUM, HIGH
-    }
 }
