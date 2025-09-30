@@ -530,18 +530,8 @@ class MainActivityAlternative : BaseComposeActivity<MainActivityViewModel>() {
 
         override fun createFragment(position: Int): Fragment {
             return when (position) {
-                // 0 -> MainFragment().apply {
-                //     // Enhanced with consolidated layout support
-                //     arguments = Bundle().apply {
-                //         putBoolean("enhanced_mode", true)
-                //         putBoolean("multi_modal_support", true)
-                //     }
-                // }
-
                 1 -> IRGalleryTabFragment()
                 2 -> MoreFragment()
-                // 3 -> MineFragment()
-                // else -> MainFragment()
                 else -> IRGalleryTabFragment()
             }
         }
@@ -575,7 +565,6 @@ class MainActivityAlternative : BaseComposeActivity<MainActivityViewModel>() {
             )
 
             "gsr" -> startActivity(Intent(this, SensorDashboardComposeActivity::class.java))
-            // "rgb" -> startActivity(Intent(this, mpdc4gsr.test.RgbCameraTestActivity::class.java))
         }
     }
 
@@ -625,7 +614,6 @@ class MainActivityAlternative : BaseComposeActivity<MainActivityViewModel>() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onWinterClickEvent(event: WinterClickEvent) {
         // Handle winter click events
-        // viewModel.handleWinterClick()
     }
 
     override fun onDestroy() {

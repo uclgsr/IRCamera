@@ -191,7 +191,7 @@ class DevicePairingActivityCompose : BaseComposeActivity<DevicePairingViewModel>
         }
 
         @Composable
-        private fun ConnectionStatusCard(
+        fun ConnectionStatusCard(
             connectionState: DevicePairingViewModel.ConnectionState,
             connectedController: NetworkClient.ControllerInfo?,
             statusMessage: String,
@@ -326,7 +326,6 @@ class DevicePairingActivityCompose : BaseComposeActivity<DevicePairingViewModel>
             )
         }
 
-        @Composable
         @Composable
         fun ScanControlsCard(
             scanState: DevicePairingViewModel.ScanState,

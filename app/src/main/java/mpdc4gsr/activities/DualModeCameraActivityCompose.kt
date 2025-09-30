@@ -483,6 +483,5 @@ class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewMode
 
     override fun onDestroy() {
         super.onDestroy()
-        // cameraVM.cleanup()
     }
 }
