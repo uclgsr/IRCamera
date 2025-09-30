@@ -168,6 +168,7 @@ class CameraConfigurationManager {
     fun createPreviewConfiguration(configuration: CameraConfiguration): Preview {
         return Preview.Builder().apply {
             val previewSize = Size(configuration.videoWidth, configuration.videoHeight)
+            @Suppress("DEPRECATION")
             setTargetResolution(previewSize)
             Log.i(TAG, "Preview configured: ${previewSize.width}x${previewSize.height}")
         }.build()
@@ -178,6 +179,7 @@ class CameraConfigurationManager {
      */
     fun createImageCaptureConfiguration(configuration: CameraConfiguration): ImageCapture {
         return ImageCapture.Builder().apply {
+            @Suppress("DEPRECATION")
             setTargetResolution(Size(configuration.videoWidth, configuration.videoHeight))
             setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
             setJpegQuality(JPEG_QUALITY)

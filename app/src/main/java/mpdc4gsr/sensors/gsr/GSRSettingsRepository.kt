@@ -2,6 +2,7 @@ package mpdc4gsr.sensors.gsr
 
 import android.content.Context
 import android.content.SharedPreferences
+@Suppress("DEPRECATION")
 import android.preference.PreferenceManager
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,6 +14,7 @@ import kotlinx.coroutines.flow.StateFlow
  */
 class GSRSettingsRepository(private val context: Context) {
 
+    @Suppress("DEPRECATION")
     private val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
 
     // StateFlow for reactive settings updates
@@ -190,7 +192,9 @@ class GSRSettingsRepository(private val context: Context) {
     // Import settings from backup
     suspend fun importSettings(settingsMap: Map<String, Any>): Boolean {
         return try {
+            @Suppress("UNCHECKED_CAST")
             val gsrMap = settingsMap["gsr_settings"] as? Map<String, Any> ?: return false
+            @Suppress("UNCHECKED_CAST")
             val deviceMap = settingsMap["device_settings"] as? Map<String, Any> ?: return false
 
             val gsrSettings = GSRSettings(

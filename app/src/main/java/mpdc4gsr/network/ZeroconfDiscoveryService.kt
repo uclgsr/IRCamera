@@ -133,6 +133,7 @@ class ZeroconfDiscoveryService(private val context: Context) {
     fun getDiscoveredControllers(): List<NetworkClient.ControllerInfo> {
         return discoveredServices.values.mapNotNull { serviceInfo ->
             try {
+                @Suppress("DEPRECATION")
                 val host = serviceInfo.host?.hostAddress ?: return@mapNotNull null
                 val port = serviceInfo.port
                 val deviceName =
@@ -168,6 +169,7 @@ class ZeroconfDiscoveryService(private val context: Context) {
                     return
                 }
 
+                @Suppress("DEPRECATION")
                 nsdManager.resolveService(service, createResolveListener())
             }
 
@@ -211,14 +213,17 @@ class ZeroconfDiscoveryService(private val context: Context) {
             }
 
             override fun onServiceResolved(serviceInfo: NsdServiceInfo) {
+                @Suppress("DEPRECATION")
+                val hostAddress = serviceInfo.host?.hostAddress ?: "unknown"
                 Log.i(
                     TAG,
-                    "Service resolved: ${serviceInfo.serviceName} at ${serviceInfo.host}:${serviceInfo.port}"
+                    "Service resolved: ${serviceInfo.serviceName} at $hostAddress:${serviceInfo.port}"
                 )
 
                 discoveredServices[serviceInfo.serviceName] = serviceInfo
 
                 try {
+                    @Suppress("DEPRECATION")
                     val host = serviceInfo.host?.hostAddress ?: return
                     val port = serviceInfo.port
                     val deviceName =
