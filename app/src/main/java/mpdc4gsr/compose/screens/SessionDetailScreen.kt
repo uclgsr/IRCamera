@@ -69,18 +69,20 @@ fun SessionDetailScreen(
         ) {
             TitleBar(
                 title = "Session Details",
-                onNavigationClick = onNavigateBack,
-                actions = listOf(
-                    TitleBar.TitleBarAction(
-                        icon = Icons.Default.Share,
-                        contentDescription = "Export session"
-                    ) { onExportSession() },
-                    TitleBar.TitleBarAction(
-                        icon = Icons.Default.PlayArrow,
-                        contentDescription = "Play video"
-                    ) { onPlayVideo() }
+                showBackButton = true,
+                onBackClick = onNavigateBack
+            ) {
+                TitleBarAction(
+                    icon = Icons.Default.Share,
+                    contentDescription = "Export session",
+                    onClick = onExportSession
                 )
-            )
+                TitleBarAction(
+                    icon = Icons.Default.PlayArrow,
+                    contentDescription = "Play video",
+                    onClick = onPlayVideo
+                )
+            }
 
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
@@ -287,7 +289,7 @@ fun MetricsOverviewCard(metrics: SessionMetrics) {
 }
 
 @Composable
-fun MetricItem(
+private fun MetricItem(
     label: String,
     value: String,
     color: Color

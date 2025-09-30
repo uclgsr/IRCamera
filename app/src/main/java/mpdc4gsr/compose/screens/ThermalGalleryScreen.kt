@@ -49,22 +49,21 @@ fun ThermalGalleryScreen(
         TitleBar(
             title = "Thermal Gallery",
             showBackButton = true,
-            onBackClick = onBackClick,
-            actions = listOf(
-                TitleBar.TitleBarAction(
-                    icon = if (viewMode == ViewMode.GRID) Icons.Default.List else Icons.Default.GridView,
-                    contentDescription = "Toggle View Mode",
-                    onClick = {
-                        viewMode = if (viewMode == ViewMode.GRID) ViewMode.LIST else ViewMode.GRID
-                    }
-                ),
-                TitleBar.TitleBarAction(
-                    icon = Icons.Default.Search,
-                    contentDescription = "Search",
-                    onClick = { /* Search functionality */ }
-                )
+            onBackClick = onBackClick
+        ) {
+            TitleBarAction(
+                icon = if (viewMode == ViewMode.GRID) Icons.Default.List else Icons.Default.GridView,
+                contentDescription = "Toggle View Mode",
+                onClick = {
+                    viewMode = if (viewMode == ViewMode.GRID) ViewMode.LIST else ViewMode.GRID
+                }
             )
-        )
+            TitleBarAction(
+                icon = Icons.Default.Search,
+                contentDescription = "Search",
+                onClick = { /* Search functionality */ }
+            )
+        }
 
         // Tab Row
         TabRow(

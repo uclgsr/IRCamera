@@ -238,7 +238,7 @@ fun TemplateStatsCard(templates: List<ResearchTemplate>) {
 }
 
 @Composable
-fun StatItem(
+private fun StatItem(
     label: String,
     value: String,
     color: Color
