@@ -22,6 +22,10 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeFragment
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.ir.view.TemperatureView
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRMonitorCaptureViewModel
+import com.mpdc4gsr.module.thermalunified.viewmodel.IRMonitorCaptureViewModel.CaptureState
+import com.mpdc4gsr.module.thermalunified.viewmodel.IRMonitorCaptureViewModel.DeviceConnectionState
+import com.mpdc4gsr.module.thermalunified.viewmodel.IRMonitorCaptureViewModel.TemperatureData
+import com.mpdc4gsr.module.thermalunified.viewmodel.IRMonitorCaptureViewModel.CaptureData
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -209,7 +213,7 @@ class IRMonitorCaptureFragmentCompose : BaseComposeFragment<IRMonitorCaptureView
                         factory = { context ->
                             TemperatureView(context).apply {
                                 // Configure for capture mode
-                                setRegionMode(TemperatureView.REGION_MODE_RECTANGLE)
+                                temperatureRegionMode = TemperatureView.REGION_MODE_RECTANGLE
                             }
                         },
                         modifier = Modifier.fillMaxSize()
@@ -562,32 +566,11 @@ class IRMonitorCaptureFragmentCompose : BaseComposeFragment<IRMonitorCaptureView
         CaptureState.CAPTURING -> "Capturing"
     }
 
+    @Composable
     private fun getCaptureStatusColor(state: CaptureState): Color = when (state) {
         CaptureState.INACTIVE -> Color.Gray
         CaptureState.ACTIVE -> Color.Green
         CaptureState.CONTINUOUS -> MaterialTheme.colorScheme.primary
         CaptureState.CAPTURING -> Color(0xFFFFA500)
-    }
-
-    // Data classes and enums
-    data class TemperatureData(
-        val centerTemp: Float,
-        val maxTemp: Float,
-        val minTemp: Float
-    )
-
-    data class CaptureData(
-        val id: Int,
-        val timestamp: Long,
-        val temperature: Float,
-        val imagePath: String
-    )
-
-    enum class DeviceConnectionState {
-        DISCONNECTED, CONNECTING, CONNECTED, ERROR
-    }
-
-    enum class CaptureState {
-        INACTIVE, ACTIVE, CONTINUOUS, CAPTURING
     }
 }

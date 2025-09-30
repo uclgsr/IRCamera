@@ -1,0 +1,237 @@
+package com.mpdc4gsr.module.thermalunified.viewmodel
+
+import androidx.lifecycle.viewModelScope
+import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
+import com.mpdc4gsr.libunified.ir.view.TemperatureView
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.delay
+
+/**
+ * ViewModel for IR Monitor Capture functionality
+ *
+ * Manages:
+ * - Capture state and monitoring control
+ * - Temperature data collection and processing
+ * - Capture history management
+ * - Device connection state monitoring
+ * - Real-time capture operations
+ */
+class IRMonitorCaptureViewModel : BaseViewModel() {
+
+    // Data classes matching the fragment requirements
+    data class TemperatureData(
+        val centerTemp: Float,
+        val maxTemp: Float,
+        val minTemp: Float
+    )
+
+    data class CaptureData(
+        val id: Int,
+        val timestamp: Long,
+        val temperature: Float,
+        val imagePath: String
+    )
+
+    enum class DeviceConnectionState {
+        DISCONNECTED, CONNECTING, CONNECTED, ERROR
+    }
+
+    enum class CaptureState {
+        INACTIVE, ACTIVE, CONTINUOUS, CAPTURING
+    }
+
+    // StateFlow properties for UI state management
+    private val _captureState = MutableStateFlow(CaptureState.INACTIVE)
+    val captureState: StateFlow<CaptureState> = _captureState.asStateFlow()
+
+    private val _temperatureData = MutableStateFlow<TemperatureData?>(null)
+    val temperatureData: StateFlow<TemperatureData?> = _temperatureData.asStateFlow()
+
+    private val _captureHistory = MutableStateFlow<List<CaptureData>>(emptyList())
+    val captureHistory: StateFlow<List<CaptureData>> = _captureHistory.asStateFlow()
+
+    private val _deviceConnectionState = MutableStateFlow(DeviceConnectionState.DISCONNECTED)
+    val deviceConnectionState: StateFlow<DeviceConnectionState> = _deviceConnectionState.asStateFlow()
+
+    // Internal state
+    private var captureIdCounter = 1
+    private var continuousCapturingJob: kotlinx.coroutines.Job? = null
+
+    init {
+        // Initialize with mock data for development
+        initializeMockData()
+        // Start temperature monitoring simulation
+        startTemperatureMonitoring()
+    }
+
+    /**
+     * Toggle capture state between active and inactive
+     */
+    fun toggleCapture() {
+        viewModelScope.launch {
+            when (_captureState.value) {
+                CaptureState.INACTIVE -> {
+                    _captureState.value = CaptureState.ACTIVE
+                    simulateDeviceConnection()
+                }
+                CaptureState.ACTIVE -> {
+                    _captureState.value = CaptureState.INACTIVE
+                    stopContinuousCapture()
+                }
+                CaptureState.CONTINUOUS -> {
+                    stopContinuousCapture()
+                    _captureState.value = CaptureState.ACTIVE
+                }
+                CaptureState.CAPTURING -> {
+                    // Already capturing, ignore
+                }
+            }
+        }
+    }
+
+    /**
+     * Capture a single frame
+     */
+    fun captureFrame() {
+        if (_deviceConnectionState.value != DeviceConnectionState.CONNECTED) return
+        
+        viewModelScope.launch {
+            _captureState.value = CaptureState.CAPTURING
+            
+            // Simulate capture delay
+            delay(500)
+            
+            // Create capture data
+            val currentTemp = _temperatureData.value?.centerTemp ?: 25.0f
+            val capture = CaptureData(
+                id = captureIdCounter++,
+                timestamp = System.currentTimeMillis(),
+                temperature = currentTemp,
+                imagePath = "/mock/path/capture_${captureIdCounter - 1}.jpg"
+            )
+            
+            // Add to history
+            val currentHistory = _captureHistory.value.toMutableList()
+            currentHistory.add(0, capture) // Add to beginning
+            _captureHistory.value = currentHistory
+            
+            // Return to previous state
+            _captureState.value = if (continuousCapturingJob?.isActive == true) {
+                CaptureState.CONTINUOUS
+            } else {
+                CaptureState.ACTIVE
+            }
+        }
+    }
+
+    /**
+     * Toggle continuous capture mode
+     */
+    fun toggleContinuousCapture() {
+        if (_deviceConnectionState.value != DeviceConnectionState.CONNECTED) return
+        
+        viewModelScope.launch {
+            if (_captureState.value == CaptureState.CONTINUOUS) {
+                stopContinuousCapture()
+                _captureState.value = CaptureState.ACTIVE
+            } else {
+                startContinuousCapture()
+            }
+        }
+    }
+
+    /**
+     * Clear all capture history
+     */
+    fun clearCaptureHistory() {
+        viewModelScope.launch {
+            _captureHistory.value = emptyList()
+        }
+    }
+
+    /**
+     * Export all captures (mock implementation)
+     */
+    fun exportCaptures() {
+        viewModelScope.launch {
+            // Mock export operation
+            // In real implementation, this would handle file operations
+        }
+    }
+
+    /**
+     * Delete a specific capture
+     */
+    fun deleteCapture(capture: CaptureData) {
+        viewModelScope.launch {
+            val currentHistory = _captureHistory.value.toMutableList()
+            currentHistory.remove(capture)
+            _captureHistory.value = currentHistory
+        }
+    }
+
+    // Private helper methods
+
+    private fun initializeMockData() {
+        // Initialize with mock temperature data
+        _temperatureData.value = TemperatureData(
+            centerTemp = 25.0f,
+            maxTemp = 28.5f,
+            minTemp = 22.1f
+        )
+        
+        // Mock device connection state
+        _deviceConnectionState.value = DeviceConnectionState.DISCONNECTED
+    }
+
+    private fun simulateDeviceConnection() {
+        viewModelScope.launch {
+            _deviceConnectionState.value = DeviceConnectionState.CONNECTING
+            delay(2000) // Simulate connection delay
+            _deviceConnectionState.value = DeviceConnectionState.CONNECTED
+        }
+    }
+
+    private fun startTemperatureMonitoring() {
+        viewModelScope.launch {
+            while (true) {
+                if (_deviceConnectionState.value == DeviceConnectionState.CONNECTED) {
+                    // Simulate temperature readings with variation
+                    val baseTemp = 25.0f
+                    val variation = (Math.random() - 0.5).toFloat() * 5.0f
+                    val centerTemp = baseTemp + variation
+                    
+                    _temperatureData.value = TemperatureData(
+                        centerTemp = centerTemp,
+                        maxTemp = centerTemp + (Math.random().toFloat() * 3.0f),
+                        minTemp = centerTemp - (Math.random().toFloat() * 2.0f)
+                    )
+                }
+                delay(1000) // Update every second
+            }
+        }
+    }
+
+    private fun startContinuousCapture() {
+        _captureState.value = CaptureState.CONTINUOUS
+        continuousCapturingJob = viewModelScope.launch {
+            while (_captureState.value == CaptureState.CONTINUOUS) {
+                captureFrame()
+                delay(3000) // Capture every 3 seconds
+            }
+        }
+    }
+
+    private fun stopContinuousCapture() {
+        continuousCapturingJob?.cancel()
+        continuousCapturingJob = null
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        stopContinuousCapture()
+    }
+}
