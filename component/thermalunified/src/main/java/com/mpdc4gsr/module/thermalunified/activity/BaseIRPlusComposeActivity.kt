@@ -1,6 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.activity
 
-import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
