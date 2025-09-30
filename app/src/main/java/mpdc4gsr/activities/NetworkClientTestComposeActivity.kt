@@ -38,6 +38,7 @@ class NetworkClientTestComposeActivity : BaseComposeActivity<NetworkClientTestVi
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NetworkClientTestScreen(
     viewModel: NetworkClientTestViewModel = viewModel(),

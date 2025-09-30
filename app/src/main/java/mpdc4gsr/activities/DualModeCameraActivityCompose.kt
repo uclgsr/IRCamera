@@ -96,6 +96,26 @@ class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewMode
                         Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
                     }
 
+                    is DualModeCameraViewModel.CameraEvent.RequestPermission -> {
+                        // Handle permission request
+                    }
+
+                    is DualModeCameraViewModel.CameraEvent.RecordingStarted -> {
+                        Toast.makeText(context, "Recording started: ${event.fileName}", Toast.LENGTH_SHORT).show()
+                    }
+
+                    is DualModeCameraViewModel.CameraEvent.RecordingStopped -> {
+                        Toast.makeText(context, "Recording stopped: ${event.duration}s", Toast.LENGTH_SHORT).show()
+                    }
+
+                    is DualModeCameraViewModel.CameraEvent.ModeChanged -> {
+                        Toast.makeText(context, "Mode changed to ${event.newMode}", Toast.LENGTH_SHORT).show()
+                    }
+
+                    DualModeCameraViewModel.CameraEvent.NavigateToGallery -> {
+                        // Navigate to gallery
+                    }
+
                     // is DualModeCameraViewModel.CameraEvent.NavigateToSettings -> {
                     //     context.startActivity(Intent(context, SettingsComposeActivity::class.java))
                     // }
@@ -177,6 +197,7 @@ class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewMode
 
                     // Camera Status Card
                     CameraStatusCard(
+                        cameraState = cameraState,
                         cameraScreenState = cameraScreenState
                     )
                 }
@@ -356,6 +377,7 @@ class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewMode
 
     @Composable
     private fun CameraStatusCard(
+        cameraState: DualModeCameraViewModel.CameraState,
         cameraScreenState: DualModeCameraViewModel.CameraScreenState
     ) {
         Card(
@@ -461,6 +483,5 @@ class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewMode
 
     override fun onDestroy() {
         super.onDestroy()
-        cameraVM.cleanup()
     }
 }

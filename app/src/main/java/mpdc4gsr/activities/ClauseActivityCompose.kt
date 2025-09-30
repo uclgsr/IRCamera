@@ -18,6 +18,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
 import com.csl.irCamera.R
 import com.mpdc4gsr.libunified.app.BaseApplication
 import com.mpdc4gsr.libunified.app.common.SharedManager
@@ -222,15 +224,14 @@ class ClauseActivityCompose : BaseComposeActivity<ClauseViewModel>() {
 
                             Button(
                                 onClick = {
-                                    kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.Main)
-                                        .launch {
-                                            val success = viewModel.confirmInitApp(context)
-                                            if (success) {
-                                                NavigationManager.build(RouterConfig.MAIN)
-                                                    .navigation(context as ClauseActivityCompose)
-                                                finish()
-                                            }
+                                    viewModel.viewModelScope.launch {
+                                        val success = viewModel.confirmInitApp(context)
+                                        if (success) {
+                                            NavigationManager.build(RouterConfig.MAIN)
+                                                .navigation(context as ClauseActivityCompose)
+                                            finish()
                                         }
+                                    }
                                 },
                                 enabled = agreementAccepted && !isLoading,
                                 modifier = Modifier.weight(1f)
