@@ -9,7 +9,9 @@ import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import com.mpdc4gsr.module.thermalunified.tools.Fence
 import com.mpdc4gsr.module.thermalunified.tools.ThermalTool
 import com.mpdc4gsr.module.thermalunified.utils.ArrayUtils
+import com.mpdc4gsr.libunified.app.matrix.IrSurfaceView
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -46,6 +48,22 @@ class ThermalFragmentViewModel : BaseViewModel() {
     private val _thermalUiState = MutableStateFlow(ThermalUIState())
     val thermalUiState: StateFlow<ThermalUIState> = _thermalUiState.asStateFlow()
 
+    // Temperature data for UI display
+    private val _temperatureData = MutableStateFlow<TemperatureData?>(null)
+    val temperatureData: StateFlow<TemperatureData?> = _temperatureData.asStateFlow()
+
+    // Recording state for UI
+    private val _isRecording = MutableStateFlow(false)
+    val isRecording: StateFlow<Boolean> = _isRecording.asStateFlow()
+
+    // Connection status for UI
+    private val _connectionStatus = MutableStateFlow("Disconnected")
+    val connectionStatus: StateFlow<String> = _connectionStatus.asStateFlow()
+
+    // Processing mode for UI
+    private val _processingMode = MutableStateFlow("Standard")
+    val processingMode: StateFlow<String> = _processingMode.asStateFlow()
+
     // Thermal surface dimensions
     var rawWidth: Int = 0
         private set
@@ -54,6 +72,7 @@ class ThermalFragmentViewModel : BaseViewModel() {
 
     init {
         setupThermalDataProcessing()
+        syncRecordingStates()
     }
 
     private fun setupThermalDataProcessing() {
@@ -73,6 +92,17 @@ class ThermalFragmentViewModel : BaseViewModel() {
                 )
             }.collect { newUiState ->
                 _thermalUiState.value = newUiState
+            }
+        }
+    }
+
+    private fun syncRecordingStates() {
+        viewModelScope.launch {
+            // Keep _isRecording in sync with _videoRecordingState
+            _videoRecordingState.collect { videoState ->
+                if (_isRecording.value != videoState.isRecording) {
+                    _isRecording.value = videoState.isRecording
+                }
             }
         }
     }
@@ -267,6 +297,61 @@ class ThermalFragmentViewModel : BaseViewModel() {
         )
     }
 
+    // Public methods for UI interaction
+    fun initializeThermalCamera(surfaceView: IrSurfaceView) {
+        // Initialize thermal camera with surface view
+        _connectionStatus.value = "Connecting"
+        // TODO: Implement actual thermal camera initialization
+        viewModelScope.launch {
+            // Simulate connection process
+            delay(1000)
+            _connectionStatus.value = "Connected"
+            // Initialize with default temperature data
+            _temperatureData.value = TemperatureData(
+                centerTemp = "25.0°C",
+                maxTemp = "30.0°C",
+                minTemp = "20.0°C"
+            )
+        }
+    }
+
+    fun capturePhoto() {
+        // Capture thermal photo
+        viewModelScope.launch {
+            // TODO: Implement photo capture functionality
+        }
+    }
+
+    fun toggleRecording() {
+        viewModelScope.launch {
+            if (_isRecording.value) {
+                // Stop recording
+                stopVideoRecording()
+                _isRecording.value = false
+            } else {
+                // Start recording
+                try {
+                    // Create a temporary file for recording
+                    val outputFile = File.createTempFile(
+                        "thermal_recording_${System.currentTimeMillis()}", 
+                        ".mp4"
+                    )
+                    startVideoRecording(outputFile)
+                    _isRecording.value = true
+                } catch (e: Exception) {
+                    // Handle file creation error
+                    _isRecording.value = false
+                    // TODO: Emit error event or log the exception
+                }
+            }
+        }
+    }
+
+    fun openSettings() {
+        // Open thermal camera settings
+        // TODO: Implement settings navigation
+    }
+
     fun updateSurfaceDimensions(width: Int, height: Int) {
         rawWidth = width
         rawHeight = height
@@ -294,6 +379,12 @@ class ThermalFragmentViewModel : BaseViewModel() {
     }
 
     // Data classes for state management
+    data class TemperatureData(
+        val centerTemp: String = "--°C",
+        val maxTemp: String = "--°C",
+        val minTemp: String = "--°C"
+    )
+
     data class ThermalImageState(
         val bitmap: Bitmap? = null,
         val isProcessing: Boolean = false,

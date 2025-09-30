@@ -21,7 +21,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeFragment
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-import com.mpdc4gsr.module.thermalunified.stubs.IrSurfaceView
+import com.mpdc4gsr.libunified.app.matrix.IrSurfaceView
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalFragmentViewModel
 
 /**
