@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mpdc4gsr.module.thermalunified.theme.ThermalTheme
+import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -46,7 +46,7 @@ class IRCorrectionLiteThreeComposeActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            ThermalTheme {
+            LibUnifiedTheme {
                 IRCorrectionLiteThreeScreen(
                     viewModel = viewModel,
                     onNavigateBack = { finish() }
@@ -599,7 +599,7 @@ enum class CorrectionParameter {
 @Preview(showBackground = true)
 @Composable
 fun IRCorrectionLiteThreePreview() {
-    ThermalTheme {
+    LibUnifiedTheme {
         // Preview implementation would go here
     }
 }

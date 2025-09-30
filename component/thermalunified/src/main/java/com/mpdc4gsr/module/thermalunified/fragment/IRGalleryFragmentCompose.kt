@@ -105,6 +105,7 @@ class IRGalleryFragmentCompose : BaseComposeFragment<IRGalleryViewModel>() {
                                 galleryItems = galleryItems,
                                 selectedItems = selectedItems,
                                 isSelectionMode = isSelectionMode,
+                                viewModel = viewModel,
                                 onItemClick = { item ->
                                     if (isSelectionMode) {
                                         viewModel.toggleItemSelection(item)
@@ -126,6 +127,7 @@ class IRGalleryFragmentCompose : BaseComposeFragment<IRGalleryViewModel>() {
                                 galleryItems = galleryItems,
                                 selectedItems = selectedItems,
                                 isSelectionMode = isSelectionMode,
+                                viewModel = viewModel,
                                 onItemClick = { item ->
                                     if (isSelectionMode) {
                                         viewModel.toggleItemSelection(item)
@@ -296,6 +298,7 @@ class IRGalleryFragmentCompose : BaseComposeFragment<IRGalleryViewModel>() {
         galleryItems: List<GalleryBean>,
         selectedItems: Set<String>,
         isSelectionMode: Boolean,
+        viewModel: IRGalleryViewModel,
         onItemClick: (GalleryBean) -> Unit,
         onItemLongClick: (GalleryBean) -> Unit,
         onRefresh: () -> Unit
@@ -311,6 +314,7 @@ class IRGalleryFragmentCompose : BaseComposeFragment<IRGalleryViewModel>() {
                     item = item,
                     isSelected = selectedItems.contains(item.path),
                     isSelectionMode = isSelectionMode,
+                    viewModel = viewModel,
                     onClick = { onItemClick(item) },
                     onLongClick = { onItemLongClick(item) }
                 )
@@ -323,6 +327,7 @@ class IRGalleryFragmentCompose : BaseComposeFragment<IRGalleryViewModel>() {
         galleryItems: List<GalleryBean>,
         selectedItems: Set<String>,
         isSelectionMode: Boolean,
+        viewModel: IRGalleryViewModel,
         onItemClick: (GalleryBean) -> Unit,
         onItemLongClick: (GalleryBean) -> Unit,
         onRefresh: () -> Unit
@@ -336,6 +341,7 @@ class IRGalleryFragmentCompose : BaseComposeFragment<IRGalleryViewModel>() {
                     item = item,
                     isSelected = selectedItems.contains(item.path),
                     isSelectionMode = isSelectionMode,
+                    viewModel = viewModel,
                     onClick = { onItemClick(item) },
                     onLongClick = { onItemLongClick(item) }
                 )
@@ -348,6 +354,7 @@ class IRGalleryFragmentCompose : BaseComposeFragment<IRGalleryViewModel>() {
         item: GalleryBean,
         isSelected: Boolean,
         isSelectionMode: Boolean,
+        viewModel: IRGalleryViewModel,
         onClick: () -> Unit,
         onLongClick: () -> Unit
     ) {
@@ -438,6 +445,7 @@ class IRGalleryFragmentCompose : BaseComposeFragment<IRGalleryViewModel>() {
         item: GalleryBean,
         isSelected: Boolean,
         isSelectionMode: Boolean,
+        viewModel: IRGalleryViewModel,
         onClick: () -> Unit,
         onLongClick: () -> Unit
     ) {

@@ -46,6 +46,10 @@ class IRMonitorLiteViewModel : ViewModel() {
     private val _monitoringData = MutableStateFlow<MonitoringData?>(null)
     val monitoringData: StateFlow<MonitoringData?> = _monitoringData.asStateFlow()
 
+    // Region mode state for temperature measurement
+    private val _regionMode = MutableStateFlow(RegionMode.POINT)
+    val regionMode: StateFlow<RegionMode> = _regionMode.asStateFlow()
+
     // Internal state
     private var startTime: Long = 0
     private var sampleCount: Int = 0
@@ -92,6 +96,29 @@ class IRMonitorLiteViewModel : ViewModel() {
         _temperatureData.value = null
         sampleCount = 0
         temperatureSum = 0f
+    }
+
+    /**
+     * Set the region mode for temperature measurement
+     * @param mode The region mode as a string (e.g., "POINT", "LINE", "RECTANGLE", "CENTER", "CLEAN")
+     */
+    fun setRegionMode(mode: String) {
+        val newMode = when (mode.uppercase()) {
+            "POINT" -> RegionMode.POINT
+            "LINE" -> RegionMode.LINE
+            "RECTANGLE" -> RegionMode.RECTANGLE
+            "CENTER" -> RegionMode.CENTER
+            "CLEAN" -> RegionMode.CLEAN
+            else -> RegionMode.POINT // Default to POINT mode
+        }
+        _regionMode.value = newMode
+    }
+
+    /**
+     * Set the region mode directly using the enum
+     */
+    fun setRegionMode(mode: RegionMode) {
+        _regionMode.value = mode
     }
 
     private fun simulateDeviceConnection() {
@@ -189,6 +216,19 @@ enum class DeviceConnectionState {
 
 enum class MonitoringState {
     INACTIVE, ACTIVE, ERROR
+}
+
+/**
+ * Temperature measurement region modes
+ * Corresponds to TemperatureView.REGION_MODE_* constants
+ */
+enum class RegionMode {
+    RESET,      // REGION_MODE_RESET = -1
+    POINT,      // REGION_MODE_POINT = 0
+    LINE,       // REGION_MODE_LINE = 1
+    RECTANGLE,  // REGION_MODE_RECTANGLE = 2
+    CENTER,     // REGION_MODE_CENTER = 3
+    CLEAN       // REGION_MODE_CLEAN = 5
 }
 
 // Remove the helper extension as we're now using kotlin.random.Random

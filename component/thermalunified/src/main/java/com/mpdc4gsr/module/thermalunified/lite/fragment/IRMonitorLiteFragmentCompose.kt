@@ -52,10 +52,10 @@ class IRMonitorLiteFragmentCompose : BaseComposeFragment<IRMonitorLiteViewModel>
     @Composable
     override fun Content(viewModel: IRMonitorLiteViewModel) {
         // Observe ViewModel state
-        val monitoringState by viewModel.monitoringState.collectAsStateWithLifecycle()
-        val temperatureData by viewModel.temperatureData.collectAsStateWithLifecycle()
-        val deviceConnectionState by viewModel.deviceConnectionState.collectAsStateWithLifecycle()
-        val monitoringData by viewModel.monitoringData.collectAsStateWithLifecycle()
+        val monitoringState: MonitoringState by viewModel.monitoringState.collectAsStateWithLifecycle()
+        val temperatureData: TemperatureData? by viewModel.temperatureData.collectAsStateWithLifecycle()
+        val deviceConnectionState: DeviceConnectionState by viewModel.deviceConnectionState.collectAsStateWithLifecycle()
+        val monitoringData: MonitoringData? by viewModel.monitoringData.collectAsStateWithLifecycle()
 
         LibUnifiedTheme {
             Column(
