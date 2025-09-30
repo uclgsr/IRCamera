@@ -249,7 +249,7 @@ fun ImageFilterTabs(
         ImageFilter.RECENT to "Recent"
     )
 
-    ScrollableTabRow(
+    PrimaryScrollableTabRow(
         selectedTabIndex = filters.indexOfFirst { it.first == selectedFilter },
         modifier = modifier
     ) {

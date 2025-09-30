@@ -265,7 +265,7 @@ class IRThermalNightComposeActivity : BaseComposeActivity<IRThermalNightViewMode
                     colors = ButtonDefaults.outlinedButtonColors(
                         contentColor = Color(0xFF58A6FF)
                     ),
-                    border = ButtonDefaults.outlinedButtonBorder.copy(
+                    border = ButtonDefaults.outlinedButtonBorder(enabled = true).copy(
                         brush = androidx.compose.ui.graphics.SolidColor(Color(0xFF58A6FF))
                     )
                 ) {

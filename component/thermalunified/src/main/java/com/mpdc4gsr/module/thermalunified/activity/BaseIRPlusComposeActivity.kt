@@ -428,7 +428,7 @@ private fun PlusModeSelector(
             modes.forEach { mode ->
                 FilterChip(
                     onClick = { onModeSelected(mode) },
-                    label = { Text(mode.capitalize(), fontSize = 11.sp) },
+                    label = { Text(mode.replaceFirstChar { it.uppercase() }, fontSize = 11.sp) },
                     selected = selectedMode == mode,
                     colors = FilterChipDefaults.filterChipColors(
                         selectedContainerColor = Color(0xFFFFD700),
