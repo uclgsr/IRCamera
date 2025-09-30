@@ -16,8 +16,8 @@ import com.mpdc4gsr.libunified.app.socket.WebSocketProxy
 import com.mpdc4gsr.libunified.app.tools.DeviceTools
 import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.module.thermalunified.activity.IRThermalNightActivity
-import com.mpdc4gsr.module.thermalunified.activity.IRThermalPlusActivity
-import com.mpdc4gsr.module.thermalunified.activity.MonitoryHomeActivity
+import com.mpdc4gsr.module.thermalunified.activity.IRThermalPlusComposeActivity
+import com.mpdc4gsr.module.thermalunified.activity.MonitoryHomeComposeActivity
 import org.greenrobot.eventbus.EventBus
 
 class AbilityFragment : BaseFragment(), View.OnClickListener {
@@ -65,7 +65,7 @@ class AbilityFragment : BaseFragment(), View.OnClickListener {
             }
 
             viewMonitory -> {
-                val intent = Intent(requireContext(), MonitoryHomeActivity::class.java)
+                val intent = Intent(requireContext(), MonitoryHomeComposeActivity::class.java)
                 intent.putExtra(ExtraKeyConfig.IS_TC007, mIsTC007)
                 startActivity(intent)
             }
@@ -84,7 +84,7 @@ class AbilityFragment : BaseFragment(), View.OnClickListener {
                     }
                 } else {
                     if (DeviceTools.isTC001PlusConnect()) {
-                        var intent = Intent(requireContext(), IRThermalPlusActivity::class.java)
+                        var intent = Intent(requireContext(), IRThermalPlusComposeActivity::class.java)
                         intent.putExtra(ExtraKeyConfig.IS_CAR_DETECT_ENTER, true)
                         startActivity(intent)
                     } else if (DeviceTools.isTC001LiteConnect()) {

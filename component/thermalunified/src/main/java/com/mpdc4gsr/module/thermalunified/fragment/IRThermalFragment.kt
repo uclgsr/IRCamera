@@ -26,7 +26,7 @@ import com.mpdc4gsr.libunified.app.utils.CommUtils
 import com.mpdc4gsr.libunified.app.utils.NetWorkUtils
 import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.module.thermalunified.activity.IRThermalNightActivity
-import com.mpdc4gsr.module.thermalunified.activity.IRThermalPlusActivity
+import com.mpdc4gsr.module.thermalunified.activity.IRThermalPlusComposeActivity
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRThermalFragmentViewModel
 import kotlinx.coroutines.launch
 
@@ -166,7 +166,7 @@ class IRThermalFragment : BaseFragment(), View.OnClickListener {
             is IRThermalFragmentViewModel.NavigationEvent.StartThermalPlusActivity -> {
                 @Suppress("DEPRECATION")
                 startActivityForResult(
-                    Intent(requireContext(), IRThermalPlusActivity::class.java), 101
+                    Intent(requireContext(), IRThermalPlusComposeActivity::class.java), 101
                 )
             }
 
