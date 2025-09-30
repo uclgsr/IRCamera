@@ -544,11 +544,11 @@ data class GSRGalleryUiState(
 
 // ViewModel
 class GSRGalleryViewModel : BaseViewModel() {
-    private val _uiState = MutableStateFlow(GSRGalleryUiState())
-    val uiState: StateFlow<GSRGalleryUiState> = _uiState.asStateFlow()
+    private val _galleryState = MutableStateFlow(GSRGalleryUiState())
+    val galleryState: StateFlow<GSRGalleryUiState> = _galleryState.asStateFlow()
 
     fun loadGSRSessions() {
-        _uiState.value = _uiState.value.copy(isLoading = true)
+        _galleryState.value = _galleryState.value.copy(isLoading = true)
 
         val mockSessions = listOf(
             GSRSession(
@@ -603,7 +603,7 @@ class GSRGalleryViewModel : BaseViewModel() {
             )
         )
 
-        _uiState.value = _uiState.value.copy(
+        _galleryState.value = _galleryState.value.copy(
             sessions = mockSessions,
             filteredSessions = mockSessions,
             isLoading = false
@@ -611,38 +611,38 @@ class GSRGalleryViewModel : BaseViewModel() {
     }
 
     fun filterSessions(query: String) {
-        val filtered = _uiState.value.sessions.filter { session ->
+        val filtered = _galleryState.value.sessions.filter { session ->
             query.isEmpty() ||
                     session.name.contains(query, ignoreCase = true) ||
                     session.participantId.contains(query, ignoreCase = true)
         }
-        _uiState.value = _uiState.value.copy(filteredSessions = filtered)
+        _galleryState.value = _galleryState.value.copy(filteredSessions = filtered)
     }
 
     fun applyFilter(filter: GSRFilter) {
-        val filtered = _uiState.value.sessions.filter { session ->
+        val filtered = _galleryState.value.sessions.filter { session ->
             session.dataQuality >= filter.minQuality &&
                     (session.duration / 60000) >= filter.minDuration &&
                     (!filter.hasParticipant || session.participantId.isNotEmpty())
         }
-        _uiState.value = _uiState.value.copy(
+        _galleryState.value = _galleryState.value.copy(
             filteredSessions = filtered,
             currentFilter = filter
         )
     }
 
     fun selectSession(session: GSRSession) {
-        val currentSelection = _uiState.value.selectedSessions
+        val currentSelection = _galleryState.value.selectedSessions
         val newSelection = if (currentSelection.contains(session.id)) {
             currentSelection - session.id
         } else {
             currentSelection + session.id
         }
-        _uiState.value = _uiState.value.copy(selectedSessions = newSelection)
+        _galleryState.value = _galleryState.value.copy(selectedSessions = newSelection)
     }
 
     fun clearSelection() {
-        _uiState.value = _uiState.value.copy(selectedSessions = emptySet())
+        _galleryState.value = _galleryState.value.copy(selectedSessions = emptySet())
     }
 
     fun openSession(session: GSRSession) {

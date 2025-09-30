@@ -26,6 +26,7 @@ import mpdc4gsr.compose.base.BaseComposeActivity
 import mpdc4gsr.compose.theme.IRCameraTheme
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import androidx.lifecycle.viewModelScope
+import kotlin.random.Random
 
 /**
  * GSRQuickRecordingActivityCompose - Enhanced Quick GSR Recording
@@ -531,8 +532,8 @@ data class GSRQuickRecordingUiState(
 
 // ViewModel
 class GSRQuickRecordingViewModel : BaseViewModel() {
-    private val _uiState = MutableStateFlow(GSRQuickRecordingUiState())
-    val uiState: StateFlow<GSRQuickRecordingUiState> = _uiState.asStateFlow()
+    private val _recordingState = MutableStateFlow(GSRQuickRecordingUiState())
+    val recordingState: StateFlow<GSRQuickRecordingUiState> = _recordingState.asStateFlow()
 
     private var recordingJob: Job? = null
 
@@ -543,21 +544,21 @@ class GSRQuickRecordingViewModel : BaseViewModel() {
             QuickSession("Quick Session 3", 240000, 61440, System.currentTimeMillis() - 10800000)
         )
 
-        _uiState.value = _uiState.value.copy(recentSessions = mockSessions)
+        _recordingState.value = _recordingState.value.copy(recentSessions = mockSessions)
     }
 
     fun startQuickRecording() {
-        _uiState.value = _uiState.value.copy(isRecording = true)
+        _recordingState.value = _recordingState.value.copy(isRecording = true)
 
         // Cancel any existing recording job
         recordingJob?.cancel()
 
         // Start recording simulation on main dispatcher
         recordingJob = viewModelScope.launch(Dispatchers.Main) {
-            while (_uiState.value.isRecording) {
+            while (_recordingState.value.isRecording) {
                 delay(1000)
-                val currentState = _uiState.value
-                _uiState.value = currentState.copy(
+                val currentState = _recordingState.value
+                _recordingState.value = currentState.copy(
                     recordingDuration = currentState.recordingDuration + 1000,
                     samplesCollected = currentState.samplesCollected + currentState.sampleRate,
                     currentGSRValue = (5.0..15.0).random(),
@@ -569,7 +570,7 @@ class GSRQuickRecordingViewModel : BaseViewModel() {
     }
 
     fun stopQuickRecording() {
-        _uiState.value = _uiState.value.copy(isRecording = false)
+        _recordingState.value = _recordingState.value.copy(isRecording = false)
         recordingJob?.cancel()
         recordingJob = null
     }
@@ -580,11 +581,11 @@ class GSRQuickRecordingViewModel : BaseViewModel() {
     }
 
     fun setSampleRate(rate: Int) {
-        _uiState.value = _uiState.value.copy(sampleRate = rate)
+        _recordingState.value = _recordingState.value.copy(sampleRate = rate)
     }
 
     fun toggleAutoSave() {
-        _uiState.value = _uiState.value.copy(autoSave = !_uiState.value.autoSave)
+        _recordingState.value = _recordingState.value.copy(autoSave = !_recordingState.value.autoSave)
     }
 
     fun viewSession(session: QuickSession) {

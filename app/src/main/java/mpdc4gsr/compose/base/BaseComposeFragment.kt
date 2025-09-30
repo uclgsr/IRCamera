@@ -10,7 +10,7 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.viewmodel.compose.viewModel
 import mpdc4gsr.compose.theme.IRCameraTheme
-import mpdc4gsr.viewmodel.BaseViewModel
+import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 
 /**
  * Base Compose Fragment that enables gradual migration from traditional Fragments

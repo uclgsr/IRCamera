@@ -53,7 +53,7 @@ enum class ThermalPalette(
     IRON("Iron", listOf(Color.Black, Color.Red, Color.Yellow, Color.White)),
     RAINBOW("Rainbow", listOf(Color.Blue, Color.Green, Color.Yellow, Color.Red)),
     GRAYSCALE("Grayscale", listOf(Color.Black, Color.Gray, Color.White)),
-    HOT("Hot", listOf(Color.Black, Color.Red, Color.Orange, Color.Yellow))
+    HOT("Hot", listOf(Color.Black, Color.Red, Color(0xFFFFA500), Color.Yellow))
 }
 
 data class ImageEditState(
