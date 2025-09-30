@@ -1,27 +1,162 @@
 package com.mpdc4gsr.module.thermalunified.viewmodel
 
+import android.content.Context
+import android.content.Intent
 import android.util.Log
+import androidx.core.content.FileProvider
 import androidx.lifecycle.viewModelScope
 import com.blankj.utilcode.util.Utils
 import com.mpdc4gsr.libunified.app.config.FileConfig
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import com.mpdc4gsr.libunified.app.utils.SingleLiveEvent
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.io.File
 
 class GalleryViewModel : BaseViewModel() {
     val galleryLiveData = SingleLiveEvent<ArrayList<String>>()
 
+    // Data class for media items
+    data class MediaItem(
+        val id: String,
+        val name: String,
+        val path: String,
+        val thumbnailPath: String,
+        val size: Long,
+        val dateModified: Long,
+        val isVideo: Boolean = false
+    )
+
+    // State flows for Compose
+    private val _mediaItems = MutableStateFlow<List<MediaItem>>(emptyList())
+    val mediaItems: StateFlow<List<MediaItem>> = _mediaItems.asStateFlow()
+
+    private val _galleryItems = MutableStateFlow<List<MediaItem>>(emptyList())
+    val galleryItems: StateFlow<List<MediaItem>> = _galleryItems.asStateFlow()
+
+    private val _videoItems = MutableStateFlow<List<MediaItem>>(emptyList())
+    val videoItems: StateFlow<List<MediaItem>> = _videoItems.asStateFlow()
+
+    private val _isGridView = MutableStateFlow(true)
+    val isGridView: StateFlow<Boolean> = _isGridView.asStateFlow()
+
+    private val _selectedItems = MutableStateFlow<Set<String>>(emptySet())
+    val selectedItems: StateFlow<Set<String>> = _selectedItems.asStateFlow()
+
+    private val _isSelectionMode = MutableStateFlow(false)
+    val isSelectionMode: StateFlow<Boolean> = _isSelectionMode.asStateFlow()
+
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
+
+    init {
+        loadMediaItems()
+    }
+
+    // Load media items and update different flows
+    private fun loadMediaItems() {
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                val items = getMediaItemsList()
+                _mediaItems.value = items
+                _galleryItems.value = items.filter { !it.isVideo }
+                _videoItems.value = items.filter { it.isVideo }
+            } catch (e: Exception) {
+                Log.e("GalleryViewModel", "Error loading media items", e)
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+
+    // View mode toggle
+    fun toggleViewMode() {
+        _isGridView.value = !_isGridView.value
+    }
+
+    // Selection mode methods
+    fun enterSelectionMode(item: MediaItem? = null) {
+        _isSelectionMode.value = true
+        item?.let {
+            _selectedItems.value = setOf(it.id)
+        }
+    }
+
+    fun exitSelectionMode() {
+        _isSelectionMode.value = false
+        _selectedItems.value = emptySet()
+    }
+
+    fun clearSelection() {
+        _selectedItems.value = emptySet()
+        _isSelectionMode.value = false
+    }
+
+    fun toggleItemSelection(item: MediaItem) {
+        val currentSelected = _selectedItems.value.toMutableSet()
+        if (currentSelected.contains(item.id)) {
+            currentSelected.remove(item.id)
+        } else {
+            currentSelected.add(item.id)
+        }
+        _selectedItems.value = currentSelected
+        
+        // Exit selection mode if no items selected
+        if (currentSelected.isEmpty()) {
+            _isSelectionMode.value = false
+        }
+    }
+
+    // File operations
+    fun deleteSelectedItems() {
+        val selectedIds = _selectedItems.value
+        val itemsToDelete = _mediaItems.value.filter { selectedIds.contains(it.id) }
+        
+        itemsToDelete.forEach { item ->
+            try {
+                File(item.path).delete()
+            } catch (e: Exception) {
+                Log.e("GalleryViewModel", "Error deleting file: ${item.path}", e)
+            }
+        }
+        
+        exitSelectionMode()
+        loadMediaItems() // Refresh the list
+    }
+
+    fun shareSelectedItems() {
+        val selectedIds = _selectedItems.value
+        val itemsToShare = _mediaItems.value.filter { selectedIds.contains(it.id) }
+        
+        if (itemsToShare.isNotEmpty()) {
+            // Implementation would depend on context being available
+            // For now, just log the action
+            Log.d("GalleryViewModel", "Sharing ${itemsToShare.size} items")
+        }
+    }
+
+    fun openMediaItem(item: MediaItem) {
+        // Implementation for opening media item
+        Log.d("GalleryViewModel", "Opening media item: ${item.name}")
+    }
+
+    // Refresh methods
+    fun refreshGallery() {
+        loadMediaItems()
+    }
+
+    fun refreshVideoGallery() {
+        loadMediaItems()
+    }
+
+    // Legacy methods for backward compatibility
     fun getData() {
         viewModelScope.launch {
             getGalleryList().collect { it ->
                 if (it.size == 0) {
                     Log.w("123", "[ph][ph][ph][ph][ph]")
                 } else {
-
                     galleryLiveData.postValue(it)
                 }
             }
@@ -34,11 +169,59 @@ class GalleryViewModel : BaseViewModel() {
                 if (it.size == 0) {
                     Log.w("123", "[ph][ph][ph][ph][ph]")
                 } else {
-
                     galleryLiveData.postValue(it)
                 }
             }
         }
+    }
+
+    private fun getMediaItemsList(): List<MediaItem> {
+        val items = mutableListOf<MediaItem>()
+        
+        // Load pictures
+        val picturePath = Utils.getApp()
+            .getExternalFilesDir("Pictures")!!.absolutePath + File.separator + "thermal"
+        val pictureDir = File(picturePath)
+        if (pictureDir.isDirectory) {
+            pictureDir.listFiles()?.forEach { file ->
+                if (file.isFile) {
+                    items.add(
+                        MediaItem(
+                            id = file.absolutePath,
+                            name = file.name,
+                            path = file.absolutePath,
+                            thumbnailPath = file.absolutePath,
+                            size = file.length(),
+                            dateModified = file.lastModified(),
+                            isVideo = false
+                        )
+                    )
+                }
+            }
+        }
+        
+        // Load videos
+        val videoPath = FileConfig.lineGalleryDir
+        val videoDir = File(videoPath)
+        if (videoDir.isDirectory) {
+            videoDir.listFiles()?.forEach { file ->
+                if (file.isFile) {
+                    items.add(
+                        MediaItem(
+                            id = file.absolutePath,
+                            name = file.name,
+                            path = file.absolutePath,
+                            thumbnailPath = file.absolutePath,
+                            size = file.length(),
+                            dateModified = file.lastModified(),
+                            isVideo = true
+                        )
+                    )
+                }
+            }
+        }
+        
+        return items.sortedByDescending { it.dateModified }
     }
 
     private fun getGalleryList(): Flow<ArrayList<String>> {

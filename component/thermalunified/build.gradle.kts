@@ -79,6 +79,7 @@ dependencies {
     implementation(platform(libs.compose.bom))
     implementation(libs.bundles.compose.core)
     implementation("androidx.compose.material:material-icons-extended")
+    implementation(libs.coil.compose)
     debugImplementation(libs.bundles.compose.debug)
 
     // Core Android libraries
