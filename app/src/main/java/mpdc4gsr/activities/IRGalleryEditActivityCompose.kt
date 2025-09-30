@@ -24,10 +24,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.csl.irCamera.R
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewModelScope
+import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import mpdc4gsr.compose.base.BaseComposeActivity
 import mpdc4gsr.compose.components.TitleBar
 import mpdc4gsr.compose.theme.IRCameraTheme
-import mpdc4gsr.viewmodel.BaseViewModel
 
 enum class EditTool(
     val displayName: String,
@@ -72,11 +76,11 @@ class IRGalleryEditViewModel : BaseViewModel() {
     val statusMessage: State<String> = _statusMessage
 
     fun loadImage(imagePath: String) {
-        kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
+        viewModelScope.launch {
             _isProcessing.value = true
             _statusMessage.value = "Loading thermal image..."
 
-            kotlinx.coroutines.delay(2000) // Simulate image loading
+            delay(2000) // Simulate image loading
 
             _editState.value = _editState.value.copy(isImageLoaded = true)
             _statusMessage.value = "Image loaded successfully"
@@ -115,11 +119,11 @@ class IRGalleryEditViewModel : BaseViewModel() {
     }
 
     fun saveImage() {
-        kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
+        viewModelScope.launch {
             _isProcessing.value = true
             _statusMessage.value = "Saving image..."
 
-            kotlinx.coroutines.delay(3000) // Simulate saving
+            delay(3000) // Simulate saving
 
             _editState.value = _editState.value.copy(hasUnsavedChanges = false)
             _statusMessage.value = "Image saved successfully"
@@ -128,11 +132,11 @@ class IRGalleryEditViewModel : BaseViewModel() {
     }
 
     fun exportImage() {
-        kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
+        viewModelScope.launch {
             _isProcessing.value = true
             _statusMessage.value = "Exporting image..."
 
-            kotlinx.coroutines.delay(2500) // Simulate export
+            delay(2500) // Simulate export
 
             _statusMessage.value = "Image exported to gallery"
             _isProcessing.value = false

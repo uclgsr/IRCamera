@@ -20,13 +20,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.csl.irCamera.R
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewModelScope
+import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import mpdc4gsr.compose.base.BaseComposeActivity
 import mpdc4gsr.compose.components.TitleBar
 import mpdc4gsr.compose.theme.IRCameraTheme
 import mpdc4gsr.controller.ComprehensiveRecordingController
 import mpdc4gsr.controller.RecordingState
 import mpdc4gsr.permissions.PermissionManager
-import mpdc4gsr.viewmodel.BaseViewModel
 
 enum class SensorConnectionStatus {
     DISCONNECTED, CONNECTING, CONNECTED, ERROR
@@ -73,7 +76,7 @@ class FaultTolerantRecordingViewModel : BaseViewModel() {
     val isInitializing: State<Boolean> = _isInitializing
 
     fun initializeSystem() {
-        kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
+        viewModelScope.launch {
             _isInitializing.value = true
             _systemStatus.value = "Initializing enhanced recording system..."
 
@@ -128,7 +131,7 @@ class FaultTolerantRecordingViewModel : BaseViewModel() {
             return
         }
 
-        kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
+        viewModelScope.launch {
             _recordingState.value = RecordingState.RECORDING
             _systemStatus.value = "Recording started with fault-tolerant mode enabled."
 
@@ -182,7 +185,7 @@ class FaultTolerantRecordingViewModel : BaseViewModel() {
     }
 
     fun reconnectSensor(sensorName: String) {
-        kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
+        viewModelScope.launch {
             _sensorInfoList.value = _sensorInfoList.value.map { sensor ->
                 if (sensor.name == sensorName) {
                     sensor.copy(status = SensorConnectionStatus.CONNECTING, errorMessage = null)

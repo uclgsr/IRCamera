@@ -689,14 +689,14 @@ fun ProtocolSelectorDialog(
 }
 
 // Helper functions
-fun formatDuration(millis: Long): String {
+private fun formatDuration(millis: Long): String {
     val seconds = millis / 1000
     val minutes = seconds / 60
     val hours = minutes / 60
     return String.format("%02d:%02d:%02d", hours, minutes % 60, seconds % 60)
 }
 
-fun formatDataSize(bytes: Long): String {
+private fun formatDataSize(bytes: Long): String {
     return when {
         bytes < 1024 -> "$bytes B"
         bytes < 1024 * 1024 -> "${bytes / 1024} KB"

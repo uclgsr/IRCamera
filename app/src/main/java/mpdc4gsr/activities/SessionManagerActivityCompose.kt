@@ -681,7 +681,7 @@ fun FilterSessionsDialog(
 }
 
 // Helper functions
-fun formatDuration(millis: Long): String {
+private fun formatDuration(millis: Long): String {
     val seconds = millis / 1000
     val minutes = seconds / 60
     val hours = minutes / 60

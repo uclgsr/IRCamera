@@ -30,9 +30,12 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import mpdc4gsr.compose.base.BaseComposeActivity
 import mpdc4gsr.compose.theme.IRCameraTheme
-import mpdc4gsr.viewmodel.BaseViewModel
+import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import androidx.lifecycle.viewModelScope
 
 /**
@@ -549,8 +552,8 @@ data class GSRDeviceManagementUiState(
 
 // ViewModel placeholder
 class GSRDeviceManagementViewModel : BaseViewModel() {
-    private val _uiState = androidx.compose.runtime.mutableStateOf(GSRDeviceManagementUiState())
-    val uiState: androidx.compose.runtime.State<GSRDeviceManagementUiState> = _uiState
+    private val _uiState = MutableStateFlow(GSRDeviceManagementUiState())
+    val uiState: StateFlow<GSRDeviceManagementUiState> = _uiState.asStateFlow()
 
     private var scanningJob: Job? = null
 

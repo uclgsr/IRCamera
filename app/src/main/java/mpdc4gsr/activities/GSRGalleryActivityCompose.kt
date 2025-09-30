@@ -17,9 +17,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import mpdc4gsr.compose.base.BaseComposeActivity
 import mpdc4gsr.compose.theme.IRCameraTheme
-import mpdc4gsr.viewmodel.BaseViewModel
+import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 
 /**
  * GSRGalleryActivityCompose - Enhanced GSR Data Gallery
@@ -499,13 +502,13 @@ fun SelectionActionsBar(
 }
 
 // Helper functions
-fun formatDuration(millis: Long): String {
+private fun formatDuration(millis: Long): String {
     val seconds = millis / 1000
     val minutes = seconds / 60
     return String.format("%d:%02d", minutes, seconds % 60)
 }
 
-fun formatFileSize(bytes: Long): String {
+private fun formatFileSize(bytes: Long): String {
     return when {
         bytes < 1024 -> "$bytes B"
         bytes < 1024 * 1024 -> "${bytes / 1024} KB"
@@ -541,8 +544,8 @@ data class GSRGalleryUiState(
 
 // ViewModel
 class GSRGalleryViewModel : BaseViewModel() {
-    private val _uiState = androidx.compose.runtime.mutableStateOf(GSRGalleryUiState())
-    val uiState: androidx.compose.runtime.State<GSRGalleryUiState> = _uiState
+    private val _uiState = MutableStateFlow(GSRGalleryUiState())
+    val uiState: StateFlow<GSRGalleryUiState> = _uiState.asStateFlow()
 
     fun loadGSRSessions() {
         _uiState.value = _uiState.value.copy(isLoading = true)

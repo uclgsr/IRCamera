@@ -19,9 +19,12 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import mpdc4gsr.compose.base.BaseComposeActivity
 import mpdc4gsr.compose.theme.IRCameraTheme
-import mpdc4gsr.viewmodel.BaseViewModel
+import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import androidx.lifecycle.viewModelScope
 
 /**
@@ -497,7 +500,7 @@ fun QuickStatItem(label: String, value: String) {
     }
 }
 
-fun formatDuration(millis: Long): String {
+private fun formatDuration(millis: Long): String {
     val seconds = millis / 1000
     val minutes = seconds / 60
     return String.format("%d:%02d", minutes, seconds % 60)
@@ -528,8 +531,8 @@ data class GSRQuickRecordingUiState(
 
 // ViewModel
 class GSRQuickRecordingViewModel : BaseViewModel() {
-    private val _uiState = androidx.compose.runtime.mutableStateOf(GSRQuickRecordingUiState())
-    val uiState: androidx.compose.runtime.State<GSRQuickRecordingUiState> = _uiState
+    private val _uiState = MutableStateFlow(GSRQuickRecordingUiState())
+    val uiState: StateFlow<GSRQuickRecordingUiState> = _uiState.asStateFlow()
 
     private var recordingJob: Job? = null
 
