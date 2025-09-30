@@ -18,3 +18,4 @@ open class BaseViewModel : com.mpdc4gsr.libunified.app.ktbase.BaseViewModel() {
         _connectionState.value = state
     }
 }
+

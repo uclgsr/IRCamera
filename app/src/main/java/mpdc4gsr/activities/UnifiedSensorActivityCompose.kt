@@ -37,7 +37,7 @@ import mpdc4gsr.sensors.unified.model.SessionStatus
 import mpdc4gsr.sensors.unified.model.SessionType
 import mpdc4gsr.viewmodel.BaseViewModel
 
-enum class SensorType(
+enum class UnifiedSensorType(
     val displayName: String,
     val icon: ImageVector,
     val description: String
@@ -45,11 +45,12 @@ enum class SensorType(
     THERMAL("Thermal Camera", Icons.Default.Thermostat, "TC001/TS004 thermal imaging sensors"),
     GSR("GSR Sensor", Icons.Default.Sensors, "Galvanic skin response monitoring"),
     RGB_CAMERA("RGB Camera", Icons.Default.Camera, "High-resolution RGB camera recording"),
+    AUDIO("Audio", Icons.Default.Audiotrack, "Audio recording"),
     NETWORK("Network", Icons.Default.NetworkCheck, "Network connectivity and data transmission")
 }
 
 data class SensorStatus(
-    val type: SensorType,
+    val type: UnifiedSensorType,
     val isConnected: Boolean = false,
     val isRecording: Boolean = false,
     val quality: String = "Unknown",
@@ -57,7 +58,7 @@ data class SensorStatus(
     val lastUpdate: String = "Never"
 )
 
-data class SessionInfo(
+data class UnifiedSessionInfo(
     val name: String = "New Session",
     val type: SessionType = SessionType.RESEARCH,
     val quality: SessionQuality = SessionQuality.STANDARD,
@@ -68,7 +69,7 @@ data class SessionInfo(
 
 class UnifiedSensorViewModel : BaseViewModel() {
     private val _sensorStatuses = mutableStateOf(
-        SensorType.values().map { type ->
+        UnifiedSensorType.values().map { type ->
             SensorStatus(
                 type = type,
                 isConnected = false,
@@ -78,8 +79,8 @@ class UnifiedSensorViewModel : BaseViewModel() {
     )
     val sensorStatuses: State<List<SensorStatus>> = _sensorStatuses
 
-    private val _sessionInfo = mutableStateOf(SessionInfo())
-    val sessionInfo: State<SessionInfo> = _sessionInfo
+    private val _sessionInfo = mutableStateOf(UnifiedSessionInfo())
+    val sessionInfo: State<UnifiedSessionInfo> = _sessionInfo
 
     private val _isRecording = mutableStateOf(false)
     val isRecording: State<Boolean> = _isRecording
@@ -87,7 +88,7 @@ class UnifiedSensorViewModel : BaseViewModel() {
     private val _connectedDevices = mutableStateOf<List<DeviceInfo>>(emptyList())
     val connectedDevices: State<List<DeviceInfo>> = _connectedDevices
 
-    fun connectSensor(sensorType: SensorType) {
+    fun connectSensor(sensorType: UnifiedSensorType) {
         kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
             // Simulate connection process
             delay(2000)
@@ -98,10 +99,11 @@ class UnifiedSensorViewModel : BaseViewModel() {
                         isConnected = true,
                         quality = "Good",
                         dataRate = when (sensorType) {
-                            SensorType.THERMAL -> "125 KB/s"
-                            SensorType.GSR -> "2 KB/s"
-                            SensorType.RGB_CAMERA -> "1.2 MB/s"
-                            SensorType.NETWORK -> "10 MB/s"
+                            UnifiedSensorType.THERMAL -> "125 KB/s"
+                            UnifiedSensorType.GSR -> "2 KB/s"
+                            UnifiedSensorType.RGB_CAMERA -> "1.2 MB/s"
+                            UnifiedSensorType.AUDIO -> "64 KB/s"
+                            UnifiedSensorType.NETWORK -> "10 MB/s"
                         },
                         lastUpdate = "Just now"
                     )
@@ -110,7 +112,7 @@ class UnifiedSensorViewModel : BaseViewModel() {
         }
     }
 
-    fun disconnectSensor(sensorType: SensorType) {
+    fun disconnectSensor(sensorType: UnifiedSensorType) {
         _sensorStatuses.value = _sensorStatuses.value.map { status ->
             if (status.type == sensorType) {
                 status.copy(
@@ -286,7 +288,7 @@ class UnifiedSensorActivityCompose : BaseComposeActivity<UnifiedSensorViewModel>
 
                             // Overlay when camera is not connected
                             val rgbCameraStatus =
-                                sensorStatuses.find { it.type == SensorType.RGB_CAMERA }
+                                sensorStatuses.find { it.type == UnifiedSensorType.RGB_CAMERA }
                             if (rgbCameraStatus?.isConnected != true) {
                                 Surface(
                                     modifier = Modifier.fillMaxSize(),
@@ -362,7 +364,7 @@ class UnifiedSensorActivityCompose : BaseComposeActivity<UnifiedSensorViewModel>
                             ) {
                                 OutlinedButton(
                                     onClick = {
-                                        SensorType.values().forEach { type ->
+                                        UnifiedSensorType.values().forEach { type ->
                                             viewModel.connectSensor(type)
                                         }
                                     },
@@ -373,7 +375,7 @@ class UnifiedSensorActivityCompose : BaseComposeActivity<UnifiedSensorViewModel>
 
                                 OutlinedButton(
                                     onClick = {
-                                        SensorType.values().forEach { type ->
+                                        UnifiedSensorType.values().forEach { type ->
                                             viewModel.disconnectSensor(type)
                                         }
                                     },
@@ -393,8 +395,8 @@ class UnifiedSensorActivityCompose : BaseComposeActivity<UnifiedSensorViewModel>
 @Composable
 private fun SensorStatusCard(
     sensorStatus: SensorStatus,
-    onConnect: (SensorType) -> Unit,
-    onDisconnect: (SensorType) -> Unit,
+    onConnect: (UnifiedSensorType) -> Unit,
+    onDisconnect: (UnifiedSensorType) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
