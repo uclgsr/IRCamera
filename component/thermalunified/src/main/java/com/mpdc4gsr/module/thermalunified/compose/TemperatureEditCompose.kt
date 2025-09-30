@@ -356,7 +356,7 @@ private fun MeasurementCard(
 private fun DrawScope.drawThermalBackground() {
     // Draw a simplified thermal pattern background
     val colors = listOf(
-        Color.Blue, Color.Green, Color.Yellow, Color.Orange, Color.Red
+        Color.Blue, Color.Green, Color.Yellow, Color(0xFFFF6600), Color.Red
     )
 
     val cellSize = 20.dp.toPx()

@@ -370,7 +370,7 @@ private fun ThermalAnalyticsTab(
             .fillMaxSize()
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalAlignment = Alignment.CenterVertically
+        verticalArrangement = Arrangement.Center
     ) {
         Icon(
             Icons.Default.Analytics,
@@ -427,7 +427,7 @@ private fun MonitoringSettingsTab(
             .fillMaxSize()
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalAlignment = Alignment.CenterVertically
+        verticalArrangement = Arrangement.Center
     ) {
         Icon(
             Icons.Default.Settings,

@@ -351,7 +351,7 @@ fun ThermalStatusBar(
                     .background(
                         when (status.level) {
                             ThermalStatusLevel.NORMAL -> Color.Green
-                            ThermalStatusLevel.WARNING -> Color.Orange
+                            ThermalStatusLevel.WARNING -> Color(0xFFFF6600)
                             ThermalStatusLevel.CRITICAL -> Color.Red
                         }
                     )

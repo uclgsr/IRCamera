@@ -23,7 +23,7 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.app.config.RouterConfig
 import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import com.mpdc4gsr.module.thermalunified.event.ThermalActionEvent
-import com.mpdc4gsr.module.thermalunified.fragment.MonitorThermalFragment
+import com.mpdc4gsr.module.thermalunified.fragment.MonitorThermalFragmentCompose
 import com.mpdc4gsr.module.thermalunified.viewmodel.MonitorViewModel
 import org.greenrobot.eventbus.EventBus
 
@@ -146,7 +146,7 @@ private fun ThermalCameraView(
     // This preserves all existing thermal camera functionality
     AndroidView(
         factory = { context ->
-            val fragment = MonitorThermalFragment()
+            val fragment = MonitorThermalFragmentCompose()
             // Return a container view for the fragment
             androidx.fragment.app.FragmentContainerView(context).apply {
                 id = androidx.core.R.id.accessibility_custom_action_0

@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-import com.mpdc4gsr.module.thermalunified.fragment.IRMonitorThermalFragment
+import com.mpdc4gsr.module.thermalunified.fragment.IRMonitorThermalFragmentCompose
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -175,7 +175,7 @@ private fun ThermalPreviewSection(
             // Thermal fragment preview (using AndroidView)
             AndroidView(
                 factory = { context ->
-                    val fragment = IRMonitorThermalFragment.newInstance(true)
+                    val fragment = IRMonitorThermalFragmentCompose()
                     androidx.fragment.app.FragmentContainerView(context).apply {
                         id = androidx.core.R.id.accessibility_custom_action_3
                     }

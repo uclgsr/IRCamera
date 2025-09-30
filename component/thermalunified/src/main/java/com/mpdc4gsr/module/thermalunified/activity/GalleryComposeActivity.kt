@@ -20,8 +20,8 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-import com.mpdc4gsr.module.thermalunified.fragment.GalleryPictureFragment
-import com.mpdc4gsr.module.thermalunified.fragment.GalleryVideoFragment
+import com.mpdc4gsr.module.thermalunified.fragment.GalleryPictureFragmentCompose
+import com.mpdc4gsr.module.thermalunified.fragment.GalleryVideoFragmentCompose
 import com.mpdc4gsr.module.thermalunified.viewmodel.GalleryActivityViewModel
 import kotlinx.coroutines.launch
 
@@ -199,10 +199,9 @@ private fun GalleryTab(
 
 @Composable
 private fun GalleryPictureTab() {
-    // Embed existing picture fragment using AndroidView
+    // Embed existing picture fragment using AndroidView wrapper
     AndroidView(
         factory = { context ->
-            val fragment = GalleryPictureFragment()
             androidx.fragment.app.FragmentContainerView(context).apply {
                 id = androidx.core.R.id.accessibility_custom_action_0
             }
@@ -213,10 +212,9 @@ private fun GalleryPictureTab() {
 
 @Composable
 private fun GalleryVideoTab() {
-    // Embed existing video fragment using AndroidView
+    // Embed existing video fragment using AndroidView wrapper
     AndroidView(
         factory = { context ->
-            val fragment = GalleryVideoFragment()
             androidx.fragment.app.FragmentContainerView(context).apply {
                 id = androidx.core.R.id.accessibility_custom_action_1
             }

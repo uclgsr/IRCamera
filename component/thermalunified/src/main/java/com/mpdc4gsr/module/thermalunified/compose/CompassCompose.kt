@@ -318,7 +318,7 @@ enum class CompassQuality(
     EXCELLENT("Excellent", Color.Green),
     GOOD("Good", Color.Green),
     FAIR("Fair", Color.Yellow),
-    POOR("Poor", Color.Orange),
+    POOR("Poor", Color(0xFFFF6600)),
     UNRELIABLE("Unreliable", Color.Red)
 }
 

@@ -66,7 +66,9 @@ class IRCorrectionViewModel : BaseViewModel() {
                     }
                 }
             } catch (e: Exception) {
-                // TODO: Handle the exception (e.g., log or update error state)
+                // Handle the exception by logging and updating error state
+                handleError(e)
+                _correctionState.value = CorrectionState.INACTIVE
             }
         }
     }

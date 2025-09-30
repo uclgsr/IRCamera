@@ -373,7 +373,7 @@ class IRConfigActivity : BaseActivity(), View.OnClickListener {
                     }
                 }
                 rootView.findViewById<TextView>(R.id.tv_all_emissivity).setOnClickListener {
-                    context.startActivity(Intent(context, IREmissivityActivity::class.java))
+                    context.startActivity(Intent(context, IREmissivityComposeActivity::class.java))
                 }
             }
         }
