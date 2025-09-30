@@ -498,8 +498,3 @@ private fun EmptyContent() {
         }
     }
 }
-
-// Type aliases to avoid redeclaration - use types from SessionExportViewModel
-typealias GSRSession = mpdc4gsr.sensors.gsr.SessionExportViewModel.GSRSession
-typealias ExportFormat = mpdc4gsr.sensors.gsr.SessionExportViewModel.ExportFormat
-typealias ExportDestination = mpdc4gsr.sensors.gsr.SessionExportViewModel.ExportDestination
