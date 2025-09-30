@@ -1,6 +1,7 @@
 package com.mpdc4gsr.module.thermalunified.fragment
 
 import android.graphics.Bitmap
+import android.widget.FrameLayout
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -136,7 +137,7 @@ class IRMonitorThermalFragmentCompose : BaseComposeFragment<ThermalFragmentViewM
             ) {
                 // Integration with native thermal camera views
                 AndroidView(
-                    factory = { context ->
+                    factory = { context: android.content.Context ->
                         // This would integrate with the actual CameraView and TemperatureView
                         // from the legacy implementation
                         FrameLayout(context).apply {
