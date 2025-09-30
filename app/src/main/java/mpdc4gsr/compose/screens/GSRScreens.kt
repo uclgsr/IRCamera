@@ -95,7 +95,7 @@ fun SessionDetailScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GSRPlotScreen(
+internal fun GSRPlotScreenPlaceholder(
     sessionId: String,
     onBackClick: () -> Unit
 ) {

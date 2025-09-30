@@ -15,6 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import mpdc4gsr.compose.components.TitleBar
+import mpdc4gsr.compose.components.TitleBarAction
 import mpdc4gsr.compose.theme.IRCameraTheme
 
 data class ResearchTemplate(
@@ -71,14 +72,15 @@ fun ResearchTemplateScreen(
         ) {
             TitleBar(
                 title = "Research Templates",
-                onNavigationClick = onNavigateBack,
-                actions = listOf(
-                    TitleBar.TitleBarAction(
-                        icon = Icons.Default.Add,
-                        contentDescription = "Create custom template"
-                    ) { onCreateCustomTemplate() }
+                showBackButton = true,
+                onBackClick = onNavigateBack
+            ) {
+                TitleBarAction(
+                    icon = Icons.Default.Add,
+                    contentDescription = "Create custom template",
+                    onClick = onCreateCustomTemplate
                 )
-            )
+            }
 
             Column(
                 modifier = Modifier.fillMaxSize()
@@ -237,7 +239,7 @@ fun TemplateStatsCard(templates: List<ResearchTemplate>) {
 }
 
 @Composable
-fun StatItem(
+private fun StatItem(
     label: String,
     value: String,
     color: Color

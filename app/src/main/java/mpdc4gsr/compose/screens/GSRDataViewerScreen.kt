@@ -20,6 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import mpdc4gsr.compose.components.TitleBar
+import mpdc4gsr.compose.components.TitleBarAction
 import mpdc4gsr.compose.theme.IRCameraTheme
 import kotlin.math.sin
 import kotlin.random.Random
@@ -46,15 +47,14 @@ fun GSRDataViewerScreen(
         TitleBar(
             title = "GSR Data Analysis",
             showBackButton = true,
-            onBackClick = onBackClick,
-            actions = listOf(
-                TitleBar.TitleBarAction(
-                    icon = Icons.Default.Share,
-                    contentDescription = "Export Data",
-                    onClick = { /* Export data */ }
-                )
+            onBackClick = onBackClick
+        ) {
+            TitleBarAction(
+                icon = Icons.Default.Share,
+                contentDescription = "Export Data",
+                onClick = { /* Export data */ }
             )
-        )
+        }
 
         Column(
             modifier = Modifier
@@ -346,7 +346,7 @@ enum class AnalysisType(val displayName: String) {
 
 private fun generateSampleGSRData(): List<Float> {
     return (0..200).map { i ->
-        0.5f + 0.3f * sin(i * 0.1) + 0.1f * Random.nextFloat()
+        0.5f + 0.3f * sin(i * 0.1).toFloat() + 0.1f * Random.nextFloat()
     }
 }
 
