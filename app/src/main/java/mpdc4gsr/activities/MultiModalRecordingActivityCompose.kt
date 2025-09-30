@@ -473,7 +473,7 @@ fun CameraPreviewCard() {
 
 @Composable
 fun SessionStatisticsCard(
-    statistics: SessionStatistics,
+    statistics: RecordingStatistics,
     isRecording: Boolean
 ) {
     Card(
@@ -726,7 +726,7 @@ data class SensorState(
     val samplesRecorded: Long = 0
 )
 
-data class SessionStatistics(
+data class RecordingStatistics(
     val totalSamples: Long = 0,
     val dataRate: Int = 0,
     val dataQuality: Int = 0
@@ -750,7 +750,7 @@ data class MultiModalRecordingUiState(
     val sessionDuration: Long = 0,
     val totalDataSize: Long = 0,
     val sensorStates: List<SensorState> = emptyList(),
-    val sessionStatistics: SessionStatistics = SessionStatistics(),
+    val sessionStatistics: RecordingStatistics = RecordingStatistics(),
     val qualityMetrics: List<QualityMetric> = emptyList(),
     val availableProtocols: List<ResearchProtocol> = emptyList(),
     val isLoading: Boolean = false,

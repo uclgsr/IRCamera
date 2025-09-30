@@ -227,6 +227,7 @@ private fun ThermalPreviewVisualization(
     isStreaming: Boolean,
     modifier: Modifier = Modifier
 ) {
+    val primaryColor = MaterialTheme.colorScheme.primary
     Card(
         modifier = modifier
             .fillMaxWidth()
@@ -262,7 +263,7 @@ private fun ThermalPreviewVisualization(
 
                     // Min temperature spot (blue)
                     drawCircle(
-                        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f),
+                        color = primaryColor.copy(alpha = 0.8f),
                         radius = hotspotRadius * 0.7f,
                         center = Offset(width * 0.3f, height * 0.7f)
                     )
@@ -388,6 +389,7 @@ private fun MetricItem(
 /**
  * Get status color based on sensor state
  */
+@Composable
 private fun getStatusColor(state: SensorState): Color {
     return when (state) {
         SensorState.Connected -> Color.Green

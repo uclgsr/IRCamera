@@ -394,7 +394,7 @@ class GSRDataIntegrityTestComposeActivity : ComponentActivity() {
     private fun initializeComponents() {
         try {
             recordingController = RecordingController(this, this)
-            gsrRecorder = GSRSensorRecorder()
+            gsrRecorder = GSRSensorRecorder(this, recordingController = recordingController)
             Log.d(TAG, "GSR data integrity components initialized successfully")
         } catch (e: Exception) {
             Log.e(TAG, "Failed to initialize components: ${e.message}")

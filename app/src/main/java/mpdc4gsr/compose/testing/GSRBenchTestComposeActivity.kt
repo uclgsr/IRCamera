@@ -220,7 +220,7 @@ class GSRBenchTestComposeActivity : ComponentActivity() {
     private fun initializeComponents() {
         try {
             recordingController = RecordingController(this, this)
-            gsrRecorder = GSRSensorRecorder()
+            gsrRecorder = GSRSensorRecorder(this, recordingController = recordingController)
             Log.d(TAG, "GSR components initialized successfully")
         } catch (e: Exception) {
             Log.e(TAG, "Failed to initialize GSR components: ${e.message}")
@@ -324,7 +324,7 @@ class GSRBenchTestComposeActivity : ComponentActivity() {
                 // Simulate GSR data processing
                 delay(1000)
                 repeat(1000) {
-                    GSRCalculationUtils.calculateResistance(500.0, 1000.0)
+                    GSRCalculationUtils.calculateGSRMicrosiemens(500)
                 }
             }
 

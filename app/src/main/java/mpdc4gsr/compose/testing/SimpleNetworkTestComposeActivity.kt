@@ -264,7 +264,9 @@ class SimpleNetworkTestComposeActivity : ComponentActivity() {
                     Button(
                         onClick = {
                             connectionStatus = ConnectionStatus.CONNECTING
-                            lifecycleScope.launch { connectWiFi() }
+                            lifecycleScope.launch { 
+                                connectionStatus = connectWiFi(ipAddress, port)
+                            }
                         },
                         enabled = connectionStatus == ConnectionStatus.DISCONNECTED,
                         modifier = Modifier.weight(1f)
@@ -277,7 +279,9 @@ class SimpleNetworkTestComposeActivity : ComponentActivity() {
                     OutlinedButton(
                         onClick = {
                             connectionStatus = ConnectionStatus.CONNECTING
-                            lifecycleScope.launch { connectBluetooth() }
+                            lifecycleScope.launch { 
+                                connectionStatus = connectBluetooth()
+                            }
                         },
                         enabled = connectionStatus == ConnectionStatus.DISCONNECTED,
                         modifier = Modifier.weight(1f)
@@ -437,27 +441,27 @@ class SimpleNetworkTestComposeActivity : ComponentActivity() {
         }
     }
 
-    private suspend fun connectWiFi() {
-        Log.d(TAG, "Connecting via WiFi to $ipAddress:$port")
-        try {
+    private suspend fun connectWiFi(ipAddr: String, portNum: String): ConnectionStatus {
+        Log.d(TAG, "Connecting via WiFi to $ipAddr:$portNum")
+        return try {
             delay(3000) // Simulate connection time
-            connectionStatus = ConnectionStatus.CONNECTED
             Log.d(TAG, "WiFi connection established")
+            ConnectionStatus.CONNECTED
         } catch (e: Exception) {
             Log.e(TAG, "WiFi connection failed: ${e.message}")
-            connectionStatus = ConnectionStatus.ERROR
+            ConnectionStatus.ERROR
         }
     }
 
-    private suspend fun connectBluetooth() {
+    private suspend fun connectBluetooth(): ConnectionStatus {
         Log.d(TAG, "Connecting via Bluetooth")
-        try {
+        return try {
             delay(4000) // Simulate BT connection time (longer)
-            connectionStatus = ConnectionStatus.CONNECTED
             Log.d(TAG, "Bluetooth connection established")
+            ConnectionStatus.CONNECTED
         } catch (e: Exception) {
             Log.e(TAG, "Bluetooth connection failed: ${e.message}")
-            connectionStatus = ConnectionStatus.ERROR
+            ConnectionStatus.ERROR
         }
     }
 
