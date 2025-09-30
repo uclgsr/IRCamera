@@ -38,12 +38,13 @@ class SessionExportComposeActivity : BaseComposeActivity<SessionExportViewModel>
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SessionExportScreen(
     viewModel: SessionExportViewModel = viewModel(),
     onNavigateBack: () -> Unit = {}
 ) {
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.exportState.collectAsState()
 
     Column(
         modifier = Modifier.fillMaxSize()
@@ -83,8 +84,9 @@ fun SessionExportScreen(
             }
 
             uiState.error != null -> {
+                val errorMessage = uiState.error ?: "Unknown error"
                 ErrorContent(
-                    error = uiState.error,
+                    error = errorMessage,
                     onRetry = { viewModel.loadSessions() }
                 )
             }

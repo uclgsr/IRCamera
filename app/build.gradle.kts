@@ -303,6 +303,9 @@ dependencies {
     // Compose testing
     androidTestImplementation(libs.bundles.compose.test)
 
+    // Coil for image loading in Compose
+    implementation(libs.coil.compose)
+
     implementation(project(":component:thermalunified"))
     implementation(project(":component:gsr-recording"))
     implementation(project(":component:user"))
