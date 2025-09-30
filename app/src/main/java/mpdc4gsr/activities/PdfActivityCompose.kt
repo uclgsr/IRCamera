@@ -63,7 +63,7 @@ class PdfViewModel : BaseViewModel() {
                 // Simulate loading delay
                 delay(1000)
 
-                val pdfDir = File(context.getExternalFilesDir("pdf"), "")
+                val pdfDir = File(context.getExternalFilesDir("pdf"))
                 if (!pdfDir.exists()) {
                     pdfDir.mkdirs()
                 }
