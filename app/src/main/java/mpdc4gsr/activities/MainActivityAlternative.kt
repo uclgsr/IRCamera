@@ -228,7 +228,6 @@ class MainActivityAlternative : ComponentActivity() {
     }
 
     @Composable
-    @Composable
     private fun EnhancedNetworkStatusBar(
         connectionState: MainActivityViewModel.NetworkConnectionState,
         sessionState: MainActivityViewModel.SessionState,
