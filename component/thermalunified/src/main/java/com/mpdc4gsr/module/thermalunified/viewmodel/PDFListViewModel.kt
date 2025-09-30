@@ -3,6 +3,7 @@ package com.mpdc4gsr.module.thermalunified.viewmodel
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
+import com.mpdc4gsr.libunified.app.config.FileConfig
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.Dispatchers
@@ -120,10 +121,54 @@ class PDFListViewModel : BaseViewModel() {
     // Get PDF items from file system
     private suspend fun getPDFItemsList(): List<PDFItem> {
         return try {
-            // This is a placeholder implementation
-            // In a real app, you would scan the file system for PDF files
-            // For now, return empty list to avoid runtime errors
-            emptyList()
+            val items = mutableListOf<PDFItem>()
+            
+            // Scan the PDF directory for PDF files
+            val pdfDir = File(FileConfig.getPdfDir())
+            Log.d(TAG, "Scanning PDF directory: ${pdfDir.absolutePath}")
+            
+            if (pdfDir.exists() && pdfDir.isDirectory) {
+                val pdfFiles = pdfDir.listFiles { file ->
+                    file.isFile && file.name.lowercase().endsWith(".pdf")
+                }
+                
+                Log.d(TAG, "Found ${pdfFiles?.size ?: 0} PDF files")
+                
+                pdfFiles?.forEach { pdfFile ->
+                    try {
+                        // Determine if this is an analysis report based on filename patterns
+                        val isAnalysisReport = pdfFile.name.contains("analysis", ignoreCase = true) ||
+                                             pdfFile.name.contains("report", ignoreCase = true) ||
+                                             pdfFile.name.contains("thermal", ignoreCase = true)
+                        
+                        // For now, we'll use a default page count of 1
+                        // In a production app, you would use a PDF library to get actual page count
+                        val pageCount = 1
+                        
+                        items.add(
+                            PDFItem(
+                                path = pdfFile.absolutePath,
+                                name = pdfFile.name,
+                                size = pdfFile.length(),
+                                pageCount = pageCount,
+                                dateModified = pdfFile.lastModified(),
+                                isAnalysisReport = isAnalysisReport
+                            )
+                        )
+                        
+                        Log.d(TAG, "Added PDF: ${pdfFile.name} (${pdfFile.length()} bytes)")
+                    } catch (e: Exception) {
+                        Log.w(TAG, "Error processing PDF file: ${pdfFile.name}", e)
+                    }
+                }
+            } else {
+                Log.w(TAG, "PDF directory does not exist or is not a directory: ${pdfDir.absolutePath}")
+            }
+            
+            // Sort by date modified (newest first)
+            val sortedItems = items.sortedByDescending { it.dateModified }
+            Log.d(TAG, "Returning ${sortedItems.size} PDF items")
+            sortedItems
         } catch (e: Exception) {
             Log.e(TAG, "Error getting PDF items list", e)
             emptyList()
