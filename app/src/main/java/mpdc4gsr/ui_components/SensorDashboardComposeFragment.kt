@@ -70,7 +70,8 @@ private fun SensorDashboardContent(
     viewModel: SensorViewModel,
     modifier: Modifier = Modifier
 ) {
-    var selectedSensor by remember { mutableStateOf<SensorInfo?>(null) }
+    val sensorState by viewModel.sensorState.collectAsState()
+    var selectedSensor by remember { mutableStateOf<mpdc4gsr.sensors.SensorViewModel.SensorInfo?>(null) }
     var showSensorDetails by remember { mutableStateOf(false) }
 
     Column(
@@ -103,11 +104,9 @@ private fun SensorDashboardContent(
             verticalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier.weight(1f)
         ) {
-            val sensors = getMockSensors()
-
-            items(sensors) { sensor ->
+            items(sensorState.sensors) { sensor ->
                 SensorCard(
-                    sensor = sensor,
+                    sensor = convertSensorInfo(sensor),
                     onClick = {
                         selectedSensor = sensor
                         showSensorDetails = true
@@ -119,14 +118,28 @@ private fun SensorDashboardContent(
 
     if (showSensorDetails && selectedSensor != null) {
         SensorDetailsDialog(
-            sensor = selectedSensor!!,
+            sensor = convertSensorInfo(selectedSensor!!),
             onDismiss = { showSensorDetails = false },
             onConfigure = {
-                // Navigate to sensor configuration
+                viewModel.configureSensor(selectedSensor!!.id)
                 showSensorDetails = false
             }
         )
     }
+}
+
+// Helper function to convert between SensorInfo types
+private fun convertSensorInfo(sensor: mpdc4gsr.sensors.SensorViewModel.SensorInfo): SensorInfo {
+    return SensorInfo(
+        id = sensor.id,
+        name = sensor.name,
+        type = sensor.type,
+        description = sensor.description,
+        status = sensor.status,
+        currentValue = sensor.currentValue,
+        lastUpdate = sensor.lastUpdate,
+        sampleRate = sensor.sampleRate
+    )
 }
 
 @Composable
