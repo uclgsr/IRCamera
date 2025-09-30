@@ -289,7 +289,7 @@ private fun PermissionCard(
     }
 
     Card(
-        onClick = if (enabled && status != PermissionRequestViewModel.PermissionStatus.GRANTED) onClick else { {} },
+        onClick = onClick,
         modifier = modifier,
         enabled = enabled && status != PermissionRequestViewModel.PermissionStatus.GRANTED,
         colors = CardDefaults.cardColors(containerColor = containerColor)
