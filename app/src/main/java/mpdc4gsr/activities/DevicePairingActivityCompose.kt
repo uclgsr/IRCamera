@@ -90,7 +90,7 @@ class DevicePairingActivityCompose : BaseComposeActivity<DevicePairingViewModel>
                     is DevicePairingViewModel.PairingEvent.ShowConnectionDialog -> {
                         Toast.makeText(
                             context,
-                            "Connecting to ${event.controller.deviceId}...",
+                            "Connecting to ${event.controller.deviceName}...",
                             Toast.LENGTH_SHORT
                         ).show()
                     }
@@ -190,6 +190,7 @@ class DevicePairingActivityCompose : BaseComposeActivity<DevicePairingViewModel>
             }
         }
 
+        @Composable
         @Composable
         private fun ConnectionStatusCard(
             connectionState: DevicePairingViewModel.ConnectionState,
@@ -303,6 +304,7 @@ class DevicePairingActivityCompose : BaseComposeActivity<DevicePairingViewModel>
         }
 
         @Composable
+        @Composable
         fun ConnectionStatusIndicator(connectionState: DevicePairingViewModel.ConnectionState) {
             val (color, icon) = when (connectionState) {
                 DevicePairingViewModel.ConnectionState.CONNECTED ->
@@ -326,6 +328,7 @@ class DevicePairingActivityCompose : BaseComposeActivity<DevicePairingViewModel>
             )
         }
 
+        @Composable
         @Composable
         fun ScanControlsCard(
             scanState: DevicePairingViewModel.ScanState,
@@ -398,6 +401,7 @@ class DevicePairingActivityCompose : BaseComposeActivity<DevicePairingViewModel>
         }
 
         @Composable
+        @Composable
         fun DiscoveredDevicesCard(
             controllers: List<NetworkClient.ControllerInfo>,
             onControllerClick: (NetworkClient.ControllerInfo) -> Unit
@@ -462,6 +466,7 @@ class DevicePairingActivityCompose : BaseComposeActivity<DevicePairingViewModel>
             }
         }
 
+        @Composable
         @Composable
         fun DeviceItem(
             controller: NetworkClient.ControllerInfo,
