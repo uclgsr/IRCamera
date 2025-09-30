@@ -303,7 +303,6 @@ class DevicePairingActivityCompose : BaseComposeActivity<DevicePairingViewModel>
         }
 
         @Composable
-        @Composable
         fun ConnectionStatusIndicator(connectionState: DevicePairingViewModel.ConnectionState) {
             val (color, icon) = when (connectionState) {
                 DevicePairingViewModel.ConnectionState.CONNECTED ->
