@@ -177,76 +177,75 @@ class MainFragment : BaseBindingFragment<FragmentMainBinding>(), View.OnClickLis
         // Show device add dialog
         // Implementation depends on your dialog framework
     }
-}
 
-private fun setupLifecycleObserver() {
-    viewLifecycleOwner.lifecycle.addObserver(
-        object : DefaultLifecycleObserver {
-            override fun onResume(owner: LifecycleOwner) {
-                // Network switching logic moved from direct WebSocket check
-                NetWorkUtils.switchNetwork(true)
+    private fun setupLifecycleObserver() {
+        viewLifecycleOwner.lifecycle.addObserver(
+            object : DefaultLifecycleObserver {
+                override fun onResume(owner: LifecycleOwner) {
+                    // Network switching logic moved from direct WebSocket check
+                    NetWorkUtils.switchNetwork(true)
+                }
+            }
+        )
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.refreshDeviceState()
+    }
+
+    private fun showDeleteDeviceDialog(view: View, type: MainFragmentViewModel.ConnectType) {
+        val popup = DelPopup(requireContext())
+        popup.onDelListener = {
+            TipDialog.Builder(requireContext())
+                .setTitleMessage(
+                    AppLanguageUtils.attachBaseContext(
+                        context, ConstantLanguages.ENGLISH,
+                    ).getString(R.string.tc_delete_device),
+                )
+                .setMessage(R.string.tc_delete_device_tips)
+                .setPositiveListener(R.string.report_delete) {
+                    viewModel.onDeviceDeleted(type)
+                    TToast.shortToast(requireContext(), R.string.test_results_delete_success)
+                }
+                .setCancelListener(R.string.app_cancel)
+                .create().show()
+        }
+        popup.show(view)
+    }
+
+    override fun connected() {
+        viewModel.onDeviceConnected(isLine = true)
+    }
+
+    override fun disConnected() {
+        viewModel.onDeviceDisconnected()
+    }
+
+    override fun onSocketConnected(isTS004: Boolean) {
+        viewModel.onSocketConnected(isTS004)
+    }
+
+    override fun onSocketDisConnected(isTS004: Boolean) {
+        viewModel.onSocketDisconnected(isTS004)
+    }
+
+    override fun onClick(v: View?) {
+        when (v) {
+            binding.tvConnectDevice, binding.ivAdd -> {
+                startActivity(Intent(requireContext(), DeviceTypeActivity::class.java))
             }
         }
-    )
-}
-
-override fun onResume() {
-    super.onResume()
-    viewModel.refreshDeviceState()
-}
-
-private fun showDeleteDeviceDialog(view: View, type: MainFragmentViewModel.ConnectType) {
-    val popup = DelPopup(requireContext())
-    popup.onDelListener = {
-        TipDialog.Builder(requireContext())
-            .setTitleMessage(
-                AppLanguageUtils.attachBaseContext(
-                    context, ConstantLanguages.ENGLISH,
-                ).getString(R.string.tc_delete_device),
-            )
-            .setMessage(R.string.tc_delete_device_tips)
-            .setPositiveListener(R.string.report_delete) {
-                viewModel.onDeviceDeleted(type)
-                TToast.shortToast(requireContext(), R.string.test_results_delete_success)
-            }
-            .setCancelListener(R.string.app_cancel)
-            .create().show()
     }
-    popup.show(view)
-}
 
-override fun connected() {
-    viewModel.onDeviceConnected(isLine = true)
-}
-
-override fun disConnected() {
-    viewModel.onDeviceDisconnected()
-}
-
-override fun onSocketConnected(isTS004: Boolean) {
-    viewModel.onSocketConnected(isTS004)
-}
-
-override fun onSocketDisConnected(isTS004: Boolean) {
-    viewModel.onSocketDisconnected(isTS004)
-}
-
-override fun onClick(v: View?) {
-    when (v) {
-        binding.tvConnectDevice, binding.ivAdd -> {
-            startActivity(Intent(requireContext(), DeviceTypeActivity::class.java))
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onSocketMsgEvent(event: SocketMsgEvent) {
+        if (SocketCmdUtil.getCmdResponse(event.text) == WsCmdConstants.APP_EVENT_HEART_BEATS) {
+            viewModel.processBatteryUpdate(event.text)
         }
     }
-}
 
-@Subscribe(threadMode = ThreadMode.MAIN)
-fun onSocketMsgEvent(event: SocketMsgEvent) {
-    if (SocketCmdUtil.getCmdResponse(event.text) == WsCmdConstants.APP_EVENT_HEART_BEATS) {
-        viewModel.processBatteryUpdate(event.text)
-    }
-}
-
-private inner class MyAdapter : RecyclerView.Adapter<MyAdapter.ViewHolder>() {
+    private inner class MyAdapter : RecyclerView.Adapter<MyAdapter.ViewHolder>() {
 
     var hasConnectLine: Boolean = false
         set(value) {
@@ -444,41 +443,40 @@ private inner class MyAdapter : RecyclerView.Adapter<MyAdapter.ViewHolder>() {
                 else -> MainFragmentViewModel.ConnectType.TC007
             }
     }
-}
 
-private fun showGSROptions() {
-    TipDialog.Builder(requireContext())
-        .setTitleMessage("GSR Multi-modal Recording")
-        .setMessage("Choose recording option:")
-        .setPositiveListener("Dual-Mode Camera") {
+    private fun showGSROptions() {
+        TipDialog.Builder(requireContext())
+            .setTitleMessage("GSR Multi-modal Recording")
+            .setMessage("Choose recording option:")
+            .setPositiveListener("Dual-Mode Camera") {
 
-            showDualModeCameraOptions()
-        }
-        .setCancelListener("Quick Recording") {
-
-            try {
-                val intent = Intent(
-                    requireContext(),
-                    Class.forName("mpdc4gsr.sensors.gsr.GSRQuickRecordingActivity")
-                )
-                startActivity(intent)
-            } catch (e: ClassNotFoundException) {
-
-                NavigationManager.getInstance()
-                    .build(RouterConfig.GSR_MULTI_MODAL)
-                    .navigation(requireContext())
+                showDualModeCameraOptions()
             }
-        }
+            .setCancelListener("Quick Recording") {
+
+                try {
+                    val intent = Intent(
+                        requireContext(),
+                        Class.forName("mpdc4gsr.sensors.gsr.GSRQuickRecordingActivity")
+                    )
+                    startActivity(intent)
+                } catch (e: ClassNotFoundException) {
+
+                    NavigationManager.getInstance()
+                        .build(RouterConfig.GSR_MULTI_MODAL)
+                        .navigation(requireContext())
+                }
+            }
 
 
-        .create().show()
-}
+            .create().show()
+    }
 
-private fun showDualModeCameraOptions() {
-    TipDialog.Builder(requireContext())
-        .setTitleMessage("Dual-Mode Camera System")
-        .setMessage("Samsung S22 optimized camera modes with fast switching:")
-        .setPositiveListener("RAW 50MP Mode") {
+    private fun showDualModeCameraOptions() {
+        TipDialog.Builder(requireContext())
+            .setTitleMessage("Dual-Mode Camera System")
+            .setMessage("Samsung S22 optimized camera modes with fast switching:")
+            .setPositiveListener("RAW 50MP Mode") {
 
             launchDualModeCamera("RAW_50MP")
         }
@@ -487,44 +485,44 @@ private fun showDualModeCameraOptions() {
             launchDualModeCamera("VIDEO_4K")
         }
         .create().show()
-}
-
-private fun launchDualModeCamera(initialMode: String) {
-    try {
-        val intent = Intent(
-            requireContext(),
-            mpdc4gsr.camera.integration.DualModeCameraActivity::class.java
-        )
-        intent.putExtra("INITIAL_MODE", initialMode)
-        intent.putExtra("ENABLE_SAMSUNG_OPTIMIZATIONS", true)
-        startActivity(intent)
-    } catch (e: Exception) {
-
-        Toast.makeText(
-            requireContext(),
-            "Launching dual-mode camera integration example...",
-            Toast.LENGTH_SHORT
-        ).show()
-
-        showDualModeIntegrationExample()
     }
-}
 
-private fun showDualModeIntegrationExample() {
+    private fun launchDualModeCamera(initialMode: String) {
+        try {
+            val intent = Intent(
+                requireContext(),
+                mpdc4gsr.camera.integration.DualModeCameraActivity::class.java
+            )
+            intent.putExtra("INITIAL_MODE", initialMode)
+            intent.putExtra("ENABLE_SAMSUNG_OPTIMIZATIONS", true)
+            startActivity(intent)
+        } catch (e: Exception) {
+
+            Toast.makeText(
+                requireContext(),
+                "Launching dual-mode camera integration example...",
+                Toast.LENGTH_SHORT
+            ).show()
+
+            showDualModeIntegrationExample()
+        }
+    }
+
+    private fun showDualModeIntegrationExample() {
 
 
-    TipDialog.Builder(requireContext())
-        .setTitleMessage("Dual-Mode Camera Integration")
-        .setMessage(
-            "Enhanced RgbCameraRecorder with:\n\n" +
-                    "• RAW 50MP capture at ~15fps\n" +
-                    "• 4K video at 30/60fps\n" +
-                    "• Fast session switching (~200ms)\n" +
-                    "• Samsung S22 optimizations\n" +
-                    "• Unified camera controls\n\n" +
-                    "Implementation ready for integration.",
-        )
-        .setPositiveListener("Got it") { }
-        .create().show()
-}
+        TipDialog.Builder(requireContext())
+            .setTitleMessage("Dual-Mode Camera Integration")
+            .setMessage(
+                "Enhanced RgbCameraRecorder with:\n\n" +
+                        "• RAW 50MP capture at ~15fps\n" +
+                        "• 4K video at 30/60fps\n" +
+                        "• Fast session switching (~200ms)\n" +
+                        "• Samsung S22 optimizations\n" +
+                        "• Unified camera controls\n\n" +
+                        "Implementation ready for integration.",
+            )
+            .setPositiveListener("Got it") { }
+            .create().show()
+    }
 }
