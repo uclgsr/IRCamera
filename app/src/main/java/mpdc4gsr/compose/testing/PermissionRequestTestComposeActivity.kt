@@ -61,6 +61,7 @@ class PermissionRequestTestComposeActivity : ComponentActivity() {
 
     private lateinit var permissionController: PermissionController
     private lateinit var permissionManager: PermissionManager
+    private var isTestRunning by mutableStateOf(false)
 
     private val permissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -84,51 +85,12 @@ class PermissionRequestTestComposeActivity : ComponentActivity() {
     @Composable
     fun PermissionRequestTestScreen() {
         var testResults by remember { mutableStateOf(listOf<TestCase>()) }
-        var isTestRunning by remember { mutableStateOf(false) }
         var permissions by remember { mutableStateOf(listOf<PermissionInfo>()) }
         var permissionLogs by remember { mutableStateOf(listOf<PermissionLog>()) }
         var overallPermissionStatus by remember { mutableStateOf("Not Checked") }
         var canStartRecording by remember { mutableStateOf(false) }
 
-        // Initialize test cases and permissions
-        LaunchedEffect(Unit) {
-            testResults = listOf(
-                TestCase(
-                    id = "camera_permissions",
-                    name = "Camera Permissions",
-                    description = "Test camera access permissions"
-                ),
-                TestCase(
-                    id = "bluetooth_permissions",
-                    name = "Bluetooth Permissions",
-                    description = "Test Bluetooth and location permissions"
-                ),
-                TestCase(
-                    id = "storage_permissions",
-                    name = "Storage Permissions",
-                    description = "Test storage access permissions"
-                ),
-                TestCase(
-                    id = "microphone_permissions",
-                    name = "Microphone Permissions",
-                    description = "Test audio recording permissions"
-                ),
-                TestCase(
-                    id = "permission_flow",
-                    name = "Permission Flow",
-                    description = "Test complete permission request flow"
-                ),
-                TestCase(
-                    id = "permission_persistence",
-                    name = "Permission Persistence",
-                    description = "Test permission state persistence"
-                )
-            )
-
-            updatePermissionStatus()
-        }
-
-        // Function to update permission status
+        // Function to update permission status (defined before being used)
         fun updatePermissionStatus() {
             val permissionList = listOf(
                 PermissionInfo(
@@ -192,6 +154,44 @@ class PermissionRequestTestComposeActivity : ComponentActivity() {
             overallPermissionStatus =
                 "$requiredGrantedCount/$requiredCount required permissions granted"
             canStartRecording = requiredGrantedCount == requiredCount
+        }
+
+        // Initialize test cases and permissions
+        LaunchedEffect(Unit) {
+            testResults = listOf(
+                TestCase(
+                    id = "camera_permissions",
+                    name = "Camera Permissions",
+                    description = "Test camera access permissions"
+                ),
+                TestCase(
+                    id = "bluetooth_permissions",
+                    name = "Bluetooth Permissions",
+                    description = "Test Bluetooth and location permissions"
+                ),
+                TestCase(
+                    id = "storage_permissions",
+                    name = "Storage Permissions",
+                    description = "Test storage access permissions"
+                ),
+                TestCase(
+                    id = "microphone_permissions",
+                    name = "Microphone Permissions",
+                    description = "Test audio recording permissions"
+                ),
+                TestCase(
+                    id = "permission_flow",
+                    name = "Permission Flow",
+                    description = "Test complete permission request flow"
+                ),
+                TestCase(
+                    id = "permission_persistence",
+                    name = "Permission Persistence",
+                    description = "Test permission state persistence"
+                )
+            )
+
+            updatePermissionStatus()
         }
 
         Scaffold(
@@ -524,8 +524,8 @@ class PermissionRequestTestComposeActivity : ComponentActivity() {
     }
 
     private fun initializePermissionSystem() {
-        permissionController = PermissionController(this)
-        permissionManager = PermissionManager(this, permissionController)
+        permissionController = PermissionController(this as FragmentActivity)
+        permissionManager = PermissionManager(this as FragmentActivity, permissionController)
     }
 
     private fun getPermissionStatus(permission: String): PermissionStatus {

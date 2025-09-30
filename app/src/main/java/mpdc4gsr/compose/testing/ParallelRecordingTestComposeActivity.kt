@@ -250,6 +250,7 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
                         onClick = {
                             lifecycleScope.launch {
                                 stopRecording(
+                                    currentStatuses = sensorStatuses,
                                     onStateUpdate = { state -> recordingState = state },
                                     onSensorStatusesUpdate = { statuses -> sensorStatuses = statuses }
                                 )
