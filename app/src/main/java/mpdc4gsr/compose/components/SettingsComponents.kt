@@ -202,7 +202,7 @@ fun SettingsDropdown(
                     cursorColor = MaterialTheme.colorScheme.primary
                 ),
                 modifier = Modifier
-                    .menuAnchor(MenuAnchorType.PrimaryNotEditable, true)
+                    .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable, true)
                     .fillMaxWidth()
             )
 

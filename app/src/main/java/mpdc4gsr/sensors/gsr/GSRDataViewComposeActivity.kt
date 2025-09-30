@@ -962,7 +962,7 @@ private fun EventItem(event: GSREventModel) {
         ) {
             Icon(
                 when (event.type) {
-                    "Peak" -> Icons.Default.TrendingUp
+                    "Peak" -> Icons.AutoMirrored.Filled.TrendingUp
                     "Artifact" -> Icons.Default.Warning
                     "Baseline" -> Icons.Default.HorizontalRule
                     else -> Icons.Default.Event

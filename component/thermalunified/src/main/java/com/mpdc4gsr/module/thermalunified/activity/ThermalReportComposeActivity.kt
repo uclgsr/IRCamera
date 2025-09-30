@@ -295,7 +295,7 @@ private fun AnalysisOptionsSection() {
             )
 
             AnalysisOptionItem("Statistical Summary", Icons.Default.BarChart)
-            AnalysisOptionItem("Temperature Trends", Icons.Default.TrendingUp)
+            AnalysisOptionItem("Temperature Trends", Icons.AutoMirrored.Filled.TrendingUp)
             AnalysisOptionItem("Thermal Mapping", Icons.Default.Map)
             AnalysisOptionItem("Comparative Analysis", Icons.Default.Compare)
         }

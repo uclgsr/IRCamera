@@ -330,7 +330,7 @@ class IRThermalPlusComposeActivity : BaseComposeActivity<IRThermalPlusViewModel>
                     colors = ButtonDefaults.outlinedButtonColors(
                         contentColor = Color(0xFFFFD700)
                     ),
-                    border = ButtonDefaults.outlinedButtonBorder.copy(
+                    border = ButtonDefaults.outlinedButtonBorder(enabled = true).copy(
                         brush = androidx.compose.ui.graphics.SolidColor(Color(0xFFFFD700))
                     )
                 ) {
