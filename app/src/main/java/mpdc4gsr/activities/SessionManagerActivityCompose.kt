@@ -681,7 +681,7 @@ fun FilterSessionsDialog(
 }
 
 // Helper functions
-fun formatDuration(millis: Long): String {
+private fun formatDuration(millis: Long): String {
     val seconds = millis / 1000
     val minutes = seconds / 60
     val hours = minutes / 60
@@ -691,7 +691,7 @@ fun formatDuration(millis: Long): String {
     }
 }
 
-fun formatDataSize(bytes: Long): String {
+private fun formatDataSize(bytes: Long): String {
     return when {
         bytes < 1024 -> "$bytes B"
         bytes < 1024 * 1024 -> "${bytes / 1024} KB"

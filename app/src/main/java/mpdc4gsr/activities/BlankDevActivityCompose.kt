@@ -11,6 +11,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import mpdc4gsr.compose.base.BaseComposeActivity
 import mpdc4gsr.viewmodel.BaseViewModel
 
@@ -31,7 +34,7 @@ class BlankDevActivityCompose : BaseComposeActivity<BlankDevActivityComposeViewM
 
         // Auto-close after 2 seconds like the original
         lifecycleScope.launch {
-            kotlinx.coroutines.delay(2000)
+            delay(2000)
             if (!isFinishing) {
                 finish()
             }

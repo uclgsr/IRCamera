@@ -6,6 +6,7 @@ import android.hardware.usb.UsbManager
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -78,7 +79,7 @@ fun BlankDevScreen(
     onNavigateBack: () -> Unit = {},
     onNavigateToMain: () -> Unit = {}
 ) {
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.blankDevUiState.collectAsState()
     val context = LocalContext.current
 
     Column(

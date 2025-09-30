@@ -29,6 +29,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.csl.irCamera.R
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import mpdc4gsr.compose.base.BaseComposeActivity
 import mpdc4gsr.compose.components.TitleBar
 import mpdc4gsr.compose.theme.IRCameraTheme
@@ -45,7 +46,7 @@ enum class ConnectionType(
     WIFI("WiFi Connection", "Connect devices over wireless network", Icons.Default.Wifi),
     BLUETOOTH("Bluetooth Connection", "Connect devices via Bluetooth", Icons.Default.Bluetooth),
     ETHERNET("Wired Connection", "Connect devices via Ethernet cable", Icons.Default.Cable),
-    HOTSPOT("Mobile Hotspot", "Create hotspot for device connection", Icons.Default.Hotspot)
+    HOTSPOT("Mobile Hotspot", "Create hotspot for device connection", Icons.Default.WifiTethering)
 }
 
 data class NetworkDevice(
@@ -78,7 +79,7 @@ class NetworkConfigViewModel : BaseViewModel() {
     }
 
     private fun startDeviceDiscovery() {
-        kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
+        launchWithErrorHandling {
             _isScanning.value = true
             _availableDevices.value = emptyList()
 
@@ -168,7 +169,7 @@ class NetworkConfigViewModel : BaseViewModel() {
     }
 
     fun connectToDevice(device: NetworkDevice) {
-        kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
+        launchWithErrorHandling {
             _connectionStatus.value = "Connecting..."
             delay(3000) // Simulate connection time
 
@@ -315,29 +316,31 @@ class NetworkConfigActivityCompose : BaseComposeActivity<NetworkConfigViewModel>
                         }
                     } else {
                         // Device discovery and connection
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(bottom = 16.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Icon(
-                                imageVector = selectedConnectionType.icon,
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.size(24.dp)
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(
-                                text = selectedConnectionType.displayName,
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.Bold,
-                                modifier = Modifier.weight(1f)
-                            )
-                            TextButton(
-                                onClick = { viewModel.selectConnectionType(selectedConnectionType) }
+                        selectedConnectionType?.let { currentConnectionType ->
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(bottom = 16.dp),
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Text("Refresh")
+                                Icon(
+                                    imageVector = currentConnectionType.icon,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.primary,
+                                    modifier = Modifier.size(24.dp)
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text(
+                                    text = currentConnectionType.displayName,
+                                    style = MaterialTheme.typography.titleMedium,
+                                    fontWeight = FontWeight.Bold,
+                                    modifier = Modifier.weight(1f)
+                                )
+                                TextButton(
+                                    onClick = { viewModel.selectConnectionType(currentConnectionType) }
+                                ) {
+                                    Text("Refresh")
+                                }
                             }
                         }
 
