@@ -30,9 +30,12 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import mpdc4gsr.compose.base.BaseComposeActivity
 import mpdc4gsr.compose.theme.IRCameraTheme
-import mpdc4gsr.viewmodel.BaseViewModel
+import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import androidx.lifecycle.viewModelScope
 
 /**
@@ -60,7 +63,7 @@ class GSRDeviceManagementActivityCompose : BaseComposeActivity<GSRDeviceManageme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GSRDeviceManagementScreen(viewModel: GSRDeviceManagementViewModel) {
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.deviceState.collectAsState()
     val context = LocalContext.current
 
     var showPermissionDialog by remember { mutableStateOf(false) }
@@ -549,8 +552,8 @@ data class GSRDeviceManagementUiState(
 
 // ViewModel placeholder
 class GSRDeviceManagementViewModel : BaseViewModel() {
-    private val _uiState = androidx.compose.runtime.mutableStateOf(GSRDeviceManagementUiState())
-    val uiState: androidx.compose.runtime.State<GSRDeviceManagementUiState> = _uiState
+    private val _deviceState = MutableStateFlow(GSRDeviceManagementUiState())
+    val deviceState: StateFlow<GSRDeviceManagementUiState> = _deviceState.asStateFlow()
 
     private var scanningJob: Job? = null
 
@@ -576,14 +579,14 @@ class GSRDeviceManagementViewModel : BaseViewModel() {
             context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
         val isBluetoothEnabled = bluetoothManager.adapter?.isEnabled == true
 
-        _uiState.value = _uiState.value.copy(
+        _deviceState.value = _deviceState.value.copy(
             hasPermissions = hasPermissions,
             isBluetoothEnabled = isBluetoothEnabled
         )
     }
 
     fun startScanning(context: Context) {
-        _uiState.value = _uiState.value.copy(isScanning = true)
+        _deviceState.value = _deviceState.value.copy(isScanning = true)
 
         // Cancel any existing scanning job
         scanningJob?.cancel()
@@ -596,7 +599,7 @@ class GSRDeviceManagementViewModel : BaseViewModel() {
                 GSRDevice("66:77:88:99:AA:BB", "Shimmer GSR #2", batteryLevel = 92),
                 GSRDevice("CC:DD:EE:FF:11:22", "Unknown Device", batteryLevel = null)
             )
-            _uiState.value = _uiState.value.copy(
+            _deviceState.value = _deviceState.value.copy(
                 discoveredDevices = mockDevices,
                 isScanning = false
             )
@@ -604,7 +607,7 @@ class GSRDeviceManagementViewModel : BaseViewModel() {
     }
 
     fun stopScanning() {
-        _uiState.value = _uiState.value.copy(isScanning = false)
+        _deviceState.value = _deviceState.value.copy(isScanning = false)
         scanningJob?.cancel()
         scanningJob = null
     }
@@ -616,16 +619,16 @@ class GSRDeviceManagementViewModel : BaseViewModel() {
 
     fun connectDevice(device: GSRDevice) {
         val updatedDevice = device.copy(isConnected = true, batteryLevel = 87)
-        _uiState.value = _uiState.value.copy(
-            connectedDevices = _uiState.value.connectedDevices + updatedDevice,
-            discoveredDevices = _uiState.value.discoveredDevices.filter { it.address != device.address }
+        _deviceState.value = _deviceState.value.copy(
+            connectedDevices = _deviceState.value.connectedDevices + updatedDevice,
+            discoveredDevices = _deviceState.value.discoveredDevices.filter { it.address != device.address }
         )
     }
 
     fun disconnectDevice(device: GSRDevice) {
-        _uiState.value = _uiState.value.copy(
-            connectedDevices = _uiState.value.connectedDevices.filter { it.address != device.address },
-            discoveredDevices = _uiState.value.discoveredDevices + device.copy(isConnected = false)
+        _deviceState.value = _deviceState.value.copy(
+            connectedDevices = _deviceState.value.connectedDevices.filter { it.address != device.address },
+            discoveredDevices = _deviceState.value.discoveredDevices + device.copy(isConnected = false)
         )
     }
 

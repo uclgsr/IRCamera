@@ -14,7 +14,7 @@ import com.mpdc4gsr.libunified.app.bean.event.device.DeviceConnectEvent
 import com.mpdc4gsr.libunified.app.tools.AppLanguageUtils
 import com.mpdc4gsr.libunified.app.tools.ConstantLanguages
 import mpdc4gsr.compose.theme.IRCameraTheme
-import mpdc4gsr.viewmodel.BaseViewModel
+import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -24,7 +24,6 @@ import org.greenrobot.eventbus.ThreadMode
  * - Theme integration
  * - EventBus registration (backward compatibility)
  * - Language handling
- * - Connection state handling
  * - ViewModel integration patterns
  */
 abstract class BaseComposeActivity<VM : BaseViewModel> : FragmentActivity() {
@@ -46,9 +45,6 @@ abstract class BaseComposeActivity<VM : BaseViewModel> : FragmentActivity() {
             IRCameraTheme {
                 val viewModel = createViewModel()
                 Content(viewModel)
-
-                // Handle connection state changes in Compose
-                HandleConnectionEvents(viewModel)
             }
         }
     }
@@ -65,20 +61,6 @@ abstract class BaseComposeActivity<VM : BaseViewModel> : FragmentActivity() {
                 ConstantLanguages.ENGLISH
             )
         )
-    }
-
-    @Composable
-    private fun HandleConnectionEvents(viewModel: VM) {
-        val connectionState by viewModel.connectionState.collectAsState()
-
-        LaunchedEffect(connectionState) {
-            when (connectionState) {
-                is mpdc4gsr.viewmodel.ConnectionState.Connected -> onDeviceConnected()
-                is mpdc4gsr.viewmodel.ConnectionState.Disconnected -> onDeviceDisconnected()
-                else -> { /* Handle other states */
-                }
-            }
-        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
