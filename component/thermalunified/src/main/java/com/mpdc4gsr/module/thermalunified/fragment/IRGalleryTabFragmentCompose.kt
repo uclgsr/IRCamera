@@ -77,7 +77,7 @@ class IRGalleryTabFragmentCompose : BaseComposeFragment<IRGalleryTabViewModel>()
                 )
 
                 // Tab row
-                ScrollableTabRow(
+                PrimaryScrollableTabRow(
                     selectedTabIndex = pagerState.currentPage,
                     modifier = Modifier.fillMaxWidth()
                 ) {
@@ -346,6 +346,5 @@ class IRGalleryTabFragmentCompose : BaseComposeFragment<IRGalleryTabViewModel>()
         DirType.TS004_LOCALE -> "TS004 Local"
         DirType.TS004_REMOTE -> "TS004 Remote"
         DirType.TC007 -> "TC007 Device"
-        else -> "All Devices"
     }
 }

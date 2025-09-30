@@ -107,7 +107,7 @@ class ReportPreviewComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             enabled = currentPage > 1
                         ) {
                             Icon(
-                                Icons.Default.NavigateBefore,
+                                Icons.AutoMirrored.Filled.NavigateBefore,
                                 contentDescription = "Previous",
                                 tint = if (currentPage > 1) Color.White else Color(0xFF7D8590)
                             )

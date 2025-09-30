@@ -87,7 +87,7 @@ class MultiModalRecordingComposeActivity : BaseComposeActivity<MultiModalRecordi
                         },
                         actions = {
                             IconButton(onClick = { /* Recording templates */ }) {
-                                Icon(Icons.Default.LibraryBooks, contentDescription = "Templates")
+                                Icon(Icons.AutoMirrored.Filled.LibraryBooks, contentDescription = "Templates")
                             }
                             IconButton(onClick = { /* Recording settings */ }) {
                                 Icon(Icons.Default.Settings, contentDescription = "Settings")

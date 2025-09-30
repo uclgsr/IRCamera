@@ -278,7 +278,6 @@ private fun ProjectItemRow(
                 ProjectStatus.NORMAL -> Color.Green
                 ProjectStatus.WARNING -> Color(0xFFFF9800)
                 ProjectStatus.CRITICAL -> Color.Red
-                else -> MaterialTheme.colorScheme.onSurface
             }
         )
     }

@@ -305,7 +305,7 @@ class TimeSynchronizationTestComposeActivity : ComponentActivity() {
                         enabled = !isTestRunning,
                         modifier = Modifier.weight(1f)
                     ) {
-                        Icon(Icons.Default.TrendingUp, contentDescription = null)
+                        Icon(Icons.AutoMirrored.Filled.TrendingUp, contentDescription = null)
                         Spacer(modifier = Modifier.width(4.dp))
                         Text("Measure Drift")
                     }

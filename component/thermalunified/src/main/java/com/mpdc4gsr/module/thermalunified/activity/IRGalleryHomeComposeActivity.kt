@@ -171,7 +171,7 @@ private fun GalleryControls(
                 sortOptions.forEach { option ->
                     FilterChip(
                         onClick = { onSortChange(option) },
-                        label = { Text(option.capitalize(), fontSize = 12.sp) },
+                        label = { Text(option.replaceFirstChar { it.uppercase() }, fontSize = 12.sp) },
                         selected = sortBy == option,
                         colors = FilterChipDefaults.filterChipColors(
                             selectedContainerColor = Color(0xFFFF6B35),
@@ -200,7 +200,7 @@ private fun GalleryControls(
                 filterOptions.forEach { option ->
                     FilterChip(
                         onClick = { onFilterChange(option) },
-                        label = { Text(option.capitalize(), fontSize = 12.sp) },
+                        label = { Text(option.replaceFirstChar { it.uppercase() }, fontSize = 12.sp) },
                         selected = filterBy == option,
                         colors = FilterChipDefaults.filterChipColors(
                             selectedContainerColor = Color(0xFFFF6B35),
