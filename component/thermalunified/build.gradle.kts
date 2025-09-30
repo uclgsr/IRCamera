@@ -79,8 +79,7 @@ dependencies {
     implementation(platform(libs.compose.bom))
     implementation(libs.bundles.compose.core)
     implementation("androidx.compose.material:material-icons-extended")
-    // TODO: Add coil dependency when Maven repositories are properly configured
-    // implementation(libs.coil.compose)
+    implementation(libs.coil.compose)
     debugImplementation(libs.bundles.compose.debug)
 
     // Core Android libraries
