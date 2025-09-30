@@ -49,7 +49,7 @@ class IRMonitorThermalFragmentCompose : BaseComposeFragment<ThermalFragmentViewM
     @Composable
     override fun Content(viewModel: ThermalFragmentViewModel) {
         val context = LocalContext.current
-        val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+        val uiState by viewModel.thermalUiState.collectAsStateWithLifecycle()
 
         LibUnifiedTheme {
             Scaffold(
@@ -81,7 +81,7 @@ class IRMonitorThermalFragmentCompose : BaseComposeFragment<ThermalFragmentViewM
     @Composable
     private fun IRMonitorThermalContent(
         viewModel: ThermalFragmentViewModel,
-        uiState: ThermalFragmentViewModel.UiState,
+        uiState: ThermalFragmentViewModel.ThermalUiState,
         modifier: Modifier = Modifier
     ) {
         Column(

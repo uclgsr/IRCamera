@@ -106,8 +106,7 @@ class GalleryPictureFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
                                 },
                                 onItemLongClick = { item ->
                                     if (!isSelectionMode) {
-                                        viewModel.enterSelectionMode()
-                                        viewModel.toggleItemSelection(item.id)
+                                        viewModel.enterSelectionMode(item)
                                     }
                                 }
                             )

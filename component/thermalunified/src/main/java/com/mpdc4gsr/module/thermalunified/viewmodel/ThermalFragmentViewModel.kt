@@ -44,9 +44,9 @@ class ThermalFragmentViewModel : BaseViewModel() {
     private val _videoRecordingState = MutableStateFlow(VideoRecordingState())
     val videoRecordingState: StateFlow<VideoRecordingState> = _videoRecordingState.asStateFlow()
 
-    // UI interaction state
-    private val _thermalUiState = MutableStateFlow(ThermalUIState())
-    val thermalUiState: StateFlow<ThermalUIState> = _thermalUiState.asStateFlow()
+    // UI interaction state for processing
+    private val _processingUiState = MutableStateFlow(ThermalUIState())
+    val processingUiState: StateFlow<ThermalUIState> = _processingUiState.asStateFlow()
 
     // Temperature data for UI display
     private val _temperatureData = MutableStateFlow<TemperatureData?>(null)
@@ -92,7 +92,7 @@ class ThermalFragmentViewModel : BaseViewModel() {
                     processingProgress = imageState.processingProgress
                 )
             }.collect { newUiState ->
-                _thermalUiState.value = newUiState
+                _processingUiState.value = newUiState
             }
         }
     }
