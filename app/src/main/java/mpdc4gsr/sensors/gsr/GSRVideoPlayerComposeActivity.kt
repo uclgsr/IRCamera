@@ -21,9 +21,9 @@ import androidx.compose.ui.viewinterop.AndroidView
 import android.widget.VideoView
 import android.widget.MediaController
 import android.net.Uri
-import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
+import mpdc4gsr.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
+import mpdc4gsr.viewmodel.BaseViewModel
 
 /**
  * GSRVideoPlayerComposeActivity - Modern Video Playback with Compose

@@ -28,7 +28,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
-import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
+import mpdc4gsr.viewmodel.BaseViewModel
 import mpdc4gsr.compose.base.BaseComposeActivity
 import mpdc4gsr.compose.components.TitleBar
 import mpdc4gsr.compose.theme.IRCameraTheme

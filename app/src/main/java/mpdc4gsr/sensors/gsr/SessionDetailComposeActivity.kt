@@ -17,9 +17,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
+import mpdc4gsr.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
+import mpdc4gsr.viewmodel.BaseViewModel
 
 /**
  * SessionDetailComposeActivity - Modern Compose Implementation

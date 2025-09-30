@@ -24,7 +24,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import mpdc4gsr.compose.base.BaseComposeActivity
 import mpdc4gsr.compose.theme.IRCameraTheme
-import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
+import mpdc4gsr.viewmodel.BaseViewModel
 import androidx.lifecycle.viewModelScope
 import kotlin.random.Random
 
