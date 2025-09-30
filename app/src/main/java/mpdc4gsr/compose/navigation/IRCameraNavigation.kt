@@ -13,6 +13,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import mpdc4gsr.activities.*
+import mpdc4gsr.compose.screens.AboutScreen
 
 /**
  * Task E: Complete Navigation Integration
@@ -79,7 +80,7 @@ sealed class IRCameraScreen(val route: String) {
 @Composable
 fun IRCameraNavHost(
     navController: NavHostController = rememberNavController(),
-    startDestination: String = IRCameraScreen.Demo.route
+    startDestination: String = IRCameraScreen.Main.route
 ) {
     val context = LocalContext.current
 
