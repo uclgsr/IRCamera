@@ -47,6 +47,9 @@ class IRGalleryViewModel : BaseViewModel() {
     private val _isGridView = MutableStateFlow(true)
     val isGridView: StateFlow<Boolean> = _isGridView.asStateFlow()
 
+    // Cache for file sizes to avoid repeated I/O operations
+    private val fileSizeCache = mutableMapOf<String, Long>()
+
     // Compose-related methods
     fun changeDirType(dirType: GalleryRepository.DirType) {
         _currentDirType.value = dirType
@@ -58,10 +61,15 @@ class IRGalleryViewModel : BaseViewModel() {
     }
 
     fun refreshGallery() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             _isLoading.value = true
             try {
                 val items = GalleryRepository.loadAllReportImg(_currentDirType.value)
+                // Pre-calculate file sizes on background thread and cache them
+                items.forEach { item ->
+                    val fileSize = calculateFileSize(item.path)
+                    fileSizeCache[item.path] = fileSize
+                }
                 _galleryItems.value = items
             } catch (e: Exception) {
                 _galleryItems.value = emptyList()
@@ -179,6 +187,19 @@ class IRGalleryViewModel : BaseViewModel() {
                 showListLD.postValue(showList)
             }
         }
+    }
+
+    private fun calculateFileSize(path: String): Long {
+        return try {
+            val file = File(path)
+            if (file.exists()) file.length() else 0L
+        } catch (e: Exception) {
+            0L
+        }
+    }
+
+    fun getCachedFileSize(path: String): Long {
+        return fileSizeCache[path] ?: 0L
     }
 
     fun delete(

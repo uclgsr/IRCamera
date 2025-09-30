@@ -423,7 +423,7 @@ class IRGalleryFragmentCompose : BaseComposeFragment<IRGalleryViewModel>() {
                             maxLines = 1
                         )
                         Text(
-                            text = formatFileSize(getFileSize(item)),
+                            text = formatFileSize(viewModel.getCachedFileSize(item.path)),
                             style = MaterialTheme.typography.labelSmall,
                             color = Color.White.copy(alpha = 0.8f)
                         )
@@ -484,7 +484,7 @@ class IRGalleryFragmentCompose : BaseComposeFragment<IRGalleryViewModel>() {
                         fontWeight = FontWeight.Medium
                     )
                     Text(
-                        text = formatFileSize(getFileSize(item)),
+                        text = formatFileSize(viewModel.getCachedFileSize(item.path)),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -511,15 +511,6 @@ class IRGalleryFragmentCompose : BaseComposeFragment<IRGalleryViewModel>() {
         DirType.LINE -> "LINE device"
         DirType.TS004_LOCALE -> "TS004 device"
         else -> "device"
-    }
-
-    private fun getFileSize(item: GalleryBean): Long {
-        return try {
-            val file = java.io.File(item.path)
-            if (file.exists()) file.length() else 0L
-        } catch (e: Exception) {
-            0L
-        }
     }
 
     private fun formatFileSize(bytes: Long): String {
