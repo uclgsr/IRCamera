@@ -280,7 +280,7 @@ private fun ControllerItem(
     modifier: Modifier = Modifier
 ) {
     Card(
-        onClick = if (enabled) onClick else { {} },
+        onClick = onClick,
         modifier = modifier.fillMaxWidth(),
         enabled = enabled,
         colors = CardDefaults.cardColors(
