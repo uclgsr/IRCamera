@@ -16,6 +16,31 @@ import java.io.FileWriter
 import java.text.SimpleDateFormat
 import java.util.*
 
+enum class ExportFormat(val displayName: String) {
+    CSV("CSV (Comma Separated Values)"),
+    JSON("JSON (JavaScript Object Notation)"),
+    XML("XML (eXtensible Markup Language)"),
+    EXCEL("Excel Spreadsheet")
+}
+
+enum class ExportDestination(val displayName: String) {
+    DOWNLOADS("Downloads Folder"),
+    EXTERNAL_STORAGE("External Storage"),
+    SHARE("Share with Other Apps"),
+    EMAIL("Email Export")
+}
+
+data class GSRSession(
+    val sessionId: String,
+    val startTime: Long,
+    val endTime: Long?,
+    val deviceId: String,
+    val participantId: String?,
+    val readingCount: Int,
+    val avgConductance: Float,
+    val status: String = "COMPLETED"
+)
+
 /**
  * ViewModel for GSR Session Export Compose Activity
  * Manages session export functionality and state
@@ -141,14 +166,6 @@ class SessionExportViewModel(
                 )
             }
         }
-    }
-
-    /**
-     * Clear error state
-     */
-    override fun clearError() {
-        super.clearError()
-        _exportState.value = _exportState.value.copy(error = null)
     }
 
     /**

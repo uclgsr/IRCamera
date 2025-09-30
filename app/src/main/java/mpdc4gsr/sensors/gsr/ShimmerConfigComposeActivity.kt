@@ -143,15 +143,15 @@ private fun ShimmerConfigContent(
         ) {
             // Mock devices - replace with actual data from viewModel
             val mockDevices = listOf(
-                DeviceInfo("shimmer_001", "Shimmer3 GSR+ #001", "connected", -45),
-                DeviceInfo("shimmer_002", "Shimmer3 GSR+ #002", "available", -62),
-                DeviceInfo("shimmer_003", "Shimmer3 GSR+ #003", "configuring", -38)
+                DeviceInfo("shimmer_001", "Shimmer3 GSR+ #001", "Shimmer3", -45, true),
+                DeviceInfo("shimmer_002", "Shimmer3 GSR+ #002", "Shimmer3", -62, true),
+                DeviceInfo("shimmer_003", "Shimmer3 GSR+ #003", "Shimmer3", -38, true)
             )
 
             items(mockDevices) { device ->
                 DeviceCard(
                     device = device,
-                    isSelected = selectedDevice?.deviceId == device.deviceId,
+                    isSelected = selectedDevice?.address == device.address,
                     onSelect = { onDeviceSelect(device) },
                     onConnect = { /* Connect to device */ },
                     onConfigure = {
@@ -256,7 +256,7 @@ private fun DeviceCard(
                         fontWeight = FontWeight.Medium
                     )
                     Text(
-                        text = "ID: ${device.deviceId}",
+                        text = "ID: ${device.address}",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -272,7 +272,7 @@ private fun DeviceCard(
                                 .size(8.dp)
                                 .clip(CircleShape)
                                 .background(
-                                    when (device.status) {
+                                    when (device.deviceType) {
                                         "connected" -> Color(0xFF4CAF50)
                                         "available" -> Color(0xFF2196F3)
                                         "configuring" -> Color(0xFFFF9800)
@@ -282,7 +282,7 @@ private fun DeviceCard(
                         )
                         Spacer(modifier = Modifier.width(6.dp))
                         Text(
-                            text = device.status.replaceFirstChar { it.uppercaseChar() },
+                            text = device.deviceType.replaceFirstChar { it.uppercaseChar() },
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -383,7 +383,7 @@ private fun SelectedDevicePanel(
             )
 
             Text(
-                text = "Status: ${device.status.replaceFirstChar { it.uppercaseChar() }}",
+                text = "Status: ${device.deviceType.replaceFirstChar { it.uppercaseChar() }}",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onPrimaryContainer,
                 modifier = Modifier.padding(bottom = 12.dp)

@@ -468,11 +468,6 @@ class MultiModalRecordingViewModel : BaseViewModel() {
         _recordingConfig.value = config.copy(participantId = defaultParticipantId)
     }
 
-    override fun clearError() {
-        super.clearError()
-        _error.value = null
-    }
-
     fun clearAction() {
         _recordingAction.value = null
     }

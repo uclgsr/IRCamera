@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewModelScope
-import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
+import mpdc4gsr.viewmodel.BaseViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
