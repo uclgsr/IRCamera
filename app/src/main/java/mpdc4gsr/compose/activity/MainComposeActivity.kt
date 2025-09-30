@@ -133,7 +133,19 @@ fun MainApp() {
 
         composable("settings") {
             SettingsScreen(
-                onBackClick = { navController.popBackStack() }
+                onBackClick = { navController.popBackStack() },
+                onNavigateToGSRSettings = { navController.navigate("gsr_settings") },
+                onNavigateToThermalSettings = { navController.navigate("thermal_settings") },
+                onNavigateToCameraSettings = { navController.navigate("camera_settings") },
+                onNavigateToRecordingSettings = { /* TODO: Add recording settings screen */ },
+                onNavigateToStorageSettings = { /* TODO: Add storage settings screen */ },
+                onNavigateToSyncSettings = { /* TODO: Add sync settings screen */ },
+                onNavigateToCalibration = { /* TODO: Add calibration screen */ },
+                onNavigateToNetworkSettings = { /* TODO: Add network settings screen */ },
+                onNavigateToDiagnostics = { /* TODO: Add diagnostics screen */ },
+                onNavigateToAppInfo = { /* TODO: Add app info screen */ },
+                onNavigateToPrivacyPolicy = { /* TODO: Add privacy policy screen */ },
+                onNavigateToHelp = { /* TODO: Add help screen */ }
             )
         }
 
