@@ -25,7 +25,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.mpdc4gsr.libunified.compose.theme.IRCameraTheme
+import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -53,7 +53,7 @@ class IRMonitorLiteComposeActivity : ComponentActivity() {
         viewModel = ViewModelProvider(this)[IRMonitorLiteViewModel::class.java]
 
         setContent {
-            IRCameraTheme {
+            LibUnifiedTheme {
                 IRMonitorLiteScreen(
                     viewModel = viewModel,
                     onNavigateBack = { finish() },
@@ -623,12 +623,12 @@ class IRMonitorLiteViewModel : ViewModel() {
                 val currentState = _uiState.value
 
                 // Simulate temperature reading with some variation using extracted constants
-                val baseTemp = BASE_TEMPERATURE + sin(timeStep * SIN_FREQUENCY) * SIN_AMPLITUDE + cos(timeStep * COS_FREQUENCY) * COS_AMPLITUDE
+                val baseTemp = BASE_TEMPERATURE + sin(timeStep * SIN_FREQUENCY).toFloat() * SIN_AMPLITUDE + cos(timeStep * COS_FREQUENCY).toFloat() * COS_AMPLITUDE
                 val noise = Random.nextFloat() * (2 * NOISE_RANGE) - NOISE_RANGE
                 val currentTemp = baseTemp + noise
 
                 // Update temperature history
-                val newHistory = (currentState.temperatureHistory + currentTemp).takeLast(MAX_TEMPERATURE_HISTORY)
+                val newHistory = (currentState.temperatureHistory + listOf(currentTemp)).takeLast(MAX_TEMPERATURE_HISTORY)
 
                 // Calculate statistics
                 val newStatistics = calculateStatistics(newHistory)

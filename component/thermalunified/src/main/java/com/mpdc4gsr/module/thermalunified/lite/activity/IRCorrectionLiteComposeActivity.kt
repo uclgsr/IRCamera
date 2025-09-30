@@ -133,6 +133,7 @@ private fun IRCorrectionContent(
         ThermalImageDisplay(
             imagePath = imagePath,
             showBeforeAfter = showBeforeAfter,
+            temperature = temperature,
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)
@@ -159,6 +160,7 @@ private fun IRCorrectionContent(
 private fun ThermalImageDisplay(
     imagePath: String,
     showBeforeAfter: Boolean,
+    temperature: Float,
     modifier: Modifier = Modifier
 ) {
     Box(
