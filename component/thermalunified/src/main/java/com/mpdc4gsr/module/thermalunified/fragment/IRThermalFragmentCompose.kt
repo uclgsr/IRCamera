@@ -2,6 +2,7 @@ package com.mpdc4gsr.module.thermalunified.fragment
 
 import android.content.Intent
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.background
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -20,7 +21,7 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import com.mpdc4gsr.libunified.app.config.RouterConfig
 import com.mpdc4gsr.module.thermalunified.activity.IRThermalNightActivity
-import com.mpdc4gsr.module.thermalunified.activity.IRThermalPlusActivity
+import com.mpdc4gsr.module.thermalunified.activity.IRThermalPlusComposeActivity
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRThermalFragmentViewModel
 
 /**
@@ -78,7 +79,7 @@ class IRThermalFragmentCompose : BaseComposeFragment<IRThermalFragmentViewModel>
                 )
 
                 // Main thermal entry point
-                if (connectionStatus == ConnectionStatus.CONNECTED) {
+                if (connectionStatus == IRThermalFragmentViewModel.ConnectionStatus.CONNECTED) {
                     ThermalEntryCard(
                         onOpenThermal = { viewModel.openMainThermal() },
                         onOpenNightVision = {
@@ -86,7 +87,7 @@ class IRThermalFragmentCompose : BaseComposeFragment<IRThermalFragmentViewModel>
                             context.startActivity(intent)
                         },
                         onOpenThermalPlus = {
-                            val intent = Intent(context, IRThermalPlusActivity::class.java)
+                            val intent = Intent(context, IRThermalPlusComposeActivity::class.java)
                             context.startActivity(intent)
                         }
                     )
@@ -113,7 +114,7 @@ class IRThermalFragmentCompose : BaseComposeFragment<IRThermalFragmentViewModel>
 
     @Composable
     private fun ConnectionStatusCard(
-        connectionStatus: ConnectionStatus,
+        connectionStatus: IRThermalFragmentViewModel.ConnectionStatus,
         isTC007: Boolean,
         deviceInfo: String?,
         onRetryConnection: () -> Unit
@@ -122,8 +123,8 @@ class IRThermalFragmentCompose : BaseComposeFragment<IRThermalFragmentViewModel>
             modifier = Modifier.fillMaxWidth(),
             colors = CardDefaults.cardColors(
                 containerColor = when (connectionStatus) {
-                    ConnectionStatus.CONNECTED -> MaterialTheme.colorScheme.primaryContainer
-                    ConnectionStatus.CONNECTING -> MaterialTheme.colorScheme.secondaryContainer
+                    IRThermalFragmentViewModel.ConnectionStatus.CONNECTED -> MaterialTheme.colorScheme.primaryContainer
+                    IRThermalFragmentViewModel.ConnectionStatus.CONNECTING -> MaterialTheme.colorScheme.secondaryContainer
                     else -> MaterialTheme.colorScheme.errorContainer
                 }
             )
@@ -158,8 +159,8 @@ class IRThermalFragmentCompose : BaseComposeFragment<IRThermalFragmentViewModel>
                             .size(12.dp)
                             .background(
                                 color = when (connectionStatus) {
-                                    ConnectionStatus.CONNECTED -> Color.Green
-                                    ConnectionStatus.CONNECTING -> Color(0xFFFFA500)
+                                    IRThermalFragmentViewModel.ConnectionStatus.CONNECTED -> Color.Green
+                                    IRThermalFragmentViewModel.ConnectionStatus.CONNECTING -> Color(0xFFFFA500)
                                     else -> Color.Red
                                 },
                                 shape = androidx.compose.foundation.shape.CircleShape
@@ -171,8 +172,8 @@ class IRThermalFragmentCompose : BaseComposeFragment<IRThermalFragmentViewModel>
                     text = getStatusText(connectionStatus),
                     style = MaterialTheme.typography.bodyMedium,
                     color = when (connectionStatus) {
-                        ConnectionStatus.CONNECTED -> MaterialTheme.colorScheme.primary
-                        ConnectionStatus.CONNECTING -> MaterialTheme.colorScheme.secondary
+                        IRThermalFragmentViewModel.ConnectionStatus.CONNECTED -> MaterialTheme.colorScheme.primary
+                        IRThermalFragmentViewModel.ConnectionStatus.CONNECTING -> MaterialTheme.colorScheme.secondary
                         else -> MaterialTheme.colorScheme.error
                     }
                 )
@@ -185,7 +186,7 @@ class IRThermalFragmentCompose : BaseComposeFragment<IRThermalFragmentViewModel>
                     )
                 }
 
-                if (connectionStatus != ConnectionStatus.CONNECTED) {
+                if (connectionStatus != IRThermalFragmentViewModel.ConnectionStatus.CONNECTED) {
                     Button(
                         onClick = onRetryConnection,
                         modifier = Modifier.fillMaxWidth()
@@ -265,7 +266,7 @@ class IRThermalFragmentCompose : BaseComposeFragment<IRThermalFragmentViewModel>
 
     @Composable
     private fun ConnectionGuideCard(
-        connectionStatus: ConnectionStatus,
+        connectionStatus: IRThermalFragmentViewModel.ConnectionStatus,
         isTC007: Boolean,
         onConnectDevice: () -> Unit,
         onOpenSettings: () -> Unit
@@ -292,7 +293,7 @@ class IRThermalFragmentCompose : BaseComposeFragment<IRThermalFragmentViewModel>
 
                 Text(
                     text = when (connectionStatus) {
-                        ConnectionStatus.CONNECTING -> "Connecting to Device..."
+                        IRThermalFragmentViewModel.ConnectionStatus.CONNECTING -> "Connecting to Device..."
                         else -> "Device Not Connected"
                     },
                     style = MaterialTheme.typography.titleMedium,
@@ -309,7 +310,7 @@ class IRThermalFragmentCompose : BaseComposeFragment<IRThermalFragmentViewModel>
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
 
-                if (connectionStatus != ConnectionStatus.CONNECTING) {
+                if (connectionStatus != IRThermalFragmentViewModel.ConnectionStatus.CONNECTING) {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -360,7 +361,7 @@ class IRThermalFragmentCompose : BaseComposeFragment<IRThermalFragmentViewModel>
                     title = "Gallery",
                     description = "View thermal images",
                     icon = Icons.Default.PhotoLibrary,
-                    onClick = { onNavigateToFeature(RouterConfig.THERMAL_GALLERY) },
+                    onClick = { onNavigateToFeature(RouterConfig.GALLERY) },
                     modifier = Modifier.weight(1f)
                 )
 
@@ -415,14 +416,10 @@ class IRThermalFragmentCompose : BaseComposeFragment<IRThermalFragmentViewModel>
         }
     }
 
-    private fun getStatusText(status: ConnectionStatus): String = when (status) {
-        ConnectionStatus.CONNECTED -> "Device connected and ready"
-        ConnectionStatus.CONNECTING -> "Connecting to device..."
-        ConnectionStatus.DISCONNECTED -> "Device not connected"
-        ConnectionStatus.ERROR -> "Connection error - check device"
-    }
-
-    enum class ConnectionStatus {
-        DISCONNECTED, CONNECTING, CONNECTED, ERROR
+    private fun getStatusText(status: IRThermalFragmentViewModel.ConnectionStatus): String = when (status) {
+        IRThermalFragmentViewModel.ConnectionStatus.CONNECTED -> "Device connected and ready"
+        IRThermalFragmentViewModel.ConnectionStatus.CONNECTING -> "Connecting to device..."
+        IRThermalFragmentViewModel.ConnectionStatus.DISCONNECTED -> "Device not connected"
+        IRThermalFragmentViewModel.ConnectionStatus.ERROR -> "Connection error - check device"
     }
 }
