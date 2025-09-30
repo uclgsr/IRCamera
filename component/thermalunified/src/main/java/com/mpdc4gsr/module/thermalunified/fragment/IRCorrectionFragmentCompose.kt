@@ -22,6 +22,9 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.ir.view.TemperatureView
 import com.infisense.usbir.view.CameraView
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRCorrectionViewModel
+import com.mpdc4gsr.module.thermalunified.viewmodel.TemperatureData
+import com.mpdc4gsr.module.thermalunified.viewmodel.CorrectionState
+import com.mpdc4gsr.module.thermalunified.viewmodel.CalibrationStatus
 
 /**
  * Compose migration of IRCorrectionFragment
@@ -182,9 +185,13 @@ class IRCorrectionFragmentCompose : BaseComposeFragment<IRCorrectionViewModel>()
                     factory = { context ->
                         TemperatureView(context).apply {
                             // Configure the temperature view
-                            setOnTempListener { temp, x, y ->
-                                onTemperatureUpdate(temp, x, y)
-                            }
+                            setListener(object : TemperatureView.TempListener {
+                                override fun getTemp(max: Float, min: Float, tempData: ByteArray) {
+                                    // Use max temperature as the representative temperature
+                                    // For demo purposes, use center coordinates
+                                    onTemperatureUpdate(max, 0, 0)
+                                }
+                            })
                         }
                     },
                     modifier = Modifier.fillMaxSize()
@@ -464,18 +471,4 @@ class IRCorrectionFragmentCompose : BaseComposeFragment<IRCorrectionViewModel>()
         else -> "Inactive"
     }
 
-    // Data classes and enums
-    data class TemperatureData(
-        val currentTemp: Float,
-        val correctedTemp: Float,
-        val offsetValue: Float
-    )
-
-    enum class CorrectionState {
-        INACTIVE, ACTIVE, CALIBRATING
-    }
-
-    enum class CalibrationStatus {
-        NONE, CALIBRATED, NEEDS_CALIBRATION
-    }
 }
