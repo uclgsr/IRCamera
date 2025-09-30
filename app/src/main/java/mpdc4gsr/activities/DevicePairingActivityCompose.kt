@@ -64,7 +64,7 @@ class DevicePairingActivityCompose : BaseComposeActivity<DevicePairingViewModel>
         // Collect state
         val discoveredControllers by viewModel.discoveredControllers.collectAsState()
         val connectedController by viewModel.connectedController.collectAsState()
-        val connectionState by viewModel.connectionState.collectAsState()
+        val connectionState by viewModel.pairingConnectionState.collectAsState()
         val scanState by viewModel.scanState.collectAsState()
         val statusMessage by viewModel.statusMessage.collectAsState()
         val pairingScreenState by viewModel.pairingScreenState.collectAsState()

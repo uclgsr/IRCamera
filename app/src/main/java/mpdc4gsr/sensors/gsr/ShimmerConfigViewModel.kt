@@ -350,9 +350,9 @@ class ShimmerConfigViewModel : BaseViewModel() {
         val device = connectedDevice
         if (device == null) {
             // _configAction.value = ConfigAction(
-                ActionType.SHOW_TOAST,
-                message = "No device connected"
-            )
+            //     ActionType.SHOW_TOAST,
+            //     message = "No device connected"
+            // )
             return
         }
 
@@ -371,18 +371,18 @@ class ShimmerConfigViewModel : BaseViewModel() {
                     isLoading = false
                 )
                 // _configAction.value = ConfigAction(
-                    ActionType.SHOW_TOAST,
-                    message = "Connection test successful"
-                )
+                //     ActionType.SHOW_TOAST,
+                //     message = "Connection test successful"
+                // )
             } catch (e: Exception) {
                 _shimmerUiState.value = _shimmerUiState.value.copy(
                     statusMessage = "Connection test failed: ${e.message}",
                     isLoading = false
                 )
                 // _configAction.value = ConfigAction(
-                    ActionType.SHOW_TOAST,
-                    message = "Connection test failed"
-                )
+                //     ActionType.SHOW_TOAST,
+                //     message = "Connection test failed"
+                // )
             }
         }
     }
@@ -403,9 +403,9 @@ class ShimmerConfigViewModel : BaseViewModel() {
                     statusMessage = "Device disconnected"
                 )
                 // _configAction.value = ConfigAction(
-                    ActionType.SHOW_TOAST,
-                    message = "Device disconnected"
-                )
+                //     ActionType.SHOW_TOAST,
+                //     message = "Device disconnected"
+                // )
             } catch (e: Exception) {
                 _shimmerUiState.value = _shimmerUiState.value.copy(
                     statusMessage = "Disconnect error: ${e.message}"
