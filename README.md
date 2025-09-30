@@ -68,14 +68,21 @@ python run_unified_controller.py
 ### Testing
 
 ```bash
-# Android tests
+# Using consolidated testing scripts
+./scripts/ircamera.sh test all          # Run all tests
+./scripts/ircamera.sh test integration  # Integration tests only
+./scripts/ircamera.sh test performance  # Performance benchmarks
+
+# Direct Gradle tests
 ./gradlew test
 ./gradlew connectedAndroidTest
 
-# Integration testing
+# Integration testing (Python)
 cd testing-suite
 python run_evaluation.py
 ```
+
+See [scripts/README.md](scripts/README.md) for complete testing documentation.
 
 ## Hardware Requirements
 
