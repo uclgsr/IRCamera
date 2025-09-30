@@ -89,7 +89,6 @@ graph TB
     subgraph "Main App Entry"
         MainActivity_Layout[activity_main.xml<br/>🏠 Main App Container]
         MainConsolidated_Layout[activity_main_consolidated.xml<br/>🏠 Consolidated Main Interface]
-        SimplifiedMain_Layout[activity_simplified_main.xml<br/> Simplified Interface]
     end
     
     %% Consolidated Layout Architecture
@@ -241,7 +240,7 @@ graph TB
     classDef componentLayout fill:#ffc9b9,stroke:#333,stroke-width:1px,color:#333
     classDef backupLayout fill:#6c757d,stroke:#333,stroke-width:1px,color:#fff
     
-    class MainActivity_Layout,SimplifiedMain_Layout mainLayout
+    class MainActivity_Layout mainLayout
     class MainConsolidated_Layout,MultiModalConsolidated_Layout,CameraTestConsolidated_Layout,SessionConsolidated_Layout,InfoConsolidated_Layout,DeviceConsolidated_Item,MediaConsolidated_Item,SensorDataConsolidated_Item,MultiModalConsolidated_Fragment,CameraModeSelector_Layout consolidatedLayout
     class MainFragment_Layout,SensorDashboard_Layout,GSRSession_Layout,GSRData_Layout,GSRVideo_Layout,GSRRawImage_Layout fragmentLayout
     class IRMain_Layout,IRThermal_Layout,IRMonitor_Layout,IRConfig_Layout,IRGallery_Layout,IRCorrection_Layout,IRMonitorChart_Layout,IRCaptureFragment_Layout thermalLayout
@@ -289,10 +288,6 @@ The app now features a streamlined layout architecture with consolidated templat
     - Contains network status bar, sensor controls container, and 4-tab navigation
     - Includes quick access buttons for thermal camera and fault-tolerant recording
     - Implements constraint-based responsive layout design
-
-- **`activity_simplified_main.xml`** - Streamlined interface for specific use cases
-    - Reduced complexity version of main interface
-    - Focus on core functionality without advanced features
 
 ### 2. **Fragment-Based UI Components**
 

@@ -8,11 +8,10 @@
 MainActivity.kt (34 lines) - Primary Compose launcher
 MainActivityLegacy.kt (394 lines) - Legacy fragment-based
 MainActivityAlternative.kt (667 lines) - Experimental Compose features  
-SimplifiedMainActivity.kt (195 lines) - Minimal implementation
 SimplifiedMainActivityCompose.kt (571 lines) - Testing/debug version
 ```
 
-**ISSUE**: Having 5 different MainActivity implementations creates confusion and maintenance overhead.
+**ISSUE**: Having 4 different MainActivity implementations creates confusion and maintenance overhead.
 
 ### Navigation Systems (ANTI-PATTERN: Multiple Navigation Paradigms)
 
