@@ -279,10 +279,7 @@ class TempAlarmSetDialog(
         }
     }
 
-    override fun onCheckedChanged(
-        buttonView: CompoundButton?,
-        isChecked: Boolean,
-    ) {
+    override fun onCheckedChanged(buttonView: CompoundButton, isChecked: Boolean) {
         when (buttonView?.id) {
             R.id.switch_alarm_high -> {
                 etAlarmHigh.isEnabled = isChecked
