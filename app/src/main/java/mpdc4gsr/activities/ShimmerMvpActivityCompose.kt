@@ -168,7 +168,7 @@ class ShimmerMvpViewModel : BaseViewModel() {
                 if (_isRecording.value) {
                     val timestamp = System.currentTimeMillis()
                     val rawValue = kotlin.random.Random.nextDouble(200.0, 4000.0)
-                    val gsrValue = GSRCalculationUtils.calculateGSRFromRaw(rawValue)
+                    val gsrValue = GSRCalculationUtils.calculateGSRMicrosiemens(rawValue.toInt())
                     val quality = determineQuality(rawValue, gsrValue)
 
                     val sample = GSRData(timestamp, rawValue, gsrValue, quality)
