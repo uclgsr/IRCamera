@@ -6,16 +6,19 @@ This document summarizes the consolidation of duplicate activities across the IR
 ## Activities Consolidated
 
 ### 1. MainActivity Variants
-**Before:** 4 different MainActivity implementations
+**Before:** 5 different MainActivity implementations
 - `MainActivity.kt` (34 lines) - Primary Compose implementation
 - `MainActivityAlternative.kt` (665 lines) - Experimental features
 - `MainActivityLegacy.kt` (396 lines) - Legacy fragment-based
 - `MainComposeActivity.kt` (164 lines) - Duplicate in different package
+- `SimplifiedMainActivity.kt` (195 lines) - Already in backup, was in manifest
 
 **After:** 1 primary implementation
 - **KEPT:** `MainActivity.kt` - Primary production implementation
-- **MOVED TO BACKUP:** All others moved to `backup/activities/consolidated-2024/mainactivity/`
+- **MOVED TO BACKUP:** All others moved to `backup/activities/consolidated-2024/mainactivity/` or already in backup
 - **FILES COMMENTED OUT:** All deprecated files have been commented out with clear deprecation notices
+
+**Note:** As documented in NAVIGATION_ARCHITECTURE_ANALYSIS.md, there are also 4 conflicting navigation paradigms in the codebase that contribute to the architectural complexity.
 
 ### 2. SimplifiedMain Variants
 **Before:** 2 different implementations

@@ -3,6 +3,13 @@
 ## Overview
 This document tracks the consolidation of duplicate activities across the IRCamera codebase.
 
+## Context
+As documented in NAVIGATION_ARCHITECTURE_ANALYSIS.md:
+- **5 different MainActivity implementations** causing confusion
+- **4 conflicting navigation paradigms** (UnifiedNavigation, IRCameraNavigation, NavigationManager with duplicates, DemoNavigationScreen)
+
+This plan addresses the MainActivity and activity consolidation. Navigation paradigm consolidation is a separate concern.
+
 ## Duplicate Activities Identified
 
 ### 1. MainActivity Variants
@@ -10,6 +17,7 @@ This document tracks the consolidation of duplicate activities across the IRCame
 - **MainActivityAlternative.kt** (665 lines) - BACKUP - Experimental features
 - **MainActivityLegacy.kt** (396 lines) - BACKUP - Legacy fragment-based
 - **MainComposeActivity.kt** (164 lines) - REMOVE - Superseded by MainActivity
+- **SimplifiedMainActivity.kt** (195 lines) - Already in backup/final-traditional-activities/
 
 **Decision**: Keep MainActivity.kt as primary, move others to backup
 
