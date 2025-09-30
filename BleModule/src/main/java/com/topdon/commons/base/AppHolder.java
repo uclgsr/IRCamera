@@ -80,31 +80,26 @@ public class AppHolder implements Application.ActivityLifecycleCallbacks {
         topActivity = a;
     }
 
-    @CallSuper
     @Override
     public void onActivityStarted(Activity activity) {
 
     }
 
-    @CallSuper
     @Override
     public void onActivityResumed(Activity activity) {
 
     }
 
-    @CallSuper
     @Override
     public void onActivityPaused(Activity activity) {
 
     }
 
-    @CallSuper
     @Override
     public void onActivityStopped(Activity activity) {
 
     }
 
-    @CallSuper
     @Override
     public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
 
