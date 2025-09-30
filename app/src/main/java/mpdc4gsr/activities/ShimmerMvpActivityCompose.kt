@@ -108,7 +108,7 @@ class ShimmerMvpViewModel : BaseViewModel() {
 
     fun startScanning() {
         kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
-            _connectionState.value = ShimmerConnectionState.SCANNING
+            _shimmerConnectionState.value = ShimmerConnectionState.SCANNING
             _statusMessage.value = "Scanning for Shimmer devices..."
             _availableDevices.value = emptyList()
 
@@ -123,14 +123,14 @@ class ShimmerMvpViewModel : BaseViewModel() {
 
             delay(3000) // Simulate scanning time
             _availableDevices.value = mockDevices
-            _connectionState.value = ShimmerConnectionState.DISCONNECTED
+            _shimmerConnectionState.value = ShimmerConnectionState.DISCONNECTED
             _statusMessage.value = "Found ${mockDevices.size} Shimmer devices"
         }
     }
 
     fun connectToDevice(device: ShimmerDevice) {
         kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
-            _connectionState.value = ShimmerConnectionState.CONNECTING
+            _shimmerConnectionState.value = ShimmerConnectionState.CONNECTING
             _statusMessage.value = "Connecting to ${device.name}..."
 
             delay(3000) // Simulate connection time
@@ -140,11 +140,11 @@ class ShimmerMvpViewModel : BaseViewModel() {
 
             if (isConnected) {
                 _connectedDevice.value = device.copy(isConnected = true)
-                _connectionState.value = ShimmerConnectionState.CONNECTED
+                _shimmerConnectionState.value = ShimmerConnectionState.CONNECTED
                 _statusMessage.value = "Connected to ${device.name}"
                 startDataSimulation()
             } else {
-                _connectionState.value = ShimmerConnectionState.ERROR
+                _shimmerConnectionState.value = ShimmerConnectionState.ERROR
                 _statusMessage.value = "Failed to connect to ${device.name}"
             }
         }
@@ -152,7 +152,7 @@ class ShimmerMvpViewModel : BaseViewModel() {
 
     fun disconnect() {
         _connectedDevice.value = null
-        _connectionState.value = ShimmerConnectionState.DISCONNECTED
+        _shimmerConnectionState.value = ShimmerConnectionState.DISCONNECTED
         _statusMessage.value = "Disconnected from Shimmer device"
         _isRecording.value = false
         _gsrData.value = emptyList()
@@ -162,13 +162,13 @@ class ShimmerMvpViewModel : BaseViewModel() {
 
     private fun startDataSimulation() {
         kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
-            while (_connectionState.value == ShimmerConnectionState.CONNECTED) {
+            while (_shimmerConnectionState.value == ShimmerConnectionState.CONNECTED) {
                 delay(50) // 20 Hz sampling rate
 
                 if (_isRecording.value) {
                     val timestamp = System.currentTimeMillis()
                     val rawValue = kotlin.random.Random.nextDouble(200.0, 4000.0)
-                    val gsrValue = GSRCalculationUtils.calculateGSRMicrosiemens(rawValue.roundToInt())
+                    val gsrValue = GSRCalculationUtils.calculateGSRMicrosiemens(rawValue.toInt())
                     val quality = determineQuality(rawValue, gsrValue)
 
                     val sample = GSRData(timestamp, rawValue, gsrValue, quality)
@@ -189,7 +189,7 @@ class ShimmerMvpViewModel : BaseViewModel() {
     }
 
     fun startRecording() {
-        if (_connectionState.value == ShimmerConnectionState.CONNECTED) {
+        if (_shimmerConnectionState.value == ShimmerConnectionState.CONNECTED) {
             _isRecording.value = true
             _statusMessage.value = "Recording GSR data..."
 

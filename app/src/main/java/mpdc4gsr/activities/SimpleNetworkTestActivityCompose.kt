@@ -35,7 +35,7 @@ import mpdc4gsr.network.SimpleCommandHandler
 import mpdc4gsr.network.TcpClient
 import mpdc4gsr.viewmodel.BaseViewModel
 
-enum class ConnectionStatus {
+enum class NetworkConnectionStatus {
     DISCONNECTED, CONNECTING, CONNECTED, ERROR
 }
 
@@ -54,8 +54,8 @@ data class TestResult(
 )
 
 class SimpleNetworkTestViewModel : BaseViewModel() {
-    private val _connectionStatus = mutableStateOf(ConnectionStatus.DISCONNECTED)
-    val connectionStatus: State<ConnectionStatus> = _connectionStatus
+    private val _connectionStatus = mutableStateOf(NetworkConnectionStatus.DISCONNECTED)
+    val connectionStatus: State<NetworkConnectionStatus> = _connectionStatus
 
     private val _ipAddress = mutableStateOf("192.168.1.100")
     val ipAddress: State<String> = _ipAddress
@@ -124,7 +124,7 @@ class SimpleNetworkTestViewModel : BaseViewModel() {
 
     fun connect() {
         viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
-            _connectionStatus.value = ConnectionStatus.CONNECTING
+            _connectionStatus.value = NetworkConnectionStatus.CONNECTING
             _statusMessage.value = "Connecting to ${_ipAddress.value}:${_port.value}..."
 
             delay(2000) // Simulate connection time
@@ -133,23 +133,23 @@ class SimpleNetworkTestViewModel : BaseViewModel() {
             val success = kotlin.random.Random.nextFloat() > 0.2f
 
             if (success) {
-                _connectionStatus.value = ConnectionStatus.CONNECTED
+                _connectionStatus.value = NetworkConnectionStatus.CONNECTED
                 _statusMessage.value = "Connected to PC Remote Control successfully"
             } else {
-                _connectionStatus.value = ConnectionStatus.ERROR
+                _connectionStatus.value = NetworkConnectionStatus.ERROR
                 _statusMessage.value = "Failed to connect. Check IP address and port."
             }
         }
     }
 
     fun disconnect() {
-        _connectionStatus.value = ConnectionStatus.DISCONNECTED
+        _connectionStatus.value = NetworkConnectionStatus.DISCONNECTED
         _statusMessage.value = "Disconnected from PC Remote Control"
         _testResults.value = emptyList()
     }
 
     fun runAllTests() {
-        if (_connectionStatus.value != ConnectionStatus.CONNECTED) return
+        if (_connectionStatus.value != NetworkConnectionStatus.CONNECTED) return
 
         viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
             _isRunningTests.value = true
@@ -186,7 +186,7 @@ class SimpleNetworkTestViewModel : BaseViewModel() {
     }
 
     fun runSingleTest(command: NetworkTestCommand) {
-        if (_connectionStatus.value != ConnectionStatus.CONNECTED) return
+        if (_connectionStatus.value != NetworkConnectionStatus.CONNECTED) return
 
         viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
             _statusMessage.value = "Testing: ${command.name}"
@@ -272,9 +272,9 @@ class SimpleNetworkTestActivityCompose : BaseComposeActivity<SimpleNetworkTestVi
                             .padding(bottom = 16.dp),
                         colors = CardDefaults.cardColors(
                             containerColor = when (connectionStatus) {
-                                ConnectionStatus.CONNECTED -> MaterialTheme.colorScheme.primaryContainer
-                                ConnectionStatus.ERROR -> MaterialTheme.colorScheme.errorContainer
-                                ConnectionStatus.CONNECTING -> MaterialTheme.colorScheme.surfaceVariant
+                                NetworkConnectionStatus.CONNECTED -> MaterialTheme.colorScheme.primaryContainer
+                                NetworkConnectionStatus.ERROR -> MaterialTheme.colorScheme.errorContainer
+                                NetworkConnectionStatus.CONNECTING -> MaterialTheme.colorScheme.surfaceVariant
                                 else -> MaterialTheme.colorScheme.surface
                             }
                         )
@@ -286,7 +286,7 @@ class SimpleNetworkTestActivityCompose : BaseComposeActivity<SimpleNetworkTestVi
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             when (connectionStatus) {
-                                ConnectionStatus.CONNECTING -> {
+                                NetworkConnectionStatus.CONNECTING -> {
                                     CircularProgressIndicator(
                                         modifier = Modifier.size(24.dp),
                                         color = MaterialTheme.colorScheme.primary,
@@ -294,7 +294,7 @@ class SimpleNetworkTestActivityCompose : BaseComposeActivity<SimpleNetworkTestVi
                                     )
                                 }
 
-                                ConnectionStatus.CONNECTED -> {
+                                NetworkConnectionStatus.CONNECTED -> {
                                     Icon(
                                         imageVector = Icons.Default.CheckCircle,
                                         contentDescription = null,
@@ -303,7 +303,7 @@ class SimpleNetworkTestActivityCompose : BaseComposeActivity<SimpleNetworkTestVi
                                     )
                                 }
 
-                                ConnectionStatus.ERROR -> {
+                                NetworkConnectionStatus.ERROR -> {
                                     Icon(
                                         imageVector = Icons.Default.Error,
                                         contentDescription = null,
@@ -341,7 +341,7 @@ class SimpleNetworkTestActivityCompose : BaseComposeActivity<SimpleNetworkTestVi
                     }
 
                     // Connection settings
-                    if (connectionStatus == ConnectionStatus.DISCONNECTED) {
+                    if (connectionStatus == NetworkConnectionStatus.DISCONNECTED) {
                         Card(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -384,7 +384,7 @@ class SimpleNetworkTestActivityCompose : BaseComposeActivity<SimpleNetworkTestVi
                                     modifier = Modifier.fillMaxWidth()
                                 ) {
                                     Icon(
-                                        imageVector = Icons.Default.Connect,
+                                        imageVector = Icons.Default.Link,
                                         contentDescription = null,
                                         modifier = Modifier.size(18.dp)
                                     )
@@ -393,7 +393,7 @@ class SimpleNetworkTestActivityCompose : BaseComposeActivity<SimpleNetworkTestVi
                                 }
                             }
                         }
-                    } else if (connectionStatus == ConnectionStatus.CONNECTED) {
+                    } else if (connectionStatus == NetworkConnectionStatus.CONNECTED) {
                         // Test controls
                         Row(
                             modifier = Modifier
@@ -428,7 +428,7 @@ class SimpleNetworkTestActivityCompose : BaseComposeActivity<SimpleNetworkTestVi
                                 modifier = Modifier.weight(1f)
                             ) {
                                 Icon(
-                                    imageVector = Icons.Default.Disconnect,
+                                    imageVector = Icons.Default.LinkOff,
                                     contentDescription = null,
                                     modifier = Modifier.size(18.dp)
                                 )
@@ -480,7 +480,7 @@ class SimpleNetworkTestActivityCompose : BaseComposeActivity<SimpleNetworkTestVi
                                 }
                             }
                         }
-                    } else if (connectionStatus == ConnectionStatus.ERROR) {
+                    } else if (connectionStatus == NetworkConnectionStatus.ERROR) {
                         Button(
                             onClick = { viewModel.connect() },
                             modifier = Modifier.fillMaxWidth()
