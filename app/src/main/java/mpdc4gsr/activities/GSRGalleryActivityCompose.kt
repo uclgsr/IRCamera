@@ -49,7 +49,7 @@ class GSRGalleryActivityCompose : BaseComposeActivity<GSRGalleryViewModel>() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GSRGalleryScreen(viewModel: GSRGalleryViewModel) {
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.galleryState.collectAsState()
 
     var searchQuery by remember { mutableStateOf("") }
     var isGridView by remember { mutableStateOf(true) }
@@ -654,9 +654,9 @@ class GSRGalleryViewModel : BaseViewModel() {
     }
 
     fun deleteSelectedSessions() {
-        val selectedIds = _uiState.value.selectedSessions
-        val updatedSessions = _uiState.value.sessions.filter { !selectedIds.contains(it.id) }
-        _uiState.value = _uiState.value.copy(
+        val selectedIds = _galleryState.value.selectedSessions
+        val updatedSessions = _galleryState.value.sessions.filter { !selectedIds.contains(it.id) }
+        _galleryState.value = _galleryState.value.copy(
             sessions = updatedSessions,
             filteredSessions = updatedSessions,
             selectedSessions = emptySet()

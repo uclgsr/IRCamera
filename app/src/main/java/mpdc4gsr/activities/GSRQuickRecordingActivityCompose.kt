@@ -53,7 +53,7 @@ class GSRQuickRecordingActivityCompose : BaseComposeActivity<GSRQuickRecordingVi
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GSRQuickRecordingScreen(viewModel: GSRQuickRecordingViewModel) {
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.recordingState.collectAsState()
 
     LaunchedEffect(Unit) {
         viewModel.initializeQuickRecording()
@@ -561,9 +561,9 @@ class GSRQuickRecordingViewModel : BaseViewModel() {
                 _recordingState.value = currentState.copy(
                     recordingDuration = currentState.recordingDuration + 1000,
                     samplesCollected = currentState.samplesCollected + currentState.sampleRate,
-                    currentGSRValue = (5.0..15.0).random(),
-                    averageGSRValue = (8.0..12.0).random(),
-                    recentGSRValues = currentState.recentGSRValues.takeLast(10) + (5.0..15.0).random()
+                    currentGSRValue = Random.nextDouble(5.0, 15.0),
+                    averageGSRValue = Random.nextDouble(8.0, 12.0),
+                    recentGSRValues = currentState.recentGSRValues.takeLast(10) + Random.nextDouble(5.0, 15.0)
                 )
             }
         }
