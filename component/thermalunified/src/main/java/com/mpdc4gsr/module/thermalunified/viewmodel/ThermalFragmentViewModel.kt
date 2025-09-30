@@ -11,6 +11,7 @@ import com.mpdc4gsr.module.thermalunified.tools.ThermalTool
 import com.mpdc4gsr.module.thermalunified.utils.ArrayUtils
 import com.mpdc4gsr.libunified.app.matrix.IrSurfaceView
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -71,6 +72,7 @@ class ThermalFragmentViewModel : BaseViewModel() {
 
     init {
         setupThermalDataProcessing()
+        syncRecordingStates()
     }
 
     private fun setupThermalDataProcessing() {
@@ -90,6 +92,17 @@ class ThermalFragmentViewModel : BaseViewModel() {
                 )
             }.collect { newUiState ->
                 _thermalUiState.value = newUiState
+            }
+        }
+    }
+
+    private fun syncRecordingStates() {
+        viewModelScope.launch {
+            // Keep _isRecording in sync with _videoRecordingState
+            _videoRecordingState.collect { videoState ->
+                if (_isRecording.value != videoState.isRecording) {
+                    _isRecording.value = videoState.isRecording
+                }
             }
         }
     }
@@ -291,7 +304,7 @@ class ThermalFragmentViewModel : BaseViewModel() {
         // TODO: Implement actual thermal camera initialization
         viewModelScope.launch {
             // Simulate connection process
-            kotlinx.coroutines.delay(1000)
+            delay(1000)
             _connectionStatus.value = "Connected"
             // Initialize with default temperature data
             _temperatureData.value = TemperatureData(
@@ -310,16 +323,26 @@ class ThermalFragmentViewModel : BaseViewModel() {
     }
 
     fun toggleRecording() {
-        _isRecording.value = !_isRecording.value
-        if (_isRecording.value) {
-            // Start recording
-            viewModelScope.launch {
-                // TODO: Implement recording start
-            }
-        } else {
-            // Stop recording
-            viewModelScope.launch {
-                // TODO: Implement recording stop
+        viewModelScope.launch {
+            if (_isRecording.value) {
+                // Stop recording
+                stopVideoRecording()
+                _isRecording.value = false
+            } else {
+                // Start recording
+                try {
+                    // Create a temporary file for recording
+                    val outputFile = File.createTempFile(
+                        "thermal_recording_${System.currentTimeMillis()}", 
+                        ".mp4"
+                    )
+                    startVideoRecording(outputFile)
+                    _isRecording.value = true
+                } catch (e: Exception) {
+                    // Handle file creation error
+                    _isRecording.value = false
+                    // TODO: Emit error event or log the exception
+                }
             }
         }
     }
