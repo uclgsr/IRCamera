@@ -486,11 +486,12 @@ private fun TestSummaryMetric(
 }
 
 @Composable
-private fun TestResultCard(
-    result: TestResult
+internal fun TestResultCard(
+    result: TestResult,
+    modifier: Modifier = Modifier
 ) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         colors = CardDefaults.cardColors(
             containerColor = when (result.severity) {

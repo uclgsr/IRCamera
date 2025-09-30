@@ -108,11 +108,17 @@ class SensorDataRepository(
         val thermalStreams = deviceIds.map { getThermalDataStream(it) }
 
         return combine(gsrStreams + thermalStreams) { results ->
-            val gsrData = results.take(deviceIds.size).mapNotNull {
-                if (it is BaseRepository.Result.Success) it.data else null
+            val gsrData = results.take(deviceIds.size).mapNotNull { result ->
+                if (result is BaseRepository.Result.Success<*>) {
+                    @Suppress("UNCHECKED_CAST")
+                    (result.data as? GSRSensorData)
+                } else null
             }
-            val thermalData = results.drop(deviceIds.size).mapNotNull {
-                if (it is BaseRepository.Result.Success) it.data else null
+            val thermalData = results.drop(deviceIds.size).mapNotNull { result ->
+                if (result is BaseRepository.Result.Success<*>) {
+                    @Suppress("UNCHECKED_CAST")
+                    (result.data as? ThermalSensorData)
+                } else null
             }
 
             BaseRepository.Result.Success(CombinedSensorData(gsrData, thermalData))

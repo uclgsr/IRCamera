@@ -1,5 +1,6 @@
 package mpdc4gsr.compose.utils
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -22,7 +23,7 @@ import androidx.fragment.app.FragmentManager
  */
 @Composable
 fun AndroidViewWrapper(
-    viewFactory: () -> View,
+    viewFactory: (Context) -> View,
     modifier: Modifier = Modifier,
     update: (View) -> Unit = {}
 ) {
