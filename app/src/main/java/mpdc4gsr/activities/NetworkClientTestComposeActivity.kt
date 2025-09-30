@@ -24,8 +24,8 @@ import mpdc4gsr.viewmodel.BaseViewModel
 
 class NetworkClientTestViewModel : BaseViewModel() {
     
-    // UI State
-    data class UiState(
+    // Network test specific state
+    data class NetworkTestState(
         val isTestRunning: Boolean = false,
         val currentTest: String = "",
         val testProgress: Float = 0f,
@@ -35,15 +35,15 @@ class NetworkClientTestViewModel : BaseViewModel() {
         val networkConfiguration: NetworkConfiguration = NetworkConfiguration("192.168.1.100", 8080, 5000, 3)
     )
     
-    private val _uiState = MutableStateFlow(UiState())
-    val uiState: StateFlow<UiState> = _uiState.asStateFlow()
+    private val _testState = MutableStateFlow(NetworkTestState())
+    val testState: StateFlow<NetworkTestState> = _testState.asStateFlow()
 
     fun startComprehensiveTest() {
-        _uiState.value = _uiState.value.copy(isTestRunning = true)
+        _testState.value = _testState.value.copy(isTestRunning = true)
     }
     
     fun stopTest() {
-        _uiState.value = _uiState.value.copy(isTestRunning = false)
+        _testState.value = _testState.value.copy(isTestRunning = false)
     }
     
     fun refreshNetworkStatus() {
@@ -63,7 +63,7 @@ class NetworkClientTestViewModel : BaseViewModel() {
     }
     
     fun updateNetworkConfiguration(config: NetworkConfiguration) {
-        _uiState.value = _uiState.value.copy(networkConfiguration = config)
+        _testState.value = _testState.value.copy(networkConfiguration = config)
     }
 }
 
@@ -93,6 +93,7 @@ fun NetworkClientTestScreen(
     viewModel: NetworkClientTestViewModel = viewModel(),
     onNavigateBack: () -> Unit = {}
 ) {
+    val testState by viewModel.testState.collectAsState()
     val uiState by viewModel.uiState.collectAsState()
 
     Column(
@@ -112,9 +113,9 @@ fun NetworkClientTestScreen(
             actions = {
                 IconButton(onClick = { viewModel.startComprehensiveTest() }) {
                     Icon(
-                        imageVector = if (uiState.isTestRunning) Icons.Default.Stop else Icons.Default.PlayArrow,
-                        contentDescription = if (uiState.isTestRunning) "Stop test" else "Start test",
-                        tint = if (uiState.isTestRunning) Color.Red else MaterialTheme.colorScheme.onSurfaceVariant
+                        imageVector = if (testState.isTestRunning) Icons.Default.Stop else Icons.Default.PlayArrow,
+                        contentDescription = if (testState.isTestRunning) "Stop test" else "Start test",
+                        tint = if (testState.isTestRunning) Color.Red else MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
 
@@ -140,17 +141,17 @@ fun NetworkClientTestScreen(
             // Network Status Overview
             item {
                 NetworkStatusOverviewCard(
-                    networkStatus = uiState.networkStatus,
+                    networkStatus = testState.networkStatus,
                     onRunQuickTest = { viewModel.runQuickNetworkTest() }
                 )
             }
 
             // Test Progress (if running)
-            if (uiState.isTestRunning) {
+            if (testState.isTestRunning) {
                 item {
                     TestProgressCard(
-                        currentTest = uiState.currentTest,
-                        progress = uiState.testProgress,
+                        currentTest = testState.currentTest,
+                        progress = testState.testProgress,
                         onStopTest = { viewModel.stopTest() }
                     )
                 }
@@ -165,7 +166,7 @@ fun NetworkClientTestScreen(
                 )
             }
 
-            items(uiState.testCategories) { category ->
+            items(testState.testCategories) { category ->
                 TestCategoryCard(
                     category = category,
                     onRunCategoryTest = { viewModel.runCategoryTest(category) }
@@ -173,7 +174,7 @@ fun NetworkClientTestScreen(
             }
 
             // Test Results
-            if (uiState.testResults.isNotEmpty()) {
+            if (testState.testResults.isNotEmpty()) {
                 item {
                     Text(
                         text = "Recent Test Results",
@@ -182,7 +183,7 @@ fun NetworkClientTestScreen(
                     )
                 }
 
-                items(uiState.testResults.take(5)) { result ->
+                items(testState.testResults.take(5)) { result ->
                     TestResultCard(
                         result = result,
                         onViewDetails = { viewModel.viewTestDetails(result) }
@@ -193,17 +194,17 @@ fun NetworkClientTestScreen(
             // Network Configuration
             item {
                 NetworkConfigurationCard(
-                    configuration = uiState.networkConfiguration,
+                    configuration = testState.networkConfiguration,
                     onUpdateConfiguration = { config -> viewModel.updateNetworkConfiguration(config) }
                 )
             }
 
-            // Error Display
+            // Error Display (from base ViewModel)
             uiState.error?.let { error ->
                 item {
                     ErrorCard(
                         error = error,
-                        onDismiss = { viewModel.clearError() }
+                        onDismiss = { /* Error is in base viewModel */ }
                     )
                 }
             }
