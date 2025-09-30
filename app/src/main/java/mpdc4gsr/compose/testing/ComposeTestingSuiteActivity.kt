@@ -144,7 +144,7 @@ class ComposeTestingSuiteActivity : ComponentActivity() {
                     ) {
                         items(testResults) { result ->
                             TestResultCard(
-                                testResult = result,
+                                result = result,
                                 modifier = Modifier.fillMaxWidth()
                             )
                         }

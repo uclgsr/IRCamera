@@ -244,7 +244,7 @@ private fun DeviceFilterRow(
     val filters = listOf("All", "Thermal", "GSR", "Camera", "Unknown")
 
     LazyColumn(
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
         modifier = modifier
     ) {
         items(filters) { filter ->
