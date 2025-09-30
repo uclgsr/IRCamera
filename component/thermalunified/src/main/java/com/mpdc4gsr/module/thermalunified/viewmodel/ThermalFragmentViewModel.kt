@@ -73,6 +73,7 @@ class ThermalFragmentViewModel : BaseViewModel() {
     init {
         setupThermalDataProcessing()
         syncRecordingStates()
+        syncUiState()
     }
 
     private fun setupThermalDataProcessing() {
@@ -448,4 +449,71 @@ class ThermalFragmentViewModel : BaseViewModel() {
     }
 
     enum class AlertType { HOT_SPOT, COLD_SPOT, TEMPERATURE_THRESHOLD }
+
+    // UiState data class for Compose UI
+    data class UiState(
+        val isMonitoring: Boolean = false,
+        val currentTemperature: Float? = null,
+        val minTemperature: Float? = null,
+        val maxTemperature: Float? = null,
+        val averageTemperature: Float? = null,
+        val isDeviceConnected: Boolean = false,
+        val isRecording: Boolean = false,
+        val alertCount: Int = 0
+    )
+
+    // Combined UI state for compose UI
+    private val _uiState = MutableStateFlow(UiState())
+    val uiState: StateFlow<UiState> = _uiState.asStateFlow()
+
+    // Monitoring state
+    private val _isMonitoring = MutableStateFlow(false)
+
+    private fun syncUiState() {
+        viewModelScope.launch {
+            combine(
+                _isMonitoring,
+                _temperatureAnalysis,
+                _connectionStatus,
+                _isRecording
+            ) { isMonitoring, tempAnalysis, connectionStatus, isRecording ->
+                UiState(
+                    isMonitoring = isMonitoring,
+                    currentTemperature = if (tempAnalysis.isValid) tempAnalysis.averageTemperature else null,
+                    minTemperature = if (tempAnalysis.isValid) tempAnalysis.minTemperature else null,
+                    maxTemperature = if (tempAnalysis.isValid) tempAnalysis.maxTemperature else null,
+                    averageTemperature = if (tempAnalysis.isValid) tempAnalysis.averageTemperature else null,
+                    isDeviceConnected = connectionStatus == "Connected",
+                    isRecording = isRecording,
+                    alertCount = tempAnalysis.hotSpotCount + tempAnalysis.coldSpotCount
+                )
+            }.collect { newUiState ->
+                _uiState.value = newUiState
+            }
+        }
+    }
+
+    // Monitoring control methods
+    fun startMonitoring() {
+        _isMonitoring.value = true
+        viewModelScope.launch {
+            // Start thermal monitoring process
+            // TODO: Implement actual monitoring logic
+        }
+    }
+
+    fun stopMonitoring() {
+        _isMonitoring.value = false
+        viewModelScope.launch {
+            // Stop thermal monitoring process
+            // TODO: Implement actual monitoring stop logic
+        }
+    }
+
+    fun configureRegions() {
+        viewModelScope.launch {
+            // Configure thermal regions
+            // TODO: Implement region configuration logic
+        }
+    }
 }
