@@ -136,7 +136,7 @@ class IRMonitorHistoryViewModel : BaseViewModel() {
                         id = record.startTime.toString(),
                         sessionName = "Session ${index + 1}",
                         startTime = record.startTime,
-                        duration = record.duration.toLong() * 1000L, // Convert to milliseconds if needed
+                        duration = record.duration.toLong() * 1000L, // Convert seconds to milliseconds
                         sampleCount = detailList.size,
                         avgTemperature = avgTemp,
                         maxTemperature = maxTemp,
