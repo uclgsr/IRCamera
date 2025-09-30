@@ -85,7 +85,7 @@ fun EmissivityCompose(
                         end = Offset(x - strokeWidth / 2, height),
                         strokeWidth = strokeWidth
                     )
-                    x += if (it == 0) columnWidth else columnWidth
+                    x += columnWidth
                 }
             }
         }
