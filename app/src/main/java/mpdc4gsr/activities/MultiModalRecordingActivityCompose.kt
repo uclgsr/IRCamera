@@ -846,39 +846,38 @@ class MultiModalRecordingViewModel : BaseViewModel() {
         super.onCleared()
         recordingJob?.cancel()
     }
-    _uiState.value = _uiState.value .copy(isRecording = false)
-}
 
-fun pauseRecording() {
-    // Implementation for pause
-}
-
-fun resumeRecording() {
-    // Implementation for resume
-}
-
-fun toggleSensor(sensorType: SensorType) {
-    val updatedSensors = _uiState.value.sensorStates.map { sensor ->
-        if (sensor.type == sensorType) {
-            sensor.copy(isEnabled = !sensor.isEnabled)
-        } else sensor
+    fun pauseRecording() {
+        _uiState.value = _uiState.value.copy(isRecording = false)
     }
-    _uiState.value = _uiState.value.copy(sensorStates = updatedSensors)
-}
 
-fun configureSensor(sensorType: SensorType) {
-    // Implementation for sensor configuration
-}
+    fun resumeRecording() {
+        _uiState.value = _uiState.value.copy(isRecording = true)
+    }
 
-fun createNewSession(sessionName: String, participantId: String) {
-    _uiState.value = _uiState.value.copy(
-        currentSession = SessionInfo(sessionName, participantId)
-    )
-}
+    fun toggleSensor(sensorType: SensorType) {
+        val updatedSensors = _uiState.value.sensorStates.map { sensor ->
+            if (sensor.type == sensorType) {
+                sensor.copy(isEnabled = !sensor.isEnabled)
+            } else sensor
+        }
+        _uiState.value = _uiState.value.copy(sensorStates = updatedSensors)
+    }
 
-fun selectProtocol(protocol: ResearchProtocol) {
-    _uiState.value = _uiState.value.copy(
-        currentSession = _uiState.value.currentSession?.copy(protocol = protocol.name)
-    )
+    fun configureSensor(sensorType: SensorType) {
+        // Implementation for sensor configuration
+    }
+
+    fun createNewSession(sessionName: String, participantId: String) {
+        _uiState.value = _uiState.value.copy(
+            currentSession = SessionInfo(sessionName, participantId)
+        )
+    }
+
+    fun selectProtocol(protocol: ResearchProtocol) {
+        _uiState.value = _uiState.value.copy(
+            currentSession = _uiState.value.currentSession?.copy(protocol = protocol.name)
+        )
+    }
 }
 }
