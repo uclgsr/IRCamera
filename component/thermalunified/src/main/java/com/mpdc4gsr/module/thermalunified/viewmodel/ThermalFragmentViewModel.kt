@@ -504,7 +504,7 @@ class ThermalFragmentViewModel : BaseViewModel() {
         data class PhotoCaptured(val fileName: String, val metadata: Map<String, Any>) : ThermalProcessingAction()
         data class RecordingError(val message: String) : ThermalProcessingAction()
         object NavigateToSettings : ThermalProcessingAction()
-        data class RegionConfigured(val regionMode: String) : ThermalProcessingAction()
+        data class RegionConfigured(val fenceType: FenceType) : ThermalProcessingAction()
     }
 
     enum class AlertType { HOT_SPOT, COLD_SPOT, TEMPERATURE_THRESHOLD }
