@@ -180,7 +180,7 @@ fun UnifiedSensorStatus(
                     UnifiedSystemState.Error -> {
                         Button(
                             onClick = { onSystemAction(SystemAction.Synchronize) },
-                            colors = ButtonDefaults.buttonColors(containerColor = Color.Orange)
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFA500))
                         ) {
                             Text("Recover")
                         }
