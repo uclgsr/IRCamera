@@ -145,8 +145,8 @@ class ResearchTemplateComposeActivity : BaseComposeActivity<BaseViewModel>() {
 private fun ResearchTemplateContent(
     selectedTemplate: ResearchTemplate?,
     onTemplateSelect: (ResearchTemplate) -> Unit,
-    selectedCategory: String,
-    onCategoryChange: (String) -> Unit,
+    selectedCategory: ResearchTemplate.TemplateCategory?,
+    onCategoryChange: (ResearchTemplate.TemplateCategory?) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
