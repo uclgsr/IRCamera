@@ -120,7 +120,7 @@ class DevicePairingViewModel : BaseViewModel(), NetworkClient.NetworkEventListen
     fun initialize(context: android.content.Context) {
         launchWithErrorHandling {
             networkClient = NetworkClient(context)
-            networkClient.setEventListener(this)
+            networkClient.setEventListener(this@DevicePairingViewModel)
 
             _connectionState.value = ConnectionState.DISCONNECTED
             _scanState.value = ScanState.IDLE
@@ -190,7 +190,10 @@ class DevicePairingViewModel : BaseViewModel(), NetworkClient.NetworkEventListen
                 // Show connection dialog
                 _events.emit(PairingEvent.ShowConnectionDialog(controller))
 
-                val success = networkClient.connectToController(controller)
+                val success = networkClient.connectToController(
+                    ipAddress = controller.ipAddress,
+                    port = controller.port
+                )
 
                 if (success) {
                     _connectedController.value = controller
