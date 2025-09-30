@@ -149,7 +149,7 @@ class IRCorrectionLiteFourViewModel : ViewModel() {
                         temperature = temp.toFloat(),
                         points = generateLinePoints(temp.toFloat()),
                         color = when {
-                            temp < 25 -> MaterialTheme.colorScheme.primary
+                            temp < 25 -> Color.Blue
                             temp < 35 -> Color.Green
                             else -> Color.Red
                         }

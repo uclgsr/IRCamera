@@ -30,7 +30,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.mpdc4gsr.libunified.compose.theme.IRCameraTheme
+import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -51,7 +51,7 @@ class ReportCreateComposeActivity : ComponentActivity() {
         viewModel = ViewModelProvider(this)[ReportCreateViewModel::class.java]
 
         setContent {
-            IRCameraTheme {
+            LibUnifiedTheme {
                 ReportCreateScreen(
                     viewModel = viewModel,
                     onNavigateBack = { finish() },
@@ -698,7 +698,7 @@ fun ReportPreviewStep(
 }
 
 @Composable
-fun ReportSummaryItem(
+private fun ReportSummaryItem(
     label: String,
     value: String,
     modifier: Modifier = Modifier
