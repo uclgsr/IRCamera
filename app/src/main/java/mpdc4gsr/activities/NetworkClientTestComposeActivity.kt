@@ -44,7 +44,7 @@ fun NetworkClientTestScreen(
     viewModel: NetworkClientTestViewModel = viewModel(),
     onNavigateBack: () -> Unit = {}
 ) {
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.networkTestUiState.collectAsState()
 
     Column(
         modifier = Modifier.fillMaxSize()
@@ -91,7 +91,18 @@ fun NetworkClientTestScreen(
             // Network Status Overview
             item {
                 NetworkStatusOverviewCard(
-                    networkStatus = uiState.networkStatus,
+                    networkStatus = NetworkTestStatus(
+                        overallStatus = when (uiState.networkStatus) {
+                            "Connected" -> TestStatus.PASS
+                            "Connecting" -> TestStatus.PENDING
+                            "Error" -> TestStatus.FAIL
+                            else -> TestStatus.WARNING
+                        },
+                        latency = 0,
+                        bandwidth = 0f,
+                        packetLoss = 0f,
+                        connectedDevices = if (uiState.networkStatus == "Connected") 1 else 0
+                    ),
                     onRunQuickTest = { viewModel.runQuickNetworkTest() }
                 )
             }
@@ -145,15 +156,17 @@ fun NetworkClientTestScreen(
             item {
                 NetworkConfigurationCard(
                     configuration = uiState.networkConfiguration,
-                    onUpdateConfiguration = { config -> viewModel.updateNetworkConfiguration(config) }
+                    onUpdateConfiguration = { config -> 
+                        viewModel.updateNetworkConfiguration(config)
+                    }
                 )
             }
 
             // Error Display
-            uiState.error?.let { error ->
+            uiState.error?.let { errorMessage: String ->
                 item {
                     ErrorCard(
-                        error = error,
+                        error = errorMessage,
                         onDismiss = { viewModel.clearError() }
                     )
                 }
@@ -690,7 +703,14 @@ private fun ErrorCard(
     }
 }
 
-// Data classes
+// Type aliases to use ViewModel types
+typealias NetworkTestCategory = NetworkClientTestViewModel.NetworkTestCategory
+typealias NetworkTestResult = NetworkClientTestViewModel.NetworkTestResult
+typealias TestStatus = NetworkClientTestViewModel.TestStatus
+typealias NetworkTestType = NetworkClientTestViewModel.NetworkTestType
+typealias NetworkConfiguration = NetworkClientTestViewModel.NetworkConfiguration
+
+// Data classes specific to this activity
 data class NetworkTestStatus(
     val overallStatus: TestStatus,
     val latency: Int,
@@ -698,37 +718,3 @@ data class NetworkTestStatus(
     val packetLoss: Float,
     val connectedDevices: Int
 )
-
-data class NetworkTestCategory(
-    val name: String,
-    val description: String,
-    val type: NetworkTestType,
-    val testCount: Int,
-    val lastResult: TestStatus
-)
-
-data class NetworkTestResult(
-    val testName: String,
-    val status: TestStatus,
-    val timestamp: String,
-    val duration: Long,
-    val details: String
-)
-
-data class NetworkConfiguration(
-    val serverAddress: String,
-    val port: Int,
-    val timeoutMs: Long,
-    val retryAttempts: Int
-)
-
-enum class TestStatus(val displayName: String) {
-    PASS("Pass"),
-    FAIL("Fail"),
-    WARNING("Warning"),
-    PENDING("Pending")
-}
-
-enum class NetworkTestType {
-    CONNECTIVITY, SPEED, STABILITY, SECURITY
-}

@@ -49,6 +49,13 @@ class NetworkClientTestViewModel : BaseViewModel() {
     enum class TestStatus { PASS, FAIL, WARNING, PENDING }
     enum class NetworkTestType { CONNECTION, LATENCY, THROUGHPUT, RELIABILITY }
     
+    data class NetworkConfiguration(
+        val serverAddress: String = "192.168.1.100",
+        val port: Int = 8080,
+        val timeoutMs: Long = 5000,
+        val retryAttempts: Int = 3
+    )
+    
     data class NetworkTestCategory(
         val name: String,
         val description: String,
@@ -66,18 +73,18 @@ class NetworkClientTestViewModel : BaseViewModel() {
     )
 
     // UI State for NetworkClientTestComposeActivity
-    data class UiState(
+    data class NetworkTestUiState(
         val isTestRunning: Boolean = false,
         val currentTest: String = "",
         val testProgress: Float = 0f,
         val networkStatus: String = "Disconnected",
         val testCategories: List<NetworkTestCategory> = emptyList(),
         val testResults: List<NetworkTestResult> = emptyList(),
-        val networkConfiguration: String = ""
+        val networkConfiguration: NetworkConfiguration = NetworkConfiguration()
     )
     
-    private val _uiState = MutableStateFlow(UiState())
-    val uiState: StateFlow<UiState> = _uiState.asStateFlow()
+    private val _networkTestUiState = MutableStateFlow(NetworkTestUiState())
+    val networkTestUiState: StateFlow<NetworkTestUiState> = _networkTestUiState.asStateFlow()
 
     fun updateConnectionState(state: CommandConnection.ConnectionState) {
         _networkConnectionState.value = state
@@ -97,15 +104,15 @@ class NetworkClientTestViewModel : BaseViewModel() {
     
     // Methods for NetworkClientTestComposeActivity
     fun startComprehensiveTest() {
-        _uiState.value = _uiState.value.copy(isTestRunning = true)
+        _networkTestUiState.value = _networkTestUiState.value.copy(isTestRunning = true)
     }
     
     fun stopTest() {
-        _uiState.value = _uiState.value.copy(isTestRunning = false)
+        _networkTestUiState.value = _networkTestUiState.value.copy(isTestRunning = false)
     }
     
     fun refreshNetworkStatus() {
-        _uiState.value = _uiState.value.copy(
+        _networkTestUiState.value = _networkTestUiState.value.copy(
             networkStatus = when (_networkConnectionState.value) {
                 CommandConnection.ConnectionState.CONNECTED -> "Connected"
                 CommandConnection.ConnectionState.CONNECTING -> "Connecting"
@@ -127,8 +134,11 @@ class NetworkClientTestViewModel : BaseViewModel() {
         // Stub implementation
     }
     
-    fun updateNetworkConfiguration(config: String) {
-        _uiState.value = _uiState.value.copy(networkConfiguration = config)
+    fun updateNetworkConfiguration(config: NetworkConfiguration) {
+        _networkTestUiState.value = _networkTestUiState.value.copy(networkConfiguration = config)
+        // Update IP and port from configuration
+        _ipAddress.value = config.serverAddress
+        _port.value = config.port.toString()
     }
 }
 
@@ -228,7 +238,7 @@ class NetworkClientTestActivityCompose : BaseComposeActivity<NetworkClientTestVi
     private fun testWifiConnection(ip: String, port: Int) {
         lifecycleScope.launch {
             try {
-                networkManager?.connectToHost(ip, port)
+                networkManager?.connectWifi(ip, port)
             } catch (e: Exception) {
                 Log.e(TAG, "WiFi connection failed", e)
                 testViewModel.updateConnectionState(CommandConnection.ConnectionState.ERROR)
@@ -239,7 +249,7 @@ class NetworkClientTestActivityCompose : BaseComposeActivity<NetworkClientTestVi
     private fun testSendMessage() {
         lifecycleScope.launch {
             try {
-                networkManager?.sendCommand("ping")
+                networkManager?.sendResponse("ping")
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to send message", e)
             }
@@ -362,7 +372,7 @@ private fun ConnectionStatusCard(
                     contentDescription = "Connection Status",
                     tint = when (connectionState) {
                         CommandConnection.ConnectionState.CONNECTED -> Color.Green
-                        CommandConnection.ConnectionState.CONNECTING -> Color.Orange
+                        CommandConnection.ConnectionState.CONNECTING -> Color(0xFFFFA500)
                         CommandConnection.ConnectionState.ERROR -> Color.Red
                         else -> Color.Gray
                     }

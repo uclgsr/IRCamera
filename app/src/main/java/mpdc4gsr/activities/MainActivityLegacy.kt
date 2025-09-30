@@ -33,7 +33,7 @@ import mpdc4gsr.core.RecordingService
 import mpdc4gsr.permissions.PermissionController
 
 import mpdc4gsr.ui_components.ComprehensiveSensorStatusWidget
-import mpdc4gsr.ui_components.MainFragment
+// import mpdc4gsr.ui_components.MainFragment
 import mpdc4gsr.ui_components.MineFragment
 import mpdc4gsr.ui_components.RecordingControlsWidget
 import mpdc4gsr.ui_components.SensorDashboardFragment
@@ -369,7 +369,8 @@ class MainActivityLegacy : BaseBindingActivity<ActivityMainBinding>(), View.OnCl
         override fun createFragment(position: Int): Fragment {
             return when (position) {
                 PAGE_GALLERY -> IRGalleryTabFragment()
-                PAGE_MAIN -> MainFragment()
+                // PAGE_MAIN -> MainFragment()
+                PAGE_MAIN -> SensorDashboardFragment() // Fallback to SensorDashboardFragment
                 PAGE_SETTINGS -> MoreFragment().apply {
                     arguments = Bundle().also { it.putBoolean(ExtraKeyConfig.IS_TC007, isTC007) }
                 }

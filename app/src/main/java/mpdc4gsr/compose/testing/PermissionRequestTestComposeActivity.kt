@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
@@ -20,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import kotlinx.coroutines.delay
@@ -33,7 +33,7 @@ import java.util.*
  * Compose version of Permission Request Activity
  * Tests permission system functionality and validation
  */
-class PermissionRequestTestComposeActivity : ComponentActivity() {
+class PermissionRequestTestComposeActivity : FragmentActivity() {
 
     companion object {
         private const val TAG = "PermissionRequestTestCompose"
@@ -61,6 +61,7 @@ class PermissionRequestTestComposeActivity : ComponentActivity() {
 
     private lateinit var permissionController: PermissionController
     private lateinit var permissionManager: PermissionManager
+    private var isTestRunning by mutableStateOf(false)
 
     private val permissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -84,51 +85,12 @@ class PermissionRequestTestComposeActivity : ComponentActivity() {
     @Composable
     fun PermissionRequestTestScreen() {
         var testResults by remember { mutableStateOf(listOf<TestCase>()) }
-        var isTestRunning by remember { mutableStateOf(false) }
         var permissions by remember { mutableStateOf(listOf<PermissionInfo>()) }
         var permissionLogs by remember { mutableStateOf(listOf<PermissionLog>()) }
         var overallPermissionStatus by remember { mutableStateOf("Not Checked") }
         var canStartRecording by remember { mutableStateOf(false) }
 
-        // Initialize test cases and permissions
-        LaunchedEffect(Unit) {
-            testResults = listOf(
-                TestCase(
-                    id = "camera_permissions",
-                    name = "Camera Permissions",
-                    description = "Test camera access permissions"
-                ),
-                TestCase(
-                    id = "bluetooth_permissions",
-                    name = "Bluetooth Permissions",
-                    description = "Test Bluetooth and location permissions"
-                ),
-                TestCase(
-                    id = "storage_permissions",
-                    name = "Storage Permissions",
-                    description = "Test storage access permissions"
-                ),
-                TestCase(
-                    id = "microphone_permissions",
-                    name = "Microphone Permissions",
-                    description = "Test audio recording permissions"
-                ),
-                TestCase(
-                    id = "permission_flow",
-                    name = "Permission Flow",
-                    description = "Test complete permission request flow"
-                ),
-                TestCase(
-                    id = "permission_persistence",
-                    name = "Permission Persistence",
-                    description = "Test permission state persistence"
-                )
-            )
-
-            updatePermissionStatus()
-        }
-
-        // Function to update permission status
+        // Function to update permission status (defined before being used)
         fun updatePermissionStatus() {
             val permissionList = listOf(
                 PermissionInfo(
@@ -192,6 +154,44 @@ class PermissionRequestTestComposeActivity : ComponentActivity() {
             overallPermissionStatus =
                 "$requiredGrantedCount/$requiredCount required permissions granted"
             canStartRecording = requiredGrantedCount == requiredCount
+        }
+
+        // Initialize test cases and permissions
+        LaunchedEffect(Unit) {
+            testResults = listOf(
+                TestCase(
+                    id = "camera_permissions",
+                    name = "Camera Permissions",
+                    description = "Test camera access permissions"
+                ),
+                TestCase(
+                    id = "bluetooth_permissions",
+                    name = "Bluetooth Permissions",
+                    description = "Test Bluetooth and location permissions"
+                ),
+                TestCase(
+                    id = "storage_permissions",
+                    name = "Storage Permissions",
+                    description = "Test storage access permissions"
+                ),
+                TestCase(
+                    id = "microphone_permissions",
+                    name = "Microphone Permissions",
+                    description = "Test audio recording permissions"
+                ),
+                TestCase(
+                    id = "permission_flow",
+                    name = "Permission Flow",
+                    description = "Test complete permission request flow"
+                ),
+                TestCase(
+                    id = "permission_persistence",
+                    name = "Permission Persistence",
+                    description = "Test permission state persistence"
+                )
+            )
+
+            updatePermissionStatus()
         }
 
         Scaffold(

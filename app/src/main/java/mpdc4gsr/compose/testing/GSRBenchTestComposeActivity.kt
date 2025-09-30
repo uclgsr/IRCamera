@@ -219,8 +219,9 @@ class GSRBenchTestComposeActivity : ComponentActivity() {
 
     private fun initializeComponents() {
         try {
-            recordingController = RecordingController(this, this)
-            gsrRecorder = GSRSensorRecorder(this, recordingController = recordingController)
+            val controller = RecordingController(this, this)
+            recordingController = controller
+            gsrRecorder = GSRSensorRecorder(this, recordingController = controller)
             Log.d(TAG, "GSR components initialized successfully")
         } catch (e: Exception) {
             Log.e(TAG, "Failed to initialize GSR components: ${e.message}")

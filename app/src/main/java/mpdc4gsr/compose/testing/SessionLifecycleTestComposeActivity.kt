@@ -43,6 +43,11 @@ class SessionLifecycleTestComposeActivity : ComponentActivity() {
         IDLE, INITIALIZING, ACTIVE, PAUSED, STOPPING, COMPLETED, ERROR
     }
 
+    private var sessionEvents by mutableStateOf(listOf<SessionEvent>())
+    private var currentSessionState by mutableStateOf(SessionState.IDLE)
+    private var isTestRunning by mutableStateOf(false)
+    private var sessionMetrics by mutableStateOf(mapOf<String, Any>())
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -57,10 +62,6 @@ class SessionLifecycleTestComposeActivity : ComponentActivity() {
     @Composable
     fun SessionLifecycleTestScreen() {
         var testResults by remember { mutableStateOf(listOf<TestCase>()) }
-        var sessionEvents by remember { mutableStateOf(listOf<SessionEvent>()) }
-        var currentSessionState by remember { mutableStateOf(SessionState.IDLE) }
-        var isTestRunning by remember { mutableStateOf(false) }
-        var sessionMetrics by remember { mutableStateOf(mapOf<String, Any>()) }
 
         // Initialize test cases
         LaunchedEffect(Unit) {

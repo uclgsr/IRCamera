@@ -121,8 +121,8 @@ fun UnifiedNavHost(
                 onSensorClick = { sensorType ->
                     when (sensorType) {
                         SensorType.GSR -> navController.navigate(UnifiedRoute.GSRSettings.route)
-                        SensorType.THERMAL -> navController.navigate(UnifiedRoute.ThermalCamera.route)
-                        SensorType.RGB_CAMERA -> navController.navigate(UnifiedRoute.CameraDashboard.route)
+                        SensorType.ThermalIR -> navController.navigate(UnifiedRoute.ThermalCamera.route)
+                        SensorType.RGBCamera -> navController.navigate(UnifiedRoute.CameraDashboard.route)
                         else -> {}
                     }
                 }
