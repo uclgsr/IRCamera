@@ -52,6 +52,8 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
 
     private var rgbCameraRecorder: RgbCameraRecorder? = null
     private var isRecording = false
+    private var captureResults by mutableStateOf(listOf<CaptureResult>())
+    private var isTestRunning by mutableStateOf(false)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,8 +72,6 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
     fun RawCaptureTestScreen() {
         var testResults by remember { mutableStateOf(listOf<TestCase>()) }
         var captureFormats by remember { mutableStateOf(listOf<CaptureFormat>()) }
-        var captureResults by remember { mutableStateOf(listOf<CaptureResult>()) }
-        var isTestRunning by remember { mutableStateOf(false) }
         var deviceCompatibility by remember { mutableStateOf(mapOf<String, Any>()) }
         var selectedFormat by remember { mutableStateOf("DNG") }
         var captureSettings by remember { mutableStateOf(mapOf<String, Boolean>()) }

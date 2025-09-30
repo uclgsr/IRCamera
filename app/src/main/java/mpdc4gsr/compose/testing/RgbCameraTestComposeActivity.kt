@@ -40,6 +40,7 @@ class RgbCameraTestComposeActivity : ComponentActivity() {
 
     private var cameraRecorder: RgbCameraRecorder? = null
     private var permissionManager: PermissionManager? = null
+    private var permissionController: mpdc4gsr.permissions.PermissionController? = null
     private var isRecording = false
 
     private val permissionLauncher = registerForActivityResult(
@@ -56,7 +57,8 @@ class RgbCameraTestComposeActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        permissionManager = PermissionManager(this)
+        permissionController = mpdc4gsr.permissions.PermissionController(this as androidx.fragment.app.FragmentActivity)
+        permissionManager = PermissionManager(this as androidx.fragment.app.FragmentActivity, permissionController!!)
         checkPermissions()
 
         setContent {

@@ -51,6 +51,11 @@ class SensorDashboardTestComposeActivity : ComponentActivity() {
         val totalDevices: Int
     )
 
+    private var isTestRunning by mutableStateOf(false)
+    private var sensorStates by mutableStateOf(listOf<SensorState>())
+    private var testMetrics by mutableStateOf(mapOf<String, Any>())
+    private var multiDeviceState by mutableStateOf(MultiDeviceState(0, 0, 0))
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -65,12 +70,8 @@ class SensorDashboardTestComposeActivity : ComponentActivity() {
     @Composable
     fun SensorDashboardTestScreen() {
         var testResults by remember { mutableStateOf(listOf<TestCase>()) }
-        var isTestRunning by remember { mutableStateOf(false) }
-        var sensorStates by remember { mutableStateOf(listOf<SensorState>()) }
         var recordingStatus by remember { mutableStateOf(false) }
         var sessionId by remember { mutableStateOf("") }
-        var multiDeviceState by remember { mutableStateOf(MultiDeviceState(0, 0, 0)) }
-        var testMetrics by remember { mutableStateOf(mapOf<String, Any>()) }
 
         // Initialize test cases and sensor states
         LaunchedEffect(Unit) {

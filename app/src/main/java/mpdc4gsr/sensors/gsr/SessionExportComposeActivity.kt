@@ -499,25 +499,10 @@ private fun EmptyContent() {
     }
 }
 
-// Data classes for export functionality
-data class GSRSession(
-    val id: String,
-    val name: String,
-    val duration: String,
-    val dataPointCount: Int,
-    val filePath: String
-)
-
-enum class ExportFormat(val displayName: String) {
-    CSV("CSV (Comma Separated Values)"),
-    JSON("JSON (JavaScript Object Notation)"),
-    XML("XML (eXtensible Markup Language)"),
-    EXCEL("Excel Spreadsheet")
-}
-
-enum class ExportDestination(val displayName: String) {
-    DOWNLOADS("Downloads Folder"),
-    EXTERNAL_STORAGE("External Storage"),
+// Type aliases to avoid redeclaration - use types from SessionExportViewModel
+typealias GSRSession = mpdc4gsr.sensors.gsr.SessionExportViewModel.GSRSession
+typealias ExportFormat = mpdc4gsr.sensors.gsr.SessionExportViewModel.ExportFormat
+typealias ExportDestination = mpdc4gsr.sensors.gsr.SessionExportViewModel.ExportDestination
     SHARE("Share with Other Apps"),
     EMAIL("Email Export")
 }
