@@ -46,7 +46,7 @@ fun ThermalCameraScreen(
                     },
                     navigationIcon = {
                         IconButton(onClick = onBackClick) {
-                            Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                         }
                     },
                     actions = {
@@ -285,7 +285,7 @@ private fun TemperatureMeasurementsCard(
                 fontWeight = FontWeight.Bold
             )
 
-            Divider()
+            HorizontalDivider()
 
             // Current measurements
             MeasurementRow("Hot Spot", 35.8f, temperatureUnit, Icons.Default.LocalFireDepartment)
@@ -293,7 +293,7 @@ private fun TemperatureMeasurementsCard(
             MeasurementRow("Center Point", 25.6f, temperatureUnit, Icons.Default.CenterFocusStrong)
             MeasurementRow("Average", 27.1f, temperatureUnit, Icons.Default.Analytics)
 
-            Divider()
+            HorizontalDivider()
 
             // Measurement controls
             Row(
@@ -388,7 +388,7 @@ private fun ThermalCameraControlsCard(
                 fontWeight = FontWeight.Bold
             )
 
-            Divider()
+            HorizontalDivider()
 
             // Color Palette Selection
             Text(
@@ -481,7 +481,7 @@ private fun ThermalCameraControlsCard(
                 }
             }
 
-            Divider()
+            HorizontalDivider()
 
             // Recording Controls
             Row(
@@ -540,7 +540,7 @@ private fun ThermalAnalysisToolsCard() {
                 fontWeight = FontWeight.Bold
             )
 
-            Divider()
+            HorizontalDivider()
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -607,7 +607,7 @@ private fun ThermalCameraStatusCard() {
                 fontWeight = FontWeight.Bold
             )
 
-            Divider()
+            HorizontalDivider()
 
             StatusRow("Connection", "Connected", Icons.Default.CheckCircle, true)
             StatusRow("Temperature", "Calibrated", Icons.Default.Thermostat, true)
@@ -615,7 +615,7 @@ private fun ThermalCameraStatusCard() {
             StatusRow("Battery", "87%", Icons.Default.Battery4Bar, true)
             StatusRow("Storage", "2.1 GB Free", Icons.Default.Storage, true)
 
-            Divider()
+            HorizontalDivider()
 
             Row(
                 modifier = Modifier.fillMaxWidth(),

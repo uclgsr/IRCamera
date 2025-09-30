@@ -119,7 +119,7 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
                     },
                     navigationIcon = {
                         IconButton(onClick = { finish() }) {
-                            Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                         }
                     }
                 )
@@ -355,7 +355,7 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
                     if (sensor.bufferUtilization > 0) {
                         Spacer(modifier = Modifier.height(4.dp))
                         LinearProgressIndicator(
-                            progress = sensor.bufferUtilization,
+                progress = { sensor.bufferUtilization },
                             modifier = Modifier.fillMaxWidth()
                         )
                         Text(

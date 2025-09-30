@@ -197,7 +197,7 @@ class GSRReconnectionTestComposeActivity : ComponentActivity() {
                     },
                     navigationIcon = {
                         IconButton(onClick = { finish() }) {
-                            Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                         }
                     }
                 )
@@ -256,7 +256,7 @@ class GSRReconnectionTestComposeActivity : ComponentActivity() {
                         if (isTestRunning) {
                             Spacer(modifier = Modifier.height(12.dp))
                             LinearProgressIndicator(
-                                progress = elapsedTime.toFloat() / RECONNECTION_TEST_DURATION,
+                progress = { elapsedTime.toFloat( }) / RECONNECTION_TEST_DURATION,
                                 modifier = Modifier.fillMaxWidth()
                             )
                         }

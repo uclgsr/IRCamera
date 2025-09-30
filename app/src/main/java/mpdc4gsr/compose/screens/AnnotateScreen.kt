@@ -397,7 +397,7 @@ private fun MeasurementSummary(
                         }
                     }
                 }
-                Divider(color = Color.Gray.copy(alpha = 0.3f))
+                HorizontalDivider(color = Color.Gray.copy(alpha = 0.3f))
             }
         }
     }

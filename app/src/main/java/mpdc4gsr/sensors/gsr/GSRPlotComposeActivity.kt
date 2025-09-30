@@ -78,7 +78,7 @@ class GSRPlotComposeActivity : BaseComposeActivity<GSRPlotViewModel>() {
                         },
                         navigationIcon = {
                             IconButton(onClick = { finish() }) {
-                                Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                             }
                         },
                         actions = {
@@ -186,7 +186,7 @@ private fun VisualizationControlsCard(
                 fontWeight = FontWeight.Bold
             )
 
-            Divider()
+            HorizontalDivider()
 
             // Visualization Type Selection
             Text(
@@ -315,7 +315,7 @@ private fun MainPlotCard(
                 }
             }
 
-            Divider()
+            HorizontalDivider()
 
             // Plot Area
             when (visualizationType) {
@@ -623,7 +623,7 @@ private fun StatisticsCard(sessionId: String) {
                 fontWeight = FontWeight.Bold
             )
 
-            Divider()
+            HorizontalDivider()
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -686,7 +686,7 @@ private fun DataAnalysisToolsCard() {
                 fontWeight = FontWeight.Bold
             )
 
-            Divider()
+            HorizontalDivider()
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -753,7 +753,7 @@ private fun ExportOptionsCard() {
                 fontWeight = FontWeight.Bold
             )
 
-            Divider()
+            HorizontalDivider()
 
             Row(
                 modifier = Modifier.fillMaxWidth(),

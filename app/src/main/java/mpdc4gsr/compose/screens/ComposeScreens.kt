@@ -626,7 +626,7 @@ fun GSRCalibrationCard() {
             Spacer(modifier = Modifier.height(8.dp))
 
             LinearProgressIndicator(
-                progress = 0.85f,
+                progress = { 0.85f },
                 modifier = Modifier.fillMaxWidth()
             )
 

@@ -42,7 +42,7 @@ fun CameraDashboardScreen(
                     },
                     navigationIcon = {
                         IconButton(onClick = onBackClick) {
-                            Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                         }
                     },
                     actions = {
@@ -118,7 +118,7 @@ private fun CameraStatusCard() {
                 )
             }
 
-            Divider()
+            HorizontalDivider()
 
             // Camera availability indicators
             CameraStatusRow("Front Camera", true)
@@ -209,7 +209,7 @@ private fun CameraModesCard(
                 fontWeight = FontWeight.Bold
             )
 
-            Divider()
+            HorizontalDivider()
 
             // Single Camera Mode
             CameraModeItem(
@@ -313,7 +313,7 @@ private fun RecordingControlsCard() {
                 fontWeight = FontWeight.Bold
             )
 
-            Divider()
+            HorizontalDivider()
 
             // Recording status
             Row(
@@ -401,7 +401,7 @@ private fun CameraSettingsCard() {
                 fontWeight = FontWeight.Bold
             )
 
-            Divider()
+            HorizontalDivider()
 
             // Flash setting
             SettingRow(
@@ -475,7 +475,7 @@ private fun PreviewGalleryCard() {
                 fontWeight = FontWeight.Bold
             )
 
-            Divider()
+            HorizontalDivider()
 
             Row(
                 modifier = Modifier.fillMaxWidth(),

@@ -557,7 +557,7 @@ private fun ReportNavigationButtons(
                     contentColor = Color.White
                 )
             ) {
-                Icon(Icons.Default.ArrowBack, contentDescription = null)
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
                 Spacer(modifier = Modifier.width(8.dp))
                 Text("Previous")
             }

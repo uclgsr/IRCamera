@@ -54,7 +54,7 @@ class ComposeTestingSuiteActivity : ComponentActivity() {
                     title = { Text("Comprehensive Test Suite") },
                     navigationIcon = {
                         IconButton(onClick = { finish() }) {
-                            Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                         }
                     }
                 )
@@ -91,7 +91,7 @@ class ComposeTestingSuiteActivity : ComponentActivity() {
 
                         if (isTestRunning) {
                             LinearProgressIndicator(
-                                progress = testProgress,
+                progress = { testProgress },
                                 modifier = Modifier.fillMaxWidth()
                             )
                             Spacer(modifier = Modifier.height(8.dp))

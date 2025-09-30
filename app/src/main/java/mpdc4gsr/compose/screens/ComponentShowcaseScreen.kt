@@ -40,7 +40,7 @@ fun ComponentShowcaseScreen(
                     },
                     navigationIcon = {
                         IconButton(onClick = onBackClick) {
-                            Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                         }
                     }
                 )
@@ -100,7 +100,7 @@ private fun TypographyShowcase() {
                 fontWeight = FontWeight.Bold
             )
 
-            Divider()
+            HorizontalDivider()
 
             Text(
                 "Headline Large",
@@ -154,7 +154,7 @@ private fun ColorPaletteShowcase() {
                 fontWeight = FontWeight.Bold
             )
 
-            Divider()
+            HorizontalDivider()
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -218,7 +218,7 @@ private fun InteractiveComponentsShowcase() {
                 fontWeight = FontWeight.Bold
             )
 
-            Divider()
+            HorizontalDivider()
 
             // Buttons
             Row(
@@ -302,7 +302,7 @@ private fun StatusIndicatorsShowcase() {
                 fontWeight = FontWeight.Bold
             )
 
-            Divider()
+            HorizontalDivider()
 
             // Progress indicators
             Column(
@@ -394,7 +394,7 @@ private fun CardLayoutsShowcase() {
                 fontWeight = FontWeight.Bold
             )
 
-            Divider()
+            HorizontalDivider()
 
             // Information card
             Card(
@@ -493,7 +493,7 @@ private fun NavigationComponentsShowcase() {
                 fontWeight = FontWeight.Bold
             )
 
-            Divider()
+            HorizontalDivider()
 
             Text(
                 "The unified navigation system provides:",

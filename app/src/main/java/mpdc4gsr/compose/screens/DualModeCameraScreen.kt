@@ -44,7 +44,7 @@ fun DualModeCameraScreen(
                     },
                     navigationIcon = {
                         IconButton(onClick = onBackClick) {
-                            Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                         }
                     },
                     actions = {
@@ -524,7 +524,7 @@ private fun CameraControlsCard(
                 fontWeight = FontWeight.Bold
             )
 
-            Divider()
+            HorizontalDivider()
 
             // Camera toggles
             Row(
@@ -578,7 +578,7 @@ private fun CameraControlsCard(
                 )
             }
 
-            Divider()
+            HorizontalDivider()
 
             // Recording controls
             Row(
@@ -639,7 +639,7 @@ private fun RecordingSettingsCard() {
                 fontWeight = FontWeight.Bold
             )
 
-            Divider()
+            HorizontalDivider()
 
             // Quality settings
             Row(
@@ -685,7 +685,7 @@ private fun CalibrationToolsCard() {
                 fontWeight = FontWeight.Bold
             )
 
-            Divider()
+            HorizontalDivider()
 
             Row(
                 modifier = Modifier.fillMaxWidth(),

@@ -576,7 +576,7 @@ fun QualityMetricItem(metric: QualityMetric) {
         )
 
         LinearProgressIndicator(
-            progress = metric.quality / 100f,
+                progress = { metric.quality / 100f },
             modifier = Modifier.weight(2f),
             color = when {
                 metric.quality > 90 -> Color(0xFF4CAF50)

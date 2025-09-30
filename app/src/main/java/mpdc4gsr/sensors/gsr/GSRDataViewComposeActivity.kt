@@ -74,7 +74,7 @@ class GSRDataViewComposeActivity : BaseComposeActivity<GSRDataViewViewModel>() {
                         },
                         navigationIcon = {
                             IconButton(onClick = { finish() }) {
-                                Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                             }
                         },
                         actions = {
@@ -119,7 +119,7 @@ private fun GSRDataViewContent(
         DataInfoCard(filePath = filePath, sessionId = sessionId)
 
         // Tab Selection
-        ScrollableTabRow(
+        PrimaryScrollableTabRow(
             selectedTabIndex = selectedTab,
             modifier = Modifier.fillMaxWidth()
         ) {
@@ -194,7 +194,7 @@ private fun DataInfoCard(
                 }
             }
 
-            Divider()
+            HorizontalDivider()
 
             DataInfoRow("File Path", filePath.substringAfterLast("/"))
             DataInfoRow("Session ID", sessionId ?: "N/A")
@@ -412,7 +412,7 @@ private fun ProcessingOptionsCard() {
                 fontWeight = FontWeight.Bold
             )
 
-            Divider()
+            HorizontalDivider()
 
             var smoothingEnabled by remember { mutableStateOf(true) }
             var artifactRemoval by remember { mutableStateOf(false) }
@@ -482,7 +482,7 @@ private fun ProcessedDataPreviewCard() {
                 fontWeight = FontWeight.Bold
             )
 
-            Divider()
+            HorizontalDivider()
 
             Text(
                 "Processing Status: Complete",
@@ -540,7 +540,7 @@ private fun ProcessingResultsCard() {
                 fontWeight = FontWeight.Bold
             )
 
-            Divider()
+            HorizontalDivider()
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -599,7 +599,7 @@ private fun DescriptiveStatisticsCard() {
                 fontWeight = FontWeight.Bold
             )
 
-            Divider()
+            HorizontalDivider()
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -647,7 +647,7 @@ private fun DistributionAnalysisCard() {
                 fontWeight = FontWeight.Bold
             )
 
-            Divider()
+            HorizontalDivider()
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -684,7 +684,7 @@ private fun TimeSeriesAnalysisCard() {
                 fontWeight = FontWeight.Bold
             )
 
-            Divider()
+            HorizontalDivider()
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -738,7 +738,7 @@ private fun OverallQualityCard() {
                 fontWeight = FontWeight.Bold
             )
 
-            Divider()
+            HorizontalDivider()
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -792,7 +792,7 @@ private fun SignalQualityCard() {
                 fontWeight = FontWeight.Bold
             )
 
-            Divider()
+            HorizontalDivider()
 
             QualityMetric("Signal-to-Noise Ratio", 0.89f, "High")
             QualityMetric("Baseline Stability", 0.95f, "Excellent")
@@ -859,7 +859,7 @@ private fun DataIntegrityCard() {
                 fontWeight = FontWeight.Bold
             )
 
-            Divider()
+            HorizontalDivider()
 
             IntegrityCheck("Missing Data Points", false, "0.1%")
             IntegrityCheck("Timestamp Gaps", false, "None")

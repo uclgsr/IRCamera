@@ -24,6 +24,8 @@ import mpdc4gsr.permissions.PermissionController
 import mpdc4gsr.sensors.unified.ShimmerDeviceManager
 import mpdc4gsr.sensors.unified.UnifiedGSRRecorder
 import mpdc4gsr.sensors.unified.model.DeviceInfo
+import kotlin.io.path.createTempDirectory
+import kotlin.io.path.deleteRecursively
 
 /**
  * Compose version of BLE Integration Test Activity
@@ -108,7 +110,7 @@ class BLEIntegrationTestComposeActivity : FragmentActivity() {
                     },
                     navigationIcon = {
                         IconButton(onClick = { finish() }) {
-                            Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                         }
                     },
                     actions = {
@@ -271,7 +273,7 @@ class BLEIntegrationTestComposeActivity : FragmentActivity() {
         try {
             gsrRecorder?.let { recorder ->
                 // Test data streaming by starting a temporary recording
-                val tempDir = createTempDir("test_streaming")
+                val tempDir = createTempDirectory("test_streaming").toFile()
                 val streamingResult = recorder.startRecording(tempDir.absolutePath)
                 delay(5000) // Record for 5 seconds
                 recorder.stopRecording()
@@ -288,7 +290,7 @@ class BLEIntegrationTestComposeActivity : FragmentActivity() {
         try {
             gsrRecorder?.let { recorder ->
                 // Test reconnection by stopping and restarting recording
-                val tempDir = createTempDir("test_reconnection")
+                val tempDir = createTempDirectory("test_reconnection").toFile()
                 val initialResult = recorder.startRecording(tempDir.absolutePath)
                 delay(2000)
                 recorder.stopRecording()
