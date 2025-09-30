@@ -21,6 +21,9 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeFragment
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.ir.view.TemperatureView
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRPlushViewModel
+import com.mpdc4gsr.module.thermalunified.viewmodel.IRPlushViewModel.DualViewState
+import com.mpdc4gsr.module.thermalunified.viewmodel.IRPlushViewModel.ProcessingMode
+import com.mpdc4gsr.module.thermalunified.viewmodel.IRPlushViewModel.TemperatureData
 
 /**
  * Compose migration of IRPlushFragment
@@ -580,22 +583,4 @@ class IRPlushFragmentCompose : BaseComposeFragment<IRPlushViewModel>() {
         DualViewState.ERROR -> Color.Red
     }
 
-    // Data classes and enums
-    data class TemperatureData(
-        val irCenterTemp: Float,
-        val irMaxTemp: Float,
-        val irMinTemp: Float,
-        val ambientTemp: Float
-    )
-
-    enum class DualViewState {
-        INACTIVE, ACTIVE, CALIBRATING, ERROR
-    }
-
-    enum class ProcessingMode(val displayName: String, val icon: androidx.compose.ui.graphics.vector.ImageVector) {
-        STANDARD("Standard", Icons.Default.CameraAlt),
-        ENHANCED("Enhanced", Icons.Default.AutoAwesome),
-        PROFESSIONAL("Professional", Icons.Default.WorkspacePremium),
-        FUSION("Fusion", Icons.Default.Merge)
-    }
 }
