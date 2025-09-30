@@ -531,7 +531,6 @@ class GSRDataIntegrityTestComposeActivity : ComponentActivity() {
                 "timestamp_accuracy" -> testTimestampAccuracy()
                 "signal_quality" -> testSignalQuality()
                 "range_validation" -> testRangeValidation()
-                // "data_integrity" -> runFullIntegrityTest() // Commented out - needs state callbacks
             }
         }
     }
