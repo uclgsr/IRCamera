@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import java.util.UUID
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -81,7 +82,7 @@ fun TemperatureEditCompose(
                                         val temp1 = simulateTemperatureReading(drawStart!!)
                                         val temp2 = simulateTemperatureReading(offset)
                                         val measurement = TemperatureMeasurementResult.Line(
-                                            id = System.currentTimeMillis().toString(),
+                                            id = UUID.randomUUID().toString(),
                                             start = drawStart!!,
                                             end = offset,
                                             temperatureMax = maxOf(temp1, temp2),
@@ -102,7 +103,7 @@ fun TemperatureEditCompose(
                                         val rect = Rect(drawStart!!, offset)
                                         val temp = simulateAreaTemperatureReading(rect)
                                         val measurement = TemperatureMeasurementResult.Rectangle(
-                                            id = System.currentTimeMillis().toString(),
+                                            id = UUID.randomUUID().toString(),
                                             rect = rect,
                                             temperatureMax = temp + 5f,
                                             temperatureMin = temp - 5f,

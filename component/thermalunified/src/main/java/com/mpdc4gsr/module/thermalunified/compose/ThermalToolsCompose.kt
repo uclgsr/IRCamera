@@ -8,6 +8,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.*
+import java.util.UUID
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -403,7 +404,7 @@ fun FenceToolCompose(
             Button(
                 onClick = {
                     val newFence = ThermalFence(
-                        id = "fence_${System.currentTimeMillis()}",
+                        id = "fence_${UUID.randomUUID()}",
                         bounds = newFencePoints,
                         label = "Fence ${fences.size + 1}",
                         averageTemperature = 0f,

@@ -73,12 +73,12 @@ fun DistanceMeasureCompose(
         canvasHeight = size.height
         
         if (isInitialized) {
-            drawDistanceLines()
+            drawDistanceLines(line1Y, line2Y)
         }
     }
 }
 
-private fun DrawScope.drawDistanceLines() {
+private fun DrawScope.drawDistanceLines(line1Y: Float, line2Y: Float) {
     val strokeWidth = 4.dp.toPx()
     val dashEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 0f)
     val lineColor = Color.Green
