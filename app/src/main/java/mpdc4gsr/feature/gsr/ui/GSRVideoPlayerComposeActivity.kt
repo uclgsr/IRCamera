@@ -10,6 +10,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -77,7 +78,7 @@ class GSRVideoPlayerComposeActivity : BaseComposeActivity<GSRVideoPlayerViewMode
                         },
                         navigationIcon = {
                             IconButton(onClick = { finish() }) {
-                                Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                             }
                         },
                         actions = {
@@ -345,7 +346,7 @@ private fun VideoControlsCard(
                 fontWeight = FontWeight.Bold
             )
 
-            Divider()
+            HorizontalDivider()
 
             // Main Controls
             Row(
@@ -447,7 +448,7 @@ private fun VideoInfoCard(
                 fontWeight = FontWeight.Bold
             )
 
-            Divider()
+            HorizontalDivider()
 
             VideoInfoRow("File Name", videoPath.substringAfterLast("/"))
             VideoInfoRow("Session ID", sessionId ?: "N/A")
@@ -502,7 +503,7 @@ private fun GSRDataTimelineCard(
                 fontWeight = FontWeight.Bold
             )
 
-            Divider()
+            HorizontalDivider()
 
             // Timeline visualization
             Box(
@@ -598,7 +599,7 @@ private fun PlaybackStatisticsCard(
                 fontWeight = FontWeight.Bold
             )
 
-            Divider()
+            HorizontalDivider()
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -653,7 +654,7 @@ private fun VideoExportCard(
                 fontWeight = FontWeight.Bold
             )
 
-            Divider()
+            HorizontalDivider()
 
             Row(
                 modifier = Modifier.fillMaxWidth(),

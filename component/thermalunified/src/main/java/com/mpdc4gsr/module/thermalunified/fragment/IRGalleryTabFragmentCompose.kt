@@ -5,6 +5,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -76,7 +77,7 @@ class IRGalleryTabFragmentCompose : BaseComposeFragment<IRGalleryTabViewModel>()
                 )
 
                 // Tab row
-                ScrollableTabRow(
+                PrimaryScrollableTabRow(
                     selectedTabIndex = pagerState.currentPage,
                     modifier = Modifier.fillMaxWidth()
                 ) {
@@ -156,7 +157,7 @@ class IRGalleryTabFragmentCompose : BaseComposeFragment<IRGalleryTabViewModel>()
             navigationIcon = {
                 if (hasBackIcon) {
                     IconButton(onClick = onBackClick) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 }
             },
@@ -345,6 +346,5 @@ class IRGalleryTabFragmentCompose : BaseComposeFragment<IRGalleryTabViewModel>()
         DirType.TS004_LOCALE -> "TS004 Local"
         DirType.TS004_REMOTE -> "TS004 Remote"
         DirType.TC007 -> "TC007 Device"
-        else -> "All Devices"
     }
 }

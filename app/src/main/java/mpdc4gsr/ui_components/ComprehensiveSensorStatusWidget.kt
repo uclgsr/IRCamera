@@ -66,7 +66,8 @@ class ComprehensiveSensorStatusWidget @JvmOverloads constructor(
         titleText = TextView(context).apply {
             text = " Multi-Modal Sensor Dashboard"
             textSize = 18f
-            setTextColor(ContextCompat.getColor(context, android.R.color.primary_text_dark))
+@Suppress("DEPRECATION")
+                        setTextColor(ContextCompat.getColor(context, android.R.color.primary_text_dark))
             gravity = Gravity.CENTER
             setPadding(0, 0, 0, 16)
         }
@@ -100,7 +101,8 @@ class ComprehensiveSensorStatusWidget @JvmOverloads constructor(
         recordingTimer = TextView(context).apply {
             text = "⏱️ Ready to Record"
             textSize = 14f
-            setTextColor(ContextCompat.getColor(context, android.R.color.primary_text_dark))
+@Suppress("DEPRECATION")
+                        setTextColor(ContextCompat.getColor(context, android.R.color.primary_text_dark))
         }
         recordingSection.addView(recordingTimer)
 
@@ -110,7 +112,8 @@ class ComprehensiveSensorStatusWidget @JvmOverloads constructor(
         val sensorsTitle = TextView(context).apply {
             text = "🔗 Sensor Connections"
             textSize = 16f
-            setTextColor(ContextCompat.getColor(context, android.R.color.primary_text_dark))
+@Suppress("DEPRECATION")
+                        setTextColor(ContextCompat.getColor(context, android.R.color.primary_text_dark))
             setPadding(0, 8, 0, 8)
         }
         addView(sensorsTitle)
@@ -295,7 +298,8 @@ class ComprehensiveSensorStatusWidget @JvmOverloads constructor(
             nameText = TextView(context).apply {
                 text = displayName
                 textSize = 14f
-                setTextColor(ContextCompat.getColor(context, android.R.color.primary_text_dark))
+@Suppress("DEPRECATION")
+                            setTextColor(ContextCompat.getColor(context, android.R.color.primary_text_dark))
             }
             textContainer.addView(nameText)
 
@@ -309,7 +313,8 @@ class ComprehensiveSensorStatusWidget @JvmOverloads constructor(
             detailsText = TextView(context).apply {
                 text = ""
                 textSize = 10f
-                setTextColor(ContextCompat.getColor(context, android.R.color.secondary_text_dark))
+@Suppress("DEPRECATION")
+                            setTextColor(ContextCompat.getColor(context, android.R.color.secondary_text_dark))
                 visibility = GONE
             }
             textContainer.addView(detailsText)

@@ -13,6 +13,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -188,7 +189,7 @@ class MoreHelpActivityCompose : BaseComposeActivity<MoreHelpViewModel>() {
                         ) {
                             Icon(
                                 imageVector = if (connectionType == Constants.SETTING_CONNECTION)
-                                    Icons.Default.Help else Icons.Default.BugReport,
+                                    Icons.AutoMirrored.Filled.Help else Icons.Default.BugReport,
                                 contentDescription = null,
                                 modifier = Modifier.size(48.dp),
                                 tint = MaterialTheme.colorScheme.primary
@@ -250,7 +251,7 @@ class MoreHelpActivityCompose : BaseComposeActivity<MoreHelpViewModel>() {
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Icon(
-                                    imageVector = Icons.Default.ContactSupport,
+                                    imageVector = Icons.AutoMirrored.Filled.ContactSupport,
                                     contentDescription = null,
                                     tint = MaterialTheme.colorScheme.primary,
                                     modifier = Modifier.size(20.dp)
@@ -391,7 +392,7 @@ private fun HelpStepCard(
                     ) {
                         Text(step.actionText)
                         Icon(
-                            imageVector = Icons.Default.OpenInNew,
+                            imageVector = Icons.AutoMirrored.Filled.OpenInNew,
                             contentDescription = null,
                             modifier = Modifier
                                 .size(16.dp)

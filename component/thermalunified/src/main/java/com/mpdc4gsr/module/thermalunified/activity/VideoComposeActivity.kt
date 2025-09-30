@@ -8,6 +8,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -69,7 +70,7 @@ class VideoComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         navigationIcon = {
                             IconButton(onClick = { finish() }) {
                                 Icon(
-                                    Icons.Default.ArrowBack,
+                                    Icons.AutoMirrored.Filled.ArrowBack,
                                     contentDescription = "Back",
                                     tint = Color.White
                                 )
@@ -355,7 +356,7 @@ private fun ThermalAnalysisOverlay(
             AnalysisItem("Min", "18.7°C", Color(0xFF4444FF))
             AnalysisItem("Avg", "32.1°C", Color(0xFFFFAA00))
 
-            Divider(color = Color(0xFF21262D), thickness = 1.dp)
+            HorizontalDivider(color = Color(0xFF21262D), thickness = 1.dp)
 
             // Analysis tools
             IconButton(

@@ -7,6 +7,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -44,7 +45,7 @@ fun DualModeCameraScreen(
                     },
                     navigationIcon = {
                         IconButton(onClick = onBackClick) {
-                            Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                         }
                     },
                     actions = {
@@ -524,7 +525,7 @@ private fun CameraControlsCard(
                 fontWeight = FontWeight.Bold
             )
 
-            Divider()
+            HorizontalDivider()
 
             // Camera toggles
             Row(
@@ -578,7 +579,7 @@ private fun CameraControlsCard(
                 )
             }
 
-            Divider()
+            HorizontalDivider()
 
             // Recording controls
             Row(
@@ -639,7 +640,7 @@ private fun RecordingSettingsCard() {
                 fontWeight = FontWeight.Bold
             )
 
-            Divider()
+            HorizontalDivider()
 
             // Quality settings
             Row(
@@ -685,7 +686,7 @@ private fun CalibrationToolsCard() {
                 fontWeight = FontWeight.Bold
             )
 
-            Divider()
+            HorizontalDivider()
 
             Row(
                 modifier = Modifier.fillMaxWidth(),

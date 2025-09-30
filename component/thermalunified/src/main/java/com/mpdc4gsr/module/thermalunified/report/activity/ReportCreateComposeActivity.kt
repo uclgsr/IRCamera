@@ -14,6 +14,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -83,7 +84,7 @@ fun ReportCreateScreen(
                 title = { Text("Create Thermal Report") },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 },
                 actions = {
@@ -123,7 +124,7 @@ fun ReportCreateScreen(
         ) {
             // Progress indicator
             LinearProgressIndicator(
-                progress = (uiState.currentStep + 1).toFloat() / uiState.totalSteps,
+                progress = { (uiState.currentStep + 1).toFloat() / uiState.totalSteps },
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -742,7 +743,7 @@ fun ReportNavigationBar(
         ) {
             if (currentStep > 0) {
                 OutlinedButton(onClick = onPrevious) {
-                    Icon(Icons.Default.ArrowBack, contentDescription = null)
+                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Previous")
                 }
@@ -769,7 +770,7 @@ fun ReportNavigationBar(
                     Text(if (currentStep == totalSteps - 1) "Create Report" else "Next")
                     if (currentStep < totalSteps - 1) {
                         Spacer(modifier = Modifier.width(8.dp))
-                        Icon(Icons.Default.ArrowForward, contentDescription = null)
+                        Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null)
                     }
                 }
             }

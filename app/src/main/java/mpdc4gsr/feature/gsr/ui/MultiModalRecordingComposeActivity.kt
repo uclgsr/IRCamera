@@ -11,6 +11,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -81,12 +82,12 @@ class MultiModalRecordingComposeActivity : BaseComposeActivity<MultiModalRecordi
                         },
                         navigationIcon = {
                             IconButton(onClick = { finish() }) {
-                                Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                             }
                         },
                         actions = {
                             IconButton(onClick = { /* Recording templates */ }) {
-                                Icon(Icons.Default.LibraryBooks, contentDescription = "Templates")
+                                Icon(Icons.AutoMirrored.Filled.LibraryBooks, contentDescription = "Templates")
                             }
                             IconButton(onClick = { /* Recording settings */ }) {
                                 Icon(Icons.Default.Settings, contentDescription = "Settings")

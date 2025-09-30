@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Camera
 import androidx.compose.material.icons.filled.Settings
@@ -57,7 +58,7 @@ class IRThermalPlusComposeActivity : BaseComposeActivity<IRThermalPlusViewModel>
                         },
                         navigationIcon = {
                             IconButton(onClick = { finish() }) {
-                                Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = Color.White)
+                                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = Color.White)
                             }
                         },
                         actions = {
@@ -329,7 +330,7 @@ class IRThermalPlusComposeActivity : BaseComposeActivity<IRThermalPlusViewModel>
                     colors = ButtonDefaults.outlinedButtonColors(
                         contentColor = Color(0xFFFFD700)
                     ),
-                    border = ButtonDefaults.outlinedButtonBorder.copy(
+                    border = ButtonDefaults.outlinedButtonBorder(enabled = true).copy(
                         brush = androidx.compose.ui.graphics.SolidColor(Color(0xFFFFD700))
                     )
                 ) {

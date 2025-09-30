@@ -12,6 +12,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.background
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -223,7 +224,7 @@ class IRGalleryFragmentCompose : BaseComposeFragment<IRGalleryViewModel>() {
                 } else {
                     IconButton(onClick = onToggleView) {
                         Icon(
-                            if (isGridView) Icons.Default.ViewList else Icons.Default.GridView,
+                            if (isGridView) Icons.AutoMirrored.Filled.ViewList else Icons.Default.GridView,
                             contentDescription = if (isGridView) "List View" else "Grid View"
                         )
                     }

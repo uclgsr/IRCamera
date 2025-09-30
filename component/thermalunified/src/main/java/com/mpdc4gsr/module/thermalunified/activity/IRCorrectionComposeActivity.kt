@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -54,7 +55,7 @@ class IRCorrectionComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         navigationIcon = {
                             IconButton(onClick = { finish() }) {
                                 Icon(
-                                    Icons.Default.ArrowBack,
+                                    Icons.AutoMirrored.Filled.ArrowBack,
                                     contentDescription = "Back",
                                     tint = Color.White
                                 )
@@ -269,8 +270,7 @@ private fun ProcessingStatusCard(
                 )
 
                 if (isProcessing) {
-                    CircularProgressIndicator(
-                        progress = progress,
+                    CircularProgressIndicator(progress = { progress },
                         color = Color(0xFFFF6B35),
                         modifier = Modifier.size(24.dp)
                     )
@@ -287,8 +287,7 @@ private fun ProcessingStatusCard(
 
             if (isProcessing) {
                 Spacer(modifier = Modifier.height(8.dp))
-                LinearProgressIndicator(
-                    progress = progress,
+                LinearProgressIndicator(progress = { progress },
                     modifier = Modifier.fillMaxWidth(),
                     color = Color(0xFFFF6B35),
                     trackColor = Color(0xFF16131E)

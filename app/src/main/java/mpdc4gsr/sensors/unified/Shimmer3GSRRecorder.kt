@@ -213,6 +213,7 @@ class Shimmer3GSRRecorder(
 
         try {
 
+            @Suppress("DEPRECATION")
             shimmer.writeEnabledSensors(Shimmer.SENSOR_GSR.toLong())
 
 

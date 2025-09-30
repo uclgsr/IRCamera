@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -49,7 +50,7 @@ class BaseIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         navigationIcon = {
                             IconButton(onClick = { finish() }) {
                                 Icon(
-                                    Icons.Default.ArrowBack,
+                                    Icons.AutoMirrored.Filled.ArrowBack,
                                     contentDescription = "Back",
                                     tint = Color.White
                                 )
@@ -427,7 +428,7 @@ private fun PlusModeSelector(
             modes.forEach { mode ->
                 FilterChip(
                     onClick = { onModeSelected(mode) },
-                    label = { Text(mode.capitalize(), fontSize = 11.sp) },
+                    label = { Text(mode.replaceFirstChar { it.uppercase() }, fontSize = 11.sp) },
                     selected = selectedMode == mode,
                     colors = FilterChipDefaults.filterChipColors(
                         selectedContainerColor = Color(0xFFFFD700),

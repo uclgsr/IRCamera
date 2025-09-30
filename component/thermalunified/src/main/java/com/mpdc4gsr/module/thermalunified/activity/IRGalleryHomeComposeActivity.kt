@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -56,7 +57,7 @@ class IRGalleryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         navigationIcon = {
                             IconButton(onClick = { finish() }) {
                                 Icon(
-                                    Icons.Default.ArrowBack,
+                                    Icons.AutoMirrored.Filled.ArrowBack,
                                     contentDescription = "Back",
                                     tint = Color.White
                                 )
@@ -74,7 +75,7 @@ class IRGalleryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 selectedView = if (selectedView == "grid") "list" else "grid"
                             }) {
                                 Icon(
-                                    if (selectedView == "grid") Icons.Default.ViewList else Icons.Default.GridView,
+                                    if (selectedView == "grid") Icons.AutoMirrored.Filled.ViewList else Icons.Default.GridView,
                                     contentDescription = "Toggle View",
                                     tint = Color.White
                                 )
@@ -170,7 +171,7 @@ private fun GalleryControls(
                 sortOptions.forEach { option ->
                     FilterChip(
                         onClick = { onSortChange(option) },
-                        label = { Text(option.capitalize(), fontSize = 12.sp) },
+                        label = { Text(option.replaceFirstChar { it.uppercase() }, fontSize = 12.sp) },
                         selected = sortBy == option,
                         colors = FilterChipDefaults.filterChipColors(
                             selectedContainerColor = Color(0xFFFF6B35),
@@ -199,7 +200,7 @@ private fun GalleryControls(
                 filterOptions.forEach { option ->
                     FilterChip(
                         onClick = { onFilterChange(option) },
-                        label = { Text(option.capitalize(), fontSize = 12.sp) },
+                        label = { Text(option.replaceFirstChar { it.uppercase() }, fontSize = 12.sp) },
                         selected = filterBy == option,
                         colors = FilterChipDefaults.filterChipColors(
                             selectedContainerColor = Color(0xFFFF6B35),

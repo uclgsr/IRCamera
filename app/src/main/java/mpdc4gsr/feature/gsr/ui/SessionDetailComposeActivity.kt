@@ -8,6 +8,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material.icons.filled.Assessment
 import androidx.compose.material.icons.filled.FileDownload
 import androidx.compose.material.icons.filled.Share
@@ -66,7 +67,7 @@ class SessionDetailComposeActivity : BaseComposeActivity<SessionDetailViewModel>
                         },
                         navigationIcon = {
                             IconButton(onClick = { finish() }) {
-                                Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                             }
                         },
                         actions = {
@@ -148,7 +149,7 @@ private fun SessionOverviewCard(sessionId: String) {
                 )
             }
 
-            Divider()
+            HorizontalDivider()
 
             SessionInfoRow("Session ID", sessionId)
             SessionInfoRow("Date", "2024-01-15 14:30:00") // Mock data
@@ -210,7 +211,7 @@ private fun SessionStatisticsCard() {
                 fontWeight = FontWeight.Bold
             )
 
-            Divider()
+            HorizontalDivider()
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -259,7 +260,7 @@ private fun DataQualityCard() {
                 fontWeight = FontWeight.Bold
             )
 
-            Divider()
+            HorizontalDivider()
 
             QualityIndicator("Signal Quality", 0.95f)
             QualityIndicator("Data Completeness", 0.98f)
@@ -321,7 +322,7 @@ private fun SessionTimelineCard() {
                 fontWeight = FontWeight.Bold
             )
 
-            Divider()
+            HorizontalDivider()
 
             Text(
                 "📅 Session started at 14:30:00\n" +
@@ -357,7 +358,7 @@ private fun SessionActionsCard(
                 fontWeight = FontWeight.Bold
             )
 
-            Divider()
+            HorizontalDivider()
 
             Row(
                 modifier = Modifier.fillMaxWidth(),

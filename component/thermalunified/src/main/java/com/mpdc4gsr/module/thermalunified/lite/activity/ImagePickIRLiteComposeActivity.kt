@@ -21,6 +21,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -114,13 +115,13 @@ fun ImagePickIRLiteScreen(
                 title = { Text("Select Thermal Image") },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 },
                 actions = {
                     IconButton(onClick = { viewModel.toggleViewMode() }) {
                         Icon(
-                            imageVector = if (uiState.isGridView) Icons.Default.ViewList else Icons.Default.GridView,
+                            imageVector = if (uiState.isGridView) Icons.AutoMirrored.Filled.ViewList else Icons.Default.GridView,
                             contentDescription = "Toggle View"
                         )
                     }
@@ -248,7 +249,7 @@ fun ImageFilterTabs(
         ImageFilter.RECENT to "Recent"
     )
 
-    ScrollableTabRow(
+    PrimaryScrollableTabRow(
         selectedTabIndex = filters.indexOfFirst { it.first == selectedFilter },
         modifier = modifier
     ) {

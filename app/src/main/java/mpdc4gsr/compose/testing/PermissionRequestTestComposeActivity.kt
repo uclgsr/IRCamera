@@ -11,6 +11,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -205,7 +206,7 @@ class PermissionRequestTestComposeActivity : FragmentActivity() {
                     },
                     navigationIcon = {
                         IconButton(onClick = { finish() }) {
-                            Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                         }
                     }
                 )
@@ -508,7 +509,7 @@ class PermissionRequestTestComposeActivity : FragmentActivity() {
         return when (status) {
             PermissionStatus.GRANTED -> Icons.Default.CheckCircle
             PermissionStatus.DENIED -> Icons.Default.Block
-            PermissionStatus.NOT_REQUESTED -> Icons.Default.HelpOutline
+            PermissionStatus.NOT_REQUESTED -> Icons.AutoMirrored.Filled.HelpOutline
             PermissionStatus.REQUESTING -> Icons.Default.HourglassEmpty
         }
     }

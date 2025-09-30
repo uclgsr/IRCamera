@@ -9,6 +9,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -151,7 +152,7 @@ class CompleteSessionTrialComposeActivity : ComponentActivity() {
                     },
                     navigationIcon = {
                         IconButton(onClick = { finish() }) {
-                            Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                         }
                     }
                 )
@@ -208,8 +209,7 @@ class CompleteSessionTrialComposeActivity : ComponentActivity() {
 
                         if (isRecording) {
                             Spacer(modifier = Modifier.height(12.dp))
-                            LinearProgressIndicator(
-                                progress = sessionProgress,
+                            LinearProgressIndicator(progress = { sessionProgress },
                                 modifier = Modifier.fillMaxWidth()
                             )
                             Spacer(modifier = Modifier.height(8.dp))

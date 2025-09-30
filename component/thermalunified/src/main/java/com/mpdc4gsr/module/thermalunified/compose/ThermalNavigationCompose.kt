@@ -10,6 +10,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -101,7 +102,7 @@ fun ThermalNavigationDrawer(
             }
 
             // Footer
-            Divider()
+            HorizontalDivider()
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -112,7 +113,7 @@ fun ThermalNavigationDrawer(
                     Icon(Icons.Default.Settings, contentDescription = "Settings")
                 }
                 IconButton(onClick = { /* Help */ }) {
-                    Icon(Icons.Default.Help, contentDescription = "Help")
+                    Icon(Icons.AutoMirrored.Filled.Help, contentDescription = "Help")
                 }
                 IconButton(onClick = { /* Info */ }) {
                     Icon(Icons.Default.Info, contentDescription = "About")

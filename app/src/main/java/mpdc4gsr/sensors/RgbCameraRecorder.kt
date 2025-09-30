@@ -607,6 +607,7 @@ class RgbCameraRecorder(
                 } else {
                     Size(1280, 720)
                 }
+                @Suppress("DEPRECATION")
                 setTargetResolution(previewSize)
 
 
@@ -626,6 +627,7 @@ class RgbCameraRecorder(
 
 
             imageCapture = ImageCapture.Builder().apply {
+                @Suppress("DEPRECATION")
                 setTargetResolution(Size(selectedVideoWidth, selectedVideoHeight))
                 setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
                 setJpegQuality(JPEG_QUALITY)
@@ -654,6 +656,7 @@ class RgbCameraRecorder(
                     val rawImageCapture = ImageCapture.Builder().apply {
                         // Set buffer format to RAW_SENSOR for actual RAW data
                         setBufferFormat(ImageFormat.RAW_SENSOR)
+                        @Suppress("DEPRECATION")
                         setTargetResolution(Size(selectedVideoWidth, selectedVideoHeight))
                         setCaptureMode(ImageCapture.CAPTURE_MODE_MAXIMIZE_QUALITY)
 

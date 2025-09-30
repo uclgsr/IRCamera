@@ -9,6 +9,7 @@ import android.os.IBinder
 import android.util.Log
 import android.view.KeyEvent
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
@@ -126,6 +127,18 @@ class MainActivityAlternative : FragmentActivity() {
         permissionController = PermissionController(this)
         requestAllPermissions()
         bindRecordingService()
+        
+        // Handle back press using OnBackPressedCallback
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (viewModel.currentPage.value != 0) {
+                    viewModel.onNavigationItemSelected(0)
+                } else {
+                    isEnabled = false
+                    onBackPressedDispatcher.onBackPressed()
+                }
+            }
+        })
         
         setContent {
             LibUnifiedTheme {
@@ -639,15 +652,6 @@ class MainActivityAlternative : FragmentActivity() {
         if (bound) {
             unbindService(serviceConnection)
             bound = false
-        }
-    }
-
-    override fun onBackPressed() {
-        // Preserve original back button behavior
-        if (viewModel.currentPage.value != 0) {
-            viewModel.onNavigationItemSelected(0)
-        } else {
-            super.onBackPressed()
         }
     }
 

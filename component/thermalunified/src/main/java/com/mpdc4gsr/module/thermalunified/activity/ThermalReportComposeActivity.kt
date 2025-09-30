@@ -9,6 +9,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -74,7 +75,7 @@ private fun ThermalReportScreen(
             navigationIcon = {
                 IconButton(onClick = { /* Navigate back */ }) {
                     Icon(
-                        Icons.Default.ArrowBack,
+                        Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Back",
                         tint = Color.White
                     )
@@ -294,7 +295,7 @@ private fun AnalysisOptionsSection() {
             )
 
             AnalysisOptionItem("Statistical Summary", Icons.Default.BarChart)
-            AnalysisOptionItem("Temperature Trends", Icons.Default.TrendingUp)
+            AnalysisOptionItem("Temperature Trends", Icons.AutoMirrored.Filled.TrendingUp)
             AnalysisOptionItem("Thermal Mapping", Icons.Default.Map)
             AnalysisOptionItem("Comparative Analysis", Icons.Default.Compare)
         }

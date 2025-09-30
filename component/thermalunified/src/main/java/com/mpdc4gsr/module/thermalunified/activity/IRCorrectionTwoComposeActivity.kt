@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -42,7 +43,7 @@ class IRCorrectionTwoComposeActivity : BaseComposeActivity<IRCorrectionTwoViewMo
                         },
                         navigationIcon = {
                             IconButton(onClick = { finish() }) {
-                                Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = Color.White)
+                                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = Color.White)
                             }
                         },
                         colors = TopAppBarDefaults.topAppBarColors(
@@ -231,7 +232,7 @@ class IRCorrectionTwoComposeActivity : BaseComposeActivity<IRCorrectionTwoViewMo
                         containerColor = Color(0xFFFF6B35)
                     )
                 ) {
-                    Icon(Icons.Default.NavigateNext, contentDescription = null)
+                    Icon(Icons.AutoMirrored.Filled.NavigateNext, contentDescription = null)
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Apply & Next")
                 }

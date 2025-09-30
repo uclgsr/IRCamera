@@ -10,6 +10,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -74,13 +75,13 @@ class IRCorrectionLiteComposeActivity : BaseComposeActivity<BaseViewModel>() {
                         },
                         navigationIcon = {
                             IconButton(onClick = { finish() }) {
-                                Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                             }
                         },
                         actions = {
                             IconButton(onClick = { showBeforeAfter = !showBeforeAfter }) {
                                 Icon(
-                                    if (showBeforeAfter) Icons.Default.Compare else Icons.Default.CompareArrows,
+                                    if (showBeforeAfter) Icons.Default.Compare else Icons.AutoMirrored.Filled.CompareArrows,
                                     contentDescription = "Compare"
                                 )
                             }

@@ -123,7 +123,6 @@ fun UnifiedNavHost(
                         SensorType.GSR -> navController.navigate(UnifiedRoute.GSRSettings.route)
                         SensorType.ThermalIR -> navController.navigate(UnifiedRoute.ThermalCamera.route)
                         SensorType.RGBCamera -> navController.navigate(UnifiedRoute.CameraDashboard.route)
-                        else -> {}
                     }
                 }
             )

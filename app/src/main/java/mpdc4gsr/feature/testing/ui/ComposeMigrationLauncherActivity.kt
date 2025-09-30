@@ -9,6 +9,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -279,7 +280,7 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                 LauncherCard(
                     title = "Help & Support (Compose)",
                     subtitle = "Interactive help guide with actionable steps",
-                    icon = Icons.Default.Help,
+                    icon = Icons.AutoMirrored.Filled.Help,
                     onClick = {
                         val intent = Intent(
                             this@ComposeMigrationLauncherActivity,
@@ -307,7 +308,7 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                 LauncherCard(
                     title = "Terms & Conditions (Compose)",
                     subtitle = "Modern agreement screen with interactive elements",
-                    icon = Icons.Default.Assignment,
+                    icon = Icons.AutoMirrored.Filled.Assignment,
                     onClick = {
                         startActivity(
                             Intent(
@@ -567,7 +568,7 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                 LauncherCard(
                     title = "Thermal Report Creation (Compose)",
                     subtitle = "Professional thermal report generation with templates",
-                    icon = Icons.Default.Assignment,
+                    icon = Icons.AutoMirrored.Filled.Assignment,
                     onClick = {
                         startActivity(
                             Intent(
