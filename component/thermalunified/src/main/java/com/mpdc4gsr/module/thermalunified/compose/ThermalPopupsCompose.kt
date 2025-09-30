@@ -244,7 +244,7 @@ private fun OptionItemCompose(
             .fillMaxWidth()
             .clip(RoundedCornerShape(12.dp))
             .background(
-                Color.lerp(
+                lerp(
                     Color.Transparent,
                     MaterialTheme.colorScheme.primaryContainer,
                     backgroundColor
@@ -385,7 +385,7 @@ private fun GalleryOptionItemCompose(
             .fillMaxWidth()
             .clip(RoundedCornerShape(8.dp))
             .background(
-                Color.lerp(
+                lerp(
                     Color.Transparent,
                     MaterialTheme.colorScheme.primaryContainer,
                     backgroundColor

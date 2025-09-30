@@ -369,7 +369,8 @@ data class ProjectItem(
 data class AlbumItem(
     val imagePath: String,
     val title: String = "",
-    val description: String = ""
+    val description: String = "",
+    val imageCount: Int = 0
 )
 
 enum class ProjectStatus {

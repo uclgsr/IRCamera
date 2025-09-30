@@ -276,4 +276,3 @@ class IRMonitorHistoryViewModel : BaseViewModel() {
         data class NavigateToDetails(val item: HistoryItem) : UiEvent()
     }
 }
-}

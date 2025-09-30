@@ -532,13 +532,6 @@ enum class SettingOptionType {
     SIMPLE, CHECKBOX, SWITCH
 }
 
-data class AlbumItem(
-    val imagePath: String,
-    val title: String = "",
-    val description: String = "",
-    val imageCount: Int = 0
-)
-
 /**
  * Preview helpers
  */
