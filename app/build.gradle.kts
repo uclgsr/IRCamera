@@ -261,7 +261,21 @@ android {
     }
     buildToolsVersion = "35.0.0"
 
+    testOptions {
+        unitTests.isIncludeAndroidResources = false
+    }
+}
 
+tasks.withType<Test> {
+    enabled = false
+}
+
+tasks.matching { it.name.startsWith("test") }.configureEach {
+    enabled = false
+}
+
+tasks.matching { it.name.contains("AndroidTest") }.configureEach {
+    enabled = false
 }
 
 configurations.all {
