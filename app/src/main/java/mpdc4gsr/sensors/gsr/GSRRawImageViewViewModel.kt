@@ -22,15 +22,15 @@ class GSRRawImageViewViewModel(
     private val application: Application
 ) : BaseViewModel() {
 
-    data class UiState(
+    data class GSRImageViewState(
         val isLoading: Boolean = false,
         val error: String? = null,
         val imageFiles: List<File> = emptyList(),
         val selectedImage: File? = null
     )
 
-    private val _uiState = MutableStateFlow(UiState())
-    val uiState: StateFlow<UiState> = _uiState.asStateFlow()
+    private val _imageViewState = MutableStateFlow(GSRImageViewState())
+    val imageViewState: StateFlow<GSRImageViewState> = _imageViewState.asStateFlow()
 
     init {
         loadImages()
@@ -41,16 +41,16 @@ class GSRRawImageViewViewModel(
      */
     fun loadImages() {
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isLoading = true, error = null)
+            _imageViewState.value = _imageViewState.value.copy(isLoading = true, error = null)
 
             try {
                 val imageFiles = getGSRImageFiles()
-                _uiState.value = _uiState.value.copy(
+                _imageViewState.value = _imageViewState.value.copy(
                     isLoading = false,
                     imageFiles = imageFiles
                 )
             } catch (e: Exception) {
-                _uiState.value = _uiState.value.copy(
+                _imageViewState.value = _imageViewState.value.copy(
                     isLoading = false,
                     error = e.message ?: "Failed to load images"
                 )
@@ -79,9 +79,9 @@ class GSRRawImageViewViewModel(
 
                 context.startActivity(intent)
 
-                _uiState.value = _uiState.value.copy(selectedImage = imageFile)
+                _imageViewState.value = _imageViewState.value.copy(selectedImage = imageFile)
             } catch (e: Exception) {
-                _uiState.value = _uiState.value.copy(
+                _imageViewState.value = _imageViewState.value.copy(
                     error = "Failed to open image: ${e.message}"
                 )
             }
@@ -110,7 +110,7 @@ class GSRRawImageViewViewModel(
 
                 context.startActivity(Intent.createChooser(intent, "Share GSR Image"))
             } catch (e: Exception) {
-                _uiState.value = _uiState.value.copy(
+                _imageViewState.value = _imageViewState.value.copy(
                     error = "Failed to share image: ${e.message}"
                 )
             }
@@ -127,12 +127,12 @@ class GSRRawImageViewViewModel(
                     // Reload images after deletion
                     loadImages()
                 } else {
-                    _uiState.value = _uiState.value.copy(
+                    _imageViewState.value = _imageViewState.value.copy(
                         error = "Failed to delete image"
                     )
                 }
             } catch (e: Exception) {
-                _uiState.value = _uiState.value.copy(
+                _imageViewState.value = _imageViewState.value.copy(
                     error = "Error deleting image: ${e.message}"
                 )
             }
@@ -142,8 +142,9 @@ class GSRRawImageViewViewModel(
     /**
      * Clear error state
      */
-    fun clearError() {
-        _uiState.value = _uiState.value.copy(error = null)
+    override fun clearError() {
+        super.clearError()
+        _imageViewState.value = _imageViewState.value.copy(error = null)
     }
 
     /**

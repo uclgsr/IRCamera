@@ -24,7 +24,7 @@ class SessionExportViewModel(
     private val application: Application
 ) : BaseViewModel() {
 
-    data class UiState(
+    data class SessionExportState(
         val isLoading: Boolean = false,
         val error: String? = null,
         val sessions: List<GSRSession> = emptyList(),
@@ -36,8 +36,8 @@ class SessionExportViewModel(
         val currentExportFile: String? = null
     )
 
-    private val _uiState = MutableStateFlow(UiState())
-    val uiState: StateFlow<UiState> = _uiState.asStateFlow()
+    private val _exportState = MutableStateFlow(SessionExportState())
+    val exportState: StateFlow<SessionExportState> = _exportState.asStateFlow()
 
     init {
         loadSessions()
@@ -48,16 +48,16 @@ class SessionExportViewModel(
      */
     fun loadSessions() {
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isLoading = true, error = null)
+            _exportState.value = _exportState.value.copy(isLoading = true, error = null)
 
             try {
                 val sessions = getAvailableSessions()
-                _uiState.value = _uiState.value.copy(
+                _exportState.value = _exportState.value.copy(
                     isLoading = false,
                     sessions = sessions
                 )
             } catch (e: Exception) {
-                _uiState.value = _uiState.value.copy(
+                _exportState.value = _exportState.value.copy(
                     isLoading = false,
                     error = e.message ?: "Failed to load sessions"
                 )
@@ -69,28 +69,28 @@ class SessionExportViewModel(
      * Toggle session selection
      */
     fun toggleSessionSelection(session: GSRSession) {
-        val currentSelection = _uiState.value.selectedSessions
+        val currentSelection = _exportState.value.selectedSessions
         val newSelection = if (session in currentSelection) {
             currentSelection - session
         } else {
             currentSelection + session
         }
 
-        _uiState.value = _uiState.value.copy(selectedSessions = newSelection)
+        _exportState.value = _exportState.value.copy(selectedSessions = newSelection)
     }
 
     /**
      * Set export format
      */
     fun setExportFormat(format: ExportFormat) {
-        _uiState.value = _uiState.value.copy(exportFormat = format)
+        _exportState.value = _exportState.value.copy(exportFormat = format)
     }
 
     /**
      * Set export destination
      */
     fun setExportDestination(destination: ExportDestination) {
-        _uiState.value = _uiState.value.copy(exportDestination = destination)
+        _exportState.value = _exportState.value.copy(exportDestination = destination)
     }
 
     /**
@@ -98,13 +98,13 @@ class SessionExportViewModel(
      */
     fun startExport() {
         viewModelScope.launch {
-            val selectedSessions = _uiState.value.selectedSessions
+            val selectedSessions = _exportState.value.selectedSessions
             if (selectedSessions.isEmpty()) {
-                _uiState.value = _uiState.value.copy(error = "No sessions selected for export")
+                _exportState.value = _exportState.value.copy(error = "No sessions selected for export")
                 return@launch
             }
 
-            _uiState.value = _uiState.value.copy(
+            _exportState.value = _exportState.value.copy(
                 isExporting = true,
                 exportProgress = 0f,
                 error = null
@@ -115,7 +115,7 @@ class SessionExportViewModel(
                 val totalSessions = selectedSessions.size
 
                 selectedSessions.forEachIndexed { index, session ->
-                    _uiState.value = _uiState.value.copy(
+                    _exportState.value = _exportState.value.copy(
                         currentExportFile = session.name,
                         exportProgress = (index.toFloat() / totalSessions)
                     )
@@ -124,7 +124,7 @@ class SessionExportViewModel(
                     exportFiles.add(exportedFile)
                 }
 
-                _uiState.value = _uiState.value.copy(
+                _exportState.value = _exportState.value.copy(
                     exportProgress = 1f,
                     currentExportFile = null
                 )
@@ -133,7 +133,7 @@ class SessionExportViewModel(
                 handleExportDestination(exportFiles)
 
             } catch (e: Exception) {
-                _uiState.value = _uiState.value.copy(
+                _exportState.value = _exportState.value.copy(
                     isExporting = false,
                     exportProgress = 0f,
                     currentExportFile = null,
@@ -146,8 +146,9 @@ class SessionExportViewModel(
     /**
      * Clear error state
      */
-    fun clearError() {
-        _uiState.value = _uiState.value.copy(error = null)
+    override fun clearError() {
+        super.clearError()
+        _exportState.value = _exportState.value.copy(error = null)
     }
 
     /**
@@ -196,10 +197,10 @@ class SessionExportViewModel(
         }
 
         val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
-        val fileName = "${session.name}_export_$timestamp.${_uiState.value.exportFormat.fileExtension}"
+        val fileName = "${session.name}_export_$timestamp.${_exportState.value.exportFormat.fileExtension}"
         val outputFile = File(outputDir, fileName)
 
-        when (_uiState.value.exportFormat) {
+        when (_exportState.value.exportFormat) {
             ExportFormat.CSV -> exportToCSV(session, outputFile)
             ExportFormat.JSON -> exportToJSON(session, outputFile)
             ExportFormat.XML -> exportToXML(session, outputFile)
@@ -317,10 +318,10 @@ class SessionExportViewModel(
      */
     private suspend fun handleExportDestination(exportFiles: List<File>) {
         try {
-            when (_uiState.value.exportDestination) {
+            when (_exportState.value.exportDestination) {
                 ExportDestination.DOWNLOADS -> {
                     // Files are already in downloads, just notify completion
-                    _uiState.value = _uiState.value.copy(
+                    _exportState.value = _exportState.value.copy(
                         isExporting = false,
                         error = "Export completed! Files saved to Downloads folder."
                     )
@@ -328,7 +329,7 @@ class SessionExportViewModel(
 
                 ExportDestination.EXTERNAL_STORAGE -> {
                     // Files are already in external storage
-                    _uiState.value = _uiState.value.copy(
+                    _exportState.value = _exportState.value.copy(
                         isExporting = false,
                         error = "Export completed! Files saved to external storage."
                     )
@@ -343,7 +344,7 @@ class SessionExportViewModel(
                 }
             }
         } catch (e: Exception) {
-            _uiState.value = _uiState.value.copy(
+            _exportState.value = _exportState.value.copy(
                 isExporting = false,
                 error = "Export completed but failed to handle destination: ${e.message}"
             )
@@ -369,12 +370,12 @@ class SessionExportViewModel(
 
             context.startActivity(Intent.createChooser(intent, "Share GSR Export"))
 
-            _uiState.value = _uiState.value.copy(
+            _exportState.value = _exportState.value.copy(
                 isExporting = false,
                 error = "Export completed! Sharing files..."
             )
         } catch (e: Exception) {
-            _uiState.value = _uiState.value.copy(
+            _exportState.value = _exportState.value.copy(
                 isExporting = false,
                 error = "Export completed but failed to share: ${e.message}"
             )
@@ -402,12 +403,12 @@ class SessionExportViewModel(
 
             context.startActivity(Intent.createChooser(intent, "Email GSR Export"))
 
-            _uiState.value = _uiState.value.copy(
+            _exportState.value = _exportState.value.copy(
                 isExporting = false,
                 error = "Export completed! Opening email client..."
             )
         } catch (e: Exception) {
-            _uiState.value = _uiState.value.copy(
+            _exportState.value = _exportState.value.copy(
                 isExporting = false,
                 error = "Export completed but failed to email: ${e.message}"
             )
@@ -417,7 +418,7 @@ class SessionExportViewModel(
     // Utility functions
 
     private fun getExportDirectory(): File {
-        return when (_uiState.value.exportDestination) {
+        return when (_exportState.value.exportDestination) {
             ExportDestination.DOWNLOADS -> File(
                 Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
                 "GSR_Exports"
