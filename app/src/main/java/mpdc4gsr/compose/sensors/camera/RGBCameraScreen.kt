@@ -484,7 +484,7 @@ private fun RecordingControlsCard(
                 Button(
                     onClick = onTogglePreview,
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = if (isPreviewActive) Color.Orange else Color.Green
+                        containerColor = if (isPreviewActive) Color(0xFFFF9800) else Color(0xFF4CAF50)
                     )
                 ) {
                     Text(if (isPreviewActive) "Stop Preview" else "Start Preview")
@@ -508,7 +508,7 @@ private fun RecordingControlsCard(
                 Button(
                     onClick = onCapturePhoto,
                     enabled = isPreviewActive && !isRecording,
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.Purple)
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF9C27B0))
                 ) {
                     Icon(Icons.Default.CameraAlt, contentDescription = null)
                     Spacer(Modifier.width(4.dp))
