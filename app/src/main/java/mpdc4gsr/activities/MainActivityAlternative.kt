@@ -9,7 +9,6 @@ import android.os.IBinder
 import android.util.Log
 import android.view.KeyEvent
 import android.widget.Toast
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
@@ -72,7 +71,7 @@ import org.greenrobot.eventbus.ThreadMode
  * - Enhanced multi-modal recording support
  * - Improved network status and device management
  */
-class MainActivityAlternative : ComponentActivity() {
+class MainActivityAlternative : FragmentActivity() {
 
     companion object {
         private const val TAG = "MainActivityAlternative"
@@ -118,8 +117,6 @@ class MainActivityAlternative : ComponentActivity() {
         permissionController = PermissionController(this)
         requestAllPermissions()
         bindRecordingService()
-        
-        EventBus.getDefault().register(this)
         
         setContent {
             LibUnifiedTheme {
@@ -191,7 +188,7 @@ class MainActivityAlternative : ComponentActivity() {
                     AndroidView(
                         factory = { context ->
                             ViewPager2(context).apply {
-                                adapter = EnhancedPagerAdapter(context as FragmentActivity)
+                                adapter = EnhancedPagerAdapter(this@MainActivityAlternative)
                                 offscreenPageLimit = 4
 
                                 // Preserve existing page change logic
