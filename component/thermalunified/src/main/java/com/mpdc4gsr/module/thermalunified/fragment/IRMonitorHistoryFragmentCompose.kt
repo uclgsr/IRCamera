@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.background
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -18,6 +19,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeFragment
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRMonitorHistoryViewModel
+import com.mpdc4gsr.module.thermalunified.viewmodel.IRMonitorHistoryViewModel.HistoryFilter
+import com.mpdc4gsr.module.thermalunified.viewmodel.IRMonitorHistoryViewModel.HistoryItem
+import com.mpdc4gsr.module.thermalunified.viewmodel.IRMonitorHistoryViewModel.SessionType
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -498,41 +502,11 @@ class IRMonitorHistoryFragmentCompose : BaseComposeFragment<IRMonitorHistoryView
         SessionType.CALIBRATION -> Icons.Default.Tune
     }
 
+    @Composable
     private fun getSessionTypeColor(type: SessionType): Color = when (type) {
         SessionType.MONITORING -> MaterialTheme.colorScheme.primary
         SessionType.CAPTURE -> Color.Green
         SessionType.ANALYSIS -> Color(0xFFFFA500)
         SessionType.CALIBRATION -> Color.Red
-    }
-
-    // Data classes and enums
-    data class HistoryItem(
-        val id: String,
-        val sessionName: String,
-        val startTime: Long,
-        val duration: Long,
-        val sampleCount: Int,
-        val avgTemperature: Float,
-        val maxTemperature: Float,
-        val minTemperature: Float,
-        val sessionType: SessionType,
-        val dataFilePath: String
-    )
-
-    enum class SessionType(val displayName: String) {
-        MONITORING("Monitor"),
-        CAPTURE("Capture"),
-        ANALYSIS("Analysis"),
-        CALIBRATION("Calibration")
-    }
-
-    enum class HistoryFilter(
-        val displayName: String,
-        val icon: androidx.compose.ui.graphics.vector.ImageVector
-    ) {
-        ALL("All", Icons.Default.ViewList),
-        TODAY("Today", Icons.Default.Today),
-        WEEK("This Week", Icons.Default.DateRange),
-        MONTH("This Month", Icons.Default.CalendarMonth)
     }
 }
