@@ -443,7 +443,7 @@ private fun CreateTemplateDialog(
                             id = "custom_${System.currentTimeMillis()}",
                             name = templateName,
                             description = templateDescription,
-                            category = ResearchTemplate.TemplateCategory.valueOf(selectedCategory),
+                            category = enumValues<ResearchTemplate.TemplateCategory>().firstOrNull { it.name == selectedCategory } ?: ResearchTemplate.TemplateCategory.CUSTOM,
                             duration = 30,
                             sensors = setOf(ResearchTemplate.SensorType.GSR, ResearchTemplate.SensorType.THERMAL_CAMERA),
                             gsrSamplingRate = 128
