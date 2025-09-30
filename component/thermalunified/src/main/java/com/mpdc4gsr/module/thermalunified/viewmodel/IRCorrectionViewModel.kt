@@ -48,19 +48,23 @@ class IRCorrectionViewModel : BaseViewModel() {
      * Toggle the correction state between active and inactive
      */
     fun toggleCorrection() {
-        launchWithErrorHandling {
-            when (_correctionState.value) {
-                CorrectionState.INACTIVE -> {
-                    _correctionState.value = CorrectionState.ACTIVE
-                    startTemperatureMonitoring()
+        viewModelScope.launch {
+            try {
+                when (_correctionState.value) {
+                    CorrectionState.INACTIVE -> {
+                        _correctionState.value = CorrectionState.ACTIVE
+                        startTemperatureMonitoring()
+                    }
+                    CorrectionState.ACTIVE -> {
+                        _correctionState.value = CorrectionState.INACTIVE
+                        stopTemperatureMonitoring()
+                    }
+                    CorrectionState.CALIBRATING -> {
+                        // Cannot toggle while calibrating
+                    }
                 }
-                CorrectionState.ACTIVE -> {
-                    _correctionState.value = CorrectionState.INACTIVE
-                    stopTemperatureMonitoring()
-                }
-                CorrectionState.CALIBRATING -> {
-                    // Cannot toggle while calibrating
-                }
+            } catch (e: Exception) {
+                // TODO: Handle the exception (e.g., log or update error state)
             }
         }
     }
