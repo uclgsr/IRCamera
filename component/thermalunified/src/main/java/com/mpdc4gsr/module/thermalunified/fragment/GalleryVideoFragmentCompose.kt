@@ -106,7 +106,8 @@ class GalleryVideoFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
                                 },
                                 onItemLongClick = { item ->
                                     if (!isSelectionMode) {
-                                        viewModel.enterSelectionMode(item)
+                                        viewModel.enterSelectionMode()
+                                        viewModel.toggleItemSelection(item)
                                     }
                                 }
                             )
