@@ -34,13 +34,13 @@ import mpdc4gsr.permissions.PermissionController
 
 import mpdc4gsr.ui_components.ComprehensiveSensorStatusWidget
 import mpdc4gsr.ui_components.MainFragment
+import mpdc4gsr.ui_components.MineFragment
 import mpdc4gsr.ui_components.RecordingControlsWidget
 import mpdc4gsr.ui_components.SensorDashboardFragment
 import mpdc4gsr.viewmodel.MainActivityViewModel
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import com.mpdc4gsr.module.thermalunified.fragment.IRGalleryTabFragment
-import com.mpdc4gsr.module.user.fragment.MineFragment
 import com.mpdc4gsr.module.user.fragment.MoreFragment
 
 class MainActivityLegacy : BaseBindingActivity<ActivityMainBinding>(), View.OnClickListener {
@@ -49,9 +49,7 @@ class MainActivityLegacy : BaseBindingActivity<ActivityMainBinding>(), View.OnCl
         const val PAGE_GALLERY = 0
         const val PAGE_MAIN = 1
         const val PAGE_SETTINGS = 2
-        const val PAGE_MINE = 2
-        private const val PAGE_SETTINGS = 2
-        private const val PAGE_MINE = 3
+        const val PAGE_MINE = 3
     }
 
     private val viewModel: MainActivityViewModel by viewModels()
@@ -94,9 +92,9 @@ class MainActivityLegacy : BaseBindingActivity<ActivityMainBinding>(), View.OnCl
         bindRecordingService()
     }
 
-    override fun onNewIntent(intent: Intent?) {
+    override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        intent?.let {
+        intent.let {
             val pageIndex = it.getIntExtra("page", -1)
             if (pageIndex in 0..2) {
                 binding.viewPage.setCurrentItem(pageIndex, false)
@@ -119,7 +117,8 @@ class MainActivityLegacy : BaseBindingActivity<ActivityMainBinding>(), View.OnCl
             // Demo functionality removed - commented out to avoid compilation errors
             // launchThermalCamera() 
         }
-        binding.faultTolerantRecordingAccess.setOnClickListener { launchFaultTolerantRecording() }
+        // Fault tolerant recording access button not in current layout
+        // binding.faultTolerantRecordingAccess.setOnClickListener { launchFaultTolerantRecording() }
         binding.viewMain.setOnLongClickListener {
             launchShimmerMvp()
             true
@@ -147,7 +146,7 @@ class MainActivityLegacy : BaseBindingActivity<ActivityMainBinding>(), View.OnCl
                         is MainActivityViewModel.Event.ShowExitDialog -> showExitDialog()
                         is MainActivityViewModel.Event.ShowToast ->
                             Toast.makeText(
-                                this@MainActivity,
+                                this@MainActivityLegacy,
                                 event.message,
                                 if (event.isLong) Toast.LENGTH_LONG else Toast.LENGTH_SHORT
                             ).show()
@@ -240,6 +239,8 @@ class MainActivityLegacy : BaseBindingActivity<ActivityMainBinding>(), View.OnCl
     // --- Helper and Legacy Methods ---
 
     private fun initializeEnhancedUIComponents() {
+        // Optional UI components - commented out as containers are not in current layout
+        /*
         // Replace widget with fragment for better lifecycle management and scrollability
         val sensorDashboardFragment = SensorDashboardFragment.newInstance()
         supportFragmentManager.beginTransaction()
@@ -304,6 +305,7 @@ class MainActivityLegacy : BaseBindingActivity<ActivityMainBinding>(), View.OnCl
                 }
             }
         }
+        */
     }
 
     /**
@@ -323,15 +325,15 @@ class MainActivityLegacy : BaseBindingActivity<ActivityMainBinding>(), View.OnCl
     // Demo functionality removed - commented out to avoid compilation errors
     // private fun launchThermalCamera() = startActivity(Intent(this, ThermalCameraDemo::class.java))
     private fun launchFaultTolerantRecording() =
-        startActivity(Intent(this, FaultTolerantRecordingActivity::class.java))
+        startActivity(Intent(this, mpdc4gsr.activities.FaultTolerantRecordingActivityCompose::class.java))
 
     private fun launchShimmerMvp() {
         AlertDialog.Builder(this)
             .setTitle("Developer Sensor Access")
             .setItems(arrayOf("Shimmer GSR MVP", "Unified Sensor Platform")) { _, which ->
                 val activityClass = when (which) {
-                    0 -> ShimmerMvpActivity::class.java
-                    else -> UnifiedSensorActivity::class.java
+                    0 -> mpdc4gsr.activities.ShimmerMvpActivityCompose::class.java
+                    else -> mpdc4gsr.activities.UnifiedSensorActivityCompose::class.java
                 }
                 startActivity(Intent(this, activityClass))
             }
