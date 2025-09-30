@@ -204,7 +204,7 @@ class ShimmerConfigViewModel : BaseViewModel() {
                             statusMessage = "Connecting to Shimmer device...",
                             isLoading = true
                         )
-                        _configAction.value = ConfigAction(ActionType.SHOW_PROGRESS_BAR)
+                        _configAction.emit(ConfigAction(ActionType.SHOW_PROGRESS_BAR))
                     }
 
                     ShimmerDeviceManager.ConnectionState.CONNECTED -> {
@@ -217,11 +217,7 @@ class ShimmerConfigViewModel : BaseViewModel() {
                                 statusMessage = "Successfully connected to ${it.name ?: event.deviceAddress}",
                                 isLoading = false
                             )
-                            _configAction.value = ConfigAction(
-                                ActionType.SHOW_TOAST,
-                                message = "Connected to Shimmer device!",
-                                device = it
-                            )
+                            _configAction.emit(ConfigAction(ActionType.HIDE_PROGRESS_BAR))
                         }
                     }
 
@@ -232,7 +228,7 @@ class ShimmerConfigViewModel : BaseViewModel() {
                             statusMessage = "Shimmer device disconnected",
                             isLoading = false
                         )
-                        _configAction.value = ConfigAction(ActionType.HIDE_PROGRESS_BAR)
+                        _configAction.emit(ConfigAction(ActionType.HIDE_PROGRESS_BAR))
                     }
 
                     ShimmerDeviceManager.ConnectionState.FAILED -> {
@@ -243,10 +239,7 @@ class ShimmerConfigViewModel : BaseViewModel() {
                             statusMessage = "Connection failed: ${event.message ?: "Unknown error"}",
                             isLoading = false
                         )
-                        _configAction.value = ConfigAction(
-                            ActionType.SHOW_TOAST,
-                            message = "Connection failed"
-                        )
+                        _configAction.emit(ConfigAction(ActionType.SHOW_ERROR))
                     }
 
                     ShimmerDeviceManager.ConnectionState.TIMEOUT -> {
@@ -257,10 +250,7 @@ class ShimmerConfigViewModel : BaseViewModel() {
                             statusMessage = "Connection timeout - device may be out of range or not responding",
                             isLoading = false
                         )
-                        _configAction.value = ConfigAction(
-                            ActionType.SHOW_TOAST,
-                            message = "Connection timeout"
-                        )
+                        _configAction.emit(ConfigAction(ActionType.SHOW_ERROR))
                     }
                 }
             }
@@ -296,7 +286,7 @@ class ShimmerConfigViewModel : BaseViewModel() {
                         deviceCount = 0
                     )
                     _discoveredDevices.value = emptyList()
-                    _configAction.value = ConfigAction(ActionType.UPDATE_SCAN_BUTTON)
+                    // _configAction.value = ConfigAction(ActionType.UPDATE_SCAN_BUTTON)
                 } else {
                     _shimmerUiState.value = _shimmerUiState.value.copy(
                         statusMessage = "Failed to start device scanning - check Bluetooth permissions"
@@ -326,7 +316,7 @@ class ShimmerConfigViewModel : BaseViewModel() {
                         "Scan completed - no Shimmer devices found"
                     }
                 )
-                _configAction.value = ConfigAction(ActionType.UPDATE_SCAN_BUTTON)
+                // _configAction.value = ConfigAction(ActionType.UPDATE_SCAN_BUTTON)
             } catch (e: Exception) {
                 _shimmerUiState.value = _shimmerUiState.value.copy(
                     statusMessage = "Error stopping scan: ${e.message}"
@@ -360,7 +350,7 @@ class ShimmerConfigViewModel : BaseViewModel() {
     fun testConnection() {
         val device = connectedDevice
         if (device == null) {
-            _configAction.value = ConfigAction(
+            // _configAction.value = ConfigAction(
                 ActionType.SHOW_TOAST,
                 message = "No device connected"
             )
@@ -381,7 +371,7 @@ class ShimmerConfigViewModel : BaseViewModel() {
                     statusMessage = "Connection test successful",
                     isLoading = false
                 )
-                _configAction.value = ConfigAction(
+                // _configAction.value = ConfigAction(
                     ActionType.SHOW_TOAST,
                     message = "Connection test successful"
                 )
@@ -390,7 +380,7 @@ class ShimmerConfigViewModel : BaseViewModel() {
                     statusMessage = "Connection test failed: ${e.message}",
                     isLoading = false
                 )
-                _configAction.value = ConfigAction(
+                // _configAction.value = ConfigAction(
                     ActionType.SHOW_TOAST,
                     message = "Connection test failed"
                 )
@@ -413,7 +403,7 @@ class ShimmerConfigViewModel : BaseViewModel() {
                 _shimmerUiState.value = _shimmerUiState.value.copy(
                     statusMessage = "Device disconnected"
                 )
-                _configAction.value = ConfigAction(
+                // _configAction.value = ConfigAction(
                     ActionType.SHOW_TOAST,
                     message = "Device disconnected"
                 )
