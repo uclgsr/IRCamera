@@ -73,6 +73,7 @@ class BlankDevComposeActivity : BaseComposeActivity<BlankDevViewModel>() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BlankDevScreen(
     viewModel: BlankDevViewModel = viewModel(),
