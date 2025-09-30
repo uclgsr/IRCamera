@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.background
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -23,8 +24,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
+// TODO: Add coil imports when dependency is available
+// import coil.compose.AsyncImage
+// import coil.request.ImageRequest
 import com.mpdc4gsr.libunified.app.bean.GalleryBean
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeFragment
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
@@ -171,7 +173,7 @@ class IRGalleryFragmentCompose : BaseComposeFragment<IRGalleryViewModel>() {
                             Text(
                                 text = when (currentDirType) {
                                     DirType.LINE -> "LINE Device"
-                                    DirType.TS004 -> "TS004 Device"
+                                    DirType.TS004_LOCALE -> "TS004 Device"
                                     else -> "All Devices"
                                 },
                                 fontWeight = FontWeight.Bold
@@ -193,7 +195,7 @@ class IRGalleryFragmentCompose : BaseComposeFragment<IRGalleryViewModel>() {
                             DropdownMenuItem(
                                 text = { Text("TS004 Device") },
                                 onClick = {
-                                    onDirTypeChanged(DirType.TS004)
+                                    onDirTypeChanged(DirType.TS004_LOCALE)
                                     expanded = false
                                 }
                             )
@@ -365,18 +367,21 @@ class IRGalleryFragmentCompose : BaseComposeFragment<IRGalleryViewModel>() {
             else null
         ) {
             Box(modifier = Modifier.fillMaxSize()) {
-                // Thumbnail
-                AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(item.path)
-                        .crossfade(true)
-                        .build(),
-                    contentDescription = item.name,
+                // Thumbnail placeholder (TODO: Replace with AsyncImage when Coil is available)
+                Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .clip(RoundedCornerShape(8.dp)),
-                    contentScale = ContentScale.Crop
-                )
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(MaterialTheme.colorScheme.surfaceVariant),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        Icons.Default.Image,
+                        contentDescription = item.name,
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.size(32.dp)
+                    )
+                }
 
                 // Selection indicator
                 if (isSelectionMode && isSelected) {
@@ -418,7 +423,7 @@ class IRGalleryFragmentCompose : BaseComposeFragment<IRGalleryViewModel>() {
                             maxLines = 1
                         )
                         Text(
-                            text = formatFileSize(item.size ?: 0),
+                            text = formatFileSize(viewModel.getCachedFileSize(item.path)),
                             style = MaterialTheme.typography.labelSmall,
                             color = Color.White.copy(alpha = 0.8f)
                         )
@@ -453,18 +458,21 @@ class IRGalleryFragmentCompose : BaseComposeFragment<IRGalleryViewModel>() {
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Thumbnail
-                AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(item.path)
-                        .crossfade(true)
-                        .build(),
-                    contentDescription = item.name,
+                // Thumbnail placeholder (TODO: Replace with AsyncImage when Coil is available)
+                Box(
                     modifier = Modifier
                         .size(60.dp)
-                        .clip(RoundedCornerShape(8.dp)),
-                    contentScale = ContentScale.Crop
-                )
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(MaterialTheme.colorScheme.surfaceVariant),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        Icons.Default.Image,
+                        contentDescription = item.name,
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
 
                 // File info
                 Column(
@@ -476,13 +484,13 @@ class IRGalleryFragmentCompose : BaseComposeFragment<IRGalleryViewModel>() {
                         fontWeight = FontWeight.Medium
                     )
                     Text(
-                        text = formatFileSize(item.size ?: 0),
+                        text = formatFileSize(viewModel.getCachedFileSize(item.path)),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Text(
                         text = SimpleDateFormat("MMM dd, yyyy HH:mm", Locale.getDefault())
-                            .format(Date(item.date ?: 0)),
+                            .format(Date(item.timeMillis)),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -501,7 +509,7 @@ class IRGalleryFragmentCompose : BaseComposeFragment<IRGalleryViewModel>() {
 
     private fun getDirTypeName(dirType: DirType): String = when (dirType) {
         DirType.LINE -> "LINE device"
-        DirType.TS004 -> "TS004 device"
+        DirType.TS004_LOCALE -> "TS004 device"
         else -> "device"
     }
 
