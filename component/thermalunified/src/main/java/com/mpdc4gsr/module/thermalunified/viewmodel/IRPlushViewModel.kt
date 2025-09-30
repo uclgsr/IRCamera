@@ -12,6 +12,10 @@ import kotlinx.coroutines.launch
 
 class IRPlushViewModel : BaseViewModel() {
 
+    companion object {
+        private const val CALIBRATION_DELAY_MS = 2000L
+    }
+
     // Dual view state management
     private val _dualViewState = MutableStateFlow(DualViewState.INACTIVE)
     val dualViewState: StateFlow<DualViewState> = _dualViewState.asStateFlow()
@@ -35,9 +39,6 @@ class IRPlushViewModel : BaseViewModel() {
     private val _isRecording = MutableStateFlow(false)
     val isRecording: StateFlow<Boolean> = _isRecording.asStateFlow()
 
-    // Surface view reference for dual view
-    private var surfaceView: SurfaceView? = null
-
     /**
      * Toggle recording state
      */
@@ -46,10 +47,11 @@ class IRPlushViewModel : BaseViewModel() {
     }
 
     /**
-     * Initialize dual view with surface view
+     * Initialize dual view - signals that dual view setup is ready
+     * Note: SurfaceView handling should remain in the fragment to avoid memory leaks
      */
     fun initializeDualView(surfaceView: SurfaceView) {
-        this.surfaceView = surfaceView
+        // Only update state, don't store the SurfaceView reference
         _dualViewState.value = DualViewState.ACTIVE
     }
 
@@ -67,7 +69,7 @@ class IRPlushViewModel : BaseViewModel() {
         launchWithErrorHandling {
             _dualViewState.value = DualViewState.CALIBRATING
             // Simulation of calibration process
-            kotlinx.coroutines.delay(2000)
+            kotlinx.coroutines.delay(CALIBRATION_DELAY_MS)
             _dualViewState.value = DualViewState.ACTIVE
         }
     }
