@@ -15,8 +15,57 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import mpdc4gsr.compose.base.BaseComposeActivity
 import mpdc4gsr.compose.theme.IRCameraTheme
+import mpdc4gsr.viewmodel.BaseViewModel
+
+class NetworkClientTestViewModel : BaseViewModel() {
+    
+    // UI State
+    data class UiState(
+        val isTestRunning: Boolean = false,
+        val currentTest: String = "",
+        val testProgress: Float = 0f,
+        val networkStatus: NetworkTestStatus = NetworkTestStatus(TestStatus.PENDING, 0, 0f, 0f, 0),
+        val testCategories: List<NetworkTestCategory> = emptyList(),
+        val testResults: List<NetworkTestResult> = emptyList(),
+        val networkConfiguration: NetworkConfiguration = NetworkConfiguration("192.168.1.100", 8080, 5000, 3)
+    )
+    
+    private val _uiState = MutableStateFlow(UiState())
+    val uiState: StateFlow<UiState> = _uiState.asStateFlow()
+
+    fun startComprehensiveTest() {
+        _uiState.value = _uiState.value.copy(isTestRunning = true)
+    }
+    
+    fun stopTest() {
+        _uiState.value = _uiState.value.copy(isTestRunning = false)
+    }
+    
+    fun refreshNetworkStatus() {
+        // Stub implementation
+    }
+    
+    fun runQuickNetworkTest() {
+        // Stub implementation
+    }
+    
+    fun runCategoryTest(category: NetworkTestCategory) {
+        // Stub implementation
+    }
+    
+    fun viewTestDetails(result: NetworkTestResult) {
+        // Stub implementation
+    }
+    
+    fun updateNetworkConfiguration(config: NetworkConfiguration) {
+        _uiState.value = _uiState.value.copy(networkConfiguration = config)
+    }
+}
 
 /**
  * Modern Compose implementation of Network Client Test

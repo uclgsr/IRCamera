@@ -354,7 +354,7 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         startActivity(
                             Intent(
                                 this@ComposeMigrationLauncherActivity,
-                                NetworkClientTestActivityCompose::class.java
+                                NetworkClientTestComposeActivity::class.java
                             )
                         )
                     }
