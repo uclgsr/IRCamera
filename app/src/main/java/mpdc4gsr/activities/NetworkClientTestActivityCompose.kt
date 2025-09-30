@@ -46,7 +46,13 @@ class NetworkClientTestViewModel : BaseViewModel() {
     val connectionInfo: StateFlow<String> = _connectionInfo.asStateFlow()
 
     // Data classes for network testing (shared with NetworkClientTestComposeActivity)
-    enum class TestStatus { PASS, FAIL, WARNING, PENDING }
+    enum class TestStatus(val displayName: String) {
+        PASS("Pass"),
+        FAIL("Fail"),
+        WARNING("Warning"),
+        PENDING("Pending")
+    }
+    
     enum class NetworkTestType { CONNECTION, LATENCY, THROUGHPUT, RELIABILITY }
     
     data class NetworkConfiguration(

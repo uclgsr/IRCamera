@@ -18,6 +18,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import mpdc4gsr.compose.base.BaseComposeActivity
 import mpdc4gsr.compose.theme.IRCameraTheme
 
+// Type aliases to avoid redeclaration - use types from SessionExportViewModel
+typealias GSRSession = SessionExportViewModel.GSRSession
+typealias ExportFormat = SessionExportViewModel.ExportFormat
+typealias ExportDestination = SessionExportViewModel.ExportDestination
+
 /**
  * Modern Compose implementation of GSR Session Export
  * Provides export functionality for GSR session data with Material 3 UI
@@ -498,8 +503,3 @@ private fun EmptyContent() {
         }
     }
 }
-
-// Type aliases to avoid redeclaration - use types from SessionExportViewModel
-typealias GSRSession = mpdc4gsr.sensors.gsr.SessionExportViewModel.GSRSession
-typealias ExportFormat = mpdc4gsr.sensors.gsr.SessionExportViewModel.ExportFormat
-typealias ExportDestination = mpdc4gsr.sensors.gsr.SessionExportViewModel.ExportDestination
