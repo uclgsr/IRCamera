@@ -21,6 +21,10 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeFragment
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.ir.view.TemperatureView
 import com.mpdc4gsr.module.thermalunified.lite.viewmodel.IRMonitorLiteViewModel
+import com.mpdc4gsr.module.thermalunified.lite.viewmodel.TemperatureData
+import com.mpdc4gsr.module.thermalunified.lite.viewmodel.MonitoringData
+import com.mpdc4gsr.module.thermalunified.lite.viewmodel.DeviceConnectionState
+import com.mpdc4gsr.module.thermalunified.lite.viewmodel.MonitoringState
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -36,8 +40,12 @@ import java.util.*
  */
 class IRMonitorLiteFragmentCompose : BaseComposeFragment<IRMonitorLiteViewModel>() {
 
+    private val viewModel: IRMonitorLiteViewModel by viewModels()
+
+    // Note: This method is required by BaseComposeFragment architecture
+    // Consider base class simplification to eliminate this redundancy
     override fun createViewModel(): IRMonitorLiteViewModel {
-        return viewModels<IRMonitorLiteViewModel>().value
+        return viewModel
     }
 
     @OptIn(ExperimentalMaterial3Api::class)
@@ -199,7 +207,7 @@ class IRMonitorLiteFragmentCompose : BaseComposeFragment<IRMonitorLiteViewModel>
                         factory = { context ->
                             TemperatureView(context).apply {
                                 // Configure for lite monitoring
-                                setRegionMode(TemperatureView.REGION_MODE_POINT)
+                                setTemperatureRegionMode(TemperatureView.REGION_MODE_POINT)
                             }
                         },
                         modifier = Modifier.fillMaxSize()
@@ -493,32 +501,4 @@ class IRMonitorLiteFragmentCompose : BaseComposeFragment<IRMonitorLiteViewModel>
         MonitoringState.ERROR -> Color.Red
     }
 
-    // Data classes and enums
-    data class TemperatureData(
-        val currentTemp: Float,
-        val maxTemp: Float,
-        val minTemp: Float
-    )
-
-    data class MonitoringData(
-        val duration: String,
-        val sampleCount: Int,
-        val averageTemp: Float,
-        val startTime: Long
-    ) {
-        fun getDataItems(): List<Pair<String, String>> = listOf(
-            "Duration" to duration,
-            "Samples" to sampleCount.toString(),
-            "Average" to "${String.format("%.1f", averageTemp)}°C",
-            "Started" to SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date(startTime))
-        )
-    }
-
-    enum class DeviceConnectionState {
-        DISCONNECTED, CONNECTING, CONNECTED, ERROR
-    }
-
-    enum class MonitoringState {
-        INACTIVE, ACTIVE, ERROR
-    }
 }
