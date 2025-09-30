@@ -27,8 +27,46 @@ import mpdc4gsr.compose.base.BaseComposeActivity
 import mpdc4gsr.compose.theme.IRCameraTheme
 import mpdc4gsr.viewmodel.BaseViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import java.text.SimpleDateFormat
 import java.util.*
+
+// SessionManagerViewModel
+class SessionManagerViewModel : BaseViewModel() {
+    
+    data class SessionManagerUiState(
+        val sessions: List<RecordingSession> = emptyList(),
+        val filteredSessions: List<RecordingSession> = emptyList(),
+        val statistics: SessionStatistics? = null,
+        val isLoading: Boolean = false,
+        val currentFilter: SessionFilter = SessionFilter()
+    )
+    
+    private val _sessionState = MutableStateFlow(SessionManagerUiState())
+    val sessionState: StateFlow<SessionManagerUiState> = _sessionState.asStateFlow()
+    
+    fun loadSessions() {
+        _sessionState.value = _sessionState.value.copy(
+            isLoading = false,
+            sessions = emptyList(),
+            filteredSessions = emptyList()
+        )
+    }
+    
+    fun filterSessions(query: String, filter: SessionFilter) {
+        // Stub implementation
+    }
+    
+    fun exportSession(session: RecordingSession, format: ExportFormat) {
+        // Stub implementation
+    }
+    
+    fun deleteSession(session: RecordingSession) {
+        // Stub implementation
+    }
+}
 
 /**
  * SessionManagerActivityCompose - Enhanced Compose Session Management
@@ -735,99 +773,3 @@ enum class ExportFormat(val displayName: String, val description: String) {
     EDF("EDF+", "European Data Format for clinical applications")
 }
 
-data class SessionManagerUiState(
-    val sessions: List<RecordingSession> = emptyList(),
-    val filteredSessions: List<RecordingSession> = emptyList(),
-    val statistics: SessionStatistics? = null,
-    val currentFilter: SessionFilter = SessionFilter(),
-    val isLoading: Boolean = false,
-    val error: String? = null
-)
-
-// ViewModel placeholder
-class SessionManagerViewModel : BaseViewModel() {
-    private val _sessionState = androidx.compose.runtime.mutableStateOf(SessionManagerUiState())
-    val sessionState: androidx.compose.runtime.State<SessionManagerUiState> = _sessionState
-
-    private var loadingJob: Job? = null
-
-    fun loadSessions() {
-        _sessionState.value = _sessionState.value.copy(isLoading = true)
-
-        // Cancel any existing loading job
-        loadingJob?.cancel()
-
-        // Simulate loading sessions on main dispatcher
-        loadingJob = viewModelScope.launch(Dispatchers.Main) {
-            delay(1000)
-
-            val mockSessions = listOf(
-                RecordingSession(
-                    "1", "Stress Response Session", "P001", "Stress Protocol",
-                    System.currentTimeMillis() - 86400000, 1800000, 3, 95, 1024 * 1024,
-                    "Baseline measurement before stress task"
-                ),
-                RecordingSession(
-                    "2", "Cognitive Load Test", "P002", "Cognitive Protocol",
-                    System.currentTimeMillis() - 172800000, 1200000, 2, 87, 512 * 1024
-                ),
-                RecordingSession(
-                    "3", "Emotion Recognition", "P001", "",
-                    System.currentTimeMillis() - 259200000, 2700000, 4, 92, 2048 * 1024
-                )
-            )
-
-            val statistics = SessionStatistics(
-                totalSessions = mockSessions.size,
-                totalDuration = mockSessions.sumOf { it.duration },
-                totalDataSize = mockSessions.sumOf { it.dataSize },
-                averageQuality = mockSessions.map { it.dataQuality }.average().toInt()
-            )
-
-            _sessionState.value = _sessionState.value.copy(
-                sessions = mockSessions,
-                filteredSessions = mockSessions,
-                statistics = statistics,
-                isLoading = false
-            )
-        }
-    }
-
-    fun filterSessions(query: String, filter: SessionFilter) {
-        val filtered = _sessionState.value.sessions.filter { session ->
-            val matchesQuery = query.isEmpty() ||
-                    session.name.contains(query, ignoreCase = true) ||
-                    session.participantId.contains(query, ignoreCase = true) ||
-                    session.protocol.contains(query, ignoreCase = true)
-
-            val matchesQuality = session.dataQuality >= filter.minQuality
-            val matchesProtocol = !filter.hasProtocol || session.protocol.isNotEmpty()
-
-            matchesQuery && matchesQuality && matchesProtocol
-        }
-
-        _sessionState.value = _sessionState.value.copy(
-            filteredSessions = filtered,
-            currentFilter = filter
-        )
-    }
-
-    fun deleteSession(session: RecordingSession) {
-        val updatedSessions = _sessionState.value.sessions.filter { it.id != session.id }
-        _sessionState.value = _sessionState.value.copy(
-            sessions = updatedSessions,
-            filteredSessions = updatedSessions.filter { session ->
-                _sessionState.value.filteredSessions.contains(session)
-            }
-        )
-    }
-
-    fun exportSession(session: RecordingSession, format: ExportFormat) {
-        // Implementation for exporting session data
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        loadingJob?.cancel()
-    }
-}

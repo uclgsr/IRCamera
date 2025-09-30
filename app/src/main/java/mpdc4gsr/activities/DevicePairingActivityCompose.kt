@@ -191,6 +191,30 @@ class DevicePairingActivityCompose : BaseComposeActivity<DevicePairingViewModel>
         }
 
         @Composable
+        fun ConnectionStatusIndicator(connectionState: DevicePairingViewModel.ConnectionState) {
+            val (color, icon) = when (connectionState) {
+                DevicePairingViewModel.ConnectionState.CONNECTED ->
+                    Pair(MaterialTheme.colorScheme.primary, Icons.Default.CheckCircle)
+
+                DevicePairingViewModel.ConnectionState.CONNECTING ->
+                    Pair(MaterialTheme.colorScheme.tertiary, Icons.Default.Refresh)
+
+                DevicePairingViewModel.ConnectionState.CONNECTION_FAILED ->
+                    Pair(MaterialTheme.colorScheme.error, Icons.Default.Error)
+
+                else ->
+                    Pair(MaterialTheme.colorScheme.outline, Icons.Default.Circle)
+            }
+
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                tint = color,
+                modifier = Modifier.size(24.dp)
+            )
+        }
+
+        @Composable
         fun ConnectionStatusCard(
             connectionState: DevicePairingViewModel.ConnectionState,
             connectedController: NetworkClient.ControllerInfo?,
@@ -300,30 +324,6 @@ class DevicePairingActivityCompose : BaseComposeActivity<DevicePairingViewModel>
                     }
                 }
             }
-        }
-
-        @Composable
-        fun ConnectionStatusIndicator(connectionState: DevicePairingViewModel.ConnectionState) {
-            val (color, icon) = when (connectionState) {
-                DevicePairingViewModel.ConnectionState.CONNECTED ->
-                    Pair(MaterialTheme.colorScheme.primary, Icons.Default.CheckCircle)
-
-                DevicePairingViewModel.ConnectionState.CONNECTING ->
-                    Pair(MaterialTheme.colorScheme.tertiary, Icons.Default.Refresh)
-
-                DevicePairingViewModel.ConnectionState.CONNECTION_FAILED ->
-                    Pair(MaterialTheme.colorScheme.error, Icons.Default.Error)
-
-                else ->
-                    Pair(MaterialTheme.colorScheme.outline, Icons.Default.Circle)
-            }
-
-            Icon(
-                imageVector = icon,
-                contentDescription = null,
-                tint = color,
-                modifier = Modifier.size(24.dp)
-            )
         }
 
         @Composable
@@ -535,7 +535,7 @@ class DevicePairingActivityCompose : BaseComposeActivity<DevicePairingViewModel>
     override fun onSyncFlash(durationMs: Int) {
         runOnUiThread {
             // Trigger flash overlay through ViewModel
-            viewModel.triggerSyncFlash(durationMs)
+            pairing.triggerSyncFlash(durationMs)
         }
     }
 

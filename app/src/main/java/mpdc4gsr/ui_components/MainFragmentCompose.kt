@@ -2,12 +2,15 @@ package mpdc4gsr.ui_components
 
 import android.content.Intent
 import androidx.activity.viewModels
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.BatteryChargingFull
+import androidx.compose.material.icons.filled.BatteryFull
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -21,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.csl.irCamera.R
-import mpdc4gsr.activities.DeviceTypeActivity
+import mpdc4gsr.activities.DeviceTypeActivityCompose
 import mpdc4gsr.compose.base.BaseComposeFragment
 import mpdc4gsr.ui_components.MainFragmentViewModel.*
 
@@ -67,7 +70,15 @@ class MainFragmentCompose : BaseComposeFragment<MainFragmentViewModel>() {
 
                     is NavigationEvent.ShowDeviceAddDialog -> {
                         // Navigate to device add screen
-                        context.startActivity(Intent(context, DeviceTypeActivity::class.java))
+                        context.startActivity(Intent(context, DeviceTypeActivityCompose::class.java))
+                    }
+
+                    is NavigationEvent.ShowDeviceDeleteDialog -> {
+                        // Show delete confirmation dialog
+                    }
+
+                    is NavigationEvent.ShowGSROptions -> {
+                        // Show GSR options dialog
                     }
                 }
             }
@@ -83,7 +94,7 @@ class MainFragmentCompose : BaseComposeFragment<MainFragmentViewModel>() {
             DeviceStatusHeader(
                 hasDevices = deviceState?.hasAnyDevice ?: false,
                 onAddDevice = {
-                    context.startActivity(Intent(context, DeviceTypeActivity::class.java))
+                    context.startActivity(Intent(context, DeviceTypeActivityCompose::class.java))
                 }
             )
 
@@ -102,7 +113,7 @@ class MainFragmentCompose : BaseComposeFragment<MainFragmentViewModel>() {
             } else {
                 EmptyDeviceState(
                     onAddDevice = {
-                        context.startActivity(Intent(context, DeviceTypeActivity::class.java))
+                        context.startActivity(Intent(context, DeviceTypeActivityCompose::class.java))
                     },
                     onGsrOptionsClick = {
                         viewModel.showGSROptions()
@@ -305,12 +316,10 @@ class MainFragmentCompose : BaseComposeFragment<MainFragmentViewModel>() {
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Icon(
-                                painter = painterResource(
-                                    id = if (batteryInfo.isCharging())
-                                        R.drawable.ic_battery_charging
-                                    else
-                                        R.drawable.ic_battery
-                                ),
+                                imageVector = if (batteryInfo.isCharging())
+                                    Icons.Default.BatteryChargingFull
+                                else
+                                    Icons.Default.BatteryFull,
                                 contentDescription = "Battery",
                                 modifier = Modifier.size(16.dp)
                             )

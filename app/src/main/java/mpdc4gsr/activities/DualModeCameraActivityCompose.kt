@@ -176,6 +176,7 @@ class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewMode
                     // Camera Preview Card
                     CameraPreviewCard(
                         cameraState = cameraState,
+                        cameraScreenState = cameraScreenState,
                         permissionState = permissionState,
                         onInitializeCamera = { previewView ->
                             if (permissionState == DualModeCameraViewModel.PermissionState.GRANTED) {
@@ -244,6 +245,7 @@ class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewMode
     @Composable
     private fun CameraPreviewCard(
         cameraState: DualModeCameraViewModel.CameraState,
+        cameraScreenState: DualModeCameraViewModel.CameraScreenState,
         permissionState: DualModeCameraViewModel.PermissionState,
         onInitializeCamera: (PreviewView) -> Unit
     ) {
@@ -463,11 +465,11 @@ class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewMode
                 this,
                 Manifest.permission.CAMERA
             ) == PackageManager.PERMISSION_GRANTED -> {
-                viewModel?.onPermissionGranted()
+                cameraVM.onPermissionGranted()
             }
 
             else -> {
-                viewModel?.requestPermission()
+                cameraVM.requestPermission()
                 requestPermissionLauncher.launch(Manifest.permission.CAMERA)
             }
         }
