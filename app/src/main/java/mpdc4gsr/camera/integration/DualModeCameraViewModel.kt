@@ -45,6 +45,7 @@ class DualModeCameraViewModel : BaseViewModel() {
 
     private var rgbCameraRecorder: RgbCameraRecorder? = null
     private var enableSamsungOptimizations: Boolean = true
+    private var appContext: Context? = null
 
     // Enhanced data classes
     data class CameraState(
@@ -193,6 +194,7 @@ class DualModeCameraViewModel : BaseViewModel() {
     ) {
         launchWithLoading {
             try {
+                appContext = context.applicationContext
                 rgbCameraRecorder = RgbCameraRecorder(
                     context = context,
                     lifecycleOwner = lifecycleOwner,
@@ -308,7 +310,7 @@ class DualModeCameraViewModel : BaseViewModel() {
 
             try {
                 val fileName = "recording_${System.currentTimeMillis()}"
-                val sessionDir = context.getExternalFilesDir("recordings")?.absolutePath ?: ""
+                val sessionDir = appContext?.getExternalFilesDir("recordings")?.absolutePath ?: ""
                 rgbCameraRecorder?.startRecording(sessionDir)
 
                 _recordingState.value = _recordingState.value.copy(

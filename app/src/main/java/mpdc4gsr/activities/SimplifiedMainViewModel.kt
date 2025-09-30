@@ -36,7 +36,7 @@ class SimplifiedMainViewModel : BaseViewModel() {
     )
 
     private val _viewState = MutableStateFlow(UiState())
-    val uiState: StateFlow<UiState> = _viewState.asStateFlow()
+    val viewState: StateFlow<UiState> = _viewState.asStateFlow()
 
     private var recordingStartTime: Long = 0
     private var recordingTimerJob: Job? = null
