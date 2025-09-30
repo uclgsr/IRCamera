@@ -286,7 +286,6 @@ class ShimmerConfigViewModel : BaseViewModel() {
                         deviceCount = 0
                     )
                     _discoveredDevices.value = emptyList()
-                    // _configAction.value = ConfigAction(ActionType.UPDATE_SCAN_BUTTON)
                 } else {
                     _shimmerUiState.value = _shimmerUiState.value.copy(
                         statusMessage = "Failed to start device scanning - check Bluetooth permissions"
