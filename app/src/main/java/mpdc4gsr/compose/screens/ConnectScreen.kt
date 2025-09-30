@@ -22,7 +22,7 @@ import mpdc4gsr.compose.theme.IRCameraTheme
  */
 @Composable
 fun ConnectScreen(
-    onDeviceSelected: (DeviceType) -> Unit = {},
+    onDeviceSelected: (ConnectedDevice) -> Unit = {},
     onBackClick: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
@@ -31,8 +31,8 @@ fun ConnectScreen(
     // Sample device types - will be replaced with actual device data
     val deviceTypes = remember {
         listOf(
-            DeviceType("TC001", "TOPDON TC001 Thermal Camera", true),
-            DeviceType("TC007", "TOPDON TC007 Thermal Camera", false)
+            ConnectedDevice("TC001", "TOPDON TC001 Thermal Camera", true),
+            ConnectedDevice("TC007", "TOPDON TC007 Thermal Camera", false)
         )
     }
 
@@ -85,7 +85,7 @@ fun ConnectScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun DeviceItem(
-    device: DeviceType,
+    device: ConnectedDevice,
     onSelected: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -131,10 +131,10 @@ private fun DeviceItem(
 }
 
 /**
- * Data class representing a device type
+ * Data class representing a connected device
  * Matches the structure expected by the thermal camera connection logic
  */
-data class DeviceType(
+data class ConnectedDevice(
     val id: String,
     val name: String,
     val isConnected: Boolean

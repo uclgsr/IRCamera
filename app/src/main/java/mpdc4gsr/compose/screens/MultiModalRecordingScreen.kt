@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
 import mpdc4gsr.compose.components.TitleBar
+import mpdc4gsr.compose.components.TitleBarAction
 import mpdc4gsr.compose.theme.IRCameraTheme
 import kotlin.math.sin
 import kotlin.random.Random
@@ -58,15 +59,14 @@ fun MultiModalRecordingScreen(
         TitleBar(
             title = "Multi-Modal Recording",
             showBackButton = true,
-            onBackClick = onBackClick,
-            actions = listOf(
-                TitleBar.TitleBarAction(
-                    icon = Icons.Default.Settings,
-                    contentDescription = "Recording Settings",
-                    onClick = { /* Open settings */ }
-                )
+            onBackClick = onBackClick
+        ) {
+            TitleBarAction(
+                icon = Icons.Default.Settings,
+                contentDescription = "Recording Settings",
+                onClick = { /* Open settings */ }
             )
-        )
+        }
 
         Column(
             modifier = Modifier

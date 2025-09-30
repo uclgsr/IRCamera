@@ -125,6 +125,8 @@ private fun ThermalImageWithAnnotations(
     annotations: List<ThermalAnnotation>,
     modifier: Modifier = Modifier
 ) {
+    val primaryColor = MaterialTheme.colorScheme.primary
+    
     Card(
         modifier = modifier,
         colors = CardDefaults.cardColors(containerColor = Color.Black)
@@ -151,7 +153,7 @@ private fun ThermalImageWithAnnotations(
                     center = Offset(size.width * 0.3f, size.height * 0.4f)
                 )
                 drawCircle(
-                    color = MaterialTheme.colorScheme.primary,
+                    color = primaryColor,
                     radius = 30f,
                     center = Offset(size.width * 0.7f, size.height * 0.6f)
                 )

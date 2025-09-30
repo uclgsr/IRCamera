@@ -2,6 +2,7 @@ package mpdc4gsr.compose.testing
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
@@ -21,7 +22,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import kotlinx.coroutines.launch
-import mpdc4gsr.test.*
 
 /**
  * Testing Suite Hub - Consolidated dashboard for all testing activities
@@ -75,7 +75,7 @@ class TestingSuiteHubActivity : ComponentActivity() {
                     description = "Test Shimmer BLE connectivity and data streaming",
                     icon = Icons.Default.Bluetooth,
                     composeActivity = BLEIntegrationTestComposeActivity::class.java,
-                    legacyActivity = BLEIntegrationTestActivity::class.java,
+                    legacyActivity = null,
                     category = TestCategory.BLE_INTEGRATION,
                     priority = TestPriority.HIGH
                 ),
@@ -85,7 +85,7 @@ class TestingSuiteHubActivity : ComponentActivity() {
                     description = "Test GSR device reconnection handling",
                     icon = Icons.Default.Refresh,
                     composeActivity = GSRReconnectionTestComposeActivity::class.java,
-                    legacyActivity = GSRReconnectionTestActivity::class.java,
+                    legacyActivity = null,
                     category = TestCategory.BLE_INTEGRATION
                 ),
 
@@ -96,7 +96,7 @@ class TestingSuiteHubActivity : ComponentActivity() {
                     description = "Comprehensive GSR performance benchmarking",
                     icon = Icons.Default.Speed,
                     composeActivity = GSRBenchTestComposeActivity::class.java,
-                    legacyActivity = GSRBenchTestActivity::class.java,
+                    legacyActivity = null,
                     category = TestCategory.GSR_SENSORS,
                     priority = TestPriority.HIGH
                 ),
@@ -106,7 +106,7 @@ class TestingSuiteHubActivity : ComponentActivity() {
                     description = "Validate GSR data quality and consistency",
                     icon = Icons.Default.VerifiedUser,
                     composeActivity = GSRDataIntegrityTestComposeActivity::class.java,
-                    legacyActivity = GSRDataIntegrityTestActivity::class.java,
+                    legacyActivity = null,
                     category = TestCategory.DATA_INTEGRITY,
                     priority = TestPriority.HIGH
                 ),
@@ -118,7 +118,7 @@ class TestingSuiteHubActivity : ComponentActivity() {
                     description = "Test RGB camera recording and controls",
                     icon = Icons.Default.Camera,
                     composeActivity = RgbCameraTestComposeActivity::class.java,
-                    legacyActivity = RgbCameraTestActivity::class.java,
+                    legacyActivity = null,
                     category = TestCategory.CAMERA_SYSTEMS,
                     priority = TestPriority.HIGH
                 ),
@@ -128,7 +128,7 @@ class TestingSuiteHubActivity : ComponentActivity() {
                     description = "Test RAW image capture functionality",
                     icon = Icons.Default.PhotoCamera,
                     composeActivity = RawCaptureTestComposeActivity::class.java,
-                    legacyActivity = RawCaptureTestActivity::class.java,
+                    legacyActivity = null,
                     category = TestCategory.CAMERA_SYSTEMS
                 ),
 
@@ -139,7 +139,7 @@ class TestingSuiteHubActivity : ComponentActivity() {
                     description = "Test synchronization between sensors",
                     icon = Icons.Default.Sync,
                     composeActivity = CrossModalSyncTestComposeActivity::class.java,
-                    legacyActivity = CrossModalSyncTestActivity::class.java,
+                    legacyActivity = null,
                     category = TestCategory.SYNCHRONIZATION,
                     priority = TestPriority.HIGH
                 ),
@@ -149,7 +149,7 @@ class TestingSuiteHubActivity : ComponentActivity() {
                     description = "Test timestamp synchronization accuracy",
                     icon = Icons.Default.Schedule,
                     composeActivity = TimeSynchronizationTestComposeActivity::class.java,
-                    legacyActivity = TimeSynchronizationTestActivity::class.java,
+                    legacyActivity = null,
                     category = TestCategory.SYNCHRONIZATION
                 ),
                 TestingModule(
@@ -157,7 +157,7 @@ class TestingSuiteHubActivity : ComponentActivity() {
                     title = "Timestamp Unification",
                     description = "Test unified timestamp system",
                     icon = Icons.Default.Timeline,
-                    legacyActivity = TimestampUnificationTestActivity::class.java,
+                    legacyActivity = null,
                     category = TestCategory.SYNCHRONIZATION
                 ),
 
@@ -168,7 +168,7 @@ class TestingSuiteHubActivity : ComponentActivity() {
                     description = "Test recording session management",
                     icon = Icons.Default.Timelapse,
                     composeActivity = SessionLifecycleTestComposeActivity::class.java,
-                    legacyActivity = SessionLifecycleTestActivity::class.java,
+                    legacyActivity = null,
                     category = TestCategory.PERFORMANCE
                 ),
                 TestingModule(
@@ -177,7 +177,7 @@ class TestingSuiteHubActivity : ComponentActivity() {
                     description = "Test multi-sensor parallel recording",
                     icon = Icons.Default.MultipleStop,
                     composeActivity = ParallelRecordingTestComposeActivity::class.java,
-                    legacyActivity = ParallelRecordingTestActivity::class.java,
+                    legacyActivity = null,
                     category = TestCategory.PERFORMANCE,
                     priority = TestPriority.HIGH
                 ),
@@ -187,7 +187,7 @@ class TestingSuiteHubActivity : ComponentActivity() {
                     description = "End-to-end session testing",
                     icon = Icons.Default.CheckCircle,
                     composeActivity = CompleteSessionTrialComposeActivity::class.java,
-                    legacyActivity = CompleteSessionTrialActivity::class.java,
+                    legacyActivity = null,
                     category = TestCategory.PERFORMANCE,
                     priority = TestPriority.HIGH
                 ),
@@ -199,7 +199,7 @@ class TestingSuiteHubActivity : ComponentActivity() {
                     description = "Test sensor dashboard UI and functionality",
                     icon = Icons.Default.Dashboard,
                     composeActivity = SensorDashboardTestComposeActivity::class.java,
-                    legacyActivity = SensorDashboardTestActivity::class.java,
+                    legacyActivity = null,
                     category = TestCategory.USER_INTERFACE
                 ),
                 TestingModule(
@@ -208,7 +208,7 @@ class TestingSuiteHubActivity : ComponentActivity() {
                     description = "Test PC remote control and networking",
                     icon = Icons.Default.NetworkCheck,
                     composeActivity = SimpleNetworkTestComposeActivity::class.java,
-                    legacyActivity = SimpleNetworkTestActivity::class.java,
+                    legacyActivity = null,
                     category = TestCategory.NETWORK
                 ),
                 TestingModule(
@@ -217,7 +217,7 @@ class TestingSuiteHubActivity : ComponentActivity() {
                     description = "Test app permission system validation",
                     icon = Icons.Default.Security,
                     composeActivity = PermissionRequestTestComposeActivity::class.java,
-                    legacyActivity = PermissionRequestActivity::class.java,
+                    legacyActivity = null,
                     category = TestCategory.SYSTEM
                 )
             )
