@@ -504,7 +504,7 @@ class ThermalFragmentViewModel : BaseViewModel() {
         data class PhotoCaptured(val fileName: String, val metadata: Map<String, Any>) : ThermalProcessingAction()
         data class RecordingError(val message: String) : ThermalProcessingAction()
         object NavigateToSettings : ThermalProcessingAction()
-        data class RegionConfigured(val regionMode: String) : ThermalProcessingAction()
+        data class RegionConfigured(val fenceType: FenceType) : ThermalProcessingAction()
     }
 
     enum class AlertType { HOT_SPOT, COLD_SPOT, TEMPERATURE_THRESHOLD }
@@ -576,18 +576,20 @@ class ThermalFragmentViewModel : BaseViewModel() {
                 val currentFence = _fenceState.value
                 
                 // Update region configuration based on current fence state
+                val nextFenceType = when (currentFence.fenceType) {
+                    FenceType.POINT -> FenceType.LINE
+                    FenceType.LINE -> FenceType.AREA
+                    FenceType.AREA -> FenceType.POINT
+                    null -> FenceType.POINT
+                }
+                
                 _fenceState.value = currentFence.copy(
-                    regionMode = when (currentFence.regionMode) {
-                        "point" -> "line"
-                        "line" -> "area"
-                        "area" -> "point"
-                        else -> "point"
-                    }
+                    fenceType = nextFenceType
                 )
                 
                 // Emit action to update UI
                 _thermalProcessingAction.postValue(
-                    ThermalProcessingAction.RegionConfigured(currentFence.regionMode)
+                    ThermalProcessingAction.RegionConfigured(nextFenceType)
                 )
             } catch (e: Exception) {
                 handleError(e)
