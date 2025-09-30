@@ -11,6 +11,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import mpdc4gsr.compose.screens.*
+import mpdc4gsr.compose.screens.SensorType
 import mpdc4gsr.compose.testing.TestResultsScreen
 
 /**
@@ -116,9 +117,15 @@ fun UnifiedNavHost(
         composable(UnifiedRoute.Dashboard.route) {
             UnifiedSensorDashboard(
                 onBackClick = { navController.popBackStack() },
-                onNavigateToGSRSettings = { navController.navigate(UnifiedRoute.GSRSettings.route) },
-                onNavigateToCamera = { navController.navigate(UnifiedRoute.CameraDashboard.route) },
-                onNavigateToThermal = { navController.navigate(UnifiedRoute.ThermalCamera.route) }
+                onSettingsClick = { navController.navigate(UnifiedRoute.GSRSettings.route) },
+                onSensorClick = { sensorType ->
+                    when (sensorType) {
+                        SensorType.GSR -> navController.navigate(UnifiedRoute.GSRSettings.route)
+                        SensorType.THERMAL -> navController.navigate(UnifiedRoute.ThermalCamera.route)
+                        SensorType.RGB_CAMERA -> navController.navigate(UnifiedRoute.CameraDashboard.route)
+                        else -> {}
+                    }
+                }
             )
         }
 
@@ -274,8 +281,7 @@ fun UnifiedNavHost(
         // Settings and System Routes
         composable(UnifiedRoute.Settings.route) {
             SettingsScreen(
-                onBackClick = { navController.popBackStack() },
-                onNavigateToNetworkConfig = { navController.navigate(UnifiedRoute.NetworkConfig.route) }
+                onBackClick = { navController.popBackStack() }
             )
         }
 

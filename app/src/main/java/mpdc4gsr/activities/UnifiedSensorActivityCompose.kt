@@ -21,6 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.viewModelScope
 import com.csl.irCamera.R
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -62,7 +63,7 @@ data class SensorStatus(
 data class UnifiedSessionInfo(
     val name: String = "New Session",
     val type: SessionType = SessionType.RESEARCH,
-    val quality: SessionQuality = SessionQuality.STANDARD,
+    val quality: SessionQuality = SessionQuality(),
     val status: SessionStatus = SessionStatus.IDLE,
     val duration: String = "00:00:00",
     val dataSize: String = "0 MB"
