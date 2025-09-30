@@ -38,6 +38,9 @@ import com.mpdc4gsr.module.thermalunified.viewmodel.CalibrationStatus
  */
 class IRCorrectionFragmentCompose : BaseComposeFragment<IRCorrectionViewModel>() {
 
+    // Compatibility property for legacy code that checks frameReady
+    val frameReady: Boolean get() = createViewModel().correctionState.value == CorrectionState.ACTIVE
+
     override fun createViewModel(): IRCorrectionViewModel {
         return viewModels<IRCorrectionViewModel>().value
     }

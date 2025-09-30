@@ -23,7 +23,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.event.ThermalActionEvent
-import com.mpdc4gsr.module.thermalunified.fragment.ThermalFragment
+import com.mpdc4gsr.module.thermalunified.fragment.ThermalFragmentCompose
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
 import org.greenrobot.eventbus.EventBus
 
@@ -125,7 +125,7 @@ private fun ThermalCameraView(
     // Embed the existing thermal fragment using AndroidView
     AndroidView(
         factory = { context ->
-            val fragment = ThermalFragment()
+            val fragment = ThermalFragmentCompose()
             androidx.fragment.app.FragmentContainerView(context).apply {
                 id = androidx.core.R.id.accessibility_custom_action_1
             }
