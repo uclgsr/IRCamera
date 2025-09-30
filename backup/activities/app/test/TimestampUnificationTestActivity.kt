@@ -65,7 +65,7 @@ class TimestampUnificationTestActivity : AppCompatActivity() {
                 testResults.add("Test $i: diff=${difference}ms")
 
                 if (difference > 10) {
-                    testResults.add("  ⚠️ WARNING: Difference exceeds 10ms threshold")
+                    testResults.add("   WARNING: Difference exceeds 10ms threshold")
                 }
 
                 delay(100)
@@ -82,9 +82,9 @@ class TimestampUnificationTestActivity : AppCompatActivity() {
             val maxDifference = differences.maxOrNull() ?: 0L
 
             val finalResult = if (maxDifference <= 10) {
-                "✅ PASS: All timestamps consistent within 10ms tolerance"
+                " PASS: All timestamps consistent within 10ms tolerance"
             } else {
-                "❌ FAIL: Timestamp inconsistency detected (max: ${maxDifference}ms)"
+                " FAIL: Timestamp inconsistency detected (max: ${maxDifference}ms)"
             }
 
             appendResultText("\n$finalResult\n")
@@ -92,7 +92,7 @@ class TimestampUnificationTestActivity : AppCompatActivity() {
             tempDir.deleteRecursively()
 
         } catch (e: Exception) {
-            appendResultText("❌ Test error: ${e.message}\n")
+            appendResultText(" Test error: ${e.message}\n")
             Log.e(TAG, "Unification test failed", e)
         }
     }

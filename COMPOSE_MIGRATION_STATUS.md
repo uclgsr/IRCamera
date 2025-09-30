@@ -5,7 +5,7 @@
 This document tracks the complete migration of traditional XML-based activities to modern Jetpack
 Compose implementations in the IRCamera application.
 
-## ✅ Successfully Converted Activities
+##  Successfully Converted Activities
 
 ### 1. WebViewActivity → WebViewActivityCompose
 
@@ -68,7 +68,7 @@ startActivity(intent)
 - Privacy Policy
 - Third Party Components
 
-## 🎯 Migration Benefits Achieved
+##  Migration Benefits Achieved
 
 ### Enhanced User Experience
 
@@ -93,7 +93,7 @@ All converted activities use the IRCameraTheme which includes:
 - Material 3 components with custom styling
 - Dark theme compatibility
 
-## 📊 Migration Statistics
+##  Migration Statistics
 
 | Category                   | Original Count | Converted Count | Conversion Rate |
 |----------------------------|----------------|-----------------|-----------------|
@@ -105,7 +105,7 @@ All converted activities use the IRCameraTheme which includes:
 
 **Migration Complete!** All major user-facing and testing activities have been successfully migrated to Compose.
 
-## 🚀 Demo and Testing
+##  Demo and Testing
 
 ### ComposeMigrationLauncherActivity
 
@@ -169,7 +169,7 @@ app/src/main/java/mpdc4gsr/activities/
 └── ComposeMigrationLauncherActivity.kt  # Demo launcher
 ```
 
-## 🎯 Recent Migration Additions
+##  Recent Migration Additions
 
 ### 4. BlankDevActivity → BlankDevActivityCompose
 
@@ -214,7 +214,7 @@ The following activities still use traditional XML layouts:
 
 - Various development and testing utilities (most have Compose equivalents)
 
-## 🎉 Completion Summary
+##  Completion Summary
 
 **All major activities have been successfully converted to Compose**, providing:
 

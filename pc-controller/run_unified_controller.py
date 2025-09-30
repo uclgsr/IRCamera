@@ -59,7 +59,7 @@ def main():
                 'requirements': ['PyQt6', 'pyqtgraph', 'numpy']
             })
         else:
-            print("⚠️  Unified Controller available but PyQt6 not functional")
+            print("  Unified Controller available but PyQt6 not functional")
     
     # Check for Enhanced Controller (fallback)
     if (src_dir / "enhanced_pc_controller.py").exists():
@@ -84,7 +84,7 @@ def main():
             })
     
     if not controllers:
-        print("❌ No PC controllers found or dependencies missing")
+        print(" No PC controllers found or dependencies missing")
         print()
         print("Required files:")
         print(f"  - {src_dir / 'unified_pc_controller.py'}")
@@ -111,21 +111,21 @@ def main():
                 missing_reqs.append(req)
         
         if missing_reqs:
-            print(f"     ⚠️  Missing: {', '.join(missing_reqs)}")
+            print(f"       Missing: {', '.join(missing_reqs)}")
         else:
-            print(f"     ✅ All requirements available")
+            print(f"      All requirements available")
         print()
     
     # Auto-select best available controller or let user choose
     if len(sys.argv) > 1 and sys.argv[1] == '--auto':
         # Auto mode - use best available
         selected = controllers[0]
-        print(f"🚀 Auto-launching: {selected['name']}")
+        print(f" Auto-launching: {selected['name']}")
     else:
         # Interactive mode
         if len(controllers) == 1:
             selected = controllers[0]
-            print(f"🚀 Launching: {selected['name']}")
+            print(f" Launching: {selected['name']}")
         else:
             print("Select controller to launch:")
             for i, controller in enumerate(controllers, 1):
@@ -166,12 +166,12 @@ def main():
         subprocess.run([sys.executable, selected['file']], check=True)
         
     except subprocess.CalledProcessError as e:
-        print(f"❌ Controller failed to start: {e}")
+        print(f" Controller failed to start: {e}")
         sys.exit(1)
     except KeyboardInterrupt:
         print("\n👋 Controller stopped by user")
     except Exception as e:
-        print(f"❌ Unexpected error: {e}")
+        print(f" Unexpected error: {e}")
         sys.exit(1)
 
 if __name__ == "__main__":

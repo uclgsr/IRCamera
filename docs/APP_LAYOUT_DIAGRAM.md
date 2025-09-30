@@ -89,7 +89,7 @@ graph TB
     subgraph "Main App Entry"
         MainActivity_Layout[activity_main.xml<br/>🏠 Main App Container]
         MainConsolidated_Layout[activity_main_consolidated.xml<br/>🏠 Consolidated Main Interface]
-        SimplifiedMain_Layout[activity_simplified_main.xml<br/>📱 Simplified Interface]
+        SimplifiedMain_Layout[activity_simplified_main.xml<br/> Simplified Interface]
     end
     
     %% Consolidated Layout Architecture
@@ -98,49 +98,49 @@ graph TB
         CameraTestConsolidated_Layout[activity_camera_test_consolidated.xml<br/>📷 Camera Testing Suite]
         SessionConsolidated_Layout[activity_session_consolidated.xml<br/>📝 Session Management Hub]
         InfoConsolidated_Layout[activity_info_consolidated.xml<br/>ℹ️ Information Display Hub]
-        DeviceConsolidated_Item[item_device_consolidated.xml<br/>📱 Unified Device Item]
+        DeviceConsolidated_Item[item_device_consolidated.xml<br/> Unified Device Item]
         MediaConsolidated_Item[item_media_consolidated.xml<br/>🎬 Unified Media Item]
-        SensorDataConsolidated_Item[item_sensor_data_consolidated.xml<br/>📊 Unified Sensor Data Item]
+        SensorDataConsolidated_Item[item_sensor_data_consolidated.xml<br/> Unified Sensor Data Item]
         MultiModalConsolidated_Fragment[fragment_multi_modal_consolidated.xml<br/>🎭 Multi-Modal Fragment]
         CameraModeSelector_Layout[camera_mode_selector_consolidated.xml<br/>📹 Camera Mode Selector]
     end
     
     %% Legacy Layouts (Moved to Backup)
     subgraph "Legacy Layouts (backup/layouts/)"
-        BackupActivityLayouts[35 Activity Layouts<br/>📦 Moved to backup/layouts/]
-        BackupFragmentLayouts[16 Fragment Layouts<br/>📦 Legacy fragments backed up]
+        BackupActivityLayouts[35 Activity Layouts<br/> Moved to backup/layouts/]
+        BackupFragmentLayouts[16 Fragment Layouts<br/> Legacy fragments backed up]
     end
     
     %% Core Fragment Layouts
     subgraph "Core UI Fragments"
         MainFragment_Layout[fragment_main.xml<br/>🏠 Main Dashboard Fragment]
-        SensorDashboard_Layout[fragment_sensor_dashboard.xml<br/>📊 Sensor Status Dashboard]
-        GSRSession_Layout[fragment_gsr_session.xml<br/>📈 GSR Session View]
-        GSRData_Layout[fragment_gsr_data.xml<br/>📋 GSR Data Display]
+        SensorDashboard_Layout[fragment_sensor_dashboard.xml<br/> Sensor Status Dashboard]
+        GSRSession_Layout[fragment_gsr_session.xml<br/> GSR Session View]
+        GSRData_Layout[fragment_gsr_data.xml<br/> GSR Data Display]
         GSRVideo_Layout[fragment_gsr_video.xml<br/>🎥 GSR Video Playback]
         GSRRawImage_Layout[fragment_gsr_raw_image.xml<br/>🖼️ Raw Image Display]
     end
     
     %% Thermal Camera Module Layouts
     subgraph "Thermal Camera Layouts"
-        IRMain_Layout[activity_ir_main.xml<br/>🌡️ Thermal Hub Interface]
+        IRMain_Layout[activity_ir_main.xml<br/> Thermal Hub Interface]
         IRThermal_Layout[fragment_ir_thermal.xml<br/>🔥 Thermal Camera Controls]
         IRMonitor_Layout[activity_ir_monitor.xml<br/>📹 Live Thermal Monitor]
-        IRConfig_Layout[activity_ir_config.xml<br/>⚙️ Camera Configuration]
+        IRConfig_Layout[activity_ir_config.xml<br/> Camera Configuration]
         IRGallery_Layout[fragment_gallery.xml<br/>🖼️ Thermal Image Gallery]
         IRCorrection_Layout[activity_ir_correction.xml<br/>🔧 Image Correction]
-        IRMonitorChart_Layout[activity_ir_monitor_chart.xml<br/>📊 Thermal Data Charts]
+        IRMonitorChart_Layout[activity_ir_monitor_chart.xml<br/> Thermal Data Charts]
         IRCaptureFragment_Layout[fragment_ir_monitor_capture.xml<br/>📸 Capture Interface]
     end
     
     %% GSR Sensor Module Layouts (Updated)
     subgraph "GSR Sensor Layouts - Streamlined"
-        GSRSettings_Layout[activity_gsr_settings.xml<br/>⚙️ GSR Configuration]
-        GSRPlot_Layout[activity_gsr_plot.xml<br/>📈 GSR Data Visualization]
+        GSRSettings_Layout[activity_gsr_settings.xml<br/> GSR Configuration]
+        GSRPlot_Layout[activity_gsr_plot.xml<br/> GSR Data Visualization]
         GSRGallery_Layout[activity_gsr_gallery.xml<br/>🖼️ GSR Media Gallery]
         GSRVideoPlayer_Layout[activity_gsr_video_player.xml<br/>🎥 GSR Video Playback]
-        GSRDataView_Layout[activity_gsr_data_view.xml<br/>📋 GSR Data Analysis]
-        GSRDeviceManagement_Layout[activity_gsr_device_management.xml<br/>📱 Device Management]
+        GSRDataView_Layout[activity_gsr_data_view.xml<br/> GSR Data Analysis]
+        GSRDeviceManagement_Layout[activity_gsr_device_management.xml<br/> Device Management]
         SessionManager_Layout[activity_session_manager.xml<br/>📝 Session Management]
         GSRQuickRecording_Layout[activity_gsr_quick_recording.xml<br/>⚡ Quick Recording]
     end
@@ -149,15 +149,15 @@ graph TB
     subgraph "Testing & Development"
         SensorDashboardTest_Layout[activity_sensor_dashboard_test.xml<br/>🧪 Sensor Testing]
         NetworkTest_Layout[activity_network_client_test.xml<br/>🌐 Network Testing]
-        NetworkConfig_Layout[activity_network_config.xml<br/>⚙️ Network Configuration]
+        NetworkConfig_Layout[activity_network_config.xml<br/> Network Configuration]
         RGBCameraTest_Layout[activity_rgb_camera_test.xml<br/>📷 RGB Camera Testing]
         ShimmerIntegration_Layout[activity_shimmer_integration.xml<br/>🔗 Shimmer Integration Test]
-        Phase2Validation_Layout[activity_phase2_validation.xml<br/>✅ Phase 2 Validation]
+        Phase2Validation_Layout[activity_phase2_validation.xml<br/> Phase 2 Validation]
     end
     
     %% User Interface & Settings
     subgraph "User Management Layouts"
-        Policy_Layout[activity_policy.xml<br/>📋 Privacy Policy]
+        Policy_Layout[activity_policy.xml<br/> Privacy Policy]
         Version_Layout[activity_version.xml<br/>ℹ️ Version Information]
         PDF_Layout[activity_pdf.xml<br/>📄 PDF Viewer]
         WebView_Layout[activity_web_view.xml<br/>🌐 Web Content]
@@ -165,11 +165,11 @@ graph TB
     
     %% Item Templates & Adapters - Streamlined
     subgraph "RecyclerView Item Templates - Consolidated"
-        DeviceConsolidated_Item[item_device_consolidated.xml<br/>📱 Unified Device Item]
+        DeviceConsolidated_Item[item_device_consolidated.xml<br/> Unified Device Item]
         MediaConsolidated_Item[item_media_consolidated.xml<br/>🎬 Unified Media Item] 
-        SensorDataConsolidated_Item[item_sensor_data_consolidated.xml<br/>📊 Unified Sensor Data Item]
+        SensorDataConsolidated_Item[item_sensor_data_consolidated.xml<br/> Unified Sensor Data Item]
         DeviceConnect_Item[item_device_connect.xml<br/>🔗 Device Connection Item]
-        DeviceType_Item[item_device_type.xml<br/>📱 Device Type Selection]
+        DeviceType_Item[item_device_type.xml<br/> Device Type Selection]
         PCController_Item[item_pc_controller.xml<br/>💻 PC Controller Item]
         ControllerDevice_Item[item_controller_device.xml<br/>🎮 Controller Device Item]
     end
@@ -185,7 +185,7 @@ graph TB
     %% UI Components & Widgets
     subgraph "Custom UI Components"
         ConnectionGuide_Layout[ui_main_connection_guide.xml<br/>🔗 Connection Guide UI]
-        ReportInfo_Layout[view_report_info.xml<br/>📊 Report Information View]
+        ReportInfo_Layout[view_report_info.xml<br/> Report Information View]
         ReportInput_Layout[view_report_ir_input.xml<br/>✏️ Report Input View]
         NewVersion_Layout[item_new_version.xml<br/>🆕 Version Update Item]
     end

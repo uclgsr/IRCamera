@@ -154,7 +154,7 @@ class RawCaptureTestActivity : AppCompatActivity() {
             features.add("$rawType (${binding.rawFrameRateSpinner.selectedItem})")
         }
 
-        val newFeaturesText = "🎯 Test Mode: ${features.joinToString(" + ")}"
+        val newFeaturesText = " Test Mode: ${features.joinToString(" + ")}"
         binding.tvFeaturesTitle.text = newFeaturesText
 
         // Update features list with Stage 3 information
@@ -227,15 +227,15 @@ class RawCaptureTestActivity : AppCompatActivity() {
 
                 if (success) {
                     binding.statusText.text =
-                        "✅ Recording stopped successfully - check files for Stage 3/Level 3 DNG output"
+                        " Recording stopped successfully - check files for Stage 3/Level 3 DNG output"
                     Log.i(TAG, "Recording stopped successfully")
                 } else {
-                    binding.statusText.text = "⚠️ Recording stopped with warnings"
+                    binding.statusText.text = " Recording stopped with warnings"
                 }
 
             } catch (e: Exception) {
                 Log.e(TAG, "Error stopping recording", e)
-                binding.statusText.text = "❌ Error stopping recording: ${e.message}"
+                binding.statusText.text = " Error stopping recording: ${e.message}"
             }
         }
     }

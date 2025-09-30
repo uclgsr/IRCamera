@@ -260,13 +260,13 @@ class ComprehensiveRecordingController(
                                     activeRecorders[sensorName] = true
                                     sensorsStarted++
                                     updateSensorHealth(sensorName, true)
-                                    Log.i(TAG, "✅ Started sensor: $sensorName")
+                                    Log.i(TAG, " Started sensor: $sensorName")
                                 } else {
                                     updateSensorHealth(sensorName, false)
                                     failedSensors.add(sensorName)
                                     Log.w(
                                         TAG,
-                                        "❌ Failed to start sensor: $sensorName - continuing with others"
+                                        " Failed to start sensor: $sensorName - continuing with others"
                                     )
                                 }
                                 success
@@ -278,13 +278,13 @@ class ComprehensiveRecordingController(
                                     activeRecorders[sensorName] = true
                                     sensorsStarted++
                                     updateSensorHealth(sensorName, true)
-                                    Log.i(TAG, "✅ Started sensor: $sensorName")
+                                    Log.i(TAG, " Started sensor: $sensorName")
                                 } else {
                                     updateSensorHealth(sensorName, false)
                                     failedSensors.add(sensorName)
                                     Log.w(
                                         TAG,
-                                        "❌ Failed to start sensor: $sensorName - continuing with others"
+                                        " Failed to start sensor: $sensorName - continuing with others"
                                     )
                                 }
                                 success
@@ -304,7 +304,7 @@ class ComprehensiveRecordingController(
                     } else {
                         Log.w(
                             TAG,
-                            "⚠️ Sensor recorder not available: $sensorName - continuing with others"
+                            " Sensor recorder not available: $sensorName - continuing with others"
                         )
                         sensorResults[sensorName] = false
                         failedSensors.add(sensorName)
@@ -325,25 +325,25 @@ class ComprehensiveRecordingController(
 
                     Log.i(
                         TAG,
-                        "🚀 Recording started successfully with $sensorsStarted/${enabledSensors.size} sensors"
+                        " Recording started successfully with $sensorsStarted/${enabledSensors.size} sensors"
                     )
 
                     // Log detailed status with fault tolerance info
                     if (failedSensors.isNotEmpty()) {
                         Log.w(
                             TAG,
-                            "⚠️ Partial recording: Failed sensors [${failedSensors.joinToString(", ")}] - continuing with active sensors"
+                            " Partial recording: Failed sensors [${failedSensors.joinToString(", ")}] - continuing with active sensors"
                         )
                     }
 
                     Log.i(
                         TAG,
-                        "📊 Sensor status: ${sensorResults.entries.joinToString { "${it.key}=${if (it.value) "✅" else "❌"}" }}"
+                        " Sensor status: ${sensorResults.entries.joinToString { "${it.key}=${if (it.value) "" else ""}" }}"
                     )
 
                     return@withContext true
                 } else {
-                    Log.e(TAG, "❌ No sensors started successfully - aborting recording")
+                    Log.e(TAG, " No sensors started successfully - aborting recording")
                     cleanupFailedRecording()
                     transitionSessionState(SessionState.STARTING, SessionState.STOPPED_FAILED)
                     _recordingStateFlow.value = RecordingState.ERROR
@@ -403,7 +403,7 @@ class ComprehensiveRecordingController(
                 sensorHealthStatus[it]?.isHealthy == false
             }
             if (unhealthySensors.isNotEmpty()) {
-                Log.w(TAG, "⚠️ Sensors with health issues: ${unhealthySensors.joinToString()}")
+                Log.w(TAG, " Sensors with health issues: ${unhealthySensors.joinToString()}")
 
             }
 
@@ -491,11 +491,11 @@ class ComprehensiveRecordingController(
                         try {
                             sensorRecorders[sensorName]?.stopRecording()
                             stopResults[sensorName] = true
-                            Log.i(TAG, "✅ Stopped sensor: $sensorName")
+                            Log.i(TAG, " Stopped sensor: $sensorName")
                         } catch (e: Exception) {
                             Log.w(
                                 TAG,
-                                "❌ Error stopping sensor $sensorName (isolated): ${e.message}",
+                                " Error stopping sensor $sensorName (isolated): ${e.message}",
                                 e
                             )
                             stopResults[sensorName] = false
@@ -528,7 +528,7 @@ class ComprehensiveRecordingController(
                 Log.i(TAG, "🏁 Recording stopped successfully (duration: ${sessionDuration}ms)")
                 Log.i(
                     TAG,
-                    "📊 Stop results: ${stopResults.entries.joinToString { "${it.key}=${if (it.value) "✅" else "❌"}" }}"
+                    " Stop results: ${stopResults.entries.joinToString { "${it.key}=${if (it.value) "" else ""}" }}"
                 )
 
                 val finalSessionState = when {
@@ -543,7 +543,7 @@ class ComprehensiveRecordingController(
                 if (sensorErrors.isNotEmpty()) {
                     Log.w(
                         TAG,
-                        "⚠️ Some sensors had stop errors but session was finalized successfully"
+                        " Some sensors had stop errors but session was finalized successfully"
                     )
                 }
 

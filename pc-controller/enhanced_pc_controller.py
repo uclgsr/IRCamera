@@ -655,14 +655,14 @@ def main():
 
     def on_data_received(device_info, message):
         if message.get('type') == 'telemetry_gsr':
-            print(f"📊 GSR data from {device_info.device_id}: {message.get('value'):.2f} µS")
+            print(f" GSR data from {device_info.device_id}: {message.get('value'):.2f} µS")
 
     controller.on_device_connected = on_device_connected
     controller.on_device_disconnected = on_device_disconnected
     controller.on_data_received = on_data_received
 
     try:
-        print("\n🚀 Enhanced PC Controller starting...")
+        print("\n Enhanced PC Controller starting...")
         print(f"📡 Listening on port {controller.port}")
         print("💡 Connect your Android devices to start recording")
         print("⏹️  Press Ctrl+C to stop\n")

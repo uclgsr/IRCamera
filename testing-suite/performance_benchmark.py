@@ -68,7 +68,7 @@ class ThesisPerformanceBenchmark:
     
     def run_all_benchmarks(self) -> Dict[str, Any]:
         """Run all performance benchmarks"""
-        print("🎯 Running Performance Benchmarks for Thesis Validation")
+        print(" Running Performance Benchmarks for Thesis Validation")
         print("=" * 60)
         
         # Synchronization benchmarks
@@ -199,7 +199,7 @@ class ThesisPerformanceBenchmark:
     
     def benchmark_data_throughput(self) -> None:
         """Benchmark data throughput performance"""
-        print("📊 Benchmarking Data Throughput...")
+        print(" Benchmarking Data Throughput...")
         
         # Expected throughput values from thesis
         throughput_specs = {
@@ -448,13 +448,13 @@ class ThesisPerformanceBenchmark:
         self.metrics.append(metric)
         
         # Print result
-        status_symbol = "✅" if status == "PASS" else "⚠️" if status == "WARNING" else "❌"
+        status_symbol = "" if status == "PASS" else "" if status == "WARNING" else ""
         print(f"  {status_symbol} {name}: {measured:.3f} {unit} "
               f"(expected: {expected:.3f}, tolerance: ±{tolerance:.3f})")
     
     def generate_validation_report(self) -> Dict[str, Any]:
         """Generate comprehensive validation report"""
-        print("\n📊 Generating Performance Validation Report...")
+        print("\n Generating Performance Validation Report...")
         
         # Calculate summary statistics
         total_metrics = len(self.metrics)
@@ -477,7 +477,7 @@ class ThesisPerformanceBenchmark:
         # Generate thesis integration data
         self.generate_thesis_data()
         
-        print(f"\n🎯 Performance Validation Summary:")
+        print(f"\n Performance Validation Summary:")
         print(f"   Total Metrics: {total_metrics}")
         print(f"   Passed: {passed_metrics} ({summary['pass_rate']:.1%})")
         print(f"   Warnings: {warning_metrics}")
@@ -566,7 +566,7 @@ class ThesisPerformanceBenchmark:
             
             f.write("## Key Metrics Summary\n\n")
             for metric in self.metrics[:10]:  # Top 10 metrics
-                status_emoji = "✅" if metric.status == "PASS" else "⚠️" if metric.status == "WARNING" else "❌"
+                status_emoji = "" if metric.status == "PASS" else "" if metric.status == "WARNING" else ""
                 f.write(f"- {status_emoji} **{metric.name}**: {metric.measured_value:.2f} {metric.unit} ")
                 f.write(f"(expected: {metric.expected_value:.2f})\n")
 
@@ -576,9 +576,9 @@ def main():
     benchmark = ThesisPerformanceBenchmark()
     results = benchmark.run_all_benchmarks()
     
-    print(f"\n🎯 Performance benchmarking complete!")
-    print(f"📊 Results saved to: {benchmark.output_dir}")
-    print(f"📈 Thesis integration files generated")
+    print(f"\n Performance benchmarking complete!")
+    print(f" Results saved to: {benchmark.output_dir}")
+    print(f" Thesis integration files generated")
     
     return results
 

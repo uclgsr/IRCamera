@@ -3,7 +3,7 @@
 # IRCamera Accessibility Testing Suite
 # Tests Compose UI accessibility features and semantic compliance
 
-echo "♿ IRCamera Accessibility Testing Suite"
+echo " IRCamera Accessibility Testing Suite"
 echo "======================================"
 
 # Configuration
@@ -36,10 +36,10 @@ record_test_result() {
     
     if [ "$status" == "PASS" ]; then
         PASSED_TESTS=$((PASSED_TESTS + 1))
-        log "  ✅ $test_name: PASSED"
+        log "   $test_name: PASSED"
     else
         FAILED_TESTS=$((FAILED_TESTS + 1))
-        log "  ❌ $test_name: FAILED - $details"
+        log "   $test_name: FAILED - $details"
     fi
     
     # Record in JSON
@@ -306,7 +306,7 @@ test_compose_semantics() {
 # Function to test error handling accessibility
 test_error_accessibility() {
     log ""
-    log "⚠️  Testing Error Handling Accessibility..."
+    log "  Testing Error Handling Accessibility..."
     
     # Try to trigger error states by navigating without proper setup
     adb shell am start -n com.csl.irCamera/.MainActivity &>/dev/null
@@ -346,7 +346,7 @@ test_error_accessibility() {
 # Function to generate accessibility report
 generate_accessibility_report() {
     log ""
-    log "📋 Generating Accessibility Report..."
+    log " Generating Accessibility Report..."
     
     # Calculate severity breakdown
     HIGH_SEVERITY=$(grep '"severity": "high"' "$RESULTS_FILE" | wc -l)
@@ -421,12 +421,12 @@ generate_accessibility_report() {
 </head>
 <body>
     <div class="header">
-        <h1>♿ IRCamera Accessibility Test Report</h1>
+        <h1> IRCamera Accessibility Test Report</h1>
         <p>Generated: $(date)</p>
     </div>
     
     <div class="summary">
-        <h2>📊 Test Summary</h2>
+        <h2> Test Summary</h2>
         <p><strong>Total Tests:</strong> $TOTAL_TESTS</p>
         <p><strong>Passed:</strong> $PASSED_TESTS</p>
         <p><strong>Failed:</strong> $FAILED_TESTS</p>
@@ -445,7 +445,7 @@ generate_accessibility_report() {
         <p><strong>Priority:</strong> Address high-severity issues first for better accessibility</p>
     </div>
     
-    <h2>📋 Detailed Results</h2>
+    <h2> Detailed Results</h2>
     <div id="test-results">
         <!-- Results will be populated by JavaScript -->
     </div>
@@ -461,7 +461,7 @@ generate_accessibility_report() {
                                       ' severity-' + test.severity;
                     testDiv.innerHTML = 
                         '<div class="test-name">' + 
-                        (test.status === 'PASS' ? '✅' : '❌') + ' ' + test.test_name +
+                        (test.status === 'PASS' ? '' : '') + ' ' + test.test_name +
                         ' <span class="severity-badge severity-' + test.severity + '-badge">' + 
                         test.severity.toUpperCase() + '</span>' +
                         '</div>' +
@@ -478,8 +478,8 @@ generate_accessibility_report() {
 </html>
 EOF
     
-    log "  ✅ Results saved to: $RESULTS_FILE"
-    log "  📊 HTML report saved to: $HTML_REPORT"
+    log "   Results saved to: $RESULTS_FILE"
+    log "   HTML report saved to: $HTML_REPORT"
     log "  📝 Detailed log saved to: $LOG_FILE"
 }
 
@@ -487,18 +487,18 @@ EOF
 main() {
     # Check prerequisites
     if ! command -v adb &> /dev/null; then
-        log "❌ ADB not found. Please install Android SDK platform tools."
+        log " ADB not found. Please install Android SDK platform tools."
         exit 1
     fi
     
     if ! command -v bc &> /dev/null; then
-        log "❌ bc (calculator) not found. Please install bc package."
+        log " bc (calculator) not found. Please install bc package."
         exit 1
     fi
     
     # Check device connection
     if ! adb devices | grep -q "device$"; then
-        log "❌ No Android device connected. Please connect a device and enable USB debugging."
+        log " No Android device connected. Please connect a device and enable USB debugging."
         exit 1
     fi
     
@@ -512,8 +512,8 @@ main() {
     echo "  }," >> "$RESULTS_FILE"
     echo "  \"tests\": [" >> "$RESULTS_FILE"
     
-    log "🚀 Starting IRCamera Accessibility Tests..."
-    log "📱 Device: $(adb shell getprop ro.product.model | tr -d '\r')"
+    log " Starting IRCamera Accessibility Tests..."
+    log " Device: $(adb shell getprop ro.product.model | tr -d '\r')"
     log "🤖 Android: $(adb shell getprop ro.build.version.release | tr -d '\r')"
     
     # Run accessibility test suites
@@ -529,10 +529,10 @@ main() {
     
     # Final summary
     log ""
-    log "🎉 Accessibility testing completed!"
-    log "📊 Results: $PASSED_TESTS/$TOTAL_TESTS tests passed ($(echo "scale=1; $PASSED_TESTS * 100 / $TOTAL_TESTS" | bc -l)%)"
-    log "⚠️  High-severity issues: $(grep '"severity": "high"' "$RESULTS_FILE" | wc -l)"
-    log "📁 Reports available in: $ACCESSIBILITY_RESULTS_DIR/"
+    log " Accessibility testing completed!"
+    log " Results: $PASSED_TESTS/$TOTAL_TESTS tests passed ($(echo "scale=1; $PASSED_TESTS * 100 / $TOTAL_TESTS" | bc -l)%)"
+    log "  High-severity issues: $(grep '"severity": "high"' "$RESULTS_FILE" | wc -l)"
+    log " Reports available in: $ACCESSIBILITY_RESULTS_DIR/"
     
     # Exit with proper code based on high-severity issues
     HIGH_ISSUES=$(grep -c '"severity": "high"' "$RESULTS_FILE")

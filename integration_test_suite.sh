@@ -35,10 +35,10 @@ record_test_result() {
     
     if [ "$status" == "PASS" ]; then
         PASSED_TESTS=$((PASSED_TESTS + 1))
-        log "  ✅ $test_name: PASSED"
+        log "   $test_name: PASSED"
     else
         FAILED_TESTS=$((FAILED_TESTS + 1))
-        log "  ❌ $test_name: FAILED - $details"
+        log "   $test_name: FAILED - $details"
     fi
     
     # Record in JSON
@@ -53,7 +53,7 @@ record_test_result() {
 # Function to check app installation and permissions
 test_app_prerequisites() {
     log ""
-    log "📱 Testing App Prerequisites..."
+    log " Testing App Prerequisites..."
     
     # Check app installation
     if adb shell pm list packages | grep -q "com.csl.irCamera"; then
@@ -138,7 +138,7 @@ test_compose_activity_launches() {
 # Function to test thermal camera integration
 test_thermal_camera_integration() {
     log ""
-    log "🌡️ Testing Thermal Camera Integration..."
+    log " Testing Thermal Camera Integration..."
     
     # Start main activity
     adb shell am start -n com.csl.irCamera/.MainActivity &>/dev/null
@@ -182,7 +182,7 @@ test_thermal_camera_integration() {
 # Function to test GSR sensor integration
 test_gsr_sensor_integration() {
     log ""
-    log "📊 Testing GSR Sensor Integration..."
+    log " Testing GSR Sensor Integration..."
     
     # Navigate back to main activity
     adb shell am start -n com.csl.irCamera/.MainActivity &>/dev/null
@@ -338,7 +338,7 @@ test_compose_lifecycle_integration() {
 # Function to generate integration test report
 generate_integration_report() {
     log ""
-    log "📋 Generating Integration Test Report..."
+    log " Generating Integration Test Report..."
     
     # Close JSON structure
     sed -i '$s/,$//' "$RESULTS_FILE"  # Remove last comma
@@ -375,14 +375,14 @@ generate_integration_report() {
     </div>
     
     <div class="summary">
-        <h2>📊 Test Summary</h2>
+        <h2> Test Summary</h2>
         <p><strong>Total Tests:</strong> $TOTAL_TESTS</p>
         <p><strong>Passed:</strong> $PASSED_TESTS</p>
         <p><strong>Failed:</strong> $FAILED_TESTS</p>
         <p><strong>Pass Rate:</strong> $(echo "scale=1; $PASSED_TESTS * 100 / $TOTAL_TESTS" | bc -l)%</p>
     </div>
     
-    <h2>📋 Detailed Results</h2>
+    <h2> Detailed Results</h2>
     <div id="test-results">
         <!-- Results will be populated by JavaScript -->
     </div>
@@ -396,7 +396,7 @@ generate_integration_report() {
                     const testDiv = document.createElement('div');
                     testDiv.className = test.status === 'PASS' ? 'test-pass' : 'test-fail';
                     testDiv.innerHTML = 
-                        '<div class="test-name">' + (test.status === 'PASS' ? '✅' : '❌') + ' ' + test.test_name + '</div>' +
+                        '<div class="test-name">' + (test.status === 'PASS' ? '' : '') + ' ' + test.test_name + '</div>' +
                         '<div class="test-details">' + test.details + '</div>';
                     resultsContainer.appendChild(testDiv);
                 });
@@ -410,8 +410,8 @@ generate_integration_report() {
 </html>
 EOF
     
-    log "  ✅ Results saved to: $RESULTS_FILE"
-    log "  📊 HTML report saved to: $HTML_REPORT"
+    log "   Results saved to: $RESULTS_FILE"
+    log "   HTML report saved to: $HTML_REPORT"
     log "  📝 Detailed log saved to: $LOG_FILE"
 }
 
@@ -419,18 +419,18 @@ EOF
 main() {
     # Check prerequisites
     if ! command -v adb &> /dev/null; then
-        log "❌ ADB not found. Please install Android SDK platform tools."
+        log " ADB not found. Please install Android SDK platform tools."
         exit 1
     fi
     
     if ! command -v bc &> /dev/null; then
-        log "❌ bc (calculator) not found. Please install bc package."
+        log " bc (calculator) not found. Please install bc package."
         exit 1
     fi
     
     # Check device connection
     if ! adb devices | grep -q "device$"; then
-        log "❌ No Android device connected. Please connect a device and enable USB debugging."
+        log " No Android device connected. Please connect a device and enable USB debugging."
         exit 1
     fi
     
@@ -443,8 +443,8 @@ main() {
     echo "  }," >> "$RESULTS_FILE"
     echo "  \"tests\": [" >> "$RESULTS_FILE"
     
-    log "🚀 Starting IRCamera Integration Tests..."
-    log "📱 Device: $(adb shell getprop ro.product.model | tr -d '\r')"
+    log " Starting IRCamera Integration Tests..."
+    log " Device: $(adb shell getprop ro.product.model | tr -d '\r')"
     log "🤖 Android: $(adb shell getprop ro.build.version.release | tr -d '\r')"
     
     # Run test suites
@@ -461,9 +461,9 @@ main() {
     
     # Final summary
     log ""
-    log "🎉 Integration testing completed!"
-    log "📊 Results: $PASSED_TESTS/$TOTAL_TESTS tests passed ($(echo "scale=1; $PASSED_TESTS * 100 / $TOTAL_TESTS" | bc -l)%)"
-    log "📁 Reports available in: $TEST_RESULTS_DIR/"
+    log " Integration testing completed!"
+    log " Results: $PASSED_TESTS/$TOTAL_TESTS tests passed ($(echo "scale=1; $PASSED_TESTS * 100 / $TOTAL_TESTS" | bc -l)%)"
+    log " Reports available in: $TEST_RESULTS_DIR/"
     
     # Exit with proper code
     if [ "$FAILED_TESTS" -eq 0 ]; then

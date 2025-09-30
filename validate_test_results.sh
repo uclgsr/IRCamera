@@ -495,25 +495,25 @@ generate_thesis_evidence() {
 ## Test Coverage Analysis
 
 ### Functional Requirements Validation
-- ✅ **Sensor Discovery**: BLE and USB device recognition
-- ✅ **Data Acquisition**: Real-time multi-modal data capture
-- ✅ **Multi-Modal Coordination**: Simultaneous sensor operation
-- ✅ **Network Communication**: PC-Android real-time streaming
-- ✅ **Error Handling**: Robust failure recovery mechanisms
+-  **Sensor Discovery**: BLE and USB device recognition
+-  **Data Acquisition**: Real-time multi-modal data capture
+-  **Multi-Modal Coordination**: Simultaneous sensor operation
+-  **Network Communication**: PC-Android real-time streaming
+-  **Error Handling**: Robust failure recovery mechanisms
 
 ### Performance Requirements Validation
-- ✅ **Synchronization Accuracy**: ±100ms target across sensors
-- ✅ **Network Latency**: <500ms end-to-end communication
-- ✅ **Frame Rate Stability**: >95% consistency for camera
-- ✅ **Resource Usage**: Acceptable mobile device performance
-- ✅ **Session Duration**: Up to 30 minutes continuous recording
+-  **Synchronization Accuracy**: ±100ms target across sensors
+-  **Network Latency**: <500ms end-to-end communication
+-  **Frame Rate Stability**: >95% consistency for camera
+-  **Resource Usage**: Acceptable mobile device performance
+-  **Session Duration**: Up to 30 minutes continuous recording
 
 ### Quality Requirements Validation
-- ✅ **System Stability**: No crashes during normal operation
-- ✅ **Connection Robustness**: Graceful handling of failures
-- ✅ **Data Integrity**: Complete file generation and validation
-- ✅ **Resource Cleanup**: Proper memory and device management
-- ✅ **User Experience**: Clear error messages and status indicators
+-  **System Stability**: No crashes during normal operation
+-  **Connection Robustness**: Graceful handling of failures
+-  **Data Integrity**: Complete file generation and validation
+-  **Resource Cleanup**: Proper memory and device management
+-  **User Experience**: Clear error messages and status indicators
 
 ## Evidence for Thesis Chapter 5
 
@@ -633,24 +633,24 @@ EOF
     echo "## Quality Assurance Validation" >> "$VALIDATION_REPORT"
     echo "" >> "$VALIDATION_REPORT"
     echo "### MVP-First Approach Compliance" >> "$VALIDATION_REPORT"
-    echo "- ✅ **No Stub Implementations**: All tests validate actual functionality" >> "$VALIDATION_REPORT"
-    echo "- ✅ **Real Hardware Integration**: Tests designed for actual device validation" >> "$VALIDATION_REPORT"
-    echo "- ✅ **Production Readiness**: Comprehensive error handling and recovery" >> "$VALIDATION_REPORT"
-    echo "- ✅ **Evidence Collection**: Quantitative metrics for thesis Chapter 5" >> "$VALIDATION_REPORT"
+    echo "-  **No Stub Implementations**: All tests validate actual functionality" >> "$VALIDATION_REPORT"
+    echo "-  **Real Hardware Integration**: Tests designed for actual device validation" >> "$VALIDATION_REPORT"
+    echo "-  **Production Readiness**: Comprehensive error handling and recovery" >> "$VALIDATION_REPORT"
+    echo "-  **Evidence Collection**: Quantitative metrics for thesis Chapter 5" >> "$VALIDATION_REPORT"
     echo "" >> "$VALIDATION_REPORT"
     
     echo "### Test Implementation Quality" >> "$VALIDATION_REPORT"
-    echo "- ✅ **Specific Mock Behaviors**: Targeted validation with exact verification" >> "$VALIDATION_REPORT"
-    echo "- ✅ **Real Timing Measurements**: Actual performance validation" >> "$VALIDATION_REPORT"
-    echo "- ✅ **Comprehensive Error Scenarios**: Full failure mode coverage" >> "$VALIDATION_REPORT"
-    echo "- ✅ **Resource Cleanup Validation**: Proper memory and device management" >> "$VALIDATION_REPORT"
+    echo "-  **Specific Mock Behaviors**: Targeted validation with exact verification" >> "$VALIDATION_REPORT"
+    echo "-  **Real Timing Measurements**: Actual performance validation" >> "$VALIDATION_REPORT"
+    echo "-  **Comprehensive Error Scenarios**: Full failure mode coverage" >> "$VALIDATION_REPORT"
+    echo "-  **Resource Cleanup Validation**: Proper memory and device management" >> "$VALIDATION_REPORT"
     echo "" >> "$VALIDATION_REPORT"
     
     echo "## Conclusion" >> "$VALIDATION_REPORT"
     echo "" >> "$VALIDATION_REPORT"
     echo "The test validation confirms that the IRCamera testing framework successfully implements comprehensive validation of all modalities and features with MVP focus. All tests avoid stub implementations and provide real functionality validation suitable for thesis evidence collection." >> "$VALIDATION_REPORT"
     echo "" >> "$VALIDATION_REPORT"
-    echo "**Validation Status**: ✅ PASSED - Ready for hardware testing and thesis evidence collection" >> "$VALIDATION_REPORT"
+    echo "**Validation Status**:  PASSED - Ready for hardware testing and thesis evidence collection" >> "$VALIDATION_REPORT"
     
     echo -e "${GREEN}✓ Comprehensive validation report generated: $VALIDATION_REPORT${NC}"
     echo ""

@@ -174,7 +174,7 @@ class MVPCLI:
 
     def cmd_discover_devices(self):
         """Simulate device discovery"""
-        print("🔍 Discovering devices...")
+        print(" Discovering devices...")
 
         # Simulate discovery time
         for i in range(3):
@@ -202,7 +202,7 @@ class MVPCLI:
 
     def cmd_demo(self):
         """Run automated demonstration"""
-        print("\n🚀 Running MVP Demo...")
+        print("\n Running MVP Demo...")
         print("This will create a session, simulate device discovery, and record data")
 
         try:
@@ -257,7 +257,7 @@ class MVPCLI:
                     f"   • Session file: {self.session_manager.get_session_directory(final_session.session_id)}/metadata.json")
 
             self.current_session = None
-            print("\n🎉 MVP Demo completed successfully!")
+            print("\n MVP Demo completed successfully!")
 
         except Exception as e:
             print(f"\n✗ Demo failed: {e}")

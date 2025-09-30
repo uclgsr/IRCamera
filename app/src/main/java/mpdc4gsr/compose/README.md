@@ -27,7 +27,7 @@ compose/
 
 ## Key Components
 
-### 🎯 Unified Sensor Dashboard
+###  Unified Sensor Dashboard
 
 - **UnifiedSensorDashboard**: Master dashboard showing all sensor modalities
 - **UnifiedSensorStatus**: System-wide status and control component
@@ -42,7 +42,7 @@ compose/
 - Interactive controls for each sensor type
 - Status indicators and metrics displays
 
-### 📱 Individual Sensor Screens
+###  Individual Sensor Screens
 
 - **GSRSensorScreen**: Dedicated GSR monitoring with data analysis
 - **ThermalMonitorScreen**: Thermal camera preview with overlays
@@ -59,28 +59,28 @@ compose/
 
 ## Features
 
-### ✅ Multi-Modal Integration
+###  Multi-Modal Integration
 
 - Unified dashboard for all sensor types (GSR, Thermal IR, RGB)
 - Real-time status monitoring with visual connection diagrams
 - Synchronized recording and data collection across sensors
 - System-wide controls for multi-modal operations
 
-### ✅ Real-Time Data Visualization
+###  Real-Time Data Visualization
 
 - **GSR**: Live waveform with skin conductance analysis
 - **Thermal IR**: Temperature overlays with hotspot detection
 - **RGB Camera**: Live preview with grid overlay and focus indicators
 - Interactive data displays with zoom and analysis features
 
-### ✅ Professional Sensor Controls
+###  Professional Sensor Controls
 
 - Individual sensor configuration and calibration
 - Recording controls with duration and file size tracking
 - Export functionality for data analysis
 - Professional camera controls (exposure, ISO, focus modes)
 
-### ✅ Consistent Design System
+###  Consistent Design System
 
 - Dark theme (#16131e) matching reference implementation
 - Material3 components with thermal-focused color scheme
@@ -136,7 +136,7 @@ fun IntegratedGSRScreen(viewModel: GSRViewModel = viewModel()) {
 - Skin conductance analysis
 - Data export for research applications
 
-### 🌡️ Thermal IR Camera
+###  Thermal IR Camera
 
 - TOPDON TC001/TC007 support
 - Temperature overlay visualization

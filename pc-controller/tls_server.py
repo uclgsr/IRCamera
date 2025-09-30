@@ -48,7 +48,7 @@ class TLSSecurityManager:
             # Check if server certificates exist and are valid
             if (self.server_cert_path.exists() and self.server_key_path.exists() and
                     self._are_certificates_valid()):
-                logger.info(f"✅ Valid TLS certificates found in {self.cert_dir}")
+                logger.info(f" Valid TLS certificates found in {self.cert_dir}")
                 return True
 
             # Generate new certificates
@@ -74,7 +74,7 @@ class TLSSecurityManager:
             return True
 
         except Exception as e:
-            logger.error(f"❌ Failed to generate TLS certificates: {e}")
+            logger.error(f" Failed to generate TLS certificates: {e}")
             return False
 
     def create_ssl_context(self) -> Optional[ssl.SSLContext]:
@@ -100,7 +100,7 @@ class TLSSecurityManager:
             return context
 
         except Exception as e:
-            logger.error(f"❌ Failed to create SSL context: {e}")
+            logger.error(f" Failed to create SSL context: {e}")
             return None
 
     def get_certificate_info(self) -> Dict[str, str]:
@@ -324,11 +324,11 @@ class SecureTCPServer:
             if self.use_tls:
                 self.ssl_context = self.security_manager.create_ssl_context()
                 if not self.ssl_context:
-                    logger.error("❌ Failed to create SSL context")
+                    logger.error(" Failed to create SSL context")
                     return False
                 logger.info("🔐 TLS encryption enabled")
             else:
-                logger.warning("⚠️ TLS encryption disabled - using plain TCP")
+                logger.warning(" TLS encryption disabled - using plain TCP")
 
             # Create server socket
             self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -354,7 +354,7 @@ class SecureTCPServer:
             return True
 
         except Exception as e:
-            logger.error(f"❌ Failed to start secure server: {e}")
+            logger.error(f" Failed to start secure server: {e}")
             return False
 
     def stop(self):
@@ -376,7 +376,7 @@ class SecureTCPServer:
         logger.info("🛑 Secure TCP Server stopped")
 
         # Print final statistics
-        logger.info(f"📊 Session statistics:")
+        logger.info(f" Session statistics:")
         logger.info(f"   • Total connections: {self.connection_count}")
         logger.info(f"   • Messages processed: {self.message_count}")
         logger.info(f"   • Data transferred: {self.bytes_transferred / 1024:.1f} KB")
@@ -398,7 +398,7 @@ class SecureTCPServer:
                         )
                         logger.info(f"🔐 TLS handshake completed with {address}")
                     except ssl.SSLError as e:
-                        logger.error(f"❌ TLS handshake failed with {address}: {e}")
+                        logger.error(f" TLS handshake failed with {address}: {e}")
                         client_socket.close()
                         continue
 
@@ -444,7 +444,7 @@ class SecureTCPServer:
                 'bytes_received': 0
             }
 
-            logger.info(f"📱 Secure device {device_id} connected from {address}")
+            logger.info(f" Secure device {device_id} connected from {address}")
 
             while self.running:
                 try:
@@ -542,7 +542,7 @@ class SecureTCPServer:
         if device_id in self.connected_clients:
             self.connected_clients[device_id]['device_info'] = device_info
 
-        logger.info(f"📱 Secure device registered: {device_id} ({device_info['device_type']})")
+        logger.info(f" Secure device registered: {device_id} ({device_info['device_type']})")
         logger.info(f"   Capabilities: {', '.join(device_info['capabilities'])}")
 
     def _handle_time_sync_request(self, device_id: str, message: Dict, client_socket):
@@ -630,13 +630,13 @@ def main():
     print("Testing certificate generation...")
 
     if security_manager.ensure_certificates_exist():
-        print("✅ TLS certificates ready")
+        print(" TLS certificates ready")
 
         cert_info = security_manager.get_certificate_info()
         for key, value in cert_info.items():
             print(f"   {key}: {value}")
     else:
-        print("❌ Certificate generation failed")
+        print(" Certificate generation failed")
         return
 
     # Test secure server
@@ -647,7 +647,7 @@ def main():
     server = SecureTCPServer(port=8443, use_tls=True, data_callback=test_callback)
 
     if server.start():
-        print("✅ Secure server started successfully")
+        print(" Secure server started successfully")
         print("   Connect Android devices to test TLS communication")
         print("   Use Ctrl+C to stop")
 
@@ -656,14 +656,14 @@ def main():
                 time.sleep(1)
                 stats = server.get_server_statistics()
                 if stats['active_connections'] > 0:
-                    print(f"📊 Active: {stats['active_connections']}, "
+                    print(f" Active: {stats['active_connections']}, "
                           f"Messages: {stats['total_messages']}, "
                           f"Data: {stats['bytes_transferred'] / 1024:.1f} KB")
         except KeyboardInterrupt:
             print("\n🛑 Stopping server...")
             server.stop()
     else:
-        print("❌ Failed to start secure server")
+        print(" Failed to start secure server")
 
 
 if __name__ == "__main__":

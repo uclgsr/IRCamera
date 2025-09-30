@@ -240,7 +240,7 @@ class RecordingController(
 
                 Log.i(
                     TAG,
-                    "🚀 Starting enhanced multi-modal recording with validation (trigger: $triggerSource)"
+                    " Starting enhanced multi-modal recording with validation (trigger: $triggerSource)"
                 )
                 _recordingStateFlow.value = RecordingState.STARTING
 
@@ -248,7 +248,7 @@ class RecordingController(
                 Log.d(TAG, "Phase 1: Validating recording prerequisites...")
                 val validationResult = validateRecordingPrerequisites(enabledSensors)
                 if (!validationResult.isValid) {
-                    Log.e(TAG, "❌ Recording validation failed: ${validationResult.errorMessage}")
+                    Log.e(TAG, " Recording validation failed: ${validationResult.errorMessage}")
                     transitionSessionState(SessionState.STARTING, SessionState.STOPPED_FAILED)
                     _recordingStateFlow.value = RecordingState.ERROR
                     addSessionEvent(
@@ -273,7 +273,7 @@ class RecordingController(
                 if (storageStatus.isLowStorage) {
                     Log.e(
                         TAG,
-                        "❌ Insufficient storage space: ${storageStatus.formattedAvailable} available"
+                        " Insufficient storage space: ${storageStatus.formattedAvailable} available"
                     )
                     transitionSessionState(SessionState.STARTING, SessionState.STOPPED_FAILED)
                     _recordingStateFlow.value = RecordingState.ERROR
@@ -299,7 +299,7 @@ class RecordingController(
                 if (storageStatus.shouldWarn) {
                     Log.w(
                         TAG,
-                        "⚠️ Low storage warning: ${storageStatus.formattedAvailable} available"
+                        " Low storage warning: ${storageStatus.formattedAvailable} available"
                     )
                     addSessionEvent(
                         "STORAGE_WARNING",
@@ -1099,7 +1099,7 @@ class RecordingController(
                 val status = when {
                     sensor.isRecording -> "🔴 RECORDING"
                     sensor.isInitialized -> "🟡 READY"
-                    else -> "❌ FAILED"
+                    else -> " FAILED"
                 }
                 val activeStatus =
                     if (activeRecorders.containsKey(sensor.sensorId)) " (ACTIVE)" else ""

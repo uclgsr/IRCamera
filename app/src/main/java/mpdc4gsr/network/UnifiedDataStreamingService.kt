@@ -85,7 +85,7 @@ class UnifiedDataStreamingService(
                     distributeHeartbeats()
                 }
 
-                Log.i(TAG, "✅ Unified streaming service started on port $port")
+                Log.i(TAG, " Unified streaming service started on port $port")
 
 
                 broadcastSessionSyncEvent(

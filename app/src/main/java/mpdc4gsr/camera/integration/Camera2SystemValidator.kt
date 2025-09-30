@@ -17,44 +17,44 @@ class Camera2SystemValidator(private val context: Context) {
             Log.i(TAG, "Starting Camera2 system validation...")
 
             if (validateArchitectureComponents()) {
-                results.add("✅ Architecture components validated")
+                results.add(" Architecture components validated")
             } else {
-                results.add("❌ Architecture components missing")
+                results.add(" Architecture components missing")
                 allPassed = false
             }
 
             if (validateModeSwitching()) {
-                results.add("✅ Mode switching logic validated")
+                results.add(" Mode switching logic validated")
             } else {
-                results.add("❌ Mode switching logic failed")
+                results.add(" Mode switching logic failed")
                 allPassed = false
             }
 
             if (validateFastSessionSwitching()) {
-                results.add("✅ Fast session switching validated")
+                results.add(" Fast session switching validated")
             } else {
-                results.add("❌ Fast session switching failed")
+                results.add(" Fast session switching failed")
                 allPassed = false
             }
 
             if (validateSamsungCompatibility()) {
-                results.add("✅ Samsung S22 compatibility validated")
+                results.add(" Samsung S22 compatibility validated")
             } else {
-                results.add("❌ Samsung S22 compatibility failed")
+                results.add(" Samsung S22 compatibility failed")
                 allPassed = false
             }
 
             if (validateStage3Level3Support()) {
-                results.add("✅ Samsung Stage3/Level3 DNG support validated")
+                results.add(" Samsung Stage3/Level3 DNG support validated")
             } else {
-                results.add("❌ Samsung Stage3/Level3 DNG support failed")
+                results.add(" Samsung Stage3/Level3 DNG support failed")
                 allPassed = false
             }
 
             Log.i(TAG, "Validation completed. Success: $allPassed")
         } catch (e: Exception) {
             Log.e(TAG, "Validation failed with exception", e)
-            results.add("❌ Validation failed: ${e.message}")
+            results.add(" Validation failed: ${e.message}")
             allPassed = false
         }
 
@@ -204,16 +204,16 @@ class Camera2SystemValidator(private val context: Context) {
         fun getFormattedReport(): String {
             return buildString {
                 appendLine("=== Camera2 System Validation Report ===")
-                appendLine("Overall Result: ${if (allTestsPassed) "✅ PASS" else "❌ FAIL"}")
+                appendLine("Overall Result: ${if (allTestsPassed) " PASS" else " FAIL"}")
                 appendLine()
                 results.forEach { result ->
                     appendLine(result)
                 }
                 appendLine()
                 if (allTestsPassed) {
-                    appendLine("🚀 System ready for Samsung S22 (Exynos, Android 15) deployment")
+                    appendLine(" System ready for Samsung S22 (Exynos, Android 15) deployment")
                 } else {
-                    appendLine("⚠️ System requires fixes before deployment")
+                    appendLine(" System requires fixes before deployment")
                 }
             }
         }

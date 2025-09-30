@@ -188,7 +188,7 @@ class ThesisTestSuite:
     
     def _test_diagram_generation(self) -> None:
         """Test diagram generation and validation"""
-        print("📊 Testing Diagram Generation...")
+        print(" Testing Diagram Generation...")
         
         diagram_files = [
             "docs/thesis-diagrams/session-sequence-diagram.md",
@@ -261,7 +261,7 @@ class ThesisTestSuite:
     
     def _test_table_validation(self) -> None:
         """Test table content validation"""
-        print("📋 Testing Table Validation...")
+        print(" Testing Table Validation...")
         
         table_files = [
             "docs/thesis-diagrams/system-configuration-tables.md",
@@ -407,7 +407,7 @@ class ThesisTestSuite:
     
     def _benchmark_throughput_performance(self) -> None:
         """Benchmark system throughput"""
-        print("📈 Benchmarking Throughput Performance...")
+        print(" Benchmarking Throughput Performance...")
         
         # Simulate throughput measurements
         throughput_targets = {
@@ -672,7 +672,7 @@ class ThesisTestSuite:
     
     def _generate_test_report(self) -> Dict[str, Any]:
         """Generate comprehensive test report"""
-        print("\n📊 Generating Comprehensive Test Report...")
+        print("\n Generating Comprehensive Test Report...")
         
         # Calculate summary statistics
         total_tests = len(self.test_results)
@@ -704,9 +704,9 @@ class ThesisTestSuite:
         self._save_results()
         
         # Print summary
-        print(f"\n✅ Test Execution Complete!")
-        print(f"📊 Tests: {passed_tests}/{total_tests} passed ({summary['test_execution']['pass_rate']:.1%})")
-        print(f"🎯 Benchmarks: {passed_benchmarks}/{total_benchmarks} passed ({summary['benchmarks']['benchmark_success_rate']:.1%})")
+        print(f"\n Test Execution Complete!")
+        print(f" Tests: {passed_tests}/{total_tests} passed ({summary['test_execution']['pass_rate']:.1%})")
+        print(f" Benchmarks: {passed_benchmarks}/{total_benchmarks} passed ({summary['benchmarks']['benchmark_success_rate']:.1%})")
         print(f"⏱️ Execution Time: {summary['execution_time']:.1f}s")
         
         return summary
@@ -758,7 +758,7 @@ class ThesisTestSuite:
     
     def _create_visualizations(self) -> None:
         """Create visualization diagrams for test results"""
-        print("📈 Creating Test Result Visualizations...")
+        print(" Creating Test Result Visualizations...")
         
         if HAS_MATPLOTLIB:
             # Create test results pie chart
@@ -771,7 +771,7 @@ class ThesisTestSuite:
             self._create_execution_timeline()
             
         else:
-            print("📊 Matplotlib not available - generating text-based visualizations")
+            print(" Matplotlib not available - generating text-based visualizations")
             self._create_text_visualizations()
     
     def _create_test_status_chart(self) -> None:
@@ -872,14 +872,14 @@ class ThesisTestSuite:
             # Benchmark results
             f.write("BENCHMARK RESULTS:\n")
             for result in self.benchmark_results:
-                status_symbol = "✅" if result.status == "PASS" else "⚠️"
+                status_symbol = "" if result.status == "PASS" else ""
                 f.write(f"{status_symbol} {result.metric_name}: {result.value:.2f} {result.unit} "
                        f"(target: {result.target:.2f})\n")
 
 
 def main():
     """Main execution function"""
-    print("🚀 IRCamera Thesis Testing and Evaluation Suite")
+    print(" IRCamera Thesis Testing and Evaluation Suite")
     print("=" * 60)
     
     # Initialize test suite
@@ -890,14 +890,14 @@ def main():
     
     # Print final summary
     print("\n" + "=" * 60)
-    print("📋 FINAL SUMMARY")
+    print(" FINAL SUMMARY")
     print("=" * 60)
     print(f"Total Tests Executed: {summary['test_execution']['total_tests']}")
     print(f"Pass Rate: {summary['test_execution']['pass_rate']:.1%}")
     print(f"Benchmark Success Rate: {summary['benchmarks']['benchmark_success_rate']:.1%}")
     print(f"Total Execution Time: {summary['execution_time']:.1f} seconds")
-    print("\n📁 Results saved to: testing-suite/results/")
-    print("📊 Visualizations generated for thesis integration")
+    print("\n Results saved to: testing-suite/results/")
+    print(" Visualizations generated for thesis integration")
     
     return summary
 

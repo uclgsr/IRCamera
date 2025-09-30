@@ -97,9 +97,9 @@ class BLEIntegrationTestActivity : AppCompatActivity() {
                 val initSuccess = gsrRecorder?.initialize() ?: false
 
                 if (initSuccess) {
-                    addLog("✅ UnifiedGSRRecorder initialized successfully")
+                    addLog(" UnifiedGSRRecorder initialized successfully")
                 } else {
-                    addLog("❌ UnifiedGSRRecorder initialization failed")
+                    addLog(" UnifiedGSRRecorder initialization failed")
                     return@launch
                 }
 
@@ -110,13 +110,13 @@ class BLEIntegrationTestActivity : AppCompatActivity() {
 
                 if (discoverySuccess) {
                     val discoveredDevices = gsrRecorder?.getDiscoveredDevices() ?: emptyList()
-                    addLog("✅ Device discovery completed: found ${discoveredDevices.size} devices")
+                    addLog(" Device discovery completed: found ${discoveredDevices.size} devices")
 
                     discoveredDevices.forEach { device ->
                         addLog("  - ${device.name} (${device.address}) RSSI: ${device.rssi}dBm")
                     }
                 } else {
-                    addLog("❌ Device discovery failed")
+                    addLog(" Device discovery failed")
                 }
 
 
@@ -129,11 +129,11 @@ class BLEIntegrationTestActivity : AppCompatActivity() {
                 val dmInitSuccess = deviceManager?.initialize() ?: false
 
                 if (dmInitSuccess) {
-                    addLog("✅ ShimmerDeviceManager initialized successfully")
+                    addLog(" ShimmerDeviceManager initialized successfully")
 
                     val scanSuccess = deviceManager?.startDeviceScanning() ?: false
                     if (scanSuccess) {
-                        addLog("✅ Enhanced BLE scanning started successfully")
+                        addLog(" Enhanced BLE scanning started successfully")
 
 
                         kotlinx.coroutines.delay(5000)
@@ -146,15 +146,15 @@ class BLEIntegrationTestActivity : AppCompatActivity() {
                             emptyList<DeviceInfo>()
                         }
 
-                        addLog("✅ BLE scan results: ${scanResults.size} devices found")
+                        addLog(" BLE scan results: ${scanResults.size} devices found")
 
                         deviceManager?.stopDeviceScanning()
-                        addLog("✅ BLE scanning stopped")
+                        addLog(" BLE scanning stopped")
                     } else {
-                        addLog("❌ Enhanced BLE scanning failed to start")
+                        addLog(" Enhanced BLE scanning failed to start")
                     }
                 } else {
-                    addLog("❌ ShimmerDeviceManager initialization failed")
+                    addLog(" ShimmerDeviceManager initialization failed")
                 }
 
 
@@ -163,9 +163,9 @@ class BLEIntegrationTestActivity : AppCompatActivity() {
                 val hasPermissions =
                     UnifiedGSRRecorder.hasRequiredPermissions(this@BLEIntegrationTestActivity)
                 if (hasPermissions) {
-                    addLog("✅ All required BLE permissions are granted")
+                    addLog(" All required BLE permissions are granted")
                 } else {
-                    addLog("⚠️ Some BLE permissions are missing")
+                    addLog(" Some BLE permissions are missing")
                     val requiredPerms = UnifiedGSRRecorder.getRequiredPermissions()
                     addLog("Required permissions: ${requiredPerms.joinToString(", ")}")
                 }
@@ -174,7 +174,7 @@ class BLEIntegrationTestActivity : AppCompatActivity() {
                 statusText.text = "BLE Integration Test Complete - Check logs"
 
             } catch (e: Exception) {
-                addLog("❌ Test failed with exception: ${e.message}")
+                addLog(" Test failed with exception: ${e.message}")
                 Log.e(TAG, "BLE integration test failed", e)
                 statusText.text = "Test Failed - Check logs"
             } finally {

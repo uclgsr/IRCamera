@@ -300,9 +300,9 @@ class SessionManagerActivity : BaseViewModelActivity<SessionManagerViewModel>() 
             if (rgbCount > 0) dataTypes.add("RGB ($rgbCount)")
 
             holder.dataTypesText.text = if (dataTypes.isNotEmpty()) {
-                "📊 ${dataTypes.joinToString(", ")}"
+                " ${dataTypes.joinToString(", ")}"
             } else {
-                "📊 No data files found"
+                " No data files found"
             }
 
             holder.cardView.setOnClickListener { onSessionClick(session) }

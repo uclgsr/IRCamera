@@ -62,7 +62,7 @@ class ThesisContentIntegrationTest:
     
     def test_source_data_integrity(self) -> None:
         """Test integrity of source data files"""
-        print("📁 Testing Source Data Integrity...")
+        print(" Testing Source Data Integrity...")
         
         # Check critical source files
         critical_files = [
@@ -445,7 +445,7 @@ class ThesisContentIntegrationTest:
     
     def test_diagram_integration(self) -> None:
         """Test diagram integration into thesis"""
-        print("📊 Testing Diagram Integration...")
+        print(" Testing Diagram Integration...")
         
         # Check if diagrams are properly integrated
         diagram_dir = self.repo_root / "../docs/thesis-diagrams"
@@ -528,7 +528,7 @@ class ThesisContentIntegrationTest:
     
     def test_table_generation(self) -> None:
         """Test table generation and integration"""
-        print("📋 Testing Table Generation...")
+        print(" Testing Table Generation...")
         
         table_files = [
             "../docs/thesis-diagrams/system-configuration-tables.md",
@@ -617,12 +617,12 @@ class ThesisContentIntegrationTest:
         self.results.append(result)
         
         # Print result
-        status_symbol = "✅" if status == "PASS" else "⚠️" if status == "WARNING" else "❌"
+        status_symbol = "" if status == "PASS" else "" if status == "WARNING" else ""
         print(f"  {status_symbol} {component}: {status}")
     
     def generate_integration_report(self) -> Dict[str, Any]:
         """Generate comprehensive integration report"""
-        print("\n📊 Generating Integration Test Report...")
+        print("\n Generating Integration Test Report...")
         
         # Calculate statistics by test type
         test_types = {}
@@ -706,7 +706,7 @@ class ThesisContentIntegrationTest:
             
             f.write("## Detailed Results\n\n")
             for result in self.results:
-                status_emoji = "✅" if result.status == "PASS" else "⚠️" if result.status == "WARNING" else "❌"
+                status_emoji = "" if result.status == "PASS" else "" if result.status == "WARNING" else ""
                 f.write(f"{status_emoji} **{result.component}** ({result.test_type}): {result.status}\n")
 
 
@@ -716,7 +716,7 @@ def main():
     results = integration_test.run_integration_tests()
     
     print(f"\n🔗 Integration testing complete!")
-    print(f"📁 Results saved to: {integration_test.output_dir}")
+    print(f" Results saved to: {integration_test.output_dir}")
     
     return results
 

@@ -64,7 +64,7 @@ class ComprehensiveSensorStatusWidget @JvmOverloads constructor(
     private fun setupUI() {
 
         titleText = TextView(context).apply {
-            text = "📊 Multi-Modal Sensor Dashboard"
+            text = " Multi-Modal Sensor Dashboard"
             textSize = 18f
             setTextColor(ContextCompat.getColor(context, android.R.color.primary_text_dark))
             gravity = Gravity.CENTER
@@ -127,7 +127,7 @@ class ComprehensiveSensorStatusWidget @JvmOverloads constructor(
 
     private fun initializeDefaultSensors() {
 
-        addSensorStatusView("thermal_camera", "🌡️ TC001 Thermal Camera", SensorType.THERMAL)
+        addSensorStatusView("thermal_camera", " TC001 Thermal Camera", SensorType.THERMAL)
         addSensorStatusView("rgb_camera", "📹 RGB Camera", SensorType.RGB)
         addSensorStatusView("shimmer_gsr", "⚡ Shimmer GSR Sensor", SensorType.GSR)
         addSensorStatusView("audio_recorder", "🎤 Audio Recorder", SensorType.AUDIO)
@@ -188,7 +188,7 @@ class ComprehensiveSensorStatusWidget @JvmOverloads constructor(
         sensorStatusViews[sensorId]?.showError(errorMessage)
 
 
-        Toast.makeText(context, "⚠️ $sensorId: $errorMessage", Toast.LENGTH_LONG).show()
+        Toast.makeText(context, " $sensorId: $errorMessage", Toast.LENGTH_LONG).show()
     }
 
 
@@ -203,10 +203,10 @@ class ComprehensiveSensorStatusWidget @JvmOverloads constructor(
 
         val statusText = when {
             isRecording -> "🔴 RECORDING - Session: ${currentSessionId ?: "Unknown"}"
-            errorSensorCount > 0 -> "⚠️ ${errorSensorCount} Sensor Error(s) Detected"
+            errorSensorCount > 0 -> " ${errorSensorCount} Sensor Error(s) Detected"
             activeSensorCount == 0 -> "🔌 No Sensors Connected"
             activeSensorCount < sensorStatusViews.size -> "🟡 ${activeSensorCount}/${sensorStatusViews.size} Sensors Connected"
-            else -> "✅ All Sensors Connected & Ready"
+            else -> " All Sensors Connected & Ready"
         }
 
         val statusColor = when {
@@ -345,7 +345,7 @@ class ComprehensiveSensorStatusWidget @JvmOverloads constructor(
         fun showSimulationMode(isSimulation: Boolean) {
             isSimulationMode = isSimulation
             if (isSimulation) {
-                detailsText.text = "⚠️ Using simulated data - no hardware detected"
+                detailsText.text = " Using simulated data - no hardware detected"
                 detailsText.setTextColor(COLOR_SIMULATION)
                 detailsText.visibility = VISIBLE
             } else if (detailsText.text.toString().contains("simulated")) {

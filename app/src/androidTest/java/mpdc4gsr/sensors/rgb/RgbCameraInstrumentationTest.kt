@@ -88,7 +88,7 @@ class RgbCameraInstrumentationTest {
         Assert.assertTrue("4K video recording test should complete", testResult.success)
         Assert.assertTrue("4K video should meet quality standards", testResult.qualityScore >= 0.8)
 
-        Log.i(TAG, "✅ 4K video recording test completed successfully")
+        Log.i(TAG, " 4K video recording test completed successfully")
         Log.i(TAG, "Test results: ${testResult.summary}")
     }
 
@@ -110,7 +110,7 @@ class RgbCameraInstrumentationTest {
         Assert.assertTrue("1080p video recording should succeed", testResult.success)
         Assert.assertTrue("1080p video should have good quality", testResult.qualityScore >= 0.7)
 
-        Log.i(TAG, "✅ 1080p video recording test completed successfully")
+        Log.i(TAG, " 1080p video recording test completed successfully")
     }
 
 
@@ -136,7 +136,7 @@ class RgbCameraInstrumentationTest {
         Log.i(TAG, "Frame rate test results:")
         Log.i(TAG, "  Average FPS: ${frameRateTest.averageFps}")
         Log.i(TAG, "  Deviation: ${frameRateTest.deviationPercent}%")
-        Log.i(TAG, "✅ Frame rate validation test passed")
+        Log.i(TAG, " Frame rate validation test passed")
     }
 
 
@@ -159,7 +159,7 @@ class RgbCameraInstrumentationTest {
             burstTest.capturedCount >= BURST_CAPTURE_COUNT - 1
         )
 
-        Log.i(TAG, "✅ Burst capture test completed: ${burstTest.capturedCount} images")
+        Log.i(TAG, " Burst capture test completed: ${burstTest.capturedCount} images")
     }
 
 
@@ -186,7 +186,7 @@ class RgbCameraInstrumentationTest {
         }
 
         Log.i(TAG, "Device capabilities: $capabilities")
-        Log.i(TAG, "✅ Device-specific configuration tests completed")
+        Log.i(TAG, " Device-specific configuration tests completed")
     }
 
 
@@ -202,7 +202,7 @@ class RgbCameraInstrumentationTest {
         val resourceTest = testResourceManagement()
         Assert.assertTrue("Should manage resources properly", resourceTest)
 
-        Log.i(TAG, "✅ Error handling and recovery tests passed")
+        Log.i(TAG, " Error handling and recovery tests passed")
     }
 
 

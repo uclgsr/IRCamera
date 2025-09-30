@@ -93,7 +93,7 @@ try:
     sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'pc-controller/enhanced_native_backend'))
     import enhanced_native_backend
     NATIVE_BACKEND_AVAILABLE = True
-    logger.info("🚀 C++ backend available for high-performance processing")
+    logger.info(" C++ backend available for high-performance processing")
 except ImportError:
     logger.info("🐍 Using Python backend (C++ backend not available)")
 
@@ -526,7 +526,7 @@ class NetworkThread(QThread if GUI_AVAILABLE else threading.Thread):
     def _handle_client(self, client_socket: socket.socket, address: Tuple[str, int]):
         """Handle individual client connection"""
         client_id = f"{address[0]}:{address[1]}"
-        logger.info(f"📱 Device connected: {client_id}")
+        logger.info(f" Device connected: {client_id}")
         
         if GUI_AVAILABLE:
             self.device_connected.emit(client_id, str(address))
@@ -569,7 +569,7 @@ class NetworkThread(QThread if GUI_AVAILABLE else threading.Thread):
             if client_id in self.client_connections:
                 del self.client_connections[client_id]
             
-            logger.info(f"📱 Device disconnected: {client_id}")
+            logger.info(f" Device disconnected: {client_id}")
             if GUI_AVAILABLE:
                 self.device_disconnected.emit(client_id, "Connection closed")
     

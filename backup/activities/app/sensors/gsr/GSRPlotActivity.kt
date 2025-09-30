@@ -192,11 +192,11 @@ class GSRPlotActivity : BaseBindingActivity<ActivityMultiModalConsolidatedBindin
         val metadata = plotData.metadata
         val stats = StringBuilder()
 
-        stats.appendLine("📊 Recording Statistics")
+        stats.appendLine(" Recording Statistics")
         stats.appendLine("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
-        stats.appendLine("📁 File: ${metadata.fileName}")
+        stats.appendLine(" File: ${metadata.fileName}")
         stats.appendLine("⏱️ Duration: ${formatDuration(metadata.duration)}")
-        stats.appendLine("📈 Data Points: ${metadata.dataPoints}")
+        stats.appendLine(" Data Points: ${metadata.dataPoints}")
         stats.appendLine("🔄 Sampling Rate: ${"%.1f".format(metadata.samplingRate)} Hz")
         stats.appendLine("")
 
@@ -225,7 +225,7 @@ class GSRPlotActivity : BaseBindingActivity<ActivityMultiModalConsolidatedBindin
         stats.appendLine("Range: ${"%.0f".format(ppgMin)} - ${"%.0f".format(ppgMax)}")
         stats.appendLine("")
 
-        stats.appendLine("🎯 Events Detected")
+        stats.appendLine(" Events Detected")
         stats.appendLine("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
         val increases = plotData.gsrEvents.count { it.type == "INCREASE" }
         val decreases = plotData.gsrEvents.count { it.type == "DECREASE" }

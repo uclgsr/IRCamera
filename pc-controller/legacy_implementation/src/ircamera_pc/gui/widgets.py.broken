@@ -101,7 +101,7 @@ class DeviceListWidget(QListWidget):
         lines = []
 
         # Device name and type
-        name_line = f"📱 {device_info.device_id}"
+        name_line = f" {device_info.device_id}"
         if device_info.is_gsr_leader:
             name_line += " (GSR Leader)"
         lines.append(name_line)
@@ -937,10 +937,10 @@ class SystemIntegrationWidget(QGroupBox):
             if key in self.permission_labels:
                 label = self.permission_labels[key]
                 if has_permission:
-                    label.setText("✅ Available")
+                    label.setText(" Available")
                     label.setStyleSheet("color: green;")
                 else:
-                    label.setText("❌ Denied")
+                    label.setText(" Denied")
                     label.setStyleSheet("color: red;")
 
     def set_status_message(self, message: str, is_error: bool = False) -> None:

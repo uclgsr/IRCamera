@@ -2144,7 +2144,7 @@ class ThermalCameraRecorder(
 
     private suspend fun startRealIRCameraRecording(irCamera: IRUVCTC): Boolean {
         return try {
-            Log.i(TAG, "🌡️ Starting enhanced real thermal camera recording")
+            Log.i(TAG, " Starting enhanced real thermal camera recording")
 
 
             val optimalFrameRate = if (thermalFrameRate >= 20.0) {
@@ -2171,10 +2171,10 @@ class ThermalCameraRecorder(
 
 
 
-            Log.i(TAG, "✅ Enhanced thermal recording started at ${optimalFrameRate}Hz")
+            Log.i(TAG, " Enhanced thermal recording started at ${optimalFrameRate}Hz")
             true
         } catch (e: Exception) {
-            Log.e(TAG, "❌ Failed to start enhanced thermal recording", e)
+            Log.e(TAG, " Failed to start enhanced thermal recording", e)
             false
         }
     }
@@ -2365,7 +2365,7 @@ class ThermalCameraRecorder(
                     val frameRatePercent = (actualFrameRate / targetFrameRate) * 100
 
                     Log.d(
-                        TAG, "🔍 Thermal performance: ${String.format("%.1f", actualFrameRate)}Hz " +
+                        TAG, " Thermal performance: ${String.format("%.1f", actualFrameRate)}Hz " +
                                 "(${String.format("%.0f", frameRatePercent)}% of target)"
                     )
 
@@ -2373,7 +2373,7 @@ class ThermalCameraRecorder(
                     if (frameRatePercent < 80) {
                         Log.w(
                             TAG,
-                            "⚠️ Thermal frame rate below target: ${
+                            " Thermal frame rate below target: ${
                                 String.format(
                                     "%.1f",
                                     actualFrameRate
@@ -2445,7 +2445,7 @@ class ThermalCameraRecorder(
                     thermalCameraDevice?.let { device ->
                         val recoverySuccess = initializeRealThermalCamera(device)
                         if (recoverySuccess) {
-                            Log.i(TAG, "✅ USB thermal recovery successful")
+                            Log.i(TAG, " USB thermal recovery successful")
 
 
                             if (_isRecording.get() && isSimulationMode) {
@@ -2453,7 +2453,7 @@ class ThermalCameraRecorder(
                                 Log.i(TAG, "Resumed real thermal recording after USB recovery")
                             }
                         } else {
-                            Log.w(TAG, "❌ USB thermal recovery failed - continuing with simulation")
+                            Log.w(TAG, " USB thermal recovery failed - continuing with simulation")
                             if (_isRecording.get()) {
                                 isSimulationMode = true
                                 startSimulatedThermalRecording()
@@ -2470,7 +2470,7 @@ class ThermalCameraRecorder(
                     // Strategy 1: Simple SDK re-initialization
                     var sdkRecoverySuccess = initializeTopdonSdk()
                     if (sdkRecoverySuccess) {
-                        Log.i(TAG, "✅ Thermal SDK recovery successful with simple re-init")
+                        Log.i(TAG, " Thermal SDK recovery successful with simple re-init")
                     } else {
                         // Strategy 2: Full teardown and rebuild
                         Log.i(TAG, "Attempting full SDK teardown and rebuild")
@@ -2481,7 +2481,7 @@ class ThermalCameraRecorder(
 
                             sdkRecoverySuccess = initializeTopdonSdk()
                             if (sdkRecoverySuccess) {
-                                Log.i(TAG, "✅ Thermal SDK recovery successful with full rebuild")
+                                Log.i(TAG, " Thermal SDK recovery successful with full rebuild")
                             }
                         } catch (e: Exception) {
                             Log.w(TAG, "Full SDK rebuild failed: ${e.message}")
@@ -2489,7 +2489,7 @@ class ThermalCameraRecorder(
                     }
 
                     if (!sdkRecoverySuccess) {
-                        Log.w(TAG, "❌ All SDK recovery strategies failed - switching to simulation")
+                        Log.w(TAG, " All SDK recovery strategies failed - switching to simulation")
                         isSimulationMode = true
                     }
                 }
@@ -2504,7 +2504,7 @@ class ThermalCameraRecorder(
                         Log.w(TAG, "Frame error caused by SDK state - attempting SDK recovery")
                         val sdkRecovered = initializeTopdonSdk()
                         if (sdkRecovered) {
-                            Log.i(TAG, "✅ Frame capture recovered via SDK re-initialization")
+                            Log.i(TAG, " Frame capture recovered via SDK re-initialization")
                             return
                         }
                     }
@@ -2522,7 +2522,7 @@ class ThermalCameraRecorder(
                                 Log.i(TAG, "USB permission still valid - attempting reconnection")
                                 val usbRecovered = initializeRealThermalCamera(device)
                                 if (usbRecovered) {
-                                    Log.i(TAG, "✅ Frame capture recovered via USB reconnection")
+                                    Log.i(TAG, " Frame capture recovered via USB reconnection")
                                     return
                                 }
                             }
@@ -2535,7 +2535,7 @@ class ThermalCameraRecorder(
                     lastFrameTimestamp = 0L
 
                     if (_isRecording.get()) {
-                        Log.i(TAG, "✅ Frame capture recovery attempted with buffer reset")
+                        Log.i(TAG, " Frame capture recovery attempted with buffer reset")
                     }
                 }
 
@@ -2553,14 +2553,14 @@ class ThermalCameraRecorder(
                                 delay(5000) // Wait for user response
 
                                 if (usbManager.hasPermission(device)) {
-                                    Log.i(TAG, "✅ Permission recovery successful")
+                                    Log.i(TAG, " Permission recovery successful")
                                     val reconnected = initializeRealThermalCamera(device)
                                     if (!reconnected) {
                                         Log.w(TAG, "Permission recovered but connection failed")
                                         isSimulationMode = true
                                     }
                                 } else {
-                                    Log.w(TAG, "❌ Permission recovery failed - user denied")
+                                    Log.w(TAG, " Permission recovery failed - user denied")
                                     isSimulationMode = true
                                 }
                             } catch (e: Exception) {
@@ -2583,7 +2583,7 @@ class ThermalCameraRecorder(
                     try {
                         val testData = generateAdvancedSimulatedThermalData(System.nanoTime(), 1L)
                         val calibratedData = applySDKCalibrationCorrections(testData)
-                        Log.i(TAG, "✅ Temperature processing recovery - calibration verified")
+                        Log.i(TAG, " Temperature processing recovery - calibration verified")
                     } catch (e: Exception) {
                         Log.w(TAG, "Temperature processing calibration failed: ${e.message}")
                         isSimulationMode = true

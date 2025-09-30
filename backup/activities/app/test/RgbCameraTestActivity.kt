@@ -324,11 +324,11 @@ class RgbCameraTestActivity : AppCompatActivity() {
                 appendLine("Current Resolution: ${capabilities["current_resolution"]}")
                 appendLine("Current FPS: ${capabilities["current_fps"]}")
                 if (supports4K && supports60fps) {
-                    appendLine("✅ Device supports 4K60 recording")
+                    appendLine(" Device supports 4K60 recording")
                 } else if (supports4K) {
-                    appendLine("✅ Device supports 4K30 recording")
+                    appendLine(" Device supports 4K30 recording")
                 } else {
-                    appendLine("❌ Device does not support 4K recording")
+                    appendLine(" Device does not support 4K recording")
                 }
                 appendLine()
             }
@@ -349,11 +349,11 @@ class RgbCameraTestActivity : AppCompatActivity() {
                 appendLine("RAW Support: $supportsRaw")
                 appendLine("Stage3 Compatible: $stage3Compatible")
                 if (supportsRaw && stage3Compatible) {
-                    appendLine("✅ Device supports Samsung Stage3 RAW DNG capture")
+                    appendLine(" Device supports Samsung Stage3 RAW DNG capture")
                 } else if (supportsRaw) {
-                    appendLine("✅ Device supports standard RAW capture")
+                    appendLine(" Device supports standard RAW capture")
                 } else {
-                    appendLine("❌ Device does not support RAW capture")
+                    appendLine(" Device does not support RAW capture")
                 }
                 appendLine()
             }

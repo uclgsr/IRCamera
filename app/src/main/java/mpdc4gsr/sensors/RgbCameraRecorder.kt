@@ -277,7 +277,7 @@ class RgbCameraRecorder(
             _cameraStatus.value = "Ready"
             Log.i(
                 TAG,
-                "✅ CameraX initialized successfully: ${selectedVideoWidth}x${selectedVideoHeight}@${selectedVideoFps}fps, Preview: ${previewView != null}"
+                " CameraX initialized successfully: ${selectedVideoWidth}x${selectedVideoHeight}@${selectedVideoFps}fps, Preview: ${previewView != null}"
             )
 
             // Log detailed capabilities for debugging and validation
@@ -399,13 +399,13 @@ class RgbCameraRecorder(
                 if (isUsingFrontCamera && !supportsFrontCamera) {
                     Log.w(
                         TAG,
-                        "⚠️ Front camera requested but not available, switching to back camera"
+                        " Front camera requested but not available, switching to back camera"
                     )
                     recordingScope.launch {
                         switchToBackCamera()
                     }
                 } else if (!isUsingFrontCamera && !supportsBackCamera) {
-                    Log.w(TAG, "⚠️ Back camera not available, switching to front camera")
+                    Log.w(TAG, " Back camera not available, switching to front camera")
                     recordingScope.launch {
                         switchToFrontCamera()
                     }
@@ -483,12 +483,12 @@ class RgbCameraRecorder(
                         "Camera Switched - ${if (useFrontCamera) "Front" else "Back"} Camera Active"
                     Log.i(
                         TAG,
-                        "✅ Successfully switched to ${if (useFrontCamera) "front" else "back"} camera"
+                        " Successfully switched to ${if (useFrontCamera) "front" else "back"} camera"
                     )
                     true
                 } else {
                     _cameraStatus.value = "Camera Switch Failed"
-                    Log.e(TAG, "❌ Failed to switch camera")
+                    Log.e(TAG, " Failed to switch camera")
                     false
                 }
 
@@ -704,7 +704,7 @@ class RgbCameraRecorder(
             imageCapture?.let { useCases.add(it) }
             rawImageCapture?.let {
                 useCases.add(it)
-                Log.i(TAG, "✅ RAW ImageCapture added for Stage 3/Level 3 DNG capture")
+                Log.i(TAG, " RAW ImageCapture added for Stage 3/Level 3 DNG capture")
             }
 
 
@@ -715,7 +715,7 @@ class RgbCameraRecorder(
                         useCases.add(preview)
                         Log.i(
                             TAG,
-                            "✅ Preview bound to PreviewView successfully - live camera feed enabled"
+                            " Preview bound to PreviewView successfully - live camera feed enabled"
                         )
 
 
@@ -770,7 +770,7 @@ class RgbCameraRecorder(
             }
 
         } catch (e: Exception) {
-            Log.e(TAG, "❌ Failed to bind camera use cases", e)
+            Log.e(TAG, " Failed to bind camera use cases", e)
             emitError(
                 ErrorType.INITIALIZATION_FAILED,
                 "Failed to bind camera use cases: ${e.message}"
@@ -1332,7 +1332,7 @@ class RgbCameraRecorder(
 
                                                     Log.i(
                                                         TAG,
-                                                        "✅ Stage 3/Level 3 DNG saved: ${stage3File.name} (${stage3File.length()} bytes)"
+                                                        " Stage 3/Level 3 DNG saved: ${stage3File.name} (${stage3File.length()} bytes)"
                                                     )
                                                 } catch (e: Exception) {
                                                     Log.e(
@@ -1515,11 +1515,11 @@ class RgbCameraRecorder(
 
             val frameRateSuccess = Math.abs(averageFrameRate - CAPTURE_FPS) / CAPTURE_FPS < 0.2
             if (frameRateSuccess) {
-                Log.i(TAG, "✅ Frame rate validation PASSED - achieved target 30 FPS ± 20%")
+                Log.i(TAG, " Frame rate validation PASSED - achieved target 30 FPS ± 20%")
             } else {
                 Log.w(
                     TAG,
-                    "⚠️ Frame rate validation WARNING - significant deviation from target 30 FPS detected"
+                    " Frame rate validation WARNING - significant deviation from target 30 FPS detected"
                 )
             }
 
@@ -1787,7 +1787,7 @@ class RgbCameraRecorder(
 
 
             val sessionStats = generateSessionStats()
-            Log.i(TAG, "📊 RGB Camera Session Complete:")
+            Log.i(TAG, " RGB Camera Session Complete:")
             Log.i(TAG, "  • Frames captured: ${sessionStats.framesCaptured}")
             Log.i(TAG, "  • Frames dropped: ${sessionStats.framesDropped}")
             Log.i(TAG, "  • Frame drop rate: ${String.format("%.2f", sessionStats.dropRate)}%")
@@ -1810,11 +1810,11 @@ class RgbCameraRecorder(
             sessionMetadata = null
             _cameraStatus.value = "Recording Stopped"
 
-            Log.i(TAG, "✅ RGB camera recording stopped successfully with enhanced cleanup")
+            Log.i(TAG, " RGB camera recording stopped successfully with enhanced cleanup")
             true
 
         } catch (e: Exception) {
-            Log.e(TAG, "❌ Failed to stop RGB CameraX recording", e)
+            Log.e(TAG, " Failed to stop RGB CameraX recording", e)
             _cameraStatus.value = "Stop Recording Failed"
             emitError(ErrorType.RECORDING_FAILED, "Failed to stop recording: ${e.message}")
             false

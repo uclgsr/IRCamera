@@ -79,11 +79,11 @@ class RealIntegrationTester:
         start_time = time.time()
         
         # Phase 1: Execute actual Android tests
-        print("\n📱 PHASE 1: ANDROID UNIT & INSTRUMENTATION TESTS")
+        print("\n PHASE 1: ANDROID UNIT & INSTRUMENTATION TESTS")
         self._execute_android_tests()
         
         # Phase 2: Analyze real session data
-        print("\n📊 PHASE 2: REAL SESSION DATA ANALYSIS")
+        print("\n PHASE 2: REAL SESSION DATA ANALYSIS")
         self._analyze_session_data()
         
         # Phase 3: Hardware detection and validation
@@ -176,7 +176,7 @@ class RealIntegrationTester:
             )
         
         # Attempt instrumentation tests (requires connected device)
-        print("📱 Attempting Android Instrumentation Tests...")
+        print(" Attempting Android Instrumentation Tests...")
         try:
             # Check for connected devices first
             adb_result = subprocess.run([
@@ -187,7 +187,7 @@ class RealIntegrationTester:
                                if '\tdevice' in line]
             
             if connected_devices:
-                print(f"📱 Found {len(connected_devices)} connected Android device(s)")
+                print(f" Found {len(connected_devices)} connected Android device(s)")
                 
                 instrumentation_result = subprocess.run([
                     "./gradlew", "connectedAndroidTest", "--no-daemon"
@@ -213,7 +213,7 @@ class RealIntegrationTester:
                     hardware_detected=True
                 )
             else:
-                print("⚠️ No Android devices connected for instrumentation tests")
+                print(" No Android devices connected for instrumentation tests")
                 self._add_real_test_result(
                     "Android Instrumentation Tests",
                     "Hardware Integration",
@@ -243,7 +243,7 @@ class RealIntegrationTester:
     
     def _analyze_session_data(self) -> None:
         """Analyze actual session data files"""
-        print("📈 Analyzing Real Session Data...")
+        print(" Analyzing Real Session Data...")
         
         # Find and analyze H5 files
         h5_files = list(self.repo_root.glob("pc-controller/data/exports/*.h5"))
@@ -279,7 +279,7 @@ class RealIntegrationTester:
             return
             
         try:
-            print(f"📊 Analyzing {h5_file.name}...")
+            print(f" Analyzing {h5_file.name}...")
             
             with h5py.File(h5_file, 'r') as f:
                 # Extract metadata
@@ -366,7 +366,7 @@ class RealIntegrationTester:
             
         for csv_file in csv_files:
             try:
-                print(f"📈 Analyzing {csv_file.name}...")
+                print(f" Analyzing {csv_file.name}...")
                 
                 df = pd.read_csv(csv_file)
                 
@@ -959,14 +959,14 @@ class RealIntegrationTester:
         self.test_results.append(result)
         
         # Print real-time results
-        status_emoji = {"PASS": "✅", "FAIL": "❌", "WARNING": "⚠️", 
+        status_emoji = {"PASS": "", "FAIL": "", "WARNING": "",
                        "ERROR": "💥", "SKIP": "⏸️", "TIMEOUT": "⏰"}.get(status, "❓")
         print(f"  {status_emoji} {name}: {measured:.3f} {unit} "
               f"(expected: {expected:.1f} ±{tolerance:.1f})")
     
     def _generate_real_integration_report(self, execution_time: float) -> Dict[str, Any]:
         """Generate comprehensive real integration report"""
-        print(f"\n📊 Generating Real Integration Report...")
+        print(f"\n Generating Real Integration Report...")
         
         # Calculate summary statistics
         total_tests = len(self.test_results)
@@ -1012,10 +1012,10 @@ class RealIntegrationTester:
         print(f"\n{'='*60}")
         print(f"🔧 REAL INTEGRATION TESTING COMPLETE")
         print(f"{'='*60}")
-        print(f"📊 Tests: {passed_tests}/{total_tests} passed ({pass_rate:.1f}%)")
+        print(f" Tests: {passed_tests}/{total_tests} passed ({pass_rate:.1f}%)")
         print(f"🔌 Hardware Coverage: {hardware_coverage:.1f}%") 
         print(f"⏱️ Execution Time: {execution_time:.1f}s")
-        print(f"📁 Results: {results_file}")
+        print(f" Results: {results_file}")
         
         return summary
     
@@ -1049,8 +1049,8 @@ class RealIntegrationTester:
 ## Hardware Integration Coverage
 
 - **Hardware Tests**: {summary['hardware_tests']}/{summary['total_tests']} ({summary['hardware_coverage_percent']:.1f}%)
-- **TC001 Thermal Camera**: {'✅ Detected' if summary['hardware_status']['tc001_detected'] else '❌ Not Found'}
-- **Shimmer3 GSR**: {'✅ Detected' if summary['hardware_status']['shimmer3_detected'] else '❌ Not Found'}  
+- **TC001 Thermal Camera**: {' Detected' if summary['hardware_status']['tc001_detected'] else ' Not Found'}
+- **Shimmer3 GSR**: {' Detected' if summary['hardware_status']['shimmer3_detected'] else ' Not Found'}
 - **Android Devices**: {len(summary['hardware_status']['android_devices'])} connected
 
 ## Key Achievements
@@ -1061,7 +1061,7 @@ class RealIntegrationTester:
 - Hardware integration validated where devices available
 
 ### System Integration  
-- Android test suite execution: {'✅ SUCCESS' if summary['android_test_results'].get('unit_tests', {}).get('success', False) else '❌ FAILED'}
+- Android test suite execution: {' SUCCESS' if summary['android_test_results'].get('unit_tests', {}).get('success', False) else ' FAILED'}
 - Build system validation: Gradle integration tested
 - File I/O performance: Real throughput measurements
 
@@ -1072,7 +1072,7 @@ class RealIntegrationTester:
 
 ## Recommendations
 
-{"✅ System ready for production use" if summary['pass_rate_percent'] >= 80 else "⚠️ Address failed tests before production deployment"}
+{" System ready for production use" if summary['pass_rate_percent'] >= 80 else " Address failed tests before production deployment"}
 
 ---
 *Generated by IRCamera Real Integration Testing Suite*
@@ -1116,7 +1116,7 @@ def main():
     results = tester.run_complete_real_integration()
     
     # Print final summary
-    print(f"\n🎯 FINAL ASSESSMENT: {results['overall_status']}")
+    print(f"\n FINAL ASSESSMENT: {results['overall_status']}")
     return results['overall_status'] in ['EXCELLENT', 'GOOD']
 
 

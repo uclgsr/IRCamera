@@ -70,9 +70,9 @@ class TimestampSyncVerificationActivity : AppCompatActivity() {
             appendResultText(alignmentResults)
 
             val finalResult = if (isTimestampAlignmentValid(syncEvents)) {
-                "✅ PASS: All sensor timestamps are synchronized within ${SYNC_TOLERANCE_MS}ms tolerance"
+                " PASS: All sensor timestamps are synchronized within ${SYNC_TOLERANCE_MS}ms tolerance"
             } else {
-                "❌ FAIL: Timestamp synchronization exceeds tolerance"
+                " FAIL: Timestamp synchronization exceeds tolerance"
             }
 
             appendResultText("\n$finalResult\n")
@@ -80,7 +80,7 @@ class TimestampSyncVerificationActivity : AppCompatActivity() {
             tempDir.deleteRecursively()
 
         } catch (e: Exception) {
-            appendResultText("❌ Test error: ${e.message}\n")
+            appendResultText(" Test error: ${e.message}\n")
             Log.e(TAG, "Timestamp sync verification test failed", e)
         }
     }

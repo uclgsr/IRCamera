@@ -482,7 +482,7 @@ class NetworkErrorRecoveryManager(
             val readvertiseSuccess = reAdvertiseNSDService()
 
             if (readvertiseSuccess) {
-                Log.i(TAG, "✅ NSD service re-advertising successful")
+                Log.i(TAG, " NSD service re-advertising successful")
                 nsdServiceReconnectionAttempts.set(0)
                 serviceDiscoveryBackoffMs.set(5000)
 
@@ -490,7 +490,7 @@ class NetworkErrorRecoveryManager(
                 attemptPCControllerReconnection()
 
             } else {
-                Log.w(TAG, "❌ NSD service re-advertising failed, will retry")
+                Log.w(TAG, " NSD service re-advertising failed, will retry")
                 serviceDiscoveryBackoffMs.set(minOf(backoffDelay * 2, MAX_RETRY_DELAY_MS.toInt()))
                 delay(backoffDelay.toLong())
             }
@@ -534,12 +534,12 @@ class NetworkErrorRecoveryManager(
             val reconnectionSuccess = networkClient.isConnected()
 
             if (reconnectionSuccess) {
-                Log.i(TAG, "✅ PC controller reconnection successful")
+                Log.i(TAG, " PC controller reconnection successful")
                 pcControllerLastSeen = System.currentTimeMillis()
                 connectionQualityScore = calculateConnectionQuality()
                 eventListener?.onRecoverySuccess(createControllerInfo())
             } else {
-                Log.w(TAG, "❌ PC controller reconnection failed")
+                Log.w(TAG, " PC controller reconnection failed")
             }
 
         } catch (e: Exception) {

@@ -37,7 +37,7 @@ def main():
     try:
         from ircamera_pc.gui.app_mvp import main as app_main
 
-        print("🚀 Launching IRCamera Hub Application...")
+        print(" Launching IRCamera Hub Application...")
         print("Features enabled:")
         print("  • Device discovery via mDNS")
         print("  • Session management")
@@ -51,7 +51,7 @@ def main():
         return app_main()
 
     except ImportError as e:
-        print(f"❌ Failed to import application: {e}")
+        print(f" Failed to import application: {e}")
         print()
         print("Please ensure all dependencies are installed:")
         print("  pip install PyQt6 loguru zeroconf")
@@ -62,7 +62,7 @@ def main():
         return 0
 
     except Exception as e:
-        print(f"❌ Application error: {e}")
+        print(f" Application error: {e}")
         return 1
 
 

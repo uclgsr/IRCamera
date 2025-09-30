@@ -17,12 +17,12 @@ mkdir -p "$OUTPUT_DIR"
 
 # Function to check if app is installed
 check_app_installed() {
-    echo "📱 Checking IRCamera app installation..."
+    echo " Checking IRCamera app installation..."
     if adb shell pm list packages | grep -q "com.csl.irCamera"; then
-        echo "  ✅ IRCamera app found"
+        echo "   IRCamera app found"
         return 0
     else
-        echo "  ❌ IRCamera app not found. Please install the app first."
+        echo "   IRCamera app not found. Please install the app first."
         return 1
     fi
 }
@@ -30,7 +30,7 @@ check_app_installed() {
 # Function to benchmark FPS during thermal data display
 benchmark_thermal_fps() {
     echo ""
-    echo "🌡️ Benchmarking Thermal Data Display FPS..."
+    echo " Benchmarking Thermal Data Display FPS..."
     
     # Start thermal activity and monitor FPS
     adb shell am start -n com.csl.irCamera/.MainActivity
@@ -41,7 +41,7 @@ benchmark_thermal_fps() {
     sleep 2
     
     # Monitor FPS for the benchmark duration
-    echo "  📊 Monitoring FPS for ${BENCHMARK_DURATION} seconds..."
+    echo "   Monitoring FPS for ${BENCHMARK_DURATION} seconds..."
     adb shell "dumpsys gfxinfo com.csl.irCamera reset" > /dev/null 2>&1
     sleep "$BENCHMARK_DURATION"
     
@@ -52,7 +52,7 @@ benchmark_thermal_fps() {
     FRAME_COUNT=$(echo "$FPS_DATA" | wc -l)
     AVERAGE_FPS=$((FRAME_COUNT * 60 / BENCHMARK_DURATION))
     
-    echo "  📈 Average FPS: $AVERAGE_FPS frames/second"
+    echo "   Average FPS: $AVERAGE_FPS frames/second"
     
     # Record result
     echo "    \"thermal_fps\": {" >> "$RESULTS_FILE"
@@ -69,7 +69,7 @@ benchmark_memory_usage() {
     
     # Get baseline memory usage
     BASELINE_MEMORY=$(adb shell "dumpsys meminfo com.csl.irCamera | grep 'TOTAL PSS' | awk '{print \$3}'" | head -1)
-    echo "  📊 Baseline memory usage: ${BASELINE_MEMORY}KB"
+    echo "   Baseline memory usage: ${BASELINE_MEMORY}KB"
     
     # Start thermal camera activity
     adb shell am start -n com.csl.irCamera/.MainActivity
@@ -83,11 +83,11 @@ benchmark_memory_usage() {
     
     # Measure peak memory usage
     PEAK_MEMORY=$(adb shell "dumpsys meminfo com.csl.irCamera | grep 'TOTAL PSS' | awk '{print \$3}'" | head -1)
-    echo "  📈 Peak memory usage: ${PEAK_MEMORY}KB"
+    echo "   Peak memory usage: ${PEAK_MEMORY}KB"
     
     # Calculate memory increase
     MEMORY_INCREASE=$((PEAK_MEMORY - BASELINE_MEMORY))
-    echo "  📊 Memory increase: ${MEMORY_INCREASE}KB"
+    echo "   Memory increase: ${MEMORY_INCREASE}KB"
     
     # Record result
     echo "    \"memory_usage\": {" >> "$RESULTS_FILE"
@@ -109,7 +109,7 @@ benchmark_battery_usage() {
     
     # Get initial battery level
     INITIAL_BATTERY=$(adb shell "dumpsys battery | grep level | awk -F: '{print \$2}' | tr -d ' '")
-    echo "  📊 Initial battery level: ${INITIAL_BATTERY}%"
+    echo "   Initial battery level: ${INITIAL_BATTERY}%"
     
     # Start intensive thermal recording session
     adb shell am start -n com.csl.irCamera/.MainActivity
@@ -127,13 +127,13 @@ benchmark_battery_usage() {
     
     # Get final battery level
     FINAL_BATTERY=$(adb shell "dumpsys battery | grep level | awk -F: '{print \$2}' | tr -d ' '")
-    echo "  📈 Final battery level: ${FINAL_BATTERY}%"
+    echo "   Final battery level: ${FINAL_BATTERY}%"
     
     # Calculate battery drain rate
     BATTERY_DRAIN=$((INITIAL_BATTERY - FINAL_BATTERY))
     DRAIN_RATE_PER_HOUR=$((BATTERY_DRAIN * 3600 / BENCHMARK_DURATION))
     
-    echo "  📊 Battery drain rate: ${DRAIN_RATE_PER_HOUR}%/hour"
+    echo "   Battery drain rate: ${DRAIN_RATE_PER_HOUR}%/hour"
     
     # Record result
     echo "    \"battery_usage\": {" >> "$RESULTS_FILE"
@@ -147,7 +147,7 @@ benchmark_battery_usage() {
 # Function to benchmark startup time
 benchmark_startup_time() {
     echo ""
-    echo "🚀 Benchmarking App Startup Time..."
+    echo " Benchmarking App Startup Time..."
     
     # Force stop the app
     adb shell am force-stop com.csl.irCamera
@@ -159,7 +159,7 @@ benchmark_startup_time() {
     adb shell am start -W -n com.csl.irCamera/.MainActivity | grep "TotalTime" | awk '{print $2}' > /tmp/startup_time.txt
     STARTUP_TIME=$(cat /tmp/startup_time.txt 2>/dev/null || echo "0")
     
-    echo "  📈 Cold start time: ${STARTUP_TIME}ms"
+    echo "   Cold start time: ${STARTUP_TIME}ms"
     
     # Record result
     echo "    \"startup_time\": {" >> "$RESULTS_FILE"
@@ -172,7 +172,7 @@ benchmark_startup_time() {
 # Function to generate performance report
 generate_report() {
     echo ""
-    echo "📋 Generating Performance Report..."
+    echo " Generating Performance Report..."
     
     # Close JSON structure
     sed -i '$s/,$//' "$RESULTS_FILE"  # Remove last comma
@@ -201,7 +201,7 @@ generate_report() {
         <p class="benchmark-date">Generated: $(date)</p>
     </div>
     
-    <h2>📊 Performance Metrics</h2>
+    <h2> Performance Metrics</h2>
     <div id="metrics">
         <!-- Metrics will be populated by JavaScript -->
     </div>
@@ -218,7 +218,7 @@ generate_report() {
                     const fps = data.thermal_fps;
                     metricsContainer.innerHTML += 
                         '<div class="metric ' + (fps.status === 'PASS' ? 'pass' : 'fail') + '">' +
-                        '<h3>🌡️ Thermal Display FPS</h3>' +
+                        '<h3> Thermal Display FPS</h3>' +
                         '<p>Average FPS: ' + fps.average_fps + ' (Target: ' + fps.target_fps + ')</p>' +
                         '<p>Status: ' + fps.status + '</p>' +
                         '</div>';
@@ -252,7 +252,7 @@ generate_report() {
                     const start = data.startup_time;
                     metricsContainer.innerHTML += 
                         '<div class="metric ' + (start.status === 'PASS' ? 'pass' : 'fail') + '">' +
-                        '<h3>🚀 Startup Time</h3>' +
+                        '<h3> Startup Time</h3>' +
                         '<p>Cold Start: ' + start.cold_start_ms + 'ms (Target: <' + start.target_ms + 'ms)</p>' +
                         '<p>Status: ' + start.status + '</p>' +
                         '</div>';
@@ -267,10 +267,10 @@ generate_report() {
 </html>
 EOF
     
-    echo "  ✅ Results saved to: $RESULTS_FILE"
-    echo "  📊 HTML report saved to: $HTML_REPORT"
+    echo "   Results saved to: $RESULTS_FILE"
+    echo "   HTML report saved to: $HTML_REPORT"
     echo ""
-    echo "📈 Performance Summary:"
+    echo " Performance Summary:"
     cat "$RESULTS_FILE" | grep -E "(average_fps|peak_kb|drain_percent_per_hour|cold_start_ms)" | sed 's/^/  /'
 }
 
@@ -278,13 +278,13 @@ EOF
 main() {
     # Check prerequisites
     if ! command -v adb &> /dev/null; then
-        echo "❌ ADB not found. Please install Android SDK platform tools."
+        echo " ADB not found. Please install Android SDK platform tools."
         exit 1
     fi
     
     # Check device connection
     if ! adb devices | grep -q "device$"; then
-        echo "❌ No Android device connected. Please connect a device and enable USB debugging."
+        echo " No Android device connected. Please connect a device and enable USB debugging."
         exit 1
     fi
     
@@ -311,8 +311,8 @@ main() {
     # Generate report
     generate_report
     
-    echo "🎉 Performance benchmarking completed!"
-    echo "📁 Results available in: $OUTPUT_DIR/"
+    echo " Performance benchmarking completed!"
+    echo " Results available in: $OUTPUT_DIR/"
 }
 
 # Run if executed directly

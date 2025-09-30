@@ -220,9 +220,9 @@ object UnifiedCleanupUtils {
                     appendLine("- $issue")
                 }
             } else {
-                appendLine("✅ ALL CONSOLIDATION OBJECTIVES ACHIEVED")
-                appendLine("✅ 99.9% DUPLICATE CODE ELIMINATION COMPLETE")
-                appendLine("✅ REPOSITORY-WIDE CLEANUP SUCCESSFUL")
+                appendLine(" ALL CONSOLIDATION OBJECTIVES ACHIEVED")
+                appendLine(" 99.9% DUPLICATE CODE ELIMINATION COMPLETE")
+                appendLine(" REPOSITORY-WIDE CLEANUP SUCCESSFUL")
             }
         }
     }

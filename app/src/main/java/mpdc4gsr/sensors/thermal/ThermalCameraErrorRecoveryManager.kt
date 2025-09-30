@@ -113,7 +113,7 @@ class ThermalCameraErrorRecoveryManager(
             isSimulationModeActive = isInSimulationMode
 
             if (isInSimulationMode) {
-                Log.w(TAG, "⚠️ Thermal camera entered simulation mode")
+                Log.w(TAG, " Thermal camera entered simulation mode")
                 updateErrorState(ThermalErrorState.SIMULATION_MODE)
                 errorEventListener?.onSimulationModeActivated("Device disconnected or unavailable")
 
@@ -121,7 +121,7 @@ class ThermalCameraErrorRecoveryManager(
                 scheduleReconnectionAttempt()
 
             } else {
-                Log.i(TAG, "✅ Thermal camera exited simulation mode")
+                Log.i(TAG, " Thermal camera exited simulation mode")
                 updateErrorState(ThermalErrorState.NORMAL)
                 errorEventListener?.onSimulationModeDeactivated()
                 resetReconnectionState()
@@ -234,10 +234,10 @@ class ThermalCameraErrorRecoveryManager(
                 val reconnectionSuccess = performThermalCameraReconnection()
 
                 if (reconnectionSuccess) {
-                    Log.i(TAG, "✅ Thermal camera reconnection successful!")
+                    Log.i(TAG, " Thermal camera reconnection successful!")
                     handleSuccessfulReconnection()
                 } else {
-                    Log.w(TAG, "❌ Thermal camera reconnection failed")
+                    Log.w(TAG, " Thermal camera reconnection failed")
                     handleFailedReconnection()
                 }
             }

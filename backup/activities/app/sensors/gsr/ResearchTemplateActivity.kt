@@ -131,14 +131,14 @@ class ResearchTemplateActivity : BaseBindingActivity<ActivityResearchTemplateBin
         selectedTemplate?.let { template ->
             binding.selectedTemplateContainer.visibility = View.VISIBLE
 
-            binding.selectedTemplateTitle.text = "${template.icon ?: "📊"} ${template.name}"
+            binding.selectedTemplateTitle.text = "${template.icon ?: ""} ${template.name}"
             binding.selectedTemplateDescription.text = template.description
 
 
             val details =
                 buildString {
                     append(
-                        "🎯 Category: ${
+                        " Category: ${
                             template.category.name.replace("_", " ").lowercase()
                                 .replaceFirstChar { it.uppercase() }
                         }\n"
@@ -162,11 +162,11 @@ class ResearchTemplateActivity : BaseBindingActivity<ActivityResearchTemplateBin
                         append("⏱️ Duration: Unlimited\n")
                     }
 
-                    append("📊 GSR Rate: ${template.gsrSamplingRate}Hz\n")
+                    append(" GSR Rate: ${template.gsrSamplingRate}Hz\n")
                     append("📹 Video: ${template.videoResolution.width}x${template.videoResolution.height} @ ${template.videoFrameRate}fps\n")
 
                     template.instructions?.let { instructions ->
-                        append("\n📋 Instructions:\n$instructions")
+                        append("\n Instructions:\n$instructions")
                     }
                 }
 
@@ -249,7 +249,7 @@ class TemplateAdapter(
         val isSelected = template == selectedTemplate
 
 
-        holder.iconText.text = template.icon ?: "📊"
+        holder.iconText.text = template.icon ?: ""
         holder.nameText.text = template.name
         holder.categoryText.text =
             template.category.name.replace("_", " ").lowercase().replaceFirstChar { it.uppercase() }
@@ -258,8 +258,8 @@ class TemplateAdapter(
         val sensorIcons =
             template.sensors.map { sensor ->
                 when (sensor) {
-                    ResearchTemplate.SensorType.GSR -> "📊"
-                    ResearchTemplate.SensorType.THERMAL_CAMERA -> "🌡️"
+                    ResearchTemplate.SensorType.GSR -> ""
+                    ResearchTemplate.SensorType.THERMAL_CAMERA -> ""
                     ResearchTemplate.SensorType.RGB_CAMERA -> "📸"
                 }
             }.joinToString(" ")

@@ -153,16 +153,16 @@ class SessionLifecycleTestActivity : FragmentActivity() {
                 )
 
                 if (result) {
-                    showToast("✅ Normal recording started successfully")
-                    Log.i(TAG, "✅ Test 1 PASSED: Normal recording started with all sensors")
+                    showToast(" Normal recording started successfully")
+                    Log.i(TAG, " Test 1 PASSED: Normal recording started with all sensors")
                 } else {
-                    showToast("❌ Normal recording failed to start")
-                    Log.e(TAG, "❌ Test 1 FAILED: Normal recording should have started")
+                    showToast(" Normal recording failed to start")
+                    Log.e(TAG, " Test 1 FAILED: Normal recording should have started")
                 }
 
             } catch (e: Exception) {
-                Log.e(TAG, "❌ Test 1 EXCEPTION: ${e.message}", e)
-                showToast("❌ Test 1 exception: ${e.message}")
+                Log.e(TAG, " Test 1 EXCEPTION: ${e.message}", e)
+                showToast(" Test 1 exception: ${e.message}")
             }
         }
     }
@@ -186,16 +186,16 @@ class SessionLifecycleTestActivity : FragmentActivity() {
                 )
 
                 if (result) {
-                    showToast("✅ Partial recording started (2/3 sensors)")
-                    Log.i(TAG, "✅ Test 2 PASSED: Partial recording started with fault tolerance")
+                    showToast(" Partial recording started (2/3 sensors)")
+                    Log.i(TAG, " Test 2 PASSED: Partial recording started with fault tolerance")
                 } else {
-                    showToast("❌ Partial recording failed")
-                    Log.e(TAG, "❌ Test 2 FAILED: Partial recording should have started")
+                    showToast(" Partial recording failed")
+                    Log.e(TAG, " Test 2 FAILED: Partial recording should have started")
                 }
 
             } catch (e: Exception) {
-                Log.e(TAG, "❌ Test 2 EXCEPTION: ${e.message}", e)
-                showToast("❌ Test 2 exception: ${e.message}")
+                Log.e(TAG, " Test 2 EXCEPTION: ${e.message}", e)
+                showToast(" Test 2 exception: ${e.message}")
             }
         }
     }
@@ -219,19 +219,19 @@ class SessionLifecycleTestActivity : FragmentActivity() {
                 )
 
                 if (!result) {
-                    showToast("✅ Recording correctly failed (no sensors started)")
-                    Log.i(TAG, "✅ Test 3 PASSED: Recording correctly failed when all sensors fail")
+                    showToast(" Recording correctly failed (no sensors started)")
+                    Log.i(TAG, " Test 3 PASSED: Recording correctly failed when all sensors fail")
                 } else {
-                    showToast("❌ Recording should have failed but succeeded")
+                    showToast(" Recording should have failed but succeeded")
                     Log.e(
                         TAG,
-                        "❌ Test 3 FAILED: Recording should have failed when all sensors fail"
+                        " Test 3 FAILED: Recording should have failed when all sensors fail"
                     )
                 }
 
             } catch (e: Exception) {
-                Log.e(TAG, "❌ Test 3 EXCEPTION: ${e.message}", e)
-                showToast("❌ Test 3 exception: ${e.message}")
+                Log.e(TAG, " Test 3 EXCEPTION: ${e.message}", e)
+                showToast(" Test 3 exception: ${e.message}")
             }
         }
     }
@@ -255,19 +255,19 @@ class SessionLifecycleTestActivity : FragmentActivity() {
                 )
 
                 if (result) {
-                    showToast("✅ Recording continued despite sensor exception")
-                    Log.i(TAG, "✅ Test 4 PASSED: Recording continued despite GSR sensor exception")
+                    showToast(" Recording continued despite sensor exception")
+                    Log.i(TAG, " Test 4 PASSED: Recording continued despite GSR sensor exception")
                 } else {
-                    showToast("❌ Recording failed due to sensor exception")
+                    showToast(" Recording failed due to sensor exception")
                     Log.e(
                         TAG,
-                        "❌ Test 4 FAILED: Recording should continue despite isolated sensor exception"
+                        " Test 4 FAILED: Recording should continue despite isolated sensor exception"
                     )
                 }
 
             } catch (e: Exception) {
-                Log.e(TAG, "❌ Test 4 EXCEPTION: ${e.message}", e)
-                showToast("❌ Test 4 exception: ${e.message}")
+                Log.e(TAG, " Test 4 EXCEPTION: ${e.message}", e)
+                showToast(" Test 4 exception: ${e.message}")
             }
         }
     }
@@ -291,22 +291,22 @@ class SessionLifecycleTestActivity : FragmentActivity() {
                 )
 
                 if (!result) {
-                    showToast("✅ Recording correctly failed (insufficient storage)")
+                    showToast(" Recording correctly failed (insufficient storage)")
                     Log.i(
                         TAG,
-                        "✅ Test 5 PASSED: Recording correctly failed due to storage requirements"
+                        " Test 5 PASSED: Recording correctly failed due to storage requirements"
                     )
                 } else {
-                    showToast("⚠️ Storage check may have passed (device has lots of space)")
+                    showToast(" Storage check may have passed (device has lots of space)")
                     Log.w(
                         TAG,
-                        "⚠️ Test 5 WARNING: Storage check passed - device may have sufficient space"
+                        " Test 5 WARNING: Storage check passed - device may have sufficient space"
                     )
                 }
 
             } catch (e: Exception) {
-                Log.e(TAG, "❌ Test 5 EXCEPTION: ${e.message}", e)
-                showToast("❌ Test 5 exception: ${e.message}")
+                Log.e(TAG, " Test 5 EXCEPTION: ${e.message}", e)
+                showToast(" Test 5 exception: ${e.message}")
             }
         }
     }
@@ -319,16 +319,16 @@ class SessionLifecycleTestActivity : FragmentActivity() {
                 val result = recordingController.stopRecording()
 
                 if (result) {
-                    showToast("✅ Recording stopped successfully")
-                    Log.i(TAG, "✅ Recording stopped with graceful teardown")
+                    showToast(" Recording stopped successfully")
+                    Log.i(TAG, " Recording stopped with graceful teardown")
                 } else {
-                    showToast("❌ Failed to stop recording")
-                    Log.e(TAG, "❌ Failed to stop recording gracefully")
+                    showToast(" Failed to stop recording")
+                    Log.e(TAG, " Failed to stop recording gracefully")
                 }
 
             } catch (e: Exception) {
-                Log.e(TAG, "❌ Stop recording EXCEPTION: ${e.message}", e)
-                showToast("❌ Stop exception: ${e.message}")
+                Log.e(TAG, " Stop recording EXCEPTION: ${e.message}", e)
+                showToast(" Stop exception: ${e.message}")
             }
         }
     }

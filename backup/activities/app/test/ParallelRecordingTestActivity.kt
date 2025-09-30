@@ -215,7 +215,7 @@ class ParallelRecordingTestActivity : ComponentActivity() {
                     buildString {
                         appendLine("Sensor Connection Test Results:")
                         testResults.forEach { (sensorId, success) ->
-                            val status = if (success) "✅ OK" else "❌ FAILED"
+                            val status = if (success) " OK" else " FAILED"
                             appendLine("$sensorId: $status")
                         }
                     }

@@ -3,7 +3,7 @@
 This guide documents the comprehensive migration of legacy Android Fragments to Jetpack Compose, as part of the IRCamera
 app modernization effort.
 
-## 🎯 Migration Overview
+##  Migration Overview
 
 The Fragment Migration phase successfully modernized **8 core fragments** to Compose, representing the foundation for
 complete UI migration. This establishes patterns and infrastructure for migrating the remaining 12+ specialized
@@ -11,24 +11,24 @@ fragments.
 
 ### Completed Migrations
 
-#### ✅ Core App Fragments (2/2)
+####  Core App Fragments (2/2)
 
 - **MainFragmentCompose.kt** - Device management and GSR integration
 - **SensorDashboardFragmentCompose.kt** - Real-time sensor monitoring
 
-#### ✅ Thermal Camera Fragments (4/12+)
+####  Thermal Camera Fragments (4/12+)
 
 - **ThermalFragmentCompose.kt** - Advanced thermal camera interface
 - **GalleryFragmentCompose.kt** - Modern media gallery
 - **AbilityFragmentCompose.kt** - Thermal abilities showcase
 - **IRGalleryFragmentCompose.kt** - IR gallery management
 
-#### ✅ User Management Fragments (2/2)
+####  User Management Fragments (2/2)
 
 - **MineFragmentCompose.kt** - User profile management
 - **MoreFragmentCompose.kt** - Additional features and tools
 
-## 🏗️ Architecture Improvements
+##  Architecture Improvements
 
 ### 1. Foundation Components
 
@@ -71,7 +71,7 @@ sealed class IRCameraScreen(val route: String) {
 }
 ```
 
-## 🚀 Key Features Implemented
+##  Key Features Implemented
 
 ### Modern Material 3 Design
 
@@ -102,7 +102,7 @@ LaunchedEffect(Unit) {
 - **Pull-to-refresh** functionality where appropriate
 - **Selection modes** with batch operations
 
-## 📱 Migration Examples
+##  Migration Examples
 
 ### 1. MainFragmentCompose.kt
 
@@ -227,7 +227,7 @@ LibUnifiedTheme {
 - **State preservation** across configuration changes
 - **Memory leak prevention** with proper lifecycle handling
 
-## 📊 Migration Impact
+##  Migration Impact
 
 ### Before vs After Comparison
 
@@ -302,16 +302,16 @@ fun testMainFragmentCompose() {
 3. Performance optimization guide
 4. Accessibility guidelines
 
-## 🎉 Success Metrics
+##  Success Metrics
 
 ### Achieved Goals
 
-- ✅ **8 core fragments** successfully migrated
-- ✅ **Modern UI patterns** established
-- ✅ **Reactive state management** implemented
-- ✅ **Performance optimizations** achieved
-- ✅ **Consistent theming** across all screens
-- ✅ **Enhanced accessibility** built-in
+-  **8 core fragments** successfully migrated
+-  **Modern UI patterns** established
+-  **Reactive state management** implemented
+-  **Performance optimizations** achieved
+-  **Consistent theming** across all screens
+-  **Enhanced accessibility** built-in
 
 ### Project Impact
 

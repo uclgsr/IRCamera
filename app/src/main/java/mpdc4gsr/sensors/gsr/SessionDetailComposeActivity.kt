@@ -326,9 +326,9 @@ private fun SessionTimelineCard() {
             Text(
                 "📅 Session started at 14:30:00\n" +
                         "🔗 Device connected at 14:30:15\n" +
-                        "📊 Data recording began at 14:30:30\n" +
+                        " Data recording began at 14:30:30\n" +
                         "⚡ Peak activity detected at 14:45:12\n" +
-                        "📈 Steady state achieved at 14:50:00\n" +
+                        " Steady state achieved at 14:50:00\n" +
                         "🔚 Recording completed at 15:15:00",
                 style = MaterialTheme.typography.bodyMedium,
                 lineHeight = MaterialTheme.typography.bodyMedium.lineHeight * 1.5

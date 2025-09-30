@@ -182,7 +182,7 @@ data class ResearchTemplate(
                             "activity_level" to "resting",
                         ),
                     instructions = "Long-term physiological baseline recording. Participant should remain in comfortable resting position. Monitor for consistent GSR patterns and thermal stability.",
-                    icon = "📈",
+                    icon = "",
                 ),
 
                 ResearchTemplate(
@@ -224,7 +224,7 @@ data class ResearchTemplate(
                     videoResolution = VideoResolution.FULL_HD,
                     metadata = mapOf("template_type" to "custom"),
                     instructions = "Configure sensors, duration, and parameters according to your specific research protocol.",
-                    icon = "⚙️",
+                    icon = "",
                 ),
             )
 

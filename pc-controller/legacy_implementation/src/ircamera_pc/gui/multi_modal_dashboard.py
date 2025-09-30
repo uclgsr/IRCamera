@@ -338,7 +338,7 @@ class DeviceStatusWidget(QGroupBox):
         layout.addWidget(quality_label, 5, 0, 1, 2)
 
         if status.is_samsung_s22 and status.thermal_throttling:
-            warning_label = QLabel("⚠️ Thermal throttling active")
+            warning_label = QLabel(" Thermal throttling active")
             warning_label.setStyleSheet("color: #FF6B6B;")
             layout.addWidget(warning_label, 6, 0, 1, 2)
 

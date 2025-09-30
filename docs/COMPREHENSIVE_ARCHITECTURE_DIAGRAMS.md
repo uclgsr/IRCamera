@@ -3,7 +3,7 @@
 This document provides comprehensive Mermaid architecture diagrams for the IRCamera Multi-Modal
 Thermal Sensing Platform, created from scratch based on current repository analysis.
 
-**📱 For detailed app navigation flow and UI structure,
+** For detailed app navigation flow and UI structure,
 see [APP_NAVIGATION_DIAGRAM.md](APP_NAVIGATION_DIAGRAM.md)**
 **🎨 For complete layout architecture and UI components,
 see [APP_LAYOUT_DIAGRAM.md](APP_LAYOUT_DIAGRAM.md)**

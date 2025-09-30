@@ -469,10 +469,10 @@ class UnifiedSessionManager(
                 if (result.success) {
                     Log.i(
                         TAG,
-                        "✅ $sensorType: Started successfully (${result.startJitterMs}ms jitter)"
+                        " $sensorType: Started successfully (${result.startJitterMs}ms jitter)"
                     )
                 } else {
-                    Log.w(TAG, "❌ $sensorType: Failed to start - ${result.errorMessage}")
+                    Log.w(TAG, " $sensorType: Failed to start - ${result.errorMessage}")
                     Log.w(TAG, "   Other sensors will continue recording (graceful degradation)")
                 }
             }
@@ -484,7 +484,7 @@ class UnifiedSessionManager(
                 if (failedSensors.isNotEmpty()) {
                     Log.w(
                         TAG,
-                        "⚠️ Session starting with ${failedSensors.size} failed sensors (graceful degradation)"
+                        " Session starting with ${failedSensors.size} failed sensors (graceful degradation)"
                     )
 
                     emitSensorFailureNotification(failedSensors)
@@ -495,12 +495,12 @@ class UnifiedSessionManager(
 
                 Log.i(
                     TAG,
-                    "✅ Multi-sensor session started with error isolation - $successCount sensors active"
+                    " Multi-sensor session started with error isolation - $successCount sensors active"
                 )
                 return true
 
             } else {
-                Log.e(TAG, "❌ Too many sensor failures - session cannot continue")
+                Log.e(TAG, " Too many sensor failures - session cannot continue")
                 Log.e(TAG, "Failed sensors: ${failedSensors.map { it.sensorType }}")
 
 
@@ -1057,10 +1057,10 @@ class UnifiedSessionManager(
             if (result.success) {
                 Log.i(
                     TAG,
-                    "✅ $sensorType: Stopped successfully (${result.finalSampleCount} samples)"
+                    " $sensorType: Stopped successfully (${result.finalSampleCount} samples)"
                 )
             } else {
-                Log.w(TAG, "❌ $sensorType: Stop failed - ${result.errorMessage}")
+                Log.w(TAG, " $sensorType: Stop failed - ${result.errorMessage}")
                 Log.w(TAG, "   Files may still be accessible (graceful degradation)")
             }
         }
@@ -1918,7 +1918,7 @@ class UnifiedSessionManager(
 
             appendLine("Data Integrity Checks:")
             summary.dataIntegrityChecks.forEach { (check, passed) ->
-                appendLine("  $check: ${if (passed) "✅ PASS" else "❌ FAIL"}")
+                appendLine("  $check: ${if (passed) " PASS" else " FAIL"}")
             }
 
             appendLine()

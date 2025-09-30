@@ -425,7 +425,7 @@ class ShimmerDeviceManager(
             while (attempts < maxAttempts) {
 
                 if (connectedDevices.containsKey(deviceInfo.address)) {
-                    Log.i(TAG, "✅ Successfully connected to Shimmer device: ${deviceInfo.address}")
+                    Log.i(TAG, " Successfully connected to Shimmer device: ${deviceInfo.address}")
 
 
                     reconnectionAttempts.remove(deviceInfo.address)
@@ -471,7 +471,7 @@ class ShimmerDeviceManager(
             return@withContext false
 
         } catch (e: Exception) {
-            Log.e(TAG, "❌ Error connecting to device: ${deviceInfo.address}", e)
+            Log.e(TAG, " Error connecting to device: ${deviceInfo.address}", e)
 
             val errorMessage = when {
                 e.message?.contains("permission", ignoreCase = true) == true ->
@@ -686,11 +686,11 @@ class ShimmerDeviceManager(
                 if (streamingResults) {
                     Log.i(
                         TAG,
-                        "✅ Multi-device testing started successfully with ${connectedDevices.size} devices"
+                        " Multi-device testing started successfully with ${connectedDevices.size} devices"
                     )
                     return@withContext true
                 } else {
-                    Log.e(TAG, "❌ Failed to start streaming on all devices")
+                    Log.e(TAG, " Failed to start streaming on all devices")
                     return@withContext false
                 }
 
@@ -711,10 +711,10 @@ class ShimmerDeviceManager(
                         try {
                             Log.d(TAG, "Starting streaming on device: $address")
                             shimmer.startStreaming()
-                            Log.d(TAG, "✅ Streaming started successfully on device: $address")
+                            Log.d(TAG, " Streaming started successfully on device: $address")
                             true
                         } catch (e: Exception) {
-                            Log.e(TAG, "❌ Failed to start streaming on device $address", e)
+                            Log.e(TAG, " Failed to start streaming on device $address", e)
                             false
                         }
                     }
@@ -731,13 +731,13 @@ class ShimmerDeviceManager(
                 if (successCount >= 2) {
                     Log.i(
                         TAG,
-                        "✅ Multi-device streaming barrier successful with $successCount devices"
+                        " Multi-device streaming barrier successful with $successCount devices"
                     )
                     true
                 } else {
                     Log.e(
                         TAG,
-                        "❌ Multi-device streaming barrier failed - insufficient devices streaming"
+                        " Multi-device streaming barrier failed - insufficient devices streaming"
                     )
                     false
                 }

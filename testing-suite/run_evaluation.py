@@ -37,19 +37,19 @@ class MasterTestRunner:
     
     def run_complete_evaluation(self) -> Dict[str, Any]:
         """Run complete thesis evaluation suite"""
-        print("🚀 IRCamera Thesis Complete Evaluation Suite")
+        print(" IRCamera Thesis Complete Evaluation Suite")
         print("=" * 70)
         print(f"Start Time: {time.strftime('%Y-%m-%d %H:%M:%S')}")
         print("=" * 70)
         
         # Phase 1: Comprehensive Tests
-        print("\n🔍 PHASE 1: COMPREHENSIVE TESTING")
+        print("\n PHASE 1: COMPREHENSIVE TESTING")
         print("-" * 50)
         thesis_results = self.thesis_tests.run_comprehensive_tests()
         self.results['thesis_tests'] = thesis_results
         
         # Phase 2: Performance Benchmarking  
-        print("\n🎯 PHASE 2: PERFORMANCE BENCHMARKING")
+        print("\n PHASE 2: PERFORMANCE BENCHMARKING")
         print("-" * 50)
         benchmark_results = self.performance_benchmark.run_all_benchmarks()
         self.results['performance_benchmarks'] = benchmark_results
@@ -67,12 +67,12 @@ class MasterTestRunner:
         self.results['real_integration'] = real_integration_results
         
         # Phase 5: Generate Comprehensive Report
-        print("\n📊 PHASE 5: GENERATING COMPREHENSIVE REPORT")
+        print("\n PHASE 5: GENERATING COMPREHENSIVE REPORT")
         print("-" * 50)
         final_summary = self.generate_final_report()
         
         # Phase 6: Create Thesis Visualizations
-        print("\n📈 PHASE 6: CREATING THESIS VISUALIZATIONS")
+        print("\n PHASE 6: CREATING THESIS VISUALIZATIONS")
         print("-" * 50)
         self.create_thesis_visualizations()
         
@@ -199,42 +199,42 @@ class MasterTestRunner:
             if 'thesis_tests' in self.results:
                 tr = self.results['thesis_tests']
                 f.write(f"### Phase 1: Comprehensive Testing\n")
-                f.write(f"- Status: {'✅ PASS' if tr['test_execution']['failed'] == 0 else '⚠️ PARTIAL'}\n")
+                f.write(f"- Status: {' PASS' if tr['test_execution']['failed'] == 0 else ' PARTIAL'}\n")
                 f.write(f"- Tests: {tr['test_execution']['passed']}/{tr['test_execution']['total_tests']} passed\n")
                 f.write(f"- Execution Time: {tr['execution_time']:.1f}s\n\n")
             
             if 'performance_benchmarks' in self.results:
                 pb = self.results['performance_benchmarks']
                 f.write(f"### Phase 2: Performance Benchmarking\n")
-                f.write(f"- Status: {'✅ PASS' if pb['failed'] == 0 else '⚠️ PARTIAL'}\n")
+                f.write(f"- Status: {' PASS' if pb['failed'] == 0 else ' PARTIAL'}\n")
                 f.write(f"- Benchmarks: {pb['passed']}/{pb['total_metrics']} passed\n")
                 f.write(f"- Validation: {pb['validation_status']}\n\n")
             
             if 'integration_tests' in self.results:
                 it = self.results['integration_tests']
                 f.write(f"### Phase 3: Integration Testing\n")
-                f.write(f"- Status: {'✅ PASS' if it['failed'] == 0 else '⚠️ PARTIAL'}\n")
+                f.write(f"- Status: {' PASS' if it['failed'] == 0 else ' PARTIAL'}\n")
                 f.write(f"- Tests: {it['passed']}/{it['total_tests']} passed\n")
                 f.write(f"- Overall: {it['overall_status']}\n\n")
             
             f.write("## Thesis Integration Readiness\n\n")
             
             if summary['overall_status'] in ['EXCELLENT', 'GOOD']:
-                f.write("✅ **READY FOR THESIS INTEGRATION**\n\n")
+                f.write(" **READY FOR THESIS INTEGRATION**\n\n")
                 f.write("The evaluation suite demonstrates that the IRCamera system meets thesis requirements:\n")
                 f.write("- Comprehensive documentation with diagrams and tables\n")
                 f.write("- Performance metrics validated against specifications\n")
                 f.write("- Integration testing confirms content generation pipeline\n")
                 f.write("- Research-grade reliability and accuracy demonstrated\n")
             elif summary['overall_status'] == 'ACCEPTABLE':
-                f.write("⚠️ **ACCEPTABLE WITH MINOR IMPROVEMENTS**\n\n")
+                f.write(" **ACCEPTABLE WITH MINOR IMPROVEMENTS**\n\n")
                 f.write("The system is largely ready for thesis integration with some areas for improvement:\n")
                 f.write("- Most critical tests pass successfully\n")
                 f.write("- Performance benchmarks meet key requirements\n")
                 f.write("- Some documentation or integration gaps identified\n")
                 f.write("- Recommend addressing warnings before final submission\n")
             else:
-                f.write("❌ **REQUIRES IMPROVEMENTS BEFORE THESIS INTEGRATION**\n\n")
+                f.write(" **REQUIRES IMPROVEMENTS BEFORE THESIS INTEGRATION**\n\n")
                 f.write("Significant issues identified that should be addressed:\n")
                 f.write("- Multiple test failures require investigation\n")
                 f.write("- Performance benchmarks may not meet specifications\n") 
@@ -275,7 +275,7 @@ class MasterTestRunner:
     
     def create_thesis_visualizations(self) -> None:
         """Create visualizations for thesis integration"""
-        print("📊 Creating Thesis Integration Visualizations...")
+        print(" Creating Thesis Integration Visualizations...")
         
         # Create comprehensive test results visualization
         self.create_comprehensive_visualization()
@@ -286,7 +286,7 @@ class MasterTestRunner:
         # Create integration status dashboard
         self.create_integration_dashboard()
         
-        print("✅ Thesis visualizations created successfully")
+        print(" Thesis visualizations created successfully")
     
     def create_comprehensive_visualization(self) -> None:
         """Create comprehensive test results visualization"""
@@ -366,10 +366,10 @@ class MasterTestRunner:
                 
                 if "Latency" in metric or "Usage" in metric:
                     # Lower is better
-                    status = "✅ PASS" if achieved_val <= target_val else "⚠️ WARNING"
+                    status = " PASS" if achieved_val <= target_val else " WARNING"
                 else:
                     # Higher is better or within tolerance
-                    status = "✅ PASS" if achieved_val >= target_val * 0.8 else "⚠️ WARNING"
+                    status = " PASS" if achieved_val >= target_val * 0.8 else " WARNING"
                 
                 f.write(f"| {metric} | {achieved} | {target} | {unit} | {status} |\n")
             
@@ -383,11 +383,11 @@ class MasterTestRunner:
             f.write("        cpu[\"CPU: 15% average utilization\"]\n")
             f.write("        network[\"Network: 23ms local latency\"]\n")
             f.write("        \n")
-            f.write("        sync --> target1[\"Target: <5ms ✅\"]\n")
-            f.write("        throughput --> target2[\"Target: >1MB/s ✅\"]\n")
-            f.write("        memory --> target3[\"Target: <200MB ✅\"]\n")
-            f.write("        cpu --> target4[\"Target: <25% ✅\"]\n")
-            f.write("        network --> target5[\"Target: <50ms ✅\"]\n")
+            f.write("        sync --> target1[\"Target: <5ms \"]\n")
+            f.write("        throughput --> target2[\"Target: >1MB/s \"]\n")
+            f.write("        memory --> target3[\"Target: <200MB \"]\n")
+            f.write("        cpu --> target4[\"Target: <25% \"]\n")
+            f.write("        network --> target5[\"Target: <50ms \"]\n")
             f.write("    end\n")
             f.write("```\n")
     
@@ -450,19 +450,19 @@ class MasterTestRunner:
             # Documentation status
             f.write("        doc[\"📄 Documentation\"]\n")
             if 'integration_tests' in self.results:
-                doc_status = "✅" if self.results['integration_tests']['failed'] <= 2 else "⚠️"
+                doc_status = "" if self.results['integration_tests']['failed'] <= 2 else ""
                 f.write(f"        doc --> doc_status[\"{doc_status} Content Generation\"]\n")
             
             # Performance status
-            f.write("        perf[\"🎯 Performance\"]\n")
+            f.write("        perf[\" Performance\"]\n")
             if 'performance_benchmarks' in self.results:
-                perf_status = "✅" if self.results['performance_benchmarks']['pass_rate'] >= 0.8 else "⚠️"
+                perf_status = "" if self.results['performance_benchmarks']['pass_rate'] >= 0.8 else ""
                 f.write(f"        perf --> perf_status[\"{perf_status} Benchmarks\"]\n")
             
             # Testing status
             f.write("        test[\"🧪 Testing\"]\n")
             if 'thesis_tests' in self.results:
-                test_status = "✅" if self.results['thesis_tests']['test_execution']['pass_rate'] >= 0.8 else "⚠️"
+                test_status = "" if self.results['thesis_tests']['test_execution']['pass_rate'] >= 0.8 else ""
                 f.write(f"        test --> test_status[\"{test_status} Test Suite\"]\n")
             
             f.write("    end\n")
@@ -471,25 +471,25 @@ class MasterTestRunner:
             f.write("## Recommendations\n\n")
             
             if health_score >= 90:
-                f.write("- ✅ System is ready for thesis integration\n")
-                f.write("- ✅ All critical tests passing\n")
-                f.write("- ✅ Performance meets specifications\n")
+                f.write("-  System is ready for thesis integration\n")
+                f.write("-  All critical tests passing\n")
+                f.write("-  Performance meets specifications\n")
                 f.write("- 📝 Consider final review of documentation\n")
             elif health_score >= 80:
-                f.write("- ✅ System is largely ready for thesis integration\n")
-                f.write("- ⚠️ Review and address any warnings\n")
+                f.write("-  System is largely ready for thesis integration\n")
+                f.write("-  Review and address any warnings\n")
                 f.write("- 📝 Ensure all tables and figures are properly referenced\n")
-                f.write("- 🔍 Consider additional validation of edge cases\n")
+                f.write("-  Consider additional validation of edge cases\n")
             else:
-                f.write("- ❌ Address failed tests before thesis integration\n")
-                f.write("- ⚠️ Review performance benchmarks that didn't pass\n")
+                f.write("-  Address failed tests before thesis integration\n")
+                f.write("-  Review performance benchmarks that didn't pass\n")
                 f.write("- 📝 Ensure all documentation components are complete\n")
                 f.write("- 🔧 Fix integration issues in content generation\n")
 
 
 def main():
     """Main execution function"""
-    print("🚀 Starting IRCamera Thesis Complete Evaluation Suite")
+    print(" Starting IRCamera Thesis Complete Evaluation Suite")
     
     runner = MasterTestRunner()
     summary = runner.run_complete_evaluation()
@@ -503,18 +503,18 @@ def main():
     print(f"Total Tests: {summary['summary']['total_tests']}")
     print(f"Pass Rate: {summary['summary']['overall_pass_rate']:.1%}")
     print(f"Benchmark Success: {summary['summary']['benchmark_pass_rate']:.1%}")
-    print("\n📁 Comprehensive results saved to: testing-suite/results/")
-    print("📊 Thesis integration visualizations generated")
-    print("📋 Executive summary ready for thesis inclusion")
+    print("\n Comprehensive results saved to: testing-suite/results/")
+    print(" Thesis integration visualizations generated")
+    print(" Executive summary ready for thesis inclusion")
     
     if summary['overall_status'] in ['EXCELLENT', 'GOOD']:
-        print("\n✅ THESIS INTEGRATION READY!")
+        print("\n THESIS INTEGRATION READY!")
         print("   The system meets thesis requirements and standards.")
     elif summary['overall_status'] == 'ACCEPTABLE':
-        print("\n⚠️ ACCEPTABLE WITH IMPROVEMENTS")
+        print("\n ACCEPTABLE WITH IMPROVEMENTS")
         print("   Review warnings and consider improvements.")
     else:
-        print("\n❌ IMPROVEMENTS REQUIRED")
+        print("\n IMPROVEMENTS REQUIRED")
         print("   Address failed tests before final thesis submission.")
     
     return summary

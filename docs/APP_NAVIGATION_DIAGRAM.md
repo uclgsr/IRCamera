@@ -62,18 +62,18 @@ For a high-level understanding, here's a simplified version of the key navigatio
 ```mermaid
 graph TD
     %% Main App Structure
-    MainActivity[📱 MainActivity<br/>App Entry Point]
+    MainActivity[ MainActivity<br/>App Entry Point]
     
     %% Main Tabs
     GalleryTab[🖼️ Gallery Tab<br/>Media Gallery]
     MainTab[🏠 Main Tab<br/>Dashboard]
-    SettingsTab[⚙️ Settings Tab<br/>Configuration]
+    SettingsTab[ Settings Tab<br/>Configuration]
     MineTab[👤 Profile Tab<br/>User Settings]
     
     %% Key Features
-    ThermalHub[🌡️ Thermal Camera Hub<br/>IRMainActivity]
-    GSRRecording[📊 GSR Recording<br/>MultiModalRecordingActivity]
-    SensorDashboard[📈 Sensor Dashboard<br/>Real-time Monitoring]
+    ThermalHub[ Thermal Camera Hub<br/>IRMainActivity]
+    GSRRecording[ GSR Recording<br/>MultiModalRecordingActivity]
+    SensorDashboard[ Sensor Dashboard<br/>Real-time Monitoring]
     
     %% Navigation Flow
     MainActivity --> GalleryTab
@@ -87,10 +87,10 @@ graph TD
     
     ThermalHub --> |Live View| IRMonitorActivity[🎥 Live Monitor]
     ThermalHub --> |Image Gallery| GalleryActivity[🖼️ Thermal Gallery]
-    ThermalHub --> |Settings| IRConfigActivity[⚙️ Camera Config]
+    ThermalHub --> |Settings| IRConfigActivity[ Camera Config]
     
-    GSRRecording --> |View Data| GSRPlotActivity[📈 GSR Plots]
-    GSRRecording --> |Settings| GSRSettingsActivity[⚙️ GSR Config]
+    GSRRecording --> |View Data| GSRPlotActivity[ GSR Plots]
+    GSRRecording --> |Settings| GSRSettingsActivity[ GSR Config]
     
     %% Styling
     classDef mainEntry fill:#ff6b6b,stroke:#333,stroke-width:3px,color:#fff
@@ -134,16 +134,16 @@ graph TB
     %% GSR/Sensor Activities - Streamlined Architecture
     subgraph "GSR Sensor Module - Consolidated"
         MultiModalActivity[MultiModalRecordingActivity<br/>🎭 Multi-Modal Recording Hub]
-        GSRSettings[GSRSettingsActivity<br/>⚙️ GSR Configuration]
-        GSRPlot[GSRPlotActivity<br/>📈 GSR Data Visualization]
+        GSRSettings[GSRSettingsActivity<br/> GSR Configuration]
+        GSRPlot[GSRPlotActivity<br/> GSR Data Visualization]
         GSRGallery[GSRGalleryActivity<br/>🖼️ GSR Media Gallery]
-        GSRDataView[GSRDataViewActivity<br/>📊 GSR Data Analysis]
+        GSRDataView[GSRDataViewActivity<br/> GSR Data Analysis]
         GSRVideoPlayer[GSRVideoPlayerActivity<br/>🎥 GSR Video Playback]
         SessionManager[SessionManagerActivity<br/>📝 Session Management]
-        SessionDetail[SessionDetailActivity<br/>📋 Session Details]
+        SessionDetail[SessionDetailActivity<br/> Session Details]
         SessionExport[SessionExportActivity<br/>📤 Session Export]
         ShimmerConfig[ShimmerConfigActivity<br/>📡 Shimmer Configuration]
-        GSRDeviceManagement[GSRDeviceManagementActivity<br/>📱 Device Management]
+        GSRDeviceManagement[GSRDeviceManagementActivity<br/> Device Management]
         GSRQuickRecording[GSRQuickRecordingActivity<br/>⚡ Quick Recording]
         ResearchTemplate[ResearchTemplateActivity<br/>🔬 Research Templates]
         GSRRawImageView[GSRRawImageViewActivity<br/>🖼️ Raw Image Viewer]
@@ -158,9 +158,9 @@ graph TB
     
     %% Thermal Camera Module Activities - COMPLETE LIST
     subgraph "Thermal Camera Module - Component Activities"
-        IRMainActivity[IRMainActivity<br/>🌡️ Thermal Camera Hub]
+        IRMainActivity[IRMainActivity<br/> Thermal Camera Hub]
         IRMonitorActivity[IRMonitorActivity<br/>📹 Live Thermal Monitor]
-        IRConfigActivity[IRConfigActivity<br/>⚙️ Camera Configuration]
+        IRConfigActivity[IRConfigActivity<br/> Camera Configuration]
         IRCorrectionActivity[IRCorrectionActivity<br/>🔧 Image Correction]
         IRCorrectionTwo[IRCorrectionTwoActivity<br/>🔧 Correction Step 2]
         IRCorrectionThree[IRCorrectionThreeActivity<br/>🔧 Correction Step 3] 
@@ -168,25 +168,25 @@ graph TB
         IRGalleryDetail01[IRGalleryDetail01Activity<br/>🖼️ Gallery Detail 1]
         IRGalleryDetail04[IRGalleryDetail04Activity<br/>🖼️ Gallery Detail 4]
         IRGalleryHome[IRGalleryHomeActivity<br/>🏠 Gallery Home]
-        IRLogMPChart[IRLogMPChartActivity<br/>📊 Log MP Charts]
-        IRMonitorChart[IRMonitorChartActivity<br/>📈 Monitor Charts]
+        IRLogMPChart[IRLogMPChartActivity<br/> Log MP Charts]
+        IRMonitorChart[IRMonitorChartActivity<br/> Monitor Charts]
         IRThermalNight[IRThermalNightActivity<br/>🌙 Night Thermal]
         IRThermalPlus[IRThermalPlusActivity<br/>➕ Enhanced Thermal]
         IRVideoGSY[IRVideoGSYActivity<br/>🎥 Video GSY Player]
         GalleryActivity[GalleryActivity<br/>🖼️ Main Gallery]
         ConnectActivity[ConnectActivity<br/>🔗 Connection Interface]
-        ThermalActivity[ThermalActivity<br/>🌡️ Thermal Processing]
+        ThermalActivity[ThermalActivity<br/> Thermal Processing]
         VideoActivity[VideoActivity<br/>🎥 Video Playback]
-        MonitorActivity[MonitorActivity<br/>📊 Monitor Interface]
-        MonitorChartActivity[MonitorChartActivity<br/>📈 Monitor Charts]
+        MonitorActivity[MonitorActivity<br/> Monitor Interface]
+        MonitorChartActivity[MonitorChartActivity<br/> Monitor Charts]
         MonitoryHomeActivity[MonitoryHomeActivity<br/>🏠 Monitor Home]
     end
     
     %% Thermal Lite Module
     subgraph "Thermal Lite Module"
-        IRThermalLite[IRThermalLiteActivity<br/>🌡️ Lite Thermal]
+        IRThermalLite[IRThermalLiteActivity<br/> Lite Thermal]
         IRMonitorLite[IRMonitorLiteActivity<br/>📹 Lite Monitor]
-        IRMonitorChartLite[IRMonitorChartLiteActivity<br/>📈 Lite Charts]
+        IRMonitorChartLite[IRMonitorChartLiteActivity<br/> Lite Charts]
         IRCorrectionLiteThree[IRCorrectionLiteThreeActivity<br/>🔧 Lite Correction 3]
         IRCorrectionLiteFour[IRCorrectionLiteFourActivity<br/>🔧 Lite Correction 4]
         ImagePickIRLite[ImagePickIRLiteActivity<br/>🖼️ Lite Image Picker]
@@ -196,7 +196,7 @@ graph TB
     subgraph "Report Generation Module"
         ReportCreateFirst[ReportCreateFirstActivity<br/>📝 Report Create 1]
         ReportCreateSecond[ReportCreateSecondActivity<br/>📝 Report Create 2]
-        ReportDetail[ReportDetailActivity<br/>📋 Report Details]
+        ReportDetail[ReportDetailActivity<br/> Report Details]
         ReportPreviewFirst[ReportPreviewFirstActivity<br/>👁️ Report Preview 1]
         ReportPreviewSecond[ReportPreviewSecondActivity<br/>👁️ Report Preview 2]
     end
@@ -208,7 +208,7 @@ graph TB
         ElectronicManual[ElectronicManualActivity<br/>📖 Electronic Manual]
         StorageSpace[StorageSpaceActivity<br/>💾 Storage Management]
         AutoSave[AutoSaveActivity<br/>💾 Auto-save Settings]
-        DeviceDetails[DeviceDetailsActivity<br/>📱 Device Information]
+        DeviceDetails[DeviceDetailsActivity<br/> Device Information]
         MoreActivity[MoreActivity<br/>➕ More Options]
         TISRActivity[TISRActivity<br/>🔧 TISR Functionality]
         UnitActivity[UnitActivity<br/>📏 Unit Settings]
@@ -218,7 +218,7 @@ graph TB
     subgraph "Testing & Development - Comprehensive"
         SensorDashboardTest[SensorDashboardTestActivity<br/>🧪 Sensor Testing]
         NetworkTest[NetworkClientTestActivity<br/>🌐 Network Testing]
-        NetworkConfig[NetworkConfigActivity<br/>⚙️ Network Configuration]
+        NetworkConfig[NetworkConfigActivity<br/> Network Configuration]
         SimpleNetworkTest[SimpleNetworkTestActivity<br/>🌐 Simple Network Test]
         BLEIntegrationTest[BLEIntegrationTestActivity<br/>📡 BLE Integration Test]
         CompleteSessionTrial[CompleteSessionTrialActivity<br/>🔬 Complete Session Trial]

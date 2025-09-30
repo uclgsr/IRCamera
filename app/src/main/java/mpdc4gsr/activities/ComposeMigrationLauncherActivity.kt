@@ -69,7 +69,7 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = "🚀 Enhanced Migration - Dev Updated",
+                            text = " Enhanced Migration - Dev Updated",
                             style = MaterialTheme.typography.headlineMedium,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onPrimaryContainer

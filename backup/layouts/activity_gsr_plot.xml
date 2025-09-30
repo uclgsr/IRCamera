@@ -57,7 +57,7 @@
                     android:orientation="vertical" android:padding="16dp">
 
                     <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-                        android:layout_marginBottom="12dp" android:gravity="center" android:text="📊 Data Analysis"
+                        android:layout_marginBottom="12dp" android:gravity="center" android:text=" Data Analysis"
                         android:textColor="@color/black" android:textSize="18sp" android:textStyle="bold" />
 
                     <TextView android:id="@+id/stats_text_view" android:layout_width="match_parent"

@@ -497,9 +497,9 @@ Samples: {len(rtt_values)}'''
                 f.write(f"- Overall success rate: {success_rate:.1f}%\n\n")
                 
                 if success_rate >= 80:
-                    f.write("✅ **System validation PASSED** - System meets performance requirements\n\n")
+                    f.write(" **System validation PASSED** - System meets performance requirements\n\n")
                 else:
-                    f.write("❌ **System validation FAILED** - System requires improvements\n\n")
+                    f.write(" **System validation FAILED** - System requires improvements\n\n")
             
             f.write("## Key Findings\n\n")
             f.write("### Time Synchronization\n")

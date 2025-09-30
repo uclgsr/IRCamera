@@ -55,7 +55,7 @@ class ThesisDeliverableGenerator:
         print("="*80)
         
         # Chapter 4: Design & Implementation
-        print("\n📋 CHAPTER 4: DESIGN & IMPLEMENTATION")
+        print("\n CHAPTER 4: DESIGN & IMPLEMENTATION")
         print("-" * 50)
         self.generate_chapter4_deliverables()
         
@@ -77,7 +77,7 @@ class ThesisDeliverableGenerator:
         self.generate_master_summary()
         
         print("\n" + "="*80)
-        print("✅ ALL THESIS DELIVERABLES GENERATED SUCCESSFULLY")
+        print(" ALL THESIS DELIVERABLES GENERATED SUCCESSFULLY")
         print("="*80)
         print(f"\nOutputs available in: {self.output_dir}")
         
@@ -99,16 +99,16 @@ class ThesisDeliverableGenerator:
                 result = subprocess.run(cmd, capture_output=True, text=True, timeout=300)
                 
                 if result.returncode == 0:
-                    print("✅ Architecture documentation generated")
+                    print(" Architecture documentation generated")
                 else:
-                    print(f"⚠️ Architecture generation had issues: {result.stderr}")
+                    print(f" Architecture generation had issues: {result.stderr}")
             else:
-                print(f"⚠️ Architecture script not found at {arch_script}")
+                print(f" Architecture script not found at {arch_script}")
                 self._generate_minimal_chapter4()
                 
         except Exception as e:
             logger.error(f"Error generating Chapter 4 deliverables: {e}")
-            print(f"❌ Error in Chapter 4 generation: {e}")
+            print(f" Error in Chapter 4 generation: {e}")
             self._generate_minimal_chapter4()
         
         print("Chapter 4 deliverables completed.")
@@ -159,22 +159,22 @@ class ThesisDeliverableGenerator:
                 result = subprocess.run(cmd, timeout=1800)  # 30 minute timeout
                 
                 if result.returncode == 0:
-                    print("✅ Automated tests completed successfully")
+                    print(" Automated tests completed successfully")
                     return str(test_output_dir)
                 else:
-                    print(f"⚠️ Some tests may have failed (exit code: {result.returncode})")
+                    print(f" Some tests may have failed (exit code: {result.returncode})")
                     return str(test_output_dir)  # Still return results for analysis
             else:
-                print(f"⚠️ Test script not found at {test_script}")
+                print(f" Test script not found at {test_script}")
                 self._generate_simulated_test_results(test_output_dir)
                 return str(test_output_dir)
                 
         except subprocess.TimeoutExpired:
-            print("⚠️ Tests timed out, using partial results")
+            print(" Tests timed out, using partial results")
             return str(test_output_dir)
         except Exception as e:
             logger.error(f"Error running automated tests: {e}")
-            print(f"❌ Error running tests: {e}")
+            print(f" Error running tests: {e}")
             self._generate_simulated_test_results(test_output_dir)
             return str(test_output_dir)
     
@@ -292,16 +292,16 @@ class ThesisDeliverableGenerator:
                 result = subprocess.run(cmd, capture_output=True, text=True, timeout=300)
                 
                 if result.returncode == 0:
-                    print("✅ Test result analysis completed")
+                    print(" Test result analysis completed")
                 else:
-                    print(f"⚠️ Analysis had issues: {result.stderr}")
+                    print(f" Analysis had issues: {result.stderr}")
             else:
-                print("⚠️ Generating minimal Chapter 5 documentation")
+                print(" Generating minimal Chapter 5 documentation")
                 self._generate_minimal_chapter5()
                 
         except Exception as e:
             logger.error(f"Error generating Chapter 5 deliverables: {e}")
-            print(f"❌ Error in Chapter 5 generation: {e}")
+            print(f" Error in Chapter 5 generation: {e}")
             self._generate_minimal_chapter5()
         
         print("Chapter 5 deliverables completed.")
@@ -343,16 +343,16 @@ class ThesisDeliverableGenerator:
                 result = subprocess.run(cmd, capture_output=True, text=True, timeout=300)
                 
                 if result.returncode == 0:
-                    print("✅ Requirements evaluation completed")
+                    print(" Requirements evaluation completed")
                 else:
-                    print(f"⚠️ Evaluation had issues: {result.stderr}")
+                    print(f" Evaluation had issues: {result.stderr}")
             else:
-                print("⚠️ Generating minimal Chapter 6 documentation")
+                print(" Generating minimal Chapter 6 documentation")
                 self._generate_minimal_chapter6()
                 
         except Exception as e:
             logger.error(f"Error generating Chapter 6 deliverables: {e}")
-            print(f"❌ Error in Chapter 6 generation: {e}")
+            print(f" Error in Chapter 6 generation: {e}")
             self._generate_minimal_chapter6()
         
         print("Chapter 6 deliverables completed.")
@@ -365,11 +365,11 @@ class ThesisDeliverableGenerator:
             f.write("## Requirements Assessment\n\n")
             f.write("| Requirement | Target | Achieved | Status |\n")
             f.write("|-------------|--------|----------|--------|\n")
-            f.write("| Time Sync Accuracy | ±10ms | ±8.5ms | ✅ Exceeds |\n")
-            f.write("| Sensor Coordination | <100ms | ~80ms | ✅ Meets |\n")
-            f.write("| Recording Duration | 5+ min | 60+ min | ✅ Exceeds |\n")
-            f.write("| Command Response | <500ms | ~150ms | ✅ Exceeds |\n")
-            f.write("| Data Throughput | Target rates | 98-100% | ✅ Meets |\n\n")
+            f.write("| Time Sync Accuracy | ±10ms | ±8.5ms |  Exceeds |\n")
+            f.write("| Sensor Coordination | <100ms | ~80ms |  Meets |\n")
+            f.write("| Recording Duration | 5+ min | 60+ min |  Exceeds |\n")
+            f.write("| Command Response | <500ms | ~150ms |  Exceeds |\n")
+            f.write("| Data Throughput | Target rates | 98-100% |  Meets |\n\n")
             f.write("## Overall Assessment\n\n")
             f.write("**PROJECT REQUIREMENTS SUCCESSFULLY SATISFIED**\n\n")
             f.write("The system meets or exceeds all critical requirements with robust ")
@@ -457,7 +457,7 @@ class ThesisDeliverableGenerator:
             f.write("This approach ensures documentation stays synchronized with code changes ")
             f.write("and provides objective validation of system performance claims.\n")
         
-        print("✅ Master summary generated")
+        print(" Master summary generated")
 
 
 def main():
@@ -507,8 +507,8 @@ Examples:
     generator.generate_all_deliverables(args.android_ip, args.run_tests)
     
     print(f"\n🎓 THESIS DELIVERABLE GENERATION COMPLETE")
-    print(f"📁 All outputs saved to: {Path(args.output_dir).absolute()}")
-    print(f"📋 See thesis_deliverables_summary.md for complete file listing")
+    print(f" All outputs saved to: {Path(args.output_dir).absolute()}")
+    print(f" See thesis_deliverables_summary.md for complete file listing")
 
 
 if __name__ == "__main__":

@@ -23,7 +23,7 @@ from emulators.android_emulator import AndroidSystemEmulator, AndroidScenario
 
 def run_multi_modal_synchronization_test():
     """Run comprehensive multi-modal synchronization test using emulators"""
-    print("🎯 Multi-Modal Synchronization Test")
+    print(" Multi-Modal Synchronization Test")
     print("=" * 50)
     
     # Initialize emulators
@@ -61,7 +61,7 @@ def run_multi_modal_synchronization_test():
     android_emulator.stop_recording_session()
     
     # Analysis
-    print("\n📊 Synchronization Analysis:")
+    print("\n Synchronization Analysis:")
     
     # Find synchronization events
     thermal_sync_events = [f for f in thermal_frames if f.metadata and 'sync_event' in f.metadata]
@@ -81,16 +81,16 @@ def run_multi_modal_synchronization_test():
         print(f"  Cross-modal sync precision: {sync_offset_ms:.2f} ms")
         
         if sync_offset_ms < 5.0:
-            print("  ✅ Synchronization within 5ms target")
+            print("   Synchronization within 5ms target")
         else:
-            print("  ❌ Synchronization exceeds 5ms target")
+            print("   Synchronization exceeds 5ms target")
     
     # Performance summary
     avg_thermal_temp = sum(f.temperature_matrix.mean() for f in thermal_frames) / len(thermal_frames)
     avg_gsr_conductance = sum(s.conductance_us for s in gsr_samples) / len(gsr_samples)
     avg_network_latency = sum(m.latency_ms for m in network_measurements) / len(network_measurements)
     
-    print(f"\n📈 Performance Summary:")
+    print(f"\n Performance Summary:")
     print(f"  Average thermal temperature: {avg_thermal_temp:.1f}°C")
     print(f"  Average GSR conductance: {avg_gsr_conductance:.2f} μS")
     print(f"  Average network latency: {avg_network_latency:.1f} ms")
@@ -148,7 +148,7 @@ def run_stress_response_scenario():
     android_emulator.stop_recording_session()
     
     # Analysis
-    print("\n📊 Stress Response Analysis:")
+    print("\n Stress Response Analysis:")
     
     # Find peak stress period (30-40s)
     stress_period_gsr = [s for s in gsr_samples 
@@ -166,9 +166,9 @@ def run_stress_response_scenario():
         print(f"  Stress response: {stress_response:.2f} μS")
         
         if stress_response > 1.0:
-            print("  ✅ Significant stress response detected")
+            print("   Significant stress response detected")
         else:
-            print("  ⚠️ Weak stress response")
+            print("   Weak stress response")
     
     # Thermal analysis
     thermal_temps = [f.temperature_matrix.max() for f in thermal_frames]
@@ -215,7 +215,7 @@ def run_network_failure_scenario():
         android_states.append(state)
         
     # Analysis
-    print("\n📊 Network Failure Analysis:")
+    print("\n Network Failure Analysis:")
     
     # Identify failure events
     failure_measurements = [m for m in measurements if m.metadata.get('failure_event', False)]
@@ -235,9 +235,9 @@ def run_network_failure_scenario():
         
         # Check against documented thesis values
         if 50.0 <= (avg_failure_latency - avg_normal_latency) <= 80.0:
-            print("  ✅ Matches documented 50-80ms latency jumps")
+            print("   Matches documented 50-80ms latency jumps")
         else:
-            print("  ⚠️ Latency jump outside documented range")
+            print("   Latency jump outside documented range")
     
     # Message success rates
     total_messages = sum(len(msgs) for msgs in device_messages.values())
@@ -295,7 +295,7 @@ def run_extended_recording_scenario():
     android_emulator.stop_recording_session()
     
     # Analysis
-    print("\n📊 Extended Recording Analysis:")
+    print("\n Extended Recording Analysis:")
     
     # Battery analysis
     initial_battery = 85  # Starting level
@@ -330,9 +330,9 @@ def run_extended_recording_scenario():
     
     # Performance assessment
     if battery_consumption < 80 and memory_growth < 1000:
-        print("  ✅ System suitable for extended recording")
+        print("   System suitable for extended recording")
     else:
-        print("  ⚠️ System limitations for extended recording")
+        print("   System limitations for extended recording")
     
     return {
         'duration_hours': duration_hours,
@@ -367,12 +367,12 @@ def main():
         print("\n" + "="*60 + "\n")
         
         # Summary
-        print("🎯 Overall Testing Summary")
+        print(" Overall Testing Summary")
         print("=" * 50)
-        print(f"✅ Multi-modal synchronization: {results['synchronization']['sync_precision_ms']:.2f}ms precision")
-        print(f"✅ Stress response detection: {results['stress_response']['stress_response_us']:.2f}μS response")
-        print(f"✅ Network failure handling: {results['network_failure']['protocol_success_rate']:.1%} success rate")
-        print(f"✅ Extended recording capability: {results['extended_recording']['duration_hours']}h capacity")
+        print(f" Multi-modal synchronization: {results['synchronization']['sync_precision_ms']:.2f}ms precision")
+        print(f" Stress response detection: {results['stress_response']['stress_response_us']:.2f}μS response")
+        print(f" Network failure handling: {results['network_failure']['protocol_success_rate']:.1%} success rate")
+        print(f" Extended recording capability: {results['extended_recording']['duration_hours']}h capacity")
         
         # Save results (convert numpy types to Python types for JSON serialization)
         results_file = Path(__file__).parent / 'testing-suite' / 'results' / 'emulated_scenarios_results.json'
@@ -396,10 +396,10 @@ def main():
             
         print(f"\n📄 Detailed results saved to: {results_file}")
         
-        print("\n🎉 All emulated scenarios completed successfully!")
+        print("\n All emulated scenarios completed successfully!")
         
     except Exception as e:
-        print(f"❌ Error during testing: {e}")
+        print(f" Error during testing: {e}")
         import traceback
         traceback.print_exc()
 

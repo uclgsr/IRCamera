@@ -76,7 +76,7 @@
                 android:textStyle="bold" />
 
             <TextView android:id="@+id/data_types_text" android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:text="📊 GSR, RGB, Thermal" android:textColor="#2196F3"
+                android:layout_height="wrap_content" android:text=" GSR, RGB, Thermal" android:textColor="#2196F3"
                 android:textSize="12sp" />
 
         </LinearLayout>
