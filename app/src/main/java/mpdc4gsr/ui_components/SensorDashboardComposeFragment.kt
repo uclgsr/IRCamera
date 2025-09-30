@@ -70,7 +70,8 @@ private fun SensorDashboardContent(
     viewModel: SensorViewModel,
     modifier: Modifier = Modifier
 ) {
-    var selectedSensor by remember { mutableStateOf<SensorInfo?>(null) }
+    val sensorState by viewModel.sensorState.collectAsState()
+    var selectedSensor by remember { mutableStateOf<mpdc4gsr.sensors.SensorViewModel.SensorInfo?>(null) }
     var showSensorDetails by remember { mutableStateOf(false) }
 
     Column(
@@ -103,9 +104,7 @@ private fun SensorDashboardContent(
             verticalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier.weight(1f)
         ) {
-            val sensors = getMockSensors()
-
-            items(sensors) { sensor ->
+            items(sensorState.sensors) { sensor ->
                 SensorCard(
                     sensor = sensor,
                     onClick = {
@@ -122,7 +121,7 @@ private fun SensorDashboardContent(
             sensor = selectedSensor!!,
             onDismiss = { showSensorDetails = false },
             onConfigure = {
-                // Navigate to sensor configuration
+                viewModel.configureSensor(selectedSensor!!.id)
                 showSensorDetails = false
             }
         )
@@ -191,7 +190,7 @@ private fun SensorStatusItem(
 
 @Composable
 private fun SensorCard(
-    sensor: SensorInfo,
+    sensor: mpdc4gsr.sensors.SensorViewModel.SensorInfo,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -272,7 +271,7 @@ private fun SensorCard(
 
 @Composable
 private fun SensorDetailsDialog(
-    sensor: SensorInfo,
+    sensor: mpdc4gsr.sensors.SensorViewModel.SensorInfo,
     onDismiss: () -> Unit,
     onConfigure: () -> Unit
 ) {
@@ -387,37 +386,3 @@ private fun getSensorStatusColor(status: String) = when (status) {
     "error" -> Color(0xFFE53E3E)
     else -> Color(0xFFFF9800)
 }
-
-data class SensorInfo(
-    val id: String,
-    val name: String,
-    val type: String,
-    val description: String,
-    val status: String,
-    val currentValue: String,
-    val lastUpdate: String,
-    val sampleRate: String
-)
-
-private fun getMockSensors() = listOf(
-    SensorInfo(
-        "gsr1", "Shimmer3 GSR+ #001", "GSR",
-        "Galvanic skin response sensor", "active",
-        "2.45 µS", "Just now", "128 Hz"
-    ),
-    SensorInfo(
-        "thermal1", "TOPDON TC001", "Thermal",
-        "Thermal imaging camera", "active",
-        "36.8°C", "2 sec ago", "25 FPS"
-    ),
-    SensorInfo(
-        "camera1", "RGB Camera", "Camera",
-        "Device RGB camera", "active",
-        "1920x1080", "1 sec ago", "30 FPS"
-    ),
-    SensorInfo(
-        "gsr2", "Shimmer3 GSR+ #002", "GSR",
-        "Secondary GSR sensor", "inactive",
-        "N/A", "5 min ago", "N/A"
-    )
-)
