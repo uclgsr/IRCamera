@@ -212,6 +212,8 @@ private fun ThermalCameraView(
     progress: Float,
     modifier: Modifier = Modifier
 ) {
+    val primaryColor = MaterialTheme.colorScheme.primary
+    
     Box(
         modifier = modifier
             .fillMaxHeight()
@@ -241,7 +243,7 @@ private fun ThermalCameraView(
                 center = Offset(size.width * 0.7f, size.height * 0.6f)
             )
             drawCircle(
-                color = MaterialTheme.colorScheme.primary,
+                color = primaryColor,
                 radius = 15f,
                 center = Offset(size.width * 0.5f, size.height * 0.2f)
             )
