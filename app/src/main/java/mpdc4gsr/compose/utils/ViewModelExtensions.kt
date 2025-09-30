@@ -146,9 +146,9 @@ object ViewModelStateBridge {
 
         return androidx.compose.runtime.derivedStateOf {
             ComposeGSRData.fromShimmerData(
-                value = currentValue.value,
-                battery = batteryLevel.value,
-                connected = isConnected.value
+                value = currentValue,
+                battery = batteryLevel,
+                connected = isConnected
             )
         }
     }
