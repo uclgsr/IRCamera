@@ -66,7 +66,7 @@ class NetworkClientTestViewModel : BaseViewModel() {
     )
 
     // UI State for NetworkClientTestComposeActivity
-    data class UiState(
+    data class NetworkTestUiState(
         val isTestRunning: Boolean = false,
         val currentTest: String = "",
         val testProgress: Float = 0f,
@@ -76,8 +76,8 @@ class NetworkClientTestViewModel : BaseViewModel() {
         val networkConfiguration: String = ""
     )
     
-    private val _uiState = MutableStateFlow(UiState())
-    val uiState: StateFlow<UiState> = _uiState.asStateFlow()
+    private val _networkTestUiState = MutableStateFlow(NetworkTestUiState())
+    val networkTestUiState: StateFlow<NetworkTestUiState> = _networkTestUiState.asStateFlow()
 
     fun updateConnectionState(state: CommandConnection.ConnectionState) {
         _networkConnectionState.value = state
@@ -97,15 +97,15 @@ class NetworkClientTestViewModel : BaseViewModel() {
     
     // Methods for NetworkClientTestComposeActivity
     fun startComprehensiveTest() {
-        _uiState.value = _uiState.value.copy(isTestRunning = true)
+        _networkTestUiState.value = _networkTestUiState.value.copy(isTestRunning = true)
     }
     
     fun stopTest() {
-        _uiState.value = _uiState.value.copy(isTestRunning = false)
+        _networkTestUiState.value = _networkTestUiState.value.copy(isTestRunning = false)
     }
     
     fun refreshNetworkStatus() {
-        _uiState.value = _uiState.value.copy(
+        _networkTestUiState.value = _networkTestUiState.value.copy(
             networkStatus = when (_networkConnectionState.value) {
                 CommandConnection.ConnectionState.CONNECTED -> "Connected"
                 CommandConnection.ConnectionState.CONNECTING -> "Connecting"
@@ -128,7 +128,7 @@ class NetworkClientTestViewModel : BaseViewModel() {
     }
     
     fun updateNetworkConfiguration(config: String) {
-        _uiState.value = _uiState.value.copy(networkConfiguration = config)
+        _networkTestUiState.value = _networkTestUiState.value.copy(networkConfiguration = config)
     }
 }
 
@@ -228,7 +228,7 @@ class NetworkClientTestActivityCompose : BaseComposeActivity<NetworkClientTestVi
     private fun testWifiConnection(ip: String, port: Int) {
         lifecycleScope.launch {
             try {
-                networkManager?.connectToHost(ip, port)
+                networkManager?.connectWifi(ip, port)
             } catch (e: Exception) {
                 Log.e(TAG, "WiFi connection failed", e)
                 testViewModel.updateConnectionState(CommandConnection.ConnectionState.ERROR)
@@ -239,7 +239,7 @@ class NetworkClientTestActivityCompose : BaseComposeActivity<NetworkClientTestVi
     private fun testSendMessage() {
         lifecycleScope.launch {
             try {
-                networkManager?.sendCommand("ping")
+                networkManager?.sendResponse("ping")
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to send message", e)
             }
@@ -362,7 +362,7 @@ private fun ConnectionStatusCard(
                     contentDescription = "Connection Status",
                     tint = when (connectionState) {
                         CommandConnection.ConnectionState.CONNECTED -> Color.Green
-                        CommandConnection.ConnectionState.CONNECTING -> Color.Orange
+                        CommandConnection.ConnectionState.CONNECTING -> Color(0xFFFFA500)
                         CommandConnection.ConnectionState.ERROR -> Color.Red
                         else -> Color.Gray
                     }
