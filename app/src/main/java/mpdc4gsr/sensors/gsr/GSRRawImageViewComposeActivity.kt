@@ -169,12 +169,7 @@ private fun GSRImageCard(
                             .build(),
                         contentDescription = "GSR image thumbnail",
                         modifier = Modifier.fillMaxSize(),
-                        contentScale = ContentScale.Crop,
-                        fallback = Icon(
-                            imageVector = Icons.Default.Image,
-                            contentDescription = "Image placeholder",
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
+                        contentScale = ContentScale.Crop
                     )
                 }
             }

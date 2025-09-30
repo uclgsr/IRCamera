@@ -294,14 +294,16 @@ private fun DeviceCard(
                             Icons.Default.Wifi,
                             contentDescription = "Signal strength",
                             modifier = Modifier.size(16.dp),
-                            tint = when {
-                                device.signalStrength > -50 -> Color(0xFF4CAF50)
-                                device.signalStrength > -60 -> Color(0xFFFF9800)
-                                else -> Color(0xFFE53E3E)
+                            tint = when (device.signalStrength) {
+                                DeviceInfo.SignalStrength.EXCELLENT -> Color(0xFF4CAF50)
+                                DeviceInfo.SignalStrength.GOOD -> Color(0xFF4CAF50)
+                                DeviceInfo.SignalStrength.FAIR -> Color(0xFFFF9800)
+                                DeviceInfo.SignalStrength.POOR -> Color(0xFFE53E3E)
+                                DeviceInfo.SignalStrength.VERY_POOR -> Color(0xFFE53E3E)
                             }
                         )
                         Text(
-                            text = "${device.signalStrength} dBm",
+                            text = "${device.rssi} dBm",
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )

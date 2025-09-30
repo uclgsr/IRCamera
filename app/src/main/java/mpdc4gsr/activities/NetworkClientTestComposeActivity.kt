@@ -163,7 +163,7 @@ fun NetworkClientTestScreen(
             }
 
             // Error Display
-            uiState.error?.let { errorMessage: String ->
+            uiState.error?.let { errorMessage ->
                 item {
                     ErrorCard(
                         error = errorMessage,
@@ -401,10 +401,10 @@ private fun TestCategoryCard(
                 ) {
                     Icon(
                         imageVector = when (category.type) {
-                            NetworkTestType.CONNECTIVITY -> Icons.Default.NetworkCheck
-                            NetworkTestType.SPEED -> Icons.Default.Speed
-                            NetworkTestType.STABILITY -> Icons.Default.Tune
-                            NetworkTestType.SECURITY -> Icons.Default.Security
+                            NetworkTestType.CONNECTION -> Icons.Default.NetworkCheck
+                            NetworkTestType.LATENCY -> Icons.Default.Speed
+                            NetworkTestType.THROUGHPUT -> Icons.Default.Tune
+                            NetworkTestType.RELIABILITY -> Icons.Default.Security
                         },
                         contentDescription = "Test type",
                         modifier = Modifier.size(24.dp),

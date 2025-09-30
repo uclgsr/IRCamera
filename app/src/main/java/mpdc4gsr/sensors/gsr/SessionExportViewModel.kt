@@ -32,13 +32,18 @@ enum class ExportDestination(val displayName: String) {
 
 data class GSRSession(
     val sessionId: String,
+    val name: String,
     val startTime: Long,
     val endTime: Long?,
     val deviceId: String,
     val participantId: String?,
     val readingCount: Int,
     val avgConductance: Float,
-    val status: String = "COMPLETED"
+    val status: String = "COMPLETED",
+    val duration: String = "0min",
+    val dataPointCount: Int = 0,
+    val filePath: String = "",
+    val lastModified: Long = 0L
 )
 
 /**
@@ -189,11 +194,19 @@ class SessionExportViewModel(
                 }?.forEach { file ->
                     sessions.add(
                         GSRSession(
-                            id = file.nameWithoutExtension,
+                            sessionId = file.nameWithoutExtension,
                             name = file.nameWithoutExtension,
+                            startTime = file.lastModified(),
+                            endTime = null,
+                            deviceId = "unknown",
+                            participantId = null,
+                            readingCount = countDataPoints(file),
+                            avgConductance = 0f,
+                            status = "COMPLETED",
                             duration = calculateSessionDuration(file),
                             dataPointCount = countDataPoints(file),
-                            filePath = file.absolutePath
+                            filePath = file.absolutePath,
+                            lastModified = file.lastModified()
                         )
                     )
                 }
@@ -201,7 +214,7 @@ class SessionExportViewModel(
         }
 
         // Sort by modification date (newest first)
-        return sessions.sortedByDescending { File(it.filePath).lastModified() }
+        return sessions.sortedByDescending { it.lastModified }
     }
 
     /**

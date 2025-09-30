@@ -481,4 +481,3 @@ private fun getCategoryColor(category: ResearchTemplate.TemplateCategory) = when
     ResearchTemplate.TemplateCategory.BEHAVIORAL_ANALYSIS -> Color(0xFF00BCD4)
     ResearchTemplate.TemplateCategory.CUSTOM -> Color(0xFFFF9800)
 }
-}
