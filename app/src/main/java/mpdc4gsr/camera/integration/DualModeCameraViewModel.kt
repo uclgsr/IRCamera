@@ -387,7 +387,9 @@ class DualModeCameraViewModel : BaseViewModel() {
 
     override fun onCleared() {
         super.onCleared()
-        rgbCameraRecorder?.release()
+        viewModelScope.launch {
+            rgbCameraRecorder?.cleanup()
+        }
     }
 
     companion object {

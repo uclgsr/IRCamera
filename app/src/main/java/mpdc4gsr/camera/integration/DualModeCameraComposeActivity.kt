@@ -21,8 +21,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
-import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
-import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
+import mpdc4gsr.compose.base.BaseComposeActivity
+import mpdc4gsr.compose.theme.IRCameraTheme
 
 /**
  * DualModeCameraComposeActivity - Advanced Dual Camera Recording with Compose
@@ -62,7 +62,7 @@ class DualModeCameraComposeActivity : BaseComposeActivity<DualModeCameraViewMode
         var cameraMode by remember { mutableStateOf("Dual") }
         var showSettingsDialog by remember { mutableStateOf(false) }
 
-        LibUnifiedTheme {
+        IRCameraTheme {
             Scaffold(
                 topBar = {
                     TopAppBar(
