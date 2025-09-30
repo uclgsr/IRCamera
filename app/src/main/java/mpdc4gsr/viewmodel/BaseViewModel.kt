@@ -93,11 +93,3 @@ open class BaseViewModel : ViewModel(), LifecycleObserver {
         }
     }
 }
-
-// Connection state for device/socket handling
-sealed class ConnectionState {
-    object Disconnected : ConnectionState()
-    object Connecting : ConnectionState()
-    data class Connected(val deviceInfo: String? = null) : ConnectionState()
-    data class Error(val message: String) : ConnectionState()
-}
