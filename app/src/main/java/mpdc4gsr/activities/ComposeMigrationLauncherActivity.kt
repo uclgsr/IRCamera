@@ -99,7 +99,7 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         startActivity(
                             Intent(
                                 this@ComposeMigrationLauncherActivity,
-                                MainActivityAlternative::class.java
+                                MainActivity::class.java
                             )
                         )
                     }
@@ -689,7 +689,7 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         startActivity(
                             Intent(
                                 this@ComposeMigrationLauncherActivity,
-                                SimplifiedMainActivityCompose::class.java
+                                SimplifiedMainComposeActivity::class.java
                             )
                         )
                     }
@@ -800,7 +800,7 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         startActivity(
                             Intent(
                                 this@ComposeMigrationLauncherActivity,
-                                GSRDeviceManagementActivityCompose::class.java
+                                mpdc4gsr.sensors.gsr.GSRDeviceManagementComposeActivity::class.java
                             )
                         )
                     }

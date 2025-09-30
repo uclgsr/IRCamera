@@ -1,0 +1,541 @@
+package mpdc4gsr.activities
+
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.ServiceConnection
+import android.os.Bundle
+import android.os.IBinder
+import android.util.Log
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import mpdc4gsr.compose.base.BaseComposeActivity
+import mpdc4gsr.core.RecordingService
+import mpdc4gsr.network.CommandConnection
+import mpdc4gsr.network.NetworkManager
+import mpdc4gsr.viewmodel.BaseViewModel
+
+class NetworkClientTestViewModel : BaseViewModel() {
+    private val _networkConnectionState = MutableStateFlow(CommandConnection.ConnectionState.DISCONNECTED)
+    val networkConnectionState: StateFlow<CommandConnection.ConnectionState> = _networkConnectionState.asStateFlow()
+
+    private val _ipAddress = MutableStateFlow("192.168.1.100")
+    val ipAddress: StateFlow<String> = _ipAddress.asStateFlow()
+
+    private val _port = MutableStateFlow("8080")
+    val port: StateFlow<String> = _port.asStateFlow()
+
+    private val _connectionInfo = MutableStateFlow("")
+    val connectionInfo: StateFlow<String> = _connectionInfo.asStateFlow()
+
+    // Data classes for network testing (shared with NetworkClientTestComposeActivity)
+    enum class TestStatus { PASS, FAIL, WARNING, PENDING }
+    enum class NetworkTestType { CONNECTION, LATENCY, THROUGHPUT, RELIABILITY }
+    
+    data class NetworkTestCategory(
+        val name: String,
+        val description: String,
+        val type: NetworkTestType,
+        val testCount: Int,
+        val lastResult: TestStatus
+    )
+    
+    data class NetworkTestResult(
+        val testName: String,
+        val status: TestStatus,
+        val timestamp: String,
+        val duration: Long,
+        val details: String
+    )
+
+    // UI State for NetworkClientTestComposeActivity
+    data class UiState(
+        val isTestRunning: Boolean = false,
+        val currentTest: String = "",
+        val testProgress: Float = 0f,
+        val networkStatus: String = "Disconnected",
+        val testCategories: List<NetworkTestCategory> = emptyList(),
+        val testResults: List<NetworkTestResult> = emptyList(),
+        val networkConfiguration: String = ""
+    )
+    
+    private val _uiState = MutableStateFlow(UiState())
+    val uiState: StateFlow<UiState> = _uiState.asStateFlow()
+
+    fun updateConnectionState(state: CommandConnection.ConnectionState) {
+        _networkConnectionState.value = state
+    }
+
+    fun updateIpAddress(ip: String) {
+        _ipAddress.value = ip
+    }
+
+    fun updatePort(port: String) {
+        _port.value = port
+    }
+
+    fun updateConnectionInfo(info: String) {
+        _connectionInfo.value = info
+    }
+    
+    // Methods for NetworkClientTestComposeActivity
+    fun startComprehensiveTest() {
+        _uiState.value = _uiState.value.copy(isTestRunning = true)
+    }
+    
+    fun stopTest() {
+        _uiState.value = _uiState.value.copy(isTestRunning = false)
+    }
+    
+    fun refreshNetworkStatus() {
+        _uiState.value = _uiState.value.copy(
+            networkStatus = when (_networkConnectionState.value) {
+                CommandConnection.ConnectionState.CONNECTED -> "Connected"
+                CommandConnection.ConnectionState.CONNECTING -> "Connecting"
+                CommandConnection.ConnectionState.ERROR -> "Error"
+                else -> "Disconnected"
+            }
+        )
+    }
+    
+    fun runQuickNetworkTest() {
+        // Stub implementation
+    }
+    
+    fun runCategoryTest(category: NetworkTestCategory) {
+        // Stub implementation
+    }
+    
+    fun viewTestDetails(result: NetworkTestResult) {
+        // Stub implementation
+    }
+    
+    fun updateNetworkConfiguration(config: String) {
+        _uiState.value = _uiState.value.copy(networkConfiguration = config)
+    }
+}
+
+/**
+ * Compose version of NetworkClientTestActivity
+ *
+ * Test activity for demonstrating bidirectional command/control networking functionality.
+ * Shows how Android app can connect as client to PC server via Wi-Fi or Bluetooth.
+ */
+class NetworkClientTestActivityCompose : BaseComposeActivity<NetworkClientTestViewModel>() {
+
+    companion object {
+        private const val TAG = "NetworkClientTestActivityCompose"
+        private const val DEFAULT_PC_IP = "192.168.1.100"
+        private const val DEFAULT_PC_PORT = 8080
+    }
+
+    private lateinit var testViewModel: NetworkClientTestViewModel
+    private var recordingService: RecordingService? = null
+    private var networkManager: NetworkManager? = null
+    private var isBound = false
+
+    private val serviceConnection = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            Log.i(TAG, "Service connected")
+            val binder = service as RecordingService.RecordingServiceBinder
+            recordingService = binder.getService()
+            networkManager = binder.getNetworkManager()
+            isBound = true
+
+            observeConnectionState()
+        }
+
+        override fun onServiceDisconnected(name: ComponentName?) {
+            Log.i(TAG, "Service disconnected")
+            recordingService = null
+            networkManager = null
+            isBound = false
+        }
+    }
+
+    override fun createViewModel(): NetworkClientTestViewModel {
+        testViewModel = NetworkClientTestViewModel()
+        return testViewModel
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        // Bind to RecordingService
+        val serviceIntent = Intent(this, RecordingService::class.java)
+        bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (isBound) {
+            unbindService(serviceConnection)
+            isBound = false
+        }
+    }
+
+    private fun observeConnectionState() {
+        networkManager?.let { manager ->
+            lifecycleScope.launch {
+                manager.connectionState.collect { state ->
+                    Log.i(TAG, "Connection state changed: $state")
+                    testViewModel.updateConnectionState(state)
+                    updateConnectionInfo()
+                }
+            }
+        }
+    }
+
+    private fun updateConnectionInfo() {
+        val info = networkManager?.let { manager ->
+            when (val state = testViewModel.networkConnectionState.value) {
+                CommandConnection.ConnectionState.CONNECTED -> {
+                    "Connected to ${testViewModel.ipAddress.value}:${testViewModel.port.value}"
+                }
+
+                CommandConnection.ConnectionState.CONNECTING -> {
+                    "Connecting to ${testViewModel.ipAddress.value}:${testViewModel.port.value}..."
+                }
+
+                CommandConnection.ConnectionState.ERROR -> {
+                    "Connection failed to ${testViewModel.ipAddress.value}:${testViewModel.port.value}"
+                }
+
+                else -> "Not connected"
+            }
+        } ?: "Service not available"
+
+        testViewModel.updateConnectionInfo(info)
+    }
+
+    private fun testWifiConnection(ip: String, port: Int) {
+        lifecycleScope.launch {
+            try {
+                networkManager?.connectToHost(ip, port)
+            } catch (e: Exception) {
+                Log.e(TAG, "WiFi connection failed", e)
+                testViewModel.updateConnectionState(CommandConnection.ConnectionState.ERROR)
+            }
+        }
+    }
+
+    private fun testSendMessage() {
+        lifecycleScope.launch {
+            try {
+                networkManager?.sendCommand("ping")
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to send message", e)
+            }
+        }
+    }
+
+    private fun testBluetoothConnection() {
+        // Placeholder for Bluetooth connection logic
+        Log.i(TAG, "Bluetooth connection test - implementation needed")
+    }
+
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    override fun Content(viewModel: NetworkClientTestViewModel) {
+        val connectionState by testViewModel.networkConnectionState.collectAsState()
+        val ipAddress by testViewModel.ipAddress.collectAsState()
+        val port by testViewModel.port.collectAsState()
+        val connectionInfo by viewModel.connectionInfo.collectAsState()
+
+        val scrollState = rememberScrollState()
+
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = {
+                        Text(
+                            "Network Client Test",
+                            fontWeight = FontWeight.Bold
+                        )
+                    },
+                    navigationIcon = {
+                        IconButton(onClick = { finish() }) {
+                            Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                        }
+                    }
+                )
+            }
+        ) { paddingValues ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+                    .padding(16.dp)
+                    .verticalScroll(scrollState),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                // Connection Status Card
+                ConnectionStatusCard(
+                    connectionState = connectionState,
+                    connectionInfo = connectionInfo
+                )
+
+                // Connection Configuration Card
+                ConnectionConfigCard(
+                    ipAddress = ipAddress,
+                    port = port,
+                    onIpAddressChange = viewModel::updateIpAddress,
+                    onPortChange = viewModel::updatePort
+                )
+
+                // Action Buttons Card
+                ActionButtonsCard(
+                    connectionState = connectionState,
+                    onConnectWifi = {
+                        val portInt = port.toIntOrNull() ?: DEFAULT_PC_PORT
+                        if (ipAddress.isNotEmpty() && portInt in 1..65535) {
+                            testWifiConnection(ipAddress, portInt)
+                        }
+                    },
+                    onTestPing = ::testSendMessage,
+                    onConnectBluetooth = ::testBluetoothConnection,
+                    onDisconnect = {
+                        lifecycleScope.launch {
+                            networkManager?.disconnect()
+                        }
+                    }
+                )
+
+                // Test Information Card
+                TestInfoCard()
+            }
+        }
+    }
+}
+
+@Composable
+private fun ConnectionStatusCard(
+    connectionState: CommandConnection.ConnectionState,
+    connectionInfo: String
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = when (connectionState) {
+                CommandConnection.ConnectionState.CONNECTED ->
+                    MaterialTheme.colorScheme.primaryContainer
+
+                CommandConnection.ConnectionState.ERROR ->
+                    MaterialTheme.colorScheme.errorContainer
+
+                else -> MaterialTheme.colorScheme.surfaceVariant
+            }
+        )
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Icon(
+                    imageVector = when (connectionState) {
+                        CommandConnection.ConnectionState.CONNECTED -> Icons.Default.CheckCircle
+                        CommandConnection.ConnectionState.CONNECTING -> Icons.Default.Sync
+                        CommandConnection.ConnectionState.ERROR -> Icons.Default.Error
+                        else -> Icons.Default.Circle
+                    },
+                    contentDescription = "Connection Status",
+                    tint = when (connectionState) {
+                        CommandConnection.ConnectionState.CONNECTED -> Color.Green
+                        CommandConnection.ConnectionState.CONNECTING -> Color.Orange
+                        CommandConnection.ConnectionState.ERROR -> Color.Red
+                        else -> Color.Gray
+                    }
+                )
+
+                Text(
+                    text = when (connectionState) {
+                        CommandConnection.ConnectionState.CONNECTED -> "Connected"
+                        CommandConnection.ConnectionState.CONNECTING -> "Connecting..."
+                        CommandConnection.ConnectionState.ERROR -> "Connection Error"
+                        else -> "Disconnected"
+                    },
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold
+                )
+            }
+
+            if (connectionInfo.isNotEmpty()) {
+                Text(
+                    text = connectionInfo,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun ConnectionConfigCard(
+    ipAddress: String,
+    port: String,
+    onIpAddressChange: (String) -> Unit,
+    onPortChange: (String) -> Unit
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Text(
+                text = "Connection Configuration",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.SemiBold
+            )
+
+            OutlinedTextField(
+                value = ipAddress,
+                onValueChange = onIpAddressChange,
+                label = { Text("PC IP Address") },
+                placeholder = { Text("192.168.1.100") },
+                leadingIcon = { Icon(Icons.Default.Computer, contentDescription = null) },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true
+            )
+
+            OutlinedTextField(
+                value = port,
+                onValueChange = onPortChange,
+                label = { Text("Port") },
+                placeholder = { Text("8080") },
+                leadingIcon = { Icon(Icons.Default.Router, contentDescription = null) },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+            )
+        }
+    }
+}
+
+@Composable
+private fun ActionButtonsCard(
+    connectionState: CommandConnection.ConnectionState,
+    onConnectWifi: () -> Unit,
+    onTestPing: () -> Unit,
+    onConnectBluetooth: () -> Unit,
+    onDisconnect: () -> Unit
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Text(
+                text = "Network Actions",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.SemiBold
+            )
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Button(
+                    onClick = onConnectWifi,
+                    modifier = Modifier.weight(1f),
+                    enabled = connectionState == CommandConnection.ConnectionState.DISCONNECTED
+                ) {
+                    Icon(Icons.Default.Wifi, contentDescription = null)
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text("WiFi")
+                }
+
+                Button(
+                    onClick = onConnectBluetooth,
+                    modifier = Modifier.weight(1f),
+                    enabled = connectionState == CommandConnection.ConnectionState.DISCONNECTED
+                ) {
+                    Icon(Icons.Default.Bluetooth, contentDescription = null)
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text("Bluetooth")
+                }
+            }
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Button(
+                    onClick = onTestPing,
+                    modifier = Modifier.weight(1f),
+                    enabled = connectionState == CommandConnection.ConnectionState.CONNECTED
+                ) {
+                    Icon(Icons.Default.Send, contentDescription = null)
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text("Test Ping")
+                }
+
+                Button(
+                    onClick = onDisconnect,
+                    modifier = Modifier.weight(1f),
+                    enabled = connectionState == CommandConnection.ConnectionState.CONNECTED,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.error
+                    )
+                ) {
+                    Icon(Icons.Default.Close, contentDescription = null)
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text("Disconnect")
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun TestInfoCard() {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant
+        )
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Text(
+                text = "Test Information",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.SemiBold
+            )
+
+            Text(
+                text = "This activity tests bidirectional network communication between the Android app and PC server. " +
+                        "Use WiFi for high-speed data transfer or Bluetooth for reliable short-range communication.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+    }
+}

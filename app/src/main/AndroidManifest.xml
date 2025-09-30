@@ -74,7 +74,8 @@
             </intent-filter>
         </activity>
 
-        <!-- Alternative MainActivity implementations -->
+        <!-- Alternative MainActivity implementations - DEPRECATED, moved to backup -->
+        <!--
         <activity
             android:name="mpdc4gsr.activities.MainActivityLegacy"
             android:exported="false"
@@ -84,6 +85,7 @@
             android:name="mpdc4gsr.activities.MainActivityAlternative"
             android:exported="false"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
+        -->
 
         <!-- Essential Activities - Migrated to Compose -->
         <activity android:name="mpdc4gsr.activities.PolicyActivityCompose" />
@@ -214,7 +216,7 @@
             android:exported="false"
             android:label="Shimmer Configuration (Compose)" />
 
-
+        <!-- DEPRECATED: MainComposeActivity superseded by MainActivity
         <activity
             android:name="mpdc4gsr.compose.activity.MainComposeActivity"
             android:exported="true"
@@ -225,6 +227,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        -->
 
 
         <!-- Navigation Demo Activity -->
@@ -318,12 +321,13 @@
             android:label="BLE Integration Test (Compose)" />
 
 
-        <!-- Simplified Main Activity -->
+        <!-- DEPRECATED: SimplifiedMainActivity - moved to backup
         <activity
             android:name="mpdc4gsr.activities.SimplifiedMainActivity"
             android:exported="false"
             android:label="Simplified Main"
             android:theme="@style/AppTheme" />
+        -->
 
         <!-- Jetpack Compose Activities -->
         <activity
