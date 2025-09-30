@@ -99,7 +99,7 @@ class GalleryVideoFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
                                 isSelectionMode = isSelectionMode,
                                 onItemClick = { item ->
                                     if (isSelectionMode) {
-                                        viewModel.toggleItemSelection(item.id)
+                                        viewModel.toggleItemSelection(item)
                                     } else {
                                         playVideo(context, item.path)
                                     }
