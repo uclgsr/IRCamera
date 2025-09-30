@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.delay
+import kotlin.random.Random
 
 /**
  * ViewModel for IR Monitor Capture functionality
@@ -199,15 +200,15 @@ class IRMonitorCaptureViewModel : BaseViewModel() {
         viewModelScope.launch {
             while (true) {
                 if (_deviceConnectionState.value == DeviceConnectionState.CONNECTED) {
-                    // Simulate temperature readings with variation
+                    // Simulate temperature readings with variation using Kotlin Random
                     val baseTemp = 25.0f
-                    val variation = (Math.random() - 0.5).toFloat() * 5.0f
+                    val variation = (Random.nextFloat() - 0.5f) * 5.0f
                     val centerTemp = baseTemp + variation
                     
                     _temperatureData.value = TemperatureData(
                         centerTemp = centerTemp,
-                        maxTemp = centerTemp + (Math.random().toFloat() * 3.0f),
-                        minTemp = centerTemp - (Math.random().toFloat() * 2.0f)
+                        maxTemp = centerTemp + (Random.nextFloat() * 3.0f),
+                        minTemp = centerTemp - (Random.nextFloat() * 2.0f)
                     )
                 }
                 delay(1000) // Update every second
