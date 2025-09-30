@@ -25,6 +25,9 @@ import androidx.compose.ui.unit.sp
 import mpdc4gsr.compose.components.TitleBar
 import mpdc4gsr.compose.components.TitleBarAction
 import mpdc4gsr.compose.theme.IRCameraTheme
+import mpdc4gsr.compose.theme.Orange
+import mpdc4gsr.compose.theme.Green
+import mpdc4gsr.compose.theme.Purple
 
 /**
  * RGB Camera Screen - Dedicated interface for RGB camera control and recording
@@ -484,7 +487,7 @@ private fun RecordingControlsCard(
                 Button(
                     onClick = onTogglePreview,
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = if (isPreviewActive) Color(0xFFFF9800) else Color(0xFF4CAF50)
+                        containerColor = if (isPreviewActive) Orange else Green
                     )
                 ) {
                     Text(if (isPreviewActive) "Stop Preview" else "Start Preview")
@@ -508,7 +511,7 @@ private fun RecordingControlsCard(
                 Button(
                     onClick = onCapturePhoto,
                     enabled = isPreviewActive && !isRecording,
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF9C27B0))
+                    colors = ButtonDefaults.buttonColors(containerColor = Purple)
                 ) {
                     Icon(Icons.Default.CameraAlt, contentDescription = null)
                     Spacer(Modifier.width(4.dp))
