@@ -100,8 +100,8 @@ private fun CameraItemCard(
                     } else {
                         // Countdown timer
                         TimeDownCompose(
-                            timeInSeconds = item.delayTime,
-                            onTimeUp = { /* Handle countdown finish */ },
+                            initialSeconds = item.delayTime,
+                            onFinish = { /* Handle countdown finish */ },
                             modifier = Modifier.size(48.dp)
                         )
                     }
@@ -135,7 +135,7 @@ private fun CameraItemCard(
 
                 CameraItemType.HDR -> {
                     Icon(
-                        imageVector = if (item.isSelected) Icons.Default.Hdr else Icons.Default.HdrOff,
+                        imageVector = if (item.isSelected) Icons.Default.WbSunny else Icons.Default.WbCloudy,
                         contentDescription = "HDR",
                         modifier = Modifier.size(32.dp),
                         tint = if (item.isSelected) {

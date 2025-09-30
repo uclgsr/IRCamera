@@ -63,4 +63,6 @@ object ExtraKeyConfig {
     const val TEMP_LOW = "temp_low"
 
     const val IS_CAR_DETECT_ENTER = "IS_CAR_DETECT_ENTER"
+    
+    const val reportId = "REPORT_ID"
 }

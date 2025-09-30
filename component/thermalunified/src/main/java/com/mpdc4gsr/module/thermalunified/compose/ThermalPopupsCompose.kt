@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
@@ -243,7 +244,7 @@ private fun OptionItemCompose(
             .fillMaxWidth()
             .clip(RoundedCornerShape(12.dp))
             .background(
-                Color.lerp(
+                lerp(
                     Color.Transparent,
                     MaterialTheme.colorScheme.primaryContainer,
                     backgroundColor
@@ -384,7 +385,7 @@ private fun GalleryOptionItemCompose(
             .fillMaxWidth()
             .clip(RoundedCornerShape(8.dp))
             .background(
-                Color.lerp(
+                lerp(
                     Color.Transparent,
                     MaterialTheme.colorScheme.primaryContainer,
                     backgroundColor

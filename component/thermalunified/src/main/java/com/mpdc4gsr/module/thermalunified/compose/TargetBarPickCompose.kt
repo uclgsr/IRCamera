@@ -73,7 +73,7 @@ fun TargetBarPickCompose(
                         isDragging = true
                         val newProgress = calculateProgressFromOffset(
                             offset = offset,
-                            size = size,
+                            size = Size(size.width.toFloat(), size.height.toFloat()),
                             isVertical = isVertical,
                             min = min,
                             max = max,
