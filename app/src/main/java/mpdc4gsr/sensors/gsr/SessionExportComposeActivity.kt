@@ -503,6 +503,3 @@ private fun EmptyContent() {
 typealias GSRSession = mpdc4gsr.sensors.gsr.SessionExportViewModel.GSRSession
 typealias ExportFormat = mpdc4gsr.sensors.gsr.SessionExportViewModel.ExportFormat
 typealias ExportDestination = mpdc4gsr.sensors.gsr.SessionExportViewModel.ExportDestination
-    SHARE("Share with Other Apps"),
-    EMAIL("Email Export")
-}

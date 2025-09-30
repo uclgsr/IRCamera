@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
@@ -19,10 +18,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import mpdc4gsr.permissions.PermissionController
 import mpdc4gsr.permissions.PermissionManager
 import mpdc4gsr.sensors.RgbCameraRecorder
 import java.io.File
@@ -32,7 +33,7 @@ import kotlin.system.measureTimeMillis
  * Compose version of RGB Camera Test Activity
  * Tests camera functionality, recording quality, and manual controls
  */
-class RgbCameraTestComposeActivity : ComponentActivity() {
+class RgbCameraTestComposeActivity : FragmentActivity() {
 
     companion object {
         private const val TAG = "RgbCameraTestCompose"
@@ -40,7 +41,7 @@ class RgbCameraTestComposeActivity : ComponentActivity() {
 
     private var cameraRecorder: RgbCameraRecorder? = null
     private var permissionManager: PermissionManager? = null
-    private var permissionController: mpdc4gsr.permissions.PermissionController? = null
+    private var permissionController: PermissionController? = null
     private var isRecording = false
 
     private val permissionLauncher = registerForActivityResult(
@@ -57,8 +58,8 @@ class RgbCameraTestComposeActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        permissionController = mpdc4gsr.permissions.PermissionController(this as androidx.fragment.app.FragmentActivity)
-        permissionManager = PermissionManager(this as androidx.fragment.app.FragmentActivity, permissionController!!)
+        permissionController = PermissionController(this)
+        permissionManager = PermissionManager(this, permissionController!!)
         checkPermissions()
 
         setContent {

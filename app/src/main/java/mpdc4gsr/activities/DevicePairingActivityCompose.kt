@@ -567,4 +567,3 @@ private fun DeviceItem(
         }
     }
 }
-    }

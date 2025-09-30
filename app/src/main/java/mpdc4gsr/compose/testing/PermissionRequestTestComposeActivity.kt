@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
@@ -20,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import kotlinx.coroutines.delay
@@ -33,7 +33,7 @@ import java.util.*
  * Compose version of Permission Request Activity
  * Tests permission system functionality and validation
  */
-class PermissionRequestTestComposeActivity : ComponentActivity() {
+class PermissionRequestTestComposeActivity : FragmentActivity() {
 
     companion object {
         private const val TAG = "PermissionRequestTestCompose"
@@ -524,8 +524,8 @@ class PermissionRequestTestComposeActivity : ComponentActivity() {
     }
 
     private fun initializePermissionSystem() {
-        permissionController = PermissionController(this as FragmentActivity)
-        permissionManager = PermissionManager(this as FragmentActivity, permissionController)
+        permissionController = PermissionController(this)
+        permissionManager = PermissionManager(this, permissionController)
     }
 
     private fun getPermissionStatus(permission: String): PermissionStatus {
