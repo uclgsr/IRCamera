@@ -71,7 +71,9 @@ class DeviceTypeViewModel : BaseViewModel() {
 
 class DeviceTypeActivityCompose : BaseComposeActivity<DeviceTypeViewModel>() {
 
-    override fun createViewModel(): DeviceTypeViewModel = viewModels<DeviceTypeViewModel>().value
+    private val deviceTypeVM: DeviceTypeViewModel by viewModels()
+
+    override fun createViewModel(): DeviceTypeViewModel = deviceTypeVM
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
