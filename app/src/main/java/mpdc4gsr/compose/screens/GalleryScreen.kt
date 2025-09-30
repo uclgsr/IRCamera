@@ -193,6 +193,8 @@ private fun ThermalImageCard(
     image: ThermalImage,
     modifier: Modifier = Modifier
 ) {
+    val primaryColor = MaterialTheme.colorScheme.primary
+    
     Card(
         onClick = { /* Open image detail */ },
         modifier = modifier.aspectRatio(1f),
@@ -225,7 +227,7 @@ private fun ThermalImageCard(
 
                     // Cool spot
                     drawCircle(
-                        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f),
+                        color = primaryColor.copy(alpha = 0.8f),
                         radius = width * 0.1f,
                         center = Offset(width * 0.3f, height * 0.7f)
                     )
