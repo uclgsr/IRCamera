@@ -168,13 +168,31 @@ private fun SessionManagerContent(
         ) {
             // Mock sessions - replace with actual data from viewModel
             val mockSessions = listOf(
-                SessionInfo("session_1", "GSR Study Session", Date(), Date(), "active"),
-                SessionInfo("session_2", "Thermal Analysis", Date(), Date(), "completed"),
-                SessionInfo("session_3", "Multi-modal Recording", Date(), Date(), "processing")
+                com.mpdc4gsr.gsr.model.SessionInfo(
+                    sessionId = "session_1",
+                    startTime = System.currentTimeMillis(),
+                    endTime = System.currentTimeMillis(),
+                    participantId = "P001",
+                    studyName = "GSR Study Session"
+                ),
+                com.mpdc4gsr.gsr.model.SessionInfo(
+                    sessionId = "session_2",
+                    startTime = System.currentTimeMillis() - 86400000,
+                    endTime = System.currentTimeMillis() - 82800000,
+                    participantId = "P002",
+                    studyName = "Thermal Analysis"
+                ),
+                com.mpdc4gsr.gsr.model.SessionInfo(
+                    sessionId = "session_3",
+                    startTime = System.currentTimeMillis() - 172800000,
+                    endTime = null,
+                    participantId = "P003",
+                    studyName = "Multi-modal Recording"
+                )
             )
 
             items(mockSessions.filter {
-                it.name.contains(searchQuery, ignoreCase = true)
+                (it.studyName ?: "").contains(searchQuery, ignoreCase = true)
             }) { session ->
                 SessionCard(
                     session = session,
@@ -283,7 +301,7 @@ private fun SessionCard(
 
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = session.name,
+                    text = session.studyName ?: session.sessionId,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Medium
                 )
@@ -293,19 +311,19 @@ private fun SessionCard(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
 
-                // Status chip
+                // Status chip - determine status from endTime
+                val status = if (session.endTime == null) "active" else "completed"
                 Surface(
                     shape = RoundedCornerShape(12.dp),
-                    color = when (session.status) {
+                    color = when (status) {
                         "active" -> Color(0xFF4CAF50)
                         "completed" -> Color(0xFF2196F3)
-                        "processing" -> Color(0xFFFF9800)
                         else -> Color(0xFF9E9E9E)
                     },
                     modifier = Modifier.padding(top = 4.dp)
                 ) {
                     Text(
-                        text = session.status.uppercase(),
+                        text = status.uppercase(),
                         style = MaterialTheme.typography.labelSmall,
                         color = Color.White,
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
