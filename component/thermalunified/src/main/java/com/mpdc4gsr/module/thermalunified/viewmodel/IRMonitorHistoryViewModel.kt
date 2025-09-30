@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.Calendar
 
 /**
@@ -95,13 +96,15 @@ class IRMonitorHistoryViewModel : BaseViewModel() {
         launchWithErrorHandling {
             val selectedIds = _selectedItems.value
             if (selectedIds.isNotEmpty()) {
-                // Remove selected items from the database
-                selectedIds.forEach { id ->
-                    val item = allHistoryItems.find { it.id == id }
-                    item?.let {
-                        // Convert id back to startTime for database operation
-                        val startTime = it.startTime
-                        AppDatabase.getInstance().thermalDao().delDetail(startTime)
+                // Remove selected items from the database on IO thread
+                withContext(Dispatchers.IO) {
+                    selectedIds.forEach { id ->
+                        val item = allHistoryItems.find { it.id == id }
+                        item?.let {
+                            // Convert id back to startTime for database operation
+                            val startTime = it.startTime
+                            AppDatabase.getInstance().thermalDao().delDetail(startTime)
+                        }
                     }
                 }
                 
@@ -115,42 +118,47 @@ class IRMonitorHistoryViewModel : BaseViewModel() {
     fun refreshHistory() {
         launchWithLoading {
             try {
-                val recordList: List<ThermalDao.Record> =
-                    AppDatabase.getInstance().thermalDao().queryRecordList()
-                
-                // Convert database records to HistoryItem objects
-                allHistoryItems = recordList.mapIndexed { index, record ->
-                    // Query additional details for temperature statistics
-                    val detailList = AppDatabase.getInstance().thermalDao().queryDetail(record.startTime)
+                // Perform database operations on IO thread
+                val historyItems = withContext(Dispatchers.IO) {
+                    val recordList: List<ThermalDao.Record> =
+                        AppDatabase.getInstance().thermalDao().queryRecordList()
                     
-                    // Calculate temperature statistics from detail data
-                    val temperatures = detailList.map { it.thermal }
-                    val maxTemperatures = detailList.map { it.thermalMax }
-                    val minTemperatures = detailList.map { it.thermalMin }
-                    
-                    val avgTemp = if (temperatures.isNotEmpty()) temperatures.average().toFloat() else 0f
-                    val maxTemp = maxTemperatures.maxOrNull() ?: 0f
-                    val minTemp = minTemperatures.minOrNull() ?: 0f
-                    
-                    HistoryItem(
-                        id = record.startTime.toString(),
-                        sessionName = "Session ${index + 1}",
-                        startTime = record.startTime,
-                        duration = record.duration.toLong() * 1000L, // Convert seconds to milliseconds
-                        sampleCount = detailList.size,
-                        avgTemperature = avgTemp,
-                        maxTemperature = maxTemp,
-                        minTemperature = minTemp,
-                        sessionType = when (record.type) {
-                            "point" -> SessionType.MONITORING
-                            "line" -> SessionType.ANALYSIS
-                            "area" -> SessionType.CAPTURE
-                            else -> SessionType.MONITORING
-                        },
-                        dataFilePath = "" // TODO: Add file path if available from entity
-                    )
+                    // Convert database records to HistoryItem objects
+                    recordList.mapIndexed { index, record ->
+                        // Query additional details for temperature statistics
+                        val detailList = AppDatabase.getInstance().thermalDao().queryDetail(record.startTime)
+                        
+                        // Calculate temperature statistics from detail data
+                        val temperatures = detailList.map { it.thermal }
+                        val maxTemperatures = detailList.map { it.thermalMax }
+                        val minTemperatures = detailList.map { it.thermalMin }
+                        
+                        val avgTemp = if (temperatures.isNotEmpty()) temperatures.average().toFloat() else 0f
+                        val maxTemp = maxTemperatures.maxOrNull() ?: 0f
+                        val minTemp = minTemperatures.minOrNull() ?: 0f
+                        
+                        HistoryItem(
+                            id = record.startTime.toString(),
+                            sessionName = "Session ${index + 1}",
+                            startTime = record.startTime,
+                            duration = record.duration.toLong() * 1000L, // Convert seconds to milliseconds
+                            sampleCount = detailList.size,
+                            avgTemperature = avgTemp,
+                            maxTemperature = maxTemp,
+                            minTemperature = minTemp,
+                            sessionType = when (record.type) {
+                                "point" -> SessionType.MONITORING
+                                "line" -> SessionType.ANALYSIS
+                                "area" -> SessionType.CAPTURE
+                                else -> SessionType.MONITORING
+                            },
+                            dataFilePath = "" // TODO: Add file path if available from entity
+                        )
+                    }
                 }
                 
+                // Update the data on main thread
+                allHistoryItems = historyItems
                 applyFilter()
             } catch (e: Exception) {
                 handleError(e)
