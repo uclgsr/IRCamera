@@ -116,10 +116,10 @@ object ViewModelStateBridge {
         minTempLiveData: LiveData<Float>,
         isRecordingLiveData: LiveData<Boolean>
     ): State<ComposeThermalData?> {
-        val centerTemp = centerTempLiveData.observeAsState(0f)
-        val maxTemp = maxTempLiveData.observeAsState(0f)
-        val minTemp = minTempLiveData.observeAsState(0f)
-        val isRecording = isRecordingLiveData.observeAsState(false)
+        val centerTemp by centerTempLiveData.observeAsState(0f)
+        val maxTemp by maxTempLiveData.observeAsState(0f)
+        val minTemp by minTempLiveData.observeAsState(0f)
+        val isRecording by isRecordingLiveData.observeAsState(false)
 
         return androidx.compose.runtime.derivedStateOf {
             ComposeThermalData.fromExistingData(
