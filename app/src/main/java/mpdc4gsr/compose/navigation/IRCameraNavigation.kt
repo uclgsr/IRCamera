@@ -174,7 +174,7 @@ fun IRCameraNavHost(
         // About screen
         composable(IRCameraScreen.About.route) {
             AboutScreen(
-                onNavigateBack = { navController.popBackStack() }
+                onBackClick = { navController.popBackStack() }
             )
         }
     }
