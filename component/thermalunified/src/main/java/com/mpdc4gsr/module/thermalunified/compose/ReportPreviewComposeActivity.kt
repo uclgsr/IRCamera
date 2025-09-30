@@ -32,6 +32,7 @@ import com.mpdc4gsr.libunified.app.tools.TimeTool
 import com.mpdc4gsr.module.thermalunified.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  * Compose implementation of ReportPreviewActivity
@@ -69,21 +70,19 @@ fun ReportPreviewScreen(
 
     // Load report data
     LaunchedEffect(reportId) {
-        context.lifecycleScope.launch(Dispatchers.IO) {
-            try {
-                val report = AppDatabase.getInstance().houseReportDao().queryDetailById(reportId)
-                report?.let {
-                    val previewData = convertToPreviewData(it)
-                    launch(Dispatchers.Main) {
-                        reportData = previewData
-                        isLoading = false
-                    }
-                }
-            } catch (e: Exception) {
-                launch(Dispatchers.Main) {
-                    isLoading = false
-                }
+        try {
+            val report = withContext(Dispatchers.IO) {
+                AppDatabase.getInstance().houseReportDao().queryById(reportId)
             }
+            report?.let {
+                val previewData = convertToPreviewData(it)
+                reportData = previewData
+                isLoading = false
+            } ?: run {
+                isLoading = false
+            }
+        } catch (e: Exception) {
+            isLoading = false
         }
     }
 
@@ -276,7 +275,7 @@ private fun ProjectItemRow(
             fontWeight = FontWeight.Medium,
             color = when (projectItem.status) {
                 ProjectStatus.NORMAL -> Color.Green
-                ProjectStatus.WARNING -> Color.Orange
+                ProjectStatus.WARNING -> Color(0xFFFF9800)
                 ProjectStatus.CRITICAL -> Color.Red
                 else -> MaterialTheme.colorScheme.onSurface
             }
@@ -380,14 +379,42 @@ enum class ProjectStatus {
 // Helper function to convert HouseReport to preview data
 private fun convertToPreviewData(report: HouseReport): HouseReportPreviewData {
     return HouseReportPreviewData(
-        housePhoto = report.housePhoto ?: "",
-        houseAddress = report.houseAddress ?: "",
-        houseName = report.houseName ?: "",
-        detectTime = TimeTool.getFormattedTimeFromTimestamp(report.detectTime),
-        inspectorName = report.inspectorName ?: "",
-        houseYear = report.houseYear ?: "",
-        houseArea = report.houseArea ?: "",
-        expenses = report.expenses ?: "",
+        housePhoto = report.imagePath,
+        houseAddress = report.address,
+        houseName = report.name,
+        detectTime = TimeTool.formatDetectTime(report.detectTime),
+        inspectorName = report.inspectorName,
+        houseYear = if (report.year == null) "--" else "${report.year}年",
+        houseArea = if (report.houseSpace.isEmpty()) "--" else "${report.houseSpace} ${report.getSpaceUnitStr()}",
+        expenses = if (report.cost.isEmpty()) "--" else "${report.getCostUnitStr()} ${report.cost}",
         sections = emptyList() // Would be populated from actual report data
     )
+}
+
+@Composable
+private fun ReportInfoRow(
+    label: String,
+    value: String,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.weight(1f)
+        )
+        Text(
+            text = value,
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.Medium,
+            modifier = Modifier.weight(2f),
+            textAlign = TextAlign.End
+        )
+    }
 }
