@@ -174,7 +174,6 @@ class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewMode
                         recordingState = recordingState,
                         onStartRecording = { viewModel.startRecording() },
                         onStopRecording = { viewModel.stopRecording() }
-                        // onToggleMode = { viewModel.toggleRecordingMode() }
                     )
 
                     // Camera Status Card
