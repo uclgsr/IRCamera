@@ -70,10 +70,6 @@ class IRMonitorHistoryViewModel : BaseViewModel() {
     private val _isSelectionMode = MutableStateFlow(false)
     val isSelectionMode: StateFlow<Boolean> = _isSelectionMode.asStateFlow()
 
-    // UI events channel for one-time events
-    private val _uiEvents = MutableSharedFlow<UiEvent>()
-    val uiEvents: SharedFlow<UiEvent> = _uiEvents.asSharedFlow()
-
     // Internal data storage
     private var allHistoryItems: List<HistoryItem> = emptyList()
 
@@ -172,7 +168,7 @@ class IRMonitorHistoryViewModel : BaseViewModel() {
                                 "area" -> SessionType.CAPTURE
                                 else -> SessionType.MONITORING
                             },
-                            dataFilePath = detailList.firstOrNull()?.irImagePath ?: "" // Use image path from first entity if available
+                            dataFilePath = "" // TODO: Add image path when available
                         )
                     }
                 }
@@ -275,5 +271,4 @@ class IRMonitorHistoryViewModel : BaseViewModel() {
         data class ExportData(val items: List<HistoryItem>) : UiEvent()
         data class NavigateToDetails(val item: HistoryItem) : UiEvent()
     }
-}
 }

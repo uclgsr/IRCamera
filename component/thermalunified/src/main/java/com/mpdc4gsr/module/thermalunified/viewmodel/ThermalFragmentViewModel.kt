@@ -356,7 +356,7 @@ class ThermalFragmentViewModel : BaseViewModel() {
                 // Create photo metadata
                 val metadata = mapOf(
                     "timestamp" to timestamp,
-                    "centerTemp" to tempAnalysis.centerTemperature,
+                    "centerTemp" to tempAnalysis.averageTemperature,
                     "maxTemp" to tempAnalysis.maxTemperature,
                     "minTemp" to tempAnalysis.minTemperature,
                     "averageTemp" to tempAnalysis.averageTemperature
@@ -509,8 +509,8 @@ class ThermalFragmentViewModel : BaseViewModel() {
 
     enum class AlertType { HOT_SPOT, COLD_SPOT, TEMPERATURE_THRESHOLD }
 
-    // UiState data class for Compose UI
-    data class UiState(
+    // ThermalUiState data class for Compose UI
+    data class ThermalUiState(
         val isMonitoring: Boolean = false,
         val currentTemperature: Float? = null,
         val minTemperature: Float? = null,
@@ -522,8 +522,8 @@ class ThermalFragmentViewModel : BaseViewModel() {
     )
 
     // Combined UI state for compose UI
-    private val _uiState = MutableStateFlow(UiState())
-    val uiState: StateFlow<UiState> = _uiState.asStateFlow()
+    private val _thermalUiState = MutableStateFlow(ThermalUiState())
+    val thermalUiState: StateFlow<ThermalUiState> = _thermalUiState.asStateFlow()
 
     // Monitoring state
     private val _isMonitoring = MutableStateFlow(false)
@@ -536,7 +536,7 @@ class ThermalFragmentViewModel : BaseViewModel() {
                 _connectionStatus,
                 _isRecording
             ) { isMonitoring, tempAnalysis, connectionStatus, isRecording ->
-                UiState(
+                ThermalUiState(
                     isMonitoring = isMonitoring,
                     currentTemperature = if (tempAnalysis.isValid) tempAnalysis.averageTemperature else null,
                     minTemperature = if (tempAnalysis.isValid) tempAnalysis.minTemperature else null,
@@ -547,7 +547,7 @@ class ThermalFragmentViewModel : BaseViewModel() {
                     alertCount = tempAnalysis.hotSpotCount + tempAnalysis.coldSpotCount
                 )
             }.collect { newUiState ->
-                _uiState.value = newUiState
+                _thermalUiState.value = newUiState
             }
         }
     }
@@ -576,18 +576,20 @@ class ThermalFragmentViewModel : BaseViewModel() {
                 val currentFence = _fenceState.value
                 
                 // Update region configuration based on current fence state
+                val nextFenceType = when (currentFence.fenceType) {
+                    FenceType.POINT -> FenceType.LINE
+                    FenceType.LINE -> FenceType.AREA
+                    FenceType.AREA -> FenceType.POINT
+                    null -> FenceType.POINT
+                }
+                
                 _fenceState.value = currentFence.copy(
-                    regionMode = when (currentFence.regionMode) {
-                        "point" -> "line"
-                        "line" -> "area"
-                        "area" -> "point"
-                        else -> "point"
-                    }
+                    fenceType = nextFenceType
                 )
                 
                 // Emit action to update UI
                 _thermalProcessingAction.postValue(
-                    ThermalProcessingAction.RegionConfigured(currentFence.regionMode)
+                    ThermalProcessingAction.RegionConfigured(nextFenceType.name.lowercase())
                 )
             } catch (e: Exception) {
                 handleError(e)
