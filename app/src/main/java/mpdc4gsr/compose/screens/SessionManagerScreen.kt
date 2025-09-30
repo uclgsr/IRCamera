@@ -285,7 +285,7 @@ fun SessionItem(
             // Progress Bar (for in-progress sessions)
             if (session.status == SessionStatus.IN_PROGRESS) {
                 LinearProgressIndicator(
-                    progress = session.progress,
+                progress = { session.progress },
                     modifier = Modifier.fillMaxWidth(),
                     color = Color(0xFF6B73FF),
                     trackColor = Color(0xFF404040)

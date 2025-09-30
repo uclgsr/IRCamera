@@ -397,7 +397,8 @@ class SensorDashboardFragment : Fragment() {
             nameText = TextView(context).apply {
                 text = displayName
                 textSize = 14f
-                setTextColor(ContextCompat.getColor(context, android.R.color.primary_text_dark))
+@Suppress("DEPRECATION")
+                            setTextColor(ContextCompat.getColor(context, android.R.color.primary_text_dark))
             }
             textContainer.addView(nameText)
 
@@ -411,7 +412,8 @@ class SensorDashboardFragment : Fragment() {
             detailsText = TextView(context).apply {
                 text = ""
                 textSize = 10f
-                setTextColor(ContextCompat.getColor(context, android.R.color.secondary_text_dark))
+@Suppress("DEPRECATION")
+                            setTextColor(ContextCompat.getColor(context, android.R.color.secondary_text_dark))
                 visibility = GONE
             }
             textContainer.addView(detailsText)

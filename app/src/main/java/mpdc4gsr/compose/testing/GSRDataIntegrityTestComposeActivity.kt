@@ -9,6 +9,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -113,7 +114,7 @@ class GSRDataIntegrityTestComposeActivity : ComponentActivity() {
                     },
                     navigationIcon = {
                         IconButton(onClick = { finish() }) {
-                            Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                         }
                     }
                 )
@@ -226,7 +227,7 @@ class GSRDataIntegrityTestComposeActivity : ComponentActivity() {
                                 val progress =
                                     (samplesCollected.toFloat() / EXPECTED_SAMPLES).coerceAtMost(1f)
                                 LinearProgressIndicator(
-                                    progress = progress,
+                progress = { progress },
                                     modifier = Modifier.fillMaxWidth()
                                 )
                             }

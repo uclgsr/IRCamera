@@ -9,6 +9,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -119,7 +120,7 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
                     },
                     navigationIcon = {
                         IconButton(onClick = { finish() }) {
-                            Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                         }
                     }
                 )
@@ -355,7 +356,7 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
                     if (sensor.bufferUtilization > 0) {
                         Spacer(modifier = Modifier.height(4.dp))
                         LinearProgressIndicator(
-                            progress = sensor.bufferUtilization,
+                progress = { sensor.bufferUtilization },
                             modifier = Modifier.fillMaxWidth()
                         )
                         Text(
