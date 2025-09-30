@@ -398,6 +398,7 @@ class SensorDashboardFragmentCompose : SimpleComposeFragment() {
     enum class SensorStatus {
         DISCONNECTED, CONNECTING, CONNECTED, STREAMING, ERROR, SIMULATION;
 
+        @Composable
         fun getColor(): Color = when (this) {
             DISCONNECTED -> Color.Gray
             CONNECTING -> Color(0xFFFFA500) // Orange
