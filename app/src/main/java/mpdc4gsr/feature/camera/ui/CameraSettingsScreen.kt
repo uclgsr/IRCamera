@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.components.*
+import mpdc4gsr.core.ui.components.settings.*
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 
 /**
@@ -59,8 +60,8 @@ fun CameraSettingsScreen(
             ) {
                 SettingsDropdown(
                     label = "Resolution",
-                    value = resolution,
                     options = listOf("1920x1080", "1280x720", "640x480"),
+                    value = resolution,
                     onValueChange = { resolution = it }
                 )
                 SettingsSlider(
