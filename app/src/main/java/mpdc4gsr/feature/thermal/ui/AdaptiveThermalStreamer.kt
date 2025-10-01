@@ -230,7 +230,8 @@ class AdaptiveThermalStreamer {
 
             // Send thermal frame via network client using existing sendMessage API
             try {
-                val frameJson = JSONObject(frame.toNetworkMessage())
+                val frameMessage = frame.toNetworkMessage()
+                val frameJson = JSONObject(frameMessage)
                 networkClient?.let { client ->
                     // Use coroutine scope since sendMessage is suspend function
                     kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
