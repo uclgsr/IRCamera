@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import mpdc4gsr.core.ui.BaseComposeActivity
 import mpdc4gsr.core.ui.theme.IRCameraTheme
+import mpdc4gsr.feature.camera.presentation.DualModeCameraViewModel
 
 /**
  * DualModeCameraComposeActivity - Advanced Dual Camera Recording with Compose
