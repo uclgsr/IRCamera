@@ -74,7 +74,9 @@ class TempLayout : LinearLayout {
                     bg?.setBackgroundResource(R.drawable.ic_ir_blue_bg)
                 }
             }
-            alphaAnimator?.start()
+            if (isAttachedToWindow) {
+                alphaAnimator?.start()
+            }
             this.type = type
         }
     }
@@ -85,7 +87,7 @@ class TempLayout : LinearLayout {
             }
 
             override fun onAnimationEnd(animation: Animator) {
-                if (this@TempLayout.visibility == View.VISIBLE) {
+                if (this@TempLayout.visibility == View.VISIBLE && isAttachedToWindow) {
                     isHot = !isHot
                     if (isHot) {
                         bg?.setBackgroundResource(R.drawable.ic_ir_read_bg)
@@ -109,6 +111,8 @@ class TempLayout : LinearLayout {
     }
 
     fun startAlphaBreathAnimation() {
-        alphaAnimator?.start()
+        if (isAttachedToWindow) {
+            alphaAnimator?.start()
+        }
     }
 }

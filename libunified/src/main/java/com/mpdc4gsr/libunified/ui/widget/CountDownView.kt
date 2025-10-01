@@ -172,13 +172,18 @@ class CountDownView : View {
      *
      */
     fun startCountDown() {
+        if (!isAttachedToWindow) {
+            return
+        }
         valueAnimator = getValueAnimator((mCountdownTime * 1000).toLong())
         valueAnimator!!.addUpdateListener { animation ->
             val i = animation.animatedValue.toString().toFloat()
             mCurrentProgress = (360 * (i / 100f))
             invalidate()
         }
-        valueAnimator!!.start()
+        if (isAttachedToWindow) {
+            valueAnimator!!.start()
+        }
         valueAnimator!!.addListener(object : AnimatorListenerAdapter() {
             override fun onAnimationEnd(animation: Animator) {
                 super.onAnimationEnd(animation)
