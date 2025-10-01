@@ -18,13 +18,26 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import mpdc4gsr.core.ui.theme.IRCameraTheme
-import mpdc4gsr.core.ui.*
 import mpdc4gsr.feature.main.ui.MainActivity
-import mpdc4gsr.feature.gsr.data.*
+import mpdc4gsr.feature.main.ui.DeviceTypeActivityCompose
 import mpdc4gsr.feature.gsr.ui.*
 import mpdc4gsr.feature.network.ui.*
 import mpdc4gsr.feature.camera.ui.*
+import mpdc4gsr.feature.device.ui.BlankDevActivityCompose
+import mpdc4gsr.feature.settings.ui.SettingsComposeActivity
+import mpdc4gsr.feature.settings.ui.VersionActivityCompose
+import mpdc4gsr.feature.settings.ui.WebViewActivityCompose
+import mpdc4gsr.feature.settings.ui.PolicyActivityCompose
+import mpdc4gsr.feature.settings.ui.MoreHelpActivityCompose
+import mpdc4gsr.feature.settings.ui.PdfActivityCompose
+import mpdc4gsr.feature.settings.ui.ClauseActivityCompose
+import mpdc4gsr.feature.thermal.ui.IRGalleryEditActivityCompose
 import mpdc4gsr.feature.testing.ui.NavigationTestActivity
+import mpdc4gsr.feature.testing.ui.TestingSuiteHubActivity
+import mpdc4gsr.feature.testing.ui.SensorDashboardTestActivityCompose
+import mpdc4gsr.feature.testing.ui.FaultTolerantRecordingActivityCompose
+import mpdc4gsr.feature.testing.ui.ComposeComponentsShowcaseActivity
+import mpdc4gsr.core.ui.PermissionRequestComposeActivity
 
 /**
  * Launch Activity for demonstrating the complete Compose migration
