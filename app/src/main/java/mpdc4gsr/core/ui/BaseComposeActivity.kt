@@ -14,7 +14,7 @@ import com.mpdc4gsr.libunified.app.bean.event.device.DeviceConnectEvent
 import com.mpdc4gsr.libunified.app.tools.AppLanguageUtils
 import com.mpdc4gsr.libunified.app.tools.ConstantLanguages
 import mpdc4gsr.core.ui.theme.IRCameraTheme
-import mpdc4gsr.core.ui.BaseViewModel
+import androidx.lifecycle.ViewModel
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -26,7 +26,7 @@ import org.greenrobot.eventbus.ThreadMode
  * - Language handling
  * - ViewModel integration patterns
  */
-abstract class BaseComposeActivity<VM : BaseViewModel> : FragmentActivity() {
+abstract class BaseComposeActivity<VM : ViewModel> : FragmentActivity() {
 
     protected abstract fun createViewModel(): VM
 
