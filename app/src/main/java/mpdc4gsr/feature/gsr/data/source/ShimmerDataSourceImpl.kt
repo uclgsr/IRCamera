@@ -10,33 +10,33 @@ import android.util.Log
 
 /**
  * Implementation of ShimmerDataSource that wraps ShimmerDeviceManager.
- * 
+ *
  * This class adapts the existing ShimmerDeviceManager to conform to the
  * ShimmerDataSource interface, providing a clean abstraction over the Shimmer SDK.
  */
 class ShimmerDataSourceImpl(
     private val deviceManager: ShimmerDeviceManager
 ) : ShimmerDataSource {
-    
+
     companion object {
         private const val TAG = "ShimmerDataSourceImpl"
         private const val DEFAULT_DEVICE_NAME = "Shimmer3"
         private const val DEFAULT_DEVICE_TYPE = "Shimmer3-GSR"
         private const val DEFAULT_RSSI = -50
     }
-    
+
     private val scannedDevices = mutableMapOf<String, DeviceInfo>()
-    
+
     override suspend fun scanForDevices(): Flow<List<DeviceInfo>> {
         deviceManager.initialize()
         deviceManager.startDeviceScanning()
         return deviceManager.scanResults
     }
-    
+
     override suspend fun connect(deviceAddress: String): Result<Unit> {
         return try {
             Log.d(TAG, "Connecting to device: $deviceAddress")
-            
+
             val deviceInfo = scannedDevices[deviceAddress] ?: run {
                 Log.w(TAG, "Device info not found in scan results, using defaults for: $deviceAddress")
                 DeviceInfo(
@@ -47,7 +47,7 @@ class ShimmerDataSourceImpl(
                     isGSRCapable = true
                 )
             }
-            
+
             val success = deviceManager.connectToDevice(deviceInfo)
             if (success) {
                 Log.i(TAG, "Successfully connected to device: $deviceAddress")
@@ -61,7 +61,7 @@ class ShimmerDataSourceImpl(
             Result.failure(e)
         }
     }
-    
+
     /**
      * Cache device info from scan results for later connection.
      * This should be called when scan results are received.
@@ -71,7 +71,7 @@ class ShimmerDataSourceImpl(
             scannedDevices[device.address] = device
         }
     }
-    
+
     override suspend fun disconnect(deviceAddress: String) {
         try {
             Log.d(TAG, "Disconnecting device: $deviceAddress")
@@ -81,7 +81,7 @@ class ShimmerDataSourceImpl(
             Log.e(TAG, "Error disconnecting device: $deviceAddress", e)
         }
     }
-    
+
     override suspend fun startStreaming(deviceAddress: String): Flow<GSRSample> {
         return flow {
             Log.d(TAG, "Starting GSR streaming for device: $deviceAddress")
@@ -90,7 +90,7 @@ class ShimmerDataSourceImpl(
             Log.w(TAG, "registering callbacks with ShimmerBluetoothManagerAndroid for data packets")
         }
     }
-    
+
     override suspend fun stopStreaming(deviceAddress: String) {
         try {
             Log.d(TAG, "Stopping streaming for device: $deviceAddress")
@@ -99,7 +99,7 @@ class ShimmerDataSourceImpl(
             Log.e(TAG, "Error stopping streaming for device: $deviceAddress", e)
         }
     }
-    
+
     override fun isConnected(deviceAddress: String): Boolean {
         val connected = deviceManager.shimmerBluetoothManager?.let { mgr ->
             mgr.getShimmerDeviceBtConnectedFromMac(deviceAddress)?.let { shimmer ->
@@ -109,7 +109,7 @@ class ShimmerDataSourceImpl(
         Log.d(TAG, "Device $deviceAddress connection status: $connected")
         return connected
     }
-    
+
     override suspend fun getBatteryLevel(deviceAddress: String): Int? {
         return try {
             val shimmer = deviceManager.shimmerBluetoothManager?.getShimmerDeviceBtConnectedFromMac(deviceAddress)

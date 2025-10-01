@@ -55,13 +55,13 @@ class MasterTestRunner:
         self.results['performance_benchmarks'] = benchmark_results
         
         # Phase 3: Integration Testing
-        print("\n🔗 PHASE 3: INTEGRATION TESTING")
+        print("\n PHASE 3: INTEGRATION TESTING")
         print("-" * 50)
         integration_results = self.integration_tests.run_integration_tests()
         self.results['integration_tests'] = integration_results
         
         # Phase 4: Real Hardware Integration
-        print("\n🔧 PHASE 4: REAL HARDWARE INTEGRATION")
+        print("\n PHASE 4: REAL HARDWARE INTEGRATION")
         print("-" * 50)
         real_integration_results = self.real_integration.run_complete_real_integration()
         self.results['real_integration'] = real_integration_results
@@ -436,7 +436,7 @@ class MasterTestRunner:
                 health_status = "🟠 ACCEPTABLE"
                 readiness = "Requires some improvements before submission"
             else:
-                health_status = "🔴 NEEDS_WORK"
+                health_status = " NEEDS_WORK"
                 readiness = "Significant improvements required"
             
             f.write(f"**Status**: {health_status}\n")
@@ -448,7 +448,7 @@ class MasterTestRunner:
             f.write("    subgraph \"Thesis Component Status\"\n")
             
             # Documentation status
-            f.write("        doc[\"📄 Documentation\"]\n")
+            f.write("        doc[\" Documentation\"]\n")
             if 'integration_tests' in self.results:
                 doc_status = "" if self.results['integration_tests']['failed'] <= 2 else ""
                 f.write(f"        doc --> doc_status[\"{doc_status} Content Generation\"]\n")
@@ -460,7 +460,7 @@ class MasterTestRunner:
                 f.write(f"        perf --> perf_status[\"{perf_status} Benchmarks\"]\n")
             
             # Testing status
-            f.write("        test[\"🧪 Testing\"]\n")
+            f.write("        test[\" Testing\"]\n")
             if 'thesis_tests' in self.results:
                 test_status = "" if self.results['thesis_tests']['test_execution']['pass_rate'] >= 0.8 else ""
                 f.write(f"        test --> test_status[\"{test_status} Test Suite\"]\n")
@@ -474,17 +474,17 @@ class MasterTestRunner:
                 f.write("-  System is ready for thesis integration\n")
                 f.write("-  All critical tests passing\n")
                 f.write("-  Performance meets specifications\n")
-                f.write("- 📝 Consider final review of documentation\n")
+                f.write("-  Consider final review of documentation\n")
             elif health_score >= 80:
                 f.write("-  System is largely ready for thesis integration\n")
                 f.write("-  Review and address any warnings\n")
-                f.write("- 📝 Ensure all tables and figures are properly referenced\n")
+                f.write("-  Ensure all tables and figures are properly referenced\n")
                 f.write("-  Consider additional validation of edge cases\n")
             else:
                 f.write("-  Address failed tests before thesis integration\n")
                 f.write("-  Review performance benchmarks that didn't pass\n")
-                f.write("- 📝 Ensure all documentation components are complete\n")
-                f.write("- 🔧 Fix integration issues in content generation\n")
+                f.write("-  Ensure all documentation components are complete\n")
+                f.write("-  Fix integration issues in content generation\n")
 
 
 def main():
@@ -496,7 +496,7 @@ def main():
     
     # Print final summary
     print("\n" + "=" * 70)
-    print("🎓 THESIS EVALUATION COMPLETE")
+    print(" THESIS EVALUATION COMPLETE")
     print("=" * 70)
     print(f"Overall Status: {summary['overall_status']}")
     print(f"Execution Time: {summary['execution_time']:.1f} seconds")

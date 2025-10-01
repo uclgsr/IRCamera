@@ -70,7 +70,7 @@ class IRLogMPChartActivity : BaseActivity() {
                     findViewById<com.mpdc4gsr.module.thermalunified.view.ChartLogView>(R.id.log_chart_time_chart)
                 chartView.initEntry(it as ArrayList<ThermalEntity>)
             } catch (e: Exception) {
-                XLog.e("刷新图表异常:${e.message}")
+                XLog.e(":${e.message}")
             }
         }
 

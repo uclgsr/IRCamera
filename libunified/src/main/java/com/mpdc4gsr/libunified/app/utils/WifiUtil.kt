@@ -21,7 +21,7 @@ import com.hjq.permissions.XXPermissions
 object WifiUtil {
 
     /**
-     * 不带双引号的 SSID.
+     *  SSID.
      */
     @Suppress("DEPRECATION")
     fun ScanResult.getWifiName(): String =
@@ -30,7 +30,7 @@ object WifiUtil {
     fun WifiInfo.getWifiName(): String = removeQuotation(ssid)
 
     /**
-     * 如果指定字符串以双引号开头及结尾，则去除开头及结尾的双引号
+     * ，
      */
     private fun removeQuotation(source: String): String {
         return if (source.length > 1 && source[0] == '\"' && source[source.length - 1] == '\"') {
@@ -41,8 +41,8 @@ object WifiUtil {
     }
 
     /**
-     * 获取当前连接的 Wifi ssid，如果有的话，移除首尾的双引号。
-     * @return 若未连接 WIFI 或 无 [Manifest.permission.ACCESS_FINE_LOCATION] 权限，则为 null
+     *  Wifi ssid，，。
+     * @return  WIFI   [Manifest.permission.ACCESS_FINE_LOCATION] ， null
      */
     fun getCurrentWifiSSID(context: Context): String? {
         if (!XXPermissions.isGranted(context, Manifest.permission.ACCESS_FINE_LOCATION)) {

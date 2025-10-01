@@ -37,11 +37,11 @@ public enum BitmapUtils {
     public static Bitmap rotateBitmap(Bitmap bm, int degree) {
         Bitmap returnBm = null;
 
-        // 根据旋转角度，生成旋转矩阵
+        // ，
         Matrix matrix = new Matrix();
         matrix.postRotate(degree);
         try {
-            // 将原始图片按照旋转矩阵进行旋转，并得到新的图片
+            // ，
             returnBm = Bitmap.createBitmap(bm, 0, 0, bm.getWidth(), bm.getHeight(), matrix, true);
         } catch (OutOfMemoryError e) {
         }
@@ -55,7 +55,7 @@ public enum BitmapUtils {
     }
 
     /**
-     * 将bitmap转换成bytes
+     * bitmapbytes
      */
     public static byte[] bitmapToBytes(Bitmap bitmap, int quality) {
         if (null == bitmap) {
@@ -74,11 +74,11 @@ public enum BitmapUtils {
     }
 
     /**
-     * 将图片保存到磁盘中
+     * 
      *
      * @param bitmap
-     * @param file   图片保存目录——不包含图片名
-     * @param path   图片保存文件路径——包含图片名
+     * @param file   ——
+     * @param path   ——
      * @return
      */
     public static boolean saveBitmap(Bitmap bitmap, File file, File path) {
@@ -108,28 +108,28 @@ public enum BitmapUtils {
     }
 
     /**
-     * 高级图片质量压缩
+     * 
      *
-     * @param bitmap 位图
-     * @param width  压缩后的宽度，单位像素
+     * @param bitmap 
+     * @param width  ，
      */
     public static Bitmap imageZoom(Bitmap bitmap, double width) {
-        // 将bitmap放至数组中，意在获得bitmap的大小（与实际读取的原文件要大）
+        // bitmap，bitmap（）
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        // 格式、质量、输出流
+        // 、、
         bitmap.compress(Bitmap.CompressFormat.JPEG, 80, baos);
         byte[] b = baos.toByteArray();
         Bitmap newBitmap = BitmapFactory.decodeByteArray(b, 0, b.length);
-        // 获取bitmap大小 是允许最大大小的多少倍
+        // bitmap 
         return scaleWithWH(newBitmap, width,
                 width * newBitmap.getHeight() / newBitmap.getWidth());
     }
 
     /***
-     * 图片缩放
-     *@param bitmap 位图
-     * @param w 新的宽度
-     * @param h 新的高度
+     * 
+     *@param bitmap 
+     * @param w 
+     * @param h 
      * @return Bitmap
      */
     public static Bitmap scaleWithWH(Bitmap bitmap, double w, double h) {
@@ -150,10 +150,10 @@ public enum BitmapUtils {
     }
 
     /**
-     * bitmap保存到指定路径
+     * bitmap
      *
-     * @param bmp  位图file 图片的绝对路径
-     * @param file 位图
+     * @param bmp  file 
+     * @param file 
      * @return bitmap
      */
     public static boolean saveFile(String file, Bitmap bmp) {
@@ -181,10 +181,10 @@ public enum BitmapUtils {
     }
 
     /**
-     * 把两个位图覆盖合成为一个位图，以底层位图的长宽为基准
+     * ，
      *
-     * @param backBitmap  在底部的位图
-     * @param frontBitmap 盖在上面的位图
+     * @param backBitmap  
+     * @param frontBitmap 
      * @return
      */
     public static Bitmap mergeBitmap(Bitmap backBitmap, Bitmap frontBitmap, int leftFront, int topFront) {
@@ -275,10 +275,10 @@ public enum BitmapUtils {
 
 
     /**
-     * 把两个位图覆盖合成为一个位图，以底层位图的长宽为基准
+     * ，
      *
-     * @param bytes  在底部的位图
-     * @param bytes2 盖在上面的位图
+     * @param bytes  
+     * @param bytes2 
      */
     public static void savaRawFile(byte[] bytes, byte[] bytes2) {
         try {
@@ -299,42 +299,42 @@ public enum BitmapUtils {
     }
 
     /**
-     * 添加水印
+     * 
      *
      * @param bmp
      * @param title
      * @param address
      * @param time
-     * @param seekBarWidth : 右边伪彩控件的宽度，防止内容和控件重叠
+     * @param seekBarWidth : ，
      * @return
      */
     public static Bitmap drawCenterLable(Bitmap bmp, String title, String address, String time, int seekBarWidth) {
-        //创建一样大小的图片
+        //
         Bitmap newBmp = Bitmap.createBitmap(bmp.getWidth(), bmp.getHeight(), Bitmap.Config.ARGB_8888);
-        //创建画布
+        //
         Canvas canvas = new Canvas(newBmp);
-        canvas.drawBitmap(bmp, 0, 0, null);  //绘制原始图片
+        canvas.drawBitmap(bmp, 0, 0, null);  //
         canvas.save();
         TextPaint paint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
-        paint.setColor(Color.WHITE); //白色半透明
+        paint.setColor(Color.WHITE); //
         paint.setTextSize(SizeUtils.sp2px(12));
         paint.setDither(true);
         paint.setFilterBitmap(true);
-        Rect rectText = new Rect();  //得到text占用宽高， 单位：像素
-        paint.getTextBounds("占位高度文本", 0, "占位高度文本".length(), rectText);
-        double beginX = SizeUtils.dp2px(10);  //45度角度值是1.414
+        Rect rectText = new Rect();  //text， ：
+        paint.getTextBounds("", 0, "".length(), rectText);
+        double beginX = SizeUtils.dp2px(10);  //451.414
         double beginY = bmp.getHeight() - SizeUtils.dp2px(10);
         if (!TextUtils.isEmpty(time)) {
             beginY = beginY - (rectText.bottom - rectText.top);
             canvas.drawText(time, (int) beginX, (int) beginY, paint);
             beginY -= SizeUtils.dp2px(6);
         }
-        int lineWidth = bmp.getWidth() - SizeUtils.dp2px(20) - seekBarWidth;//一行的可显示内容宽度
+        int lineWidth = bmp.getWidth() - SizeUtils.dp2px(20) - seekBarWidth;//
         if (!TextUtils.isEmpty(address)) {
             int textHeight = (rectText.bottom - rectText.top);
             paint.getTextBounds(address, 0, address.length(), rectText);
             if (rectText.width() > lineWidth) {
-                //字符太长，进行换行处理
+                //，
                 StaticLayout staticLayout = new StaticLayout(address,
                         paint, lineWidth,
                         Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
@@ -353,7 +353,7 @@ public enum BitmapUtils {
             int textHeight = (rectText.bottom - rectText.top);
             paint.getTextBounds(title, 0, title.length(), rectText);
             if (rectText.width() > lineWidth) {
-                //字符太长，进行换行处理
+                //，
                 StaticLayout staticLayout = new StaticLayout(title,
                         paint, lineWidth,
                         Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);

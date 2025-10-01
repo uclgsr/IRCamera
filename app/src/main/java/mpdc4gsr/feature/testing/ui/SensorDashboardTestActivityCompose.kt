@@ -320,7 +320,8 @@ class SensorDashboardTestActivityCompose : BaseComposeActivity<SensorDashboardTe
 
                             if (isRunningTest) {
                                 Spacer(modifier = Modifier.height(12.dp))
-                                LinearProgressIndicator(progress = { testProgress },
+                                LinearProgressIndicator(
+                                    progress = { testProgress },
                                     modifier = Modifier.fillMaxWidth(),
                                     color = MaterialTheme.colorScheme.primary
                                 )

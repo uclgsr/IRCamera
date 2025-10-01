@@ -7,7 +7,7 @@ import mpdc4gsr.core.data.model.GSRSample
 
 /**
  * Use case for scanning Shimmer devices
- * 
+ *
  * Encapsulates business logic for device discovery.
  */
 class ScanShimmerDevicesUseCase(
@@ -20,7 +20,7 @@ class ScanShimmerDevicesUseCase(
 
 /**
  * Use case for connecting to a Shimmer device
- * 
+ *
  * Handles connection logic and validation.
  */
 class ConnectShimmerDeviceUseCase(
@@ -47,7 +47,7 @@ class DisconnectShimmerDeviceUseCase(
 
 /**
  * Use case for streaming GSR data from Shimmer device
- * 
+ *
  * Handles data streaming and validation.
  */
 class StartGSRStreamingUseCase(

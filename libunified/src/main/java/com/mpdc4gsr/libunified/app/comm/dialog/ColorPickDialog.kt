@@ -83,7 +83,7 @@ class ColorPickDialog(
                         isFromUser: Boolean,
                         tempMode: Int
                     ) {
-                        var text = "标准"
+                        var text = ""
                         text =
                             if (leftValue <= 0) {
                                 textSize = 14

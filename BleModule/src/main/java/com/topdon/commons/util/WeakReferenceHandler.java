@@ -6,10 +6,10 @@ import android.os.Looper;
 import java.lang.ref.WeakReference;
 
 /**
- * @Desc Handle软引用工具类
+ * @Desc Handle
  * @ClassName WeakReferenceHandler
  * @Email 616862466@qq.com
- * @Author 子墨
+ * @Author 
  * @Date 2022/10/12 9:25
  */
 public class WeakReferenceHandler<T> extends Handler {

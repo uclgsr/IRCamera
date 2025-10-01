@@ -355,7 +355,8 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
 
                     if (sensor.bufferUtilization > 0) {
                         Spacer(modifier = Modifier.height(4.dp))
-                        LinearProgressIndicator(progress = { sensor.bufferUtilization },
+                        LinearProgressIndicator(
+                            progress = { sensor.bufferUtilization },
                             modifier = Modifier.fillMaxWidth()
                         )
                         Text(
@@ -474,7 +475,7 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
         // Start RGB recording
         delay(400)
         statuses = updateSensorRecordingState(statuses, "RGB Camera", true)
-        
+
         return statuses
     }
 
@@ -487,7 +488,11 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
         }
     }
 
-    private fun updateSensorRecordingState(currentStatuses: List<SensorStatus>, sensorName: String, isRecording: Boolean): List<SensorStatus> {
+    private fun updateSensorRecordingState(
+        currentStatuses: List<SensorStatus>,
+        sensorName: String,
+        isRecording: Boolean
+    ): List<SensorStatus> {
         return currentStatuses.map { sensor ->
             if (sensor.sensorName == sensorName) {
                 sensor.copy(isRecording = isRecording)

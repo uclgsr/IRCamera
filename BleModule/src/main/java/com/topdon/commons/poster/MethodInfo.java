@@ -31,21 +31,21 @@ public class MethodInfo {
     }
 
     /**
-     * 实例化参数全为null的方法信息
+     * null
      *
-     * @param name           方法名
-     * @param parameterTypes 方法参数类型
+     * @param name           
+     * @param parameterTypes 
      */
     public MethodInfo(@NonNull String name, @Nullable Class<?>[] parameterTypes) {
         this(name, name, parameterTypes);
     }
 
     /**
-     * 实例化参数全为null的方法信息
+     * null
      *
-     * @param name           方法名
+     * @param name           
      * @param tag            {@link Tag#value()}
-     * @param parameterTypes 方法参数类型
+     * @param parameterTypes 
      */
     public MethodInfo(@NonNull String name, @NonNull String tag, @Nullable Class<?>[] parameterTypes) {
         this(name, tag, toParameters(parameterTypes));

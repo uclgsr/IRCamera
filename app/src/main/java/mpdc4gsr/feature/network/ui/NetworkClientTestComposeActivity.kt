@@ -157,7 +157,7 @@ fun NetworkClientTestScreen(
             item {
                 NetworkConfigurationCard(
                     configuration = uiState.networkConfiguration,
-                    onUpdateConfiguration = { config -> 
+                    onUpdateConfiguration = { config ->
                         viewModel.updateNetworkConfiguration(config)
                     }
                 )
@@ -356,7 +356,8 @@ private fun TestProgressCard(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            LinearProgressIndicator(progress = { progress },
+            LinearProgressIndicator(
+                progress = { progress },
                 modifier = Modifier.fillMaxWidth()
             )
 

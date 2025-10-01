@@ -93,7 +93,7 @@ class ThesisTestSuite:
         
     def run_comprehensive_tests(self) -> Dict[str, Any]:
         """Run all test suites and return summary"""
-        print("🧪 Starting Comprehensive Thesis Testing Suite")
+        print(" Starting Comprehensive Thesis Testing Suite")
         print("=" * 60)
         
         # 1. Documentation Tests
@@ -119,7 +119,7 @@ class ThesisTestSuite:
     
     def _test_latex_compilation(self) -> None:
         """Test LaTeX compilation of thesis documents"""
-        print("\n📄 Testing LaTeX Compilation...")
+        print("\n Testing LaTeX Compilation...")
         
         latex_files = [
             "docs/latex/main.tex",
@@ -445,7 +445,7 @@ class ThesisTestSuite:
     
     def _benchmark_resource_utilization(self) -> None:
         """Benchmark resource utilization"""
-        print("💾 Benchmarking Resource Utilization...")
+        print(" Benchmarking Resource Utilization...")
         
         resource_targets = {
             "Android Memory Usage": (120, "MB", 200),  # current, unit, max
@@ -485,7 +485,7 @@ class ThesisTestSuite:
     
     def _test_thesis_content_generation(self) -> None:
         """Test thesis content generation integration"""
-        print("📚 Testing Thesis Content Generation...")
+        print(" Testing Thesis Content Generation...")
         
         start_time = time.time()
         
@@ -520,7 +520,7 @@ class ThesisTestSuite:
     
     def _test_cross_references(self) -> None:
         """Test cross-references between documents"""
-        print("🔗 Testing Cross-References...")
+        print(" Testing Cross-References...")
         
         start_time = time.time()
         
@@ -556,7 +556,7 @@ class ThesisTestSuite:
     
     def _test_multi_modal_integration(self) -> None:
         """Test multi-modal integration documentation"""
-        print("🔄 Testing Multi-Modal Integration...")
+        print(" Testing Multi-Modal Integration...")
         
         start_time = time.time()
         
@@ -592,7 +592,7 @@ class ThesisTestSuite:
     
     def _test_system_reliability(self) -> None:
         """Test system reliability documentation"""
-        print("🛡️ Testing System Reliability...")
+        print("️ Testing System Reliability...")
         
         start_time = time.time()
         

@@ -12,7 +12,8 @@ The following MVP files have been moved here from the main directory:
 - **requirements_mvp.txt** - Minimal MVP dependencies
 - **config_mvp.yaml** - Basic MVP configuration
 
-**Why archived**: The unified controller (`run_unified_controller.py`) consolidates all MVP functionality with better dependency management and automatic controller selection.
+**Why archived**: The unified controller (`run_unified_controller.py`) consolidates all MVP functionality with better
+dependency management and automatic controller selection.
 
 **For new development**: Use `run_unified_controller.py` in the main pc-controller directory.
 
@@ -27,6 +28,7 @@ Refer to OVER_ENGINEERED_ANALYSIS.md for detailed analysis.
 ## Historical Context
 
 These files are preserved for:
+
 1. Reference implementation patterns
 2. Understanding evolution of the PC Controller
 3. Educational purposes

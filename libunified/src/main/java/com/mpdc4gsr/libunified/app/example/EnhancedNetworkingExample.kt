@@ -62,7 +62,7 @@ class EnhancedNetworkingExample(private val context: Context) {
                         if (syncResult.isSuccess) {
                             Log.i(
                                 TAG,
-                                "✓ Time synchronized. Offset: ${syncResult.clockOffsetMs}ms, RTT: ${syncResult.roundTripDelayMs}ms"
+                                " Time synchronized. Offset: ${syncResult.clockOffsetMs}ms, RTT: ${syncResult.roundTripDelayMs}ms"
                             )
 
                             val syncTimestamp =
@@ -148,14 +148,14 @@ class EnhancedNetworkingExample(private val context: Context) {
                 callback =
                     object : ReliableMessageService.MessageCallback {
                         override fun onAcknowledged(messageId: String) {
-                            Log.i(TAG, "✓ Message acknowledged: $messageId")
+                            Log.i(TAG, " Message acknowledged: $messageId")
                         }
 
                         override fun onFailed(
                             messageId: String,
                             error: String,
                         ) {
-                            Log.e(TAG, "✗ Message failed: $messageId - $error")
+                            Log.e(TAG, " Message failed: $messageId - $error")
                         }
 
                         override fun onRetrying(

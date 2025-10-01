@@ -385,7 +385,7 @@ private fun convertToPreviewData(report: HouseReport): HouseReportPreviewData {
         houseName = report.name,
         detectTime = TimeTool.formatDetectTime(report.detectTime),
         inspectorName = report.inspectorName,
-        houseYear = if (report.year == null) "--" else "${report.year}年",
+        houseYear = if (report.year == null) "--" else "${report.year}",
         houseArea = if (report.houseSpace.isEmpty()) "--" else "${report.houseSpace} ${report.getSpaceUnitStr()}",
         expenses = if (report.cost.isEmpty()) "--" else "${report.getCostUnitStr()} ${report.cost}",
         sections = emptyList() // Would be populated from actual report data

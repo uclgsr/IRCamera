@@ -319,8 +319,8 @@ class RgbCameraTestComposeActivity : FragmentActivity() {
         Log.d(TAG, "Testing camera permissions")
         try {
             // Check camera permission using Android API
-            val hasPermissions = checkSelfPermission(Manifest.permission.CAMERA) == 
-                PackageManager.PERMISSION_GRANTED
+            val hasPermissions = checkSelfPermission(Manifest.permission.CAMERA) ==
+                    PackageManager.PERMISSION_GRANTED
             Log.d(TAG, "Camera permissions check: $hasPermissions")
         } catch (e: Exception) {
             Log.e(TAG, "Permissions test failed: ${e.message}")

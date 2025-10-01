@@ -10,7 +10,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 /**
  * SingleLiveEvent based on reference repository implementation
  * Adapted from libapp/src/main/java/com/topdon/lib/core/utils/SingleLiveEvent.kt
- * 解决LiveData粘性事件
+ * LiveData
  */
 class SingleLiveEvent<T> : MutableLiveData<T>() {
 

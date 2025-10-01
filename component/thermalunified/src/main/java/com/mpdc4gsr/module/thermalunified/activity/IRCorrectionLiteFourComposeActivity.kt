@@ -47,7 +47,11 @@ class IRCorrectionLiteFourComposeActivity : BaseComposeActivity<IRCorrectionLite
                         },
                         navigationIcon = {
                             IconButton(onClick = { finish() }) {
-                                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = Color.White)
+                                Icon(
+                                    Icons.AutoMirrored.Filled.ArrowBack,
+                                    contentDescription = "Back",
+                                    tint = Color.White
+                                )
                             }
                         },
                         colors = TopAppBarDefaults.topAppBarColors(
@@ -146,7 +150,8 @@ class IRCorrectionLiteFourComposeActivity : BaseComposeActivity<IRCorrectionLite
                         )
                     }
 
-                    LinearProgressIndicator(progress = { qualityScore / 100f },
+                    LinearProgressIndicator(
+                        progress = { qualityScore / 100f },
                         modifier = Modifier.fillMaxWidth(),
                         color = when {
                             qualityScore >= 80 -> Color(0xFF4CAF50)
@@ -273,7 +278,7 @@ class IRCorrectionLiteFourComposeActivity : BaseComposeActivity<IRCorrectionLite
                 style = MaterialTheme.typography.bodyMedium
             )
             Text(
-                if (passed) "✓ Pass" else "⚠ Warning",
+                if (passed) " Pass" else " Warning",
                 color = if (passed) Color(0xFF4CAF50) else Color(0xFFFF9800),
                 fontWeight = FontWeight.Medium
             )

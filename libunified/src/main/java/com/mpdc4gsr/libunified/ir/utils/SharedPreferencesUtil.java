@@ -15,7 +15,7 @@ public enum SharedPreferencesUtil {
     private static final String FILE_NAME = "usb_ir";
 
     /**
-     * 保存数据到文件
+     *
      *
      * @param context
      * @param key
@@ -42,7 +42,7 @@ public enum SharedPreferencesUtil {
     }
 
     /**
-     * 从文件里读取数据
+     *
      *
      * @param context
      * @param key

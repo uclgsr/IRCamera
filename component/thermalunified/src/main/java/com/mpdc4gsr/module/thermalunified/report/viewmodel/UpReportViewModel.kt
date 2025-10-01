@@ -65,12 +65,12 @@ class UpReportViewModel : BaseViewModel() {
                         } catch (e: Exception) {
                             XLog.e("Error parsing upload response", e)
                         }
-                        XLog.i("Upload完一张图")
+                        XLog.i("Upload")
                         downLatch.countDown()
                     }
                 }
                 downLatch.await()
-                XLog.i("${irList.size} 张图Upload完毕")
+                XLog.i("${irList.size} Upload")
             }
         }
     }

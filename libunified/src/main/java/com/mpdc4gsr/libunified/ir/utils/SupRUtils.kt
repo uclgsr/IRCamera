@@ -9,14 +9,14 @@ object SupRUtils {
 
 
     /**
-     * 是否能开启超分
+     * 
      */
     fun canOpenSupR(): Boolean {
         return true
     }
 
     /**
-     * 由此统一弹
+     * 
      */
     fun showOpenSupRTipsDialog(activity: Activity) {
 

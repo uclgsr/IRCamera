@@ -2,7 +2,8 @@
 
 ## Overview
 
-This directory contains comprehensive tests and documentation verifying that the PC-Android communication protocol works correctly. The verification confirms that:
+This directory contains comprehensive tests and documentation verifying that the PC-Android communication protocol works
+correctly. The verification confirms that:
 
 - PC commands are correctly sent to Android
 - Android correctly parses and processes commands
@@ -15,45 +16,45 @@ This directory contains comprehensive tests and documentation verifying that the
 ### Test Files
 
 1. **`test_protocol_compatibility.py`** - Tests the protocol adapter
-   - Verifies bidirectional message conversion (text ↔ JSON)
-   - Tests all message types can be parsed
-   - Tests parameter extraction
-   
+    - Verifies bidirectional message conversion (text ↔ JSON)
+    - Tests all message types can be parsed
+    - Tests parameter extraction
+
 2. **`test_protocol_verification.py`** - Comprehensive integration test
-   - Simulates Android device
-   - Tests complete command flow
-   - Verifies responses
-   - Tests error handling
-   - **RUN THIS to verify the protocol works**
+    - Simulates Android device
+    - Tests complete command flow
+    - Verifies responses
+    - Tests error handling
+    - **RUN THIS to verify the protocol works**
 
 3. **`ProtocolIntegrationTest.kt`** (in app/src/androidTest/)
-   - Android-side protocol tests
-   - Tests protocol message parsing
-   - Tests ProtocolHandler integration
-   - Verifies command callbacks work
+    - Android-side protocol tests
+    - Tests protocol message parsing
+    - Tests ProtocolHandler integration
+    - Verifies command callbacks work
 
 ### Documentation
 
 1. **`PROTOCOL_VERIFICATION_REPORT.md`** - Complete verification report
-   - Test results and findings
-   - Protocol flow diagrams
-   - Integration verification
-   - Performance metrics
+    - Test results and findings
+    - Protocol flow diagrams
+    - Integration verification
+    - Performance metrics
 
 2. **`PROTOCOL_FLOW.txt`** - Protocol flow diagrams
-   - Message sequence diagrams
-   - Command examples
-   - Response examples
+    - Message sequence diagrams
+    - Command examples
+    - Response examples
 
 3. **`PROTOCOL_VERIFICATION_README.md`** - This file
 
 ### Example Code
 
 1. **`example_pc_control.py`** - Simple usage example
-   - Shows how to connect to Android
-   - Demonstrates time sync
-   - Shows start/stop recording
-   - Ready-to-use template
+    - Shows how to connect to Android
+    - Demonstrates time sync
+    - Shows start/stop recording
+    - Ready-to-use template
 
 ## Running the Tests
 
@@ -69,6 +70,7 @@ python3 test_protocol_verification.py
 ```
 
 **Expected Output:**
+
 ```
 ======================================================================
 PROTOCOL VERIFICATION TEST SUMMARY
@@ -78,7 +80,7 @@ Successes: 7
 Failures: 0
 Errors: 0
 
-✓✓✓ ALL PROTOCOL VERIFICATION TESTS PASSED ✓✓✓
+ ALL PROTOCOL VERIFICATION TESTS PASSED 
 ```
 
 ### Android Tests
@@ -110,6 +112,7 @@ python3 example_pc_control.py 192.168.1.100
 ```
 
 The example will:
+
 1. Connect to the Android device
 2. Perform time synchronization
 3. Start a recording session
@@ -165,6 +168,7 @@ Use this checklist to verify the protocol works in your environment:
 **Problem:** Cannot connect to Android device
 
 **Solutions:**
+
 1. Verify Android device is on same network
 2. Check Android device IP address (Settings → About Phone → Status)
 3. Ensure RecordingService is started on Android
@@ -176,6 +180,7 @@ Use this checklist to verify the protocol works in your environment:
 **Problem:** Commands sent but no response received
 
 **Solutions:**
+
 1. Check Android logcat for error messages: `adb logcat -s RecordingService ProtocolHandler NetworkServer`
 2. Verify Android device is not in deep sleep
 3. Check socket timeout settings
@@ -186,6 +191,7 @@ Use this checklist to verify the protocol works in your environment:
 **Problem:** ACK received but recording doesn't actually start
 
 **Solutions:**
+
 1. Check if sensors are connected (GSR, cameras)
 2. Check if permissions are granted (camera, Bluetooth, storage)
 3. Check RecordingService logs for error messages
@@ -197,6 +203,7 @@ Use this checklist to verify the protocol works in your environment:
 **Problem:** Time sync fails or gives large offset
 
 **Solutions:**
+
 1. Check network latency (should be < 100ms for good sync)
 2. Verify clocks on both devices are approximately correct
 3. Perform multiple sync rounds and average the results
@@ -216,7 +223,8 @@ This means protocol commands **actually trigger recording** on the sensors.
 
 ### Protocol Handler
 
-The `ProtocolHandler` class processes incoming messages and calls appropriate callbacks. It's configured in `RecordingService` with:
+The `ProtocolHandler` class processes incoming messages and calls appropriate callbacks. It's configured in
+`RecordingService` with:
 
 ```kotlin
 protocolHandler.setCommandHandler(object : ProtocolHandler.CommandHandler {
@@ -271,6 +279,7 @@ Based on test results:
 - **Command processing**: < 10ms
 
 Real-world network performance will vary based on:
+
 - Network latency
 - WiFi signal strength
 - Network congestion

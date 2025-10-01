@@ -8,13 +8,13 @@ import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatImageView
 
 /**
- * TC007 电池电量图标.
+ * TC007 .
  *
  * Created by LCG on 2024/5/22.
  */
 class BatteryView : AppCompatImageView {
     /**
-     * 当前电量
+     *
      */
     var battery = -1
         set(value) {
@@ -23,7 +23,7 @@ class BatteryView : AppCompatImageView {
         }
 
     /**
-     * 当前是否充电中
+     *
      */
     var isCharging = false
         set(value) {
@@ -75,7 +75,7 @@ class BatteryView : AppCompatImageView {
 
                     MeasureSpec.AT_MOST -> {
                         if (widthSize < 58) {
-                            if (heightSize < 30) {//宽✘ 高✘
+                            if (heightSize < 30) {//
                                 if ((widthSize * 30 / 58f).toInt() <= heightSize) {
                                     setMeasuredDimension(widthSize, (widthSize * 30 / 58f).toInt())
                                 } else {
@@ -84,13 +84,13 @@ class BatteryView : AppCompatImageView {
                                         heightSize
                                     )
                                 }
-                            } else {//宽✘ 高✔
+                            } else {//
                                 setMeasuredDimension(widthSize, (widthSize * 30 / 58f).toInt())
                             }
                         } else {
-                            if (heightSize < 30) {//宽✔ 高✘
+                            if (heightSize < 30) {//
                                 setMeasuredDimension((heightSize * 58 / 30f).toInt(), heightSize)
-                            } else {//宽✔ 高✔
+                            } else {//
                                 setMeasuredDimension(58, 30)
                             }
                         }
@@ -151,7 +151,7 @@ class BatteryView : AppCompatImageView {
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        //绘制电池外壳
+        //
         val lineSize = drawWidth * 2 / 58f
         val roundSize = drawWidth * 6 / 58f
         val batteryWidth = drawWidth * 50 / 58f
@@ -168,7 +168,7 @@ class BatteryView : AppCompatImageView {
             paint
         )
 
-        //绘制电池正极
+        //
         val anodeWidth = drawWidth * 3 / 58f
         val anodeHeight = drawHeight * 8 / 30f - lineSize
         val anodeX = drawWidth - anodeWidth / 2
@@ -178,7 +178,7 @@ class BatteryView : AppCompatImageView {
         paint.strokeWidth = anodeWidth
         canvas.drawLine(anodeX, anodeStartY, anodeX, anodeStartY + anodeHeight, paint)
 
-        //绘制电量
+        //
         if (battery <= 0) {
             return
         }
