@@ -100,7 +100,7 @@ object TimeTool {
     @SuppressLint("SimpleDateFormat")
     fun showDateSecond(): String {
         val date = Date()
-        val dateFormat = SimpleDateFormat("yyyyMMddHHmmss")
+        val dateFormat = SimpleDateFormat("yyyyMMdd_HHmmss_SSS")
         val timeZone =
             TimeZone.getTimeZone(TimeZone.getDefault().getDisplayName(false, TimeZone.SHORT))
         dateFormat.timeZone = timeZone
