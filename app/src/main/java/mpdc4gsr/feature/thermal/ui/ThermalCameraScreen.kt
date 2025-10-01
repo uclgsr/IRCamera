@@ -120,15 +120,7 @@ private fun ThermalCameraContent(
 }
 
 // ThermalPalette enum is defined in IRGalleryEditActivityCompose.kt
-// No need for duplicate definition here
-
-enum class TemperatureUnit {
-    CELSIUS, FAHRENHEIT, KELVIN
-}
-
-enum class MeasurementMode {
-    POINT, LINE, AREA, ISOTHERMAL
-}
+// TemperatureUnit and MeasurementMode are imported from mpdc4gsr.feature.thermal.data.ThermalModels.kt
 
 @Composable
 private fun ThermalPreviewCard(
