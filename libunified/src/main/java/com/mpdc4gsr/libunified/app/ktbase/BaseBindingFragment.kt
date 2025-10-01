@@ -1,5 +1,14 @@
 package com.mpdc4gsr.libunified.app.ktbase
 
+/*
+ * DEPRECATED: This file has been deprecated as part of migration to Jetpack Compose.
+ * Use BaseComposeFragment from com.mpdc4gsr.libunified.app.compose.base instead.
+ *
+ * This file is kept for reference but is commented out to avoid compilation errors
+ * when dataBinding is disabled.
+ */
+
+/*
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -102,3 +111,4 @@ abstract class BaseBindingFragment<B : ViewDataBinding> : Fragment() {
         loadingDialog?.dismiss()
     }
 }
+*/

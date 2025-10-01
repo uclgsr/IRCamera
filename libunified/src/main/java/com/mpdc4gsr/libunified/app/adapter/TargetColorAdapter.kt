@@ -1,5 +1,13 @@
 package com.mpdc4gsr.libunified.app.adapter
 
+/*
+ * DEPRECATED: This file has been deprecated as part of migration to Jetpack Compose.
+ * This code is commented out to avoid compilation errors when dataBinding is disabled.
+ * See COMPOSE_MIGRATION.md for alternatives.
+ */
+
+/*
+
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -123,3 +131,4 @@ class TargetColorAdapter(val context: Context, var targetColor: Int) :
         )
     }
 }
+*/

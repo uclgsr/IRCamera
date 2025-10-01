@@ -978,4 +978,7 @@
     <!-- Missing resource for BaseViewModelActivity -->
     <string name="http_code_z5004">Network error. Please try again.</string>
 
+    <!-- Car Detection Dialog -->
+    <string name="car_detection_title">Car Detection</string>
+
 </resources>
