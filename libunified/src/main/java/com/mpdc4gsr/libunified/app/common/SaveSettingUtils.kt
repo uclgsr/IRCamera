@@ -11,7 +11,7 @@ import com.mpdc4gsr.libunified.app.utils.CommUtils
 
 object SaveSettingUtils {
 
-    private const val SP_NAME = "SaveSettingUtil"
+    private const val SP_NAME = "SaveSettingUtils"
 
     const val FusionTypeLPYFusion = 4
 

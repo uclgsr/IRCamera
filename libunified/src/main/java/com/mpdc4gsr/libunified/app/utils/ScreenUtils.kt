@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.res.Configuration
 
 /**
- * ScreenUtil based on reference repository implementation
+ * ScreenUtils based on reference repository implementation
  * Adapted from libapp/src/main/java/com/topdon/lib/core/utils/ScreenUtils.kt
  */
 object ScreenUtils {

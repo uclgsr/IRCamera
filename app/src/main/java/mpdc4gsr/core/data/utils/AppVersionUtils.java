@@ -48,7 +48,7 @@ public class AppVersionUtils {
     private String fileName = "";
     private Long mDownloadId = 0l;
 
-    public AppVersionUtil(Context context, DotIsShowListener dotIsShow) {
+    public AppVersionUtils(Context context, DotIsShowListener dotIsShow) {
         this.mContext = context;
         this.dotIsShowListener = dotIsShow;
     }

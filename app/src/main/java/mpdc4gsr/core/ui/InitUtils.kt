@@ -32,9 +32,9 @@ object InitUtils {
                 addAction("android.hardware.usb.action.USB_DEVICE_DETACHED")
             }
             context.registerReceiver(receiver, filter)
-            XLog.i("InitUtil: Device broadcast receiver initialized")
+            XLog.i("InitUtils: Device broadcast receiver initialized")
         } catch (e: Exception) {
-            XLog.e("InitUtil: Failed to initialize receiver: ${e.message}")
+            XLog.e("InitUtils: Failed to initialize receiver: ${e.message}")
         }
     }
 
@@ -45,10 +45,10 @@ object InitUtils {
         try {
             if (BuildConfig.DEBUG) {
                 XLog.init()
-                XLog.i("InitUtil: Logging system initialized")
+                XLog.i("InitUtils: Logging system initialized")
             }
         } catch (e: Exception) {
-            XLog.e("InitUtil: Failed to initialize logging: ${e.message}")
+            XLog.e("InitUtils: Failed to initialize logging: ${e.message}")
         }
     }
 
@@ -69,9 +69,9 @@ object InitUtils {
                 setServicesAgreement("")
             }
 
-            XLog.i("InitUtil: LMS initialized")
+            XLog.i("InitUtils: LMS initialized")
         } catch (e: Exception) {
-            XLog.e("InitUtil: Failed to initialize LMS: ${e.message}")
+            XLog.e("InitUtils: Failed to initialize LMS: ${e.message}")
         }
     }
 
@@ -82,9 +82,9 @@ object InitUtils {
         try {
             // UM initialization would go here if needed
             // For now, this is a placeholder to satisfy the compilation
-            XLog.i("InitUtil: UM initialized (placeholder)")
+            XLog.i("InitUtils: UM initialized (placeholder)")
         } catch (e: Exception) {
-            XLog.e("InitUtil: Failed to initialize UM: ${e.message}")
+            XLog.e("InitUtils: Failed to initialize UM: ${e.message}")
         }
     }
 
@@ -95,9 +95,9 @@ object InitUtils {
         try {
             // JPush initialization would go here if needed
             // For now, this is a placeholder to satisfy the compilation
-            XLog.i("InitUtil: JPush initialized (placeholder)")
+            XLog.i("InitUtils: JPush initialized (placeholder)")
         } catch (e: Exception) {
-            XLog.e("InitUtil: Failed to initialize JPush: ${e.message}")
+            XLog.e("InitUtils: Failed to initialize JPush: ${e.message}")
         }
     }
 
@@ -107,9 +107,9 @@ object InitUtils {
     fun initXutils() {
         try {
             // XUtils initialization if needed
-            XLog.i("InitUtil: XUtils initialized")
+            XLog.i("InitUtils: XUtils initialized")
         } catch (e: Exception) {
-            XLog.e("InitUtil: Failed to initialize XUtils: ${e.message}")
+            XLog.e("InitUtils: Failed to initialize XUtils: ${e.message}")
         }
     }
 
@@ -119,9 +119,9 @@ object InitUtils {
     fun setWxAppId(appId: String) {
         try {
             // WeChat App ID configuration
-            XLog.i("InitUtil: WeChat App ID set")
+            XLog.i("InitUtils: WeChat App ID set")
         } catch (e: Exception) {
-            XLog.e("InitUtil: Failed to set WeChat App ID: ${e.message}")
+            XLog.e("InitUtils: Failed to set WeChat App ID: ${e.message}")
         }
     }
 
@@ -131,9 +131,9 @@ object InitUtils {
     fun setBuglyAppId(appId: String) {
         try {
             // Bugly crash reporting configuration
-            XLog.i("InitUtil: Bugly App ID set")
+            XLog.i("InitUtils: Bugly App ID set")
         } catch (e: Exception) {
-            XLog.e("InitUtil: Failed to set Bugly App ID: ${e.message}")
+            XLog.e("InitUtils: Failed to set Bugly App ID: ${e.message}")
         }
     }
 
@@ -143,9 +143,9 @@ object InitUtils {
     fun setAppKey(appKey: String) {
         try {
             // App key configuration
-            XLog.i("InitUtil: App Key set")
+            XLog.i("InitUtils: App Key set")
         } catch (e: Exception) {
-            XLog.e("InitUtil: Failed to set App Key: ${e.message}")
+            XLog.e("InitUtils: Failed to set App Key: ${e.message}")
         }
     }
 
@@ -155,9 +155,9 @@ object InitUtils {
     fun setAppSecret(appSecret: String) {
         try {
             // App secret configuration
-            XLog.i("InitUtil: App Secret set")
+            XLog.i("InitUtils: App Secret set")
         } catch (e: Exception) {
-            XLog.e("InitUtil: Failed to set App Secret: ${e.message}")
+            XLog.e("InitUtils: Failed to set App Secret: ${e.message}")
         }
     }
 
@@ -167,9 +167,9 @@ object InitUtils {
     fun setAuthSecret(authSecret: String) {
         try {
             // Auth secret configuration
-            XLog.i("InitUtil: Auth Secret set")
+            XLog.i("InitUtils: Auth Secret set")
         } catch (e: Exception) {
-            XLog.e("InitUtil: Failed to set Auth Secret: ${e.message}")
+            XLog.e("InitUtils: Failed to set Auth Secret: ${e.message}")
         }
     }
 }

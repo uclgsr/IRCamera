@@ -13,7 +13,7 @@ import com.mpdc4gsr.libunified.app.utils.CommUtils
 class SaveSettingBean(private val isWifi: Boolean = false) {
 
     private fun getSPUtils(): SPUtils =
-        SPUtils.getInstance(if (isWifi) "WifiSaveSettingUtil" else "SaveSettingUtil")
+        SPUtils.getInstance(if (isWifi) "WifiSaveSettingUtils" else "SaveSettingUtils")
 
     var isSaveSetting: Boolean = getSPUtils().getBoolean("isSaveSetting", true)
         set(value) {

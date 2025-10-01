@@ -12,7 +12,7 @@ import com.mpdc4gsr.libunified.app.utils.CommUtils
 
 object WifiSaveSettingUtils {
 
-    private const val SP_NAME = "WifiSaveSettingUtil"
+    private const val SP_NAME = "WifiSaveSettingUtils"
 
     const val TYPE_PLUG = 0
     const val TYPE_WIFI = 1

@@ -41,7 +41,7 @@ import java.util.Locale;
 public enum FileUtils {
     ;
 
-    private static final String TAG = "FileUtil";
+    private static final String TAG = "FileUtils";
     private static final String DATA_SAVE_DIR = "InfiRay";
     private static final int sBufferSize = 524288;
 
@@ -189,7 +189,7 @@ public enum FileUtils {
             boolean mkdirs = dirFile.mkdirs();
             boolean isSuccess = mkdirs || dirFile.exists();
             if (!isSuccess) {
-                Log.e("FileUtil", "createFileDir fail " + dirFile);
+                Log.e("FileUtils", "createFileDir fail " + dirFile);
             }
             return isSuccess;
         }

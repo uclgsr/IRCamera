@@ -15,7 +15,7 @@ import androidx.lifecycle.LifecycleOwner
 import com.hjq.permissions.XXPermissions
 
 /**
- * WifiUtil based on reference repository implementation
+ * WifiUtils based on reference repository implementation
  * Adapted from libapp/src/main/java/com/topdon/lib/core/utils/WifiUtils.kt
  */
 object WifiUtils {
