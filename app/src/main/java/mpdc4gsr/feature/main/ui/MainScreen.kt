@@ -24,7 +24,7 @@ import mpdc4gsr.core.ui.theme.IRCameraTheme
 
 /**
  * Main Screen - Replaces MainActivity with Compose implementation
- * Primary entry point for the IR Camera application
+ * Primary entry point for the IR Camera application with Quick Actions
  */
 @Composable
 fun MainScreen(
@@ -32,6 +32,10 @@ fun MainScreen(
     onNavigateToGallery: () -> Unit = {},
     onNavigateToSettings: () -> Unit = {},
     onNavigateToProfile: () -> Unit = {},
+    onCaptureThermal: () -> Unit = {},
+    onStartGSRSession: () -> Unit = {},
+    onThermalRGBCapture: () -> Unit = {},
+    onViewRecentSessions: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     var selectedTab by remember { mutableIntStateOf(0) }
@@ -60,7 +64,13 @@ fun MainScreen(
                 .weight(1f)
         ) {
             when (selectedTab) {
-                0 -> SensorDashboardTab(onNavigateToSensors = onNavigateToSensors)
+                0 -> SensorDashboardTab(
+                    onCaptureThermal = onCaptureThermal,
+                    onStartGSRSession = onStartGSRSession,
+                    onThermalRGBCapture = onThermalRGBCapture,
+                    onViewGallery = onNavigateToGallery,
+                    onViewRecentSessions = onViewRecentSessions
+                )
                 1 -> GalleryTab(onNavigateToGallery = onNavigateToGallery)
                 2 -> SettingsTab(onNavigateToSettings = onNavigateToSettings)
                 3 -> ProfileTab(onNavigateToProfile = onNavigateToProfile)
@@ -124,11 +134,15 @@ fun MainScreen(
 }
 
 /**
- * Sensor Dashboard Tab - Main sensor interface
+ * Sensor Dashboard Tab - Main sensor interface with Quick Actions
  */
 @Composable
 private fun SensorDashboardTab(
-    onNavigateToSensors: () -> Unit,
+    onCaptureThermal: () -> Unit,
+    onStartGSRSession: () -> Unit,
+    onThermalRGBCapture: () -> Unit,
+    onViewGallery: () -> Unit,
+    onViewRecentSessions: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -164,7 +178,7 @@ private fun SensorDashboardTab(
             }
         }
 
-        // Quick actions
+        // Quick Actions - User-centric design
         Card(
             modifier = Modifier.fillMaxWidth(),
             colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
@@ -182,15 +196,40 @@ private fun SensorDashboardTab(
                     fontWeight = FontWeight.Bold
                 )
 
-                Button(
-                    onClick = onNavigateToSensors,
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
-                ) {
-                    Icon(Icons.Default.Dashboard, contentDescription = null)
-                    Spacer(Modifier.width(8.dp))
-                    Text("Open Sensor Dashboard")
-                }
+                QuickActionButton(
+                    icon = "🔥",
+                    title = "Capture Thermal Image",
+                    subtitle = "Most recent: 2 min ago",
+                    onClick = onCaptureThermal
+                )
+
+                QuickActionButton(
+                    icon = "📊",
+                    title = "Start GSR Session",
+                    subtitle = "Last session: 1 hour ago",
+                    onClick = onStartGSRSession
+                )
+
+                QuickActionButton(
+                    icon = "📷",
+                    title = "Thermal + RGB Capture",
+                    subtitle = "Multi-sensor recording",
+                    onClick = onThermalRGBCapture
+                )
+
+                QuickActionButton(
+                    icon = "🖼️",
+                    title = "View Gallery",
+                    subtitle = "12 new images",
+                    onClick = onViewGallery
+                )
+
+                QuickActionButton(
+                    icon = "📈",
+                    title = "Recent Sessions",
+                    subtitle = "3 sessions today",
+                    onClick = onViewRecentSessions
+                )
             }
         }
 
@@ -434,6 +473,58 @@ private fun StatusItem(
             color = Color.Gray,
             fontSize = 10.sp
         )
+    }
+}
+
+/**
+ * Quick Action Button - Action-oriented button with icon and subtitle
+ */
+@Composable
+private fun QuickActionButton(
+    icon: String,
+    title: String,
+    subtitle: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF353535)),
+        onClick = onClick
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = icon,
+                fontSize = 28.sp
+            )
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(
+                    text = title,
+                    color = Color.White,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Medium
+                )
+                Text(
+                    text = subtitle,
+                    color = Color.Gray,
+                    fontSize = 12.sp
+                )
+            }
+            Icon(
+                imageVector = Icons.Default.Dashboard,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(20.dp)
+            )
+        }
     }
 }
 

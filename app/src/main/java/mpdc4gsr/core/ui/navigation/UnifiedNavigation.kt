@@ -97,7 +97,11 @@ fun UnifiedNavHost(
             MainScreen(
                 onNavigateToSensors = { navController.navigate(UnifiedRoute.Dashboard.route) },
                 onNavigateToGallery = { navController.navigate(UnifiedRoute.ThermalGallery.route) },
-                onNavigateToSettings = { navController.navigate(UnifiedRoute.Settings.route) }
+                onNavigateToSettings = { navController.navigate(UnifiedRoute.Settings.route) },
+                onCaptureThermal = { navController.navigate(UnifiedRoute.ThermalCamera.route) },
+                onStartGSRSession = { navController.navigate(UnifiedRoute.GSRSettings.route) },
+                onThermalRGBCapture = { navController.navigate(UnifiedRoute.DualModeCamera.route) },
+                onViewRecentSessions = { navController.navigate(UnifiedRoute.GSRDataView.route) }
             )
         }
 
@@ -365,6 +369,27 @@ object NavigationHelper {
 
     fun navigateToPermissionRequest(navController: NavHostController) {
         navController.navigate(UnifiedRoute.PermissionRequest.route)
+    }
+    
+    // Quick Action Navigation - User-centric direct access
+    fun captureThermalImage(navController: NavHostController) {
+        navController.navigate(UnifiedRoute.ThermalCamera.route)
+    }
+    
+    fun startGSRSession(navController: NavHostController) {
+        navController.navigate(UnifiedRoute.GSRSettings.route)
+    }
+    
+    fun thermalRGBCapture(navController: NavHostController) {
+        navController.navigate(UnifiedRoute.DualModeCamera.route)
+    }
+    
+    fun viewGallery(navController: NavHostController) {
+        navController.navigate(UnifiedRoute.ThermalGallery.route)
+    }
+    
+    fun viewRecentSessions(navController: NavHostController) {
+        navController.navigate(UnifiedRoute.GSRDataView.route)
     }
 
     fun navigateWithPopUp(
