@@ -21,6 +21,9 @@ import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.core.ui.*
 import mpdc4gsr.feature.main.ui.MainActivity
 import mpdc4gsr.feature.gsr.data.*
+import mpdc4gsr.feature.gsr.ui.*
+import mpdc4gsr.feature.network.ui.*
+import mpdc4gsr.feature.camera.ui.*
 import mpdc4gsr.feature.testing.ui.NavigationTestActivity
 
 /**
@@ -210,7 +213,7 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         startActivity(
                             Intent(
                                 this@ComposeMigrationLauncherActivity,
-                                mpdc4gsr.compose.testing.TestingSuiteHubActivity::class.java
+                                TestingSuiteHubActivity::class.java
                             )
                         )
                     }
@@ -396,7 +399,7 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         startActivity(
                             Intent(
                                 this@ComposeMigrationLauncherActivity,
-                                mpdc4gsr.sensors.gsr.SessionManagerComposeActivity::class.java
+                                SessionManagerComposeActivity::class.java
                             )
                         )
                     }
@@ -410,7 +413,7 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         startActivity(
                             Intent(
                                 this@ComposeMigrationLauncherActivity,
-                                mpdc4gsr.sensors.gsr.MultiModalRecordingComposeActivity::class.java
+                                MultiModalRecordingComposeActivity::class.java
                             )
                         )
                     }
@@ -424,7 +427,7 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         startActivity(
                             Intent(
                                 this@ComposeMigrationLauncherActivity,
-                                mpdc4gsr.feature.gsr.ui.ShimmerConfigComposeActivity::class.java
+                                ShimmerConfigComposeActivity::class.java
                             )
                         )
                     }
@@ -438,7 +441,7 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         startActivity(
                             Intent(
                                 this@ComposeMigrationLauncherActivity,
-                                mpdc4gsr.sensors.gsr.ResearchTemplateComposeActivity::class.java
+                                ResearchTemplateComposeActivity::class.java
                             )
                         )
                     }
@@ -452,7 +455,7 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         startActivity(
                             Intent(
                                 this@ComposeMigrationLauncherActivity,
-                                mpdc4gsr.sensors.gsr.GSRVideoPlayerComposeActivity::class.java
+                                GSRVideoPlayerComposeActivity::class.java
                             )
                         )
                     }
@@ -466,7 +469,7 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         startActivity(
                             Intent(
                                 this@ComposeMigrationLauncherActivity,
-                                mpdc4gsr.sensors.gsr.GSRPlotComposeActivity::class.java
+                                GSRPlotComposeActivity::class.java
                             )
                         )
                     }
@@ -489,7 +492,7 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         startActivity(
                             Intent(
                                 this@ComposeMigrationLauncherActivity,
-                                mpdc4gsr.network.DevicePairingComposeActivity::class.java
+                                DevicePairingComposeActivity::class.java
                             )
                         )
                     }
@@ -517,7 +520,7 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         startActivity(
                             Intent(
                                 this@ComposeMigrationLauncherActivity,
-                                mpdc4gsr.sensors.gsr.GSRDeviceManagementComposeActivity::class.java
+                                GSRDeviceManagementComposeActivity::class.java
                             )
                         )
                     }
@@ -540,7 +543,7 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         startActivity(
                             Intent(
                                 this@ComposeMigrationLauncherActivity,
-                                mpdc4gsr.camera.integration.DualModeCameraComposeActivity::class.java
+                                DualModeCameraComposeActivity::class.java
                             )
                         )
                     }
@@ -805,7 +808,7 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         startActivity(
                             Intent(
                                 this@ComposeMigrationLauncherActivity,
-                                GSRDeviceManagementActivityCompose::class.java
+                                GSRDeviceManagementComposeActivity::class.java
                             )
                         )
                     }
@@ -819,7 +822,7 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         startActivity(
                             Intent(
                                 this@ComposeMigrationLauncherActivity,
-                                MultiModalRecordingActivityCompose::class.java
+                                MultiModalRecordingComposeActivity::class.java
                             )
                         )
                     }
@@ -833,7 +836,7 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         startActivity(
                             Intent(
                                 this@ComposeMigrationLauncherActivity,
-                                SessionManagerActivityCompose::class.java
+                                SessionManagerComposeActivity::class.java
                             )
                         )
                     }

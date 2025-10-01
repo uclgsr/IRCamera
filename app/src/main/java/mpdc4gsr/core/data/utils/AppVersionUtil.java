@@ -1,4 +1,4 @@
-package mpdc4gsr.utils;
+package mpdc4gsr.core.data.utils;
 
 import static android.content.Context.DOWNLOAD_SERVICE;
 import static com.mpdc4gsr.libunified.app.lms.LMS.SUCCESS;
