@@ -25,6 +25,13 @@ import org.greenrobot.eventbus.ThreadMode
  * - EventBus registration (backward compatibility)
  * - Language handling
  * - ViewModel integration patterns
+ *
+ * @param VM The type of [androidx.lifecycle.ViewModel] used by this activity.
+ *           Any subclass of [ViewModel] is supported. There is no dependency on project-specific
+ *           BaseViewModel APIs; implementations should not assume the presence of any APIs beyond
+ *           those provided by [ViewModel] itself.
+ *           Subclasses are responsible for providing a [ViewModel] via [createViewModel] and
+ *           implementing [Content] to display UI using the provided [ViewModel].
  */
 abstract class BaseComposeActivity<VM : ViewModel> : FragmentActivity() {
 
