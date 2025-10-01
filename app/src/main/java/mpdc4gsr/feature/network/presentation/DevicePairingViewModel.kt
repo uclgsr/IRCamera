@@ -3,6 +3,7 @@ package mpdc4gsr.feature.network.presentation
 import androidx.lifecycle.viewModelScope
 import com.mpdc4gsr.gsr.model.SessionInfo
 import mpdc4gsr.core.ui.BaseViewModel
+import mpdc4gsr.feature.network.data.NetworkClient
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
