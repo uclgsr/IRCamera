@@ -91,9 +91,9 @@ class AdaptiveThermalStreamer {
     }
 
     // Network client for actual thermal frame streaming
-    private var networkClient: mpdc4gsr.network.NetworkClient? = null
+    private var networkClient: mpdc4gsr.feature.network.data.NetworkClient? = null
 
-    fun setNetworkClient(client: mpdc4gsr.network.NetworkClient?) {
+    fun setNetworkClient(client: mpdc4gsr.feature.network.data.NetworkClient?) {
         networkClient = client
         Log.i(
             TAG,
@@ -230,7 +230,8 @@ class AdaptiveThermalStreamer {
 
             // Send thermal frame via network client using existing sendMessage API
             try {
-                val frameJson = JSONObject(frame.toNetworkMessage())
+                val frameMessage = frame.toNetworkMessage()
+                val frameJson = JSONObject(frameMessage)
                 networkClient?.let { client ->
                     // Use coroutine scope since sendMessage is suspend function
                     kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
