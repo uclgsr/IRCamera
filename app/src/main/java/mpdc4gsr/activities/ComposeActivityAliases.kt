@@ -12,17 +12,7 @@ typealias SensorDashboardComposeActivity = mpdc4gsr.feature.gsr.ui.SensorDashboa
 typealias SensorDashboardComposeEnhanced = mpdc4gsr.feature.gsr.ui.SensorDashboardComposeEnhanced
 typealias UnifiedSensorActivityCompose = mpdc4gsr.feature.gsr.ui.UnifiedSensorActivityCompose
 typealias ShimmerConfigComposeActivity = mpdc4gsr.feature.gsr.ui.ShimmerConfigComposeActivity
-typealias GSRDeviceManagementActivityCompose = mpdc4gsr.feature.gsr.ui.GSRDeviceManagementComposeActivity
-typealias MultiModalRecordingActivityCompose = mpdc4gsr.feature.gsr.ui.MultiModalRecordingComposeActivity
-typealias SessionManagerActivityCompose = mpdc4gsr.feature.gsr.ui.SessionManagerComposeActivity
-typealias GSRDataViewComposeActivity = mpdc4gsr.feature.gsr.ui.GSRDataViewComposeActivity
-typealias GSRPlotComposeActivity = mpdc4gsr.feature.gsr.ui.GSRPlotComposeActivity
-typealias GSRRawImageViewComposeActivity = mpdc4gsr.feature.gsr.ui.GSRRawImageViewComposeActivity
-typealias GSRSettingsComposeActivity = mpdc4gsr.feature.gsr.ui.GSRSettingsComposeActivity
-typealias GSRVideoPlayerComposeActivity = mpdc4gsr.feature.gsr.ui.GSRVideoPlayerComposeActivity
-typealias ResearchTemplateComposeActivity = mpdc4gsr.feature.gsr.ui.ResearchTemplateComposeActivity
-typealias SessionDetailComposeActivity = mpdc4gsr.feature.gsr.ui.SessionDetailComposeActivity
-typealias SessionExportComposeActivity = mpdc4gsr.feature.gsr.ui.SessionExportComposeActivity
+// Note: Additional GSR activity aliases are in sensors/gsr/ActivityAliases.kt to maintain backward compatibility
 
 // Network Feature Activities
 typealias NetworkClientTestActivityCompose = mpdc4gsr.feature.network.ui.NetworkClientTestActivityCompose

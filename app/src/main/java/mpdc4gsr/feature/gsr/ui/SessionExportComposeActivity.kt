@@ -1,4 +1,4 @@
-package mpdc4gsr.sensors.gsr
+package mpdc4gsr.feature.gsr.ui
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
