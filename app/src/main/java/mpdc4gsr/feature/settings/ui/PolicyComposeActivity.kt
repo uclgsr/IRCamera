@@ -417,7 +417,7 @@ class PolicyViewModel : BaseViewModel() {
     """.trimIndent()
 }
 
-class PolicyActivityCompose : BaseComposeActivity<PolicyViewModel>() {
+class PolicyComposeActivity : BaseComposeActivity<PolicyViewModel>() {
 
     companion object {
         const val KEY_THEME_TYPE = "key_theme_type"

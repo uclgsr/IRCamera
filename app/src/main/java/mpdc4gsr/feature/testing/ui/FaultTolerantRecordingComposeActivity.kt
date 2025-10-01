@@ -209,7 +209,7 @@ class FaultTolerantRecordingViewModel : BaseViewModel() {
     }
 }
 
-class FaultTolerantRecordingActivityCompose :
+class FaultTolerantRecordingComposeActivity :
     BaseComposeActivity<FaultTolerantRecordingViewModel>() {
 
     override fun createViewModel(): FaultTolerantRecordingViewModel =

@@ -58,7 +58,7 @@ class WebViewViewModel : BaseViewModel() {
     }
 }
 
-class WebViewActivityCompose : BaseComposeActivity<WebViewViewModel>() {
+class WebViewComposeActivity : BaseComposeActivity<WebViewViewModel>() {
 
     override fun createViewModel(): WebViewViewModel = viewModels<WebViewViewModel>().value
 

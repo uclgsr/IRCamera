@@ -79,7 +79,7 @@ class ClauseViewModel : BaseViewModel() {
     }
 }
 
-class ClauseActivityCompose : BaseComposeActivity<ClauseViewModel>() {
+class ClauseComposeActivity : BaseComposeActivity<ClauseViewModel>() {
 
     private val clauseVM: ClauseViewModel by viewModels()
 
@@ -231,7 +231,7 @@ class ClauseActivityCompose : BaseComposeActivity<ClauseViewModel>() {
                                         val success = viewModel.confirmInitApp(context)
                                         if (success) {
                                             NavigationManager.build(RouterConfig.MAIN)
-                                                .navigation(context as ClauseActivityCompose)
+                                                .navigation(context as ClauseComposeActivity)
                                             finish()
                                         }
                                     }

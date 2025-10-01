@@ -70,7 +70,7 @@ class DeviceTypeViewModel : BaseViewModel() {
     }
 }
 
-class DeviceTypeActivityCompose : BaseComposeActivity<DeviceTypeViewModel>() {
+class DeviceTypeComposeActivity : BaseComposeActivity<DeviceTypeViewModel>() {
 
     private val deviceTypeVM: DeviceTypeViewModel by viewModels()
 
@@ -152,14 +152,14 @@ class DeviceTypeActivityCompose : BaseComposeActivity<DeviceTypeViewModel>() {
                                             NavigationManager.getInstance()
                                                 .build(RouterConfig.IR_DEVICE_ADD)
                                                 .withBoolean("isTS004", true)
-                                                .navigation(context as DeviceTypeActivityCompose)
+                                                .navigation(context as DeviceTypeComposeActivity)
                                         }
 
                                         IRDeviceType.TC007 -> {
                                             NavigationManager.getInstance()
                                                 .build(RouterConfig.IR_DEVICE_ADD)
                                                 .withBoolean("isTS004", false)
-                                                .navigation(context as DeviceTypeActivityCompose)
+                                                .navigation(context as DeviceTypeComposeActivity)
                                         }
                                     }
                                 }

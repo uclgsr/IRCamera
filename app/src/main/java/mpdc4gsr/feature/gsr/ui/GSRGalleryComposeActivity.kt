@@ -30,7 +30,7 @@ import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.core.ui.BaseViewModel
 
 /**
- * GSRGalleryActivityCompose - Enhanced GSR Data Gallery
+ * GSRGalleryComposeActivity - Enhanced GSR Data Gallery
  *
  * Modern gallery interface for GSR recordings with:
  * - Grid and list view modes for recorded sessions
@@ -39,7 +39,7 @@ import mpdc4gsr.core.ui.BaseViewModel
  * - Batch operations for multiple sessions
  * - Integration with analysis and export tools
  */
-class GSRGalleryActivityCompose : BaseComposeActivity<GSRGalleryViewModel>() {
+class GSRGalleryComposeActivity : BaseComposeActivity<GSRGalleryViewModel>() {
 
     override fun createViewModel(): GSRGalleryViewModel = GSRGalleryViewModel()
 

@@ -145,7 +145,7 @@ class IRGalleryEditViewModel : BaseViewModel() {
     }
 }
 
-class IRGalleryEditActivityCompose : BaseComposeActivity<IRGalleryEditViewModel>() {
+class IRGalleryEditComposeActivity : BaseComposeActivity<IRGalleryEditViewModel>() {
 
     private val viewModelInstance: IRGalleryEditViewModel by viewModels()
 

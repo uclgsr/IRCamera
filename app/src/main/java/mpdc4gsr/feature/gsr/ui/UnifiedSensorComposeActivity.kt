@@ -172,7 +172,7 @@ class UnifiedSensorViewModel : BaseViewModel() {
     }
 }
 
-class UnifiedSensorActivityCompose : BaseComposeActivity<UnifiedSensorViewModel>() {
+class UnifiedSensorComposeActivity : BaseComposeActivity<UnifiedSensorViewModel>() {
 
     override fun createViewModel(): UnifiedSensorViewModel =
         viewModels<UnifiedSensorViewModel>().value

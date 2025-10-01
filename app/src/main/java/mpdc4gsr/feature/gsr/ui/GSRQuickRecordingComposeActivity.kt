@@ -30,7 +30,7 @@ import androidx.lifecycle.viewModelScope
 import kotlin.random.Random
 
 /**
- * GSRQuickRecordingActivityCompose - Enhanced Quick GSR Recording
+ * GSRQuickRecordingComposeActivity - Enhanced Quick GSR Recording
  *
  * Streamlined interface for rapid GSR data collection with:
  * - One-touch recording start/stop functionality
@@ -39,7 +39,7 @@ import kotlin.random.Random
  * - Live data visualization and statistics
  * - Automatic session naming and organization
  */
-class GSRQuickRecordingActivityCompose : BaseComposeActivity<GSRQuickRecordingViewModel>() {
+class GSRQuickRecordingComposeActivity : BaseComposeActivity<GSRQuickRecordingViewModel>() {
 
     override fun createViewModel(): GSRQuickRecordingViewModel = GSRQuickRecordingViewModel()
 

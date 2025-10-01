@@ -19,22 +19,22 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.feature.main.ui.MainActivity
-import mpdc4gsr.feature.main.ui.DeviceTypeActivityCompose
+import mpdc4gsr.feature.main.ui.DeviceTypeComposeActivity
 import mpdc4gsr.feature.gsr.ui.*
 import mpdc4gsr.feature.network.ui.*
 import mpdc4gsr.feature.camera.ui.*
 import mpdc4gsr.feature.settings.ui.SettingsComposeActivity
-import mpdc4gsr.feature.settings.ui.VersionActivityCompose
-import mpdc4gsr.feature.settings.ui.WebViewActivityCompose
-import mpdc4gsr.feature.settings.ui.PolicyActivityCompose
-import mpdc4gsr.feature.settings.ui.MoreHelpActivityCompose
-import mpdc4gsr.feature.settings.ui.PdfActivityCompose
-import mpdc4gsr.feature.settings.ui.ClauseActivityCompose
-import mpdc4gsr.feature.thermal.ui.IRGalleryEditActivityCompose
+import mpdc4gsr.feature.settings.ui.VersionComposeActivity
+import mpdc4gsr.feature.settings.ui.WebViewComposeActivity
+import mpdc4gsr.feature.settings.ui.PolicyComposeActivity
+import mpdc4gsr.feature.settings.ui.MoreHelpComposeActivity
+import mpdc4gsr.feature.settings.ui.PdfComposeActivity
+import mpdc4gsr.feature.settings.ui.ClauseComposeActivity
+import mpdc4gsr.feature.thermal.ui.IRGalleryEditComposeActivity
 import mpdc4gsr.feature.testing.ui.NavigationTestActivity
 import mpdc4gsr.feature.testing.ui.TestingSuiteHubActivity
 import mpdc4gsr.feature.testing.ui.SensorDashboardTestActivityCompose
-import mpdc4gsr.feature.testing.ui.FaultTolerantRecordingActivityCompose
+import mpdc4gsr.feature.testing.ui.FaultTolerantRecordingComposeActivity
 import mpdc4gsr.feature.testing.ui.ComposeComponentsShowcaseActivity
 import mpdc4gsr.core.ui.PermissionRequestComposeActivity
 
@@ -247,7 +247,7 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                     onClick = {
                         val intent = Intent(
                             this@ComposeMigrationLauncherActivity,
-                            WebViewActivityCompose::class.java
+                            WebViewComposeActivity::class.java
                         )
                         intent.putExtra("URL", "https://github.com/uclgsr/IRCamera")
                         startActivity(intent)
@@ -262,7 +262,7 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         startActivity(
                             Intent(
                                 this@ComposeMigrationLauncherActivity,
-                                VersionActivityCompose::class.java
+                                VersionComposeActivity::class.java
                             )
                         )
                     }
@@ -275,9 +275,9 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                     onClick = {
                         val intent = Intent(
                             this@ComposeMigrationLauncherActivity,
-                            PolicyActivityCompose::class.java
+                            PolicyComposeActivity::class.java
                         )
-                        intent.putExtra(PolicyActivityCompose.KEY_THEME_TYPE, 2) // Privacy Policy
+                        intent.putExtra(PolicyComposeActivity.KEY_THEME_TYPE, 2) // Privacy Policy
                         startActivity(intent)
                     }
                 )
@@ -290,7 +290,7 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         startActivity(
                             Intent(
                                 this@ComposeMigrationLauncherActivity,
-                                DeviceTypeActivityCompose::class.java
+                                DeviceTypeComposeActivity::class.java
                             )
                         )
                     }
@@ -303,7 +303,7 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                     onClick = {
                         val intent = Intent(
                             this@ComposeMigrationLauncherActivity,
-                            MoreHelpActivityCompose::class.java
+                            MoreHelpComposeActivity::class.java
                         )
                         intent.putExtra("SETTING_CONNECTION_TYPE", 1) // Connection help
                         startActivity(intent)
@@ -317,7 +317,7 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                     onClick = {
                         val intent = Intent(
                             this@ComposeMigrationLauncherActivity,
-                            PdfActivityCompose::class.java
+                            PdfComposeActivity::class.java
                         )
                         intent.putExtra("isTS001", true) // TC001 manual
                         startActivity(intent)
@@ -332,7 +332,7 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         startActivity(
                             Intent(
                                 this@ComposeMigrationLauncherActivity,
-                                ClauseActivityCompose::class.java
+                                ClauseComposeActivity::class.java
                             )
                         )
                     }
@@ -346,7 +346,7 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         startActivity(
                             Intent(
                                 this@ComposeMigrationLauncherActivity,
-                                mpdc4gsr.feature.network.ui.NetworkConfigActivityCompose::class.java
+                                mpdc4gsr.feature.network.ui.NetworkConfigComposeActivity::class.java
                             )
                         )
                     }
@@ -360,7 +360,7 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         startActivity(
                             Intent(
                                 this@ComposeMigrationLauncherActivity,
-                                mpdc4gsr.feature.gsr.ui.UnifiedSensorActivityCompose::class.java
+                                mpdc4gsr.feature.gsr.ui.UnifiedSensorComposeActivity::class.java
                             )
                         )
                     }
@@ -681,7 +681,7 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         startActivity(
                             Intent(
                                 this@ComposeMigrationLauncherActivity,
-                                FaultTolerantRecordingActivityCompose::class.java
+                                FaultTolerantRecordingComposeActivity::class.java
                             )
                         )
                     }
@@ -709,7 +709,7 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         startActivity(
                             Intent(
                                 this@ComposeMigrationLauncherActivity,
-                                IRGalleryEditActivityCompose::class.java
+                                IRGalleryEditComposeActivity::class.java
                             )
                         )
                     }

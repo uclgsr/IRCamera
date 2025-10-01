@@ -135,7 +135,7 @@ class PdfViewModel : BaseViewModel() {
     }
 }
 
-class PdfActivityCompose : BaseComposeActivity<PdfViewModel>() {
+class PdfComposeActivity : BaseComposeActivity<PdfViewModel>() {
 
     override fun createViewModel(): PdfViewModel = viewModels<PdfViewModel>().value
 

@@ -129,7 +129,7 @@ class MoreHelpViewModel : BaseViewModel() {
     }
 }
 
-class MoreHelpActivityCompose : BaseComposeActivity<MoreHelpViewModel>() {
+class MoreHelpComposeActivity : BaseComposeActivity<MoreHelpViewModel>() {
 
     private lateinit var wifiManager: WifiManager
 

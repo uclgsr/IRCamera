@@ -70,7 +70,7 @@ class VersionViewModel : BaseViewModel() {
     }
 }
 
-class VersionActivityCompose : BaseComposeActivity<VersionViewModel>() {
+class VersionComposeActivity : BaseComposeActivity<VersionViewModel>() {
 
     override fun createViewModel(): VersionViewModel = viewModels<VersionViewModel>().value
 
@@ -287,8 +287,8 @@ class VersionActivityCompose : BaseComposeActivity<VersionViewModel>() {
                                     onClick = {
                                         // Navigate to privacy policy
                                         val intent =
-                                            Intent(context, PolicyActivityCompose::class.java).apply {
-                                                putExtra(PolicyActivityCompose.KEY_THEME_TYPE, 2)
+                                            Intent(context, PolicyComposeActivity::class.java).apply {
+                                                putExtra(PolicyComposeActivity.KEY_THEME_TYPE, 2)
                                             }
                                         context.startActivity(intent)
                                     },
@@ -301,8 +301,8 @@ class VersionActivityCompose : BaseComposeActivity<VersionViewModel>() {
                                     onClick = {
                                         // Navigate to terms
                                         val intent =
-                                            Intent(context, PolicyActivityCompose::class.java).apply {
-                                                putExtra(PolicyActivityCompose.KEY_THEME_TYPE, 1)
+                                            Intent(context, PolicyComposeActivity::class.java).apply {
+                                                putExtra(PolicyComposeActivity.KEY_THEME_TYPE, 1)
                                             }
                                         context.startActivity(intent)
                                     },

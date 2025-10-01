@@ -196,7 +196,7 @@ class NetworkConfigViewModel : BaseViewModel() {
     }
 }
 
-class NetworkConfigActivityCompose : BaseComposeActivity<NetworkConfigViewModel>() {
+class NetworkConfigComposeActivity : BaseComposeActivity<NetworkConfigViewModel>() {
 
     private lateinit var networkSettings: NetworkSettings
     private lateinit var permissionManager: PermissionManager

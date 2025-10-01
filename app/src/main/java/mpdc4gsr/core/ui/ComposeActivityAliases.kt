@@ -6,18 +6,18 @@ package mpdc4gsr.core.ui
  */
 
 // GSR Feature Activities
-typealias GSRGalleryActivityCompose = mpdc4gsr.feature.gsr.ui.GSRGalleryActivityCompose
-typealias GSRQuickRecordingActivityCompose = mpdc4gsr.feature.gsr.ui.GSRQuickRecordingActivityCompose
+typealias GSRGalleryComposeActivity = mpdc4gsr.feature.gsr.ui.GSRGalleryComposeActivity
+typealias GSRQuickRecordingComposeActivity = mpdc4gsr.feature.gsr.ui.GSRQuickRecordingComposeActivity
 typealias SensorDashboardComposeActivity = mpdc4gsr.feature.gsr.ui.SensorDashboardComposeActivity
 typealias SensorDashboardComposeEnhanced = mpdc4gsr.feature.gsr.ui.SensorDashboardComposeEnhanced
-typealias UnifiedSensorActivityCompose = mpdc4gsr.feature.gsr.ui.UnifiedSensorActivityCompose
+typealias UnifiedSensorComposeActivity = mpdc4gsr.feature.gsr.ui.UnifiedSensorComposeActivity
 typealias ShimmerConfigComposeActivity = mpdc4gsr.feature.gsr.ui.ShimmerConfigComposeActivity
 // Note: Additional GSR activity aliases are in sensors/gsr/ActivityAliases.kt to maintain backward compatibility
 
 // Network Feature Activities
 typealias NetworkClientTestActivityCompose = mpdc4gsr.feature.network.ui.NetworkClientTestActivityCompose
 typealias NetworkClientTestComposeActivity = mpdc4gsr.feature.network.ui.NetworkClientTestComposeActivity
-typealias NetworkConfigActivityCompose = mpdc4gsr.feature.network.ui.NetworkConfigActivityCompose
+typealias NetworkConfigComposeActivity = mpdc4gsr.feature.network.ui.NetworkConfigComposeActivity
 typealias SimpleNetworkTestActivityCompose = mpdc4gsr.feature.network.ui.SimpleNetworkTestActivityCompose
 
 // Camera Feature Activities
@@ -25,23 +25,23 @@ typealias DualModeCameraActivityCompose = mpdc4gsr.feature.camera.ui.DualModeCam
 
 // Settings Feature Activities
 typealias SettingsComposeActivity = mpdc4gsr.feature.settings.ui.SettingsComposeActivity
-typealias MoreHelpActivityCompose = mpdc4gsr.feature.settings.ui.MoreHelpActivityCompose
-typealias PolicyActivityCompose = mpdc4gsr.feature.settings.ui.PolicyActivityCompose
-typealias ClauseActivityCompose = mpdc4gsr.feature.settings.ui.ClauseActivityCompose
-typealias VersionActivityCompose = mpdc4gsr.feature.settings.ui.VersionActivityCompose
-typealias WebViewActivityCompose = mpdc4gsr.feature.settings.ui.WebViewActivityCompose
-typealias PdfActivityCompose = mpdc4gsr.feature.settings.ui.PdfActivityCompose
+typealias MoreHelpComposeActivity = mpdc4gsr.feature.settings.ui.MoreHelpComposeActivity
+typealias PolicyComposeActivity = mpdc4gsr.feature.settings.ui.PolicyComposeActivity
+typealias ClauseComposeActivity = mpdc4gsr.feature.settings.ui.ClauseComposeActivity
+typealias VersionComposeActivity = mpdc4gsr.feature.settings.ui.VersionComposeActivity
+typealias WebViewComposeActivity = mpdc4gsr.feature.settings.ui.WebViewComposeActivity
+typealias PdfComposeActivity = mpdc4gsr.feature.settings.ui.PdfComposeActivity
 
 // Testing Feature Activities
 typealias SensorDashboardTestActivityCompose = mpdc4gsr.feature.testing.ui.SensorDashboardTestActivityCompose
-typealias FaultTolerantRecordingActivityCompose = mpdc4gsr.feature.testing.ui.FaultTolerantRecordingActivityCompose
+typealias FaultTolerantRecordingComposeActivity = mpdc4gsr.feature.testing.ui.FaultTolerantRecordingComposeActivity
 typealias ComposeComponentsShowcaseActivity = mpdc4gsr.feature.testing.ui.ComposeComponentsShowcaseActivity
 typealias ComposeMigrationLauncherActivity = mpdc4gsr.feature.testing.ui.ComposeMigrationLauncherActivity
 
 // Main Feature Activities
 typealias UnifiedComposeActivity = mpdc4gsr.feature.main.ui.UnifiedComposeActivity
-typealias DeviceTypeActivityCompose = mpdc4gsr.feature.main.ui.DeviceTypeActivityCompose
+typealias DeviceTypeComposeActivity = mpdc4gsr.feature.main.ui.DeviceTypeComposeActivity
 // Note: MainActivity alias is in MainActivity.kt to avoid circular reference
 
 // Thermal Feature Activities
-typealias IRGalleryEditActivityCompose = mpdc4gsr.feature.thermal.ui.IRGalleryEditActivityCompose
+typealias IRGalleryEditComposeActivity = mpdc4gsr.feature.thermal.ui.IRGalleryEditComposeActivity

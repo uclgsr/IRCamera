@@ -61,8 +61,8 @@
         </activity>
 
         <!-- Jetpack Compose Activities -->
-        <activity android:name="mpdc4gsr.feature.settings.ui.PolicyActivityCompose" />
-        <activity android:name="mpdc4gsr.feature.settings.ui.VersionActivityCompose" />
+        <activity android:name="mpdc4gsr.feature.settings.ui.PolicyComposeActivity" />
+        <activity android:name="mpdc4gsr.feature.settings.ui.VersionComposeActivity" />
 
         <activity
             android:name="mpdc4gsr.feature.settings.ui.SettingsComposeActivity"
@@ -82,7 +82,7 @@
         </receiver>
 
         <activity
-            android:name="mpdc4gsr.feature.network.ui.NetworkConfigActivityCompose"
+            android:name="mpdc4gsr.feature.network.ui.NetworkConfigComposeActivity"
             android:exported="false"
             android:label="Network Configuration"
             android:screenOrientation="userPortrait"
@@ -98,7 +98,7 @@
             android:label="@string/gsr_quick_access" />
 
         <activity
-            android:name="mpdc4gsr.feature.testing.ui.FaultTolerantRecordingActivityCompose"
+            android:name="mpdc4gsr.feature.testing.ui.FaultTolerantRecordingComposeActivity"
             android:exported="false"
             android:label="@string/enhanced_recording_label" />
 
