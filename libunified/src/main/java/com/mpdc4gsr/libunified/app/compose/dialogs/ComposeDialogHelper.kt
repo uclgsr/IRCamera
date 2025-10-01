@@ -18,7 +18,7 @@ class ComposeDialogWrapper(
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
-        
+
         val composeView = ComposeView(context).apply {
             setContent {
                 LibUnifiedTheme {
@@ -26,7 +26,7 @@ class ComposeDialogWrapper(
                 }
             }
         }
-        
+
         setContentView(composeView)
         window?.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,

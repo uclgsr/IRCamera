@@ -116,7 +116,7 @@ fun CarDetectDialog(
     onItemSelected: (CarDetectChildItem) -> Unit,
     onDismiss: () -> Unit
 ) {
-    val expandedStates = remember { 
+    val expandedStates = remember {
         androidx.compose.runtime.snapshots.SnapshotStateList<Boolean>().apply {
             addAll(items.map { it.isExpanded })
         }
@@ -185,7 +185,7 @@ fun CarDetectDialog(
                                 onDismiss()
                             }
                         )
-                        
+
                         if (index < items.size - 1) {
                             HorizontalDivider(
                                 color = Color.LightGray,
@@ -221,7 +221,7 @@ private fun CarDetectSection(
                 color = Color.Black,
                 modifier = Modifier.weight(1f)
             )
-            
+
             Text(
                 text = if (isExpanded) "▼" else "▶",
                 fontSize = 12.sp,
@@ -244,7 +244,7 @@ private fun CarDetectSection(
                         color = Color.DarkGray,
                         modifier = Modifier.weight(1f)
                     )
-                    
+
                     if (child.isSelected) {
                         Text(
                             text = "✓",
@@ -330,7 +330,7 @@ fun CameraProgressDialog(
                             .height(8.dp),
                         color = MaterialTheme.colorScheme.primary,
                     )
-                    
+
                     Text(
                         text = "${(progress * 100).toInt()}%",
                         fontSize = 16.sp,

@@ -184,7 +184,7 @@ fun UnifiedNavHost(
                     } catch (e: NoClassDefFoundError) {
                         null
                     }
-                    
+
                     if (activityClass != null) {
                         context.startActivity(Intent(context, activityClass))
                     } else {
@@ -218,7 +218,7 @@ fun UnifiedNavHost(
                             null
                         }
                     }
-                    
+
                     if (activityClass != null) {
                         context.startActivity(Intent(context, activityClass))
                     }
@@ -239,7 +239,7 @@ fun UnifiedNavHost(
                     } catch (e: NoClassDefFoundError) {
                         null
                     }
-                    
+
                     if (activityClass != null) {
                         context.startActivity(Intent(context, activityClass))
                     }
@@ -259,7 +259,7 @@ fun UnifiedNavHost(
                     } catch (e: NoClassDefFoundError) {
                         null
                     }
-                    
+
                     if (activityClass != null) {
                         context.startActivity(Intent(context, activityClass))
                     }
@@ -331,7 +331,7 @@ fun UnifiedNavHost(
                     } catch (e: NoClassDefFoundError) {
                         null
                     }
-                    
+
                     if (activityClass != null) {
                         context.startActivity(Intent(context, activityClass))
                     }

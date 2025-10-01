@@ -19,7 +19,7 @@ import com.mpdc4gsr.libunified.databinding.DialogFirmwareUpBinding
 
 class FirmwareUpDialog(context: Context) : Dialog(context, R.style.InfoDialog),
     View.OnClickListener {
-    
+
     private lateinit var tvTitle: TextView
     private lateinit var tvSize: TextView
     private lateinit var tvContent: TextView
@@ -67,7 +67,7 @@ class FirmwareUpDialog(context: Context) : Dialog(context, R.style.InfoDialog),
         setCancelable(false)
         setCanceledOnTouchOutside(false)
         setContentView(view)
-        
+
         tvTitle = view.findViewById(R.id.tv_title)
         tvSize = view.findViewById(R.id.tv_size)
         tvContent = view.findViewById(R.id.tv_content)

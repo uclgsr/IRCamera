@@ -24,7 +24,7 @@ import com.mpdc4gsr.libunified.databinding.DialogConfirmSelectBinding
 class ConfirmSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog),
     View.OnClickListener {
     var onConfirmClickListener: ((isSelect: Boolean) -> Unit)? = null
-    
+
     private lateinit var ivIcon: ImageView
     private lateinit var tvTitle: TextView
     private lateinit var rlMessage: ConstraintLayout
@@ -80,7 +80,7 @@ class ConfirmSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog
 
         val view = LayoutInflater.from(context).inflate(R.layout.dialog_confirm_select, null)
         setContentView(view)
-        
+
         ivIcon = view.findViewById(R.id.iv_icon)
         tvTitle = view.findViewById(R.id.tv_title)
         rlMessage = view.findViewById(R.id.rl_message)

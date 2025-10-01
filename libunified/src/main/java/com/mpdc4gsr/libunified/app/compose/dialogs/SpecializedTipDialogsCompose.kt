@@ -129,7 +129,8 @@ fun ShutterDialog(
 
     @Suppress("UNCHECKED_CAST")
     Dialog(
-        onDismissRequest = (if (!isCalibrating) onDismiss else {}) as () -> Unit,
+        onDismissRequest = (if (!isCalibrating) onDismiss else {
+        }) as () -> Unit,
         properties = DialogProperties(
             dismissOnBackPress = !isCalibrating,
             dismissOnClickOutside = false
@@ -368,7 +369,7 @@ fun WaterMarkDialog(
                     )
                     Switch(
                         checked = watermarkEnabled,
-                        onCheckedChange = { 
+                        onCheckedChange = {
                             watermarkEnabled = it
                             onWatermarkChange(it)
                         }
@@ -389,7 +390,7 @@ fun WaterMarkDialog(
                     )
                     Switch(
                         checked = dateTimeEnabled,
-                        onCheckedChange = { 
+                        onCheckedChange = {
                             dateTimeEnabled = it
                             onDateTimeChange(it)
                         }
