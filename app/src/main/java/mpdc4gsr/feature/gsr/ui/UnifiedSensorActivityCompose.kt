@@ -35,8 +35,8 @@ import mpdc4gsr.core.data.UnifiedNetworkController
 import mpdc4gsr.core.data.UnifiedSessionManager
 import mpdc4gsr.core.data.model.DeviceInfo
 import mpdc4gsr.core.data.model.SessionQuality
-import mpdc4gsr.sensors.unified.model.SessionStatus
-import mpdc4gsr.sensors.unified.model.SessionType
+import mpdc4gsr.core.data.model.SessionStatus
+import mpdc4gsr.core.data.model.SessionType
 import mpdc4gsr.core.ui.BaseViewModel
 
 enum class UnifiedSensorType(

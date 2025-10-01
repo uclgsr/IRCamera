@@ -22,9 +22,9 @@ import mpdc4gsr.core.StructuredLogger
 import mpdc4gsr.core.data.model.SessionConfig
 import mpdc4gsr.core.data.model.SessionInfo
 import mpdc4gsr.core.data.model.SessionQuality
-import mpdc4gsr.sensors.unified.model.SessionStatistics
-import mpdc4gsr.sensors.unified.model.SessionStatus
-import mpdc4gsr.sensors.unified.model.SessionSummary
+import mpdc4gsr.core.data.model.SessionStatistics
+import mpdc4gsr.core.data.model.SessionStatus
+import mpdc4gsr.core.data.model.SessionSummary
 import org.json.JSONObject
 import java.io.File
 import java.text.SimpleDateFormat

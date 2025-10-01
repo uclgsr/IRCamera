@@ -111,6 +111,8 @@ import mpdc4gsr.feature.gsr.data.RealShimmerDeviceFactory
 
 **Affected Files:** 20 files
 
+**Note:** `ShimmerDeviceManager` was consolidated from multiple locations (`mpdc4gsr.sensors.gsr.ShimmerDeviceManager` and `mpdc4gsr.sensors.unified.ShimmerDeviceManager`) into a single location at `mpdc4gsr.core.data.ShimmerDeviceManager`.
+
 #### Camera Managers
 **Old Path:**
 ```kotlin
@@ -139,6 +141,10 @@ import mpdc4gsr.sensors.unified.model.PCControllerInfo
 import mpdc4gsr.sensors.unified.model.SessionConfig
 import mpdc4gsr.sensors.unified.model.SessionInfo
 import mpdc4gsr.sensors.unified.model.SessionQuality
+import mpdc4gsr.sensors.unified.model.SessionStatistics
+import mpdc4gsr.sensors.unified.model.SessionStatus
+import mpdc4gsr.sensors.unified.model.SessionSummary
+import mpdc4gsr.sensors.unified.model.SessionType
 ```
 
 **New Path:**
@@ -150,9 +156,15 @@ import mpdc4gsr.core.data.model.PCControllerInfo
 import mpdc4gsr.core.data.model.SessionConfig
 import mpdc4gsr.core.data.model.SessionInfo
 import mpdc4gsr.core.data.model.SessionQuality
+import mpdc4gsr.core.data.model.SessionStatistics
+import mpdc4gsr.core.data.model.SessionStatus
+import mpdc4gsr.core.data.model.SessionSummary
+import mpdc4gsr.core.data.model.SessionType
 ```
 
-**Affected Files:** 25 files
+**Affected Files:** 27 files
+
+**Note:** All session-related models (SessionConfig, SessionInfo, SessionQuality, SessionStatistics, SessionStatus, SessionSummary, SessionType) have been consolidated into `mpdc4gsr.core.data.model`.
 
 ### 4. Unified Controllers
 
@@ -259,14 +271,20 @@ import mpdc4gsr.feature.network.ui.*
 | `mpdc4gsr.compose.components` | `mpdc4gsr.core.ui.components` | UI components |
 | `mpdc4gsr.sensors.*` | `mpdc4gsr.core.data.*` | Core sensor interfaces |
 | `mpdc4gsr.sensors.thermal.*` | `mpdc4gsr.feature.thermal.ui.*` | Thermal sensor implementation |
-| `mpdc4gsr.sensors.gsr.*` | `mpdc4gsr.feature.gsr.data.*` | GSR sensor implementation |
+| `mpdc4gsr.sensors.gsr.*` (except ShimmerDeviceManager) | `mpdc4gsr.feature.gsr.data.*` | GSR sensor implementation |
+| `mpdc4gsr.sensors.gsr.ShimmerDeviceManager` | `mpdc4gsr.core.data.ShimmerDeviceManager` | Shimmer device manager (consolidated) |
 | `mpdc4gsr.sensors.camera.*` | `mpdc4gsr.feature.camera.data.*` | Camera managers |
-| `mpdc4gsr.sensors.unified.model` | `mpdc4gsr.core.data.model` | Data models |
-| `mpdc4gsr.sensors.unified` | `mpdc4gsr.core.data` | Unified controllers |
+| `mpdc4gsr.sensors.unified.model.*` | `mpdc4gsr.core.data.model.*` | Data models (all session models included) |
+| `mpdc4gsr.sensors.unified.*` (controllers) | `mpdc4gsr.core.data.*` | Unified controllers |
+| `mpdc4gsr.sensors.unified.ShimmerDeviceManager` | `mpdc4gsr.core.data.ShimmerDeviceManager` | Shimmer device manager (consolidated) |
 | `mpdc4gsr.data.*` | `mpdc4gsr.core.data.*` or `mpdc4gsr.core.data.utils.*` | Data utilities |
 | `mpdc4gsr.network.*` | `mpdc4gsr.feature.network.data.*` | Network components |
 | `mpdc4gsr.permissions.*` | `mpdc4gsr.core.ui.*` | Permission managers |
-| `mpdc4gsr.compose.screens` | `mpdc4gsr.feature.*.ui` | Screen implementations |
+| `mpdc4gsr.compose.screens.*` | `mpdc4gsr.feature.*.ui.*` | Screen implementations |
+
+**Note on Consolidations:**
+- `ShimmerDeviceManager` from both `mpdc4gsr.sensors.gsr` and `mpdc4gsr.sensors.unified` has been consolidated to `mpdc4gsr.core.data.ShimmerDeviceManager`
+- All session-related models (SessionConfig, SessionInfo, SessionQuality, SessionStatistics, SessionStatus, SessionSummary, SessionType) are now in `mpdc4gsr.core.data.model`
 
 ## Statistics
 
