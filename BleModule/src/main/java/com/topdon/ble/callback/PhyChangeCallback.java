@@ -10,7 +10,7 @@ import com.topdon.ble.Request;
  */
 public interface PhyChangeCallback extends RequestFailedCallback {
     /**
-     * @param request 
+     * @param request
      * @param txPhy   。{@link BluetoothDevice#PHY_LE_1M_MASK}
      * @param rxPhy   。{@link BluetoothDevice#PHY_LE_1M_MASK}
      */

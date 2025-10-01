@@ -268,7 +268,10 @@ class ReportPreviewFirstComposeActivity : BaseComposeActivity<ReportPreviewViewM
             colors = CardDefaults.cardColors(
                 containerColor = if (selected) MaterialTheme.colorScheme.primary else Color(0xFF2A2A2A)
             ),
-            border = if (selected) null else androidx.compose.foundation.BorderStroke(1.dp, Color.White.copy(alpha = 0.2f))
+            border = if (selected) null else androidx.compose.foundation.BorderStroke(
+                1.dp,
+                Color.White.copy(alpha = 0.2f)
+            )
         ) {
             Column(
                 modifier = Modifier

@@ -279,9 +279,9 @@ class ConnectionImpl implements Connection, ScanListener {
     }
 
     /**
-     * 
      *
-     * @param reconnect 
+     *
+     * @param reconnect
      */
     private void doDisconnect(boolean reconnect) {
         clearRequestQueueAndNotify();
@@ -913,7 +913,7 @@ class ConnectionImpl implements Connection, ScanListener {
     }
 
     /**
-     * 
+     *
      */
     private void clearRequestQueueAndNotify() {
         synchronized (this) {

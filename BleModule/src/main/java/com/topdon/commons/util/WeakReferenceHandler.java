@@ -9,7 +9,7 @@ import java.lang.ref.WeakReference;
  * @Desc Handle
  * @ClassName WeakReferenceHandler
  * @Email 616862466@qq.com
- * @Author 
+ * @Author
  * @Date 2022/10/12 9:25
  */
 public class WeakReferenceHandler<T> extends Handler {

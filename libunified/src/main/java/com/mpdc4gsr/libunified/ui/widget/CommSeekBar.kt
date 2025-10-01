@@ -197,7 +197,7 @@ class CommSeekBar : AppCompatSeekBar {
     }
 
     /**
-     * 
+     *
      */
     fun stopTrackTouchLevel() {
         if (level > 0) {

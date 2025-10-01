@@ -261,9 +261,9 @@ public class RangeSeekBar extends View {
         int heightMode = MeasureSpec.getMode(heightMeasureSpec);
         /*
          * onMeasurewidthMeasureSpecheightMeasureSpec，
-         * MeasureSpec.EXACTLY 
-         * MeasureSpec.AT_MOST 
-         * MeasureSpec.UNSPECIFIED 
+         * MeasureSpec.EXACTLY
+         * MeasureSpec.AT_MOST
+         * MeasureSpec.UNSPECIFIED
          */
 
         if (heightMode == MeasureSpec.EXACTLY) {

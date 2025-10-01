@@ -72,7 +72,7 @@ public interface EventObserver extends Observer {
     }
 
     /**
-     *  / Indication
+     * / Indication
      *
      * @param request
      * @param isEnabled

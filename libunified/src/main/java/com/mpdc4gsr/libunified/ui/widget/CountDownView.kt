@@ -48,7 +48,7 @@ class CountDownView : View {
     private var valueAnimator: ValueAnimator? = null
 
     /**
-     * 
+     *
      */
     private var mListener: OnCountDownListener? = null
 
@@ -123,7 +123,7 @@ class CountDownView : View {
 
 
     /**
-     *  
+     *
      */
     fun setCountdownTime(mCountdownTime: Int) {
         this.mCountdownTime = mCountdownTime
@@ -132,7 +132,7 @@ class CountDownView : View {
     }
 
     /**
-     * 
+     *
      */
     private fun getValueAnimator(countdownTime: Long): ValueAnimator? {
         val valueAnimator = ValueAnimator.ofFloat(0f, 100f)
@@ -169,7 +169,7 @@ class CountDownView : View {
 
 
     /**
-     * 
+     *
      */
     fun startCountDown() {
         valueAnimator = getValueAnimator((mCountdownTime * 1000).toLong())
@@ -191,7 +191,7 @@ class CountDownView : View {
     }
 
     /**
-     * 
+     *
      */
     fun stopCountDown() {
         if (valueAnimator!!.isRunning) {

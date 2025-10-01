@@ -77,12 +77,12 @@ PASSED: Phone can connect to PC
 
 | Test Item           | Status | Notes                                  |
 |---------------------|--------|----------------------------------------|
-| TCP Connection      |  PASS | Connected successfully                 |
-| HELLO Protocol      |  PASS | Message sent and acknowledged          |
-| Message Format      |  PASS | Android protocol format working        |
-| Device Registration |  PASS | Device registered with correct sensors |
-| Bidirectional Comm  |  PASS | Both send and receive working          |
-| Clean Disconnect    |  PASS | No connection errors                   |
+| TCP Connection      | PASS   | Connected successfully                 |
+| HELLO Protocol      | PASS   | Message sent and acknowledged          |
+| Message Format      | PASS   | Android protocol format working        |
+| Device Registration | PASS   | Device registered with correct sensors |
+| Bidirectional Comm  | PASS   | Both send and receive working          |
+| Clean Disconnect    | PASS   | No connection errors                   |
 
 ### Performance Metrics
 

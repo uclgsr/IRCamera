@@ -72,7 +72,7 @@ PHONE_PC_CONNECTION_VERIFIED.md          # Summary report (repo root)
 
 ## Result
 
- Phone and PC controller CAN connect to each other
- Protocol handshake works correctly
- Bidirectional communication verified
- Ready for production use
+Phone and PC controller CAN connect to each other
+Protocol handshake works correctly
+Bidirectional communication verified
+Ready for production use

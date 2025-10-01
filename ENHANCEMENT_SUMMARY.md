@@ -161,9 +161,9 @@ python3 test_enhanced_phone_pc_connection.py --test 3  # Test #3 only
 
 All tests have been executed and verified:
 
--  Quick test: PASSED
--  Full test: PASSED (previously failed)
--  Enhanced test suite: ALL 6 TESTS PASSED
+- Quick test: PASSED
+- Full test: PASSED (previously failed)
+- Enhanced test suite: ALL 6 TESTS PASSED
 
 ## Impact
 

@@ -11,7 +11,7 @@ PC sends commands, the Android app correctly:
 
 ## TL;DR - Does It Work?
 
-**YES!** 
+**YES!**
 
 All 38 tests pass:
 
@@ -42,14 +42,14 @@ Successes: 7
 
 | What                             | Result |
 |----------------------------------|--------|
-| PC can send START_RECORD command |  PASS |
-| Android starts recording         |  PASS |
-| PC can send STOP_RECORD command  |  PASS |
-| Android stops recording          |  PASS |
-| Time synchronization works       |  PASS |
-| ACK messages work                |  PASS |
-| ERROR messages work              |  PASS |
-| Complete session flow            |  PASS |
+| PC can send START_RECORD command | PASS   |
+| Android starts recording         | PASS   |
+| PC can send STOP_RECORD command  | PASS   |
+| Android stops recording          | PASS   |
+| Time synchronization works       | PASS   |
+| ACK messages work                | PASS   |
+| ERROR messages work              | PASS   |
+| Complete session flow            | PASS   |
 
 ## Command Flow Example
 
@@ -69,7 +69,7 @@ Android: Sends "ACK cmd=START_RECORD session_id=test_001"
 PC: Receives ACK, recording confirmed
 ```
 
- **This flow is verified working**
+**This flow is verified working**
 
 ## Simple Usage Example
 
@@ -107,7 +107,7 @@ Three levels of documentation provided:
 
 ## Key Verification Points
 
-### Commands Trigger Actions 
+### Commands Trigger Actions
 
 When PC sends `START_RECORD session_id=X`:
 
@@ -119,7 +119,7 @@ UnifiedSessionManager.startSession()
 // Which actually starts the sensors
 ```
 
-### Responses Work 
+### Responses Work
 
 Success:
 
@@ -135,7 +135,7 @@ PC: START_RECORD session_id=test (while already recording)
 Android: ERROR cmd=START_RECORD code=BUSY msg="Already recording"
 ```
 
-### Time Sync Works 
+### Time Sync Works
 
 ```
 PC → SYNC_REQUEST t_pc=1234567890

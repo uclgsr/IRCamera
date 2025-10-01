@@ -66,9 +66,9 @@ public class VerticalRangeSeekBar extends RangeSeekBar {
         int widthMode = MeasureSpec.getMode(widthMeasureSpec);
         /*
          * onMeasurewidthMeasureSpecheightMeasureSpec，
-         * MeasureSpec.EXACTLY 
-         * MeasureSpec.AT_MOST 
-         * MeasureSpec.UNSPECIFIED 
+         * MeasureSpec.EXACTLY
+         * MeasureSpec.AT_MOST
+         * MeasureSpec.UNSPECIFIED
          */
 
         if (widthMode == MeasureSpec.EXACTLY) {

@@ -2,9 +2,9 @@ package com.mpdc4gsr.libunified.app.bean
 
 /**
  * .
- * @param isOpen 
+ * @param isOpen
  * @param continuaTime ，
- * @param count 
+ * @param count
  */
 data class ContinuousBean(
     var isOpen: Boolean = false,

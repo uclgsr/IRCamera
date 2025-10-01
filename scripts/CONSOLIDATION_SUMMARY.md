@@ -146,38 +146,38 @@ scripts/
 
 ### Organization
 
--  All scripts in dedicated directory
--  Clear naming conventions
--  Logical grouping by function
--  Easy to locate and manage
+- All scripts in dedicated directory
+- Clear naming conventions
+- Logical grouping by function
+- Easy to locate and manage
 
 ### Consolidation
 
--  50% reduction in script count
--  Eliminated code duplication
--  Single source of truth for each function
--  Consistent implementation patterns
+- 50% reduction in script count
+- Eliminated code duplication
+- Single source of truth for each function
+- Consistent implementation patterns
 
 ### Usability
 
--  Master script provides unified interface
--  Consistent command-line options
--  Better help documentation
--  Simpler usage examples
+- Master script provides unified interface
+- Consistent command-line options
+- Better help documentation
+- Simpler usage examples
 
 ### Maintainability
 
--  Easier to update (fewer files)
--  Shared functions reduce duplication
--  Clear separation of concerns
--  Better documentation
+- Easier to update (fewer files)
+- Shared functions reduce duplication
+- Clear separation of concerns
+- Better documentation
 
 ### Code Quality
 
--  Removed redundant code
--  Standardized error handling
--  Consistent output formatting
--  Better script structure
+- Removed redundant code
+- Standardized error handling
+- Consistent output formatting
+- Better script structure
 
 ## Migration Guide
 
@@ -259,22 +259,22 @@ test-results/
 
 ### Build System
 
--  No impact on Gradle build
--  gradlew.bat remains functional
--  No broken dependencies
+- No impact on Gradle build
+- gradlew.bat remains functional
+- No broken dependencies
 
 ### Functionality
 
--  All original features preserved
--  Same test coverage maintained
--  Compatible with existing workflows
+- All original features preserved
+- Same test coverage maintained
+- Compatible with existing workflows
 
 ### Documentation
 
--  Complete migration guide
--  Updated main README
--  Comprehensive script README
--  Clear usage examples
+- Complete migration guide
+- Updated main README
+- Comprehensive script README
+- Clear usage examples
 
 ## Future Maintenance
 

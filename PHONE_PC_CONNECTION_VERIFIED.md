@@ -11,26 +11,26 @@ messages.
 
 ## What Was Verified
 
-### 1. TCP Socket Connection 
+### 1. TCP Socket Connection
 
 - Android phone (simulated) successfully establishes TCP connection to PC controller
 - Connection is stable and reliable
 - No connection errors or timeouts
 
-### 2. Protocol Handshake 
+### 2. Protocol Handshake
 
 - Phone sends: `HELLO device_name=<ID> sensors=[RGB,THERMAL,GSR]`
 - PC responds: `ACK cmd=HELLO device_id=<assigned_id>`
 - Protocol format is compatible and working correctly
 
-### 3. Bidirectional Communication 
+### 3. Bidirectional Communication
 
 - Phone can send messages to PC
 - PC can send responses to phone
 - Message framing works correctly (newline-delimited)
 - UTF-8 encoding/decoding works
 
-### 4. Device Registration 
+### 4. Device Registration
 
 - PC controller recognizes and registers Android devices
 - Device capabilities (sensors) are communicated correctly
@@ -232,6 +232,6 @@ With verified connectivity, the system can now:
 
 ---
 
-**Verification Complete** 
-**Connection Working** 
+**Verification Complete**
+**Connection Working**
 **Ready for Integration** 

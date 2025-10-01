@@ -183,13 +183,13 @@ This will:
 
 ### Core Requirements: VERIFIED
 
--  Phone can connect to PC controller
--  TCP socket connection established successfully
--  HELLO handshake protocol works
--  Message format compatible between Android and PC
--  Bidirectional communication functional
--  UTF-8 encoding/decoding works correctly
--  Connection gracefully closes
+- Phone can connect to PC controller
+- TCP socket connection established successfully
+- HELLO handshake protocol works
+- Message format compatible between Android and PC
+- Bidirectional communication functional
+- UTF-8 encoding/decoding works correctly
+- Connection gracefully closes
 
 ### Performance Characteristics
 

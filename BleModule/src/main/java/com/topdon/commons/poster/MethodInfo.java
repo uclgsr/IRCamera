@@ -33,8 +33,8 @@ public class MethodInfo {
     /**
      * null
      *
-     * @param name           
-     * @param parameterTypes 
+     * @param name
+     * @param parameterTypes
      */
     public MethodInfo(@NonNull String name, @Nullable Class<?>[] parameterTypes) {
         this(name, name, parameterTypes);
@@ -43,9 +43,9 @@ public class MethodInfo {
     /**
      * null
      *
-     * @param name           
+     * @param name
      * @param tag            {@link Tag#value()}
-     * @param parameterTypes 
+     * @param parameterTypes
      */
     public MethodInfo(@NonNull String name, @NonNull String tag, @Nullable Class<?>[] parameterTypes) {
         this(name, tag, toParameters(parameterTypes));

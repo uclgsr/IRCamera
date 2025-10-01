@@ -4,7 +4,7 @@ import android.bluetooth.BluetoothDevice;
 
 
 /**
- * 
+ *
  * <p>
  * date: 2021/8/12 21:11
  * author: bichuanfeng

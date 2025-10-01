@@ -270,10 +270,10 @@ xvfb-run python3 advanced_pc_controller.py
 
 **Checklist**:
 
-1.  PC and Android on same network
-2.  Firewall allows incoming connections on port 8080
-3.  Correct IP address entered on Android
-4.  PC Controller server is running (check status bar)
+1. PC and Android on same network
+2. Firewall allows incoming connections on port 8080
+3. Correct IP address entered on Android
+4. PC Controller server is running (check status bar)
 
 **Find PC IP Address**:
 
@@ -463,13 +463,13 @@ Check logs for detailed error information:
 ## Summary
 
 The PC Controller provides:
- Real-time multi-modal data visualization  
- High-performance C++ backend  
- Secure SSL/TLS communication  
- Multi-device session management  
- Data export and aggregation  
- Cross-platform support  
- Comprehensive testing
+Real-time multi-modal data visualization  
+High-performance C++ backend  
+Secure SSL/TLS communication  
+Multi-device session management  
+Data export and aggregation  
+Cross-platform support  
+Comprehensive testing
 
 Minimum setup:
 

@@ -165,14 +165,14 @@ public class CameraPreviewManager {
         mSurfaceNativeWindow = new SurfaceNativeWindow();
         mIIrFrameCallback = new IIrFrameCallback() {
             /**
-             * 
+             *
              * setFrameOutputFormat，
-             * @param frame 
+             * @param frame
              * YUYV_IMAGE_OUTPUT(0)： YUYV； 256*192； （）256*192*2=98304
              * NV12_IMAGE_OUTPUT(1)： NV12； 256*192； （）256*192*1.5=73782
              * NV12_AND_TEMP_OUTPUT(2)： NV12++Y16； 256*386； （）256*192*1.5+256*2*2+256*192*2=173110
              * YUYV_AND_TEMP_OUTPUT(0)： YUYV++Y16； 256*386； （）256*192*2+256*2*2+256*192*2=197632
-             * @param length 
+             * @param length
              */
             @Override
             public void onFrame(byte[] frame, int length) {
@@ -501,7 +501,7 @@ public class CameraPreviewManager {
     }
 
     /**
-     * 
+     *
      *
      * @return
      */
@@ -529,7 +529,7 @@ public class CameraPreviewManager {
                 IrConst.KEY_DEFAULT_STREAM_BANDWIDTH, IrConst.DEFAULT_STREAM_BANDWIDTH);
 
         /**
-         * 
+         *
          * ，，，
          */
         uvcHandleParam.setBandwidth(bandwidth);
@@ -549,7 +549,7 @@ public class CameraPreviewManager {
                 .setStreamHeight(mStreamHeight)
                 .setDriverType(CommonParams.DriverType.USB)
                 /**
-                 * 
+                 *
                  */
                 .setFrameOutputFormat(FRAME_OUT_PUT_FORMAT)
                 .setUvcHandleParam(uvcHandleParam)
@@ -577,7 +577,7 @@ public class CameraPreviewManager {
     }
 
     /**
-     * 
+     *
      */
     public void startPreview() {
         Log.d(TAG, "startPreview");
@@ -596,7 +596,7 @@ public class CameraPreviewManager {
     }
 
     /**
-     * 
+     *
      */
     public void pausePreview() {
         if (mIrcamEngine != null) {
@@ -605,7 +605,7 @@ public class CameraPreviewManager {
     }
 
     /**
-     * 
+     *
      */
     public void resumePreview() {
         if (mIrcamEngine != null) {
@@ -614,7 +614,7 @@ public class CameraPreviewManager {
     }
 
     /**
-     * 
+     *
      */
     public void closePreview() {
         if (mIrcamEngine != null) {
@@ -626,7 +626,7 @@ public class CameraPreviewManager {
     }
 
     /**
-     * 
+     *
      */
     public void stopPreview() {
         Log.i(TAG, "stopPreview");
@@ -644,7 +644,7 @@ public class CameraPreviewManager {
     }
 
     /**
-     * 
+     *
      */
     public void releaseSource() {
         mIIrFrameCallback = null;
