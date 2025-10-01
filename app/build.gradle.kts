@@ -246,8 +246,8 @@ android {
 
     buildFeatures {
         buildConfig = true
-        dataBinding = true
-        viewBinding = true
+//        dataBinding = true
+//        viewBinding = true
         compose = true
     }
 
@@ -314,9 +314,9 @@ dependencies {
     implementation(files("libs/libAC020sdk_USB_IR_1.1.1_2408291439.aar"))
     implementation(files("libs/libirutils_1.2.0_2409241055.aar"))
     implementation(files("libs/libcommon_1.2.0_24052117.aar"))
-    implementation(files("libs/abtest-1.0.1.aar"))
-    implementation(files("libs/auth-number-2.13.2.1.aar"))
-    implementation(files("libs/logger-2.2.1-release.aar"))
+//    implementation(files("libs/abtest-1.0.1.aar"))
+//    implementation(files("libs/auth-number-2.13.2.1.aar"))
+//    implementation(files("libs/logger-2.2.1-release.aar"))
     implementation(files("libs/main-2.2.1-release.aar"))
     implementation(files("libs/topdon.aar"))
 
@@ -332,14 +332,14 @@ dependencies {
     implementation(files("../libunified/libs/libusbdualsdk_1.3.4_2406271906_standard.aar"))
 
     implementation(libs.jsbridge)
-    implementation(libs.fastjson2)
+//    implementation(libs.fastjson2)
     implementation(libs.ucrop)
     implementation(libs.play.app.update)
     implementation(libs.immersionbar)
     implementation(libs.xpopup)
-    implementation(libs.wechat.sdk)
-    implementation(libs.umeng.apm)
-    implementation(libs.umeng.common)
+//    implementation(libs.wechat.sdk)
+//    implementation(libs.umeng.apm)
+//    implementation(libs.umeng.common)
     implementation(libs.opencsv)
     implementation(libs.gson)
     implementation(libs.jmdns)
