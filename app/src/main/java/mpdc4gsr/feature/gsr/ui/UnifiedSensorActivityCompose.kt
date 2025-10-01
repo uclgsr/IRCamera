@@ -37,7 +37,7 @@ import mpdc4gsr.sensors.unified.model.DeviceInfo
 import mpdc4gsr.sensors.unified.model.SessionQuality
 import mpdc4gsr.sensors.unified.model.SessionStatus
 import mpdc4gsr.sensors.unified.model.SessionType
-import mpdc4gsr.viewmodel.BaseViewModel
+import mpdc4gsr.core.ui.BaseViewModel
 
 enum class UnifiedSensorType(
     val displayName: String,
