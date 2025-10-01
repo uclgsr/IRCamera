@@ -56,7 +56,7 @@ public enum AppUtil {
 
 
     /**
-     * 
+     *
      *
      * @param context
      * @param
@@ -79,9 +79,9 @@ public enum AppUtil {
 
     /**
      * ：Service     *
-     * * @param context     
+     * * @param context
      * * @param serviceName Service：  + service
-     * * @return true ，false 
+     * * @return true ，false
      */
     public static boolean isProcessRunning(Context context, String serviceName) {
         ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
@@ -100,9 +100,9 @@ public enum AppUtil {
 
     /**
      * ：Service     *
-     * * @param context     
+     * * @param context
      * * @param serviceName Service：  + service
-     * * @return true ，false 
+     * * @return true ，false
      */
     public static boolean isServiceRunning(Context context, String serviceName) {
         ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);

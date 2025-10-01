@@ -38,7 +38,7 @@ public class EasyBLEBuilder {
     }
 
     /**
-     * 
+     *
      */
     public EasyBLEBuilder setExecutorService(ExecutorService executorService) {
         Inspector.requireNonNull(executorService, "executorService can't be null");
@@ -47,7 +47,7 @@ public class EasyBLEBuilder {
     }
 
     /**
-     * 
+     *
      */
     public EasyBLEBuilder setDeviceCreator(DeviceCreator deviceCreator) {
         Inspector.requireNonNull(deviceCreator, "deviceCreator can't be null");
@@ -74,7 +74,7 @@ public class EasyBLEBuilder {
     }
 
     /**
-     * 
+     *
      */
     public EasyBLEBuilder setScanConfiguration(ScanConfiguration scanConfiguration) {
         Inspector.requireNonNull(scanConfiguration, "scanConfiguration can't be null");
@@ -83,7 +83,7 @@ public class EasyBLEBuilder {
     }
 
     /**
-     * 
+     *
      */
     public EasyBLEBuilder setLogger(Logger logger) {
         Inspector.requireNonNull(logger, "logger can't be null");

@@ -20,7 +20,7 @@ import java.util.UUID;
  */
 public class ConnectionConfiguration {
     /**
-     * 
+     *
      */
     public static final int TRY_RECONNECT_TIMES_INFINITE = -1;
     @NonNull
@@ -47,7 +47,7 @@ public class ConnectionConfiguration {
     }
 
     /**
-     * 
+     *
      */
     public ConnectionConfiguration setDiscoverServicesDelayMillis(int discoverServicesDelayMillis) {
         this.discoverServicesDelayMillis = discoverServicesDelayMillis;
@@ -55,7 +55,7 @@ public class ConnectionConfiguration {
     }
 
     /**
-     * 
+     *
      */
     public ConnectionConfiguration setConnectTimeoutMillis(int connectTimeoutMillis) {
         if (requestTimeoutMillis >= 1000) {
@@ -65,7 +65,7 @@ public class ConnectionConfiguration {
     }
 
     /**
-     * 
+     *
      */
     public ConnectionConfiguration setRequestTimeoutMillis(int requestTimeoutMillis) {
         if (requestTimeoutMillis >= 1000) {
@@ -75,7 +75,7 @@ public class ConnectionConfiguration {
     }
 
     /**
-     * 
+     *
      */
     public ConnectionConfiguration setTryReconnectMaxTimes(int tryReconnectMaxTimes) {
         this.tryReconnectMaxTimes = tryReconnectMaxTimes;
@@ -91,7 +91,7 @@ public class ConnectionConfiguration {
     }
 
     /**
-     * 
+     *
      */
     public ConnectionConfiguration setAutoReconnect(boolean autoReconnect) {
         isAutoReconnect = autoReconnect;
@@ -99,7 +99,7 @@ public class ConnectionConfiguration {
     }
 
     /**
-     * 
+     *
      *
      * @param transport {@link BluetoothDevice#TRANSPORT_AUTO}
      */
@@ -110,7 +110,7 @@ public class ConnectionConfiguration {
     }
 
     /**
-     * 
+     *
      */
     @RequiresApi(Build.VERSION_CODES.O)
     public ConnectionConfiguration setPhy(int phy) {
@@ -129,11 +129,11 @@ public class ConnectionConfiguration {
     }
 
     /**
-     * 
+     *
      *
      * @param service        UUID
      * @param characteristic UUID
-     * @param options        
+     * @param options
      */
     public ConnectionConfiguration setDefaultWriteOptions(UUID service, UUID characteristic, WriteOptions options) {
         Inspector.requireNonNull(service, "service can't be null");

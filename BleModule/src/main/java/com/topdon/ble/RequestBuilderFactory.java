@@ -20,9 +20,9 @@ import java.util.UUID;
  */
 public class RequestBuilderFactory {
     /**
-     * 
      *
-     * @param mtu 
+     *
+     * @param mtu
      */
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     public RequestBuilder<MtuChangeCallback> getChangeMtuBuilder(@IntRange(from = 23, to = 517) int mtu) {
@@ -37,7 +37,7 @@ public class RequestBuilderFactory {
     }
 
     /**
-     * 
+     *
      *
      * @param service        UUID
      * @param characteristic UUID
@@ -50,11 +50,11 @@ public class RequestBuilderFactory {
     }
 
     /**
-     * 
+     *
      *
      * @param service        UUID
      * @param characteristic UUID
-     * @param enable         
+     * @param enable
      */
     public RequestBuilder<NotificationChangeCallback> getSetNotificationBuilder(UUID service, UUID characteristic,
                                                                                 boolean enable) {
@@ -70,7 +70,7 @@ public class RequestBuilderFactory {
      *
      * @param service        UUID
      * @param characteristic UUID
-     * @param enable         
+     * @param enable
      */
     public RequestBuilder<NotificationChangeCallback> getSetIndicationBuilder(UUID service, UUID characteristic,
                                                                               boolean enable) {
@@ -82,7 +82,7 @@ public class RequestBuilderFactory {
     }
 
     /**
-     * 
+     *
      *
      * @param service        UUID
      * @param characteristic UUID
@@ -98,11 +98,11 @@ public class RequestBuilderFactory {
     }
 
     /**
-     * 
+     *
      *
      * @param service        UUID
      * @param characteristic UUID
-     * @param value          
+     * @param value
      */
     public WriteCharacteristicBuilder getWriteCharacteristicBuilder(UUID service, UUID characteristic,
                                                                     byte[] value) {
@@ -115,14 +115,14 @@ public class RequestBuilderFactory {
     }
 
     /**
-     * 
+     *
      */
     public RequestBuilder<ReadRssiCallback> getReadRssiBuilder() {
         return new RequestBuilder<>(RequestType.READ_RSSI);
     }
 
     /**
-     * 
+     *
      */
     @RequiresApi(Build.VERSION_CODES.O)
     public RequestBuilder<PhyChangeCallback> getReadPhyBuilder() {
@@ -130,7 +130,7 @@ public class RequestBuilderFactory {
     }
 
     /**
-     * 
+     *
      *
      * @param txPhy      。{@link BluetoothDevice#PHY_LE_1M_MASK}
      * @param rxPhy      。{@link BluetoothDevice#PHY_LE_1M_MASK}

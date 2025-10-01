@@ -9,10 +9,10 @@ import com.topdon.ble.Request;
  */
 public interface ReadRssiCallback extends RequestFailedCallback {
     /**
-     * 
      *
-     * @param request 
-     * @param rssi    
+     *
+     * @param request
+     * @param rssi
      */
     void onRssiRead(Request request, int rssi);
 }

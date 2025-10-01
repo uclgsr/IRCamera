@@ -187,7 +187,7 @@ class TempDrawHelper {
      * ，、.
      *
      * ， x、y ，。
-     * @param x  View 
+     * @param x  View
      */
     fun drawTempText(canvas: Canvas, text: String, width: Int, x: Int, y: Int) {
         var textX: Float = (x + TEMP_TEXT_OFFSET).toFloat()
@@ -245,7 +245,7 @@ class TempDrawHelper {
      * ，.
      *
      * ， x、y ，。
-     * @param x  View 
+     * @param x  View
      */
     fun drawPointName(canvas: Canvas, name: String, width: Int, height: Int, x: Int, y: Int) {
         val textWidth: Float = textPaint.measureText(name)

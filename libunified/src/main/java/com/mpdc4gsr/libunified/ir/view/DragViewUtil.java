@@ -21,7 +21,7 @@ public enum DragViewUtil {
      * View
      *
      * @param v     view
-     * @param delay 
+     * @param delay
      */
     public static void registerDragAction(View v, long delay) {
         v.setOnTouchListener(new TouchListener(delay));

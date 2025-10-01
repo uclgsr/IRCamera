@@ -221,22 +221,22 @@ grep -n "settimeout" unified_pc_controller_improved.py
 
 ## Impact Summary
 
-| Issue                   | Priority | Status         | Impact                             |
-|-------------------------|----------|----------------|------------------------------------|
-| Socket timeout DoS      | HIGH     |  Fixed        | Security vulnerability eliminated  |
-| Test suite fails        | P1       |  Fixed        | Tests pass on clean checkout       |
-| Controller won't launch | P1       |  Fixed        | Production controller now runnable |
-| Long method             | MEDIUM   |  Documented  | Acceptable for thesis/MVP          |
-| Global state            | MEDIUM   |  Not an issue | Each thread has own instance       |
+| Issue                   | Priority | Status       | Impact                             |
+|-------------------------|----------|--------------|------------------------------------|
+| Socket timeout DoS      | HIGH     | Fixed        | Security vulnerability eliminated  |
+| Test suite fails        | P1       | Fixed        | Tests pass on clean checkout       |
+| Controller won't launch | P1       | Fixed        | Production controller now runnable |
+| Long method             | MEDIUM   | Documented   | Acceptable for thesis/MVP          |
+| Global state            | MEDIUM   | Not an issue | Each thread has own instance       |
 
 ## Conclusion
 
 All high-priority and P1 issues have been resolved. The implementation is now:
 
--  **Secure**: Socket timeouts prevent DoS attacks
--  **Testable**: Test suite passes on clean checkout
--  **Runnable**: Both MVP and production controllers launch correctly
--  **Documented**: All fixes clearly documented with verification steps
+- **Secure**: Socket timeouts prevent DoS attacks
+- **Testable**: Test suite passes on clean checkout
+- **Runnable**: Both MVP and production controllers launch correctly
+- **Documented**: All fixes clearly documented with verification steps
 
 The code is ready for:
 

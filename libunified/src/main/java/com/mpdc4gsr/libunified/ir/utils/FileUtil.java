@@ -289,8 +289,8 @@ public enum FileUtil {
     /**
      * ，
      *
-     * @param bytes  
-     * @param bytes2 
+     * @param bytes
+     * @param bytes2
      */
     public static void savaRawFile(byte[] bytes, byte[] bytes2) {
         try {
@@ -310,7 +310,7 @@ public enum FileUtil {
     }
 
     /**
-     * 
+     *
      *
      * @param bytes
      */
@@ -333,7 +333,7 @@ public enum FileUtil {
     }
 
     /**
-     * 
+     *
      *
      * @param bytes
      */
@@ -476,7 +476,7 @@ public enum FileUtil {
     }
 
     /**
-     * 
+     *
      *
      * @param fileDir
      */
@@ -623,7 +623,7 @@ public enum FileUtil {
     }
 
     /**
-     * 
+     *
      *
      * @param context
      * @return

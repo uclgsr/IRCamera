@@ -27,7 +27,7 @@ public final class Observable {
     private final ObserverMethodHelper helper;
 
     /**
-     * @param posterDispatcher            
+     * @param posterDispatcher
      * @param isObserveAnnotationRequired {@link Observe}。，
      */
     public Observable(@NonNull PosterDispatcher posterDispatcher, boolean isObserveAnnotationRequired) {
@@ -36,16 +36,16 @@ public final class Observable {
     }
 
     /**
-     * 
+     *
      */
     public PosterDispatcher getPosterDispatcher() {
         return posterDispatcher;
     }
 
     /**
-     * 
      *
-     * @param observer 
+     *
+     * @param observer
      */
     public void registerObserver(@NonNull Observer observer) {
         Objects.requireNonNull(observer, "observer can't be null");
@@ -70,9 +70,9 @@ public final class Observable {
     }
 
     /**
-     * 
      *
-     * @param observer 
+     *
+     * @param observer
      */
     public boolean isRegistered(@NonNull Observer observer) {
         synchronized (observerInfos) {
@@ -86,9 +86,9 @@ public final class Observable {
     }
 
     /**
-     * 
      *
-     * @param observer 
+     *
+     * @param observer
      */
     public void unregisterObserver(@NonNull Observer observer) {
         synchronized (observerInfos) {
@@ -103,7 +103,7 @@ public final class Observable {
     }
 
     /**
-     * 
+     *
      */
     public void unregisterAll() {
         synchronized (observerInfos) {
@@ -126,19 +126,19 @@ public final class Observable {
     }
 
     /**
-     * 
      *
-     * @param methodName 
-     * @param parameters 
+     *
+     * @param methodName
+     * @param parameters
      */
     public void notifyObservers(@NonNull String methodName, @Nullable MethodInfo.Parameter... parameters) {
         notifyObservers(new MethodInfo(methodName, parameters));
     }
 
     /**
-     * 
      *
-     * @param info 
+     *
+     * @param info
      */
     public void notifyObservers(@NonNull MethodInfo info) {
         List<ObserverInfo> infos = getObserverInfos();

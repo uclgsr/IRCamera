@@ -8,7 +8,7 @@ import java.lang.reflect.Method;
 import java.util.concurrent.ExecutorService;
 
 /**
- * 
+ *
  * <p>
  * date: 2019/8/7 10:18
  * author: chuanfeng.bi
@@ -29,14 +29,14 @@ public class PosterDispatcher {
     }
 
     /**
-     * 
+     *
      */
     public ThreadMode getDefaultMode() {
         return defaultMode;
     }
 
     /**
-     * 
+     *
      */
     public ExecutorService getExecutorService() {
         return executorService;
@@ -54,8 +54,8 @@ public class PosterDispatcher {
     /**
      * {@link RunOn}，post。，
      *
-     * @param method   
-     * @param runnable 
+     * @param method
+     * @param runnable
      */
     public void post(@Nullable Method method, @NonNull Runnable runnable) {
         if (method != null) {
@@ -71,8 +71,8 @@ public class PosterDispatcher {
     /**
      * post。
      *
-     * @param mode     
-     * @param runnable 
+     * @param mode
+     * @param runnable
      */
     public void post(@NonNull ThreadMode mode, @NonNull Runnable runnable) {
         if (mode == ThreadMode.UNSPECIFIED) {
@@ -97,10 +97,10 @@ public class PosterDispatcher {
     /**
      * post
      *
-     * @param owner      
-     * @param methodName 
+     * @param owner
+     * @param methodName
      * @param tag        {@link Tag#value()}
-     * @param parameters 
+     * @param parameters
      */
     public void post(@NonNull Object owner, @NonNull String methodName, @NonNull String tag,
                      @Nullable MethodInfo.Parameter... parameters) {
@@ -163,9 +163,9 @@ public class PosterDispatcher {
     /**
      * post
      *
-     * @param owner      
-     * @param methodName 
-     * @param parameters 
+     * @param owner
+     * @param methodName
+     * @param parameters
      */
     public void post(@NonNull final Object owner, @NonNull String methodName, @Nullable MethodInfo.Parameter... parameters) {
         post(owner, methodName, "", parameters);
@@ -174,8 +174,8 @@ public class PosterDispatcher {
     /**
      * post
      *
-     * @param owner      
-     * @param methodInfo 
+     * @param owner
+     * @param methodInfo
      */
     public void post(@NonNull Object owner, @NonNull MethodInfo methodInfo) {
         post(owner, methodInfo.getName(), methodInfo.getTag(), methodInfo.getParameters());

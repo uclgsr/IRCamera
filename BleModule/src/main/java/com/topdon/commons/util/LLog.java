@@ -12,7 +12,7 @@ import com.elvishew.xlog.XLog;
  */
 public class LLog {
     /**
-     * 
+     *
      */
     public final static int MAX_LENGTH = 2000;
     private static boolean isDebug = true; // Simplified for now
@@ -46,10 +46,10 @@ public class LLog {
     }
 
     /**
-     * 
      *
-     * @param tag 
-     * @param msg 
+     *
+     * @param tag
+     * @param msg
      */
     public static void LogMaxPrint(String tag, String msg) {
         if (msg.length() > MAX_LENGTH) {
