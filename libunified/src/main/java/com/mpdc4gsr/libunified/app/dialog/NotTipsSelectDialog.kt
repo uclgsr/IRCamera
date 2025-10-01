@@ -1,5 +1,13 @@
 package com.mpdc4gsr.libunified.app.dialog
 
+/*
+ * DEPRECATED: This file has been deprecated as part of migration to Jetpack Compose.
+ * This code is commented out to avoid compilation errors when dataBinding is disabled.
+ * See COMPOSE_MIGRATION.md for alternatives.
+ */
+
+/*
+
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
@@ -54,3 +62,4 @@ class NotTipsSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog
         }
     }
 }
+*/

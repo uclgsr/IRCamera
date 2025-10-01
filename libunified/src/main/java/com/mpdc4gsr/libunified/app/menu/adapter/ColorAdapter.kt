@@ -1,5 +1,13 @@
 package com.mpdc4gsr.libunified.app.menu.adapter
 
+/*
+ * DEPRECATED: This file has been deprecated as part of migration to Jetpack Compose.
+ * This code is commented out to avoid compilation errors when dataBinding is disabled.
+ * See COMPOSE_MIGRATION.md for alternatives.
+ */
+
+/*
+
 import android.annotation.SuppressLint
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -57,3 +65,4 @@ internal class ColorAdapter : RecyclerView.Adapter<ColorAdapter.ViewHolder>() {
 
     class ViewHolder(val colorView: ColorView) : RecyclerView.ViewHolder(colorView)
 }
+*/
