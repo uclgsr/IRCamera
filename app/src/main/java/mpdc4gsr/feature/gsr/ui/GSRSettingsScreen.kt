@@ -65,7 +65,7 @@ fun GSRSettingsScreen(
                     value = samplingRate.toFloat(),
                     valueRange = 1f..512f,
                     onValueChange = { samplingRate = it.toInt() },
-                    valueLabel = { "${it.toInt()} Hz" }
+                    unit = " Hz"
                 )
                 SettingsToggle(
                     label = "Auto Connect",
