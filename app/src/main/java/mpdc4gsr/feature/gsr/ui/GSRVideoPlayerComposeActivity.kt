@@ -22,7 +22,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import android.widget.VideoView
 import android.widget.MediaController
 import android.net.Uri
-import mpdc4gsr.compose.base.BaseComposeActivity
+import mpdc4gsr.core.ui.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import mpdc4gsr.core.ui.BaseViewModel
 
