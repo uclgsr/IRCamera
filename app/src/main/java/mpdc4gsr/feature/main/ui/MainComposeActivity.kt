@@ -32,6 +32,7 @@ import mpdc4gsr.feature.settings.ui.HelpScreen
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.core.ui.model.SensorType
 
+
 /**
  * Main Compose Activity - Unified entry point for the IR Camera application
  * Replaces the traditional MainActivity with a complete Compose implementation

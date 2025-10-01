@@ -146,10 +146,10 @@ Each consolidated document follows this structure:
 ## Related Documentation
 
 ### Root Level
-- [../../README.md](../../README.md) - Main project overview
-- [../../DOCUMENTATION_INDEX.md](../../DOCUMENTATION_INDEX.md) - Master navigation
-- [../../BACKLOG.md](../../BACKLOG.md) - Project roadmap
-- [../../MVVM_MODERNIZATION_GUIDE.md](../../MVVM_MODERNIZATION_GUIDE.md) - MVVM patterns
+- [../../README.md](../README.md) - Main project overview
+- [../../DOCUMENTATION_INDEX.md](../DOCUMENTATION_INDEX.md) - Master navigation
+- [../../BACKLOG.md](../BACKLOG.md) - Project roadmap
+- [../../MVVM_MODERNIZATION_GUIDE.md](../MVVM_MODERNIZATION_GUIDE.md) - MVVM patterns
 
 ### Architecture
 - [../COMPREHENSIVE_ARCHITECTURE_DIAGRAMS.md](../COMPREHENSIVE_ARCHITECTURE_DIAGRAMS.md) - Detailed system diagrams
@@ -171,7 +171,7 @@ When updating documentation:
 ## Questions or Issues?
 
 If you can't find information:
-1. Check [DOCUMENTATION_INDEX.md](../../DOCUMENTATION_INDEX.md) for all available docs
+1. Check [DOCUMENTATION_INDEX.md](../DOCUMENTATION_INDEX.md) for all available docs
 2. Search within consolidated documents (they are comprehensive)
 3. Review [CONSOLIDATION_SUMMARY.md](CONSOLIDATION_SUMMARY.md) for what was merged
 
