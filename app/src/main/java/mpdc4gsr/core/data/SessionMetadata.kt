@@ -442,13 +442,13 @@ data class SessionMetadata(
             "data_files" to mapOf(
                 "modality_files" to modalityFiles,
                 "file_schema" to mapOf(
-                    "thermal_data_csv" to mpdc4gsr.data.FileSchemaManager()
+                    "thermal_data_csv" to mpdc4gsr.core.data.FileSchemaManager()
                         .generateCsvHeader("thermal", includeUnits = false),
-                    "rgb_data_csv" to mpdc4gsr.data.FileSchemaManager()
+                    "rgb_data_csv" to mpdc4gsr.core.data.FileSchemaManager()
                         .generateCsvHeader("rgb", includeUnits = false),
-                    "gsr_data_csv" to mpdc4gsr.data.FileSchemaManager()
+                    "gsr_data_csv" to mpdc4gsr.core.data.FileSchemaManager()
                         .generateCsvHeader("gsr", includeUnits = false),
-                    "audio_data_csv" to mpdc4gsr.data.FileSchemaManager()
+                    "audio_data_csv" to mpdc4gsr.core.data.FileSchemaManager()
                         .generateCsvHeader("audio", includeUnits = false)
                 )
             ),
