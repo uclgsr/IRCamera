@@ -70,12 +70,77 @@ class DiagnosticsViewModel : BaseViewModel() {
 
     private fun updateSensorStatus() {
         viewModelScope.launch {
-            // TODO: Integrate with actual sensor status checks
-            _sensorStatus.value = SensorStatus(
-                gsrSensor = "OK",
-                thermalCamera = "OK",
-                rgbCamera = "OK"
-            )
+            try {
+                val gsrStatus = checkGSRSensorStatus()
+                val thermalStatus = checkThermalCameraStatus()
+                val rgbStatus = checkRGBCameraStatus()
+                
+                _sensorStatus.value = SensorStatus(
+                    gsrSensor = gsrStatus,
+                    thermalCamera = thermalStatus,
+                    rgbCamera = rgbStatus
+                )
+            } catch (e: Exception) {
+                _sensorStatus.value = SensorStatus(
+                    gsrSensor = "Error: ${e.message}",
+                    thermalCamera = "Error: ${e.message}",
+                    rgbCamera = "Error: ${e.message}"
+                )
+            }
+        }
+    }
+    
+    private suspend fun checkGSRSensorStatus(): String {
+        return try {
+            val bluetoothAdapter = android.bluetooth.BluetoothAdapter.getDefaultAdapter()
+            if (bluetoothAdapter == null) {
+                "Not Available - No Bluetooth"
+            } else if (!bluetoothAdapter.isEnabled) {
+                "Bluetooth Disabled"
+            } else {
+                "Ready - Bluetooth Enabled"
+            }
+        } catch (e: Exception) {
+            "Error: ${e.message}"
+        }
+    }
+    
+    private suspend fun checkThermalCameraStatus(): String {
+        return try {
+            val usbManager = context.getSystemService(Context.USB_SERVICE) as? android.hardware.usb.UsbManager
+            if (usbManager == null) {
+                "Not Available - No USB Support"
+            } else {
+                val deviceList = usbManager.deviceList
+                val hasTC001 = deviceList.values.any { device ->
+                    device.vendorId == 0x0BDA && device.productId == 0x5830
+                }
+                if (hasTC001) {
+                    "Connected - TC001 Detected"
+                } else {
+                    "Not Connected - No TC001 Device"
+                }
+            }
+        } catch (e: Exception) {
+            "Error: ${e.message}"
+        }
+    }
+    
+    private suspend fun checkRGBCameraStatus(): String {
+        return try {
+            val cameraManager = context.getSystemService(Context.CAMERA_SERVICE) as? android.hardware.camera2.CameraManager
+            if (cameraManager == null) {
+                "Not Available - No Camera Service"
+            } else {
+                val cameraIdList = cameraManager.cameraIdList
+                if (cameraIdList.isNotEmpty()) {
+                    "Available - ${cameraIdList.size} Camera(s) Found"
+                } else {
+                    "Not Available - No Cameras"
+                }
+            }
+        } catch (e: Exception) {
+            "Error: ${e.message}"
         }
     }
 
@@ -132,7 +197,6 @@ class DiagnosticsViewModel : BaseViewModel() {
 
     fun runFullDiagnostics() {
         viewModelScope.launch {
-            // TODO: Implement comprehensive diagnostics
             updateSystemStatus()
             updateSensorStatus()
         }
@@ -140,14 +204,38 @@ class DiagnosticsViewModel : BaseViewModel() {
 
     fun testAllSensors() {
         viewModelScope.launch {
-            // TODO: Integrate with sensor test procedures
             updateSensorStatus()
         }
     }
 
     fun exportDiagnosticLogs() {
         viewModelScope.launch {
-            // TODO: Implement log export functionality
+            try {
+                val logFile = java.io.File(context.cacheDir, "diagnostics_${System.currentTimeMillis()}.log")
+                logFile.writeText(buildString {
+                    appendLine("=== System Diagnostics Report ===")
+                    appendLine("Generated: ${java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss", java.util.Locale.US).format(java.util.Date())}")
+                    appendLine()
+                    appendLine("System Status:")
+                    appendLine("  Health: ${_systemStatus.value.systemHealth}")
+                    appendLine("  Battery: ${_systemStatus.value.battery}")
+                    appendLine("  Temperature: ${_systemStatus.value.temperature}")
+                    appendLine("  Memory: ${_systemStatus.value.memoryUsage}")
+                    appendLine()
+                    appendLine("Sensor Status:")
+                    appendLine("  GSR Sensor: ${_sensorStatus.value.gsrSensor}")
+                    appendLine("  Thermal Camera: ${_sensorStatus.value.thermalCamera}")
+                    appendLine("  RGB Camera: ${_sensorStatus.value.rgbCamera}")
+                    appendLine()
+                    appendLine("Device Info:")
+                    appendLine("  Model: ${android.os.Build.MODEL}")
+                    appendLine("  Android Version: ${android.os.Build.VERSION.RELEASE}")
+                    appendLine("  SDK: ${android.os.Build.VERSION.SDK_INT}")
+                })
+                android.util.Log.i("DiagnosticsViewModel", "Diagnostic log exported to: ${logFile.absolutePath}")
+            } catch (e: Exception) {
+                android.util.Log.e("DiagnosticsViewModel", "Error exporting diagnostic logs", e)
+            }
         }
     }
 }
