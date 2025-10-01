@@ -23,6 +23,7 @@ The module is being migrated from traditional Android Views with DataBinding to 
 - ✅ ProgressDialogCompose.kt - Progress dialog with linear/circular progress indicator
 - ✅ TipDialogsCompose.kt - TipDialog, MessageDialog, EmissivityDialog
 - ✅ SpecializedTipDialogsCompose.kt - ObserveDialog, ShutterDialog, OtgDialog, WaterMarkDialog, ChangeDeviceDialog
+- ✅ ComplexDialogsCompose.kt - TargetColorDialog, CarDetectDialog, CameraProgressDialog
 - ✅ ComposeDialogHelper.kt - Helper classes to use Compose dialogs in non-Compose contexts
 
 #### UI Components (app/compose/components/)
@@ -163,10 +164,10 @@ fun ColorSelectionScreen() {
 - [x] TipOtgDialog → OtgDialog (in SpecializedTipDialogsCompose.kt) ✅ (Created)
 - [x] TipShutterDialog → ShutterDialog (in SpecializedTipDialogsCompose.kt) ✅ (Created)
 - [x] TipWaterMarkDialog → WaterMarkDialog (in SpecializedTipDialogsCompose.kt) ✅ (Created)
-- [ ] TipTargetColorDialog → TargetColorDialogCompose
-- [ ] CarDetectDialog → CarDetectDialogCompose
+- [x] TipTargetColorDialog → TargetColorDialog (in ComplexDialogsCompose.kt) ✅ (Created)
+- [x] CarDetectDialog → CarDetectDialog (in ComplexDialogsCompose.kt) ✅ (Created)
+- [x] TipCameraProgressDialog → CameraProgressDialog (in ComplexDialogsCompose.kt) ✅ (Created)
 - [ ] EmissivityTipPopup → EmissivityPopupCompose
-- [ ] TipCameraProgressDialog → CameraProgressDialogCompose
 
 ### Adapters
 - [x] TargetColorAdapter → TargetColorPickerCompose ✅ (Created)
