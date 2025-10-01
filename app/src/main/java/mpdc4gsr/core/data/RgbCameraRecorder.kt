@@ -886,7 +886,10 @@ class RgbCameraRecorder(
                     return@withContext true
                 }
 
+                mpdc4gsr.feature.settings.data.RecordingSettingsValidator.validateAndLogSettings(context)
+                
                 Log.i(TAG, "Starting RGB camera recording with Samsung Galaxy S22 optimization")
+                Log.i(TAG, "Recording config from settings: ${selectedVideoWidth}x${selectedVideoHeight}@${selectedVideoFps}fps, audio=${recordingSettings?.audioEnabled}")
                 _isRecording.set(true)
                 sessionStartTime.set(System.currentTimeMillis())
 
@@ -907,6 +910,8 @@ class RgbCameraRecorder(
                         "sensor_type" to "rgb_camera",
                         "sensor_id" to sensorId,
                         "recording_config" to "${selectedVideoWidth}x${selectedVideoHeight}@${selectedVideoFps}fps",
+                        "audio_enabled" to "${recordingSettings?.audioEnabled}",
+                        "recording_quality" to "${recordingSettings?.recordingQuality}",
                         "sync_verification" to "enabled"
                     )
                 )
