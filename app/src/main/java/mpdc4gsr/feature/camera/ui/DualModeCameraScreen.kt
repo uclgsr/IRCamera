@@ -40,7 +40,7 @@ fun DualModeCameraScreen(
                 TopAppBar(
                     title = {
                         Text(
-                            "Dual Mode Camera",
+                            "Thermal + RGB Camera",
                             fontWeight = FontWeight.Bold
                         )
                     },

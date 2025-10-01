@@ -3,6 +3,7 @@ package mpdc4gsr.core.ui.components
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -27,12 +28,13 @@ fun NavigationBreadcrumb(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start
     ) {
+        Icon(
+            imageVector = Icons.Default.Home,
+            contentDescription = null,
+            tint = Color.Gray,
+            modifier = Modifier.size(14.dp)
+        )
         if (previousScreen != null) {
-            Text(
-                text = previousScreen,
-                color = Color.Gray,
-                fontSize = 12.sp
-            )
             Icon(
                 imageVector = Icons.Default.ChevronRight,
                 contentDescription = null,
@@ -41,7 +43,20 @@ fun NavigationBreadcrumb(
                     .size(16.dp)
                     .padding(horizontal = 4.dp)
             )
+            Text(
+                text = previousScreen,
+                color = Color.Gray,
+                fontSize = 12.sp
+            )
         }
+        Icon(
+            imageVector = Icons.Default.ChevronRight,
+            contentDescription = null,
+            tint = Color.Gray,
+            modifier = Modifier
+                .size(16.dp)
+                .padding(horizontal = 4.dp)
+        )
         Text(
             text = currentScreen,
             color = MaterialTheme.colorScheme.primary,

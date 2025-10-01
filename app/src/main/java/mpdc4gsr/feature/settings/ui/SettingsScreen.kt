@@ -18,6 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import mpdc4gsr.core.ui.components.TitleBar
+import mpdc4gsr.core.ui.components.NavigationBreadcrumb
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 
 /**
@@ -46,11 +47,15 @@ fun SettingsScreen(
             .fillMaxSize()
             .background(Color(0xFF16131e))
     ) {
-        // Title bar
         TitleBar(
             title = "Settings",
             showBackButton = true,
             onBackClick = onBackClick
+        )
+
+        NavigationBreadcrumb(
+            currentScreen = "Settings",
+            previousScreen = "Home"
         )
 
         // Settings content
