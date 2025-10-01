@@ -96,7 +96,9 @@ fun SessionManagerScreen(
                     onValueChange = { searchQuery = it },
                     placeholder = { Text("Search sessions...") },
                     leadingIcon = {
-                        Icon(Icons.Default.Search, contentDescription = "Search")
+                        IconButton(onClick = { keyboardController?.hide() }) {
+                            Icon(Icons.Default.Search, contentDescription = "Search")
+                        }
                     },
                     trailingIcon = {
                         if (searchQuery.isNotEmpty()) {

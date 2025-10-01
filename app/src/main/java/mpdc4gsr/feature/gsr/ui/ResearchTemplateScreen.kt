@@ -97,7 +97,9 @@ fun ResearchTemplateScreen(
                     onValueChange = { searchQuery = it },
                     placeholder = { Text("Search templates...") },
                     leadingIcon = {
-                        Icon(Icons.Default.Search, contentDescription = "Search")
+                        IconButton(onClick = { keyboardController?.hide() }) {
+                            Icon(Icons.Default.Search, contentDescription = "Search")
+                        }
                     },
                     trailingIcon = {
                         if (searchQuery.isNotEmpty()) {
