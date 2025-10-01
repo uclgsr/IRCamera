@@ -42,7 +42,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 
-
+@Suppress("DEPRECATION")
 class PDFListFragment : BaseViewModelFragment<PdfViewModel>() {
 
     private val titleView: TitleView by lazy { requireView().findViewById(R.id.title_view) }

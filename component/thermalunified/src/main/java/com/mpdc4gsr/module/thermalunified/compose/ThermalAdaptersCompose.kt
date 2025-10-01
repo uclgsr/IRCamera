@@ -371,7 +371,7 @@ fun MenuTabBarCompose(
     onTabSelected: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    ScrollableTabRow(
+    PrimaryScrollableTabRow(
         selectedTabIndex = selectedIndex,
         modifier = modifier,
         containerColor = MaterialTheme.colorScheme.surface,

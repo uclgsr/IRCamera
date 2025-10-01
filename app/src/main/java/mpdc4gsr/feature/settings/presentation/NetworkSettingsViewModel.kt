@@ -91,6 +91,7 @@ class NetworkSettingsViewModel : BaseViewModel() {
         )
     }
 
+    @Suppress("DEPRECATION")
     private fun updateNetworkInfo() {
         viewModelScope.launch {
             val wifiInfo = wifiManager?.connectionInfo

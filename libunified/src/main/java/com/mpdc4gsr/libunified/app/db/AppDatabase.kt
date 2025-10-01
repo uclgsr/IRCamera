@@ -115,7 +115,7 @@ abstract class AppDatabase : RoomDatabase() {
                         }
                     },
                 )
-                .fallbackToDestructiveMigration()
+                .fallbackToDestructiveMigration(true)
                 .build()
     }
 }
