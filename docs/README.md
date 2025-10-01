@@ -82,7 +82,7 @@ cd testing-suite
 python run_evaluation.py
 ```
 
-See [scripts/README.md](scripts/README.md) for complete testing documentation.
+See [scripts/README.md](../scripts/README.md) for complete testing documentation.
 
 ## Hardware Requirements
 
@@ -102,22 +102,22 @@ See [scripts/README.md](scripts/README.md) for complete testing documentation.
 
 ### Essential Documentation
 
-- **[docs/consolidated/ARCHITECTURE_AND_UI.md](docs/consolidated/ARCHITECTURE_AND_UI.md)** - Complete system architecture and UI reference
-- **[docs/consolidated/IMPLEMENTATION_STATUS.md](docs/consolidated/IMPLEMENTATION_STATUS.md)** - Implementation history and current status
-- **[docs/consolidated/TESTING_GUIDE.md](docs/consolidated/TESTING_GUIDE.md)** - Comprehensive testing procedures and validation
-- **[docs/consolidated/COMPOSE_MIGRATION.md](docs/consolidated/COMPOSE_MIGRATION.md)** - Jetpack Compose migration details
+- **[docs/consolidated/ARCHITECTURE_AND_UI.md](consolidated/ARCHITECTURE_AND_UI.md)** - Complete system architecture and UI reference
+- **[docs/consolidated/IMPLEMENTATION_STATUS.md](consolidated/IMPLEMENTATION_STATUS.md)** - Implementation history and current status
+- **[docs/consolidated/TESTING_GUIDE.md](consolidated/TESTING_GUIDE.md)** - Comprehensive testing procedures and validation
+- **[docs/consolidated/COMPOSE_MIGRATION.md](consolidated/COMPOSE_MIGRATION.md)** - Jetpack Compose migration details
 
 ### Quick Navigation
 
 - **[BACKLOG.md](BACKLOG.md)** - Current development priorities and roadmap
-- **[pc-controller/README.md](pc-controller/README.md)** - Desktop controller setup and usage
+- **[pc-controller/README.md](../pc-controller/README.md)** - Desktop controller setup and usage
 - **[MVVM_MODERNIZATION_GUIDE.md](MVVM_MODERNIZATION_GUIDE.md)** - MVVM architecture patterns
 
 ### Additional Resources
 
-- **[docs/COMPREHENSIVE_ARCHITECTURE_DIAGRAMS.md](docs/COMPREHENSIVE_ARCHITECTURE_DIAGRAMS.md)** - Detailed system diagrams
+- **[docs/COMPREHENSIVE_ARCHITECTURE_DIAGRAMS.md](COMPREHENSIVE_ARCHITECTURE_DIAGRAMS.md)** - Detailed system diagrams
 - **[docs/thesis-diagrams/](docs/thesis-diagrams/)** - Generated figures and tables for thesis
-- **[docs/BACKGROUND_DEVICE_SCANNING.md](docs/BACKGROUND_DEVICE_SCANNING.md)** - BLE implementation details
+- **[docs/BACKGROUND_DEVICE_SCANNING.md](BACKGROUND_DEVICE_SCANNING.md)** - BLE implementation details
 - **[testing-suite/](testing-suite/)** - Test framework and results
 
 ## Development Status

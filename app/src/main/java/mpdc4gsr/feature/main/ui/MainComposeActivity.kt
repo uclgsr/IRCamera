@@ -8,9 +8,18 @@ import androidx.compose.runtime.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import mpdc4gsr.feature.gsr.ui.GSRSensorScreen
+import mpdc4gsr.core.ui.model.SensorType
+import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.feature.camera.ui.RGBCameraScreen
+import mpdc4gsr.feature.gsr.ui.GSRSensorScreen
 import mpdc4gsr.feature.network.ui.ConnectScreen
+import mpdc4gsr.feature.network.ui.NetworkSettingsScreen
+import mpdc4gsr.feature.settings.ui.AboutScreen
+import mpdc4gsr.feature.settings.ui.AppInfoScreen
+import mpdc4gsr.feature.settings.ui.PrivacyPolicyScreen
+import mpdc4gsr.feature.settings.ui.ProfileScreen
+import mpdc4gsr.feature.settings.ui.SettingsScreen
+import mpdc4gsr.feature.thermal.ui.GalleryScreen
 import mpdc4gsr.feature.thermal.ui.ThermalMonitorScreen
 import mpdc4gsr.feature.thermal.ui.ThermalSettingsScreen
 import mpdc4gsr.feature.thermal.ui.CalibrationScreen
@@ -20,6 +29,7 @@ import mpdc4gsr.feature.settings.ui.ProfileScreen
 import mpdc4gsr.feature.settings.ui.AboutScreen
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.core.ui.model.SensorType
+
 
 /**
  * Main Compose Activity - Unified entry point for the IR Camera application

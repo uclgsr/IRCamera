@@ -74,13 +74,9 @@ class NetworkSettingsViewModel : BaseViewModel() {
         bluetoothAdapter = bluetoothManager?.adapter
         wifiManager = ctx.applicationContext.getSystemService(Context.WIFI_SERVICE) as? WifiManager
         
-        try {
-            shimmerDeviceManager = ShimmerDeviceManager.getInstance(ctx)
-        } catch (e: Exception) {
-            // ShimmerDeviceManager initialization failed
-            // This can occur if the device doesn't have Bluetooth LE support,
-            // required permissions are not granted, or the Shimmer SDK is not properly configured
-        }
+// TODO: Instantiate ShimmerDeviceManager in the Activity/Fragment, as it requires a
+// LifecycleOwner. The instance should then be passed to this ViewModel, for example
+// via the initialize() method.
         
         loadSettings()
         updateNetworkInfo()
