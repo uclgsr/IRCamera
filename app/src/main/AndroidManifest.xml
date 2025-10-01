@@ -49,20 +49,6 @@
         android:theme="@style/AppTheme"
         tools:replace="android:label">
 
-        <!-- USB Device Handler Activity -->
-        <activity
-            android:name="mpdc4gsr.feature.device.ui.BlankDevComposeActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:exported="true"
-            android:theme="@style/Blank">
-            <intent-filter>
-                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
-            </intent-filter>
-            <meta-data
-                android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
-                android:resource="@xml/ir_device_filter" />
-        </activity>
-
         <!-- Main Launcher Activity -->
         <activity
             android:name="mpdc4gsr.feature.main.ui.MainActivity"

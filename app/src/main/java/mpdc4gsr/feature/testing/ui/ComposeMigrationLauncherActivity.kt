@@ -23,7 +23,6 @@ import mpdc4gsr.feature.main.ui.DeviceTypeActivityCompose
 import mpdc4gsr.feature.gsr.ui.*
 import mpdc4gsr.feature.network.ui.*
 import mpdc4gsr.feature.camera.ui.*
-import mpdc4gsr.feature.device.ui.BlankDevActivityCompose
 import mpdc4gsr.feature.settings.ui.SettingsComposeActivity
 import mpdc4gsr.feature.settings.ui.VersionActivityCompose
 import mpdc4gsr.feature.settings.ui.WebViewActivityCompose
@@ -376,20 +375,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                             Intent(
                                 this@ComposeMigrationLauncherActivity,
                                 mpdc4gsr.feature.network.ui.NetworkClientTestActivityCompose::class.java
-                            )
-                        )
-                    }
-                )
-
-                LauncherCard(
-                    title = "USB Device Handler (Compose)",
-                    subtitle = "Modern USB device attachment handling",
-                    icon = Icons.Default.Usb,
-                    onClick = {
-                        startActivity(
-                            Intent(
-                                this@ComposeMigrationLauncherActivity,
-                                BlankDevActivityCompose::class.java
                             )
                         )
                     }
