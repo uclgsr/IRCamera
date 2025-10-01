@@ -192,6 +192,12 @@ fun UnifiedNavHost(
             ThermalLoadingScreen("Loading Dual Mode Camera...")
         }
 
+        composable(UnifiedRoute.CameraSettings.route) {
+            CameraSettingsScreen(
+                onBackClick = { navController.popBackStack() }
+            )
+        }
+
         composable(UnifiedRoute.DevicePairing.route) {
             LaunchedEffect(Unit) {
                 try {
@@ -258,6 +264,12 @@ fun UnifiedNavHost(
                 onBackClick = { navController.popBackStack() },
                 onNavigateToSettings = { navController.navigate(UnifiedRoute.ThermalSettings.route) },
                 onNavigateToGallery = { navController.navigate(UnifiedRoute.ThermalGallery.route) }
+            )
+        }
+
+        composable(UnifiedRoute.ThermalSettings.route) {
+            ThermalSettingsScreen(
+                onBackClick = { navController.popBackStack() }
             )
         }
 
