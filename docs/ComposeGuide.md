@@ -21,6 +21,7 @@ The module is being migrated from traditional Android Views with DataBinding to 
 - ✅ ConfirmDialogCompose.kt - Confirmation dialog with customizable buttons and checkbox
 - ✅ MessageDialogCompose.kt - LongTextDialog, NotificationDialog, and FirmwareUpdateDialog
 - ✅ ProgressDialogCompose.kt - Progress dialog with linear/circular progress indicator
+- ✅ TipDialogsCompose.kt - TipDialog, MessageDialog, EmissivityDialog
 - ✅ ComposeDialogHelper.kt - Helper classes to use Compose dialogs in non-Compose contexts
 
 #### UI Components (app/compose/components/)
@@ -151,11 +152,11 @@ fun ColorSelectionScreen() {
 - [x] FirmwareUpDialog → FirmwareUpdateDialog (in MessageDialogCompose.kt) ✅ (Created)
 - [x] TipProgressDialog → ProgressDialog (in ProgressDialogCompose.kt) ✅ (Created)
 - [x] ColorSelectDialog → ColorPickerDialog (in ProgressDialogCompose.kt) ✅ (Created)
-- [ ] TipDialog → TipDialogCompose
-- [ ] MsgDialog → MessageDialogCompose
+- [x] TipDialog → TipDialog (in TipDialogsCompose.kt) ✅ (Created)
+- [x] MsgDialog → MessageDialog (in TipDialogsCompose.kt) ✅ (Created)
 
 ### Medium Priority Dialogs
-- [ ] TipEmissivityDialog → EmissivityDialogCompose
+- [x] TipEmissivityDialog → EmissivityDialog (in TipDialogsCompose.kt) ✅ (Created)
 - [ ] TipObserveDialog → ObserveDialogCompose
 - [ ] TipChangeDeviceDialog → ChangeDeviceDialogCompose
 - [ ] TipOtgDialog → OtgDialogCompose

@@ -208,3 +208,77 @@ class FirmwareDialogState(private val context: Context) {
         dialog.show()
     }
 }
+
+class TipDialogState(private val context: Context) {
+    fun show(
+        title: String = "",
+        message: String,
+        positiveText: String = "Confirm",
+        negativeText: String = "Cancel",
+        showCancel: Boolean = true,
+        showRestartTips: Boolean = false,
+        restartTipsText: String = "Device will restart",
+        cancelable: Boolean = false,
+        onPositive: () -> Unit,
+        onNegative: () -> Unit = {}
+    ) {
+        val dialog = ComposeDialogWrapper(context) {
+            TipDialog(
+                title = title,
+                message = message,
+                positiveText = positiveText,
+                negativeText = negativeText,
+                showCancel = showCancel,
+                showRestartTips = showRestartTips,
+                restartTipsText = restartTipsText,
+                cancelable = cancelable,
+                onPositive = onPositive,
+                onNegative = onNegative,
+                onDismiss = {}
+            )
+        }
+        dialog.show()
+    }
+}
+
+class MessageDialogState(private val context: Context) {
+    fun show(
+        iconRes: Int? = null,
+        message: String,
+        onDismiss: () -> Unit = {}
+    ) {
+        val dialog = ComposeDialogWrapper(context) {
+            MessageDialog(
+                iconRes = iconRes,
+                message = message,
+                onDismiss = onDismiss
+            )
+        }
+        dialog.show()
+    }
+}
+
+class EmissivityDialogState(private val context: Context) {
+    fun show(
+        title: String = "Emissivity Settings",
+        currentValue: Float,
+        minValue: Float = 0.1f,
+        maxValue: Float = 1.0f,
+        onValueChange: (Float) -> Unit = {},
+        onConfirm: (Float) -> Unit,
+        onDismiss: () -> Unit = {}
+    ) {
+        val dialog = ComposeDialogWrapper(context) {
+            EmissivityDialog(
+                title = title,
+                currentValue = currentValue,
+                minValue = minValue,
+                maxValue = maxValue,
+                onValueChange = onValueChange,
+                onConfirm = onConfirm,
+                onDismiss = onDismiss
+            )
+        }
+        dialog.show()
+    }
+}
