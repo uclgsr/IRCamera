@@ -101,7 +101,7 @@ class ReportDetailComposeActivity : BaseComposeActivity<ReportDetailViewModel>()
                                 fontWeight = FontWeight.Bold
                             )
 
-                            Divider(color = Color.White.copy(alpha = 0.1f))
+                            HorizontalDivider(color = Color.White.copy(alpha = 0.1f))
 
                             ReportInfoRow("Date", "2024-10-01")
                             ReportInfoRow("Time", "14:30:00")
@@ -179,7 +179,7 @@ class ReportDetailComposeActivity : BaseComposeActivity<ReportDetailViewModel>()
                                 fontWeight = FontWeight.Bold
                             )
 
-                            Divider(color = Color.White.copy(alpha = 0.1f))
+                            HorizontalDivider(color = Color.White.copy(alpha = 0.1f))
 
                             MeasurementRow("Max Temperature", "28.5°C", Color(0xFFFF4747))
                             MeasurementRow("Min Temperature", "22.1°C", Color(0xFF06AAFF))
