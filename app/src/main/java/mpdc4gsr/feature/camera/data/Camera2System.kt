@@ -16,12 +16,12 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
-import mpdc4gsr.camera.core.CameraController
-import mpdc4gsr.camera.core.DeviceCaps
-import mpdc4gsr.camera.core.ModeManager
-import mpdc4gsr.camera.core.RawEngine
-import mpdc4gsr.camera.core.UiBridge
-import mpdc4gsr.camera.core.VideoEngine
+import mpdc4gsr.feature.camera.data.CameraController
+import mpdc4gsr.feature.camera.data.DeviceCaps
+import mpdc4gsr.feature.camera.data.ModeManager
+import mpdc4gsr.feature.camera.data.RawEngine
+import mpdc4gsr.feature.camera.data.UiBridge
+import mpdc4gsr.feature.camera.data.VideoEngine
 import java.io.File
 
 class Camera2System(

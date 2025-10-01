@@ -41,7 +41,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import mpdc4gsr.camera.core.SamsungDeviceCompatibility
+import mpdc4gsr.feature.camera.data.SamsungDeviceCompatibility
 import mpdc4gsr.core.data.SessionMetadata
 import mpdc4gsr.core.ui.PermissionManager
 import mpdc4gsr.feature.camera.data.CameraConfigurationManager
