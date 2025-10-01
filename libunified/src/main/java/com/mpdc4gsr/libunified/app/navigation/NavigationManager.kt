@@ -10,6 +10,65 @@ import com.mpdc4gsr.libunified.app.tools.DeviceTools
 
 object NavigationManager {
 
+    private val routeToClassMap = mapOf(
+        RouterConfig.MAIN to "mpdc4gsr.activities.MainActivity",
+        RouterConfig.CLAUSE to "mpdc4gsr.activities.ClauseActivity",
+        RouterConfig.POLICY to "mpdc4gsr.activities.PolicyActivityCompose",
+        RouterConfig.VERSION to "mpdc4gsr.activities.VersionActivityCompose",
+        RouterConfig.IR_GALLERY_EDIT to "mpdc4gsr.activities.IRGalleryEditActivity",
+        RouterConfig.WEB_VIEW to "mpdc4gsr.activities.WebViewActivity",
+        
+        RouterConfig.IR_MAIN to "com.mpdc4gsr.module.thermalunified.activity.IRMainComposeActivity",
+        RouterConfig.IR_SETTING to "com.mpdc4gsr.module.thermalunified.activity.IRConfigComposeActivity",
+        RouterConfig.IR_THERMAL_MONITOR to "com.mpdc4gsr.module.thermalunified.activity.IRMonitorComposeActivity",
+        RouterConfig.IR_MONITOR_CHART to "com.mpdc4gsr.module.thermalunified.activity.IRMonitorChartComposeActivity",
+        RouterConfig.IR_GALLERY_DETAIL_01 to "com.mpdc4gsr.module.thermalunified.activity.IRGalleryDetail01ComposeActivity",
+        RouterConfig.IR_GALLERY_DETAIL_04 to "com.mpdc4gsr.module.thermalunified.activity.IRGalleryDetail04ComposeActivity",
+        RouterConfig.IR_VIDEO_GSY to "com.mpdc4gsr.module.thermalunified.activity.IRVideoGSYComposeActivity",
+        RouterConfig.IR_CORRECTION_TWO to "com.mpdc4gsr.module.thermalunified.activity.IRCorrectionTwoComposeActivity",
+        RouterConfig.IR_CORRECTION_THREE to "com.mpdc4gsr.module.thermalunified.activity.IRCorrectionThreeComposeActivity",
+        RouterConfig.IR_CORRECTION_FOUR to "com.mpdc4gsr.module.thermalunified.activity.IRCorrectionFourComposeActivity",
+        RouterConfig.IR_IMG_PICK to "com.mpdc4gsr.module.thermalunified.activity.ImagePickIRComposeActivity",
+        RouterConfig.IR_IMG_PICK_PLUS to "com.mpdc4gsr.module.thermalunified.activity.ImagePickIRPlushComposeActivity",
+        
+        RouterConfig.GALLERY to "com.mpdc4gsr.module.thermalunified.activity.GalleryComposeActivity",
+        RouterConfig.THERMAL_MONITOR to "com.mpdc4gsr.module.thermalunified.activity.MonitorComposeActivity",
+        RouterConfig.CONNECT to "com.mpdc4gsr.module.thermalunified.activity.ConnectComposeActivity",
+        RouterConfig.VIDEO to "com.mpdc4gsr.module.thermalunified.activity.VideoComposeActivity",
+        RouterConfig.MONITOR_CHART to "com.mpdc4gsr.module.thermalunified.activity.MonitorChartComposeActivity",
+        RouterConfig.LOG_MP_CHART to "com.mpdc4gsr.module.thermalunified.activity.LogMPChartComposeActivity",
+        
+        RouterConfig.IR_TCLITE to "com.mpdc4gsr.module.thermalunified.lite.activity.IRThermalLiteComposeActivity",
+        RouterConfig.IR_THERMAL_MONITOR_LITE to "com.mpdc4gsr.module.thermalunified.lite.activity.IRMonitorLiteComposeActivity",
+        RouterConfig.IR_IMG_PICK_LITE to "com.mpdc4gsr.module.thermalunified.lite.activity.ImagePickIRLiteComposeActivity",
+        RouterConfig.IR_MONITOR_CHART_LITE to "com.mpdc4gsr.module.thermalunified.activity.IRMonitorChartComposeActivity",
+        RouterConfig.IR_CORRECTION_THREE_LITE to "com.mpdc4gsr.module.thermalunified.lite.activity.IRCorrectionLiteThreeComposeActivity",
+        RouterConfig.IR_CORRECTION_FOUR_LITE to "com.mpdc4gsr.module.thermalunified.lite.activity.IRCorrectionLiteFourComposeActivity",
+        
+        RouterConfig.REPORT_CREATE_FIRST to "com.mpdc4gsr.module.thermalunified.report.activity.ReportCreateComposeActivity",
+        RouterConfig.REPORT_CREATE_SECOND to "com.mpdc4gsr.module.thermalunified.report.activity.ReportCreateComposeActivity",
+        RouterConfig.REPORT_PREVIEW_SECOND to "com.mpdc4gsr.module.thermalunified.activity.ReportPreviewSecondComposeActivity",
+        RouterConfig.REPORT_PICK_IMG to "com.mpdc4gsr.module.thermalunified.activity.ReportPickImgComposeActivity",
+        
+        RouterConfig.QUESTION to "com.mpdc4gsr.module.user.activity.QuestionComposeActivity",
+        RouterConfig.ELECTRONIC_MANUAL to "com.mpdc4gsr.module.user.activity.ElectronicManualComposeActivity",
+        RouterConfig.STORAGE_SPACE to "com.mpdc4gsr.module.user.activity.StorageSpaceComposeActivity",
+        RouterConfig.TC_MORE to "com.mpdc4gsr.module.user.activity.MoreComposeActivity",
+        
+        RouterConfig.GSR_MULTI_MODAL to "mpdc4gsr.gsr.MultiModalRecordingActivity",
+        RouterConfig.GSR_DEMO to "com.mpdc4gsr.component.gsr.activity.GSRDemoActivity",
+        
+        RouterConfig.IR_GALLERY_HOME to "com.mpdc4gsr.module.thermalunified.activity.IRGalleryActivity",
+        RouterConfig.IR_CAMERA_SETTING to "com.mpdc4gsr.module.thermalunified.activity.IRCameraSettingActivity",
+        
+        RouterConfig.QUESTION_DETAILS to "com.mpdc4gsr.module.user.activity.QuestionDetailsComposeActivity",
+        RouterConfig.PDF to "com.mpdc4gsr.module.user.activity.PDFActivity",
+        
+        RouterConfig.DEVICE_INFORMATION to "com.mpdc4gsr.module.user.activity.DeviceDetailsComposeActivity",
+        RouterConfig.TISR to "com.mpdc4gsr.module.user.activity.TISRComposeActivity",
+        RouterConfig.AUTO_SAVE to "com.mpdc4gsr.module.user.activity.AutoSaveComposeActivity",
+        RouterConfig.UNIT to "com.mpdc4gsr.module.user.activity.UnitComposeActivity"
+    )
 
     class NavigationBuilder(private val route: String) {
         private val extras = Bundle()
@@ -95,88 +154,10 @@ object NavigationManager {
         context: Context,
         route: String,
     ): Intent {
-        val activityClass =
-            when (route) {
-
-                RouterConfig.MAIN -> getClassByName("mpdc4gsr.activities.MainActivity")
-                RouterConfig.CLAUSE -> getClassByName("mpdc4gsr.activities.ClauseActivity")
-                RouterConfig.POLICY -> getClassByName("mpdc4gsr.activities.PolicyActivityCompose")
-                RouterConfig.VERSION -> getClassByName("mpdc4gsr.activities.VersionActivityCompose")
-                RouterConfig.IR_GALLERY_EDIT -> getClassByName("mpdc4gsr.activities.IRGalleryEditActivity")
-                RouterConfig.WEB_VIEW -> getClassByName("mpdc4gsr.activities.WebViewActivity")
-
-                RouterConfig.IR_MAIN -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.IRMainComposeActivity")
-                RouterConfig.IR_SETTING -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.IRConfigComposeActivity")
-                RouterConfig.IR_THERMAL_MONITOR -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.IRMonitorComposeActivity")
-                RouterConfig.IR_MONITOR_CHART -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.IRMonitorChartComposeActivity")
-                RouterConfig.IR_GALLERY_DETAIL_01 -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.IRGalleryDetail01ComposeActivity")
-                RouterConfig.IR_GALLERY_DETAIL_04 -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.IRGalleryDetail04ComposeActivity")
-                RouterConfig.IR_VIDEO_GSY -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.IRVideoGSYComposeActivity")
-                RouterConfig.IR_CORRECTION_TWO -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.IRCorrectionTwoComposeActivity")
-                RouterConfig.IR_CORRECTION_THREE -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.IRCorrectionThreeComposeActivity")
-                RouterConfig.IR_CORRECTION_FOUR -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.IRCorrectionFourComposeActivity")
-                RouterConfig.IR_IMG_PICK -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.ImagePickIRComposeActivity")
-                RouterConfig.IR_IMG_PICK_PLUS -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.ImagePickIRPlushComposeActivity")
-
-                // RouterConfig.IR_MONOCULAR -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.IRMonocularActivity")
-                // RouterConfig.IR_DEVICE_ADD -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.DeviceAddActivity")
-
-                RouterConfig.GALLERY -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.GalleryComposeActivity")
-                RouterConfig.THERMAL_MONITOR -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.MonitorComposeActivity")
-                RouterConfig.CONNECT -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.ConnectComposeActivity")
-                RouterConfig.VIDEO -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.VideoComposeActivity")
-                RouterConfig.MONITOR_CHART -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.MonitorChartComposeActivity")
-                RouterConfig.LOG_MP_CHART -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.LogMPChartComposeActivity")
-
-                RouterConfig.IR_TCLITE -> getClassByName("com.mpdc4gsr.module.thermalunified.lite.activity.IRThermalLiteComposeActivity")
-                RouterConfig.IR_THERMAL_MONITOR_LITE -> getClassByName("com.mpdc4gsr.module.thermalunified.lite.activity.IRMonitorLiteComposeActivity")
-                RouterConfig.IR_IMG_PICK_LITE -> getClassByName("com.mpdc4gsr.module.thermalunified.lite.activity.ImagePickIRLiteComposeActivity")
-                RouterConfig.IR_MONITOR_CHART_LITE -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.IRMonitorChartComposeActivity")
-                RouterConfig.IR_CORRECTION_THREE_LITE -> getClassByName("com.mpdc4gsr.module.thermalunified.lite.activity.IRCorrectionLiteThreeComposeActivity")
-                RouterConfig.IR_CORRECTION_FOUR_LITE -> getClassByName("com.mpdc4gsr.module.thermalunified.lite.activity.IRCorrectionLiteFourComposeActivity")
-
-                RouterConfig.REPORT_CREATE_FIRST -> getClassByName("com.mpdc4gsr.module.thermalunified.report.activity.ReportCreateComposeActivity")
-                RouterConfig.REPORT_CREATE_SECOND ->
-                    getClassByName(
-                        "com.mpdc4gsr.module.thermalunified.report.activity.ReportCreateComposeActivity",
-                    )
-
-                RouterConfig.REPORT_PREVIEW_SECOND ->
-                    getClassByName(
-                        "com.mpdc4gsr.module.thermalunified.activity.ReportPreviewSecondComposeActivity",
-                    )
-
-                RouterConfig.REPORT_PICK_IMG -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.ReportPickImgComposeActivity")
-
-                RouterConfig.QUESTION -> getClassByName("com.mpdc4gsr.module.user.activity.QuestionComposeActivity")
-                RouterConfig.ELECTRONIC_MANUAL -> getClassByName("com.mpdc4gsr.module.user.activity.ElectronicManualComposeActivity")
-                RouterConfig.STORAGE_SPACE -> getClassByName("com.mpdc4gsr.module.user.activity.StorageSpaceComposeActivity")
-                RouterConfig.TC_MORE -> getClassByName("com.mpdc4gsr.module.user.activity.MoreComposeActivity")
-
-                RouterConfig.GSR_MULTI_MODAL -> getClassByName("mpdc4gsr.gsr.MultiModalRecordingActivity")
-                RouterConfig.GSR_DEMO -> getClassByName("com.mpdc4gsr.component.gsr.activity.GSRDemoActivity")
-
-                RouterConfig.IR_GALLERY_HOME -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.IRGalleryActivity")
-                RouterConfig.IR_CAMERA_SETTING -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.IRCameraSettingActivity")
-
-                RouterConfig.QUESTION_DETAILS -> getClassByName("com.mpdc4gsr.module.user.activity.QuestionDetailsComposeActivity")
-
-                RouterConfig.PDF -> getClassByName("com.mpdc4gsr.module.user.activity.PDFActivity")
-
-                RouterConfig.DEVICE_INFORMATION -> getClassByName("com.mpdc4gsr.module.user.activity.DeviceDetailsComposeActivity")
-                RouterConfig.TISR -> getClassByName("com.mpdc4gsr.module.user.activity.TISRComposeActivity")
-                RouterConfig.AUTO_SAVE -> getClassByName("com.mpdc4gsr.module.user.activity.AutoSaveComposeActivity")
-
-                RouterConfig.IR_CORRECTION_TWO -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.IRCorrectionTwoActivity")
-                RouterConfig.IR_GALLERY_DETAIL_01 -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.IRGalleryDetail01Activity")
-                RouterConfig.REPORT_PICK_IMG -> getClassByName("com.mpdc4gsr.module.thermalunified.activity.ReportPickImgActivity")
-                RouterConfig.UNIT -> getClassByName("com.mpdc4gsr.module.user.activity.UnitComposeActivity")
-
-                else -> {
-                    throw IllegalArgumentException("Unknown route: $route")
-                }
-            }
-        return Intent(context, activityClass)
+        val className = routeToClassMap[route]
+            ?: throw IllegalArgumentException("Unknown route: $route")
+        
+        return Intent(context, getClassByName(className))
     }
 
     fun jumpImagePick(

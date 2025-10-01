@@ -15,6 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.components.TitleBarAction
+import mpdc4gsr.core.ui.components.NavigationBreadcrumb
 import mpdc4gsr.core.ui.components.sensors.GSRSensorCard
 import mpdc4gsr.core.ui.components.sensors.ThermalSensorCard
 import mpdc4gsr.core.ui.components.sensors.RGBCameraSensorCard
@@ -50,11 +51,11 @@ fun UnifiedSensorDashboard(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(Color(0xFF16131e)) // Match theme background
+            .background(Color(0xFF16131e))
     ) {
-        // Title bar with dashboard icon and settings
+        // Title bar with user-friendly name
         TitleBar(
-            title = "Sensor Dashboard",
+            title = "Sensor Overview",
             showBackButton = true,
             onBackClick = onBackClick
         ) {
@@ -64,6 +65,12 @@ fun UnifiedSensorDashboard(
                 onClick = onSettingsClick
             )
         }
+
+        // Breadcrumb navigation for context
+        NavigationBreadcrumb(
+            currentScreen = "Sensor Overview",
+            previousScreen = "Home"
+        )
 
         // Scrollable sensor content
         Column(
