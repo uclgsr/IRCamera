@@ -1,5 +1,13 @@
 package com.mpdc4gsr.libunified.app.dialog
 
+/*
+ * DEPRECATED: This file has been deprecated as part of migration to Jetpack Compose.
+ * This code is commented out to avoid compilation errors when dataBinding is disabled.
+ * See COMPOSE_MIGRATION.md for alternatives.
+ */
+
+/*
+
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -122,3 +130,4 @@ class EmissivityTipPopup(val context: Context, val isTC007: Boolean) {
         closeEvent?.invoke(checkBox?.isChecked ?: false)
     }
 }
+*/

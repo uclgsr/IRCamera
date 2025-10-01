@@ -1,5 +1,13 @@
 package com.mpdc4gsr.libunified.app.binding
 
+/*
+ * DEPRECATED: This file has been deprecated as part of migration to Jetpack Compose.
+ * This code is commented out to avoid compilation errors when dataBinding is disabled.
+ * See COMPOSE_MIGRATION.md for alternatives.
+ */
+
+/*
+
 import android.content.res.TypedArray
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
@@ -238,3 +246,4 @@ object ViewBindingAdapter {
         return bgDrawable
     }
 }
+*/

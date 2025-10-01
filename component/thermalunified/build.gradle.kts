@@ -57,8 +57,8 @@ android {
     }
 
     buildFeatures {
-        viewBinding = true
-        dataBinding = true
+//        viewBinding = true  // Disabled - migrated to Jetpack Compose
+//        dataBinding = true  // Disabled - migrated to Jetpack Compose
         compose = true
     }
 
