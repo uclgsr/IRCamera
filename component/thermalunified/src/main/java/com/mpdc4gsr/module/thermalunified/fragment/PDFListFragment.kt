@@ -22,7 +22,7 @@ import com.mpdc4gsr.libunified.app.dialog.TipDialog
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModelFragment
 import com.mpdc4gsr.libunified.app.lms.Config
 import com.mpdc4gsr.libunified.app.lms.LMS
-import com.mpdc4gsr.libunified.app.lms.UrlConstant
+import com.mpdc4gsr.libunified.app.lms.UrlConstants
 import com.mpdc4gsr.libunified.app.lms.network.HttpProxy
 import com.mpdc4gsr.libunified.app.lms.network.IResponseCallback
 import com.mpdc4gsr.libunified.app.lms.utils.LanguageUtils
@@ -173,7 +173,7 @@ class PDFListFragment : BaseViewModelFragment<PdfViewModel>() {
                         showLoadingDialog()
                         withContext(Dispatchers.IO) {
                             val url =
-                                UrlConstant.BASE_URL + "api/v1/outProduce/testReport/delTestReport"
+                                UrlConstants.BASE_URL + "api/v1/outProduce/testReport/delTestReport"
                             val params = RequestParams()
                             params.addBodyParameter(
                                 "modelId",

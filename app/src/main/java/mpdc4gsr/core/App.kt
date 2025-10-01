@@ -12,7 +12,7 @@ import com.mpdc4gsr.libunified.app.common.SharedManager
 import com.mpdc4gsr.libunified.app.config.HttpConfig
 import com.mpdc4gsr.libunified.app.lms.Config
 import com.mpdc4gsr.libunified.app.lms.LMS.mContext
-import com.mpdc4gsr.libunified.app.lms.UrlConstant
+import com.mpdc4gsr.libunified.app.lms.UrlConstants
 import com.mpdc4gsr.libunified.app.lms.utils.SPUtils
 import com.mpdc4gsr.module.thermalunified.lite.IrConst
 import com.mpdc4gsr.module.thermalunified.lite.util.CommonUtils
@@ -72,8 +72,8 @@ class App : BaseApplication() {
             }
             if (!isDomestic()) {
 
-                UrlConstant.setBaseUrl("${HttpConfig.HOST}/", false)
-                SharedManager.setBaseHost(UrlConstant.BASE_URL)
+                UrlConstants.setBaseUrl("${HttpConfig.HOST}/", false)
+                SharedManager.setBaseHost(UrlConstants.BASE_URL)
             }
 
             CoroutineScope(Dispatchers.IO).launch {

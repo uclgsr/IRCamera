@@ -10,7 +10,7 @@ import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
 import com.mpdc4gsr.libunified.app.config.RouterConfig
 import com.mpdc4gsr.libunified.app.dialog.TipDialog
 import com.mpdc4gsr.libunified.app.ktbase.BaseFragment
-import com.mpdc4gsr.libunified.app.lms.UrlConstant
+import com.mpdc4gsr.libunified.app.lms.UrlConstants
 import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import com.mpdc4gsr.libunified.app.socket.WebSocketProxy
 import com.mpdc4gsr.libunified.app.tools.DeviceTools
@@ -53,7 +53,7 @@ class AbilityFragment : BaseFragment(), View.OnClickListener {
                 SharedManager.hasClickWinter = true
                 EventBus.getDefault().post(WinterClickEvent())
                 val url =
-                    if (UrlConstant.BASE_URL == "https://api.topdon.com/") {
+                    if (UrlConstants.BASE_URL == "https://api.topdon.com/") {
                         "https://app.topdon.com/h5/share/#/detectionGuidanceIndex?showHeader=1&" +
                                 "languageId=1"
                     } else {

@@ -10,7 +10,7 @@ import com.google.gson.Gson
 import com.mpdc4gsr.libunified.R
 import com.mpdc4gsr.libunified.app.config.FileConfig
 import com.mpdc4gsr.libunified.app.lms.LMS
-import com.mpdc4gsr.libunified.app.lms.UrlConstant
+import com.mpdc4gsr.libunified.app.lms.UrlConstants
 import com.mpdc4gsr.libunified.app.lms.bean.CommonBean
 import com.mpdc4gsr.libunified.app.lms.network.HttpProxy
 import com.mpdc4gsr.libunified.app.lms.network.IResponseCallback
@@ -206,7 +206,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
             var packageData: PackageData? = null
             val countDownLatch = CountDownLatch(1)
 
-            val url = UrlConstant.BASE_URL + "api/v1/user/deviceSoftOut/page"
+            val url = UrlConstants.BASE_URL + "api/v1/user/deviceSoftOut/page"
             val params = RequestParams()
             params.addBodyParameter("sn", sn)
             params.addBodyParameter("softCode", softCode)
@@ -250,7 +250,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
         withContext(Dispatchers.IO) {
             var result: DownloadData? = null
             val countDownLatch = CountDownLatch(1)
-            val url = UrlConstant.BASE_URL + "api/v1/user/deviceSoftOut/getFileUrl"
+            val url = UrlConstants.BASE_URL + "api/v1/user/deviceSoftOut/getFileUrl"
             val params = RequestParams()
             params.addBodyParameter("sn", sn)
             params.addBodyParameter("businessId", businessId)
