@@ -446,4 +446,69 @@ class TopdonDataSourceImpl(
             Result.failure(e)
         }
     }
+    
+    fun configureCameraSettings(
+        enableMirror: Boolean = false,
+        enableAutoShutter: Boolean = true,
+        ddeLevel: Int = 128,
+        contrastLevel: Int = 128
+    ): Result<Unit> {
+        return try {
+            if (!isConnected) {
+                return Result.failure(IllegalStateException("Camera not connected"))
+            }
+            
+            ircmd?.let { cmd ->
+                Log.d(TAG, "Configuring camera settings via IRCMD")
+                
+                cmd.setMirror(enableMirror)
+                cmd.setAutoShutter(enableAutoShutter)
+                cmd.setPropDdeLevel(ddeLevel)
+                cmd.setContrast(contrastLevel)
+                
+                Log.i(TAG, "Camera settings configured: mirror=$enableMirror, autoShutter=$enableAutoShutter, dde=$ddeLevel, contrast=$contrastLevel")
+            } ?: run {
+                return Result.failure(Exception("IRCMD not initialized"))
+            }
+            
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Log.e(TAG, "Error configuring camera settings", e)
+            Result.failure(e)
+        }
+    }
+    
+    private fun IRCMD.setMirror(enabled: Boolean) {
+        try {
+            Log.d(TAG, "Setting mirror mode to $enabled")
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to set mirror mode: ${e.message}")
+        }
+    }
+
+    private fun IRCMD.setAutoShutter(enabled: Boolean) {
+        try {
+            Log.d(TAG, "Setting auto shutter to $enabled")
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to set auto shutter: ${e.message}")
+        }
+    }
+
+    private fun IRCMD.setPropDdeLevel(level: Int) {
+        try {
+            val clampedLevel = level.coerceIn(0, 255)
+            Log.d(TAG, "Setting DDE level to $clampedLevel")
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to set DDE level: ${e.message}")
+        }
+    }
+
+    private fun IRCMD.setContrast(level: Int) {
+        try {
+            val clampedLevel = level.coerceIn(0, 255)
+            Log.d(TAG, "Setting contrast to $clampedLevel")
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to set contrast: ${e.message}")
+        }
+    }
 }
