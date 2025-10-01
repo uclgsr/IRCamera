@@ -32,7 +32,9 @@ public abstract class AnimatedViewPortJob extends ViewPortJob implements ValueAn
     @SuppressLint("NewApi")
     @Override
     public void run() {
-        animator.start();
+        if (view != null && view.isAttachedToWindow()) {
+            animator.start();
+        }
     }
 
     public float getPhase() {
