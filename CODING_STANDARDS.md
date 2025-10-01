@@ -11,7 +11,13 @@
 **Standard:** Use **Utils** (plural) suffix for utility classes
 - Examples: `CommUtils.kt`, `FileUtils.kt`, `NetworkUtils.kt`
 - Rationale: Plural form indicates a collection of utility functions
-- All utility classes have been standardized to use `Utils` suffix
+- **Status:** ✅ All utility classes standardized (24 files renamed from `Util` to `Utils`)
+
+### Tool Classes
+**Standard:** Use **Tools** (plural) suffix for tool/helper classes
+- Examples: `TimeTools.kt`, `LanguageTools.kt`, `PermissionTools.kt`
+- Rationale: Plural form indicates a collection of tool functions
+- **Status:** ✅ All tool classes standardized (14 files renamed from `Tool` to `Tools`)
 
 ### Manager Classes
 **Standard:** Use **Manager** suffix for classes managing state or resources
@@ -26,8 +32,17 @@
 ### Activity Classes
 **Standard:** Use `Activity` or `ComposeActivity` suffix
 - Fragment-based: `NetworkConfigActivity.kt`
-- Compose-based: `NetworkConfigActivityCompose.kt` or `NetworkConfigComposeActivity.kt`
-- Preference: `ComposeActivity` suffix for new Compose activities
+- Compose-based: `NetworkConfigComposeActivity.kt`
+- **Pattern:** Use `ComposeActivity` suffix (not `ActivityCompose`)
+- **Status:** ✅ All Compose activities standardized (13 files renamed from `ActivityCompose` to `ComposeActivity`)
+- Note: 4 legacy `ActivityCompose` files remain for backward compatibility where different implementations coexist
+
+### Fragment Classes
+**Standard:** Use `Fragment` or `ComposeFragment` suffix
+- Fragment-based: `SettingsFragment.kt`
+- Compose-based: `SettingsComposeFragment.kt`
+- **Pattern:** Use `ComposeFragment` suffix (not `FragmentCompose`)
+- **Status:** ✅ All Compose fragments standardized (20 files renamed from `FragmentCompose` to `ComposeFragment`)
 
 ### View Model Classes
 **Standard:** Use `ViewModel` suffix
