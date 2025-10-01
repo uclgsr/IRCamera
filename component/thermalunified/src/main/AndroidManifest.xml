@@ -100,6 +100,49 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.IRCamera" />
 
+        <!-- New Compose Activities from PR #477 - Complete Migration -->
+        <activity
+            android:name=".activity.IRMonitorChartLiteComposeActivity"
+            android:exported="false"
+            android:screenOrientation="userPortrait"
+            android:theme="@style/Theme.IRCamera" />
+
+        <activity
+            android:name=".activity.IRThermalDoubleComposeActivity"
+            android:exported="false"
+            android:screenOrientation="userPortrait"
+            android:theme="@style/Theme.IRCamera" />
+
+        <activity
+            android:name=".activity.ImageColorComposeActivity"
+            android:exported="false"
+            android:screenOrientation="userPortrait"
+            android:theme="@style/Theme.IRCamera" />
+
+        <activity
+            android:name=".activity.MonitorLogComposeActivity"
+            android:exported="false"
+            android:screenOrientation="userPortrait"
+            android:theme="@style/Theme.IRCamera" />
+
+        <activity
+            android:name=".activity.ThermalIrNightComposeActivity"
+            android:exported="false"
+            android:screenOrientation="userPortrait"
+            android:theme="@style/Theme.IRCamera" />
+
+        <activity
+            android:name=".report.activity.ReportDetailComposeActivity"
+            android:exported="false"
+            android:screenOrientation="userPortrait"
+            android:theme="@style/Theme.IRCamera" />
+
+        <activity
+            android:name=".report.activity.ReportPreviewFirstComposeActivity"
+            android:exported="false"
+            android:screenOrientation="userPortrait"
+            android:theme="@style/Theme.IRCamera" />
+
         <!-- Note: Component Module Compose Activities declared earlier in manifest to avoid duplicates -->
     </application>
 

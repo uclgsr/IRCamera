@@ -20,7 +20,7 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeFragment
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import com.mpdc4gsr.libunified.app.config.RouterConfig
-import com.mpdc4gsr.module.thermalunified.activity.IRThermalNightActivity
+import com.mpdc4gsr.module.thermalunified.activity.ThermalIrNightComposeActivity
 import com.mpdc4gsr.module.thermalunified.activity.IRThermalPlusComposeActivity
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRThermalFragmentViewModel
 
@@ -83,7 +83,7 @@ class IRThermalFragmentCompose : BaseComposeFragment<IRThermalFragmentViewModel>
                     ThermalEntryCard(
                         onOpenThermal = { viewModel.openMainThermal() },
                         onOpenNightVision = {
-                            val intent = Intent(context, IRThermalNightActivity::class.java)
+                            val intent = Intent(context, ThermalIrNightComposeActivity::class.java)
                             context.startActivity(intent)
                         },
                         onOpenThermalPlus = {
