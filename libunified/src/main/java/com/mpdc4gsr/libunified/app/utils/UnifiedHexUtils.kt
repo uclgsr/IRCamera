@@ -4,9 +4,7 @@ import java.util.Locale
 
 /**
  * Consolidated hex and conversion utilities
- * Replaces:
- * - libunified/src/main/java/com/mpdc4gsr/libunified/ir/utils/HexUtils.java
- * - Various conversion utilities scattered across modules
+ * All duplicate hex utility files have been consolidated into this single utility.
  */
 object UnifiedHexUtils {
 
