@@ -172,6 +172,9 @@ class CountDownView : View {
      *
      */
     fun startCountDown() {
+        if (!isAttachedToWindow) {
+            return
+        }
         valueAnimator = getValueAnimator((mCountdownTime * 1000).toLong())
         valueAnimator!!.addUpdateListener { animation ->
             val i = animation.animatedValue.toString().toFloat()

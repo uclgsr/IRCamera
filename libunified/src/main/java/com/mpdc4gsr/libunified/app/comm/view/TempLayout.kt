@@ -111,6 +111,8 @@ class TempLayout : LinearLayout {
     }
 
     fun startAlphaBreathAnimation() {
-        alphaAnimator?.start()
+        if (isAttachedToWindow) {
+            alphaAnimator?.start()
+        }
     }
 }

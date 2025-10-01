@@ -60,6 +60,9 @@ public class AnimatedZoomJob extends AnimatedViewPortJob implements Animator.Ani
 
     @Override
     public void onAnimationUpdate(ValueAnimator animation) {
+        if (view == null || !view.isAttachedToWindow()) {
+            return;
+        }
 
         float scaleX = xOrigin + (xValue - xOrigin) * phase;
         float scaleY = yOrigin + (yValue - yOrigin) * phase;
@@ -82,8 +85,10 @@ public class AnimatedZoomJob extends AnimatedViewPortJob implements Animator.Ani
 
     @Override
     public void onAnimationEnd(Animator animation) {
-        ((BarLineChartBase) view).calculateOffsets();
-        view.postInvalidate();
+        if (view != null && view.isAttachedToWindow()) {
+            ((BarLineChartBase) view).calculateOffsets();
+            view.postInvalidate();
+        }
     }
 
     @Override

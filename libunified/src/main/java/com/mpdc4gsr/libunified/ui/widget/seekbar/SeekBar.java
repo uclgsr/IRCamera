@@ -372,6 +372,9 @@ public class SeekBar {
     }
 
     public void materialRestore() {
+        if (rangeSeekBar != null && !rangeSeekBar.isAttachedToWindow()) {
+            return;
+        }
         if (anim != null) anim.cancel();
         anim = ValueAnimator.ofFloat(material, 0);
         anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {

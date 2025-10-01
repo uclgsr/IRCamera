@@ -130,6 +130,7 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
                 postInvalidate();
             }
         });
+        mAnimator.setView(this);
 
         Utils.init(getContext());
         mMaxHighlightDistance = Utils.convertDpToPixel(500f);

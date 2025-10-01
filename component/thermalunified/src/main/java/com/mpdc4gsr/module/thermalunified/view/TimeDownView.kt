@@ -213,7 +213,7 @@ public class TimeDownView : AppCompatTextView {
     }
 
     private fun startDefaultAnimate() {
-        if (startDefaultAnimFlag) {
+        if (startDefaultAnimFlag && isAttachedToWindow) {
             animation?.start()
         }
     }
