@@ -19,6 +19,18 @@
 - Rationale: Plural form indicates a collection of tool functions
 - **Status:** ✅ All tool classes standardized (14 files renamed from `Tool` to `Tools`)
 
+### Constant Classes
+**Standard:** Use **Constants** (plural) suffix for constant collections
+- Examples: `UrlConstants.java`, `AppConstants.kt`
+- Rationale: Plural form indicates a collection of constants
+- **Status:** ✅ All constant classes standardized (1 file renamed from `Constant` to `Constants`)
+
+### Extension Files
+**Standard:** Use **Extensions** (plural) suffix for extension function files
+- Examples: `ViewModelExtensions.kt`, `IRCMDExtensions.kt`
+- Rationale: Plural form indicates a collection of extension functions
+- **Status:** ✅ All extension files standardized (1 file renamed from `Extension` to `Extensions`)
+
 ### Manager Classes
 **Standard:** Use **Manager** suffix for classes managing state or resources
 - Examples: `FileSchemaManager.kt`, `SessionManager.kt`, `NetworkManager.kt`
