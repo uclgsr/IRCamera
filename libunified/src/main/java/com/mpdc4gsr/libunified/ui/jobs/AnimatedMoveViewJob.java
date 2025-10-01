@@ -42,6 +42,9 @@ public class AnimatedMoveViewJob extends AnimatedViewPortJob {
 
     @Override
     public void onAnimationUpdate(ValueAnimator animation) {
+        if (view == null || !view.isAttachedToWindow()) {
+            return;
+        }
 
         pts[0] = xOrigin + (xValue - xOrigin) * phase;
         pts[1] = yOrigin + (yValue - yOrigin) * phase;

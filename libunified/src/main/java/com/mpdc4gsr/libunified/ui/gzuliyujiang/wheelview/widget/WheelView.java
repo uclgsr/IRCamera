@@ -1195,7 +1195,7 @@ public class WheelView extends View implements Runnable {
     }
 
     public final void smoothScrollTo(final int position) {
-        if (isInEditMode()) {
+        if (isInEditMode() || !isAttachedToWindow()) {
             scrollTo(position);
             return;
         }
@@ -1216,7 +1216,9 @@ public class WheelView extends View implements Runnable {
                 scrollTo(position);
             }
         });
-        animator.start();
+        if (isAttachedToWindow()) {
+            animator.start();
+        }
     }
 
     public void scrollTo(int position) {
