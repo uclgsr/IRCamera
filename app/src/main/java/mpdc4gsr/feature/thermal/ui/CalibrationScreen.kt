@@ -18,9 +18,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import mpdc4gsr.core.ui.components.TitleBar
-import mpdc4gsr.core.ui.components.*
+import mpdc4gsr.core.ui.components.settings.*
 import mpdc4gsr.core.ui.theme.IRCameraTheme
-import mpdc4gsr.viewmodel.CalibrationViewModel
+import mpdc4gsr.feature.thermal.presentation.CalibrationViewModel
 
 /**
  * Calibration Screen - System calibration and alignment tools

@@ -28,7 +28,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import mpdc4gsr.core.data.SessionMetadata
 import mpdc4gsr.feature.network.data.NetworkServer
-import mpdc4gsr.permissions.PermissionController
+import mpdc4gsr.core.ui.PermissionController
 import mpdc4gsr.core.data.ErrorType
 import mpdc4gsr.core.data.RecordingStats
 import mpdc4gsr.core.data.RecordingStatus
@@ -36,9 +36,9 @@ import mpdc4gsr.core.data.SensorError
 import mpdc4gsr.core.data.SensorRecorder
 import mpdc4gsr.core.data.TimestampManager
 import mpdc4gsr.core.data.TimestampRecord
-import mpdc4gsr.utils.BufferedDataWriter
-import mpdc4gsr.utils.CSVBufferedWriter
-import mpdc4gsr.utils.SessionDirectoryManager
+import mpdc4gsr.core.data.utils.BufferedDataWriter
+import mpdc4gsr.core.data.utils.CSVBufferedWriter
+import mpdc4gsr.core.data.utils.SessionDirectoryManager
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
