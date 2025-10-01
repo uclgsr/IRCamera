@@ -1,44 +1,42 @@
-# Legacy Migration Scripts
+# Legacy Migration Scripts Archive
 
-This directory contains historical migration scripts that were used during the transition from legacy architecture to Clean Architecture with Compose.
+This directory previously contained historical migration scripts that were used during the transition from legacy architecture to Clean Architecture with Compose.
 
-## Status: ARCHIVED
+## Status: REMOVED - CONSOLIDATION COMPLETE
 
-These scripts have completed their purpose and are kept for historical reference only.
+All migration scripts have been removed as part of aggressive code consolidation. The migrations they facilitated are complete and the scripts are no longer needed.
 
-## Migration Scripts
+## Previously Archived Scripts (Now Removed)
 
-### Fragment Migration
-- **migrate_fragments.py** - Moved legacy fragments to backup/fragments
-- **migrate_viewmodels.py** - Reorganized ViewModels by feature
+The following scripts were removed as they served no further purpose:
+- migrate_fragments.py - Fragment migration (completed)
+- migrate_viewmodels.py - ViewModel reorganization (completed)
+- migrate_thermal_activities.py - Thermal activities migration (completed)
+- migrate_remaining_modules.py - Remaining modules migration (completed)
+- cleanup_manifests.py - Manifest cleanup (completed)
+- cleanup_component_manifests.py - Component manifest cleanup (completed)
+- migrate_to_backup.py - General backup utility (no longer needed)
 
-### Activity Migration
-- **migrate_thermal_activities.py** - Migrated thermal activities to Compose
-- **migrate_remaining_modules.py** - Migrated remaining module activities
+## Why Removed?
 
-### Cleanup Scripts
-- **cleanup_manifests.py** - Cleaned up Android manifest files
-- **cleanup_component_manifests.py** - Cleaned up component manifest files
-- **migrate_to_backup.py** - General backup utility
-
-## Why Archived?
-
-These scripts are no longer needed because:
+These scripts were removed because:
 1. All migrations are complete
-2. The repository is now fully organized
+2. The repository is fully organized
 3. Clean Architecture is implemented
 4. 100% Compose migration is done
+5. No historical reference value for future development
+6. Reduced repository clutter
 
 ## Historical Context
 
-These scripts were part of the major architectural transformation:
+These scripts facilitated the major architectural transformation:
 - **Before**: Monolithic structure, mixed XML/Compose, direct SDK coupling
 - **After**: Clean Architecture, 100% Compose, proper abstraction layers
 
-## Do Not Use
+## Current Development Workflows
 
-These scripts should not be executed as they were designed for one-time migrations that have already been completed. Running them again could cause issues.
-
-For current development workflows, see the main scripts directory:
+For current development workflows, see:
 - `../README.md` - Current script documentation
 - `../ircamera.sh` - Master script entry point
+- `../test.sh` - Testing utilities
+- `../verify.sh` - Verification utilities
