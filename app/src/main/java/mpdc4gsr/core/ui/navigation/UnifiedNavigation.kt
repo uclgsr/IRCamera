@@ -3,7 +3,6 @@ package mpdc4gsr.core.ui.navigation
 import android.content.Intent
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -13,7 +12,6 @@ import mpdc4gsr.feature.main.ui.MainScreen
 import mpdc4gsr.feature.main.ui.UnifiedSensorDashboard
 import mpdc4gsr.feature.main.ui.ComponentShowcaseScreen
 import mpdc4gsr.feature.testing.ui.TestResultsScreen
-import mpdc4gsr.core.ui.ComposePerformanceMonitor
 import mpdc4gsr.core.ui.model.SensorType
 import mpdc4gsr.feature.settings.ui.*
 import mpdc4gsr.feature.thermal.ui.*
@@ -94,11 +92,7 @@ fun UnifiedNavHost(
     ) {
         // Home and Dashboard
         composable(UnifiedRoute.Home.route) {
-            val startTime = remember { System.currentTimeMillis() }
-            
-            LaunchedEffect(Unit) {
-                ComposePerformanceMonitor.trackNavigation("Home", startTime)
-            }
+            NavigationPerformanceHelper.TrackNavigation("Home")
             
             MainScreen(
                 onNavigateToSensors = { navController.navigate(UnifiedRoute.Dashboard.route) },
@@ -108,11 +102,7 @@ fun UnifiedNavHost(
         }
 
         composable(UnifiedRoute.Dashboard.route) {
-            val startTime = remember { System.currentTimeMillis() }
-            
-            LaunchedEffect(Unit) {
-                ComposePerformanceMonitor.trackNavigation("Dashboard", startTime)
-            }
+            NavigationPerformanceHelper.TrackNavigation("Dashboard")
             
             UnifiedSensorDashboard(
                 onBackClick = { navController.popBackStack() },
@@ -129,11 +119,7 @@ fun UnifiedNavHost(
 
         // GSR Sensor Routes
         composable(UnifiedRoute.GSRSettings.route) {
-            val startTime = remember { System.currentTimeMillis() }
-            
-            LaunchedEffect(Unit) {
-                ComposePerformanceMonitor.trackNavigation("GSRSettings", startTime)
-            }
+            NavigationPerformanceHelper.TrackNavigation("GSRSettings")
             
             GSRSettingsScreen(
                 onBackClick = { navController.popBackStack() }
@@ -143,12 +129,8 @@ fun UnifiedNavHost(
 
 
         composable(UnifiedRoute.GSRSessionDetail.route) { backStackEntry ->
-            val startTime = remember { System.currentTimeMillis() }
+            NavigationPerformanceHelper.TrackNavigation("GSRSessionDetail")
             val sessionId = backStackEntry.arguments?.getString("sessionId") ?: "unknown"
-            
-            LaunchedEffect(Unit) {
-                ComposePerformanceMonitor.trackNavigation("GSRSessionDetail", startTime)
-            }
             
             SessionDetailScreen(
                 sessionId = sessionId,
@@ -164,12 +146,8 @@ fun UnifiedNavHost(
         }
 
         composable(UnifiedRoute.GSRPlot.route) { backStackEntry ->
-            val startTime = remember { System.currentTimeMillis() }
+            NavigationPerformanceHelper.TrackNavigation("GSRPlot")
             val sessionId = backStackEntry.arguments?.getString("sessionId") ?: "unknown"
-            
-            LaunchedEffect(Unit) {
-                ComposePerformanceMonitor.trackNavigation("GSRPlot", startTime)
-            }
             
             GSRPlotScreen(
                 sessionId = sessionId,
@@ -178,9 +156,10 @@ fun UnifiedNavHost(
         }
 
         composable(UnifiedRoute.GSRDataView.route) {
-            // File path should be passed via savedStateHandle or ViewModel
+            NavigationPerformanceHelper.TrackNavigation("GSRDataView")
+            
             GSRDataViewScreen(
-                filePath = "", // Get from savedStateHandle or arguments
+                filePath = "",
                 onBackClick = { navController.popBackStack() }
             )
         }
@@ -287,6 +266,8 @@ fun UnifiedNavHost(
         }
 
         composable(UnifiedRoute.ThermalCamera.route) {
+            NavigationPerformanceHelper.TrackNavigation("ThermalCamera")
+            
             ThermalCameraScreen(
                 onBackClick = { navController.popBackStack() },
                 onNavigateToSettings = { navController.navigate(UnifiedRoute.ThermalSettings.route) },
@@ -296,12 +277,16 @@ fun UnifiedNavHost(
 
         // Settings and System Routes
         composable(UnifiedRoute.Settings.route) {
+            NavigationPerformanceHelper.TrackNavigation("Settings")
+            
             SettingsScreen(
                 onBackClick = { navController.popBackStack() }
             )
         }
 
         composable(UnifiedRoute.About.route) {
+            NavigationPerformanceHelper.TrackNavigation("About")
+            
             AboutScreen(
                 onBackClick = { navController.popBackStack() }
             )
@@ -310,12 +295,16 @@ fun UnifiedNavHost(
 
 
         composable(UnifiedRoute.ComponentShowcase.route) {
+            NavigationPerformanceHelper.TrackNavigation("ComponentShowcase")
+            
             ComponentShowcaseScreen(
                 onBackClick = { navController.popBackStack() }
             )
         }
 
         composable(UnifiedRoute.TestingSuite.route) {
+            NavigationPerformanceHelper.TrackNavigation("TestingSuite")
+            
             TestResultsScreen(
                 onBackClick = { navController.popBackStack() }
             )
