@@ -187,7 +187,7 @@ fun CarDetectDialog(
                         )
                         
                         if (index < items.size - 1) {
-                            Divider(
+                            HorizontalDivider(
                                 color = Color.LightGray,
                                 thickness = 0.5.dp
                             )
