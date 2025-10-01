@@ -1,0 +1,227 @@
+package com.mpdc4gsr.module.thermalunified.activity
+
+import android.os.Bundle
+import androidx.activity.viewModels
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
+import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
+import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
+
+/**
+ * Compose implementation of Monitor Log activity
+ * Displays monitoring history and log entries
+ */
+class MonitorLogComposeActivity : BaseComposeActivity<ThermalViewModel>() {
+
+    override fun createViewModel(): ThermalViewModel {
+        return viewModels<ThermalViewModel>().value
+    }
+
+    data class LogEntry(
+        val timestamp: String,
+        val temperature: Float,
+        val location: String,
+        val notes: String = ""
+    )
+
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    override fun Content(viewModel: ThermalViewModel) {
+        // Sample log data
+        val logEntries = remember {
+            mutableStateListOf(
+                LogEntry("2024-10-01 10:30:00", 25.5f, "Location A", "Normal reading"),
+                LogEntry("2024-10-01 10:25:00", 27.2f, "Location B", "Elevated temperature"),
+                LogEntry("2024-10-01 10:20:00", 24.8f, "Location C", ""),
+                LogEntry("2024-10-01 10:15:00", 26.1f, "Location A", "Follow-up check"),
+            )
+        }
+
+        var showFilterDialog by remember { mutableStateOf(false) }
+
+        LibUnifiedTheme {
+            Scaffold(
+                topBar = {
+                    TopAppBar(
+                        title = {
+                            Text(
+                                "Monitor Log",
+                                fontWeight = FontWeight.Bold,
+                                color = Color.White
+                            )
+                        },
+                        navigationIcon = {
+                            IconButton(onClick = { finish() }) {
+                                Icon(
+                                    Icons.AutoMirrored.Filled.ArrowBack,
+                                    contentDescription = "Back",
+                                    tint = Color.White
+                                )
+                            }
+                        },
+                        actions = {
+                            IconButton(onClick = { showFilterDialog = true }) {
+                                Icon(Icons.Default.FilterList, contentDescription = "Filter", tint = Color.White)
+                            }
+                            IconButton(onClick = { /* Export */ }) {
+                                Icon(Icons.Default.Download, contentDescription = "Export", tint = Color.White)
+                            }
+                        },
+                        colors = TopAppBarDefaults.topAppBarColors(
+                            containerColor = Color.Black
+                        )
+                    )
+                },
+                floatingActionButton = {
+                    FloatingActionButton(
+                        onClick = { /* Add new log */ },
+                        containerColor = MaterialTheme.colorScheme.primary
+                    ) {
+                        Icon(Icons.Default.Add, contentDescription = "Add Log")
+                    }
+                },
+                containerColor = Color(0xFF16131E)
+            ) { paddingValues ->
+                if (logEntries.isEmpty()) {
+                    // Empty state
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(paddingValues),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(16.dp)
+                        ) {
+                            Icon(
+                                Icons.Default.Description,
+                                contentDescription = null,
+                                modifier = Modifier.size(64.dp),
+                                tint = Color.White.copy(alpha = 0.3f)
+                            )
+                            Text(
+                                "No log entries",
+                                color = Color.White.copy(alpha = 0.6f),
+                                fontSize = 16.sp
+                            )
+                            Text(
+                                "Start monitoring to create logs",
+                                color = Color.White.copy(alpha = 0.4f),
+                                fontSize = 14.sp
+                            )
+                        }
+                    }
+                } else {
+                    // Log list
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(paddingValues),
+                        contentPadding = PaddingValues(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        items(logEntries) { entry ->
+                            LogEntryCard(entry)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @Composable
+    fun LogEntryCard(entry: LogEntry) {
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(
+                containerColor = Color(0xFF1A1A1A)
+            ),
+            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
+                // Header row with timestamp and temperature
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.Top
+                ) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            entry.timestamp,
+                            color = Color.White,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Medium
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                Icons.Default.LocationOn,
+                                contentDescription = null,
+                                modifier = Modifier.size(16.dp),
+                                tint = Color.White.copy(alpha = 0.6f)
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(
+                                entry.location,
+                                color = Color.White.copy(alpha = 0.6f),
+                                fontSize = 12.sp
+                            )
+                        }
+                    }
+
+                    // Temperature badge
+                    Card(
+                        colors = CardDefaults.cardColors(
+                            containerColor = when {
+                                entry.temperature > 30f -> Color(0xFFFF4747)
+                                entry.temperature > 26f -> Color(0xFFFFA500)
+                                else -> Color(0xFF06AAFF)
+                            }
+                        ),
+                        shape = RoundedCornerShape(12.dp)
+                    ) {
+                        Text(
+                            "%.1f°C".format(entry.temperature),
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+                            color = Color.White,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+
+                // Notes section
+                if (entry.notes.isNotEmpty()) {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Divider(color = Color.White.copy(alpha = 0.1f))
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        entry.notes,
+                        color = Color.White.copy(alpha = 0.8f),
+                        fontSize = 13.sp
+                    )
+                }
+            }
+        }
+    }
+}
