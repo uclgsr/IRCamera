@@ -1,4 +1,4 @@
-package mpdc4gsr.data
+package mpdc4gsr.core.data
 
 /**
  * Data classes for recording session management and networking integration

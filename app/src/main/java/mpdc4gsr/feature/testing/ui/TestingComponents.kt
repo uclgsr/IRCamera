@@ -1,4 +1,4 @@
-package mpdc4gsr.compose.testing
+package mpdc4gsr.feature.testing.ui
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape

@@ -1,4 +1,4 @@
-package mpdc4gsr.compose.components
+package mpdc4gsr.core.ui.components
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.*

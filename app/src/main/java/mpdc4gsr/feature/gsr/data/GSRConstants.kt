@@ -1,4 +1,4 @@
-package mpdc4gsr.sensors.gsr
+package mpdc4gsr.feature.gsr.data
 
 object GSRConstants {
     // GSR calculation constants based on Shimmer3 GSR hardware specifications

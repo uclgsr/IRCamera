@@ -1,4 +1,4 @@
-package mpdc4gsr.viewmodel
+package mpdc4gsr.core.ui
 
 /**
  * Sealed classes for type-safe UI state management

@@ -1,4 +1,4 @@
-package mpdc4gsr.sensors.gsr
+package mpdc4gsr.feature.gsr.data
 
 // Import removed - ShimmerMsg constants may not be available in this version
 import android.content.Context

@@ -1,4 +1,4 @@
-package mpdc4gsr.compose.integration
+package mpdc4gsr.core.ui
 
 /**
  * Integration examples showing how to wire Compose screens with existing ViewModels

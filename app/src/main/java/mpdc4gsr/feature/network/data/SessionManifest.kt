@@ -1,4 +1,4 @@
-package mpdc4gsr.controller
+package mpdc4gsr.feature.network.data
 
 /**
  * Legacy compatibility exports - data classes moved to RecordingTypes.kt

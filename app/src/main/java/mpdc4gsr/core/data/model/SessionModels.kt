@@ -1,4 +1,4 @@
-package mpdc4gsr.sensors.unified.model
+package mpdc4gsr.core.data.model
 
 import org.json.JSONObject
 

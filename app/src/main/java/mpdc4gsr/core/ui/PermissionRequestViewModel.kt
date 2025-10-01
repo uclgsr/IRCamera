@@ -1,4 +1,4 @@
-package mpdc4gsr.permissions
+package mpdc4gsr.core.ui
 
 import android.content.Context
 import androidx.lifecycle.viewModelScope

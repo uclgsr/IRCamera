@@ -1,4 +1,4 @@
-package mpdc4gsr.camera.ui
+package mpdc4gsr.feature.camera.ui
 
 import android.content.Context
 import android.util.AttributeSet

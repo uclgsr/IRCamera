@@ -1,4 +1,4 @@
-package mpdc4gsr.compose.navigation
+package mpdc4gsr.core.ui.navigation
 
 /**
  * Backward compatibility file for navigation package refactoring

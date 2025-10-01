@@ -1,4 +1,4 @@
-package mpdc4gsr.network
+package mpdc4gsr.feature.network.data
 
 /**
  * Simplified recording interface for remote control networking.

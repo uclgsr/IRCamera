@@ -1,4 +1,4 @@
-package mpdc4gsr.permissions
+package mpdc4gsr.core.ui
 
 import android.Manifest
 import android.app.PendingIntent

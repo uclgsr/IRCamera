@@ -1,4 +1,4 @@
-package mpdc4gsr.compose.components.sensor
+package mpdc4gsr.core.ui.components.sensors
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*

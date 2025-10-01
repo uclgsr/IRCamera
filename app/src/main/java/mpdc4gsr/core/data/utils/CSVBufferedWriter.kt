@@ -1,4 +1,4 @@
-package mpdc4gsr.utils
+package mpdc4gsr.core.data.utils
 
 import android.util.Log
 import java.io.File

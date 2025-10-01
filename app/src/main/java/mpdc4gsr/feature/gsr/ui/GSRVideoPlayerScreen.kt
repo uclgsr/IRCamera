@@ -1,4 +1,4 @@
-package mpdc4gsr.compose.screens
+package mpdc4gsr.feature.gsr.ui
 
 import android.net.Uri
 import android.widget.VideoView

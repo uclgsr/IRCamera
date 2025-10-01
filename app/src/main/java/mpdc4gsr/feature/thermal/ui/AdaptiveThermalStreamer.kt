@@ -1,4 +1,4 @@
-package mpdc4gsr.sensors.thermal
+package mpdc4gsr.feature.thermal.ui
 
 import android.util.Log
 import kotlinx.coroutines.CoroutineScope

@@ -1,4 +1,4 @@
-package mpdc4gsr.sensors.gsr
+package mpdc4gsr.feature.gsr.data
 
 import android.content.Context
 import android.content.SharedPreferences

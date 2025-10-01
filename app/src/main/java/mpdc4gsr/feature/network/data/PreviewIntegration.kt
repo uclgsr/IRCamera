@@ -1,4 +1,4 @@
-package mpdc4gsr.network
+package mpdc4gsr.feature.network.data
 
 import android.content.Context
 import android.graphics.Bitmap

@@ -1,4 +1,4 @@
-package mpdc4gsr.sensors
+package mpdc4gsr.core.data
 
 import android.content.Context
 import android.graphics.ImageFormat

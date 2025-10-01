@@ -1,4 +1,4 @@
-package mpdc4gsr.compose.sensors.camera
+package mpdc4gsr.feature.camera.ui
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background

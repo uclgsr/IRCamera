@@ -1,4 +1,4 @@
-package mpdc4gsr.camera.ui
+package mpdc4gsr.feature.camera.ui
 
 import android.app.Dialog
 import android.content.Context

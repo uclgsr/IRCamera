@@ -1,4 +1,4 @@
-package mpdc4gsr.sensors
+package mpdc4gsr.core.data
 
 import android.os.SystemClock
 import android.util.Log

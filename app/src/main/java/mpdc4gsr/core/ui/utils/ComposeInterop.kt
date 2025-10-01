@@ -1,4 +1,4 @@
-package mpdc4gsr.compose.utils
+package mpdc4gsr.core.ui.utils
 
 import android.content.Context
 import android.content.Intent

@@ -1,4 +1,4 @@
-package mpdc4gsr.compose.screens
+package mpdc4gsr.feature.main.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*

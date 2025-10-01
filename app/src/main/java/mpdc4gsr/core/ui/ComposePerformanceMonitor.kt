@@ -1,4 +1,4 @@
-package mpdc4gsr.compose.performance
+package mpdc4gsr.core.ui
 
 import android.util.Log
 import androidx.compose.foundation.layout.Box

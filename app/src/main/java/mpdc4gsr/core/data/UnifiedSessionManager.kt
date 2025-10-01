@@ -1,4 +1,4 @@
-package mpdc4gsr.sensors.unified
+package mpdc4gsr.core.data
 
 import android.content.Context
 import android.util.Log

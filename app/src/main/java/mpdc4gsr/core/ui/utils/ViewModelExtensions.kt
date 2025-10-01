@@ -1,4 +1,4 @@
-package mpdc4gsr.compose.utils
+package mpdc4gsr.core.ui.utils
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State

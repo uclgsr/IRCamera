@@ -1,4 +1,4 @@
-package mpdc4gsr.activities
+package mpdc4gsr.core.ui
 
 /**
  * Backward compatibility type aliases for Compose activities moved to feature modules.

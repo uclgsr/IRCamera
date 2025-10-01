@@ -1,4 +1,4 @@
-package mpdc4gsr.config
+package mpdc4gsr.core.data
 
 import android.content.Context
 import android.content.SharedPreferences

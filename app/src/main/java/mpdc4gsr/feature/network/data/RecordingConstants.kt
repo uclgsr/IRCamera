@@ -1,4 +1,4 @@
-package mpdc4gsr.controller
+package mpdc4gsr.feature.network.data
 
 /**
  * Centralized constants for recording controllers to eliminate duplication

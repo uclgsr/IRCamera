@@ -1,4 +1,4 @@
-package mpdc4gsr.data
+package mpdc4gsr.core.data
 
 import android.os.SystemClock
 import com.google.gson.GsonBuilder

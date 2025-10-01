@@ -1,4 +1,4 @@
-package mpdc4gsr.controller
+package mpdc4gsr.feature.network.data
 
 /**
  * Centralized recording types and enums to eliminate duplication across controllers

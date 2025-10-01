@@ -1,4 +1,4 @@
-package mpdc4gsr.repository
+package mpdc4gsr.core.data
 
 import com.mpdc4gsr.libunified.app.repository.BaseRepository
 import kotlinx.coroutines.flow.*

@@ -1,4 +1,4 @@
-package mpdc4gsr.compose.testing
+package mpdc4gsr.feature.testing.ui
 
 import android.Manifest
 import android.content.pm.PackageManager

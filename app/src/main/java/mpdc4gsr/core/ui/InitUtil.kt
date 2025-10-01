@@ -1,4 +1,4 @@
-package mpdc4gsr.activities
+package mpdc4gsr.core.ui
 
 import android.content.Context
 import android.content.IntentFilter

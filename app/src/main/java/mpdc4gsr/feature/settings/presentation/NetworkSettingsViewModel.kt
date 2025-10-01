@@ -1,4 +1,4 @@
-package mpdc4gsr.viewmodel
+package mpdc4gsr.feature.settings.presentation
 
 import android.Manifest
 import android.bluetooth.BluetoothAdapter

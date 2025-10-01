@@ -1,4 +1,4 @@
-package mpdc4gsr.network
+package mpdc4gsr.feature.network.data
 
 import android.bluetooth.BluetoothDevice
 import android.content.Context

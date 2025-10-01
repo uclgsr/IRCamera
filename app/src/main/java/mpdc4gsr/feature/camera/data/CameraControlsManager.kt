@@ -1,4 +1,4 @@
-package mpdc4gsr.sensors.camera
+package mpdc4gsr.feature.camera.data
 
 import android.util.Log
 import androidx.camera.core.Camera

@@ -1,4 +1,4 @@
-package mpdc4gsr.compose.navigation
+package mpdc4gsr.core.ui.navigation
 
 import android.content.Intent
 import androidx.compose.foundation.layout.*

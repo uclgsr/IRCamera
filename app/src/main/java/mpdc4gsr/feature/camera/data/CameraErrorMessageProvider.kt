@@ -1,4 +1,4 @@
-package mpdc4gsr.sensors.camera
+package mpdc4gsr.feature.camera.data
 
 import mpdc4gsr.sensors.ErrorType
 

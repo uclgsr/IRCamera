@@ -1,4 +1,4 @@
-package mpdc4gsr.compose.activity
+package mpdc4gsr.feature.main.ui
 
 import android.content.Intent
 import android.os.Bundle

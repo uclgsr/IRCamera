@@ -1,4 +1,4 @@
-package mpdc4gsr.viewmodel
+package mpdc4gsr.feature.device.presentation
 
 import android.content.Context
 import android.content.Intent

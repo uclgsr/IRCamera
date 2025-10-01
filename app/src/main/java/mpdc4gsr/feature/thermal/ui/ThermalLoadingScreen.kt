@@ -1,4 +1,4 @@
-package mpdc4gsr.compose.screens
+package mpdc4gsr.feature.thermal.ui
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*

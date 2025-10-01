@@ -1,4 +1,4 @@
-package mpdc4gsr.network
+package mpdc4gsr.feature.network.data
 
 /**
  * Standardized networking protocol for PC-orchestrated multi-modal recording.

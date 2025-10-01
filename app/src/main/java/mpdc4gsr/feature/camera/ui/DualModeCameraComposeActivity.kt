@@ -1,4 +1,4 @@
-package mpdc4gsr.camera.integration
+package mpdc4gsr.feature.camera.ui
 
 import android.content.Context
 import android.content.Intent

@@ -1,4 +1,4 @@
-package mpdc4gsr.sensors
+package mpdc4gsr.core.data
 
 import kotlinx.coroutines.flow.Flow
 import mpdc4gsr.data.SessionMetadata

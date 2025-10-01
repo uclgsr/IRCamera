@@ -1,4 +1,4 @@
-package mpdc4gsr.activities
+package mpdc4gsr.feature.device.presentation
 
 // import android.app.Application
 import android.app.PendingIntent

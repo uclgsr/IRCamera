@@ -1,4 +1,4 @@
-package mpdc4gsr.ui_components
+package mpdc4gsr.core.ui.components
 
 import android.content.Context
 import android.graphics.Color

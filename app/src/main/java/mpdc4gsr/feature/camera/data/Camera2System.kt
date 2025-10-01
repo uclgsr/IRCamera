@@ -1,4 +1,4 @@
-package mpdc4gsr.camera
+package mpdc4gsr.feature.camera.data
 
 import android.content.Context
 import android.hardware.camera2.CameraCaptureSession

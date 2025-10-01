@@ -1,4 +1,4 @@
-package mpdc4gsr.compose.screens
+package mpdc4gsr.feature.settings.ui
 
 import android.webkit.WebView
 import android.webkit.WebViewClient

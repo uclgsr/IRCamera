@@ -1,4 +1,4 @@
-package mpdc4gsr.camera.core
+package mpdc4gsr.feature.camera.data
 
 import android.graphics.SurfaceTexture
 import android.util.Log

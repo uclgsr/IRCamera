@@ -1,4 +1,4 @@
-package mpdc4gsr.config
+package mpdc4gsr.core.data
 
 import android.util.Log
 import org.json.JSONObject

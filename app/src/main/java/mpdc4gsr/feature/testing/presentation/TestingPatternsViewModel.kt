@@ -1,4 +1,4 @@
-package mpdc4gsr.testing
+package mpdc4gsr.feature.testing.presentation
 
 import androidx.lifecycle.viewModelScope
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel

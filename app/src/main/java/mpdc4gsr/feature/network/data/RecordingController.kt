@@ -1,4 +1,4 @@
-package mpdc4gsr.controller
+package mpdc4gsr.feature.network.data
 
 import android.content.Context
 import android.os.SystemClock

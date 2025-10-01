@@ -1,4 +1,4 @@
-package mpdc4gsr.camera.integration
+package mpdc4gsr.feature.camera.presentation
 
 import android.content.Context
 import androidx.camera.view.PreviewView

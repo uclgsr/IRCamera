@@ -1,4 +1,4 @@
-package mpdc4gsr.activities
+package mpdc4gsr.feature.testing.ui
 
 import android.os.Bundle
 import androidx.activity.compose.setContent

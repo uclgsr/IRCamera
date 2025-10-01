@@ -1,4 +1,4 @@
-package mpdc4gsr.sensors.gsr
+package mpdc4gsr.feature.gsr.data
 
 /**
  * Type aliases for GSR activities that have been moved to feature/gsr/ui

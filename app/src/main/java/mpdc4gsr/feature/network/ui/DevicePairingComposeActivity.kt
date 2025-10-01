@@ -1,4 +1,4 @@
-package mpdc4gsr.network
+package mpdc4gsr.feature.network.ui
 
 import android.content.Context
 import android.content.Intent

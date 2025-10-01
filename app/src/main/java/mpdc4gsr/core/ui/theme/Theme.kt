@@ -1,4 +1,4 @@
-package mpdc4gsr.compose.theme
+package mpdc4gsr.core.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.*

@@ -1,4 +1,4 @@
-package mpdc4gsr.network
+package mpdc4gsr.feature.network.data
 
 /**
  * Standardized error codes for network operations with granular failure classification

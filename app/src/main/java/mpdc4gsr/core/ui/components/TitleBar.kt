@@ -1,4 +1,4 @@
-package mpdc4gsr.compose.components
+package mpdc4gsr.core.ui.components
 
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.icons.Icons

@@ -1,4 +1,4 @@
-package mpdc4gsr.sensors.unified
+package mpdc4gsr.core.data
 
 import android.Manifest
 import android.bluetooth.BluetoothAdapter

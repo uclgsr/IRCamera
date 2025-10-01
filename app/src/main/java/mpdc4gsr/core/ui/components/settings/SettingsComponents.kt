@@ -1,4 +1,4 @@
-package mpdc4gsr.compose.components.settings
+package mpdc4gsr.core.ui.components.settings
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.selection.selectable
