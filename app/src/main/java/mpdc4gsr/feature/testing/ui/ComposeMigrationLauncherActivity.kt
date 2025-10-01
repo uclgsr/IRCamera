@@ -21,6 +21,7 @@ import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.core.ui.*
 import mpdc4gsr.feature.main.ui.MainActivity
 import mpdc4gsr.feature.gsr.data.*
+import mpdc4gsr.feature.gsr.ui.*
 import mpdc4gsr.feature.testing.ui.NavigationTestActivity
 
 /**
@@ -797,6 +798,7 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                     modifier = Modifier.padding(top = 16.dp)
                 )
 
+                /* TODO: These activities are not yet implemented
                 LauncherCard(
                     title = "GSR Device Management (Compose)",
                     subtitle = "Enhanced GSR device discovery, connection, and real-time monitoring",
@@ -838,6 +840,7 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         )
                     }
                 )
+                */
 
                 // Comparison option
                 Card(
