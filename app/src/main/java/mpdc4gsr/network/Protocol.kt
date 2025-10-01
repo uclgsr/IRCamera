@@ -10,52 +10,61 @@ import mpdc4gsr.feature.network.data.Protocol as InternalProtocol
 
 // Re-export as an object to maintain the same API
 object Protocol {
-    // Delegate all properties and methods to the internal Protocol
-    val VERSION = InternalProtocol.VERSION
-    val MESSAGE_TYPE_HELLO = InternalProtocol.MESSAGE_TYPE_HELLO
-    val MESSAGE_TYPE_SESSION_START = InternalProtocol.MESSAGE_TYPE_SESSION_START
-    val MESSAGE_TYPE_SESSION_STOP = InternalProtocol.MESSAGE_TYPE_SESSION_STOP
-    val MESSAGE_TYPE_SESSION_STATUS = InternalProtocol.MESSAGE_TYPE_SESSION_STATUS
-    val MESSAGE_TYPE_DATA_PREVIEW = InternalProtocol.MESSAGE_TYPE_DATA_PREVIEW
-    val MESSAGE_TYPE_SYNC_REQUEST = InternalProtocol.MESSAGE_TYPE_SYNC_REQUEST
-    val MESSAGE_TYPE_SYNC_RESPONSE = InternalProtocol.MESSAGE_TYPE_SYNC_RESPONSE
-    val MESSAGE_TYPE_ERROR = InternalProtocol.MESSAGE_TYPE_ERROR
-    val MESSAGE_TYPE_ACK = InternalProtocol.MESSAGE_TYPE_ACK
+    // Delegate all constants
+    const val MSG_HELLO = InternalProtocol.MSG_HELLO
+    const val MSG_SYNC_REQUEST = InternalProtocol.MSG_SYNC_REQUEST
+    const val MSG_SYNC_RESPONSE = InternalProtocol.MSG_SYNC_RESPONSE
+    const val MSG_SYNC_RESULT = InternalProtocol.MSG_SYNC_RESULT
+    const val MSG_START_RECORD = InternalProtocol.MSG_START_RECORD
+    const val MSG_STOP_RECORD = InternalProtocol.MSG_STOP_RECORD
+    const val MSG_ACK = InternalProtocol.MSG_ACK
+    const val MSG_ERROR = InternalProtocol.MSG_ERROR
+    const val MSG_DATA_GSR = InternalProtocol.MSG_DATA_GSR
+    const val MSG_FRAME = InternalProtocol.MSG_FRAME
     
-    val ERR_INVALID_MESSAGE = InternalProtocol.ERR_INVALID_MESSAGE
-    val ERR_UNSUPPORTED_VERSION = InternalProtocol.ERR_UNSUPPORTED_VERSION
-    val ERR_SESSION_ACTIVE = InternalProtocol.ERR_SESSION_ACTIVE
-    val ERR_SESSION_INACTIVE = InternalProtocol.ERR_SESSION_INACTIVE
-    val ERR_FAIL = InternalProtocol.ERR_FAIL
+    const val PROTOCOL_VERSION = InternalProtocol.PROTOCOL_VERSION
+    const val DEFAULT_PORT = InternalProtocol.DEFAULT_PORT
+    const val DEFAULT_SERVER_PORT = InternalProtocol.DEFAULT_SERVER_PORT
+    const val MAX_MESSAGE_SIZE = InternalProtocol.MAX_MESSAGE_SIZE
+    
+    const val ERR_FAIL = InternalProtocol.ERR_FAIL
+    const val ERR_BUSY = InternalProtocol.ERR_BUSY
+    const val ERR_SENSOR_FAIL = InternalProtocol.ERR_SENSOR_FAIL
+    const val ERR_THERMAL_NOT_FOUND = InternalProtocol.ERR_THERMAL_NOT_FOUND
+    const val ERR_GSR_NOT_FOUND = InternalProtocol.ERR_GSR_NOT_FOUND
+    const val ERR_INVALID_SESSION = InternalProtocol.ERR_INVALID_SESSION
     
     // Type aliases for nested classes
     typealias ProtocolMessage = InternalProtocol.ProtocolMessage
     
     // Delegate methods
-    fun createHelloMessage(deviceId: String, capabilities: Map<String, Any>) = 
-        InternalProtocol.createHelloMessage(deviceId, capabilities)
+    fun createHelloMessage(deviceId: String, sensors: List<String>) = 
+        InternalProtocol.createHelloMessage(deviceId, sensors)
     
-    fun createSessionStartMessage(sessionId: String, config: Map<String, Any>) = 
-        InternalProtocol.createSessionStartMessage(sessionId, config)
+    fun createSyncRequestMessage(pcTimestamp: Long) = 
+        InternalProtocol.createSyncRequestMessage(pcTimestamp)
     
-    fun createSessionStopMessage(sessionId: String) = 
-        InternalProtocol.createSessionStopMessage(sessionId)
+    fun createSyncResponseMessage(pcTimestamp: Long, phoneTimestamp: Long) = 
+        InternalProtocol.createSyncResponseMessage(pcTimestamp, phoneTimestamp)
     
-    fun createSessionStatusMessage(sessionId: String, status: String, data: Map<String, Any>) = 
-        InternalProtocol.createSessionStatusMessage(sessionId, status, data)
+    fun createSyncResultMessage(t1: Long, t2: Long, t3: Long, offsetMs: Long, rttMs: Long) = 
+        InternalProtocol.createSyncResultMessage(t1, t2, t3, offsetMs, rttMs)
     
-    fun createSyncResponseMessage(pcTimestamp: Long, phoneTimestamp: Long, offsetNs: Long) = 
-        InternalProtocol.createSyncResponseMessage(pcTimestamp, phoneTimestamp, offsetNs)
+    fun createStartRecordMessage(sessionId: String) = 
+        InternalProtocol.createStartRecordMessage(sessionId)
     
-    fun createErrorMessage(messageType: String, errorCode: String, errorMessage: String) = 
-        InternalProtocol.createErrorMessage(messageType, errorCode, errorMessage)
+    fun createStopRecordMessage(sessionId: String) = 
+        InternalProtocol.createStopRecordMessage(sessionId)
     
-    fun createAckMessage(messageType: String) = 
-        InternalProtocol.createAckMessage(messageType)
+    fun createAckMessage(command: String, info: Map<String, String> = emptyMap()) = 
+        InternalProtocol.createAckMessage(command, info)
     
-    fun parseMessage(data: String) = 
-        InternalProtocol.parseMessage(data)
+    fun createErrorMessage(command: String?, errorCode: String, message: String) = 
+        InternalProtocol.createErrorMessage(command, errorCode, message)
     
-    fun serializeMessage(message: ProtocolMessage) = 
-        InternalProtocol.serializeMessage(message)
+    fun createDataGsrMessage(timestamp: Long, value: Double) = 
+        InternalProtocol.createDataGsrMessage(timestamp, value)
+    
+    fun parseMessage(message: String) = 
+        InternalProtocol.parseMessage(message)
 }

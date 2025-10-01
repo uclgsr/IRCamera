@@ -116,9 +116,8 @@ private fun ThermalCameraContent(
     }
 }
 
-enum class ThermalPalette {
-    IRON, RAINBOW, WHITE_HOT, BLACK_HOT, RED_HOT, ARCTIC
-}
+// ThermalPalette enum is defined in IRGalleryEditActivityCompose.kt
+// No need for duplicate definition here
 
 enum class TemperatureUnit {
     CELSIUS, FAHRENHEIT, KELVIN
@@ -686,10 +685,8 @@ private fun getThermalPreviewColor(palette: ThermalPalette): Color {
     return when (palette) {
         ThermalPalette.IRON -> Color(0xFF8B4513)
         ThermalPalette.RAINBOW -> Color(0xFF4169E1)
-        ThermalPalette.WHITE_HOT -> Color(0xFF696969)
-        ThermalPalette.BLACK_HOT -> Color(0xFF2F2F2F)
-        ThermalPalette.RED_HOT -> Color(0xFFDC143C)
-        ThermalPalette.ARCTIC -> Color(0xFF4682B4)
+        ThermalPalette.GRAYSCALE -> Color(0xFF696969)
+        ThermalPalette.HOT -> Color(0xFFDC143C)
     }
 }
 
@@ -697,10 +694,8 @@ private fun getThermalGradient(palette: ThermalPalette): Color {
     return when (palette) {
         ThermalPalette.IRON -> Color(0xFFFF4500)
         ThermalPalette.RAINBOW -> Color(0xFF32CD32)
-        ThermalPalette.WHITE_HOT -> Color(0xFFFFFFFF)
-        ThermalPalette.BLACK_HOT -> Color(0xFF000000)
-        ThermalPalette.RED_HOT -> Color(0xFFFF0000)
-        ThermalPalette.ARCTIC -> Color(0xFF00CED1)
+        ThermalPalette.GRAYSCALE -> Color(0xFFFFFFFF)
+        ThermalPalette.HOT -> Color(0xFFFF0000)
     }
 }
 
