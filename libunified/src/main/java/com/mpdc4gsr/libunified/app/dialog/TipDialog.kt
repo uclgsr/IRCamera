@@ -154,7 +154,7 @@ class TipDialog : Dialog {
                                             dismiss()
                                             cancelEvent?.invoke()
                                         }) {
-                                            Text(cancelStr!!)
+                                            Text(cancelStr)
                                         }
                                         Spacer(modifier = Modifier.width(8.dp))
                                     }
