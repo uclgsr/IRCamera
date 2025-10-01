@@ -11,6 +11,7 @@ import mpdc4gsr.core.data.TimestampManager
 import mpdc4gsr.core.data.TimestampRecord
 import mpdc4gsr.core.data.utils.CSVBufferedWriter
 import mpdc4gsr.core.data.utils.SessionDirectoryManager
+import mpdc4gsr.core.data.utils.WriteStats
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Locale

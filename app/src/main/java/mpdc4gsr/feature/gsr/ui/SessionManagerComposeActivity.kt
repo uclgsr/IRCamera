@@ -29,6 +29,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import mpdc4gsr.core.ui.BaseComposeActivity
+import mpdc4gsr.feature.gsr.presentation.SessionManagerViewModel
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.gsr.model.SessionInfo
 import java.text.SimpleDateFormat

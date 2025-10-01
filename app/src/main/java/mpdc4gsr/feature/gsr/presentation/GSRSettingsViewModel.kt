@@ -5,6 +5,9 @@ import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewModelScope
 import mpdc4gsr.core.ui.BaseViewModel
+import mpdc4gsr.feature.gsr.data.GSRSensorRecorder
+import mpdc4gsr.feature.gsr.data.GSRSettingsRepository
+import mpdc4gsr.feature.network.data.RecordingController
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
@@ -134,7 +137,7 @@ class GSRSettingsViewModel : BaseViewModel() {
             try {
                 val currentSettings = repository.gsrSettings.value
                 // Create a temporary RecordingController since it's required by the constructor
-                val tempRecordingController = mpdc4gsr.controller.RecordingController(
+                val tempRecordingController = RecordingController(
                     context,
                     object : androidx.lifecycle.LifecycleOwner {
                         override val lifecycle: androidx.lifecycle.Lifecycle
