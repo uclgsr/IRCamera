@@ -21,6 +21,7 @@ import mpdc4gsr.core.ui.components.sensors.RGBCameraSensorCard
 import mpdc4gsr.core.ui.components.sensors.UnifiedSensorStatus
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.core.ui.model.*
+import mpdc4gsr.core.ui.model.SystemAction
 
 /**
  * Unified Sensor Dashboard - Comprehensive view of all sensor modalities
