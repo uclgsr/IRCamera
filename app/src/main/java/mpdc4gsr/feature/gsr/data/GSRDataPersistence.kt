@@ -11,7 +11,6 @@ import mpdc4gsr.core.data.TimestampManager
 import mpdc4gsr.core.data.TimestampRecord
 import mpdc4gsr.core.data.utils.CSVBufferedWriter
 import mpdc4gsr.core.data.utils.SessionDirectoryManager
-import mpdc4gsr.core.data.utils.WriteStats
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -315,7 +314,7 @@ data class GSRPersistenceStats(
     val csvFilePath: String,
     val sessionId: String,
     val isActive: Boolean,
-    val bufferStats: WriteStats? = null,
+    val bufferStats: mpdc4gsr.utils.WriteStats? = null,
 ) {
     val totalDataSizeBytes: Long
         get() = bufferStats?.bytesWritten ?: 0L

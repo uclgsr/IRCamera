@@ -2,7 +2,7 @@ package mpdc4gsr.feature.camera.ui
 
 import android.content.Context
 import android.util.Log
-import mpdc4gsr.camera.core.ModeManager
+import mpdc4gsr.feature.camera.data.ModeManager
 
 class Camera2SystemValidator(private val context: Context) {
     companion object {

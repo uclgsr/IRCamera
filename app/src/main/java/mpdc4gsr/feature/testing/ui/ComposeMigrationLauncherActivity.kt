@@ -19,7 +19,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.feature.main.ui.MainActivity
-import mpdc4gsr.feature.device.ui.BlankDevActivityCompose
 
 /**
  * Launch Activity for demonstrating the complete Compose migration

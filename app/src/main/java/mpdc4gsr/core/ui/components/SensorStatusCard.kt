@@ -14,7 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import mpdc4gsr.feature.main.presentation.ConnectionState
+import mpdc4gsr.core.ui.ConnectionState
 
 /**
  * Compose component for displaying comprehensive sensor status
