@@ -33,7 +33,7 @@ import java.util.concurrent.atomic.AtomicReference
 class ComprehensiveRecordingController(
     private val context: Context,
     private val lifecycleOwner: androidx.lifecycle.LifecycleOwner? = null,
-    private val permissionManager: mpdc4gsr.permissions.PermissionManager? = null
+    private val permissionManager: mpdc4gsr.core.ui.PermissionManager? = null
 ) {
     companion object {
         private const val TAG = "ComprehensiveRecordingController"
