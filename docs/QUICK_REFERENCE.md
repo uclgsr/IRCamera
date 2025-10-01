@@ -69,15 +69,15 @@ This quick reference helps you find the right documentation quickly after the co
 
 ### For Developers
 1. Start: [README.md](README.md)
-2. Architecture: [docs/consolidated/ARCHITECTURE_AND_UI.md](docs/consolidated/ARCHITECTURE_AND_UI.md)
+2. Architecture: [docs/consolidated/ARCHITECTURE_AND_UI.md](consolidated/ARCHITECTURE_AND_UI.md)
 3. MVVM Patterns: [MVVM_MODERNIZATION_GUIDE.md](MVVM_MODERNIZATION_GUIDE.md)
 
 ### For Testing
-1. Start: [docs/consolidated/TESTING_GUIDE.md](docs/consolidated/TESTING_GUIDE.md)
-2. Results: [testing-suite/TESTING_RESULTS_SUMMARY.md](testing-suite/TESTING_RESULTS_SUMMARY.md)
+1. Start: [docs/consolidated/TESTING_GUIDE.md](consolidated/TESTING_GUIDE.md)
+2. Results: [testing-suite/TESTING_RESULTS_SUMMARY.md](../testing-suite/TESTING_RESULTS_SUMMARY.md)
 
 ### For Research/Thesis
-1. Status: [docs/consolidated/IMPLEMENTATION_STATUS.md](docs/consolidated/IMPLEMENTATION_STATUS.md)
+1. Status: [docs/consolidated/IMPLEMENTATION_STATUS.md](consolidated/IMPLEMENTATION_STATUS.md)
 2. Diagrams: [docs/thesis-diagrams/](docs/thesis-diagrams/)
 3. Test Results: [testing-suite/testing-suite/results/](testing-suite/testing-suite/results/)
 
@@ -154,11 +154,11 @@ Removed (duplicate of COMPREHENSIVE_ARCHITECTURE_DIAGRAMS.md)
 
 1. Check [DOCUMENTATION_INDEX.md](DOCUMENTATION_INDEX.md) - Complete index of all docs
 2. Look in [docs/consolidated/](docs/consolidated/) - Most content is here
-3. Review [docs/consolidated/CONSOLIDATION_SUMMARY.md](docs/consolidated/CONSOLIDATION_SUMMARY.md) - Details what was merged
+3. Review [docs/consolidated/CONSOLIDATION_SUMMARY.md](consolidated/CONSOLIDATION_SUMMARY.md) - Details what was merged
 4. Search in consolidated docs - They are comprehensive
 
 ## Support
 
 For questions about documentation organization, refer to:
-- [docs/consolidated/CONSOLIDATION_SUMMARY.md](docs/consolidated/CONSOLIDATION_SUMMARY.md) - Consolidation details
-- [docs/consolidated/README.md](docs/consolidated/README.md) - Navigation help
+- [docs/consolidated/CONSOLIDATION_SUMMARY.md](consolidated/CONSOLIDATION_SUMMARY.md) - Consolidation details
+- [docs/consolidated/README.md](consolidated/README.md) - Navigation help

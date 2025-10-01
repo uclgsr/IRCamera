@@ -1,8 +1,10 @@
 package mpdc4gsr.feature.network.ui
 
+import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
@@ -203,7 +205,7 @@ class NetworkConfigActivityCompose : BaseComposeActivity<NetworkConfigViewModel>
     private val bluetoothEnableResult = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
-        if (result.resultCode == RESULT_OK) {
+        if (result.resultCode == Activity.RESULT_OK) {
             // Bluetooth enabled
         }
     }
@@ -216,7 +218,7 @@ class NetworkConfigActivityCompose : BaseComposeActivity<NetworkConfigViewModel>
 
         networkSettings = NetworkSettings(this)
         permissionManager = PermissionManager(this, PermissionController(this))
-        val bluetoothManager = getSystemService(BLUETOOTH_SERVICE) as? BluetoothManager
+        val bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
         bluetoothAdapter = bluetoothManager?.adapter
     }
 
