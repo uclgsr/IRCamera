@@ -110,7 +110,7 @@ public class LmsLoadView extends View {
     }
 
     public void startAnimation() {
-        if (animator != null && !animator.isStarted()) {
+        if (animator != null && !animator.isStarted() && isAttachedToWindow()) {
             animator.start();
         }
     }
