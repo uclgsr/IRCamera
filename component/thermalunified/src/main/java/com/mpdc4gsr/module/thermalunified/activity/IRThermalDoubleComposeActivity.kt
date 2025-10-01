@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.TrendingUp
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -259,7 +260,7 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
                                 horizontalArrangement = Arrangement.SpaceEvenly
                             ) {
                                 IconButton(onClick = { viewModel.toggleTrendChart() }) {
-                                    Icon(Icons.Default.TrendingUp, "Trend", tint = Color.White)
+                                    Icon(Icons.AutoMirrored.Filled.TrendingUp, "Trend", tint = Color.White)
                                 }
                                 IconButton(onClick = { viewModel.toggleCompass() }) {
                                     Icon(Icons.Default.Explore, "Compass", tint = Color.White)
@@ -273,7 +274,7 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
                                 }
                             }
 
-                            Divider(color = Color.White.copy(alpha = 0.1f))
+                            HorizontalDivider(color = Color.White.copy(alpha = 0.1f))
 
                             // Primary menu
                             Row(

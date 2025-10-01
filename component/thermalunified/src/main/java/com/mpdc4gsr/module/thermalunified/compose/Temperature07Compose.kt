@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -291,7 +292,7 @@ enum class TemperatureMeasurementMode(
     POINT("Point", Icons.Default.Place),
     LINE("Line", Icons.Default.Timeline),
     RECT("Rectangle", Icons.Default.CropFree),
-    TREND("Trend", Icons.Default.TrendingUp)
+    TREND("Trend", Icons.AutoMirrored.Filled.TrendingUp)
 }
 
 sealed class TemperatureMeasurement {
