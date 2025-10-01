@@ -18,7 +18,10 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import mpdc4gsr.core.ui.theme.IRCameraTheme
-import mpdc4gsr.activities.*
+import mpdc4gsr.core.ui.*
+import mpdc4gsr.feature.main.ui.MainActivity
+import mpdc4gsr.feature.gsr.data.*
+import mpdc4gsr.feature.testing.ui.NavigationTestActivity
 
 /**
  * Launch Activity for demonstrating the complete Compose migration
