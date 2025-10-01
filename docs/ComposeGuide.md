@@ -24,6 +24,7 @@ The module is being migrated from traditional Android Views with DataBinding to 
 - ✅ TipDialogsCompose.kt - TipDialog, MessageDialog, EmissivityDialog
 - ✅ SpecializedTipDialogsCompose.kt - ObserveDialog, ShutterDialog, OtgDialog, WaterMarkDialog, ChangeDeviceDialog
 - ✅ ComplexDialogsCompose.kt - TargetColorDialog, CarDetectDialog, CameraProgressDialog
+- ✅ PopupDialogsCompose.kt - EmissivityTipPopup
 - ✅ ComposeDialogHelper.kt - Helper classes to use Compose dialogs in non-Compose contexts
 
 #### UI Components (app/compose/components/)
@@ -167,19 +168,19 @@ fun ColorSelectionScreen() {
 - [x] TipTargetColorDialog → TargetColorDialog (in ComplexDialogsCompose.kt) ✅ (Created)
 - [x] CarDetectDialog → CarDetectDialog (in ComplexDialogsCompose.kt) ✅ (Created)
 - [x] TipCameraProgressDialog → CameraProgressDialog (in ComplexDialogsCompose.kt) ✅ (Created)
-- [ ] EmissivityTipPopup → EmissivityPopupCompose
+- [x] EmissivityTipPopup → EmissivityTipPopup (in PopupDialogsCompose.kt) ✅ (Created)
 
 ### Adapters
 - [x] TargetColorAdapter → TargetColorPickerCompose ✅ (Created)
 - [x] MenuTabAdapter → MenuTabBar (in MenuCompose.kt) ✅ (Created)
-- [ ] BaseMenuAdapter → BaseMenuCompose
+- [x] BaseMenuAdapter → BaseMenuCompose (Covered by MenuTabBar)
 
 ### Custom Views
 - [x] SettingNightView → SettingItem (in SettingsCompose.kt) ✅ (Created)
 - [x] MenuFirstTabView → MenuFirstTab (in MenuCompose.kt) ✅ (Created)
 - [x] MenuSecondView → MenuSecondTab (in MenuCompose.kt) ✅ (Created)
-- [ ] MenuEditView → MenuEditCompose
-- [ ] CameraMenuView → CameraMenuCompose
+- [ ] MenuEditView → MenuEditCompose (Low priority - MVP complete)
+- [ ] CameraMenuView → CameraMenuCompose (Low priority - MVP complete)
 
 ## Best Practices
 
