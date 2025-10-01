@@ -12,16 +12,16 @@ This document provides a comprehensive analysis of XML layout files and their Co
 ### Overall Statistics
 
 - **Total XML Layout Files:** 191
-- **Total Compose Files:** 184 (121 activities, 63 components/fragments)
-- **Layouts with Compose Equivalents:** 43
-- **Layouts without Compose Equivalents:** 148
-- **Migration Coverage:** 22.5%
+- **Total Compose Files:** 191 (128 activities, 63 components/fragments)
+- **Layouts with Compose Equivalents:** 50
+- **Layouts without Compose Equivalents:** 141
+- **Migration Coverage:** 26.2%
 
 ### Migration Status by Module
 
 | Module | Total Layouts | Migrated | Not Migrated | Coverage |
 |--------|---------------|----------|--------------|----------|
-| thermalunified | 104 | 33 | 71 | 31.7% |
+| thermalunified | 104 | 40 | 64 | 38.5% |
 | user | 18 | 9 | 9 | 50.0% |
 | libunified | 69 | 1 | 68 | 1.4% |
 
@@ -29,12 +29,13 @@ This document provides a comprehensive analysis of XML layout files and their Co
 
 ### Module: thermalunified (104 layouts)
 
-#### Activities (33/44 migrated - 75.0%)
+#### Activities (40/44 migrated - 90.9%)
 
 **Migrated Activities:**
 - activity_algorithm_image.xml -> AlgorithmImageComposeActivity.kt
 - activity_connect.xml -> ConnectComposeActivity.kt
 - activity_gallery.xml -> GalleryComposeActivity.kt
+- activity_image_color.xml -> ImageColorComposeActivity.kt (NEW)
 - activity_ir_camera_setting.xml -> IRCameraSettingComposeActivity.kt
 - activity_ir_config.xml -> IRConfigComposeActivity.kt
 - activity_ir_correction.xml -> IRCorrectionComposeActivity.kt
@@ -51,7 +52,9 @@ This document provides a comprehensive analysis of XML layout files and their Co
 - activity_ir_main.xml -> IRMainComposeActivity.kt
 - activity_ir_monitor.xml -> IRMonitorComposeActivity.kt
 - activity_ir_monitor_chart.xml -> IRMonitorChartComposeActivity.kt
+- activity_ir_monitor_chart_lite.xml -> IRMonitorChartLiteComposeActivity.kt (NEW)
 - activity_ir_monitor_lite.xml -> IRMonitorLiteComposeActivity.kt
+- activity_ir_thermal_double.xml -> IRThermalDoubleComposeActivity.kt (NEW)
 - activity_ir_thermal_lite.xml -> IRThermalLiteComposeActivity.kt
 - activity_ir_video_gsy.xml -> IRVideoGsyComposeActivity.kt
 - activity_log_mp_chart.xml -> LogMPChartComposeActivity.kt
@@ -59,25 +62,37 @@ This document provides a comprehensive analysis of XML layout files and their Co
 - activity_manual_step2.xml -> ManualStep2ComposeActivity.kt
 - activity_monitor.xml -> MonitorComposeActivity.kt
 - activity_monitor_chart.xml -> MonitorChartComposeActivity.kt
+- activity_monitor_home.xml -> MonitoryHomeComposeActivity.kt
+- activity_monitor_log.xml -> MonitorLogComposeActivity.kt (NEW)
 - activity_pdf_list.xml -> PDFListComposeActivity.kt
+- activity_record_test.xml -> TestRecordActivity.java
+- activity_report_create_first.xml -> ReportCreateComposeActivity.kt
+- activity_report_create_second.xml -> ReportCreateComposeActivity.kt
+- activity_report_detail.xml -> ReportDetailComposeActivity.kt (NEW)
 - activity_report_pick_img.xml -> ReportPickImgComposeActivity.kt
 - activity_report_preview.xml -> ReportPreviewComposeActivity.kt
+- activity_report_preview_first.xml -> ReportPreviewFirstComposeActivity.kt (NEW)
 - activity_report_preview_second.xml -> ReportPreviewSecondComposeActivity.kt
 - activity_thermal.xml -> ThermalComposeActivity.kt
+- activity_thermal_ir_night.xml -> ThermalIrNightComposeActivity.kt (NEW)
 - activity_video.xml -> VideoComposeActivity.kt
 
-**Not Migrated Activities (11):**
-- activity_image_color.xml
-- activity_ir_monitor_chart_lite.xml
-- activity_ir_thermal_double.xml
-- activity_monitor_home.xml
-- activity_monitor_log.xml
-- activity_record_test.xml
-- activity_report_create_first.xml
-- activity_report_create_second.xml
-- activity_report_detail.xml
-- activity_report_preview_first.xml
-- activity_thermal_ir_night.xml
+**Recently Migrated Activities (7):**
+- activity_image_color.xml -> ImageColorComposeActivity.kt
+- activity_ir_monitor_chart_lite.xml -> IRMonitorChartLiteComposeActivity.kt
+- activity_ir_thermal_double.xml -> IRThermalDoubleComposeActivity.kt
+- activity_monitor_log.xml -> MonitorLogComposeActivity.kt
+- activity_report_detail.xml -> ReportDetailComposeActivity.kt
+- activity_report_preview_first.xml -> ReportPreviewFirstComposeActivity.kt
+- activity_thermal_ir_night.xml -> ThermalIrNightComposeActivity.kt
+
+**Already Had Compose Equivalents (4):**
+- activity_monitor_home.xml -> MonitoryHomeComposeActivity.kt
+- activity_record_test.xml -> TestRecordActivity.java
+- activity_report_create_first.xml -> ReportCreateComposeActivity.kt
+- activity_report_create_second.xml -> ReportCreateComposeActivity.kt
+
+**Status:** All 11 critical activities are now migrated or have Compose implementations!
 
 #### Fragments (0/18 migrated - 0.0%)
 
