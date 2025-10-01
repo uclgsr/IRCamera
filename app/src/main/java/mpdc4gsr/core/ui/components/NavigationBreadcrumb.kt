@@ -30,7 +30,7 @@ fun NavigationBreadcrumb(
     ) {
         Icon(
             imageVector = Icons.Default.Home,
-            contentDescription = null,
+            contentDescription = "Home",
             tint = Color.Gray,
             modifier = Modifier.size(14.dp)
         )
