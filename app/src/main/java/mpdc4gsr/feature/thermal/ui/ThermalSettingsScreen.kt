@@ -18,10 +18,6 @@ import androidx.compose.ui.unit.sp
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.components.settings.*
 import mpdc4gsr.core.ui.components.*
-import mpdc4gsr.core.ui.components.settings.SettingsCard
-import mpdc4gsr.core.ui.components.settings.SettingsToggle
-import mpdc4gsr.core.ui.components.settings.SettingsSlider
-import mpdc4gsr.core.ui.components.settings.SettingsDropdown
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 
 /**
