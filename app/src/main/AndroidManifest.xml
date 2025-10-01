@@ -182,18 +182,6 @@
             android:label="Shimmer Configuration (Compose)" />
 
 
-        <activity
-            android:name="mpdc4gsr.feature.main.ui.MainComposeActivity"
-            android:exported="false"
-            android:label="IR Camera - Compose UI"
-            android:theme="@style/Theme.AppCompat.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-
-
         <!-- Navigation Demo Activity -->
         <activity
             android:name="mpdc4gsr.compose.navigation.IRCameraNavHost"
