@@ -16,6 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import mpdc4gsr.core.ui.components.TitleBar
+import mpdc4gsr.core.ui.components.NavigationBreadcrumb
 import mpdc4gsr.core.ui.components.settings.*
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 
@@ -42,6 +43,11 @@ fun GSRSettingsScreen(
             title = "GSR Settings",
             showBackButton = true,
             onBackClick = onBackClick
+        )
+
+        NavigationBreadcrumb(
+            currentScreen = "GSR Settings",
+            previousScreen = "Sensor Overview"
         )
 
         Column(

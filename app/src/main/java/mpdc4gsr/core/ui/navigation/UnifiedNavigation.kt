@@ -29,50 +29,48 @@ import mpdc4gsr.feature.network.ui.*
  * - Integration with both Compose and traditional activities
  * - Centralized navigation logic for maintainability
  */
-sealed class UnifiedRoute(val route: String) {
+sealed class UnifiedRoute(val route: String, val displayName: String = "") {
     // Main Application Routes
-    object Home : UnifiedRoute("home")
-    object Dashboard : UnifiedRoute("dashboard")
+    object Home : UnifiedRoute("home", "Home")
+    object Dashboard : UnifiedRoute("dashboard", "Sensor Overview")
 
     // GSR Sensor Routes
-    object GSRSettings : UnifiedRoute("gsr_settings")
-    object GSRPlot : UnifiedRoute("gsr_plot/{sessionId}") {
+    object GSRSettings : UnifiedRoute("gsr_settings", "GSR Settings")
+    object GSRPlot : UnifiedRoute("gsr_plot/{sessionId}", "GSR Session") {
         fun createRoute(sessionId: String) = "gsr_plot/$sessionId"
     }
 
-    object GSRDataView : UnifiedRoute("gsr_data_view") {
-        // File paths should be passed via arguments, not URL parameters
+    object GSRDataView : UnifiedRoute("gsr_data_view", "Export GSR Data") {
         fun createRoute() = "gsr_data_view"
     }
 
-    object GSRSessionDetail : UnifiedRoute("gsr_session_detail/{sessionId}") {
+    object GSRSessionDetail : UnifiedRoute("gsr_session_detail/{sessionId}", "Session Details") {
         fun createRoute(sessionId: String) = "gsr_session_detail/$sessionId"
     }
 
     // Camera Integration Routes
-    object CameraDashboard : UnifiedRoute("camera_dashboard")
-    object DualModeCamera : UnifiedRoute("dual_mode_camera")
-    object CameraSettings : UnifiedRoute("camera_settings")
+    object CameraDashboard : UnifiedRoute("camera_dashboard", "Camera Hub")
+    object DualModeCamera : UnifiedRoute("dual_mode_camera", "Thermal + RGB Camera")
+    object CameraSettings : UnifiedRoute("camera_settings", "Camera Settings")
 
     // Network Routes
-    object DevicePairing : UnifiedRoute("device_pairing")
-    object PermissionRequest : UnifiedRoute("permission_request")
+    object DevicePairing : UnifiedRoute("device_pairing", "Device Pairing")
+    object PermissionRequest : UnifiedRoute("permission_request", "Permissions")
 
-    // Thermal Camera Routes (consistent naming)
-    object ThermalMain : UnifiedRoute("thermal_main")
-    object ThermalGallery : UnifiedRoute("thermal_gallery")
-    object ThermalReport : UnifiedRoute("thermal_report")
-    object ThermalCamera : UnifiedRoute("thermal_camera")
-    object ThermalSettings : UnifiedRoute("thermal_settings")
+    // Thermal Camera Routes - Consolidated (removed ThermalMain duplicate)
+    object ThermalGallery : UnifiedRoute("thermal_gallery", "Gallery")
+    object ThermalReport : UnifiedRoute("thermal_report", "Reports")
+    object ThermalCamera : UnifiedRoute("thermal_camera", "Thermal Imaging")
+    object ThermalSettings : UnifiedRoute("thermal_settings", "Thermal Settings")
 
     // System Routes
-    object Settings : UnifiedRoute("settings")
-    object About : UnifiedRoute("about")
-    object NetworkConfig : UnifiedRoute("network_config")
+    object Settings : UnifiedRoute("settings", "Settings")
+    object About : UnifiedRoute("about", "About")
+    object NetworkConfig : UnifiedRoute("network_config", "Network")
 
     // Development and Demo Routes
-    object ComponentShowcase : UnifiedRoute("component_showcase")
-    object TestingSuite : UnifiedRoute("testing_suite")
+    object ComponentShowcase : UnifiedRoute("component_showcase", "Feature Demos")
+    object TestingSuite : UnifiedRoute("testing_suite", "Diagnostics")
 }
 
 @Composable
@@ -220,23 +218,7 @@ fun UnifiedNavHost(
             ThermalLoadingScreen("Loading Device Pairing...")
         }
 
-        // Thermal Camera Routes
-        composable(UnifiedRoute.ThermalMain.route) {
-            LaunchedEffect(Unit) {
-                try {
-                    context.startActivity(
-                        Intent(
-                            context,
-                            Class.forName("com.mpdc4gsr.module.thermalunified.activity.IRMainComposeActivity")
-                        )
-                    )
-                } catch (e: Exception) {
-                    // Fallback to placeholder
-                }
-            }
-            ThermalLoadingScreen("Loading Thermal Main...")
-        }
-
+        // Thermal Camera Routes - ThermalMain removed, use ThermalCamera instead
         composable(UnifiedRoute.ThermalGallery.route) {
             LaunchedEffect(Unit) {
                 try {

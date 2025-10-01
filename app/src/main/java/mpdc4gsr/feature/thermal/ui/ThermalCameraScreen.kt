@@ -44,7 +44,7 @@ fun ThermalCameraScreen(
                 TopAppBar(
                     title = {
                         Text(
-                            "Thermal Camera",
+                            "Thermal Imaging",
                             fontWeight = FontWeight.Bold
                         )
                     },
