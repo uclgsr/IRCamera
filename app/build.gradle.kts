@@ -270,6 +270,9 @@ configurations.all {
         force("androidx.core:core:1.13.1")
         force("androidx.core:core-ktx:1.13.1")
 
+        // Force a stable version of snakeyaml to resolve build cache issues with v2.x
+        force("org.yaml:snakeyaml:1.33")
+
         eachDependency {
             if (requested.group == "it.gerdavax.easybluetooth") {
 
