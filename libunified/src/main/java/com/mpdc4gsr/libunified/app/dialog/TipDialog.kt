@@ -119,7 +119,7 @@ class TipDialog : Dialog {
                             ) {
                                 if (!titleMessage.isNullOrEmpty()) {
                                     Text(
-                                        text = titleMessage!!,
+                                        text = titleMessage,
                                         style = MaterialTheme.typography.titleLarge,
                                         fontWeight = FontWeight.Bold,
                                         color = MaterialTheme.colorScheme.onSurface

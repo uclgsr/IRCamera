@@ -15,6 +15,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.R
@@ -81,12 +82,12 @@ private fun CarDetectDialogContent(
         ) {
             // Title bar
             TopAppBar(
-                title = { Text("Car Detection") },
+                title = { Text(stringResource(R.string.car_detection_title)) },
                 navigationIcon = {
                     IconButton(onClick = onDismiss) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Back"
+                            contentDescription = stringResource(R.string.select_monitor_return)
                         )
                     }
                 }

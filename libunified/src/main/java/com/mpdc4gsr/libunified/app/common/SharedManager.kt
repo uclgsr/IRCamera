@@ -466,13 +466,13 @@ object SharedManager {
     }
 
     fun getCarDetectInfo(): CarDetectChildBean {
-        var detectInfo = SPUtils.getInstance().getString(SP_CAR_DETECT, "")
+        val detectInfo = SPUtils.getInstance().getString(SP_CAR_DETECT, "")
         if (detectInfo.isEmpty()) {
             return CarDetectData.getDetectList()[0].detectChildBeans[0]
         }
-        var detectChildBean = GsonUtils.fromJson(detectInfo, CarDetectChildBean::class.java)
-        var type = detectChildBean.type
-        var pos = detectChildBean.pos
+        val detectChildBean = GsonUtils.fromJson(detectInfo, CarDetectChildBean::class.java)
+        val type = detectChildBean.type
+        val pos = detectChildBean.pos
         return CarDetectData.getDetectList()[type].detectChildBeans[pos]
     }
 
