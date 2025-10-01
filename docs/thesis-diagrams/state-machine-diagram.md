@@ -223,7 +223,11 @@ class AndroidStateMachine {
       {
         "device_id": "Samsung_S22_001",
         "state": "RECORDING",
-        "sensors": ["thermal", "gsr", "rgb"],
+        "sensors": [
+          "thermal",
+          "gsr",
+          "rgb"
+        ],
         "last_heartbeat": 1703441234580
       }
     ],

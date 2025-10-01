@@ -3,6 +3,7 @@
 ## Current User Navigation (As-Is)
 
 ### Current Home Screen Flow
+
 ```
 ┌─────────────────────────────────────┐
 │         HOME SCREEN                 │
@@ -22,12 +23,14 @@
     └──────────┘  └──────────┘
 ```
 
-**User Experience**: 
+**User Experience**:
+
 - ❌ Not action-oriented
 - ❌ Requires remembering structure
 - ❌ 2-4 taps to actual functionality
 
 ### Current Thermal Imaging Flow
+
 ```
 User wants: Capture thermal image
 
@@ -45,12 +48,14 @@ Home → Dashboard → ThermalMain? or ThermalCamera?
 ```
 
 **User Experience**:
+
 - ❌ Multiple confusing paths
 - ❌ Duplicate screens (ThermalMain vs ThermalCamera)
 - ❌ Too many steps for common action
 - ❌ Gallery shortcut misleading
 
 ### Current GSR Monitoring Flow
+
 ```
 User wants: Monitor GSR data
 
@@ -68,12 +73,14 @@ Home → Dashboard → GSRDataView
 ```
 
 **User Experience**:
+
 - ❌ No clear entry point
 - ❌ Confusing screen purposes
 - ❌ 5 levels deep
 - ❌ No "Start Session" button visible
 
 ### Current Multi-Sensor Flow
+
 ```
 User wants: Use thermal + RGB camera
 
@@ -88,6 +95,7 @@ Questions user has:
 ```
 
 **User Experience**:
+
 - ❌ Unclear feature name
 - ❌ Multiple intermediate screens
 - ❌ No explanation of functionality
@@ -98,6 +106,7 @@ Questions user has:
 ## Proposed User Navigation (To-Be)
 
 ### Proposed Home Screen Flow
+
 ```
 ┌─────────────────────────────────────────────────┐
 │         HOME SCREEN - QUICK ACTIONS             │
@@ -129,6 +138,7 @@ Questions user has:
 ```
 
 **User Experience**:
+
 - ✅ Action-oriented (verbs, not nouns)
 - ✅ Context (when last used)
 - ✅ Visual icons for quick recognition
@@ -136,6 +146,7 @@ Questions user has:
 - ✅ Secondary actions accessible but not prominent
 
 ### Proposed Thermal Imaging Flow
+
 ```
 User wants: Capture thermal image
 
@@ -181,6 +192,7 @@ After Capture:
 ```
 
 **User Experience**:
+
 - ✅ 1 tap from home to ready-to-capture
 - ✅ Live view is main focus
 - ✅ Capture button prominent
@@ -188,6 +200,7 @@ After Capture:
 - ✅ Clear next actions after capture
 
 ### Proposed GSR Monitoring Flow
+
 ```
 User wants: Monitor GSR data
 
@@ -247,6 +260,7 @@ After Session Stops:
 ```
 
 **User Experience**:
+
 - ✅ Direct to monitoring (no intermediate screens)
 - ✅ Real-time plot is main focus
 - ✅ Clear session info (duration, samples)
@@ -256,6 +270,7 @@ After Session Stops:
 - ✅ Clear next actions
 
 ### Proposed Multi-Sensor Flow
+
 ```
 User wants: Capture with both thermal and RGB
 
@@ -311,6 +326,7 @@ After Capture:
 ```
 
 **User Experience**:
+
 - ✅ Visual split view shows both sensors
 - ✅ "Both" clearly captures synchronized pair
 - ✅ Option to capture individually if needed
@@ -323,27 +339,27 @@ After Capture:
 
 ### Current Depth (Tap Count to Common Actions)
 
-| User Goal | Current Taps | Screens Passed Through |
-|-----------|--------------|------------------------|
-| Capture thermal image | 4 | Home → Dashboard → Thermal → Capture |
-| Start GSR session | 5 | Home → Dashboard → GSR Settings → Session → Active |
-| View thermal gallery | 3 | Home → Gallery → Thermal Gallery |
-| Multi-sensor capture | 4 | Home → Dashboard → Camera → Dual Mode |
-| View recent GSR data | 4 | Home → Dashboard → GSR → Data View |
-| Change thermal settings | 4 | Home → Dashboard → Thermal → Settings |
-| **Average** | **4 taps** | **Deep nesting** |
+| User Goal               | Current Taps | Screens Passed Through                             |
+|-------------------------|--------------|----------------------------------------------------|
+| Capture thermal image   | 4            | Home → Dashboard → Thermal → Capture               |
+| Start GSR session       | 5            | Home → Dashboard → GSR Settings → Session → Active |
+| View thermal gallery    | 3            | Home → Gallery → Thermal Gallery                   |
+| Multi-sensor capture    | 4            | Home → Dashboard → Camera → Dual Mode              |
+| View recent GSR data    | 4            | Home → Dashboard → GSR → Data View                 |
+| Change thermal settings | 4            | Home → Dashboard → Thermal → Settings              |
+| **Average**             | **4 taps**   | **Deep nesting**                                   |
 
 ### Proposed Depth (Tap Count to Common Actions)
 
-| User Goal | Proposed Taps | Path |
-|-----------|---------------|------|
-| Capture thermal image | 1 | Home → [Quick Action] |
-| Start GSR session | 1 | Home → [Quick Action] |
-| View thermal gallery | 1 | Home → [Quick Action] |
-| Multi-sensor capture | 1 | Home → [Quick Action] |
-| View recent GSR data | 1 | Home → [Quick Action] |
-| Change thermal settings | 2 | Home → Thermal Camera → ⚙️ |
-| **Average** | **1.2 taps** | **Direct access** |
+| User Goal               | Proposed Taps | Path                       |
+|-------------------------|---------------|----------------------------|
+| Capture thermal image   | 1             | Home → [Quick Action]      |
+| Start GSR session       | 1             | Home → [Quick Action]      |
+| View thermal gallery    | 1             | Home → [Quick Action]      |
+| Multi-sensor capture    | 1             | Home → [Quick Action]      |
+| View recent GSR data    | 1             | Home → [Quick Action]      |
+| Change thermal settings | 2             | Home → Thermal Camera → ⚙️ |
+| **Average**             | **1.2 taps**  | **Direct access**          |
 
 **Improvement**: 70% reduction in navigation depth
 
@@ -354,6 +370,7 @@ After Capture:
 ### Journey 1: First-Time User - "I want to try thermal imaging"
 
 #### Current Journey
+
 ```
 Step 1: Opens app
 Thinking: "Where do I start?"
@@ -378,6 +395,7 @@ Emotion: Frustrated, took 2-3 minutes
 **Confusion**: High
 
 #### Proposed Journey
+
 ```
 Step 1: Opens app
 Sees: "🔥 Capture Thermal Image" button
@@ -399,6 +417,7 @@ Emotion: Satisfied, took 15 seconds
 ### Journey 2: Regular User - "Daily thermal monitoring task"
 
 #### Current Journey
+
 ```
 Day 1: Took 5 minutes to find feature
 Day 2: Still need to remember path (4 taps)
@@ -410,6 +429,7 @@ Month 1: Muscle memory but wish it was easier
 **Time Cost**: 30 seconds per use = 3.5 hours per year
 
 #### Proposed Journey
+
 ```
 Day 1: One tap, immediate
 Day 2: One tap, remembers
@@ -426,6 +446,7 @@ Month 1: Lightning fast
 ## Information Architecture Comparison
 
 ### Current: Flat + Hidden Structure
+
 ```
 Home (No clear structure)
   ├── Dashboard (Everything mixed)
@@ -441,12 +462,14 @@ Home (No clear structure)
 ```
 
 **Problems**:
+
 - No clear categories
 - Mixed features in Dashboard
 - Actions hidden behind labels
 - No visual hierarchy
 
 ### Proposed: Task-Oriented Structure
+
 ```
 Home (Task-Focused)
   ├── Quick Actions (80% use cases)
@@ -468,6 +491,7 @@ Home (Task-Focused)
 ```
 
 **Benefits**:
+
 - Task-first organization
 - 80/20 rule applied
 - Clear visual hierarchy
@@ -478,6 +502,7 @@ Home (Task-Focused)
 ## Accessibility & Cognitive Load
 
 ### Current Cognitive Load
+
 ```
 Screen Name → Mental Translation → Action
 "Dashboard" → "What's this?" → Exploration
@@ -488,6 +513,7 @@ Average mental steps: 3-4 per screen
 ```
 
 ### Proposed Cognitive Load
+
 ```
 Action Label → Direct Understanding → Action
 "Capture Thermal Image" → "That's what I want" → Tap
@@ -502,16 +528,17 @@ Average mental steps: 1 per action
 
 ## Summary: User Impact
 
-| Metric | Current | Proposed | Improvement |
-|--------|---------|----------|-------------|
-| **Average taps to action** | 4 | 1.2 | 70% reduction |
-| **Time to first action** | 2-3 min | 15 sec | 88% reduction |
-| **New user confusion** | High | Low | 80% reduction |
-| **Daily friction** | Every use | Minimal | 90% reduction |
-| **Learning curve** | Steep | Gentle | 75% reduction |
-| **Mental steps per action** | 3-4 | 1 | 67% reduction |
+| Metric                      | Current   | Proposed | Improvement   |
+|-----------------------------|-----------|----------|---------------|
+| **Average taps to action**  | 4         | 1.2      | 70% reduction |
+| **Time to first action**    | 2-3 min   | 15 sec   | 88% reduction |
+| **New user confusion**      | High      | Low      | 80% reduction |
+| **Daily friction**          | Every use | Minimal  | 90% reduction |
+| **Learning curve**          | Steep     | Gentle   | 75% reduction |
+| **Mental steps per action** | 3-4       | 1        | 67% reduction |
 
 **Bottom Line**: From a user perspective, navigation becomes:
+
 - ✅ 70% faster to accomplish tasks
 - ✅ 80% less confusing for new users
 - ✅ 90% less daily friction

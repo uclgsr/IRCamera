@@ -2,7 +2,8 @@
 
 ## Executive Summary
 
-This document provides a comprehensive analysis of the navigation system in the IRCamera application, identifying optimization opportunities to improve performance, maintainability, and user experience.
+This document provides a comprehensive analysis of the navigation system in the IRCamera application, identifying
+optimization opportunities to improve performance, maintainability, and user experience.
 
 ## Current Navigation Architecture
 
@@ -29,12 +30,14 @@ The application currently has **three navigation systems**:
 **Problem**: Three overlapping navigation systems create confusion and maintenance overhead.
 
 **Impact**:
+
 - Developers must decide which system to use
 - Inconsistent navigation patterns across features
 - Difficult to trace navigation flow
 - Code duplication
 
 **Evidence**:
+
 ```kotlin
 // UnifiedNavigation.kt - Compose Navigation
 navController.navigate(UnifiedRoute.GSRSettings.route)
@@ -51,12 +54,14 @@ context.startActivity(Intent(context, MainActivity::class.java))
 **Problem**: 7 routes launch external activities using LaunchedEffect + Class.forName, breaking Compose navigation flow.
 
 **Impact**:
+
 - Breaks back stack management
 - Inconsistent transition animations
 - Performance overhead from Activity launches
 - Error-prone reflection-based class loading
 
 **Example**:
+
 ```kotlin
 composable(UnifiedRoute.ThermalGallery.route) {
     LaunchedEffect(Unit) {
@@ -76,6 +81,7 @@ composable(UnifiedRoute.ThermalGallery.route) {
 ```
 
 **Affected Routes**:
+
 - ThermalMain
 - ThermalGallery
 - ThermalReport
@@ -89,6 +95,7 @@ composable(UnifiedRoute.ThermalGallery.route) {
 **Problem**: IRCameraNavigation.kt appears to be an older navigation system that is not actively used.
 
 **Impact**:
+
 - Dead code maintenance burden
 - Potential confusion for new developers
 - 271 lines of mostly placeholder code
@@ -98,11 +105,13 @@ composable(UnifiedRoute.ThermalGallery.route) {
 **Problem**: Navigation monitoring exists but is not actively used.
 
 **Impact**:
+
 - No visibility into navigation performance
 - Cannot identify slow transitions
 - Missing optimization opportunities
 
 **Evidence**:
+
 ```kotlin
 // ComposePerformanceMonitor.kt has navigation tracking
 fun trackNavigation(route: String, startTime: Long)
@@ -116,6 +125,7 @@ fun trackNavigationPerformance(fromRoute: String, toRoute: String, transitionTim
 **Problem**: Same animation configuration repeated in NavHost.
 
 **Impact**:
+
 - Code duplication (4 transition blocks)
 - Difficult to maintain consistent animations
 - No centralized animation theming
@@ -125,6 +135,7 @@ fun trackNavigationPerformance(fromRoute: String, toRoute: String, transitionTim
 **Problem**: Route strings are hardcoded in sealed class and used directly.
 
 **Impact**:
+
 - No compile-time safety for route arguments
 - Risk of typos in navigation calls
 - Difficult to refactor route structure
@@ -134,6 +145,7 @@ fun trackNavigationPerformance(fromRoute: String, toRoute: String, transitionTim
 **Problem**: Deep linking support declared but not implemented.
 
 **Impact**:
+
 - Cannot navigate from notifications
 - No support for external app links
 - Limited testing capabilities
@@ -143,6 +155,7 @@ fun trackNavigationPerformance(fromRoute: String, toRoute: String, transitionTim
 **Problem**: NavigationManager creates intents using when statement with 100+ cases.
 
 **Impact**:
+
 - Large switch statement impacts performance
 - High maintenance burden
 - Reflection-based class loading overhead
@@ -156,12 +169,14 @@ fun trackNavigationPerformance(fromRoute: String, toRoute: String, transitionTim
 **Action**: Create a unified navigation strategy
 
 **Approach**:
+
 - Keep UnifiedNavigation as the primary system
 - Migrate Intent-based routes to Compose screens
 - Remove or archive IRCameraNavigation.kt
 - Create clear documentation on when to use each approach
 
 **Expected Impact**:
+
 - 70% reduction in navigation code duplication
 - Single source of truth for navigation
 - Improved developer experience
@@ -171,6 +186,7 @@ fun trackNavigationPerformance(fromRoute: String, toRoute: String, transitionTim
 **Action**: Convert Activity-based routes to Compose screens or create proper navigation integration
 
 **Approach**:
+
 ```kotlin
 // Instead of launching activity
 composable(UnifiedRoute.ThermalGallery.route) {
@@ -189,6 +205,7 @@ composable(UnifiedRoute.ThermalGallery.route) {
 ```
 
 **Expected Impact**:
+
 - Faster navigation transitions
 - Better back stack management
 - Consistent user experience
@@ -198,6 +215,7 @@ composable(UnifiedRoute.ThermalGallery.route) {
 **Action**: Create reusable animation configuration
 
 **Implementation**:
+
 ```kotlin
 object NavigationAnimations {
     private const val ANIMATION_DURATION_MS = 300
@@ -219,6 +237,7 @@ NavHost(
 ```
 
 **Expected Impact**:
+
 - Single place to manage animations
 - Easy to implement custom animations per route
 - Consistent animation timing
@@ -230,6 +249,7 @@ NavHost(
 **Action**: Integrate ComposePerformanceMonitor with navigation
 
 **Implementation**:
+
 ```kotlin
 composable(UnifiedRoute.GSRSettings.route) {
     val startTime = remember { System.currentTimeMillis() }
@@ -243,6 +263,7 @@ composable(UnifiedRoute.GSRSettings.route) {
 ```
 
 **Expected Impact**:
+
 - Identify slow navigation paths
 - Data-driven optimization decisions
 - Better user experience monitoring
@@ -252,6 +273,7 @@ composable(UnifiedRoute.GSRSettings.route) {
 **Action**: Cache frequently accessed routes
 
 **Implementation**:
+
 ```kotlin
 sealed class UnifiedRoute(val route: String) {
     companion object {
@@ -267,6 +289,7 @@ sealed class UnifiedRoute(val route: String) {
 ```
 
 **Expected Impact**:
+
 - Faster route resolution
 - Reduced string comparison overhead
 
@@ -275,6 +298,7 @@ sealed class UnifiedRoute(val route: String) {
 **Action**: Replace when statement with map-based lookup
 
 **Implementation**:
+
 ```kotlin
 object NavigationManager {
     private val routeToClass = mapOf(
@@ -292,6 +316,7 @@ object NavigationManager {
 ```
 
 **Expected Impact**:
+
 - O(1) route lookup vs O(n) when statement
 - Better performance with many routes
 - Easier to maintain
@@ -303,6 +328,7 @@ object NavigationManager {
 **Action**: Create argument wrappers for routes with parameters
 
 **Implementation**:
+
 ```kotlin
 sealed class UnifiedRoute(val route: String) {
     object GSRPlot : UnifiedRoute("gsr_plot/{sessionId}") {
@@ -328,6 +354,7 @@ composable(UnifiedRoute.GSRPlot.route) { backStackEntry ->
 ```
 
 **Expected Impact**:
+
 - Type-safe argument handling
 - Better error messages
 - Reduced runtime errors
@@ -337,6 +364,7 @@ composable(UnifiedRoute.GSRPlot.route) { backStackEntry ->
 **Action**: Add deep link support for key routes
 
 **Implementation**:
+
 ```kotlin
 composable(
     route = UnifiedRoute.GSRPlot.route,
@@ -350,6 +378,7 @@ composable(
 ```
 
 **Expected Impact**:
+
 - Support for notifications
 - Better testing capabilities
 - External app integration
@@ -359,11 +388,13 @@ composable(
 **Action**: Move IRCameraNavigation.kt to backup or remove
 
 **Rationale**:
+
 - Not actively used in codebase
 - Creates maintenance burden
 - Confuses developers
 
 **Expected Impact**:
+
 - Cleaner codebase
 - Reduced confusion
 - Lower maintenance cost
@@ -375,6 +406,7 @@ composable(
 **Action**: Document navigation patterns and guidelines
 
 **Contents**:
+
 - When to use each navigation approach
 - How to add new routes
 - Testing navigation flows
@@ -385,6 +417,7 @@ composable(
 **Action**: Create navigation test suite
 
 **Implementation**:
+
 ```kotlin
 @Test
 fun testGSRNavigationFlow() {
@@ -402,21 +435,25 @@ fun testGSRNavigationFlow() {
 ## Optimization Roadmap
 
 ### Phase 1: Foundation (Week 1)
+
 - Extract animation configuration
 - Add performance tracking
 - Document current navigation patterns
 
 ### Phase 2: Consolidation (Week 2)
+
 - Remove or archive IRCameraNavigation.kt
 - Create unified navigation guidelines
 - Optimize NavigationManager lookup
 
 ### Phase 3: Enhancement (Week 3)
+
 - Add type-safe arguments
 - Implement deep linking
 - Convert Activity launches to Compose screens
 
 ### Phase 4: Performance (Week 4)
+
 - Implement route caching
 - Add comprehensive performance monitoring
 - Optimize transition animations
@@ -424,16 +461,19 @@ fun testGSRNavigationFlow() {
 ## Metrics for Success
 
 ### Performance Metrics
+
 - Navigation latency < 300ms (currently tracked but not measured)
 - Memory overhead < 50MB during navigation
 - Zero navigation-related crashes
 
 ### Code Quality Metrics
+
 - Single primary navigation system
 - 0 reflection-based class lookups in hot paths
 - 100% navigation test coverage for critical paths
 
 ### Developer Experience Metrics
+
 - Clear documentation
 - Consistent patterns
 - Easy to add new routes
@@ -448,6 +488,7 @@ The current navigation system has significant optimization opportunities across 
 4. **Observability**: Missing performance monitoring
 
 Implementing these optimizations will result in:
+
 - **50-70% reduction** in navigation-related code
 - **30-50% improvement** in navigation performance
 - **Significantly better** developer experience

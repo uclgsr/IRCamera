@@ -25,7 +25,6 @@ appsecretTopinfrared10 = "2870276D969B45C1B4A312B336274079"
 appsecretTopinfraredCn = "9D33C48FD7CE4440B7D922FBF9B6DE2A"
 appsecretTopinfraredCn10 = "F4511AAA6C694E54A3676CF2345A4A8E"
 
-
 kotlin = "2.2.20"
 agp = "8.11.0"
 
@@ -51,30 +50,20 @@ lifecycle = "2.9.4"
 
 
 room = "2.8.1"
-work = "2.10.4"
+work = "2.10.5"
 camerax = "1.5.0"
-coroutines = "1.9.0"
-kotlinxSerialization = "1.7.3"
+coroutines = "1.10.2"
+kotlinxSerialization = "1.9.0"
 
 
 fastjson2 = "2.0.59"
 jsbridge = "1.0.4"
-retrofit = "2.11.0"
-okhttp = "4.12.0"
-
-
+retrofit = "3.0.0"
+okhttp = "5.1.0"
 rxjava = "2.2.21"
 rxandroid = "2.1.1"
-
-
-arouter = "1.5.2"
-
-
-rxpermissions = "3.0.0"
 rxlifecycle2 = "2.2.2"
 rxlifecycle3 = "3.1.0"
-
-
 ucrop = "2.2.11-native"
 playAppUpdate = "2.1.0"
 immersionbar = "3.2.2"
@@ -87,55 +76,23 @@ brvah = "3.0.11"
 colorpickerview = "2.3.0"
 photoview = "2.3.0"
 nifty = "2.4.0"
-
-
 glide = "5.0.5"
 mnImageBrowser = "V3.1.2X"
-gsyVideoPlayer = "v8.6.0-release-jitpack"
 gsyVideoPlayerThermal = "v8.6.0-release-jitpack"
-
-
-shimmerAndroidApi = "1.0.0"
-
-
 nordicBle = "2.11.0"
-
-
-opengl = "2.0.0"
-
-
 utilcode = "1.31.1"
 xxpermissions = "20.0"
-xlog = "1.11.0"
-lottie = "6.0.1"
+xlog = "1.11.1"
+lottie = "6.6.9"
 eventbus = "3.3.1"
-
-
-andromeda = "16.0.1"
-
-
-javacv = "1.5.7"
-
-
-lmsInternational = "3.90.009.0"
-lmsChina = "3.90.076"
-
-
-ffmpeg = "7.1.1-1.5.12"
-
-
-wechatSdk = "6.8.0"
+andromeda = "17.0.0"
+javacv = "1.5.12"
+ffmpeg = "7.1-1.5.11"
+wechatSdk = "6.8.34"
 umengApm = "2.0.6"
-zohoSalesiq = "8.2.3"
-
-
-
-
 umengCommon = "9.8.8"
 umengAsms = "1.8.7.2"
 umengAnalytics = "9.8.8"
-
-
 junit = "4.13.2"
 junitJupiter = "5.13.4"
 hamcrest = "3.0"
@@ -147,48 +104,37 @@ testRules = "1.7.0"
 testExtJunitKtx = "1.3.0"
 testEspressoContrib = "3.7.0"
 testEspressoIntents = "3.7.0"
-testUiautomator = "2.2.0"
-robolectric = "4.10.3"
-mockwebserver = "4.11.0"
-benchmark = "1.2.2"
+testUiautomator = "2.3.0"
+robolectric = "4.16"
+mockwebserver = "5.1.0"
+benchmark = "1.4.1"
 truth = "1.4.5"
 javafaker = "1.0.2"
-testCore = "1.5.0"
-
-
-guava = "31.1-android"
-
+testCore = "1.7.0"
+guava = "33.5.0-android"
 opencsv = "5.12.0"
 gson = "2.13.2"
-jmdns = "3.5.8"
-apachePoi = "5.4.0"
-xmlbeans = "3.1.0"
+jmdns = "3.6.2"
+apachePoi = "5.4.1"
+xmlbeans = "5.3.0"
 staxApi = "1.0-2"
-aaltoXml = "1.3.3"
+aaltoXml = "1.3.4"
 coroutinesTest = "1.6.4"
-
 vecmath = "1.3.1"
-commonsLang3 = "3.18.0"
+commonsLang3 = "3.19.0"
 fastBle = "2.4.0"
 localbroadcastmanager = "1.1.0"
 easySwipeMenuLayout = "1.1.4"
-lifecycleService = "2.9.3"
-media3 = "1.3.1"
-
-
-
-
-
+lifecycleService = "2.9.4"
+media3 = "1.8.0"
 huaweiAgcp = "1.6.0.300"
-
-
-androidGradlePlugin = "8.11.0"
-kotlinGradlePlugin = "2.2.0"
+androidGradlePlugin = "8.11.2"
+kotlinGradlePlugin = "2.2.20"
 ksp = "2.2.20-2.0.3"
 desugarJdkLibs = "2.1.5"
-ktlint = "12.1.3"
+ktlint = "13.1.0"
 detekt = "1.24.0"
-spotless = "7.0.1"
+spotless = "8.0.0"
 identityJvm = "202411.1"
 
 [libraries]
@@ -251,24 +197,13 @@ converter-gson = { group = "com.squareup.retrofit2", name = "converter-gson", ve
 adapter-rxjava2 = { group = "com.squareup.retrofit2", name = "adapter-rxjava2", version.ref = "retrofit" }
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
 logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
-
-
 rxjava2 = { group = "io.reactivex.rxjava2", name = "rxjava", version.ref = "rxjava" }
 rxandroid = { group = "io.reactivex.rxjava2", name = "rxandroid", version.ref = "rxandroid" }
-
-
-arouter-api = { group = "com.alibaba", name = "arouter-api", version.ref = "arouter" }
-arouter-compiler = { group = "com.alibaba", name = "arouter-compiler", version.ref = "arouter" }
-
-
-rxpermissions = { group = "com.github.tbruyelle", name = "rxpermissions", version.ref = "rxpermissions" }
 rxlifecycle = { group = "com.trello.rxlifecycle2", name = "rxlifecycle", version.ref = "rxlifecycle2" }
 rxlifecycle-android = { group = "com.trello.rxlifecycle2", name = "rxlifecycle-android", version.ref = "rxlifecycle2" }
 rxlifecycle-components = { group = "com.trello.rxlifecycle2", name = "rxlifecycle-components", version.ref = "rxlifecycle2" }
 rxlifecycle-ktx = { group = "com.trello.rxlifecycle3", name = "rxlifecycle-kotlin", version.ref = "rxlifecycle3" }
 rxlifecycle-android-lifecycle-ktx = { group = "com.trello.rxlifecycle3", name = "rxlifecycle-android-lifecycle-kotlin", version.ref = "rxlifecycle3" }
-
-
 ucrop = { group = "com.github.yalantis", name = "ucrop", version.ref = "ucrop" }
 play-app-update = { group = "com.google.android.play", name = "app-update", version.ref = "playAppUpdate" }
 immersionbar = { group = "com.geyifeng.immersionbar", name = "immersionbar", version.ref = "immersionbar" }
@@ -282,72 +217,37 @@ brvah = { group = "com.github.CymChad", name = "BaseRecyclerViewAdapterHelper", 
 colorpickerview = { group = "com.github.skydoves", name = "colorpickerview", version.ref = "colorpickerview" }
 photoview = { group = "com.github.chrisbanes", name = "PhotoView", version.ref = "photoview" }
 nifty = { group = "com.nineoldandroids", name = "library", version.ref = "nifty" }
-
-
 glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
 glide-compiler = { group = "com.github.bumptech.glide", name = "compiler", version.ref = "glide" }
 mn-image-browser = { group = "com.github.maning0303", name = "MNImageBrowser", version.ref = "mnImageBrowser" }
-gsy-video-player = { group = "com.github.CarGuo.GSYVideoPlayer", name = "gsyVideoPlayer-java", version.ref = "gsyVideoPlayer" }
-
-
 camerax-core = { group = "androidx.camera", name = "camera-core", version.ref = "camerax" }
 camerax-camera2 = { group = "androidx.camera", name = "camera-camera2", version.ref = "camerax" }
 camerax-lifecycle = { group = "androidx.camera", name = "camera-lifecycle", version.ref = "camerax" }
 camerax-video = { group = "androidx.camera", name = "camera-video", version.ref = "camerax" }
 camerax-view = { group = "androidx.camera", name = "camera-view", version.ref = "camerax" }
 camerax-extensions = { group = "androidx.camera", name = "camera-extensions", version.ref = "camerax" }
-
 compose-constraint-layout = { group = "androidx.constraintlayout", name = "constraintlayout-compose", version = "1.1.0" }
-
-
-
 nordic-ble-ktx = { group = "no.nordicsemi.android", name = "ble-ktx", version.ref = "nordicBle" }
-
-
-opengl-android = { group = "org.khronos", name = "opengl-api", version.ref = "opengl" }
-
-
 utilcode = { group = "com.blankj", name = "utilcodex", version.ref = "utilcode" }
 xxpermissions = { group = "com.github.getActivity", name = "XXPermissions", version.ref = "xxpermissions" }
 xlog = { group = "com.elvishew", name = "xlog", version.ref = "xlog" }
 lottie = { group = "com.airbnb.android", name = "lottie", version.ref = "lottie" }
 eventbus = { group = "org.greenrobot", name = "eventbus", version.ref = "eventbus" }
-
-
 andromeda-core = { group = "com.kylecorry.andromeda", name = "core", version.ref = "andromeda" }
 andromeda-sense = { group = "com.kylecorry.andromeda", name = "sense", version.ref = "andromeda" }
 andromeda-views = { group = "com.kylecorry.andromeda", name = "views", version.ref = "andromeda" }
-
-
 javacv = { group = "org.bytedeco", name = "javacv", version.ref = "javacv" }
 javacpp = { group = "org.bytedeco", name = "javacpp", version.ref = "javacv" }
-
-
 ir-layout = { group = "com.github.CoderCaiSL", name = "jitpackMvn", version = "+" }
-
-
-lms2-user = { group = "com.mpdc4gsr.lms.sdk3", name = "lms_international", version.ref = "lmsInternational" }
-lms3-user = { group = "com.mpdc4gsr.lms.sdk3", name = "lms_china", version.ref = "lmsChina" }
-
-
 ffmpeg-android-arm64 = { group = "org.bytedeco", name = "ffmpeg", version.ref = "ffmpeg" }
 ffmpeg-android-arm = { group = "org.bytedeco", name = "ffmpeg", version.ref = "ffmpeg" }
 ffmpeg-android-x86-64 = { group = "org.bytedeco", name = "ffmpeg", version.ref = "ffmpeg" }
 ffmpeg-android-x86 = { group = "org.bytedeco", name = "ffmpeg", version.ref = "ffmpeg" }
-
-
 wechat-sdk = { group = "com.tencent.mm.opensdk", name = "wechat-sdk-android", version.ref = "wechatSdk" }
 umeng-apm = { group = "com.umeng.umsdk", name = "apm", version.ref = "umengApm" }
-zoho-salesiq = { group = "com.zoho.salesiq", name = "mobilisten", version.ref = "zohoSalesiq" }
-
-
-
-
 umeng-common = { group = "com.umeng.umsdk", name = "common", version.ref = "umengCommon" }
 umeng-asms = { group = "com.umeng.umsdk", name = "asms", version.ref = "umengAsms" }
 umeng-analytics = { group = "com.umeng.umsdk", name = "analytics", version.ref = "umengAnalytics" }
-
-
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junitJupiter" }
 hamcrest = { group = "org.hamcrest", name = "hamcrest", version.ref = "hamcrest" }
@@ -367,10 +267,7 @@ benchmark-junit4 = { group = "androidx.benchmark", name = "benchmark-junit4", ve
 truth = { group = "com.google.truth", name = "truth", version.ref = "truth" }
 test-core = { group = "androidx.test", name = "core", version.ref = "testCore" }
 javafaker = { group = "com.github.javafaker", name = "javafaker", version.ref = "javafaker" }
-
-
 guava = { group = "com.google.guava", name = "guava", version.ref = "guava" }
-
 opencsv = { group = "com.opencsv", name = "opencsv", version.ref = "opencsv" }
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 jmdns = { group = "org.jmdns", name = "jmdns", version.ref = "jmdns" }
@@ -379,9 +276,6 @@ apache-poi-ooxml = { group = "org.apache.poi", name = "poi-ooxml", version.ref =
 xmlbeans = { group = "org.apache.xmlbeans", name = "xmlbeans", version.ref = "xmlbeans" }
 stax-api = { group = "javax.xml.stream", name = "stax-api", version.ref = "staxApi" }
 aalto-xml = { group = "com.fasterxml", name = "aalto-xml", version.ref = "aaltoXml" }
-
-
-
 vecmath = { group = "java3d", name = "vecmath", version.ref = "vecmath" }
 commons-lang3 = { group = "org.apache.commons", name = "commons-lang3", version.ref = "commonsLang3" }
 fastble = { group = "com.github.Jasonchenlijian", name = "FastBle", version.ref = "fastBle" }

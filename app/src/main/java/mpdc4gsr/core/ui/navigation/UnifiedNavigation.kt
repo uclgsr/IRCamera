@@ -91,7 +91,7 @@ fun UnifiedNavHost(
         // Home and Dashboard
         composable(UnifiedRoute.Home.route) {
             NavigationPerformanceHelper.TrackNavigation(UnifiedRoute.Home.displayName)
-            
+
             MainScreen(
                 onNavigateToSensors = { navController.navigate(UnifiedRoute.Dashboard.route) },
                 onNavigateToGallery = { navController.navigate(UnifiedRoute.ThermalGallery.route) },
@@ -105,7 +105,7 @@ fun UnifiedNavHost(
 
         composable(UnifiedRoute.Dashboard.route) {
             NavigationPerformanceHelper.TrackNavigation("Dashboard")
-            
+
             UnifiedSensorDashboard(
                 onBackClick = { navController.popBackStack() },
                 onSettingsClick = { navController.navigate(UnifiedRoute.GSRSettings.route) },
@@ -122,7 +122,7 @@ fun UnifiedNavHost(
         // GSR Sensor Routes
         composable(UnifiedRoute.GSRSettings.route) {
             NavigationPerformanceHelper.TrackNavigation("GSRSettings")
-            
+
             GSRSettingsScreen(
                 onBackClick = { navController.popBackStack() }
             )
@@ -133,7 +133,7 @@ fun UnifiedNavHost(
         composable(UnifiedRoute.GSRSessionDetail.route) { backStackEntry ->
             NavigationPerformanceHelper.TrackNavigation("GSRSessionDetail")
             val sessionId = backStackEntry.arguments?.getString("sessionId") ?: "unknown"
-            
+
             SessionDetailScreen(
                 sessionId = sessionId,
                 onBackClick = { navController.popBackStack() },
@@ -150,7 +150,7 @@ fun UnifiedNavHost(
         composable(UnifiedRoute.GSRPlot.route) { backStackEntry ->
             NavigationPerformanceHelper.TrackNavigation("GSRPlot")
             val sessionId = backStackEntry.arguments?.getString("sessionId") ?: "unknown"
-            
+
             GSRPlotScreen(
                 sessionId = sessionId,
                 onBackClick = { navController.popBackStack() }
@@ -159,7 +159,7 @@ fun UnifiedNavHost(
 
         composable(UnifiedRoute.GSRDataView.route) {
             NavigationPerformanceHelper.TrackNavigation("GSRDataView")
-            
+
             GSRDataViewScreen(
                 filePath = "",
                 onBackClick = { navController.popBackStack() }
@@ -259,7 +259,7 @@ fun UnifiedNavHost(
 
         composable(UnifiedRoute.ThermalCamera.route) {
             NavigationPerformanceHelper.TrackNavigation("ThermalCamera")
-            
+
             ThermalCameraScreen(
                 onBackClick = { navController.popBackStack() },
                 onNavigateToSettings = { navController.navigate(UnifiedRoute.ThermalSettings.route) },
@@ -276,7 +276,7 @@ fun UnifiedNavHost(
         // Settings and System Routes
         composable(UnifiedRoute.Settings.route) {
             NavigationPerformanceHelper.TrackNavigation("Settings")
-            
+
             SettingsScreen(
                 onBackClick = { navController.popBackStack() }
             )
@@ -284,7 +284,7 @@ fun UnifiedNavHost(
 
         composable(UnifiedRoute.About.route) {
             NavigationPerformanceHelper.TrackNavigation("About")
-            
+
             AboutScreen(
                 onBackClick = { navController.popBackStack() }
             )
@@ -294,7 +294,7 @@ fun UnifiedNavHost(
 
         composable(UnifiedRoute.ComponentShowcase.route) {
             NavigationPerformanceHelper.TrackNavigation("ComponentShowcase")
-            
+
             ComponentShowcaseScreen(
                 onBackClick = { navController.popBackStack() }
             )
@@ -302,7 +302,7 @@ fun UnifiedNavHost(
 
         composable(UnifiedRoute.TestingSuite.route) {
             NavigationPerformanceHelper.TrackNavigation("TestingSuite")
-            
+
             TestResultsScreen(
                 onBackClick = { navController.popBackStack() }
             )
@@ -364,24 +364,24 @@ object NavigationHelper {
     fun navigateToPermissionRequest(navController: NavHostController) {
         navController.navigate(UnifiedRoute.PermissionRequest.route)
     }
-    
+
     // Quick Action Navigation - User-centric direct access
     fun captureThermalImage(navController: NavHostController) {
         navController.navigate(UnifiedRoute.ThermalCamera.route)
     }
-    
+
     fun startGSRSession(navController: NavHostController) {
         navController.navigate(UnifiedRoute.GSRSettings.route)
     }
-    
+
     fun thermalRGBCapture(navController: NavHostController) {
         navController.navigate(UnifiedRoute.DualModeCamera.route)
     }
-    
+
     fun viewGallery(navController: NavHostController) {
         navController.navigate(UnifiedRoute.ThermalGallery.route)
     }
-    
+
     fun viewRecentSessions(navController: NavHostController) {
         navController.navigate(UnifiedRoute.GSRDataView.route)
     }

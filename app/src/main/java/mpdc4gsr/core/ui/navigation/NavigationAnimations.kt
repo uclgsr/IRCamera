@@ -26,26 +26,58 @@ object NavigationAnimations {
     }
 
     fun <S> AnimatedContentTransitionScope<S>.slideInFromRight(): EnterTransition =
-        slideTransition(AnimatedContentTransitionScope.SlideDirection.Left, ANIMATION_DURATION_MS, true) as EnterTransition
+        slideTransition(
+            AnimatedContentTransitionScope.SlideDirection.Left,
+            ANIMATION_DURATION_MS,
+            true
+        ) as EnterTransition
 
     fun <S> AnimatedContentTransitionScope<S>.slideOutToLeft(): ExitTransition =
-        slideTransition(AnimatedContentTransitionScope.SlideDirection.Left, ANIMATION_DURATION_MS, false) as ExitTransition
+        slideTransition(
+            AnimatedContentTransitionScope.SlideDirection.Left,
+            ANIMATION_DURATION_MS,
+            false
+        ) as ExitTransition
 
     fun <S> AnimatedContentTransitionScope<S>.slideInFromLeft(): EnterTransition =
-        slideTransition(AnimatedContentTransitionScope.SlideDirection.Right, ANIMATION_DURATION_MS, true) as EnterTransition
+        slideTransition(
+            AnimatedContentTransitionScope.SlideDirection.Right,
+            ANIMATION_DURATION_MS,
+            true
+        ) as EnterTransition
 
     fun <S> AnimatedContentTransitionScope<S>.slideOutToRight(): ExitTransition =
-        slideTransition(AnimatedContentTransitionScope.SlideDirection.Right, ANIMATION_DURATION_MS, false) as ExitTransition
+        slideTransition(
+            AnimatedContentTransitionScope.SlideDirection.Right,
+            ANIMATION_DURATION_MS,
+            false
+        ) as ExitTransition
 
     fun <S> AnimatedContentTransitionScope<S>.fastSlideInFromRight(): EnterTransition =
-        slideTransition(AnimatedContentTransitionScope.SlideDirection.Left, FAST_ANIMATION_DURATION_MS, true) as EnterTransition
+        slideTransition(
+            AnimatedContentTransitionScope.SlideDirection.Left,
+            FAST_ANIMATION_DURATION_MS,
+            true
+        ) as EnterTransition
 
     fun <S> AnimatedContentTransitionScope<S>.fastSlideOutToLeft(): ExitTransition =
-        slideTransition(AnimatedContentTransitionScope.SlideDirection.Left, FAST_ANIMATION_DURATION_MS, false) as ExitTransition
+        slideTransition(
+            AnimatedContentTransitionScope.SlideDirection.Left,
+            FAST_ANIMATION_DURATION_MS,
+            false
+        ) as ExitTransition
 
     fun <S> AnimatedContentTransitionScope<S>.fastSlideInFromLeft(): EnterTransition =
-        slideTransition(AnimatedContentTransitionScope.SlideDirection.Right, FAST_ANIMATION_DURATION_MS, true) as EnterTransition
+        slideTransition(
+            AnimatedContentTransitionScope.SlideDirection.Right,
+            FAST_ANIMATION_DURATION_MS,
+            true
+        ) as EnterTransition
 
     fun <S> AnimatedContentTransitionScope<S>.fastSlideOutToRight(): ExitTransition =
-        slideTransition(AnimatedContentTransitionScope.SlideDirection.Right, FAST_ANIMATION_DURATION_MS, false) as ExitTransition
+        slideTransition(
+            AnimatedContentTransitionScope.SlideDirection.Right,
+            FAST_ANIMATION_DURATION_MS,
+            false
+        ) as ExitTransition
 }

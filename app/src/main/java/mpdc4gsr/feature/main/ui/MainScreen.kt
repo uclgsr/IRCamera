@@ -71,6 +71,7 @@ fun MainScreen(
                     onViewGallery = onNavigateToGallery,
                     onViewRecentSessions = onViewRecentSessions
                 )
+
                 1 -> GalleryTab(onNavigateToGallery = onNavigateToGallery)
                 2 -> SettingsTab(onNavigateToSettings = onNavigateToSettings)
                 3 -> ProfileTab(onNavigateToProfile = onNavigateToProfile)

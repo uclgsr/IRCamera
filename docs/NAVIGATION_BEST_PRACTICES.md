@@ -2,7 +2,8 @@
 
 ## Overview
 
-This guide provides best practices for using the navigation system in the IRCamera application, following the optimizations outlined in the Navigation Optimization Analysis.
+This guide provides best practices for using the navigation system in the IRCamera application, following the
+optimizations outlined in the Navigation Optimization Analysis.
 
 ## Navigation System Architecture
 
@@ -21,12 +22,14 @@ navController.navigate(UnifiedRoute.GSRPlot.createRoute(sessionId))
 ### When to Use Each System
 
 #### Use UnifiedNavigation for:
+
 - All new Compose screens
 - Feature navigation within the app module
 - Type-safe navigation with sealed classes
 - Screens with back stack management
 
 #### Use NavigationManager for:
+
 - Legacy activity launches (being phased out)
 - Deep integration with thermal module activities
 - Cross-module navigation (temporary)
@@ -346,15 +349,18 @@ composable(UnifiedRoute.MyRoute.route) {
 
 ### Issue: Navigation not working
 
-**Solution**: Check that the route is properly defined in UnifiedRoute and the composable is registered in UnifiedNavHost.
+**Solution**: Check that the route is properly defined in UnifiedRoute and the composable is registered in
+UnifiedNavHost.
 
 ### Issue: Back button not working
 
-**Solution**: Ensure you're passing `onBackClick = { navController.popBackStack() }` to your screen and calling it appropriately.
+**Solution**: Ensure you're passing `onBackClick = { navController.popBackStack() }` to your screen and calling it
+appropriately.
 
 ### Issue: Arguments not received
 
 **Solution**: Verify that:
+
 1. The route pattern includes the parameter: `"detail/{id}"`
 2. You're using the createRoute function to navigate
 3. You're extracting arguments correctly in the composable
@@ -362,6 +368,7 @@ composable(UnifiedRoute.MyRoute.route) {
 ### Issue: Slow navigation
 
 **Solution**:
+
 1. Check performance metrics using ComposePerformanceMonitor
 2. Profile the destination screen for heavy operations
 3. Ensure proper use of remember and LaunchedEffect

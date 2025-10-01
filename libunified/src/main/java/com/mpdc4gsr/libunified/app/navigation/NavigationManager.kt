@@ -17,7 +17,7 @@ object NavigationManager {
         RouterConfig.VERSION to "mpdc4gsr.activities.VersionActivityCompose",
         RouterConfig.IR_GALLERY_EDIT to "mpdc4gsr.activities.IRGalleryEditActivity",
         RouterConfig.WEB_VIEW to "mpdc4gsr.activities.WebViewActivity",
-        
+
         RouterConfig.IR_MAIN to "com.mpdc4gsr.module.thermalunified.activity.IRMainComposeActivity",
         RouterConfig.IR_SETTING to "com.mpdc4gsr.module.thermalunified.activity.IRConfigComposeActivity",
         RouterConfig.IR_THERMAL_MONITOR to "com.mpdc4gsr.module.thermalunified.activity.IRMonitorComposeActivity",
@@ -30,40 +30,40 @@ object NavigationManager {
         RouterConfig.IR_CORRECTION_FOUR to "com.mpdc4gsr.module.thermalunified.activity.IRCorrectionFourComposeActivity",
         RouterConfig.IR_IMG_PICK to "com.mpdc4gsr.module.thermalunified.activity.ImagePickIRComposeActivity",
         RouterConfig.IR_IMG_PICK_PLUS to "com.mpdc4gsr.module.thermalunified.activity.ImagePickIRPlushComposeActivity",
-        
+
         RouterConfig.GALLERY to "com.mpdc4gsr.module.thermalunified.activity.GalleryComposeActivity",
         RouterConfig.THERMAL_MONITOR to "com.mpdc4gsr.module.thermalunified.activity.MonitorComposeActivity",
         RouterConfig.CONNECT to "com.mpdc4gsr.module.thermalunified.activity.ConnectComposeActivity",
         RouterConfig.VIDEO to "com.mpdc4gsr.module.thermalunified.activity.VideoComposeActivity",
         RouterConfig.MONITOR_CHART to "com.mpdc4gsr.module.thermalunified.activity.MonitorChartComposeActivity",
         RouterConfig.LOG_MP_CHART to "com.mpdc4gsr.module.thermalunified.activity.LogMPChartComposeActivity",
-        
+
         RouterConfig.IR_TCLITE to "com.mpdc4gsr.module.thermalunified.lite.activity.IRThermalLiteComposeActivity",
         RouterConfig.IR_THERMAL_MONITOR_LITE to "com.mpdc4gsr.module.thermalunified.lite.activity.IRMonitorLiteComposeActivity",
         RouterConfig.IR_IMG_PICK_LITE to "com.mpdc4gsr.module.thermalunified.lite.activity.ImagePickIRLiteComposeActivity",
         RouterConfig.IR_MONITOR_CHART_LITE to "com.mpdc4gsr.module.thermalunified.activity.IRMonitorChartComposeActivity",
         RouterConfig.IR_CORRECTION_THREE_LITE to "com.mpdc4gsr.module.thermalunified.lite.activity.IRCorrectionLiteThreeComposeActivity",
         RouterConfig.IR_CORRECTION_FOUR_LITE to "com.mpdc4gsr.module.thermalunified.lite.activity.IRCorrectionLiteFourComposeActivity",
-        
+
         RouterConfig.REPORT_CREATE_FIRST to "com.mpdc4gsr.module.thermalunified.report.activity.ReportCreateComposeActivity",
         RouterConfig.REPORT_CREATE_SECOND to "com.mpdc4gsr.module.thermalunified.report.activity.ReportCreateComposeActivity",
         RouterConfig.REPORT_PREVIEW_SECOND to "com.mpdc4gsr.module.thermalunified.activity.ReportPreviewSecondComposeActivity",
         RouterConfig.REPORT_PICK_IMG to "com.mpdc4gsr.module.thermalunified.activity.ReportPickImgComposeActivity",
-        
+
         RouterConfig.QUESTION to "com.mpdc4gsr.module.user.activity.QuestionComposeActivity",
         RouterConfig.ELECTRONIC_MANUAL to "com.mpdc4gsr.module.user.activity.ElectronicManualComposeActivity",
         RouterConfig.STORAGE_SPACE to "com.mpdc4gsr.module.user.activity.StorageSpaceComposeActivity",
         RouterConfig.TC_MORE to "com.mpdc4gsr.module.user.activity.MoreComposeActivity",
-        
+
         RouterConfig.GSR_MULTI_MODAL to "mpdc4gsr.gsr.MultiModalRecordingActivity",
         RouterConfig.GSR_DEMO to "com.mpdc4gsr.component.gsr.activity.GSRDemoActivity",
-        
+
         RouterConfig.IR_GALLERY_HOME to "com.mpdc4gsr.module.thermalunified.activity.IRGalleryActivity",
         RouterConfig.IR_CAMERA_SETTING to "com.mpdc4gsr.module.thermalunified.activity.IRCameraSettingActivity",
-        
+
         RouterConfig.QUESTION_DETAILS to "com.mpdc4gsr.module.user.activity.QuestionDetailsComposeActivity",
         RouterConfig.PDF to "com.mpdc4gsr.module.user.activity.PDFActivity",
-        
+
         RouterConfig.DEVICE_INFORMATION to "com.mpdc4gsr.module.user.activity.DeviceDetailsComposeActivity",
         RouterConfig.TISR to "com.mpdc4gsr.module.user.activity.TISRComposeActivity",
         RouterConfig.AUTO_SAVE to "com.mpdc4gsr.module.user.activity.AutoSaveComposeActivity",
@@ -156,7 +156,7 @@ object NavigationManager {
     ): Intent {
         val className = routeToClassMap[route]
             ?: throw IllegalArgumentException("Unknown route: $route")
-        
+
         return Intent(context, getClassByName(className))
     }
 

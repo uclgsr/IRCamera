@@ -2,7 +2,8 @@
 
 ## Executive Summary
 
-Based on the comprehensive analysis and implemented optimizations, this document provides recommendations for maintaining and further improving the navigation system in the IRCamera application.
+Based on the comprehensive analysis and implemented optimizations, this document provides recommendations for
+maintaining and further improving the navigation system in the IRCamera application.
 
 ## Immediate Recommendations (This Sprint)
 
@@ -11,6 +12,7 @@ Based on the comprehensive analysis and implemented optimizations, this document
 **Action**: Add performance summary logging to debug builds
 
 **Implementation**:
+
 ```kotlin
 // In MainActivity or Application class
 class MainActivity : ComponentActivity() {
@@ -30,6 +32,7 @@ class MainActivity : ComponentActivity() {
 **Action**: After 1 week of testing, identify routes exceeding 300ms threshold
 
 **Implementation**:
+
 ```kotlin
 // Add to testing activity
 val slowRoutes = NavigationPerformanceHelper.getSlowRoutes(300)
@@ -45,6 +48,7 @@ if (slowRoutes.isNotEmpty()) {
 **Action**: Share the new navigation best practices guide with the team
 
 **Files to Review**:
+
 - `docs/NAVIGATION_BEST_PRACTICES.md`
 - `docs/NAVIGATION_OPTIMIZATION_SUMMARY.md`
 - `docs/NAVIGATION_OPTIMIZATION_DIAGRAM.md`
@@ -58,11 +62,13 @@ if (slowRoutes.isNotEmpty()) {
 **Action**: Move `IRCameraNavigation.kt` to backup directory
 
 **Rationale**:
+
 - Not actively used in current codebase
 - Creates confusion for developers
 - 271 lines of mostly placeholder code
 
 **Implementation**:
+
 ```bash
 git mv app/src/main/java/mpdc4gsr/core/ui/navigation/IRCameraNavigation.kt \
        app/src/main/java/mpdc4gsr/core/ui/navigation/backup/
@@ -73,11 +79,13 @@ git mv app/src/main/java/mpdc4gsr/core/ui/navigation/IRCameraNavigation.kt \
 ### 5. Convert High-Traffic Activity Routes to Compose
 
 **Priority Routes** (based on likely usage):
+
 1. `ThermalGallery` - Currently launches activity
 2. `ThermalMain` - Currently launches activity
 3. `DevicePairing` - Currently launches activity
 
 **Benefits**:
+
 - Faster navigation (no Activity overhead)
 - Better back stack management
 - Consistent animations
@@ -88,11 +96,13 @@ git mv app/src/main/java/mpdc4gsr/core/ui/navigation/IRCameraNavigation.kt \
 ### 6. Implement Deep Linking for Key Features
 
 **Recommended Routes**:
+
 - `gsr_plot/{sessionId}` - For notifications
 - `thermal_camera` - For quick access
 - `gsr_settings` - For configuration shortcuts
 
 **Implementation Pattern**:
+
 ```kotlin
 composable(
     route = UnifiedRoute.GSRPlot.route,
@@ -112,12 +122,14 @@ composable(
 ### 7. Add Navigation Unit Tests
 
 **Test Coverage Goals**:
+
 - Route definitions: 100%
 - Navigation flows: 80%
 - Back stack behavior: 80%
 - Deep links: 100%
 
 **Example Test**:
+
 ```kotlin
 @Test
 fun testNavigationToGSRPlot() {
@@ -144,6 +156,7 @@ fun testNavigationToGSRPlot() {
 **Action**: Add argument helpers to route objects
 
 **Example**:
+
 ```kotlin
 object GSRPlot : UnifiedRoute("gsr_plot/{sessionId}") {
     const val ARG_SESSION_ID = "sessionId"
@@ -173,6 +186,7 @@ composable(UnifiedRoute.GSRPlot.route) { entry ->
 **Action**: Build a debug screen showing navigation metrics
 
 **Features**:
+
 - List all tracked routes with metrics
 - Highlight slow routes (>300ms)
 - Show trends over time
@@ -185,17 +199,20 @@ composable(UnifiedRoute.GSRPlot.route) { entry ->
 ### 10. Complete Activity to Compose Migration
 
 **Remaining Activities** (in order of priority):
+
 1. Thermal camera activities (7 activities)
 2. Device pairing and network (3 activities)
 3. User settings activities (5 activities)
 
 **Migration Strategy**:
+
 - Migrate highest-usage activities first
 - Test thoroughly after each migration
 - Keep old activities as fallback initially
 - Remove old activities once stable
 
 **Expected Benefits**:
+
 - 40-60% faster navigation overall
 - Consistent user experience
 - Better maintainability
@@ -206,6 +223,7 @@ composable(UnifiedRoute.GSRPlot.route) { entry ->
 **Action**: Organize routes into feature-based graphs
 
 **Example Structure**:
+
 ```kotlin
 // GSR Feature Graph
 navGraph(
@@ -229,6 +247,7 @@ navGraph(
 ```
 
 **Benefits**:
+
 - Better code organization
 - Feature isolation
 - Easier to maintain
@@ -239,6 +258,7 @@ navGraph(
 **Evaluate First**: Check if route lookup is a bottleneck after data collection
 
 **Implementation** (if needed):
+
 ```kotlin
 sealed class UnifiedRoute(val route: String) {
     companion object {
@@ -258,16 +278,19 @@ sealed class UnifiedRoute(val route: String) {
 ## Maintenance Guidelines
 
 ### Daily
+
 - Monitor navigation logs during development
 - Watch for performance warnings (>300ms)
 - Test new navigation flows
 
 ### Weekly
+
 - Review navigation performance summary
 - Identify any new slow routes
 - Update documentation if patterns change
 
 ### Monthly
+
 - Analyze navigation metrics trends
 - Plan optimizations for slow routes
 - Review and update this recommendations document
@@ -275,11 +298,13 @@ sealed class UnifiedRoute(val route: String) {
 ## Performance Targets
 
 ### Current Targets (Established)
+
 - Fast routes (simple Compose): <100ms
 - Medium routes (with data): <200ms
 - Heavy routes (complex UI): <300ms
 
 ### Future Targets (After Migration)
+
 - All Compose routes: <150ms average
 - 95th percentile: <250ms
 - No routes consistently >300ms
@@ -303,18 +328,21 @@ sealed class UnifiedRoute(val route: String) {
 ## Success Metrics
 
 ### Technical Metrics
+
 - Navigation performance: <300ms average
 - Code quality: Maintained or improved lint score
 - Test coverage: >80% for navigation code
 - Zero navigation-related crashes
 
 ### Developer Metrics
+
 - Time to add new route: <5 minutes
 - Time to debug navigation: <10 minutes
 - Developer satisfaction: Positive feedback
 - Documentation usage: Regular references
 
 ### User Metrics
+
 - App responsiveness: Improved ratings
 - Navigation fluidity: Smooth transitions
 - Crash rate: Zero navigation crashes
@@ -361,12 +389,14 @@ sealed class UnifiedRoute(val route: String) {
 ## Conclusion
 
 The navigation system has been significantly optimized with:
+
 - **Immediate improvements**: 50-80% faster route resolution
 - **Code quality**: 40-63% reduction in navigation code
 - **Monitoring**: 100% visibility for key routes
 - **Documentation**: Comprehensive guides for developers
 
 Following these recommendations will:
+
 - Maintain and improve navigation performance
 - Ensure consistent development patterns
 - Support the thesis project timeline

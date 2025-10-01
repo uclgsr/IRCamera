@@ -100,7 +100,7 @@ class MainActivity : AppCompatActivity() {
     private val recordingController = RecordingController()
     private val networkServer = NetworkServer(8080)
     private val deviceManager = DeviceManager()
-    
+
     // UI lifecycle management, session control, status display
     // Integration point for all major subsystems
 }
@@ -112,7 +112,7 @@ class MainActivity : AppCompatActivity() {
 class RecordingService : Service() {
     private val sensorCoordinator = SensorCoordinator()
     private val dataLogger = DataLogger()
-    
+
     // Background recording operations
     // Survives activity lifecycle changes
     // Maintains recording state during UI transitions
@@ -237,24 +237,24 @@ dependencies {
     implementation(project(":ble-core"))
     implementation(project(":ble-shimmer"))
     implementation(project(":ble-topdon"))
-    
+
     // Core Android
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
-    
+
     // Camera
     implementation(libs.androidx.camera.core)
     implementation(libs.androidx.camera.camera2)
     implementation(libs.androidx.camera.lifecycle)
-    
+
     // Network
     implementation(libs.okhttp3.okhttp)
     implementation(libs.gson)
-    
+
     // BLE
     implementation(libs.nordic.ble.library)
-    
+
     // Hardware Integration
     implementation(libs.topdon.thermal.sdk)
     implementation(libs.shimmer.android.api)
@@ -265,16 +265,15 @@ dependencies {
 
 ```xml
 <!-- AndroidManifest.xml -->
-<uses-permission android:name="android.permission.CAMERA" />
-<uses-permission android:name="android.permission.RECORD_AUDIO" />
-<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-<uses-permission android:name="android.permission.BLUETOOTH" />
-<uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-<uses-permission android:name="android.permission.INTERNET" />
-<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-<uses-feature android:name="android.hardware.usb.host" />
-<uses-feature android:name="android.hardware.bluetooth_le" required="true" />
+<uses-permission android:name="android.permission.CAMERA" /><uses-permission
+android:name="android.permission.RECORD_AUDIO" /><uses-permission
+android:name="android.permission.WRITE_EXTERNAL_STORAGE" /><uses-permission
+android:name="android.permission.BLUETOOTH" /><uses-permission
+android:name="android.permission.BLUETOOTH_ADMIN" /><uses-permission
+android:name="android.permission.ACCESS_FINE_LOCATION" /><uses-permission
+android:name="android.permission.INTERNET" /><uses-permission
+android:name="android.permission.ACCESS_NETWORK_STATE" /><uses-feature
+android:name="android.hardware.usb.host" /><uses-feature android:name="android.hardware.bluetooth_le" required="true" />
 ```
 
 ## Data Flow and Storage Architecture
