@@ -43,9 +43,5 @@ typealias UnifiedComposeActivity = mpdc4gsr.feature.main.ui.UnifiedComposeActivi
 typealias DeviceTypeActivityCompose = mpdc4gsr.feature.main.ui.DeviceTypeActivityCompose
 // Note: MainActivity alias is in MainActivity.kt to avoid circular reference
 
-// Device Feature Activities
-typealias BlankDevActivityCompose = mpdc4gsr.feature.device.ui.BlankDevActivityCompose
-typealias BlankDevComposeActivity = mpdc4gsr.feature.device.ui.BlankDevComposeActivity
-
 // Thermal Feature Activities
 typealias IRGalleryEditActivityCompose = mpdc4gsr.feature.thermal.ui.IRGalleryEditActivityCompose
