@@ -206,7 +206,7 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                     .fillMaxWidth(0.7f)
                                     .aspectRatio(264f / 158f),
                                 colors = CardDefaults.cardColors(
-                                    containerColor = Color(0xE6 + 0x16131E)
+                                    containerColor = Color(0xFF16131E).copy(alpha = 0.9f)
                                 )
                             ) {
                                 Column(modifier = Modifier.padding(8.dp)) {
