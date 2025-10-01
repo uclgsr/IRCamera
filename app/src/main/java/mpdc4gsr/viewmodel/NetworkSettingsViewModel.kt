@@ -76,7 +76,9 @@ class NetworkSettingsViewModel : BaseViewModel() {
         try {
             shimmerDeviceManager = ShimmerDeviceManager.getInstance(ctx)
         } catch (e: Exception) {
-            // ShimmerDeviceManager may not be available
+            // ShimmerDeviceManager initialization failed
+            // This can occur if the device doesn't have Bluetooth LE support,
+            // required permissions are not granted, or the Shimmer SDK is not properly configured
         }
         
         loadSettings()
@@ -120,6 +122,9 @@ class NetworkSettingsViewModel : BaseViewModel() {
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) 
                 == PackageManager.PERMISSION_GRANTED) {
                 bluetoothAdapter?.bondedDevices?.forEach { device ->
+                    // Identify device type by checking for known device name patterns
+                    // Note: This is a heuristic approach. For more robust detection,
+                    // consider scanning for specific Bluetooth service UUIDs if available
                     val deviceType = when {
                         device.name?.contains("Shimmer", ignoreCase = true) == true -> DeviceType.SHIMMER_GSR
                         device.name?.contains("Topdon", ignoreCase = true) == true || 
@@ -155,13 +160,21 @@ class NetworkSettingsViewModel : BaseViewModel() {
         }
     }
 
-    fun toggleWifi(enabled: Boolean) {
-        // Note: Direct WiFi control requires system permissions in Android 10+
+    /**
+     * Refreshes WiFi network information.
+     * Note: Direct WiFi control (enable/disable) requires system-level permissions
+     * in Android 10+ and is not available to regular applications.
+     */
+    fun refreshWifiInfo() {
         updateNetworkInfo()
     }
 
-    fun toggleBluetooth(enabled: Boolean) {
-        // Note: Direct Bluetooth control requires permissions
+    /**
+     * Refreshes Bluetooth status information.
+     * Note: Direct Bluetooth control (enable/disable) requires BLUETOOTH_ADMIN permission
+     * and user interaction via system dialogs in modern Android versions.
+     */
+    fun refreshBluetoothInfo() {
         updateNetworkInfo()
     }
 }

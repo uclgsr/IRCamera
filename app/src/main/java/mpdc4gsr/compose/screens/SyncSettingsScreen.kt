@@ -11,28 +11,33 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import mpdc4gsr.compose.components.TitleBar
 import mpdc4gsr.compose.components.*
 import mpdc4gsr.compose.theme.IRCameraTheme
+import mpdc4gsr.viewmodel.SyncSettingsViewModel
 
 /**
  * Synchronization Settings Screen - Configure time sync and data alignment
+ * Integrated with SyncSettingsViewModel for persistence
  */
 @Composable
 fun SyncSettingsScreen(
     onBackClick: (() -> Unit)? = null,
+    viewModel: SyncSettingsViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
-    var ntpSync by remember { mutableStateOf(true) }
-    var manualTimeSync by remember { mutableStateOf(false) }
-    var syncMethod by remember { mutableStateOf("NTP") }
-    var syncInterval by remember { mutableIntStateOf(60) }
-    var autoAlignment by remember { mutableStateOf(true) }
-    var timestampCorrection by remember { mutableStateOf(true) }
+    val context = LocalContext.current
+    val settings by viewModel.syncSettings.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.initialize(context)
+    }
 
     Column(
         modifier = modifier
@@ -60,26 +65,26 @@ fun SyncSettingsScreen(
                 SettingsToggle(
                     label = "NTP Synchronization",
                     description = "Sync time with network time protocol server",
-                    checked = ntpSync,
-                    onCheckedChange = { ntpSync = it }
+                    checked = settings.ntpSync,
+                    onCheckedChange = { viewModel.updateNtpSync(it) }
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
 
                 SettingsDropdown(
                     label = "Sync Method",
-                    value = syncMethod,
+                    value = settings.syncMethod,
                     options = listOf("NTP", "GPS", "Manual", "Device Clock"),
-                    onValueChange = { syncMethod = it }
+                    onValueChange = { viewModel.updateSyncMethod(it) }
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
 
                 SettingsSlider(
                     label = "Sync Interval",
-                    value = syncInterval.toFloat(),
+                    value = settings.syncInterval.toFloat(),
                     valueRange = 10f..300f,
-                    onValueChange = { syncInterval = it.toInt() },
+                    onValueChange = { viewModel.updateSyncInterval(it.toInt()) },
                     unit = "sec"
                 )
 
@@ -87,7 +92,7 @@ fun SyncSettingsScreen(
 
                 SettingsRow(
                     label = "Last Sync",
-                    value = "2 minutes ago"
+                    value = settings.lastSync
                 )
             }
 
@@ -99,8 +104,8 @@ fun SyncSettingsScreen(
                 SettingsToggle(
                     label = "Auto Alignment",
                     description = "Automatically align data from multiple sensors",
-                    checked = autoAlignment,
-                    onCheckedChange = { autoAlignment = it }
+                    checked = settings.autoAlignment,
+                    onCheckedChange = { viewModel.updateAutoAlignment(it) }
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -108,8 +113,8 @@ fun SyncSettingsScreen(
                 SettingsToggle(
                     label = "Timestamp Correction",
                     description = "Apply correction to align timestamps",
-                    checked = timestampCorrection,
-                    onCheckedChange = { timestampCorrection = it }
+                    checked = settings.timestampCorrection,
+                    onCheckedChange = { viewModel.updateTimestampCorrection(it) }
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))

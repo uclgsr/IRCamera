@@ -68,7 +68,7 @@ fun NetworkSettingsScreen(
                     label = "WiFi",
                     description = "Enable WiFi connectivity",
                     checked = settings.wifiEnabled,
-                    onCheckedChange = { viewModel.toggleWifi(it) }
+                    onCheckedChange = { viewModel.refreshWifiInfo() }
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 SettingsRow(
@@ -91,7 +91,7 @@ fun NetworkSettingsScreen(
                     label = "Bluetooth",
                     description = "Enable Bluetooth connectivity",
                     checked = settings.bluetoothEnabled,
-                    onCheckedChange = { viewModel.toggleBluetooth(it) }
+                    onCheckedChange = { viewModel.refreshBluetoothInfo() }
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 SettingsToggle(

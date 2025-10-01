@@ -11,22 +11,35 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import mpdc4gsr.compose.components.TitleBar
 import mpdc4gsr.compose.components.*
 import mpdc4gsr.compose.theme.IRCameraTheme
+import mpdc4gsr.viewmodel.DiagnosticsViewModel
 
 /**
  * Diagnostics Screen - System diagnostics and troubleshooting
+ * Integrated with DiagnosticsViewModel for real-time system monitoring
  */
 @Composable
 fun DiagnosticsScreen(
     onBackClick: (() -> Unit)? = null,
+    viewModel: DiagnosticsViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
+    val systemStatus by viewModel.systemStatus.collectAsState()
+    val sensorStatus by viewModel.sensorStatus.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.initialize(context)
+    }
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -52,22 +65,22 @@ fun DiagnosticsScreen(
             ) {
                 SettingsRow(
                     label = "System Health",
-                    value = "Good"
+                    value = systemStatus.systemHealth
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 SettingsRow(
                     label = "Battery",
-                    value = "85%"
+                    value = systemStatus.battery
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 SettingsRow(
                     label = "Temperature",
-                    value = "42°C"
+                    value = systemStatus.temperature
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 SettingsRow(
                     label = "Memory Usage",
-                    value = "2.4 GB / 8 GB"
+                    value = systemStatus.memoryUsage
                 )
             }
 
@@ -78,17 +91,17 @@ fun DiagnosticsScreen(
             ) {
                 SettingsRow(
                     label = "GSR Sensor",
-                    value = "OK"
+                    value = sensorStatus.gsrSensor
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 SettingsRow(
                     label = "Thermal Camera",
-                    value = "OK"
+                    value = sensorStatus.thermalCamera
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 SettingsRow(
                     label = "RGB Camera",
-                    value = "OK"
+                    value = sensorStatus.rgbCamera
                 )
             }
 
@@ -98,7 +111,7 @@ fun DiagnosticsScreen(
                 icon = Icons.Default.Build
             ) {
                 Button(
-                    onClick = { /* Run diagnostics */ },
+                    onClick = { viewModel.runFullDiagnostics() },
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Icon(Icons.Default.PlayArrow, contentDescription = null)
@@ -107,7 +120,7 @@ fun DiagnosticsScreen(
                 }
                 Spacer(modifier = Modifier.height(8.dp))
                 Button(
-                    onClick = { /* Test sensors */ },
+                    onClick = { viewModel.testAllSensors() },
                     modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.secondary
@@ -119,7 +132,7 @@ fun DiagnosticsScreen(
                 }
                 Spacer(modifier = Modifier.height(8.dp))
                 OutlinedButton(
-                    onClick = { /* Export logs */ },
+                    onClick = { viewModel.exportDiagnosticLogs() },
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Icon(Icons.Default.FileDownload, contentDescription = null)

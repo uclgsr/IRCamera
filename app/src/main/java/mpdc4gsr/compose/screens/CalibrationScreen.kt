@@ -11,23 +11,34 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import mpdc4gsr.compose.components.TitleBar
 import mpdc4gsr.compose.components.*
 import mpdc4gsr.compose.theme.IRCameraTheme
+import mpdc4gsr.viewmodel.CalibrationViewModel
 
 /**
  * Calibration Screen - System calibration and alignment tools
+ * Integrated with CalibrationViewModel for persistence
  */
 @Composable
 fun CalibrationScreen(
     onBackClick: (() -> Unit)? = null,
+    viewModel: CalibrationViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
-    var autoCalibration by remember { mutableStateOf(true) }
+    val context = LocalContext.current
+    val settings by viewModel.calibrationSettings.collectAsState()
+    val calibrationInfo by viewModel.calibrationInfo.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.initialize(context)
+    }
 
     Column(
         modifier = modifier
@@ -59,7 +70,7 @@ fun CalibrationScreen(
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 Button(
-                    onClick = { /* Start thermal calibration */ },
+                    onClick = { viewModel.startThermalCalibration() },
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Icon(Icons.Default.PlayArrow, contentDescription = null)
@@ -69,7 +80,7 @@ fun CalibrationScreen(
                 Spacer(modifier = Modifier.height(8.dp))
                 SettingsRow(
                     label = "Last Calibrated",
-                    value = "3 days ago"
+                    value = calibrationInfo.thermalLastCalibrated
                 )
             }
 
@@ -81,18 +92,23 @@ fun CalibrationScreen(
                 SettingsToggle(
                     label = "Auto Calibration",
                     description = "Automatically calibrate before each recording",
-                    checked = autoCalibration,
-                    onCheckedChange = { autoCalibration = it }
+                    checked = settings.autoCalibration,
+                    onCheckedChange = { viewModel.updateAutoCalibration(it) }
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 Button(
-                    onClick = { /* Start GSR calibration */ },
+                    onClick = { viewModel.startGSRCalibration() },
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Icon(Icons.Default.PlayArrow, contentDescription = null)
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Start Calibration")
                 }
+                Spacer(modifier = Modifier.height(8.dp))
+                SettingsRow(
+                    label = "Last Calibrated",
+                    value = calibrationInfo.gsrLastCalibrated
+                )
             }
 
             // Camera Alignment
@@ -107,13 +123,18 @@ fun CalibrationScreen(
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 Button(
-                    onClick = { /* Start alignment */ },
+                    onClick = { viewModel.startCameraAlignment() },
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Icon(Icons.Default.PlayArrow, contentDescription = null)
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Start Alignment")
                 }
+                Spacer(modifier = Modifier.height(8.dp))
+                SettingsRow(
+                    label = "Last Aligned",
+                    value = calibrationInfo.cameraLastAligned
+                )
             }
         }
     }
