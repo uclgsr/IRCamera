@@ -1,10 +1,9 @@
 package mpdc4gsr.core.ui.navigation
 
 import android.content.Intent
-import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -14,13 +13,13 @@ import mpdc4gsr.feature.main.ui.MainScreen
 import mpdc4gsr.feature.main.ui.UnifiedSensorDashboard
 import mpdc4gsr.feature.main.ui.ComponentShowcaseScreen
 import mpdc4gsr.feature.testing.ui.TestResultsScreen
-// Screens imported individually from feature packages
+import mpdc4gsr.core.ui.ComposePerformanceMonitor
+import mpdc4gsr.core.ui.model.SensorType
 import mpdc4gsr.feature.settings.ui.*
 import mpdc4gsr.feature.thermal.ui.*
 import mpdc4gsr.feature.gsr.ui.*
 import mpdc4gsr.feature.camera.ui.*
 import mpdc4gsr.feature.network.ui.*
-import mpdc4gsr.core.ui.model.SensorType
 
 /**
  * Unified Navigation System - Phase 2 Implementation
@@ -88,33 +87,19 @@ fun UnifiedNavHost(
     NavHost(
         navController = navController,
         startDestination = startDestination,
-        enterTransition = {
-            slideIntoContainer(
-                towards = AnimatedContentTransitionScope.SlideDirection.Left,
-                animationSpec = tween(300)
-            )
-        },
-        exitTransition = {
-            slideOutOfContainer(
-                towards = AnimatedContentTransitionScope.SlideDirection.Left,
-                animationSpec = tween(300)
-            )
-        },
-        popEnterTransition = {
-            slideIntoContainer(
-                towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                animationSpec = tween(300)
-            )
-        },
-        popExitTransition = {
-            slideOutOfContainer(
-                towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                animationSpec = tween(300)
-            )
-        }
+        enterTransition = { with(NavigationAnimations) { slideInFromRight() } },
+        exitTransition = { with(NavigationAnimations) { slideOutToLeft() } },
+        popEnterTransition = { with(NavigationAnimations) { slideInFromLeft() } },
+        popExitTransition = { with(NavigationAnimations) { slideOutToRight() } }
     ) {
         // Home and Dashboard
         composable(UnifiedRoute.Home.route) {
+            val startTime = remember { System.currentTimeMillis() }
+            
+            LaunchedEffect(Unit) {
+                ComposePerformanceMonitor.trackNavigation("Home", startTime)
+            }
+            
             MainScreen(
                 onNavigateToSensors = { navController.navigate(UnifiedRoute.Dashboard.route) },
                 onNavigateToGallery = { navController.navigate(UnifiedRoute.ThermalGallery.route) },
@@ -123,6 +108,12 @@ fun UnifiedNavHost(
         }
 
         composable(UnifiedRoute.Dashboard.route) {
+            val startTime = remember { System.currentTimeMillis() }
+            
+            LaunchedEffect(Unit) {
+                ComposePerformanceMonitor.trackNavigation("Dashboard", startTime)
+            }
+            
             UnifiedSensorDashboard(
                 onBackClick = { navController.popBackStack() },
                 onSettingsClick = { navController.navigate(UnifiedRoute.GSRSettings.route) },
@@ -138,6 +129,12 @@ fun UnifiedNavHost(
 
         // GSR Sensor Routes
         composable(UnifiedRoute.GSRSettings.route) {
+            val startTime = remember { System.currentTimeMillis() }
+            
+            LaunchedEffect(Unit) {
+                ComposePerformanceMonitor.trackNavigation("GSRSettings", startTime)
+            }
+            
             GSRSettingsScreen(
                 onBackClick = { navController.popBackStack() }
             )
@@ -146,7 +143,13 @@ fun UnifiedNavHost(
 
 
         composable(UnifiedRoute.GSRSessionDetail.route) { backStackEntry ->
+            val startTime = remember { System.currentTimeMillis() }
             val sessionId = backStackEntry.arguments?.getString("sessionId") ?: "unknown"
+            
+            LaunchedEffect(Unit) {
+                ComposePerformanceMonitor.trackNavigation("GSRSessionDetail", startTime)
+            }
+            
             SessionDetailScreen(
                 sessionId = sessionId,
                 onBackClick = { navController.popBackStack() },
@@ -161,7 +164,13 @@ fun UnifiedNavHost(
         }
 
         composable(UnifiedRoute.GSRPlot.route) { backStackEntry ->
+            val startTime = remember { System.currentTimeMillis() }
             val sessionId = backStackEntry.arguments?.getString("sessionId") ?: "unknown"
+            
+            LaunchedEffect(Unit) {
+                ComposePerformanceMonitor.trackNavigation("GSRPlot", startTime)
+            }
+            
             GSRPlotScreen(
                 sessionId = sessionId,
                 onBackClick = { navController.popBackStack() }
