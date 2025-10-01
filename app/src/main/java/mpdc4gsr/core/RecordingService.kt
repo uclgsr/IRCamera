@@ -96,7 +96,7 @@ class RecordingService : LifecycleService() {
         const val EXTRA_BLUETOOTH_DEVICE = "bluetooth_device"
 
         // Type aliases for compatibility
-        typealias SessionManifest = mpdc4gsr.controller.SessionManifest
+        typealias SessionManifest = mpdc4gsr.feature.network.data.SessionManifest
 
         fun startRecording(context: Context, sessionDirectory: String) {
             val intent = Intent(context, RecordingService::class.java).apply {
@@ -961,8 +961,8 @@ class RecordingService : LifecycleService() {
                     "session_manifest_saved",
                     mapOf(
                         "manifest_file" to manifestFile.absolutePath,
-                        "session_state" to manifest.sessionState,
-                        "trigger_source" to (manifest.triggerSource ?: "UNKNOWN")
+                        "session_state" to manifest.sessionState.toString(),
+                        "trigger_source" to manifest.triggerSource.toString()
                     )
                 )
             }
@@ -1952,7 +1952,7 @@ class RecordingService : LifecycleService() {
         }
     }
 
-    private suspend fun handleProtocolMessage(message: mpdc4gsr.network.Protocol.ProtocolMessage) {
+    private suspend fun handleProtocolMessage(message: mpdc4gsr.feature.network.data.Protocol.ProtocolMessage) {
         try {
             val response = protocolHandler.processMessage(message)
             if (response != null) {
@@ -1960,9 +1960,9 @@ class RecordingService : LifecycleService() {
             }
         } catch (e: Exception) {
             Log.e(TAG, "Error processing protocol message: ${message.type}", e)
-            val errorResponse = mpdc4gsr.network.Protocol.createErrorMessage(
+            val errorResponse = mpdc4gsr.feature.network.data.Protocol.createErrorMessage(
                 message.type,
-                mpdc4gsr.network.Protocol.ERR_FAIL,
+                mpdc4gsr.feature.network.data.Protocol.ERR_FAIL,
                 "Processing error: ${e.message}"
             )
             networkServer.sendMessage(errorResponse)
