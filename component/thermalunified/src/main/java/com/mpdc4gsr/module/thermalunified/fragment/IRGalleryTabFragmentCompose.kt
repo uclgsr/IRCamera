@@ -51,6 +51,7 @@ class IRGalleryTabFragmentCompose : BaseComposeFragment<IRGalleryTabViewModel>()
                     is com.mpdc4gsr.libunified.app.ktbase.BaseViewModel.UiEvent.NavigateBack -> {
                         requireActivity().finish()
                     }
+
                     else -> {} // Handle other events if needed
                 }
             }

@@ -2,11 +2,13 @@
 
 ## Overview
 
-The PC Controller is a desktop application that serves as the central Hub for the IRCamera Multi-Modal Thermal Sensing Platform. It coordinates multiple Android sensor nodes and provides real-time visualization and data management.
+The PC Controller is a desktop application that serves as the central Hub for the IRCamera Multi-Modal Thermal Sensing
+Platform. It coordinates multiple Android sensor nodes and provides real-time visualization and data management.
 
 ## Prerequisites
 
 ### System Requirements
+
 - **OS**: Windows 10+, Ubuntu 20.04+, or macOS 11+
 - **Python**: 3.8 or higher
 - **RAM**: 4GB minimum (8GB recommended)
@@ -14,12 +16,13 @@ The PC Controller is a desktop application that serves as the central Hub for th
 - **Network**: Ethernet or Wi-Fi for device communication
 
 ### Required Software
+
 - Python 3.8+
 - pip (Python package manager)
 - C++ compiler (for native backend):
-  - Linux: g++ or clang
-  - Windows: MSVC or MinGW
-  - macOS: Xcode Command Line Tools
+    - Linux: g++ or clang
+    - Windows: MSVC or MinGW
+    - macOS: Xcode Command Line Tools
 
 ## Installation
 
@@ -31,6 +34,7 @@ pip install -r requirements.txt
 ```
 
 Key dependencies:
+
 - PyQt6: GUI framework
 - pyqtgraph: High-performance plotting
 - numpy: Numerical computing
@@ -55,6 +59,7 @@ This creates `enhanced_native_backend.so` (Linux/Mac) or `enhanced_native_backen
 ### 3. Verify Installation
 
 Run the test suite:
+
 ```bash
 python3 test_pc_controller_features.py
 ```
@@ -62,6 +67,7 @@ python3 test_pc_controller_features.py
 Expected output: 13/13 tests passing
 
 Run the feature demonstration:
+
 ```bash
 python3 demo_features.py
 ```
@@ -77,6 +83,7 @@ python3 advanced_pc_controller.py
 ```
 
 This launches the full PyQt6 GUI with:
+
 - Real-time GSR plotting
 - Camera preview (RGB and Thermal)
 - Device management panel
@@ -90,6 +97,7 @@ python3 pc_controller.py --port 8080
 ```
 
 Options:
+
 - `--port PORT`: Server port (default: 8080)
 - `--ssl`: Enable SSL/TLS encryption
 - `--output-dir DIR`: Data output directory
@@ -104,6 +112,7 @@ python3 tls_server.py --port 8443 --use-tls
 ```
 
 This will:
+
 1. Generate self-signed certificates (if not present)
 2. Start secure TLS server on port 8443
 3. Accept encrypted connections from Android devices
@@ -113,6 +122,7 @@ This will:
 ### Network Configuration
 
 Edit `config.yaml`:
+
 ```yaml
 network:
   port: 8080
@@ -121,6 +131,7 @@ network:
 ```
 
 Or configure via GUI:
+
 1. Click "Network Settings" in the device panel
 2. Set port (1024-65535)
 3. Check "Enable SSL/TLS" for secure connections
@@ -136,6 +147,7 @@ visualization:
 ```
 
 Or adjust in GUI:
+
 - Use "Time Window" slider in GSR plot tab
 - Toggle "Auto Scale" for automatic Y-axis scaling
 
@@ -152,6 +164,7 @@ The server starts automatically on port 8080.
 ### 2. Connect Android Devices
 
 On the Android app:
+
 1. Go to Settings → Network
 2. Enter PC IP address (e.g., 192.168.1.100)
 3. Enter port (8080)
@@ -183,18 +196,21 @@ The device should appear in the "Connected Devices" panel.
 ## Features
 
 ### 1. Real-Time Visualization
+
 - High-performance GSR plotting (PyQtGraph)
 - Update rate: 10 Hz
 - Multi-device support with color-coded curves
 - Camera preview for RGB and thermal images
 
 ### 2. Data Processing
+
 - C++ native backend for high-performance processing
 - Digital filtering (lowpass, highpass, notch)
 - Statistical analysis (mean, std, RMS)
 - Artifact detection
 
 ### 3. Network Communication
+
 - JSON-based protocol
 - SSL/TLS encryption support
 - Multi-device concurrent connections
@@ -202,12 +218,14 @@ The device should appear in the "Connected Devices" panel.
 - Heartbeat monitoring
 
 ### 4. Data Export
+
 - CSV format for GSR data
 - JSON format for device status
 - Session logs as text files
 - Organized export directories
 
 ### 5. Security
+
 - Self-signed certificate generation
 - TLS 1.2+ encryption
 - Secure message handling
@@ -220,10 +238,11 @@ The device should appear in the "Connected Devices" panel.
 **Symptoms**: Error during `python3 setup.py build_ext`
 
 **Solutions**:
+
 1. Install C++ compiler:
-   - Linux: `sudo apt-get install build-essential`
-   - Windows: Install Visual Studio with C++ tools
-   - macOS: `xcode-select --install`
+    - Linux: `sudo apt-get install build-essential`
+    - Windows: Install Visual Studio with C++ tools
+    - macOS: `xcode-select --install`
 
 2. Install pybind11: `pip install pybind11`
 
@@ -234,11 +253,13 @@ The device should appear in the "Connected Devices" panel.
 **Symptoms**: `ImportError: libEGL.so.1: cannot open shared object file`
 
 **Solutions** (Linux):
+
 ```bash
 sudo apt-get install libegl1 libgl1 libxkbcommon-x11-0 libxcb-cursor0
 ```
 
 For headless servers:
+
 ```bash
 xvfb-run python3 advanced_pc_controller.py
 ```
@@ -248,17 +269,20 @@ xvfb-run python3 advanced_pc_controller.py
 **Symptoms**: Android devices cannot connect to PC
 
 **Checklist**:
-1. ✓ PC and Android on same network
-2. ✓ Firewall allows incoming connections on port 8080
-3. ✓ Correct IP address entered on Android
-4. ✓ PC Controller server is running (check status bar)
+
+1.  PC and Android on same network
+2.  Firewall allows incoming connections on port 8080
+3.  Correct IP address entered on Android
+4.  PC Controller server is running (check status bar)
 
 **Find PC IP Address**:
+
 - Linux/Mac: `ip addr` or `ifconfig`
 - Windows: `ipconfig`
 - Look for address like 192.168.1.x
 
 **Test Connection**:
+
 ```bash
 # On PC
 python3 pc_controller.py --port 8080
@@ -273,6 +297,7 @@ telnet <PC_IP> 8080
 **Symptoms**: SSL handshake failures
 
 **Solutions**:
+
 1. Delete old certificates:
    ```bash
    rm -rf certificates/
@@ -287,6 +312,7 @@ telnet <PC_IP> 8080
 **Symptoms**: Slow GUI, dropped frames, high CPU
 
 **Solutions**:
+
 1. Reduce time window: Settings → GSR time window → 30s
 2. Lower update rate: Edit config.yaml → visualization.update_rate: 5
 3. Build native backend for better performance
@@ -333,11 +359,13 @@ filtered = enhanced_native_backend.processing.apply_lowpass_filter(
 Run multiple PC controllers for redundancy:
 
 **PC 1 (Primary)**:
+
 ```bash
 python3 advanced_pc_controller.py --port 8080
 ```
 
 **PC 2 (Backup)**:
+
 ```bash
 python3 advanced_pc_controller.py --port 8081
 ```
@@ -353,6 +381,7 @@ python3 test_pc_controller_features.py
 ```
 
 Tests:
+
 - Native backend integration
 - Network protocol handling
 - Data export functionality
@@ -379,16 +408,16 @@ Demonstrates all implemented features with sample data.
    ```
 
 2. **Data Export Test**:
-   - Start GUI
-   - Wait for some data (or use demo data)
-   - Click "Export Session Data"
-   - Verify files in export directory
+    - Start GUI
+    - Wait for some data (or use demo data)
+    - Click "Export Session Data"
+    - Verify files in export directory
 
 3. **Performance Test**:
-   - Connect 2-4 devices
-   - Start recording
-   - Monitor CPU usage (`top` or Task Manager)
-   - Check GUI responsiveness
+    - Connect 2-4 devices
+    - Start recording
+    - Monitor CPU usage (`top` or Task Manager)
+    - Check GUI responsiveness
 
 ## Documentation
 
@@ -401,17 +430,18 @@ Demonstrates all implemented features with sample data.
 
 ### Common Issues
 
-| Issue | Solution |
-|-------|----------|
-| Build errors | Check C++ compiler installation |
-| Import errors | Install missing dependencies with pip |
-| Connection issues | Check firewall and network configuration |
+| Issue              | Solution                                 |
+|--------------------|------------------------------------------|
+| Build errors       | Check C++ compiler installation          |
+| Import errors      | Install missing dependencies with pip    |
+| Connection issues  | Check firewall and network configuration |
 | Performance issues | Build native backend, reduce time window |
-| SSL errors | Delete and regenerate certificates |
+| SSL errors         | Delete and regenerate certificates       |
 
 ### Logs
 
 Check logs for detailed error information:
+
 - GUI session log (bottom panel)
 - Terminal output (if running from command line)
 - System logs: `/var/log/` (Linux) or Event Viewer (Windows)
@@ -433,21 +463,23 @@ Check logs for detailed error information:
 ## Summary
 
 The PC Controller provides:
-✓ Real-time multi-modal data visualization  
-✓ High-performance C++ backend  
-✓ Secure SSL/TLS communication  
-✓ Multi-device session management  
-✓ Data export and aggregation  
-✓ Cross-platform support  
-✓ Comprehensive testing  
+ Real-time multi-modal data visualization  
+ High-performance C++ backend  
+ Secure SSL/TLS communication  
+ Multi-device session management  
+ Data export and aggregation  
+ Cross-platform support  
+ Comprehensive testing
 
 Minimum setup:
+
 ```bash
 pip install -r requirements.txt
 python3 advanced_pc_controller.py
 ```
 
 Full setup (recommended):
+
 ```bash
 pip install -r requirements.txt
 cd native_backend && python3 setup.py build_ext --inplace && cd ..

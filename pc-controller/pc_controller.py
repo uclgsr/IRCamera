@@ -54,10 +54,10 @@ try:
         PYQTGRAPH_AVAILABLE = False
         
     GUI_AVAILABLE = True
-    logger.info("🖥️ PyQt6 GUI interface available")
+    logger.info("️ PyQt6 GUI interface available")
 except ImportError:
     GUI_AVAILABLE = False
-    logger.info("💻 Running in CLI mode (PyQt6 not available)")
+    logger.info(" Running in CLI mode (PyQt6 not available)")
     
     # Dummy classes for CLI mode
     class QThread:
@@ -83,9 +83,9 @@ OPENCV_AVAILABLE = False
 try:
     import cv2
     OPENCV_AVAILABLE = True
-    logger.info("📹 OpenCV webcam support available")
+    logger.info(" OpenCV webcam support available")
 except ImportError:
-    logger.info("📷 No native webcam support (OpenCV not available)")
+    logger.info(" No native webcam support (OpenCV not available)")
 
 # Optional C++ backend
 NATIVE_BACKEND_AVAILABLE = False
@@ -95,7 +95,7 @@ try:
     NATIVE_BACKEND_AVAILABLE = True
     logger.info(" C++ backend available for high-performance processing")
 except ImportError:
-    logger.info("🐍 Using Python backend (C++ backend not available)")
+    logger.info(" Using Python backend (C++ backend not available)")
 
 
 class WebcamCapture:
@@ -486,7 +486,7 @@ class NetworkThread(QThread if GUI_AVAILABLE else threading.Thread):
             self.server_socket.listen(10)
             
             protocol = "SSL/TLS" if self.use_ssl else "TCP"
-            logger.info(f"🌐 PC Controller server started on port {self.port} ({protocol})")
+            logger.info(f" PC Controller server started on port {self.port} ({protocol})")
             
             self.running = True
             self.start()
@@ -548,7 +548,7 @@ class NetworkThread(QThread if GUI_AVAILABLE else threading.Thread):
                     # Parse message using unified protocol
                     message = Protocol.parse_message(message_str)
                     
-                    logger.info(f"📨 Received from {client_id}: {message.get('type', 'unknown')}")
+                    logger.info(f" Received from {client_id}: {message.get('type', 'unknown')}")
                     
                     if GUI_AVAILABLE:
                         self.message_received.emit(client_id, message)
@@ -605,7 +605,7 @@ class NetworkThread(QThread if GUI_AVAILABLE else threading.Thread):
         for client_id, client_socket in self.client_connections.items():
             try:
                 self._send_message(client_socket, message)
-                logger.info(f"📤 Sent {command} to {client_id}")
+                logger.info(f" Sent {command} to {client_id}")
             except Exception as e:
                 logger.error(f"Failed to send {command} to {client_id}: {e}")
 
@@ -1068,7 +1068,7 @@ class PCController(QMainWindow if GUI_AVAILABLE else object):
     
     def _run_cli(self):
         """Run in CLI mode when GUI is not available"""
-        logger.info("🖥️ Starting PC Controller in CLI mode")
+        logger.info("️ Starting PC Controller in CLI mode")
         
         # Start network server
         self.network_thread = NetworkThread(self.config['port'], self.config['use_ssl'])

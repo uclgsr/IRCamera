@@ -959,7 +959,7 @@ class ThermalCameraRecorder(
                         }
 
                         override fun onDettach() {
-                            Log.w(TAG, "🔌 USB thermal camera detached")
+                            Log.w(TAG, " USB thermal camera detached")
                             isIRCameraConnected = false
 
 
@@ -2395,7 +2395,7 @@ class ThermalCameraRecorder(
         errorMessage: String,
         isRecoverable: Boolean = true
     ) {
-        Log.e(TAG, "🔥 TC001 thermal camera error [$errorType]: $errorMessage")
+        Log.e(TAG, " TC001 thermal camera error [$errorType]: $errorMessage")
 
         recordingScope.launch {
             // Emit error to system
@@ -3138,7 +3138,7 @@ class ThermalCameraRecorder(
                 if (disconnectedDevice != null) {
                     Log.w(
                         TAG,
-                        "🔌 Thermal camera device disconnected - implementing enhanced recovery"
+                        " Thermal camera device disconnected - implementing enhanced recovery"
                     )
 
 

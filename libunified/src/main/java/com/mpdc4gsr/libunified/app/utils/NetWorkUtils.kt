@@ -37,7 +37,7 @@ object NetWorkUtils {
 
         @Suppress("DEPRECATION")
         val wifiInfo = wifiManager.connectionInfo
-        val ssid = wifiInfo.ssid.replace("\"", "") // 移除双引号
+        val ssid = wifiInfo.ssid.replace("\"", "") // 
         for (prefix in prefixes) {
             if (ssid.startsWith(prefix)) {
                 return true
@@ -52,7 +52,7 @@ object NetWorkUtils {
         listener: ((network: Network?) -> Unit)? = null
     ) {
         netWorkListener = listener
-        if (Build.VERSION.SDK_INT < 29) {//低于 Android10
+        if (Build.VERSION.SDK_INT < 29) {// Android10
             val request = NetworkRequest.Builder()
                 .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
                 .build()

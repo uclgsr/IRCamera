@@ -117,7 +117,7 @@ class DeviceListWidget(QListWidget):
         status_parts = [f"State: {device_info.state}"]
 
         if device_info.battery_level is not None:
-            battery_icon = "🔋" if device_info.battery_level > 20 else "🪫"
+            battery_icon = "" if device_info.battery_level > 20 else "🪫"
             status_parts.append(f"Battery: {device_info.battery_level}%{battery_icon}")
 
         lines.append(f"   {', '.join(status_parts)}")
@@ -223,7 +223,7 @@ class SessionControlWidget(QWidget):
                     "Session active - preparing to record"
                 )
             elif session.state == SessionState.RECORDING.value:
-                self.session_status_label.setText("🔴 Recording in progress")
+                self.session_status_label.setText(" Recording in progress")
             else:
                 self.session_status_label.setText(f"Status: {session.state}")
         else:
@@ -670,8 +670,8 @@ class WiFiControlWidget(QGroupBox):
 
             # Create list item
             signal_bars = self._get_signal_bars(network.signal_strength)
-            security_icon = "🔒" if network.security_type.value"
-                "!= "open" else "🔓"
+            security_icon = "" if network.security_type.value"
+                "!= "open" else ""
 
             item_text = f"{security_icon} {network.ssid} {signal_bars}"
             if network.is_ircamera_hotspot:
@@ -748,15 +748,15 @@ class WiFiControlWidget(QGroupBox):
     def _get_signal_bars(self, signal_strength: int) -> str:
         """Convert signal strength to visual bars."""
         if signal_strength >= -50:
-            return "📶📶📶📶"
+            return ""
         elif signal_strength >= -60:
-            return "📶📶📶"
+            return ""
         elif signal_strength >= -70:
-            return "📶📶"
+            return ""
         elif signal_strength >= -80:
-            return "📶"
+            return ""
         else:
-            return "📵"
+            return ""
 
     def _on_network_selection_changed(self) -> None:
         """Handle network selection change."""

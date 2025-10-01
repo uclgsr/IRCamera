@@ -15,10 +15,10 @@ import java.text.DecimalFormat
  */
 object FileUtils {
 
-    const val SIZETYPE_B = 1    // 获取文件大小单位为B的double值
-    const val SIZETYPE_KB = 2   // 获取文件大小单位为KB的double值
-    const val SIZETYPE_MB = 3   // 获取文件大小单位为MB的double值
-    const val SIZETYPE_GB = 4   // 获取文件大小单位为GB的double值
+    const val SIZETYPE_B = 1    // Bdouble
+    const val SIZETYPE_KB = 2   // KBdouble
+    const val SIZETYPE_MB = 3   // MBdouble
+    const val SIZETYPE_GB = 4   // GBdouble
 
     fun getFileOrFilesSize(filePath: String, sizeType: Int): Double {
         val file = File(filePath)
@@ -31,7 +31,7 @@ object FileUtils {
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            Log.e("FileUtils", "获取文件大小失败!")
+            Log.e("FileUtils", "!")
         }
         return formatFileSize(blockSize, sizeType)
     }
@@ -61,7 +61,7 @@ object FileUtils {
                 e.printStackTrace()
             }
         } else {
-            Log.e("FileUtils", "文件或者文件夹不存在，请检查路径是否正确!")
+            Log.e("FileUtils", "，!")
         }
         return size
     }

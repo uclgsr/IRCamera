@@ -235,7 +235,7 @@ class SystemIntegrationWidget(QWidget):
 
     def update_permissions(self, permissions: None = Dict) -> None:
         perm_text = "\n".join(
-            [f"{k}: {'✓' if v else '✗'}" for k, v in permissions.items()]
+            [f"{k}: {'' if v else ''}" for k, v in permissions.items()]
         )
         self.setToolTip(f"Permissions:\n{perm_text}")
 

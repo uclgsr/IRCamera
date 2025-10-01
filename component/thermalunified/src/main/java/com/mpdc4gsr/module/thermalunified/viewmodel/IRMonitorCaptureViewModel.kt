@@ -78,14 +78,17 @@ class IRMonitorCaptureViewModel : BaseViewModel() {
                     _captureState.value = CaptureState.ACTIVE
                     simulateDeviceConnection()
                 }
+
                 CaptureState.ACTIVE -> {
                     _captureState.value = CaptureState.INACTIVE
                     stopContinuousCapture()
                 }
+
                 CaptureState.CONTINUOUS -> {
                     stopContinuousCapture()
                     _captureState.value = CaptureState.ACTIVE
                 }
+
                 CaptureState.CAPTURING -> {
                     // Already capturing, ignore
                 }
@@ -98,13 +101,13 @@ class IRMonitorCaptureViewModel : BaseViewModel() {
      */
     fun captureFrame() {
         if (_deviceConnectionState.value != DeviceConnectionState.CONNECTED) return
-        
+
         viewModelScope.launch {
             _captureState.value = CaptureState.CAPTURING
-            
+
             // Simulate capture delay
             delay(500)
-            
+
             // Create capture data
             val currentTemp = _temperatureData.value?.centerTemp ?: 25.0f
             val capture = CaptureData(
@@ -113,12 +116,12 @@ class IRMonitorCaptureViewModel : BaseViewModel() {
                 temperature = currentTemp,
                 imagePath = "/mock/path/capture_${captureIdCounter - 1}.jpg"
             )
-            
+
             // Add to history
             val currentHistory = _captureHistory.value.toMutableList()
             currentHistory.add(0, capture) // Add to beginning
             _captureHistory.value = currentHistory
-            
+
             // Return to previous state
             _captureState.value = if (continuousCapturingJob?.isActive == true) {
                 CaptureState.CONTINUOUS
@@ -133,7 +136,7 @@ class IRMonitorCaptureViewModel : BaseViewModel() {
      */
     fun toggleContinuousCapture() {
         if (_deviceConnectionState.value != DeviceConnectionState.CONNECTED) return
-        
+
         viewModelScope.launch {
             if (_captureState.value == CaptureState.CONTINUOUS) {
                 stopContinuousCapture()
@@ -183,7 +186,7 @@ class IRMonitorCaptureViewModel : BaseViewModel() {
             maxTemp = 28.5f,
             minTemp = 22.1f
         )
-        
+
         // Mock device connection state
         _deviceConnectionState.value = DeviceConnectionState.DISCONNECTED
     }
@@ -204,7 +207,7 @@ class IRMonitorCaptureViewModel : BaseViewModel() {
                     val baseTemp = 25.0f
                     val variation = (Random.nextFloat() - 0.5f) * 5.0f
                     val centerTemp = baseTemp + variation
-                    
+
                     _temperatureData.value = TemperatureData(
                         centerTemp = centerTemp,
                         maxTemp = centerTemp + (Random.nextFloat() * 3.0f),

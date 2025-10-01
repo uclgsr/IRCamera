@@ -297,7 +297,7 @@ class ReportPreviewSecondComposeActivity : BaseComposeActivity<ReportPreviewSeco
 
                 if (section.hasContent) {
                     Text(
-                        "✓",
+                        "",
                         color = if (isSelected) Color.White else Color(0xFF4CAF50),
                         fontWeight = FontWeight.Bold
                     )

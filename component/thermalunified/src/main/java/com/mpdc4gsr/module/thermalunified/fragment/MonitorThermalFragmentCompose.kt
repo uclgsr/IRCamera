@@ -262,7 +262,8 @@ class MonitorThermalFragmentCompose : BaseComposeFragment<MonitorThermalViewMode
                                     srcRect: IntArray
                                 ) {
                                     // Convert fence callback data to FenceData and notify viewmodel
-                                    val fenceData = "start:${startPoint.contentToString()},end:${endPoint.contentToString()},rect:${srcRect.contentToString()}"
+                                    val fenceData =
+                                        "start:${startPoint.contentToString()},end:${endPoint.contentToString()},rect:${srcRect.contentToString()}"
                                     onFenceUpdate(FenceData(fenceData))
                                 }
                             }

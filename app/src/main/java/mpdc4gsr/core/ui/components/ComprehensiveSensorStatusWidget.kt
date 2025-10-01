@@ -110,7 +110,7 @@ class ComprehensiveSensorStatusWidget @JvmOverloads constructor(
 
 
         val sensorsTitle = TextView(context).apply {
-            text = "🔗 Sensor Connections"
+            text = " Sensor Connections"
             textSize = 16f
             @Suppress("DEPRECATION")
             setTextColor(ContextCompat.getColor(context, android.R.color.primary_text_dark))
@@ -131,9 +131,9 @@ class ComprehensiveSensorStatusWidget @JvmOverloads constructor(
     private fun initializeDefaultSensors() {
 
         addSensorStatusView("thermal_camera", " TC001 Thermal Camera", SensorType.THERMAL)
-        addSensorStatusView("rgb_camera", "📹 RGB Camera", SensorType.RGB)
-        addSensorStatusView("shimmer_gsr", "⚡ Shimmer GSR Sensor", SensorType.GSR)
-        addSensorStatusView("audio_recorder", "🎤 Audio Recorder", SensorType.AUDIO)
+        addSensorStatusView("rgb_camera", " RGB Camera", SensorType.RGB)
+        addSensorStatusView("shimmer_gsr", " Shimmer GSR Sensor", SensorType.GSR)
+        addSensorStatusView("audio_recorder", " Audio Recorder", SensorType.AUDIO)
     }
 
 
@@ -205,9 +205,9 @@ class ComprehensiveSensorStatusWidget @JvmOverloads constructor(
         errorSensorCount = sensorStatusViews.values.count { it.hasError() }
 
         val statusText = when {
-            isRecording -> "🔴 RECORDING - Session: ${currentSessionId ?: "Unknown"}"
+            isRecording -> " RECORDING - Session: ${currentSessionId ?: "Unknown"}"
             errorSensorCount > 0 -> " ${errorSensorCount} Sensor Error(s) Detected"
-            activeSensorCount == 0 -> "🔌 No Sensors Connected"
+            activeSensorCount == 0 -> " No Sensors Connected"
             activeSensorCount < sensorStatusViews.size -> "🟡 ${activeSensorCount}/${sensorStatusViews.size} Sensors Connected"
             else -> " All Sensors Connected & Ready"
         }
@@ -230,7 +230,7 @@ class ComprehensiveSensorStatusWidget @JvmOverloads constructor(
             while (isRecording) {
                 val elapsed = System.currentTimeMillis() - recordingStartTime
                 val formattedTime = formatElapsedTime(elapsed)
-                recordingTimer.text = "🔴 RECORDING: $formattedTime"
+                recordingTimer.text = " RECORDING: $formattedTime"
                 delay(1000)
             }
         }

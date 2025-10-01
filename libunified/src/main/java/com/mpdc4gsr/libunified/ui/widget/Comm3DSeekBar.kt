@@ -14,14 +14,14 @@ import kotlin.math.roundToInt
 
 
 /**
- * 支持竖向的 SeekBar。
- * 暂不支持 thumbOffset.
+ *  SeekBar。
+ *  thumbOffset.
  */
 class Comm3DSeekBar : AppCompatSeekBar {
     private lateinit var mPaint: TextPaint
 
     /**
-     * 0-横向 1-竖向
+     * 0- 1-
      */
     private val orientation: Int
 
@@ -31,13 +31,13 @@ class Comm3DSeekBar : AppCompatSeekBar {
     private var mMinHeight = 24
     var level = 0;
 
-    // 进度文字位置信息
+    // 
     private val mProgressTextRect: Rect = Rect()
 
-    // 滑块按钮宽度
+    // 
     private val mThumbWidth: Int = SizeUtils.dp2px(50f)
 
-    // 进度指示器宽度
+    // 
     private val mIndicatorWidth: Int = SizeUtils.dp2px(50f)
     private var onSeekBarChangeListener: OnSeekBarChangeListener? = null
 
@@ -171,9 +171,9 @@ class Comm3DSeekBar : AppCompatSeekBar {
             super.onDraw(canvas)
 //            val progressText = "$progress%"
 //            mPaint.getTextBounds(progressText, 0, progressText.length, mProgressTextRect)
-//            // 进度百分比
+//            // 
 //            val progressRatio = progress.toFloat() / max
-//            // thumb偏移量
+//            // thumb
 //            val thumbOffset: Float =
 //                (mThumbWidth - mProgressTextRect.width()) / 2 - mThumbWidth * progressRatio
 //            val thumbX = width * progressRatio + thumbOffset
@@ -225,7 +225,7 @@ class Comm3DSeekBar : AppCompatSeekBar {
     }
 
     /**
-     * 通过级别分层进行粘性处理
+     * 
      */
     fun stopTrackTouchLevel() {
         if (level > 0) {
