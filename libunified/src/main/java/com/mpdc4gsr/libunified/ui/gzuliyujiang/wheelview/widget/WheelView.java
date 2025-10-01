@@ -1216,7 +1216,9 @@ public class WheelView extends View implements Runnable {
                 scrollTo(position);
             }
         });
-        animator.start();
+        if (isAttachedToWindow()) {
+            animator.start();
+        }
     }
 
     public void scrollTo(int position) {

@@ -366,6 +366,8 @@ public abstract class PieRadarChartBase<T extends ChartData<? extends IDataSet<?
                 postInvalidate();
             }
         });
-        spinAnimator.start();
+        if (isAttachedToWindow()) {
+            spinAnimator.start();
+        }
     }
 }

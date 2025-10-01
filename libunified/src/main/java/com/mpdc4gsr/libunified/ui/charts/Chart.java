@@ -444,38 +444,52 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
     @RequiresApi(11)
     public void animateXY(int durationMillisX, int durationMillisY, EasingFunction easingX,
                           EasingFunction easingY) {
-        mAnimator.animateXY(durationMillisX, durationMillisY, easingX, easingY);
+        if (isAttachedToWindow()) {
+            mAnimator.animateXY(durationMillisX, durationMillisY, easingX, easingY);
+        }
     }
 
     @RequiresApi(11)
     public void animateXY(int durationMillisX, int durationMillisY, EasingFunction easing) {
-        mAnimator.animateXY(durationMillisX, durationMillisY, easing);
+        if (isAttachedToWindow()) {
+            mAnimator.animateXY(durationMillisX, durationMillisY, easing);
+        }
     }
 
     @RequiresApi(11)
     public void animateX(int durationMillis, EasingFunction easing) {
-        mAnimator.animateX(durationMillis, easing);
+        if (isAttachedToWindow()) {
+            mAnimator.animateX(durationMillis, easing);
+        }
     }
 
     @RequiresApi(11)
     public void animateY(int durationMillis, EasingFunction easing) {
-        mAnimator.animateY(durationMillis, easing);
+        if (isAttachedToWindow()) {
+            mAnimator.animateY(durationMillis, easing);
+        }
     }
 
 
     @RequiresApi(11)
     public void animateX(int durationMillis) {
-        mAnimator.animateX(durationMillis);
+        if (isAttachedToWindow()) {
+            mAnimator.animateX(durationMillis);
+        }
     }
 
     @RequiresApi(11)
     public void animateY(int durationMillis) {
-        mAnimator.animateY(durationMillis);
+        if (isAttachedToWindow()) {
+            mAnimator.animateY(durationMillis);
+        }
     }
 
     @RequiresApi(11)
     public void animateXY(int durationMillisX, int durationMillisY) {
-        mAnimator.animateXY(durationMillisX, durationMillisY);
+        if (isAttachedToWindow()) {
+            mAnimator.animateXY(durationMillisX, durationMillisY);
+        }
     }
 
 

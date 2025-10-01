@@ -87,7 +87,7 @@ class TempLayout : LinearLayout {
             }
 
             override fun onAnimationEnd(animation: Animator) {
-                if (this@TempLayout.visibility == View.VISIBLE && this@TempLayout.isAttachedToWindow) {
+                if (this@TempLayout.visibility == View.VISIBLE && isAttachedToWindow) {
                     isHot = !isHot
                     if (isHot) {
                         bg?.setBackgroundResource(R.drawable.ic_ir_read_bg)
