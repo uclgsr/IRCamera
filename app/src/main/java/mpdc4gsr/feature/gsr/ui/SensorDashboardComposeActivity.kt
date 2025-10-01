@@ -44,7 +44,7 @@ class SensorDashboardComposeActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         dashboardViewModel = viewModels<MainActivityViewModel>().value
-        
+
         setContent {
             LibUnifiedTheme {
                 Content(dashboardViewModel)
@@ -184,12 +184,14 @@ class SensorDashboardComposeActivity : ComponentActivity() {
                         color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.8f)
                     )
                     Text(
-                        text = "Status: ${when(thermalCameraState) {
-                            is ConnectionState.Connected -> "Connected"
-                            is ConnectionState.Connecting -> "Connecting"
-                            is ConnectionState.Disconnected -> "Disconnected"
-                            is ConnectionState.Error -> "Error"
-                        }}",
+                        text = "Status: ${
+                            when (thermalCameraState) {
+                                is ConnectionState.Connected -> "Connected"
+                                is ConnectionState.Connecting -> "Connecting"
+                                is ConnectionState.Disconnected -> "Disconnected"
+                                is ConnectionState.Error -> "Error"
+                            }
+                        }",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.8f)
                     )
@@ -224,12 +226,14 @@ class SensorDashboardComposeActivity : ComponentActivity() {
                         color = MaterialTheme.colorScheme.onTertiaryContainer.copy(alpha = 0.8f)
                     )
                     Text(
-                        text = "Status: ${when(gsrSensorState) {
-                            is ConnectionState.Connected -> "Connected"
-                            is ConnectionState.Connecting -> "Connecting"
-                            is ConnectionState.Disconnected -> "Disconnected"
-                            is ConnectionState.Error -> "Error"
-                        }}",
+                        text = "Status: ${
+                            when (gsrSensorState) {
+                                is ConnectionState.Connected -> "Connected"
+                                is ConnectionState.Connecting -> "Connecting"
+                                is ConnectionState.Disconnected -> "Disconnected"
+                                is ConnectionState.Error -> "Error"
+                            }
+                        }",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onTertiaryContainer.copy(alpha = 0.8f)
                     )
@@ -296,7 +300,13 @@ class SensorDashboardComposeActivity : ComponentActivity() {
             MainActivityViewModel.SensorStatus.CONNECTING -> ConnectionState.Connecting
             MainActivityViewModel.SensorStatus.CONNECTED -> ConnectionState.Connected()
             MainActivityViewModel.SensorStatus.STREAMING -> ConnectionState.Connected()
-            MainActivityViewModel.SensorStatus.ERROR -> ConnectionState.Error(AppError.SensorError("ThermalCamera", "Sensor Error"))
+            MainActivityViewModel.SensorStatus.ERROR -> ConnectionState.Error(
+                AppError.SensorError(
+                    "ThermalCamera",
+                    "Sensor Error"
+                )
+            )
+
             MainActivityViewModel.SensorStatus.SIMULATION -> ConnectionState.Connected()
         }
     }
@@ -307,7 +317,12 @@ class SensorDashboardComposeActivity : ComponentActivity() {
             MainActivityViewModel.GSRConnectionState.DISCOVERING -> ConnectionState.Connecting
             MainActivityViewModel.GSRConnectionState.CONNECTING -> ConnectionState.Connecting
             MainActivityViewModel.GSRConnectionState.CONNECTED -> ConnectionState.Connected()
-            MainActivityViewModel.GSRConnectionState.ERROR -> ConnectionState.Error(AppError.SensorError("GSR", "GSR Error"))
+            MainActivityViewModel.GSRConnectionState.ERROR -> ConnectionState.Error(
+                AppError.SensorError(
+                    "GSR",
+                    "GSR Error"
+                )
+            )
         }
     }
 

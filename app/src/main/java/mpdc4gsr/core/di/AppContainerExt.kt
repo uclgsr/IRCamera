@@ -15,71 +15,71 @@ import mpdc4gsr.core.data.ShimmerDeviceManager
 
 /**
  * Extended Dependency Injection Container
- * 
+ *
  * Provides instances of repositories, data sources, and use cases
  * following Clean Architecture principles.
- * 
+ *
  * This is a manual DI implementation that will be replaced with Hilt
  * in a future migration.
  */
 class AppContainerExt(private val context: Context) {
-    
+
     // Shimmer SDK Integration
     private fun provideShimmerDeviceManager(lifecycleOwner: LifecycleOwner): ShimmerDeviceManager {
         return ShimmerDeviceManager(context, lifecycleOwner)
     }
-    
+
     private fun provideShimmerDataSource(lifecycleOwner: LifecycleOwner): ShimmerDataSource {
         return ShimmerDataSourceImpl(provideShimmerDeviceManager(lifecycleOwner))
     }
-    
+
     fun provideShimmerRepository(lifecycleOwner: LifecycleOwner): ShimmerRepository {
         return ShimmerRepositoryImpl(provideShimmerDataSource(lifecycleOwner))
     }
-    
+
     // Shimmer Use Cases
     fun provideScanShimmerDevicesUseCase(lifecycleOwner: LifecycleOwner): ScanShimmerDevicesUseCase {
         return ScanShimmerDevicesUseCase(provideShimmerRepository(lifecycleOwner))
     }
-    
+
     fun provideConnectShimmerDeviceUseCase(lifecycleOwner: LifecycleOwner): ConnectShimmerDeviceUseCase {
         return ConnectShimmerDeviceUseCase(provideShimmerRepository(lifecycleOwner))
     }
-    
+
     fun provideStartGSRStreamingUseCase(lifecycleOwner: LifecycleOwner): StartGSRStreamingUseCase {
         return StartGSRStreamingUseCase(provideShimmerRepository(lifecycleOwner))
     }
-    
+
     fun provideStopGSRStreamingUseCase(lifecycleOwner: LifecycleOwner): StopGSRStreamingUseCase {
         return StopGSRStreamingUseCase(provideShimmerRepository(lifecycleOwner))
     }
-    
+
     // Thermal SDK Integration
     private fun provideTopdonDataSource(): TopdonDataSource {
         return mpdc4gsr.feature.thermal.data.source.TopdonDataSourceImpl(context)
     }
-    
+
     fun provideThermalRepository(): ThermalRepository {
         return ThermalRepositoryImpl(provideTopdonDataSource())
     }
-    
+
     // Thermal Use Cases
     fun provideConnectThermalCameraUseCase(): ConnectThermalCameraUseCase {
         return ConnectThermalCameraUseCase(provideThermalRepository())
     }
-    
+
     fun provideStartThermalStreamingUseCase(): StartThermalStreamingUseCase {
         return StartThermalStreamingUseCase(provideThermalRepository())
     }
-    
+
     fun provideCaptureThermalSnapshotUseCase(): CaptureThermalSnapshotUseCase {
         return CaptureThermalSnapshotUseCase(provideThermalRepository())
     }
-    
+
     fun provideStartThermalRecordingUseCase(): StartThermalRecordingUseCase {
         return StartThermalRecordingUseCase(provideThermalRepository())
     }
-    
+
     fun provideStopThermalRecordingUseCase(): StopThermalRecordingUseCase {
         return StopThermalRecordingUseCase(provideThermalRepository())
     }

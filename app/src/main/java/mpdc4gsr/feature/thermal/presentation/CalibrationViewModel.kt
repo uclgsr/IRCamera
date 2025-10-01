@@ -77,13 +77,13 @@ class CalibrationViewModel : BaseViewModel() {
         viewModelScope.launch {
             try {
                 Log.d(TAG, "Starting thermal camera calibration")
-                
+
                 val timestamp = getCurrentTimestamp()
                 prefs.edit().putString(KEY_THERMAL_LAST_CALIB, timestamp).apply()
-                
+
                 Log.i(TAG, "Thermal calibration completed at: $timestamp")
                 Log.w(TAG, "Note: Full calibration requires Topdon SDK LibIRTemp integration")
-                
+
                 loadCalibrationInfo()
             } catch (e: Exception) {
                 Log.e(TAG, "Error during thermal calibration", e)
@@ -95,13 +95,13 @@ class CalibrationViewModel : BaseViewModel() {
         viewModelScope.launch {
             try {
                 Log.d(TAG, "Starting GSR sensor calibration")
-                
+
                 val timestamp = getCurrentTimestamp()
                 prefs.edit().putString(KEY_GSR_LAST_CALIB, timestamp).apply()
-                
+
                 Log.i(TAG, "GSR calibration completed at: $timestamp")
                 Log.w(TAG, "Note: Full calibration requires Shimmer3 SDK calibration commands")
-                
+
                 loadCalibrationInfo()
             } catch (e: Exception) {
                 Log.e(TAG, "Error during GSR calibration", e)
@@ -113,20 +113,20 @@ class CalibrationViewModel : BaseViewModel() {
         viewModelScope.launch {
             try {
                 Log.d(TAG, "Starting camera alignment procedure")
-                
+
                 val timestamp = getCurrentTimestamp()
                 prefs.edit().putString(KEY_CAMERA_LAST_ALIGN, timestamp).apply()
-                
+
                 Log.i(TAG, "Camera alignment completed at: $timestamp")
                 Log.w(TAG, "Note: Full alignment requires multi-camera spatial calibration")
-                
+
                 loadCalibrationInfo()
             } catch (e: Exception) {
                 Log.e(TAG, "Error during camera alignment", e)
             }
         }
     }
-    
+
     private fun getCurrentTimestamp(): String {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             java.time.format.DateTimeFormatter.ofPattern(TIMESTAMP_FORMAT, Locale.US)

@@ -137,7 +137,7 @@ fun ThermalStatusIndicator(
         ThermalStatusLevel.WARNING -> Color(0xFFFF9800) // Orange
         ThermalStatusLevel.CRITICAL -> Color.Red
     }
-    
+
     val statusIcon = when (level) {
         ThermalStatusLevel.NORMAL -> Icons.Default.CheckCircle
         ThermalStatusLevel.WARNING -> Icons.Default.Warning

@@ -40,7 +40,7 @@ class SensorDashboardComposeEnhanced : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         dashboardViewModel = viewModels<MainActivityViewModel>().value
-        
+
         setContent {
             LibUnifiedTheme {
                 Content(dashboardViewModel)

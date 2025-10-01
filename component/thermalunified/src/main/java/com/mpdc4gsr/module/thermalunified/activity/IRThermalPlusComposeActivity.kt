@@ -58,7 +58,11 @@ class IRThermalPlusComposeActivity : BaseComposeActivity<IRThermalPlusViewModel>
                         },
                         navigationIcon = {
                             IconButton(onClick = { finish() }) {
-                                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = Color.White)
+                                Icon(
+                                    Icons.AutoMirrored.Filled.ArrowBack,
+                                    contentDescription = "Back",
+                                    tint = Color.White
+                                )
                             }
                         },
                         actions = {

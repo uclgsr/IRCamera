@@ -226,7 +226,8 @@ class GSRDataIntegrityTestComposeActivity : ComponentActivity() {
                                 Spacer(modifier = Modifier.height(8.dp))
                                 val progress =
                                     (samplesCollected.toFloat() / EXPECTED_SAMPLES).coerceAtMost(1f)
-                                LinearProgressIndicator(progress = { progress },
+                                LinearProgressIndicator(
+                                    progress = { progress },
                                     modifier = Modifier.fillMaxWidth()
                                 )
                             }

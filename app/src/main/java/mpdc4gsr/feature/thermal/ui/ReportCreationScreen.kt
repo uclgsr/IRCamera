@@ -161,7 +161,7 @@ private fun BasicInfoStep(
     onDescriptionChange: (String) -> Unit
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
-    
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -250,7 +250,7 @@ private fun ContentStep(
     onAnnotationsChange: (Boolean) -> Unit
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
-    
+
     Column(
         modifier = Modifier
             .fillMaxWidth()

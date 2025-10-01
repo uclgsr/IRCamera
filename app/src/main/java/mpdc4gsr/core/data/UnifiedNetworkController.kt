@@ -137,6 +137,7 @@ class UnifiedNetworkController(
 
             @Suppress("DEPRECATION")
             val wifiInfo = wifiManager.connectionInfo
+
             @Suppress("DEPRECATION")
             val ipAddress = wifiInfo.ipAddress
             val inetAddress = InetAddress.getByAddress(

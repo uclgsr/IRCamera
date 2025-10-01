@@ -255,7 +255,7 @@ class TestingSuiteHubActivity : ComponentActivity() {
             }
         ) { paddingValues ->
             val keyboardController = LocalSoftwareKeyboardController.current
-            
+
             Column(
                 modifier = Modifier
                     .fillMaxSize()

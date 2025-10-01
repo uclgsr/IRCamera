@@ -37,11 +37,11 @@ import mpdc4gsr.core.ui.BaseViewModel
 import java.util.Calendar
 
 class VersionViewModel : BaseViewModel() {
-    
+
     companion object {
         private const val DEFAULT_VERSION = "1.0.0"
     }
-    
+
     data class VersionInfo(
         val appVersion: String,
         val buildCode: String,
