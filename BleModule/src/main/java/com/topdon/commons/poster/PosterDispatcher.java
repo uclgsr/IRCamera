@@ -8,7 +8,7 @@ import java.lang.reflect.Method;
 import java.util.concurrent.ExecutorService;
 
 /**
- * 任务分配
+ * 
  * <p>
  * date: 2019/8/7 10:18
  * author: chuanfeng.bi
@@ -29,21 +29,21 @@ public class PosterDispatcher {
     }
 
     /**
-     * 获取默认运行线程
+     * 
      */
     public ThreadMode getDefaultMode() {
         return defaultMode;
     }
 
     /**
-     * 获取线程池
+     * 
      */
     public ExecutorService getExecutorService() {
         return executorService;
     }
 
     /**
-     * 清除所有队列中任务，存在执行的无法停止
+     * ，
      */
     public void clearTasks() {
         backgroundPoster.clear();
@@ -52,10 +52,10 @@ public class PosterDispatcher {
     }
 
     /**
-     * 根据方法上带的{@link RunOn}注解，将任务post到指定线程执行。如果方法上没有带注解，使用配置的默认值
+     * {@link RunOn}，post。，
      *
-     * @param method   方法
-     * @param runnable 要执行的任务
+     * @param method   
+     * @param runnable 
      */
     public void post(@Nullable Method method, @NonNull Runnable runnable) {
         if (method != null) {
@@ -69,10 +69,10 @@ public class PosterDispatcher {
     }
 
     /**
-     * 将任务post到指定线程执行。
+     * post。
      *
-     * @param mode     指定任务执行线程
-     * @param runnable 要执行的任务
+     * @param mode     
+     * @param runnable 
      */
     public void post(@NonNull ThreadMode mode, @NonNull Runnable runnable) {
         if (mode == ThreadMode.UNSPECIFIED) {
@@ -95,12 +95,12 @@ public class PosterDispatcher {
     }
 
     /**
-     * 将任务post到指定线程执行
+     * post
      *
-     * @param owner      方法的所在的对象实例
-     * @param methodName 方法名
+     * @param owner      
+     * @param methodName 
      * @param tag        {@link Tag#value()}
-     * @param parameters 参数信息
+     * @param parameters 
      */
     public void post(@NonNull Object owner, @NonNull String methodName, @NonNull String tag,
                      @Nullable MethodInfo.Parameter... parameters) {
@@ -161,21 +161,21 @@ public class PosterDispatcher {
     }
 
     /**
-     * 将任务post到指定线程执行
+     * post
      *
-     * @param owner      方法的所在的对象实例
-     * @param methodName 方法名
-     * @param parameters 参数信息
+     * @param owner      
+     * @param methodName 
+     * @param parameters 
      */
     public void post(@NonNull final Object owner, @NonNull String methodName, @Nullable MethodInfo.Parameter... parameters) {
         post(owner, methodName, "", parameters);
     }
 
     /**
-     * 将任务post到指定线程执行
+     * post
      *
-     * @param owner      方法的所在的对象实例
-     * @param methodInfo 方法信息实例
+     * @param owner      
+     * @param methodInfo 
      */
     public void post(@NonNull Object owner, @NonNull MethodInfo methodInfo) {
         post(owner, methodInfo.getName(), methodInfo.getTag(), methodInfo.getParameters());

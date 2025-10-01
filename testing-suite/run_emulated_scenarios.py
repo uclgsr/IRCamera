@@ -110,7 +110,7 @@ def run_multi_modal_synchronization_test():
 
 def run_stress_response_scenario():
     """Run realistic stress response testing scenario"""
-    print("🧠 Stress Response Scenario Test")
+    print(" Stress Response Scenario Test")
     print("=" * 50)
     
     # Initialize emulators for stress testing
@@ -193,7 +193,7 @@ def run_stress_response_scenario():
 
 def run_network_failure_scenario():
     """Run network failure and recovery testing"""
-    print("📶 Network Failure Scenario Test")
+    print(" Network Failure Scenario Test")
     print("=" * 50)
     
     network_emulator = NetworkEmulator(seed=60)
@@ -346,7 +346,7 @@ def run_extended_recording_scenario():
 
 def main():
     """Run all emulated testing scenarios"""
-    print("🧪 IRCamera Emulated Testing Suite")
+    print(" IRCamera Emulated Testing Suite")
     print("=" * 60)
     print()
     
@@ -394,7 +394,7 @@ def main():
         with open(results_file, 'w') as f:
             json.dump(json_results, f, indent=2)
             
-        print(f"\n📄 Detailed results saved to: {results_file}")
+        print(f"\n Detailed results saved to: {results_file}")
         
         print("\n All emulated scenarios completed successfully!")
         

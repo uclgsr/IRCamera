@@ -248,9 +248,9 @@ class TestProtocolVerification(unittest.TestCase):
         self.assertEqual(json_hello['device_name'], 'mock_android_001')
         self.assertIn('GSR', json_hello['sensors'])
         
-        print(f"✓ PC connected successfully")
-        print(f"✓ Received HELLO: {hello}")
-        print(f"✓ Parsed: device={json_hello['device_name']}, sensors={json_hello['sensors']}")
+        print(f" PC connected successfully")
+        print(f" Received HELLO: {hello}")
+        print(f" Parsed: device={json_hello['device_name']}, sensors={json_hello['sensors']}")
     
     def test_02_start_recording_success(self):
         """Test 2: PC sends START_RECORD, Android starts recording and sends ACK"""
@@ -266,7 +266,7 @@ class TestProtocolVerification(unittest.TestCase):
         session_id = "test_session_001"
         sent = self.send_command('START_RECORD', session_id=session_id)
         self.assertTrue(sent, "PC should send START_RECORD command")
-        print(f"✓ PC sent: START_RECORD session_id={session_id}")
+        print(f" PC sent: START_RECORD session_id={session_id}")
         
         # Wait a bit for Android to process
         time.sleep(0.1)
@@ -277,14 +277,14 @@ class TestProtocolVerification(unittest.TestCase):
         received = self.mock_android.received_messages[-1]
         self.assertIn('START_RECORD', received)
         self.assertIn(session_id, received)
-        print(f"✓ Android received: {received}")
+        print(f" Android received: {received}")
         
         # Verify Android started recording
         self.assertTrue(self.mock_android.is_recording, 
                        "Android should start recording")
         self.assertEqual(self.mock_android.current_session_id, session_id,
                         "Android should store session ID")
-        print(f"✓ Android recording state: {self.mock_android.is_recording}")
+        print(f" Android recording state: {self.mock_android.is_recording}")
         
         # Receive ACK
         ack = self.receive_response()
@@ -292,13 +292,13 @@ class TestProtocolVerification(unittest.TestCase):
         self.assertIn('ACK', ack)
         self.assertIn('START_RECORD', ack)
         self.assertIn(session_id, ack)
-        print(f"✓ PC received ACK: {ack}")
+        print(f" PC received ACK: {ack}")
         
         # Parse ACK
         json_ack = self.adapter.android_to_json(ack)
         self.assertEqual(json_ack['type'], 'ACK')
         self.assertEqual(json_ack['cmd'], 'START_RECORD')
-        print(f"✓ ACK parsed correctly")
+        print(f" ACK parsed correctly")
     
     def test_03_start_recording_while_recording(self):
         """Test 3: PC sends START_RECORD while already recording - Android sends ERROR"""
@@ -318,7 +318,7 @@ class TestProtocolVerification(unittest.TestCase):
         # Try to start again
         sent = self.send_command('START_RECORD', session_id='session_002')
         self.assertTrue(sent, "PC should send second START_RECORD")
-        print(f"✓ PC sent: START_RECORD session_id=session_002 (while already recording)")
+        print(f" PC sent: START_RECORD session_id=session_002 (while already recording)")
         
         time.sleep(0.1)
         
@@ -327,14 +327,14 @@ class TestProtocolVerification(unittest.TestCase):
         self.assertIsNotNone(error, "PC should receive ERROR response")
         self.assertIn('ERROR', error)
         self.assertIn('BUSY', error)
-        print(f"✓ PC received ERROR: {error}")
+        print(f" PC received ERROR: {error}")
         
         # Parse ERROR
         json_error = self.adapter.android_to_json(error)
         self.assertEqual(json_error['type'], 'ERROR')
         self.assertEqual(json_error['cmd'], 'START_RECORD')
         self.assertEqual(json_error['code'], 'BUSY')
-        print(f"✓ ERROR parsed correctly: {json_error['msg']}")
+        print(f" ERROR parsed correctly: {json_error['msg']}")
     
     def test_04_stop_recording_success(self):
         """Test 4: PC sends STOP_RECORD, Android stops recording and sends ACK"""
@@ -353,21 +353,21 @@ class TestProtocolVerification(unittest.TestCase):
         # Send STOP_RECORD
         sent = self.send_command('STOP_RECORD', session_id=session_id)
         self.assertTrue(sent, "PC should send STOP_RECORD command")
-        print(f"✓ PC sent: STOP_RECORD session_id={session_id}")
+        print(f" PC sent: STOP_RECORD session_id={session_id}")
         
         time.sleep(0.1)
         
         # Verify Android stopped recording
         self.assertFalse(self.mock_android.is_recording,
                         "Android should stop recording")
-        print(f"✓ Android recording state: {self.mock_android.is_recording}")
+        print(f" Android recording state: {self.mock_android.is_recording}")
         
         # Receive ACK
         ack = self.receive_response()
         self.assertIsNotNone(ack, "PC should receive ACK response")
         self.assertIn('ACK', ack)
         self.assertIn('STOP_RECORD', ack)
-        print(f"✓ PC received ACK: {ack}")
+        print(f" PC received ACK: {ack}")
     
     def test_05_stop_recording_not_recording(self):
         """Test 5: PC sends STOP_RECORD when not recording - Android sends ERROR"""
@@ -382,7 +382,7 @@ class TestProtocolVerification(unittest.TestCase):
         # Send STOP_RECORD
         sent = self.send_command('STOP_RECORD', session_id='session_004')
         self.assertTrue(sent, "PC should send STOP_RECORD command")
-        print(f"✓ PC sent: STOP_RECORD (while not recording)")
+        print(f" PC sent: STOP_RECORD (while not recording)")
         
         time.sleep(0.1)
         
@@ -390,13 +390,13 @@ class TestProtocolVerification(unittest.TestCase):
         error = self.receive_response()
         self.assertIsNotNone(error, "PC should receive ERROR response")
         self.assertIn('ERROR', error)
-        print(f"✓ PC received ERROR: {error}")
+        print(f" PC received ERROR: {error}")
         
         # Parse ERROR
         json_error = self.adapter.android_to_json(error)
         self.assertEqual(json_error['type'], 'ERROR')
         self.assertEqual(json_error['cmd'], 'STOP_RECORD')
-        print(f"✓ ERROR parsed correctly: {json_error['msg']}")
+        print(f" ERROR parsed correctly: {json_error['msg']}")
     
     def test_06_time_sync(self):
         """Test 6: PC sends SYNC_REQUEST, Android responds with SYNC_RESPONSE"""
@@ -412,7 +412,7 @@ class TestProtocolVerification(unittest.TestCase):
         t1 = int(time.time() * 1000)
         sent = self.send_command('SYNC_REQUEST', t_pc=t1)
         self.assertTrue(sent, "PC should send SYNC_REQUEST")
-        print(f"✓ PC sent: SYNC_REQUEST t_pc={t1}")
+        print(f" PC sent: SYNC_REQUEST t_pc={t1}")
         
         time.sleep(0.1)
         
@@ -420,33 +420,33 @@ class TestProtocolVerification(unittest.TestCase):
         sync_resp = self.receive_response()
         self.assertIsNotNone(sync_resp, "PC should receive SYNC_RESPONSE")
         self.assertIn('SYNC_RESPONSE', sync_resp)
-        print(f"✓ PC received: {sync_resp}")
+        print(f" PC received: {sync_resp}")
         
         # Parse SYNC_RESPONSE
         json_sync = self.adapter.android_to_json(sync_resp)
         self.assertEqual(json_sync['type'], 'SYNC_RESPONSE')
         self.assertEqual(json_sync['t_pc'], t1, "Should echo back t_pc")
         self.assertGreater(json_sync['t_ph'], 0, "Should include Android timestamp")
-        print(f"✓ SYNC_RESPONSE parsed: t_pc={json_sync['t_pc']}, t_ph={json_sync['t_ph']}")
+        print(f" SYNC_RESPONSE parsed: t_pc={json_sync['t_pc']}, t_ph={json_sync['t_ph']}")
         
         # Calculate offset and RTT (NTP algorithm)
         t3 = int(time.time() * 1000)
         t2 = json_sync['t_ph']
         rtt = t3 - t1
         offset = int((t2 - t1 - rtt / 2))
-        print(f"✓ Time sync calculated: offset={offset}ms, rtt={rtt}ms")
+        print(f" Time sync calculated: offset={offset}ms, rtt={rtt}ms")
         
         # Send SYNC_RESULT back to Android
         sent = self.send_command('SYNC_RESULT', t1=t1, t2=t2, t3=t3, 
                                 offset=offset, rtt=rtt)
         self.assertTrue(sent, "PC should send SYNC_RESULT")
-        print(f"✓ PC sent: SYNC_RESULT with calculated offset and RTT")
+        print(f" PC sent: SYNC_RESULT with calculated offset and RTT")
         
         time.sleep(0.1)
         
         # Verify Android received SYNC_RESULT
         self.assertIn('SYNC_RESULT', self.mock_android.received_messages[-1])
-        print(f"✓ Android received and processed SYNC_RESULT")
+        print(f" Android received and processed SYNC_RESULT")
     
     def test_07_complete_session_flow(self):
         """Test 7: Complete recording session flow"""
@@ -495,7 +495,7 @@ class TestProtocolVerification(unittest.TestCase):
         self.assertFalse(self.mock_android.is_recording)
         print(f"6. Recording stopped: {stop_ack}")
         
-        print(f"\n✓ Complete session flow executed successfully")
+        print(f"\n Complete session flow executed successfully")
         print(f"  - Messages sent by PC: {len(self.mock_android.received_messages)}")
         print(f"  - Messages sent by Android: {len(self.mock_android.sent_messages)}")
 
@@ -522,7 +522,7 @@ def run_verification_tests():
     print(f"Errors: {len(result.errors)}")
     
     if result.wasSuccessful():
-        print("\n✓✓✓ ALL PROTOCOL VERIFICATION TESTS PASSED ✓✓✓")
+        print("\n ALL PROTOCOL VERIFICATION TESTS PASSED ")
         print("\nVerified:")
         print("  - PC can connect to Android")
         print("  - Android sends HELLO message")
@@ -534,7 +534,7 @@ def run_verification_tests():
         print("  - Android handles error cases correctly")
         print("  - Complete session flow works end-to-end")
     else:
-        print("\n✗✗✗ SOME TESTS FAILED ✗✗✗")
+        print("\n SOME TESTS FAILED ")
     
     print("="*70)
     

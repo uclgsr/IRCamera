@@ -168,11 +168,11 @@ class ThermalFragmentViewModel : BaseViewModel() {
             val red = (pixel shr 16) and 0xFF
             val green = (pixel shr 8) and 0xFF
             val blue = pixel and 0xFF
-            
+
             // Weighted conversion based on thermal intensity
             // Assumes thermal palette where blue=cold, red=hot
             val intensity = (red * 0.3f + green * 0.59f + blue * 0.11f) / 255f
-            
+
             // Map to typical thermal range: -20°C to 120°C
             val minTemp = -20f
             val maxTemp = 120f
@@ -313,7 +313,7 @@ class ThermalFragmentViewModel : BaseViewModel() {
     fun initializeThermalCamera(surfaceView: IrSurfaceView) {
         // Initialize thermal camera with surface view
         _connectionStatus.value = "Connecting"
-        
+
         viewModelScope.launch {
             try {
                 // Initialize the thermal camera surface view
@@ -323,11 +323,11 @@ class ThermalFragmentViewModel : BaseViewModel() {
                         surface.holder.setFixedSize(640, 480) // Standard thermal resolution
                     }
                 }
-                
+
                 // Simulate connection process with proper error handling
                 delay(1000)
                 _connectionStatus.value = "Connected"
-                
+
                 // Initialize with default temperature data
                 _temperatureData.value = TemperatureData(
                     centerTemp = "25.0°C",
@@ -348,11 +348,11 @@ class ThermalFragmentViewModel : BaseViewModel() {
                 // Generate unique filename with timestamp
                 val timestamp = System.currentTimeMillis()
                 val fileName = "thermal_photo_$timestamp.jpg"
-                
+
                 // Capture current thermal frame state
                 val thermalState = _thermalImageState.value
                 val tempAnalysis = _temperatureAnalysis.value
-                
+
                 // Create photo metadata
                 val metadata = mapOf(
                     "timestamp" to timestamp,
@@ -361,7 +361,7 @@ class ThermalFragmentViewModel : BaseViewModel() {
                     "minTemp" to tempAnalysis.minTemperature,
                     "averageTemp" to tempAnalysis.averageTemperature
                 )
-                
+
                 // Store photo capture data
                 _thermalProcessingAction.postValue(
                     ThermalProcessingAction.PhotoCaptured(fileName, metadata)
@@ -383,7 +383,7 @@ class ThermalFragmentViewModel : BaseViewModel() {
                 try {
                     // Create a temporary file for recording
                     val outputFile = File.createTempFile(
-                        "thermal_recording_${System.currentTimeMillis()}", 
+                        "thermal_recording_${System.currentTimeMillis()}",
                         ".mp4"
                     )
                     startVideoRecording(outputFile)
@@ -501,6 +501,7 @@ class ThermalFragmentViewModel : BaseViewModel() {
         data class ProcessingError(val message: String) : ThermalProcessingAction()
         data class TemperatureAlert(val temperature: Float, val type: AlertType) :
             ThermalProcessingAction()
+
         data class PhotoCaptured(val fileName: String, val metadata: Map<String, Any>) : ThermalProcessingAction()
         data class RecordingError(val message: String) : ThermalProcessingAction()
         object NavigateToSettings : ThermalProcessingAction()
@@ -574,7 +575,7 @@ class ThermalFragmentViewModel : BaseViewModel() {
             // Configure thermal regions for measurement and analysis
             try {
                 val currentFence = _fenceState.value
-                
+
                 // Update region configuration based on current fence state
                 val nextFenceType = when (currentFence.fenceType) {
                     FenceType.POINT -> FenceType.LINE
@@ -582,11 +583,11 @@ class ThermalFragmentViewModel : BaseViewModel() {
                     FenceType.AREA -> FenceType.POINT
                     null -> FenceType.POINT
                 }
-                
+
                 _fenceState.value = currentFence.copy(
                     fenceType = nextFenceType
                 )
-                
+
                 // Emit action to update UI
                 _thermalProcessingAction.postValue(
                     ThermalProcessingAction.RegionConfigured(nextFenceType)

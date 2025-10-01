@@ -6,10 +6,10 @@ package com.topdon.ble;
  */
 final class Inspector {
     /**
-     * 对象为空时抛EasyBLEException
+     * EasyBLEException
      *
-     * @param obj     要检查的对象
-     * @param message 异常概要消息
+     * @param obj     
+     * @param message 
      */
     static <T> T requireNonNull(T obj, String message) {
         if (obj == null)

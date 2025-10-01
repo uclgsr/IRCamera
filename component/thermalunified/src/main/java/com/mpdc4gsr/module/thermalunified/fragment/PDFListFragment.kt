@@ -198,7 +198,7 @@ class PDFListFragment : BaseViewModelFragment<PdfViewModel>() {
                                         if (file.exists()) {
                                             file.delete()
                                         }
-                                        Log.w("删除成功", response.toString())
+                                        Log.w("", response.toString())
                                     }
 
                                     override fun onFail(exception: Exception?) {

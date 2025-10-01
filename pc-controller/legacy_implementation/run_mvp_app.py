@@ -18,14 +18,14 @@ def main():
 
     print("Environment Check:")
     try:
-        print("✓ PyQt6 GUI framework available")
+        print(" PyQt6 GUI framework available")
     except ImportError:
-        print("✗ PyQt6 not available - GUI will run in headless mode")
+        print(" PyQt6 not available - GUI will run in headless mode")
 
     try:
-        print("✓ Zeroconf service discovery available")
+        print(" Zeroconf service discovery available")
     except ImportError:
-        print("⚠ Zeroconf not available - using fallback discovery")
+        print(" Zeroconf not available - using fallback discovery")
 
     print()
 
@@ -58,7 +58,7 @@ def main():
         return 1
 
     except KeyboardInterrupt:
-        print("\n👋 Application stopped by user")
+        print("\n Application stopped by user")
         return 0
 
     except Exception as e:

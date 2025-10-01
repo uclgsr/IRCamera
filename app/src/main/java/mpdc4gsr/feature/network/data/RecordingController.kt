@@ -463,7 +463,7 @@ class RecordingController(
 
                 // Enhanced sensor start result processing
                 successfulStarts.forEach { (sensorName, _, _) ->
-                    Log.i(TAG, "✓ Sensor $sensorName: STARTED")
+                    Log.i(TAG, " Sensor $sensorName: STARTED")
                     addSessionEvent("SENSOR_STARTED", sensorId = sensorName, success = true)
                 }
 
@@ -473,7 +473,7 @@ class RecordingController(
                     } else {
                         " (Returned false)"
                     }
-                    Log.w(TAG, "✗ Sensor $sensorName: FAILED$errorDetails")
+                    Log.w(TAG, " Sensor $sensorName: FAILED$errorDetails")
                     updateSensorHealth(sensorName, false, "Start failed$errorDetails")
                     addSessionEvent(
                         "SENSOR_START_FAILED", sensorId = sensorName, success = false,
@@ -516,7 +516,7 @@ class RecordingController(
                         "Partial multi-modal recording session started"
                     }
 
-                    Log.i(TAG, "✓ $sessionTypeMessage: $successCount/$totalSensors sensors active")
+                    Log.i(TAG, " $sessionTypeMessage: $successCount/$totalSensors sensors active")
                     Log.i(
                         TAG,
                         "Active sensors: ${successfulStarts.joinToString(", ") { it.first }}"
@@ -919,13 +919,13 @@ class RecordingController(
                     Log.i(TAG, "Stopping sensor: $sensorName")
                     val success = sensor.stopRecording()
                     if (success) {
-                        Log.i(TAG, "✓ Sensor $sensorName stopped successfully")
+                        Log.i(TAG, " Sensor $sensorName stopped successfully")
                     } else {
-                        Log.w(TAG, "✗ Sensor $sensorName returned false on stop")
+                        Log.w(TAG, " Sensor $sensorName returned false on stop")
                     }
                     Triple(sensorName, success, null)
                 } catch (e: Exception) {
-                    Log.w(TAG, "✗ Exception stopping sensor $sensorName", e)
+                    Log.w(TAG, " Exception stopping sensor $sensorName", e)
                     Triple(sensorName, false, e)
                 }
             }
@@ -1097,7 +1097,7 @@ class RecordingController(
             appendLine("Individual Sensors:")
             summary.sensors.forEach { sensor ->
                 val status = when {
-                    sensor.isRecording -> "🔴 RECORDING"
+                    sensor.isRecording -> " RECORDING"
                     sensor.isInitialized -> "🟡 READY"
                     else -> " FAILED"
                 }

@@ -9,10 +9,10 @@ import com.topdon.ble.Request;
  */
 public interface ReadRssiCallback extends RequestFailedCallback {
     /**
-     * 读取到设备的信号强度
+     * 
      *
-     * @param request 请求
-     * @param rssi    信号强度
+     * @param request 
+     * @param rssi    
      */
     void onRssiRead(Request request, int rssi);
 }

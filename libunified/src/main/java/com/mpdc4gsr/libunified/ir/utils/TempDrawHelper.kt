@@ -12,37 +12,37 @@ import kotlin.math.min
 class TempDrawHelper {
     companion object {
         /**
-         * 点是一个十字架，该值为十字架的长度，单位 px.
+         * ，， px.
          */
         private val POINT_SIZE: Int = SizeUtils.dp2px(16f)
 
         /**
-         * 点、线、面、全图 最高温及最低温中心实心圆的半径，单位 px.
+         * 、、、 ， px.
          */
         private val CIRCLE_RADIUS: Int = SizeUtils.dp2px(3f)
 
         /**
-         * 温度值文字，与实心圆圆心的偏移量，防止文字与实心圆重叠，X轴为该值，Y轴为该值/2，单位 px.
+         * ，，，X，Y/2， px.
          */
         private val TEMP_TEXT_OFFSET = SizeUtils.dp2px(6f)
 
 
         /**
-         * 修正指定十字架的 View 坐标值，确保十字架不会超出 View 界外.
+         *  View ， View .
          */
         fun Float.correctPoint(max: Int): Int = this.toInt()
             .coerceAtLeast(POINT_SIZE / 2)
             .coerceAtMost(max - POINT_SIZE / 2)
 
         /**
-         * 修正线、面、最高温点、最低温点的 View 坐标值，确保实心圆不会超出 View 界外。
+         * 、、、 View ， View 。
          */
         fun Float.correct(max: Int): Int = this.toInt()
             .coerceAtLeast(CIRCLE_RADIUS)
             .coerceAtMost(max - CIRCLE_RADIUS)
 
         /**
-         * 获取可保证实心圆不会超出 View 界外的 Rect.
+         *  View  Rect.
          */
         fun getRect(width: Int, height: Int): Rect =
             Rect(CIRCLE_RADIUS, CIRCLE_RADIUS, width - CIRCLE_RADIUS, height - CIRCLE_RADIUS)
@@ -50,7 +50,7 @@ class TempDrawHelper {
 
 
     /**
-     * 温度值文字、趋势图 AB 两个字母、点线面名称 文字大小，单位 px.
+     * 、 AB 、 ， px.
      */
     var textSize: Int
         get() = textPaint.textSize.toInt()
@@ -59,7 +59,7 @@ class TempDrawHelper {
         }
 
     /**
-     * 温度值文字、趋势图 AB 两个字母、点线面名称 文字颜色值.
+     * 、 AB 、 .
      */
     var textColor: Int
         @ColorInt get() = textPaint.color
@@ -69,24 +69,24 @@ class TempDrawHelper {
 
 
     /**
-     * 绘制 点、线、面、趋势图直线 Paint，白色.
-     * 描边宽度 1dp.
+     *  、、、 Paint，.
+     *  1dp.
      */
     private val linePaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
     /**
-     * 点、线、面、全图 低温点实心圆 Paint，蓝色.
+     * 、、、  Paint，.
      */
     private val bluePaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
     /**
-     * 点、线、面、全图 高温点实心圆 Paint，红色.
+     * 、、、  Paint，.
      */
     private val redPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
     /**
-     * 高温温度文字、低温温度文字、趋势图 AB 两个字母、点线面名称 Paint，
-     * 颜色默认白色，大小默认 14sp，可由文字颜色、大小设置更改.
+     * 、、 AB 、 Paint，
+     * ， 14sp，、.
      */
     private val textPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
@@ -107,23 +107,23 @@ class TempDrawHelper {
 
     /* ******************************************** Draw ******************************************** */
     /**
-     * 在 (x,y) 画一个十字.
+     *  (x,y) .
      *
-     * 注意，不对 x、y 进行处理，传进来是哪就在哪绘制。
+     * ， x、y ，。
      */
     fun drawPoint(canvas: Canvas, x: Int, y: Int) {
         val left: Float = x - POINT_SIZE / 2f
         val top: Float = y - POINT_SIZE / 2f
         val right: Float = x + POINT_SIZE / 2f
         val bottom: Float = y + POINT_SIZE / 2f
-        canvas.drawLine(left, y.toFloat(), right, y.toFloat(), linePaint) //画横线
-        canvas.drawLine(x.toFloat(), top, x.toFloat(), bottom, linePaint) //画竖线
+        canvas.drawLine(left, y.toFloat(), right, y.toFloat(), linePaint) //
+        canvas.drawLine(x.toFloat(), top, x.toFloat(), bottom, linePaint) //
     }
 
     /**
-     * 连接 (startX, startY)、(stopX, stopY) 两点绘制一条线段.
+     *  (startX, startY)、(stopX, stopY) .
      *
-     * 注意，不对 坐标参数 进行处理，传进来是哪就在哪绘制。
+     * ，  ，。
      */
     fun drawLine(canvas: Canvas, startX: Int, startY: Int, stopX: Int, stopY: Int) {
         canvas.drawLine(
@@ -136,9 +136,9 @@ class TempDrawHelper {
     }
 
     /**
-     * 按指定范围绘制一个矩形.
+     * .
      *
-     * 注意，不对 坐标参数 进行处理，传进来是哪就在哪绘制。
+     * ，  ，。
      */
     fun drawRect(canvas: Canvas, left: Int, top: Int, right: Int, bottom: Int) {
         val leftF: Float = left.toFloat()
@@ -168,10 +168,10 @@ class TempDrawHelper {
 
 
     /**
-     * 在 (x,y) 画一个实心圆。
+     *  (x,y) 。
      *
-     * 注意，不对 x、y 进行处理，传进来是哪就在哪绘制。
-     * @param isMax true-最高温红色 false-最低温蓝色
+     * ， x、y ，。
+     * @param isMax true- false-
      */
     fun drawCircle(canvas: Canvas, x: Int, y: Int, isMax: Boolean) {
         canvas.drawCircle(
@@ -183,23 +183,23 @@ class TempDrawHelper {
     }
 
     /**
-     * 指定的 (x,y) 坐标为实心圆圆心，以该实心圆为基准绘制指定文字。
-     * 若空间允许则放置在实心圆圆心右上方，否则根据实际情况放置在下方、左方或左下方.
+     *  (x,y) ，。
+     * ，、.
      *
-     * 注意，不对 x、y 进行处理，传进来是哪就在哪绘制。
-     * @param x 实心圆圆心的 View 尺寸坐标
+     * ， x、y ，。
+     * @param x  View 
      */
     fun drawTempText(canvas: Canvas, text: String, width: Int, x: Int, y: Int) {
         var textX: Float = (x + TEMP_TEXT_OFFSET).toFloat()
         var textY: Float = (y - TEMP_TEXT_OFFSET).toFloat()
 
         val textWidth: Float = textPaint.measureText(text)
-        if (x > width - textWidth - TEMP_TEXT_OFFSET) {//超出右边界，那就挪到左边
+        if (x > width - textWidth - TEMP_TEXT_OFFSET) {//，
             textX = x - TEMP_TEXT_OFFSET - textWidth
         }
 
         val textFontTop: Float = -textPaint.getFontMetrics().top
-        if (y < textFontTop + TEMP_TEXT_OFFSET / 2) {//超出上边界，那就挪到下面
+        if (y < textFontTop + TEMP_TEXT_OFFSET / 2) {//，
             textY = y + TEMP_TEXT_OFFSET / 2 + textFontTop
         }
 
@@ -207,10 +207,10 @@ class TempDrawHelper {
     }
 
     /**
-     * 指定的 (startX, startY)、(stopX, stopY) 坐标为线段，
-     * 以该线段为基准绘制趋势图的 "A"、"B" 文字。
+     *  (startX, startY)、(stopX, stopY) ，
+     *  "A"、"B" 。
      *
-     * 注意，不对 坐标参数 进行处理，传进来是哪就在哪绘制。
+     * ，  ，。
      */
     fun drawTrendText(
         canvas: Canvas,
@@ -241,11 +241,11 @@ class TempDrawHelper {
     }
 
     /**
-     * 指定的 (x,y) 坐标为实心圆圆心，以该实心圆为基准绘制指定点名称文字。
-     * 若空间允许则放置在实心圆圆心正下方，否则放正上方.
+     *  (x,y) ，。
+     * ，.
      *
-     * 注意，不对 x、y 进行处理，传进来是哪就在哪绘制。
-     * @param x 实心圆圆心的 View 尺寸坐标
+     * ， x、y ，。
+     * @param x  View 
      */
     fun drawPointName(canvas: Canvas, name: String, width: Int, height: Int, x: Int, y: Int) {
         val textWidth: Float = textPaint.measureText(name)
@@ -254,23 +254,23 @@ class TempDrawHelper {
         var textX = x - textWidth / 2
         var textY = y + POINT_SIZE / 2 + textHeight
 
-        if (textX < 0) {//x超出左边界
+        if (textX < 0) {//x
             textX = 0f
         }
-        if (textX + textWidth > width) {//x超出右边界
+        if (textX + textWidth > width) {//x
             textX = width - textWidth
         }
-        if (textY > height) {//若名字放点下面要超出范围时，放点上面
+        if (textY > height) {//，
             textY = y - POINT_SIZE / 2 - textPaint.fontMetrics.bottom
         }
         canvas.drawText(name, textX, textY, textPaint)
     }
 
     /**
-     * 指定的 线段或矩形 坐标为范围，
-     * 以该范围为基准绘制指定线名称文字，放置于范围中心。
+     *   ，
+     * ，。
      *
-     * 注意，不对 x、y 进行处理，传进来是哪就在哪绘制。
+     * ， x、y ，。
      */
     fun drawPointRectName(
         canvas: Canvas,
@@ -292,16 +292,16 @@ class TempDrawHelper {
         var textX: Float = centerX - textWidth / 2
         var textY: Float = centerY + offset
 
-        if (textX < 0) {//x超出左边界
+        if (textX < 0) {//x
             textX = 0f
         }
-        if (textX + textWidth > width) {//x超出右边界
+        if (textX + textWidth > width) {//x
             textX = width - textWidth
         }
-        if (textY < textHeight) {//y超出上边界
+        if (textY < textHeight) {//y
             textY = textHeight
         }
-        if (textY > height) {//y超出下边界
+        if (textY > height) {//y
             textY = height.toFloat()
         }
         canvas.drawText(name, textX, textY, textPaint)

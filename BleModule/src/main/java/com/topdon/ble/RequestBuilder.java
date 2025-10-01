@@ -26,7 +26,7 @@ public class RequestBuilder<T extends RequestCallback> {
     }
 
     /**
-     * @param tag 请求标识，用于标识每次请求，规则自定。可以用来区分相同类型的不同批次请求
+     * @param tag ，，。
      */
     public RequestBuilder<T> setTag(String tag) {
         this.tag = tag;
@@ -34,7 +34,7 @@ public class RequestBuilder<T extends RequestCallback> {
     }
 
     /**
-     * @param priority 请求优先级，值越大，优先级越高，用于请求队列中插队
+     * @param priority ，，，
      */
     public RequestBuilder<T> setPriority(int priority) {
         this.priority = priority;
@@ -42,8 +42,8 @@ public class RequestBuilder<T extends RequestCallback> {
     }
 
     /**
-     * 如果设置了回调，则观察者不会收到此次请求的消息；不设置则使用观察者接收请求结果。
-     * <br>回调方法使用{@link RunOn}注解指定执行线程，观察者方法使用{@link Observe}注解指定执行线程
+     * ，；。
+     * <br>{@link RunOn}，{@link Observe}
      */
     public RequestBuilder<T> setCallback(T callback) {
         this.callback = callback;

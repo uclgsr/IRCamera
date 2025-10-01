@@ -169,7 +169,7 @@ def main():
         print(f" Controller failed to start: {e}")
         sys.exit(1)
     except KeyboardInterrupt:
-        print("\n👋 Controller stopped by user")
+        print("\n Controller stopped by user")
     except Exception as e:
         print(f" Unexpected error: {e}")
         sys.exit(1)

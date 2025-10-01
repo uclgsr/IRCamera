@@ -33,7 +33,7 @@ class ThesisContentIntegrationTest:
     
     def run_integration_tests(self) -> Dict[str, Any]:
         """Run all integration tests"""
-        print("🔗 Running Thesis Content Generation Integration Tests")
+        print(" Running Thesis Content Generation Integration Tests")
         print("=" * 60)
         
         # Test 1: Source Data Integrity
@@ -125,7 +125,7 @@ class ThesisContentIntegrationTest:
     
     def test_document_generation(self) -> None:
         """Test document generation process"""
-        print("📝 Testing Document Generation Pipeline...")
+        print(" Testing Document Generation Pipeline...")
         
         # Test Markdown to content conversion
         diagram_files = list((self.repo_root / "../docs/thesis-diagrams").glob("*.md"))
@@ -183,7 +183,7 @@ class ThesisContentIntegrationTest:
     
     def test_cross_references(self) -> None:
         """Test cross-references between documents"""
-        print("🔗 Testing Cross-Reference Validation...")
+        print(" Testing Cross-Reference Validation...")
         
         # Build reference map
         references = self.build_reference_map()
@@ -274,7 +274,7 @@ class ThesisContentIntegrationTest:
     
     def test_content_consistency(self) -> None:
         """Test consistency of content across documents"""
-        print("🔄 Testing Content Consistency...")
+        print(" Testing Content Consistency...")
         
         # Key terms that should appear consistently
         key_terms = [
@@ -343,7 +343,7 @@ class ThesisContentIntegrationTest:
     
     def test_latex_compilation(self) -> None:
         """Test LaTeX compilation readiness"""
-        print("📄 Testing LaTeX Compilation Readiness...")
+        print(" Testing LaTeX Compilation Readiness...")
         
         latex_files = ["../docs/latex/main.tex"]
         
@@ -653,7 +653,7 @@ class ThesisContentIntegrationTest:
         self.save_integration_results(summary)
         
         # Print summary
-        print(f"\n🔗 Integration Test Summary:")
+        print(f"\n Integration Test Summary:")
         print(f"   Total Tests: {total_tests}")
         print(f"   Passed: {passed_tests} ({summary['pass_rate']:.1%})")
         print(f"   Warnings: {warning_tests}")
@@ -715,7 +715,7 @@ def main():
     integration_test = ThesisContentIntegrationTest()
     results = integration_test.run_integration_tests()
     
-    print(f"\n🔗 Integration testing complete!")
+    print(f"\n Integration testing complete!")
     print(f" Results saved to: {integration_test.output_dir}")
     
     return results
