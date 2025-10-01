@@ -46,7 +46,7 @@ The project has made significant progress with the completion of all critical th
   1. ✅ activity_image_color.xml -> ImageColorComposeActivity.kt
   2. ✅ activity_ir_monitor_chart_lite.xml -> IRMonitorChartLiteComposeActivity.kt
   3. ✅ activity_ir_thermal_double.xml -> IRThermalDoubleComposeActivity.kt
-  4. ✅ activity_monitor_home.xml -> MonitoryHomeComposeActivity.kt
+  4. ✅ activity_monitor_home.xml -> MonitorHomeComposeActivity.kt
   5. ✅ activity_monitor_log.xml -> MonitorLogComposeActivity.kt
   6. ✅ activity_record_test.xml -> TestRecordActivity.java
   7. ✅ activity_report_create_first.xml -> ReportCreateComposeActivity.kt
