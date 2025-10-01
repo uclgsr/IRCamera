@@ -42,4 +42,10 @@ object NavigationAnimations {
 
     fun <S> AnimatedContentTransitionScope<S>.fastSlideOutToLeft(): ExitTransition =
         slideTransition(AnimatedContentTransitionScope.SlideDirection.Left, FAST_ANIMATION_DURATION_MS, false) as ExitTransition
+
+    fun <S> AnimatedContentTransitionScope<S>.fastSlideInFromLeft(): EnterTransition =
+        slideTransition(AnimatedContentTransitionScope.SlideDirection.Right, FAST_ANIMATION_DURATION_MS, true) as EnterTransition
+
+    fun <S> AnimatedContentTransitionScope<S>.fastSlideOutToRight(): ExitTransition =
+        slideTransition(AnimatedContentTransitionScope.SlideDirection.Right, FAST_ANIMATION_DURATION_MS, false) as ExitTransition
 }

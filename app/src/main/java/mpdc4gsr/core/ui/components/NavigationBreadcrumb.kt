@@ -31,28 +31,28 @@ fun NavigationBreadcrumb(
         Icon(
             imageVector = Icons.Default.Home,
             contentDescription = "Home",
-            tint = Color.Gray,
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.size(14.dp)
         )
         if (previousScreen != null) {
             Icon(
                 imageVector = Icons.Default.ChevronRight,
-                contentDescription = null,
-                tint = Color.Gray,
+                contentDescription = "Separator",
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier
                     .size(16.dp)
                     .padding(horizontal = 4.dp)
             )
             Text(
                 text = previousScreen,
-                color = Color.Gray,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontSize = 12.sp
             )
         }
         Icon(
             imageVector = Icons.Default.ChevronRight,
-            contentDescription = null,
-            tint = Color.Gray,
+            contentDescription = "Separator",
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier
                 .size(16.dp)
                 .padding(horizontal = 4.dp)
