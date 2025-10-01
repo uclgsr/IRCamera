@@ -11,6 +11,7 @@ import com.mpdc4gsr.gsr.service.GSRRecorder
 import com.mpdc4gsr.gsr.service.SessionManager
 import com.mpdc4gsr.gsr.util.TimeUtil
 import mpdc4gsr.core.ui.BaseViewModel
+import mpdc4gsr.feature.gsr.data.RealShimmerDeviceFactory
 import com.shimmerresearch.android.Shimmer
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

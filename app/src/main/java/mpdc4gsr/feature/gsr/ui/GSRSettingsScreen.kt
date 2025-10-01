@@ -17,7 +17,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.components.settings.*
-import mpdc4gsr.core.ui.components.*
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 
 /**
@@ -66,7 +65,7 @@ fun GSRSettingsScreen(
                     value = samplingRate.toFloat(),
                     valueRange = 1f..512f,
                     onValueChange = { samplingRate = it.toInt() },
-                    unit = "Hz"
+                    valueLabel = { "${it.toInt()} Hz" }
                 )
                 SettingsToggle(
                     label = "Auto Connect",

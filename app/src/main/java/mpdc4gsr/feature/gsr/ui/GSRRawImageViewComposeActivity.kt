@@ -22,6 +22,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import mpdc4gsr.core.ui.BaseComposeActivity
 import mpdc4gsr.core.ui.theme.IRCameraTheme
+import mpdc4gsr.feature.gsr.presentation.GSRRawImageViewViewModel
 import java.io.File
 
 /**

@@ -523,13 +523,13 @@ class NetworkManager(
             recordingController.recordingStateFlow.collect { state ->
                 if (isConnected()) {
                     when (state) {
-                        mpdc4gsr.controller.RecordingState.RECORDING -> {
+                        RecordingState.RECORDING -> {
                             val message =
                                 "STATUS Recording started locally, sensors: [RGB,Thermal,GSR]"
                             sendTelemetry(message)
                         }
 
-                        mpdc4gsr.controller.RecordingState.STOPPED -> {
+                        RecordingState.STOPPED -> {
                             val message = "STATUS Recording stopped locally"
                             sendTelemetry(message)
                         }
