@@ -246,8 +246,8 @@ android {
 
     buildFeatures {
         buildConfig = true
-//        dataBinding = true
-//        viewBinding = true
+        dataBinding = true
+        viewBinding = true
         compose = true
     }
 
