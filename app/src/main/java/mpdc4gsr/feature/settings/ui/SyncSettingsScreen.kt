@@ -86,7 +86,7 @@ fun SyncSettingsScreen(
                     value = settings.syncInterval.toFloat(),
                     valueRange = 10f..300f,
                     onValueChange = { viewModel.updateSyncInterval(it.toInt()) },
-                    unit = "sec"
+                    valueLabel = { "${it.toInt()} sec" }
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
