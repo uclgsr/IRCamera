@@ -441,7 +441,7 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         startActivity(
                             Intent(
                                 this@ComposeMigrationLauncherActivity,
-                                ResearchTemplateComposeActivity::class.java
+                                mpdc4gsr.feature.gsr.ui.ResearchTemplateComposeActivity::class.java
                             )
                         )
                     }
@@ -455,7 +455,7 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         startActivity(
                             Intent(
                                 this@ComposeMigrationLauncherActivity,
-                                GSRVideoPlayerComposeActivity::class.java
+                                mpdc4gsr.feature.gsr.ui.GSRVideoPlayerComposeActivity::class.java
                             )
                         )
                     }
@@ -469,7 +469,7 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         startActivity(
                             Intent(
                                 this@ComposeMigrationLauncherActivity,
-                                GSRPlotComposeActivity::class.java
+                                mpdc4gsr.feature.gsr.ui.GSRPlotComposeActivity::class.java
                             )
                         )
                     }
@@ -520,7 +520,7 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         startActivity(
                             Intent(
                                 this@ComposeMigrationLauncherActivity,
-                                GSRDeviceManagementComposeActivity::class.java
+                                mpdc4gsr.feature.gsr.ui.GSRDeviceManagementComposeActivity::class.java
                             )
                         )
                     }
@@ -762,7 +762,7 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         startActivity(
                             Intent(
                                 this@ComposeMigrationLauncherActivity,
-                                SimpleNetworkTestActivityCompose::class.java
+                                mpdc4gsr.feature.network.ui.SimpleNetworkTestActivityCompose::class.java
                             )
                         )
                     }
@@ -808,7 +808,7 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         startActivity(
                             Intent(
                                 this@ComposeMigrationLauncherActivity,
-                                GSRDeviceManagementComposeActivity::class.java
+                                mpdc4gsr.feature.gsr.ui.GSRDeviceManagementComposeActivity::class.java
                             )
                         )
                     }
@@ -822,7 +822,7 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         startActivity(
                             Intent(
                                 this@ComposeMigrationLauncherActivity,
-                                MultiModalRecordingComposeActivity::class.java
+                                mpdc4gsr.feature.gsr.ui.MultiModalRecordingComposeActivity::class.java
                             )
                         )
                     }
@@ -836,7 +836,7 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         startActivity(
                             Intent(
                                 this@ComposeMigrationLauncherActivity,
-                                SessionManagerComposeActivity::class.java
+                                mpdc4gsr.feature.gsr.ui.SessionManagerComposeActivity::class.java
                             )
                         )
                     }

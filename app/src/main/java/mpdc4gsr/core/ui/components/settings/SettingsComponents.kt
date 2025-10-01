@@ -374,6 +374,7 @@ fun SettingsCard(
     }
 }
 
+@OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsDropdown(
     label: String,
