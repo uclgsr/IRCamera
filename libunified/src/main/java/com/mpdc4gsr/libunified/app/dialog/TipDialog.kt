@@ -3,17 +3,27 @@ package com.mpdc4gsr.libunified.app.dialog
 import android.app.Dialog
 import android.content.Context
 import android.content.res.Configuration
-import android.text.TextUtils
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup.LayoutParams
-import android.widget.TextView
 import androidx.annotation.StringRes
-import androidx.core.view.isVisible
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.R
-import com.mpdc4gsr.libunified.databinding.DialogTipBinding
+import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 
-
+/**
+ * TipDialog - Migrated to Jetpack Compose
+ * Maintains Builder API compatibility with the old databinding version
+ */
 class TipDialog : Dialog {
     constructor(context: Context) : super(context)
 
@@ -45,40 +55,26 @@ class TipDialog : Dialog {
             return this
         }
 
-        fun setMessage(
-            @StringRes message: Int,
-        ): Builder {
+        fun setMessage(@StringRes message: Int): Builder {
             this.message = context.getString(message)
             return this
         }
 
-        fun setPositiveListener(
-            @StringRes strRes: Int,
-            event: (() -> Unit)? = null,
-        ): Builder {
+        fun setPositiveListener(@StringRes strRes: Int, event: (() -> Unit)? = null): Builder {
             return setPositiveListener(context.getString(strRes), event)
         }
 
-        fun setPositiveListener(
-            str: String,
-            event: (() -> Unit)? = null,
-        ): Builder {
+        fun setPositiveListener(str: String, event: (() -> Unit)? = null): Builder {
             this.positiveStr = str
             this.positiveEvent = event
             return this
         }
 
-        fun setCancelListener(
-            @StringRes strRes: Int,
-            event: (() -> Unit)? = null,
-        ): Builder {
+        fun setCancelListener(@StringRes strRes: Int, event: (() -> Unit)? = null): Builder {
             return setCancelListener(context.getString(strRes), event)
         }
 
-        fun setCancelListener(
-            str: String,
-            event: (() -> Unit)? = null,
-        ): Builder {
+        fun setCancelListener(str: String, event: (() -> Unit)? = null): Builder {
             this.cancelStr = str
             this.cancelEvent = event
             return this
@@ -95,7 +91,7 @@ class TipDialog : Dialog {
         }
 
         fun dismiss() {
-            this.dialog!!.dismiss()
+            this.dialog?.dismiss()
         }
 
         fun create(): TipDialog {
@@ -103,59 +99,88 @@ class TipDialog : Dialog {
                 dialog = TipDialog(context, R.style.InfoDialog)
             }
 
-            val binding = DialogTipBinding.inflate(LayoutInflater.from(context))
-            dialog!!.addContentView(
-                binding.root,
-                LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
-            )
             val isPortrait =
                 context.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT
             val widthPixels = context.resources.displayMetrics.widthPixels
+            
+            val composeView = ComposeView(context).apply {
+                setContent {
+                    LibUnifiedTheme {
+                        Box(
+                            modifier = Modifier
+                                .background(
+                                    color = MaterialTheme.colorScheme.surface,
+                                    shape = RoundedCornerShape(8.dp)
+                                )
+                                .padding(24.dp)
+                        ) {
+                            Column(
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                if (!titleMessage.isNullOrEmpty()) {
+                                    Text(
+                                        text = titleMessage!!,
+                                        style = MaterialTheme.typography.titleLarge,
+                                        fontWeight = FontWeight.Bold,
+                                        color = MaterialTheme.colorScheme.onSurface
+                                    )
+                                    Spacer(modifier = Modifier.height(16.dp))
+                                }
+
+                                if (!message.isNullOrEmpty()) {
+                                    Text(
+                                        text = message!!,
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = MaterialTheme.colorScheme.onSurface
+                                    )
+                                    Spacer(modifier = Modifier.height(16.dp))
+                                }
+
+                                if (isShowRestartTips) {
+                                    Text(
+                                        text = context.getString(R.string.ts004_store_reset),
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                    Spacer(modifier = Modifier.height(16.dp))
+                                }
+
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.End
+                                ) {
+                                    if (!cancelStr.isNullOrEmpty()) {
+                                        TextButton(onClick = {
+                                            dismiss()
+                                            cancelEvent?.invoke()
+                                        }) {
+                                            Text(cancelStr!!)
+                                        }
+                                        Spacer(modifier = Modifier.width(8.dp))
+                                    }
+
+                                    Button(onClick = {
+                                        dismiss()
+                                        positiveEvent?.invoke()
+                                    }) {
+                                        Text(positiveStr ?: context.getString(android.R.string.ok))
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            dialog!!.setContentView(composeView)
+            dialog!!.setCanceledOnTouchOutside(canceled)
+            
             val lp = dialog!!.window!!.attributes
             lp.width = (widthPixels * if (isPortrait) 0.85 else 0.35).toInt()
             dialog!!.window!!.attributes = lp
 
-            dialog!!.setCanceledOnTouchOutside(canceled)
-            binding.dialogTipSuccessBtn.setOnClickListener {
-                dismiss()
-                positiveEvent?.invoke()
-            }
-            binding.dialogTipCancelBtn.setOnClickListener {
-                dismiss()
-                cancelEvent?.invoke()
-            }
-
-            if (positiveStr != null) {
-                binding.dialogTipSuccessBtn.text = positiveStr
-            }
-            if (!TextUtils.isEmpty(cancelStr)) {
-                binding.spaceMargin.visibility = View.VISIBLE
-                binding.dialogTipCancelBtn.visibility = View.VISIBLE
-                binding.dialogTipCancelBtn.text = cancelStr
-            } else {
-                binding.spaceMargin.visibility = View.GONE
-                binding.dialogTipCancelBtn.visibility = View.GONE
-                binding.dialogTipCancelBtn.text = ""
-            }
-
-            if (message != null) {
-                binding.dialogTipMsgText.visibility = View.VISIBLE
-                binding.dialogTipMsgText.setText(message, TextView.BufferType.NORMAL)
-            } else {
-                binding.dialogTipMsgText.visibility = View.GONE
-            }
-
-            if (titleMessage != null) {
-                binding.dialogTipTitleMsgText.visibility = View.VISIBLE
-                binding.dialogTipTitleMsgText.setText(titleMessage, TextView.BufferType.NORMAL)
-            } else {
-                binding.dialogTipTitleMsgText.visibility = View.GONE
-            }
-
-            binding.tvRestartTips.isVisible = isShowRestartTips
-
-            dialog!!.setContentView(binding.root)
             return dialog as TipDialog
         }
     }
 }
+
