@@ -18,7 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import mpdc4gsr.compose.base.BaseComposeActivity
+import mpdc4gsr.core.ui.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import mpdc4gsr.core.ui.BaseViewModel
 
@@ -31,7 +31,7 @@ import mpdc4gsr.core.ui.BaseViewModel
  * - Enhanced user interactions with action buttons
  * - Consistent theming with other modernized activities
  */
-class SessionDetailComposeActivity : BaseComposeActivity<SessionDetailViewModel>() {
+class SessionDetailComposeActivity : BaseComposeActivity<BaseViewModel>() {
     companion object {
         private const val EXTRA_SESSION_ID = "session_id"
 
@@ -46,13 +46,13 @@ class SessionDetailComposeActivity : BaseComposeActivity<SessionDetailViewModel>
         }
     }
 
-    override fun createViewModel(): SessionDetailViewModel {
-        return viewModels<SessionDetailViewModel>().value
+    override fun createViewModel(): BaseViewModel {
+        return viewModels<BaseViewModel>().value
     }
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    override fun Content(viewModel: SessionDetailViewModel) {
+    override fun Content(viewModel: BaseViewModel) {
         val sessionId = intent.getStringExtra(EXTRA_SESSION_ID) ?: "Unknown"
 
         LibUnifiedTheme {

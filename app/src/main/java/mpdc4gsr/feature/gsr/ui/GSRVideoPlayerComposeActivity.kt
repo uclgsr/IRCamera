@@ -22,7 +22,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import android.widget.VideoView
 import android.widget.MediaController
 import android.net.Uri
-import mpdc4gsr.compose.base.BaseComposeActivity
+import mpdc4gsr.core.ui.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import mpdc4gsr.core.ui.BaseViewModel
 
@@ -37,7 +37,7 @@ import mpdc4gsr.core.ui.BaseViewModel
  * - Export and sharing capabilities
  * - Performance-optimized video rendering
  */
-class GSRVideoPlayerComposeActivity : BaseComposeActivity<GSRVideoPlayerViewModel>() {
+class GSRVideoPlayerComposeActivity : BaseComposeActivity<BaseViewModel>() {
 
     companion object {
         private const val EXTRA_VIDEO_PATH = "video_path"
@@ -56,13 +56,13 @@ class GSRVideoPlayerComposeActivity : BaseComposeActivity<GSRVideoPlayerViewMode
         }
     }
 
-    override fun createViewModel(): GSRVideoPlayerViewModel {
-        return viewModels<GSRVideoPlayerViewModel>().value
+    override fun createViewModel(): BaseViewModel {
+        return viewModels<BaseViewModel>().value
     }
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    override fun Content(viewModel: GSRVideoPlayerViewModel) {
+    override fun Content(viewModel: BaseViewModel) {
         val videoPath = intent.getStringExtra(EXTRA_VIDEO_PATH) ?: ""
         val sessionId = intent.getStringExtra(EXTRA_SESSION_ID)
 
