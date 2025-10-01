@@ -10,7 +10,6 @@ import android.widget.TextView
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
-@Suppress("DEPRECATION")
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -43,6 +42,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 
+@Suppress("DEPRECATION")
 class PDFListFragment : BaseViewModelFragment<PdfViewModel>() {
 
     private val titleView: TitleView by lazy { requireView().findViewById(R.id.title_view) }
