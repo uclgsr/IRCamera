@@ -94,7 +94,7 @@ class IRMonitorChartLiteComposeActivity : BaseComposeActivity<ThermalViewModel>(
                             .weight(0.45f)
                             .padding(8.dp),
                         colors = CardDefaults.cardColors(
-                            containerColor = Color(0xFF16131E)
+                            containerColor = MaterialTheme.colorScheme.surfaceVariant
                         ),
                         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
                     ) {
