@@ -32,6 +32,7 @@ import mpdc4gsr.core.ui.BaseViewModel
 import mpdc4gsr.core.ui.BaseComposeActivity
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.theme.IRCameraTheme
+import mpdc4gsr.feature.thermal.data.ThermalPalette
 
 enum class EditTool(
     val displayName: String,
@@ -44,16 +45,6 @@ enum class EditTool(
     CROP("Crop", Icons.Default.Crop, "Crop image area"),
     FILTER("Filter", Icons.Default.FilterAlt, "Apply thermal filters"),
     EXPORT("Export", Icons.Default.FileDownload, "Export processed image")
-}
-
-enum class ThermalPalette(
-    val displayName: String,
-    val colors: List<Color>
-) {
-    IRON("Iron", listOf(Color.Black, Color.Red, Color.Yellow, Color.White)),
-    RAINBOW("Rainbow", listOf(Color.Blue, Color.Green, Color.Yellow, Color.Red)),
-    GRAYSCALE("Grayscale", listOf(Color.Black, Color.Gray, Color.White)),
-    HOT("Hot", listOf(Color.Black, Color.Red, Color(0xFFFFA500), Color.Yellow))
 }
 
 data class ImageEditState(
@@ -146,15 +137,15 @@ class IRGalleryEditViewModel : BaseViewModel() {
 
 class IRGalleryEditActivityCompose : BaseComposeActivity<IRGalleryEditViewModel>() {
 
-    override fun createViewModel(): IRGalleryEditViewModel =
-        viewModels<IRGalleryEditViewModel>().value
+    private val viewModelInstance: IRGalleryEditViewModel by viewModels()
+
+    override fun createViewModel(): IRGalleryEditViewModel = viewModelInstance
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Simulate loading an image (in real implementation, get from intent)
-        val imagePath = intent.getStringExtra("image_path") ?: "sample_thermal_image.jpg"
-        viewModels<IRGalleryEditViewModel>().value.loadImage(imagePath)
+        val imagePath = intent?.getStringExtra("image_path") ?: "sample_thermal_image.jpg"
+        viewModelInstance.loadImage(imagePath)
     }
 
     @OptIn(ExperimentalMaterial3Api::class)
