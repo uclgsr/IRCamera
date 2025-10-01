@@ -20,21 +20,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
+import com.mpdc4gsr.module.thermalunified.viewmodel.ReportDetailViewModel
 
 /**
  * Compose implementation of Report Detail activity
  * Displays detailed view of a thermal imaging report
  */
-class ReportDetailComposeActivity : BaseComposeActivity<ThermalViewModel>() {
+class ReportDetailComposeActivity : BaseComposeActivity<ReportDetailViewModel>() {
 
-    override fun createViewModel(): ThermalViewModel {
-        return viewModels<ThermalViewModel>().value
+    override fun createViewModel(): ReportDetailViewModel {
+        return viewModels<ReportDetailViewModel>().value
     }
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    override fun Content(viewModel: ThermalViewModel) {
+    override fun Content(viewModel: ReportDetailViewModel) {
         var showShareDialog by remember { mutableStateOf(false) }
 
         LibUnifiedTheme {

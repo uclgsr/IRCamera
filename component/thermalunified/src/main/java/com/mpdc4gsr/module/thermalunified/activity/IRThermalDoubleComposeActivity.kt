@@ -17,26 +17,26 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
+import com.mpdc4gsr.module.thermalunified.viewmodel.IRThermalDoubleViewModel
 
 /**
  * Compose implementation of IR Thermal Double activity
  * Dual-mode thermal imaging with temperature and observation modes
  */
-class IRThermalDoubleComposeActivity : BaseComposeActivity<ThermalViewModel>() {
+class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewModel>() {
 
-    override fun createViewModel(): ThermalViewModel {
-        return viewModels<ThermalViewModel>().value
+    override fun createViewModel(): IRThermalDoubleViewModel {
+        return viewModels<IRThermalDoubleViewModel>().value
     }
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    override fun Content(viewModel: ThermalViewModel) {
-        var selectedMode by remember { mutableIntStateOf(0) }
-        var showOverlay by remember { mutableStateOf(true) }
-        var showTrendChart by remember { mutableStateOf(false) }
-        var showCompass by remember { mutableStateOf(false) }
-        var isRecording by remember { mutableStateOf(false) }
+    override fun Content(viewModel: IRThermalDoubleViewModel) {
+        val selectedMode by viewModel.selectedMode.collectAsState()
+        val showOverlay by viewModel.showOverlay.collectAsState()
+        val showTrendChart by viewModel.showTrendChart.collectAsState()
+        val showCompass by viewModel.showCompass.collectAsState()
+        val isRecording by viewModel.isRecording.collectAsState()
 
         LibUnifiedTheme {
             Scaffold(
@@ -47,7 +47,7 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 horizontalArrangement = Arrangement.spacedBy(8.dp)
                             ) {
                                 TextButton(
-                                    onClick = { selectedMode = 0 },
+                                    onClick = { viewModel.selectMode(0) },
                                     colors = ButtonDefaults.textButtonColors(
                                         contentColor = if (selectedMode == 0) Color.White else Color.White.copy(alpha = 0.6f)
                                     )
@@ -65,7 +65,7 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 }
 
                                 TextButton(
-                                    onClick = { selectedMode = 1 },
+                                    onClick = { viewModel.selectMode(1) },
                                     colors = ButtonDefaults.textButtonColors(
                                         contentColor = if (selectedMode == 1) Color.White else Color.White.copy(alpha = 0.6f)
                                     )
@@ -216,7 +216,7 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                     ) {
                                         Text("Trend", color = Color.White, fontSize = 14.sp)
                                         IconButton(
-                                            onClick = { showTrendChart = false },
+                                            onClick = { if (showTrendChart) viewModel.toggleTrendChart() },
                                             modifier = Modifier.size(24.dp)
                                         ) {
                                             Icon(
@@ -258,13 +258,13 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                     .padding(vertical = 4.dp),
                                 horizontalArrangement = Arrangement.SpaceEvenly
                             ) {
-                                IconButton(onClick = { showTrendChart = !showTrendChart }) {
+                                IconButton(onClick = { viewModel.toggleTrendChart() }) {
                                     Icon(Icons.Default.TrendingUp, "Trend", tint = Color.White)
                                 }
-                                IconButton(onClick = { showCompass = !showCompass }) {
+                                IconButton(onClick = { viewModel.toggleCompass() }) {
                                     Icon(Icons.Default.Explore, "Compass", tint = Color.White)
                                 }
-                                IconButton(onClick = { showOverlay = !showOverlay }) {
+                                IconButton(onClick = { viewModel.toggleOverlay() }) {
                                     Icon(
                                         if (showOverlay) Icons.Default.Visibility else Icons.Default.VisibilityOff,
                                         "Toggle Overlay",
@@ -285,7 +285,7 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 IconButton(onClick = { /* Gallery */ }) {
                                     Icon(Icons.Default.PhotoLibrary, "Gallery", tint = Color.White)
                                 }
-                                IconButton(onClick = { isRecording = !isRecording }) {
+                                IconButton(onClick = { viewModel.toggleRecording() }) {
                                     Icon(
                                         if (isRecording) Icons.Default.Stop else Icons.Default.FiberManualRecord,
                                         "Record",

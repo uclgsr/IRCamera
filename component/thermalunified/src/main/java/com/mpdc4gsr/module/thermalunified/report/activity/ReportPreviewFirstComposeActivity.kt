@@ -20,21 +20,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
+import com.mpdc4gsr.module.thermalunified.viewmodel.ReportPreviewViewModel
 
 /**
  * Compose implementation of Report Preview First activity
  * First step in report preview workflow
  */
-class ReportPreviewFirstComposeActivity : BaseComposeActivity<ThermalViewModel>() {
+class ReportPreviewFirstComposeActivity : BaseComposeActivity<ReportPreviewViewModel>() {
 
-    override fun createViewModel(): ThermalViewModel {
-        return viewModels<ThermalViewModel>().value
+    override fun createViewModel(): ReportPreviewViewModel {
+        return viewModels<ReportPreviewViewModel>().value
     }
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    override fun Content(viewModel: ThermalViewModel) {
+    override fun Content(viewModel: ReportPreviewViewModel) {
         var selectedLayout by remember { mutableIntStateOf(0) }
         var showConfirmDialog by remember { mutableStateOf(false) }
 

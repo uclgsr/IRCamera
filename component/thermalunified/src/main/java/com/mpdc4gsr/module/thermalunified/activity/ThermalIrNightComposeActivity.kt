@@ -17,25 +17,25 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
+import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalIrNightViewModel
 
 /**
  * Compose implementation of Thermal IR Night activity
  * Night mode thermal imaging interface
  */
-class ThermalIrNightComposeActivity : BaseComposeActivity<ThermalViewModel>() {
+class ThermalIrNightComposeActivity : BaseComposeActivity<ThermalIrNightViewModel>() {
 
-    override fun createViewModel(): ThermalViewModel {
-        return viewModels<ThermalViewModel>().value
+    override fun createViewModel(): ThermalIrNightViewModel {
+        return viewModels<ThermalIrNightViewModel>().value
     }
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    override fun Content(viewModel: ThermalViewModel) {
-        var selectedMode by remember { mutableIntStateOf(0) }
-        var nightModeEnabled by remember { mutableStateOf(true) }
-        var showOverlay by remember { mutableStateOf(true) }
-        var isRecording by remember { mutableStateOf(false) }
+    override fun Content(viewModel: ThermalIrNightViewModel) {
+        val selectedMode by viewModel.selectedMode.collectAsState()
+        val nightModeEnabled by viewModel.nightModeEnabled.collectAsState()
+        val showOverlay by viewModel.showOverlay.collectAsState()
+        val isRecording by viewModel.isRecording.collectAsState()
 
         LibUnifiedTheme {
             Scaffold(
@@ -46,7 +46,7 @@ class ThermalIrNightComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 horizontalArrangement = Arrangement.spacedBy(8.dp)
                             ) {
                                 TextButton(
-                                    onClick = { selectedMode = 0 },
+                                    onClick = { viewModel.selectMode(0) },
                                     colors = ButtonDefaults.textButtonColors(
                                         contentColor = if (selectedMode == 0) Color.White else Color.White.copy(alpha = 0.6f)
                                     )
@@ -64,7 +64,7 @@ class ThermalIrNightComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 }
 
                                 TextButton(
-                                    onClick = { selectedMode = 1 },
+                                    onClick = { viewModel.selectMode(1) },
                                     colors = ButtonDefaults.textButtonColors(
                                         contentColor = if (selectedMode == 1) Color.White else Color.White.copy(alpha = 0.6f)
                                     )
@@ -95,7 +95,7 @@ class ThermalIrNightComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             IconButton(onClick = { /* Show info */ }) {
                                 Icon(Icons.Default.Info, contentDescription = "Info", tint = Color.White)
                             }
-                            IconButton(onClick = { nightModeEnabled = !nightModeEnabled }) {
+                            IconButton(onClick = { viewModel.toggleNightMode() }) {
                                 Icon(
                                     if (nightModeEnabled) Icons.Default.Brightness3 else Icons.Default.Brightness7,
                                     contentDescription = "Night Mode",
@@ -258,7 +258,7 @@ class ThermalIrNightComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                     .padding(vertical = 4.dp),
                                 horizontalArrangement = Arrangement.SpaceEvenly
                             ) {
-                                IconButton(onClick = { showOverlay = !showOverlay }) {
+                                IconButton(onClick = { viewModel.toggleOverlay() }) {
                                     Icon(
                                         if (showOverlay) Icons.Default.Visibility else Icons.Default.VisibilityOff,
                                         "Overlay",
@@ -286,7 +286,7 @@ class ThermalIrNightComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                     Icon(Icons.Default.PhotoLibrary, "Gallery", tint = Color.White)
                                 }
                                 FloatingActionButton(
-                                    onClick = { isRecording = !isRecording },
+                                    onClick = { viewModel.toggleRecording() },
                                     containerColor = if (isRecording) Color.Red else MaterialTheme.colorScheme.primary
                                 ) {
                                     Icon(

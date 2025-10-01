@@ -168,7 +168,7 @@ class ImageColorComposeActivity : BaseComposeActivity<ImageColorViewModel>() {
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Button(
-                            onClick = { showData = !showData },
+                            onClick = { viewModel.toggleDataDisplay() },
                             modifier = Modifier.width(120.dp),
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = MaterialTheme.colorScheme.primary
