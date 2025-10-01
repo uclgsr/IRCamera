@@ -26,6 +26,8 @@ The module is being migrated from traditional Android Views with DataBinding to 
 #### UI Components (app/compose/components/)
 - ✅ TargetColorPickerCompose.kt - Horizontal color picker with selection indicator
 - ✅ ComposeTextRenderer.kt - Text rendering utilities
+- ✅ SettingsCompose.kt - Settings list item and section components
+- ✅ MenuCompose.kt - Menu tab bar components (MenuTabBar, MenuFirstTab, MenuSecondTab)
 
 ## Migration Strategy
 
@@ -165,15 +167,15 @@ fun ColorSelectionScreen() {
 
 ### Adapters
 - [x] TargetColorAdapter → TargetColorPickerCompose ✅ (Created)
-- [ ] MenuTabAdapter → MenuTabCompose
-- [ ] BaseMenuAdapter → MenuCompose
+- [x] MenuTabAdapter → MenuTabBar (in MenuCompose.kt) ✅ (Created)
+- [ ] BaseMenuAdapter → BaseMenuCompose
 
 ### Custom Views
+- [x] SettingNightView → SettingItem (in SettingsCompose.kt) ✅ (Created)
+- [x] MenuFirstTabView → MenuFirstTab (in MenuCompose.kt) ✅ (Created)
+- [x] MenuSecondView → MenuSecondTab (in MenuCompose.kt) ✅ (Created)
 - [ ] MenuEditView → MenuEditCompose
-- [ ] MenuSecondView → MenuSecondCompose
-- [ ] MenuFirstTabView → MenuFirstTabCompose
 - [ ] CameraMenuView → CameraMenuCompose
-- [ ] SettingNightView → SettingNightCompose
 
 ## Best Practices
 
