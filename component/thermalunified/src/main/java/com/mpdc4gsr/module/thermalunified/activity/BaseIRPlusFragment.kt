@@ -33,7 +33,7 @@ import com.mpdc4gsr.libunified.ir.usbdual.camera.IRUVCDual
 import com.mpdc4gsr.libunified.ir.usbdual.camera.USBMonitorManager
 import com.mpdc4gsr.libunified.ir.usbdual.inf.OnUSBConnectListener
 import com.mpdc4gsr.libunified.ir.utils.PseudocodeUtils
-import com.mpdc4gsr.libunified.ir.utils.ScreenUtils
+import com.mpdc4gsr.libunified.app.utils.UnifiedScreenUtils
 import com.mpdc4gsr.libunified.ir.view.ITsTempListener
 import com.mpdc4gsr.libunified.ir.view.TemperatureView
 import com.mpdc4gsr.module.thermalunified.extension.setAutoShutter
@@ -196,8 +196,8 @@ abstract class BaseIRPlusFragment :
 
         var width = 0
         var height = 0
-        val screenWidth: Int = ScreenUtils.getScreenWidth(context)
-        val screenHeight: Int = ScreenUtils.getScreenHeight(context) - SizeUtils.dp2px(52f)
+        val screenWidth: Int = UnifiedScreenUtils.getScreenWidth(requireContext())
+        val screenHeight: Int = UnifiedScreenUtils.getScreenHeight(requireContext()) - SizeUtils.dp2px(52f)
         if (screenWidth > screenHeight) {
             width = screenHeight * imageWidth / imageHeight
             height = screenHeight

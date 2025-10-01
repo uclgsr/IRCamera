@@ -78,9 +78,6 @@
         <activity android:name="mpdc4gsr.feature.settings.ui.PolicyActivityCompose" />
         <activity android:name="mpdc4gsr.feature.settings.ui.VersionActivityCompose" />
 
-        <!-- Legacy Activities (deprecated - use Compose versions above) -->
-        <!-- <activity android:name="mpdc4gsr.activities.PolicyActivity" /> -->
-        <!-- <activity android:name="mpdc4gsr.activities.VersionActivity" /> -->
         <activity
             android:name="mpdc4gsr.feature.settings.ui.SettingsComposeActivity"
             android:exported="false"

@@ -9,9 +9,7 @@ import java.util.Locale
 
 /**
  * Consolidated color utilities replacing multiple ColorUtils classes
- * Replaces:
- * - libunified/src/main/java/com/mpdc4gsr/libunified/ir/utils/ColorUtils.kt
- * - libunified/src/main/java/com/mpdc4gsr/libunified/app/comm/util/ColorUtils.kt
+ * All duplicate ColorUtils files have been consolidated into this single utility.
  */
 object UnifiedColorUtils {
 

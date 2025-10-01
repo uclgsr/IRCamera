@@ -8,9 +8,7 @@ import java.io.*
 
 /**
  * Consolidated file utilities replacing multiple FileUtils classes
- * Replaces:
- * - libunified/src/main/java/com/mpdc4gsr/libunified/app/matrix/utils/FileUtils.kt
- * - libunified/src/main/java/com/mpdc4gsr/libunified/ui/utils/FileUtils.java
+ * All duplicate FileUtils files have been consolidated into this single utility.
  */
 object UnifiedFileUtils {
 
