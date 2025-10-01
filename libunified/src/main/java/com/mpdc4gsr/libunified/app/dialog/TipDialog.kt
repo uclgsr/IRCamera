@@ -129,7 +129,7 @@ class TipDialog : Dialog {
 
                                 if (!message.isNullOrEmpty()) {
                                     Text(
-                                        text = message!!,
+                                        text = message,
                                         style = MaterialTheme.typography.bodyMedium,
                                         color = MaterialTheme.colorScheme.onSurface
                                     )
