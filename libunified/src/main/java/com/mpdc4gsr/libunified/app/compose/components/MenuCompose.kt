@@ -112,21 +112,21 @@ fun MenuFirstTab(
     val menuItems = remember(isObserveMode) {
         if (isObserveMode) {
             listOf(
-                MenuTabItem(iconRes = 0, "Menu 1"),
-                MenuTabItem(iconRes = 0, "Observe 2"),
-                MenuTabItem(iconRes = 0, "Menu 4-3"),
-                MenuTabItem(iconRes = 0, "Observe 4"),
-                MenuTabItem(iconRes = 0, "Menu 2-5"),
-                MenuTabItem(iconRes = 0, "Menu 5-6")
+                MenuTabItem(iconRes = com.mpdc4gsr.libunified.R.drawable.selector_menu_first_1, "Menu 1"),
+                MenuTabItem(iconRes = com.mpdc4gsr.libunified.R.drawable.selector_menu_first_observe_2, "Observe 2"),
+                MenuTabItem(iconRes = com.mpdc4gsr.libunified.R.drawable.selector_menu_first_4_3, "Menu 4-3"),
+                MenuTabItem(iconRes = com.mpdc4gsr.libunified.R.drawable.selector_menu_first_observe_4, "Observe 4"),
+                MenuTabItem(iconRes = com.mpdc4gsr.libunified.R.drawable.selector_menu_first_2_5, "Menu 2-5"),
+                MenuTabItem(iconRes = com.mpdc4gsr.libunified.R.drawable.selector_menu_first_5_6, "Menu 5-6")
             )
         } else {
             listOf(
-                MenuTabItem(iconRes = 0, "Menu 1"),
-                MenuTabItem(iconRes = 0, "Menu 2-5"),
-                MenuTabItem(iconRes = 0, "Normal 3"),
-                MenuTabItem(iconRes = 0, "Menu 4-3"),
-                MenuTabItem(iconRes = 0, "Menu 5-6"),
-                MenuTabItem(iconRes = 0, "Normal 6")
+                MenuTabItem(iconRes = com.mpdc4gsr.libunified.R.drawable.selector_menu_first_1, "Menu 1"),
+                MenuTabItem(iconRes = com.mpdc4gsr.libunified.R.drawable.selector_menu_first_2_5, "Menu 2-5"),
+                MenuTabItem(iconRes = com.mpdc4gsr.libunified.R.drawable.selector_menu_first_normal_3, "Normal 3"),
+                MenuTabItem(iconRes = com.mpdc4gsr.libunified.R.drawable.selector_menu_first_4_3, "Menu 4-3"),
+                MenuTabItem(iconRes = com.mpdc4gsr.libunified.R.drawable.selector_menu_first_5_6, "Menu 5-6"),
+                MenuTabItem(iconRes = com.mpdc4gsr.libunified.R.drawable.selector_menu_first_normal_6, "Normal 6")
             )
         }
     }

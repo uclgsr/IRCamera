@@ -20,7 +20,6 @@ import androidx.compose.ui.window.DialogProperties
 fun ConfirmDialog(
     title: String,
     message: String = "",
-    showIcon: Boolean = true,
     showCancel: Boolean = true,
     confirmText: String = "Confirm",
     cancelText: String = "Cancel",

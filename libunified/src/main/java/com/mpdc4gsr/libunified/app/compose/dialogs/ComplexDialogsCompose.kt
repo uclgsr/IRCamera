@@ -116,8 +116,10 @@ fun CarDetectDialog(
     onItemSelected: (CarDetectChildItem) -> Unit,
     onDismiss: () -> Unit
 ) {
-    var expandedStates by remember { 
-        mutableStateOf(items.map { it.isExpanded }.toMutableList()) 
+    val expandedStates = remember { 
+        androidx.compose.runtime.snapshots.SnapshotStateList<Boolean>().apply {
+            addAll(items.map { it.isExpanded })
+        }
     }
     val configuration = LocalConfiguration.current
     val isPortrait = configuration.orientation == android.content.res.Configuration.ORIENTATION_PORTRAIT
@@ -176,9 +178,7 @@ fun CarDetectDialog(
                             item = item,
                             isExpanded = expandedStates.getOrElse(index) { false },
                             onToggle = {
-                                expandedStates = expandedStates.toMutableList().apply {
-                                    this[index] = !this[index]
-                                }
+                                expandedStates[index] = !expandedStates[index]
                             },
                             onChildSelected = { child ->
                                 onItemSelected(child)

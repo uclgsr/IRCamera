@@ -1,5 +1,8 @@
 package com.mpdc4gsr.libunified.app.compose.dialogs
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -7,6 +10,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -116,19 +120,44 @@ fun ColorPickerDialog(
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
 
-                Box(
+                val commonColors = listOf(
+                    Color.Red, Color.Green, Color.Blue, Color.Yellow,
+                    Color.Cyan, Color.Magenta, Color.White, Color.Gray,
+                    Color.Black, Color(0xFFFFA500), Color(0xFF800080), Color(0xFFFFC0CB)
+                )
+                
+                androidx.compose.foundation.lazy.grid.LazyVerticalGrid(
+                    columns = androidx.compose.foundation.lazy.grid.GridCells.Fixed(4),
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(200.dp)
                         .padding(vertical = 16.dp),
-                    contentAlignment = Alignment.Center
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    Text(
-                        text = "Color Picker Component",
-                        fontSize = 14.sp,
-                        color = Color.Gray,
-                        textAlign = TextAlign.Center
-                    )
+                    items(commonColors.size) { index ->
+                        val color = commonColors[index]
+                        Box(
+                            modifier = Modifier
+                                .size(48.dp)
+                                .background(
+                                    color = color,
+                                    shape = androidx.compose.foundation.shape.CircleShape
+                                )
+                                .clickable {
+                                    selectedColor = color.toArgb()
+                                }
+                                .then(
+                                    if (selectedColor == color.toArgb()) {
+                                        Modifier.border(
+                                            width = 3.dp,
+                                            color = MaterialTheme.colorScheme.primary,
+                                            shape = androidx.compose.foundation.shape.CircleShape
+                                        )
+                                    } else Modifier
+                                )
+                        )
+                    }
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))

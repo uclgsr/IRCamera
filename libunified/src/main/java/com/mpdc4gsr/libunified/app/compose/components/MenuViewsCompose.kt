@@ -246,11 +246,3 @@ fun CameraMenuView(
         }
     }
 }
-
-// Constants for camera modes
-object CameraMode {
-    const val MODE_PHOTO = 0
-    const val MODE_VIDEO_TOGGLE = 1
-    const val MODE_GALLERY = 2
-    const val MODE_MORE = 3
-}

@@ -118,6 +118,5 @@ data class SettingItemData(
     val text: String,
     @DrawableRes val iconRes: Int? = null,
     val showIcon: Boolean = true,
-    val showMoreArrow: Boolean = true,
-    val action: (() -> Unit)? = null
+    val showMoreArrow: Boolean = true
 )

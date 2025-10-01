@@ -35,11 +35,11 @@ fun TargetColorPicker(
 ) {
     val targetColors = remember {
         listOf(
-            TargetColor(R.drawable.bg_target_color_green, ObserveBean.TYPE_TARGET_COLOR_GREEN),
-            TargetColor(R.drawable.bg_target_color_red, ObserveBean.TYPE_TARGET_COLOR_RED),
-            TargetColor(R.drawable.bg_target_color_blue, ObserveBean.TYPE_TARGET_COLOR_BLUE),
-            TargetColor(R.drawable.bg_target_color_black, ObserveBean.TYPE_TARGET_COLOR_BLACK),
-            TargetColor(R.drawable.bg_target_color_white, ObserveBean.TYPE_TARGET_COLOR_WHITE)
+            TargetColor(R.drawable.bg_target_color_green, ObserveBean.TYPE_TARGET_COLOR_GREEN, "Green"),
+            TargetColor(R.drawable.bg_target_color_red, ObserveBean.TYPE_TARGET_COLOR_RED, "Red"),
+            TargetColor(R.drawable.bg_target_color_blue, ObserveBean.TYPE_TARGET_COLOR_BLUE, "Blue"),
+            TargetColor(R.drawable.bg_target_color_black, ObserveBean.TYPE_TARGET_COLOR_BLACK, "Black"),
+            TargetColor(R.drawable.bg_target_color_white, ObserveBean.TYPE_TARGET_COLOR_WHITE, "White")
         )
     }
 

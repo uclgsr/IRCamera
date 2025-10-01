@@ -241,7 +241,7 @@ class TipDialogState(private val context: Context) {
     }
 }
 
-class MessageDialogState(private val context: Context) {
+class SimpleMessageDialogState(private val context: Context) {
     fun show(
         iconRes: Int? = null,
         message: String,
