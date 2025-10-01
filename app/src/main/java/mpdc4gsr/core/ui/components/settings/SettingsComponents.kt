@@ -483,8 +483,8 @@ fun SettingsSlider(
 fun SettingsDropdown(
     label: String,
     options: List<String>,
-    selectedOption: String,
-    onOptionSelected: (String) -> Unit,
+    value: String,
+    onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true
 ) {
@@ -505,7 +505,7 @@ fun SettingsDropdown(
             onExpandedChange = { if (enabled) expanded = !expanded }
         ) {
             TextField(
-                value = selectedOption,
+                value = value,
                 onValueChange = {},
                 readOnly = true,
                 enabled = enabled,
@@ -525,7 +525,7 @@ fun SettingsDropdown(
                     androidx.compose.material3.DropdownMenuItem(
                         text = { Text(option) },
                         onClick = {
-                            onOptionSelected(option)
+                            onValueChange(option)
                             expanded = false
                         }
                     )
