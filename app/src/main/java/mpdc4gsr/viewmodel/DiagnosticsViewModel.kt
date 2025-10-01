@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.io.File
+import mpdc4gsr.core.ui.BaseViewModel
 
 /**
  * Diagnostics ViewModel - MVVM Integration
