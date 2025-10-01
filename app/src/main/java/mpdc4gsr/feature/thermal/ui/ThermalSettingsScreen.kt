@@ -87,7 +87,7 @@ fun ThermalSettingsScreen(
                     value = emissivity,
                     valueRange = 0.1f..1.0f,
                     onValueChange = { emissivity = it },
-                    unit = ""
+                    valueLabel = { String.format("%.2f", it) }
                 )
                 SettingsToggle(
                     label = "Auto Scale",
