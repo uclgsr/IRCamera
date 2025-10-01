@@ -86,7 +86,7 @@ fun RecordingSettingsScreen(
                     value = settings.videoFrameRate.toFloat(),
                     valueRange = 15f..60f,
                     onValueChange = { viewModel.updateVideoFrameRate(it.toInt()) },
-                    valueLabel = { "${it.toInt()} fps" }
+                    unit = " fps"
                 )
             }
 
