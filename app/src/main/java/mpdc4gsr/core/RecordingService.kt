@@ -25,12 +25,12 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import mpdc4gsr.config.FeatureFlags
-import mpdc4gsr.config.ProtocolVersion
-import mpdc4gsr.controller.ComprehensiveRecordingController
-import mpdc4gsr.controller.RecordingController
-import mpdc4gsr.controller.RecordingState
-import mpdc4gsr.controller.TriggerSource
+import mpdc4gsr.core.data.FeatureFlags
+import mpdc4gsr.core.data.ProtocolVersion
+import mpdc4gsr.feature.network.data.ComprehensiveRecordingController
+import mpdc4gsr.feature.network.data.RecordingController
+import mpdc4gsr.feature.network.data.RecordingState
+import mpdc4gsr.feature.network.data.TriggerSource
 import mpdc4gsr.feature.network.data.NetworkClient
 import mpdc4gsr.feature.network.data.NetworkConnectionManager
 import mpdc4gsr.feature.network.data.NetworkManager
@@ -40,7 +40,7 @@ import mpdc4gsr.feature.network.data.PreviewDataAdapter
 import mpdc4gsr.feature.network.data.PreviewStreamer
 import mpdc4gsr.feature.network.data.ProtocolHandler
 import mpdc4gsr.core.ui.PermissionManager
-import mpdc4gsr.sync.TimeSyncManager
+import mpdc4gsr.core.data.TimeSyncManager
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.DataInputStream

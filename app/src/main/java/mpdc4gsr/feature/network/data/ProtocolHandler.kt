@@ -2,8 +2,8 @@ package mpdc4gsr.feature.network.data
 
 import android.content.Context
 import android.util.Log
-import mpdc4gsr.sync.TimeSyncManager
-import mpdc4gsr.core.data.utils.TimeManager
+import mpdc4gsr.core.data.TimeSyncManager
+import mpdc4gsr.core.data.TimeManager
 import org.json.JSONObject
 
 /**

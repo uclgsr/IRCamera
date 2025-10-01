@@ -14,8 +14,8 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import mpdc4gsr.config.FeatureFlags
-import mpdc4gsr.config.ProtocolVersion
+import mpdc4gsr.core.data.FeatureFlags
+import mpdc4gsr.core.data.ProtocolVersion
 import mpdc4gsr.core.SessionManager
 import mpdc4gsr.core.StructuredLogger
 import mpdc4gsr.core.data.AdvancedAuthenticationManager

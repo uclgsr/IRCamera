@@ -11,7 +11,7 @@ import mpdc4gsr.core.data.RgbCameraRecorder
 import mpdc4gsr.core.ui.PermissionController
 import mpdc4gsr.feature.gsr.data.GSRSensorRecorder
 import mpdc4gsr.feature.thermal.ui.ThermalCameraRecorder
-import mpdc4gsr.controller.RecordingConstants
+import mpdc4gsr.feature.network.data.RecordingConstants
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.system.measureTimeMillis

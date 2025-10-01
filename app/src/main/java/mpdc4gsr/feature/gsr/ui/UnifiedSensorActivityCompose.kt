@@ -28,7 +28,7 @@ import kotlinx.coroutines.launch
 import mpdc4gsr.core.ui.BaseComposeActivity
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.theme.IRCameraTheme
-import mpdc4gsr.controller.RecordingController
+import mpdc4gsr.feature.network.data.RecordingController
 import mpdc4gsr.core.data.RgbCameraRecorder
 import mpdc4gsr.core.data.UnifiedGSRRecorder
 import mpdc4gsr.core.data.UnifiedNetworkController

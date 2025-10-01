@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
-import mpdc4gsr.controller.RecordingController
+import mpdc4gsr.feature.network.data.RecordingController
 import mpdc4gsr.core.StructuredLogger
 import mpdc4gsr.core.data.model.SessionConfig
 import mpdc4gsr.core.data.model.SessionInfo
