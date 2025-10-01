@@ -49,17 +49,6 @@
         android:theme="@style/AppTheme"
         tools:replace="android:label">
 
-        <!-- Main Launcher Activity -->
-        <activity
-            android:name="mpdc4gsr.feature.main.ui.MainActivity"
-            android:exported="true"
-            android:theme="@style/Theme.AppCompat.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-
         <!-- Jetpack Compose Activities -->
         <activity android:name="mpdc4gsr.feature.settings.ui.PolicyActivityCompose" />
         <activity android:name="mpdc4gsr.feature.settings.ui.VersionActivityCompose" />
@@ -180,6 +169,19 @@
             android:name="mpdc4gsr.sensors.gsr.ShimmerConfigComposeActivity"
             android:exported="false"
             android:label="Shimmer Configuration (Compose)" />
+
+
+        <!-- Main Launcher Activity -->
+        <activity
+            android:name="mpdc4gsr.feature.main.ui.MainComposeActivity"
+            android:exported="true"
+            android:label="IR Camera - Compose UI"
+            android:theme="@style/Theme.AppCompat.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
 
         <!-- Navigation Demo Activity -->

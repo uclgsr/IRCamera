@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#16131e"
-    tools:context="com.mpdc4gsr.module.thermalunified.activity.IRLogMPChartActivity">
+    tools:context="com.mpdc4gsr.module.thermalunified.activity.IRLogMPChartComposeActivity">
 
     <com.mpdc4gsr.libunified.app.view.TitleView
         android:id="@+id/title_view"
