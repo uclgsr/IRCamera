@@ -11,28 +11,33 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import mpdc4gsr.compose.components.TitleBar
 import mpdc4gsr.compose.components.*
 import mpdc4gsr.compose.theme.IRCameraTheme
+import mpdc4gsr.viewmodel.RecordingSettingsViewModel
 
 /**
  * Recording Settings Screen - Configure multi-modal recording parameters
+ * Integrated with RecordingSettingsViewModel for MVVM architecture
  */
 @Composable
 fun RecordingSettingsScreen(
     onBackClick: (() -> Unit)? = null,
+    viewModel: RecordingSettingsViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
-    var autoRecording by remember { mutableStateOf(false) }
-    var recordingQuality by remember { mutableStateOf("High") }
-    var videoFrameRate by remember { mutableIntStateOf(30) }
-    var audioEnabled by remember { mutableStateOf(true) }
-    var simultaneousRecording by remember { mutableStateOf(true) }
-    var timestampSync by remember { mutableStateOf(true) }
+    val context = LocalContext.current
+    val settings by viewModel.recordingSettings.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.initialize(context)
+    }
 
     Column(
         modifier = modifier
@@ -60,26 +65,26 @@ fun RecordingSettingsScreen(
                 SettingsToggle(
                     label = "Auto Recording",
                     description = "Start recording automatically when all devices are connected",
-                    checked = autoRecording,
-                    onCheckedChange = { autoRecording = it }
+                    checked = settings.autoRecording,
+                    onCheckedChange = { viewModel.updateAutoRecording(it) }
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
 
                 SettingsDropdown(
                     label = "Recording Quality",
-                    value = recordingQuality,
+                    value = settings.recordingQuality,
                     options = listOf("Low", "Medium", "High", "Ultra"),
-                    onValueChange = { recordingQuality = it }
+                    onValueChange = { viewModel.updateRecordingQuality(it) }
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
 
                 SettingsSlider(
                     label = "Video Frame Rate",
-                    value = videoFrameRate.toFloat(),
+                    value = settings.videoFrameRate.toFloat(),
                     valueRange = 15f..60f,
-                    onValueChange = { videoFrameRate = it.toInt() },
+                    onValueChange = { viewModel.updateVideoFrameRate(it.toInt()) },
                     unit = "fps"
                 )
             }
@@ -92,8 +97,8 @@ fun RecordingSettingsScreen(
                 SettingsToggle(
                     label = "Audio Recording",
                     description = "Record audio along with video and sensor data",
-                    checked = audioEnabled,
-                    onCheckedChange = { audioEnabled = it }
+                    checked = settings.audioEnabled,
+                    onCheckedChange = { viewModel.updateAudioEnabled(it) }
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -101,8 +106,8 @@ fun RecordingSettingsScreen(
                 SettingsToggle(
                     label = "Simultaneous Recording",
                     description = "Record all sensors at the same time",
-                    checked = simultaneousRecording,
-                    onCheckedChange = { simultaneousRecording = it }
+                    checked = settings.simultaneousRecording,
+                    onCheckedChange = { viewModel.updateSimultaneousRecording(it) }
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -110,8 +115,8 @@ fun RecordingSettingsScreen(
                 SettingsToggle(
                     label = "Timestamp Synchronization",
                     description = "Synchronize timestamps across all recordings",
-                    checked = timestampSync,
-                    onCheckedChange = { timestampSync = it }
+                    checked = settings.timestampSync,
+                    onCheckedChange = { viewModel.updateTimestampSync(it) }
                 )
             }
 
@@ -122,17 +127,17 @@ fun RecordingSettingsScreen(
             ) {
                 SettingsRow(
                     label = "Video Format",
-                    value = "MP4 (H.264)"
+                    value = settings.videoFormat
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 SettingsRow(
                     label = "Audio Format",
-                    value = "AAC"
+                    value = settings.audioFormat
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 SettingsRow(
                     label = "Sensor Data Format",
-                    value = "CSV"
+                    value = settings.sensorDataFormat
                 )
             }
         }

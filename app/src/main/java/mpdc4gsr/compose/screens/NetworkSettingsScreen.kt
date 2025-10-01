@@ -11,25 +11,35 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import mpdc4gsr.compose.components.TitleBar
 import mpdc4gsr.compose.components.*
 import mpdc4gsr.compose.theme.IRCameraTheme
+import mpdc4gsr.viewmodel.NetworkSettingsViewModel
 
 /**
  * Network Settings Screen - Device pairing and network configuration
+ * Integrated with NetworkSettingsViewModel and ShimmerDeviceManager
  */
 @Composable
 fun NetworkSettingsScreen(
     onBackClick: (() -> Unit)? = null,
+    viewModel: NetworkSettingsViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
-    var wifiEnabled by remember { mutableStateOf(true) }
-    var bluetoothEnabled by remember { mutableStateOf(true) }
-    var autoConnect by remember { mutableStateOf(true) }
+    val context = LocalContext.current
+    val settings by viewModel.networkSettings.collectAsState()
+    val networkInfo by viewModel.networkInfo.collectAsState()
+    val pairedDevices by viewModel.pairedDevices.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.initialize(context)
+    }
 
     Column(
         modifier = modifier
@@ -38,7 +48,7 @@ fun NetworkSettingsScreen(
     ) {
         TitleBar(
             title = "Network Settings",
-            showBackClick = true,
+            showBackButton = true,
             onBackClick = onBackClick
         )
 
@@ -57,18 +67,18 @@ fun NetworkSettingsScreen(
                 SettingsToggle(
                     label = "WiFi",
                     description = "Enable WiFi connectivity",
-                    checked = wifiEnabled,
-                    onCheckedChange = { wifiEnabled = it }
+                    checked = settings.wifiEnabled,
+                    onCheckedChange = { viewModel.toggleWifi(it) }
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 SettingsRow(
                     label = "Network",
-                    value = "UCL-WiFi"
+                    value = networkInfo.wifiNetwork
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 SettingsRow(
                     label = "IP Address",
-                    value = "192.168.1.100"
+                    value = networkInfo.ipAddress
                 )
             }
 
@@ -80,15 +90,15 @@ fun NetworkSettingsScreen(
                 SettingsToggle(
                     label = "Bluetooth",
                     description = "Enable Bluetooth connectivity",
-                    checked = bluetoothEnabled,
-                    onCheckedChange = { bluetoothEnabled = it }
+                    checked = settings.bluetoothEnabled,
+                    onCheckedChange = { viewModel.toggleBluetooth(it) }
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 SettingsToggle(
                     label = "Auto Connect",
                     description = "Automatically connect to known devices",
-                    checked = autoConnect,
-                    onCheckedChange = { autoConnect = it }
+                    checked = settings.autoConnect,
+                    onCheckedChange = { viewModel.updateAutoConnect(it) }
                 )
             }
 
@@ -97,18 +107,27 @@ fun NetworkSettingsScreen(
                 title = "Paired Devices",
                 icon = Icons.Default.Devices
             ) {
-                SettingsRow(
-                    label = "Shimmer3 GSR",
-                    value = "Connected"
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                SettingsRow(
-                    label = "TOPDON TC001",
-                    value = "Disconnected"
-                )
+                if (pairedDevices.isEmpty()) {
+                    Text(
+                        text = "No paired devices found",
+                        color = Color.Gray,
+                        fontSize = 14.sp,
+                        modifier = Modifier.padding(vertical = 8.dp)
+                    )
+                } else {
+                    pairedDevices.forEach { device ->
+                        SettingsRow(
+                            label = device.name,
+                            value = if (device.isConnected) "Connected" else "Disconnected"
+                        )
+                        if (device != pairedDevices.last()) {
+                            Spacer(modifier = Modifier.height(8.dp))
+                        }
+                    }
+                }
                 Spacer(modifier = Modifier.height(12.dp))
                 Button(
-                    onClick = { /* Scan for devices */ },
+                    onClick = { viewModel.scanForDevices() },
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Icon(Icons.Default.Search, contentDescription = null)

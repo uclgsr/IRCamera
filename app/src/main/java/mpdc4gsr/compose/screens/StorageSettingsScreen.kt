@@ -11,28 +11,34 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import mpdc4gsr.compose.components.TitleBar
 import mpdc4gsr.compose.components.*
 import mpdc4gsr.compose.theme.IRCameraTheme
+import mpdc4gsr.viewmodel.StorageSettingsViewModel
 
 /**
  * Storage Settings Screen - Configure data storage and export options
+ * Integrated with StorageSettingsViewModel for MVVM architecture
  */
 @Composable
 fun StorageSettingsScreen(
     onBackClick: (() -> Unit)? = null,
+    viewModel: StorageSettingsViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
-    var autoExport by remember { mutableStateOf(false) }
-    var exportFormat by remember { mutableStateOf("CSV") }
-    var storageLocation by remember { mutableStateOf("Internal Storage") }
-    var autoBackup by remember { mutableStateOf(false) }
-    var compressionEnabled by remember { mutableStateOf(true) }
-    var deleteAfterExport by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+    val settings by viewModel.storageSettings.collectAsState()
+    val storageInfo by viewModel.storageInfo.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.initialize(context)
+    }
 
     Column(
         modifier = modifier
@@ -59,23 +65,23 @@ fun StorageSettingsScreen(
             ) {
                 SettingsDropdown(
                     label = "Default Storage",
-                    value = storageLocation,
+                    value = settings.storageLocation,
                     options = listOf("Internal Storage", "SD Card", "External USB"),
-                    onValueChange = { storageLocation = it }
+                    onValueChange = { viewModel.updateStorageLocation(it) }
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
 
                 SettingsRow(
                     label = "Available Space",
-                    value = "45.2 GB"
+                    value = storageInfo.availableSpace
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
 
                 SettingsRow(
                     label = "Used Space",
-                    value = "12.8 GB"
+                    value = storageInfo.usedSpace
                 )
             }
 
@@ -87,17 +93,17 @@ fun StorageSettingsScreen(
                 SettingsToggle(
                     label = "Auto Export",
                     description = "Automatically export data after recording",
-                    checked = autoExport,
-                    onCheckedChange = { autoExport = it }
+                    checked = settings.autoExport,
+                    onCheckedChange = { viewModel.updateAutoExport(it) }
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
 
                 SettingsDropdown(
                     label = "Export Format",
-                    value = exportFormat,
+                    value = settings.exportFormat,
                     options = listOf("CSV", "JSON", "XML", "MATLAB"),
-                    onValueChange = { exportFormat = it }
+                    onValueChange = { viewModel.updateExportFormat(it) }
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -105,8 +111,8 @@ fun StorageSettingsScreen(
                 SettingsToggle(
                     label = "Compression",
                     description = "Compress exported files to save space",
-                    checked = compressionEnabled,
-                    onCheckedChange = { compressionEnabled = it }
+                    checked = settings.compressionEnabled,
+                    onCheckedChange = { viewModel.updateCompression(it) }
                 )
             }
 
@@ -118,8 +124,8 @@ fun StorageSettingsScreen(
                 SettingsToggle(
                     label = "Auto Backup",
                     description = "Automatically backup data to cloud storage",
-                    checked = autoBackup,
-                    onCheckedChange = { autoBackup = it }
+                    checked = settings.autoBackup,
+                    onCheckedChange = { viewModel.updateAutoBackup(it) }
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -127,8 +133,8 @@ fun StorageSettingsScreen(
                 SettingsToggle(
                     label = "Delete After Export",
                     description = "Delete local data after successful export",
-                    checked = deleteAfterExport,
-                    onCheckedChange = { deleteAfterExport = it }
+                    checked = settings.deleteAfterExport,
+                    onCheckedChange = { viewModel.updateDeleteAfterExport(it) }
                 )
             }
         }
