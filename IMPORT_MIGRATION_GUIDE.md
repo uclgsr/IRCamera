@@ -263,6 +263,34 @@ import mpdc4gsr.feature.network.ui.*
 
 **Affected Files:** 2 files
 
+### 9. Sensor UI Models
+
+**Old Path:**
+```kotlin
+import mpdc4gsr.compose.screens.SensorState
+import mpdc4gsr.compose.screens.SensorType
+import mpdc4gsr.compose.screens.GSRAction
+import mpdc4gsr.compose.screens.ThermalAction
+import mpdc4gsr.compose.screens.CameraAction
+import mpdc4gsr.compose.screens.UnifiedSystemState
+import mpdc4gsr.compose.screens.SystemAction
+```
+
+**New Path:**
+```kotlin
+import mpdc4gsr.core.ui.model.SensorState
+import mpdc4gsr.core.ui.model.SensorType
+import mpdc4gsr.core.ui.model.GSRAction
+import mpdc4gsr.core.ui.model.ThermalAction
+import mpdc4gsr.core.ui.model.CameraAction
+import mpdc4gsr.core.ui.model.UnifiedSystemState
+import mpdc4gsr.core.ui.model.SystemAction
+```
+
+**Affected Files:** 7 files
+
+**Note:** All sensor UI models including states and actions have been centralized in `mpdc4gsr.core.ui.model` for better organization and reusability.
+
 ## Quick Reference Table
 
 | Old Package | New Package | Content Type |
@@ -280,18 +308,29 @@ import mpdc4gsr.feature.network.ui.*
 | `mpdc4gsr.data.*` | `mpdc4gsr.core.data.*` or `mpdc4gsr.core.data.utils.*` | Data utilities |
 | `mpdc4gsr.network.*` | `mpdc4gsr.feature.network.data.*` | Network components |
 | `mpdc4gsr.permissions.*` | `mpdc4gsr.core.ui.*` | Permission managers |
-| `mpdc4gsr.compose.screens.*` | `mpdc4gsr.feature.*.ui.*` | Screen implementations |
+| `mpdc4gsr.compose.screens.*` (actions/states) | `mpdc4gsr.core.ui.model.*` | Sensor UI models and actions |
+| `mpdc4gsr.compose.screens.*` (screens) | `mpdc4gsr.feature.*.ui.*` | Screen implementations |
 
 **Note on Consolidations:**
 - `ShimmerDeviceManager` from both `mpdc4gsr.sensors.gsr` and `mpdc4gsr.sensors.unified` has been consolidated to `mpdc4gsr.core.data.ShimmerDeviceManager`
 - All session-related models (SessionConfig, SessionInfo, SessionQuality, SessionStatistics, SessionStatus, SessionSummary, SessionType) are now in `mpdc4gsr.core.data.model`
+- All sensor UI models (SensorState, SensorType, GSRAction, ThermalAction, CameraAction, etc.) are now in `mpdc4gsr.core.ui.model`
 
 ## Statistics
 
-- **Total files modified:** 120+
-- **Total import statements fixed:** 300+
+- **Total files modified:** 130+
+- **Total import statements fixed:** 320+
+- **New model files created:** 1 (SensorModels.kt)
 - **Component modules build status:** All passing
-- **App module status:** Most imports fixed, some remaining issues with Settings components and ViewModels
+- **App module status:** All old compose.screens imports eliminated
+- **Duplicate definitions removed:** Sensor models consolidated from UnifiedSensorDashboard.kt to core.ui.model package
+
+## Key Improvements
+
+1. **Eliminated Old Imports**: All `mpdc4gsr.compose.screens` imports have been replaced with proper package references
+2. **Created Centralized Models**: New `mpdc4gsr.core.ui.model` package for sensor UI models and actions
+3. **Reduced Duplication**: Sensor state and action definitions consolidated from multiple files into single source
+4. **Improved Organization**: Clear separation between data models (core.data.model) and UI models (core.ui.model)
 
 ## Remaining Issues
 
