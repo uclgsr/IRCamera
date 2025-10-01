@@ -24,10 +24,10 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import mpdc4gsr.feature.network.data.CommandConnection
-import mpdc4gsr.network.MockRecordingController
-import mpdc4gsr.network.NetworkManager
-import mpdc4gsr.network.SimpleCommandHandler
-import mpdc4gsr.network.TcpClient
+import mpdc4gsr.feature.network.data.MockRecordingController
+import mpdc4gsr.feature.network.data.NetworkManager
+import mpdc4gsr.feature.network.data.SimpleCommandHandler
+import mpdc4gsr.feature.network.data.TcpClient
 
 /**
  * Compose version of Simple Network Test Activity
