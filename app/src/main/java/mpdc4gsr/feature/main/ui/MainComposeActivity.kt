@@ -9,6 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import mpdc4gsr.feature.gsr.ui.GSRSensorScreen
+import mpdc4gsr.feature.gsr.ui.GSRSettingsScreen
 import mpdc4gsr.feature.camera.ui.RGBCameraScreen
 import mpdc4gsr.feature.network.ui.ConnectScreen
 import mpdc4gsr.feature.thermal.ui.ThermalMonitorScreen
