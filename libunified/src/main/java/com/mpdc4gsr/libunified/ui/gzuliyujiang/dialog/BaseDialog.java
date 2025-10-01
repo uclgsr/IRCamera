@@ -140,7 +140,6 @@ public abstract class BaseDialog extends Dialog implements DialogInterface.OnSho
             return;
         }
         float radiusInPX = contentView.getResources().getDisplayMetrics().density * radius;
-        contentView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         Drawable drawable;
         switch (cornerRound) {
             case CornerRound.Top:
