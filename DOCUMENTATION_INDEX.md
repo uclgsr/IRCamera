@@ -35,7 +35,15 @@ This comprehensive index provides quick navigation to all documentation across t
 ### PC Controller
 
 - **[pc-controller/README.md](pc-controller/README.md)** - Complete desktop controller documentation
+- **[pc-controller/QUICK_START.md](pc-controller/QUICK_START.md)** - Quick start guide
+- **[pc-controller/docs/](pc-controller/docs/)** - Technical documentation (implementation, integration, protocols)
 - **[pc-controller/legacy_implementation/README.md](pc-controller/legacy_implementation/README.md)** - Historical implementation reference
+
+### Scripts
+
+- **[scripts/README.md](scripts/README.md)** - Current script documentation
+- **[scripts/CONSOLIDATION_SUMMARY.md](scripts/CONSOLIDATION_SUMMARY.md)** - Script consolidation details
+- **[scripts/legacy/](scripts/legacy/)** - Archived migration scripts (historical reference only)
 
 ### Testing Infrastructure
 
@@ -127,7 +135,7 @@ Generated figures and tables for academic use:
 
 ### Consolidated Documentation (4 files)
 - docs/consolidated/ARCHITECTURE_AND_UI.md - Complete architecture reference
-- docs/consolidated/IMPLEMENTATION_STATUS.md - Implementation history
+- docs/consolidated/IMPLEMENTATION_STATUS.md - Implementation history and module details
 - docs/consolidated/TESTING_GUIDE.md - Comprehensive testing guide
 - docs/consolidated/COMPOSE_MIGRATION.md - Compose migration details
 
@@ -135,11 +143,19 @@ Generated figures and tables for academic use:
 - MVVM_MODERNIZATION_GUIDE.md - MVVM architecture patterns
 - NETWORK_DEVICE_TESTING_GUIDE.md - Network testing procedures
 
-### Component Documentation (6 files)
+### Component Documentation
 - pc-controller/README.md - Desktop controller guide
+- pc-controller/QUICK_START.md - PC controller quick start
+- pc-controller/docs/ - Technical documentation (7 detailed guides)
+- pc-controller/legacy_implementation/README.md - Historical reference
 - testing-suite/README.md - Testing framework overview
 - testing-suite/TESTING_RESULTS_SUMMARY.md - Test results
 - Component READMEs in source code directories (3 files)
+
+### Scripts Documentation
+- scripts/README.md - Current script documentation
+- scripts/CONSOLIDATION_SUMMARY.md - Script consolidation details
+- scripts/legacy/ - Archived migration scripts (historical reference)
 
 ### Architecture Documentation (2 files)
 - docs/COMPREHENSIVE_ARCHITECTURE_DIAGRAMS.md - System diagrams
@@ -158,7 +174,8 @@ Generated figures and tables for academic use:
 - **Currency**: All content reflects current implementation
 - **Completeness**: Covers all major system components and use cases
 - **Organization**: Logical structure with clear navigation
-- **Consolidation**: Reduced from 52 to ~30 essential files
+- **Consolidation**: Reduced from 54 to 47 markdown files (13% reduction)
+- **Organization**: Clear hierarchy with docs/ consolidation, pc-controller/docs/, and scripts/legacy/
 
 ## Navigation Tips
 
