@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -52,7 +53,7 @@ fun HelpScreen(
             // Quick Start Guide
             SettingsCard(
                 title = "Quick Start Guide",
-                icon = Icons.Default.MenuBook
+                icon = Icons.AutoMirrored.Filled.MenuBook
             ) {
                 Text(
                     text = "1. Connect your sensors (GSR, Thermal Camera)\n" +
