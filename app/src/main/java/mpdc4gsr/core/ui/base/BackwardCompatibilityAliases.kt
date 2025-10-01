@@ -5,8 +5,8 @@ package mpdc4gsr.core.ui.base
  *
  * This file provides backward compatibility for existing references to
  * mpdc4gsr.activities.MainActivity. The actual implementation is now at
- * mpdc4gsr.feature.main.ui.MainActivity following Clean Architecture principles.
+ * mpdc4gsr.feature.main.ui.MainComposeActivity following Clean Architecture principles.
  *
- * @deprecated Use mpdc4gsr.feature.main.ui.MainActivity instead
+ * @deprecated Use mpdc4gsr.feature.main.ui.MainComposeActivity instead
  */
-typealias MainActivity = mpdc4gsr.feature.main.ui.MainActivity
+typealias MainActivity = mpdc4gsr.feature.main.ui.MainComposeActivity

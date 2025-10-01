@@ -13,7 +13,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import mpdc4gsr.core.ui.*
-import mpdc4gsr.feature.main.ui.MainActivity
+import mpdc4gsr.feature.main.ui.MainComposeActivity
 import mpdc4gsr.feature.settings.ui.AboutScreen
 
 /**
@@ -52,7 +52,7 @@ sealed class IRCameraScreen(val route: String) {
     object MonitorThermalFragmentCompose : IRCameraScreen("monitor_thermal_fragment_compose")
 
     // Priority 4: Additional Gallery and Lite Fragments
-    object IRGalleryTabFragment : IRCameraScreen("ir_gallery_tab_fragment")
+    object IRGalleryTabFragmentCompose : IRCameraScreen("ir_gallery_tab_fragment_compose")
     object GalleryPictureFragment : IRCameraScreen("gallery_picture_fragment")
     object GalleryPictureFragmentCompose : IRCameraScreen("gallery_picture_fragment_compose")
     object IRPlushFragment : IRCameraScreen("ir_plush_fragment")
@@ -63,7 +63,7 @@ sealed class IRCameraScreen(val route: String) {
     // Priority 5: Final Specialized Fragments
     object GalleryVideoFragment : IRCameraScreen("gallery_video_fragment")
     object GalleryVideoFragmentCompose : IRCameraScreen("gallery_video_fragment_compose")
-    object PDFListFragment : IRCameraScreen("pdf_list_fragment")
+    object PDFListFragmentCompose : IRCameraScreen("pdf_list_fragment_compose")
     object IRMonitorCaptureFragment : IRCameraScreen("ir_monitor_capture_fragment")
     object IRMonitorCaptureFragmentCompose : IRCameraScreen("ir_monitor_capture_fragment_compose")
     object IRMonitorHistoryFragment : IRCameraScreen("ir_monitor_history_fragment")
@@ -93,15 +93,15 @@ fun IRCameraNavHost(
         composable(IRCameraScreen.Main.route) {
             // Launch main activity
             LaunchedEffect(Unit) {
-                context.startActivity(Intent(context, MainActivity::class.java))
+                context.startActivity(Intent(context, MainComposeActivity::class.java))
             }
             LoadingScreen()
         }
 
         composable(IRCameraScreen.MainCompose.route) {
-            // Launch MainActivity instead of non-existent activity
+            // Launch MainComposeActivity
             LaunchedEffect(Unit) {
-                context.startActivity(Intent(context, MainActivity::class.java))
+                context.startActivity(Intent(context, MainComposeActivity::class.java))
             }
             LoadingScreen()
         }

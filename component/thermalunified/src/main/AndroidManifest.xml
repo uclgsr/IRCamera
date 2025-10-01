@@ -18,6 +18,11 @@
             android:screenOrientation="userPortrait" />
 
         <activity
+            android:name=".activity.IRLogMPChartComposeActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="userPortrait" />
+
+        <activity
             android:name=".activity.IRConfigComposeActivity"
             android:launchMode="singleTop"
             android:screenOrientation="userPortrait" />

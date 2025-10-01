@@ -11,7 +11,7 @@ import com.mpdc4gsr.libunified.app.tools.DeviceTools
 object NavigationManager {
 
     private val routeToClassMap = mapOf(
-        RouterConfig.MAIN to "mpdc4gsr.activities.MainActivity",
+        RouterConfig.MAIN to "mpdc4gsr.feature.main.ui.MainComposeActivity",
         RouterConfig.CLAUSE to "mpdc4gsr.activities.ClauseActivity",
         RouterConfig.POLICY to "mpdc4gsr.activities.PolicyActivityCompose",
         RouterConfig.VERSION to "mpdc4gsr.activities.VersionActivityCompose",
