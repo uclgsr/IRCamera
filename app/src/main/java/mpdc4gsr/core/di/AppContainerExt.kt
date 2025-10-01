@@ -56,8 +56,7 @@ class AppContainerExt(private val context: Context) {
     
     // Thermal SDK Integration
     private fun provideTopdonDataSource(): TopdonDataSource {
-        // TODO: Implement TopdonDataSourceImpl
-        throw NotImplementedError("TopdonDataSource implementation pending")
+        return mpdc4gsr.feature.thermal.data.source.TopdonDataSourceImpl(context)
     }
     
     fun provideThermalRepository(): ThermalRepository {
