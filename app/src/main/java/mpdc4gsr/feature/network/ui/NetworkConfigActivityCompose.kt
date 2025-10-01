@@ -34,8 +34,8 @@ import kotlinx.coroutines.launch
 import mpdc4gsr.core.ui.BaseComposeActivity
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.theme.IRCameraTheme
-import mpdc4gsr.network.NetworkSettings
-import mpdc4gsr.permissions.PermissionController
+import mpdc4gsr.feature.network.data.NetworkSettings
+import mpdc4gsr.core.ui.PermissionController
 import mpdc4gsr.core.ui.PermissionManager
 import mpdc4gsr.core.ui.BaseViewModel
 

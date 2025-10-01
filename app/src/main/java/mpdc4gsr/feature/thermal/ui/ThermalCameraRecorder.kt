@@ -28,7 +28,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import mpdc4gsr.core.data.SessionMetadata
 import mpdc4gsr.feature.network.data.NetworkServer
-import mpdc4gsr.permissions.PermissionController
+import mpdc4gsr.core.ui.PermissionController
 import mpdc4gsr.core.data.ErrorType
 import mpdc4gsr.core.data.RecordingStats
 import mpdc4gsr.core.data.RecordingStatus

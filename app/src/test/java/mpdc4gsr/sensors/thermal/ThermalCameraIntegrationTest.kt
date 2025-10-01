@@ -8,7 +8,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 import org.junit.Assert.*
-import mpdc4gsr.permissions.PermissionController
+import mpdc4gsr.core.ui.PermissionController
 
 /**
  * MVP-focused unit tests for Topdon TC001 thermal camera integration

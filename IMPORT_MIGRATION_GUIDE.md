@@ -252,7 +252,7 @@ import mpdc4gsr.feature.network.data.CommandConnection
 import mpdc4gsr.feature.network.data.ProtocolHandler
 ```
 
-**Affected Files:** 12 files
+**Affected Files:** 12 files (5 additional files fixed in continuation)
 
 ### 7. Permissions
 
@@ -260,14 +260,16 @@ import mpdc4gsr.feature.network.data.ProtocolHandler
 ```kotlin
 import mpdc4gsr.core.permissions.PermissionManager
 import mpdc4gsr.permissions.PermissionManager
+import mpdc4gsr.permissions.PermissionController
 ```
 
 **New Path:**
 ```kotlin
 import mpdc4gsr.core.ui.PermissionManager
+import mpdc4gsr.core.ui.PermissionController
 ```
 
-**Affected Files:** 7 files
+**Affected Files:** 7 files (All 7 files fixed in continuation)
 
 ### 8. Navigation Screens
 
@@ -345,23 +347,26 @@ import mpdc4gsr.core.ui.model.SystemAction
 
 ## Statistics
 
-- **Total files modified:** 174+
-- **Total import statements fixed:** 364+
-- **Files fixed in this update:** 44 files (36 for compose.base, 9 for utils, plus package declaration fixes)
+- **Total files modified:** 187+
+- **Total import statements fixed:** 382+
+- **Files fixed in initial update:** 44 files (36 for compose.base, 9 for utils, plus package declaration fixes)
+- **Files fixed in continuation:** 13 files (7 for permissions, 5 for network, plus additional network fixes)
 - **New model files created:** 1 (SensorModels.kt)
 - **Component modules build status:** All passing
-- **App module status:** All old compose.screens, compose.base, and utils imports eliminated
+- **App module status:** All old compose.screens, compose.base, utils, permissions, and network imports eliminated
 - **Duplicate definitions removed:** Sensor models consolidated from UnifiedSensorDashboard.kt to core.ui.model package
 
 ## Key Improvements
 
-1. **Eliminated Old Imports**: All `mpdc4gsr.compose.screens`, `mpdc4gsr.compose.base`, and `mpdc4gsr.utils` imports have been replaced with proper package references
+1. **Eliminated Old Imports**: All `mpdc4gsr.compose.screens`, `mpdc4gsr.compose.base`, `mpdc4gsr.utils`, `mpdc4gsr.permissions`, and `mpdc4gsr.network` imports have been replaced with proper package references
 2. **Created Centralized Models**: New `mpdc4gsr.core.ui.model` package for sensor UI models and actions
 3. **Reduced Duplication**: Sensor state and action definitions consolidated from multiple files into single source
 4. **Improved Organization**: Clear separation between data models (core.data.model) and UI models (core.ui.model)
 5. **Fixed Base Activity**: BaseComposeActivity moved to `mpdc4gsr.core.ui` package (36 files updated)
 6. **Fixed Utilities**: All utility classes moved to `mpdc4gsr.core.data.utils` package (9 files updated)
 7. **Fixed Package Declarations**: Updated Java files with incorrect package declarations (AppVersionUtil.java)
+8. **Fixed Permissions**: All permission classes moved to `mpdc4gsr.core.ui` package (7 files updated)
+9. **Fixed Network Components**: All network classes moved to `mpdc4gsr.feature.network.data` package (5 files updated)
 
 ## Remaining Issues
 

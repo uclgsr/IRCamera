@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import mpdc4gsr.network.WebSocketClient
+import mpdc4gsr.feature.network.data.WebSocketClient
 import mpdc4gsr.core.data.model.NetworkStatus
 import mpdc4gsr.core.data.model.PCControllerInfo
 import org.json.JSONObject
