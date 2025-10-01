@@ -20,7 +20,14 @@ import mpdc4gsr.core.ui.components.sensors.ThermalSensorCard
 import mpdc4gsr.core.ui.components.sensors.RGBCameraSensorCard
 import mpdc4gsr.core.ui.components.sensors.UnifiedSensorStatus
 import mpdc4gsr.core.ui.theme.IRCameraTheme
-import mpdc4gsr.core.ui.model.*
+import mpdc4gsr.core.ui.model.CameraAction
+import mpdc4gsr.core.ui.model.GSRAction
+import mpdc4gsr.core.ui.model.SensorInfo
+import mpdc4gsr.core.ui.model.SensorState
+import mpdc4gsr.core.ui.model.SensorType
+import mpdc4gsr.core.ui.model.SystemAction
+import mpdc4gsr.core.ui.model.ThermalAction
+import mpdc4gsr.core.ui.model.UnifiedSystemState
 
 /**
  * Unified Sensor Dashboard - Comprehensive view of all sensor modalities
