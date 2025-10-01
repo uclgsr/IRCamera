@@ -3,7 +3,7 @@ package com.mpdc4gsr.libunified.ir.extension
 import android.util.Log
 import com.energy.iruvc.ircmd.IRCMD
 
-private const val TAG = "IRCMDExtension"
+private const val TAG = "IRCMDExtensions"
 
 fun IRCMD.setMirror(enabled: Boolean) {
     try {
