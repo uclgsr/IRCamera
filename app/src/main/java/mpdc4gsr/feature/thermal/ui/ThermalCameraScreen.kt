@@ -119,24 +119,6 @@ private fun ThermalCameraContent(
     }
 }
 
-enum class ThermalPalette(
-    val displayName: String,
-    val colors: List<Color>
-) {
-    IRON("Iron", listOf(Color.Black, Color.Red, Color.Yellow, Color.White)),
-    RAINBOW("Rainbow", listOf(Color.Blue, Color.Green, Color.Yellow, Color.Red)),
-    GRAYSCALE("Grayscale", listOf(Color.Black, Color.Gray, Color.White)),
-    HOT("Hot", listOf(Color.Black, Color.Red, Color(0xFFFFA500), Color.Yellow))
-}
-
-enum class TemperatureUnit {
-    CELSIUS, FAHRENHEIT, KELVIN
-}
-
-enum class MeasurementMode {
-    POINT, LINE, AREA, ISOTHERMAL
-}
-
 @Composable
 private fun ThermalPreviewCard(
     selectedPalette: ThermalPalette,

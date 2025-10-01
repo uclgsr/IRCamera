@@ -24,6 +24,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import mpdc4gsr.core.ui.BaseComposeActivity
 import mpdc4gsr.core.ui.components.TitleBar
+import mpdc4gsr.core.ui.components.SensorStatus
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.core.ui.BaseViewModel
 
@@ -38,14 +39,6 @@ enum class TestSensorType(
     BLUETOOTH("Bluetooth", Icons.Default.Bluetooth, "bluetooth_device"),
     NETWORK("Network", Icons.Default.NetworkCheck, "network_device"),
     STORAGE("Storage", Icons.Default.Storage, "storage_device")
-}
-
-enum class SensorStatus {
-    CONNECTED,
-    DISCONNECTED,
-    CONNECTING,
-    ERROR,
-    STREAMING
 }
 
 data class SensorTestStatus(
