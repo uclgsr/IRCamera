@@ -9,6 +9,7 @@ import android.os.IBinder
 import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -19,7 +20,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
@@ -420,6 +423,8 @@ private fun ConnectionConfigCard(
     onIpAddressChange: (String) -> Unit,
     onPortChange: (String) -> Unit
 ) {
+    val keyboardController = LocalSoftwareKeyboardController.current
+    
     Card(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -440,7 +445,13 @@ private fun ConnectionConfigCard(
                 placeholder = { Text("192.168.1.100") },
                 leadingIcon = { Icon(Icons.Default.Computer, contentDescription = null) },
                 modifier = Modifier.fillMaxWidth(),
-                singleLine = true
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                keyboardActions = KeyboardActions(
+                    onNext = {
+                        // Focus moves to next field automatically
+                    }
+                )
             )
 
             OutlinedTextField(
@@ -451,7 +462,15 @@ private fun ConnectionConfigCard(
                 leadingIcon = { Icon(Icons.Default.Router, contentDescription = null) },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Done
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        keyboardController?.hide()
+                    }
+                )
             )
         }
     }

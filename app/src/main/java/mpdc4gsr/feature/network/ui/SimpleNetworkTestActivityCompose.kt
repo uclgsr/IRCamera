@@ -5,6 +5,7 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -15,8 +16,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -232,6 +235,7 @@ class SimpleNetworkTestActivityCompose : BaseComposeActivity<SimpleNetworkTestVi
     override fun Content(viewModel: SimpleNetworkTestViewModel) {
         IRCameraTheme {
             val context = LocalContext.current
+            val keyboardController = LocalSoftwareKeyboardController.current
             val connectionStatus by viewModel.connectionStatus
             val ipAddress by viewModel.ipAddress
             val port by viewModel.port
@@ -365,7 +369,16 @@ class SimpleNetworkTestActivityCompose : BaseComposeActivity<SimpleNetworkTestVi
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .padding(bottom = 8.dp),
-                                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                                    singleLine = true,
+                                    keyboardOptions = KeyboardOptions(
+                                        keyboardType = KeyboardType.Number,
+                                        imeAction = ImeAction.Next
+                                    ),
+                                    keyboardActions = KeyboardActions(
+                                        onNext = {
+                                            // Focus moves to next field automatically
+                                        }
+                                    )
                                 )
 
                                 OutlinedTextField(
@@ -376,7 +389,16 @@ class SimpleNetworkTestActivityCompose : BaseComposeActivity<SimpleNetworkTestVi
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .padding(bottom = 16.dp),
-                                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                                    singleLine = true,
+                                    keyboardOptions = KeyboardOptions(
+                                        keyboardType = KeyboardType.Number,
+                                        imeAction = ImeAction.Done
+                                    ),
+                                    keyboardActions = KeyboardActions(
+                                        onDone = {
+                                            keyboardController?.hide()
+                                        }
+                                    )
                                 )
 
                                 Button(

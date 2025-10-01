@@ -27,6 +27,18 @@ import mpdc4gsr.compose.theme.IRCameraTheme
 @Composable
 fun SettingsScreen(
     onBackClick: (() -> Unit)? = null,
+    onNavigateToGSRSettings: (() -> Unit)? = null,
+    onNavigateToThermalSettings: (() -> Unit)? = null,
+    onNavigateToCameraSettings: (() -> Unit)? = null,
+    onNavigateToRecordingSettings: (() -> Unit)? = null,
+    onNavigateToStorageSettings: (() -> Unit)? = null,
+    onNavigateToSyncSettings: (() -> Unit)? = null,
+    onNavigateToCalibration: (() -> Unit)? = null,
+    onNavigateToNetworkSettings: (() -> Unit)? = null,
+    onNavigateToDiagnostics: (() -> Unit)? = null,
+    onNavigateToAppInfo: (() -> Unit)? = null,
+    onNavigateToPrivacyPolicy: (() -> Unit)? = null,
+    onNavigateToHelp: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -57,19 +69,19 @@ fun SettingsScreen(
                     icon = Icons.Default.Sensors,
                     title = "GSR Sensor Settings",
                     subtitle = "Configure Shimmer3 device and sampling rate",
-                    onClick = { /* Navigate to GSR settings */ }
+                    onClick = { onNavigateToGSRSettings?.invoke() }
                 )
                 SettingsItem(
                     icon = Icons.Default.Thermostat,
                     title = "Thermal Camera Settings",
                     subtitle = "Temperature calibration and palette options",
-                    onClick = { /* Navigate to thermal settings */ }
+                    onClick = { onNavigateToThermalSettings?.invoke() }
                 )
                 SettingsItem(
                     icon = Icons.Default.Camera,
                     title = "RGB Camera Settings",
                     subtitle = "Resolution, frame rate, and quality settings",
-                    onClick = { /* Navigate to camera settings */ }
+                    onClick = { onNavigateToCameraSettings?.invoke() }
                 )
             }
 
@@ -81,19 +93,19 @@ fun SettingsScreen(
                     icon = Icons.Default.VideoCall,
                     title = "Recording Settings",
                     subtitle = "Multi-modal recording preferences",
-                    onClick = { /* Navigate to recording settings */ }
+                    onClick = { onNavigateToRecordingSettings?.invoke() }
                 )
                 SettingsItem(
                     icon = Icons.Default.Storage,
                     title = "Data Storage",
                     subtitle = "Export location and file formats",
-                    onClick = { /* Navigate to storage settings */ }
+                    onClick = { onNavigateToStorageSettings?.invoke() }
                 )
                 SettingsItem(
                     icon = Icons.Default.Sync,
                     title = "Synchronization",
                     subtitle = "Time sync and data alignment settings",
-                    onClick = { /* Navigate to sync settings */ }
+                    onClick = { onNavigateToSyncSettings?.invoke() }
                 )
             }
 
@@ -136,19 +148,19 @@ fun SettingsScreen(
                     icon = Icons.Default.Tune,
                     title = "Calibration",
                     subtitle = "System calibration and alignment tools",
-                    onClick = { /* Navigate to calibration */ }
+                    onClick = { onNavigateToCalibration?.invoke() }
                 )
                 SettingsItem(
                     icon = Icons.Default.NetworkCheck,
                     title = "Network Settings",
                     subtitle = "Device pairing and network configuration",
-                    onClick = { /* Navigate to network settings */ }
+                    onClick = { onNavigateToNetworkSettings?.invoke() }
                 )
                 SettingsItem(
                     icon = Icons.Default.BugReport,
                     title = "Diagnostics",
                     subtitle = "System diagnostics and troubleshooting",
-                    onClick = { /* Navigate to diagnostics */ }
+                    onClick = { onNavigateToDiagnostics?.invoke() }
                 )
             }
 
@@ -160,19 +172,19 @@ fun SettingsScreen(
                     icon = Icons.Default.Info,
                     title = "App Information",
                     subtitle = "Version 1.0.0 - Multi-Modal Sensor Platform",
-                    onClick = { /* Show app info */ }
+                    onClick = { onNavigateToAppInfo?.invoke() }
                 )
                 SettingsItem(
                     icon = Icons.Default.Description,
                     title = "Privacy Policy",
                     subtitle = "Data privacy and usage policy",
-                    onClick = { /* Show privacy policy */ }
+                    onClick = { onNavigateToPrivacyPolicy?.invoke() }
                 )
                 SettingsItem(
                     icon = Icons.AutoMirrored.Filled.Help,
                     title = "Help & Support",
                     subtitle = "User guide and technical support",
-                    onClick = { /* Show help */ }
+                    onClick = { onNavigateToHelp?.invoke() }
                 )
             }
         }
