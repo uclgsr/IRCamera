@@ -2106,7 +2106,7 @@ class RecordingController(
         }
 
         val convertedEvents = sessionEvents.map { event ->
-            SessionEvent(
+            mpdc4gsr.feature.network.data.SessionEvent(
                 eventType = event.eventType,
                 timestampMs = event.timestampMs,
                 sensorId = event.sensorId,
@@ -2123,7 +2123,7 @@ class RecordingController(
             stopTime = stopTime,
             duration = duration,
             triggerSource = convertFromRecordingControllerTriggerSource(lastTriggerSource)
-                ?: TriggerSource.LOCAL_UI,
+                ?: mpdc4gsr.feature.network.data.TriggerSource.LOCAL_UI,
             sensorActivitySummary = convertedSensorActivitySummary,
             events = convertedEvents,
             errors = errors,
@@ -2133,26 +2133,26 @@ class RecordingController(
         )
     }
 
-    private fun convertFromRecordingControllerTriggerSource(source: RecordingController.TriggerSource?): TriggerSource? {
+    private fun convertFromRecordingControllerTriggerSource(source: RecordingController.TriggerSource?): mpdc4gsr.feature.network.data.TriggerSource? {
         return when (source) {
-            RecordingController.TriggerSource.LOCAL_UI -> TriggerSource.LOCAL_UI
-            RecordingController.TriggerSource.LOCAL_NOTIFICATION -> TriggerSource.LOCAL_NOTIFICATION
-            RecordingController.TriggerSource.REMOTE_PC -> TriggerSource.REMOTE_PC
-            RecordingController.TriggerSource.AUTOMATIC -> TriggerSource.AUTOMATIC
-            RecordingController.TriggerSource.CRASH_RECOVERY -> TriggerSource.CRASH_RECOVERY
+            RecordingController.TriggerSource.LOCAL_UI -> mpdc4gsr.feature.network.data.TriggerSource.LOCAL_UI
+            RecordingController.TriggerSource.LOCAL_NOTIFICATION -> mpdc4gsr.feature.network.data.TriggerSource.LOCAL_NOTIFICATION
+            RecordingController.TriggerSource.REMOTE_PC -> mpdc4gsr.feature.network.data.TriggerSource.REMOTE_PC
+            RecordingController.TriggerSource.AUTOMATIC -> mpdc4gsr.feature.network.data.TriggerSource.AUTOMATIC
+            RecordingController.TriggerSource.CRASH_RECOVERY -> mpdc4gsr.feature.network.data.TriggerSource.CRASH_RECOVERY
             null -> null
         }
     }
 
-    private fun convertFromRecordingControllerSessionState(state: RecordingController.SessionState): SessionState {
+    private fun convertFromRecordingControllerSessionState(state: RecordingController.SessionState): mpdc4gsr.feature.network.data.SessionState {
         return when (state) {
-            RecordingController.SessionState.IDLE -> SessionState.IDLE
-            RecordingController.SessionState.STARTING -> SessionState.STARTING
-            RecordingController.SessionState.RECORDING -> SessionState.RECORDING
-            RecordingController.SessionState.STOPPING -> SessionState.STOPPING
-            RecordingController.SessionState.STOPPED_COMPLETED -> SessionState.STOPPED_COMPLETED
-            RecordingController.SessionState.STOPPED_FAILED -> SessionState.STOPPED_FAILED
-            RecordingController.SessionState.STOPPED_INCOMPLETE -> SessionState.STOPPED_INCOMPLETE
+            RecordingController.SessionState.IDLE -> mpdc4gsr.feature.network.data.SessionState.IDLE
+            RecordingController.SessionState.STARTING -> mpdc4gsr.feature.network.data.SessionState.STARTING
+            RecordingController.SessionState.RECORDING -> mpdc4gsr.feature.network.data.SessionState.RECORDING
+            RecordingController.SessionState.STOPPING -> mpdc4gsr.feature.network.data.SessionState.STOPPING
+            RecordingController.SessionState.STOPPED_COMPLETED -> mpdc4gsr.feature.network.data.SessionState.STOPPED_COMPLETED
+            RecordingController.SessionState.STOPPED_FAILED -> mpdc4gsr.feature.network.data.SessionState.STOPPED_FAILED
+            RecordingController.SessionState.STOPPED_INCOMPLETE -> mpdc4gsr.feature.network.data.SessionState.STOPPED_INCOMPLETE
         }
     }
 }

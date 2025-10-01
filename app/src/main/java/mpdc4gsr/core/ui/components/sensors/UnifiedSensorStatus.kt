@@ -20,6 +20,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 // Replaced with specific imports
 import mpdc4gsr.core.ui.theme.IRCameraTheme
+import mpdc4gsr.core.ui.model.UnifiedSystemState
+import mpdc4gsr.core.ui.model.SensorInfo
+import mpdc4gsr.core.ui.model.SystemAction
+import mpdc4gsr.core.ui.model.SensorType
+import mpdc4gsr.core.ui.model.SensorState
 
 /**
  * Unified Sensor Status Component
