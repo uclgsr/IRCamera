@@ -2,6 +2,7 @@ package com.mpdc4gsr.libunified.ui.animation;
 
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator.AnimatorUpdateListener;
+import android.view.View;
 
 import androidx.annotation.RequiresApi;
 
@@ -17,6 +18,7 @@ public class ChartAnimator {
     protected float mPhaseX = 1f;
 
     private AnimatorUpdateListener mListener;
+    private View mView;
 
     public ChartAnimator() {
     }
@@ -24,6 +26,10 @@ public class ChartAnimator {
     @RequiresApi(11)
     public ChartAnimator(AnimatorUpdateListener listener) {
         mListener = listener;
+    }
+
+    public void setView(View view) {
+        mView = view;
     }
 
     @RequiresApi(11)
@@ -53,7 +59,9 @@ public class ChartAnimator {
 
     @RequiresApi(11)
     public void animateX(int durationMillis, EasingFunction easing) {
-
+        if (mView != null && !mView.isAttachedToWindow()) {
+            return;
+        }
         ObjectAnimator animatorX = xAnimator(durationMillis, easing);
         animatorX.addUpdateListener(mListener);
         animatorX.start();
@@ -66,7 +74,9 @@ public class ChartAnimator {
 
     @RequiresApi(11)
     public void animateXY(int durationMillisX, int durationMillisY, EasingFunction easing) {
-
+        if (mView != null && !mView.isAttachedToWindow()) {
+            return;
+        }
         ObjectAnimator xAnimator = xAnimator(durationMillisX, easing);
         ObjectAnimator yAnimator = yAnimator(durationMillisY, easing);
 
@@ -83,7 +93,9 @@ public class ChartAnimator {
     @RequiresApi(11)
     public void animateXY(int durationMillisX, int durationMillisY, EasingFunction easingX,
                           EasingFunction easingY) {
-
+        if (mView != null && !mView.isAttachedToWindow()) {
+            return;
+        }
         ObjectAnimator xAnimator = xAnimator(durationMillisX, easingX);
         ObjectAnimator yAnimator = yAnimator(durationMillisY, easingY);
 
@@ -104,7 +116,9 @@ public class ChartAnimator {
 
     @RequiresApi(11)
     public void animateY(int durationMillis, EasingFunction easing) {
-
+        if (mView != null && !mView.isAttachedToWindow()) {
+            return;
+        }
         ObjectAnimator animatorY = yAnimator(durationMillis, easing);
         animatorY.addUpdateListener(mListener);
         animatorY.start();

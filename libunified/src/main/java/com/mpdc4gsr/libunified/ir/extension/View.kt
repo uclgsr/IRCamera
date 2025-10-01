@@ -18,8 +18,12 @@ fun View.invisible() {
 }
 
 fun View?.goneAlphaAnimation(duration: Long = 500L) {
-    this?.visibility = View.GONE
-    this?.startAnimation(
+    if (this?.isAttachedToWindow != true) {
+        this?.visibility = View.GONE
+        return
+    }
+    this.visibility = View.GONE
+    this.startAnimation(
         AlphaAnimation(1f, 0f).apply {
             this.duration = duration
             fillAfter = true
@@ -28,8 +32,12 @@ fun View?.goneAlphaAnimation(duration: Long = 500L) {
 }
 
 fun View?.invisibleAlphaAnimation(duration: Long = 500L) {
-    this?.visibility = View.INVISIBLE
-    this?.startAnimation(
+    if (this?.isAttachedToWindow != true) {
+        this?.visibility = View.INVISIBLE
+        return
+    }
+    this.visibility = View.INVISIBLE
+    this.startAnimation(
         AlphaAnimation(1f, 0f).apply {
             this.duration = duration
             fillAfter = true
@@ -38,8 +46,12 @@ fun View?.invisibleAlphaAnimation(duration: Long = 500L) {
 }
 
 fun View?.visibleAlphaAnimation(duration: Long = 500L) {
-    this?.visibility = View.VISIBLE
-    this?.startAnimation(
+    if (this?.isAttachedToWindow != true) {
+        this?.visibility = View.VISIBLE
+        return
+    }
+    this.visibility = View.VISIBLE
+    this.startAnimation(
         AlphaAnimation(0f, 1f).apply {
             this.duration = duration
             fillAfter = true

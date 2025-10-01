@@ -349,7 +349,9 @@ public abstract class PieRadarChartBase<T extends ChartData<? extends IDataSet<?
 
     @SuppressLint("NewApi")
     public void spin(int durationmillis, float fromangle, float toangle, EasingFunction easing) {
-
+        if (!isAttachedToWindow()) {
+            return;
+        }
         setRotationAngle(fromangle);
 
         ObjectAnimator spinAnimator = ObjectAnimator.ofFloat(this, "rotationAngle", fromangle,
@@ -364,6 +366,8 @@ public abstract class PieRadarChartBase<T extends ChartData<? extends IDataSet<?
                 postInvalidate();
             }
         });
-        spinAnimator.start();
+        if (isAttachedToWindow()) {
+            spinAnimator.start();
+        }
     }
 }
