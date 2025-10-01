@@ -13,9 +13,9 @@ ext_modules = [
     Pybind11Extension(
         "enhanced_native_backend",
         [
-            "src/enhanced_shimmer.cpp",
+            "src/shimmer.cpp",
             "src/data_processor.cpp", 
-            "src/enhanced_pybind_module.cpp",
+            "src/pybind_module.cpp",
         ],
         include_dirs=[
             "include",
