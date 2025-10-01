@@ -69,7 +69,7 @@ fun CameraSettingsScreen(
                     value = frameRate.toFloat(),
                     valueRange = 15f..60f,
                     onValueChange = { frameRate = it.toInt() },
-                    valueLabel = { "${it.toInt()} fps" }
+                    unit = " fps"
                 )
             }
 
