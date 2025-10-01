@@ -23,7 +23,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import mpdc4gsr.compose.activity.MainComposeActivity
+import mpdc4gsr.feature.main.ui.MainComposeActivity
 import kotlin.coroutines.CoroutineContext
 
 class BackgroundDeviceScanningService : LifecycleService(), CoroutineScope {
