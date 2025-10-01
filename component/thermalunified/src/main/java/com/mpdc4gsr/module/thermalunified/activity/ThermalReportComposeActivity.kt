@@ -36,7 +36,9 @@ class ThermalReportComposeActivity : BaseComposeActivity<ThermalReportViewModel>
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ThermalReportViewModel) {
-        ThermalReportScreen()
+        ThermalReportScreen(
+            onBackClick = { finish() }
+        )
     }
 }
 
@@ -47,7 +49,8 @@ class ThermalReportViewModel : BaseViewModel() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ThermalReportScreen(
-    viewModel: ThermalReportViewModel = viewModel()
+    viewModel: ThermalReportViewModel = viewModel(),
+    onBackClick: (() -> Unit)? = null
 ) {
     var selectedTemplate by remember { mutableStateOf(ReportTemplate.STANDARD) }
     var reportTitle by remember { mutableStateOf("Thermal Analysis Report") }
@@ -73,7 +76,7 @@ private fun ThermalReportScreen(
                 titleContentColor = Color.White
             ),
             navigationIcon = {
-                IconButton(onClick = { /* Navigate back */ }) {
+                IconButton(onClick = { onBackClick?.invoke() }) {
                     Icon(
                         Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Back",
