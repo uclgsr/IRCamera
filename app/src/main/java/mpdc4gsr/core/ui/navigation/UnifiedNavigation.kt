@@ -90,7 +90,7 @@ fun UnifiedNavHost(
     ) {
         // Home and Dashboard
         composable(UnifiedRoute.Home.route) {
-            NavigationPerformanceHelper.TrackNavigation("Home")
+            NavigationPerformanceHelper.TrackNavigation(UnifiedRoute.Home.displayName)
             
             MainScreen(
                 onNavigateToSensors = { navController.navigate(UnifiedRoute.Dashboard.route) },
