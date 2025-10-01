@@ -9,16 +9,16 @@ import com.mpdc4gsr.libunified.app.broadcast.DeviceBroadcastReceiver
 import com.mpdc4gsr.libunified.app.common.SharedManager
 import com.mpdc4gsr.libunified.app.config.HttpConfig
 import com.mpdc4gsr.libunified.app.lms.LMS
-import com.mpdc4gsr.libunified.app.lms.utils.ConstantUtil
-import com.mpdc4gsr.libunified.app.lms.utils.LanguageUtil
-import com.mpdc4gsr.libunified.app.utils.AppUtil
+import com.mpdc4gsr.libunified.app.lms.utils.ConstantUtils
+import com.mpdc4gsr.libunified.app.lms.utils.LanguageUtils
+import com.mpdc4gsr.libunified.app.utils.AppUtils
 import mpdc4gsr.core.App
 
 /**
  * Application initialization utility functions
  * Provides centralized initialization for various app components
  */
-object InitUtil {
+object InitUtils {
 
     /**
      * Initialize receiver for device broadcast events
@@ -58,11 +58,11 @@ object InitUtil {
     fun initLms() {
         try {
             val context = BaseApplication.instance
-            val locale = LanguageUtil.getCurrentLanguage()
+            val locale = LanguageUtils.getCurrentLanguage()
 
             LMS.getInstance().init(context).apply {
                 productType = "TC001"
-                setLoginType(ConstantUtil.LOGIN_TC001_TYPE)
+                setLoginType(ConstantUtils.LOGIN_TC001_TYPE)
                 softwareCode = BaseApplication.instance.getSoftWareCode()
                 setEnabledLog(BuildConfig.DEBUG)
                 setPrivacyPolicy("")

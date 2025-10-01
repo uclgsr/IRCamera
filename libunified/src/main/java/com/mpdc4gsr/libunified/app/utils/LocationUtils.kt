@@ -24,7 +24,7 @@ import kotlin.coroutines.resume
  *
  * Created by LCG on 2024/6/27.
  */
-object LocationUtil {
+object LocationUtils {
     /**
      * ， .
      * @return --， null

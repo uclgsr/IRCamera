@@ -16,9 +16,9 @@ import com.hjq.permissions.XXPermissions
 
 /**
  * WifiUtil based on reference repository implementation
- * Adapted from libapp/src/main/java/com/topdon/lib/core/utils/WifiUtil.kt
+ * Adapted from libapp/src/main/java/com/topdon/lib/core/utils/WifiUtils.kt
  */
-object WifiUtil {
+object WifiUtils {
 
     /**
      *  SSID.

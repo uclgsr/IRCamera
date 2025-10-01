@@ -1,8 +1,8 @@
 package com.mpdc4gsr.module.user.viewmodel
 
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
-import com.mpdc4gsr.libunified.app.common.SaveSettingUtil
-import com.mpdc4gsr.libunified.app.common.WifiSaveSettingUtil
+import com.mpdc4gsr.libunified.app.common.SaveSettingUtils
+import com.mpdc4gsr.libunified.app.common.WifiSaveSettingUtils
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -32,9 +32,9 @@ class MoreFragmentComposeViewModel : BaseViewModel() {
     fun initialize(isTC007: Boolean) {
         launchWithErrorHandling {
             val isSaveEnabled = if (isTC007) {
-                WifiSaveSettingUtil.isSaveSetting
+                WifiSaveSettingUtils.isSaveSetting
             } else {
-                SaveSettingUtil.isSaveSetting
+                SaveSettingUtils.isSaveSetting
             }
 
             _deviceSettings.value = DeviceSettingsState(
@@ -50,9 +50,9 @@ class MoreFragmentComposeViewModel : BaseViewModel() {
         launchWithErrorHandling {
             val currentState = _deviceSettings.value
             if (currentState.isTC007) {
-                WifiSaveSettingUtil.isSaveSetting = enabled
+                WifiSaveSettingUtils.isSaveSetting = enabled
             } else {
-                SaveSettingUtil.isSaveSetting = enabled
+                SaveSettingUtils.isSaveSetting = enabled
             }
 
             _deviceSettings.value = currentState.copy(

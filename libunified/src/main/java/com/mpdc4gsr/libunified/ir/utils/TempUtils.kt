@@ -3,7 +3,7 @@ package com.mpdc4gsr.libunified.ir.utils
 import android.graphics.Point
 import kotlin.math.abs
 
-object TempUtil {
+object TempUtils {
     fun getLineTemps(point1: Point, point2: Point, tempArray: ByteArray, width: Int): List<Float> {
         if (point1 == point2) {//，
             return ArrayList(0)

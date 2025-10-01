@@ -8,7 +8,7 @@ import kotlin.math.min
 /**
  * Consolidated temperature and thermal utilities
  * Replaces:
- * - libunified/src/main/java/com/mpdc4gsr/libunified/ir/utils/TempUtil.kt
+ * - libunified/src/main/java/com/mpdc4gsr/libunified/ir/utils/TempUtils.kt
  * - Various temperature calculation utilities across modules
  */
 object UnifiedTemperatureUtils {

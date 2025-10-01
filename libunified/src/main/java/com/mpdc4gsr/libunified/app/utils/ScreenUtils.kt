@@ -5,9 +5,9 @@ import android.content.res.Configuration
 
 /**
  * ScreenUtil based on reference repository implementation
- * Adapted from libapp/src/main/java/com/topdon/lib/core/utils/ScreenUtil.kt
+ * Adapted from libapp/src/main/java/com/topdon/lib/core/utils/ScreenUtils.kt
  */
-object ScreenUtil {
+object ScreenUtils {
     @JvmStatic
     fun getScreenWidth(context: Context): Int = context.resources.displayMetrics.widthPixels
 

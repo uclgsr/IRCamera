@@ -2,7 +2,7 @@ package com.mpdc4gsr.libunified.app.lms.utils;
 
 import android.content.Context;
 
-public class NetworkUtil {
+public class NetworkUtils {
     public static boolean isNetworkAvailable() {
         return true;
     }

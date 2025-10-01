@@ -24,7 +24,7 @@ import com.csl.irCamera.R
 import com.mpdc4gsr.libunified.app.BaseApplication
 import com.mpdc4gsr.libunified.app.common.SharedManager
 import com.mpdc4gsr.libunified.app.config.RouterConfig
-import com.mpdc4gsr.libunified.app.lms.utils.NetworkUtil
+import com.mpdc4gsr.libunified.app.lms.utils.NetworkUtils
 import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import com.mpdc4gsr.libunified.app.utils.CommUtils
 import com.mpdc4gsr.libunified.app.utils.UnifiedVersionUtils
@@ -66,7 +66,7 @@ class ClauseViewModel : BaseViewModel() {
 
                 // Set network status
                 val networkStatus =
-                    if (NetworkUtil.isNetworkAvailable()) "Connected" else "Disconnected"
+                    if (NetworkUtils.isNetworkAvailable()) "Connected" else "Disconnected"
                 // SharedManager.setNetworkStatus(networkStatus)
             }
 

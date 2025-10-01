@@ -24,13 +24,13 @@ import com.mpdc4gsr.libunified.app.lms.activity.LmsUpdateDialog;
 import com.mpdc4gsr.libunified.app.lms.bean.AppInfoBean;
 import com.mpdc4gsr.libunified.app.lms.bean.CommonBean;
 import com.mpdc4gsr.libunified.app.lms.network.ResponseBean;
-import com.mpdc4gsr.libunified.app.lms.utils.NetworkUtil;
+import com.mpdc4gsr.libunified.app.lms.utils.NetworkUtils;
 import com.mpdc4gsr.libunified.app.lms.weiget.TToast;
 import com.mpdc4gsr.libunified.app.lms.xutils.common.Callback;
 import com.mpdc4gsr.libunified.app.lms.xutils.common.task.PriorityExecutor;
 import com.mpdc4gsr.libunified.app.lms.xutils.http.RequestParams;
 import com.mpdc4gsr.libunified.app.lms.xutils.x;
-import com.mpdc4gsr.libunified.app.utils.AppUtil;
+import com.mpdc4gsr.libunified.app.utils.AppUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -40,7 +40,7 @@ import java.util.List;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
 
-public class AppVersionUtil {
+public class AppVersionUtils {
     private Context mContext;
     private DownloadCompleteReceiver completeReceiver;
     private DownloadManager dowanloadmanager = null;
@@ -58,7 +58,7 @@ public class AppVersionUtil {
             dowanloadmanager = (DownloadManager) mContext.getSystemService(DOWNLOAD_SERVICE);
         }
 
-        if (!NetworkUtil.isConnected(mContext)) {
+        if (!NetworkUtils.isConnected(mContext)) {
             TToast.shortToast(mContext, R.string.lms_setting_http_error);
             return;
         }
@@ -100,7 +100,7 @@ public class AppVersionUtil {
     }
 
     private float getDealVersionCode() {
-        return AppUtil.getVersionCode(mContext) / 10;
+        return AppUtils.getVersionCode(mContext) / 10;
     }
 
     private void showNewVersionDialog(AppInfoBean bean) {
@@ -196,7 +196,7 @@ public class AppVersionUtil {
             File localFile = new File(mContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath());
             List<File> files = ZipUtils.unzipFile(file, localFile);
             if (files != null && files.size() != 0) {
-                AppUtil.installApp(mContext, files.get(0));
+                AppUtils.installApp(mContext, files.get(0));
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -293,7 +293,7 @@ public class AppVersionUtil {
             File localFile = new File(mContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath());
             List<File> files = ZipUtils.unzipFile(file, localFile);
             if (files != null && files.size() != 0) {
-                AppUtil.installApp(mContext, files.get(0));
+                AppUtils.installApp(mContext, files.get(0));
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();

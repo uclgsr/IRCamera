@@ -45,7 +45,7 @@ import static com.blankj.utilcode.util.ImageUtils.save;
  * @author: CaiSongL
  * @date: 2023/5/11 15:58
  */
-public class ExcelUtil {
+public class ExcelUtils {
 
     @NonNull
     private static String getTemperature(int index, @NonNull byte[] norTempData, boolean isShowC) {

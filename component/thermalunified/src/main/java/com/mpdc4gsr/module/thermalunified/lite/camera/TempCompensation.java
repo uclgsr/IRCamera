@@ -16,7 +16,7 @@ import com.energy.irutilslibrary.LibIRTemp;
 import com.mpdc4gsr.libunified.app.BaseApplication;
 import com.mpdc4gsr.libunified.ir.usbdual.Const;
 import com.mpdc4gsr.libunified.ir.usbdual.DeviceType;
-import com.mpdc4gsr.libunified.ir.utils.FileUtil;
+import com.mpdc4gsr.libunified.ir.utils.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -67,14 +67,14 @@ public class TempCompensation {
         File file = new File(BaseApplication.instance.getExternalCacheDir(), "NUC_T_HIGH_" + sn + ".bin");
         if (file.exists()) {
             Log.d(TAG, "File exists, reading from: " + file.getAbsolutePath());
-            byte[] nucTableHighByte = FileUtil.readFile2BytesByStream(BaseApplication.instance.getApplicationContext(), file);
+            byte[] nucTableHighByte = FileUtils.readFile2BytesByStream(BaseApplication.instance.getApplicationContext(), file);
             nucT = byteToShort(nucTableHighByte);
             Log.d(TAG, "getNucTData int: " + Arrays.toString(nucT));
         } else {
             Log.d(TAG, "getNucTData path: " + file.getAbsolutePath());
             readFlashData(CommonParams.SdFilePath.DEFAULT_DATA_NUC_T_HIGH, file.getPath(),
                     progress -> Log.d(TAG, "getNucTData readFlashData DEFAULT_DATA_NUC_T_HIGH : " + progress));
-            byte[] nucTableHighByte = FileUtil.readFile2BytesByStream(BaseApplication.instance.getApplicationContext(), file);
+            byte[] nucTableHighByte = FileUtils.readFile2BytesByStream(BaseApplication.instance.getApplicationContext(), file);
             Log.d(TAG, "getNucTData byte: " + nucTableHighByte.length + "---" + Arrays.toString(nucTableHighByte));
             nucT = byteToShort(nucTableHighByte);
             Log.d(TAG, "getNucTData int: " + Arrays.toString(nucT));

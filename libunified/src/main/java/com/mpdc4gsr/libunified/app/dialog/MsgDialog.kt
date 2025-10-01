@@ -12,7 +12,7 @@ import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.mpdc4gsr.libunified.R
-import com.mpdc4gsr.libunified.app.utils.ScreenUtil
+import com.mpdc4gsr.libunified.app.utils.ScreenUtils
 import com.mpdc4gsr.libunified.databinding.DialogMsgBinding
 
 
@@ -87,7 +87,7 @@ class MsgDialog : Dialog {
 
                     0.3
                 }
-            lp.width = (ScreenUtil.getScreenWidth(context!!) * wRatio).toInt()
+            lp.width = (ScreenUtils.getScreenWidth(context!!) * wRatio).toInt()
             dialog!!.window!!.attributes = lp
 
             dialog!!.setCanceledOnTouchOutside(false)

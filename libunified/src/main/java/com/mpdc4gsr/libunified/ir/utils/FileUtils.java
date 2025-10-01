@@ -38,7 +38,7 @@ import java.util.Locale;
  * Provides methods for file I/O operations including saving thermal data,
  * managing directories, and handling various file formats.
  */
-public enum FileUtil {
+public enum FileUtils {
     ;
 
     private static final String TAG = "FileUtil";
@@ -397,7 +397,7 @@ public enum FileUtil {
                 os = new ByteArrayOutputStream();
                 byte[] b = new byte[sBufferSize];
                 int len;
-                while (-1 != (len = is.read(b, 0, FileUtil.sBufferSize))) {
+                while (-1 != (len = is.read(b, 0, FileUtils.sBufferSize))) {
                     os.write(b, 0, len);
                 }
                 return os.toByteArray();

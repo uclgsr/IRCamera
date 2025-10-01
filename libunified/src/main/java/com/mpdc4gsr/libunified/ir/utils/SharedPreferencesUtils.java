@@ -9,7 +9,7 @@ import java.nio.charset.StandardCharsets;
 /**
  * Created by fengjibo on 2023/4/12.
  */
-public enum SharedPreferencesUtil {
+public enum SharedPreferencesUtils {
     ;
 
     private static final String FILE_NAME = "usb_ir";

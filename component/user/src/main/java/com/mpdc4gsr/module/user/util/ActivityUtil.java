@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 
-import com.mpdc4gsr.libunified.app.lms.utils.NetworkUtil;
+import com.mpdc4gsr.libunified.app.lms.utils.NetworkUtils;
 import com.mpdc4gsr.libunified.app.lms.weiget.TToast;
 import com.mpdc4gsr.module.user.R;
 
@@ -20,7 +20,7 @@ public class ActivityUtil {
 
     public static void goSystemBrowser(Context mContext, String url) {
         Log.w("bcf", "goSystemBrowser");
-        if (!NetworkUtil.isConnected(mContext)) {
+        if (!NetworkUtils.isConnected(mContext)) {
             TToast.shortToast(mContext, R.string.lms_setting_http_error);
             return;
         }

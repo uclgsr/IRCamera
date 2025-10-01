@@ -8,7 +8,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.view.isVisible
 import com.blankj.utilcode.util.SizeUtils
-import com.mpdc4gsr.libunified.app.utils.ScreenUtil
+import com.mpdc4gsr.libunified.app.utils.ScreenUtils
 import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.module.thermalunified.report.bean.ReportIRBean
 import com.mpdc4gsr.module.thermalunified.report.bean.ReportTempBean
@@ -178,7 +178,7 @@ class ReportIRShowView : LinearLayout {
     fun setImageDrawable(drawable: Drawable?) {
         val ivImage = findViewById<View>(R.id.iv_image)
         val isLand = (drawable?.intrinsicWidth ?: 0) > (drawable?.intrinsicHeight ?: 0)
-        val width = (ScreenUtil.getScreenWidth(context) * (if (isLand) 234 else 175) / 375f).toInt()
+        val width = (ScreenUtils.getScreenWidth(context) * (if (isLand) 234 else 175) / 375f).toInt()
         val height = (width * (drawable?.intrinsicHeight ?: 0).toFloat() / (drawable?.intrinsicWidth
             ?: 1)).toInt()
         val layoutParams = ivImage.layoutParams

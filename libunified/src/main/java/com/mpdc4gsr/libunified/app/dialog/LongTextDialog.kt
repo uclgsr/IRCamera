@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.mpdc4gsr.libunified.R
-import com.mpdc4gsr.libunified.app.utils.ScreenUtil
+import com.mpdc4gsr.libunified.app.utils.ScreenUtils
 import com.mpdc4gsr.libunified.databinding.DialogLongTextBinding
 
 
@@ -29,7 +29,7 @@ class LongTextDialog(context: Context, val title: String?, val content: String?)
 
         window?.let {
             val layoutParams = it.attributes
-            layoutParams.width = (ScreenUtil.getScreenWidth(context) * 0.74f).toInt()
+            layoutParams.width = (ScreenUtils.getScreenWidth(context) * 0.74f).toInt()
             layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
             it.attributes = layoutParams
         }

@@ -115,7 +115,48 @@ val dateFormat = SimpleDateFormat("yyyyMMddHHmmss")
 val dateFormat = SimpleDateFormat("yyyyMMdd_HHmmss_SSS")
 ```
 
-### 3. CODING_STANDARDS.md Created
+### 3. File Renaming: Util to Utils Standardization
+
+All utility class files with `Util` (singular) suffix have been renamed to `Utils` (plural) to enforce consistency across the codebase.
+
+**Files Renamed (20 total):**
+
+**App Module:**
+- `AppVersionUtil.java` → `AppVersionUtils.java`
+- `InitUtil.kt` → `InitUtils.kt`
+
+**LibUnified Module:**
+- `ExcelUtil.java` → `ExcelUtils.java`
+- `SaveSettingUtil.kt` → `SaveSettingUtils.kt`
+- `WifiSaveSettingUtil.kt` → `WifiSaveSettingUtils.kt`
+- `ConstantUtil.java` → `ConstantUtils.java`
+- `LanguageUtil.java` → `LanguageUtils.java`
+- `NetworkUtil.java` → `NetworkUtils.java`
+- `SocketCmdUtil.kt` → `SocketCmdUtils.kt`
+- `AmplifyUtil.java` → `AmplifyUtils.java`
+- `AppUtil.java` → `AppUtils.java`
+- `BluetoothUtil.kt` → `BluetoothUtils.kt`
+- `LocationUtil.kt` → `LocationUtils.kt`
+- `ScreenUtil.kt` → `ScreenUtils.kt`
+- `TemperatureUtil.kt` → `TemperatureUtils.kt`
+- `WifiUtil.kt` → `WifiUtils.kt`
+- `FileUtil.java` → `FileUtils.java`
+- `SharedPreferencesUtil.java` → `SharedPreferencesUtils.java`
+- `TempUtil.kt` → `TempUtils.kt`
+- `DragViewUtil.java` → `DragViewUtils.java`
+
+**Changes Applied:**
+1. Files renamed using `git mv` to preserve history
+2. Class/object/enum names updated inside each file
+3. All import statements updated across the entire codebase
+4. All class usage references updated (e.g., `FileUtil.method()` → `FileUtils.method()`)
+
+**Impact:**
+- 20 files renamed
+- 68 files total modified (including files with updated imports)
+- Zero breaking changes - all references updated automatically
+
+### 4. CODING_STANDARDS.md Created
 
 A comprehensive coding standards document has been created covering:
 
@@ -131,22 +172,31 @@ A comprehensive coding standards document has been created covering:
 ## Statistics
 
 ### Lines Changed
-- **FileUtil.java:** 143 lines modified (131 deleted, 12 added)
+- **FileUtils.java** (renamed from FileUtil.java): 143 lines modified (131 deleted, 12 added)
 - **TimeTool.kt:** 1 line changed
+- **File renames:** 20 files renamed with class names updated
+- **Import updates:** 68 files modified with updated imports and references
 - **CODING_STANDARDS.md:** 271 lines added (new file)
-- **Total:** 415 lines affected
+- **STANDARDIZATION_SUMMARY.md:** Updated with file renaming details
+- **Total impact:** 100+ files affected across the renaming process
 
 ### Non-ASCII Characters Removed
-- **FileUtil.java:** 7 instances of Chinese text removed
+- **FileUtils.java:** 7 instances of Chinese text removed
 - **TimeTool.kt:** 0 (no non-ASCII characters found)
 
 ### Timestamp Formats Standardized
-- **FileUtil.java:** 5 occurrences updated
+- **FileUtils.java:** 5 occurrences updated
 - **TimeTool.kt:** 1 occurrence updated
 - **Total:** 6 timestamp formats standardized across both files
 
 ### Minimal Javadocs Removed
-- **FileUtil.java:** 20+ minimal/empty Javadoc blocks removed
+- **FileUtils.java:** 20+ minimal/empty Javadoc blocks removed
+
+### File Naming Standardized
+- **Util → Utils renames:** 20 files renamed
+- **Class names updated:** 20 class/object declarations updated
+- **Import statements updated:** All import statements across codebase updated
+- **Reference updates:** All class usage references updated
 
 ## Verification
 

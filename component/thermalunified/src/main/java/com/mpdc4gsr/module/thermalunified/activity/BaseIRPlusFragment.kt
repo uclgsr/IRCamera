@@ -25,7 +25,7 @@ import com.energy.iruvc.utils.IIRFrameCallback
 import com.energy.iruvc.utils.SynchronizedBitmap
 import com.energy.iruvc.uvc.ConnectCallback
 import com.energy.iruvc.uvc.UVCCamera
-import com.mpdc4gsr.libunified.app.common.SaveSettingUtil
+import com.mpdc4gsr.libunified.app.common.SaveSettingUtils
 import com.mpdc4gsr.libunified.app.ktbase.BaseFragment
 import com.mpdc4gsr.libunified.ir.usbdual.Const
 import com.mpdc4gsr.libunified.ir.usbdual.camera.DualViewWithExternalCameraCommonApi
@@ -88,10 +88,10 @@ abstract class BaseIRPlusFragment :
         0
     protected var temperatureSrc: ByteArray? = null
 
-    protected var mCurrentFusionType = DualParamsUtil.fusionTypeToParams(SaveSettingUtil.fusionType)
+    protected var mCurrentFusionType = DualParamsUtil.fusionTypeToParams(SaveSettingUtils.fusionType)
     private var syncimage = SynchronizedBitmap()
     protected var isConfigWait = true
-    protected var pseudoColorMode = SaveSettingUtil.pseudoColorMode
+    protected var pseudoColorMode = SaveSettingUtils.pseudoColorMode
 
     private var vlPid = 12337
     private var vlFps = 30
@@ -186,7 +186,7 @@ abstract class BaseIRPlusFragment :
 
     override fun initView() {
         if (isDualIR()) {
-            getTemperatureDualView().setTextSize(SaveSettingUtil.tempTextSize)
+            getTemperatureDualView().setTextSize(SaveSettingUtils.tempTextSize)
             initDataFlowMode(defaultDataFlowMode)
             initIrDualdata()
         }

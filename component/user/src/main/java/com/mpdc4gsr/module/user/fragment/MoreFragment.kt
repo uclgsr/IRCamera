@@ -14,9 +14,9 @@ import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.ToastUtils
 import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.BaseApplication
-import com.mpdc4gsr.libunified.app.common.SaveSettingUtil
+import com.mpdc4gsr.libunified.app.common.SaveSettingUtils
 import com.mpdc4gsr.libunified.app.common.SharedManager
-import com.mpdc4gsr.libunified.app.common.WifiSaveSettingUtil
+import com.mpdc4gsr.libunified.app.common.WifiSaveSettingUtils
 import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
 import com.mpdc4gsr.libunified.app.config.FileConfig
 import com.mpdc4gsr.libunified.app.config.RouterConfig
@@ -89,16 +89,16 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
 
     private fun setupObservers() {
         settingItemConfigSelect.isChecked =
-            if (isTC007) WifiSaveSettingUtil.isSaveSetting else SaveSettingUtil.isSaveSetting
+            if (isTC007) WifiSaveSettingUtils.isSaveSetting else SaveSettingUtils.isSaveSetting
         settingItemConfigSelect.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 TipDialog.Builder(requireContext())
                     .setMessage(RCore.string.save_setting_tips)
                     .setPositiveListener(RCore.string.app_ok) {
                         if (isTC007) {
-                            WifiSaveSettingUtil.isSaveSetting = true
+                            WifiSaveSettingUtils.isSaveSetting = true
                         } else {
-                            SaveSettingUtil.isSaveSetting = true
+                            SaveSettingUtils.isSaveSetting = true
                         }
                     }
                     .setCancelListener(RCore.string.app_cancel) {
@@ -108,11 +108,11 @@ class MoreFragment : BaseFragment(), View.OnClickListener {
                     .create().show()
             } else {
                 if (isTC007) {
-                    WifiSaveSettingUtil.reset()
-                    WifiSaveSettingUtil.isSaveSetting = false
+                    WifiSaveSettingUtils.reset()
+                    WifiSaveSettingUtils.isSaveSetting = false
                 } else {
-                    SaveSettingUtil.reset()
-                    SaveSettingUtil.isSaveSetting = false
+                    SaveSettingUtils.reset()
+                    SaveSettingUtils.isSaveSetting = false
                 }
             }
         }

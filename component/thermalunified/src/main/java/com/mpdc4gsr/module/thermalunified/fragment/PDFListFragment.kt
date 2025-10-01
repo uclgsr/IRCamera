@@ -25,7 +25,7 @@ import com.mpdc4gsr.libunified.app.lms.LMS
 import com.mpdc4gsr.libunified.app.lms.UrlConstant
 import com.mpdc4gsr.libunified.app.lms.network.HttpProxy
 import com.mpdc4gsr.libunified.app.lms.network.IResponseCallback
-import com.mpdc4gsr.libunified.app.lms.utils.LanguageUtil
+import com.mpdc4gsr.libunified.app.lms.utils.LanguageUtils
 import com.mpdc4gsr.libunified.app.lms.utils.StringUtils
 import com.mpdc4gsr.libunified.app.lms.weiget.TToast
 import com.mpdc4gsr.libunified.app.lms.xutils.http.RequestParams
@@ -183,7 +183,7 @@ class PDFListFragment : BaseViewModelFragment<PdfViewModel>() {
                             params.addBodyParameter("status", 1)
                             params.addBodyParameter(
                                 "languageId",
-                                LanguageUtil.getLanguageId(Utils.getApp())
+                                LanguageUtils.getLanguageId(Utils.getApp())
                             )
                             params.addBodyParameter("reportType", 2)
                             HttpProxy.getInstance().post(

@@ -11,7 +11,7 @@
 **Standard:** Use **Utils** (plural) suffix for utility classes
 - Examples: `CommUtils.kt`, `FileUtils.kt`, `NetworkUtils.kt`
 - Rationale: Plural form indicates a collection of utility functions
-- Legacy files with `Util` (singular) may remain but new files should use `Utils`
+- All utility classes have been standardized to use `Utils` suffix
 
 ### Manager Classes
 **Standard:** Use **Manager** suffix for classes managing state or resources

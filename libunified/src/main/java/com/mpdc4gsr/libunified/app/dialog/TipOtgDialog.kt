@@ -12,7 +12,7 @@ import android.widget.CheckBox
 import android.widget.TextView
 import androidx.annotation.StringRes
 import com.mpdc4gsr.libunified.R
-import com.mpdc4gsr.libunified.app.utils.ScreenUtil
+import com.mpdc4gsr.libunified.app.utils.ScreenUtils
 import com.mpdc4gsr.libunified.databinding.DialogTipOtgBinding
 
 
@@ -118,7 +118,7 @@ class TipOtgDialog : Dialog {
 
                     0.35
                 }
-            lp.width = (ScreenUtil.getScreenWidth(context!!) * wRatio).toInt()
+            lp.width = (ScreenUtils.getScreenWidth(context!!) * wRatio).toInt()
             dialog!!.window!!.attributes = lp
 
             dialog!!.setCanceledOnTouchOutside(canceled)

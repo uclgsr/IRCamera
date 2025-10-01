@@ -19,7 +19,7 @@ import com.energy.iruvc.sdkisp.LibIRTemp.TemperatureSampleResult
 import com.energy.iruvc.utils.CommonParams.IRPROCSRCFMTType
 import com.energy.iruvc.utils.Line
 import com.mpdc4gsr.libunified.ir.utils.TempDrawHelper.Companion.correct
-import com.mpdc4gsr.libunified.ir.utils.TempUtil
+import com.mpdc4gsr.libunified.ir.utils.TempUtils
 
 
 class TemperatureHikView : TemperatureBaseView {
@@ -348,7 +348,7 @@ class TemperatureHikView : TemperatureBaseView {
                     }
 
                     val tempList: List<Float> =
-                        TempUtil.getLineTemps(startPoint, endPoint, rotateTempArray, imageWidth)
+                        TempUtils.getLineTemps(startPoint, endPoint, rotateTempArray, imageWidth)
                     mainHandler.post {
                         onTrendChangeListener?.invoke(tempList)
                     }

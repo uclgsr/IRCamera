@@ -17,7 +17,7 @@ import com.elvishew.xlog.XLog;
 import java.io.File;
 import java.util.List;
 
-public enum AppUtil {
+public enum AppUtils {
     ;
 
     public static boolean isAppInstalled(Context context, String packageName) {

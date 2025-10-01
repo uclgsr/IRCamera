@@ -16,7 +16,7 @@ import com.mpdc4gsr.libunified.app.lms.network.HttpProxy
 import com.mpdc4gsr.libunified.app.lms.network.IResponseCallback
 import com.mpdc4gsr.libunified.app.lms.network.ResponseBean
 import com.mpdc4gsr.libunified.app.lms.utils.DateUtils
-import com.mpdc4gsr.libunified.app.lms.utils.LanguageUtil
+import com.mpdc4gsr.libunified.app.lms.utils.LanguageUtils
 import com.mpdc4gsr.libunified.app.lms.xutils.http.RequestParams
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -212,7 +212,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
             params.addBodyParameter("softCode", softCode)
             params.addBodyParameter(
                 "downloadLanguageId",
-                LanguageUtil.getLanguageId(Utils.getApp())
+                LanguageUtils.getLanguageId(Utils.getApp())
             )
             params.addBodyParameter("downloadPlatformId", 2)
             params.addBodyParameter(

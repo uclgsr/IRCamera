@@ -7,9 +7,9 @@ import org.json.JSONObject
 
 /**
  * SocketCmdUtil based on reference repository implementation
- * Adapted from libapp/src/main/java/com/topdon/lib/core/socket/SocketCmdUtil.kt
+ * Adapted from libapp/src/main/java/com/topdon/lib/core/socket/SocketCmdUtils.kt
  */
-object SocketCmdUtil {
+object SocketCmdUtils {
     fun getSocketCmd(cmd: Int): String? {
         var cmdJson: String? = null
         try {

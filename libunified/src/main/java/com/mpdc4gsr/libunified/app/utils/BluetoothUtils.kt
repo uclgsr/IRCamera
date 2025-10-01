@@ -18,7 +18,7 @@ import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.config.DeviceConfig
 import com.mpdc4gsr.libunified.app.tools.PermissionTool
 
-object BluetoothUtil {
+object BluetoothUtils {
 
     /**
      *  activity   .

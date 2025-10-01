@@ -8,7 +8,7 @@ import android.view.ViewGroup.LayoutParams
 import android.widget.TextView
 import androidx.annotation.StringRes
 import com.mpdc4gsr.libunified.R
-import com.mpdc4gsr.libunified.app.utils.ScreenUtil
+import com.mpdc4gsr.libunified.app.utils.ScreenUtils
 import com.mpdc4gsr.libunified.databinding.DialogTipShutterBinding
 
 class TipShutterDialog : Dialog {
@@ -71,7 +71,7 @@ class TipShutterDialog : Dialog {
 
             val lp = dialog!!.window!!.attributes
             lp.width =
-                (ScreenUtil.getScreenWidth(context) * if (ScreenUtil.isPortrait(context)) 0.85 else 0.35).toInt()
+                (ScreenUtils.getScreenWidth(context) * if (ScreenUtils.isPortrait(context)) 0.85 else 0.35).toInt()
             dialog!!.window!!.attributes = lp
 
             binding.tvIKnow.setOnClickListener {

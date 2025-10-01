@@ -14,7 +14,7 @@ import com.hjq.permissions.OnPermissionCallback
 import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
 import com.mpdc4gsr.libunified.app.BaseApplication
-import com.mpdc4gsr.libunified.app.comm.ExcelUtil
+import com.mpdc4gsr.libunified.app.comm.ExcelUtils
 import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
 import com.mpdc4gsr.libunified.app.config.FileConfig
 import com.mpdc4gsr.libunified.app.db.entity.ThermalEntity
@@ -98,7 +98,7 @@ class IRLogMPChartActivity : BaseActivity() {
                                                 var filePath: String? = null
                                                 withContext(Dispatchers.IO) {
                                                     tempData?.get(0)?.let {
-                                                        filePath = ExcelUtil.exportExcel(
+                                                        filePath = ExcelUtils.exportExcel(
                                                             tempData as java.util.ArrayList<ThermalEntity>?,
                                                             "point" == it.type
                                                         )

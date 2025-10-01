@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import androidx.annotation.StringRes
 import androidx.core.view.isVisible
 import com.mpdc4gsr.libunified.R
-import com.mpdc4gsr.libunified.app.utils.ScreenUtil
+import com.mpdc4gsr.libunified.app.utils.ScreenUtils
 import com.mpdc4gsr.libunified.databinding.DialogConfirmSelectBinding
 
 class ConfirmSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog),
@@ -67,7 +67,7 @@ class ConfirmSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog
 
         window?.let {
             val layoutParams = it.attributes
-            layoutParams.width = (ScreenUtil.getScreenWidth(context) * 0.72).toInt()
+            layoutParams.width = (ScreenUtils.getScreenWidth(context) * 0.72).toInt()
             layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
             it.attributes = layoutParams
         }

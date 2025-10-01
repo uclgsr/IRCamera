@@ -1,21 +1,31 @@
 package com.mpdc4gsr.libunified.app.common
 
 import com.blankj.utilcode.util.SPUtils
+import com.blankj.utilcode.util.SizeUtils
 import com.google.gson.Gson
 import com.mpdc4gsr.libunified.app.bean.AlarmBean
 import com.mpdc4gsr.libunified.app.bean.CameraItemBean
 import com.mpdc4gsr.libunified.app.bean.ObserveBean
-import com.mpdc4gsr.libunified.app.common.SaveSettingUtil.FusionTypeIROnly
-import com.mpdc4gsr.libunified.app.common.SaveSettingUtil.FusionTypeLPYFusion
 import com.mpdc4gsr.libunified.app.config.DeviceConfig
 import com.mpdc4gsr.libunified.app.utils.CommUtils
 
-object WifiSaveSettingUtil {
+object SaveSettingUtils {
 
-    private const val SP_NAME = "WifiSaveSettingUtil"
+    private const val SP_NAME = "SaveSettingUtil"
 
-    const val TYPE_PLUG = 0
-    const val TYPE_WIFI = 1
+    const val FusionTypeLPYFusion = 4
+
+    const val FusionTypeMeanFusion = 2
+
+    const val FusionTypeIROnly = 1
+
+    const val FusionTypeVLOnly = 0
+
+    // FusionTypeTC007Fusion constant removed - TC007 device support discontinued
+
+    const val FusionTypeHSLFusion = 3
+    const val FusionTypeScreenFusion = 5
+    const val FusionTypeIROnlyNoFusion = 6
 
     fun reset() {
 
@@ -50,26 +60,8 @@ object WifiSaveSettingUtil {
         reportWatermarkText = CommUtils.getAppName()
         reportHumidity = 500
         fusionType = FusionTypeLPYFusion
-        registrationX = 0
-        registrationY = 0
+        isOpenAmplify = false
     }
-
-    var registrationX: Int
-        get() = if (isSaveSetting) SPUtils.getInstance(SP_NAME).getInt("registrationX", 0) else 0
-        set(value) {
-            SPUtils.getInstance(SP_NAME).put("registrationX", value)
-        }
-    var registrationY: Int
-        get() = if (isSaveSetting) SPUtils.getInstance(SP_NAME).getInt("registrationY", 0) else 0
-        set(value) {
-            SPUtils.getInstance(SP_NAME).put("registrationY", value)
-        }
-    var fusionType: Int
-        get() = if (isSaveSetting) SPUtils.getInstance(SP_NAME)
-            .getInt("fusionType", FusionTypeIROnly) else FusionTypeIROnly
-        set(value) {
-            SPUtils.getInstance(SP_NAME).put("fusionType", value)
-        }
 
     var isSaveSetting: Boolean
         get() = SPUtils.getInstance(SP_NAME).getBoolean("isSaveSetting", true)
@@ -84,6 +76,13 @@ object WifiSaveSettingUtil {
             if (isSaveSetting) {
                 SPUtils.getInstance(SP_NAME).put("isMeasureTempMode", value)
             }
+        }
+
+    var isOpenAmplify: Boolean
+        get() = if (isSaveSetting) SPUtils.getInstance(SP_NAME)
+            .getBoolean("isOpenAmplify", false) else false
+        set(value) {
+            SPUtils.getInstance(SP_NAME).put("isOpenAmplify", value)
         }
 
     var isVideoMode: Boolean
@@ -128,20 +127,6 @@ object WifiSaveSettingUtil {
             }
         }
 
-    var isOpenMirror: Boolean
-        get() =
-            if (isSaveSetting) {
-                SPUtils.getInstance(SP_NAME)
-                    .getBoolean("isOpenMirror", false)
-            } else {
-                false
-            }
-        set(value) {
-            if (isSaveSetting) {
-                SPUtils.getInstance(SP_NAME).put("isOpenMirror", value)
-            }
-        }
-
     var delayCaptureSecond: Int
         get() =
             if (isSaveSetting) {
@@ -156,17 +141,27 @@ object WifiSaveSettingUtil {
             }
         }
 
-    var contrastValue: Int
-        get() =
-            if (isSaveSetting) {
-                SPUtils.getInstance(SP_NAME)
-                    .getInt("contrastValue", 128)
-            } else {
-                128
-            }
+    var fusionType: Int
+        get() = if (isSaveSetting) SPUtils.getInstance(SP_NAME)
+            .getInt("fusionType", FusionTypeLPYFusion) else FusionTypeLPYFusion
+        set(value) {
+            SPUtils.getInstance(SP_NAME).put("fusionType", value)
+        }
+
+    var isOpenTwoLight: Boolean
+        get() = if (isSaveSetting) SPUtils.getInstance(SP_NAME)
+            .getBoolean("isOpenTwoLight", false) else false
         set(value) {
             if (isSaveSetting) {
-                SPUtils.getInstance(SP_NAME).put("contrastValue", value)
+                SPUtils.getInstance(SP_NAME).put("isOpenTwoLight", value)
+            }
+        }
+
+    var twoLightAlpha: Int
+        get() = if (isSaveSetting) SPUtils.getInstance(SP_NAME).getInt("twoLightAlpha", 50) else 50
+        set(value) {
+            if (isSaveSetting) {
+                SPUtils.getInstance(SP_NAME).put("twoLightAlpha", value)
             }
         }
 
@@ -175,20 +170,6 @@ object WifiSaveSettingUtil {
         set(value) {
             if (isSaveSetting) {
                 SPUtils.getInstance(SP_NAME).put("pseudoColorMode", value)
-            }
-        }
-
-    var rotateAngle: Int
-        get() =
-            if (isSaveSetting) {
-                SPUtils.getInstance(SP_NAME)
-                    .getInt("rotateAngle", DeviceConfig.S_ROTATE_ANGLE)
-            } else {
-                DeviceConfig.S_ROTATE_ANGLE
-            }
-        set(value) {
-            if (isSaveSetting) {
-                SPUtils.getInstance(SP_NAME).put("rotateAngle", value)
             }
         }
 
@@ -206,25 +187,17 @@ object WifiSaveSettingUtil {
             }
         }
 
-    var isOpenTwoLight: Boolean
+    var contrastValue: Int
         get() =
             if (isSaveSetting) {
                 SPUtils.getInstance(SP_NAME)
-                    .getBoolean("isOpenTwoLight", false)
+                    .getInt("contrastValue", 128)
             } else {
-                false
+                128
             }
         set(value) {
             if (isSaveSetting) {
-                SPUtils.getInstance(SP_NAME).put("isOpenTwoLight", value)
-            }
-        }
-
-    var twoLightAlpha: Int
-        get() = if (isSaveSetting) SPUtils.getInstance(SP_NAME).getInt("twoLightAlpha", 50) else 50
-        set(value) {
-            if (isSaveSetting) {
-                SPUtils.getInstance(SP_NAME).put("twoLightAlpha", value)
+                SPUtils.getInstance(SP_NAME).put("contrastValue", value)
             }
         }
 
@@ -233,6 +206,65 @@ object WifiSaveSettingUtil {
         set(value) {
             if (isSaveSetting) {
                 SPUtils.getInstance(SP_NAME).put("ddeConfig", value)
+            }
+        }
+
+    var alarmBean: AlarmBean
+        get() =
+            if (isSaveSetting) {
+                val json = SPUtils.getInstance(SP_NAME).getString("alarmBean", "")
+                if (json.isNullOrEmpty()) AlarmBean() else Gson().fromJson(
+                    json,
+                    AlarmBean::class.java
+                )
+            } else {
+                AlarmBean()
+            }
+        set(value) {
+            if (isSaveSetting) {
+                SPUtils.getInstance(SP_NAME).put("alarmBean", Gson().toJson(value))
+            }
+        }
+
+    var rotateAngle: Int
+        get() =
+            if (isSaveSetting) {
+                SPUtils.getInstance(SP_NAME)
+                    .getInt("rotateAngle", DeviceConfig.S_ROTATE_ANGLE)
+            } else {
+                DeviceConfig.S_ROTATE_ANGLE
+            }
+        set(value) {
+            if (isSaveSetting) {
+                SPUtils.getInstance(SP_NAME).put("rotateAngle", value)
+            }
+        }
+
+    var isOpenMirror: Boolean
+        get() =
+            if (isSaveSetting) {
+                SPUtils.getInstance(SP_NAME)
+                    .getBoolean("isOpenMirror", false)
+            } else {
+                false
+            }
+        set(value) {
+            if (isSaveSetting) {
+                SPUtils.getInstance(SP_NAME).put("isOpenMirror", value)
+            }
+        }
+
+    var isOpenCompass: Boolean
+        get() =
+            if (isSaveSetting) {
+                SPUtils.getInstance(SP_NAME)
+                    .getBoolean("isOpenCompass", false)
+            } else {
+                false
+            }
+        set(value) {
+            if (isSaveSetting) {
+                SPUtils.getInstance(SP_NAME).put("isOpenCompass", value)
             }
         }
 
@@ -254,9 +286,9 @@ object WifiSaveSettingUtil {
         get() =
             if (isSaveSetting) {
                 SPUtils.getInstance(SP_NAME)
-                    .getInt("tempTextSize", 14)
+                    .getInt("tempTextSize", SizeUtils.sp2px(14f))
             } else {
-                14
+                SizeUtils.sp2px(14f)
             }
         set(value) {
             if (isSaveSetting) {
@@ -275,37 +307,6 @@ object WifiSaveSettingUtil {
         set(value) {
             if (isSaveSetting) {
                 SPUtils.getInstance(SP_NAME).put("temperatureMode", value)
-            }
-        }
-
-    var alarmBean: AlarmBean
-        get() =
-            if (isSaveSetting) {
-                val json = SPUtils.getInstance(SP_NAME).getString("alarmBean", "")
-                if (json.isNullOrEmpty()) AlarmBean() else Gson().fromJson(
-                    json,
-                    AlarmBean::class.java
-                )
-            } else {
-                AlarmBean()
-            }
-        set(value) {
-            if (isSaveSetting) {
-                SPUtils.getInstance(SP_NAME).put("alarmBean", Gson().toJson(value))
-            }
-        }
-
-    var isOpenCompass: Boolean
-        get() =
-            if (isSaveSetting) {
-                SPUtils.getInstance(SP_NAME)
-                    .getBoolean("isOpenCompass", false)
-            } else {
-                false
-            }
-        set(value) {
-            if (isSaveSetting) {
-                SPUtils.getInstance(SP_NAME).put("isOpenCompass", value)
             }
         }
 

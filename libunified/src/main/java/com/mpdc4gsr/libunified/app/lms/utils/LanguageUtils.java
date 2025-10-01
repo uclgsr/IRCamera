@@ -3,7 +3,7 @@ package com.mpdc4gsr.libunified.app.lms.utils;
 import android.content.Context;
 
 
-public class LanguageUtil {
+public class LanguageUtils {
     public static String getLanguageId(Context context) {
         return "en";
     }

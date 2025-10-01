@@ -12,7 +12,7 @@ import android.view.MotionEvent
 import android.view.View
 import androidx.annotation.ColorInt
 import com.blankj.utilcode.util.SizeUtils
-import com.mpdc4gsr.libunified.app.utils.ScreenUtil
+import com.mpdc4gsr.libunified.app.utils.ScreenUtils
 
 class TargetBarPickView : View {
     companion object {
@@ -180,7 +180,7 @@ class TargetBarPickView : View {
 
         val width: Int =
             if (rotate == 0 || rotate == 180) {
-                if (widthMode == MeasureSpec.UNSPECIFIED) ScreenUtil.getScreenWidth(context) else widthSize
+                if (widthMode == MeasureSpec.UNSPECIFIED) ScreenUtils.getScreenWidth(context) else widthSize
             } else {
                 val wantWidth: Int = thumbWidth + paddingStart + paddingEnd
                 when (widthMode) {
@@ -201,7 +201,7 @@ class TargetBarPickView : View {
                     else -> wantHeight
                 }
             } else {
-                if (heightMode == MeasureSpec.UNSPECIFIED) ScreenUtil.getScreenHeight(context) else heightSize
+                if (heightMode == MeasureSpec.UNSPECIFIED) ScreenUtils.getScreenHeight(context) else heightSize
             }
 
         setMeasuredDimension(width, height)

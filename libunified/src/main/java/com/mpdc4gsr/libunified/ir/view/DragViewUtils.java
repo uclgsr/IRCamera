@@ -10,7 +10,7 @@ import android.view.View;
  * @author: CaiSongL
  * @date: 2023/10/25 11:42
  */
-public enum DragViewUtil {
+public enum DragViewUtils {
     ;
 
     public static void registerDragAction(View v) {
