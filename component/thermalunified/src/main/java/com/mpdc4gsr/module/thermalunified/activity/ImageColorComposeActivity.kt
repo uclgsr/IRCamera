@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
+import com.mpdc4gsr.module.thermalunified.viewmodel.ImageColorViewModel
 
 /**
  * Compose implementation of Image Color activity
@@ -30,30 +30,18 @@ import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
  * NOTE: This is an MVP implementation with placeholder UI.
  * TODO: For production, hoist UI state to ViewModel (timestamp, showData) and load actual image data.
  */
-class ImageColorComposeActivity : BaseComposeActivity<ThermalViewModel>() {
+class ImageColorComposeActivity : BaseComposeActivity<ImageColorViewModel>() {
 
-    override fun createViewModel(): ThermalViewModel {
-        return viewModels<ThermalViewModel>().value
+    override fun createViewModel(): ImageColorViewModel {
+        return viewModels<ImageColorViewModel>().value
     }
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    override fun Content(viewModel: ThermalViewModel) {
+    override fun Content(viewModel: ImageColorViewModel) {
+        val uiState by viewModel.uiState.collectAsState()
         // Local UI state - TODO: Hoist to ViewModel
-        var timestamp by remember { mutableStateOf("") }
-        var showData by remember { mutableStateOf(false) }
-
-        LibUnifiedTheme {
-            Scaffold(
-                topBar = {
-                    TopAppBar(
-                        title = {
-                            Text(
-                                "Image Color",
-                                fontWeight = FontWeight.Bold,
-                                color = Color.White
-                            )
-                        },
+        ,
                         navigationIcon = {
                             IconButton(onClick = { finish() }) {
                                 Icon(
@@ -170,13 +158,13 @@ class ImageColorComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Button(
-                            onClick = { showData = !showData },
+                            onClick = { viewModel.toggleDataDisplay() },
                             modifier = Modifier.width(120.dp),
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = MaterialTheme.colorScheme.primary
                             )
                         ) {
-                            Text(if (showData) "Hide Data" else "Show Data")
+                            Text(if (uiState.showData) "Hide Data" else "Show Data")
                         }
 
                         Button(

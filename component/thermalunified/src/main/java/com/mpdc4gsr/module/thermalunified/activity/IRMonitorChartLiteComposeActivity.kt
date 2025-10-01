@@ -20,31 +20,22 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
+import com.mpdc4gsr.module.thermalunified.viewmodel.IRMonitorChartLiteViewModel
 
 /**
  * Lite version of IR Monitor Chart activity with Compose
- * Simplified chart display for thermal monitoring
- * 
- * NOTE: This is an MVP implementation with placeholder UI.
- * TODO: For production, hoist UI state to ViewModel (isRecording, recordingTime, showOverlay, currentTemp, lowTemp)
- *       and integrate with actual monitoring data source.
+ * Simplified chart display for thermal monitoring with ViewModel integration
  */
-class IRMonitorChartLiteComposeActivity : BaseComposeActivity<ThermalViewModel>() {
+class IRMonitorChartLiteComposeActivity : BaseComposeActivity<IRMonitorChartLiteViewModel>() {
 
-    override fun createViewModel(): ThermalViewModel {
-        return viewModels<ThermalViewModel>().value
+    override fun createViewModel(): IRMonitorChartLiteViewModel {
+        return viewModels<IRMonitorChartLiteViewModel>().value
     }
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    override fun Content(viewModel: ThermalViewModel) {
-        // Local UI state - TODO: Hoist to ViewModel
-        var isRecording by remember { mutableStateOf(false) }
-        var recordingTime by remember { mutableStateOf("00:00:00") }
-        var showOverlay by remember { mutableStateOf(true) }
-        var currentTemp by remember { mutableFloatStateOf(25.0f) }
-        var lowTemp by remember { mutableFloatStateOf(20.0f) }
+    override fun Content(viewModel: IRMonitorChartLiteViewModel) {
+        val uiState by viewModel.uiState.collectAsState()
 
         LibUnifiedTheme {
             Scaffold(
@@ -67,9 +58,9 @@ class IRMonitorChartLiteComposeActivity : BaseComposeActivity<ThermalViewModel>(
                             }
                         },
                         actions = {
-                            IconButton(onClick = { showOverlay = !showOverlay }) {
+                            IconButton(onClick = { viewModel.toggleOverlay() }) {
                                 Icon(
-                                    if (showOverlay) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                                    if (uiState.showOverlay) Icons.Default.Visibility else Icons.Default.VisibilityOff,
                                     contentDescription = "Toggle Overlay",
                                     tint = Color.White
                                 )
@@ -131,7 +122,7 @@ class IRMonitorChartLiteComposeActivity : BaseComposeActivity<ThermalViewModel>(
                                             .background(Color(0xFFFF4747))
                                     )
                                     Text(
-                                        recordingTime,
+                                        uiState.recordingTime,
                                         color = Color.White,
                                         fontSize = 14.sp
                                     )
@@ -228,7 +219,7 @@ class IRMonitorChartLiteComposeActivity : BaseComposeActivity<ThermalViewModel>(
                                     color = Color.White.copy(alpha = 0.5f),
                                     fontSize = 16.sp
                                 )
-                                if (showOverlay) {
+                                if (uiState.showOverlay) {
                                     Card(
                                         colors = CardDefaults.cardColors(
                                             containerColor = Color(0x80000000)
@@ -239,12 +230,12 @@ class IRMonitorChartLiteComposeActivity : BaseComposeActivity<ThermalViewModel>(
                                             verticalArrangement = Arrangement.spacedBy(4.dp)
                                         ) {
                                             Text(
-                                                "Current: %.1f°C".format(currentTemp),
+                                                "Current: %.1f°C".format(uiState.currentTemp),
                                                 color = Color.White,
                                                 fontSize = 14.sp
                                             )
                                             Text(
-                                                "Low: %.1f°C".format(lowTemp),
+                                                "Low: %.1f°C".format(uiState.lowTemp),
                                                 color = Color.White,
                                                 fontSize = 14.sp
                                             )

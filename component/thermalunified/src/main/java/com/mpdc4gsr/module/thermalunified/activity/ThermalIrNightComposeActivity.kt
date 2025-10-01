@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
+import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalIrNightViewModel
 
 /**
  * Compose implementation of Thermal IR Night activity
@@ -32,15 +32,16 @@ import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
  *   - Add camera permissions handling
  *   - Integrate with IRCamera SDK for live thermal feed
  */
-class ThermalIrNightComposeActivity : BaseComposeActivity<ThermalViewModel>() {
+class ThermalIrNightComposeActivity : BaseComposeActivity<ThermalIrNightViewModel>() {
 
-    override fun createViewModel(): ThermalViewModel {
-        return viewModels<ThermalViewModel>().value
+    override fun createViewModel(): ThermalIrNightViewModel {
+        return viewModels<ThermalIrNightViewModel>().value
     }
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    override fun Content(viewModel: ThermalViewModel) {
+    override fun Content(viewModel: ThermalIrNightViewModel) {
+        val uiState by viewModel.uiState.collectAsState()
         // Local UI state - TODO: Hoist to ViewModel
         var selectedMode by remember { mutableIntStateOf(0) }
         var nightModeEnabled by remember { mutableStateOf(true) }
