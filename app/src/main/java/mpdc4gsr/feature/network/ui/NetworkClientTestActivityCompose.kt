@@ -33,7 +33,7 @@ import kotlinx.coroutines.launch
 import mpdc4gsr.core.ui.BaseComposeActivity
 import mpdc4gsr.core.RecordingService
 import mpdc4gsr.feature.network.data.CommandConnection
-import mpdc4gsr.network.NetworkManager
+import mpdc4gsr.feature.network.data.NetworkManager
 import mpdc4gsr.core.ui.BaseViewModel
 
 class NetworkClientTestViewModel : BaseViewModel() {

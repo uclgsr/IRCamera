@@ -20,9 +20,9 @@ import mpdc4gsr.core.ui.components.SensorStatusCard
 import mpdc4gsr.core.ui.components.sensors.GSRVisualizationCard
 import mpdc4gsr.core.ui.components.sensors.GSRData
 import mpdc4gsr.core.ui.components.sensors.GSRConnectionState
-import mpdc4gsr.viewmodel.ConnectionState
-import mpdc4gsr.viewmodel.AppError
-import mpdc4gsr.viewmodel.MainActivityViewModel
+import mpdc4gsr.core.ui.ConnectionState
+import mpdc4gsr.core.ui.AppError
+import mpdc4gsr.feature.main.presentation.MainActivityViewModel
 // Note: MainActivityViewModel was moved to backup during cleanup
 // Using modern Compose ViewModels instead
 import mpdc4gsr.core.ui.BaseViewModel
