@@ -39,7 +39,7 @@ fun TipDialog(
     val widthFraction = if (isPortrait) 0.72f else 0.5f
 
     Dialog(
-        onDismissRequest = if (cancelable) onDismiss else {},
+        onDismissRequest = (if (cancelable) onDismiss else {}) as () -> Unit,
         properties = DialogProperties(
             dismissOnBackPress = cancelable,
             dismissOnClickOutside = cancelable

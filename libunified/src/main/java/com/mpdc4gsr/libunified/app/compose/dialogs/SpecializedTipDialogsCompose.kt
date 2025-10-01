@@ -128,7 +128,7 @@ fun ShutterDialog(
     val widthFraction = if (isPortrait) 0.72f else 0.5f
 
     Dialog(
-        onDismissRequest = if (!isCalibrating) onDismiss else {},
+        onDismissRequest = (if (!isCalibrating) onDismiss else {}) as () -> Unit,
         properties = DialogProperties(
             dismissOnBackPress = !isCalibrating,
             dismissOnClickOutside = false

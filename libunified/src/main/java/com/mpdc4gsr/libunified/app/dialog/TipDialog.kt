@@ -119,7 +119,7 @@ class TipDialog : Dialog {
                             ) {
                                 if (!titleMessage.isNullOrEmpty()) {
                                     Text(
-                                        text = titleMessage,
+                                        text = titleMessage!!,
                                         style = MaterialTheme.typography.titleLarge,
                                         fontWeight = FontWeight.Bold,
                                         color = MaterialTheme.colorScheme.onSurface
@@ -129,7 +129,7 @@ class TipDialog : Dialog {
 
                                 if (!message.isNullOrEmpty()) {
                                     Text(
-                                        text = message,
+                                        text = message!!,
                                         style = MaterialTheme.typography.bodyMedium,
                                         color = MaterialTheme.colorScheme.onSurface
                                     )
@@ -154,7 +154,7 @@ class TipDialog : Dialog {
                                             dismiss()
                                             cancelEvent?.invoke()
                                         }) {
-                                            Text(cancelStr)
+                                            Text(cancelStr!!)
                                         }
                                         Spacer(modifier = Modifier.width(8.dp))
                                     }
