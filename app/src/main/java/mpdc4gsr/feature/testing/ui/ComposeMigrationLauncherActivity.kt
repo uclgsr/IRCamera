@@ -94,14 +94,14 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                 )
 
                 LauncherCard(
-                    title = "Enhanced Main Dashboard",
-                    subtitle = "Updated with consolidated layout integration",
+                    title = "Unified Main Activity",
+                    subtitle = "Single unified MainActivity with all features",
                     icon = Icons.Default.Dashboard,
                     onClick = {
                         startActivity(
                             Intent(
                                 this@ComposeMigrationLauncherActivity,
-                                MainActivityAlternative::class.java
+                                mpdc4gsr.feature.main.ui.MainActivity::class.java
                             )
                         )
                     }
