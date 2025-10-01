@@ -28,7 +28,7 @@ import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
 import mpdc4gsr.compose.base.BaseComposeActivity
 import mpdc4gsr.compose.components.TitleBar
 import mpdc4gsr.compose.theme.IRCameraTheme
-import mpdc4gsr.viewmodel.BaseViewModel
+import mpdc4gsr.core.ui.BaseViewModel
 
 class WebViewViewModel : BaseViewModel() {
     private val _isLoading = mutableStateOf(false)

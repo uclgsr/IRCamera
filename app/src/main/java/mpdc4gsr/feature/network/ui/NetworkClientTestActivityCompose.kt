@@ -31,7 +31,7 @@ import mpdc4gsr.compose.base.BaseComposeActivity
 import mpdc4gsr.core.RecordingService
 import mpdc4gsr.network.CommandConnection
 import mpdc4gsr.network.NetworkManager
-import mpdc4gsr.viewmodel.BaseViewModel
+import mpdc4gsr.core.ui.BaseViewModel
 
 class NetworkClientTestViewModel : BaseViewModel() {
     private val _networkConnectionState = MutableStateFlow(CommandConnection.ConnectionState.DISCONNECTED)

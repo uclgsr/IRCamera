@@ -1,18 +1,18 @@
 package mpdc4gsr.feature.camera.presentation
 
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import mpdc4gsr.core.ui.BaseViewModel
 
 /**
  * ViewModel for Dual Mode Camera functionality
  * 
  * Manages RGB and thermal camera synchronization following MVVM architecture
  */
-class DualModeCameraViewModel : BaseViewModel() {
+class DualModeCameraViewModel : ViewModel() {
     
     data class DualModeCameraUiState(
         val isRgbCameraReady: Boolean = false,
