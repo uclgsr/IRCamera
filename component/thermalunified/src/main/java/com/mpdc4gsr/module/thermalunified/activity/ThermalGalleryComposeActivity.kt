@@ -37,7 +37,9 @@ class ThermalGalleryComposeActivity : BaseComposeActivity<ThermalGalleryViewMode
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ThermalGalleryViewModel) {
-        ThermalGalleryScreen()
+        ThermalGalleryScreen(
+            onBackClick = { finish() }
+        )
     }
 }
 
@@ -48,7 +50,8 @@ class ThermalGalleryViewModel : BaseViewModel() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ThermalGalleryScreen(
-    viewModel: ThermalGalleryViewModel = viewModel()
+    viewModel: ThermalGalleryViewModel = viewModel(),
+    onBackClick: (() -> Unit)? = null
 ) {
     var viewMode by remember { mutableStateOf(ViewMode.GRID) }
     var selectedFilter by remember { mutableStateOf(FilterType.ALL) }
@@ -73,7 +76,7 @@ private fun ThermalGalleryScreen(
                 titleContentColor = Color.White
             ),
             navigationIcon = {
-                IconButton(onClick = { /* Navigate back */ }) {
+                IconButton(onClick = { onBackClick?.invoke() }) {
                     Icon(
                         Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Back",
