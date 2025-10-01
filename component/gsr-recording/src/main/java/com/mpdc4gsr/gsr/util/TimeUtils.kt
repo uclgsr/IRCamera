@@ -1,7 +1,7 @@
 package com.mpdc4gsr.gsr.util
 
-object TimeUtil {
-    private const val TAG = "TimeUtil"
+object TimeUtils {
+    private const val TAG = "TimeUtils"
 
     private var pcTimeOffset: Long = 0L
 

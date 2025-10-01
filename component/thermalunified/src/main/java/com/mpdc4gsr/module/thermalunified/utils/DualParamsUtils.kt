@@ -3,7 +3,7 @@ package com.mpdc4gsr.module.thermalunified.utils
 import com.energy.iruvc.utils.DualCameraParams
 import com.mpdc4gsr.libunified.app.common.SaveSettingUtils
 
-object DualParamsUtil {
+object DualParamsUtils {
     fun wifiFusionTypeToParams(fusionType: Int): Int {
         return when (fusionType) {
             SaveSettingUtils.FusionTypeVLOnly -> 3

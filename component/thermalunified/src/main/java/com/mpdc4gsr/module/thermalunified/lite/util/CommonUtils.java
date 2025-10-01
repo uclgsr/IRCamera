@@ -8,8 +8,8 @@ import com.energy.irutilslibrary.LibIRParse;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class CommonUtil {
-    public static final String TAG = "CommonUtil";
+public class CommonUtils {
+    public static final String TAG = "CommonUtils";
     public static int mCount = 0;
     private static long mTimeStart = 0;
     private static double mFps = 0;

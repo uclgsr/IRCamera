@@ -17,7 +17,7 @@ import kotlin.math.pow
 import com.mpdc4gsr.libunified.R as UiR
 
 
-object IRImageUtil {
+object IRImageUtils {
 
     fun showContrast(
         imageView: ImageView,

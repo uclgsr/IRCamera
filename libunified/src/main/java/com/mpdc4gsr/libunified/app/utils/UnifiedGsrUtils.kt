@@ -5,7 +5,7 @@ import android.content.Context
 /**
  * Repository-wide consolidated GSR utilities
  * Replaces ALL GSR utility classes across the ENTIRE repository:
- * - component/gsr-recording/src/main/java/com/mpdc4gsr/gsr/util/TimeUtil.kt
+ * - component/gsr-recording/src/main/java/com/mpdc4gsr/gsr/util/TimeUtils.kt
  * - Various GSR and time synchronization utilities scattered across ALL modules
  */
 object UnifiedGsrUtils {

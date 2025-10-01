@@ -41,7 +41,7 @@ import com.mpdc4gsr.module.thermalunified.extension.setContrast
 import com.mpdc4gsr.module.thermalunified.extension.setMirror
 import com.mpdc4gsr.module.thermalunified.extension.setPropDdeLevel
 import com.mpdc4gsr.module.thermalunified.repository.ConfigRepository
-import com.mpdc4gsr.module.thermalunified.utils.DualParamsUtil
+import com.mpdc4gsr.module.thermalunified.utils.DualParamsUtils
 import com.mpdc4gsr.module.thermalunified.utils.IRCmdTool
 import com.mpdc4gsr.module.thermalunified.utils.IRCmdTool.getSNStr
 import kotlinx.coroutines.Dispatchers
@@ -88,7 +88,7 @@ abstract class BaseIRPlusFragment :
         0
     protected var temperatureSrc: ByteArray? = null
 
-    protected var mCurrentFusionType = DualParamsUtil.fusionTypeToParams(SaveSettingUtils.fusionType)
+    protected var mCurrentFusionType = DualParamsUtils.fusionTypeToParams(SaveSettingUtils.fusionType)
     private var syncimage = SynchronizedBitmap()
     protected var isConfigWait = true
     protected var pseudoColorMode = SaveSettingUtils.pseudoColorMode

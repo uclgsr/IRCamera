@@ -5,29 +5,29 @@ import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
-class TimeUtilTest {
+class TimeUtilsTest {
     @Test
     fun testPcTimeOffset() {
 
-        TimeUtil.initializeGroundTruthTiming()
+        TimeUtils.initializeGroundTruthTiming()
 
-        val initialOffset = TimeUtil.getPcTimeOffset()
+        val initialOffset = TimeUtils.getPcTimeOffset()
         assertEquals(0L, initialOffset)
 
         val testOffset = 5000L
-        TimeUtil.setPcTimeOffset(testOffset)
-        assertEquals(testOffset, TimeUtil.getPcTimeOffset())
+        TimeUtils.setPcTimeOffset(testOffset)
+        assertEquals(testOffset, TimeUtils.getPcTimeOffset())
 
-        TimeUtil.setPcTimeOffset(0L)
+        TimeUtils.setPcTimeOffset(0L)
     }
 
     @Test
     fun testUtcTimestamp() {
         val offset = 1000L
-        TimeUtil.setPcTimeOffset(offset)
+        TimeUtils.setPcTimeOffset(offset)
 
         val systemTime = System.currentTimeMillis()
-        val utcTime = TimeUtil.getUtcTimestamp()
+        val utcTime = TimeUtils.getUtcTimestamp()
 
         assertTrue("UTC time should be greater than system time", utcTime > systemTime)
         assertTrue(
@@ -35,20 +35,20 @@ class TimeUtilTest {
             Math.abs(utcTime - (systemTime + offset)) < 100,
         )
 
-        TimeUtil.setPcTimeOffset(0L)
+        TimeUtils.setPcTimeOffset(0L)
     }
 
     @Test
     fun testTimeConversion() {
 
-        TimeUtil.initializeGroundTruthTiming()
+        TimeUtils.initializeGroundTruthTiming()
 
         val offset = 2000L
-        TimeUtil.setPcTimeOffset(offset)
+        TimeUtils.setPcTimeOffset(offset)
 
         val systemTime = System.currentTimeMillis()
-        val utcTime = TimeUtil.systemToUtc(systemTime)
-        val backToSystem = TimeUtil.utcToSystem(utcTime)
+        val utcTime = TimeUtils.systemToUtc(systemTime)
+        val backToSystem = TimeUtils.utcToSystem(utcTime)
 
         assertTrue(
             "UTC time should include PC offset",
@@ -59,13 +59,13 @@ class TimeUtilTest {
             Math.abs(backToSystem - systemTime) < 100
         )
 
-        TimeUtil.setPcTimeOffset(0L)
+        TimeUtils.setPcTimeOffset(0L)
     }
 
     @Test
     fun testFormatTimestamp() {
         val timestamp = 1640995200000L
-        val formatted = TimeUtil.formatTimestamp(timestamp)
+        val formatted = TimeUtils.formatTimestamp(timestamp)
 
         assertTrue(
             "Formatted time should contain year",
@@ -76,9 +76,9 @@ class TimeUtilTest {
 
     @Test
     fun testGenerateSessionId() {
-        val sessionId1 = TimeUtil.generateSessionId()
-        val sessionId2 = TimeUtil.generateSessionId()
-        val customId = TimeUtil.generateSessionId("CUSTOM")
+        val sessionId1 = TimeUtils.generateSessionId()
+        val sessionId2 = TimeUtils.generateSessionId()
+        val customId = TimeUtils.generateSessionId("CUSTOM")
 
         assertTrue("Session ID should start with GSR", sessionId1.startsWith("GSR_"))
         assertTrue("Session ID should start with GSR", sessionId2.startsWith("GSR_"))
@@ -91,24 +91,24 @@ class TimeUtilTest {
     @Test
     fun testGroundTruthTiming() {
 
-        TimeUtil.initializeGroundTruthTiming()
+        TimeUtils.initializeGroundTruthTiming()
 
-        val groundTruthBase = TimeUtil.getGroundTruthBase()
+        val groundTruthBase = TimeUtils.getGroundTruthBase()
         assertTrue(
             "Ground truth base should be recent",
             System.currentTimeMillis() - groundTruthBase < 1000,
         )
 
-        val syncTime = TimeUtil.getSynchronizedTimestamp()
+        val syncTime = TimeUtils.getSynchronizedTimestamp()
         assertTrue("Synchronized timestamp should be valid", syncTime > 0)
     }
 
     @Test
     fun testTimingMetadata() {
-        TimeUtil.initializeGroundTruthTiming()
-        TimeUtil.setPcTimeOffset(1500L)
+        TimeUtils.initializeGroundTruthTiming()
+        TimeUtils.setPcTimeOffset(1500L)
 
-        val metadata = TimeUtil.getTimingMetadata()
+        val metadata = TimeUtils.getTimingMetadata()
 
         assertTrue("Should contain ground truth base", metadata.containsKey("ground_truth_base"))
         assertTrue("Should contain PC offset", metadata.containsKey("pc_offset_ms"))
@@ -122,6 +122,6 @@ class TimeUtilTest {
 
         assertNotNull("Device processor should be detected", metadata["device_processor"])
 
-        TimeUtil.setPcTimeOffset(0L)
+        TimeUtils.setPcTimeOffset(0L)
     }
 }

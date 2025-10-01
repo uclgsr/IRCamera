@@ -15,7 +15,7 @@ import com.mpdc4gsr.libunified.app.lms.LMS.mContext
 import com.mpdc4gsr.libunified.app.lms.UrlConstant
 import com.mpdc4gsr.libunified.app.lms.utils.SPUtils
 import com.mpdc4gsr.module.thermalunified.lite.IrConst
-import com.mpdc4gsr.module.thermalunified.lite.util.CommonUtil
+import com.mpdc4gsr.module.thermalunified.lite.util.CommonUtils
 import io.reactivex.plugins.RxJavaPlugins
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -78,8 +78,8 @@ class App : BaseApplication() {
 
             CoroutineScope(Dispatchers.IO).launch {
                 try {
-                    tau_data_H = CommonUtil.getAssetData(mContext, IrConst.TAU_HIGH_GAIN_ASSET_PATH)
-                    tau_data_L = CommonUtil.getAssetData(mContext, IrConst.TAU_LOW_GAIN_ASSET_PATH)
+                    tau_data_H = CommonUtils.getAssetData(mContext, IrConst.TAU_HIGH_GAIN_ASSET_PATH)
+                    tau_data_L = CommonUtils.getAssetData(mContext, IrConst.TAU_LOW_GAIN_ASSET_PATH)
                 } catch (e: Exception) {
                     XLog.e("App: Failed to load tau data assets: ${e.message}")
                 }
