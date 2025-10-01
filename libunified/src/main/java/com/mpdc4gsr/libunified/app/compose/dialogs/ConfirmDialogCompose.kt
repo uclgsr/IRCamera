@@ -1,6 +1,5 @@
 package com.mpdc4gsr.libunified.app.compose.dialogs
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -26,7 +25,8 @@ fun ConfirmDialog(
     showCheckbox: Boolean = false,
     checkboxLabel: String = "",
     onConfirm: (isChecked: Boolean) -> Unit,
-    onDismiss: () -> Unit = {}
+    onDismiss: () -> Unit = {},
+    showIcon: Boolean
 ) {
     var isChecked by remember { mutableStateOf(false) }
     val configuration = LocalConfiguration.current
