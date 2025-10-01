@@ -9,7 +9,7 @@ import com.mpdc4gsr.libunified.app.lms.utils.NetworkUtils;
 import com.mpdc4gsr.libunified.app.lms.weiget.TToast;
 import com.mpdc4gsr.module.user.R;
 
-public class ActivityUtil {
+public class ActivityUtils {
 
     public static void goSystemCustomer(Context mContext) {
         Log.w("bcf", "[TEXT]Event");
