@@ -246,8 +246,8 @@ android {
 
     buildFeatures {
         buildConfig = true
-//        dataBinding = true
-//        viewBinding = true
+        dataBinding = true
+        viewBinding = true
         compose = true
     }
 
@@ -283,6 +283,7 @@ configurations.all {
     }
 
     exclude(group = "android.bluetooth", module = "IBluetoothDeviceCallback")
+    exclude(group = "org.jetbrains.kotlin", module = "kotlin-android-extensions-runtime")
 }
 
 dependencies {
