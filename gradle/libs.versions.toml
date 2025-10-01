@@ -67,7 +67,6 @@ rxlifecycle3 = "3.1.0"
 ucrop = "2.2.11-native"
 playAppUpdate = "2.1.0"
 immersionbar = "3.2.2"
-xpopup = "2.10.0"
 smartRefreshLayout = "2.1.1"
 smartRefreshLayoutV2 = "2.1.1"
 smartRefreshHeaderV2 = "2.1.1"
@@ -80,7 +79,7 @@ glide = "5.0.5"
 mnImageBrowser = "V3.1.2X"
 gsyVideoPlayerThermal = "v8.6.0-release-jitpack"
 nordicBle = "2.11.0"
-utilcode = "1.31.1"
+utilcodex = "1.31.1"
 xxpermissions = "20.0"
 xlog = "1.11.1"
 lottie = "6.6.9"
@@ -88,8 +87,6 @@ eventbus = "3.3.1"
 andromeda = "17.0.0"
 javacv = "1.5.12"
 ffmpeg = "7.1-1.5.11"
-wechatSdk = "6.8.34"
-umengApm = "2.0.6"
 umengCommon = "9.8.8"
 umengAsms = "1.8.7.2"
 umengAnalytics = "9.8.8"
@@ -189,8 +186,6 @@ kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
 
-
-fastjson2 = { group = "com.alibaba.fastjson2", name = "fastjson2", version.ref = "fastjson2" }
 jsbridge = { group = "com.github.lzyzsd", name = "jsbridge", version.ref = "jsbridge" }
 retrofit2 = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 converter-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
@@ -207,7 +202,6 @@ rxlifecycle-android-lifecycle-ktx = { group = "com.trello.rxlifecycle3", name = 
 ucrop = { group = "com.github.yalantis", name = "ucrop", version.ref = "ucrop" }
 play-app-update = { group = "com.google.android.play", name = "app-update", version.ref = "playAppUpdate" }
 immersionbar = { group = "com.geyifeng.immersionbar", name = "immersionbar", version.ref = "immersionbar" }
-xpopup = { group = "com.github.li-xiaojun", name = "XPopup", version.ref = "xpopup" }
 smart-refresh-layout = { group = "com.scwang.smartrefresh", name = "SmartRefreshLayout", version.ref = "smartRefreshLayout" }
 smart-refresh-header = { group = "com.scwang.smartrefresh", name = "SmartRefreshHeader", version.ref = "smartRefreshLayout" }
 refresh-layout-kernel = { group = "io.github.scwang90", name = "refresh-layout-kernel", version.ref = "smartRefreshLayoutV2" }
@@ -228,7 +222,7 @@ camerax-view = { group = "androidx.camera", name = "camera-view", version.ref = 
 camerax-extensions = { group = "androidx.camera", name = "camera-extensions", version.ref = "camerax" }
 compose-constraint-layout = { group = "androidx.constraintlayout", name = "constraintlayout-compose", version = "1.1.0" }
 nordic-ble-ktx = { group = "no.nordicsemi.android", name = "ble-ktx", version.ref = "nordicBle" }
-utilcode = { group = "com.blankj", name = "utilcodex", version.ref = "utilcode" }
+utilcode = { group = "com.blankj", name = "utilcodex", version.ref = "utilcodex" }
 xxpermissions = { group = "com.github.getActivity", name = "XXPermissions", version.ref = "xxpermissions" }
 xlog = { group = "com.elvishew", name = "xlog", version.ref = "xlog" }
 lottie = { group = "com.airbnb.android", name = "lottie", version.ref = "lottie" }
@@ -243,8 +237,6 @@ ffmpeg-android-arm64 = { group = "org.bytedeco", name = "ffmpeg", version.ref = 
 ffmpeg-android-arm = { group = "org.bytedeco", name = "ffmpeg", version.ref = "ffmpeg" }
 ffmpeg-android-x86-64 = { group = "org.bytedeco", name = "ffmpeg", version.ref = "ffmpeg" }
 ffmpeg-android-x86 = { group = "org.bytedeco", name = "ffmpeg", version.ref = "ffmpeg" }
-wechat-sdk = { group = "com.tencent.mm.opensdk", name = "wechat-sdk-android", version.ref = "wechatSdk" }
-umeng-apm = { group = "com.umeng.umsdk", name = "apm", version.ref = "umengApm" }
 umeng-common = { group = "com.umeng.umsdk", name = "common", version.ref = "umengCommon" }
 umeng-asms = { group = "com.umeng.umsdk", name = "asms", version.ref = "umengAsms" }
 umeng-analytics = { group = "com.umeng.umsdk", name = "analytics", version.ref = "umengAnalytics" }
