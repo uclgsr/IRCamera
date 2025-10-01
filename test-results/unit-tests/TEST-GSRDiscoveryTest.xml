@@ -1,5 +1,0 @@
-<testsuites>
-    <testsuite name="GSRDiscoveryTest" failures="0" tests="4">
-        <testcase name="should_discover_shimmer_devices_within_timeout" />
-    </testsuite>
-</testsuites>
