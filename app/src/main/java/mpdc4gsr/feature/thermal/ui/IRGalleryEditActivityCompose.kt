@@ -32,6 +32,7 @@ import mpdc4gsr.core.ui.BaseViewModel
 import mpdc4gsr.core.ui.BaseComposeActivity
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.theme.IRCameraTheme
+import mpdc4gsr.feature.thermal.data.ThermalPalette
 
 enum class EditTool(
     val displayName: String,
@@ -146,15 +147,15 @@ class IRGalleryEditViewModel : BaseViewModel() {
 
 class IRGalleryEditActivityCompose : BaseComposeActivity<IRGalleryEditViewModel>() {
 
-    override fun createViewModel(): IRGalleryEditViewModel =
-        viewModels<IRGalleryEditViewModel>().value
+    private val viewModelInstance: IRGalleryEditViewModel by viewModels()
+
+    override fun createViewModel(): IRGalleryEditViewModel = viewModelInstance
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Simulate loading an image (in real implementation, get from intent)
-        val imagePath = intent.getStringExtra("image_path") ?: "sample_thermal_image.jpg"
-        viewModels<IRGalleryEditViewModel>().value.loadImage(imagePath)
+        val imagePath = intent?.getStringExtra("image_path") ?: "sample_thermal_image.jpg"
+        viewModelInstance.loadImage(imagePath)
     }
 
     @OptIn(ExperimentalMaterial3Api::class)
