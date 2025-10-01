@@ -26,8 +26,6 @@
             android:name=".activity.IRConfigComposeActivity"
             android:launchMode="singleTop"
             android:screenOrientation="userPortrait" />
-        <!-- Test utility activity (deprecated - Java-based utility) -->
-        <!-- <activity android:name=".activity.TestRecordActivity" /> -->
 
         <!-- Report Activities - Migrated to Compose -->
         <activity
@@ -43,19 +41,6 @@
         <activity
             android:name=".activity.IRCorrectionThreeComposeActivity"
             android:screenOrientation="userPortrait" />
-
-        <!-- Legacy Activities (deprecated - use Compose versions above) -->
-        <!-- <activity android:name=".activity.IRMonitorActivity" android:launchMode="singleTop" android:screenOrientation="userPortrait" /> -->
-        <!-- <activity android:name=".activity.IRLogMPChartActivity" android:launchMode="singleTop" android:screenOrientation="userPortrait" /> -->
-        <!-- <activity android:name=".activity.IRConfigActivity" android:launchMode="singleTop" android:screenOrientation="userPortrait" /> -->
-        <!-- <activity android:name=".report.activity.ReportCreateFirstActivity" android:screenOrientation="userPortrait" /> -->
-        <!-- <activity android:name=".report.activity.ReportCreateSecondActivity" android:screenOrientation="userPortrait" /> -->
-        <!-- <activity android:name=".report.activity.ReportDetailActivity" android:screenOrientation="userPortrait" /> -->
-        <!-- <activity android:name=".report.activity.ReportPreviewFirstActivity" android:screenOrientation="userPortrait" /> -->
-        <!-- <activity android:name=".report.activity.ReportPreviewSecondActivity" android:screenOrientation="userPortrait" /> -->
-        <!-- <activity android:name=".report.activity.PDFListActivity" android:screenOrientation="userPortrait" /> -->
-        <!-- <activity android:name=".activity.IRCorrectionThreeActivity" android:screenOrientation="userPortrait" /> -->
-        <!-- <activity android:name=".activity.ReportPreviewActivity" android:screenOrientation="userPortrait" /> -->
 
         <!-- Activities from thermal module -->
 
@@ -76,14 +61,6 @@
             android:requestLegacyExternalStorage="true"
             android:screenOrientation="userPortrait"
             android:windowSoftInputMode="adjustPan" />
-
-        <!-- Legacy Activities (deprecated - use Compose versions above) -->
-        <!-- <activity android:name=".lite.activity.IRMonitorLiteActivity" /> -->
-        <!-- <activity android:name=".lite.activity.IRMonitorChartLiteActivity" /> -->
-        <!-- <activity android:name=".lite.activity.IRCorrectionLiteThreeActivity" /> -->
-        <!-- <activity android:name=".lite.activity.IRCorrectionLiteFourActivity" /> -->
-        <!-- <activity android:name=".lite.activity.ImagePickIRLiteActivity" android:screenOrientation="portrait" /> -->
-        <!-- <activity android:name=".lite.activity.IRThermalLiteActivity" android:configChanges="orientation|screenSize|keyboardHidden" android:exported="true" android:launchMode="singleTask" android:maxAspectRatio="2.4" android:requestLegacyExternalStorage="true" android:screenOrientation="userPortrait" android:windowSoftInputMode="adjustPan" /> -->
 
         <!-- Missing base activities -->
 
