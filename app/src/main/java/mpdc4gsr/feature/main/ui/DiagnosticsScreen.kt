@@ -20,7 +20,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.components.*
 import mpdc4gsr.core.ui.theme.IRCameraTheme
-import mpdc4gsr.viewmodel.DiagnosticsViewModel
+import mpdc4gsr.feature.device.presentation.DiagnosticsViewModel
 
 /**
  * Diagnostics Screen - System diagnostics and troubleshooting
