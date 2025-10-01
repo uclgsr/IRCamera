@@ -22,6 +22,7 @@ The module is being migrated from traditional Android Views with DataBinding to 
 - ✅ MessageDialogCompose.kt - LongTextDialog, NotificationDialog, and FirmwareUpdateDialog
 - ✅ ProgressDialogCompose.kt - Progress dialog with linear/circular progress indicator
 - ✅ TipDialogsCompose.kt - TipDialog, MessageDialog, EmissivityDialog
+- ✅ SpecializedTipDialogsCompose.kt - ObserveDialog, ShutterDialog, OtgDialog, WaterMarkDialog, ChangeDeviceDialog
 - ✅ ComposeDialogHelper.kt - Helper classes to use Compose dialogs in non-Compose contexts
 
 #### UI Components (app/compose/components/)
@@ -157,14 +158,15 @@ fun ColorSelectionScreen() {
 
 ### Medium Priority Dialogs
 - [x] TipEmissivityDialog → EmissivityDialog (in TipDialogsCompose.kt) ✅ (Created)
-- [ ] TipObserveDialog → ObserveDialogCompose
-- [ ] TipChangeDeviceDialog → ChangeDeviceDialogCompose
-- [ ] TipOtgDialog → OtgDialogCompose
-- [ ] TipShutterDialog → ShutterDialogCompose
+- [x] TipObserveDialog → ObserveDialog (in SpecializedTipDialogsCompose.kt) ✅ (Created)
+- [x] TipChangeDeviceDialog → ChangeDeviceDialog (in SpecializedTipDialogsCompose.kt) ✅ (Created)
+- [x] TipOtgDialog → OtgDialog (in SpecializedTipDialogsCompose.kt) ✅ (Created)
+- [x] TipShutterDialog → ShutterDialog (in SpecializedTipDialogsCompose.kt) ✅ (Created)
+- [x] TipWaterMarkDialog → WaterMarkDialog (in SpecializedTipDialogsCompose.kt) ✅ (Created)
 - [ ] TipTargetColorDialog → TargetColorDialogCompose
-- [ ] TipWaterMarkDialog → WaterMarkDialogCompose
 - [ ] CarDetectDialog → CarDetectDialogCompose
 - [ ] EmissivityTipPopup → EmissivityPopupCompose
+- [ ] TipCameraProgressDialog → CameraProgressDialogCompose
 
 ### Adapters
 - [x] TargetColorAdapter → TargetColorPickerCompose ✅ (Created)
