@@ -21,7 +21,7 @@ import mpdc4gsr.core.ui.components.SensorStatusCard
 import mpdc4gsr.core.ui.components.sensors.GSRVisualizationCard
 import mpdc4gsr.core.ui.components.sensors.GSRData
 import mpdc4gsr.core.ui.components.sensors.GSRConnectionState
-import mpdc4gsr.core.ui.ConnectionState
+import mpdc4gsr.feature.network.data.ConnectionState
 import mpdc4gsr.feature.main.presentation.MainActivityViewModel
 
 /**

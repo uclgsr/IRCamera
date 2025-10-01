@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import mpdc4gsr.controller.ComprehensiveRecordingController
+import mpdc4gsr.feature.network.data.ComprehensiveRecordingController
 
 /**
  * Enhanced NetworkManager with automatic reconnection, settings persistence,

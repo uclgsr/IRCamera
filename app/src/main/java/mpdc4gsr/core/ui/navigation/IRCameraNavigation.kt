@@ -12,9 +12,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import mpdc4gsr.core.ui.*
 import mpdc4gsr.feature.main.ui.MainActivity
-import mpdc4gsr.feature.gsr.ui.SensorDashboardComposeActivity
-import mpdc4gsr.feature.settings.ui.SettingsComposeActivity
 import mpdc4gsr.feature.settings.ui.AboutScreen
 
 /**

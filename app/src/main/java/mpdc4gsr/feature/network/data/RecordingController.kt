@@ -23,9 +23,9 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import mpdc4gsr.core.data.SessionMetadata
-import mpdc4gsr.controller.RecordingConstants.RGB_STORAGE_MB_PER_MIN
-import mpdc4gsr.controller.RecordingConstants.THERMAL_STORAGE_MB_PER_MIN
-import mpdc4gsr.controller.RecordingConstants.SHIMMER_STORAGE_MB_PER_MIN
+import mpdc4gsr.feature.network.data.RecordingConstants.RGB_STORAGE_MB_PER_MIN
+import mpdc4gsr.feature.network.data.RecordingConstants.THERMAL_STORAGE_MB_PER_MIN
+import mpdc4gsr.feature.network.data.RecordingConstants.SHIMMER_STORAGE_MB_PER_MIN
 import mpdc4gsr.core.data.ErrorType
 import mpdc4gsr.core.data.RecordingStats
 import mpdc4gsr.core.data.RecordingStatus
