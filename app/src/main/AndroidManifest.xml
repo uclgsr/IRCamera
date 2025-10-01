@@ -51,7 +51,7 @@
 
         <!-- USB Device Handler Activity -->
         <activity
-            android:name="mpdc4gsr.activities.BlankDevActivity"
+            android:name="mpdc4gsr.feature.device.ui.BlankDevComposeActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="true"
             android:theme="@style/Blank">
@@ -65,7 +65,7 @@
 
         <!-- Main Launcher Activity -->
         <activity
-            android:name="mpdc4gsr.activities.MainActivity"
+            android:name="mpdc4gsr.feature.main.ui.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>
@@ -75,14 +75,14 @@
         </activity>
 
         <!-- Jetpack Compose Activities -->
-        <activity android:name="mpdc4gsr.activities.PolicyActivityCompose" />
-        <activity android:name="mpdc4gsr.activities.VersionActivityCompose" />
+        <activity android:name="mpdc4gsr.feature.settings.ui.PolicyActivityCompose" />
+        <activity android:name="mpdc4gsr.feature.settings.ui.VersionActivityCompose" />
 
         <!-- Legacy Activities (deprecated - use Compose versions above) -->
         <!-- <activity android:name="mpdc4gsr.activities.PolicyActivity" /> -->
         <!-- <activity android:name="mpdc4gsr.activities.VersionActivity" /> -->
         <activity
-            android:name="mpdc4gsr.activities.SettingsComposeActivity"
+            android:name="mpdc4gsr.feature.settings.ui.SettingsComposeActivity"
             android:exported="false"
             android:label="Settings (Compose)"
             android:theme="@style/AppTheme" />
@@ -99,7 +99,7 @@
         </receiver>
 
         <activity
-            android:name="mpdc4gsr.activities.NetworkConfigActivity"
+            android:name="mpdc4gsr.feature.network.ui.NetworkConfigActivityCompose"
             android:exported="false"
             android:label="Network Configuration"
             android:screenOrientation="userPortrait"
@@ -115,7 +115,7 @@
             android:label="@string/gsr_quick_access" />
 
         <activity
-            android:name="mpdc4gsr.activities.FaultTolerantRecordingActivity"
+            android:name="mpdc4gsr.feature.testing.ui.FaultTolerantRecordingActivityCompose"
             android:exported="false"
             android:label="@string/enhanced_recording_label" />
 
@@ -160,17 +160,12 @@
             android:label="Hub-Spoke Recording" />
 
         <activity
-            android:name="mpdc4gsr.network.DevicePairingComposeActivity"
+            android:name="mpdc4gsr.feature.network.ui.DevicePairingComposeActivity"
             android:exported="false"
             android:label="Device Pairing" />
 
         <activity
-            android:name="mpdc4gsr.activities.DevicePairingActivityCompose"
-            android:exported="false"
-            android:label="Device Pairing (Compose)" />
-
-        <activity
-            android:name="mpdc4gsr.permissions.PermissionRequestComposeActivity"
+            android:name="mpdc4gsr.core.ui.PermissionRequestComposeActivity"
             android:exported="false"
             android:label="Enhanced Permission System Test" />
 
@@ -205,7 +200,7 @@
 
 
         <activity
-            android:name="mpdc4gsr.compose.activity.MainComposeActivity"
+            android:name="mpdc4gsr.feature.main.ui.MainComposeActivity"
             android:exported="true"
             android:label="IR Camera - Compose UI"
             android:theme="@style/Theme.AppCompat.NoActionBar">
@@ -225,7 +220,7 @@
 
         <!-- Navigation Test Activity -->
         <activity
-            android:name="mpdc4gsr.activities.NavigationTestActivity"
+            android:name="mpdc4gsr.feature.testing.ui.NavigationTestActivity"
             android:exported="true"
             android:label="Navigation Test"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
@@ -233,7 +228,7 @@
 
         <!-- Comprehensive Integration Test Activity -->
         <activity
-            android:name="mpdc4gsr.activities.ComprehensiveIntegrationTestActivity"
+            android:name="mpdc4gsr.feature.testing.ui.ComprehensiveIntegrationTestActivity"
             android:exported="true"
             android:label="Integration Test Suite"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
@@ -267,7 +262,7 @@
             android:label="Dual Mode Camera" />
 
         <activity
-            android:name="mpdc4gsr.activities.DualModeCameraActivityCompose"
+            android:name="mpdc4gsr.feature.camera.ui.DualModeCameraActivityCompose"
             android:exported="false"
             android:label="Dual Mode Camera (Compose)" />
 
@@ -309,7 +304,7 @@
 
         <!-- Jetpack Compose Activities -->
         <activity
-            android:name="mpdc4gsr.activities.SensorDashboardComposeActivity"
+            android:name="mpdc4gsr.feature.gsr.ui.SensorDashboardComposeActivity"
             android:exported="false"
             android:label="Sensor Dashboard (Compose)"
             android:screenOrientation="userPortrait"
@@ -319,7 +314,7 @@
 
 
         <activity
-            android:name="mpdc4gsr.activities.ComposeMigrationLauncherActivity"
+            android:name="mpdc4gsr.feature.testing.ui.ComposeMigrationLauncherActivity"
             android:exported="true"
             android:label="Compose Migration Launcher"
             android:screenOrientation="userPortrait"

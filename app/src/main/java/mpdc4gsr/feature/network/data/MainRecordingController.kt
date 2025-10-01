@@ -13,7 +13,7 @@ import kotlinx.coroutines.withContext
 import mpdc4gsr.core.data.SessionMetadata
 import mpdc4gsr.core.data.SensorRecorder
 import mpdc4gsr.core.data.utils.SessionDirectoryManager
-import mpdc4gsr.controller.RecordingConstants
+import mpdc4gsr.feature.network.data.RecordingConstants
 import java.io.File
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
