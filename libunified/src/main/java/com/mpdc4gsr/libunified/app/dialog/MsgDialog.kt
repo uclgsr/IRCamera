@@ -96,7 +96,7 @@ class MsgDialog : Dialog {
                                 ) {
                                     IconButton(onClick = {
                                         dismiss()
-                                        positiveClickListener?.onClick(dialog!!)
+                                        dialog?.let { positiveClickListener?.onClick(it) }
                                     }) {
                                         Icon(
                                             imageVector = Icons.Default.Close,
