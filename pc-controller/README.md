@@ -71,30 +71,32 @@ The PC Controller implements a **Hub-and-Spoke Model** where:
 
 ### Implementation Options
 
-#### 1. MVP Simple (Recommended for Testing)
+#### 1. Unified Controller (Recommended - Production Ready)
 
-**File**: `mvp_simple.py` (~250 lines)
+**File**: `run_unified_controller.py`
 
-- Single-file implementation focused on core functionality
-- Minimal dependencies, easy to understand and modify
-- Perfect for initial testing and development
-
-#### 2. Full GUI Application (Production Ready)
-
-**File**: `run_mvp_app.py` + supporting modules
-
+- Consolidated implementation combining best features from all previous versions
+- Automatic dependency detection and optimal controller selection
 - Complete PyQt6 interface with advanced features
 - Device dashboard with real-time status monitoring
 - Session controls and metadata management
 - Comprehensive logging and error handling
 
-#### 3. Component Demonstration
+#### 2. Component Demonstration
 
-**File**: `demo_mvp_components.py`
+**File**: `demo_features.py`
 
 - Demonstrates Hub-and-Spoke architecture components
-- Validates 83% complete framework functionality
+- Validates framework functionality
 - Useful for understanding system capabilities
+
+#### 3. Legacy MVP Implementations (Archived)
+
+**Location**: `legacy_implementation/`
+
+- MVP simple, CLI, and app versions archived for reference
+- Use unified controller for all new development
+- See `legacy_implementation/README.md` for historical context
 
 ## Quick Start
 
@@ -110,65 +112,56 @@ pip install scipy opencv-python bleak psutil
 
 ### Usage Options
 
-#### Simple MVP Server (Basic Testing)
+#### Unified Controller (Recommended)
 
 ```bash
-# Run single-file MVP implementation
-python mvp_simple.py
-
-# Run for specific duration
-python mvp_simple.py --duration 60
+# Launch unified controller (auto-selects best available option)
+python run_unified_controller.py
 ```
 
-#### Full GUI Application (Recommended)
+#### Component Demonstration
 
 ```bash
-# Launch complete application with GUI
-python run_mvp_app.py
-
-# For headless systems
-QT_QPA_PLATFORM=offscreen python run_mvp_app.py
+# Component demonstration and validation
+python demo_features.py
 ```
 
 #### Development and Testing
 
 ```bash
-# Component demonstration
-python demo_mvp_components.py
-
 # Run comprehensive tests
-python test_mvp.py
-
-# Simple functionality tests  
-python test_mvp_simple.py
+python test_*.py
 ```
+
+**Note**: Legacy MVP implementations (`mvp_simple.py`, `run_mvp_app.py`, etc.) have been archived to `legacy_implementation/` for historical reference. Use `run_unified_controller.py` for all new development.
 
 ## Project Structure
 
 ```
 pc-controller/
 +-- Core Implementation Files
-    +-- mvp_simple.py              # Single-file MVP (~250 lines)
-    +-- pc_controller.py           # Main application entry point
-    +-- run_mvp_app.py             # GUI application launcher
-    +-- demo_mvp_components.py     # Component demonstration
-
+    +-- run_unified_controller.py  # Main unified controller (recommended)
+    +-- pc_controller.py           # Application core
+    +-- demo_features.py          # Feature demonstration
+    
 +-- Configuration and Setup
     +-- requirements.txt           # Full dependency list
-    +-- requirements_mvp.txt       # Minimal dependencies
-    +-- config_mvp.yaml           # Basic configuration
     +-- setup.py                  # Package setup
+    +-- config/                   # Configuration files
     
 +-- Testing and Validation
-    +-- test_mvp.py               # Comprehensive test suite
-    +-- test_mvp_simple.py        # Basic functionality tests
-    +-- test_mvp_core_continued.py # Extended core tests
+    +-- test_*.py                 # Test suite files
 
 +-- Supporting Files
     +-- connect_to_android.sh     # Android connection helper
-    +-- config/                   # Configuration files
     +-- data/                     # Session data directory
-    +-- legacy_implementation/    # Historical reference
+    +-- legacy_implementation/    # Archived MVP implementations
+        +-- mvp_simple.py         # Legacy single-file MVP
+        +-- run_mvp_app.py        # Legacy GUI launcher
+        +-- run_mvp_cli.py        # Legacy CLI version
+        +-- requirements_mvp.txt  # Legacy dependencies
+        +-- config_mvp.yaml       # Legacy config
+        +-- README.md             # Legacy documentation
 ```
 
 ## Device Communication Protocol
