@@ -133,7 +133,8 @@ def categorize_layout(layout_name):
         return 'Other'
 
 def main():
-    base_path = '/home/runner/work/IRCamera/IRCamera'
+    script_dir = Path(__file__).resolve().parent
+    base_path = str(script_dir.parent.parent)
     
     print("# Detailed Layout vs Compose Migration Analysis")
     print("=" * 100)
