@@ -178,7 +178,9 @@ class CountDownView : View {
             mCurrentProgress = (360 * (i / 100f))
             invalidate()
         }
-        valueAnimator!!.start()
+        if (isAttachedToWindow) {
+            valueAnimator!!.start()
+        }
         valueAnimator!!.addListener(object : AnimatorListenerAdapter() {
             override fun onAnimationEnd(animation: Animator) {
                 super.onAnimationEnd(animation)
