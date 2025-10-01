@@ -7,13 +7,26 @@ import android.content.Intent
 import android.hardware.usb.UsbDevice
 import android.hardware.usb.UsbManager
 import androidx.lifecycle.viewModelScope
-import mpdc4gsr.viewmodel.BaseViewModel
+import mpdc4gsr.core.ui.BaseViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+
+// Data classes for USB device information
+data class UsbDeviceInfo(
+    val name: String,
+    val productId: Int,
+    val vendorId: Int,
+    val deviceType: UsbDeviceType,
+    val hasPermission: Boolean
+)
+
+enum class UsbDeviceType {
+    CAMERA, SENSOR, UNKNOWN
+}
 
 /**
  * ViewModel for USB Device Handler Compose Activity
@@ -223,7 +236,7 @@ class BlankDevViewModel : BaseViewModel() {
     /**
      * Clear BlankDev-specific error message
      */
-    fun clearBlankDevError() {
+    override fun clearError() {
         _blankDevUiState.value = _blankDevUiState.value.copy(error = null)
     }
 

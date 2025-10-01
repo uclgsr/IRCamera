@@ -1,35 +1,12 @@
 package mpdc4gsr.activities
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.ui.Modifier
-import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-import mpdc4gsr.compose.navigation.UnifiedNavHost
-
 /**
- * Primary MainActivity implementation using Compose
+ * Backward compatibility redirect for MainActivity
  *
- * This is the main entry point for the IRCamera application using the unified
- * navigation system and Compose UI framework.
+ * This file provides backward compatibility for existing references to
+ * mpdc4gsr.activities.MainActivity. The actual implementation is now at
+ * mpdc4gsr.feature.main.ui.MainActivity following Clean Architecture principles.
+ *
+ * @deprecated Use mpdc4gsr.feature.main.ui.MainActivity instead
  */
-class MainActivity : ComponentActivity() {
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        setContent {
-            LibUnifiedTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    UnifiedNavHost()
-                }
-            }
-        }
-    }
-}
+typealias MainActivity = mpdc4gsr.feature.main.ui.MainActivity

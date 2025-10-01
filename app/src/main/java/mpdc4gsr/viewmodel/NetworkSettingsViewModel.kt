@@ -14,6 +14,7 @@ import androidx.preference.PreferenceManager
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import mpdc4gsr.sensors.gsr.ShimmerDeviceManager
+import mpdc4gsr.core.ui.BaseViewModel
 
 /**
  * Network Settings ViewModel - MVVM Integration

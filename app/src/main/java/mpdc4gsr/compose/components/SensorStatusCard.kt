@@ -107,25 +107,25 @@ private fun SensorStatusRow(
 @Composable
 private fun StatusIndicator(state: ConnectionState) {
     val (icon, color, text) = when (state) {
-        is ConnectionState.Connected -> Triple(
+        is mpdc4gsr.core.ui.ConnectionState.Connected -> Triple(
             Icons.Default.CheckCircle,
             Color.Green,
             "Connected"
         )
 
-        is ConnectionState.Connecting -> Triple(
+        is mpdc4gsr.core.ui.ConnectionState.Connecting -> Triple(
             Icons.Default.Warning,
             MaterialTheme.colorScheme.primary,
             "Connecting"
         )
 
-        is ConnectionState.Disconnected -> Triple(
+        is mpdc4gsr.core.ui.ConnectionState.Disconnected -> Triple(
             Icons.Default.Error,
             Color.Red,
             "Disconnected"
         )
 
-        is ConnectionState.Error -> Triple(
+        is mpdc4gsr.core.ui.ConnectionState.Error -> Triple(
             Icons.Default.Error,
             Color.Red,
             "Error"

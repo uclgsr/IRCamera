@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.preference.PreferenceManager
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import mpdc4gsr.core.ui.BaseViewModel
 
 /**
  * Calibration ViewModel - MVVM Integration

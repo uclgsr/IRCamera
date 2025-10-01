@@ -18,8 +18,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-import mpdc4gsr.compose.navigation.UnifiedNavHost
-import mpdc4gsr.compose.navigation.UnifiedRoute
+import mpdc4gsr.core.ui.navigation.UnifiedNavHost
+import mpdc4gsr.core.ui.navigation.UnifiedRoute
 
 /**
  * Navigation Test Activity

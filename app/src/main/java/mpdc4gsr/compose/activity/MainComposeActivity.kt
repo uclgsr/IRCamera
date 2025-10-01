@@ -9,7 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import mpdc4gsr.compose.screens.*
-import mpdc4gsr.compose.sensors.gsr.GSRSensorScreen
+import mpdc4gsr.feature.gsr.ui.GSRSensorScreen
 import mpdc4gsr.compose.sensors.camera.RGBCameraScreen
 import mpdc4gsr.compose.theme.IRCameraTheme
 
@@ -64,11 +64,7 @@ fun MainApp() {
         // Individual sensor screens
         composable("gsr_sensor") {
             GSRSensorScreen(
-                onBackClick = { navController.popBackStack() },
-                onSettingsClick = { navController.navigate("gsr_settings") },
-                onSaveData = {
-                    // Save GSR data functionality
-                }
+                navController = navController
             )
         }
 
