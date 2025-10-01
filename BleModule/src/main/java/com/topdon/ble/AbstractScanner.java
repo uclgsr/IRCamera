@@ -305,17 +305,17 @@ abstract class AbstractScanner implements Scanner {
     }
 
     /**
-     * 
+     *
      */
     protected abstract boolean isReady();
 
     /**
-     * 
+     *
      */
     protected abstract void performStartScan();
 
     /**
-     * 
+     *
      */
     protected abstract void performStopScan();
 

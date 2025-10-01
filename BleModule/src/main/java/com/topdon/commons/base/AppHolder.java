@@ -148,7 +148,7 @@ public class AppHolder implements Application.ActivityLifecycleCallbacks {
     }
 
     /**
-     * 
+     *
      */
     public boolean isAppOnForeground() {
         ActivityManager am = (ActivityManager) application.getSystemService(Context.ACTIVITY_SERVICE);
@@ -224,7 +224,7 @@ public class AppHolder implements Application.ActivityLifecycleCallbacks {
     /**
      * Activity
      *
-     * @param className 
+     * @param className
      */
     public void backTo(String className) {
         List<RunningActivity> list = new ArrayList<>(runningActivities);

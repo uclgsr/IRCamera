@@ -8,8 +8,8 @@ final class Inspector {
     /**
      * EasyBLEException
      *
-     * @param obj     
-     * @param message 
+     * @param obj
+     * @param message
      */
     static <T> T requireNonNull(T obj, String message) {
         if (obj == null)

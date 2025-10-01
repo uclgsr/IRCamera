@@ -159,7 +159,7 @@ public class EasyBLE {
     }
 
     /**
-     * 
+     *
      */
     public boolean isBluetoothOn() {
         return bluetoothAdapter != null && bluetoothAdapter.isEnabled();
@@ -217,14 +217,14 @@ public class EasyBLE {
     }
 
     /**
-     * 
+     *
      */
     public void setLogEnabled(boolean isEnabled) {
         logger.setEnabled(isEnabled);
     }
 
     /**
-     * 
+     *
      */
     public synchronized void release() {
         if (broadcastReceiver != null) {
@@ -253,7 +253,7 @@ public class EasyBLE {
     }
 
     /**
-     * 
+     *
      */
     public void registerObserver(EventObserver observer) {
         if (checkStatus()) {
@@ -262,14 +262,14 @@ public class EasyBLE {
     }
 
     /**
-     * 
+     *
      */
     public boolean isObserverRegistered(EventObserver observer) {
         return observable.isRegistered(observer);
     }
 
     /**
-     * 
+     *
      */
     public void unregisterObserver(EventObserver observer) {
         observable.unregisterObserver(observer);
@@ -278,7 +278,7 @@ public class EasyBLE {
     /**
      * ，
      *
-     * @param info 
+     * @param info
      */
     public void notifyObservers(MethodInfo info) {
         if (checkStatus()) {
@@ -310,7 +310,7 @@ public class EasyBLE {
     }
 
     /**
-     * 
+     *
      */
     public void addScanListener(ScanListener listener) {
         checkAndInstanceScanner();
@@ -320,7 +320,7 @@ public class EasyBLE {
     }
 
     /**
-     * 
+     *
      */
     public void removeScanListener(ScanListener listener) {
         if (scanner != null) {
@@ -329,7 +329,7 @@ public class EasyBLE {
     }
 
     /**
-     * 
+     *
      */
     public boolean isScanning() {
         return scanner != null && scanner.isScanning();
@@ -346,7 +346,7 @@ public class EasyBLE {
     }
 
     /**
-     * 
+     *
      */
     public void stopScan() {
         if (checkStatus() && scanner != null) {
@@ -364,9 +364,9 @@ public class EasyBLE {
     }
 
     /**
-     * 
      *
-     * @param address 
+     *
+     * @param address
      * @return ，null
      */
     @Nullable
@@ -375,10 +375,10 @@ public class EasyBLE {
     }
 
     /**
-     * 
      *
-     * @param address       
-     * @param configuration 
+     *
+     * @param address
+     * @param configuration
      * @return ，null
      */
     @Nullable
@@ -387,10 +387,10 @@ public class EasyBLE {
     }
 
     /**
-     * 
      *
-     * @param address  
-     * @param observer 
+     *
+     * @param address
+     * @param observer
      * @return ，null
      */
     @Nullable
@@ -399,11 +399,11 @@ public class EasyBLE {
     }
 
     /**
-     * 
      *
-     * @param address       
-     * @param configuration 
-     * @param observer      
+     *
+     * @param address
+     * @param configuration
+     * @param observer
      * @return ，null
      */
     @Nullable
@@ -420,9 +420,9 @@ public class EasyBLE {
     }
 
     /**
-     * 
      *
-     * @param device 
+     *
+     * @param device
      * @return ，null
      */
     @Nullable
@@ -431,10 +431,10 @@ public class EasyBLE {
     }
 
     /**
-     * 
      *
-     * @param device        
-     * @param configuration 
+     *
+     * @param device
+     * @param configuration
      * @return ，null
      */
     @Nullable
@@ -443,10 +443,10 @@ public class EasyBLE {
     }
 
     /**
-     * 
      *
-     * @param device   
-     * @param observer 
+     *
+     * @param device
+     * @param observer
      * @return ，null
      */
     @Nullable
@@ -455,11 +455,11 @@ public class EasyBLE {
     }
 
     /**
-     * 
      *
-     * @param device        
-     * @param configuration 
-     * @param observer      
+     *
+     * @param device
+     * @param configuration
+     * @param observer
      * @return ，null
      */
     @Nullable
@@ -522,7 +522,7 @@ public class EasyBLE {
     }
 
     /**
-     * 
+     *
      */
     @Nullable
     public Connection getFirstConnection() {
@@ -530,7 +530,7 @@ public class EasyBLE {
     }
 
     /**
-     * 
+     *
      */
     @Nullable
     public Connection getLastConnection() {
@@ -548,7 +548,7 @@ public class EasyBLE {
     }
 
     /**
-     * 
+     *
      */
     public void disconnectConnection(Device device) {
         if (checkStatus() && device != null) {
@@ -560,7 +560,7 @@ public class EasyBLE {
     }
 
     /**
-     * 
+     *
      */
     public void disconnectConnection(String address) {
         if (checkStatus() && address != null) {
@@ -572,7 +572,7 @@ public class EasyBLE {
     }
 
     /**
-     * 
+     *
      */
     public void disconnectAllConnections() {
         if (checkStatus()) {
@@ -583,7 +583,7 @@ public class EasyBLE {
     }
 
     /**
-     * 
+     *
      */
     public void releaseAllConnections() {
         if (checkStatus()) {
@@ -596,7 +596,7 @@ public class EasyBLE {
     }
 
     /**
-     * 
+     *
      */
     public void releaseConnection(String address) {
         if (checkStatus() && address != null) {
@@ -609,7 +609,7 @@ public class EasyBLE {
     }
 
     /**
-     * 
+     *
      */
     public void releaseConnection(Device device) {
         if (checkStatus() && device != null) {
@@ -622,7 +622,7 @@ public class EasyBLE {
     }
 
     /**
-     * 
+     *
      */
     public void reconnectAll() {
         if (checkStatus()) {
@@ -635,7 +635,7 @@ public class EasyBLE {
     }
 
     /**
-     * 
+     *
      */
     public void reconnect(Device device) {
         if (checkStatus() && device != null) {
@@ -661,9 +661,9 @@ public class EasyBLE {
     }
 
     /**
-     * 
      *
-     * @param address 
+     *
+     * @param address
      */
     public boolean createBond(String address) {
         checkStatus();
@@ -698,9 +698,9 @@ public class EasyBLE {
     }
 
     /**
-     * 
      *
-     * @param address 
+     *
+     * @param address
      */
     @SuppressWarnings("all")
     public void removeBond(String address) {

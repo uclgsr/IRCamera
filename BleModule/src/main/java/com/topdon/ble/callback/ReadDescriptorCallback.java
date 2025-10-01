@@ -9,10 +9,10 @@ import com.topdon.ble.Request;
  */
 public interface ReadDescriptorCallback extends RequestFailedCallback {
     /**
-     * 
      *
-     * @param request 
-     * @param value   
+     *
+     * @param request
+     * @param value
      */
     void onDescriptorRead(Request request, byte[] value);
 }

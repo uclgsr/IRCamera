@@ -9,10 +9,10 @@ import com.topdon.ble.Request;
  */
 public interface NotificationChangeCallback extends RequestFailedCallback {
     /**
-     *  / Indication
+     * / Indication
      *
-     * @param request   
-     * @param isEnabled 
+     * @param request
+     * @param isEnabled
      */
     void onNotificationChanged(Request request, boolean isEnabled);
 }

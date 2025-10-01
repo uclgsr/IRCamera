@@ -74,7 +74,7 @@ public enum BitmapUtils {
     }
 
     /**
-     * 
+     *
      *
      * @param bitmap
      * @param file   ——
@@ -108,9 +108,9 @@ public enum BitmapUtils {
     }
 
     /**
-     * 
      *
-     * @param bitmap 
+     *
+     * @param bitmap
      * @param width  ，
      */
     public static Bitmap imageZoom(Bitmap bitmap, double width) {
@@ -126,10 +126,10 @@ public enum BitmapUtils {
     }
 
     /***
-     * 
-     *@param bitmap 
-     * @param w 
-     * @param h 
+     *
+     *@param bitmap
+     * @param w
+     * @param h
      * @return Bitmap
      */
     public static Bitmap scaleWithWH(Bitmap bitmap, double w, double h) {
@@ -152,8 +152,8 @@ public enum BitmapUtils {
     /**
      * bitmap
      *
-     * @param bmp  file 
-     * @param file 
+     * @param bmp  file
+     * @param file
      * @return bitmap
      */
     public static boolean saveFile(String file, Bitmap bmp) {
@@ -183,8 +183,8 @@ public enum BitmapUtils {
     /**
      * ，
      *
-     * @param backBitmap  
-     * @param frontBitmap 
+     * @param backBitmap
+     * @param frontBitmap
      * @return
      */
     public static Bitmap mergeBitmap(Bitmap backBitmap, Bitmap frontBitmap, int leftFront, int topFront) {
@@ -277,8 +277,8 @@ public enum BitmapUtils {
     /**
      * ，
      *
-     * @param bytes  
-     * @param bytes2 
+     * @param bytes
+     * @param bytes2
      */
     public static void savaRawFile(byte[] bytes, byte[] bytes2) {
         try {
@@ -299,7 +299,7 @@ public enum BitmapUtils {
     }
 
     /**
-     * 
+     *
      *
      * @param bmp
      * @param title

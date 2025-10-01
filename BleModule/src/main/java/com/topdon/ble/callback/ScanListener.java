@@ -37,7 +37,7 @@ public interface ScanListener {
     /**
      * BLE
      *
-     * @deprecated  {@link #onScanResult(Device, boolean)}，，
+     * @deprecated {@link #onScanResult(Device, boolean)}，，
      */
     @Deprecated
     default void onScanResult(Device device) {

@@ -33,18 +33,18 @@ The original PC Controller used JSON protocol while Android used text-based prot
 
 All Android Protocol.kt message types are now supported:
 
-| Message Type  | Direction    | Status     | Handler                |
-|---------------|--------------|------------|------------------------|
-| HELLO         | Android → PC |  Complete | Device registration    |
-| SYNC_REQUEST  | PC → Android |  Complete | Time sync initiation   |
-| SYNC_RESPONSE | Android → PC |  Complete | Time sync response     |
-| SYNC_RESULT   | PC → Android |  Complete | Time sync completion   |
-| START_RECORD  | PC → Android |  Complete | Start recording        |
-| STOP_RECORD   | PC → Android |  Complete | Stop recording         |
-| ACK           | Android → PC |  Complete | Command acknowledgment |
-| ERROR         | Android → PC |  Complete | Error reporting        |
-| DATA_GSR      | Android → PC |  Complete | GSR data streaming     |
-| FRAME         | Android → PC |  Complete | Frame data             |
+| Message Type  | Direction    | Status   | Handler                |
+|---------------|--------------|----------|------------------------|
+| HELLO         | Android → PC | Complete | Device registration    |
+| SYNC_REQUEST  | PC → Android | Complete | Time sync initiation   |
+| SYNC_RESPONSE | Android → PC | Complete | Time sync response     |
+| SYNC_RESULT   | PC → Android | Complete | Time sync completion   |
+| START_RECORD  | PC → Android | Complete | Start recording        |
+| STOP_RECORD   | PC → Android | Complete | Stop recording         |
+| ACK           | Android → PC | Complete | Command acknowledgment |
+| ERROR         | Android → PC | Complete | Error reporting        |
+| DATA_GSR      | Android → PC | Complete | GSR data streaming     |
+| FRAME         | Android → PC | Complete | Frame data             |
 
 ### Translation Examples
 
@@ -269,18 +269,18 @@ python3 unified_pc_controller.py
 
 | Feature        | Android | PC (Old) | PC (New) | Compatible? |
 |----------------|---------|----------|----------|-------------|
-| Text Protocol  |        |         |         |            |
-| JSON Protocol  |        |         |         |            |
-| HELLO          |        |         |         |            |
-| START_RECORD   |        |         |         |            |
-| STOP_RECORD    |        |         |         |            |
-| SYNC_REQUEST   |        |         |         |            |
-| SYNC_RESULT    |        |         |         |            |
-| DATA_GSR       |        |         |         |            |
-| ACK            |        |         |         |            |
-| ERROR          |        |         |         |            |
-| Time Sync      |        | Partial  |         |            |
-| Error Recovery |        |         |         |            |
+| Text Protocol  |         |          |          |             |
+| JSON Protocol  |         |          |          |             |
+| HELLO          |         |          |          |             |
+| START_RECORD   |         |          |          |             |
+| STOP_RECORD    |         |          |          |             |
+| SYNC_REQUEST   |         |          |          |             |
+| SYNC_RESULT    |         |          |          |             |
+| DATA_GSR       |         |          |          |             |
+| ACK            |         |          |          |             |
+| ERROR          |         |          |          |             |
+| Time Sync      |         | Partial  |          |             |
+| Error Recovery |         |          |          |             |
 
 **New Compatibility Score: 14/14 (100%)**
 

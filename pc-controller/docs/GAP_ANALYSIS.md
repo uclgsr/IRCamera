@@ -47,16 +47,16 @@ ACK cmd=START_RECORD session_id=session_20240101_120000
 
 **Gap**: Different message type names between Android and PC
 
-| Android (Protocol.kt) | PC (advanced_pc_controller.py) | Match?            |
-|-----------------------|--------------------------------|-------------------|
-| `HELLO`               | `HELLO`                        |  Partial         |
-| `SYNC_REQUEST`        | `sync_request`                 |  Case mismatch   |
-| `START_RECORD`        | `start_recording`              |  Different name  |
-| `STOP_RECORD`         | `stop_recording`               |  Different name  |
-| `DATA_GSR`            | `telemetry_gsr`                |  Different name  |
-| `FRAME`               | `thermal_frame`, `rgb_frame`   |  Different names |
-| `ACK`                 | (not handled)                  |  Missing         |
-| `ERROR`               | (not handled)                  |  Missing         |
+| Android (Protocol.kt) | PC (advanced_pc_controller.py) | Match?          |
+|-----------------------|--------------------------------|-----------------|
+| `HELLO`               | `HELLO`                        | Partial         |
+| `SYNC_REQUEST`        | `sync_request`                 | Case mismatch   |
+| `START_RECORD`        | `start_recording`              | Different name  |
+| `STOP_RECORD`         | `stop_recording`               | Different name  |
+| `DATA_GSR`            | `telemetry_gsr`                | Different name  |
+| `FRAME`               | `thermal_frame`, `rgb_frame`   | Different names |
+| `ACK`                 | (not handled)                  | Missing         |
+| `ERROR`               | (not handled)                  | Missing         |
 
 **Impact**:
 
@@ -348,22 +348,22 @@ const val PROTOCOL_VERSION = "1.0"
 
 ## Protocol Compatibility Matrix
 
-| Feature       | Android Support | PC Support            | Compatible?  |
-|---------------|-----------------|-----------------------|--------------|
-| Text Protocol |                |                      |             |
-| JSON Protocol |                |                      |             |
-| HELLO message |                |                      |  (format)   |
-| START_RECORD  |                |  (wrong name)        |             |
-| STOP_RECORD   |                |  (wrong name)        |             |
-| SYNC_REQUEST  |                |  (case)              |             |
-| SYNC_RESULT   |                |                      |             |
-| DATA_GSR      |                |  (wrong name/format) |             |
-| ACK           |                |                      |             |
-| ERROR         |                |                      |             |
-| SSL/TLS       |                |                      | ? (untested) |
-| Heartbeat     |                |                      |             |
-| File Transfer |                |                      | N/A          |
-| Discovery     |                |                      |             |
+| Feature       | Android Support | PC Support          | Compatible?  |
+|---------------|-----------------|---------------------|--------------|
+| Text Protocol |                 |                     |              |
+| JSON Protocol |                 |                     |              |
+| HELLO message |                 |                     | (format)     |
+| START_RECORD  |                 | (wrong name)        |              |
+| STOP_RECORD   |                 | (wrong name)        |              |
+| SYNC_REQUEST  |                 | (case)              |              |
+| SYNC_RESULT   |                 |                     |              |
+| DATA_GSR      |                 | (wrong name/format) |              |
+| ACK           |                 |                     |              |
+| ERROR         |                 |                     |              |
+| SSL/TLS       |                 |                     | ? (untested) |
+| Heartbeat     |                 |                     |              |
+| File Transfer |                 |                     | N/A          |
+| Discovery     |                 |                     |              |
 
 **Compatibility Score: 0/14 (0%)**
 
@@ -446,16 +446,16 @@ const val PROTOCOL_VERSION = "1.0"
 
 To verify fixes, need integration tests for:
 
-1.  Connection establishment
-2.  HELLO message exchange
-3.  Time synchronization (full 4-step process)
-4.  Session start/stop commands
-5.  GSR data streaming
-6.  Frame streaming
-7.  Error handling and recovery
-8.  Multi-device coordination
-9.  SSL/TLS connection
-10.  Protocol version negotiation
+1. Connection establishment
+2. HELLO message exchange
+3. Time synchronization (full 4-step process)
+4. Session start/stop commands
+5. GSR data streaming
+6. Frame streaming
+7. Error handling and recovery
+8. Multi-device coordination
+9. SSL/TLS connection
+10. Protocol version negotiation
 
 **Current Test Coverage**: 0/10 integration tests exist
 
@@ -505,11 +505,11 @@ To verify fixes, need integration tests for:
 
 The existing PC Controller implementation is **well-architected** with excellent features:
 
--  C++ native backend for performance
--  SSL/TLS security layer
--  Real-time PyQtGraph visualization
--  Comprehensive documentation
--  Cross-platform support
+- C++ native backend for performance
+- SSL/TLS security layer
+- Real-time PyQtGraph visualization
+- Comprehensive documentation
+- Cross-platform support
 
 However, it has **zero compatibility** with the Android app due to fundamental protocol mismatches. The gaps are
 systematic and affect every aspect of communication.

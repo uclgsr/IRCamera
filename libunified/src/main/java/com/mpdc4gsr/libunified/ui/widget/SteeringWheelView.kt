@@ -10,7 +10,7 @@ import android.widget.TextView
 import com.mpdc4gsr.libunified.R
 
 /**
- * 
+ *
  */
 class SteeringWheelView : LinearLayout, OnClickListener {
 
