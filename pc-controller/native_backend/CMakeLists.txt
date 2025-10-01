@@ -37,9 +37,9 @@ endif ()
 
 # Source files
 set(SOURCES
-        src/enhanced_shimmer.cpp
+        src/shimmer.cpp
         src/data_processor.cpp
-        src/enhanced_pybind_module.cpp
+        src/pybind_module.cpp
 )
 
 # Add optional webcam source if OpenCV is available
