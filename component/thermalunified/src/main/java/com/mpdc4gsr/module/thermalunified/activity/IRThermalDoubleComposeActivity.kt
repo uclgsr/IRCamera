@@ -22,6 +22,9 @@ import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
 /**
  * Compose implementation of IR Thermal Double activity
  * Dual-mode thermal imaging with temperature and observation modes
+ * 
+ * NOTE: This is an MVP implementation with placeholder UI.
+ * TODO: For production, hoist UI state to ViewModel (selectedMode, showOverlay, showTrendChart, showCompass, isRecording).
  */
 class IRThermalDoubleComposeActivity : BaseComposeActivity<ThermalViewModel>() {
 
@@ -32,6 +35,7 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<ThermalViewModel>() {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ThermalViewModel) {
+        // Local UI state - TODO: Hoist to ViewModel
         var selectedMode by remember { mutableIntStateOf(0) }
         var showOverlay by remember { mutableStateOf(true) }
         var showTrendChart by remember { mutableStateOf(false) }

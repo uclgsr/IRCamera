@@ -29,16 +29,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-
-/**
- * Data class for album items in gallery
- */
-data class AlbumItem(
-    val imagePath: String,
-    val title: String,
-    val description: String = "",
-    val imageCount: Int = 0
-)
+import com.mpdc4gsr.module.thermalunified.model.AlbumItem
 
 /**
  * Compose equivalents of thermal adapters

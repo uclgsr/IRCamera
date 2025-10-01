@@ -25,6 +25,9 @@ import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
 /**
  * Compose implementation of Report Detail activity
  * Displays detailed view of a thermal imaging report
+ * 
+ * NOTE: This is an MVP implementation with hardcoded placeholder data.
+ * TODO: For production, load actual report data from ViewModel/Repository and display dynamically.
  */
 class ReportDetailComposeActivity : BaseComposeActivity<ThermalViewModel>() {
 
@@ -35,6 +38,7 @@ class ReportDetailComposeActivity : BaseComposeActivity<ThermalViewModel>() {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ThermalViewModel) {
+        // Local UI state
         var showShareDialog by remember { mutableStateOf(false) }
 
         LibUnifiedTheme {

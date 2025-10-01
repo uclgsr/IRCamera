@@ -25,6 +25,10 @@ import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
 /**
  * Lite version of IR Monitor Chart activity with Compose
  * Simplified chart display for thermal monitoring
+ * 
+ * NOTE: This is an MVP implementation with placeholder UI.
+ * TODO: For production, hoist UI state to ViewModel (isRecording, recordingTime, showOverlay, currentTemp, lowTemp)
+ *       and integrate with actual monitoring data source.
  */
 class IRMonitorChartLiteComposeActivity : BaseComposeActivity<ThermalViewModel>() {
 
@@ -35,6 +39,7 @@ class IRMonitorChartLiteComposeActivity : BaseComposeActivity<ThermalViewModel>(
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ThermalViewModel) {
+        // Local UI state - TODO: Hoist to ViewModel
         var isRecording by remember { mutableStateOf(false) }
         var recordingTime by remember { mutableStateOf("00:00:00") }
         var showOverlay by remember { mutableStateOf(true) }

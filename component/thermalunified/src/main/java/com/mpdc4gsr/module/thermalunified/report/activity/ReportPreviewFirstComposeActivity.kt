@@ -25,6 +25,10 @@ import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
 /**
  * Compose implementation of Report Preview First activity
  * First step in report preview workflow
+ * 
+ * NOTE: This is an MVP implementation with placeholder UI.
+ * TODO: For production, hoist UI state (selectedLayout, showImages, showMetadata, showWatermark) to ViewModel
+ *       to control actual report generation logic.
  */
 class ReportPreviewFirstComposeActivity : BaseComposeActivity<ThermalViewModel>() {
 
@@ -35,6 +39,7 @@ class ReportPreviewFirstComposeActivity : BaseComposeActivity<ThermalViewModel>(
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ThermalViewModel) {
+        // Local UI state - TODO: Hoist to ViewModel
         var selectedLayout by remember { mutableIntStateOf(0) }
         var showConfirmDialog by remember { mutableStateOf(false) }
 

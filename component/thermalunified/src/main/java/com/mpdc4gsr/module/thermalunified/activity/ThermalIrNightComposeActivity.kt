@@ -22,6 +22,15 @@ import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
 /**
  * Compose implementation of Thermal IR Night activity
  * Night mode thermal imaging interface
+ * 
+ * NOTE: This is an MVP implementation with placeholder UI demonstrating the layout and controls.
+ * TODO: For production implementation:
+ *   - Connect to actual thermal camera hardware via ViewModel
+ *   - Integrate IR camera preview surface
+ *   - Implement actual recording functionality
+ *   - Hoist UI state to ViewModel (selectedMode, nightModeEnabled, showOverlay, isRecording)
+ *   - Add camera permissions handling
+ *   - Integrate with IRCamera SDK for live thermal feed
  */
 class ThermalIrNightComposeActivity : BaseComposeActivity<ThermalViewModel>() {
 
@@ -32,6 +41,7 @@ class ThermalIrNightComposeActivity : BaseComposeActivity<ThermalViewModel>() {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ThermalViewModel) {
+        // Local UI state - TODO: Hoist to ViewModel
         var selectedMode by remember { mutableIntStateOf(0) }
         var nightModeEnabled by remember { mutableStateOf(true) }
         var showOverlay by remember { mutableStateOf(true) }

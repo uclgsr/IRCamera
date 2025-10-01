@@ -62,7 +62,7 @@ This document provides a comprehensive analysis of XML layout files and their Co
 - activity_manual_step2.xml -> ManualStep2ComposeActivity.kt
 - activity_monitor.xml -> MonitorComposeActivity.kt
 - activity_monitor_chart.xml -> MonitorChartComposeActivity.kt
-- activity_monitor_home.xml -> MonitoryHomeComposeActivity.kt
+- activity_monitor_home.xml -> MonitorHomeComposeActivity.kt
 - activity_monitor_log.xml -> MonitorLogComposeActivity.kt (NEW)
 - activity_pdf_list.xml -> PDFListComposeActivity.kt
 - activity_record_test.xml -> TestRecordActivity.java
@@ -87,7 +87,7 @@ This document provides a comprehensive analysis of XML layout files and their Co
 - activity_thermal_ir_night.xml -> ThermalIrNightComposeActivity.kt
 
 **Already Had Compose Equivalents (4):**
-- activity_monitor_home.xml -> MonitoryHomeComposeActivity.kt
+- activity_monitor_home.xml -> MonitorHomeComposeActivity.kt
 - activity_record_test.xml -> TestRecordActivity.java
 - activity_report_create_first.xml -> ReportCreateComposeActivity.kt
 - activity_report_create_second.xml -> ReportCreateComposeActivity.kt

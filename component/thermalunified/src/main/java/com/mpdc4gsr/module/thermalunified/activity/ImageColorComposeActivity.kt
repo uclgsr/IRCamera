@@ -26,6 +26,9 @@ import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
 /**
  * Compose implementation of Image Color activity
  * Displays thermal images with color processing and comparison
+ * 
+ * NOTE: This is an MVP implementation with placeholder UI.
+ * TODO: For production, hoist UI state to ViewModel (timestamp, showData) and load actual image data.
  */
 class ImageColorComposeActivity : BaseComposeActivity<ThermalViewModel>() {
 
@@ -36,6 +39,7 @@ class ImageColorComposeActivity : BaseComposeActivity<ThermalViewModel>() {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ThermalViewModel) {
+        // Local UI state - TODO: Hoist to ViewModel
         var timestamp by remember { mutableStateOf("") }
         var showData by remember { mutableStateOf(false) }
 

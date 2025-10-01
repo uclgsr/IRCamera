@@ -59,7 +59,7 @@ def read_file_content(file_path):
     try:
         with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
             return f.read()
-    except:
+    except Exception:
         return ""
 
 def check_compose_equivalent(layout_name, compose_files):

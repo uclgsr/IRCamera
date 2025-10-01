@@ -20,11 +20,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
+import com.mpdc4gsr.module.thermalunified.model.LogEntry
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
 
 /**
  * Compose implementation of Monitor Log activity
  * Displays monitoring history and log entries
+ * 
+ * NOTE: This is an MVP implementation with placeholder UI.
+ * TODO: For production, state should be hoisted to ThermalViewModel and data fetched from repository.
  */
 class MonitorLogComposeActivity : BaseComposeActivity<ThermalViewModel>() {
 
@@ -32,17 +36,10 @@ class MonitorLogComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         return viewModels<ThermalViewModel>().value
     }
 
-    data class LogEntry(
-        val timestamp: String,
-        val temperature: Float,
-        val location: String,
-        val notes: String = ""
-    )
-
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ThermalViewModel) {
-        // Sample log data
+        // Sample log data - TODO: Replace with ViewModel state
         val logEntries = remember {
             mutableStateListOf(
                 LogEntry("2024-10-01 10:30:00", 25.5f, "Location A", "Normal reading"),
