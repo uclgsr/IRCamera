@@ -8,7 +8,7 @@ import com.mpdc4gsr.gsr.service.SessionManager
 import mpdc4gsr.core.ui.BaseViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import mpdc4gsr.utils.SessionDirectoryManager
+import mpdc4gsr.core.data.utils.SessionDirectoryManager
 import java.io.File
 
 /**

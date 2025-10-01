@@ -17,8 +17,8 @@ import kotlinx.coroutines.withContext
 import mpdc4gsr.core.CrashRecoveryManager
 import mpdc4gsr.core.RecordingService
 import mpdc4gsr.core.data.SensorRecorder
-import mpdc4gsr.utils.SessionDirectory
-import mpdc4gsr.utils.SessionDirectoryManager
+import mpdc4gsr.core.data.utils.SessionDirectory
+import mpdc4gsr.core.data.utils.SessionDirectoryManager
 import mpdc4gsr.controller.RecordingConstants
 import mpdc4gsr.core.data.SessionMetadata
 import org.json.JSONArray
@@ -33,7 +33,7 @@ import java.util.concurrent.atomic.AtomicReference
 class ComprehensiveRecordingController(
     private val context: Context,
     private val lifecycleOwner: androidx.lifecycle.LifecycleOwner? = null,
-    private val permissionManager: mpdc4gsr.permissions.PermissionManager? = null
+    private val permissionManager: mpdc4gsr.core.ui.PermissionManager? = null
 ) {
     companion object {
         private const val TAG = "ComprehensiveRecordingController"

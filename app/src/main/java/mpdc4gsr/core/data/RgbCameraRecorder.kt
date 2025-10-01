@@ -47,8 +47,8 @@ import mpdc4gsr.core.ui.PermissionManager
 import mpdc4gsr.feature.camera.data.CameraConfigurationManager
 import mpdc4gsr.feature.camera.data.CameraControlsManager
 import mpdc4gsr.feature.camera.data.CameraPerformanceManager
-import mpdc4gsr.utils.CSVBufferedWriter
-import mpdc4gsr.utils.SessionDirectoryManager
+import mpdc4gsr.core.data.utils.CSVBufferedWriter
+import mpdc4gsr.core.data.utils.SessionDirectoryManager
 import java.io.File
 import java.io.FileWriter
 import java.util.concurrent.ExecutorService

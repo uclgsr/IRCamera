@@ -500,7 +500,7 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         startActivity(
                             Intent(
                                 this@ComposeMigrationLauncherActivity,
-                                mpdc4gsr.permissions.PermissionRequestComposeActivity::class.java
+                                mpdc4gsr.core.ui.PermissionRequestComposeActivity::class.java
                             )
                         )
                     }

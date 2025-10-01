@@ -21,7 +21,7 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import mpdc4gsr.permissions.PermissionController
+import mpdc4gsr.core.ui.PermissionController
 import mpdc4gsr.core.data.ShimmerDeviceManager
 import mpdc4gsr.core.data.UnifiedGSRRecorder
 import mpdc4gsr.core.data.model.DeviceInfo

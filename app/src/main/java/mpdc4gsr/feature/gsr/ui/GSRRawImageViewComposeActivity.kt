@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import mpdc4gsr.compose.base.BaseComposeActivity
+import mpdc4gsr.core.ui.BaseComposeActivity
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import java.io.File
 

@@ -18,7 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.csl.irCamera.R
-import mpdc4gsr.compose.base.BaseComposeActivity
+import mpdc4gsr.core.ui.BaseComposeActivity
 import mpdc4gsr.core.ui.components.*
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.theme.IRCameraTheme

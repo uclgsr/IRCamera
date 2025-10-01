@@ -316,7 +316,7 @@ fun UnifiedNavHost(
                     context.startActivity(
                         Intent(
                             context,
-                            Class.forName("mpdc4gsr.permissions.PermissionRequestComposeActivity")
+                            Class.forName("mpdc4gsr.core.ui.PermissionRequestComposeActivity")
                         )
                     )
                 } catch (e: Exception) {
