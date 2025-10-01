@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import mpdc4gsr.core.ui.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
+import mpdc4gsr.core.ui.BaseViewModel
 
 /**
  * PermissionRequestComposeActivity - Modern Permission Management with Compose

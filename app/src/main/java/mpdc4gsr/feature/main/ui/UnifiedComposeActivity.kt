@@ -3,7 +3,6 @@ package mpdc4gsr.feature.main.ui
 import androidx.activity.viewModels
 import androidx.compose.runtime.Composable
 import mpdc4gsr.core.ui.BaseComposeActivity
-import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import mpdc4gsr.core.ui.navigation.UnifiedNavHost
 
 /**
@@ -30,7 +29,7 @@ class UnifiedComposeActivity : BaseComposeActivity<UnifiedComposeViewModel>() {
 /**
  * Simple ViewModel for the unified activity
  */
-class UnifiedComposeViewModel : BaseViewModel() {
+class UnifiedComposeViewModel : com.mpdc4gsr.libunified.app.ktbase.BaseViewModel() {
     // This activity primarily handles navigation, so minimal ViewModel needed
     // Future enhancements could include:
     // - Global app state management
