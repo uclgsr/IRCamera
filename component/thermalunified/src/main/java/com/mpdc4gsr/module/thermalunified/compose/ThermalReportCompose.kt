@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -533,7 +534,7 @@ private fun ReportMetadataCompose(
                 minLines = 2,
                 maxLines = 4,
                 leadingIcon = {
-                    Icon(Icons.Default.Notes, contentDescription = "Notes")
+                    Icon(Icons.AutoMirrored.Filled.Notes, contentDescription = "Notes")
                 }
             )
         }
@@ -728,7 +729,7 @@ fun ReportIRShowCompose(
                             verticalAlignment = Alignment.Top
                         ) {
                             Icon(
-                                Icons.Default.Notes,
+                                Icons.AutoMirrored.Filled.Notes,
                                 contentDescription = "Notes",
                                 tint = MaterialTheme.colorScheme.primary,
                                 modifier = Modifier.size(20.dp)

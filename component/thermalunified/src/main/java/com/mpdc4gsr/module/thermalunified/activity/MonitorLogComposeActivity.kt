@@ -213,7 +213,7 @@ class MonitorLogComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                 // Notes section
                 if (entry.notes.isNotEmpty()) {
                     Spacer(modifier = Modifier.height(8.dp))
-                    Divider(color = Color.White.copy(alpha = 0.1f))
+                    HorizontalDivider(color = Color.White.copy(alpha = 0.1f))
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
                         entry.notes,

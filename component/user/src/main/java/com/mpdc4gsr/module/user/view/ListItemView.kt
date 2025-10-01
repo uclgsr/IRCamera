@@ -67,24 +67,22 @@ class ListItemView : LinearLayout {
     }
 
     fun setLeftText(text: CharSequence?) {
-        if (mIvLeftContent == null || TextUtils.isEmpty(text)) return
+        if (TextUtils.isEmpty(text)) return
         mIvLeftContent.text = text
         mIvLeftContent.movementMethod = LinkMovementMethod.getInstance()
     }
 
     fun getLeftText(): String {
-        if (mIvLeftContent == null) return ""
         return mIvLeftContent.text.toString()
     }
 
     fun setRightText(text: CharSequence?) {
-        if (mIvLeftContent == null || TextUtils.isEmpty(text)) return
+        if (TextUtils.isEmpty(text)) return
         mIvRightContent.text = text
         mIvRightContent.movementMethod = LinkMovementMethod.getInstance()
     }
 
     fun getRightText(): String {
-        if (mIvRightContent == null) return ""
         return mIvRightContent.text.toString()
     }
 }
