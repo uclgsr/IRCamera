@@ -62,7 +62,6 @@ fun MainScreen(
             when (selectedTab) {
                 0 -> SensorDashboardTab()
                 1 -> GalleryTab(onNavigateToGallery = onNavigateToGallery)
-                2 -> SettingsTab(onNavigateToSettings = onNavigateToSettings)
                 3 -> ProfileTab(onNavigateToProfile = onNavigateToProfile)
             }
         }
@@ -99,7 +98,7 @@ fun MainScreen(
                 icon = { Icon(Icons.Default.Settings, contentDescription = "Settings") },
                 label = { Text("Settings") },
                 selected = selectedTab == 2,
-                onClick = { selectedTab = 2 },
+                onClick = { onNavigateToSettings() },
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = MaterialTheme.colorScheme.primary,
                     unselectedIconColor = Color.Gray,
@@ -218,62 +217,6 @@ private fun GalleryTab(
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
                 ) {
                     Text("Open Gallery")
-                }
-            }
-        }
-    }
-}
-
-/**
- * Settings Tab - Application settings
- */
-@Composable
-private fun SettingsTab(
-    onNavigateToSettings: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(20.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Icon(
-                    Icons.Default.Settings,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(64.dp)
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    text = "Settings",
-                    color = Color.White,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = "Configure sensors, calibration, and app preferences",
-                    color = Color.Gray,
-                    fontSize = 14.sp,
-                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                Button(
-                    onClick = onNavigateToSettings,
-                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
-                ) {
-                    Text("Open Settings")
                 }
             }
         }
