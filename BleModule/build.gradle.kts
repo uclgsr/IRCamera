@@ -60,7 +60,9 @@ dependencies {
     api("com.blankj:utilcodex:1.31.1")
     api("com.google.code.gson:gson:2.13.2")
     api("com.elvishew:xlog:1.10.1")
-    api("no.nordicsemi.android:ble:2.11.0")
+    api("no.nordicsemi.android:ble:2.11.0") {
+        exclude(group = "org.jetbrains.kotlin", module = "kotlin-android-extensions-runtime")
+    }
     api(libs.nordic.ble.ktx)
     implementation(files("libs/ini4j-0.5.5.jar"))
     implementation(project(":libunified"))

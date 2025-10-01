@@ -246,8 +246,8 @@ android {
 
     buildFeatures {
         buildConfig = true
-        dataBinding = true
-        viewBinding = true
+//        dataBinding = true
+//        viewBinding = true
         compose = true
     }
 
@@ -332,14 +332,14 @@ dependencies {
     implementation(files("../libunified/libs/libusbdualsdk_1.3.4_2406271906_standard.aar"))
 
     implementation(libs.jsbridge)
-    implementation(libs.fastjson2)
+//    implementation(libs.fastjson2)
     implementation(libs.ucrop)
     implementation(libs.play.app.update)
     implementation(libs.immersionbar)
     implementation(libs.xpopup)
-    implementation(libs.wechat.sdk)
-    implementation(libs.umeng.apm)
-    implementation(libs.umeng.common)
+//    implementation(libs.wechat.sdk)
+//    implementation(libs.umeng.apm)
+//    implementation(libs.umeng.common)
     implementation(libs.opencsv)
     implementation(libs.gson)
     implementation(libs.jmdns)
