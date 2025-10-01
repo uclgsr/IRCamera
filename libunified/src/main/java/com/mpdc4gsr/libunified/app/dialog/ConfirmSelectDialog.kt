@@ -1,12 +1,9 @@
 package com.mpdc4gsr.libunified.app.dialog
 
 /*
- * DEPRECATED: This file has been deprecated as part of migration to Jetpack Compose.
- * This code is commented out to avoid compilation errors when dataBinding is disabled.
- * See COMPOSE_MIGRATION.md for alternatives.
+ * SIMPLIFIED: This file has been simplified to work without dataBinding.
+ * For new code, prefer Jetpack Compose alternatives. See COMPOSE_MIGRATION.md.
  */
-
-/*
 
 import android.app.Dialog
 import android.content.Context
@@ -14,55 +11,66 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.annotation.StringRes
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import com.mpdc4gsr.libunified.R
-import com.mpdc4gsr.libunified.app.utils.ScreenUtil
+import com.mpdc4gsr.libunified.app.utils.ScreenUtils
 import com.mpdc4gsr.libunified.databinding.DialogConfirmSelectBinding
+
 
 class ConfirmSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog),
     View.OnClickListener {
     var onConfirmClickListener: ((isSelect: Boolean) -> Unit)? = null
-    private lateinit var binding: DialogConfirmSelectBinding
+    
+    private lateinit var ivIcon: ImageView
+    private lateinit var tvTitle: TextView
+    private lateinit var rlMessage: ConstraintLayout
+    private lateinit var ivSelect: ImageView
+    private lateinit var tvMessage: TextView
+    private lateinit var tvCancel: TextView
+    private lateinit var tvConfirm: TextView
 
     fun setShowIcon(isShowIcon: Boolean) {
-        binding.ivIcon.isVisible = isShowIcon
+        ivIcon.isVisible = isShowIcon
     }
 
     fun setTitleRes(
         @StringRes titleRes: Int,
     ) {
-        binding.tvTitle.setText(titleRes)
+        tvTitle.setText(titleRes)
     }
 
     fun setTitleStr(titleStr: String) {
-        binding.tvTitle.text = titleStr
+        tvTitle.text = titleStr
     }
 
     fun setShowMessage(isShowMessage: Boolean) {
-        binding.rlMessage.isVisible = isShowMessage
+        rlMessage.isVisible = isShowMessage
     }
 
     fun setMessageRes(
         @StringRes messageRes: Int,
     ) {
-        binding.tvMessage.setText(messageRes)
+        tvMessage.setText(messageRes)
     }
 
     fun setShowCancel(isShowCancel: Boolean) {
-        binding.tvCancel.isVisible = isShowCancel
+        tvCancel.isVisible = isShowCancel
     }
 
     fun setCancelText(
         @StringRes cancelRes: Int,
     ) {
-        binding.tvCancel.setText(cancelRes)
+        tvCancel.setText(cancelRes)
     }
 
     fun setConfirmText(
         @StringRes confirmRes: Int,
     ) {
-        binding.tvConfirm.setText(confirmRes)
+        tvConfirm.setText(confirmRes)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,36 +78,43 @@ class ConfirmSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog
         setCancelable(true)
         setCanceledOnTouchOutside(true)
 
-        binding = DialogConfirmSelectBinding.inflate(LayoutInflater.from(context))
-        setContentView(binding.root)
+        val view = LayoutInflater.from(context).inflate(R.layout.dialog_confirm_select, null)
+        setContentView(view)
+        
+        ivIcon = view.findViewById(R.id.iv_icon)
+        tvTitle = view.findViewById(R.id.tv_title)
+        rlMessage = view.findViewById(R.id.rl_message)
+        ivSelect = view.findViewById(R.id.iv_select)
+        tvMessage = view.findViewById(R.id.tv_message)
+        tvCancel = view.findViewById(R.id.tv_cancel)
+        tvConfirm = view.findViewById(R.id.tv_confirm)
 
         window?.let {
             val layoutParams = it.attributes
-            layoutParams.width = (ScreenUtil.getScreenWidth(context) * 0.72).toInt()
+            layoutParams.width = (ScreenUtils.getScreenWidth(context) * 0.72).toInt()
             layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
             it.attributes = layoutParams
         }
 
-        binding.rlMessage.setOnClickListener(this)
-        binding.tvCancel.setOnClickListener(this)
-        binding.tvConfirm.setOnClickListener(this)
+        rlMessage.setOnClickListener(this)
+        tvCancel.setOnClickListener(this)
+        tvConfirm.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
-        when (v) {
-            binding.rlMessage -> {
-                binding.ivSelect.isSelected = !binding.ivSelect.isSelected
+        when (v?.id) {
+            R.id.rl_message -> {
+                ivSelect.isSelected = !ivSelect.isSelected
             }
 
-            binding.tvCancel -> {
+            R.id.tv_cancel -> {
                 dismiss()
             }
 
-            binding.tvConfirm -> {
+            R.id.tv_confirm -> {
                 dismiss()
-                onConfirmClickListener?.invoke(binding.ivSelect.isSelected)
+                onConfirmClickListener?.invoke(ivSelect.isSelected)
             }
         }
     }
 }
-*/

@@ -40,6 +40,7 @@ class OKLogInterceptor(val isTC007: Boolean) : Interceptor {
                 .i("<-- ${response.code}${if (response.message.isEmpty()) "" else ' ' + response.message} ${response.request.url}")
             val responseBody = response.body
             val contentType = response.headers["Content-Type"]
+            @Suppress("SENSELESS_COMPARISON")
             if (responseBody != null && (isTC007 || contentType == null || contentType == "application/json")) {
                 val source = responseBody.source()
                 source.request(Long.MAX_VALUE)

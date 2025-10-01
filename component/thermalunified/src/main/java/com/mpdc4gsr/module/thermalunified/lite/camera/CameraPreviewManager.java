@@ -42,7 +42,7 @@ import com.energy.iruvccamera.bean.UvcParams;
 import com.energy.iruvccamera.usb.USBMonitor;
 import com.mpdc4gsr.module.thermalunified.lite.IrConst;
 import com.mpdc4gsr.module.thermalunified.lite.ui.activity.IrDisplayActivity;
-import com.mpdc4gsr.module.thermalunified.lite.util.CommonUtil;
+import com.mpdc4gsr.module.thermalunified.lite.util.CommonUtils;
 import com.mpdc4gsr.libunified.ir.utils.IRImageHelp;
 import com.mpdc4gsr.libunified.ir.utils.PseudocodeUtils;
 import com.mpdc4gsr.libunified.app.bean.AlarmBean;
@@ -183,7 +183,7 @@ public class CameraPreviewManager {
 
                     // 
                     if (mIsShowFPS) {
-                        double fps = CommonUtil.showFps();
+                        double fps = CommonUtils.showFps();
                         Log.d(TAG, "onFrame frame.length = " + length + " onFrame fps=" + String.format("%.1f", fps));
                         Message message = Message.obtain(mMainHandler, IrDisplayActivity.HANDLE_SHOW_FPS, fps);
                         mMainHandler.sendMessage(message);
@@ -243,7 +243,7 @@ public class CameraPreviewManager {
                         case YUYV_IMAGE_OUTPUT:
                         case YUYV_AND_TEMP_OUTPUT:
                             if (Const.DEVICE_TYPE == DeviceType.DEVICE_TYPE_GL1280) {
-                                CommonUtil.convertArrayY16ToY14(mIrData, 2 * mPreviewWidth * mPreviewHeight, mIrYuvData);
+                                CommonUtils.convertArrayY16ToY14(mIrData, 2 * mPreviewWidth * mPreviewHeight, mIrYuvData);
                                 LibIRParse.convertArrayY14ToARGB(mIrYuvData, mPreviewWidth * mPreviewHeight, mIrARGBData);
 //                            com.infisense.iruvc.sdkisp.LibIRProcess.convertYuyvMapToARGBPseudocolor(mIrYuvData,
 //                                    mPreviewWidth * mPreviewHeight,

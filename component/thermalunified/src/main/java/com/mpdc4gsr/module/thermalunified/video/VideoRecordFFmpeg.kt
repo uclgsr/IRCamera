@@ -37,7 +37,7 @@ import com.mpdc4gsr.libunified.app.comm.view.TempLayout
 import com.mpdc4gsr.libunified.app.common.SharedManager
 import com.mpdc4gsr.libunified.app.config.FileConfig
 import com.mpdc4gsr.libunified.app.dialog.TipDialog
-import com.mpdc4gsr.libunified.app.tools.TimeTool
+import com.mpdc4gsr.libunified.app.tools.TimeTools
 import com.mpdc4gsr.libunified.app.utils.BitmapUtils
 import com.mpdc4gsr.libunified.ir.usbdual.camera.DualViewWithExternalCameraCommonApi
 import com.infisense.usbir.view.CameraView
@@ -694,7 +694,7 @@ class VideoRecordFFmpeg(
                     dstBitmap!!,
                     watermarkBean.title,
                     watermarkBean.address,
-                    if (watermarkBean.isAddTime) TimeTool.getNowTime() else "",
+                    if (watermarkBean.isAddTime) TimeTools.getNowTime() else "",
                 )!!
         }
         return dstBitmap

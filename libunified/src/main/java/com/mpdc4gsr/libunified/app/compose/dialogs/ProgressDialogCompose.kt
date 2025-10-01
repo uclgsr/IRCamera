@@ -29,6 +29,7 @@ fun ProgressDialog(
     val isPortrait = configuration.orientation == android.content.res.Configuration.ORIENTATION_PORTRAIT
     val widthFraction = if (isPortrait) 0.52f else 0.35f
 
+    @Suppress("UNCHECKED_CAST")
     Dialog(
         onDismissRequest = (if (cancelable) onDismiss else {}) as () -> Unit,
         properties = DialogProperties(

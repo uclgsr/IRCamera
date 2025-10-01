@@ -16,7 +16,7 @@ import kotlin.math.*
  * Consolidates remaining utilities from:
  * - BaseDataTypeConvertUtils.kt from libunified/matrix
  * - TempDrawHelper.kt from libunified/ir
- * - InitUtil.kt from app module
+ * - InitUtils.kt from app module
  * - Any other remaining scattered functionality
  */
 object UnifiedFinalUtils {

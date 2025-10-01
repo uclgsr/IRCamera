@@ -3,7 +3,7 @@ package com.mpdc4gsr.gsr.service
 import android.content.Context
 import android.util.Log
 import com.mpdc4gsr.gsr.model.SessionInfo
-import com.mpdc4gsr.gsr.util.TimeUtil
+import com.mpdc4gsr.gsr.util.TimeUtils
 import java.util.concurrent.ConcurrentHashMap
 
 class SessionManager private constructor(context: Context) {
@@ -52,7 +52,7 @@ class SessionManager private constructor(context: Context) {
         studyName: String? = null,
         metadata: Map<String, String> = emptyMap(),
     ): SessionInfo {
-        val finalSessionId = sessionId ?: TimeUtil.generateSessionId("MultiModal")
+        val finalSessionId = sessionId ?: TimeUtils.generateSessionId("MultiModal")
 
         val session =
             SessionInfo(

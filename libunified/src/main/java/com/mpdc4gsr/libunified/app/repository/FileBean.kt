@@ -3,7 +3,7 @@ package com.mpdc4gsr.libunified.app.repository
 import android.os.Parcel
 import android.os.Parcelable
 import com.mpdc4gsr.libunified.app.config.FileConfig
-import com.mpdc4gsr.libunified.app.tools.TimeTool
+import com.mpdc4gsr.libunified.app.tools.TimeTools
 import com.mpdc4gsr.libunified.app.tools.VideoTools
 import java.io.File
 import java.util.TimeZone
@@ -23,7 +23,7 @@ open class FileBean(
         thumb = file.absolutePath,
         name = file.name,
         duration = VideoTools.getLocalVideoDuration(file.absolutePath),
-        timeMillis = TimeTool.updateDateTime(file),
+        timeMillis = TimeTools.updateDateTime(file),
         hasDownload = true,
     )
 

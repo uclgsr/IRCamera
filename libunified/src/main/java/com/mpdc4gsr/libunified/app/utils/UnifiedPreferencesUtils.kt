@@ -7,7 +7,7 @@ import android.util.Log
 /**
  * Consolidated SharedPreferences utilities for centralized configuration management
  * Replaces:
- * - libunified/src/main/java/com/mpdc4gsr/libunified/ir/utils/SharedPreferencesUtil.java
+ * - libunified/src/main/java/com/mpdc4gsr/libunified/ir/utils/SharedPreferencesUtils.java
  * - Various scattered preferences handling across modules
  */
 object UnifiedPreferencesUtils {

@@ -12,19 +12,19 @@ import com.mpdc4gsr.libunified.app.common.SharedManager
 import com.mpdc4gsr.libunified.app.config.HttpConfig
 import com.mpdc4gsr.libunified.app.lms.Config
 import com.mpdc4gsr.libunified.app.lms.LMS.mContext
-import com.mpdc4gsr.libunified.app.lms.UrlConstant
+import com.mpdc4gsr.libunified.app.lms.UrlConstants
 import com.mpdc4gsr.libunified.app.lms.utils.SPUtils
 import com.mpdc4gsr.module.thermalunified.lite.IrConst
-import com.mpdc4gsr.module.thermalunified.lite.util.CommonUtil
+import com.mpdc4gsr.module.thermalunified.lite.util.CommonUtils
 import io.reactivex.plugins.RxJavaPlugins
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import mpdc4gsr.core.ui.InitUtil.initJPush
-import mpdc4gsr.core.ui.InitUtil.initLms
-import mpdc4gsr.core.ui.InitUtil.initLog
-import mpdc4gsr.core.ui.InitUtil.initReceiver
-import mpdc4gsr.core.ui.InitUtil.initUM
+import mpdc4gsr.core.ui.InitUtils.initJPush
+import mpdc4gsr.core.ui.InitUtils.initLms
+import mpdc4gsr.core.ui.InitUtils.initLog
+import mpdc4gsr.core.ui.InitUtils.initReceiver
+import mpdc4gsr.core.ui.InitUtils.initUM
 
 class App : BaseApplication() {
 
@@ -72,14 +72,14 @@ class App : BaseApplication() {
             }
             if (!isDomestic()) {
 
-                UrlConstant.setBaseUrl("${HttpConfig.HOST}/", false)
-                SharedManager.setBaseHost(UrlConstant.BASE_URL)
+                UrlConstants.setBaseUrl("${HttpConfig.HOST}/", false)
+                SharedManager.setBaseHost(UrlConstants.BASE_URL)
             }
 
             CoroutineScope(Dispatchers.IO).launch {
                 try {
-                    tau_data_H = CommonUtil.getAssetData(mContext, IrConst.TAU_HIGH_GAIN_ASSET_PATH)
-                    tau_data_L = CommonUtil.getAssetData(mContext, IrConst.TAU_LOW_GAIN_ASSET_PATH)
+                    tau_data_H = CommonUtils.getAssetData(mContext, IrConst.TAU_HIGH_GAIN_ASSET_PATH)
+                    tau_data_L = CommonUtils.getAssetData(mContext, IrConst.TAU_LOW_GAIN_ASSET_PATH)
                 } catch (e: Exception) {
                     XLog.e("App: Failed to load tau data assets: ${e.message}")
                 }

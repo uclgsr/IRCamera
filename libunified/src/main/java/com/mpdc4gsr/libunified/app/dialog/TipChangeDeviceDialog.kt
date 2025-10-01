@@ -17,7 +17,7 @@ import android.widget.CheckBox
 import android.widget.ImageView
 import androidx.annotation.StringRes
 import com.mpdc4gsr.libunified.R
-import com.mpdc4gsr.libunified.app.utils.ScreenUtil
+import com.mpdc4gsr.libunified.app.utils.ScreenUtils
 import com.mpdc4gsr.libunified.databinding.DialogTipChangeDeviceBinding
 
 @Deprecated("3.80，")
@@ -94,7 +94,7 @@ class TipChangeDeviceDialog : Dialog {
 
                     0.35
                 }
-            lp.width = (ScreenUtil.getScreenWidth(context!!) * wRatio).toInt()
+            lp.width = (ScreenUtils.getScreenWidth(context!!) * wRatio).toInt()
             dialog!!.window!!.attributes = lp
 
             dialog!!.setCanceledOnTouchOutside(canceled)

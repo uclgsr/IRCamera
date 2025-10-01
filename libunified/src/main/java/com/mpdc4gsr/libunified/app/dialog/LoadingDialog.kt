@@ -18,7 +18,8 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.R
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-import com.mpdc4gsr.libunified.app.utils.ScreenUtil
+import com.mpdc4gsr.libunified.app.utils.ScreenUtils
+
 
 /**
  * LoadingDialog - Migrated to Jetpack Compose
@@ -88,7 +89,7 @@ class LoadingDialog(context: Context) : Dialog(context, R.style.TransparentDialo
         window?.let {
             val layoutParams = it.attributes
             layoutParams.width =
-                (ScreenUtil.getScreenWidth(context) * if (ScreenUtil.isPortrait(context)) 0.3 else 0.15).toInt()
+                (ScreenUtils.getScreenWidth(context) * if (ScreenUtils.isPortrait(context)) 0.3 else 0.15).toInt()
             layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
             it.attributes = layoutParams
         }

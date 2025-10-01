@@ -13,8 +13,8 @@ object NavigationManager {
     private val routeToClassMap = mapOf(
         RouterConfig.MAIN to "mpdc4gsr.feature.main.ui.MainComposeActivity",
         RouterConfig.CLAUSE to "mpdc4gsr.activities.ClauseActivity",
-        RouterConfig.POLICY to "mpdc4gsr.activities.PolicyActivityCompose",
-        RouterConfig.VERSION to "mpdc4gsr.activities.VersionActivityCompose",
+        RouterConfig.POLICY to "mpdc4gsr.activities.PolicyComposeActivity",
+        RouterConfig.VERSION to "mpdc4gsr.activities.VersionComposeActivity",
         RouterConfig.IR_GALLERY_EDIT to "mpdc4gsr.activities.IRGalleryEditActivity",
         RouterConfig.WEB_VIEW to "mpdc4gsr.activities.WebViewActivity",
 

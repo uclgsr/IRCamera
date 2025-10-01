@@ -21,8 +21,8 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-import com.mpdc4gsr.module.thermalunified.fragment.GalleryPictureFragmentCompose
-import com.mpdc4gsr.module.thermalunified.fragment.GalleryVideoFragmentCompose
+import com.mpdc4gsr.module.thermalunified.fragment.GalleryPictureComposeFragment
+import com.mpdc4gsr.module.thermalunified.fragment.GalleryVideoComposeFragment
 import com.mpdc4gsr.module.thermalunified.viewmodel.GalleryActivityViewModel
 import kotlinx.coroutines.launch
 

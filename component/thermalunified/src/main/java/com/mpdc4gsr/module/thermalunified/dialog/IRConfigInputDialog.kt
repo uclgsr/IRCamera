@@ -11,7 +11,7 @@ import android.widget.TextView
 import androidx.core.view.isVisible
 import com.mpdc4gsr.libunified.app.lms.weiget.TToast
 import com.mpdc4gsr.libunified.app.tools.UnitTools
-import com.mpdc4gsr.libunified.app.utils.ScreenUtil
+import com.mpdc4gsr.libunified.app.utils.ScreenUtils
 import com.mpdc4gsr.module.thermalunified.R
 
 
@@ -103,7 +103,7 @@ class IRConfigInputDialog(context: Context, val type: Type, val isTC007: Boolean
                 context.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT
             val layoutParams = it.attributes
             layoutParams.width =
-                (ScreenUtil.getScreenWidth(context) * if (isPortrait) 0.73f else 0.48f).toInt()
+                (ScreenUtils.getScreenWidth(context) * if (isPortrait) 0.73f else 0.48f).toInt()
             layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
             it.attributes = layoutParams
         }

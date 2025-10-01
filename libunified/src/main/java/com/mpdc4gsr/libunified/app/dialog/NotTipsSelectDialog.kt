@@ -14,7 +14,7 @@ import android.os.Bundle
 import android.view.ViewGroup
 import androidx.annotation.StringRes
 import com.mpdc4gsr.libunified.R
-import com.mpdc4gsr.libunified.app.utils.ScreenUtil
+import com.mpdc4gsr.libunified.app.utils.ScreenUtils
 import com.mpdc4gsr.libunified.databinding.DialogNotTipsSelectBinding
 
 class NotTipsSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog) {
@@ -56,7 +56,7 @@ class NotTipsSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog
 
         window?.let {
             val layoutParams = it.attributes
-            layoutParams.width = (ScreenUtil.getScreenWidth(context) * 0.73f).toInt()
+            layoutParams.width = (ScreenUtils.getScreenWidth(context) * 0.73f).toInt()
             layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
             it.attributes = layoutParams
         }

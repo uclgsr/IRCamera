@@ -9,7 +9,7 @@ import com.mpdc4gsr.gsr.model.SessionInfo
 import com.mpdc4gsr.gsr.model.SyncMark
 import com.mpdc4gsr.gsr.service.GSRRecorder
 import com.mpdc4gsr.gsr.service.SessionManager
-import com.mpdc4gsr.gsr.util.TimeUtil
+import com.mpdc4gsr.gsr.util.TimeUtils
 import mpdc4gsr.core.ui.BaseViewModel
 import mpdc4gsr.feature.gsr.data.RealShimmerDeviceFactory
 import com.shimmerresearch.android.Shimmer
@@ -239,7 +239,7 @@ class MultiModalRecordingViewModel : BaseViewModel() {
                 // Generate session info
                 val config = _recordingConfig.value
                 val sessionInfo = SessionInfo(
-                    sessionId = TimeUtil.generateSessionId("MultiModal"),
+                    sessionId = TimeUtils.generateSessionId("MultiModal"),
                     participantId = config.participantId.takeIf { it.isNotEmpty() },
                     startTime = System.currentTimeMillis()
                 )
@@ -465,7 +465,7 @@ class MultiModalRecordingViewModel : BaseViewModel() {
 
     private fun generateDefaultSessionId() {
         val config = _recordingConfig.value
-        val defaultParticipantId = TimeUtil.generateSessionId("MultiModal")
+        val defaultParticipantId = TimeUtils.generateSessionId("MultiModal")
         _recordingConfig.value = config.copy(participantId = defaultParticipantId)
     }
 

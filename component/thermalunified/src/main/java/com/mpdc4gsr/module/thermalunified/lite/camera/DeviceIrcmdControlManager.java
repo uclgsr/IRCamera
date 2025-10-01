@@ -6,7 +6,7 @@ import com.energy.ac020library.IrcamEngine;
 import com.energy.ac020library.IrcmdEngine;
 import com.energy.ac020library.bean.IrcmdError;
 import com.mpdc4gsr.libunified.ir.usbdual.Const;
-import com.mpdc4gsr.libunified.ir.utils.FileUtil;
+import com.mpdc4gsr.libunified.ir.utils.FileUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -150,7 +150,7 @@ public class DeviceIrcmdControlManager {
                     if (!file.exists()) {
                         return;
                     }
-                    String fpgaParams = FileUtil.getStringFromFile(fpga_param_path);
+                    String fpgaParams = FileUtils.getStringFromFile(fpga_param_path);
                     int firstAddress = 0x0096;
 
                     JSONArray jsonArray = new JSONArray(fpgaParams);
@@ -217,7 +217,7 @@ public class DeviceIrcmdControlManager {
                     if (!file.exists()) {
                         return;
                     }
-                    String fpgaParams = FileUtil.getStringFromFile(ispParamPath);
+                    String fpgaParams = FileUtils.getStringFromFile(ispParamPath);
 
                     JSONArray jsonArray = new JSONArray(fpgaParams);
                     for (int i = 0; i < jsonArray.length(); i++) {

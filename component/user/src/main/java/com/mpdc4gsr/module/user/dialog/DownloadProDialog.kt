@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.mpdc4gsr.libunified.app.utils.ScreenUtil
+import com.mpdc4gsr.libunified.app.utils.ScreenUtils
 import com.mpdc4gsr.module.user.R
 import java.text.DecimalFormat
 import com.mpdc4gsr.libunified.R as LibAppR
@@ -25,7 +25,7 @@ class DownloadProDialog(context: Context) : Dialog(context, LibAppR.style.InfoDi
 
         window?.let {
             val layoutParams = it.attributes
-            layoutParams.width = (ScreenUtil.getScreenWidth(context) * 0.72).toInt()
+            layoutParams.width = (ScreenUtils.getScreenWidth(context) * 0.72).toInt()
             layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
             it.attributes = layoutParams
         }

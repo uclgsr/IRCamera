@@ -1,12 +1,9 @@
 package com.mpdc4gsr.libunified.app.dialog
 
 /*
- * DEPRECATED: This file has been deprecated as part of migration to Jetpack Compose.
- * This code is commented out to avoid compilation errors when dataBinding is disabled.
- * See COMPOSE_MIGRATION.md for alternatives.
+ * SIMPLIFIED: This file has been simplified to work without dataBinding.
+ * For new code, prefer Jetpack Compose alternatives. See COMPOSE_MIGRATION.md.
  */
-
-/*
 
 import android.app.Dialog
 import android.content.Context
@@ -14,44 +11,50 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.core.view.isVisible
 import com.mpdc4gsr.libunified.R
-import com.mpdc4gsr.libunified.app.utils.ScreenUtil
+import com.mpdc4gsr.libunified.app.utils.ScreenUtils
 import com.mpdc4gsr.libunified.databinding.DialogFirmwareUpBinding
 
 class FirmwareUpDialog(context: Context) : Dialog(context, R.style.InfoDialog),
     View.OnClickListener {
-    private var _binding: DialogFirmwareUpBinding? = null
-    private val binding get() = _binding!!
+    
+    private lateinit var tvTitle: TextView
+    private lateinit var tvSize: TextView
+    private lateinit var tvContent: TextView
+    private lateinit var tvRestartTips: TextView
+    private lateinit var tvCancel: TextView
+    private lateinit var tvConfirm: TextView
 
     var titleStr: CharSequence?
-        get() = binding.tvTitle.text
+        get() = tvTitle.text
         set(value) {
-            binding.tvTitle.text = value
+            tvTitle.text = value
         }
 
     var sizeStr: CharSequence?
-        get() = binding.tvSize.text
+        get() = tvSize.text
         set(value) {
-            binding.tvSize.text = value
+            tvSize.text = value
         }
 
     var contentStr: CharSequence?
-        get() = binding.tvContent.text
+        get() = tvContent.text
         set(value) {
-            binding.tvContent.text = value
+            tvContent.text = value
         }
 
     var isShowRestartTips: Boolean
-        get() = binding.tvRestartTips.isVisible
+        get() = tvRestartTips.isVisible
         set(value) {
-            binding.tvRestartTips.isVisible = value
+            tvRestartTips.isVisible = value
         }
 
     var isShowCancel: Boolean
-        get() = binding.tvCancel.isVisible
+        get() = tvCancel.isVisible
         set(value) {
-            binding.tvCancel.isVisible = value
+            tvCancel.isVisible = value
         }
 
     var onCancelClickListener: (() -> Unit)? = null
@@ -60,39 +63,40 @@ class FirmwareUpDialog(context: Context) : Dialog(context, R.style.InfoDialog),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        _binding = DialogFirmwareUpBinding.inflate(LayoutInflater.from(context))
+        val view = LayoutInflater.from(context).inflate(R.layout.dialog_firmware_up, null)
         setCancelable(false)
         setCanceledOnTouchOutside(false)
-        setContentView(binding.root)
+        setContentView(view)
+        
+        tvTitle = view.findViewById(R.id.tv_title)
+        tvSize = view.findViewById(R.id.tv_size)
+        tvContent = view.findViewById(R.id.tv_content)
+        tvRestartTips = view.findViewById(R.id.tv_restart_tips)
+        tvCancel = view.findViewById(R.id.tv_cancel)
+        tvConfirm = view.findViewById(R.id.tv_confirm)
 
         window?.let {
             val layoutParams = it.attributes
-            layoutParams.width = (ScreenUtil.getScreenWidth(context) * 0.72).toInt()
+            layoutParams.width = (ScreenUtils.getScreenWidth(context) * 0.72).toInt()
             layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
             it.attributes = layoutParams
         }
 
-        binding.tvCancel.setOnClickListener(this)
-        binding.tvConfirm.setOnClickListener(this)
+        tvCancel.setOnClickListener(this)
+        tvConfirm.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
-        when (v) {
-            binding.tvCancel -> {
+        when (v?.id) {
+            R.id.tv_cancel -> {
                 dismiss()
                 onCancelClickListener?.invoke()
             }
 
-            binding.tvConfirm -> {
+            R.id.tv_confirm -> {
                 dismiss()
                 onConfirmClickListener?.invoke()
             }
         }
     }
-
-    override fun onDetachedFromWindow() {
-        super.onDetachedFromWindow()
-        _binding = null
-    }
 }
-*/

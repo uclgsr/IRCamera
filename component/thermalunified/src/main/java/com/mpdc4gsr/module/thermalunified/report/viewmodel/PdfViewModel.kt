@@ -8,7 +8,7 @@ import com.google.gson.Gson
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import com.mpdc4gsr.libunified.app.lms.LMS
 import com.mpdc4gsr.libunified.app.lms.network.IResponseCallback
-import com.mpdc4gsr.libunified.app.lms.utils.NetworkUtil
+import com.mpdc4gsr.libunified.app.lms.utils.NetworkUtils
 import com.mpdc4gsr.libunified.app.lms.utils.StringUtils
 import com.mpdc4gsr.libunified.app.lms.utils.TLog
 import com.mpdc4gsr.libunified.app.lms.weiget.TToast
@@ -28,7 +28,7 @@ class PdfViewModel : BaseViewModel() {
         isTC007: Boolean,
         page: Int,
     ) {
-        if (!NetworkUtil.isConnected(Utils.getApp())) {
+        if (!NetworkUtils.isConnected(Utils.getApp())) {
             TToast.shortToast(Utils.getApp(), LibR.string.http_code_z5004)
             listData.postValue(null)
             return
