@@ -28,6 +28,16 @@ import mpdc4gsr.feature.settings.ui.StorageSettingsScreen
 import mpdc4gsr.feature.settings.ui.SyncSettingsScreen
 import mpdc4gsr.feature.settings.ui.AppInfoScreen
 import mpdc4gsr.feature.settings.ui.PrivacyPolicyScreen
+import mpdc4gsr.feature.settings.ui.ProfileScreen
+import mpdc4gsr.feature.settings.ui.SettingsScreen
+import mpdc4gsr.feature.thermal.ui.GalleryScreen
+import mpdc4gsr.feature.thermal.ui.ThermalMonitorScreen
+import mpdc4gsr.feature.thermal.ui.ThermalSettingsScreen
+import mpdc4gsr.feature.thermal.ui.CalibrationScreen
+import mpdc4gsr.feature.thermal.ui.GalleryScreen
+import mpdc4gsr.feature.settings.ui.SettingsScreen
+import mpdc4gsr.feature.settings.ui.ProfileScreen
+import mpdc4gsr.feature.settings.ui.AboutScreen
 import mpdc4gsr.feature.settings.ui.HelpScreen
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.core.ui.model.SensorType
