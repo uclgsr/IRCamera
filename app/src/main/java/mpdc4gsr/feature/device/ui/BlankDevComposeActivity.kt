@@ -28,6 +28,7 @@ import mpdc4gsr.compose.theme.IRCameraTheme
 import mpdc4gsr.activities.BlankDevViewModel
 import mpdc4gsr.activities.UsbDeviceInfo
 import mpdc4gsr.activities.UsbDeviceType
+import mpdc4gsr.activities.MainActivity
 
 /**
  * Modern Compose implementation of USB Device Handler

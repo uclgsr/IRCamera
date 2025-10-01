@@ -236,7 +236,7 @@ class BlankDevViewModel : BaseViewModel() {
     /**
      * Clear BlankDev-specific error message
      */
-    fun clearError() {
+    override fun clearError() {
         _blankDevUiState.value = _blankDevUiState.value.copy(error = null)
     }
 

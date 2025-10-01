@@ -43,7 +43,7 @@ typealias ComposeMigrationLauncherActivity = mpdc4gsr.feature.testing.ui.Compose
 // Main Feature Activities
 typealias UnifiedComposeActivity = mpdc4gsr.feature.main.ui.UnifiedComposeActivity
 typealias DeviceTypeActivityCompose = mpdc4gsr.feature.main.ui.DeviceTypeActivityCompose
-typealias MainActivity = mpdc4gsr.feature.main.ui.MainActivity
+// Note: MainActivity alias is in MainActivity.kt to avoid circular reference
 
 // Device Feature Activities
 typealias BlankDevActivityCompose = mpdc4gsr.feature.device.ui.BlankDevActivityCompose
