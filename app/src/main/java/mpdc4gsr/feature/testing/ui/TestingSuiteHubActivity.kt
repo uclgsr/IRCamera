@@ -268,7 +268,9 @@ class TestingSuiteHubActivity : ComponentActivity() {
                     onValueChange = { searchQuery = it },
                     label = { Text("Search tests") },
                     leadingIcon = {
-                        Icon(Icons.Default.Search, contentDescription = null)
+                        IconButton(onClick = { keyboardController?.hide() }) {
+                            Icon(Icons.Default.Search, contentDescription = null)
+                        }
                     },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true,
