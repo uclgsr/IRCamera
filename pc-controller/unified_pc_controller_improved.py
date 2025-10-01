@@ -470,9 +470,80 @@ class NetworkThread(QThread if GUI_AVAILABLE else threading.Thread):
             self.connections.clear()
 
 
-# Main controller class would be the same as unified_pc_controller.py
-# Just use NetworkThread from this improved version
+# Import the main controller class from unified_pc_controller
+# This improved version only provides the NetworkThread implementation
+try:
+    from unified_pc_controller import UnifiedPCController as BaseController
+    
+    class UnifiedPCControllerImproved(BaseController):
+        """Improved version using the enhanced NetworkThread"""
+        
+        def __init__(self, port: int = 8080):
+            # Initialize base without starting network
+            if GUI_AVAILABLE:
+                from PyQt6.QtWidgets import QMainWindow
+                QMainWindow.__init__(self)
+            
+            self.port = port
+            self.network = NetworkThread(port)  # Use improved NetworkThread
+            
+            if GUI_AVAILABLE:
+                self._init_ui()
+                self._setup_connections()
+                self._setup_timers()
+            
+            # Start network
+            self.network.start()
+            logger.info(f"Unified PC Controller (Improved) started on port {port}")
+        
+        def _init_ui(self):
+            """Initialize UI - delegate to parent"""
+            super()._init_ui() if hasattr(super(), '_init_ui') else None
+        
+        def _setup_connections(self):
+            """Setup signal connections - delegate to parent"""
+            super()._setup_connections() if hasattr(super(), '_setup_connections') else None
+        
+        def _setup_timers(self):
+            """Setup timers - delegate to parent"""
+            super()._setup_timers() if hasattr(super(), '_setup_timers') else None
+
+except ImportError:
+    logger.warning("Could not import UnifiedPCController base class")
+    UnifiedPCControllerImproved = None
+
+
+def main():
+    """Main entry point"""
+    if UnifiedPCControllerImproved is None:
+        logger.error("Cannot start: UnifiedPCController base class not available")
+        logger.info("This improved version requires unified_pc_controller.py")
+        return 1
+    
+    if GUI_AVAILABLE:
+        app = QApplication(sys.argv)
+        controller = UnifiedPCControllerImproved()
+        controller.show()
+        sys.exit(app.exec())
+    else:
+        logger.info("Running in CLI mode (PyQt6 not available)")
+        
+        # Create network thread directly for CLI mode
+        network = NetworkThread(port=8080)
+        network.start()
+        
+        logger.info("Server started on port 8080 (CLI mode)")
+        logger.info("Press Ctrl+C to stop")
+        
+        try:
+            while network.running:
+                time.sleep(1)
+        except KeyboardInterrupt:
+            logger.info("\nShutting down...")
+            network.stop()
+        
+        return 0
+
 
 if __name__ == '__main__':
-    logger.info("Starting improved unified PC controller")
-    # ... rest of main() implementation
+    sys.exit(main())

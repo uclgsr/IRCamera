@@ -124,6 +124,9 @@ class NetworkThread(QThread if GUI_AVAILABLE else threading.Thread):
         buffer = ""
         
         try:
+            # Set socket timeout to prevent hanging
+            client_socket.settimeout(30.0)
+            
             # Wait for HELLO message
             initial_data = client_socket.recv(4096).decode('utf-8')
             if not initial_data:
