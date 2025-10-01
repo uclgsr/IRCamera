@@ -25,10 +25,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import mpdc4gsr.core.ui.BaseComposeActivity
 import mpdc4gsr.core.ui.theme.IRCameraTheme
-import mpdc4gsr.activities.BlankDevViewModel
-import mpdc4gsr.activities.UsbDeviceInfo
-import mpdc4gsr.activities.UsbDeviceType
-import mpdc4gsr.activities.MainActivity
+import mpdc4gsr.feature.device.presentation.BlankDevViewModel
+import mpdc4gsr.feature.device.presentation.UsbDeviceInfo
+import mpdc4gsr.feature.device.presentation.UsbDeviceType
+import mpdc4gsr.feature.main.ui.MainActivity
 
 /**
  * Modern Compose implementation of USB Device Handler

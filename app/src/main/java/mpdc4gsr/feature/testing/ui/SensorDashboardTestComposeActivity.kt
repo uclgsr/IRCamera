@@ -21,7 +21,6 @@ import androidx.lifecycle.lifecycleScope
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import mpdc4gsr.ui_components.SensorDashboardFragment
 
 /**
  * Compose version of Sensor Dashboard Test Activity

@@ -25,7 +25,6 @@ import kotlinx.coroutines.launch
 import mpdc4gsr.core.ui.BaseComposeActivity
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.theme.IRCameraTheme
-import mpdc4gsr.ui_components.SensorDashboardFragment
 import mpdc4gsr.core.ui.BaseViewModel
 
 enum class TestSensorType(
