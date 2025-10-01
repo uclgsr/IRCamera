@@ -35,7 +35,7 @@ data class SessionMetadata(
     val modalityFiles: MutableMap<String, String> = mutableMapOf(),
 
 
-    val syncEvents: MutableList<SyncEvent> = mutableListOf(),
+    val syncEvents: MutableList<SessionSyncEvent> = mutableListOf(),
 
 
     val sensorSummaries: MutableMap<String, SensorSummary> = mutableMapOf(),
@@ -205,7 +205,7 @@ data class SessionMetadata(
 
 
         syncEvents.add(
-            SyncEvent(
+            SessionSyncEvent(
                 eventType = "${modalityType}_START",
                 timestampMs = sessionStartTimestampMs + startOffsetMs,
                 monotonicOffsetNs = startOffsetMs * 1_000_000L,
@@ -225,7 +225,7 @@ data class SessionMetadata(
         val offsetFromStartNs = currentMonotonicNs - sessionStartMonotonicNs
 
         syncEvents.add(
-            SyncEvent(
+            SessionSyncEvent(
                 eventType = eventType,
                 timestampMs = currentWallMs,
                 monotonicOffsetNs = offsetFromStartNs,
@@ -607,7 +607,7 @@ data class SessionMetadata(
 }
 
 
-data class SyncEvent(
+data class SessionSyncEvent(
     val eventType: String,
     val timestampMs: Long,
     val monotonicOffsetNs: Long,

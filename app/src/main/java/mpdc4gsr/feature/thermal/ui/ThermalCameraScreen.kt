@@ -119,6 +119,9 @@ private fun ThermalCameraContent(
     }
 }
 
+// ThermalPalette enum is defined in IRGalleryEditActivityCompose.kt
+// TemperatureUnit and MeasurementMode are imported from mpdc4gsr.feature.thermal.data.ThermalModels.kt
+
 @Composable
 private fun ThermalPreviewCard(
     selectedPalette: ThermalPalette,

@@ -60,8 +60,8 @@ fun CameraSettingsScreen(
             ) {
                 SettingsDropdown(
                     label = "Resolution",
-                    value = resolution,
                     options = listOf("1920x1080", "1280x720", "640x480"),
+                    value = resolution,
                     onValueChange = { resolution = it }
                 )
                 SettingsSlider(
@@ -69,7 +69,7 @@ fun CameraSettingsScreen(
                     value = frameRate.toFloat(),
                     valueRange = 15f..60f,
                     onValueChange = { frameRate = it.toInt() },
-                    unit = "fps"
+                    valueLabel = { "${it.toInt()} fps" }
                 )
             }
 
