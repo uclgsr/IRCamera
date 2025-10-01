@@ -300,9 +300,26 @@ class NetworkThread(QThread if GUI_AVAILABLE else threading.Thread):
             elif msg_type == 'FRAME':
                 self._handle_frame(device_id, json_msg)
             
+            elif msg_type == 'START_RECORD':
+                self._handle_start_record(device_id, json_msg, client_socket)
+            
+            elif msg_type == 'STOP_RECORD':
+                self._handle_stop_record(device_id, json_msg, client_socket)
+            
             else:
-                # Generic message handling
+                # Generic message handling - send ACK for unknown commands
+                logger.info(f"Unhandled message type from {device_id}: {msg_type}")
+                self._log(f"Unhandled message type from {device_id}: {msg_type}")
                 self._emit_signal('message_received', device_id, json_msg)
+                
+                # Send ACK for any command-like message
+                if msg_type and msg_type.isupper():
+                    ack = self.adapter.create_ack(msg_type)
+                    try:
+                        client_socket.send((ack + '\n').encode('utf-8'))
+                        logger.info(f"Sent ACK to {device_id} for {msg_type}")
+                    except (OSError, socket.error) as e:
+                        logger.error(f"Failed to send ACK to {device_id}: {e}")
         
         except Exception as e:
             logger.exception(f"Error processing message from {device_id}: {e}")
@@ -385,6 +402,45 @@ class NetworkThread(QThread if GUI_AVAILABLE else threading.Thread):
         frame_type = json_msg.get('frame_type', 'UNKNOWN')
         logger.debug(f"Frame received from {device_id}: {frame_type}")
         self._log(f"Frame received from {device_id}: {frame_type}")
+    
+    def _handle_start_record(self, device_id: str, json_msg: dict, client_socket: socket.socket):
+        """Handle START_RECORD command from Android device"""
+        session_id = json_msg.get('session_id', 'unknown')
+        
+        with self.lock:
+            connection = self.connections.get(device_id)
+            if connection:
+                connection.is_recording = True
+                connection.session_id = session_id
+        
+        logger.info(f"Device {device_id} started recording session {session_id}")
+        self._log(f"Device {device_id} started recording session {session_id}")
+        
+        # Send ACK
+        ack = self.adapter.create_ack('START_RECORD', session_id=session_id)
+        try:
+            client_socket.send((ack + '\n').encode('utf-8'))
+        except (OSError, socket.error) as e:
+            logger.error(f"Failed to send START_RECORD ACK to {device_id}: {e}")
+    
+    def _handle_stop_record(self, device_id: str, json_msg: dict, client_socket: socket.socket):
+        """Handle STOP_RECORD command from Android device"""
+        session_id = json_msg.get('session_id', 'unknown')
+        
+        with self.lock:
+            connection = self.connections.get(device_id)
+            if connection:
+                connection.is_recording = False
+        
+        logger.info(f"Device {device_id} stopped recording session {session_id}")
+        self._log(f"Device {device_id} stopped recording session {session_id}")
+        
+        # Send ACK
+        ack = self.adapter.create_ack('STOP_RECORD', session_id=session_id)
+        try:
+            client_socket.send((ack + '\n').encode('utf-8'))
+        except (OSError, socket.error) as e:
+            logger.error(f"Failed to send STOP_RECORD ACK to {device_id}: {e}")
     
     def send_command(self, device_id: str, command: str, **params) -> bool:
         """Send command to Android device"""
