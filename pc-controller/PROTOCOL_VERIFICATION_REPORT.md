@@ -319,7 +319,7 @@ The communication protocol is **PRODUCTION READY** and meets all specified requi
 
 ## Test Execution Summary
 
-**Date**: 2025-01-01
+**Date**: {{DATE}}
 **Environment**: Ubuntu Linux, Python 3.x, Android SDK
 **Test Duration**: ~3 seconds per test suite
 **Total Tests**: 16 (7 PC-side + 9 Android-side)
