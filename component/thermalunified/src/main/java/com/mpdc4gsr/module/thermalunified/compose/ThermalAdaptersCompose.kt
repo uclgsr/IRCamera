@@ -31,6 +31,16 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 
 /**
+ * Data class for album items in gallery
+ */
+data class AlbumItem(
+    val imagePath: String,
+    val title: String,
+    val description: String = "",
+    val imageCount: Int = 0
+)
+
+/**
  * Compose equivalents of thermal adapters
  * Modern list and grid components replacing RecyclerView adapters
  */

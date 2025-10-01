@@ -15,7 +15,7 @@ import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import com.mpdc4gsr.libunified.app.socket.WebSocketProxy
 import com.mpdc4gsr.libunified.app.tools.DeviceTools
 import com.mpdc4gsr.module.thermalunified.R
-import com.mpdc4gsr.module.thermalunified.activity.IRThermalNightActivity
+import com.mpdc4gsr.module.thermalunified.activity.ThermalIrNightComposeActivity
 import com.mpdc4gsr.module.thermalunified.activity.IRThermalPlusComposeActivity
 import com.mpdc4gsr.module.thermalunified.activity.MonitoryHomeComposeActivity
 import org.greenrobot.eventbus.EventBus
@@ -96,7 +96,7 @@ class AbilityFragment : BaseFragment(), View.OnClickListener {
                             .withBoolean(ExtraKeyConfig.IS_CAR_DETECT_ENTER, true)
                             .navigation(requireActivity())
                     } else if (DeviceTools.isConnect(isSendConnectEvent = false, true)) {
-                        var intent = Intent(requireContext(), IRThermalNightActivity::class.java)
+                        var intent = Intent(requireContext(), ThermalIrNightComposeActivity::class.java)
                         intent.putExtra(ExtraKeyConfig.IS_CAR_DETECT_ENTER, true)
                         startActivity(intent)
                     } else {
