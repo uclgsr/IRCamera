@@ -13,6 +13,7 @@ import mpdc4gsr.feature.camera.ui.RGBCameraScreen
 import mpdc4gsr.feature.network.ui.ConnectScreen
 import mpdc4gsr.feature.thermal.ui.ThermalMonitorScreen
 import mpdc4gsr.feature.thermal.ui.ThermalSettingsScreen
+import mpdc4gsr.feature.thermal.ui.CalibrationScreen
 import mpdc4gsr.feature.thermal.ui.GalleryScreen
 import mpdc4gsr.feature.settings.ui.SettingsScreen
 import mpdc4gsr.feature.settings.ui.ProfileScreen
