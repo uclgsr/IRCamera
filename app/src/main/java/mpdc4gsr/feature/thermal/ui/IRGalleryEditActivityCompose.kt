@@ -137,7 +137,7 @@ class IRGalleryEditViewModel : BaseViewModel() {
 
 class IRGalleryEditActivityCompose : BaseComposeActivity<IRGalleryEditViewModel>() {
 
-    private val viewModelInstance by lazy { IRGalleryEditViewModel() }
+    private val viewModelInstance: IRGalleryEditViewModel by viewModels()
 
     override fun createViewModel(): IRGalleryEditViewModel = viewModelInstance
 
