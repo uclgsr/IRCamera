@@ -33,7 +33,7 @@ import java.util.concurrent.atomic.AtomicReference
 class ComprehensiveRecordingController(
     private val context: Context,
     private val lifecycleOwner: androidx.lifecycle.LifecycleOwner? = null,
-    private val permissionManager: mpdc4gsr.permissions.PermissionManager? = null
+    private val permissionManager: mpdc4gsr.core.ui.PermissionManager? = null
 ) {
     companion object {
         private const val TAG = "ComprehensiveRecordingController"
@@ -67,7 +67,7 @@ class ComprehensiveRecordingController(
 
     // Use a thread-safe list for session events  
     private val sessionEvents =
-        CopyOnWriteArrayList<mpdc4gsr.controller.RecordingControllerSessionEvent>()
+        CopyOnWriteArrayList<RecordingControllerSessionEvent>()
 
     private val _errorFlow = MutableStateFlow<RecordingError?>(null)
     val errorFlow: StateFlow<RecordingError?> = _errorFlow.asStateFlow()
@@ -755,7 +755,7 @@ class ComprehensiveRecordingController(
 
             // Initialize RGB Camera Recorder
             try {
-                val rgbRecorder = mpdc4gsr.sensors.RgbCameraRecorder(
+                val rgbRecorder = mpdc4gsr.core.data.RgbCameraRecorder(
                     context = context,
                     lifecycleOwner = effectiveLifecycleOwner,
                     previewView = null, // No preview needed for background recording
@@ -770,7 +770,7 @@ class ComprehensiveRecordingController(
 
             // Initialize Thermal Camera Recorder  
             try {
-                val thermalRecorder = mpdc4gsr.sensors.thermal.ThermalCameraRecorder(
+                val thermalRecorder = mpdc4gsr.feature.thermal.ui.ThermalCameraRecorder(
                     context = context,
                     sensorIdParam = THERMAL_SENSOR_ID,
                     thermalFrameRate = THERMAL_FRAME_RATE_HZ,
@@ -784,7 +784,7 @@ class ComprehensiveRecordingController(
 
             // Initialize GSR Sensor Recorder using Shimmer3GSRRecorder to avoid circular dependency
             try {
-                val gsrRecorder = mpdc4gsr.sensors.unified.Shimmer3GSRRecorder(
+                val gsrRecorder = mpdc4gsr.core.data.Shimmer3GSRRecorder(
                     context = context,
                     lifecycleOwner = effectiveLifecycleOwner,
                     sensorId = GSR_SENSOR_ID,
@@ -1198,7 +1198,7 @@ class ComprehensiveRecordingController(
         errorMessage: String? = null,
         metadata: Map<String, String> = emptyMap()
     ) {
-        val event = mpdc4gsr.controller.RecordingControllerSessionEvent(
+        val event = RecordingControllerSessionEvent(
             eventType = eventType,
             timestampMs = System.currentTimeMillis(),
             sensorId = sensorId,
