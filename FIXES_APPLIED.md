@@ -181,7 +181,44 @@ import mpdc4gsr.feature.camera.ui.*
 
 4. **Wrong Package Qualifiers**: Activity classes were referenced with incorrect package paths (e.g., `mpdc4gsr.sensors.gsr` instead of `mpdc4gsr.feature.gsr.ui`).
 
-5. **Non-existent Classes**: Some activities referenced don't exist and need to be implemented or the references should be removed.
+5. **Activities with Wrong Imports**: GSRDeviceManagementComposeActivity, MultiModalRecordingComposeActivity, and SessionManagerComposeActivity existed but had incorrect BaseComposeActivity import paths.
+
+## Update (Implementation of Missing Activities)
+
+### 9. GSRDeviceManagementComposeActivity.kt
+**Location:** `app/src/main/java/mpdc4gsr/feature/gsr/ui/GSRDeviceManagementComposeActivity.kt`
+
+**Issue:** Activity existed but had incorrect BaseComposeActivity import path and was commented out in launcher
+
+**Fixes:**
+1. Updated import path:
+```kotlin
+// Before:
+import mpdc4gsr.compose.base.BaseComposeActivity
+
+// After:
+import mpdc4gsr.core.ui.BaseComposeActivity
+```
+
+2. Uncommented the launcher card in ComposeMigrationLauncherActivity.kt
+
+### 10. MultiModalRecordingComposeActivity.kt
+**Location:** `app/src/main/java/mpdc4gsr/feature/gsr/ui/MultiModalRecordingComposeActivity.kt`
+
+**Issue:** Activity existed but had incorrect BaseComposeActivity import path and was commented out in launcher
+
+**Fixes:**
+1. Updated import path to `mpdc4gsr.core.ui.BaseComposeActivity`
+2. Uncommented the launcher card in ComposeMigrationLauncherActivity.kt
+
+### 11. SessionManagerComposeActivity.kt
+**Location:** `app/src/main/java/mpdc4gsr/feature/gsr/ui/SessionManagerComposeActivity.kt`
+
+**Issue:** Activity existed but had incorrect BaseComposeActivity import path and was commented out in launcher
+
+**Fixes:**
+1. Updated import path to `mpdc4gsr.core.ui.BaseComposeActivity`
+2. Uncommented the launcher card in ComposeMigrationLauncherActivity.kt
 
 ## Testing Recommendations
 
@@ -189,10 +226,11 @@ import mpdc4gsr.feature.camera.ui.*
 2. Run full build with `./gradlew build` to ensure no other issues
 3. Test each modified activity to ensure UI renders correctly
 4. Verify navigation to all activities in ComposeMigrationLauncherActivity works
+5. Test the newly enabled launcher cards for GSR Device Management, Multi-Modal Recording, and Session Manager
 
 ## Notes
 
 - All changes follow the principle of minimal modifications
 - Existing functionality is preserved
-- Non-existent activities are clearly marked with TODO comments for future implementation
+- All TODO-marked activities have been implemented and enabled
 - The fixes align with the MVVM architecture and repository pattern used in the project

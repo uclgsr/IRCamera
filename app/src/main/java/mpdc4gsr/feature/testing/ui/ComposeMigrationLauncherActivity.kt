@@ -512,7 +512,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                     }
                 )
 
-                /* TODO: GSRDeviceManagementComposeActivity not yet implemented
                 LauncherCard(
                     title = "GSR Device Management (Compose)",
                     subtitle = "Comprehensive GSR device monitoring and configuration",
@@ -526,7 +525,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         )
                     }
                 )
-                */
 
                 // Camera Integration Section
                 Text(
@@ -802,7 +800,6 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                     modifier = Modifier.padding(top = 16.dp)
                 )
 
-                /* TODO: These activities are not yet implemented
                 LauncherCard(
                     title = "GSR Device Management (Compose)",
                     subtitle = "Enhanced GSR device discovery, connection, and real-time monitoring",
@@ -811,7 +808,7 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         startActivity(
                             Intent(
                                 this@ComposeMigrationLauncherActivity,
-                                GSRDeviceManagementActivityCompose::class.java
+                                GSRDeviceManagementComposeActivity::class.java
                             )
                         )
                     }
@@ -825,7 +822,7 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         startActivity(
                             Intent(
                                 this@ComposeMigrationLauncherActivity,
-                                MultiModalRecordingActivityCompose::class.java
+                                MultiModalRecordingComposeActivity::class.java
                             )
                         )
                     }
@@ -839,12 +836,11 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         startActivity(
                             Intent(
                                 this@ComposeMigrationLauncherActivity,
-                                SessionManagerActivityCompose::class.java
+                                SessionManagerComposeActivity::class.java
                             )
                         )
                     }
                 )
-                */
 
                 // Comparison option
                 Card(
