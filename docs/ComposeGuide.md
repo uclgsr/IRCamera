@@ -1,0 +1,188 @@
+# Jetpack Compose Migration Guide
+
+This document outlines the migration from Android DataBinding/ViewBinding to Jetpack Compose for the libunified module.
+
+## Overview
+
+The module is being migrated from traditional Android Views with DataBinding to Jetpack Compose for better maintainability, performance, and modern Android development practices.
+
+## Current State
+
+### Compose Infrastructure
+- ✅ BaseComposeActivity - Base class for Compose-based activities
+- ✅ BaseComposeFragment - Base class for Compose-based fragments  
+- ✅ LibUnifiedTheme - Shared theme with thermal-specific colors
+- ✅ Compose dependencies configured in build.gradle.kts
+
+### Compose Components Created
+
+#### Dialogs (app/compose/dialogs/)
+- ✅ LoadingDialogCompose.kt - Loading indicator with optional message
+- ✅ ConfirmDialogCompose.kt - Confirmation dialog with customizable buttons and checkbox
+- ✅ ComposeDialogHelper.kt - Helper classes to use Compose dialogs in non-Compose contexts
+
+#### UI Components (app/compose/components/)
+- ✅ TargetColorPickerCompose.kt - Horizontal color picker with selection indicator
+- ✅ ComposeTextRenderer.kt - Text rendering utilities
+
+## Migration Strategy
+
+### Phase 1: Infrastructure (COMPLETED)
+- Set up base Compose classes
+- Configure Compose dependencies
+- Create theme system
+- Disable dataBinding and viewBinding
+
+### Phase 2: Create Compose Alternatives (IN PROGRESS)
+- Create Compose versions of commonly used components
+- Keep original components during transition
+- Allow gradual migration
+
+### Phase 3: Migrate Usage (TODO)
+- Update activities/fragments to use Compose versions
+- Replace databinding dialogs with Compose dialogs
+- Migrate custom views to Composables
+
+### Phase 4: Cleanup (TODO)
+- Remove databinding/viewbinding dependencies completely
+- Delete old View-based components
+- Update all references
+
+## Using Compose Components
+
+### LoadingDialog Example
+
+```kotlin
+// In a Composable
+@Composable
+fun MyScreen() {
+    var showLoading by remember { mutableStateOf(false) }
+    
+    if (showLoading) {
+        LoadingDialog(
+            message = "Loading...",
+            onDismissRequest = { }
+        )
+    }
+}
+
+// In a traditional Activity/Fragment
+class MyActivity : AppCompatActivity() {
+    private val loadingDialog = LoadingDialogState(this)
+    
+    fun showLoading() {
+        loadingDialog.show("Loading...")
+    }
+    
+    fun hideLoading() {
+        loadingDialog.dismiss()
+    }
+}
+```
+
+### ConfirmDialog Example
+
+```kotlin
+// In a Composable
+@Composable
+fun MyScreen() {
+    var showConfirm by remember { mutableStateOf(false) }
+    
+    if (showConfirm) {
+        ConfirmDialog(
+            title = "Confirm Action",
+            message = "Are you sure?",
+            confirmText = "Yes",
+            cancelText = "No",
+            onConfirm = { isChecked ->
+                // Handle confirmation
+                showConfirm = false
+            },
+            onDismiss = { showConfirm = false }
+        )
+    }
+}
+
+// In a traditional Activity/Fragment
+class MyActivity : AppCompatActivity() {
+    private val confirmDialog = ConfirmDialogState(this)
+    
+    fun showConfirmation() {
+        confirmDialog.show(
+            title = "Confirm Action",
+            message = "Are you sure?",
+            onConfirm = { isChecked ->
+                // Handle confirmation
+            }
+        )
+    }
+}
+```
+
+### TargetColorPicker Example
+
+```kotlin
+@Composable
+fun ColorSelectionScreen() {
+    var selectedColor by remember { mutableStateOf(ObserveBean.TYPE_TARGET_COLOR_GREEN) }
+    
+    Column {
+        TargetColorPicker(
+            selectedColor = selectedColor,
+            onColorSelected = { newColor ->
+                selectedColor = newColor
+            }
+        )
+    }
+}
+```
+
+## Components to Migrate
+
+### High Priority Dialogs
+- [ ] LoadingDialog → LoadingDialogCompose ✅ (Created)
+- [ ] ConfirmSelectDialog → ConfirmDialogCompose ✅ (Created)
+- [ ] TipDialog → TipDialogCompose
+- [ ] MsgDialog → MessageDialogCompose
+- [ ] NotTipsSelectDialog → NotificationDialogCompose
+
+### Medium Priority Dialogs
+- [ ] FirmwareUpDialog → FirmwareUpdateDialogCompose
+- [ ] TipEmissivityDialog → EmissivityDialogCompose
+- [ ] TipProgressDialog → ProgressDialogCompose
+- [ ] ColorSelectDialog → ColorPickerDialogCompose
+
+### Adapters
+- [ ] TargetColorAdapter → TargetColorPickerCompose ✅ (Created)
+- [ ] MenuTabAdapter → MenuTabCompose
+- [ ] BaseMenuAdapter → MenuCompose
+
+### Custom Views
+- [ ] MenuEditView → MenuEditCompose
+- [ ] MenuSecondView → MenuSecondCompose
+- [ ] MenuFirstTabView → MenuFirstTabCompose
+- [ ] CameraMenuView → CameraMenuCompose
+
+## Best Practices
+
+1. **State Management**: Use `remember`, `mutableStateOf`, and `derivedStateOf` appropriately
+2. **Side Effects**: Use `LaunchedEffect`, `DisposableEffect` for side effects
+3. **Recomposition**: Keep composables pure and avoid side effects in composition
+4. **Performance**: Use `key()` in lists, `derivedStateOf` for expensive calculations
+5. **Theming**: Always use LibUnifiedTheme colors and styles
+6. **Accessibility**: Add contentDescription for images and semantic properties
+
+## Testing Strategy
+
+1. Test Compose components in isolation
+2. Test integration with existing View-based code
+3. Test theme consistency
+4. Test dialog behavior (dismiss, confirm, etc.)
+5. Test on different screen sizes and orientations
+
+## Notes
+
+- DataBinding and ViewBinding are disabled in build.gradle.kts
+- Compose infrastructure is MVP (Master Thesis Project) focused
+- Migration is gradual - both systems coexist during transition
+- Follow Kotlin coding conventions and Android best practices
