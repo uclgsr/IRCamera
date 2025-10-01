@@ -28,7 +28,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import mpdc4gsr.controller.RecordingController
+import mpdc4gsr.feature.network.data.RecordingController
 import mpdc4gsr.core.data.ErrorType
 import mpdc4gsr.core.data.RecordingStats
 import mpdc4gsr.core.data.RecordingStatus

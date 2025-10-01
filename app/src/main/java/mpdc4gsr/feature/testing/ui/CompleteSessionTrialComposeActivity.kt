@@ -21,7 +21,7 @@ import androidx.lifecycle.lifecycleScope
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import mpdc4gsr.controller.RecordingController
+import mpdc4gsr.feature.network.data.RecordingController
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date

@@ -32,10 +32,10 @@ import mpdc4gsr.compose.base.BaseComposeActivity
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.feature.network.data.CommandConnection
-import mpdc4gsr.network.MockRecordingController
-import mpdc4gsr.network.NetworkManager
-import mpdc4gsr.network.SimpleCommandHandler
-import mpdc4gsr.network.TcpClient
+import mpdc4gsr.feature.network.data.MockRecordingController
+import mpdc4gsr.feature.network.data.NetworkManager
+import mpdc4gsr.feature.network.data.SimpleCommandHandler
+import mpdc4gsr.feature.network.data.TcpClient
 import mpdc4gsr.core.ui.BaseViewModel
 
 enum class NetworkConnectionStatus {

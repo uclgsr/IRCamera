@@ -20,7 +20,7 @@ import androidx.lifecycle.lifecycleScope
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import mpdc4gsr.controller.RecordingController
+import mpdc4gsr.feature.network.data.RecordingController
 import mpdc4gsr.feature.gsr.data.GSRCalculationUtils
 import mpdc4gsr.feature.gsr.data.GSRConstants
 import mpdc4gsr.feature.gsr.data.GSRSensorRecorder
