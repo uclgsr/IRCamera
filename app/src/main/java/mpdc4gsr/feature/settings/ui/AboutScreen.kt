@@ -10,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import mpdc4gsr.core.ui.components.NavigationBreadcrumb
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -26,6 +27,11 @@ fun AboutScreen(
                     Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                 }
             }
+        )
+
+        NavigationBreadcrumb(
+            currentScreen = "About",
+            previousScreen = "Settings"
         )
 
         Column(

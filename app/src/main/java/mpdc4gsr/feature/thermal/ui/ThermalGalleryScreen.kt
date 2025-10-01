@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.components.TitleBarAction
+import mpdc4gsr.core.ui.components.NavigationBreadcrumb
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 
 /**
@@ -49,7 +50,7 @@ fun ThermalGalleryScreen(
             .background(Color(0xFF16131e))
     ) {
         TitleBar(
-            title = "Thermal Gallery",
+            title = "Gallery",
             showBackButton = true,
             onBackClick = onBackClick
         ) {
@@ -66,6 +67,11 @@ fun ThermalGalleryScreen(
                 onClick = { /* Search functionality */ }
             )
         }
+
+        NavigationBreadcrumb(
+            currentScreen = "Gallery",
+            previousScreen = "Home"
+        )
 
         // Tab Row
         PrimaryTabRow(
