@@ -19,6 +19,8 @@ The module is being migrated from traditional Android Views with DataBinding to 
 #### Dialogs (app/compose/dialogs/)
 - ✅ LoadingDialogCompose.kt - Loading indicator with optional message
 - ✅ ConfirmDialogCompose.kt - Confirmation dialog with customizable buttons and checkbox
+- ✅ MessageDialogCompose.kt - LongTextDialog, NotificationDialog, and FirmwareUpdateDialog
+- ✅ ProgressDialogCompose.kt - Progress dialog with linear/circular progress indicator
 - ✅ ComposeDialogHelper.kt - Helper classes to use Compose dialogs in non-Compose contexts
 
 #### UI Components (app/compose/components/)
@@ -140,20 +142,29 @@ fun ColorSelectionScreen() {
 ## Components to Migrate
 
 ### High Priority Dialogs
-- [ ] LoadingDialog → LoadingDialogCompose ✅ (Created)
-- [ ] ConfirmSelectDialog → ConfirmDialogCompose ✅ (Created)
+- [x] LoadingDialog → LoadingDialogCompose ✅ (Created)
+- [x] ConfirmSelectDialog → ConfirmDialogCompose ✅ (Created)
+- [x] LongTextDialog → LongTextDialog (in MessageDialogCompose.kt) ✅ (Created)
+- [x] NotTipsSelectDialog → NotificationDialog (in MessageDialogCompose.kt) ✅ (Created)
+- [x] FirmwareUpDialog → FirmwareUpdateDialog (in MessageDialogCompose.kt) ✅ (Created)
+- [x] TipProgressDialog → ProgressDialog (in ProgressDialogCompose.kt) ✅ (Created)
+- [x] ColorSelectDialog → ColorPickerDialog (in ProgressDialogCompose.kt) ✅ (Created)
 - [ ] TipDialog → TipDialogCompose
 - [ ] MsgDialog → MessageDialogCompose
-- [ ] NotTipsSelectDialog → NotificationDialogCompose
 
 ### Medium Priority Dialogs
-- [ ] FirmwareUpDialog → FirmwareUpdateDialogCompose
 - [ ] TipEmissivityDialog → EmissivityDialogCompose
-- [ ] TipProgressDialog → ProgressDialogCompose
-- [ ] ColorSelectDialog → ColorPickerDialogCompose
+- [ ] TipObserveDialog → ObserveDialogCompose
+- [ ] TipChangeDeviceDialog → ChangeDeviceDialogCompose
+- [ ] TipOtgDialog → OtgDialogCompose
+- [ ] TipShutterDialog → ShutterDialogCompose
+- [ ] TipTargetColorDialog → TargetColorDialogCompose
+- [ ] TipWaterMarkDialog → WaterMarkDialogCompose
+- [ ] CarDetectDialog → CarDetectDialogCompose
+- [ ] EmissivityTipPopup → EmissivityPopupCompose
 
 ### Adapters
-- [ ] TargetColorAdapter → TargetColorPickerCompose ✅ (Created)
+- [x] TargetColorAdapter → TargetColorPickerCompose ✅ (Created)
 - [ ] MenuTabAdapter → MenuTabCompose
 - [ ] BaseMenuAdapter → MenuCompose
 
@@ -162,6 +173,7 @@ fun ColorSelectionScreen() {
 - [ ] MenuSecondView → MenuSecondCompose
 - [ ] MenuFirstTabView → MenuFirstTabCompose
 - [ ] CameraMenuView → CameraMenuCompose
+- [ ] SettingNightView → SettingNightCompose
 
 ## Best Practices
 
