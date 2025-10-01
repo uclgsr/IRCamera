@@ -34,7 +34,7 @@ import com.mpdc4gsr.module.thermalunified.viewmodel.IRThermalFragmentViewModel
  * - Improved connection flow and user guidance
  * - Integration with specialized thermal activities
  */
-class IRThermalFragmentCompose : BaseComposeFragment<IRThermalFragmentViewModel>() {
+class IRThermalComposeFragment : BaseComposeFragment<IRThermalFragmentViewModel>() {
 
     override fun createViewModel(): IRThermalFragmentViewModel {
         return viewModels<IRThermalFragmentViewModel>().value

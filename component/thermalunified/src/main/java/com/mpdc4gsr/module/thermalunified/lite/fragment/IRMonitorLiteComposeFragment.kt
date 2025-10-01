@@ -38,7 +38,7 @@ import java.util.*
  * - Efficient resource usage for lite implementation
  * - Integration with USB thermal devices
  */
-class IRMonitorLiteFragmentCompose : BaseComposeFragment<IRMonitorLiteViewModel>() {
+class IRMonitorLiteComposeFragment : BaseComposeFragment<IRMonitorLiteViewModel>() {
 
     private val viewModel: IRMonitorLiteViewModel by viewModels()
 

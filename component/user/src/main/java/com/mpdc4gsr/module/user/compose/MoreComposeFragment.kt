@@ -16,7 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.config.RouterConfig
 import com.mpdc4gsr.libunified.app.navigation.NavigationManager
-import com.mpdc4gsr.module.user.viewmodel.MoreFragmentComposeViewModel
+import com.mpdc4gsr.module.user.viewmodel.MoreComposeFragmentViewModel
 import com.mpdc4gsr.libunified.R as RCore
 
 /**
@@ -25,8 +25,8 @@ import com.mpdc4gsr.libunified.R as RCore
  * Device settings and configuration screen
  */
 @Composable
-fun MoreFragmentCompose(
-    viewModel: MoreFragmentComposeViewModel,
+fun MoreComposeFragment(
+    viewModel: MoreComposeFragmentViewModel,
     isTC007: Boolean = false,
     modifier: Modifier = Modifier
 ) {

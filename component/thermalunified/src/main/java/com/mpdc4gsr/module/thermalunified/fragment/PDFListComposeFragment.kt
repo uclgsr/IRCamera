@@ -1,59 +1,68 @@
 package com.mpdc4gsr.module.thermalunified.fragment
 
 import android.content.Intent
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeFragment
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-import com.mpdc4gsr.module.thermalunified.viewmodel.GalleryViewModel
+import com.mpdc4gsr.module.thermalunified.viewmodel.PDFListViewModel
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.time.Duration.Companion.milliseconds
+
+// Type alias for cleaner code
+typealias PDFItem = PDFListViewModel.PDFItem
 
 /**
- * Compose migration of GalleryVideoFragment
+ * Compose migration of PDFListFragment
  *
  * This fragment demonstrates:
- * - Complete migration of video gallery UI to Compose
- * - Modern grid-based video display with thumbnails
- * - Enhanced video preview and playback capabilities
- * - Material 3 design with thermal video support
- * - Integration with thermal video recording systems
+ * - Complete migration of PDF report list to Compose
+ * - Modern list-based PDF document display
+ * - Enhanced PDF preview and sharing capabilities
+ * - Material 3 design with document management
+ * - Integration with thermal analysis report systems
  */
-class GalleryVideoFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
+class PDFListComposeFragment : BaseComposeFragment<PDFListViewModel>() {
 
-    override fun createViewModel(): GalleryViewModel {
-        return viewModels<GalleryViewModel>().value
+    private var isTC007 by mutableStateOf(false)
+
+    override fun createViewModel(): PDFListViewModel {
+        return viewModels<PDFListViewModel>().value
+    }
+
+    companion object {
+        fun newInstance(isTC007: Boolean): PDFListComposeFragment {
+            return PDFListComposeFragment().apply {
+                this.isTC007 = isTC007
+            }
+        }
     }
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    override fun Content(viewModel: GalleryViewModel) {
+    override fun Content(viewModel: PDFListViewModel) {
         val context = LocalContext.current
 
         // Observe ViewModel state
-        val videoItems by viewModel.videoItems.collectAsStateWithLifecycle()
+        val pdfItems by viewModel.pdfItems.collectAsStateWithLifecycle()
         val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
         val selectedItems by viewModel.selectedItems.collectAsStateWithLifecycle()
         val isSelectionMode by viewModel.isSelectionMode.collectAsStateWithLifecycle()
@@ -62,22 +71,28 @@ class GalleryVideoFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
             Column(
                 modifier = Modifier.fillMaxSize()
             ) {
+                // Header with device type indicator
+                PDFListHeader(
+                    isTC007 = isTC007,
+                    totalReports = pdfItems.size
+                )
+
                 // Selection toolbar
                 if (isSelectionMode) {
-                    VideoSelectionToolbar(
+                    PDFSelectionToolbar(
                         selectedCount = selectedItems.size,
                         onClearSelection = { viewModel.clearSelection() },
                         onShareSelected = {
-                            shareSelectedVideos(context, selectedItems.toList())
+                            shareSelectedPDFs(context, selectedItems.toList())
                         },
                         onDeleteSelected = { viewModel.deleteSelectedItems() },
                         onExportSelected = {
-                            exportSelectedVideos(context, selectedItems.toList())
+                            exportSelectedPDFs(context, selectedItems.toList())
                         }
                     )
                 }
 
-                // Video gallery content
+                // PDF list content
                 Box(
                     modifier = Modifier.fillMaxSize()
                 ) {
@@ -86,28 +101,28 @@ class GalleryVideoFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
                             LoadingState()
                         }
 
-                        videoItems.isEmpty() -> {
-                            EmptyVideoGalleryState(
-                                onRefresh = { viewModel.refreshVideoGallery() }
+                        pdfItems.isEmpty() -> {
+                            EmptyPDFState(
+                                onRefresh = { viewModel.refreshPDFList() }
                             )
                         }
 
                         else -> {
-                            VideoGrid(
-                                videos = videoItems,
+                            PDFList(
+                                pdfs = pdfItems,
                                 selectedItems = selectedItems,
                                 isSelectionMode = isSelectionMode,
                                 onItemClick = { item ->
                                     if (isSelectionMode) {
-                                        viewModel.toggleItemSelection(item)
+                                        viewModel.toggleItemSelection(item.path)
                                     } else {
-                                        playVideo(context, item.path)
+                                        openPDF(context, item.path)
                                     }
                                 },
                                 onItemLongClick = { item ->
                                     if (!isSelectionMode) {
                                         viewModel.enterSelectionMode()
-                                        viewModel.toggleItemSelection(item)
+                                        viewModel.toggleItemSelection(item.path)
                                     }
                                 }
                             )
@@ -119,12 +134,9 @@ class GalleryVideoFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
     }
 
     @Composable
-    private fun VideoSelectionToolbar(
-        selectedCount: Int,
-        onClearSelection: () -> Unit,
-        onShareSelected: () -> Unit,
-        onDeleteSelected: () -> Unit,
-        onExportSelected: () -> Unit
+    private fun PDFListHeader(
+        isTC007: Boolean,
+        totalReports: Int
     ) {
         Card(
             modifier = Modifier
@@ -141,8 +153,83 @@ class GalleryVideoFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                Column {
+                    Text(
+                        text = "Analysis Reports",
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        StatusChip(
+                            text = if (isTC007) "TC007 Device" else "Standard Device",
+                            color = if (isTC007) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.primary
+                        )
+                        Text(
+                            text = "$totalReports reports",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onPrimaryContainer
+                        )
+                    }
+                }
+
+                Icon(
+                    Icons.Default.PictureAsPdf,
+                    contentDescription = "PDF Reports",
+                    modifier = Modifier.size(32.dp),
+                    tint = MaterialTheme.colorScheme.onPrimaryContainer
+                )
+            }
+        }
+    }
+
+    @Composable
+    private fun StatusChip(
+        text: String,
+        color: androidx.compose.ui.graphics.Color
+    ) {
+        Card(
+            colors = CardDefaults.cardColors(
+                containerColor = color.copy(alpha = 0.2f)
+            ),
+            shape = RoundedCornerShape(12.dp)
+        ) {
+            Text(
+                text = text,
+                style = MaterialTheme.typography.labelSmall,
+                color = color,
+                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+            )
+        }
+    }
+
+    @Composable
+    private fun PDFSelectionToolbar(
+        selectedCount: Int,
+        onClearSelection: () -> Unit,
+        onShareSelected: () -> Unit,
+        onDeleteSelected: () -> Unit,
+        onExportSelected: () -> Unit
+    ) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.tertiaryContainer
+            )
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(12.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Text(
-                    text = "$selectedCount video${if (selectedCount != 1) "s" else ""} selected",
+                    text = "$selectedCount report${if (selectedCount != 1) "s" else ""} selected",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )
@@ -183,7 +270,7 @@ class GalleryVideoFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
             ) {
                 CircularProgressIndicator()
                 Text(
-                    text = "Loading videos...",
+                    text = "Loading reports...",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -192,7 +279,7 @@ class GalleryVideoFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
     }
 
     @Composable
-    private fun EmptyVideoGalleryState(
+    private fun EmptyPDFState(
         onRefresh: () -> Unit
     ) {
         Box(
@@ -204,21 +291,21 @@ class GalleryVideoFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Icon(
-                    Icons.Default.VideoLibrary,
-                    contentDescription = "No videos",
+                    Icons.AutoMirrored.Filled.Assignment,
+                    contentDescription = "No reports",
                     modifier = Modifier.size(64.dp),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
 
                 Text(
-                    text = "No Videos Found",
+                    text = "No Reports Found",
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
 
                 Text(
-                    text = "Record thermal videos to see them here",
+                    text = "Generate thermal analysis reports to see them here",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -233,26 +320,21 @@ class GalleryVideoFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
     }
 
     @Composable
-    private fun VideoGrid(
-        videos: List<GalleryViewModel.MediaItem>,
+    private fun PDFList(
+        pdfs: List<PDFItem>,
         selectedItems: Set<String>,
         isSelectionMode: Boolean,
-        onItemClick: (GalleryViewModel.MediaItem) -> Unit,
-        onItemLongClick: (GalleryViewModel.MediaItem) -> Unit
+        onItemClick: (PDFItem) -> Unit,
+        onItemLongClick: (PDFItem) -> Unit
     ) {
-        // Adaptive grid columns based on screen size
-        val columns = remember { mutableIntStateOf(3) }
-
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(columns.intValue),
+        LazyColumn(
             contentPadding = PaddingValues(8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            items(videos) { item ->
-                VideoGridItem(
+            items(pdfs) { item ->
+                PDFListItem(
                     item = item,
-                    isSelected = selectedItems.contains(item.id),
+                    isSelected = selectedItems.contains(item.path),
                     isSelectionMode = isSelectionMode,
                     onClick = { onItemClick(item) },
                     onLongClick = { onItemLongClick(item) }
@@ -262,8 +344,8 @@ class GalleryVideoFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
     }
 
     @Composable
-    private fun VideoGridItem(
-        item: GalleryViewModel.MediaItem,
+    private fun PDFListItem(
+        item: PDFItem,
         isSelected: Boolean,
         isSelectionMode: Boolean,
         onClick: () -> Unit,
@@ -271,9 +353,7 @@ class GalleryVideoFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
     ) {
         Card(
             onClick = onClick,
-            modifier = Modifier
-                .aspectRatio(16f / 9f)
-                .fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             colors = CardDefaults.cardColors(
                 containerColor = if (isSelected)
                     MaterialTheme.colorScheme.primaryContainer
@@ -285,126 +365,97 @@ class GalleryVideoFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
             else null,
             shape = RoundedCornerShape(12.dp)
         ) {
-            Box(
-                modifier = Modifier.fillMaxSize()
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                // Video thumbnail
-                AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(item.thumbnailPath ?: item.path)
-                        .crossfade(true)
-                        .build(),
-                    contentDescription = item.name,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .clip(RoundedCornerShape(12.dp)),
-                    contentScale = ContentScale.Crop
-                )
-
-                // Video play indicator
+                // PDF icon
                 Box(
                     modifier = Modifier
-                        .align(Alignment.Center)
                         .size(48.dp)
-                        .clip(androidx.compose.foundation.shape.CircleShape)
-                        .background(Color.Black.copy(alpha = 0.6f)),
+                        .background(
+                            MaterialTheme.colorScheme.errorContainer,
+                            shape = RoundedCornerShape(8.dp)
+                        ),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
-                        Icons.Default.PlayArrow,
-                        contentDescription = "Play",
-                        tint = Color.White,
-                        modifier = Modifier.size(32.dp)
+                        Icons.Default.PictureAsPdf,
+                        contentDescription = "PDF",
+                        tint = MaterialTheme.colorScheme.onErrorContainer,
+                        modifier = Modifier.size(24.dp)
                     )
                 }
 
-                // Thermal video indicator
-                if (item.isVideo) {
-                    Card(
-                        modifier = Modifier
-                            .align(Alignment.TopStart)
-                            .padding(8.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.secondary
-                        ),
-                        shape = RoundedCornerShape(8.dp)
-                    ) {
-                        Text(
-                            text = "THERMAL",
-                            style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.onSecondary,
-                            modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp)
-                        )
-                    }
-                }
-
-                // Selection indicator
-                if (isSelectionMode) {
-                    Box(
-                        modifier = Modifier
-                            .align(Alignment.TopEnd)
-                            .padding(8.dp)
-                    ) {
-                        if (isSelected) {
-                            Icon(
-                                Icons.Default.CheckCircle,
-                                contentDescription = "Selected",
-                                tint = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier
-                                    .background(
-                                        Color.White,
-                                        shape = androidx.compose.foundation.shape.CircleShape
-                                    )
-                                    .padding(2.dp)
-                            )
-                        } else {
-                            Icon(
-                                Icons.Default.RadioButtonUnchecked,
-                                contentDescription = "Not Selected",
-                                tint = Color.White,
-                                modifier = Modifier
-                                    .background(
-                                        Color.Black.copy(alpha = 0.5f),
-                                        shape = androidx.compose.foundation.shape.CircleShape
-                                    )
-                                    .padding(2.dp)
-                            )
-                        }
-                    }
-                }
-
-                // Video info overlay
-                Card(
-                    modifier = Modifier
-                        .align(Alignment.BottomStart)
-                        .padding(8.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = Color.Black.copy(alpha = 0.7f)
-                    ),
-                    shape = RoundedCornerShape(6.dp)
+                // PDF info
+                Column(
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
-                    Column(
-                        modifier = Modifier.padding(6.dp)
+                    Text(
+                        text = item.name,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Medium,
+                        maxLines = 2
+                    )
+
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = item.name,
-                            style = MaterialTheme.typography.labelSmall,
-                            color = Color.White,
-                            maxLines = 1
+                            text = formatFileSize(item.size),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            Text(
-                                text = formatFileSize(item.size),
-                                style = MaterialTheme.typography.labelSmall,
-                                color = Color.White.copy(alpha = 0.8f)
+                        Text(
+                            text = "${item.pageCount} pages",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        if (item.isAnalysisReport) {
+                            StatusChip(
+                                text = "ANALYSIS",
+                                color = MaterialTheme.colorScheme.secondary
                             )
                         }
-                        Text(
-                            text = SimpleDateFormat("MM/dd HH:mm", Locale.getDefault()).format(Date(item.dateModified)),
-                            style = MaterialTheme.typography.labelSmall,
-                            color = Color.White.copy(alpha = 0.8f)
+                    }
+
+                    Text(
+                        text = SimpleDateFormat(
+                            "MMM dd, yyyy HH:mm",
+                            Locale.getDefault()
+                        ).format(Date(item.dateModified)),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+
+                // Selection indicator or actions
+                if (isSelectionMode) {
+                    if (isSelected) {
+                        Icon(
+                            Icons.Default.CheckCircle,
+                            contentDescription = "Selected",
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    } else {
+                        Icon(
+                            Icons.Default.RadioButtonUnchecked,
+                            contentDescription = "Not Selected",
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                } else {
+                    IconButton(
+                        onClick = { /* Handle more actions */ }
+                    ) {
+                        Icon(
+                            Icons.Default.MoreVert,
+                            contentDescription = "More actions"
                         )
                     }
                 }
@@ -413,7 +464,7 @@ class GalleryVideoFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
     }
 
     // Helper functions
-    private fun playVideo(context: android.content.Context, path: String) {
+    private fun openPDF(context: android.content.Context, path: String) {
         try {
             val intent = Intent(Intent.ACTION_VIEW).apply {
                 setDataAndType(
@@ -421,17 +472,18 @@ class GalleryVideoFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
                         context,
                         "${context.packageName}.fileprovider",
                         File(path)
-                    ), "video/*"
+                    ),
+                    "application/pdf"
                 )
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             }
             context.startActivity(intent)
         } catch (e: Exception) {
-            // Handle error - maybe show a toast or use internal video player
+            // Handle error - maybe show a toast or use internal PDF viewer
         }
     }
 
-    private fun shareSelectedVideos(context: android.content.Context, selectedPaths: List<String>) {
+    private fun shareSelectedPDFs(context: android.content.Context, selectedPaths: List<String>) {
         try {
             val uris = selectedPaths.map { path ->
                 androidx.core.content.FileProvider.getUriForFile(
@@ -449,18 +501,18 @@ class GalleryVideoFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
                     action = Intent.ACTION_SEND_MULTIPLE
                     putParcelableArrayListExtra(Intent.EXTRA_STREAM, ArrayList(uris))
                 }
-                type = "video/*"
+                type = "application/pdf"
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             }
 
-            context.startActivity(Intent.createChooser(intent, "Share Videos"))
+            context.startActivity(Intent.createChooser(intent, "Share Reports"))
         } catch (e: Exception) {
             // Handle error
         }
     }
 
-    private fun exportSelectedVideos(context: android.content.Context, selectedPaths: List<String>) {
-        // Implementation for exporting videos to external storage
+    private fun exportSelectedPDFs(context: android.content.Context, selectedPaths: List<String>) {
+        // Implementation for exporting PDFs to external storage
         // This would typically involve copying files to a user-accessible location
     }
 

@@ -1,10 +1,10 @@
 /*
- * TODO: Fix MineFragmentCompose similar to MoreFragmentCompose fixes
+ * TODO: Fix MineComposeFragment similar to MoreComposeFragment fixes
  * - Convert Column to LazyColumn  
  * - Add missing data classes and composable functions
  * - Fix ViewModel references
  *
- * Temporarily simplified to allow build success for MoreFragmentCompose fixes
+ * Temporarily simplified to allow build success for MoreComposeFragment fixes
  */
 
 package com.mpdc4gsr.module.user.fragment
@@ -40,9 +40,9 @@ import com.mpdc4gsr.module.user.viewmodel.MineViewModel
 
 /**
  * Compose migration of MineFragment - Minimal working version
- * TEMPORARILY SIMPLIFIED - needs similar fixes to MoreFragmentCompose
+ * TEMPORARILY SIMPLIFIED - needs similar fixes to MoreComposeFragment
  */
-class MineFragmentCompose : BaseComposeFragment<MineFragmentViewModel>() {
+class MineComposeFragment : BaseComposeFragment<MineFragmentViewModel>() {
 
     data class SettingsItem(
         val id: String,

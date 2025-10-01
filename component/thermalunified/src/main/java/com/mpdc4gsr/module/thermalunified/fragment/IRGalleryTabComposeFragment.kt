@@ -30,7 +30,7 @@ import kotlinx.coroutines.launch
  * - Material 3 design with improved user experience
  * - Integration with gallery sub-fragments
  */
-class IRGalleryTabFragmentCompose : BaseComposeFragment<IRGalleryTabViewModel>() {
+class IRGalleryTabComposeFragment : BaseComposeFragment<IRGalleryTabViewModel>() {
 
     override fun createViewModel(): IRGalleryTabViewModel {
         return viewModels<IRGalleryTabViewModel>().value
@@ -235,7 +235,7 @@ class IRGalleryTabFragmentCompose : BaseComposeFragment<IRGalleryTabViewModel>()
             modifier = modifier,
             contentAlignment = Alignment.Center
         ) {
-            // This would embed the actual GalleryPictureFragmentCompose
+            // This would embed the actual GalleryPictureComposeFragment
             // For now, showing a placeholder that will be replaced with the actual implementation
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -258,7 +258,7 @@ class IRGalleryTabFragmentCompose : BaseComposeFragment<IRGalleryTabViewModel>()
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(
-                    text = "Integration with GalleryPictureFragmentCompose",
+                    text = "Integration with GalleryPictureComposeFragment",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )

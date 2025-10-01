@@ -47,7 +47,7 @@ import java.util.*
  * - Advanced filtering and sorting capabilities
  * - Pull-to-refresh functionality
  */
-class IRGalleryFragmentCompose : BaseComposeFragment<IRGalleryViewModel>() {
+class IRGalleryComposeFragment : BaseComposeFragment<IRGalleryViewModel>() {
 
     override fun createViewModel(): IRGalleryViewModel {
         return viewModels<IRGalleryViewModel>().value

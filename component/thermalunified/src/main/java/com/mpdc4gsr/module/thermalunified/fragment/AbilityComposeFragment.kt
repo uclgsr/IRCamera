@@ -42,7 +42,7 @@ import com.mpdc4gsr.module.thermalunified.activity.MonitoryHomeComposeActivity
  * - Thermal imaging specialized feature sets
  * - Material 3 design with thermal optimizations
  */
-class AbilityFragmentCompose : Fragment() {
+class AbilityComposeFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater,

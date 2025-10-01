@@ -35,7 +35,7 @@ import com.mpdc4gsr.module.thermalunified.viewmodel.IRPlushViewModel.Temperature
  * - Integration with dual-view thermal processing
  * - Professional thermal imaging features
  */
-class IRPlushFragmentCompose : BaseComposeFragment<IRPlushViewModel>() {
+class IRPlushComposeFragment : BaseComposeFragment<IRPlushViewModel>() {
 
     override fun createViewModel(): IRPlushViewModel {
         return viewModels<IRPlushViewModel>().value

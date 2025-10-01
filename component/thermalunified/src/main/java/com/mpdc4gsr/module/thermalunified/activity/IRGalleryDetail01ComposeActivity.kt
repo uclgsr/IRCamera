@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-import com.mpdc4gsr.module.thermalunified.fragment.GalleryFragmentCompose
+import com.mpdc4gsr.module.thermalunified.fragment.GalleryComposeFragment
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRGalleryEditViewModel
 
 /**
@@ -149,7 +149,7 @@ private fun GalleryImageView(
     // Embed existing gallery fragment using AndroidView
     AndroidView(
         factory = { context ->
-            val fragment = GalleryFragmentCompose()
+            val fragment = GalleryComposeFragment()
             androidx.fragment.app.FragmentContainerView(context).apply {
                 id = androidx.core.R.id.accessibility_custom_action_2
             }

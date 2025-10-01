@@ -47,7 +47,7 @@ import java.util.*
  * - Enhanced monitoring controls and data visualization
  * - Integration with thermal recording and analysis tools
  */
-class MonitorThermalFragmentCompose : BaseComposeFragment<MonitorThermalViewModel>() {
+class MonitorThermalComposeFragment : BaseComposeFragment<MonitorThermalViewModel>() {
 
     override fun createViewModel(): MonitorThermalViewModel {
         return viewModels<MonitorThermalViewModel>().value

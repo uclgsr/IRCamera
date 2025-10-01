@@ -23,12 +23,12 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeFragment
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.app.config.RouterConfig
 import com.mpdc4gsr.libunified.app.navigation.NavigationManager
-import com.mpdc4gsr.module.user.viewmodel.MoreFragmentComposeViewModel
+import com.mpdc4gsr.module.user.viewmodel.MoreComposeFragmentViewModel
 
 /**
  * Compose migration of MoreFragment - Minimal working version
  */
-class MoreFragmentCompose : BaseComposeFragment<MoreFragmentComposeViewModel>() {
+class MoreComposeFragment : BaseComposeFragment<MoreComposeFragmentViewModel>() {
 
     data class QuickActionItem(
         val id: String,
@@ -65,12 +65,12 @@ class MoreFragmentCompose : BaseComposeFragment<MoreFragmentComposeViewModel>() 
         val isExperimental: Boolean = false
     )
 
-    override fun createViewModel(): MoreFragmentComposeViewModel {
-        return viewModels<MoreFragmentComposeViewModel>().value
+    override fun createViewModel(): MoreComposeFragmentViewModel {
+        return viewModels<MoreComposeFragmentViewModel>().value
     }
 
     @Composable
-    override fun Content(viewModel: MoreFragmentComposeViewModel) {
+    override fun Content(viewModel: MoreComposeFragmentViewModel) {
         val context = LocalContext.current
         val quickActionItems = remember { getQuickActionItems() }
         val helpSupportItems = remember { getHelpSupportItems() }
@@ -446,7 +446,7 @@ class MoreFragmentCompose : BaseComposeFragment<MoreFragmentComposeViewModel>() 
     private fun handleQuickActionClick(
         context: android.content.Context,
         action: QuickActionItem,
-        viewModel: MoreFragmentComposeViewModel
+        viewModel: MoreComposeFragmentViewModel
     ) {
         when (action.id) {
             "calibrate" -> {
@@ -481,7 +481,7 @@ class MoreFragmentCompose : BaseComposeFragment<MoreFragmentComposeViewModel>() 
     private fun handleHelpSupportClick(
         context: android.content.Context,
         item: HelpSupportItem,
-        viewModel: MoreFragmentComposeViewModel
+        viewModel: MoreComposeFragmentViewModel
     ) {
         when (item.id) {
             "user_guide" -> {
@@ -514,7 +514,7 @@ class MoreFragmentCompose : BaseComposeFragment<MoreFragmentComposeViewModel>() 
     private fun handleCommunityClick(
         context: android.content.Context,
         item: CommunityItem,
-        viewModel: MoreFragmentComposeViewModel
+        viewModel: MoreComposeFragmentViewModel
     ) {
         // Community click logic can be implemented later
         // For now, show a placeholder message
@@ -528,7 +528,7 @@ class MoreFragmentCompose : BaseComposeFragment<MoreFragmentComposeViewModel>() 
     private fun handleAdvancedToolClick(
         context: android.content.Context,
         tool: AdvancedToolItem,
-        viewModel: MoreFragmentComposeViewModel
+        viewModel: MoreComposeFragmentViewModel
     ) {
         // Advanced tool click logic can be implemented later
         // For now, we'll just handle the click without action

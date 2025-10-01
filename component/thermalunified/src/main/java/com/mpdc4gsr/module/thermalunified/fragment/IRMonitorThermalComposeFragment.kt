@@ -30,7 +30,7 @@ import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalFragmentViewModel
 import com.infisense.usbir.view.CameraView
 
 /**
- * IRMonitorThermalFragmentCompose - Advanced thermal monitoring fragment with Compose UI
+ * IRMonitorThermalComposeFragment - Advanced thermal monitoring fragment with Compose UI
  *
  * This fragment provides comprehensive thermal monitoring capabilities with:
  * - Real-time thermal data monitoring with temperature overlays
@@ -39,7 +39,7 @@ import com.infisense.usbir.view.CameraView
  * - Professional monitoring interface for extended thermal analysis
  * - USB thermal device integration and management
  */
-class IRMonitorThermalFragmentCompose : BaseComposeFragment<ThermalFragmentViewModel>() {
+class IRMonitorThermalComposeFragment : BaseComposeFragment<ThermalFragmentViewModel>() {
 
     override fun createViewModel(): ThermalFragmentViewModel {
         return viewModels<ThermalFragmentViewModel>().value

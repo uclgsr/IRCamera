@@ -41,7 +41,7 @@ import java.util.*
  * - Material 3 design with improved user experience
  * - Integration with thermal image preview systems
  */
-class GalleryPictureFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
+class GalleryPictureComposeFragment : BaseComposeFragment<GalleryViewModel>() {
 
     override fun createViewModel(): GalleryViewModel {
         return viewModels<GalleryViewModel>().value

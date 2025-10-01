@@ -35,7 +35,7 @@ import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalFragmentViewModel
  * - Improved recording controls and status indicators
  * - Seamless integration with ThermalFragmentViewModel
  */
-class ThermalFragmentCompose : BaseComposeFragment<ThermalFragmentViewModel>() {
+class ThermalComposeFragment : BaseComposeFragment<ThermalFragmentViewModel>() {
 
     override fun createViewModel(): ThermalFragmentViewModel {
         return viewModels<ThermalFragmentViewModel>().value

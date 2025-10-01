@@ -36,7 +36,7 @@ import com.mpdc4gsr.module.thermalunified.viewmodel.CalibrationStatus
  * - Enhanced temperature correction controls
  * - Integration with native thermal imaging components
  */
-class IRCorrectionFragmentCompose : BaseComposeFragment<IRCorrectionViewModel>() {
+class IRCorrectionComposeFragment : BaseComposeFragment<IRCorrectionViewModel>() {
 
     // Compatibility property for legacy code that checks frameReady
     val frameReady: Boolean get() = createViewModel().correctionState.value == CorrectionState.ACTIVE

@@ -29,7 +29,7 @@ import com.mpdc4gsr.libunified.R as RCore
  * User profile screen with settings and navigation options
  */
 @Composable
-fun MineFragmentCompose(
+fun MineComposeFragment(
     viewModel: MineFragmentViewModel,
     modifier: Modifier = Modifier
 ) {

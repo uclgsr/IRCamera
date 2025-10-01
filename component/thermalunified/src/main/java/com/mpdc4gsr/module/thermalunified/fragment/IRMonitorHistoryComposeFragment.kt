@@ -35,7 +35,7 @@ import java.util.*
  * - Material 3 design optimized for data review workflows
  * - Integration with thermal monitoring history systems
  */
-class IRMonitorHistoryFragmentCompose : BaseComposeFragment<IRMonitorHistoryViewModel>() {
+class IRMonitorHistoryComposeFragment : BaseComposeFragment<IRMonitorHistoryViewModel>() {
 
     override fun createViewModel(): IRMonitorHistoryViewModel {
         return viewModels<IRMonitorHistoryViewModel>().value

@@ -44,7 +44,7 @@ import java.util.*
  * - Enhanced file management capabilities
  * - Material 3 design with thermal imaging optimizations
  */
-class GalleryFragmentCompose : BaseComposeFragment<GalleryViewModel>() {
+class GalleryComposeFragment : BaseComposeFragment<GalleryViewModel>() {
 
     override fun createViewModel(): GalleryViewModel {
         return viewModels<GalleryViewModel>().value

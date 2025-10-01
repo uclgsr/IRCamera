@@ -39,7 +39,7 @@ import java.util.*
  * - Material 3 design optimized for monitoring workflows
  * - Integration with thermal monitoring and capture systems
  */
-class IRMonitorCaptureFragmentCompose : BaseComposeFragment<IRMonitorCaptureViewModel>() {
+class IRMonitorCaptureComposeFragment : BaseComposeFragment<IRMonitorCaptureViewModel>() {
 
     override fun createViewModel(): IRMonitorCaptureViewModel {
         return viewModels<IRMonitorCaptureViewModel>().value

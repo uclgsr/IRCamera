@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.asStateFlow
  * ViewModel for More Fragment Compose
  * Manages device settings and configuration options
  */
-class MoreFragmentComposeViewModel : BaseViewModel() {
+class MoreComposeFragmentViewModel : BaseViewModel() {
 
     companion object {
         // Mock data constants for improved maintainability
