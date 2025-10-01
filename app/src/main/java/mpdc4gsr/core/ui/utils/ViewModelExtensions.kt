@@ -95,9 +95,9 @@ data class ComposeGSRData(
  * Provides unified connection state representation
  */
 data class ComposeConnectionStates(
-    val thermalCamera: mpdc4gsr.viewmodel.ConnectionState,
-    val gsrSensor: mpdc4gsr.viewmodel.ConnectionState,
-    val bleConnection: mpdc4gsr.viewmodel.ConnectionState
+    val thermalCamera: mpdc4gsr.core.ui.ConnectionState,
+    val gsrSensor: mpdc4gsr.core.ui.ConnectionState,
+    val bleConnection: mpdc4gsr.core.ui.ConnectionState
 )
 
 /**
