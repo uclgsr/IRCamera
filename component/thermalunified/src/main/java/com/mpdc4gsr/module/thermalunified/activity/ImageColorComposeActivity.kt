@@ -27,8 +27,7 @@ import com.mpdc4gsr.module.thermalunified.viewmodel.ImageColorViewModel
  * Compose implementation of Image Color activity
  * Displays thermal images with color processing and comparison
  * 
- * NOTE: This is an MVP implementation with placeholder UI.
- * TODO: For production, hoist UI state to ViewModel (timestamp, showData) and load actual image data.
+ * Integrated with ImageColorViewModel for state management
  */
 class ImageColorComposeActivity : BaseComposeActivity<ImageColorViewModel>() {
 
@@ -39,9 +38,20 @@ class ImageColorComposeActivity : BaseComposeActivity<ImageColorViewModel>() {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ImageColorViewModel) {
-        val uiState by viewModel.uiState.collectAsState()
-        // Local UI state - TODO: Hoist to ViewModel
-        ,
+        val timestamp by viewModel.timestamp.collectAsState()
+        val showData by viewModel.showData.collectAsState()
+
+        LibUnifiedTheme {
+            Scaffold(
+                topBar = {
+                    TopAppBar(
+                        title = {
+                            Text(
+                                "Image Color",
+                                fontWeight = FontWeight.Bold,
+                                color = Color.White
+                            )
+                        },
                         navigationIcon = {
                             IconButton(onClick = { finish() }) {
                                 Icon(
@@ -158,13 +168,13 @@ class ImageColorComposeActivity : BaseComposeActivity<ImageColorViewModel>() {
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Button(
-                            onClick = { viewModel.toggleDataDisplay() },
+                            onClick = { showData = !showData },
                             modifier = Modifier.width(120.dp),
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = MaterialTheme.colorScheme.primary
                             )
                         ) {
-                            Text(if (uiState.showData) "Hide Data" else "Show Data")
+                            Text(if (showData) "Hide Data" else "Show Data")
                         }
 
                         Button(

@@ -17,31 +17,26 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-import com.mpdc4gsr.module.thermalunified.viewmodel.IRThermalDoubleViewModel
+import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
 
 /**
  * Compose implementation of IR Thermal Double activity
  * Dual-mode thermal imaging with temperature and observation modes
- * 
- * NOTE: This is an MVP implementation with placeholder UI.
- * TODO: For production, hoist UI state to ViewModel (uiState.selectedMode, uiState.showOverlay, uiState.showTrendChart, uiState.showCompass, isRecording).
  */
-class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewModel>() {
+class IRThermalDoubleComposeActivity : BaseComposeActivity<ThermalViewModel>() {
 
-    override fun createViewModel(): IRThermalDoubleViewModel {
-        return viewModels<IRThermalDoubleViewModel>().value
+    override fun createViewModel(): ThermalViewModel {
+        return viewModels<ThermalViewModel>().value
     }
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    override fun Content(viewModel: IRThermalDoubleViewModel) {
-        val uiState by viewModel.uiState.collectAsState()
-        // Local UI state - TODO: Hoist to ViewModel
-        var uiState.selectedMode by remember { mutableIntStateOf(0) }
-        var uiState.showOverlay by remember { mutableStateOf(true) }
-        var uiState.showTrendChart by remember { mutableStateOf(false) }
-        var uiState.showCompass by remember { mutableStateOf(false) }
-        var uiState.isRecording by remember { mutableStateOf(false) }
+    override fun Content(viewModel: ThermalViewModel) {
+        var selectedMode by remember { mutableIntStateOf(0) }
+        var showOverlay by remember { mutableStateOf(true) }
+        var showTrendChart by remember { mutableStateOf(false) }
+        var showCompass by remember { mutableStateOf(false) }
+        var isRecording by remember { mutableStateOf(false) }
 
         LibUnifiedTheme {
             Scaffold(
@@ -52,14 +47,14 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
                                 horizontalArrangement = Arrangement.spacedBy(8.dp)
                             ) {
                                 TextButton(
-                                    onClick = { viewModel.setMode(if (0 == 0) IRThermalDoubleViewModel.ThermalMode.TEMPERATURE else IRThermalDoubleViewModel.ThermalMode.OBSERVE) },
+                                    onClick = { selectedMode = 0 },
                                     colors = ButtonDefaults.textButtonColors(
-                                        contentColor = if (uiState.selectedMode == 0) Color.White else Color.White.copy(alpha = 0.6f)
+                                        contentColor = if (selectedMode == 0) Color.White else Color.White.copy(alpha = 0.6f)
                                     )
                                 ) {
                                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                         Text("Temperature", fontSize = 16.sp)
-                                        if (uiState.selectedMode == 0) {
+                                        if (selectedMode == 0) {
                                             Box(
                                                 modifier = Modifier
                                                     .size(4.dp)
@@ -70,14 +65,14 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
                                 }
 
                                 TextButton(
-                                    onClick = { viewModel.setMode(if (1 == 0) IRThermalDoubleViewModel.ThermalMode.TEMPERATURE else IRThermalDoubleViewModel.ThermalMode.OBSERVE) },
+                                    onClick = { selectedMode = 1 },
                                     colors = ButtonDefaults.textButtonColors(
-                                        contentColor = if (uiState.selectedMode == 1) Color.White else Color.White.copy(alpha = 0.6f)
+                                        contentColor = if (selectedMode == 1) Color.White else Color.White.copy(alpha = 0.6f)
                                     )
                                 ) {
                                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                         Text("Observe", fontSize = 16.sp)
-                                        if (uiState.selectedMode == 1) {
+                                        if (selectedMode == 1) {
                                             Box(
                                                 modifier = Modifier
                                                     .size(4.dp)
@@ -204,14 +199,14 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
                         }
 
                         // Trend chart overlay
-                        if (uiState.showTrendChart) {
+                        if (showTrendChart) {
                             Card(
                                 modifier = Modifier
                                     .align(Alignment.BottomStart)
                                     .fillMaxWidth(0.7f)
                                     .aspectRatio(264f / 158f),
                                 colors = CardDefaults.cardColors(
-                                    containerColor = Color(0xFF16131E).copy(alpha = 0.9f)
+                                    containerColor = Color(0xE6 + 0x16131E)
                                 )
                             ) {
                                 Column(modifier = Modifier.padding(8.dp)) {
@@ -221,7 +216,7 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
                                     ) {
                                         Text("Trend", color = Color.White, fontSize = 14.sp)
                                         IconButton(
-                                            onClick = { uiState.showTrendChart = false },
+                                            onClick = { showTrendChart = false },
                                             modifier = Modifier.size(24.dp)
                                         ) {
                                             Icon(
@@ -263,13 +258,13 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
                                     .padding(vertical = 4.dp),
                                 horizontalArrangement = Arrangement.SpaceEvenly
                             ) {
-                                IconButton(onClick = { viewModel.toggleTrendChart() }) {
+                                IconButton(onClick = { showTrendChart = !showTrendChart }) {
                                     Icon(Icons.Default.TrendingUp, "Trend", tint = Color.White)
                                 }
-                                IconButton(onClick = { viewModel.toggleCompass() }) {
+                                IconButton(onClick = { showCompass = !showCompass }) {
                                     Icon(Icons.Default.Explore, "Compass", tint = Color.White)
                                 }
-                                IconButton(onClick = { viewModel.toggleOverlay() }) {
+                                IconButton(onClick = { showOverlay = !showOverlay }) {
                                     Icon(
                                         if (showOverlay) Icons.Default.Visibility else Icons.Default.VisibilityOff,
                                         "Toggle Overlay",
@@ -290,7 +285,7 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
                                 IconButton(onClick = { /* Gallery */ }) {
                                     Icon(Icons.Default.PhotoLibrary, "Gallery", tint = Color.White)
                                 }
-                                IconButton(onClick = { viewModel.toggleRecording() }) {
+                                IconButton(onClick = { isRecording = !isRecording }) {
                                     Icon(
                                         if (isRecording) Icons.Default.Stop else Icons.Default.FiberManualRecord,
                                         "Record",

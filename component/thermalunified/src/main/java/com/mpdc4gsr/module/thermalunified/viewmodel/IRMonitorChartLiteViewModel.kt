@@ -7,65 +7,62 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-/**
- * ViewModel for IR Monitor Chart Lite functionality
- * Manages real-time monitoring chart state with recording capabilities
- */
 class IRMonitorChartLiteViewModel : BaseViewModel() {
 
-    private val _uiState = MutableStateFlow(ChartLiteUiState())
-    val uiState: StateFlow<ChartLiteUiState> = _uiState.asStateFlow()
+    private val _isRecording = MutableStateFlow(false)
+    val isRecording: StateFlow<Boolean> = _isRecording.asStateFlow()
+
+    private val _recordingTime = MutableStateFlow("00:00:00")
+    val recordingTime: StateFlow<String> = _recordingTime.asStateFlow()
+
+    private val _showOverlay = MutableStateFlow(true)
+    val showOverlay: StateFlow<Boolean> = _showOverlay.asStateFlow()
+
+    private val _currentTemp = MutableStateFlow(25.0f)
+    val currentTemp: StateFlow<Float> = _currentTemp.asStateFlow()
+
+    private val _highTemp = MutableStateFlow(30.0f)
+    val highTemp: StateFlow<Float> = _highTemp.asStateFlow()
+
+    private val _lowTemp = MutableStateFlow(20.0f)
+    val lowTemp: StateFlow<Float> = _lowTemp.asStateFlow()
+
+    private val _isMonitoring = MutableStateFlow(false)
+    val isMonitoring: StateFlow<Boolean> = _isMonitoring.asStateFlow()
 
     fun toggleRecording() {
         launchWithErrorHandling {
-            val current = _uiState.value
-            _uiState.value = current.copy(
-                isRecording = !current.isRecording,
-                recordingTime = if (!current.isRecording) "00:00:00" else current.recordingTime
-            )
+            _isRecording.value = !_isRecording.value
+            if (!_isRecording.value) {
+                _recordingTime.value = "00:00:00"
+            }
         }
     }
 
     fun toggleOverlay() {
         launchWithErrorHandling {
-            val current = _uiState.value
-            _uiState.value = current.copy(showOverlay = !current.showOverlay)
+            _showOverlay.value = !_showOverlay.value
         }
     }
 
     fun updateTemperature(current: Float, high: Float, low: Float) {
         launchWithErrorHandling {
-            val state = _uiState.value
-            _uiState.value = state.copy(
-                currentTemp = current,
-                highTemp = high,
-                lowTemp = low
-            )
+            _currentTemp.value = current
+            _highTemp.value = high
+            _lowTemp.value = low
         }
     }
 
     fun startMonitoring() {
-        launchWithErrorHandling {
-            _uiState.value = _uiState.value.copy(isMonitoring = true)
+        launchWithLoading {
+            _isMonitoring.value = true
         }
     }
 
     fun stopMonitoring() {
         launchWithErrorHandling {
-            _uiState.value = _uiState.value.copy(
-                isMonitoring = false,
-                isRecording = false
-            )
+            _isMonitoring.value = false
+            _isRecording.value = false
         }
     }
-
-    data class ChartLiteUiState(
-        val isRecording: Boolean = false,
-        val recordingTime: String = "00:00:00",
-        val showOverlay: Boolean = true,
-        val currentTemp: Float = 25.0f,
-        val highTemp: Float = 30.0f,
-        val lowTemp: Float = 20.0f,
-        val isMonitoring: Boolean = false
-    )
 }

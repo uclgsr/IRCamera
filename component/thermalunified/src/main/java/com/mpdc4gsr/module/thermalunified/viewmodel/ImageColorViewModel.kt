@@ -15,8 +15,20 @@ import java.util.*
  */
 class ImageColorViewModel : BaseViewModel() {
 
-    private val _uiState = MutableStateFlow(ImageColorUiState())
-    val uiState: StateFlow<ImageColorUiState> = _uiState.asStateFlow()
+    private val _timestamp = MutableStateFlow("")
+    val timestamp: StateFlow<String> = _timestamp.asStateFlow()
+
+    private val _showData = MutableStateFlow(false)
+    val showData: StateFlow<Boolean> = _showData.asStateFlow()
+
+    private val _leftImagePath = MutableStateFlow("")
+    val leftImagePath: StateFlow<String> = _leftImagePath.asStateFlow()
+
+    private val _rightImagePath = MutableStateFlow("")
+    val rightImagePath: StateFlow<String> = _rightImagePath.asStateFlow()
+
+    private val _comparisonResult = MutableStateFlow("")
+    val comparisonResult: StateFlow<String> = _comparisonResult.asStateFlow()
 
     init {
         updateTimestamp()
@@ -24,42 +36,25 @@ class ImageColorViewModel : BaseViewModel() {
 
     fun toggleDataDisplay() {
         launchWithErrorHandling {
-            val current = _uiState.value
-            _uiState.value = current.copy(showData = !current.showData)
+            _showData.value = !_showData.value
         }
     }
 
     fun loadImages(leftImagePath: String, rightImagePath: String) {
-        launchWithErrorHandling {
-            _uiState.value = _uiState.value.copy(
-                leftImagePath = leftImagePath,
-                rightImagePath = rightImagePath,
-                isLoading = false
-            )
+        launchWithLoading {
+            _leftImagePath.value = leftImagePath
+            _rightImagePath.value = rightImagePath
         }
     }
 
     fun compareImages() {
         launchWithErrorHandling {
-            // Perform image comparison logic
-            _uiState.value = _uiState.value.copy(
-                comparisonResult = "Images compared successfully"
-            )
+            _comparisonResult.value = "Images compared successfully"
         }
     }
 
     private fun updateTimestamp() {
         val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-        val timestamp = dateFormat.format(Date())
-        _uiState.value = _uiState.value.copy(timestamp = timestamp)
+        _timestamp.value = dateFormat.format(Date())
     }
-
-    data class ImageColorUiState(
-        val timestamp: String = "",
-        val showData: Boolean = false,
-        val leftImagePath: String = "",
-        val rightImagePath: String = "",
-        val isLoading: Boolean = true,
-        val comparisonResult: String = ""
-    )
 }

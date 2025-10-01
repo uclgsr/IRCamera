@@ -24,7 +24,8 @@ import com.mpdc4gsr.module.thermalunified.viewmodel.IRMonitorChartLiteViewModel
 
 /**
  * Lite version of IR Monitor Chart activity with Compose
- * Simplified chart display for thermal monitoring with ViewModel integration
+ * Simplified chart display for thermal monitoring
+ * Integrated with IRMonitorChartLiteViewModel
  */
 class IRMonitorChartLiteComposeActivity : BaseComposeActivity<IRMonitorChartLiteViewModel>() {
 
@@ -35,7 +36,11 @@ class IRMonitorChartLiteComposeActivity : BaseComposeActivity<IRMonitorChartLite
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: IRMonitorChartLiteViewModel) {
-        val uiState by viewModel.uiState.collectAsState()
+        val isRecording by viewModel.isRecording.collectAsState()
+        val recordingTime by viewModel.recordingTime.collectAsState()
+        val showOverlay by viewModel.showOverlay.collectAsState()
+        val currentTemp by viewModel.currentTemp.collectAsState()
+        val lowTemp by viewModel.lowTemp.collectAsState()
 
         LibUnifiedTheme {
             Scaffold(
@@ -60,7 +65,7 @@ class IRMonitorChartLiteComposeActivity : BaseComposeActivity<IRMonitorChartLite
                         actions = {
                             IconButton(onClick = { viewModel.toggleOverlay() }) {
                                 Icon(
-                                    if (uiState.showOverlay) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                                    if (showOverlay) Icons.Default.Visibility else Icons.Default.VisibilityOff,
                                     contentDescription = "Toggle Overlay",
                                     tint = Color.White
                                 )
@@ -90,7 +95,7 @@ class IRMonitorChartLiteComposeActivity : BaseComposeActivity<IRMonitorChartLite
                             .weight(0.45f)
                             .padding(8.dp),
                         colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surfaceVariant
+                            containerColor = Color(0xFF16131E)
                         ),
                         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
                     ) {
@@ -122,7 +127,7 @@ class IRMonitorChartLiteComposeActivity : BaseComposeActivity<IRMonitorChartLite
                                             .background(Color(0xFFFF4747))
                                     )
                                     Text(
-                                        uiState.recordingTime,
+                                        recordingTime,
                                         color = Color.White,
                                         fontSize = 14.sp
                                     )
@@ -219,7 +224,7 @@ class IRMonitorChartLiteComposeActivity : BaseComposeActivity<IRMonitorChartLite
                                     color = Color.White.copy(alpha = 0.5f),
                                     fontSize = 16.sp
                                 )
-                                if (uiState.showOverlay) {
+                                if (showOverlay) {
                                     Card(
                                         colors = CardDefaults.cardColors(
                                             containerColor = Color(0x80000000)
@@ -230,12 +235,12 @@ class IRMonitorChartLiteComposeActivity : BaseComposeActivity<IRMonitorChartLite
                                             verticalArrangement = Arrangement.spacedBy(4.dp)
                                         ) {
                                             Text(
-                                                "Current: %.1f°C".format(uiState.currentTemp),
+                                                "Current: %.1f°C".format(currentTemp),
                                                 color = Color.White,
                                                 fontSize = 14.sp
                                             )
                                             Text(
-                                                "Low: %.1f°C".format(uiState.lowTemp),
+                                                "Low: %.1f°C".format(lowTemp),
                                                 color = Color.White,
                                                 fontSize = 14.sp
                                             )

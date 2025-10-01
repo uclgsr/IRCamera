@@ -7,59 +7,50 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-/**
- * ViewModel for IR Thermal Double mode functionality
- * Manages dual-mode thermal imaging with temperature/observe modes
- */
 class IRThermalDoubleViewModel : BaseViewModel() {
 
-    private val _uiState = MutableStateFlow(ThermalDoubleUiState())
-    val uiState: StateFlow<ThermalDoubleUiState> = _uiState.asStateFlow()
+    private val _selectedMode = MutableStateFlow(0)
+    val selectedMode: StateFlow<Int> = _selectedMode.asStateFlow()
 
-    fun setMode(mode: ThermalMode) {
+    private val _showOverlay = MutableStateFlow(true)
+    val showOverlay: StateFlow<Boolean> = _showOverlay.asStateFlow()
+
+    private val _showTrendChart = MutableStateFlow(false)
+    val showTrendChart: StateFlow<Boolean> = _showTrendChart.asStateFlow()
+
+    private val _showCompass = MutableStateFlow(false)
+    val showCompass: StateFlow<Boolean> = _showCompass.asStateFlow()
+
+    private val _isRecording = MutableStateFlow(false)
+    val isRecording: StateFlow<Boolean> = _isRecording.asStateFlow()
+
+    fun selectMode(mode: Int) {
         launchWithErrorHandling {
-            _uiState.value = _uiState.value.copy(selectedMode = mode)
+            _selectedMode.value = mode
         }
     }
 
     fun toggleOverlay() {
         launchWithErrorHandling {
-            val current = _uiState.value
-            _uiState.value = current.copy(showOverlay = !current.showOverlay)
+            _showOverlay.value = !_showOverlay.value
         }
     }
 
     fun toggleTrendChart() {
         launchWithErrorHandling {
-            val current = _uiState.value
-            _uiState.value = current.copy(showTrendChart = !current.showTrendChart)
+            _showTrendChart.value = !_showTrendChart.value
         }
     }
 
     fun toggleCompass() {
         launchWithErrorHandling {
-            val current = _uiState.value
-            _uiState.value = current.copy(showCompass = !current.showCompass)
+            _showCompass.value = !_showCompass.value
         }
     }
 
     fun toggleRecording() {
         launchWithErrorHandling {
-            val current = _uiState.value
-            _uiState.value = current.copy(isRecording = !current.isRecording)
+            _isRecording.value = !_isRecording.value
         }
     }
-
-    enum class ThermalMode(val displayName: String) {
-        TEMPERATURE("Temperature"),
-        OBSERVE("Observe")
-    }
-
-    data class ThermalDoubleUiState(
-        val selectedMode: ThermalMode = ThermalMode.TEMPERATURE,
-        val showOverlay: Boolean = true,
-        val showTrendChart: Boolean = false,
-        val showCompass: Boolean = false,
-        val isRecording: Boolean = false
-    )
 }

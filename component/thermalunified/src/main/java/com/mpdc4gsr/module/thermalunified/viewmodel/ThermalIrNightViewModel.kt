@@ -7,52 +7,41 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-/**
- * ViewModel for Thermal IR Night mode functionality
- * Manages night-optimized thermal imaging state
- */
 class ThermalIrNightViewModel : BaseViewModel() {
 
-    private val _uiState = MutableStateFlow(ThermalNightUiState())
-    val uiState: StateFlow<ThermalNightUiState> = _uiState.asStateFlow()
+    private val _selectedMode = MutableStateFlow(0)
+    val selectedMode: StateFlow<Int> = _selectedMode.asStateFlow()
 
-    fun setMode(mode: NightMode) {
+    private val _nightModeEnabled = MutableStateFlow(true)
+    val nightModeEnabled: StateFlow<Boolean> = _nightModeEnabled.asStateFlow()
+
+    private val _showOverlay = MutableStateFlow(true)
+    val showOverlay: StateFlow<Boolean> = _showOverlay.asStateFlow()
+
+    private val _isRecording = MutableStateFlow(false)
+    val isRecording: StateFlow<Boolean> = _isRecording.asStateFlow()
+
+    fun selectMode(mode: Int) {
         launchWithErrorHandling {
-            _uiState.value = _uiState.value.copy(selectedMode = mode)
+            _selectedMode.value = mode
         }
     }
 
     fun toggleNightMode() {
         launchWithErrorHandling {
-            val current = _uiState.value
-            _uiState.value = current.copy(nightModeEnabled = !current.nightModeEnabled)
+            _nightModeEnabled.value = !_nightModeEnabled.value
         }
     }
 
     fun toggleOverlay() {
         launchWithErrorHandling {
-            val current = _uiState.value
-            _uiState.value = current.copy(showOverlay = !current.showOverlay)
+            _showOverlay.value = !_showOverlay.value
         }
     }
 
     fun toggleRecording() {
         launchWithErrorHandling {
-            val current = _uiState.value
-            _uiState.value = current.copy(isRecording = !current.isRecording)
+            _isRecording.value = !_isRecording.value
         }
     }
-
-    enum class NightMode(val displayName: String) {
-        ENHANCED("Enhanced"),
-        STANDARD("Standard"),
-        ULTRA("Ultra")
-    }
-
-    data class ThermalNightUiState(
-        val selectedMode: NightMode = NightMode.ENHANCED,
-        val nightModeEnabled: Boolean = true,
-        val showOverlay: Boolean = true,
-        val isRecording: Boolean = false
-    )
 }
