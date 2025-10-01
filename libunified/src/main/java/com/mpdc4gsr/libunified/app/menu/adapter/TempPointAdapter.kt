@@ -1,5 +1,13 @@
 package com.mpdc4gsr.libunified.app.menu.adapter
 
+/*
+ * DEPRECATED: This file has been deprecated as part of migration to Jetpack Compose.
+ * This code is commented out to avoid compilation errors when dataBinding is disabled.
+ * See COMPOSE_MIGRATION.md for alternatives.
+ */
+
+/*
+
 import android.annotation.SuppressLint
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
@@ -90,3 +98,4 @@ internal class TempPointAdapter : BaseMenuAdapter() {
         var isSelected: Boolean = false,
     )
 }
+*/

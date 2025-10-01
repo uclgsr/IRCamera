@@ -9,7 +9,7 @@ import com.google.gson.Gson
 import com.mpdc4gsr.libunified.app.bean.CarDetectChildBean
 import com.mpdc4gsr.libunified.app.bean.ContinuousBean
 import com.mpdc4gsr.libunified.app.bean.WatermarkBean
-import com.mpdc4gsr.libunified.app.dialog.CarDetectDialog
+import com.mpdc4gsr.libunified.app.utils.CarDetectData
 
 
 object SharedManager {
@@ -466,14 +466,14 @@ object SharedManager {
     }
 
     fun getCarDetectInfo(): CarDetectChildBean {
-        var detectInfo = SPUtils.getInstance().getString(SP_CAR_DETECT, "")
+        val detectInfo = SPUtils.getInstance().getString(SP_CAR_DETECT, "")
         if (detectInfo.isEmpty()) {
-            return CarDetectDialog.getDetectList()[0].detectChildBeans[0]
+            return CarDetectData.getDetectList()[0].detectChildBeans[0]
         }
-        var detectChildBean = GsonUtils.fromJson(detectInfo, CarDetectChildBean::class.java)
-        var type = detectChildBean.type
-        var pos = detectChildBean.pos
-        return CarDetectDialog.getDetectList()[type].detectChildBeans[pos]
+        val detectChildBean = GsonUtils.fromJson(detectInfo, CarDetectChildBean::class.java)
+        val type = detectChildBean.type
+        val pos = detectChildBean.pos
+        return CarDetectData.getDetectList()[type].detectChildBeans[pos]
     }
 
     fun saveCarDetectInfo(bean: CarDetectChildBean) {

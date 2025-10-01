@@ -1,5 +1,13 @@
 package com.mpdc4gsr.libunified.app.menu.view
 
+/*
+ * DEPRECATED: This file has been deprecated as part of migration to Jetpack Compose.
+ * This code is commented out to avoid compilation errors when dataBinding is disabled.
+ * See COMPOSE_MIGRATION.md for alternatives.
+ */
+
+/*
+
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -89,4 +97,4 @@ class CameraMenuView @JvmOverloads constructor(
         const val MODE_MORE = 3
         const val MODE_GALLERY_REFRESH = 4
     }
-}
+}*/

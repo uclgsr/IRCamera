@@ -1,5 +1,14 @@
 package com.mpdc4gsr.libunified.app.ktbase
 
+/*
+ * DEPRECATED: This file has been deprecated as part of migration to Jetpack Compose.
+ * Use Compose Dialog composables instead.
+ *
+ * This file is kept for reference but is commented out to avoid compilation errors
+ * when dataBinding is disabled.
+ */
+
+/*
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
@@ -82,3 +91,4 @@ abstract class BaseDialogFragment<B : ViewDataBinding> : AppCompatDialogFragment
         }
     }
 }
+*/

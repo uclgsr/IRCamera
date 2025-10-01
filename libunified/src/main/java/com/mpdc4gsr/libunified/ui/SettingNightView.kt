@@ -1,5 +1,13 @@
 package com.mpdc4gsr.libunified.ui
 
+/*
+ * DEPRECATED: This file has been deprecated as part of migration to Jetpack Compose.
+ * This code is commented out to avoid compilation errors when dataBinding is disabled.
+ * See COMPOSE_MIGRATION.md for alternatives.
+ */
+
+/*
+
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -73,4 +81,4 @@ class SettingNightView @JvmOverloads constructor(
     override fun setOnClickListener(listener: OnClickListener?) {
         super.setOnClickListener(listener)
     }
-}
+}*/

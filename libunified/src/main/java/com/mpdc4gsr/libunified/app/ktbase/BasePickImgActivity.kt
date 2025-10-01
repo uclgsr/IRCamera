@@ -1,5 +1,14 @@
 package com.mpdc4gsr.libunified.app.ktbase
 
+/*
+ * DEPRECATED: This file has been deprecated as part of migration to Jetpack Compose.
+ * Use Compose-based image editing instead.
+ *
+ * This file is kept for reference but is commented out to avoid compilation errors
+ * when dataBinding and viewBinding are disabled.
+ */
+
+/*
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
@@ -198,3 +207,4 @@ abstract class BasePickImgActivity : BaseActivity(), View.OnClickListener {
         finish()
     }
 }
+*/

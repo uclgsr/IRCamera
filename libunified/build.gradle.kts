@@ -72,8 +72,6 @@ android {
     ndkVersion = libs.versions.ndkVersion.get()
     buildFeatures {
         buildConfig = true
-//        dataBinding = true
-//        viewBinding = true
         compose = true
     }
 
