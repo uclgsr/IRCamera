@@ -17,6 +17,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.components.*
+import mpdc4gsr.core.ui.components.settings.SettingsCard
+import mpdc4gsr.core.ui.components.settings.SettingsToggle
+import mpdc4gsr.core.ui.components.settings.SettingsSlider
+import mpdc4gsr.core.ui.components.settings.SettingsDropdown
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 
 /**
@@ -87,7 +91,7 @@ fun ThermalSettingsScreen(
                     value = emissivity,
                     valueRange = 0.1f..1.0f,
                     onValueChange = { emissivity = it },
-                    unit = ""
+                    valueLabel = { String.format("%.2f", it) }
                 )
                 SettingsToggle(
                     label = "Auto Scale",

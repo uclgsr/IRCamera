@@ -91,9 +91,9 @@ class AdaptiveThermalStreamer {
     }
 
     // Network client for actual thermal frame streaming
-    private var networkClient: mpdc4gsr.network.NetworkClient? = null
+    private var networkClient: mpdc4gsr.feature.network.data.NetworkClient? = null
 
-    fun setNetworkClient(client: mpdc4gsr.network.NetworkClient?) {
+    fun setNetworkClient(client: mpdc4gsr.feature.network.data.NetworkClient?) {
         networkClient = client
         Log.i(
             TAG,

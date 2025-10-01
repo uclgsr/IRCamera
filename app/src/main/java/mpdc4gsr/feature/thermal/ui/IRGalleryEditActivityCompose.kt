@@ -29,7 +29,7 @@ import kotlinx.coroutines.launch
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import mpdc4gsr.core.ui.BaseViewModel
-import mpdc4gsr.compose.base.BaseComposeActivity
+import mpdc4gsr.core.ui.BaseComposeActivity
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 
@@ -44,16 +44,6 @@ enum class EditTool(
     CROP("Crop", Icons.Default.Crop, "Crop image area"),
     FILTER("Filter", Icons.Default.FilterAlt, "Apply thermal filters"),
     EXPORT("Export", Icons.Default.FileDownload, "Export processed image")
-}
-
-enum class ThermalPalette(
-    val displayName: String,
-    val colors: List<Color>
-) {
-    IRON("Iron", listOf(Color.Black, Color.Red, Color.Yellow, Color.White)),
-    RAINBOW("Rainbow", listOf(Color.Blue, Color.Green, Color.Yellow, Color.Red)),
-    GRAYSCALE("Grayscale", listOf(Color.Black, Color.Gray, Color.White)),
-    HOT("Hot", listOf(Color.Black, Color.Red, Color(0xFFFFA500), Color.Yellow))
 }
 
 data class ImageEditState(

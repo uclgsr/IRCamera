@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import com.csl.irCamera.R
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import mpdc4gsr.compose.base.BaseComposeActivity
+import mpdc4gsr.core.ui.BaseComposeActivity
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.core.ui.BaseViewModel
@@ -40,9 +40,17 @@ enum class TestSensorType(
     STORAGE("Storage", Icons.Default.Storage, "storage_device")
 }
 
+enum class SensorStatus {
+    CONNECTED,
+    DISCONNECTED,
+    CONNECTING,
+    ERROR,
+    STREAMING
+}
+
 data class SensorTestStatus(
     val sensorType: TestSensorType,
-    val status: SensorDashboardFragment.SensorStatus,
+    val status: SensorStatus,
     val message: String,
     val lastUpdate: String = "Never",
     val dataRate: String = "0 KB/s"
@@ -53,7 +61,7 @@ class SensorDashboardTestViewModel : BaseViewModel() {
         TestSensorType.values().map { type ->
             SensorTestStatus(
                 sensorType = type,
-                status = SensorDashboardFragment.SensorStatus.DISCONNECTED,
+                status = SensorStatus.DISCONNECTED,
                 message = "Not connected"
             )
         }
@@ -82,7 +90,7 @@ class SensorDashboardTestViewModel : BaseViewModel() {
                 // Update to connecting
                 updateSensorStatus(
                     sensorType,
-                    SensorDashboardFragment.SensorStatus.CONNECTING,
+                    SensorStatus.CONNECTING,
                     "Connecting...",
                     "Just now"
                 )
@@ -94,7 +102,7 @@ class SensorDashboardTestViewModel : BaseViewModel() {
                     0 -> {
                         // Connected successfully
                         Triple(
-                            SensorDashboardFragment.SensorStatus.CONNECTED,
+                            SensorStatus.CONNECTED,
                             "Connected successfully",
                             when (sensorType) {
                                 TestSensorType.THERMAL_CAMERA -> "125 KB/s"
@@ -110,7 +118,7 @@ class SensorDashboardTestViewModel : BaseViewModel() {
                     1 -> {
                         // Warning state
                         Triple(
-                            SensorDashboardFragment.SensorStatus.ERROR,
+                            SensorStatus.ERROR,
                             "Connected with issues",
                             "Reduced rate"
                         )
@@ -119,7 +127,7 @@ class SensorDashboardTestViewModel : BaseViewModel() {
                     2 -> {
                         // Error state
                         Triple(
-                            SensorDashboardFragment.SensorStatus.ERROR,
+                            SensorStatus.ERROR,
                             "Connection failed",
                             "0 KB/s"
                         )
@@ -128,7 +136,7 @@ class SensorDashboardTestViewModel : BaseViewModel() {
                     else -> {
                         // Disconnected
                         Triple(
-                            SensorDashboardFragment.SensorStatus.DISCONNECTED,
+                            SensorStatus.DISCONNECTED,
                             "Device not available",
                             "0 KB/s"
                         )
@@ -158,7 +166,7 @@ class SensorDashboardTestViewModel : BaseViewModel() {
 
             updateSensorStatus(
                 sensorType,
-                SensorDashboardFragment.SensorStatus.CONNECTING,
+                SensorStatus.CONNECTING,
                 "Testing connection...",
                 "Testing now"
             )
@@ -171,7 +179,7 @@ class SensorDashboardTestViewModel : BaseViewModel() {
             if (success) {
                 updateSensorStatus(
                     sensorType,
-                    SensorDashboardFragment.SensorStatus.CONNECTED,
+                    SensorStatus.CONNECTED,
                     "Test passed - sensor responding",
                     "Just tested",
                     when (sensorType) {
@@ -187,7 +195,7 @@ class SensorDashboardTestViewModel : BaseViewModel() {
             } else {
                 updateSensorStatus(
                     sensorType,
-                    SensorDashboardFragment.SensorStatus.ERROR,
+                    SensorStatus.ERROR,
                     "Test failed - sensor not responding",
                     "Just tested",
                     "0 KB/s"
@@ -199,7 +207,7 @@ class SensorDashboardTestViewModel : BaseViewModel() {
 
     private fun updateSensorStatus(
         sensorType: TestSensorType,
-        status: SensorDashboardFragment.SensorStatus,
+        status: SensorStatus,
         message: String,
         lastUpdate: String,
         dataRate: String = "0 KB/s"
@@ -220,7 +228,7 @@ class SensorDashboardTestViewModel : BaseViewModel() {
         _sensorStatuses.value = TestSensorType.values().map { type ->
             SensorTestStatus(
                 sensorType = type,
-                status = SensorDashboardFragment.SensorStatus.DISCONNECTED,
+                status = SensorStatus.DISCONNECTED,
                 message = "Reset to initial state"
             )
         }
@@ -439,9 +447,9 @@ private fun SensorTestCard(
         modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
             containerColor = when (sensorStatus.status) {
-                SensorDashboardFragment.SensorStatus.CONNECTED -> MaterialTheme.colorScheme.primaryContainer
-                SensorDashboardFragment.SensorStatus.ERROR -> MaterialTheme.colorScheme.errorContainer
-                SensorDashboardFragment.SensorStatus.CONNECTING -> MaterialTheme.colorScheme.surfaceVariant
+                SensorStatus.CONNECTED -> MaterialTheme.colorScheme.primaryContainer
+                SensorStatus.ERROR -> MaterialTheme.colorScheme.errorContainer
+                SensorStatus.CONNECTING -> MaterialTheme.colorScheme.surfaceVariant
                 else -> MaterialTheme.colorScheme.surface
             }
         )
@@ -452,7 +460,7 @@ private fun SensorTestCard(
                 .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            if (sensorStatus.status == SensorDashboardFragment.SensorStatus.CONNECTING) {
+            if (sensorStatus.status == SensorStatus.CONNECTING) {
                 CircularProgressIndicator(
                     modifier = Modifier.size(32.dp),
                     color = MaterialTheme.colorScheme.primary,
@@ -464,8 +472,8 @@ private fun SensorTestCard(
                     contentDescription = null,
                     modifier = Modifier.size(32.dp),
                     tint = when (sensorStatus.status) {
-                        SensorDashboardFragment.SensorStatus.CONNECTED -> MaterialTheme.colorScheme.primary
-                        SensorDashboardFragment.SensorStatus.ERROR -> MaterialTheme.colorScheme.error
+                        SensorStatus.CONNECTED -> MaterialTheme.colorScheme.primary
+                        SensorStatus.ERROR -> MaterialTheme.colorScheme.error
                         else -> MaterialTheme.colorScheme.onSurfaceVariant
                     }
                 )
@@ -506,9 +514,9 @@ private fun SensorTestCard(
                 Surface(
                     shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp),
                     color = when (sensorStatus.status) {
-                        SensorDashboardFragment.SensorStatus.CONNECTED -> MaterialTheme.colorScheme.primary
-                        SensorDashboardFragment.SensorStatus.ERROR -> MaterialTheme.colorScheme.error
-                        SensorDashboardFragment.SensorStatus.CONNECTING -> MaterialTheme.colorScheme.surfaceVariant
+                        SensorStatus.CONNECTED -> MaterialTheme.colorScheme.primary
+                        SensorStatus.ERROR -> MaterialTheme.colorScheme.error
+                        SensorStatus.CONNECTING -> MaterialTheme.colorScheme.surfaceVariant
                         else -> MaterialTheme.colorScheme.surfaceVariant
                     }
                 ) {
@@ -517,8 +525,8 @@ private fun SensorTestCard(
                             .replaceFirstChar { it.uppercase() },
                         style = MaterialTheme.typography.labelSmall,
                         color = when (sensorStatus.status) {
-                            SensorDashboardFragment.SensorStatus.CONNECTED -> MaterialTheme.colorScheme.onPrimary
-                            SensorDashboardFragment.SensorStatus.ERROR -> MaterialTheme.colorScheme.onError
+                            SensorStatus.CONNECTED -> MaterialTheme.colorScheme.onPrimary
+                            SensorStatus.ERROR -> MaterialTheme.colorScheme.onError
                             else -> MaterialTheme.colorScheme.onSurfaceVariant
                         },
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)

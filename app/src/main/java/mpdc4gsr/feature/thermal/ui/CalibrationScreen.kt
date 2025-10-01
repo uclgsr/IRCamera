@@ -19,6 +19,9 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.components.*
+import mpdc4gsr.core.ui.components.settings.SettingsCard
+import mpdc4gsr.core.ui.components.settings.SettingsRow
+import mpdc4gsr.core.ui.components.settings.SettingsToggle
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.feature.thermal.presentation.CalibrationViewModel
 
