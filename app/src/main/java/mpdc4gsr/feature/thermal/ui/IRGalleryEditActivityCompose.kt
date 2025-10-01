@@ -47,10 +47,20 @@ enum class EditTool(
     EXPORT("Export", Icons.Default.FileDownload, "Export processed image")
 }
 
+enum class IRGalleryThermalPalette(
+    val displayName: String,
+    val colors: List<Color>
+) {
+    IRON("Iron", listOf(Color.Black, Color.Red, Color.Yellow, Color.White)),
+    RAINBOW("Rainbow", listOf(Color.Blue, Color.Green, Color.Yellow, Color.Red)),
+    GRAYSCALE("Grayscale", listOf(Color.Black, Color.Gray, Color.White)),
+    HOT("Hot", listOf(Color.Black, Color.Red, Color(0xFFFFA500), Color.Yellow))
+}
+
 data class ImageEditState(
     val isImageLoaded: Boolean = false,
     val selectedTool: EditTool? = null,
-    val selectedPalette: ThermalPalette = ThermalPalette.IRON,
+    val selectedPalette: IRGalleryThermalPalette = IRGalleryThermalPalette.IRON,
     val hasUnsavedChanges: Boolean = false,
     val temperatureRange: Pair<Float, Float> = 20f to 40f,
     val annotations: List<String> = emptyList()
@@ -84,7 +94,7 @@ class IRGalleryEditViewModel : BaseViewModel() {
         _statusMessage.value = "Selected tool: ${tool.displayName}"
     }
 
-    fun selectPalette(palette: ThermalPalette) {
+    fun selectPalette(palette: IRGalleryThermalPalette) {
         _editState.value = _editState.value.copy(
             selectedPalette = palette,
             hasUnsavedChanges = true
@@ -357,7 +367,7 @@ class IRGalleryEditActivityCompose : BaseComposeActivity<IRGalleryEditViewModel>
                                 .padding(bottom = 16.dp),
                             horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
-                            ThermalPalette.values().forEach { palette ->
+                            IRGalleryThermalPalette.values().forEach { palette ->
                                 PaletteButton(
                                     palette = palette,
                                     isSelected = editState.selectedPalette == palette,
@@ -504,7 +514,7 @@ private fun EditToolButton(
 
 @Composable
 private fun PaletteButton(
-    palette: ThermalPalette,
+    palette: IRGalleryThermalPalette,
     isSelected: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
