@@ -205,7 +205,7 @@ private fun CategoryFilterRow(
         categories.forEach { category ->
             val displayName = category?.name?.replace("_", " ")?.lowercase()
                 ?.replaceFirstChar { it.uppercase() } ?: "All"
-            
+
             FilterChip(
                 selected = selectedCategory == category,
                 onClick = { onCategoryChange(category) },
@@ -454,9 +454,13 @@ private fun CreateTemplateDialog(
                                     id = "custom_${System.currentTimeMillis()}",
                                     name = templateName,
                                     description = templateDescription,
-                                    category = enumValues<ResearchTemplate.TemplateCategory>().firstOrNull { it.name == selectedCategory } ?: ResearchTemplate.TemplateCategory.CUSTOM,
+                                    category = enumValues<ResearchTemplate.TemplateCategory>().firstOrNull { it.name == selectedCategory }
+                                        ?: ResearchTemplate.TemplateCategory.CUSTOM,
                                     duration = 30,
-                                    sensors = setOf(ResearchTemplate.SensorType.GSR, ResearchTemplate.SensorType.THERMAL_CAMERA),
+                                    sensors = setOf(
+                                        ResearchTemplate.SensorType.GSR,
+                                        ResearchTemplate.SensorType.THERMAL_CAMERA
+                                    ),
                                     gsrSamplingRate = 128
                                 )
                                 onCreateTemplate(newTemplate)
@@ -475,9 +479,13 @@ private fun CreateTemplateDialog(
                             id = "custom_${System.currentTimeMillis()}",
                             name = templateName,
                             description = templateDescription,
-                            category = enumValues<ResearchTemplate.TemplateCategory>().firstOrNull { it.name == selectedCategory } ?: ResearchTemplate.TemplateCategory.CUSTOM,
+                            category = enumValues<ResearchTemplate.TemplateCategory>().firstOrNull { it.name == selectedCategory }
+                                ?: ResearchTemplate.TemplateCategory.CUSTOM,
                             duration = 30,
-                            sensors = setOf(ResearchTemplate.SensorType.GSR, ResearchTemplate.SensorType.THERMAL_CAMERA),
+                            sensors = setOf(
+                                ResearchTemplate.SensorType.GSR,
+                                ResearchTemplate.SensorType.THERMAL_CAMERA
+                            ),
                             gsrSamplingRate = 128
                         )
                         onCreateTemplate(newTemplate)

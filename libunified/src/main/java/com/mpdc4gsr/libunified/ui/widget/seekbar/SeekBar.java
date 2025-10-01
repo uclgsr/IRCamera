@@ -188,14 +188,14 @@ public class SeekBar {
 
         canvas.translate(left, 0);
         if (isShowIndicator) {
-            onDrawIndicator(canvas, paint, formatCurrentIndicatorText(userText2Draw)); //滑动轴外标签
+            onDrawIndicator(canvas, paint, formatCurrentIndicatorText(userText2Draw)); //
         }
 
 
         if (thumbShow) {
             onDrawThumb(canvas);
         } else {
-            onDrawThumb(canvas, isLeft); //轴上标签
+            onDrawThumb(canvas, isLeft); //
         }
         canvas.restore();
     }
@@ -295,7 +295,7 @@ public class SeekBar {
                 canvas.drawPath(indicatorArrowPath, paint);
                 indicatorRect.bottom -= indicatorArrowSize;
                 indicatorRect.top -= indicatorArrowSize;
-                Log.w("pseudo color条refresh", "///");
+                Log.w("pseudo colorrefresh", "///");
             }
 
             int defaultPaddingOffset = Utils.dp2px(getContext(), 1);
@@ -341,7 +341,7 @@ public class SeekBar {
             paint.setColor(indicatorTextColor);
             canvas.drawText(text2Draw, tx, ty, paint);
         } catch (Exception e) {
-            Log.w("渲染异常", e.getMessage() + "");
+            Log.w("", e.getMessage() + "");
         }
     }
 

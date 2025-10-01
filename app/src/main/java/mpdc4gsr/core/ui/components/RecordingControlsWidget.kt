@@ -91,8 +91,8 @@ class RecordingControlsWidget @JvmOverloads constructor(
         statusText = TextView(context).apply {
             text = "Ready to Record"
             textSize = 16f
-@Suppress("DEPRECATION")
-                        setTextColor(ContextCompat.getColor(context, android.R.color.primary_text_dark))
+            @Suppress("DEPRECATION")
+            setTextColor(ContextCompat.getColor(context, android.R.color.primary_text_dark))
             layoutParams = LayoutParams(0, LayoutParams.WRAP_CONTENT, 1f)
         }
         statusSection.addView(statusText)
@@ -114,8 +114,8 @@ class RecordingControlsWidget @JvmOverloads constructor(
             text = ""
             textSize = 12f
             gravity = Gravity.CENTER
-@Suppress("DEPRECATION")
-                        setTextColor(ContextCompat.getColor(context, android.R.color.secondary_text_dark))
+            @Suppress("DEPRECATION")
+            setTextColor(ContextCompat.getColor(context, android.R.color.secondary_text_dark))
             setPadding(0, 0, 0, 8)
         }
         addView(triggerSourceText)

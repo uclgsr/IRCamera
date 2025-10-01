@@ -385,7 +385,7 @@ class RgbCameraRecorder(
                 supportsBackCamera = provider.hasCamera(CameraSelector.DEFAULT_BACK_CAMERA)
                 supportsFrontCamera = provider.hasCamera(CameraSelector.DEFAULT_FRONT_CAMERA)
 
-                Log.i(TAG, "📷 Camera availability detected:")
+                Log.i(TAG, " Camera availability detected:")
                 Log.i(
                     TAG,
                     "  • Back camera: ${if (supportsBackCamera) "Available" else "Not available"}"
@@ -467,7 +467,7 @@ class RgbCameraRecorder(
                     return@withContext false
                 }
 
-                Log.i(TAG, "🔄 Switching to ${if (useFrontCamera) "front" else "back"} camera")
+                Log.i(TAG, " Switching to ${if (useFrontCamera) "front" else "back"} camera")
                 _cameraStatus.value = "Switching Camera..."
 
 
@@ -755,7 +755,7 @@ class RgbCameraRecorder(
                 val hasFlash = cameraInfo.hasFlashUnit()
                 val zoomRatio = cameraInfo.zoomState.value?.zoomRatio ?: 1.0f
 
-                Log.i(TAG, "📷 Camera bound successfully:")
+                Log.i(TAG, " Camera bound successfully:")
                 Log.i(TAG, "  - Camera: ${if (isUsingFrontCamera) "Front" else "Back"}")
                 Log.i(
                     TAG,
@@ -1114,7 +1114,7 @@ class RgbCameraRecorder(
 
             Log.i(
                 TAG,
-                "🎬 Starting optimized frame capture at ${CAPTURE_FPS} FPS with throttling (every ${FRAME_CAPTURE_EVERY_N_FRAMES} frames)"
+                " Starting optimized frame capture at ${CAPTURE_FPS} FPS with throttling (every ${FRAME_CAPTURE_EVERY_N_FRAMES} frames)"
             )
 
             while (_isRecording.get() && isActive) {
@@ -1189,7 +1189,7 @@ class RgbCameraRecorder(
 
 
             logFinalFrameRateStats()
-            Log.i(TAG, "📸 Enhanced frame capture completed")
+            Log.i(TAG, " Enhanced frame capture completed")
         }
     }
 
@@ -1731,7 +1731,7 @@ class RgbCameraRecorder(
                 return false
             }
 
-            Log.i(TAG, "🛑 Stopping RGB camera recording with enhanced cleanup...")
+            Log.i(TAG, " Stopping RGB camera recording with enhanced cleanup...")
             _isRecording.set(false)
             _cameraStatus.value = "Stopping Recording..."
 

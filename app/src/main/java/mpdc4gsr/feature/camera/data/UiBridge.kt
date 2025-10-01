@@ -47,9 +47,9 @@ class UiBridge(private val textureView: TextureView) {
         onRecordingStateChanged?.invoke(recording, fullInfo)
 
         if (recording) {
-            reportProgress("🔴 Recording $currentMode mode")
+            reportProgress(" Recording $currentMode mode")
         } else {
-            reportProgress("⚫ Recording stopped")
+            reportProgress(" Recording stopped")
         }
     }
 

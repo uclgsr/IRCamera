@@ -138,7 +138,7 @@ private fun SessionManagerContent(
     modifier: Modifier = Modifier
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
-    
+
     Column(
         modifier = modifier
             .fillMaxSize()

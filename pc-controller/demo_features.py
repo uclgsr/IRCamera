@@ -26,7 +26,7 @@ def demo_native_backend():
     
     try:
         import enhanced_native_backend
-        print("✓ Native backend loaded successfully")
+        print(" Native backend loaded successfully")
         print(f"  Module: {enhanced_native_backend.__name__}")
         print(f"  Version: {enhanced_native_backend.__version__}")
         print(f"  Build date: {enhanced_native_backend.__build_date__}")
@@ -73,13 +73,13 @@ def demo_native_backend():
         print(f"  Lowpass filter (cutoff={cutoff_freq} Hz, fs={sample_rate} Hz)")
         print(f"  Filtered data: {[f'{x:.2f}' for x in filtered[:5]]}...")
         
-        print("\n✓ All native backend features working!")
+        print("\n All native backend features working!")
         
     except ImportError as e:
-        print(f"✗ Failed to import native backend: {e}")
+        print(f" Failed to import native backend: {e}")
         return False
     except Exception as e:
-        print(f"✗ Native backend error: {e}")
+        print(f" Native backend error: {e}")
         return False
     
     return True
@@ -135,9 +135,9 @@ def demo_protocol():
         # Validate JSON serialization
         parsed = json.loads(json.dumps(msg))
         assert parsed == msg
-        print("  ✓ JSON serialization validated")
+        print("   JSON serialization validated")
     
-    print("\n✓ Protocol handling working!")
+    print("\n Protocol handling working!")
     return True
 
 
@@ -170,7 +170,7 @@ def demo_data_export():
             f.write("timestamp,gsr_value\n")
             for timestamp, value in gsr_data:
                 f.write(f"{timestamp:.6f},{value:.3f}\n")
-        print(f"  ✓ CSV exported: {csv_file.name}")
+        print(f"   CSV exported: {csv_file.name}")
         print(f"  File size: {csv_file.stat().st_size} bytes")
         
         # Export device status to JSON
@@ -190,7 +190,7 @@ def demo_data_export():
         json_file = export_path / "device_status.json"
         with open(json_file, 'w') as f:
             json.dump(device_status, f, indent=2)
-        print(f"  ✓ JSON exported: {json_file.name}")
+        print(f"   JSON exported: {json_file.name}")
         print(f"  File size: {json_file.stat().st_size} bytes")
         
         # Show export directory structure
@@ -198,7 +198,7 @@ def demo_data_export():
         for item in export_path.iterdir():
             print(f"  {item.name} ({item.stat().st_size} bytes)")
         
-        print("\n✓ Data export working!")
+        print("\n Data export working!")
         
     return True
 
@@ -221,7 +221,7 @@ def demo_security():
         print(f"  Protocol: {context.protocol}")
         print(f"  Verify mode: {context.verify_mode}")
         print(f"  Check hostname: {context.check_hostname}")
-        print("  ✓ SSL context created")
+        print("   SSL context created")
         
         print("\n--- Certificate Generation ---")
         # Generate a test key
@@ -229,13 +229,13 @@ def demo_security():
             public_exponent=65537,
             key_size=2048,
         )
-        print(f"  ✓ RSA private key generated (2048 bits)")
+        print(f"   RSA private key generated (2048 bits)")
         print(f"  Public exponent: 65537")
         
-        print("\n✓ Security features working!")
+        print("\n Security features working!")
         
     except ImportError as e:
-        print(f"✗ Cryptography library not available: {e}")
+        print(f" Cryptography library not available: {e}")
         return False
     
     return True
@@ -249,7 +249,7 @@ def demo_opencv():
     
     try:
         import cv2
-        print(f"✓ OpenCV version: {cv2.__version__}")
+        print(f" OpenCV version: {cv2.__version__}")
         
         print("\n--- Available Camera Backends ---")
         backends = [
@@ -270,10 +270,10 @@ def demo_opencv():
         print("  - Frame counter")
         print("  - Cross-platform")
         
-        print("\n✓ OpenCV integration available!")
+        print("\n OpenCV integration available!")
         
     except ImportError:
-        print("✗ OpenCV not available (expected in CI environment)")
+        print(" OpenCV not available (expected in CI environment)")
         return False
     
     return True
@@ -305,15 +305,15 @@ def main():
     passed = sum(1 for _, success in results if success)
     
     for feature, success in results:
-        status = "✓ PASS" if success else "✗ FAIL"
+        status = " PASS" if success else " FAIL"
         print(f"  {feature:.<50} {status}")
     
     print(f"\nTotal: {passed}/{total} features demonstrated successfully")
     
     if passed == total:
-        print("\n🎉 All features working correctly!")
+        print("\n All features working correctly!")
     else:
-        print(f"\n⚠️  {total - passed} feature(s) failed")
+        print(f"\n️  {total - passed} feature(s) failed")
     
     print("="*70)
     

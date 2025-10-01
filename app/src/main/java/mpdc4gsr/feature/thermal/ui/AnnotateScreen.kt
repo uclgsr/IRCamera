@@ -130,7 +130,7 @@ private fun ThermalImageWithAnnotations(
     modifier: Modifier = Modifier
 ) {
     val primaryColor = MaterialTheme.colorScheme.primary
-    
+
     Card(
         modifier = modifier,
         colors = CardDefaults.cardColors(containerColor = Color.Black)
@@ -256,7 +256,7 @@ private fun ReportInfoPanel(
     modifier: Modifier = Modifier
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
-    
+
     Card(
         modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))

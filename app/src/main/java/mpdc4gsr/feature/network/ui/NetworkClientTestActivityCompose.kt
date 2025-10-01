@@ -56,16 +56,16 @@ class NetworkClientTestViewModel : BaseViewModel() {
         WARNING("Warning"),
         PENDING("Pending")
     }
-    
+
     enum class NetworkTestType { CONNECTION, LATENCY, THROUGHPUT, RELIABILITY }
-    
+
     data class NetworkConfiguration(
         val serverAddress: String = "192.168.1.100",
         val port: Int = 8080,
         val timeoutMs: Long = 5000,
         val retryAttempts: Int = 3
     )
-    
+
     data class NetworkTestCategory(
         val name: String,
         val description: String,
@@ -73,7 +73,7 @@ class NetworkClientTestViewModel : BaseViewModel() {
         val testCount: Int,
         val lastResult: TestStatus
     )
-    
+
     data class NetworkTestResult(
         val testName: String,
         val status: TestStatus,
@@ -93,7 +93,7 @@ class NetworkClientTestViewModel : BaseViewModel() {
         val networkConfiguration: NetworkConfiguration = NetworkConfiguration(),
         val error: String? = null
     )
-    
+
     private val _networkTestUiState = MutableStateFlow(NetworkTestUiState())
     val networkTestUiState: StateFlow<NetworkTestUiState> = _networkTestUiState.asStateFlow()
 
@@ -112,16 +112,16 @@ class NetworkClientTestViewModel : BaseViewModel() {
     fun updateConnectionInfo(info: String) {
         _connectionInfo.value = info
     }
-    
+
     // Methods for NetworkClientTestComposeActivity
     fun startComprehensiveTest() {
         _networkTestUiState.value = _networkTestUiState.value.copy(isTestRunning = true)
     }
-    
+
     fun stopTest() {
         _networkTestUiState.value = _networkTestUiState.value.copy(isTestRunning = false)
     }
-    
+
     fun refreshNetworkStatus() {
         _networkTestUiState.value = _networkTestUiState.value.copy(
             networkStatus = when (_networkConnectionState.value) {
@@ -132,26 +132,26 @@ class NetworkClientTestViewModel : BaseViewModel() {
             }
         )
     }
-    
+
     fun runQuickNetworkTest() {
         // Stub implementation
     }
-    
+
     fun runCategoryTest(category: NetworkTestCategory) {
         // Stub implementation
     }
-    
+
     fun viewTestDetails(result: NetworkTestResult) {
         // Stub implementation
     }
-    
+
     fun updateNetworkConfiguration(config: NetworkConfiguration) {
         _networkTestUiState.value = _networkTestUiState.value.copy(networkConfiguration = config)
         // Update IP and port from configuration
         _ipAddress.value = config.serverAddress
         _port.value = config.port.toString()
     }
-    
+
     override fun clearError() {
         _networkTestUiState.value = _networkTestUiState.value.copy(error = null)
     }
@@ -424,7 +424,7 @@ private fun ConnectionConfigCard(
     onPortChange: (String) -> Unit
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
-    
+
     Card(
         modifier = Modifier.fillMaxWidth()
     ) {

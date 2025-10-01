@@ -648,10 +648,10 @@ def main():
 
     # Setup event callbacks
     def on_device_connected(device_info):
-        print(f"✓ Device connected: {device_info.device_name} ({device_info.device_id})")
+        print(f" Device connected: {device_info.device_name} ({device_info.device_id})")
 
     def on_device_disconnected(device_info):
-        print(f"✗ Device disconnected: {device_info.device_name} ({device_info.device_id})")
+        print(f" Device disconnected: {device_info.device_name} ({device_info.device_id})")
 
     def on_data_received(device_info, message):
         if message.get('type') == 'telemetry_gsr':
@@ -663,14 +663,14 @@ def main():
 
     try:
         print("\n Enhanced PC Controller starting...")
-        print(f"📡 Listening on port {controller.port}")
-        print("💡 Connect your Android devices to start recording")
+        print(f" Listening on port {controller.port}")
+        print(" Connect your Android devices to start recording")
         print("⏹️  Press Ctrl+C to stop\n")
 
         controller.start()
 
     except KeyboardInterrupt:
-        print("\n👋 Shutting down...")
+        print("\n Shutting down...")
         controller.stop()
 
 

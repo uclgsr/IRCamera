@@ -50,7 +50,11 @@ class ReportPreviewSecondComposeActivity : BaseComposeActivity<ReportPreviewSeco
                         },
                         navigationIcon = {
                             IconButton(onClick = { finish() }) {
-                                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = Color.White)
+                                Icon(
+                                    Icons.AutoMirrored.Filled.ArrowBack,
+                                    contentDescription = "Back",
+                                    tint = Color.White
+                                )
                             }
                         },
                         actions = {
@@ -293,7 +297,7 @@ class ReportPreviewSecondComposeActivity : BaseComposeActivity<ReportPreviewSeco
 
                 if (section.hasContent) {
                     Text(
-                        "✓",
+                        "",
                         color = if (isSelected) Color.White else Color(0xFF4CAF50),
                         fontWeight = FontWeight.Bold
                     )

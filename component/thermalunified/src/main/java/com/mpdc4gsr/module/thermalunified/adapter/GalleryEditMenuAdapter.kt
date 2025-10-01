@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.libunified.R as MenuR
 
-@Deprecated("旧的2D编辑一级菜单，已重构过了")
+@Deprecated("2D，")
 class GalleryEditMenuAdapter(val context: Context) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var listener: ((code: Int) -> Unit)? = null

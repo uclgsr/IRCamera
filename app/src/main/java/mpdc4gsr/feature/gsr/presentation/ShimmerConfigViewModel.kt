@@ -13,7 +13,7 @@ import mpdc4gsr.feature.gsr.domain.usecase.*
 
 /**
  * Modern Shimmer Config ViewModel - Clean Architecture MVVM Implementation
- * 
+ *
  * Uses use cases instead of direct repository/manager access for proper layer separation.
  * Manages Shimmer device configuration, scanning, and connections with reactive patterns.
  */
@@ -71,15 +71,15 @@ class ShimmerConfigViewModel(
     fun startScan() {
         viewModelScope.launch {
             _shimmerUiState.update { it.copy(isScanning = true, error = null) }
-            
+
             try {
                 scanDevicesUseCase().collect { devices ->
                     _discoveredDevices.value = devices
                     _shimmerUiState.update { it.copy(isScanning = false) }
                 }
             } catch (e: Exception) {
-                _shimmerUiState.update { 
-                    it.copy(isScanning = false, error = e.message ?: "Scan failed") 
+                _shimmerUiState.update {
+                    it.copy(isScanning = false, error = e.message ?: "Scan failed")
                 }
             }
         }
@@ -91,7 +91,7 @@ class ShimmerConfigViewModel(
     fun connectDevice(deviceAddress: String) {
         viewModelScope.launch {
             _shimmerConnectionState.value = ConnectionState.Connecting
-            
+
             val result = connectDeviceUseCase(deviceAddress)
             result.fold(
                 onSuccess = {
@@ -124,8 +124,8 @@ class ShimmerConfigViewModel(
         viewModelScope.launch {
             val batteryLevel = getBatteryLevelUseCase(deviceAddress)
             batteryLevel?.let {
-                _shimmerUiState.update { state -> 
-                    state.copy(batteryLevel = it) 
+                _shimmerUiState.update { state ->
+                    state.copy(batteryLevel = it)
                 }
             }
         }
@@ -145,7 +145,7 @@ class ShimmerConfigViewModel(
         val missingPermissions = REQUIRED_PERMISSIONS.filter {
             ActivityCompat.checkSelfPermission(context, it) != PackageManager.PERMISSION_GRANTED
         }
-        
+
         _permissionState.value = PermissionState(
             hasAllPermissions = missingPermissions.isEmpty(),
             missingPermissions = missingPermissions

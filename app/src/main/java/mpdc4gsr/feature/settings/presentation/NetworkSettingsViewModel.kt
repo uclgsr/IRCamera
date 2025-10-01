@@ -69,15 +69,15 @@ class NetworkSettingsViewModel : BaseViewModel() {
     fun initialize(ctx: Context) {
         context = ctx
         prefs = PreferenceManager.getDefaultSharedPreferences(ctx)
-        
+
         val bluetoothManager = ctx.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
         bluetoothAdapter = bluetoothManager?.adapter
         wifiManager = ctx.applicationContext.getSystemService(Context.WIFI_SERVICE) as? WifiManager
-        
+
 // TODO: Instantiate ShimmerDeviceManager in the Activity/Fragment, as it requires a
 // LifecycleOwner. The instance should then be passed to this ViewModel, for example
 // via the initialize() method.
-        
+
         loadSettings()
         updateNetworkInfo()
         loadPairedDevices()
@@ -115,17 +115,19 @@ class NetworkSettingsViewModel : BaseViewModel() {
     private fun loadPairedDevices() {
         viewModelScope.launch {
             val devices = mutableListOf<DeviceInfo>()
-            
-            if (ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) 
-                == PackageManager.PERMISSION_GRANTED) {
+
+            if (ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT)
+                == PackageManager.PERMISSION_GRANTED
+            ) {
                 bluetoothAdapter?.bondedDevices?.forEach { device ->
                     // Identify device type by checking for known device name patterns
                     // Note: This is a heuristic approach. For more robust detection,
                     // consider scanning for specific Bluetooth service UUIDs if available
                     val deviceType = when {
                         device.name?.contains("Shimmer", ignoreCase = true) == true -> DeviceType.SHIMMER_GSR
-                        device.name?.contains("Topdon", ignoreCase = true) == true || 
-                        device.name?.contains("TC001", ignoreCase = true) == true -> DeviceType.TOPDON_THERMAL
+                        device.name?.contains("Topdon", ignoreCase = true) == true ||
+                                device.name?.contains("TC001", ignoreCase = true) == true -> DeviceType.TOPDON_THERMAL
+
                         else -> DeviceType.UNKNOWN
                     }
                     devices.add(
@@ -138,7 +140,7 @@ class NetworkSettingsViewModel : BaseViewModel() {
                     )
                 }
             }
-            
+
             _pairedDevices.value = devices
         }
     }

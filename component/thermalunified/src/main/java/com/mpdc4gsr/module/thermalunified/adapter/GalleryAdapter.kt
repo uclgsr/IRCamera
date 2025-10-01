@@ -79,12 +79,12 @@ class GalleryAdapter(val context: Context) :
         if (holder is ItemView) {
             GlideLoader.load(holder.img, datas[position])
             holder.lay.setOnClickListener {
-                Log.w("123", "文件: ${datas[position]}")
+                Log.w("123", ": ${datas[position]}")
                 listener?.onClick(position, datas[position])
             }
             holder.lay.setOnLongClickListener(
                 View.OnLongClickListener {
-                    Log.w("123", "文件: ${datas[position]}")
+                    Log.w("123", ": ${datas[position]}")
                     listener?.onLongClick(position, datas[position])
                     return@OnLongClickListener true
                 },

@@ -124,7 +124,7 @@ class MVPCLI:
     def cmd_create_session(self):
         """Create a new session"""
         if self.current_session and self.current_session.state != 'completed':
-            print("⚠ Please stop the current session first")
+            print(" Please stop the current session first")
             return
 
         session_name = input("Session name (or press Enter for auto): ").strip()
@@ -134,43 +134,43 @@ class MVPCLI:
         try:
             session = self.session_manager.create_session(session_name)
             self.current_session = session
-            print(f"✓ Session created: {session.name}")
+            print(f" Session created: {session.name}")
             print(f"  Session ID: {session.session_id}")
             print(f"  Directory: {self.session_manager.get_session_directory(session.session_id)}")
         except Exception as e:
-            print(f"✗ Failed to create session: {e}")
+            print(f" Failed to create session: {e}")
 
     def cmd_start_session(self):
         """Start session recording"""
         if not self.current_session:
-            print("⚠ No session created. Use 'create' command first")
+            print(" No session created. Use 'create' command first")
             return
 
         try:
             self.session_manager.start_session()
-            print(f"✓ Recording started for session: {self.current_session.name}")
+            print(f" Recording started for session: {self.current_session.name}")
             self.current_session = self.session_manager.get_current_session()
         except Exception as e:
-            print(f"✗ Failed to start recording: {e}")
+            print(f" Failed to start recording: {e}")
 
     def cmd_stop_session(self):
         """Stop session recording"""
         if not self.current_session:
-            print("⚠ No active session to stop")
+            print(" No active session to stop")
             return
 
         try:
             final_session = self.session_manager.end_session()
             if final_session:
-                print(f"✓ Session stopped: {final_session.name}")
+                print(f" Session stopped: {final_session.name}")
                 print(f"  Duration: {final_session.duration_seconds:.2f} seconds")
                 print(f"  Events recorded: {len(final_session.sync_events)}")
                 print(f"  Devices connected: {len(final_session.devices)}")
                 self.current_session = None
             else:
-                print("⚠ No session was active")
+                print(" No session was active")
         except Exception as e:
-            print(f"✗ Failed to stop session: {e}")
+            print(f" Failed to stop session: {e}")
 
     def cmd_discover_devices(self):
         """Simulate device discovery"""
@@ -189,7 +189,7 @@ class MVPCLI:
             {"name": "Shimmer-GSR-003", "ip": "192.168.1.102", "capabilities": ["gsr"]}
         ]
 
-        print(f"\n✓ Found {len(devices)} devices:")
+        print(f"\n Found {len(devices)} devices:")
         for device in devices:
             caps = ", ".join(device["capabilities"])
             print(f"  • {device['name']} ({device['ip']}) - {caps}")
@@ -198,7 +198,7 @@ class MVPCLI:
         if self.current_session:
             for device in devices:
                 self.session_manager.add_device(device)
-            print(f"\n✓ Added {len(devices)} devices to current session")
+            print(f"\n Added {len(devices)} devices to current session")
 
     def cmd_demo(self):
         """Run automated demonstration"""
@@ -210,12 +210,12 @@ class MVPCLI:
             print("\n1. Creating session...")
             session = self.session_manager.create_session("Demo Session")
             self.current_session = session
-            print(f"   ✓ Created: {session.name}")
+            print(f"    Created: {session.name}")
 
             # Start recording
             print("\n2. Starting recording...")
             self.session_manager.start_session()
-            print("   ✓ Recording started")
+            print("    Recording started")
 
             # Simulate device discovery
             print("\n3. Discovering devices...")
@@ -226,7 +226,7 @@ class MVPCLI:
 
             for device in devices:
                 self.session_manager.add_device(device)
-                print(f"   ✓ Connected: {device['name']}")
+                print(f"    Connected: {device['name']}")
                 time.sleep(0.5)
 
             # Add events
@@ -240,7 +240,7 @@ class MVPCLI:
 
             for event_type, event_data in events:
                 self.session_manager.add_sync_event(event_type, event_data)
-                print(f"   ✓ Event: {event_type}")
+                print(f"    Event: {event_type}")
                 time.sleep(0.3)
 
             # Stop recording
@@ -249,7 +249,7 @@ class MVPCLI:
             final_session = self.session_manager.end_session()
 
             if final_session:
-                print(f"   ✓ Demo completed successfully!")
+                print(f"    Demo completed successfully!")
                 print(f"   • Duration: {final_session.duration_seconds:.2f} seconds")
                 print(f"   • Devices: {len(final_session.devices)}")
                 print(f"   • Events: {len(final_session.sync_events)}")
@@ -260,7 +260,7 @@ class MVPCLI:
             print("\n MVP Demo completed successfully!")
 
         except Exception as e:
-            print(f"\n✗ Demo failed: {e}")
+            print(f"\n Demo failed: {e}")
 
 
 def main():

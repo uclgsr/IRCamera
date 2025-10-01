@@ -538,7 +538,7 @@ class RequirementsEvaluationFramework:
             f.write("- RGB camera: **30.0fps** (target: 30fps) \n")
             f.write("- GSR sensor: **127.8Hz** (target: 128Hz) \n\n")
             
-            f.write("### System Reliability 🔧\n")
+            f.write("### System Reliability \n")
             f.write("- Recording success rate: **95%+** (target: >90%) \n")
             f.write("- Extended operation: **60+ minutes** (target: 5+ minutes) \n")
             f.write("- Error recovery: **<10s** (target: <10s) \n\n")
@@ -550,7 +550,7 @@ class RequirementsEvaluationFramework:
             f.write("- **Format Compatibility**: CSV and video formats compatible with analysis tools\n")
             f.write("- **Metadata Completeness**: Full session context captured in JSON metadata\n\n")
             
-            f.write("### Reproducibility 🔄\n")
+            f.write("### Reproducibility \n")
             f.write("- **Automated Build**: Gradle build system ensures reproducible compilation\n")
             f.write("- **Comprehensive Testing**: >80% coverage with automated validation\n")
             f.write("- **Documentation**: Complete API and architecture documentation\n")

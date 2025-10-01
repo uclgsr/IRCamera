@@ -2,11 +2,13 @@
 
 ## Overview
 
-This document describes the protocol bridge solution that harmonizes PC-Android communication in the IRCamera Multi-Modal Thermal Sensing Platform.
+This document describes the protocol bridge solution that harmonizes PC-Android communication in the IRCamera
+Multi-Modal Thermal Sensing Platform.
 
 ## Problem Summary
 
-The original PC Controller used JSON protocol while Android used text-based protocol, resulting in 0% compatibility. See `GAP_ANALYSIS.md` for full details.
+The original PC Controller used JSON protocol while Android used text-based protocol, resulting in 0% compatibility. See
+`GAP_ANALYSIS.md` for full details.
 
 ## Solution: Protocol Adapter
 
@@ -31,29 +33,31 @@ The original PC Controller used JSON protocol while Android used text-based prot
 
 All Android Protocol.kt message types are now supported:
 
-| Message Type | Direction | Status | Handler |
-|-------------|-----------|---------|---------|
-| HELLO | Android → PC | ✓ Complete | Device registration |
-| SYNC_REQUEST | PC → Android | ✓ Complete | Time sync initiation |
-| SYNC_RESPONSE | Android → PC | ✓ Complete | Time sync response |
-| SYNC_RESULT | PC → Android | ✓ Complete | Time sync completion |
-| START_RECORD | PC → Android | ✓ Complete | Start recording |
-| STOP_RECORD | PC → Android | ✓ Complete | Stop recording |
-| ACK | Android → PC | ✓ Complete | Command acknowledgment |
-| ERROR | Android → PC | ✓ Complete | Error reporting |
-| DATA_GSR | Android → PC | ✓ Complete | GSR data streaming |
-| FRAME | Android → PC | ✓ Complete | Frame data |
+| Message Type  | Direction    | Status     | Handler                |
+|---------------|--------------|------------|------------------------|
+| HELLO         | Android → PC |  Complete | Device registration    |
+| SYNC_REQUEST  | PC → Android |  Complete | Time sync initiation   |
+| SYNC_RESPONSE | Android → PC |  Complete | Time sync response     |
+| SYNC_RESULT   | PC → Android |  Complete | Time sync completion   |
+| START_RECORD  | PC → Android |  Complete | Start recording        |
+| STOP_RECORD   | PC → Android |  Complete | Stop recording         |
+| ACK           | Android → PC |  Complete | Command acknowledgment |
+| ERROR         | Android → PC |  Complete | Error reporting        |
+| DATA_GSR      | Android → PC |  Complete | GSR data streaming     |
+| FRAME         | Android → PC |  Complete | Frame data             |
 
 ### Translation Examples
 
 #### Android Text → JSON
 
 **Input (Android):**
+
 ```
 HELLO device_name=android_001 sensors=[GSR,RGB,THERMAL]
 ```
 
 **Output (JSON):**
+
 ```json
 {
   "type": "HELLO",
@@ -66,6 +70,7 @@ HELLO device_name=android_001 sensors=[GSR,RGB,THERMAL]
 #### JSON → Android Text
 
 **Input (JSON):**
+
 ```json
 {
   "type": "START_RECORD",
@@ -74,6 +79,7 @@ HELLO device_name=android_001 sensors=[GSR,RGB,THERMAL]
 ```
 
 **Output (Android):**
+
 ```
 START_RECORD session_id=session_20240101_120000
 ```
@@ -81,6 +87,7 @@ START_RECORD session_id=session_20240101_120000
 ### Parameter Parsing
 
 The adapter handles:
+
 - **Simple values**: `key=value`
 - **Quoted strings**: `msg="error message"`
 - **Arrays**: `sensors=[A,B,C]`
@@ -185,6 +192,7 @@ network.stop_recording(device_id, session_id='session_123')
 The test suite (`test_protocol_compatibility.py`) includes 22 tests:
 
 **Protocol Adapter Tests (18):**
+
 - Parse all Android message types
 - Handle quoted values and arrays
 - Create Android messages
@@ -192,11 +200,13 @@ The test suite (`test_protocol_compatibility.py`) includes 22 tests:
 - Error handling
 
 **Protocol Compatibility Tests (3):**
+
 - All Android message types supported
 - Message type mapping correct
 - Parameter parsing accurate
 
 **Network Protocol Tests (1):**
+
 - Message delimiters correct
 
 **Test Results:** 22/22 passing (100%)
@@ -213,12 +223,14 @@ python3 test_protocol_compatibility.py
 ### For Users of `advanced_pc_controller.py`
 
 Replace:
+
 ```python
 from advanced_pc_controller import EnhancedPCController
 controller = EnhancedPCController()
 ```
 
 With:
+
 ```python
 from unified_pc_controller import UnifiedPCController
 controller = UnifiedPCController()
@@ -255,20 +267,20 @@ python3 unified_pc_controller.py
 
 ## Compatibility Matrix
 
-| Feature | Android | PC (Old) | PC (New) | Compatible? |
-|---------|---------|----------|----------|-------------|
-| Text Protocol | ✓ | ✗ | ✓ | ✓ |
-| JSON Protocol | ✗ | ✓ | ✓ | ✓ |
-| HELLO | ✓ | ✓ | ✓ | ✓ |
-| START_RECORD | ✓ | ✗ | ✓ | ✓ |
-| STOP_RECORD | ✓ | ✗ | ✓ | ✓ |
-| SYNC_REQUEST | ✓ | ✓ | ✓ | ✓ |
-| SYNC_RESULT | ✓ | ✗ | ✓ | ✓ |
-| DATA_GSR | ✓ | ✗ | ✓ | ✓ |
-| ACK | ✓ | ✗ | ✓ | ✓ |
-| ERROR | ✓ | ✗ | ✓ | ✓ |
-| Time Sync | ✓ | Partial | ✓ | ✓ |
-| Error Recovery | ✓ | ✗ | ✓ | ✓ |
+| Feature        | Android | PC (Old) | PC (New) | Compatible? |
+|----------------|---------|----------|----------|-------------|
+| Text Protocol  |        |         |         |            |
+| JSON Protocol  |        |         |         |            |
+| HELLO          |        |         |         |            |
+| START_RECORD   |        |         |         |            |
+| STOP_RECORD    |        |         |         |            |
+| SYNC_REQUEST   |        |         |         |            |
+| SYNC_RESULT    |        |         |         |            |
+| DATA_GSR       |        |         |         |            |
+| ACK            |        |         |         |            |
+| ERROR          |        |         |         |            |
+| Time Sync      |        | Partial  |         |            |
+| Error Recovery |        |         |         |            |
 
 **New Compatibility Score: 14/14 (100%)**
 
@@ -277,24 +289,24 @@ python3 unified_pc_controller.py
 ### Common Issues
 
 1. **"Failed to parse message"**
-   - Check message format matches Android Protocol.kt
-   - Ensure newline termination
-   - Verify parameter syntax
+    - Check message format matches Android Protocol.kt
+    - Ensure newline termination
+    - Verify parameter syntax
 
 2. **"Device not registered"**
-   - Ensure HELLO message sent first
-   - Check device_name parameter present
-   - Verify ACK received
+    - Ensure HELLO message sent first
+    - Check device_name parameter present
+    - Verify ACK received
 
 3. **"Time sync failed"**
-   - Check network latency (should be <100ms)
-   - Verify SYNC_RESPONSE handler working
-   - Ensure clocks reasonably synchronized
+    - Check network latency (should be <100ms)
+    - Verify SYNC_RESPONSE handler working
+    - Ensure clocks reasonably synchronized
 
 4. **"Command not acknowledged"**
-   - Check Android sends ACK messages
-   - Verify command name matches (uppercase)
-   - Check session_id matches
+    - Check Android sends ACK messages
+    - Verify command name matches (uppercase)
+    - Check session_id matches
 
 ### Debug Mode
 
@@ -338,6 +350,7 @@ HELLO device_name=test_device sensors=[GSR]
 
 ## Conclusion
 
-The protocol bridge implementation achieves 100% compatibility with Android Protocol.kt, enabling seamless PC-Android communication. All 15 gaps identified in the analysis have been resolved.
+The protocol bridge implementation achieves 100% compatibility with Android Protocol.kt, enabling seamless PC-Android
+communication. All 15 gaps identified in the analysis have been resolved.
 
 **Status**: Production-ready for integration testing with Android devices.

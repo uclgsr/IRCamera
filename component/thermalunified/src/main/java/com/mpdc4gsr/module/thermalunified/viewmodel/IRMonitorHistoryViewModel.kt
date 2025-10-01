@@ -100,13 +100,13 @@ class IRMonitorHistoryViewModel : BaseViewModel() {
                 _historyUiEvents.emit(HistoryUiEvent.ShowMessage("No items selected for export"))
                 return@launchWithErrorHandling
             }
-            
+
             // Create export data from selected items
             val exportData = historyItems.value.filter { selectedList.contains(it.id) }
-            
+
             // Emit export event with data
             _historyUiEvents.emit(HistoryUiEvent.ExportData(exportData))
-            
+
             // Show success message and clear selection
             _historyUiEvents.emit(HistoryUiEvent.ShowMessage("Exported ${exportData.size} items"))
             clearSelection()

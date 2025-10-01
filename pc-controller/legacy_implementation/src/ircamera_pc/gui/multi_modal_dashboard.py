@@ -477,7 +477,7 @@ class SessionControlPanel(QGroupBox):
         self.stop_button.setEnabled(True)
         self.participant_id_input.setEnabled(False)
 
-        self.status_label.setText("🔴 RECORDING")
+        self.status_label.setText(" RECORDING")
         self.status_label.setStyleSheet("font-weight: bold; color: #FF6B6B;")
 
         self.flash_sync_button.setEnabled(True)

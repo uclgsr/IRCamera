@@ -194,7 +194,7 @@ private fun ThermalImageCard(
     modifier: Modifier = Modifier
 ) {
     val primaryColor = MaterialTheme.colorScheme.primary
-    
+
     Card(
         onClick = { /* Open image detail */ },
         modifier = modifier.aspectRatio(1f),

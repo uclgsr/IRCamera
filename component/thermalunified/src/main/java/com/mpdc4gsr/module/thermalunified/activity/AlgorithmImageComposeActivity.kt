@@ -214,7 +214,8 @@ private fun ProcessingOverlay(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            CircularProgressIndicator(progress = { progress },
+            CircularProgressIndicator(
+                progress = { progress },
                 color = Color(0xFFFF6B35),
                 modifier = Modifier.size(48.dp)
             )

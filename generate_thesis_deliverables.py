@@ -60,7 +60,7 @@ class ThesisDeliverableGenerator:
         self.generate_chapter4_deliverables()
         
         # Chapter 5: Testing & Results (conditional on test execution)
-        print("\n🧪 CHAPTER 5: TESTING & RESULTS")
+        print("\n CHAPTER 5: TESTING & RESULTS")
         print("-" * 50)
         test_results_dir = None
         if run_tests and android_ip:
@@ -69,7 +69,7 @@ class ThesisDeliverableGenerator:
         self.generate_chapter5_deliverables(test_results_dir)
         
         # Chapter 6: Discussion & Evaluation
-        print("\n💬 CHAPTER 6: DISCUSSION & EVALUATION")
+        print("\n CHAPTER 6: DISCUSSION & EVALUATION")
         print("-" * 50)
         self.generate_chapter6_deliverables(test_results_dir)
         
@@ -506,7 +506,7 @@ Examples:
     generator = ThesisDeliverableGenerator(args.project_root, args.output_dir)
     generator.generate_all_deliverables(args.android_ip, args.run_tests)
     
-    print(f"\n🎓 THESIS DELIVERABLE GENERATION COMPLETE")
+    print(f"\n THESIS DELIVERABLE GENERATION COMPLETE")
     print(f" All outputs saved to: {Path(args.output_dir).absolute()}")
     print(f" See thesis_deliverables_summary.md for complete file listing")
 

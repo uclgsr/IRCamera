@@ -274,7 +274,7 @@ class ThesisPerformanceBenchmark:
     
     def benchmark_resource_usage(self) -> None:
         """Benchmark resource utilization"""
-        print("💾 Benchmarking Resource Utilization...")
+        print(" Benchmarking Resource Utilization...")
         
         # Android resource usage from thesis
         android_specs = {
@@ -359,7 +359,7 @@ class ThesisPerformanceBenchmark:
     
     def benchmark_network_performance(self) -> None:
         """Benchmark network performance"""
-        print("🌐 Benchmarking Network Performance...")
+        print(" Benchmarking Network Performance...")
         
         # Network performance specs from thesis
         network_specs = {
@@ -534,7 +534,7 @@ class ThesisPerformanceBenchmark:
             f.write("Metric & Measured & Expected & Unit & Status \\\\ \\hline\n")
             
             for metric in self.metrics:
-                status_symbol = "✓" if metric.status == "PASS" else "⚠" if metric.status == "WARNING" else "✗"
+                status_symbol = "" if metric.status == "PASS" else "" if metric.status == "WARNING" else ""
                 f.write(f"{metric.name} & {metric.measured_value:.2f} & "
                        f"{metric.expected_value:.2f} & {metric.unit} & {status_symbol} \\\\ \\hline\n")
             

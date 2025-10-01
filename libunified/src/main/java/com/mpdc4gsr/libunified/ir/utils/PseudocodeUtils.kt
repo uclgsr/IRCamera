@@ -59,7 +59,7 @@ object PseudocodeUtils {
     }
 
     /**
-     * 旧版sdk的兼容
+     * sdk
      */
     fun changePseudocodeModeByOld(oldPseudocodeMode: Int): CommonParams.PseudoColorType {
         return when (oldPseudocodeMode) {

@@ -9,15 +9,15 @@ import android.bluetooth.le.BluetoothLeScanner;
  */
 public enum ScannerType {
     /**
-     * 对应{@link BluetoothLeScanner}
+     * {@link BluetoothLeScanner}
      */
     LE,
     /**
-     * 使用{@link BluetoothAdapter#startLeScan(BluetoothAdapter.LeScanCallback)}
+     * {@link BluetoothAdapter#startLeScan(BluetoothAdapter.LeScanCallback)}
      */
     LEGACY,
     /**
-     * 使用{@link BluetoothAdapter#startDiscovery()}，没有广播数据，不支持搜索设置
+     * {@link BluetoothAdapter#startDiscovery()}，，
      */
     CLASSIC
 }

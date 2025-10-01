@@ -10,7 +10,7 @@ import android.widget.TextView
 import com.mpdc4gsr.libunified.R
 
 /**
- * 校准方向
+ * 
  */
 class WifiSteeringWheelView : LinearLayout, OnClickListener {
 

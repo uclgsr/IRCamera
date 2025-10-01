@@ -213,7 +213,7 @@ private fun ThermalCameraView(
     modifier: Modifier = Modifier
 ) {
     val primaryColor = MaterialTheme.colorScheme.primary
-    
+
     Box(
         modifier = modifier
             .fillMaxHeight()
