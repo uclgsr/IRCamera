@@ -12,7 +12,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import mpdc4gsr.viewmodel.ConnectionState
 
 /**
  * Base ViewModel for the app module with connection state support
