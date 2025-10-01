@@ -184,7 +184,7 @@
 
         <activity
             android:name="mpdc4gsr.feature.main.ui.MainComposeActivity"
-            android:exported="true"
+            android:exported="false"
             android:label="IR Camera - Compose UI"
             android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>
@@ -298,7 +298,7 @@
 
         <activity
             android:name="mpdc4gsr.feature.testing.ui.ComposeMigrationLauncherActivity"
-            android:exported="true"
+            android:exported="false"
             android:label="Compose Migration Launcher"
             android:screenOrientation="userPortrait"
             android:theme="@style/AppTheme">
