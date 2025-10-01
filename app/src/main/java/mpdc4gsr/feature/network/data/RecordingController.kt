@@ -329,7 +329,7 @@ class RecordingController(
                 createCrashRecoveryMarker(finalSessionId, enabledSensors, sessionDir)
 
 
-                val utilMetadata = mpdc4gsr.utils.SessionMetadata(
+                val utilMetadata = mpdc4gsr.core.data.SessionMetadata(
                     startTime = sessionMetadata!!.sessionStartTimestampMs,
                     enabledSensors = enabledSensors,
                     participantId = participantId,

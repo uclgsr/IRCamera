@@ -545,7 +545,7 @@ class SessionManager(
 
     suspend fun initializeSessionWithWorkflow(
         sessionConfig: SessionConfig,
-        permissionController: mpdc4gsr.permissions.PermissionController? = null
+        permissionController: mpdc4gsr.core.ui.PermissionController? = null
     ): Boolean = withContext(Dispatchers.IO) {
         try {
             logger.log(
@@ -576,7 +576,7 @@ class SessionManager(
 
     private suspend fun setupWorkflowSteps(
         config: SessionConfig,
-        permissionController: mpdc4gsr.permissions.PermissionController?
+        permissionController: mpdc4gsr.core.ui.PermissionController?
     ) {
         workflowSteps.clear()
         currentStepIndex = 0

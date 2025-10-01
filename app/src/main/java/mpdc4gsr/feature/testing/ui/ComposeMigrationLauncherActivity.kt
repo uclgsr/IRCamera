@@ -506,7 +506,7 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         startActivity(
                             Intent(
                                 this@ComposeMigrationLauncherActivity,
-                                PermissionRequestComposeActivity::class.java
+                                mpdc4gsr.core.ui.PermissionRequestComposeActivity::class.java
                             )
                         )
                     }
