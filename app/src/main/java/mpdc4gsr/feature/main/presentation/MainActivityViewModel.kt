@@ -1,4 +1,4 @@
-package mpdc4gsr.viewmodel
+package mpdc4gsr.feature.main.presentation
 
 import android.app.Application
 import android.util.Log

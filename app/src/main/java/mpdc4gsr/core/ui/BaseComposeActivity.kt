@@ -1,4 +1,4 @@
-package mpdc4gsr.compose.base
+package mpdc4gsr.core.ui
 
 import android.content.Context
 import android.os.Bundle

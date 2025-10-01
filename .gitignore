@@ -173,6 +173,10 @@ wheels/
 *.orig
 *~
 
+# Backup directories - prevent future commits
+backup/
+*/backup/
+
 # Documentation temporary and generated files
 # -------------------------------------------------------------------
 # Prevent accumulation of outdated documentation

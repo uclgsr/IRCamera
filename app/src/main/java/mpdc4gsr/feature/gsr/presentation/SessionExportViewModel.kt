@@ -1,4 +1,4 @@
-package mpdc4gsr.sensors.gsr
+package mpdc4gsr.feature.gsr.presentation
 
 import android.app.Application
 import android.content.Intent
