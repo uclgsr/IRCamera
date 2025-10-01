@@ -56,7 +56,7 @@ data class ResearchTemplate(
                             "measurement_focus" to "physiological_arousal",
                         ),
                     instructions = "Place GSR sensors on participant's fingers. Position thermal camera to capture face. Begin baseline recording for 2 minutes before stress induction.",
-                    icon = "🧠",
+                    icon = "",
                 ),
                 ResearchTemplate(
                     id = "stress_response_comprehensive",
@@ -80,7 +80,7 @@ data class ResearchTemplate(
                             "recovery_duration" to "300",
                         ),
                     instructions = "Multi-modal stress response study:\n1. Attach GSR sensors\n2. Position thermal and RGB cameras\n3. Record 5min baseline → 10min stress task → 5min recovery",
-                    icon = "🔬",
+                    icon = "",
                 ),
 
                 ResearchTemplate(
@@ -99,7 +99,7 @@ data class ResearchTemplate(
                             "difficulty_levels" to "3",
                         ),
                     instructions = "Measure cognitive load during mental tasks. Begin with 3min rest, then progressive difficulty tasks (easy→medium→hard). Monitor GSR changes and thermal patterns.",
-                    icon = "🧮",
+                    icon = "",
                 ),
                 ResearchTemplate(
                     id = "cognitive_load_learning",
@@ -120,7 +120,7 @@ data class ResearchTemplate(
                             "session_structure" to "instruction_practice_test",
                         ),
                     instructions = "Learning session with physiological monitoring:\n1. 10min instruction phase\n2. 15min practice phase\n3. 5min assessment phase\nMonitor engagement and cognitive load throughout.",
-                    icon = "📚",
+                    icon = "",
                 ),
 
                 ResearchTemplate(
@@ -140,7 +140,7 @@ data class ResearchTemplate(
                             "emotions_targeted" to "joy_fear_anger_sadness_neutral",
                         ),
                     instructions = "Present emotional stimuli while recording physiological responses. Ensure thermal camera captures full face area. Record GSR baseline before each stimulus presentation.",
-                    icon = "😊",
+                    icon = "",
                 ),
                 ResearchTemplate(
                     id = "emotion_recognition_multimodal",
@@ -163,7 +163,7 @@ data class ResearchTemplate(
                             "stimulus_categories" to "images_audio_video_social",
                         ),
                     instructions = "Comprehensive emotion recognition study:\n- RGB: facial expressions\n- Thermal: arousal patterns\n- GSR: autonomic responses\nPresent varied emotional stimuli and record multi-modal responses.",
-                    icon = "🎭",
+                    icon = "",
                 ),
 
                 ResearchTemplate(
@@ -206,7 +206,7 @@ data class ResearchTemplate(
                             "behavioral_measures" to "gaze_gesture_posture_arousal",
                         ),
                     instructions = "Social interaction study with multi-modal monitoring:\n- RGB: behavioral coding\n- Thermal: arousal detection\n- GSR: stress/engagement\nRecord natural conversation or structured interaction tasks.",
-                    icon = "👥",
+                    icon = "",
                 ),
 
                 ResearchTemplate(

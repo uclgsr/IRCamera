@@ -198,7 +198,8 @@ private fun ConnectionSetupCard(
             // Status icon
             when {
                 isCalibrating -> {
-                    CircularProgressIndicator(progress = { calibrationProgress },
+                    CircularProgressIndicator(
+                        progress = { calibrationProgress },
                         color = Color(0xFFFF6B35),
                         modifier = Modifier.size(64.dp)
                     )

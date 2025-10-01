@@ -53,7 +53,7 @@ class CameraManager:
         self.thermal_frames = {}  # {device_id: latest_thermal_frame}
         self.rgb_frames = {}  # {device_id: latest_rgb_frame}
 
-        logger.info("📷 Camera manager initialized")
+        logger.info(" Camera manager initialized")
 
     def start_webcam_capture(self) -> bool:
         """Start local webcam capture"""
@@ -79,7 +79,7 @@ class CameraManager:
             actual_height = int(self.camera.get(cv2.CAP_PROP_FRAME_HEIGHT))
             actual_fps = self.camera.get(cv2.CAP_PROP_FPS)
 
-            logger.info(f"📷 Webcam started: {actual_width}x{actual_height} @ {actual_fps:.1f} FPS")
+            logger.info(f" Webcam started: {actual_width}x{actual_height} @ {actual_fps:.1f} FPS")
             return True
 
         except Exception as e:
@@ -97,11 +97,11 @@ class CameraManager:
             self.camera.release()
             self.camera = None
 
-        logger.info("📷 Webcam capture stopped")
+        logger.info(" Webcam capture stopped")
 
     def _camera_capture_loop(self):
         """Camera capture loop running in background thread"""
-        logger.info("📷 Camera capture loop started")
+        logger.info(" Camera capture loop started")
 
         while self.camera_running and self.camera:
             try:
@@ -160,7 +160,7 @@ class CameraManager:
             if self.preview_callback:
                 self.preview_callback(device_id, frame, 'thermal')
 
-            logger.debug(f"📷 Thermal frame processed from {device_id}: {frame.shape}")
+            logger.debug(f" Thermal frame processed from {device_id}: {frame.shape}")
             return True
 
         except Exception as e:
@@ -198,7 +198,7 @@ class CameraManager:
             if self.preview_callback:
                 self.preview_callback(device_id, frame, 'rgb')
 
-            logger.debug(f"📷 RGB frame processed from {device_id}: {frame.shape}")
+            logger.debug(f" RGB frame processed from {device_id}: {frame.shape}")
             return True
 
         except Exception as e:
@@ -255,7 +255,7 @@ class CameraManager:
                 # Default to JPEG
                 cv2.imwrite(str(file_path), frame, [cv2.IMWRITE_JPEG_QUALITY, quality])
 
-            logger.info(f"📷 Frame saved to: {filename}")
+            logger.info(f" Frame saved to: {filename}")
             return True
 
         except Exception as e:
@@ -370,7 +370,7 @@ class DataExporter:
                 camera_manager.save_frame_to_file(frame, str(rgb_file))
                 frame_count += 1
 
-            logger.info(f"📷 Exported {frame_count} camera frames to: {camera_dir}")
+            logger.info(f" Exported {frame_count} camera frames to: {camera_dir}")
 
         except Exception as e:
             logger.error(f" Failed to export camera frames: {e}")
@@ -475,7 +475,7 @@ class DataExporter:
                 f.write("    • thermal/ - Thermal camera frames\n")
                 f.write("    • rgb/ - RGB camera frames\n")
 
-            logger.info(f"📄 Session summary created: {output_file}")
+            logger.info(f" Session summary created: {output_file}")
 
         except Exception as e:
             logger.error(f" Failed to create session summary: {e}")
@@ -483,12 +483,12 @@ class DataExporter:
 
 def main():
     """Test camera manager and data export functionality"""
-    print("📷 IRCamera Camera Manager & Data Export Test")
+    print(" IRCamera Camera Manager & Data Export Test")
     print("=" * 50)
 
     # Test camera manager
     def preview_callback(device_id: str, frame: np.ndarray, camera_type: str):
-        print(f"📷 Frame received from {device_id} ({camera_type}): {frame.shape}")
+        print(f" Frame received from {device_id} ({camera_type}): {frame.shape}")
 
     camera_manager = CameraManager(preview_callback=preview_callback)
 
@@ -560,7 +560,7 @@ def main():
 
     # Cleanup
     camera_manager.cleanup()
-    print("🧹 Cleanup completed")
+    print(" Cleanup completed")
 
 
 if __name__ == "__main__":

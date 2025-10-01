@@ -525,7 +525,7 @@ class ComprehensiveRecordingController(
                 currentSessionDirectory = null
                 _recordingStateFlow.value = RecordingState.IDLE
 
-                Log.i(TAG, "🏁 Recording stopped successfully (duration: ${sessionDuration}ms)")
+                Log.i(TAG, " Recording stopped successfully (duration: ${sessionDuration}ms)")
                 Log.i(
                     TAG,
                     " Stop results: ${stopResults.entries.joinToString { "${it.key}=${if (it.value) "" else ""}" }}"

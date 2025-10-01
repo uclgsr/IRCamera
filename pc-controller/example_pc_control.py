@@ -39,18 +39,18 @@ class SimplePCController:
             # Receive HELLO message
             hello = self._receive_message()
             if hello and 'HELLO' in hello:
-                print(f"✓ Connected! Android says: {hello}")
+                print(f" Connected! Android says: {hello}")
                 json_hello = self.adapter.android_to_json(hello)
                 print(f"  Device: {json_hello.get('device_name', 'unknown')}")
                 print(f"  Sensors: {json_hello.get('sensors', [])}")
                 self.connected = True
                 return True
             else:
-                print(f"✗ Failed to receive HELLO message")
+                print(f" Failed to receive HELLO message")
                 return False
                 
         except Exception as e:
-            print(f"✗ Connection failed: {e}")
+            print(f" Connection failed: {e}")
             return False
     
     def disconnect(self):
@@ -66,7 +66,7 @@ class SimplePCController:
     def sync_time(self) -> bool:
         """Perform time synchronization with Android"""
         if not self.connected:
-            print("✗ Not connected to Android")
+            print(" Not connected to Android")
             return False
         
         try:
@@ -79,7 +79,7 @@ class SimplePCController:
             # Receive SYNC_RESPONSE
             sync_resp = self._receive_message()
             if not sync_resp or 'SYNC_RESPONSE' not in sync_resp:
-                print("✗ Failed to receive SYNC_RESPONSE")
+                print(" Failed to receive SYNC_RESPONSE")
                 return False
             
             # Parse response
@@ -91,7 +91,7 @@ class SimplePCController:
             rtt = t3 - t1
             offset = int((t2 - t1 - rtt / 2))
             
-            print(f"✓ Time synchronized")
+            print(f" Time synchronized")
             print(f"  Round-trip time: {rtt}ms")
             print(f"  Clock offset: {offset}ms")
             
@@ -103,13 +103,13 @@ class SimplePCController:
             return True
             
         except Exception as e:
-            print(f"✗ Time sync failed: {e}")
+            print(f" Time sync failed: {e}")
             return False
     
     def start_recording(self, session_id: str) -> bool:
         """Start recording on Android"""
         if not self.connected:
-            print("✗ Not connected to Android")
+            print(" Not connected to Android")
             return False
         
         try:
@@ -121,33 +121,33 @@ class SimplePCController:
             # Receive response
             response = self._receive_message()
             if not response:
-                print("✗ No response from Android")
+                print(" No response from Android")
                 return False
             
             # Check if ACK or ERROR
             json_resp = self.adapter.android_to_json(response)
             
             if json_resp['type'] == 'ACK':
-                print(f"✓ Recording started successfully")
+                print(f" Recording started successfully")
                 print(f"  Response: {response}")
                 return True
             elif json_resp['type'] == 'ERROR':
-                print(f"✗ Recording failed to start")
+                print(f" Recording failed to start")
                 print(f"  Error code: {json_resp.get('code', 'UNKNOWN')}")
                 print(f"  Error message: {json_resp.get('msg', 'No message')}")
                 return False
             else:
-                print(f"✗ Unexpected response: {response}")
+                print(f" Unexpected response: {response}")
                 return False
                 
         except Exception as e:
-            print(f"✗ Start recording failed: {e}")
+            print(f" Start recording failed: {e}")
             return False
     
     def stop_recording(self, session_id: str) -> bool:
         """Stop recording on Android"""
         if not self.connected:
-            print("✗ Not connected to Android")
+            print(" Not connected to Android")
             return False
         
         try:
@@ -159,27 +159,27 @@ class SimplePCController:
             # Receive response
             response = self._receive_message()
             if not response:
-                print("✗ No response from Android")
+                print(" No response from Android")
                 return False
             
             # Check if ACK or ERROR
             json_resp = self.adapter.android_to_json(response)
             
             if json_resp['type'] == 'ACK':
-                print(f"✓ Recording stopped successfully")
+                print(f" Recording stopped successfully")
                 print(f"  Response: {response}")
                 return True
             elif json_resp['type'] == 'ERROR':
-                print(f"✗ Recording failed to stop")
+                print(f" Recording failed to stop")
                 print(f"  Error code: {json_resp.get('code', 'UNKNOWN')}")
                 print(f"  Error message: {json_resp.get('msg', 'No message')}")
                 return False
             else:
-                print(f"✗ Unexpected response: {response}")
+                print(f" Unexpected response: {response}")
                 return False
                 
         except Exception as e:
-            print(f"✗ Stop recording failed: {e}")
+            print(f" Stop recording failed: {e}")
             return False
     
     def _send_command(self, command_type: str, **params):
@@ -235,7 +235,7 @@ def main():
     try:
         # Step 1: Connect
         if not controller.connect():
-            print("\n✗ Failed to connect to Android device")
+            print("\n Failed to connect to Android device")
             print("\nTroubleshooting:")
             print("  1. Check if Android device is on the same network")
             print("  2. Check if RecordingService is started on Android")
@@ -245,12 +245,12 @@ def main():
         
         # Step 2: Time sync
         if not controller.sync_time():
-            print("\n✗ Time synchronization failed")
+            print("\n Time synchronization failed")
             return 1
         
         # Step 3: Start recording
         if not controller.start_recording(SESSION_ID):
-            print("\n✗ Failed to start recording")
+            print("\n Failed to start recording")
             return 1
         
         # Step 4: Record for specified duration
@@ -262,11 +262,11 @@ def main():
         
         # Step 5: Stop recording
         if not controller.stop_recording(SESSION_ID):
-            print("\n✗ Failed to stop recording")
+            print("\n Failed to stop recording")
             return 1
         
         print("\n" + "="*70)
-        print("✓✓✓ Example completed successfully! ✓✓✓")
+        print(" Example completed successfully! ")
         print("="*70)
         print()
         print("The recording session has been completed.")
@@ -285,7 +285,7 @@ def main():
         return 1
         
     except Exception as e:
-        print(f"\n✗ Unexpected error: {e}")
+        print(f"\n Unexpected error: {e}")
         import traceback
         traceback.print_exc()
         return 1

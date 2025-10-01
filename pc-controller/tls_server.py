@@ -52,7 +52,7 @@ class TLSSecurityManager:
                 return True
 
             # Generate new certificates
-            logger.info("🔐 Generating new TLS certificates for secure communication...")
+            logger.info(" Generating new TLS certificates for secure communication...")
 
             # Generate CA certificate first
             ca_private_key, ca_certificate = self._generate_ca_certificate()
@@ -68,7 +68,7 @@ class TLSSecurityManager:
                 server_private_key, server_certificate
             )
 
-            logger.info(f"🔐 TLS certificates generated successfully")
+            logger.info(f" TLS certificates generated successfully")
             logger.info(f"   CA Certificate: {self.ca_cert_path}")
             logger.info(f"   Server Certificate: {self.server_cert_path}")
             return True
@@ -96,7 +96,7 @@ class TLSSecurityManager:
             # Set cipher preferences for compatibility
             context.set_ciphers('ECDHE+AESGCM:ECDHE+CHACHA20:DHE+AESGCM:DHE+CHACHA20:!aNULL:!MD5:!DSS')
 
-            logger.info("🔐 SSL context created successfully")
+            logger.info(" SSL context created successfully")
             return context
 
         except Exception as e:
@@ -326,7 +326,7 @@ class SecureTCPServer:
                 if not self.ssl_context:
                     logger.error(" Failed to create SSL context")
                     return False
-                logger.info("🔐 TLS encryption enabled")
+                logger.info(" TLS encryption enabled")
             else:
                 logger.warning(" TLS encryption disabled - using plain TCP")
 
@@ -345,11 +345,11 @@ class SecureTCPServer:
             server_thread.start()
 
             protocol = "TLS" if self.use_tls else "TCP"
-            logger.info(f"🌐 Secure {protocol} Server started on port {self.port}")
+            logger.info(f" Secure {protocol} Server started on port {self.port}")
 
             if self.use_tls:
                 cert_info = self.security_manager.get_certificate_info()
-                logger.info(f"🔐 Server certificate valid until: {cert_info.get('valid_until', 'Unknown')}")
+                logger.info(f" Server certificate valid until: {cert_info.get('valid_until', 'Unknown')}")
 
             return True
 
@@ -373,7 +373,7 @@ class SecureTCPServer:
                 pass
             self.server_socket = None
 
-        logger.info("🛑 Secure TCP Server stopped")
+        logger.info(" Secure TCP Server stopped")
 
         # Print final statistics
         logger.info(f" Session statistics:")
@@ -383,7 +383,7 @@ class SecureTCPServer:
 
     def _server_loop(self):
         """Main server loop with TLS support"""
-        logger.info("🔄 Secure server loop started")
+        logger.info(" Secure server loop started")
 
         while self.running:
             try:
@@ -396,14 +396,14 @@ class SecureTCPServer:
                             client_socket,
                             server_side=True
                         )
-                        logger.info(f"🔐 TLS handshake completed with {address}")
+                        logger.info(f" TLS handshake completed with {address}")
                     except ssl.SSLError as e:
                         logger.error(f" TLS handshake failed with {address}: {e}")
                         client_socket.close()
                         continue
 
                 self.connection_count += 1
-                logger.info(f"🔗 New secure connection #{self.connection_count} from {address}")
+                logger.info(f" New secure connection #{self.connection_count} from {address}")
 
                 # Start client handler thread
                 client_thread = threading.Thread(
@@ -485,7 +485,7 @@ class SecureTCPServer:
                         break
                     continue
                 except (ConnectionResetError, ssl.SSLError) as e:
-                    logger.info(f"🔌 Secure connection closed by device {device_id}: {e}")
+                    logger.info(f" Secure connection closed by device {device_id}: {e}")
                     break
                 except Exception as e:
                     logger.error(f"Secure client error for {device_id}: {e}")
@@ -522,7 +522,7 @@ class SecureTCPServer:
             if message_type in ['device_register', 'session_start']:
                 self._send_ack_response(client_socket, message.get('message_id', 'unknown'))
 
-            logger.debug(f"🔐 Secure message processed: {message_type} from {device_id}")
+            logger.debug(f" Secure message processed: {message_type} from {device_id}")
 
         except Exception as e:
             logger.error(f"Secure message processing error for {device_id}: {e}")
@@ -601,7 +601,7 @@ class SecureTCPServer:
 
             # Log connection statistics
             duration = (datetime.now(timezone.utc) - client_info['connected_at']).total_seconds()
-            logger.info(f"🔌 Device {device_id} disconnected")
+            logger.info(f" Device {device_id} disconnected")
             logger.info(f"   Duration: {duration:.1f}s")
             logger.info(f"   Messages: {client_info['message_count']}")
             logger.info(f"   Data: {client_info['bytes_received'] / 1024:.1f} KB")
@@ -622,7 +622,7 @@ class SecureTCPServer:
 
 def main():
     """Test the secure TLS server"""
-    print("🔐 IRCamera Secure TLS Server Test")
+    print(" IRCamera Secure TLS Server Test")
     print("=" * 50)
 
     # Test security manager
@@ -641,7 +641,7 @@ def main():
 
     # Test secure server
     def test_callback(device_id, message):
-        print(f"📨 Message from {device_id}: {message.get('message_type')}")
+        print(f" Message from {device_id}: {message.get('message_type')}")
 
     print("\nStarting secure server...")
     server = SecureTCPServer(port=8443, use_tls=True, data_callback=test_callback)
@@ -660,7 +660,7 @@ def main():
                           f"Messages: {stats['total_messages']}, "
                           f"Data: {stats['bytes_transferred'] / 1024:.1f} KB")
         except KeyboardInterrupt:
-            print("\n🛑 Stopping server...")
+            print("\n Stopping server...")
             server.stop()
     else:
         print(" Failed to start secure server")

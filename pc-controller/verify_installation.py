@@ -22,10 +22,10 @@ def check_python_version():
     print("\n[1/8] Checking Python version...")
     version = sys.version_info
     if version.major >= 3 and version.minor >= 8:
-        print(f"  ✓ Python {version.major}.{version.minor}.{version.micro}")
+        print(f"   Python {version.major}.{version.minor}.{version.micro}")
         return True
     else:
-        print(f"  ✗ Python {version.major}.{version.minor} (requires 3.8+)")
+        print(f"   Python {version.major}.{version.minor} (requires 3.8+)")
         return False
 
 
@@ -48,15 +48,15 @@ def check_dependencies():
             # Special cases for different package names
             if package == 'opencv-python':
                 import cv2
-                print(f"  ✓ {package:20s} - {description}")
+                print(f"   {package:20s} - {description}")
             elif package == 'PyQt6':
                 import PyQt6
-                print(f"  ✓ {package:20s} - {description}")
+                print(f"   {package:20s} - {description}")
             else:
                 __import__(package.replace('-', '_').lower())
-                print(f"  ✓ {package:20s} - {description}")
+                print(f"   {package:20s} - {description}")
         except ImportError:
-            print(f"  ✗ {package:20s} - {description} (MISSING)")
+            print(f"   {package:20s} - {description} (MISSING)")
             missing.append(package)
     
     if missing:
@@ -75,12 +75,12 @@ def check_native_backend():
     
     try:
         import enhanced_native_backend
-        print(f"  ✓ Native backend found")
+        print(f"   Native backend found")
         print(f"    Version: {enhanced_native_backend.__version__}")
         print(f"    Build date: {enhanced_native_backend.__build_date__}")
         return True
     except ImportError:
-        print(f"  ⚠  Native backend not built (optional)")
+        print(f"    Native backend not built (optional)")
         print(f"    Build with: cd native_backend && python3 setup.py build_ext --inplace")
         print(f"    Controller will use Python fallback")
         return None  # None means optional, not critical
@@ -100,9 +100,9 @@ def check_controllers():
     for filename, description in files.items():
         filepath = Path(__file__).parent / filename
         if filepath.exists():
-            print(f"  ✓ {filename:30s} - {description}")
+            print(f"   {filename:30s} - {description}")
         else:
-            print(f"  ✗ {filename:30s} - MISSING")
+            print(f"   {filename:30s} - MISSING")
             all_ok = False
     
     return all_ok
@@ -117,9 +117,9 @@ def check_config_files():
     for filename in files:
         filepath = Path(__file__).parent / filename
         if filepath.exists():
-            print(f"  ✓ {filename}")
+            print(f"   {filename}")
         else:
-            print(f"  ⚠  {filename} (optional)")
+            print(f"    {filename} (optional)")
     
     return True
 
@@ -133,11 +133,11 @@ def check_certificates():
     if cert_dir.exists():
         cert_files = list(cert_dir.glob('*.crt')) + list(cert_dir.glob('*.key'))
         if cert_files:
-            print(f"  ✓ Certificate directory found with {len(cert_files)} files")
+            print(f"   Certificate directory found with {len(cert_files)} files")
         else:
-            print(f"  ⚠  Certificate directory empty (will auto-generate)")
+            print(f"    Certificate directory empty (will auto-generate)")
     else:
-        print(f"  ⚠  No certificates (will auto-generate on first run)")
+        print(f"    No certificates (will auto-generate on first run)")
     
     return True
 
@@ -150,15 +150,15 @@ def check_tests():
     demo_file = Path(__file__).parent / 'demo_features.py'
     
     if test_file.exists():
-        print(f"  ✓ test_pc_controller_features.py")
+        print(f"   test_pc_controller_features.py")
     else:
-        print(f"  ✗ test_pc_controller_features.py (MISSING)")
+        print(f"   test_pc_controller_features.py (MISSING)")
         return False
     
     if demo_file.exists():
-        print(f"  ✓ demo_features.py")
+        print(f"   demo_features.py")
     else:
-        print(f"  ✗ demo_features.py (MISSING)")
+        print(f"   demo_features.py (MISSING)")
         return False
     
     return True
@@ -178,9 +178,9 @@ def check_documentation():
         filepath = Path(__file__).parent / filename
         if filepath.exists():
             size_kb = filepath.stat().st_size / 1024
-            print(f"  ✓ {filename:40s} ({size_kb:.1f} KB)")
+            print(f"   {filename:40s} ({size_kb:.1f} KB)")
         else:
-            print(f"  ⚠  {filename:40s} (optional)")
+            print(f"    {filename:40s} (optional)")
     
     return True
 
@@ -197,11 +197,11 @@ def run_quick_test():
         import enhanced_native_backend
         gsr = enhanced_native_backend.GSRData()
         gsr.gsr_microsiemens = 5.5
-        print(f"  ✓ Native backend working: {gsr}")
+        print(f"   Native backend working: {gsr}")
     except ImportError:
-        print(f"  ⚠  Native backend not available (using Python fallback)")
+        print(f"    Native backend not available (using Python fallback)")
     except Exception as e:
-        print(f"  ✗ Native backend error: {e}")
+        print(f"   Native backend error: {e}")
         return False
     
     print("\nTesting protocol message handling...")
@@ -215,9 +215,9 @@ def run_quick_test():
         json_str = json.dumps(test_msg)
         parsed = json.loads(json_str)
         assert parsed == test_msg
-        print(f"  ✓ Protocol handling working")
+        print(f"   Protocol handling working")
     except Exception as e:
-        print(f"  ✗ Protocol error: {e}")
+        print(f"   Protocol error: {e}")
         return False
     
     return True
@@ -242,7 +242,7 @@ def main():
     if all(r for r in [results['Python version'], results['Dependencies'], results['Controllers']]):
         results['Smoke test'] = run_quick_test()
     else:
-        print("\n⚠  Skipping smoke test due to missing components")
+        print("\n  Skipping smoke test due to missing components")
         results['Smoke test'] = None
     
     # Print summary
@@ -255,12 +255,12 @@ def main():
     
     for check, result in results.items():
         if result is True:
-            status = "✓ PASS"
+            status = " PASS"
         elif result is False:
-            status = "✗ FAIL"
+            status = " FAIL"
             critical_count += 1
         else:  # None means optional/warning
-            status = "⚠  WARN"
+            status = "  WARN"
             warning_count += 1
         
         print(f"  {check:.<50} {status}")
@@ -268,12 +268,12 @@ def main():
     print("\n" + "-"*70)
     
     if critical_count == 0:
-        print("  🎉 All critical checks passed!")
+        print("   All critical checks passed!")
         if warning_count > 0:
-            print(f"  ⚠  {warning_count} optional component(s) missing")
+            print(f"    {warning_count} optional component(s) missing")
             print("  The controller will work but with reduced functionality")
     else:
-        print(f"  ❌ {critical_count} critical check(s) failed")
+        print(f"   {critical_count} critical check(s) failed")
         print("  Please fix the issues above before running the controller")
     
     print("="*70)

@@ -13,7 +13,7 @@ import com.topdon.ble.callback.ScanListener;
 import com.topdon.ble.util.Logger;
 
 /**
- * 蓝牙搜索器
+ *
  * <p>
  * date: 2021/8/12 12:30
  * author: bichuanfeng
@@ -40,7 +40,7 @@ class LeScanner extends AbstractScanner {
 
     private BluetoothLeScanner getLeScanner() {
         if (bleScanner == null) {
-            //如果蓝牙未开启的时候，获取到是null
+            //，null
             bleScanner = bluetoothAdapter.getBluetoothLeScanner();
         }
         return bleScanner;

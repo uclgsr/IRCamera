@@ -19,14 +19,14 @@ class IRThermalFragmentViewModel : BaseViewModel() {
     private val _deviceConnectionState = MutableStateFlow(DeviceConnectionState())
     val deviceConnectionState: StateFlow<DeviceConnectionState> =
         _deviceConnectionState.asStateFlow()
-    
+
     // Individual state flows required by the Compose fragment
     private val _connectionStatus = MutableStateFlow(ConnectionStatus.DISCONNECTED)
     val connectionStatus: StateFlow<ConnectionStatus> = _connectionStatus.asStateFlow()
-    
+
     private val _isTC007 = MutableStateFlow(false)
     val isTC007: StateFlow<Boolean> = _isTC007.asStateFlow()
-    
+
     private val _deviceInfo = MutableStateFlow<String?>(null)
     val deviceInfo: StateFlow<String?> = _deviceInfo.asStateFlow()
 
@@ -68,7 +68,7 @@ class IRThermalFragmentViewModel : BaseViewModel() {
                 } else {
                     if (connectionState.hasUsbDevice) "USB Device Available" else "No Device Detected"
                 }
-                
+
                 uiState.copy(
                     isConnected = connectionState.hasConnection,
                     isTC007Connected = connectionState.isTC007Connected,
@@ -95,7 +95,7 @@ class IRThermalFragmentViewModel : BaseViewModel() {
             hasUsbDevice = hasUsbDevice,
             isTC007Device = isTC007
         )
-        
+
         // Update individual state flows
         _connectionStatus.value = if (hasConnection) ConnectionStatus.CONNECTED else ConnectionStatus.DISCONNECTED
         _isTC007.value = isTC007
@@ -202,7 +202,7 @@ class IRThermalFragmentViewModel : BaseViewModel() {
             } else {
                 DeviceTools.isConnect(isAutoRequest = false)
             }
-            
+
             if (hasConnection) {
                 _connectionStatus.value = ConnectionStatus.CONNECTED
                 onDeviceConnected(isTC007Device)
@@ -211,18 +211,18 @@ class IRThermalFragmentViewModel : BaseViewModel() {
             }
         }
     }
-    
+
     fun openMainThermal() {
         val isTC007Device = _isTC007.value
         handleThermalOpen(isTC007Device)
     }
-    
+
     fun connectDevice() {
         _connectionStatus.value = ConnectionStatus.CONNECTING
         // This would typically trigger device connection logic
         retryConnection()
     }
-    
+
     fun openDeviceSettings() {
         _thermalAction.value = ThermalAction.ShowConnectTip
     }
@@ -261,7 +261,7 @@ class IRThermalFragmentViewModel : BaseViewModel() {
         object PermissionGranted : PermissionState()
         data class PermissionDenied(val doNotAskAgain: Boolean) : PermissionState()
     }
-    
+
     enum class ConnectionStatus {
         DISCONNECTED, CONNECTING, CONNECTED, ERROR
     }

@@ -9,10 +9,10 @@ import com.topdon.ble.Request;
  */
 public interface ReadCharacteristicCallback extends RequestFailedCallback {
     /**
-     * 读取到特征值
      *
-     * @param request 请求
-     * @param value   读取到的数据
+     *
+     * @param request
+     * @param value
      */
     void onCharacteristicRead(Request request, byte[] value);
 }

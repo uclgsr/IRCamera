@@ -122,29 +122,29 @@ class PDFListViewModel : BaseViewModel() {
     private suspend fun getPDFItemsList(): List<PDFItem> {
         return try {
             val items = mutableListOf<PDFItem>()
-            
+
             // Scan the PDF directory for PDF files
             val pdfDir = File(FileConfig.getPdfDir())
             Log.d(TAG, "Scanning PDF directory: ${pdfDir.absolutePath}")
-            
+
             if (pdfDir.exists() && pdfDir.isDirectory) {
                 val pdfFiles = pdfDir.listFiles { file ->
                     file.isFile && file.name.lowercase().endsWith(".pdf")
                 }
-                
+
                 Log.d(TAG, "Found ${pdfFiles?.size ?: 0} PDF files")
-                
+
                 pdfFiles?.forEach { pdfFile ->
                     try {
                         // Determine if this is an analysis report based on filename patterns
                         val isAnalysisReport = pdfFile.name.contains("analysis", ignoreCase = true) ||
-                                             pdfFile.name.contains("report", ignoreCase = true) ||
-                                             pdfFile.name.contains("thermal", ignoreCase = true)
-                        
+                                pdfFile.name.contains("report", ignoreCase = true) ||
+                                pdfFile.name.contains("thermal", ignoreCase = true)
+
                         // For now, we'll use a default page count of 1
                         // In a production app, you would use a PDF library to get actual page count
                         val pageCount = 1
-                        
+
                         items.add(
                             PDFItem(
                                 path = pdfFile.absolutePath,
@@ -155,7 +155,7 @@ class PDFListViewModel : BaseViewModel() {
                                 isAnalysisReport = isAnalysisReport
                             )
                         )
-                        
+
                         Log.d(TAG, "Added PDF: ${pdfFile.name} (${pdfFile.length()} bytes)")
                     } catch (e: Exception) {
                         Log.w(TAG, "Error processing PDF file: ${pdfFile.name}", e)
@@ -164,7 +164,7 @@ class PDFListViewModel : BaseViewModel() {
             } else {
                 Log.w(TAG, "PDF directory does not exist or is not a directory: ${pdfDir.absolutePath}")
             }
-            
+
             // Sort by date modified (newest first)
             val sortedItems = items.sortedByDescending { it.dateModified }
             Log.d(TAG, "Returning ${sortedItems.size} PDF items")

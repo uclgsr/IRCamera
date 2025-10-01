@@ -136,7 +136,8 @@ class IRCorrectionLiteThreeComposeActivity : BaseComposeActivity<IRCorrectionLit
                             fontWeight = FontWeight.Bold
                         )
                         Spacer(modifier = Modifier.height(8.dp))
-                        LinearProgressIndicator(progress = { progress },
+                        LinearProgressIndicator(
+                            progress = { progress },
                             modifier = Modifier.fillMaxWidth(),
                             color = Color(0xFF4A90E2)
                         )

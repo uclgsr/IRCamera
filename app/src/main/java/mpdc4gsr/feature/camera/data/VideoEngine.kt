@@ -34,29 +34,29 @@ class VideoEngine(private val context: Context? = null) {
                 @Suppress("DEPRECATION")
                 MediaRecorder()
             }.apply {
-                    if (audioEnabled) {
-                        setAudioSource(MediaRecorder.AudioSource.MIC)
-                    }
-                    setVideoSource(MediaRecorder.VideoSource.SURFACE)
-                    setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
-                    setOutputFile(outputFile.absolutePath)
-                    setVideoEncodingBitRate(bitRate)
-                    setVideoFrameRate(frameRate)
-                    setVideoSize(videoSize.width, videoSize.height)
-                    setVideoEncoder(MediaRecorder.VideoEncoder.H264)
-
-
-                    setOrientationHint(orientationHint)
-                    Log.d(TAG, "Video orientation hint set to: $orientationHint degrees")
-
-                    if (audioEnabled) {
-                        setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
-                        setAudioEncodingBitRate(128000)
-                        setAudioSamplingRate(44100)
-                    }
-
-                    prepare()
+                if (audioEnabled) {
+                    setAudioSource(MediaRecorder.AudioSource.MIC)
                 }
+                setVideoSource(MediaRecorder.VideoSource.SURFACE)
+                setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
+                setOutputFile(outputFile.absolutePath)
+                setVideoEncodingBitRate(bitRate)
+                setVideoFrameRate(frameRate)
+                setVideoSize(videoSize.width, videoSize.height)
+                setVideoEncoder(MediaRecorder.VideoEncoder.H264)
+
+
+                setOrientationHint(orientationHint)
+                Log.d(TAG, "Video orientation hint set to: $orientationHint degrees")
+
+                if (audioEnabled) {
+                    setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
+                    setAudioEncodingBitRate(128000)
+                    setAudioSamplingRate(44100)
+                }
+
+                prepare()
+            }
 
             isPrepared = true
             Log.i(

@@ -2,13 +2,15 @@
 
 ## Overview
 
-This document consolidates architecture diagrams, UI component mappings, layout information, and navigation structure for the IRCamera application.
+This document consolidates architecture diagrams, UI component mappings, layout information, and navigation structure
+for the IRCamera application.
 
 ## System Architecture
 
 ### Hub-and-Spoke Design
 
 The IRCamera platform implements a hub-and-spoke architecture:
+
 - **Hub**: Desktop PC controller coordinates all sensor nodes
 - **Spokes**: Android devices act as sensor nodes
 - **Communication**: Network-based command and data exchange
@@ -19,28 +21,29 @@ The IRCamera platform implements a hub-and-spoke architecture:
 #### Core Modules
 
 1. **app/** - Main application module
-   - Activities: 210+ implementations
-   - Layouts: 221 XML layouts (legacy) + Compose screens
-   - Services: Background data collection and coordination
+    - Activities: 210+ implementations
+    - Layouts: 221 XML layouts (legacy) + Compose screens
+    - Services: Background data collection and coordination
 
 2. **libunified/** - Shared library module
-   - BaseComposeActivity - Compose foundation
-   - BaseViewModel - StateFlow-based state management
-   - Common utilities and extensions
+    - BaseComposeActivity - Compose foundation
+    - BaseViewModel - StateFlow-based state management
+    - Common utilities and extensions
 
 3. **component/thermalunified/** - Thermal camera integration
-   - TC001 device communication
-   - Image processing and display
-   - Temperature data handling
+    - TC001 device communication
+    - Image processing and display
+    - Temperature data handling
 
 4. **component/user/** - User management
-   - Authentication
-   - Profile management
-   - Session handling
+    - Authentication
+    - Profile management
+    - Session handling
 
 ### MVVM Architecture
 
 Modern MVVM implementation using:
+
 - **StateFlow** instead of LiveData for reactive UI
 - **Repository pattern** for data management
 - **Coroutine-based** error handling
@@ -83,24 +86,24 @@ MainActivity (Launcher)
 #### Main Screens
 
 1. **Dashboard**
-   - Sensor status overview
-   - Quick actions
-   - System health indicators
+    - Sensor status overview
+    - Quick actions
+    - System health indicators
 
 2. **Thermal Camera**
-   - Live thermal feed
-   - Temperature controls
-   - Capture and recording
+    - Live thermal feed
+    - Temperature controls
+    - Capture and recording
 
 3. **GSR Monitoring**
-   - Real-time GSR data
-   - Signal quality indicators
-   - Calibration controls
+    - Real-time GSR data
+    - Signal quality indicators
+    - Calibration controls
 
 4. **Settings**
-   - Device configuration
-   - Network settings
-   - Data management
+    - Device configuration
+    - Network settings
+    - Data management
 
 #### Supporting Screens
 
@@ -145,6 +148,7 @@ MainActivity (Launcher)
 #### Material Design 3
 
 Consistent use of Material Design 3 components:
+
 - Cards for content grouping
 - Elevated buttons for primary actions
 - Outlined buttons for secondary actions
@@ -162,6 +166,7 @@ Consistent use of Material Design 3 components:
 ### Compose Activities (Primary)
 
 Current implementation uses Compose for all new screens:
+
 - Material 3 design system
 - Declarative UI
 - StateFlow-based state management
@@ -170,6 +175,7 @@ Current implementation uses Compose for all new screens:
 ### Legacy XML Activities (Backed Up)
 
 Traditional activities moved to backup/ directory:
+
 - 74 activities backed up
 - 9 fragments archived
 - 51 XML layouts preserved
@@ -180,6 +186,7 @@ Traditional activities moved to backup/ directory:
 ### Test Activity Organization
 
 Seven comprehensive test activities:
+
 1. BLE Integration Testing
 2. GSR Benchmarking
 3. RGB Camera Testing
@@ -215,6 +222,7 @@ User Action -> ViewModel -> Repository -> Data Source
 ### Error Handling
 
 Comprehensive error handling at each layer:
+
 - Network errors with retry logic
 - Device disconnection handling
 - Data validation and sanitization
@@ -309,4 +317,6 @@ For detailed information on specific topics:
 
 ## Conclusion
 
-The IRCamera architecture provides a solid foundation for multi-modal physiological sensing with clear separation of concerns, modern development practices, and comprehensive testing infrastructure. The modular design enables independent development and maintenance of different system components.
+The IRCamera architecture provides a solid foundation for multi-modal physiological sensing with clear separation of
+concerns, modern development practices, and comprehensive testing infrastructure. The modular design enables independent
+development and maintenance of different system components.

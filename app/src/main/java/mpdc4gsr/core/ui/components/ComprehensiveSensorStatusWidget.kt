@@ -66,8 +66,8 @@ class ComprehensiveSensorStatusWidget @JvmOverloads constructor(
         titleText = TextView(context).apply {
             text = " Multi-Modal Sensor Dashboard"
             textSize = 18f
-@Suppress("DEPRECATION")
-                        setTextColor(ContextCompat.getColor(context, android.R.color.primary_text_dark))
+            @Suppress("DEPRECATION")
+            setTextColor(ContextCompat.getColor(context, android.R.color.primary_text_dark))
             gravity = Gravity.CENTER
             setPadding(0, 0, 0, 16)
         }
@@ -101,8 +101,8 @@ class ComprehensiveSensorStatusWidget @JvmOverloads constructor(
         recordingTimer = TextView(context).apply {
             text = "⏱️ Ready to Record"
             textSize = 14f
-@Suppress("DEPRECATION")
-                        setTextColor(ContextCompat.getColor(context, android.R.color.primary_text_dark))
+            @Suppress("DEPRECATION")
+            setTextColor(ContextCompat.getColor(context, android.R.color.primary_text_dark))
         }
         recordingSection.addView(recordingTimer)
 
@@ -110,10 +110,10 @@ class ComprehensiveSensorStatusWidget @JvmOverloads constructor(
 
 
         val sensorsTitle = TextView(context).apply {
-            text = "🔗 Sensor Connections"
+            text = " Sensor Connections"
             textSize = 16f
-@Suppress("DEPRECATION")
-                        setTextColor(ContextCompat.getColor(context, android.R.color.primary_text_dark))
+            @Suppress("DEPRECATION")
+            setTextColor(ContextCompat.getColor(context, android.R.color.primary_text_dark))
             setPadding(0, 8, 0, 8)
         }
         addView(sensorsTitle)
@@ -131,9 +131,9 @@ class ComprehensiveSensorStatusWidget @JvmOverloads constructor(
     private fun initializeDefaultSensors() {
 
         addSensorStatusView("thermal_camera", " TC001 Thermal Camera", SensorType.THERMAL)
-        addSensorStatusView("rgb_camera", "📹 RGB Camera", SensorType.RGB)
-        addSensorStatusView("shimmer_gsr", "⚡ Shimmer GSR Sensor", SensorType.GSR)
-        addSensorStatusView("audio_recorder", "🎤 Audio Recorder", SensorType.AUDIO)
+        addSensorStatusView("rgb_camera", " RGB Camera", SensorType.RGB)
+        addSensorStatusView("shimmer_gsr", " Shimmer GSR Sensor", SensorType.GSR)
+        addSensorStatusView("audio_recorder", " Audio Recorder", SensorType.AUDIO)
     }
 
 
@@ -205,9 +205,9 @@ class ComprehensiveSensorStatusWidget @JvmOverloads constructor(
         errorSensorCount = sensorStatusViews.values.count { it.hasError() }
 
         val statusText = when {
-            isRecording -> "🔴 RECORDING - Session: ${currentSessionId ?: "Unknown"}"
+            isRecording -> " RECORDING - Session: ${currentSessionId ?: "Unknown"}"
             errorSensorCount > 0 -> " ${errorSensorCount} Sensor Error(s) Detected"
-            activeSensorCount == 0 -> "🔌 No Sensors Connected"
+            activeSensorCount == 0 -> " No Sensors Connected"
             activeSensorCount < sensorStatusViews.size -> "🟡 ${activeSensorCount}/${sensorStatusViews.size} Sensors Connected"
             else -> " All Sensors Connected & Ready"
         }
@@ -230,7 +230,7 @@ class ComprehensiveSensorStatusWidget @JvmOverloads constructor(
             while (isRecording) {
                 val elapsed = System.currentTimeMillis() - recordingStartTime
                 val formattedTime = formatElapsedTime(elapsed)
-                recordingTimer.text = "🔴 RECORDING: $formattedTime"
+                recordingTimer.text = " RECORDING: $formattedTime"
                 delay(1000)
             }
         }
@@ -298,8 +298,8 @@ class ComprehensiveSensorStatusWidget @JvmOverloads constructor(
             nameText = TextView(context).apply {
                 text = displayName
                 textSize = 14f
-@Suppress("DEPRECATION")
-                            setTextColor(ContextCompat.getColor(context, android.R.color.primary_text_dark))
+                @Suppress("DEPRECATION")
+                setTextColor(ContextCompat.getColor(context, android.R.color.primary_text_dark))
             }
             textContainer.addView(nameText)
 
@@ -313,8 +313,8 @@ class ComprehensiveSensorStatusWidget @JvmOverloads constructor(
             detailsText = TextView(context).apply {
                 text = ""
                 textSize = 10f
-@Suppress("DEPRECATION")
-                            setTextColor(ContextCompat.getColor(context, android.R.color.secondary_text_dark))
+                @Suppress("DEPRECATION")
+                setTextColor(ContextCompat.getColor(context, android.R.color.secondary_text_dark))
                 visibility = GONE
             }
             textContainer.addView(detailsText)

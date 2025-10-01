@@ -78,7 +78,7 @@ class CameraController(private val context: Context) {
                 captureSession = null
 
                 Log.i(TAG, "Creating capture session with ${surfaces.size} surfaces")
-                
+
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                     val outputConfigs = surfaces.map { OutputConfiguration(it) }
                     val sessionConfig = SessionConfiguration(

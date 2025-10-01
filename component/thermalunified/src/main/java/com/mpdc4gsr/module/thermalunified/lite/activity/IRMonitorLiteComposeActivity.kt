@@ -588,14 +588,14 @@ class IRMonitorLiteViewModel : ViewModel() {
 
     private val _uiState = MutableStateFlow(IRMonitorUiState())
     val uiState: StateFlow<IRMonitorUiState> = _uiState.asStateFlow()
-    
+
     // Job reference for monitoring coroutine management
     private var monitoringJob: Job? = null
 
     fun startMonitoring() {
         // Cancel any existing monitoring job before starting a new one
         monitoringJob?.cancel()
-        
+
         _uiState.value = _uiState.value.copy(isMonitoring = true)
         startTemperatureMonitoring()
     }
@@ -604,7 +604,7 @@ class IRMonitorLiteViewModel : ViewModel() {
         // Cancel the monitoring job when stopping
         monitoringJob?.cancel()
         monitoringJob = null
-        
+
         _uiState.value = _uiState.value.copy(isMonitoring = false)
     }
 
@@ -624,12 +624,14 @@ class IRMonitorLiteViewModel : ViewModel() {
                 val currentState = _uiState.value
 
                 // Simulate temperature reading with some variation using extracted constants
-                val baseTemp = BASE_TEMPERATURE + sin(timeStep * SIN_FREQUENCY).toFloat() * SIN_AMPLITUDE + cos(timeStep * COS_FREQUENCY).toFloat() * COS_AMPLITUDE
+                val baseTemp =
+                    BASE_TEMPERATURE + sin(timeStep * SIN_FREQUENCY).toFloat() * SIN_AMPLITUDE + cos(timeStep * COS_FREQUENCY).toFloat() * COS_AMPLITUDE
                 val noise = Random.nextFloat() * (2 * NOISE_RANGE) - NOISE_RANGE
                 val currentTemp = baseTemp + noise
 
                 // Update temperature history
-                val newHistory = (currentState.temperatureHistory + listOf(currentTemp)).takeLast(MAX_TEMPERATURE_HISTORY)
+                val newHistory =
+                    (currentState.temperatureHistory + listOf(currentTemp)).takeLast(MAX_TEMPERATURE_HISTORY)
 
                 // Calculate statistics
                 val newStatistics = calculateStatistics(newHistory)
@@ -732,7 +734,7 @@ class IRMonitorLiteViewModel : ViewModel() {
     fun setSamplingRate(rate: Int) {
         _uiState.value = _uiState.value.copy(samplingRate = rate)
     }
-    
+
     override fun onCleared() {
         super.onCleared()
         // Cancel monitoring job when ViewModel is destroyed

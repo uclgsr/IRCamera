@@ -126,7 +126,7 @@ private fun ThermalCameraPreview(
     modifier: Modifier = Modifier
 ) {
     val primaryColor = MaterialTheme.colorScheme.primary
-    
+
     // Placeholder for actual thermal camera preview
     // In production, this would use AndroidView to host the IrSurfaceView
     Box(

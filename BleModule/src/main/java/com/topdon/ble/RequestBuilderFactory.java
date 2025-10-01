@@ -20,9 +20,9 @@ import java.util.UUID;
  */
 public class RequestBuilderFactory {
     /**
-     * 获取修改最大传输单元请求构建器
+     * 
      *
-     * @param mtu 要修改成的值
+     * @param mtu 
      */
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     public RequestBuilder<MtuChangeCallback> getChangeMtuBuilder(@IntRange(from = 23, to = 517) int mtu) {
@@ -37,10 +37,10 @@ public class RequestBuilderFactory {
     }
 
     /**
-     * 获取读取蓝牙设备的特征请求构建器
+     * 
      *
-     * @param service        服务UUID
-     * @param characteristic 特征UUID
+     * @param service        UUID
+     * @param characteristic UUID
      */
     public RequestBuilder<ReadCharacteristicCallback> getReadCharacteristicBuilder(UUID service, UUID characteristic) {
         RequestBuilder<ReadCharacteristicCallback> builder = new RequestBuilder<>(RequestType.READ_CHARACTERISTIC);
@@ -50,11 +50,11 @@ public class RequestBuilderFactory {
     }
 
     /**
-     * 获取开关数据通知请求构建器
+     * 
      *
-     * @param service        服务UUID
-     * @param characteristic 特征UUID
-     * @param enable         开启或关闭
+     * @param service        UUID
+     * @param characteristic UUID
+     * @param enable         
      */
     public RequestBuilder<NotificationChangeCallback> getSetNotificationBuilder(UUID service, UUID characteristic,
                                                                                 boolean enable) {
@@ -66,11 +66,11 @@ public class RequestBuilderFactory {
     }
 
     /**
-     * 获取开关Indication请求构建器
+     * Indication
      *
-     * @param service        服务UUID
-     * @param characteristic 特征UUID
-     * @param enable         开启或关闭
+     * @param service        UUID
+     * @param characteristic UUID
+     * @param enable         
      */
     public RequestBuilder<NotificationChangeCallback> getSetIndicationBuilder(UUID service, UUID characteristic,
                                                                               boolean enable) {
@@ -82,11 +82,11 @@ public class RequestBuilderFactory {
     }
 
     /**
-     * 获取读取描述符的值请求构建器
+     * 
      *
-     * @param service        服务UUID
-     * @param characteristic 特征UUID
-     * @param descriptor     描述符UUID
+     * @param service        UUID
+     * @param characteristic UUID
+     * @param descriptor     UUID
      */
     public RequestBuilder<NotificationChangeCallback> getReadDescriptorBuilder(UUID service, UUID characteristic,
                                                                                UUID descriptor) {
@@ -98,11 +98,11 @@ public class RequestBuilderFactory {
     }
 
     /**
-     * 获取向特征写入请求构建器
+     * 
      *
-     * @param service        服务UUID
-     * @param characteristic 特征UUID
-     * @param value          要写入特征的值
+     * @param service        UUID
+     * @param characteristic UUID
+     * @param value          
      */
     public WriteCharacteristicBuilder getWriteCharacteristicBuilder(UUID service, UUID characteristic,
                                                                     byte[] value) {
@@ -115,14 +115,14 @@ public class RequestBuilderFactory {
     }
 
     /**
-     * 获取读取已连接的蓝牙设备的信号强度请求构建器
+     * 
      */
     public RequestBuilder<ReadRssiCallback> getReadRssiBuilder() {
         return new RequestBuilder<>(RequestType.READ_RSSI);
     }
 
     /**
-     * 获取读取物理层发送器和接收器请求构建器
+     * 
      */
     @RequiresApi(Build.VERSION_CODES.O)
     public RequestBuilder<PhyChangeCallback> getReadPhyBuilder() {
@@ -130,11 +130,11 @@ public class RequestBuilderFactory {
     }
 
     /**
-     * 获取设置物理层发送器和接收器偏好请求构建器
+     * 
      *
-     * @param txPhy      物理层发送器偏好。{@link BluetoothDevice#PHY_LE_1M_MASK}等
-     * @param rxPhy      物理层接收器偏好。{@link BluetoothDevice#PHY_LE_1M_MASK}等
-     * @param phyOptions 物理层BLE首选传输编码。{@link BluetoothDevice#PHY_OPTION_NO_PREFERRED}等
+     * @param txPhy      。{@link BluetoothDevice#PHY_LE_1M_MASK}
+     * @param rxPhy      。{@link BluetoothDevice#PHY_LE_1M_MASK}
+     * @param phyOptions BLE。{@link BluetoothDevice#PHY_OPTION_NO_PREFERRED}
      */
     @RequiresApi(Build.VERSION_CODES.O)
     public RequestBuilder<PhyChangeCallback> getSetPreferredPhyBuilder(int txPhy, int rxPhy, int phyOptions) {

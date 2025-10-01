@@ -90,7 +90,7 @@ class ClauseActivityCompose : BaseComposeActivity<ClauseViewModel>() {
     override fun Content(viewModel: ClauseViewModel) {
         IRCameraTheme {
             val context = LocalContext.current
-    val scope = rememberCoroutineScope()
+            val scope = rememberCoroutineScope()
             val isLoading by viewModel.isLoading
             val currentYear by viewModel.currentYear
             val agreementAccepted by viewModel.agreementAccepted

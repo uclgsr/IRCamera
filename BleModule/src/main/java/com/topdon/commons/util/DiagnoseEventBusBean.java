@@ -1,21 +1,21 @@
 package com.topdon.commons.util;
 
 /**
- * @Desc 诊断语言实体类
+ * @Desc
  * @ClassName DiagnoseLanguageBean
  * @Email 616862466@qq.com
- * @Author 子墨
+ * @Author
  * @Date 2022/9/13 15:40
  */
 
 public class DiagnoseEventBusBean {
-    private int what;//1 语言  2 sn连接  3进入诊断或者百公里加速 4 诊断或者保养  5 Folder sn号路径   6 diagMenuMask
+    private int what;//1   2 sn  3 4   5 Folder sn   6 diagMenuMask
     private String language;
-    private boolean snConnection;// true sn不相等  false 相等
-    private boolean isDiagnose;// true 进入诊断或者百公里加速  false  未进入诊断或者百公里加速
-    private long mDiagEntryType;// 进入诊断的方式
-    private long mDiagMenuMask;//车型实际开发内容配置
-    private String snPath;//sn文件夹路径
+    private boolean snConnection;// true sn  false
+    private boolean isDiagnose;// true   false
+    private long mDiagEntryType;//
+    private long mDiagMenuMask;//
+    private String snPath;//sn
 
     public String getSnPath() {
         return snPath;

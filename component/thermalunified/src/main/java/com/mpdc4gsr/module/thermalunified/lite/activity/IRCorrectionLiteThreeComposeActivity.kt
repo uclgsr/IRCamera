@@ -245,7 +245,8 @@ fun StatusCard(
 
             if (uiState.isProcessing) {
                 Spacer(modifier = Modifier.height(12.dp))
-                LinearProgressIndicator(progress = { correctionProgress },
+                LinearProgressIndicator(
+                    progress = { correctionProgress },
                     modifier = Modifier.fillMaxWidth()
                 )
                 Text(

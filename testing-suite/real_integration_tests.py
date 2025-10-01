@@ -73,7 +73,7 @@ class RealIntegrationTester:
         
     def run_complete_real_integration(self) -> Dict[str, Any]:
         """Execute complete real integration testing suite"""
-        print("🔧 Starting Real Integration Testing Suite")
+        print(" Starting Real Integration Testing Suite")
         print("=" * 60)
         
         start_time = time.time()
@@ -87,15 +87,15 @@ class RealIntegrationTester:
         self._analyze_session_data()
         
         # Phase 3: Hardware detection and validation
-        print("\n🔌 PHASE 3: HARDWARE INTEGRATION TESTING")
+        print("\n PHASE 3: HARDWARE INTEGRATION TESTING")
         self._test_hardware_integration()
         
         # Phase 4: Network performance measurement
-        print("\n🌐 PHASE 4: REAL NETWORK PERFORMANCE TESTING")
+        print("\n PHASE 4: REAL NETWORK PERFORMANCE TESTING")
         self._measure_network_performance()
         
         # Phase 5: File I/O and system integration
-        print("\n💾 PHASE 5: SYSTEM INTEGRATION VALIDATION")
+        print("\n PHASE 5: SYSTEM INTEGRATION VALIDATION")
         self._test_system_integration()
         
         # Generate comprehensive report
@@ -104,7 +104,7 @@ class RealIntegrationTester:
     
     def _execute_android_tests(self) -> None:
         """Execute actual Android unit and instrumentation tests"""
-        print("🧪 Running Android Unit Tests...")
+        print(" Running Android Unit Tests...")
         
         # Run Gradle unit tests
         try:
@@ -249,7 +249,7 @@ class RealIntegrationTester:
         h5_files = list(self.repo_root.glob("pc-controller/data/exports/*.h5"))
         csv_files = list(self.repo_root.glob("**/*.csv"))
         
-        print(f"📄 Found {len(h5_files)} H5 files, {len(csv_files)} CSV files")
+        print(f" Found {len(h5_files)} H5 files, {len(csv_files)} CSV files")
         
         if h5_files:
             self._analyze_h5_session_data(h5_files[0])
@@ -423,7 +423,7 @@ class RealIntegrationTester:
     
     def _test_hardware_integration(self) -> None:
         """Test actual hardware integration"""
-        print("🔌 Testing Hardware Integration...")
+        print(" Testing Hardware Integration...")
         
         # Check USB devices for TC001
         self._detect_tc001_hardware()
@@ -566,7 +566,7 @@ class RealIntegrationTester:
     
     def _measure_network_performance(self) -> None:
         """Measure actual network performance"""
-        print("🌐 Measuring Network Performance...")
+        print(" Measuring Network Performance...")
         
         # Test local network latency
         self._test_network_latency("127.0.0.1", "Local Loopback")
@@ -735,7 +735,7 @@ class RealIntegrationTester:
     
     def _test_system_integration(self) -> None:
         """Test system integration and file I/O"""
-        print("💾 Testing System Integration...")
+        print(" Testing System Integration...")
         
         # Test file system performance
         self._test_file_io_performance()
@@ -960,7 +960,7 @@ class RealIntegrationTester:
         
         # Print real-time results
         status_emoji = {"PASS": "", "FAIL": "", "WARNING": "",
-                       "ERROR": "💥", "SKIP": "⏸️", "TIMEOUT": "⏰"}.get(status, "❓")
+                       "ERROR": "", "SKIP": "⏸️", "TIMEOUT": "⏰"}.get(status, "")
         print(f"  {status_emoji} {name}: {measured:.3f} {unit} "
               f"(expected: {expected:.1f} ±{tolerance:.1f})")
     
@@ -1010,10 +1010,10 @@ class RealIntegrationTester:
         self._generate_csv_results()
         
         print(f"\n{'='*60}")
-        print(f"🔧 REAL INTEGRATION TESTING COMPLETE")
+        print(f" REAL INTEGRATION TESTING COMPLETE")
         print(f"{'='*60}")
         print(f" Tests: {passed_tests}/{total_tests} passed ({pass_rate:.1f}%)")
-        print(f"🔌 Hardware Coverage: {hardware_coverage:.1f}%") 
+        print(f" Hardware Coverage: {hardware_coverage:.1f}%")
         print(f"⏱️ Execution Time: {execution_time:.1f}s")
         print(f" Results: {results_file}")
         

@@ -270,7 +270,8 @@ private fun ProcessingStatusCard(
                 )
 
                 if (isProcessing) {
-                    CircularProgressIndicator(progress = { progress },
+                    CircularProgressIndicator(
+                        progress = { progress },
                         color = Color(0xFFFF6B35),
                         modifier = Modifier.size(24.dp)
                     )
@@ -287,7 +288,8 @@ private fun ProcessingStatusCard(
 
             if (isProcessing) {
                 Spacer(modifier = Modifier.height(8.dp))
-                LinearProgressIndicator(progress = { progress },
+                LinearProgressIndicator(
+                    progress = { progress },
                     modifier = Modifier.fillMaxWidth(),
                     color = Color(0xFFFF6B35),
                     trackColor = Color(0xFF16131E)

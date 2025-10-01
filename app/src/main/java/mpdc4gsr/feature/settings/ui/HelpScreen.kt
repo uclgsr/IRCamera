@@ -56,9 +56,9 @@ fun HelpScreen(
             ) {
                 Text(
                     text = "1. Connect your sensors (GSR, Thermal Camera)\n" +
-                           "2. Configure sensor settings\n" +
-                           "3. Start recording\n" +
-                           "4. Export your data",
+                            "2. Configure sensor settings\n" +
+                            "3. Start recording\n" +
+                            "4. Export your data",
                     color = Color.White,
                     fontSize = 14.sp,
                     lineHeight = 20.sp
@@ -129,10 +129,10 @@ fun HelpScreen(
             ) {
                 Text(
                     text = "If you encounter issues:\n\n" +
-                           "• Check device connections\n" +
-                           "• Restart the application\n" +
-                           "• Run diagnostics\n" +
-                           "• Check system logs",
+                            "• Check device connections\n" +
+                            "• Restart the application\n" +
+                            "• Run diagnostics\n" +
+                            "• Check system logs",
                     color = Color.White,
                     fontSize = 14.sp,
                     lineHeight = 20.sp

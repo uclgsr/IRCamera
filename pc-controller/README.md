@@ -133,7 +133,8 @@ python demo_features.py
 python test_*.py
 ```
 
-**Note**: Legacy MVP implementations (`mvp_simple.py`, `run_mvp_app.py`, etc.) have been archived to `legacy_implementation/` for historical reference. Use `run_unified_controller.py` for all new development.
+**Note**: Legacy MVP implementations (`mvp_simple.py`, `run_mvp_app.py`, etc.) have been archived to
+`legacy_implementation/` for historical reference. Use `run_unified_controller.py` for all new development.
 
 ## Project Structure
 
@@ -290,6 +291,7 @@ sensing capabilities.
 ## Additional Documentation
 
 For detailed technical documentation, see:
+
 - **docs/IMPLEMENTATION_SUMMARY.md** - Complete implementation overview
 - **docs/INTEGRATION_READY.md** - PC-Android integration status
 - **docs/PROTOCOL_BRIDGE_GUIDE.md** - Communication protocol details
