@@ -20,6 +20,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.components.settings.*
 import mpdc4gsr.core.ui.components.*
+import mpdc4gsr.core.ui.components.settings.*
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.feature.settings.presentation.SyncSettingsViewModel
 
@@ -86,7 +87,7 @@ fun SyncSettingsScreen(
                     value = settings.syncInterval.toFloat(),
                     valueRange = 10f..300f,
                     onValueChange = { viewModel.updateSyncInterval(it.toInt()) },
-                    unit = "sec"
+                    valueLabel = { "${it.toInt()} sec" }
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))

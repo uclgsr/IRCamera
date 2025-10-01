@@ -23,13 +23,14 @@ import mpdc4gsr.core.ui.components.*
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.core.ui.BaseViewModel
+import mpdc4gsr.core.ui.model.SensorType
 
 class ComposeComponentsShowcaseViewModel : BaseViewModel() {
     private val _showSensorDialog = mutableStateOf(false)
     val showSensorDialog: State<Boolean> = _showSensorDialog
 
-    private val _selectedSensors = mutableStateOf<Set<mpdc4gsr.compose.components.SensorType>>(emptySet())
-    val selectedSensors: State<Set<mpdc4gsr.compose.components.SensorType>> = _selectedSensors
+    private val _selectedSensors = mutableStateOf<Set<SensorType>>(emptySet())
+    val selectedSensors: State<Set<SensorType>> = _selectedSensors
 
     fun showSensorSelection() {
         _showSensorDialog.value = true
@@ -39,7 +40,7 @@ class ComposeComponentsShowcaseViewModel : BaseViewModel() {
         _showSensorDialog.value = false
     }
 
-    fun updateSelectedSensors(sensors: Set<mpdc4gsr.compose.components.SensorType>) {
+    fun updateSelectedSensors(sensors: Set<SensorType>) {
         _selectedSensors.value = sensors
     }
 }
@@ -153,7 +154,7 @@ class ComposeComponentsShowcaseActivity :
                                 modifier = Modifier.padding(16.dp)
                             ) {
                                 Button(
-                                    onClick = { viewModel.showSensorSelection() },
+                                    onClick = { /* viewModel.showSensorSelection() */ },
                                     modifier = Modifier.fillMaxWidth()
                                 ) {
                                     Icon(
@@ -165,6 +166,7 @@ class ComposeComponentsShowcaseActivity :
                                     Text("Select Sensors (${selectedSensors.size})")
                                 }
 
+                                /* Sensor display temporarily disabled - requires SensorAvailability component
                                 if (selectedSensors.isNotEmpty()) {
                                     Spacer(modifier = Modifier.height(12.dp))
 
@@ -195,6 +197,7 @@ class ComposeComponentsShowcaseActivity :
                                         }
                                     }
                                 }
+                                */
                             }
                         }
                     }
@@ -305,6 +308,7 @@ private fun ComponentSection(
     }
 }
 
+/* Sensor availability sample data temporarily disabled
 private fun getSampleSensorAvailability(): List<mpdc4gsr.compose.components.SensorAvailability> {
     return listOf(
         mpdc4gsr.compose.components.SensorAvailability(
@@ -329,3 +333,4 @@ private fun getSampleSensorAvailability(): List<mpdc4gsr.compose.components.Sens
         )
     )
 }
+*/
