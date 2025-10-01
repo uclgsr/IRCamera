@@ -14,7 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import mpdc4gsr.feature.network.data.ConnectionState
+import mpdc4gsr.core.ui.ConnectionState
 
 /**
  * Compose component for displaying comprehensive sensor status
@@ -107,25 +107,25 @@ private fun SensorStatusRow(
 @Composable
 private fun StatusIndicator(state: ConnectionState) {
     val (icon, color, text) = when (state) {
-        is mpdc4gsr.core.ui.ConnectionState.Connected -> Triple(
+        is ConnectionState.Connected -> Triple(
             Icons.Default.CheckCircle,
             Color.Green,
             "Connected"
         )
 
-        is mpdc4gsr.core.ui.ConnectionState.Connecting -> Triple(
+        is ConnectionState.Connecting -> Triple(
             Icons.Default.Warning,
             MaterialTheme.colorScheme.primary,
             "Connecting"
         )
 
-        is mpdc4gsr.core.ui.ConnectionState.Disconnected -> Triple(
+        is ConnectionState.Disconnected -> Triple(
             Icons.Default.Error,
             Color.Red,
             "Disconnected"
         )
 
-        is mpdc4gsr.core.ui.ConnectionState.Error -> Triple(
+        is ConnectionState.Error -> Triple(
             Icons.Default.Error,
             Color.Red,
             "Error"
