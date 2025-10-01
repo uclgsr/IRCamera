@@ -29,18 +29,18 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import mpdc4gsr.controller.RecordingController
-import mpdc4gsr.sensors.ErrorType
-import mpdc4gsr.sensors.RecordingStats
-import mpdc4gsr.sensors.RecordingStatus
-import mpdc4gsr.sensors.SensorError
-import mpdc4gsr.sensors.SensorRecorder
-import mpdc4gsr.sensors.TimeSynchronizationService
-import mpdc4gsr.sensors.TimestampManager
-import mpdc4gsr.sensors.TimestampRecord
+import mpdc4gsr.core.data.ErrorType
+import mpdc4gsr.core.data.RecordingStats
+import mpdc4gsr.core.data.RecordingStatus
+import mpdc4gsr.core.data.SensorError
+import mpdc4gsr.core.data.SensorRecorder
+import mpdc4gsr.core.data.TimeSynchronizationService
+import mpdc4gsr.core.data.TimestampManager
+import mpdc4gsr.core.data.TimestampRecord
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 import com.mpdc4gsr.gsr.service.GSRRecorder as LegacyGSRRecorder
-import mpdc4gsr.sensors.gsr.RealShimmerDeviceFactory as GSRRealShimmerDeviceFactory
+import mpdc4gsr.feature.gsr.data.RealShimmerDeviceFactory as GSRRealShimmerDeviceFactory
 
 class GSRSensorRecorder(
     private val context: Context,

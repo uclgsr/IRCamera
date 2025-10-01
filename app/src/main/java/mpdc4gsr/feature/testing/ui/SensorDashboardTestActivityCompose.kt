@@ -23,8 +23,8 @@ import com.csl.irCamera.R
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import mpdc4gsr.compose.base.BaseComposeActivity
-import mpdc4gsr.compose.components.TitleBar
-import mpdc4gsr.compose.theme.IRCameraTheme
+import mpdc4gsr.core.ui.components.TitleBar
+import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.ui_components.SensorDashboardFragment
 import mpdc4gsr.core.ui.BaseViewModel
 

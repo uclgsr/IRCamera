@@ -1,6 +1,6 @@
 package mpdc4gsr.feature.camera.data
 
-import mpdc4gsr.sensors.ErrorType
+import mpdc4gsr.core.data.ErrorType
 
 /**
  * Provides user-friendly error messages with actionable suggestions

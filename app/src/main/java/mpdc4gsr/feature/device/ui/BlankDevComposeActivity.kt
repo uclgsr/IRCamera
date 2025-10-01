@@ -24,7 +24,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import mpdc4gsr.compose.base.BaseComposeActivity
-import mpdc4gsr.compose.theme.IRCameraTheme
+import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.activities.BlankDevViewModel
 import mpdc4gsr.activities.UsbDeviceInfo
 import mpdc4gsr.activities.UsbDeviceType

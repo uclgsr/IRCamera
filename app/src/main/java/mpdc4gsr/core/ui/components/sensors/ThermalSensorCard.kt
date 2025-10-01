@@ -18,9 +18,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import mpdc4gsr.compose.screens.SensorState
-import mpdc4gsr.compose.screens.ThermalAction
-import mpdc4gsr.compose.theme.IRCameraTheme
+import mpdc4gsr.core.ui.model.SensorState
+import mpdc4gsr.core.ui.model.ThermalAction
+import mpdc4gsr.core.ui.theme.IRCameraTheme
 
 /**
  * Thermal IR Sensor Card Component

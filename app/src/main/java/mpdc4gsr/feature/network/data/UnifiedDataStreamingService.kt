@@ -9,8 +9,8 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import mpdc4gsr.sensors.TimestampManager
-import mpdc4gsr.sensors.TimestampRecord
+import mpdc4gsr.core.data.TimestampManager
+import mpdc4gsr.core.data.TimestampRecord
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.PrintWriter

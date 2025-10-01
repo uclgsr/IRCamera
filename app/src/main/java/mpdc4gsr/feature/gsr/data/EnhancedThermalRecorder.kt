@@ -5,11 +5,11 @@ import android.util.Log
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import mpdc4gsr.data.SessionMetadata
-import mpdc4gsr.sensors.RecordingStats
-import mpdc4gsr.sensors.RecordingStatus
-import mpdc4gsr.sensors.SensorError
-import mpdc4gsr.sensors.thermal.ThermalCameraRecorder
+import mpdc4gsr.core.data.SessionMetadata
+import mpdc4gsr.core.data.RecordingStats
+import mpdc4gsr.core.data.RecordingStatus
+import mpdc4gsr.core.data.SensorError
+import mpdc4gsr.feature.thermal.ui.ThermalCameraRecorder
 import java.io.File
 import java.io.FileWriter
 

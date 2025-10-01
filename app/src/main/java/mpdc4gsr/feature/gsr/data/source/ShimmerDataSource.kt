@@ -1,8 +1,8 @@
 package mpdc4gsr.feature.gsr.data.source
 
 import kotlinx.coroutines.flow.Flow
-import mpdc4gsr.sensors.unified.model.DeviceInfo
-import mpdc4gsr.sensors.unified.model.GSRSample
+import mpdc4gsr.core.data.model.DeviceInfo
+import mpdc4gsr.core.data.model.GSRSample
 
 /**
  * Data source interface for Shimmer3 GSR+ device SDK integration.

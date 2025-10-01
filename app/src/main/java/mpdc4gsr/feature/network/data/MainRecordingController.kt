@@ -10,8 +10,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.withContext
-import mpdc4gsr.data.SessionMetadata
-import mpdc4gsr.sensors.SensorRecorder
+import mpdc4gsr.core.data.SessionMetadata
+import mpdc4gsr.core.data.SensorRecorder
 import mpdc4gsr.utils.SessionDirectoryManager
 import mpdc4gsr.controller.RecordingConstants
 import java.io.File

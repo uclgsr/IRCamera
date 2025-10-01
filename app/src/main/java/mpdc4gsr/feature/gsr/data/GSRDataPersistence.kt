@@ -7,8 +7,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import mpdc4gsr.sensors.TimestampManager
-import mpdc4gsr.sensors.TimestampRecord
+import mpdc4gsr.core.data.TimestampManager
+import mpdc4gsr.core.data.TimestampRecord
 import mpdc4gsr.utils.CSVBufferedWriter
 import mpdc4gsr.utils.SessionDirectoryManager
 import java.io.File

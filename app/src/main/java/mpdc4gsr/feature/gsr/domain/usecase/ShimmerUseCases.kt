@@ -2,8 +2,8 @@ package mpdc4gsr.feature.gsr.domain.usecase
 
 import kotlinx.coroutines.flow.Flow
 import mpdc4gsr.feature.gsr.domain.repository.ShimmerRepository
-import mpdc4gsr.sensors.unified.model.DeviceInfo
-import mpdc4gsr.sensors.unified.model.GSRSample
+import mpdc4gsr.core.data.model.DeviceInfo
+import mpdc4gsr.core.data.model.GSRSample
 
 /**
  * Use case for scanning Shimmer devices

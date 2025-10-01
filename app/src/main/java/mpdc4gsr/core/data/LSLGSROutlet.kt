@@ -8,7 +8,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import mpdc4gsr.sensors.unified.model.GSRSample
+import mpdc4gsr.core.data.model.GSRSample
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.PrintWriter

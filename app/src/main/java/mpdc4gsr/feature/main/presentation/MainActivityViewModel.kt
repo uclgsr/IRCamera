@@ -11,11 +11,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import mpdc4gsr.core.RecordingService
 import mpdc4gsr.core.SessionManager
-import mpdc4gsr.network.NetworkClient
+import mpdc4gsr.feature.network.data.NetworkClient
 import mpdc4gsr.network.NetworkController
-import mpdc4gsr.sensors.gsr.GSRSensorRecorder
-import mpdc4gsr.sensors.thermal.ThermalRecorder
-import mpdc4gsr.sensors.unified.UnifiedGSRRecorder
+import mpdc4gsr.feature.gsr.data.GSRSensorRecorder
+import mpdc4gsr.feature.thermal.ui.ThermalRecorder
+import mpdc4gsr.core.data.UnifiedGSRRecorder
 import com.mpdc4gsr.gsr.service.SessionManager as GSRSessionManager
 
 class MainActivityViewModel(application: Application) : AndroidViewModel(application) {

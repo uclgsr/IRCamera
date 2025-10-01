@@ -42,11 +42,11 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import mpdc4gsr.camera.core.SamsungDeviceCompatibility
-import mpdc4gsr.data.SessionMetadata
-import mpdc4gsr.permissions.PermissionManager
-import mpdc4gsr.sensors.camera.CameraConfigurationManager
-import mpdc4gsr.sensors.camera.CameraControlsManager
-import mpdc4gsr.sensors.camera.CameraPerformanceManager
+import mpdc4gsr.core.data.SessionMetadata
+import mpdc4gsr.core.ui.PermissionManager
+import mpdc4gsr.feature.camera.data.CameraConfigurationManager
+import mpdc4gsr.feature.camera.data.CameraControlsManager
+import mpdc4gsr.feature.camera.data.CameraPerformanceManager
 import mpdc4gsr.utils.CSVBufferedWriter
 import mpdc4gsr.utils.SessionDirectoryManager
 import java.io.File

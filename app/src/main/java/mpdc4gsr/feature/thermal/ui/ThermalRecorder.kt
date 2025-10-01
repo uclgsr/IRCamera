@@ -8,8 +8,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import mpdc4gsr.data.SessionMetadata
-import mpdc4gsr.sensors.TimestampManager
+import mpdc4gsr.core.data.SessionMetadata
+import mpdc4gsr.core.data.TimestampManager
 import java.io.File
 import java.io.FileOutputStream
 import java.io.FileWriter

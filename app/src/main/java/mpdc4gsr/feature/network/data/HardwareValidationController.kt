@@ -7,10 +7,10 @@ import androidx.lifecycle.LifecycleOwner
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
-import mpdc4gsr.sensors.RgbCameraRecorder
+import mpdc4gsr.core.data.RgbCameraRecorder
 import mpdc4gsr.permissions.PermissionController
-import mpdc4gsr.sensors.gsr.GSRSensorRecorder
-import mpdc4gsr.sensors.thermal.ThermalCameraRecorder
+import mpdc4gsr.feature.gsr.data.GSRSensorRecorder
+import mpdc4gsr.feature.thermal.ui.ThermalCameraRecorder
 import mpdc4gsr.controller.RecordingConstants
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean

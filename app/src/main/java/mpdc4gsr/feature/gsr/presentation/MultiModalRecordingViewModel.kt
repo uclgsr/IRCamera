@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
-import mpdc4gsr.sensors.RgbCameraRecorder
+import mpdc4gsr.core.data.RgbCameraRecorder
 
 /**
  * MultiModalRecordingViewModel - Advanced MVVM Implementation

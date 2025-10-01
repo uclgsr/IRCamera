@@ -22,7 +22,7 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import mpdc4gsr.controller.RecordingController
-import mpdc4gsr.sensors.gsr.GSRSensorRecorder
+import mpdc4gsr.feature.gsr.data.GSRSensorRecorder
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale

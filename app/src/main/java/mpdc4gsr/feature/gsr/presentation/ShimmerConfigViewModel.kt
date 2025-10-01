@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import mpdc4gsr.core.ui.BaseViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import mpdc4gsr.sensors.unified.model.DeviceInfo
+import mpdc4gsr.core.data.model.DeviceInfo
 import mpdc4gsr.feature.gsr.domain.usecase.*
 
 /**

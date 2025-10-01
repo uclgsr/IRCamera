@@ -18,8 +18,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import mpdc4gsr.compose.screens.*
-import mpdc4gsr.compose.theme.IRCameraTheme
+// Replaced with specific imports
+import mpdc4gsr.core.ui.theme.IRCameraTheme
 
 /**
  * Unified Sensor Status Component

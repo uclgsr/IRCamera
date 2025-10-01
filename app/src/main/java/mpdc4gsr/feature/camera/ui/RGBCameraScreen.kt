@@ -22,12 +22,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import mpdc4gsr.compose.components.TitleBar
-import mpdc4gsr.compose.components.TitleBarAction
-import mpdc4gsr.compose.theme.IRCameraTheme
-import mpdc4gsr.compose.theme.Orange
-import mpdc4gsr.compose.theme.Green
-import mpdc4gsr.compose.theme.Purple
+import mpdc4gsr.core.ui.components.TitleBar
+import mpdc4gsr.core.ui.components.TitleBarAction
+import mpdc4gsr.core.ui.theme.IRCameraTheme
+import mpdc4gsr.core.ui.theme.Orange
+import mpdc4gsr.core.ui.theme.Green
+import mpdc4gsr.core.ui.theme.Purple
 
 /**
  * RGB Camera Screen - Dedicated interface for RGB camera control and recording

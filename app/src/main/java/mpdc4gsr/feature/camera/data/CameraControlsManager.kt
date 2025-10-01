@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.camera.core.Camera
 import androidx.camera.core.FocusMeteringAction
 import androidx.camera.view.PreviewView
-import mpdc4gsr.sensors.ErrorType
+import mpdc4gsr.core.data.ErrorType
 
 /**
  * Manages manual camera controls including exposure and focus

@@ -11,8 +11,8 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
-import mpdc4gsr.permissions.PermissionManager
-import mpdc4gsr.sensors.RgbCameraRecorder
+import mpdc4gsr.core.ui.PermissionManager
+import mpdc4gsr.core.data.RgbCameraRecorder
 
 
 class CameraStatusWidget @JvmOverloads constructor(

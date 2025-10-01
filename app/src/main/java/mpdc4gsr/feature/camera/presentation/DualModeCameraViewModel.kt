@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import mpdc4gsr.camera.core.SamsungDeviceCompatibility
-import mpdc4gsr.sensors.RgbCameraRecorder
+import mpdc4gsr.core.data.RgbCameraRecorder
 
 /**
  * Modernized DualModeCameraViewModel using StateFlow and Repository pattern

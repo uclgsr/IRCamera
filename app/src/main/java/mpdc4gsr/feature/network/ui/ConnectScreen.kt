@@ -13,8 +13,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import mpdc4gsr.compose.components.TitleBar
-import mpdc4gsr.compose.theme.IRCameraTheme
+import mpdc4gsr.core.ui.components.TitleBar
+import mpdc4gsr.core.ui.theme.IRCameraTheme
 
 /**
  * ConnectScreen composable - replaces activity_device_type.xml

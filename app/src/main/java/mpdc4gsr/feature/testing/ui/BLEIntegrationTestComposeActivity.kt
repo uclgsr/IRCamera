@@ -22,9 +22,9 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import mpdc4gsr.permissions.PermissionController
-import mpdc4gsr.sensors.unified.ShimmerDeviceManager
-import mpdc4gsr.sensors.unified.UnifiedGSRRecorder
-import mpdc4gsr.sensors.unified.model.DeviceInfo
+import mpdc4gsr.core.data.ShimmerDeviceManager
+import mpdc4gsr.core.data.UnifiedGSRRecorder
+import mpdc4gsr.core.data.model.DeviceInfo
 import kotlin.io.path.createTempDirectory
 import kotlin.io.path.deleteRecursively
 

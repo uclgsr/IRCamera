@@ -13,8 +13,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import mpdc4gsr.network.NetworkServer
-import mpdc4gsr.network.ProtocolHandler
+import mpdc4gsr.feature.network.data.NetworkServer
+import mpdc4gsr.feature.network.data.ProtocolHandler
 import mpdc4gsr.sync.TimeSyncManager
 import org.json.JSONObject
 

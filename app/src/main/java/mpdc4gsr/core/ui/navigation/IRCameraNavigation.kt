@@ -13,7 +13,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import mpdc4gsr.activities.*
-import mpdc4gsr.compose.screens.AboutScreen
+import mpdc4gsr.feature.settings.ui.AboutScreen
 
 /**
  * Task E: Complete Navigation Integration

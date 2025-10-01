@@ -10,9 +10,14 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import mpdc4gsr.compose.screens.*
-import mpdc4gsr.compose.screens.SensorType
-import mpdc4gsr.compose.testing.TestResultsScreen
+// Screens imported individually from feature packages
+import mpdc4gsr.feature.settings.ui.*
+import mpdc4gsr.feature.thermal.ui.*
+import mpdc4gsr.feature.gsr.ui.*
+import mpdc4gsr.feature.camera.ui.*
+import mpdc4gsr.feature.network.ui.*
+import mpdc4gsr.core.data.model.SensorType
+// TestResultsScreen - check if exists
 
 /**
  * Unified Navigation System - Phase 2 Implementation

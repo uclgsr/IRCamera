@@ -32,11 +32,11 @@ import com.csl.irCamera.R
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import mpdc4gsr.compose.base.BaseComposeActivity
-import mpdc4gsr.compose.components.TitleBar
-import mpdc4gsr.compose.theme.IRCameraTheme
+import mpdc4gsr.core.ui.components.TitleBar
+import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.network.NetworkSettings
 import mpdc4gsr.permissions.PermissionController
-import mpdc4gsr.permissions.PermissionManager
+import mpdc4gsr.core.ui.PermissionManager
 import mpdc4gsr.core.ui.BaseViewModel
 
 enum class ConnectionType(

@@ -30,8 +30,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import mpdc4gsr.core.ui.BaseViewModel
 import mpdc4gsr.compose.base.BaseComposeActivity
-import mpdc4gsr.compose.components.TitleBar
-import mpdc4gsr.compose.theme.IRCameraTheme
+import mpdc4gsr.core.ui.components.TitleBar
+import mpdc4gsr.core.ui.theme.IRCameraTheme
 
 enum class EditTool(
     val displayName: String,

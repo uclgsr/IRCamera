@@ -26,17 +26,17 @@ import com.csl.irCamera.R
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import mpdc4gsr.compose.base.BaseComposeActivity
-import mpdc4gsr.compose.components.TitleBar
-import mpdc4gsr.compose.theme.IRCameraTheme
+import mpdc4gsr.core.ui.components.TitleBar
+import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.controller.RecordingController
-import mpdc4gsr.sensors.RgbCameraRecorder
-import mpdc4gsr.sensors.unified.UnifiedGSRRecorder
-import mpdc4gsr.sensors.unified.UnifiedNetworkController
-import mpdc4gsr.sensors.unified.UnifiedSessionManager
-import mpdc4gsr.sensors.unified.model.DeviceInfo
-import mpdc4gsr.sensors.unified.model.SessionQuality
-import mpdc4gsr.sensors.unified.model.SessionStatus
-import mpdc4gsr.sensors.unified.model.SessionType
+import mpdc4gsr.core.data.RgbCameraRecorder
+import mpdc4gsr.core.data.UnifiedGSRRecorder
+import mpdc4gsr.core.data.UnifiedNetworkController
+import mpdc4gsr.core.data.UnifiedSessionManager
+import mpdc4gsr.core.data.model.DeviceInfo
+import mpdc4gsr.core.data.model.SessionQuality
+import mpdc4gsr.core.data.model.SessionStatus
+import mpdc4gsr.core.data.model.SessionType
 import mpdc4gsr.core.ui.BaseViewModel
 
 enum class UnifiedSensorType(
