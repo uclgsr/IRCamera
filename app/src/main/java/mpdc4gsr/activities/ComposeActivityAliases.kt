@@ -11,10 +11,18 @@ typealias GSRQuickRecordingActivityCompose = mpdc4gsr.feature.gsr.ui.GSRQuickRec
 typealias SensorDashboardComposeActivity = mpdc4gsr.feature.gsr.ui.SensorDashboardComposeActivity
 typealias SensorDashboardComposeEnhanced = mpdc4gsr.feature.gsr.ui.SensorDashboardComposeEnhanced
 typealias UnifiedSensorActivityCompose = mpdc4gsr.feature.gsr.ui.UnifiedSensorActivityCompose
-typealias ShimmerConfigComposeActivity = mpdc4gsr.sensors.gsr.ShimmerConfigComposeActivity
-typealias GSRDeviceManagementActivityCompose = mpdc4gsr.sensors.gsr.GSRDeviceManagementComposeActivity
-typealias MultiModalRecordingActivityCompose = mpdc4gsr.sensors.gsr.MultiModalRecordingComposeActivity
-typealias SessionManagerActivityCompose = mpdc4gsr.sensors.gsr.SessionManagerComposeActivity
+typealias ShimmerConfigComposeActivity = mpdc4gsr.feature.gsr.ui.ShimmerConfigComposeActivity
+typealias GSRDeviceManagementActivityCompose = mpdc4gsr.feature.gsr.ui.GSRDeviceManagementComposeActivity
+typealias MultiModalRecordingActivityCompose = mpdc4gsr.feature.gsr.ui.MultiModalRecordingComposeActivity
+typealias SessionManagerActivityCompose = mpdc4gsr.feature.gsr.ui.SessionManagerComposeActivity
+typealias GSRDataViewComposeActivity = mpdc4gsr.feature.gsr.ui.GSRDataViewComposeActivity
+typealias GSRPlotComposeActivity = mpdc4gsr.feature.gsr.ui.GSRPlotComposeActivity
+typealias GSRRawImageViewComposeActivity = mpdc4gsr.feature.gsr.ui.GSRRawImageViewComposeActivity
+typealias GSRSettingsComposeActivity = mpdc4gsr.feature.gsr.ui.GSRSettingsComposeActivity
+typealias GSRVideoPlayerComposeActivity = mpdc4gsr.feature.gsr.ui.GSRVideoPlayerComposeActivity
+typealias ResearchTemplateComposeActivity = mpdc4gsr.feature.gsr.ui.ResearchTemplateComposeActivity
+typealias SessionDetailComposeActivity = mpdc4gsr.feature.gsr.ui.SessionDetailComposeActivity
+typealias SessionExportComposeActivity = mpdc4gsr.feature.gsr.ui.SessionExportComposeActivity
 
 // Network Feature Activities
 typealias NetworkClientTestActivityCompose = mpdc4gsr.feature.network.ui.NetworkClientTestActivityCompose
