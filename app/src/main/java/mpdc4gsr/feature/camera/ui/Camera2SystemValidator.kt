@@ -138,7 +138,7 @@ class Camera2SystemValidator(private val context: Context) {
 
             // Test RawEngine Stage3/Level3 functionality
             val rawEngineWorks = try {
-                val rawEngine = mpdc4gsr.camera.core.RawEngine(context)
+                val rawEngine = mpdc4gsr.feature.camera.data.RawEngine(context)
                 // Test that the methods exist by trying to call them (safe calls)
                 rawEngine.isStage3ProcessingEnabled() // This should not throw
                 rawEngine.setStage3ProcessingEnabled(false) // This should not throw
@@ -152,7 +152,7 @@ class Camera2SystemValidator(private val context: Context) {
             val camera2SystemWorks = try {
                 // Use a mock TextureView for testing
                 val textureView = android.view.TextureView(context)
-                val camera2System = mpdc4gsr.camera.Camera2System(context, textureView)
+                val camera2System = mpdc4gsr.feature.camera.data.Camera2System(context, textureView)
 
                 // Test that the methods exist
                 camera2System.isStage3ProcessingEnabled() // This should not throw
@@ -174,8 +174,8 @@ class Camera2SystemValidator(private val context: Context) {
 
             // Test SamsungDeviceCompatibility utility
             val deviceCompatibilityWorks = try {
-                mpdc4gsr.camera.core.SamsungDeviceCompatibility.isStage3Compatible()
-                mpdc4gsr.camera.core.SamsungDeviceCompatibility.getDeviceInfo()
+                mpdc4gsr.feature.camera.data.SamsungDeviceCompatibility.isStage3Compatible()
+                mpdc4gsr.feature.camera.data.SamsungDeviceCompatibility.getDeviceInfo()
                 true
             } catch (e: Exception) {
                 Log.e(TAG, "SamsungDeviceCompatibility utility not working", e)
