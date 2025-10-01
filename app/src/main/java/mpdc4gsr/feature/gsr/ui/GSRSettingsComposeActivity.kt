@@ -20,6 +20,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import mpdc4gsr.core.ui.BaseComposeActivity
+import mpdc4gsr.feature.gsr.presentation.GSRSettingsViewModel
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 
 /**
