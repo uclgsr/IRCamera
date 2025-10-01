@@ -382,6 +382,114 @@ When making changes:
 - Android Jetpack Compose guides
 - Kotlin coroutines documentation
 
+## Architecture Details
+
+For complete architecture documentation, see:
+- `ARCHITECTURE_AND_UI.md` - Complete system architecture and UI reference
+- `COMPOSE_MIGRATION.md` - Compose migration details and status
+
+### Clean Architecture Implementation
+
+The application follows Clean Architecture principles with clear layer separation:
+
+**UI Layer (Compose)**:
+- 47 activities fully migrated to Jetpack Compose
+- Feature-based organization
+- Material Design 3 components
+
+**Presentation Layer (ViewModels)**:
+- 10 ViewModels across all features
+- StateFlow for reactive state management
+- UiState pattern throughout
+
+**Domain Layer (Use Cases)**:
+- 16 use cases for business logic
+- 2 repository interfaces (ShimmerRepository, ThermalRepository)
+- Pure Kotlin, no framework dependencies
+
+**Data Layer (Repositories)**:
+- ShimmerRepositoryImpl - GSR data management
+- ThermalRepositoryImpl - Thermal camera data
+- ShimmerDataSourceImpl - SDK wrapper
+- Proper error handling with Result types
+
+### Module Organization
+
+**Feature Modules**:
+1. feature/main - Application entry point and dashboard
+2. feature/gsr - GSR sensor integration (18 activities, 6 ViewModels)
+3. feature/thermal - Thermal camera integration (6 components, 1 ViewModel)
+4. feature/network - Device pairing (5 activities, 1 ViewModel)
+5. feature/camera - RGB camera (1 activity, 1 ViewModel)
+6. feature/settings - Application settings (7 activities)
+7. feature/device - Device management (2 activities)
+8. feature/testing - Testing infrastructure (4 activities)
+
+**Component Modules** (Self-contained libraries):
+- component/thermalunified - 93 thermal activities (independent)
+- component/gsr-recording - Data recording module (no UI)
+- component/user - 18 user management activities (independent)
+- BleModule - Shimmer3 SDK wrapper (legacy, abstracted)
+- libunified - Shared library components (7 activities)
+
+### Sensor Architecture
+
+**Three Independent Sensor Systems**:
+
+1. **RGB Module** (feature/camera/)
+   - Hardware: Built-in device camera
+   - SDK: Android CameraX/Camera2 API
+   - Capabilities: RGB video, RAW DNG, photos
+
+2. **GSR Module** (feature/gsr/)
+   - Hardware: Shimmer3 GSR+ BLE device
+   - SDK: Shimmer Android Instrument Driver
+   - Capabilities: GSR data streaming, recording, device management
+
+3. **Thermal Module** (feature/thermal/)
+   - Hardware: Topdon TC001/TC007 USB-C devices
+   - SDK: Topdon IrUsb library
+   - Capabilities: Thermal imaging, recording, temperature analysis
+
+### Migration Status
+
+**100% Completion Achieved**:
+- [x] Clean Architecture foundation
+- [x] Feature-based organization
+- [x] 100% Compose migration
+- [x] MVVM pattern implementation
+- [x] SDK abstraction layer
+- [x] Repository implementation
+- [x] Use cases for business logic
+- [x] Dependency injection infrastructure
+- [x] Zero breaking changes
+
+### Backward Compatibility
+
+Maintained through:
+- 43 type aliases for relocated classes
+- Import re-exports for navigation
+- Deprecated annotations for old code
+- All existing code continues to work
+
+## Component Module Strategy
+
+**Why Component Modules Stay Independent**:
+1. They are library modules, not application modules
+2. Proper abstraction layers in main app
+3. Can evolve independently
+4. Other apps may depend on them
+5. Gradual modernization strategy
+
+**Component modules are intentionally not migrated** as they operate independently and are properly abstracted from the main application.
+
 ## Conclusion
 
 The IRCamera platform represents a complete, production-ready implementation of a multi-modal physiological sensing system. All major development milestones have been achieved, creating a solid foundation for research use and future enhancements. The systematic approach to development, testing, and documentation ensures maintainability and extensibility.
+
+The successful migration from legacy monolithic structure to Clean Architecture demonstrates:
+- Complete Compose adoption (100%)
+- Proper SDK abstraction
+- Clear separation of concerns
+- Feature-based organization
+- High maintainability and testability

@@ -293,3 +293,15 @@ python demo_mvp_components.py --verbose
 The PC Controller Hub is fully functional and ready for scientific research applications with
 multi-modal physiological
 sensing capabilities.
+
+## Additional Documentation
+
+For detailed technical documentation, see:
+- **docs/IMPLEMENTATION_SUMMARY.md** - Complete implementation overview
+- **docs/INTEGRATION_READY.md** - PC-Android integration status
+- **docs/PROTOCOL_BRIDGE_GUIDE.md** - Communication protocol details
+- **docs/GAP_ANALYSIS.md** - Protocol compatibility analysis
+- **docs/CODE_REVIEW.md** - Code quality assessment
+- **docs/README.md** - Technical documentation index
+
+For quick start, see **QUICK_START.md** in this directory.
