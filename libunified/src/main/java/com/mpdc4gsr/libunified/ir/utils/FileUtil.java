@@ -31,18 +31,12 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
- * @ProjectName: ANDROID_IRUVC_SDK
- * @Package: com.infisense.iruvc.utils
- * @ClassName: FileUtil
- * @Description:
- * @Author: brilliantzhao
- * @CreateDate: 2021.11.11 13:56
- * @UpdateUser:
- * @UpdateDate: 2021.11.11 13:56
- * @UpdateRemark:
- * @Version: 1.0.0
+ * File utility functions for thermal camera data handling.
+ * Provides methods for file I/O operations including saving thermal data,
+ * managing directories, and handling various file formats.
  */
 public enum FileUtil {
     ;
@@ -51,10 +45,6 @@ public enum FileUtil {
     private static final String DATA_SAVE_DIR = "InfiRay";
     private static final int sBufferSize = 524288;
 
-    /**
-     * @param context
-     * @return
-     */
     public static String getDiskCacheDir(Context context) {
         String cachePath = context.getCacheDir().getPath();
         if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())
@@ -67,12 +57,6 @@ public enum FileUtil {
         return cachePath;
     }
 
-    /**
-     * @param context
-     * @param srcFileName
-     * @param strOutFileName
-     * @throws IOException
-     */
     public static void copyAssetsDataToSD(Context context, String srcFileName, String strOutFileName) throws IOException {
         File file = new File(strOutFileName);
         if (file.exists()) {
@@ -92,10 +76,6 @@ public enum FileUtil {
         myOutput.close();
     }
 
-    /**
-     * @param bytes
-     * @param fileTitle
-     */
     public static void saveByteFile(Context mContext, byte[] bytes, String fileTitle) {
         try {
             String fileSaveDir = mContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES).getAbsolutePath();
@@ -103,7 +83,7 @@ public enum FileUtil {
             if (!path.exists() && path.isDirectory()) {
                 path.mkdirs();
             }
-            String fileName = fileTitle + new SimpleDateFormat("_HHmmss_yyMMdd").
+            String fileName = fileTitle + new SimpleDateFormat("yyyyMMdd_HHmmss_SSS", Locale.getDefault()).
                     format(new Date(System.currentTimeMillis())) + ".bin";
             File file = new File(fileSaveDir, fileName);
             Log.i(TAG, "fileSaveDir=" + fileSaveDir + " fileName=" + fileName);
@@ -115,61 +95,34 @@ public enum FileUtil {
         }
     }
 
-    /**
-     * @param bytes
-     * @param fileTitle
-     */
     public static void saveByteFile(byte[] bytes, String fileTitle) {
-//        try {
-//            String fileSaveDir = TempKey.DEVICE_DATA_SAVE_DIR;
-//            File path = new File(fileSaveDir);
-//            if (!path.exists() && path.isDirectory()) {
-//                path.mkdirs();
-//            }
-//            //
-//            File file = new File(fileSaveDir, fileTitle);
-//            FileOutputStream fos = new FileOutputStream(file);
-//            fos.write(bytes);
-//            fos.close();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
     }
 
     public static String getTableDirPath() {
         return Utils.getApp().getCacheDir().getAbsolutePath() + "/table";
     }
 
-    /**
-     * @param bytes
-     * @param fileTitle
-     */
     public static void saveShortFileForDeviceData(short[] bytes, String fileTitle) {
         try {
             String fileSaveDir = getTableDirPath();
             createOrExistsDir(fileSaveDir);
-            //
             File file = new File(fileSaveDir, fileTitle);
             FileOutputStream fos = new FileOutputStream(file);
             fos.write(toByteArray(bytes));
             fos.close();
-            Log.i(TAG, fileTitle + " ");
+            Log.i(TAG, fileTitle + " saved");
         } catch (IOException e) {
-            Log.e(TAG, fileTitle + " ：" + e.getMessage());
+            Log.e(TAG, fileTitle + " save error: " + e.getMessage());
         }
     }
 
-    /**
-     * @param bytes
-     * @param fileTitle
-     */
     public static void saveShortFile(short[] bytes, String fileTitle) {
         try {
             File path = new File("/sdcard");
             if (!path.exists() && path.isDirectory()) {
                 path.mkdirs();
             }
-            File file = new File("/sdcard/", fileTitle + new SimpleDateFormat("_HHmmss_yyMMdd").
+            File file = new File("/sdcard/", fileTitle + new SimpleDateFormat("yyyyMMdd_HHmmss_SSS", Locale.getDefault()).
                     format(new Date(System.currentTimeMillis())) + ".bin");
             FileOutputStream fos = new FileOutputStream(file);
             fos.write(toByteArray(bytes));
@@ -224,12 +177,6 @@ public enum FileUtil {
         return null;
     }
 
-    /**
-     * ---，！
-     *
-     * @param dirFile
-     * @return
-     */
     public static boolean createFileDir(File dirFile) {
         if (null == dirFile) return true;
         if (dirFile.exists()) {
@@ -237,7 +184,6 @@ public enum FileUtil {
         }
         File parentFile = dirFile.getParentFile();
         if (null != parentFile && !parentFile.exists()) {
-            //，，
             return createFileDir(parentFile) && createFileDir(dirFile);
         } else {
             boolean mkdirs = dirFile.mkdirs();
@@ -249,11 +195,6 @@ public enum FileUtil {
         }
     }
 
-    /**
-     * @param dirPath
-     * @param fileName
-     * @return
-     */
     public static File createFile(String dirPath, String fileName) {
         try {
             File dirFile = new File(dirPath);
@@ -286,19 +227,13 @@ public enum FileUtil {
         }
     }
 
-    /**
-     * ，
-     *
-     * @param bytes
-     * @param bytes2
-     */
     public static void savaRawFile(byte[] bytes, byte[] bytes2) {
         try {
             File path = new File("/sdcard");
             if (!path.exists() && path.isDirectory()) {
                 path.mkdirs();
             }
-            File file = new File("/sdcard/", new SimpleDateFormat("_HHmmss_yyMMdd").
+            File file = new File("/sdcard/", new SimpleDateFormat("yyyyMMdd_HHmmss_SSS", Locale.getDefault()).
                     format(new Date(System.currentTimeMillis())) + ".bin");
             FileOutputStream fos = new FileOutputStream(file);
             fos.write(bytes);
@@ -309,18 +244,13 @@ public enum FileUtil {
         }
     }
 
-    /**
-     *
-     *
-     * @param bytes
-     */
     public static void savaIRFile(byte[] bytes) {
         try {
             File path = new File("/sdcard");
             if (!path.exists() && path.isDirectory()) {
                 path.mkdirs();
             }
-            File file = new File("/sdcard/", "ir" + new SimpleDateFormat("_HHmmss_yyMMdd").
+            File file = new File("/sdcard/", "ir" + new SimpleDateFormat("yyyyMMdd_HHmmss_SSS", Locale.getDefault()).
                     format(new Date(System.currentTimeMillis())) + ".bin");
             FileOutputStream fos = new FileOutputStream(file);
             fos.write(bytes);
@@ -332,18 +262,13 @@ public enum FileUtil {
         }
     }
 
-    /**
-     *
-     *
-     * @param bytes
-     */
     public static void savaTempFile(byte[] bytes) {
         try {
             File path = new File("/sdcard");
             if (!path.exists() && path.isDirectory()) {
                 path.mkdirs();
             }
-            File file = new File("/sdcard/", "temp" + new SimpleDateFormat("_HHmmss_yyMMdd").
+            File file = new File("/sdcard/", "temp" + new SimpleDateFormat("yyyyMMdd_HHmmss_SSS", Locale.getDefault()).
                     format(new Date(System.currentTimeMillis())) + ".bin");
             FileOutputStream fos = new FileOutputStream(file);
             fos.write(bytes);
@@ -355,11 +280,6 @@ public enum FileUtil {
         }
     }
 
-    /**
-     * @param context
-     * @param file
-     * @return
-     */
     public static boolean isFileExists(Context context, final File file) {
         if (null == file) {
             return false;
@@ -387,11 +307,6 @@ public enum FileUtil {
         return isFileExistsApi29(context, filePath);
     }
 
-    /**
-     * @param context
-     * @param filePath
-     * @return
-     */
     private static boolean isFileExistsApi29(Context context, String filePath) {
         if (29 <= Build.VERSION.SDK_INT) {
             try {
@@ -427,12 +342,6 @@ public enum FileUtil {
         return dest;
     }
 
-    /**
-     * byteshort
-     *
-     * @param src
-     * @return
-     */
     public static short[] toShortArray(byte[] src) {
         int count = src.length >> 1;
         short[] dest = new short[count];
@@ -442,12 +351,7 @@ public enum FileUtil {
         return dest;
     }
 
-    /**
-     * @param bytes
-     * @param fileTitle
-     */
     public static void saveShortFile(String fileDir, short[] bytes, String fileTitle) {
-        // 
         createOrExistsDir(fileDir);
         try {
             File file = new File(fileDir, fileTitle + ".bin");
@@ -475,27 +379,13 @@ public enum FileUtil {
         }
     }
 
-    /**
-     *
-     *
-     * @param fileDir
-     */
     private static void createOrExistsDir(String fileDir) {
         File file = new File(fileDir);
-        //
         if (!file.exists() && !file.isDirectory()) {
-            //
             file.mkdir();
-        } else {
-            //
         }
     }
 
-    /**
-     * @param context
-     * @param file
-     * @return
-     */
     public static byte[] readFile2BytesByStream(Context context, final File file) {
         if (!isFileExists(context, file)) {
             return null;
@@ -547,12 +437,10 @@ public enum FileUtil {
             File file = new File(strOutFileName);
             Log.i(TAG, "file.exists->getAbsolutePath = " + file.getAbsolutePath());
             if (file.exists()) {
-                // ，，
                 file.delete();
             }
-            //
             if (!file.createNewFile()) {
-                Log.e(TAG, " " + srcFileName + " ");
+                Log.e(TAG, "Failed to create file: " + srcFileName);
                 return;
             }
 
@@ -605,7 +493,6 @@ public enum FileUtil {
         return Utils.getApp().getExternalFilesDir(Environment.DIRECTORY_PICTURES).getAbsolutePath();
     }
 
-    //=== ，app
     static String DEVICE_DATA_SAVE_DIR() {
         return Utils.getApp().getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath();
     }
@@ -759,12 +646,6 @@ public enum FileUtil {
         }
     }
 
-    /**
-     * String，
-     *
-     * @param str
-     * @param path
-     */
     public static void saveStringToFile(String str, String path) {
         File file;
         FileOutputStream stream = null;
