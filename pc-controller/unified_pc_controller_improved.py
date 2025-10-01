@@ -515,24 +515,38 @@ except ImportError:
 
 def main():
     """Main entry point"""
-    if UnifiedPCControllerImproved is None:
+    import argparse
+    
+    parser = argparse.ArgumentParser(description='Unified PC Controller with Improved Networking')
+    parser.add_argument('--cli', action='store_true', help='Force CLI mode (no GUI)')
+    parser.add_argument('--port', type=int, default=8080, help='Server port (default: 8080)')
+    args = parser.parse_args()
+    
+    port = args.port
+    force_cli = args.cli
+    
+    if UnifiedPCControllerImproved is None and not force_cli:
         logger.error("Cannot start: UnifiedPCController base class not available")
         logger.info("This improved version requires unified_pc_controller.py")
+        logger.info("Try running with --cli flag for CLI-only mode")
         return 1
     
-    if GUI_AVAILABLE:
+    if GUI_AVAILABLE and not force_cli:
         app = QApplication(sys.argv)
-        controller = UnifiedPCControllerImproved()
+        controller = UnifiedPCControllerImproved(port=port)
         controller.show()
         sys.exit(app.exec())
     else:
-        logger.info("Running in CLI mode (PyQt6 not available)")
+        if force_cli:
+            logger.info("Running in CLI mode (forced by --cli flag)")
+        else:
+            logger.info("Running in CLI mode (PyQt6 not available)")
         
         # Create network thread directly for CLI mode
-        network = NetworkThread(port=8080)
+        network = NetworkThread(port=port)
         network.start()
         
-        logger.info("Server started on port 8080 (CLI mode)")
+        logger.info(f"Server started on port {port} (CLI mode)")
         logger.info("Press Ctrl+C to stop")
         
         try:
