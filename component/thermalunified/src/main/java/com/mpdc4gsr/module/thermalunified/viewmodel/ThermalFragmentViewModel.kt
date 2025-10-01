@@ -7,7 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import com.mpdc4gsr.module.thermalunified.tools.Fence
-import com.mpdc4gsr.module.thermalunified.tools.ThermalTool
+import com.mpdc4gsr.module.thermalunified.tools.ThermalTools
 import com.mpdc4gsr.module.thermalunified.utils.ArrayUtils
 import com.mpdc4gsr.libunified.app.matrix.IrSurfaceView
 import kotlinx.coroutines.Dispatchers

@@ -4,7 +4,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.mpdc4gsr.libunified.app.config.FileConfig
 import com.mpdc4gsr.libunified.app.repository.TS004FileBean
-import com.mpdc4gsr.libunified.app.tools.TimeTool
+import com.mpdc4gsr.libunified.app.tools.TimeTools
 import com.mpdc4gsr.libunified.app.tools.VideoTools
 import kotlinx.parcelize.Parcelize
 import java.io.File
@@ -26,7 +26,7 @@ open class GalleryBean(
         thumb = file.absolutePath,
         name = file.name,
         duration = VideoTools.getLocalVideoDuration(file.absolutePath),
-        timeMillis = TimeTool.updateDateTime(file),
+        timeMillis = TimeTools.updateDateTime(file),
         hasDownload = true,
     )
 

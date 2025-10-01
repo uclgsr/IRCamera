@@ -7,7 +7,7 @@ import com.mpdc4gsr.libunified.app.utils.ScreenUtils
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-object ScreenTool {
+object ScreenTools {
 
     fun isLandPhone(): Boolean {
         val displayMetrics: DisplayMetrics = Utils.getApp().resources.displayMetrics

@@ -12,7 +12,7 @@ import com.mpdc4gsr.module.thermalunified.lite.camera.DeviceIrcmdControlManager
 import kotlinx.coroutines.delay
 
 
-object IRTool {
+object IRTools {
     const val TAG: String = "IRTool"
 
     fun setAutoShutter(isAutoShutter: Boolean) {

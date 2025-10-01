@@ -8,7 +8,7 @@ import com.mpdc4gsr.libunified.app.config.FileConfig
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import com.mpdc4gsr.libunified.app.repository.GalleryRepository
 import com.mpdc4gsr.libunified.app.repository.TS004Repository
-import com.mpdc4gsr.libunified.app.tools.TimeTool
+import com.mpdc4gsr.libunified.app.tools.TimeTools
 import com.mpdc4gsr.module.thermalunified.utils.WriteTools
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -139,7 +139,7 @@ class IRGalleryViewModel : BaseViewModel() {
             val showList: ArrayList<GalleryBean> = ArrayList(sourceList.size)
             var beforeTime = 0L
             for (galleryBean in sourceList) {
-                val currentTime = TimeTool.timeToMinute(galleryBean.timeMillis, 4)
+                val currentTime = TimeTools.timeToMinute(galleryBean.timeMillis, 4)
                 if (beforeTime != currentTime) {
                     showList.add(GalleryTitle(galleryBean.timeMillis))
                     beforeTime = currentTime
@@ -169,12 +169,12 @@ class IRGalleryViewModel : BaseViewModel() {
                     hasLoadPage++
                 }
 
-                var beforeTime = if (sourceList.isEmpty()) 0 else TimeTool.timeToMinute(
+                var beforeTime = if (sourceList.isEmpty()) 0 else TimeTools.timeToMinute(
                     sourceList.last().timeMillis,
                     4
                 )
                 for (galleryBean in pageList) {
-                    val currentTime = TimeTool.timeToMinute(galleryBean.timeMillis, 4)
+                    val currentTime = TimeTools.timeToMinute(galleryBean.timeMillis, 4)
                     if (beforeTime != currentTime) {
                         showList.add(GalleryTitle(galleryBean.timeMillis))
                         beforeTime = currentTime

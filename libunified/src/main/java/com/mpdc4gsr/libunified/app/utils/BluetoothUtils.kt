@@ -16,7 +16,7 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.config.DeviceConfig
-import com.mpdc4gsr.libunified.app.tools.PermissionTool
+import com.mpdc4gsr.libunified.app.tools.PermissionTools
 
 object BluetoothUtils {
 
@@ -74,7 +74,7 @@ object BluetoothUtils {
     fun startLeScan(context: Context): Boolean {
         XLog.i("startLeScan()")
 
-        if (!PermissionTool.hasBtPermission(context)) {
+        if (!PermissionTools.hasBtPermission(context)) {
             XLog.e("-!")
             return false
         }
@@ -104,7 +104,7 @@ object BluetoothUtils {
     fun stopLeScan(context: Context): Boolean {
         XLog.i("stopBtScan()")
 
-        if (!PermissionTool.hasBtPermission(context)) {
+        if (!PermissionTools.hasBtPermission(context)) {
             XLog.w("-!")
             return false
         }

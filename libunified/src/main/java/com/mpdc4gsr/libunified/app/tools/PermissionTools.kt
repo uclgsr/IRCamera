@@ -12,7 +12,7 @@ import com.mpdc4gsr.libunified.app.BaseApplication
 import com.mpdc4gsr.libunified.app.dialog.TipDialog
 import com.mpdc4gsr.libunified.app.lms.weiget.TToast
 
-object PermissionTool {
+object PermissionTools {
 
     fun requestRecordAudio(
         context: Context,

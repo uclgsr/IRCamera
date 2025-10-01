@@ -12,7 +12,7 @@ import java.io.FileOutputStream
 import java.io.InputStream
 import java.util.concurrent.TimeUnit
 
-object DownloadTool {
+object DownloadTools {
     private fun getOKHttpClient(): OkHttpClient =
         OkHttpClient.Builder()
             .retryOnConnectionFailure(false)

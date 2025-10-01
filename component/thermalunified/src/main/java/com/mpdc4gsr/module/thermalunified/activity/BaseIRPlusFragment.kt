@@ -42,8 +42,8 @@ import com.mpdc4gsr.module.thermalunified.extension.setMirror
 import com.mpdc4gsr.module.thermalunified.extension.setPropDdeLevel
 import com.mpdc4gsr.module.thermalunified.repository.ConfigRepository
 import com.mpdc4gsr.module.thermalunified.utils.DualParamsUtils
-import com.mpdc4gsr.module.thermalunified.utils.IRCmdTool
-import com.mpdc4gsr.module.thermalunified.utils.IRCmdTool.getSNStr
+import com.mpdc4gsr.module.thermalunified.utils.IRCmdTools
+import com.mpdc4gsr.module.thermalunified.utils.IRCmdTools.getSNStr
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -274,9 +274,9 @@ abstract class BaseIRPlusFragment :
             return
         }
         lifecycleScope.launch {
-            val parameters = IRCmdTool.getDualBytes(USBMonitorManager.getInstance().ircmd)
+            val parameters = IRCmdTools.getDualBytes(USBMonitorManager.getInstance().ircmd)
             val data = dualView?.dualUVCCamera?.loadParameters(parameters, typeLoadParameters)
-            dualDisp = IRCmdTool.dispNumber
+            dualDisp = IRCmdTools.dispNumber
             setDispViewData(dualDisp)
 
             dualView?.dualUVCCamera?.setDisp(dualDisp)

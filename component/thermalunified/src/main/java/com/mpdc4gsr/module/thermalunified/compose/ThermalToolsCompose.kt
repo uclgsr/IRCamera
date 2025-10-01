@@ -54,8 +54,8 @@ import kotlin.math.*
  *
  * This file contains Compose implementations for:
  * - Fence.kt → FenceCompose
- * - ThermalTool.kt → ThermalToolCompose
- * - FenceTool.kt → FenceToolCompose
+ * - ThermalTools.kt → ThermalToolCompose
+ * - FenceTools.kt → FenceToolCompose
  * - GlideImageEngine.kt → ImageLoadingCompose (utilities)
  */
 

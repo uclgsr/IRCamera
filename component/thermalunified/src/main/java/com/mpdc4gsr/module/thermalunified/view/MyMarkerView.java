@@ -6,7 +6,7 @@ import android.widget.TextView;
 
 import com.mpdc4gsr.libunified.app.db.entity.ThermalEntity;
 import com.mpdc4gsr.libunified.app.tools.NumberTools;
-import com.mpdc4gsr.libunified.app.tools.TimeTool;
+import com.mpdc4gsr.libunified.app.tools.TimeTools;
 import com.mpdc4gsr.libunified.ui.components.MarkerView;
 import com.mpdc4gsr.libunified.ui.data.CandleEntry;
 import com.mpdc4gsr.libunified.ui.data.Entry;
@@ -51,7 +51,7 @@ public class MyMarkerView extends MarkerView {
                 str.append(System.getProperty("line.separator")).append("[CHINESE_TEXT]:").append(thermalMinStr);
             }
             tvContent.setText(str.toString());
-            timeText.setText(TimeTool.INSTANCE.showTimeSecond(data.getCreateTime()));
+            timeText.setText(TimeTools.INSTANCE.showTimeSecond(data.getCreateTime()));
         }
         super.refreshContent(e, highlight);
     }

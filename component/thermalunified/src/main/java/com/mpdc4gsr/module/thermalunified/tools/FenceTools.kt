@@ -1,6 +1,6 @@
 package com.mpdc4gsr.module.thermalunified.tools
 
-object FenceTool {
+object FenceTools {
 
     fun pointToIndex(
         point: IntArray,

@@ -16,7 +16,7 @@ import java.io.InputStream
 import kotlin.math.ceil
 import kotlin.math.floor
 
-object IRCmdTool {
+object IRCmdTools {
     val TAG = "IRCmdTool"
     var dispNumber = 30
 

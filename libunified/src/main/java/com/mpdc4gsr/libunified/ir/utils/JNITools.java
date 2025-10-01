@@ -9,7 +9,7 @@ import org.opencv.core.Mat;
  * JNITool implementation for thermal image processing using app/libs thermal processing libraries
  * Utilizes libAC020sdk_USB_IR, libirutils, and libcommon from app/libs for enhanced thermal analysis
  */
-public class JNITool {
+public class JNITools {
     public static final JNITool INSTANCE = new JNITool();
     private static final String TAG = "JNITool";
     private static final int DEFAULT_IMAGE_WIDTH = 192;

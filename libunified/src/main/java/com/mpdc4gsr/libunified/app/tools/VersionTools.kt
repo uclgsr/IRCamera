@@ -3,7 +3,7 @@ package com.mpdc4gsr.libunified.app.tools
 import com.elvishew.xlog.XLog
 import java.util.regex.Pattern
 
-object VersionTool {
+object VersionTools {
 
     fun getVersion(str: String): String {
         var versionStr = "1.0"

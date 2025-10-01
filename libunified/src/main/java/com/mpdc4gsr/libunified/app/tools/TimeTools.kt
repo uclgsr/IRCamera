@@ -11,7 +11,7 @@ import java.util.Formatter
 import java.util.Locale
 import java.util.TimeZone
 
-object TimeTool {
+object TimeTools {
     fun formatDetectTime(timeMillis: Long): String {
         return SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(Date(timeMillis))
     }

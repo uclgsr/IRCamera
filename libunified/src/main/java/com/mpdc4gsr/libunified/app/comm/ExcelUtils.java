@@ -14,7 +14,7 @@ import com.mpdc4gsr.libunified.R;
 import com.mpdc4gsr.libunified.app.common.SharedManager;
 import com.mpdc4gsr.libunified.app.config.FileConfig;
 import com.mpdc4gsr.libunified.app.db.entity.ThermalEntity;
-import com.mpdc4gsr.libunified.app.tools.TimeTool;
+import com.mpdc4gsr.libunified.app.tools.TimeTools;
 import com.mpdc4gsr.libunified.app.tools.UnitTools;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -194,7 +194,7 @@ public class ExcelUtils {
                     }
                 }
             }
-            String timeStr = listData.isEmpty() ? TimeTool.INSTANCE.showDateSecond() : TimeUtils.millis2String(listData.get(0).getStartTime(), "yyyyMMddHHmmss");
+            String timeStr = listData.isEmpty() ? TimeTools.INSTANCE.showDateSecond() : TimeUtils.millis2String(listData.get(0).getStartTime(), "yyyyMMddHHmmss");
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
                 File excel = new File(FileConfig.getExcelDir(), "TCView_" + timeStr + ".xlsx");
                 FileOutputStream fos = new FileOutputStream(excel);

@@ -105,7 +105,7 @@ class Fence(var w: Int = 256, var h: Int = 192, val srcRect: IntArray, rotateTyp
     fun pointToIndex(lineList: ArrayList<IntArray>): ArrayList<Int> {
         val indexList = arrayListOf<Int>()
         lineList.forEach {
-            indexList.add(FenceTool.pointToIndex(it, w))
+            indexList.add(FenceTools.pointToIndex(it, w))
         }
         return indexList
     }
@@ -122,7 +122,7 @@ class Fence(var w: Int = 256, var h: Int = 192, val srcRect: IntArray, rotateTyp
     private fun showArrayIndex(list: ArrayList<IntArray>) {
         val stringBuilder = StringBuilder()
         list.forEach {
-            stringBuilder.append(FenceTool.pointToIndex(it, w)).append(", ")
+            stringBuilder.append(FenceTools.pointToIndex(it, w)).append(", ")
         }
         Log.w("123", "list size:${list.size}")
         Log.w("123", "list index:$stringBuilder")
