@@ -12,7 +12,7 @@ import kotlinx.coroutines.withContext
 import mpdc4gsr.core.RecordingService
 import mpdc4gsr.core.SessionManager
 import mpdc4gsr.feature.network.data.NetworkClient
-import mpdc4gsr.network.NetworkController
+import mpdc4gsr.feature.network.data.NetworkController
 import mpdc4gsr.feature.gsr.data.GSRSensorRecorder
 import mpdc4gsr.feature.thermal.ui.ThermalRecorder
 import mpdc4gsr.core.data.UnifiedGSRRecorder

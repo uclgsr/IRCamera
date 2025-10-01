@@ -30,10 +30,10 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.csl.irCamera.R
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-import mpdc4gsr.camera.integration.DualModeCameraViewModel
+import mpdc4gsr.feature.camera.presentation.DualModeCameraViewModel
 import mpdc4gsr.compose.base.BaseComposeActivity
 import mpdc4gsr.core.ui.components.TitleBar
-import mpdc4gsr.activities.MainActivity
+import mpdc4gsr.feature.main.ui.MainActivity
 
 /**
  * Dual Mode Camera Activity - Compose Implementation
