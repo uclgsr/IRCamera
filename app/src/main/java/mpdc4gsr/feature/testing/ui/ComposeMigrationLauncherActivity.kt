@@ -421,7 +421,7 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         startActivity(
                             Intent(
                                 this@ComposeMigrationLauncherActivity,
-                                mpdc4gsr.sensors.gsr.ShimmerConfigComposeActivity::class.java
+                                mpdc4gsr.feature.gsr.ui.ShimmerConfigComposeActivity::class.java
                             )
                         )
                     }
@@ -728,7 +728,7 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         startActivity(
                             Intent(
                                 this@ComposeMigrationLauncherActivity,
-                                mpdc4gsr.sensors.gsr.ShimmerConfigComposeActivity::class.java
+                                mpdc4gsr.feature.gsr.ui.ShimmerConfigComposeActivity::class.java
                             )
                         )
                     }

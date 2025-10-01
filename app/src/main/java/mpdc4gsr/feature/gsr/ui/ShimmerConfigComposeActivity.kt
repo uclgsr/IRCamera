@@ -2,6 +2,9 @@ package mpdc4gsr.feature.gsr.ui
 
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -23,7 +26,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import mpdc4gsr.core.ui.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import mpdc4gsr.sensors.unified.model.DeviceInfo
 import mpdc4gsr.feature.gsr.presentation.ShimmerConfigViewModel
@@ -39,7 +41,7 @@ import mpdc4gsr.feature.gsr.presentation.ShimmerConfigViewModel
  * - Advanced sensor configuration (GSR range, PPG channels)
  * - Firmware update management and device diagnostics
  */
-class ShimmerConfigComposeActivity : BaseComposeActivity<ShimmerConfigViewModel>() {
+class ShimmerConfigComposeActivity : ComponentActivity() {
 
     companion object {
         fun startActivity(context: Context) {
@@ -47,13 +49,18 @@ class ShimmerConfigComposeActivity : BaseComposeActivity<ShimmerConfigViewModel>
         }
     }
 
-    override fun createViewModel(): ShimmerConfigViewModel {
-        return viewModels<ShimmerConfigViewModel>().value
+    private val viewModel: ShimmerConfigViewModel by viewModels()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContent {
+            Content(viewModel)
+        }
     }
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    override fun Content(viewModel: ShimmerConfigViewModel) {
+    fun Content(viewModel: ShimmerConfigViewModel) {
         var isScanning by remember { mutableStateOf(false) }
         var selectedDevice by remember { mutableStateOf<DeviceInfo?>(null) }
         var showConfigDialog by remember { mutableStateOf(false) }
