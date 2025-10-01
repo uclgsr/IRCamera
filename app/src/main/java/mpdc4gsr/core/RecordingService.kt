@@ -1630,7 +1630,7 @@ class RecordingService : LifecycleService() {
 
             override suspend fun onSyncRequest(pcTimestamp: Long): ProtocolHandler.SyncResult {
                 return try {
-                    val timeManager = mpdc4gsr.utils.TimeManager.getInstance(this@RecordingService)
+                    val timeManager = mpdc4gsr.core.data.utils.TimeManager.getInstance(this@RecordingService)
                     val phoneTimestamp =
                         timeManager.getCurrentTimestampNs() / 1_000_000 // Convert to ms
 

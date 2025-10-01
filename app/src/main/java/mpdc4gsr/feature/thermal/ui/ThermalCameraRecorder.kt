@@ -36,9 +36,9 @@ import mpdc4gsr.core.data.SensorError
 import mpdc4gsr.core.data.SensorRecorder
 import mpdc4gsr.core.data.TimestampManager
 import mpdc4gsr.core.data.TimestampRecord
-import mpdc4gsr.utils.BufferedDataWriter
-import mpdc4gsr.utils.CSVBufferedWriter
-import mpdc4gsr.utils.SessionDirectoryManager
+import mpdc4gsr.core.data.utils.BufferedDataWriter
+import mpdc4gsr.core.data.utils.CSVBufferedWriter
+import mpdc4gsr.core.data.utils.SessionDirectoryManager
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode

@@ -22,7 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
-import mpdc4gsr.compose.base.BaseComposeActivity
+import mpdc4gsr.core.ui.BaseComposeActivity
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 
 /**

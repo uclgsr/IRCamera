@@ -36,9 +36,10 @@ import mpdc4gsr.core.data.TimeSynchronizationService
 import mpdc4gsr.core.data.TimestampManager
 import mpdc4gsr.feature.gsr.data.GSRSensorRecorder
 import mpdc4gsr.feature.thermal.ui.ThermalCameraRecorder
-import mpdc4gsr.utils.SessionDirectory
-import mpdc4gsr.utils.SessionDirectoryManager
-import mpdc4gsr.utils.StorageStatus
+import mpdc4gsr.core.data.utils.SessionDirectory
+import mpdc4gsr.core.data.utils.SessionDirectoryManager
+import mpdc4gsr.core.data.utils.SessionMetadata as UtilSessionMetadata
+import mpdc4gsr.core.data.utils.StorageStatus
 import java.io.File
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
@@ -329,7 +330,7 @@ class RecordingController(
                 createCrashRecoveryMarker(finalSessionId, enabledSensors, sessionDir)
 
 
-                val utilMetadata = mpdc4gsr.utils.SessionMetadata(
+                val utilMetadata = UtilSessionMetadata(
                     startTime = sessionMetadata!!.sessionStartTimestampMs,
                     enabledSensors = enabledSensors,
                     participantId = participantId,

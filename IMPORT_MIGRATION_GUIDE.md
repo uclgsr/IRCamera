@@ -6,7 +6,26 @@ This document summarizes the import path changes made after the repository restr
 
 After the repository consolidation, many packages were moved and renamed for better organization. This guide documents all the import path changes that were applied.
 
+**Latest Update:** Fixed remaining incorrect imports for `mpdc4gsr.compose.base.*` and `mpdc4gsr.utils.*` (44 files corrected).
+
 ## Package Migration Summary
+
+### 0. Base Compose Activity
+
+#### BaseComposeActivity
+**Old Path:**
+```kotlin
+import mpdc4gsr.compose.base.BaseComposeActivity
+```
+
+**New Path:**
+```kotlin
+import mpdc4gsr.core.ui.BaseComposeActivity
+```
+
+**Affected Files:** 36 files
+
+**Note:** The BaseComposeActivity class was moved from the old `mpdc4gsr.compose.base` package to `mpdc4gsr.core.ui` as part of the UI component consolidation.
 
 ### 1. Compose UI Components
 
@@ -196,6 +215,11 @@ import mpdc4gsr.data.BufferedDataWriter
 import mpdc4gsr.data.CSVBufferedWriter
 import mpdc4gsr.data.SessionDirectoryManager
 import mpdc4gsr.data.TimeManager
+import mpdc4gsr.utils.BufferedDataWriter
+import mpdc4gsr.utils.CSVBufferedWriter
+import mpdc4gsr.utils.SessionDirectoryManager
+import mpdc4gsr.utils.TimeManager
+import mpdc4gsr.utils.AppVersionUtil
 ```
 
 **New Path:**
@@ -205,9 +229,10 @@ import mpdc4gsr.core.data.utils.BufferedDataWriter
 import mpdc4gsr.core.data.utils.CSVBufferedWriter
 import mpdc4gsr.core.data.utils.SessionDirectoryManager
 import mpdc4gsr.core.data.utils.TimeManager
+import mpdc4gsr.core.data.utils.AppVersionUtil
 ```
 
-**Affected Files:** 18 files
+**Affected Files:** 18 files (9 additional files fixed for mpdc4gsr.utils.* imports)
 
 ### 6. Network Components
 
@@ -295,6 +320,7 @@ import mpdc4gsr.core.ui.model.SystemAction
 
 | Old Package | New Package | Content Type |
 |-------------|-------------|--------------|
+| `mpdc4gsr.compose.base.*` | `mpdc4gsr.core.ui.*` | Base Compose activities |
 | `mpdc4gsr.compose.theme` | `mpdc4gsr.core.ui.theme` | Theme definitions |
 | `mpdc4gsr.compose.components` | `mpdc4gsr.core.ui.components` | UI components |
 | `mpdc4gsr.sensors.*` | `mpdc4gsr.core.data.*` | Core sensor interfaces |
@@ -306,6 +332,7 @@ import mpdc4gsr.core.ui.model.SystemAction
 | `mpdc4gsr.sensors.unified.*` (controllers) | `mpdc4gsr.core.data.*` | Unified controllers |
 | `mpdc4gsr.sensors.unified.ShimmerDeviceManager` | `mpdc4gsr.core.data.ShimmerDeviceManager` | Shimmer device manager (consolidated) |
 | `mpdc4gsr.data.*` | `mpdc4gsr.core.data.*` or `mpdc4gsr.core.data.utils.*` | Data utilities |
+| `mpdc4gsr.utils.*` | `mpdc4gsr.core.data.utils.*` | Utility classes |
 | `mpdc4gsr.network.*` | `mpdc4gsr.feature.network.data.*` | Network components |
 | `mpdc4gsr.permissions.*` | `mpdc4gsr.core.ui.*` | Permission managers |
 | `mpdc4gsr.compose.screens.*` (actions/states) | `mpdc4gsr.core.ui.model.*` | Sensor UI models and actions |
@@ -318,19 +345,23 @@ import mpdc4gsr.core.ui.model.SystemAction
 
 ## Statistics
 
-- **Total files modified:** 130+
-- **Total import statements fixed:** 320+
+- **Total files modified:** 174+
+- **Total import statements fixed:** 364+
+- **Files fixed in this update:** 44 files (36 for compose.base, 9 for utils, plus package declaration fixes)
 - **New model files created:** 1 (SensorModels.kt)
 - **Component modules build status:** All passing
-- **App module status:** All old compose.screens imports eliminated
+- **App module status:** All old compose.screens, compose.base, and utils imports eliminated
 - **Duplicate definitions removed:** Sensor models consolidated from UnifiedSensorDashboard.kt to core.ui.model package
 
 ## Key Improvements
 
-1. **Eliminated Old Imports**: All `mpdc4gsr.compose.screens` imports have been replaced with proper package references
+1. **Eliminated Old Imports**: All `mpdc4gsr.compose.screens`, `mpdc4gsr.compose.base`, and `mpdc4gsr.utils` imports have been replaced with proper package references
 2. **Created Centralized Models**: New `mpdc4gsr.core.ui.model` package for sensor UI models and actions
 3. **Reduced Duplication**: Sensor state and action definitions consolidated from multiple files into single source
 4. **Improved Organization**: Clear separation between data models (core.data.model) and UI models (core.ui.model)
+5. **Fixed Base Activity**: BaseComposeActivity moved to `mpdc4gsr.core.ui` package (36 files updated)
+6. **Fixed Utilities**: All utility classes moved to `mpdc4gsr.core.data.utils` package (9 files updated)
+7. **Fixed Package Declarations**: Updated Java files with incorrect package declarations (AppVersionUtil.java)
 
 ## Remaining Issues
 
@@ -339,6 +370,7 @@ The following issues still need to be addressed:
 1. **Settings Components**: Some files reference `SettingsCard`, `SettingsToggle`, `SettingsSlider` which may need to be mapped to `SettingsItem`, `SwitchSettingsItem`, `SliderSettingsItem`
 2. **ViewModels**: Some ViewModel imports may need path updates
 3. **Navigation**: Some complex navigation files may have additional screen import issues
+4. **Other Unrelated Compilation Errors**: There are some unrelated compilation issues in test files and other areas that are not part of this import migration
 
 ## How to Use This Guide
 

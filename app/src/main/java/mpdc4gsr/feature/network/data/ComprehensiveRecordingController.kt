@@ -17,8 +17,8 @@ import kotlinx.coroutines.withContext
 import mpdc4gsr.core.CrashRecoveryManager
 import mpdc4gsr.core.RecordingService
 import mpdc4gsr.core.data.SensorRecorder
-import mpdc4gsr.utils.SessionDirectory
-import mpdc4gsr.utils.SessionDirectoryManager
+import mpdc4gsr.core.data.utils.SessionDirectory
+import mpdc4gsr.core.data.utils.SessionDirectoryManager
 import mpdc4gsr.controller.RecordingConstants
 import mpdc4gsr.core.data.SessionMetadata
 import org.json.JSONArray
