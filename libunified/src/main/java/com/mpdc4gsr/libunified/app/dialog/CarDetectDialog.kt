@@ -3,338 +3,199 @@ package com.mpdc4gsr.libunified.app.dialog
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
-import android.text.TextUtils
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.RelativeLayout
-import android.widget.TextView
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.R
-import com.mpdc4gsr.libunified.app.BaseApplication
 import com.mpdc4gsr.libunified.app.bean.CarDetectBean
 import com.mpdc4gsr.libunified.app.bean.CarDetectChildBean
 import com.mpdc4gsr.libunified.app.common.SharedManager
-import com.mpdc4gsr.libunified.databinding.DialogCarDetectBinding
-import com.mpdc4gsr.libunified.databinding.ItemCarDetectChildLayoutBinding
-import com.mpdc4gsr.libunified.databinding.ItemCarDetectLayoutBinding
+import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
+import com.mpdc4gsr.libunified.app.utils.CarDetectData
 
-
+/**
+ * CarDetectDialog - Migrated to Jetpack Compose
+ * Maintains API compatibility with the old databinding version
+ */
 class CarDetectDialog(context: Context, val listener: ((bean: CarDetectChildBean) -> Unit)) :
     Dialog(context, R.style.DefaultDialog) {
-    private lateinit var binding: DialogCarDetectBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setCancelable(true)
         setCanceledOnTouchOutside(false)
 
-        binding = DialogCarDetectBinding.inflate(LayoutInflater.from(context))
-        setContentView(binding.root)
+        val composeView = ComposeView(context).apply {
+            setContent {
+                LibUnifiedTheme {
+                    CarDetectDialogContent(
+                        detectList = CarDetectData.getDetectList(),
+                        currentSelection = SharedManager.getCarDetectInfo(),
+                        onDismiss = { dismiss() },
+                        onItemSelected = { bean ->
+                            listener(bean)
+                            dismiss()
+                        }
+                    )
+                }
+            }
+        }
 
-        binding.titleView.setLeftClickListener { dismiss() }
-
-        binding.rcyDetect.layoutManager =
-            LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-        binding.rcyDetect.adapter = CarDetectAdapter(context, getDetectList())
-
-
+        setContentView(composeView)
     }
 
     companion object {
         @JvmStatic
+        @Deprecated("Use CarDetectData.getDetectList() instead", ReplaceWith("CarDetectData.getDetectList()"))
         fun getDetectList(): MutableList<CarDetectBean> {
-            val dataList: MutableList<CarDetectBean> = ArrayList()
-            val data1List: MutableList<CarDetectChildBean> = ArrayList()
-            val data2List: MutableList<CarDetectChildBean> = ArrayList()
-            data1List.add(
-                CarDetectChildBean(
-                    0,
-                    0,
-                    BaseApplication.instance.getString(R.string.abnormal_description1),
-                    BaseApplication.instance.getString(R.string.abnormal_item1),
-                    "40~70",
-                ),
-            )
-            data1List.add(
-                CarDetectChildBean(
-                    0,
-                    1,
-                    BaseApplication.instance.getString(R.string.abnormal_description2),
-                    BaseApplication.instance.getString(R.string.abnormal_item2),
-                    "200~400",
-                ),
-            )
-            data1List.add(
-                CarDetectChildBean(
-                    0,
-                    2,
-                    BaseApplication.instance.getString(R.string.abnormal_description3),
-                    BaseApplication.instance.getString(R.string.abnormal_item3),
-                    "200~400",
-                ),
-            )
-            data1List.add(
-                CarDetectChildBean(
-                    0,
-                    3,
-                    BaseApplication.instance.getString(R.string.abnormal_description4),
-                    BaseApplication.instance.getString(R.string.abnormal_item4),
-                    "40~60",
-                ),
-            )
-            data1List.add(
-                CarDetectChildBean(
-                    0,
-                    4,
-                    BaseApplication.instance.getString(R.string.abnormal_description5),
-                    BaseApplication.instance.getString(R.string.abnormal_item5),
-                    "40~60",
-                ),
-            )
-            data1List.add(
-                CarDetectChildBean(
-                    0,
-                    5,
-                    BaseApplication.instance.getString(R.string.abnormal_description6),
-                    BaseApplication.instance.getString(R.string.abnormal_item6),
-                    "40~60",
-                ),
-            )
-            data1List.add(
-                CarDetectChildBean(
-                    0,
-                    6,
-                    BaseApplication.instance.getString(R.string.abnormal_description7),
-                    BaseApplication.instance.getString(R.string.abnormal_item7),
-                    "40~60",
-                ),
-            )
-            data1List.add(
-                CarDetectChildBean(
-                    0,
-                    7,
-                    BaseApplication.instance.getString(R.string.abnormal_description8),
-                    BaseApplication.instance.getString(R.string.abnormal_item8),
-                    "80~100",
-                ),
-            )
-            data1List.add(
-                CarDetectChildBean(
-                    0,
-                    8,
-                    BaseApplication.instance.getString(R.string.abnormal_description9),
-                    BaseApplication.instance.getString(R.string.abnormal_item9),
-                    "80~100",
-                ),
-            )
-            data1List.add(
-                CarDetectChildBean(
-                    0,
-                    9,
-                    BaseApplication.instance.getString(R.string.abnormal_description10),
-                    BaseApplication.instance.getString(R.string.abnormal_item10),
-                    "80~100",
-                ),
-            )
-            data1List.add(
-                CarDetectChildBean(
-                    0,
-                    10,
-                    BaseApplication.instance.getString(R.string.abnormal_description11),
-                    BaseApplication.instance.getString(R.string.abnormal_item11),
-                    "80~100",
-                ),
-            )
-            data1List.add(
-                CarDetectChildBean(
-                    0,
-                    11,
-                    BaseApplication.instance.getString(R.string.abnormal_description12),
-                    BaseApplication.instance.getString(R.string.abnormal_item12),
-                    "80~100",
-                ),
-            )
-            data1List.add(
-                CarDetectChildBean(
-                    0,
-                    12,
-                    BaseApplication.instance.getString(R.string.abnormal_description13),
-                    BaseApplication.instance.getString(R.string.abnormal_item13),
-                    "80~100",
-                ),
-            )
-            val carDetectBean1 =
-                CarDetectBean(
-                    BaseApplication.instance.getString(R.string.abnormal_title1),
-                    data1List,
-                )
-            data2List.add(
-                CarDetectChildBean(
-                    1,
-                    0,
-                    BaseApplication.instance.getString(R.string.abnormal_description14),
-                    BaseApplication.instance.getString(R.string.abnormal_item14),
-                    "20~50",
-                ),
-            )
-            data2List.add(
-                CarDetectChildBean(
-                    1,
-                    1,
-                    BaseApplication.instance.getString(R.string.abnormal_description15),
-                    BaseApplication.instance.getString(R.string.abnormal_item15),
-                    "20~50",
-                ),
-            )
-            data2List.add(
-                CarDetectChildBean(
-                    1,
-                    2,
-                    BaseApplication.instance.getString(R.string.abnormal_description16),
-                    BaseApplication.instance.getString(R.string.abnormal_item16),
-                    "20~50",
-                ),
-            )
-            data2List.add(
-                CarDetectChildBean(
-                    1,
-                    3,
-                    BaseApplication.instance.getString(R.string.abnormal_description17),
-                    BaseApplication.instance.getString(R.string.abnormal_item17),
-                    "20~50",
-                ),
-            )
-            data2List.add(
-                CarDetectChildBean(
-                    1,
-                    4,
-                    BaseApplication.instance.getString(R.string.abnormal_description18),
-                    BaseApplication.instance.getString(R.string.abnormal_item18),
-                    "20~50",
-                ),
-            )
-            val carDetectBean2 =
-                CarDetectBean(
-                    BaseApplication.instance.getString(R.string.abnormal_title2),
-                    data2List,
-                )
-            dataList.add(carDetectBean1)
-            dataList.add(carDetectBean2)
-            return dataList
+            return CarDetectData.getDetectList()
         }
     }
+}
 
-    inner class CarDetectAdapter(val act: Context, private var carDetects: List<CarDetectBean>) :
-        RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-        override fun onCreateViewHolder(
-            parent: ViewGroup,
-            viewType: Int,
-        ): RecyclerView.ViewHolder {
-            val binding = ItemCarDetectLayoutBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent,
-                false
-            )
-            return ItemView(binding)
-        }
-
-        override fun onBindViewHolder(
-            holder: RecyclerView.ViewHolder,
-            position: Int,
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun CarDetectDialogContent(
+    detectList: List<CarDetectBean>,
+    currentSelection: CarDetectChildBean,
+    onDismiss: () -> Unit,
+    onItemSelected: (CarDetectChildBean) -> Unit
+) {
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.surface
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize()
         ) {
-            if (holder is ItemView) {
-                val bean = carDetects[position]
-                holder.tvTitle.text = bean.title
-                holder.rcyDetectChild.layoutManager =
-                    LinearLayoutManager(act, RecyclerView.VERTICAL, false)
-                val carDetectChildAdapter = CarDetectChildAdapter(act, bean.detectChildBeans)
-                carDetectChildAdapter.listener = listener@{ _, item ->
-                    carDetects.forEach { it ->
-                        it.detectChildBeans.forEach {
-                            it.isSelected = false
+            // Title bar
+            TopAppBar(
+                title = { Text("Car Detection") },
+                navigationIcon = {
+                    IconButton(onClick = onDismiss) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "Back"
+                        )
+                    }
+                }
+            )
+
+            // List of detection categories and items
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                detectList.forEachIndexed { index, detectBean ->
+                    item {
+                        Text(
+                            text = detectBean.title,
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+                    }
+
+                    items(detectBean.detectChildBeans) { childBean ->
+                        CarDetectItem(
+                            childBean = childBean,
+                            isSelected = currentSelection.type == childBean.type && 
+                                        currentSelection.pos == childBean.pos,
+                            onClick = { onItemSelected(childBean) }
+                        )
+                    }
+
+                    // Add divider between categories (except after last one)
+                    if (index < detectList.size - 1) {
+                        item {
+                            HorizontalDivider(
+                                modifier = Modifier.padding(vertical = 8.dp),
+                                thickness = 1.dp,
+                                color = MaterialTheme.colorScheme.outlineVariant
+                            )
                         }
                     }
-                    item.isSelected = true
-                    carDetectChildAdapter.notifyDataSetChanged()
-                    SharedManager.saveCarDetectInfo(item)
-                    listener.invoke(item)
-                    dismiss()
                 }
-
-                val selectCarDetect = SharedManager.getCarDetectInfo()
-                carDetects.forEachIndexed { index, carDetectBean ->
-                    carDetectBean.detectChildBeans.forEachIndexed { childIndex, carDetectChildBean ->
-                        // SharedManager.getCarDetectInfo() never returns null, it returns a default value
-                        carDetectChildBean.isSelected =
-                            TextUtils.equals(carDetectChildBean.item, selectCarDetect.item)
-                    }
-                }
-
-                holder.rcyDetectChild?.adapter = carDetectChildAdapter
             }
-        }
-
-        override fun getItemCount(): Int {
-            return carDetects.size
-        }
-
-        inner class ItemView(private val binding: ItemCarDetectLayoutBinding) :
-            RecyclerView.ViewHolder(binding.root) {
-            val tvTitle: TextView = binding.tvTitle
-            val rcyDetectChild: RecyclerView = binding.rcyDetectChild
         }
     }
+}
 
-    class CarDetectChildAdapter(
-        val context: Context,
-        private var carChildDetects: List<CarDetectChildBean>,
-    ) :
-        RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-        var listener: ((index: Int, bean: CarDetectChildBean) -> Unit)? = null
-
-        override fun onCreateViewHolder(
-            parent: ViewGroup,
-            viewType: Int,
-        ): RecyclerView.ViewHolder {
-            val binding = ItemCarDetectChildLayoutBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent,
-                false
-            )
-            return ItemView(binding)
-        }
-
-        override fun onBindViewHolder(
-            holder: RecyclerView.ViewHolder,
-            position: Int,
+@Composable
+private fun CarDetectItem(
+    childBean: CarDetectChildBean,
+    isSelected: Boolean,
+    onClick: () -> Unit
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick),
+        colors = CardDefaults.cardColors(
+            containerColor = if (isSelected) 
+                MaterialTheme.colorScheme.primaryContainer 
+            else 
+                MaterialTheme.colorScheme.surfaceVariant
+        ),
+        shape = RoundedCornerShape(8.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
         ) {
-            if (holder is ItemView) {
-                val bean = carChildDetects[position]
-                holder.tvTitle.text = bean.item
-                holder.viewLine.visibility =
-                    if (position == carChildDetects.size - 1) View.GONE else View.VISIBLE
-                holder.ivSelectState.setImageResource(
-                    if (bean.isSelected) R.drawable.ic_car_detect_selected else R.drawable.ic_car_detect_unselected,
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = childBean.item,
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                    color = if (isSelected)
+                        MaterialTheme.colorScheme.onPrimaryContainer
+                    else
+                        MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.weight(1f)
                 )
-                holder.rlyParent.setOnClickListener {
-                    listener?.invoke(position, carChildDetects[position])
+                
+                if (!childBean.temperature.isNullOrEmpty()) {
+                    Text(
+                        text = childBean.temperature,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = if (isSelected)
+                            MaterialTheme.colorScheme.onPrimaryContainer
+                        else
+                            MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                 }
             }
-        }
-
-        override fun getItemCount(): Int {
-            return carChildDetects.size
-        }
-
-        inner class ItemView(private val binding: ItemCarDetectChildLayoutBinding) :
-            RecyclerView.ViewHolder(binding.root) {
-            val rlyParent: RelativeLayout = binding.rlyParent
-            val tvTitle: TextView = binding.tvName
-            val ivSelectState: ImageView = binding.ivSelectState
-            val viewLine: View = binding.viewLine
+            
+            if (!childBean.description.isNullOrEmpty()) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = childBean.description,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = if (isSelected)
+                        MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
+                    else
+                        MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+                )
+            }
         }
     }
 }
