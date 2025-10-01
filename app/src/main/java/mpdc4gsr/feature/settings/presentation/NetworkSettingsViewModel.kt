@@ -74,9 +74,9 @@ class NetworkSettingsViewModel : BaseViewModel() {
         bluetoothAdapter = bluetoothManager?.adapter
         wifiManager = ctx.applicationContext.getSystemService(Context.WIFI_SERVICE) as? WifiManager
         
-        // Note: ShimmerDeviceManager requires a LifecycleOwner, which we don't have in ViewModel context
-        // This functionality should be handled at the Activity/Fragment level
-        // shimmerDeviceManager would need to be passed in or accessed differently
+// TODO: Instantiate ShimmerDeviceManager in the Activity/Fragment, as it requires a
+// LifecycleOwner. The instance should then be passed to this ViewModel, for example
+// via the initialize() method.
         
         loadSettings()
         updateNetworkInfo()
