@@ -28,7 +28,7 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import com.mpdc4gsr.libunified.app.config.RouterConfig
 import com.mpdc4gsr.module.thermalunified.R
-import com.mpdc4gsr.module.thermalunified.activity.IRThermalNightActivity
+import com.mpdc4gsr.module.thermalunified.activity.ThermalIrNightComposeActivity
 import com.mpdc4gsr.module.thermalunified.activity.IRThermalPlusComposeActivity
 import com.mpdc4gsr.module.thermalunified.activity.MonitoryHomeComposeActivity
 
@@ -283,7 +283,7 @@ class AbilityFragmentCompose : Fragment() {
 
             "night_vision" -> {
                 // Navigate to night vision thermal mode
-                val intent = Intent(context, IRThermalNightActivity::class.java)
+                val intent = Intent(context, ThermalIrNightComposeActivity::class.java)
                 context.startActivity(intent)
             }
 
