@@ -376,16 +376,16 @@ When modernizing an existing ViewModel:
 ```kotlin
 @Test
 fun `test data loading success`() = runTest {
-    // Given
-    val mockRepository = mockk<MyRepository>()
-    val viewModel = MyViewModel(mockRepository)
-    
-    // When
-    viewModel.loadData()
-    
-    // Then
-    assertEquals(LoadingState.Success, viewModel.state.value)
-}
+        // Given
+        val mockRepository = mockk<MyRepository>()
+        val viewModel = MyViewModel(mockRepository)
+
+        // When
+        viewModel.loadData()
+
+        // Then
+        assertEquals(LoadingState.Success, viewModel.state.value)
+    }
 ```
 
 ### 2. Repository Testing
@@ -393,16 +393,16 @@ fun `test data loading success`() = runTest {
 ```kotlin
 @Test
 fun `test repository caching`() = runTest {
-    val repository = MyRepository()
-    
-    // First call should fetch from network
-    val result1 = repository.getData().first()
-    
-    // Second call should use cache
-    val result2 = repository.getData().first()
-    
-    assertEquals(result1, result2)
-}
+        val repository = MyRepository()
+
+        // First call should fetch from network
+        val result1 = repository.getData().first()
+
+        // Second call should use cache
+        val result2 = repository.getData().first()
+
+        assertEquals(result1, result2)
+    }
 ```
 
 ### 3. Flow Testing

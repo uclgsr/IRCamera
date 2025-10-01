@@ -158,7 +158,8 @@ fun TestProgressIndicator(
             Spacer(modifier = Modifier.height(8.dp))
 
             val progress = if (totalTests > 0) completedTests.toFloat() / totalTests else 0f
-            LinearProgressIndicator(progress = { progress },
+            LinearProgressIndicator(
+                progress = { progress },
                 modifier = Modifier.fillMaxWidth()
             )
 

@@ -46,7 +46,7 @@ class EnhancedThermalRecorder(private val context: Context) {
 
 
             @OptIn(kotlinx.coroutines.DelicateCoroutinesApi::class)
-        GlobalScope.launch {
+            GlobalScope.launch {
                 val success = if (sessionMetadata != null) {
                     thermalCameraRecorder.startRecording(
                         currentSessionDirectory!!.absolutePath,
@@ -75,7 +75,7 @@ class EnhancedThermalRecorder(private val context: Context) {
         return try {
 
             @OptIn(kotlinx.coroutines.DelicateCoroutinesApi::class)
-        GlobalScope.launch {
+            GlobalScope.launch {
                 thermalCameraRecorder.stopRecording()
             }
 

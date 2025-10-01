@@ -11,11 +11,11 @@ import kotlinx.coroutines.launch
 
 /**
  * ViewModel for Thermal Camera functionality
- * 
+ *
  * Manages thermal camera state following MVVM architecture
  */
 class ThermalCameraViewModel : ViewModel() {
-    
+
     data class ThermalCameraUiState(
         val isConnected: Boolean = false,
         val isRecording: Boolean = false,
@@ -26,20 +26,20 @@ class ThermalCameraViewModel : ViewModel() {
         val recordingDuration: Long = 0L,
         val errorMessage: String? = null
     )
-    
+
     private val _uiState = MutableStateFlow(ThermalCameraUiState())
     val uiState: StateFlow<ThermalCameraUiState> = _uiState.asStateFlow()
-    
+
     fun connectToDevice() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isConnected = true)
         }
     }
-    
+
     fun startRecording() {
         _uiState.value = _uiState.value.copy(isRecording = true)
     }
-    
+
     fun stopRecording() {
         _uiState.value = _uiState.value.copy(isRecording = false)
     }

@@ -265,7 +265,7 @@ class SimpleNetworkTestComposeActivity : ComponentActivity() {
                     Button(
                         onClick = {
                             connectionStatus = ConnectionStatus.CONNECTING
-                            lifecycleScope.launch { 
+                            lifecycleScope.launch {
                                 connectionStatus = connectWiFi(ipAddress, port)
                             }
                         },
@@ -280,7 +280,7 @@ class SimpleNetworkTestComposeActivity : ComponentActivity() {
                     OutlinedButton(
                         onClick = {
                             connectionStatus = ConnectionStatus.CONNECTING
-                            lifecycleScope.launch { 
+                            lifecycleScope.launch {
                                 connectionStatus = connectBluetooth()
                             }
                         },

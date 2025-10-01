@@ -1,4 +1,5 @@
 package mpdc4gsr.feature.main.ui
+
 import mpdc4gsr.core.ui.components.settings.*
 
 import androidx.compose.foundation.layout.*
@@ -626,7 +627,8 @@ fun GSRCalibrationCard() {
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            LinearProgressIndicator(progress = { 0.85f },
+            LinearProgressIndicator(
+                progress = { 0.85f },
                 modifier = Modifier.fillMaxWidth()
             )
 

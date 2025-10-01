@@ -135,7 +135,7 @@ fun GSRGalleryHeader(
     sessionsCount: Int
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
-    
+
     Column {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -165,7 +165,7 @@ fun GSRGalleryHeader(
                 value = searchQuery,
                 onValueChange = onSearchChange,
                 label = { Text("Search GSR sessions...") },
-                leadingIcon = { 
+                leadingIcon = {
                     IconButton(onClick = { keyboardController?.hide() }) {
                         Icon(Icons.Default.Search, contentDescription = "Search")
                     }

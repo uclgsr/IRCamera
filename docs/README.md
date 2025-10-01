@@ -102,9 +102,12 @@ See [scripts/README.md](../scripts/README.md) for complete testing documentation
 
 ### Essential Documentation
 
-- **[docs/consolidated/ARCHITECTURE_AND_UI.md](consolidated/ARCHITECTURE_AND_UI.md)** - Complete system architecture and UI reference
-- **[docs/consolidated/IMPLEMENTATION_STATUS.md](consolidated/IMPLEMENTATION_STATUS.md)** - Implementation history and current status
-- **[docs/consolidated/TESTING_GUIDE.md](consolidated/TESTING_GUIDE.md)** - Comprehensive testing procedures and validation
+- **[docs/consolidated/ARCHITECTURE_AND_UI.md](consolidated/ARCHITECTURE_AND_UI.md)** - Complete system architecture and
+  UI reference
+- **[docs/consolidated/IMPLEMENTATION_STATUS.md](consolidated/IMPLEMENTATION_STATUS.md)** - Implementation history and
+  current status
+- **[docs/consolidated/TESTING_GUIDE.md](consolidated/TESTING_GUIDE.md)** - Comprehensive testing procedures and
+  validation
 - **[docs/consolidated/COMPOSE_MIGRATION.md](consolidated/COMPOSE_MIGRATION.md)** - Jetpack Compose migration details
 
 ### Quick Navigation

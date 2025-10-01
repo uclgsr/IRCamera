@@ -40,7 +40,7 @@ class DiagnosticsViewModel : BaseViewModel() {
         val thermalCamera: String = "Checking...",
         val rgbCamera: String = "Checking..."
     )
-    
+
     companion object {
         private const val TC001_VENDOR_ID = 0x0BDA
         private const val TC001_PRODUCT_ID = 0x5830
@@ -59,7 +59,7 @@ class DiagnosticsViewModel : BaseViewModel() {
                 val batteryStatus = getBatteryLevel()
                 val memoryInfo = getMemoryInfo()
                 val temperature = getDeviceTemperature()
-                
+
                 _systemStatus.value = SystemStatus(
                     systemHealth = "Good",
                     battery = batteryStatus,
@@ -82,7 +82,7 @@ class DiagnosticsViewModel : BaseViewModel() {
             val gsrStatus = checkGSRSensorStatus()
             val thermalStatus = checkThermalCameraStatus()
             val rgbStatus = checkRGBCameraStatus()
-            
+
             _sensorStatus.value = SensorStatus(
                 gsrSensor = gsrStatus,
                 thermalCamera = thermalStatus,
@@ -90,7 +90,7 @@ class DiagnosticsViewModel : BaseViewModel() {
             )
         }
     }
-    
+
     private suspend fun checkGSRSensorStatus(): String {
         return try {
             val bluetoothAdapter = android.bluetooth.BluetoothAdapter.getDefaultAdapter()
@@ -105,7 +105,7 @@ class DiagnosticsViewModel : BaseViewModel() {
             "Error: ${e.message}"
         }
     }
-    
+
     private suspend fun checkThermalCameraStatus(): String {
         return try {
             val usbManager = context.getSystemService(Context.USB_SERVICE) as? android.hardware.usb.UsbManager
@@ -126,10 +126,11 @@ class DiagnosticsViewModel : BaseViewModel() {
             "Error: ${e.message}"
         }
     }
-    
+
     private suspend fun checkRGBCameraStatus(): String {
         return try {
-            val cameraManager = context.getSystemService(Context.CAMERA_SERVICE) as? android.hardware.camera2.CameraManager
+            val cameraManager =
+                context.getSystemService(Context.CAMERA_SERVICE) as? android.hardware.camera2.CameraManager
             if (cameraManager == null) {
                 "Not Available - No Camera Service"
             } else {
@@ -153,7 +154,7 @@ class DiagnosticsViewModel : BaseViewModel() {
             )
             val level = batteryStatus?.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) ?: -1
             val scale = batteryStatus?.getIntExtra(BatteryManager.EXTRA_SCALE, -1) ?: -1
-            
+
             if (level >= 0 && scale > 0) {
                 val batteryPct = level * 100 / scale
                 "$batteryPct%"
@@ -237,7 +238,7 @@ class DiagnosticsViewModel : BaseViewModel() {
             }
         }
     }
-    
+
     private fun getCurrentTimestamp(): String {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             java.time.format.DateTimeFormatter.ofPattern(TIMESTAMP_FORMAT, Locale.US)

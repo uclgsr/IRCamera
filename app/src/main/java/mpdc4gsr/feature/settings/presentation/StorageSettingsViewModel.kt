@@ -71,7 +71,7 @@ class StorageSettingsViewModel : BaseViewModel() {
     /**
      * Updates storage information based on the selected storage location.
      * Calculates available, used, and total storage space using Android's StatFs API.
-     * 
+     *
      * - Internal Storage: Uses Environment.getDataDirectory()
      * - SD Card: Uses Environment.getExternalStorageDirectory() if available
      * - External USB: Falls back to internal storage (requires proper path detection)
@@ -89,14 +89,16 @@ class StorageSettingsViewModel : BaseViewModel() {
                             Environment.getDataDirectory()
                         }
                     }
+
                     "External USB" -> {
                         // For External USB, would need to scan removable storage
                         // Falling back to internal for now
                         Environment.getDataDirectory()
                     }
+
                     else -> Environment.getDataDirectory()
                 }
-                
+
                 val stat = StatFs(path.path)
                 val blockSize = stat.blockSizeLong
                 val availableBlocks = stat.availableBlocksLong

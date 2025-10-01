@@ -192,6 +192,7 @@ class GSRSettingsRepository(private val context: Context) {
         return try {
             @Suppress("UNCHECKED_CAST")
             val gsrMap = settingsMap["gsr_settings"] as? Map<String, Any> ?: return false
+
             @Suppress("UNCHECKED_CAST")
             val deviceMap = settingsMap["device_settings"] as? Map<String, Any> ?: return false
 

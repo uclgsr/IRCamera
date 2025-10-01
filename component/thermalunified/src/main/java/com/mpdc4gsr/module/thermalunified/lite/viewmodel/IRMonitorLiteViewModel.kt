@@ -77,7 +77,7 @@ class IRMonitorLiteViewModel : ViewModel() {
 
         // Cancel any existing monitoring job before starting a new one
         monitoringJob?.cancel()
-        
+
         _monitoringState.value = MonitoringState.ACTIVE
         startTime = System.currentTimeMillis()
         sampleCount = 0
@@ -135,9 +135,9 @@ class IRMonitorLiteViewModel : ViewModel() {
 
             while (_monitoringState.value == MonitoringState.ACTIVE) {
                 // Simulate temperature reading with constants
-                val baseTemp = BASE_TEMPERATURE + 
-                    sin(timeStep * SINE_FREQUENCY) * SINE_AMPLITUDE + 
-                    cos(timeStep * COSINE_FREQUENCY) * COSINE_AMPLITUDE
+                val baseTemp = BASE_TEMPERATURE +
+                        sin(timeStep * SINE_FREQUENCY) * SINE_AMPLITUDE +
+                        cos(timeStep * COSINE_FREQUENCY) * COSINE_AMPLITUDE
                 val noise = Random.nextFloat() * (NOISE_RANGE * 2) - NOISE_RANGE
                 val currentTemp = baseTemp + noise
                 val maxTemp = currentTemp + Random.nextFloat() * TEMP_VARIATION_RANGE
@@ -174,7 +174,7 @@ class IRMonitorLiteViewModel : ViewModel() {
         val seconds = millis / 1000
         val minutes = seconds / 60
         val hours = minutes / 60
-        
+
         return when {
             hours > 0 -> String.format("%02d:%02d:%02d", hours, minutes % 60, seconds % 60)
             minutes > 0 -> String.format("%02d:%02d", minutes, seconds % 60)
