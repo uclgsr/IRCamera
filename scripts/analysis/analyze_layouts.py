@@ -127,7 +127,8 @@ def categorize_layout(layout_name, path):
         return 'Other'
 
 def main():
-    base_path = '/home/runner/work/IRCamera/IRCamera'
+    script_dir = Path(__file__).resolve().parent
+    base_path = str(script_dir.parent.parent)
     
     print("Analyzing XML layouts and Compose equivalents...")
     print("=" * 80)
