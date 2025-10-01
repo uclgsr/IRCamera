@@ -11,7 +11,7 @@ import mpdc4gsr.feature.thermal.data.repository.ThermalRepositoryImpl
 import mpdc4gsr.feature.thermal.data.source.TopdonDataSource
 import mpdc4gsr.feature.thermal.domain.repository.ThermalRepository
 import mpdc4gsr.feature.thermal.domain.usecase.*
-import mpdc4gsr.sensors.unified.ShimmerDeviceManager
+import mpdc4gsr.core.data.ShimmerDeviceManager
 
 /**
  * Extended Dependency Injection Container

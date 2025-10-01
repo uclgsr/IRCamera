@@ -16,10 +16,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-import mpdc4gsr.compose.components.SensorStatusCard
-import mpdc4gsr.compose.components.sensor.GSRVisualizationCard
-import mpdc4gsr.compose.components.sensor.GSRData
-import mpdc4gsr.compose.components.sensor.GSRConnectionState
+import mpdc4gsr.core.ui.components.SensorStatusCard
+import mpdc4gsr.core.ui.components.sensor.GSRVisualizationCard
+import mpdc4gsr.core.ui.components.sensor.GSRData
+import mpdc4gsr.core.ui.components.sensor.GSRConnectionState
 import mpdc4gsr.viewmodel.ConnectionState
 import mpdc4gsr.viewmodel.AppError
 import mpdc4gsr.viewmodel.MainActivityViewModel

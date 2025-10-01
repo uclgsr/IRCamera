@@ -17,7 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import mpdc4gsr.compose.theme.IRCameraTheme
+import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.activities.*
 
 /**

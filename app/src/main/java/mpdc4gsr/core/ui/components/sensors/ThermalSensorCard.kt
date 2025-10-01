@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import mpdc4gsr.compose.screens.SensorState
 import mpdc4gsr.compose.screens.ThermalAction
-import mpdc4gsr.compose.theme.IRCameraTheme
+import mpdc4gsr.core.ui.theme.IRCameraTheme
 
 /**
  * Thermal IR Sensor Card Component

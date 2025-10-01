@@ -32,7 +32,7 @@ import com.csl.irCamera.R
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import mpdc4gsr.camera.integration.DualModeCameraViewModel
 import mpdc4gsr.compose.base.BaseComposeActivity
-import mpdc4gsr.compose.components.TitleBar
+import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.activities.MainActivity
 
 /**

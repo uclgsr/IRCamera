@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import mpdc4gsr.compose.screens.SensorState
 import mpdc4gsr.compose.screens.CameraAction
-import mpdc4gsr.compose.theme.IRCameraTheme
+import mpdc4gsr.core.ui.theme.IRCameraTheme
 
 /**
  * RGB Camera Sensor Card Component

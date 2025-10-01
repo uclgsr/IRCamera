@@ -22,8 +22,8 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import mpdc4gsr.camera.core.SamsungDeviceCompatibility
-import mpdc4gsr.data.SessionMetadata
-import mpdc4gsr.sensors.RgbCameraRecorder
+import mpdc4gsr.core.data.SessionMetadata
+import mpdc4gsr.core.data.RgbCameraRecorder
 import kotlin.system.measureTimeMillis
 
 /**

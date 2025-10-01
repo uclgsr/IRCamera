@@ -22,8 +22,8 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import mpdc4gsr.controller.RecordingController
-import mpdc4gsr.sensors.TimeSynchronizationService
-import mpdc4gsr.sensors.TimestampManager
+import mpdc4gsr.core.data.TimeSynchronizationService
+import mpdc4gsr.core.data.TimestampManager
 import kotlin.math.abs
 import kotlin.system.measureTimeMillis
 

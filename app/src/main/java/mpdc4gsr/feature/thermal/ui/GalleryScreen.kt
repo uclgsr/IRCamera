@@ -21,9 +21,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import mpdc4gsr.compose.components.TitleBar
-import mpdc4gsr.compose.components.TitleBarAction
-import mpdc4gsr.compose.theme.IRCameraTheme
+import mpdc4gsr.core.ui.components.TitleBar
+import mpdc4gsr.core.ui.components.TitleBarAction
+import mpdc4gsr.core.ui.theme.IRCameraTheme
 
 /**
  * Gallery Screen - Media gallery for thermal images, recordings, and data

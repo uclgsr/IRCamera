@@ -19,9 +19,9 @@ import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
 import mpdc4gsr.controller.RecordingController
 import mpdc4gsr.core.StructuredLogger
-import mpdc4gsr.sensors.unified.model.SessionConfig
-import mpdc4gsr.sensors.unified.model.SessionInfo
-import mpdc4gsr.sensors.unified.model.SessionQuality
+import mpdc4gsr.core.data.model.SessionConfig
+import mpdc4gsr.core.data.model.SessionInfo
+import mpdc4gsr.core.data.model.SessionQuality
 import mpdc4gsr.sensors.unified.model.SessionStatistics
 import mpdc4gsr.sensors.unified.model.SessionStatus
 import mpdc4gsr.sensors.unified.model.SessionSummary

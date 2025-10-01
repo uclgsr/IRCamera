@@ -25,8 +25,8 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import mpdc4gsr.permissions.PermissionController
-import mpdc4gsr.permissions.PermissionManager
-import mpdc4gsr.sensors.RgbCameraRecorder
+import mpdc4gsr.core.ui.PermissionManager
+import mpdc4gsr.core.data.RgbCameraRecorder
 import java.io.File
 import kotlin.system.measureTimeMillis
 

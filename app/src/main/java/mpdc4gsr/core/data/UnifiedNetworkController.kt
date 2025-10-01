@@ -18,8 +18,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import mpdc4gsr.network.WebSocketClient
-import mpdc4gsr.sensors.unified.model.NetworkStatus
-import mpdc4gsr.sensors.unified.model.PCControllerInfo
+import mpdc4gsr.core.data.model.NetworkStatus
+import mpdc4gsr.core.data.model.PCControllerInfo
 import org.json.JSONObject
 import java.net.InetAddress
 import java.util.concurrent.atomic.AtomicBoolean

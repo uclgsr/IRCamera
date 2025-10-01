@@ -11,7 +11,7 @@ import androidx.navigation.compose.rememberNavController
 import mpdc4gsr.compose.screens.*
 import mpdc4gsr.feature.gsr.ui.GSRSensorScreen
 import mpdc4gsr.compose.sensors.camera.RGBCameraScreen
-import mpdc4gsr.compose.theme.IRCameraTheme
+import mpdc4gsr.core.ui.theme.IRCameraTheme
 
 /**
  * Main Compose Activity - Unified entry point for the IR Camera application

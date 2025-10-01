@@ -23,7 +23,7 @@ import androidx.lifecycle.lifecycleScope
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import mpdc4gsr.network.CommandConnection
+import mpdc4gsr.feature.network.data.CommandConnection
 import mpdc4gsr.network.MockRecordingController
 import mpdc4gsr.network.NetworkManager
 import mpdc4gsr.network.SimpleCommandHandler

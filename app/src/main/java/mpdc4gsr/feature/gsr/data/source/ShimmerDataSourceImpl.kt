@@ -1,9 +1,9 @@
 package mpdc4gsr.feature.gsr.data.source
 
 import kotlinx.coroutines.flow.Flow
-import mpdc4gsr.sensors.unified.ShimmerDeviceManager
-import mpdc4gsr.sensors.unified.model.DeviceInfo
-import mpdc4gsr.sensors.unified.model.GSRSample
+import mpdc4gsr.core.data.ShimmerDeviceManager
+import mpdc4gsr.core.data.model.DeviceInfo
+import mpdc4gsr.core.data.model.GSRSample
 
 /**
  * Implementation of ShimmerDataSource that wraps ShimmerDeviceManager.

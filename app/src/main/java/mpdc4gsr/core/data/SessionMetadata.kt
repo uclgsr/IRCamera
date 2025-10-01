@@ -2,8 +2,8 @@ package mpdc4gsr.core.data
 
 import android.os.SystemClock
 import com.google.gson.GsonBuilder
-import mpdc4gsr.sensors.RecordingStats
-import mpdc4gsr.sensors.TimestampManager
+import mpdc4gsr.core.data.RecordingStats
+import mpdc4gsr.core.data.TimestampManager
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date

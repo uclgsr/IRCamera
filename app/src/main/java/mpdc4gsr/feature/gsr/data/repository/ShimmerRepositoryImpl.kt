@@ -3,8 +3,8 @@ package mpdc4gsr.feature.gsr.data.repository
 import kotlinx.coroutines.flow.Flow
 import mpdc4gsr.feature.gsr.data.source.ShimmerDataSource
 import mpdc4gsr.feature.gsr.domain.repository.ShimmerRepository
-import mpdc4gsr.sensors.unified.model.DeviceInfo
-import mpdc4gsr.sensors.unified.model.GSRSample
+import mpdc4gsr.core.data.model.DeviceInfo
+import mpdc4gsr.core.data.model.GSRSample
 
 class ShimmerRepositoryImpl(
     private val shimmerDataSource: ShimmerDataSource

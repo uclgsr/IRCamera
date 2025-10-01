@@ -13,13 +13,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import mpdc4gsr.compose.components.TitleBar
-import mpdc4gsr.compose.components.TitleBarAction
-import mpdc4gsr.compose.components.sensors.GSRSensorCard
-import mpdc4gsr.compose.components.sensors.ThermalSensorCard
-import mpdc4gsr.compose.components.sensors.RGBCameraSensorCard
-import mpdc4gsr.compose.components.sensors.UnifiedSensorStatus
-import mpdc4gsr.compose.theme.IRCameraTheme
+import mpdc4gsr.core.ui.components.TitleBar
+import mpdc4gsr.core.ui.components.TitleBarAction
+import mpdc4gsr.core.ui.components.sensors.GSRSensorCard
+import mpdc4gsr.core.ui.components.sensors.ThermalSensorCard
+import mpdc4gsr.core.ui.components.sensors.RGBCameraSensorCard
+import mpdc4gsr.core.ui.components.sensors.UnifiedSensorStatus
+import mpdc4gsr.core.ui.theme.IRCameraTheme
 
 /**
  * Unified Sensor Dashboard - Comprehensive view of all sensor modalities
