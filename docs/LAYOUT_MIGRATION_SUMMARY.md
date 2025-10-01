@@ -114,7 +114,7 @@ Pattern: Various `ui_*.xml` → Functions in `LayoutComponentsCompose.kt`
 
 ## Verification Scripts
 
-Analysis scripts are available in `/tmp/` for re-running the analysis:
+Analysis scripts are available in `scripts/analysis/` for re-running the analysis:
 - `analyze_layouts.py` - Basic layout inventory
 - `detailed_layout_analysis.py` - Comprehensive migration mapping
 
