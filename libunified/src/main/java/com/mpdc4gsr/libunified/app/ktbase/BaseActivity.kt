@@ -176,7 +176,7 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     private fun synLogin() {
-        if (this::class.java.simpleName == "MainComposeActivity") {
+        if (this is MainComposeActivity) {
             LMS.getInstance().syncUserInfo()
         }
         if (SharedManager.getHasShowClause() && LMS.getInstance().isLogin) {
