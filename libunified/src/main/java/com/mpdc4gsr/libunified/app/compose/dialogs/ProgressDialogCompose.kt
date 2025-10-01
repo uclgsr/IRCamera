@@ -30,7 +30,7 @@ fun ProgressDialog(
     val widthFraction = if (isPortrait) 0.52f else 0.35f
 
     Dialog(
-        onDismissRequest = if (cancelable) onDismiss else {},
+        onDismissRequest = (if (cancelable) onDismiss else {}) as () -> Unit,
         properties = DialogProperties(
             dismissOnBackPress = cancelable,
             dismissOnClickOutside = cancelable
