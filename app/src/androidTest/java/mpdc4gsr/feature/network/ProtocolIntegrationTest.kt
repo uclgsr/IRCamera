@@ -44,6 +44,8 @@ class ProtocolIntegrationTest {
     private var mockPcSocket: Socket? = null
 
     companion object {
+        // Use a different port for testing to avoid conflicts with production server (8081)
+        // and to isolate test traffic. Production port is 8081.
         private const val TEST_PORT = 8182
         private const val CONNECTION_TIMEOUT_MS = 5000L
     }
