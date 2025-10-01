@@ -3,6 +3,8 @@ package mpdc4gsr.compose.screens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -12,7 +14,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -156,6 +160,8 @@ private fun BasicInfoStep(
     description: String,
     onDescriptionChange: (String) -> Unit
 ) {
+    val keyboardController = LocalSoftwareKeyboardController.current
+    
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -189,6 +195,13 @@ private fun BasicInfoStep(
                         unfocusedBorderColor = Color.Gray,
                         focusedLabelColor = MaterialTheme.colorScheme.primary,
                         unfocusedLabelColor = Color.Gray
+                    ),
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                    keyboardActions = KeyboardActions(
+                        onNext = {
+                            // Focus moves to description field
+                        }
                     )
                 )
 
@@ -209,6 +222,12 @@ private fun BasicInfoStep(
                         unfocusedBorderColor = Color.Gray,
                         focusedLabelColor = MaterialTheme.colorScheme.primary,
                         unfocusedLabelColor = Color.Gray
+                    ),
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                    keyboardActions = KeyboardActions(
+                        onDone = {
+                            keyboardController?.hide()
+                        }
                     )
                 )
             }
@@ -230,6 +249,8 @@ private fun ContentStep(
     includeAnnotations: Boolean,
     onAnnotationsChange: (Boolean) -> Unit
 ) {
+    val keyboardController = LocalSoftwareKeyboardController.current
+    
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -266,6 +287,12 @@ private fun ContentStep(
                         unfocusedBorderColor = Color.Gray,
                         focusedLabelColor = MaterialTheme.colorScheme.primary,
                         unfocusedLabelColor = Color.Gray
+                    ),
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                    keyboardActions = KeyboardActions(
+                        onDone = {
+                            keyboardController?.hide()
+                        }
                     )
                 )
             }

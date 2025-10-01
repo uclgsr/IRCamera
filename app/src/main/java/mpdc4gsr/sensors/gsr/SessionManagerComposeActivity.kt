@@ -11,6 +11,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -21,7 +23,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import mpdc4gsr.compose.base.BaseComposeActivity
@@ -132,6 +136,8 @@ private fun SessionManagerContent(
     context: Context,
     modifier: Modifier = Modifier
 ) {
+    val keyboardController = LocalSoftwareKeyboardController.current
+    
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -154,7 +160,14 @@ private fun SessionManagerContent(
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 16.dp)
+                .padding(bottom = 16.dp),
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+            keyboardActions = KeyboardActions(
+                onSearch = {
+                    keyboardController?.hide()
+                }
+            )
         )
 
         // Session Statistics Card

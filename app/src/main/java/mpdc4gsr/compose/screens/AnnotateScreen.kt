@@ -6,6 +6,8 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Save
@@ -19,7 +21,9 @@ import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -251,6 +255,8 @@ private fun ReportInfoPanel(
     onInfoChanged: (ReportInfo) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val keyboardController = LocalSoftwareKeyboardController.current
+    
     Card(
         modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
@@ -278,7 +284,14 @@ private fun ReportInfoPanel(
                     focusedBorderColor = MaterialTheme.colorScheme.primary,
                     unfocusedBorderColor = Color.Gray
                 ),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                keyboardActions = KeyboardActions(
+                    onNext = {
+                        // Focus moves to notes field
+                    }
+                )
             )
 
             OutlinedTextField(
@@ -292,7 +305,13 @@ private fun ReportInfoPanel(
                     unfocusedBorderColor = Color.Gray
                 ),
                 maxLines = 3,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        keyboardController?.hide()
+                    }
+                )
             )
 
             Row(
