@@ -165,7 +165,11 @@ fun GSRGalleryHeader(
                 value = searchQuery,
                 onValueChange = onSearchChange,
                 label = { Text("Search GSR sessions...") },
-                leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Search") },
+                leadingIcon = { 
+                    IconButton(onClick = { keyboardController?.hide() }) {
+                        Icon(Icons.Default.Search, contentDescription = "Search")
+                    }
+                },
                 trailingIcon = {
                     if (searchQuery.isNotEmpty()) {
                         IconButton(onClick = { onSearchChange("") }) {
