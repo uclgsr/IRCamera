@@ -23,7 +23,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import mpdc4gsr.compose.base.BaseComposeActivity
 import mpdc4gsr.compose.theme.IRCameraTheme
-import mpdc4gsr.viewmodel.BaseViewModel
+import mpdc4gsr.core.ui.BaseViewModel
 
 /**
  * GSRGalleryActivityCompose - Enhanced GSR Data Gallery

@@ -33,7 +33,7 @@ import mpdc4gsr.network.MockRecordingController
 import mpdc4gsr.network.NetworkManager
 import mpdc4gsr.network.SimpleCommandHandler
 import mpdc4gsr.network.TcpClient
-import mpdc4gsr.viewmodel.BaseViewModel
+import mpdc4gsr.core.ui.BaseViewModel
 
 enum class NetworkConnectionStatus {
     DISCONNECTED, CONNECTING, CONNECTED, ERROR

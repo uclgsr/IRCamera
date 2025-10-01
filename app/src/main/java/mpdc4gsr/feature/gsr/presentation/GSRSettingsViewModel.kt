@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewModelScope
-import mpdc4gsr.viewmodel.BaseViewModel
+import mpdc4gsr.core.ui.BaseViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 

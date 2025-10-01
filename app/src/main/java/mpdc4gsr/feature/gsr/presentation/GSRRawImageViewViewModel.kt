@@ -7,7 +7,7 @@ import android.net.Uri
 import android.os.Environment
 import androidx.core.content.FileProvider
 import androidx.lifecycle.viewModelScope
-import mpdc4gsr.viewmodel.BaseViewModel
+import mpdc4gsr.core.ui.BaseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

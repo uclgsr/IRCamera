@@ -26,7 +26,7 @@ import mpdc4gsr.compose.base.BaseComposeActivity
 import mpdc4gsr.compose.components.TitleBar
 import mpdc4gsr.compose.theme.IRCameraTheme
 import mpdc4gsr.ui_components.SensorDashboardFragment
-import mpdc4gsr.viewmodel.BaseViewModel
+import mpdc4gsr.core.ui.BaseViewModel
 
 enum class TestSensorType(
     val displayName: String,

@@ -15,7 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import mpdc4gsr.compose.base.BaseComposeActivity
-import mpdc4gsr.viewmodel.BaseViewModel
+import mpdc4gsr.core.ui.BaseViewModel
 
 class BlankDevActivityComposeViewModel : BaseViewModel()
 

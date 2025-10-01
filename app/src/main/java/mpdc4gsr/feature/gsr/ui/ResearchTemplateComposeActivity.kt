@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.sp
 import mpdc4gsr.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.gsr.model.ResearchTemplate
-import mpdc4gsr.viewmodel.BaseViewModel
+import mpdc4gsr.core.ui.BaseViewModel
 
 /**
  * ResearchTemplateComposeActivity - Modern Research Template Selection with Compose

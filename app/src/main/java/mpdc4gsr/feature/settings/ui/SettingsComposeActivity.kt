@@ -15,7 +15,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import mpdc4gsr.compose.base.BaseComposeActivity
 import mpdc4gsr.compose.components.settings.*
-import mpdc4gsr.viewmodel.BaseViewModel
+import mpdc4gsr.core.ui.BaseViewModel
 
 /**
  * Task D: Complete Settings Activity using Compose

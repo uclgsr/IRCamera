@@ -37,7 +37,7 @@ import mpdc4gsr.compose.theme.IRCameraTheme
 import mpdc4gsr.network.NetworkSettings
 import mpdc4gsr.permissions.PermissionController
 import mpdc4gsr.permissions.PermissionManager
-import mpdc4gsr.viewmodel.BaseViewModel
+import mpdc4gsr.core.ui.BaseViewModel
 
 enum class ConnectionType(
     val displayName: String,

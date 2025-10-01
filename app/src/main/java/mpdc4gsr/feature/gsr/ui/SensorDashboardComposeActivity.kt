@@ -25,7 +25,7 @@ import mpdc4gsr.viewmodel.AppError
 import mpdc4gsr.viewmodel.MainActivityViewModel
 // Note: MainActivityViewModel was moved to backup during cleanup
 // Using modern Compose ViewModels instead
-import mpdc4gsr.viewmodel.BaseViewModel
+import mpdc4gsr.core.ui.BaseViewModel
 
 /**
  * Task C: Complete Sensor Dashboard using Compose
