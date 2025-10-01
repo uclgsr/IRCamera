@@ -393,9 +393,9 @@ private fun VideoBottomControlsCompose(
             ) {
                 Icon(
                     imageVector = when {
-                        volume == 0f -> Icons.Default.VolumeOff
-                        volume < 0.5f -> Icons.Default.VolumeDown
-                        else -> Icons.Default.VolumeUp
+                        volume == 0f -> Icons.AutoMirrored.Filled.VolumeOff
+                        volume < 0.5f -> Icons.AutoMirrored.Filled.VolumeDown
+                        else -> Icons.AutoMirrored.Filled.VolumeUp
                     },
                     contentDescription = "Volume",
                     tint = Color.White

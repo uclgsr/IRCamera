@@ -52,7 +52,7 @@ fun HelpScreen(
             // Quick Start Guide
             SettingsCard(
                 title = "Quick Start Guide",
-                icon = Icons.Default.MenuBook
+                icon = Icons.AutoMirrored.Filled.MenuBook
             ) {
                 Text(
                     text = "1. Connect your sensors (GSR, Thermal Camera)\n" +

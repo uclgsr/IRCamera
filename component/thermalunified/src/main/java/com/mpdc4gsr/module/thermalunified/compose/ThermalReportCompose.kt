@@ -533,7 +533,7 @@ private fun ReportMetadataCompose(
                 minLines = 2,
                 maxLines = 4,
                 leadingIcon = {
-                    Icon(Icons.Default.Notes, contentDescription = "Notes")
+                    Icon(Icons.AutoMirrored.Filled.Notes, contentDescription = "Notes")
                 }
             )
         }
@@ -728,7 +728,7 @@ fun ReportIRShowCompose(
                             verticalAlignment = Alignment.Top
                         ) {
                             Icon(
-                                Icons.Default.Notes,
+                                Icons.AutoMirrored.Filled.Notes,
                                 contentDescription = "Notes",
                                 tint = MaterialTheme.colorScheme.primary,
                                 modifier = Modifier.size(20.dp)

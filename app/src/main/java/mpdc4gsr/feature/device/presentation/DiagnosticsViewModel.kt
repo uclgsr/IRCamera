@@ -1,5 +1,6 @@
 package mpdc4gsr.feature.device.presentation
 
+import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -93,7 +94,8 @@ class DiagnosticsViewModel : BaseViewModel() {
 
     private suspend fun checkGSRSensorStatus(): String {
         return try {
-            val bluetoothAdapter = android.bluetooth.BluetoothAdapter.getDefaultAdapter()
+            val bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
+            val bluetoothAdapter = bluetoothManager?.adapter
             if (bluetoothAdapter == null) {
                 "Not Available - No Bluetooth"
             } else if (!bluetoothAdapter.isEnabled) {

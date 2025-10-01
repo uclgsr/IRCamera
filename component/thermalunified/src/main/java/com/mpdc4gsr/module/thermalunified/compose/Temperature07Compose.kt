@@ -291,7 +291,7 @@ enum class TemperatureMeasurementMode(
     POINT("Point", Icons.Default.Place),
     LINE("Line", Icons.Default.Timeline),
     RECT("Rectangle", Icons.Default.CropFree),
-    TREND("Trend", Icons.Default.TrendingUp)
+    TREND("Trend", Icons.AutoMirrored.Filled.TrendingUp)
 }
 
 sealed class TemperatureMeasurement {

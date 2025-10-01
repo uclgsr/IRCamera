@@ -259,7 +259,7 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
                                 horizontalArrangement = Arrangement.SpaceEvenly
                             ) {
                                 IconButton(onClick = { viewModel.toggleTrendChart() }) {
-                                    Icon(Icons.Default.TrendingUp, "Trend", tint = Color.White)
+                                    Icon(Icons.AutoMirrored.Filled.TrendingUp, "Trend", tint = Color.White)
                                 }
                                 IconButton(onClick = { viewModel.toggleCompass() }) {
                                     Icon(Icons.Default.Explore, "Compass", tint = Color.White)
@@ -273,7 +273,7 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
                                 }
                             }
 
-                            Divider(color = Color.White.copy(alpha = 0.1f))
+                            HorizontalDivider(color = Color.White.copy(alpha = 0.1f))
 
                             // Primary menu
                             Row(
