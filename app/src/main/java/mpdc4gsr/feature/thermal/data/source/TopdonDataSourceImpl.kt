@@ -27,6 +27,11 @@ class TopdonDataSourceImpl(
     
     companion object {
         private const val TAG = "TopdonDataSourceImpl"
+        private const val PLACEHOLDER_WIDTH = 256
+        private const val PLACEHOLDER_HEIGHT = 192
+        private const val PLACEHOLDER_TEMP = 25.0f
+        private const val MIN_TEMP = 20.0f
+        private const val MAX_TEMP = 35.0f
     }
     
     private var isConnected = false
@@ -95,14 +100,14 @@ class TopdonDataSourceImpl(
             Log.w(TAG, "Note: Actual snapshot requires LibIRProcess for frame processing")
             Log.w(TAG, "and LibIRTemp for temperature matrix calculation")
             
-            val emptyBitmap = Bitmap.createBitmap(256, 192, Bitmap.Config.ARGB_8888)
-            val emptyMatrix = Array(192) { FloatArray(256) { 25.0f } }
+            val emptyBitmap = Bitmap.createBitmap(PLACEHOLDER_WIDTH, PLACEHOLDER_HEIGHT, Bitmap.Config.ARGB_8888)
+            val emptyMatrix = Array(PLACEHOLDER_HEIGHT) { FloatArray(PLACEHOLDER_WIDTH) { PLACEHOLDER_TEMP } }
             
             val snapshot = ThermalSnapshot(
                 bitmap = emptyBitmap,
                 temperatureMatrix = emptyMatrix,
-                minTemp = 20.0f,
-                maxTemp = 35.0f,
+                minTemp = MIN_TEMP,
+                maxTemp = MAX_TEMP,
                 timestamp = System.currentTimeMillis(),
                 location = null
             )

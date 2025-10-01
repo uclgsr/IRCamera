@@ -9,6 +9,9 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.io.File
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import mpdc4gsr.core.ui.BaseViewModel
 
 /**
@@ -37,6 +40,12 @@ class DiagnosticsViewModel : BaseViewModel() {
         val thermalCamera: String = "Checking...",
         val rgbCamera: String = "Checking..."
     )
+    
+    companion object {
+        private const val TC001_VENDOR_ID = 0x0BDA
+        private const val TC001_PRODUCT_ID = 0x5830
+        private const val TIMESTAMP_FORMAT = "yyyy-MM-dd HH:mm:ss"
+    }
 
     fun initialize(ctx: Context) {
         context = ctx
@@ -70,23 +79,15 @@ class DiagnosticsViewModel : BaseViewModel() {
 
     private fun updateSensorStatus() {
         viewModelScope.launch {
-            try {
-                val gsrStatus = checkGSRSensorStatus()
-                val thermalStatus = checkThermalCameraStatus()
-                val rgbStatus = checkRGBCameraStatus()
-                
-                _sensorStatus.value = SensorStatus(
-                    gsrSensor = gsrStatus,
-                    thermalCamera = thermalStatus,
-                    rgbCamera = rgbStatus
-                )
-            } catch (e: Exception) {
-                _sensorStatus.value = SensorStatus(
-                    gsrSensor = "Error: ${e.message}",
-                    thermalCamera = "Error: ${e.message}",
-                    rgbCamera = "Error: ${e.message}"
-                )
-            }
+            val gsrStatus = checkGSRSensorStatus()
+            val thermalStatus = checkThermalCameraStatus()
+            val rgbStatus = checkRGBCameraStatus()
+            
+            _sensorStatus.value = SensorStatus(
+                gsrSensor = gsrStatus,
+                thermalCamera = thermalStatus,
+                rgbCamera = rgbStatus
+            )
         }
     }
     
@@ -113,7 +114,7 @@ class DiagnosticsViewModel : BaseViewModel() {
             } else {
                 val deviceList = usbManager.deviceList
                 val hasTC001 = deviceList.values.any { device ->
-                    device.vendorId == 0x0BDA && device.productId == 0x5830
+                    device.vendorId == TC001_VENDOR_ID && device.productId == TC001_PRODUCT_ID
                 }
                 if (hasTC001) {
                     "Connected - TC001 Detected"
@@ -177,8 +178,6 @@ class DiagnosticsViewModel : BaseViewModel() {
 
     private fun getDeviceTemperature(): String {
         return try {
-            // Note: Actual temperature reading requires hardware sensor access
-            // This is a placeholder for demonstration
             val tempFile = File("/sys/class/thermal/thermal_zone0/temp")
             if (tempFile.exists()) {
                 val temp = tempFile.readText().trim().toIntOrNull()
@@ -211,10 +210,10 @@ class DiagnosticsViewModel : BaseViewModel() {
     fun exportDiagnosticLogs() {
         viewModelScope.launch {
             try {
-                val logFile = java.io.File(context.cacheDir, "diagnostics_${System.currentTimeMillis()}.log")
+                val logFile = File(context.cacheDir, "diagnostics_${System.currentTimeMillis()}.log")
                 logFile.writeText(buildString {
                     appendLine("=== System Diagnostics Report ===")
-                    appendLine("Generated: ${java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss", java.util.Locale.US).format(java.util.Date())}")
+                    appendLine("Generated: ${getCurrentTimestamp()}")
                     appendLine()
                     appendLine("System Status:")
                     appendLine("  Health: ${_systemStatus.value.systemHealth}")
@@ -228,14 +227,23 @@ class DiagnosticsViewModel : BaseViewModel() {
                     appendLine("  RGB Camera: ${_sensorStatus.value.rgbCamera}")
                     appendLine()
                     appendLine("Device Info:")
-                    appendLine("  Model: ${android.os.Build.MODEL}")
-                    appendLine("  Android Version: ${android.os.Build.VERSION.RELEASE}")
-                    appendLine("  SDK: ${android.os.Build.VERSION.SDK_INT}")
+                    appendLine("  Model: ${Build.MODEL}")
+                    appendLine("  Android Version: ${Build.VERSION.RELEASE}")
+                    appendLine("  SDK: ${Build.VERSION.SDK_INT}")
                 })
                 android.util.Log.i("DiagnosticsViewModel", "Diagnostic log exported to: ${logFile.absolutePath}")
             } catch (e: Exception) {
                 android.util.Log.e("DiagnosticsViewModel", "Error exporting diagnostic logs", e)
             }
+        }
+    }
+    
+    private fun getCurrentTimestamp(): String {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            java.time.format.DateTimeFormatter.ofPattern(TIMESTAMP_FORMAT, Locale.US)
+                .format(java.time.LocalDateTime.now())
+        } else {
+            SimpleDateFormat(TIMESTAMP_FORMAT, Locale.US).format(Date())
         }
     }
 }

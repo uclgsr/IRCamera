@@ -2,6 +2,7 @@ package mpdc4gsr.feature.gsr.data.source
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.first
 import mpdc4gsr.core.data.ShimmerDeviceManager
 import mpdc4gsr.core.data.model.DeviceInfo
 import mpdc4gsr.core.data.model.GSRSample
@@ -19,7 +20,12 @@ class ShimmerDataSourceImpl(
     
     companion object {
         private const val TAG = "ShimmerDataSourceImpl"
+        private const val DEFAULT_DEVICE_NAME = "Shimmer3"
+        private const val DEFAULT_DEVICE_TYPE = "Shimmer3-GSR"
+        private const val DEFAULT_RSSI = -50
     }
+    
+    private val scannedDevices = mutableMapOf<String, DeviceInfo>()
     
     override suspend fun scanForDevices(): Flow<List<DeviceInfo>> {
         deviceManager.initialize()
@@ -30,13 +36,18 @@ class ShimmerDataSourceImpl(
     override suspend fun connect(deviceAddress: String): Result<Unit> {
         return try {
             Log.d(TAG, "Connecting to device: $deviceAddress")
-            val deviceInfo = DeviceInfo(
-                address = deviceAddress,
-                name = "Shimmer3",
-                deviceType = "Shimmer3-GSR",
-                rssi = -50,
-                isGSRCapable = true
-            )
+            
+            val deviceInfo = scannedDevices[deviceAddress] ?: run {
+                Log.w(TAG, "Device info not found in scan results, using defaults for: $deviceAddress")
+                DeviceInfo(
+                    address = deviceAddress,
+                    name = DEFAULT_DEVICE_NAME,
+                    deviceType = DEFAULT_DEVICE_TYPE,
+                    rssi = DEFAULT_RSSI,
+                    isGSRCapable = true
+                )
+            }
+            
             val success = deviceManager.connectToDevice(deviceInfo)
             if (success) {
                 Log.i(TAG, "Successfully connected to device: $deviceAddress")
@@ -48,6 +59,16 @@ class ShimmerDataSourceImpl(
         } catch (e: Exception) {
             Log.e(TAG, "Error connecting to device: $deviceAddress", e)
             Result.failure(e)
+        }
+    }
+    
+    /**
+     * Cache device info from scan results for later connection.
+     * This should be called when scan results are received.
+     */
+    fun cacheDeviceInfo(devices: List<DeviceInfo>) {
+        devices.forEach { device ->
+            scannedDevices[device.address] = device
         }
     }
     
