@@ -10,7 +10,7 @@ All major user-facing activities have been modernized with 100% migration covera
 
 **Detailed Status:**
 - User-facing activities: 100% migrated
-- XML layout to Compose coverage: 22.5% (43 of 191 layouts)
+- XML layout to Compose coverage: 26.2% (50 of 191 layouts)
 - Functional UI element coverage: ~60-70% (when accounting for Composable functions)
 
 See [LAYOUT_TO_COMPOSE_MIGRATION_STATUS.md](../LAYOUT_TO_COMPOSE_MIGRATION_STATUS.md) for comprehensive analysis.
