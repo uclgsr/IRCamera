@@ -607,13 +607,6 @@ data class SessionMetadata(
 }
 
 
-data class SyncEvent(
-    val eventType: String,
-    val timestampMs: Long,
-    val monotonicOffsetNs: Long,
-    val metadata: Map<String, String> = emptyMap()
-)
-
 data class SensorSummary(
     val sensorId: String,
     val sensorType: String,
