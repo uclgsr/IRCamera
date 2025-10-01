@@ -7,7 +7,7 @@ import com.google.gson.Gson
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import com.mpdc4gsr.libunified.app.lms.LMS
 import com.mpdc4gsr.libunified.app.lms.network.IResponseCallback
-import com.mpdc4gsr.libunified.app.lms.utils.NetworkUtil
+import com.mpdc4gsr.libunified.app.lms.utils.NetworkUtils
 import com.mpdc4gsr.libunified.app.lms.utils.StringUtils
 import com.mpdc4gsr.libunified.app.lms.utils.TLog
 import com.mpdc4gsr.libunified.app.lms.weiget.TToast
@@ -86,7 +86,7 @@ class ModernPdfViewModel : BaseViewModel() {
         launchWithLoading {
             try {
                 // Check network connectivity first
-                if (!NetworkUtil.isConnected(Utils.getApp())) {
+                if (!NetworkUtils.isConnected(Utils.getApp())) {
                     _reportDataState.value = ReportDataState.NoNetwork
                     _events.emit(PdfEvent.ShowError("No network connection available"))
                     return@launchWithLoading

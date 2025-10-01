@@ -7,7 +7,7 @@ import android.content.res.Configuration
 import android.view.LayoutInflater
 import android.view.ViewGroup.LayoutParams
 import com.mpdc4gsr.libunified.R
-import com.mpdc4gsr.libunified.app.utils.ScreenUtil
+import com.mpdc4gsr.libunified.app.utils.ScreenUtils
 
 
 class TipCameraProgressDialog : Dialog {
@@ -54,7 +54,7 @@ class TipCameraProgressDialog : Dialog {
 
                     0.35
                 }
-            lp.width = (ScreenUtil.getScreenWidth(context!!) * wRatio).toInt()
+            lp.width = (ScreenUtils.getScreenWidth(context!!) * wRatio).toInt()
             dialog!!.window!!.attributes = lp
             dialog!!.setCanceledOnTouchOutside(canceleable)
             dialog!!.setCancelable(canceleable)

@@ -13,7 +13,7 @@ import androidx.core.app.ActivityCompat
 import com.mpdc4gsr.gsr.model.GSRSample
 import com.mpdc4gsr.gsr.model.SessionInfo
 import com.mpdc4gsr.gsr.model.SyncMark
-import com.mpdc4gsr.gsr.util.TimeUtil
+import com.mpdc4gsr.gsr.util.TimeUtils
 import com.opencsv.CSVWriter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -325,7 +325,7 @@ class ShimmerGSRRecorder(
                 val syncMark =
                     SyncMark(
                         timestamp = System.currentTimeMillis(),
-                        utcTimestamp = TimeUtil.getUtcTimestamp(),
+                        utcTimestamp = TimeUtils.getUtcTimestamp(),
                         eventType = eventType,
                         sessionId = session.sessionId,
                         metadata = if (metadata.isNotEmpty()) mapOf("data" to metadata) else emptyMap(),
@@ -352,7 +352,7 @@ class ShimmerGSRRecorder(
 
         try {
             val currentTime = System.currentTimeMillis()
-            val utcTime = TimeUtil.getUtcTimestamp()
+            val utcTime = TimeUtils.getUtcTimestamp()
             val currentIndex = sampleIndex.getAndIncrement()
 
             currentSession?.let { session ->

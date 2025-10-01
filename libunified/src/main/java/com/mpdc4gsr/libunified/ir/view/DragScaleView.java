@@ -9,7 +9,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 
-import com.mpdc4gsr.libunified.app.utils.ScreenUtil;
+import com.mpdc4gsr.libunified.app.utils.ScreenUtils;
 
 public class DragScaleView extends FrameLayout implements View.OnTouchListener {
     private static final int TOP = 0x15;
@@ -52,8 +52,8 @@ public class DragScaleView extends FrameLayout implements View.OnTouchListener {
     }
 
     protected void initScreenW_H() {
-        screenHeight = ScreenUtil.getScreenHeight(getContext()) - 40;
-        screenWidth = ScreenUtil.getScreenWidth(getContext());
+        screenHeight = ScreenUtils.getScreenHeight(getContext()) - 40;
+        screenWidth = ScreenUtils.getScreenWidth(getContext());
     }
 
     @Override

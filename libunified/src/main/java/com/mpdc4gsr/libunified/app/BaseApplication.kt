@@ -22,12 +22,12 @@ import com.mpdc4gsr.libunified.app.bean.event.SocketMsgEvent
 import com.mpdc4gsr.libunified.app.broadcast.DeviceBroadcastReceiver
 import com.mpdc4gsr.libunified.app.common.SharedManager
 import com.mpdc4gsr.libunified.app.db.AppDatabase
-import com.mpdc4gsr.libunified.app.socket.SocketCmdUtil
+import com.mpdc4gsr.libunified.app.socket.SocketCmdUtils
 import com.mpdc4gsr.libunified.app.socket.WebSocketProxy
 import com.mpdc4gsr.libunified.app.tools.AppLanguageUtils
 import com.mpdc4gsr.libunified.app.tools.ConstantLanguages
 import com.mpdc4gsr.libunified.app.utils.NetWorkUtils
-import com.mpdc4gsr.libunified.app.utils.WifiUtil
+import com.mpdc4gsr.libunified.app.utils.WifiUtils
 import com.mpdc4gsr.libunified.app.utils.WsCmdConstants
 import com.mpdc4gsr.libunified.model.IRTempConfig
 import kotlinx.coroutines.CoroutineScope
@@ -116,7 +116,7 @@ abstract class BaseApplication : Application() {
     }
 
     private fun connectWebSocket() {
-        val ssid = WifiUtil.getCurrentWifiSSID(this) ?: return
+        val ssid = WifiUtils.getCurrentWifiSSID(this) ?: return
         Log.i("WebSocket", "current[ph][ph] Wifi SSID: $ssid")
         // TS004/TC007 device functionality removed
         // if (ssid.startsWith(DeviceConfig.TS004_NAME_START)) {
@@ -140,7 +140,7 @@ abstract class BaseApplication : Application() {
         EventBus.getDefault().post(SocketMsgEvent(msgJson))
 
         if (SharedManager.is04AutoSync) {
-            when (SocketCmdUtil.getCmdResponse(msgJson)) {
+            when (SocketCmdUtils.getCmdResponse(msgJson)) {
                 WsCmdConstants.AR_COMMAND_SNAPSHOT -> {
                     autoSaveNewest(false)
                 }

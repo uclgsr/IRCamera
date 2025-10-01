@@ -14,7 +14,7 @@ import com.elvishew.xlog.XLog
 import com.hjq.permissions.XXPermissions
 import com.mpdc4gsr.libunified.app.bean.event.SocketStateEvent
 import com.mpdc4gsr.libunified.app.security.CertificateManager
-import com.mpdc4gsr.libunified.app.utils.WifiUtil
+import com.mpdc4gsr.libunified.app.utils.WifiUtils
 import com.mpdc4gsr.libunified.app.utils.WsCmdConstants
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -236,7 +236,7 @@ class WebSocketProxy {
             webSocket: WebSocket,
             text: String,
         ) {
-            if (SocketCmdUtil.getCmdResponse(text) == WsCmdConstants.APP_EVENT_HEART_BEATS) {
+            if (SocketCmdUtils.getCmdResponse(text) == WsCmdConstants.APP_EVENT_HEART_BEATS) {
                 Log.v(
                     "WebSocket",
                     "<-- [ph][ph][ph][ph][ph][ph] ${text.replace("\n", "").replace(" ", "")}"
@@ -312,7 +312,7 @@ class WebSocketProxy {
         }
 
         override fun onHeartBeat(): String? =
-            SocketCmdUtil.getSocketCmd(WsCmdConstants.APP_EVENT_HEART_BEATS)
+            SocketCmdUtils.getSocketCmd(WsCmdConstants.APP_EVENT_HEART_BEATS)
 
         override fun onHeartBeatTimeout() {
             XLog.tag("WebSocket").w("[ph][ph][ph][ph]")
@@ -330,7 +330,7 @@ class WebSocketProxy {
             ) {
                 return true
             }
-            val wifiName: String = WifiUtil.getCurrentWifiSSID(Utils.getApp()) ?: return true
+            val wifiName: String = WifiUtils.getCurrentWifiSSID(Utils.getApp()) ?: return true
             XLog.tag("WebSocket").i("[ph][ph][ph][ph][ph]，[ph][ph][ph][ph] WIFI：$wifiName")
             return wifiName == ssid
         }

@@ -29,7 +29,7 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
 import com.mpdc4gsr.libunified.app.db.AppDatabase
 import com.mpdc4gsr.libunified.app.db.entity.HouseReport
-import com.mpdc4gsr.libunified.app.tools.TimeTool
+import com.mpdc4gsr.libunified.app.tools.TimeTools
 import com.mpdc4gsr.module.thermalunified.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -383,7 +383,7 @@ private fun convertToPreviewData(report: HouseReport): HouseReportPreviewData {
         housePhoto = report.imagePath,
         houseAddress = report.address,
         houseName = report.name,
-        detectTime = TimeTool.formatDetectTime(report.detectTime),
+        detectTime = TimeTools.formatDetectTime(report.detectTime),
         inspectorName = report.inspectorName,
         houseYear = if (report.year == null) "--" else "${report.year}",
         houseArea = if (report.houseSpace.isEmpty()) "--" else "${report.houseSpace} ${report.getSpaceUnitStr()}",

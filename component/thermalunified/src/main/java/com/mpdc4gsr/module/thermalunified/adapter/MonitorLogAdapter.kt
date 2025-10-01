@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.mpdc4gsr.libunified.app.db.entity.ThermalEntity
-import com.mpdc4gsr.libunified.app.tools.TimeTool
+import com.mpdc4gsr.libunified.app.tools.TimeTools
 import com.mpdc4gsr.module.thermalunified.R
 
 class MonitorLogAdapter(val context: Context) :
@@ -36,7 +36,7 @@ class MonitorLogAdapter(val context: Context) :
         if (holder is ItemView) {
             val data = datas[position]
             holder.indexText.text = "${position + 1}"
-            holder.timeText.text = TimeTool.showTimeSecond(data.createTime)
+            holder.timeText.text = TimeTools.showTimeSecond(data.createTime)
             holder.lay.setOnClickListener {
                 listener?.onClick(position, data.thermalId)
             }

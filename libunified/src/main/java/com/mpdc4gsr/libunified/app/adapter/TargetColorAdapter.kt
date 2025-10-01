@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mpdc4gsr.libunified.R
 import com.mpdc4gsr.libunified.app.bean.ObserveBean
 import com.mpdc4gsr.libunified.app.bean.TargetColorBean
-import com.mpdc4gsr.libunified.app.utils.ScreenUtil
+import com.mpdc4gsr.libunified.app.utils.ScreenUtils
 import com.mpdc4gsr.libunified.databinding.ItmeTargetColorBinding
 
 class TargetColorAdapter(val context: Context, var targetColor: Int) :
@@ -109,10 +109,10 @@ class TargetColorAdapter(val context: Context, var targetColor: Int) :
 
         init {
             val canSeeCount = 5
-            val with = (ScreenUtil.getScreenWidth(context) / canSeeCount)
+            val with = (ScreenUtils.getScreenWidth(context) / canSeeCount)
             itemView.layoutParams =
                 ViewGroup.LayoutParams((with * 0.78).toInt(), ViewGroup.LayoutParams.WRAP_CONTENT)
-            val imageSize = (ScreenUtil.getScreenWidth(context) * 30 / 375f).toInt()
+            val imageSize = (ScreenUtils.getScreenWidth(context) * 30 / 375f).toInt()
             val lpImg = img.layoutParams
             val lpStrokeImg = strokeBg.layoutParams
             lpImg.width = imageSize

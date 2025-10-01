@@ -25,7 +25,7 @@ import com.energy.iruvc.utils.IIRFrameCallback
 import com.energy.iruvc.utils.SynchronizedBitmap
 import com.energy.iruvc.uvc.ConnectCallback
 import com.energy.iruvc.uvc.UVCCamera
-import com.mpdc4gsr.libunified.app.common.SaveSettingUtil
+import com.mpdc4gsr.libunified.app.common.SaveSettingUtils
 import com.mpdc4gsr.libunified.app.ktbase.BaseFragment
 import com.mpdc4gsr.libunified.ir.usbdual.Const
 import com.mpdc4gsr.libunified.ir.usbdual.camera.DualViewWithExternalCameraCommonApi
@@ -41,9 +41,9 @@ import com.mpdc4gsr.module.thermalunified.extension.setContrast
 import com.mpdc4gsr.module.thermalunified.extension.setMirror
 import com.mpdc4gsr.module.thermalunified.extension.setPropDdeLevel
 import com.mpdc4gsr.module.thermalunified.repository.ConfigRepository
-import com.mpdc4gsr.module.thermalunified.utils.DualParamsUtil
-import com.mpdc4gsr.module.thermalunified.utils.IRCmdTool
-import com.mpdc4gsr.module.thermalunified.utils.IRCmdTool.getSNStr
+import com.mpdc4gsr.module.thermalunified.utils.DualParamsUtils
+import com.mpdc4gsr.module.thermalunified.utils.IRCmdTools
+import com.mpdc4gsr.module.thermalunified.utils.IRCmdTools.getSNStr
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -88,10 +88,10 @@ abstract class BaseIRPlusFragment :
         0
     protected var temperatureSrc: ByteArray? = null
 
-    protected var mCurrentFusionType = DualParamsUtil.fusionTypeToParams(SaveSettingUtil.fusionType)
+    protected var mCurrentFusionType = DualParamsUtils.fusionTypeToParams(SaveSettingUtils.fusionType)
     private var syncimage = SynchronizedBitmap()
     protected var isConfigWait = true
-    protected var pseudoColorMode = SaveSettingUtil.pseudoColorMode
+    protected var pseudoColorMode = SaveSettingUtils.pseudoColorMode
 
     private var vlPid = 12337
     private var vlFps = 30
@@ -186,7 +186,7 @@ abstract class BaseIRPlusFragment :
 
     override fun initView() {
         if (isDualIR()) {
-            getTemperatureDualView().setTextSize(SaveSettingUtil.tempTextSize)
+            getTemperatureDualView().setTextSize(SaveSettingUtils.tempTextSize)
             initDataFlowMode(defaultDataFlowMode)
             initIrDualdata()
         }
@@ -274,9 +274,9 @@ abstract class BaseIRPlusFragment :
             return
         }
         lifecycleScope.launch {
-            val parameters = IRCmdTool.getDualBytes(USBMonitorManager.getInstance().ircmd)
+            val parameters = IRCmdTools.getDualBytes(USBMonitorManager.getInstance().ircmd)
             val data = dualView?.dualUVCCamera?.loadParameters(parameters, typeLoadParameters)
-            dualDisp = IRCmdTool.dispNumber
+            dualDisp = IRCmdTools.dispNumber
             setDispViewData(dualDisp)
 
             dualView?.dualUVCCamera?.setDisp(dualDisp)

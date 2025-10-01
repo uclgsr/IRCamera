@@ -6,7 +6,7 @@ import com.blankj.utilcode.util.TimeUtils
 import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import com.mpdc4gsr.libunified.app.lms.LMS
-import com.mpdc4gsr.libunified.app.lms.UrlConstant
+import com.mpdc4gsr.libunified.app.lms.UrlConstants
 import com.mpdc4gsr.libunified.app.lms.bean.CommonBean
 import com.mpdc4gsr.libunified.app.lms.network.HttpProxy
 import com.mpdc4gsr.libunified.app.lms.network.IResponseCallback
@@ -80,7 +80,7 @@ class UpReportViewModel : BaseViewModel() {
         reportBean: ReportBean?,
     ) {
         withContext(Dispatchers.IO) {
-            val url = UrlConstant.BASE_URL + "api/v1/outProduce/testReport/addTestReport"
+            val url = UrlConstants.BASE_URL + "api/v1/outProduce/testReport/addTestReport"
             val params = RequestParams()
             params.addBodyParameter("reportType", 2)
             params.addBodyParameter(

@@ -16,7 +16,7 @@ import android.view.ViewGroup
 import androidx.annotation.ColorInt
 import com.blankj.utilcode.util.SizeUtils
 import com.mpdc4gsr.libunified.R
-import com.mpdc4gsr.libunified.app.utils.ScreenUtil
+import com.mpdc4gsr.libunified.app.utils.ScreenUtils
 import com.mpdc4gsr.libunified.databinding.DialogColorSelectBinding
 
 
@@ -48,7 +48,7 @@ class ColorSelectDialog(
 
         window?.let {
             val layoutParams = it.attributes
-            layoutParams.width = ScreenUtil.getScreenWidth(context) - SizeUtils.dp2px(36f)
+            layoutParams.width = ScreenUtils.getScreenWidth(context) - SizeUtils.dp2px(36f)
             layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
             it.attributes = layoutParams
         }

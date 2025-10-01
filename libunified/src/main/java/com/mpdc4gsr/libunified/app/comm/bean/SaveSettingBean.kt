@@ -6,14 +6,14 @@ import com.google.gson.Gson
 import com.mpdc4gsr.libunified.app.bean.AlarmBean
 import com.mpdc4gsr.libunified.app.bean.CameraItemBean
 import com.mpdc4gsr.libunified.app.bean.ObserveBean
-import com.mpdc4gsr.libunified.app.common.SaveSettingUtil
+import com.mpdc4gsr.libunified.app.common.SaveSettingUtils
 import com.mpdc4gsr.libunified.app.config.DeviceConfig
 import com.mpdc4gsr.libunified.app.utils.CommUtils
 
 class SaveSettingBean(private val isWifi: Boolean = false) {
 
     private fun getSPUtils(): SPUtils =
-        SPUtils.getInstance(if (isWifi) "WifiSaveSettingUtil" else "SaveSettingUtil")
+        SPUtils.getInstance(if (isWifi) "WifiSaveSettingUtils" else "SaveSettingUtils")
 
     var isSaveSetting: Boolean = getSPUtils().getBoolean("isSaveSetting", true)
         set(value) {
@@ -79,10 +79,10 @@ class SaveSettingBean(private val isWifi: Boolean = false) {
         if (isSaveSetting) {
             getSPUtils().getInt(
                 "fusionType",
-                SaveSettingUtil.FusionTypeLPYFusion,
+                SaveSettingUtils.FusionTypeLPYFusion,
             )
         } else {
-            SaveSettingUtil.FusionTypeLPYFusion
+            SaveSettingUtils.FusionTypeLPYFusion
         }
         set(value) {
             field = value

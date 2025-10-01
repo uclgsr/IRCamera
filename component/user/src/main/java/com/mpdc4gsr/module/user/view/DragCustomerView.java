@@ -6,7 +6,7 @@ import android.view.MotionEvent;
 
 import com.blankj.utilcode.util.BarUtils;
 import com.blankj.utilcode.util.SizeUtils;
-import com.mpdc4gsr.libunified.app.utils.ScreenUtil;
+import com.mpdc4gsr.libunified.app.utils.ScreenUtils;
 
 public class DragCustomerView extends androidx.appcompat.widget.AppCompatImageView {
     float mDownX;
@@ -39,8 +39,8 @@ public class DragCustomerView extends androidx.appcompat.widget.AppCompatImageVi
         if (!isInEditMode()) {
             mWidth = getMeasuredWidth();
             mHeight = getMeasuredHeight();
-            mScreenWidth = ScreenUtil.getScreenWidth(getContext());
-            mScreenHeight = ScreenUtil.getScreenHeight(getContext()) - BarUtils.getStatusBarHeight() - BarUtils.getNavBarHeight() - SizeUtils.dp2px(62f);
+            mScreenWidth = ScreenUtils.getScreenWidth(getContext());
+            mScreenHeight = ScreenUtils.getScreenHeight(getContext()) - BarUtils.getStatusBarHeight() - BarUtils.getNavBarHeight() - SizeUtils.dp2px(62f);
         }
     }
 

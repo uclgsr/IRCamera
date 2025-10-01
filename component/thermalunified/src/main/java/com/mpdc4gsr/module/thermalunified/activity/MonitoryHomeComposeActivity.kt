@@ -21,8 +21,8 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-import com.mpdc4gsr.module.thermalunified.fragment.IRMonitorCaptureFragmentCompose
-import com.mpdc4gsr.module.thermalunified.fragment.IRMonitorHistoryFragmentCompose
+import com.mpdc4gsr.module.thermalunified.fragment.IRMonitorCaptureComposeFragment
+import com.mpdc4gsr.module.thermalunified.fragment.IRMonitorHistoryComposeFragment
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
 import kotlinx.coroutines.launch
 
@@ -270,7 +270,7 @@ private fun MonitorHistoryTab() {
     ) {
         AndroidView(
             factory = { context ->
-                val fragment = IRMonitorHistoryFragmentCompose()
+                val fragment = IRMonitorHistoryComposeFragment()
                 androidx.fragment.app.FragmentContainerView(context).apply {
                     id = androidx.core.R.id.accessibility_custom_action_4
                 }
@@ -339,7 +339,7 @@ private fun MonitorRealTimeTab(
     ) {
         AndroidView(
             factory = { context ->
-                val fragment = IRMonitorCaptureFragmentCompose()
+                val fragment = IRMonitorCaptureComposeFragment()
                 androidx.fragment.app.FragmentContainerView(context).apply {
                     id = androidx.core.R.id.accessibility_custom_action_5
                 }

@@ -3,7 +3,7 @@ package com.mpdc4gsr.libunified.app.db.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.mpdc4gsr.libunified.app.tools.TimeTool
+import com.mpdc4gsr.libunified.app.tools.TimeTools
 
 @Entity(tableName = "thermal")
 class ThermalEntity {
@@ -56,6 +56,6 @@ class ThermalEntity {
     }
 
     fun getTime(): String {
-        return TimeTool.reportTime(createTime)
+        return TimeTools.reportTime(createTime)
     }
 }

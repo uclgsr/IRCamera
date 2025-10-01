@@ -150,7 +150,7 @@ class IRGalleryTabFragment : BaseFragment() {
             val bundle = Bundle()
             bundle.putBoolean(ExtraKeyConfig.IS_VIDEO, position == 1)
             bundle.putInt(ExtraKeyConfig.DIR_TYPE, currentDirType.ordinal)
-            val fragment = IRGalleryFragmentCompose()
+            val fragment = IRGalleryComposeFragment()
             fragment.arguments = bundle
             return fragment
         }

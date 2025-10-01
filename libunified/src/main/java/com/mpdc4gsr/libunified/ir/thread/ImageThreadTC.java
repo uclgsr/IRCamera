@@ -15,7 +15,7 @@ import com.example.suplib.wrapper.SupHelp;
 import com.mpdc4gsr.libunified.app.bean.AlarmBean;
 import com.mpdc4gsr.libunified.ir.bean.ColorRGB;
 import com.mpdc4gsr.libunified.ir.utils.IRImageHelp;
-import com.mpdc4gsr.libunified.ir.utils.JNITool;
+import com.mpdc4gsr.libunified.ir.utils.JNITools;
 import com.mpdc4gsr.libunified.ir.utils.OpencvTools;
 import com.mpdc4gsr.libunified.app.utils.UnifiedColorUtils;
 
@@ -190,7 +190,7 @@ public class ImageThreadTC extends Thread {
                         (rotateInt == 270 || rotateInt == 90) ? imageWidth : imageHeight,
                         (rotateInt == 270 || rotateInt == 90) ? imageHeight : imageWidth);
                 if (typeAi == TYPE_AI_H) {
-                    byte[] dataArray = JNITool.INSTANCE.maxTempL(imageDst, temperatureSrc,
+                    byte[] dataArray = JNITools.INSTANCE.maxTempL(imageDst, temperatureSrc,
                             (rotateInt == 270 || rotateInt == 90) ? imageWidth : imageHeight,
                             (rotateInt == 270 || rotateInt == 90) ? imageHeight : imageWidth, -1);
                     Mat diffMat = new Mat(192, 256, CvType.CV_8UC3);
@@ -200,7 +200,7 @@ public class ImageThreadTC extends Thread {
                     diffMat.get(0, 0, grayData);
                     imageDst = grayData;
                 } else if (typeAi == TYPE_AI_L) {
-                    byte[] dataArray = JNITool.INSTANCE.lowTemTrack(imageDst, temperatureSrc,
+                    byte[] dataArray = JNITools.INSTANCE.lowTemTrack(imageDst, temperatureSrc,
                             (rotateInt == 270 || rotateInt == 90) ? imageWidth : imageHeight,
                             (rotateInt == 270 || rotateInt == 90) ? imageHeight : imageWidth, -1);
                     Mat diffMat = new Mat(192, 256, CvType.CV_8UC3);
@@ -220,7 +220,7 @@ public class ImageThreadTC extends Thread {
                     } else {
                         if (OpencvTools.getStatus(firstFrame, imageDst)) {
                             try {
-                                byte[] dataArray = JNITool.INSTANCE.diff2firstFrameByTempWH(
+                                byte[] dataArray = JNITools.INSTANCE.diff2firstFrameByTempWH(
                                         (rotateInt == 270 || rotateInt == 90) ? imageWidth : imageHeight,
                                         (rotateInt == 270 || rotateInt == 90) ? imageHeight : imageWidth,
                                         firstTemp, temperatureSrc, imageDst);
