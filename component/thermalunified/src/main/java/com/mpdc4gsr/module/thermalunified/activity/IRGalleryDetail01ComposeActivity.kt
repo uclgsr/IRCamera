@@ -25,7 +25,6 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.fragment.GalleryComposeFragment
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRGalleryEditViewModel
 
-
 class IRGalleryDetail01ComposeActivity : BaseComposeActivity<IRGalleryEditViewModel>() {
 
     override fun createViewModel(): IRGalleryEditViewModel {

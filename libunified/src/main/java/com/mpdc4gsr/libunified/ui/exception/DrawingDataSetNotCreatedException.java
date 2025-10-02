@@ -2,7 +2,6 @@ package com.mpdc4gsr.libunified.ui.exception;
 
 public class DrawingDataSetNotCreatedException extends RuntimeException {
 
-
     private static final long serialVersionUID = 1L;
 
     public DrawingDataSetNotCreatedException() {

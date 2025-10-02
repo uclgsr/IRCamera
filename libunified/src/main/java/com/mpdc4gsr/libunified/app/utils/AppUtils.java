@@ -54,7 +54,6 @@ public enum AppUtils {
         }
     }
 
-
     public static void installApp(Context context, File apkPath) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -70,7 +69,6 @@ public enum AppUtils {
         context.startActivity(intent);
     }
 
-
     public static boolean isProcessRunning(Context context, String serviceName) {
         ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         List<ActivityManager.RunningServiceInfo> runningServiceInfos = am.getRunningServices(200);
@@ -85,7 +83,6 @@ public enum AppUtils {
         }
         return false;
     }
-
 
     public static boolean isServiceRunning(Context context, String serviceName) {
         ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);

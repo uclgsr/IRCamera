@@ -3,15 +3,12 @@ plugins {
     kotlin("android")
     alias(libs.plugins.kotlin.compose)
 }
-
 android {
     namespace = "com.mpdc4gsr.ble"
     compileSdk = 36
-
     defaultConfig {
         minSdk = libs.versions.minSdk.get().toInt()
     }
-
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -22,16 +19,13 @@ android {
             )
         }
     }
-
     buildFeatures {
         buildConfig = true
         compose = true
     }
-
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
-
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -39,22 +33,16 @@ android {
     }
     buildToolsVersion = "35.0.0"
 }
-
 dependencies {
     implementation(libs.identity.jvm)
     coreLibraryDesugaring(libs.desugar.jdk.libs)
-
-    // Compose dependencies for BLE module
     implementation(platform(libs.compose.bom))
     implementation(libs.compose.ui)
     implementation(libs.compose.ui.tooling.preview)
     implementation(libs.compose.material3)
     implementation(libs.compose.activity)
-
-    // Debug Compose dependencies
     debugImplementation(libs.compose.ui.tooling)
     debugImplementation(libs.compose.ui.test.manifest)
-
     api("androidx.appcompat:appcompat:1.2.0")
     api("org.greenrobot:eventbus:3.2.0")
     api("com.blankj:utilcodex:1.31.1")

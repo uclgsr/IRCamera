@@ -24,7 +24,6 @@ class ShimmerApiBridge private constructor() {
 
     private fun initializeShimmerProcessing() {
 
-
         Log.i(TAG, "Using fallback processing - official Shimmer SDK handled by main app module")
         setupEnhancedFallback()
     }
@@ -91,7 +90,6 @@ class ShimmerApiBridge private constructor() {
     private fun convertToConductanceOfficial(rawValue: Double): Double {
         return try {
 
-
             val resistance = convertToResistanceShimmer3(rawValue)
             if (resistance > 0) 1000000.0 / resistance else 0.0
         } catch (e: Exception) {
@@ -112,7 +110,6 @@ class ShimmerApiBridge private constructor() {
 
     private fun convertToResistanceShimmer3(rawValue: Double): Double {
 
-
         val vRef = 3.0
         val rRef = 40200.0
         val adcMax = 4095.0
@@ -121,7 +118,6 @@ class ShimmerApiBridge private constructor() {
         val clampedRaw = rawValue.coerceIn(adcMin, adcMax)
 
         val vOut = (clampedRaw / adcMax) * vRef
-
 
         val denominator = vOut
         if (denominator <= 0.001) {

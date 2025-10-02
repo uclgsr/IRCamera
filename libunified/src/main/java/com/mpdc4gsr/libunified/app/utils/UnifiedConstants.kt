@@ -1,6 +1,5 @@
 package com.mpdc4gsr.libunified.app.utils
 
-
 object UnifiedConstants {
 
     // Product Configuration Constants

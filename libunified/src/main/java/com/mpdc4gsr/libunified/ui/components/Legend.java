@@ -391,7 +391,6 @@ public class Legend extends ComponentBase {
 
                     if (stackedStartIndex == -1) {
 
-
                         requiredWidth = 0.f;
                     } else {
 

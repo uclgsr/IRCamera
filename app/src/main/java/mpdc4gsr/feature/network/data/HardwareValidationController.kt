@@ -130,7 +130,6 @@ class HardwareValidationController(
                 context.checkSelfPermission(android.Manifest.permission.CAMERA) == android.content.pm.PackageManager.PERMISSION_GRANTED
             val initTime = measureTimeMillis {
 
-
             }
 
             sensorCapabilities["rgb_camera"] = SensorCapability(
@@ -173,13 +172,6 @@ class HardwareValidationController(
             }
 
             val thermalRecorder = ThermalCameraRecorder(context, "thermal_validation_1")
-
-
-
-
-
-
-
 
             sensorCapabilities["thermal_camera"] = SensorCapability(
                 name = "Topdon TC001 Thermal Camera",
@@ -226,14 +218,6 @@ class HardwareValidationController(
                 128,
                 RecordingController(context, lifecycleOwner)
             )
-
-
-
-
-
-
-
-
 
             sensorCapabilities["gsr_sensor"] = SensorCapability(
                 name = "Shimmer3 GSR+ Sensor",
@@ -290,8 +274,6 @@ class HardwareValidationController(
     private suspend fun validateNetworkCapabilities() {
         Log.i(TAG, "Validating network capabilities...")
 
-
-
         validationResults["network"] = HardwareValidationResult(
             "network", true, emptyList(), emptyList()
         )
@@ -300,8 +282,6 @@ class HardwareValidationController(
     private suspend fun validateBackgroundRecording() {
         Log.i(TAG, "Validating background recording...")
 
-
-
         validationResults["background_recording"] = HardwareValidationResult(
             "background_recording", true, emptyList(), emptyList()
         )
@@ -309,7 +289,6 @@ class HardwareValidationController(
 
     private suspend fun validateBatteryOptimization() {
         Log.i(TAG, "Validating battery optimization...")
-
 
         validationResults["battery_optimization"] = HardwareValidationResult(
             "battery_optimization", true, emptyList(), emptyList()

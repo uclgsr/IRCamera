@@ -229,7 +229,6 @@
     <string name="auto_shutter">Auto Shutter</string>
     <string name="color_board">color board</string>
 
-
     <string name="user_services_agreement">Terms of Service</string>
     <string name="privacy_policy">Privacy Policy</string>
     <string name="third_party_components">Third-party Components</string>
@@ -239,7 +238,6 @@
     <string name="app_save_image">Do you want to save images?</string>
     <string name="app_tip">Tips</string>
     <string name="device_loading_tip">Loading…</string>
-
 
     <string name="app_lapsePhotography">Timed Photo</string>
     <string name="app_Manual_Shutter">Manual Shutter</string>
@@ -283,7 +281,6 @@
     <string name="app_open">to open</string>
     <string name="album_report_aleart">The phone memory is insufficient, the video recording stops</string>
     <string name="tip_video_record">Each recording time is up to 60 minutes</string>
-
 
     <string name="temp_alarm_alarm">Alarm</string>
     <string name="temp_alarm_high_alarm">High Temp. Alarm</string>
@@ -387,7 +384,6 @@
     <string name="tip_change_pseudo_mode">Do you want to switch to the Dynamic Rendering mode?</string>
     <string name="color_p8_ios">Xinhui gold</string>
 
-
     <string name="menu_3d_visual">View</string>
     <string name="menu_3d_calibrate">Calibration</string>
     <string name="model">Mode</string>
@@ -399,7 +395,6 @@
     <string name="menu_3d_range_temp">Temperature Bar</string>
     <string name="menu_3d_x_axis">X-axis</string>
     <string name="menu_3d_y_axis">Y-axis</string>
-
 
     <string name="album_menu_Photos">Photos</string>
     <string name="feedback_problem_type_6">Others</string>
@@ -454,7 +449,6 @@
     <string name="target_tips_step_4">4.Observe the object and the number on the target (the distance between the camera and the object). As shown in the picture below, the distance between the camera and the object is 20 meters.</string>
     <string name="target_tips_tip_content">Note: Currently, referential heights for 4 types of objects are available.</string>
 
-
     <string name="permission_request_camera_app">%1$s is requesting permission for your camera to allow changing your profile picture or taking photos to give feedback.</string>
     <string name="permission_request_location_app">%1$s is requesting permission for your location to search for nearby Bluetooth devices.</string>
     <string name="permission_request_storage_app">%1$s is requesting storage permission to save local files or read pictures for profile setting.</string>
@@ -472,7 +466,6 @@
     <string name="installation_package_downloading">Downloading the installation package</string>
     <string name="installation_package_downloading_tips">It starts downloading. Please check the progress in the Notifications</string>
     <string name="welcome_use_app">Welcome to %1$s</string>
-
 
     <string name="dual_light_correction">Dual Light Correction</string>
     <string name="dual_light_correction_tips_1">Since the focuses of the two cameras are not aligned, the images captured from different distances by the two cameras will not be aligned. \nThis function can help with the image alignment separately.</string>
@@ -495,7 +488,6 @@
     <string name="menu_thermal_font">Font</string>
 
     <string name="text_p_umeng">In order to provide a better functional experience, our products integrate Umeng+SDK for data statistics and log collection. The SDK will collect your device identification and account information</string>
-
 
     <string name="ts004_connection_device">Wired connected devices</string>
     <string name="func_test_distance">Distance (Beta)</string>
@@ -610,11 +602,9 @@
     <string name="ts004_faq_q5">How do I view the captured thermal images on a PC?</string>
     <string name="ts004_faq_a5">Connect TS004 to a PC via the USB cable, and then you can view the thermal images stored on TS004.</string>
 
-
     <string name="gallery_transfer">Gallery Transfer</string>
     <string name="gallery_transfer_wait">Data is being transferred. Please wait.</string>
     <string name="gallery_transfer_complete">Data Transfer Completed</string>
-
 
     <string name="user_jump">Skip</string>
     <string name="tc_guide_tips1">View real-time monitor graphs and history monitor records.</string>
@@ -632,7 +622,6 @@
     <string name="ts004_conntenct_tip">You will use cellular data. The device may be disconnected.</string>
     <string name="fireware_update_tips">Bug fixes and performance improvements</string>
 
-
     <string name="tc_local_album">Local Gallery</string>
     <string name="tc_connect_device">Connect Device</string>
     <string name="tc_connect_tips">Choose the device you want to connect.</string>
@@ -643,7 +632,6 @@
     <string name="tc_has_line_device">Wired Device</string>
     <string name="tc_reset_tips">All device settings will be restored to factory settings. Confirm to restore?</string>
     <string name="coming_soon">Stay Tuned…</string>
-
 
     <string name="tc007_connect_tips1">1. Ensure that the equipment has sufficient power and is close enough</string>
     <string name="tc007_connect_tips2">2. Turn on Bluetooth and WiFi on your phone</string>
@@ -660,7 +648,6 @@
     <string name="open_bt_switch_tips">When connecting to a mobile phone, Bluetooth needs to be turned on to obtain necessary device information</string>
     <string name="wifi_connect_loading">It is expected to take 15s…</string>
     <string name="tc007_done_fast">Frequent operations</string>
-
 
     <string name="main_professional_test">Professional Testing</string>
     <string name="main_temperature_test">Temperature Testing</string>
@@ -830,7 +817,6 @@
     <string name="abnormal_description17">The temperature of the rear mirror heater is affected by many factors, such as ambient temperature, and heater load. Monitor the heater temperature with a thermal imager, and then you can assess whether the rear mirror can be heated effectively.</string>
     <string name="abnormal_description18">The window motor temperature is affected by many factors, such as ambient temperature, and motor load. Monitor the motor temperature with a thermal imager. If the temperature is too high, it may be caused by the failure of the window lifting mechanism or the motor itself.</string>
 
-
     <string name="vehicle_function">Function</string>
     <string name="ability_find">find</string>
     <string name="ability_monitory">Real time viewing of object temperature to generate data</string>
@@ -855,7 +841,6 @@
     <string name="pdf_sign_tips">Please sign and save the report</string>
     <string name="pdf_project_item">project</string>
     <string name="house_sign_finish_tips">Please complete the electronic signature</string>
-
 
     <string name="thermal_trend">Trend Chart</string>
     <string name="thermal_trend_tips">Draw a line segment on the image to see the temperature change.</string>
@@ -968,7 +953,6 @@
     <string name="tips_tisr_on">Imaging Super Resolution has been activated.</string>
     <string name="tips_tisr_off">Imaging Super Resolution has been deactivated.</string>
     <string name="tips_tisr_fail">Your phone does not support OpenCL and cannot enable Imaging Super Resolution.</string>
-
 
     <string name="testing_guidance">Testing guidance</string>
     <string name="unlock_professional_perspectives">Unlock professional perspectives</string>

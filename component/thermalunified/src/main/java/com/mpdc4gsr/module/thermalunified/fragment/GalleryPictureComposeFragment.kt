@@ -34,7 +34,6 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
-
 class GalleryPictureComposeFragment : BaseComposeFragment<GalleryViewModel>() {
 
     override fun createViewModel(): GalleryViewModel {

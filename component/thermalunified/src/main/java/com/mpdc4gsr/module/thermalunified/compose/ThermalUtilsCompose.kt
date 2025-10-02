@@ -24,7 +24,6 @@ import androidx.compose.ui.unit.sp
 import com.mpdc4gsr.libunified.app.utils.UnifiedMathUtils
 import kotlin.math.roundToInt
 
-
 @Composable
 fun TemperatureIndicator(
     temperature: Float,
@@ -63,7 +62,6 @@ fun TemperatureIndicator(
         }
     }
 }
-
 
 @Composable
 fun ThermalGradientBar(
@@ -114,7 +112,6 @@ fun ThermalGradientBar(
     }
 }
 
-
 @Composable
 fun ThermalStatusIndicator(
     level: ThermalStatusLevel,
@@ -159,7 +156,6 @@ fun ThermalStatusIndicator(
         )
     }
 }
-
 
 @Composable
 fun MeasurementPoint(
@@ -212,7 +208,6 @@ fun MeasurementPoint(
     }
 }
 
-
 @Composable
 fun ThermalToolbar(
     selectedTool: ThermalTool?,
@@ -263,7 +258,6 @@ enum class ThermalTool(
     CIRCLE("Circle", Icons.Default.RadioButtonUnchecked),
     AREA("Area", Icons.Default.CropFree)
 }
-
 
 @Composable
 fun ThermalUtilsComposePreview() {

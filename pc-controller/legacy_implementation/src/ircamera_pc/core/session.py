@@ -13,7 +13,6 @@ except ImportError:
 
 from .config import config
 
-
 class SessionState(Enum):
     IDLE = "idle"
     ACTIVE = "active"
@@ -21,7 +20,6 @@ class SessionState(Enum):
     STOPPING = "stopping"
     COMPLETED = "completed"
     ERROR = "error"
-
 
 @dataclass
 class SessionMetadata:
@@ -47,7 +45,6 @@ class SessionMetadata:
             self.sync_events = []
         if self.calibration_data is None:
             self.calibration_data = {}
-
 
 class SessionManager:
 

@@ -45,7 +45,6 @@ import androidx.compose.ui.unit.sp
 import java.util.*
 import kotlin.math.roundToInt
 
-
 @OptIn(ExperimentalTextApi::class)
 @Composable
 fun FenceCompose(
@@ -179,7 +178,6 @@ fun FenceCompose(
     }
 }
 
-
 @Composable
 fun ThermalToolCompose(
     selectedTool: ThermalToolType,
@@ -284,7 +282,6 @@ private fun ThermalToolItemCompose(
         )
     }
 }
-
 
 @OptIn(ExperimentalTextApi::class)
 @Composable

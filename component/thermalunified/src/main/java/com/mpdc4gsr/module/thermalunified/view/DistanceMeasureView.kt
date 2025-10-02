@@ -9,7 +9,6 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 
-
 class DistanceMeasureView : View {
     private var margin: Float = 0f
     private var linePaint: Paint? = null

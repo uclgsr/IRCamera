@@ -2,15 +2,12 @@ package com.mpdc4gsr.libunified.app.utils
 
 import kotlin.math.pow
 
-
 object UnifiedMathUtils {
-
 
     fun setDoubleAccuracy(num: Double, scale: Int): Double {
         val factor = 10.0.pow(scale)
         return (num * factor).toInt() / factor
     }
-
 
     fun getPercents(scale: Int, vararg values: Float): FloatArray {
         val total = values.sum()
@@ -33,7 +30,6 @@ object UnifiedMathUtils {
         return result
     }
 
-
     fun numberToBytes(bigEndian: Boolean, value: Long, len: Int): ByteArray {
         val bytes = ByteArray(8)
         for (i in 0..7) {
@@ -50,7 +46,6 @@ object UnifiedMathUtils {
         }
     }
 
-
     fun splitPackage(src: ByteArray, size: Int): List<ByteArray> {
         val result = mutableListOf<ByteArray>()
         var offset = 0
@@ -66,7 +61,6 @@ object UnifiedMathUtils {
         return result
     }
 
-
     fun joinPackage(vararg src: ByteArray): ByteArray {
         val totalSize = src.sumOf { it.size }
         val result = ByteArray(totalSize)
@@ -80,7 +74,6 @@ object UnifiedMathUtils {
         return result
     }
 
-
     fun clamp(value: Int, min: Int, max: Int): Int {
         return when {
             value < min -> min
@@ -88,7 +81,6 @@ object UnifiedMathUtils {
             else -> value
         }
     }
-
 
     fun clamp(value: Float, min: Float, max: Float): Float {
         return when {
@@ -98,7 +90,6 @@ object UnifiedMathUtils {
         }
     }
 
-
     fun clamp(value: Double, min: Double, max: Double): Double {
         return when {
             value < min -> min
@@ -107,31 +98,25 @@ object UnifiedMathUtils {
         }
     }
 
-
     fun lerp(start: Float, end: Float, fraction: Float): Float {
         return start + fraction * (end - start)
     }
-
 
     fun inRange(value: Int, min: Int, max: Int): Boolean {
         return value in min..max
     }
 
-
     fun inRange(value: Float, min: Float, max: Float): Boolean {
         return value in min..max
     }
-
 
     fun roundToNearest(value: Int, multiple: Int): Int {
         return ((value + multiple / 2) / multiple) * multiple
     }
 
-
     fun average(values: IntArray): Double {
         return if (values.isEmpty()) 0.0 else values.average()
     }
-
 
     fun average(values: FloatArray): Double {
         return if (values.isEmpty()) 0.0 else values.average()

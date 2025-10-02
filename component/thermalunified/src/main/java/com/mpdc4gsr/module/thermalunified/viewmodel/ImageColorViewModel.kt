@@ -7,7 +7,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import java.text.SimpleDateFormat
 import java.util.*
 
-
 class ImageColorViewModel : BaseViewModel() {
 
     private val _timestamp = MutableStateFlow("")

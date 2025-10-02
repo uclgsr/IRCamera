@@ -13,7 +13,6 @@ except ImportError:
 from .config import config
 from ..network.server import NetworkServer, DeviceInfo
 
-
 class SessionState(Enum):
     IDLE = "idle"
     PREPARING = "preparing"
@@ -22,7 +21,6 @@ class SessionState(Enum):
     COMPLETED = "completed"
     ERROR = "error"
 
-
 class SyncMarkerType(Enum):
     SESSION_START = "session_start"
     SESSION_END = "session_end"
@@ -30,7 +28,6 @@ class SyncMarkerType(Enum):
     CUSTOM_EVENT = "custom_event"
     PAUSE_MARKER = "pause_marker"
     RESUME_MARKER = "resume_marker"
-
 
 @dataclass
 class RecordingSession:
@@ -52,7 +49,6 @@ class RecordingSession:
 
     sync_quality_stats: Dict[str, Any] = field(default_factory=dict)
     data_collection_stats: Dict[str, Any] = field(default_factory=dict)
-
 
 class HubCoordinator:
 

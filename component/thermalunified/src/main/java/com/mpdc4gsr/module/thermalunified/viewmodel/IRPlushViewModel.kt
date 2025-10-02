@@ -40,22 +40,18 @@ class IRPlushViewModel : BaseViewModel() {
     private val _isRecording = MutableStateFlow(false)
     val isRecording: StateFlow<Boolean> = _isRecording.asStateFlow()
 
-
     fun toggleRecording() {
         _isRecording.value = !_isRecording.value
     }
-
 
     fun initializeDualView(surfaceView: SurfaceView) {
         // Only update state, don't store the SurfaceView reference
         _dualViewState.value = DualViewState.ACTIVE
     }
 
-
     fun changeProcessingMode(mode: ProcessingMode) {
         _processingMode.value = mode
     }
-
 
     fun calibrateDualView() {
         launchWithErrorHandling {
@@ -65,7 +61,6 @@ class IRPlushViewModel : BaseViewModel() {
             _dualViewState.value = DualViewState.ACTIVE
         }
     }
-
 
     fun resetSettings() {
         _processingMode.value = ProcessingMode.STANDARD
@@ -77,7 +72,6 @@ class IRPlushViewModel : BaseViewModel() {
             ambientTemp = 0.0f
         )
     }
-
 
     fun updateTemperatureData(
         centerTemp: Float,

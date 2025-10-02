@@ -56,7 +56,6 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
         this.mMinScalePointerDistance = Utils.convertDpToPixel(3.5f);
     }
 
-
     private static void midPoint(MPPointF point, MotionEvent event) {
         float x = event.getX(0) + event.getX(1);
         float y = event.getY(0) + event.getY(1);
@@ -233,7 +232,6 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
                         mTouchMode == PINCH_ZOOM ||
                         mTouchMode == POST_ZOOM) {
 
-
                     mChart.calculateOffsets();
                     mChart.postInvalidate();
                 }
@@ -266,7 +264,6 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
 
         return true;
     }
-
 
     private void saveTouchStart(MotionEvent event) {
 
@@ -420,7 +417,6 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
                 && mChart.isInverted(mClosestDataSetToTouch.getAxisDependency()));
     }
 
-
     public Matrix getMatrix() {
         return mMatrix;
     }
@@ -543,7 +539,6 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
         if (Math.abs(mDecelerationVelocity.x) >= 0.01 || Math.abs(mDecelerationVelocity.y) >= 0.01)
             Utils.postInvalidateOnAnimation(mChart);
         else {
-
 
             mChart.calculateOffsets();
             mChart.postInvalidate();

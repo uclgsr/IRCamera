@@ -25,7 +25,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 
-
 class ThermalGalleryComposeActivity : BaseComposeActivity<ThermalGalleryViewModel>() {
 
     override fun createViewModel(): ThermalGalleryViewModel {

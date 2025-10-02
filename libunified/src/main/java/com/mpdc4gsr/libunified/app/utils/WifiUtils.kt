@@ -15,16 +15,13 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 
-
 object WifiUtils {
-
 
     @Suppress("DEPRECATION")
     fun ScanResult.getWifiName(): String =
         if (Build.VERSION.SDK_INT < 33) SSID else removeQuotation(wifiSsid.toString())
 
     fun WifiInfo.getWifiName(): String = removeQuotation(ssid)
-
 
     private fun removeQuotation(source: String): String {
         return if (source.length > 1 && source[0] == '\"' && source[source.length - 1] == '\"') {
@@ -33,7 +30,6 @@ object WifiUtils {
             source
         }
     }
-
 
     fun getCurrentWifiSSID(context: Context): String? {
         if (ContextCompat.checkSelfPermission(

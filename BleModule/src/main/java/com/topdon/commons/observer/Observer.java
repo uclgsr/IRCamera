@@ -1,6 +1,5 @@
 package com.topdon.commons.observer;
 
-
 public interface Observer {
 
     @Observe

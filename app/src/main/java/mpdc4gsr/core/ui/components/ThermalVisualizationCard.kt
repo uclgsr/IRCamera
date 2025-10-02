@@ -11,10 +11,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-/**
- * Compose component for thermal data visualization
- * Can be used alongside existing thermal camera SurfaceView or as a replacement
- */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ThermalVisualizationCard(

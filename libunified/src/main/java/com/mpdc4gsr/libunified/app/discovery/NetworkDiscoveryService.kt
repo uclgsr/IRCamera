@@ -7,7 +7,6 @@ import android.util.Log
 import kotlinx.coroutines.*
 import java.util.concurrent.ConcurrentHashMap
 
-
 class NetworkDiscoveryService(private val context: Context) {
     companion object {
         private const val TAG = "NetworkDiscovery"

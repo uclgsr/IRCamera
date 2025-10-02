@@ -17,7 +17,6 @@ except ImportError:
 from ..core.config import config
 from ..core.session import SessionManager
 
-
 def main():
     """Main entry point for the MVP GUI application"""
     try:
@@ -67,7 +66,6 @@ def main():
     except Exception as e:
         logger.error(f"MVP GUI application failed: {e}")
         return 1
-
 
 def run_fallback_gui(session_manager):
     """Run a simple fallback GUI when the main GUI is not available"""
@@ -238,7 +236,6 @@ def run_fallback_gui(session_manager):
         logger.error(f"Fallback GUI failed: {e}")
         return run_cli_interface(session_manager)
 
-
 def run_cli_interface(session_manager):
     """Run CLI interface when GUI is not available"""
     try:
@@ -249,7 +246,6 @@ def run_cli_interface(session_manager):
     except Exception as e:
         logger.error(f"CLI interface failed: {e}")
         return run_headless_mode(session_manager)
-
 
 def run_headless_mode(session_manager):
     """Run in headless mode when no GUI is available"""
@@ -285,7 +281,6 @@ def run_headless_mode(session_manager):
     except Exception as e:
         logger.error(f"Headless mode failed: {e}")
         return 1
-
 
 if __name__ == "__main__":
     sys.exit(main())

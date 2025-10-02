@@ -78,10 +78,8 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
     protected ViewPortHandler mViewPortHandler = new ViewPortHandler();
     protected ChartAnimator mAnimator;
 
-
     protected Highlight[] mIndicesToHighlight;
     protected float mMaxHighlightDistance = 0f;
-
 
     protected boolean mDrawMarkers = true;
     protected IMarker mMarker;
@@ -115,7 +113,6 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
     protected void init() {
 
         setWillNotDraw(false);
-
 
         mAnimator = new ChartAnimator(new AnimatorUpdateListener() {
 
@@ -198,7 +195,6 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
 
     @Override
     protected void onDraw(Canvas canvas) {
-
 
         if (mData == null) {
 
@@ -406,7 +402,6 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
         return new float[]{high.getDrawX(), high.getDrawY()};
     }
 
-
     public ChartAnimator getAnimator() {
         return mAnimator;
     }
@@ -414,7 +409,6 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
     public boolean isDragDecelerationEnabled() {
         return mDragDecelerationEnabled;
     }
-
 
     public void setDragDecelerationEnabled(boolean enabled) {
         mDragDecelerationEnabled = enabled;
@@ -434,7 +428,6 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
 
         mDragDecelerationFrictionCoef = newValue;
     }
-
 
     @RequiresApi(11)
     public void animateXY(int durationMillisX, int durationMillisY, EasingFunction easingX,
@@ -465,7 +458,6 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
         }
     }
 
-
     @RequiresApi(11)
     public void animateX(int durationMillis) {
         if (isAttachedToWindow()) {
@@ -486,7 +478,6 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
             mAnimator.animateXY(durationMillisX, durationMillisY);
         }
     }
-
 
     public XAxis getXAxis() {
         return mXAxis;
@@ -760,7 +751,6 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
             bgDrawable.draw(canvas);
         else
 
-
             canvas.drawColor(Color.WHITE);
 
         draw(canvas);
@@ -777,7 +767,6 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
             stream = new FileOutputStream(Environment.getExternalStorageDirectory().getPath()
                     + pathOnSD + "/" + title
                     + ".png");
-
 
             b.compress(CompressFormat.PNG, 40, stream);
 
@@ -923,7 +912,6 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
                 Log.w(LOG_TAG, "*Avoiding* setting chart dimens! width: " + w + ", height: " + h);
         }
 
-
         notifyDataSetChanged();
 
         for (Runnable r : mJobs) {
@@ -946,7 +934,6 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-
 
         if (mUnbind)
             unbindDrawables(this);

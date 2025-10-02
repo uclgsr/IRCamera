@@ -26,7 +26,6 @@ import com.mpdc4gsr.module.thermalunified.viewmodel.IRMonitorCaptureViewModel.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-
 class IRMonitorCaptureComposeFragment : BaseComposeFragment<IRMonitorCaptureViewModel>() {
 
     override fun createViewModel(): IRMonitorCaptureViewModel {

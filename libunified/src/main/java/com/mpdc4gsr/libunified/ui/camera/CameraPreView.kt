@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.elvishew.xlog.XLog
 
-
 class CameraPreView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,

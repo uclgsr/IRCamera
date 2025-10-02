@@ -2,7 +2,6 @@ package com.mpdc4gsr.libunified.app.lms.utils;
 
 import android.content.Context;
 
-
 public class SPUtils {
     private static volatile SPUtils instance;
 

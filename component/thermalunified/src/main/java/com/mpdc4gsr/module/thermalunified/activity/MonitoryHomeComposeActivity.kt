@@ -26,7 +26,6 @@ import com.mpdc4gsr.module.thermalunified.fragment.IRMonitorHistoryComposeFragme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
 import kotlinx.coroutines.launch
 
-
 class MonitoryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
 
     override fun createViewModel(): ThermalViewModel {

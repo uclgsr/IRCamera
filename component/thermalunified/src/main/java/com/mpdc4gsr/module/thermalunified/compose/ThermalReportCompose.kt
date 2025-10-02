@@ -29,7 +29,6 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 
-
 // Data classes for report components
 data class ReportData(
     val id: String,
@@ -74,7 +73,6 @@ data class WatermarkData(
 enum class WatermarkPosition {
     TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT, CENTER
 }
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -520,7 +518,6 @@ private fun ReportMetadataCompose(
     }
 }
 
-
 @Composable
 fun ReportIRShowCompose(
     reportData: ReportData,
@@ -757,7 +754,6 @@ private fun MetadataRow(
         }
     }
 }
-
 
 @Composable
 fun WatermarkCompose(

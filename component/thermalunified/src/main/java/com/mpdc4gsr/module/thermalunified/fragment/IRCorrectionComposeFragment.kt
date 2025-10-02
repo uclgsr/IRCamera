@@ -24,7 +24,6 @@ import com.mpdc4gsr.module.thermalunified.viewmodel.CorrectionState
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRCorrectionViewModel
 import com.mpdc4gsr.module.thermalunified.viewmodel.TemperatureData
 
-
 class IRCorrectionComposeFragment : BaseComposeFragment<IRCorrectionViewModel>() {
 
     // Compatibility property for legacy code that checks frameReady

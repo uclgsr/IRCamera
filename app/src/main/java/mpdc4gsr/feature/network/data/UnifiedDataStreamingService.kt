@@ -16,7 +16,6 @@ import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 
-
 class UnifiedDataStreamingService(
     private val context: Context
 ) {
@@ -38,11 +37,9 @@ class UnifiedDataStreamingService(
     private var currentSessionId: String? = null
     private var sessionStartReference: TimestampRecord? = null
 
-
     private val packetsSent = AtomicLong(0)
     private val clientsConnected = AtomicLong(0)
     private val streamStartTime = AtomicLong(0)
-
 
     suspend fun startStreaming(sessionId: String, port: Int = DEFAULT_PORT): Boolean {
         return withContext(Dispatchers.IO) {
@@ -58,30 +55,25 @@ class UnifiedDataStreamingService(
                 sessionStartReference = TimestampManager.createTimestampRecord()
                 streamStartTime.set(System.currentTimeMillis())
 
-
                 serverSocket = ServerSocket().apply {
                     reuseAddress = true
                     bind(InetSocketAddress(port))
                 }
                 isStreaming.set(true)
 
-
                 streamingScope.launch {
                     acceptClients()
                 }
 
-
                 streamingScope.launch {
                     processStreamingData()
                 }
-
 
                 streamingScope.launch {
                     distributeHeartbeats()
                 }
 
                 Log.i(TAG, " Unified streaming service started on port $port")
-
 
                 broadcastSessionSyncEvent(
                     "session_start", mapOf(
@@ -100,12 +92,10 @@ class UnifiedDataStreamingService(
         }
     }
 
-
     suspend fun stopStreaming() {
         withContext(Dispatchers.IO) {
             try {
                 Log.i(TAG, "Stopping unified streaming service")
-
 
                 currentSessionId?.let { sessionId ->
                     broadcastSessionSyncEvent(
@@ -119,7 +109,6 @@ class UnifiedDataStreamingService(
 
                 isStreaming.set(false)
 
-
                 synchronized(connectedClients) {
                     connectedClients.forEach { client ->
                         client.disconnect()
@@ -127,10 +116,8 @@ class UnifiedDataStreamingService(
                     connectedClients.clear()
                 }
 
-
                 serverSocket?.close()
                 serverSocket = null
-
 
                 dataQueue.clear()
 
@@ -141,7 +128,6 @@ class UnifiedDataStreamingService(
             }
         }
     }
-
 
     fun streamGSRData(gsrSample: GSRSample, timestampRecord: TimestampRecord) {
         if (!isStreaming.get()) return
@@ -159,7 +145,6 @@ class UnifiedDataStreamingService(
 
         dataQueue.offer(packet)
     }
-
 
     fun streamThermalData(
         frameNumber: Long,
@@ -186,7 +171,6 @@ class UnifiedDataStreamingService(
         dataQueue.offer(packet)
     }
 
-
     fun streamRGBMetadata(
         frameNumber: Long,
         timestampRecord: TimestampRecord,
@@ -208,7 +192,6 @@ class UnifiedDataStreamingService(
         dataQueue.offer(packet)
     }
 
-
     fun broadcastSyncMarker(
         markerType: String,
         timestampRecord: TimestampRecord,
@@ -227,7 +210,6 @@ class UnifiedDataStreamingService(
         broadcastToClients(syncPacket.toString())
         Log.d(TAG, "Broadcasted sync marker: $markerType")
     }
-
 
     fun getStreamingStats(): StreamingStats {
         val uptime = if (streamStartTime.get() > 0) {
@@ -260,7 +242,6 @@ class UnifiedDataStreamingService(
                                 TAG,
                                 "Client connected: ${socket.remoteSocketAddress} (${connectedClients.size} total)"
                             )
-
 
                             clientHandler.sendSessionInfo()
 
@@ -375,7 +356,6 @@ class UnifiedDataStreamingService(
                     disconnectedClients.add(client)
                 }
             }
-
 
             disconnectedClients.forEach { client ->
                 connectedClients.remove(client)

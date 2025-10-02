@@ -11,7 +11,6 @@ object RouterConfig {
     private const val GROUP_CALIBRATE = "calibrate"
     private const val GROUP_GSR = "gsr"
 
-
     const val MAIN = "/$GROUP_APP/main"
     const val CLAUSE = "/$GROUP_APP/clause"
     const val POLICY = "/$GROUP_APP/policy"
@@ -25,7 +24,6 @@ object RouterConfig {
     const val IR_HIK_CORRECT_THREE = "/$GROUP_HIK_IR/correction3"
     const val IR_HIK_MONITOR_CAPTURE1 = "/$GROUP_HIK_IR/monitorCap1"
     const val IR_HIK_IMG_PICK = "/$GROUP_HIK_IR/ImagePick"
-
 
     const val IR_MAIN = "/$GROUP_IR/irMain"
     const val IR_FRAME = "/$GROUP_IR/frame"
@@ -50,11 +48,9 @@ object RouterConfig {
 
     const val IR_GALLERY_3D = "/menu/Image3DActivity"
 
-
     const val IR_MONOCULAR = "/$GROUP_THERMAL04/IRMonocularActivity"
     const val IR_DEVICE_ADD = "/$GROUP_THERMAL04/DeviceAddActivity"
     const val IR_CONNECT_TIPS = "/$GROUP_THERMAL04/ConnectTipsActivity"
-
 
     const val IR_THERMAL_07 = "/$GROUP_THERMAL07/IRThermal07Activity"
     const val IR_MONITOR_CAPTURE_07 = "/$GROUP_THERMAL07/MonitorCapture1"
@@ -70,7 +66,6 @@ object RouterConfig {
     const val REPORT_PICK_IMG = "/$GROUP_REPORT/pick/img"
     const val REPORT_PREVIEW = "/$GROUP_REPORT/preview"
 
-
     const val QUESTION = "/$GROUP_USER/question"
     const val QUESTION_DETAILS = "/$GROUP_USER/question/details"
     const val UNIT = "/$GROUP_USER/unit"
@@ -84,7 +79,6 @@ object RouterConfig {
 
     const val MANUAL_START = "/$GROUP_CALIBRATE/manual/first"
     const val IR_FRAME_PLUSH = "/$GROUP_IR/frame/plush"
-
 
     const val IR_TCLITE = "/lite/tcLite"
     const val IR_THERMAL_MONITOR_LITE = "/lite/monitor"

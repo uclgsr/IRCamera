@@ -8,7 +8,6 @@
     android:layout_marginEnd="20dp"
     android:orientation="vertical">
 
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_image"
         android:layout_width="match_parent"
@@ -75,7 +74,6 @@
             app:lottie_rawRes="@raw/ic_report_image_loading" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-
     <include
         android:id="@+id/cl_full"
         layout="@layout/item_report_ir_show"
@@ -83,7 +81,6 @@
         android:layout_height="wrap_content"
         android:visibility="gone"
         tools:visibility="visible" />
-
 
     <include
         android:id="@+id/cl_point1"
@@ -120,7 +117,6 @@
         android:layout_height="wrap_content"
         android:visibility="gone" />
 
-
     <include
         android:id="@+id/cl_line1"
         layout="@layout/item_report_ir_show"
@@ -155,7 +151,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="gone" />
-
 
     <include
         android:id="@+id/cl_rect1"

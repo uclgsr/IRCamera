@@ -292,7 +292,6 @@ public class DateWheelLayout extends BaseWheelLayout {
         monthLabelView.setText(month);
         dayLabelView.setText(day);
 
-
     }
 
     public void setOnDateSelectedListener(OnDateSelectedListener onDateSelectedListener) {
@@ -342,7 +341,6 @@ public class DateWheelLayout extends BaseWheelLayout {
     public final TextView getSpaceEndView() {
         return spaceEndView;
     }
-
 
     public final int getSelectedYear() {
         return yearWheelView.getCurrentItem();

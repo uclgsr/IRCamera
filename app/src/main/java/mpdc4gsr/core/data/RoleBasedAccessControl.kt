@@ -429,7 +429,6 @@ class RoleBasedAccessControl(
 
     private fun loadRoleAssignments() {
 
-
         Log.i(TAG, "Role assignments loaded (placeholder implementation)")
     }
 

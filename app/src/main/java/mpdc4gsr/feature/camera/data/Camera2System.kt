@@ -198,7 +198,6 @@ class Camera2System(
         Log.i(TAG, "Camera2System released")
     }
 
-
     private fun setupCallbacks() {
 
         cameraController.onCameraOpened = { caps ->
@@ -397,7 +396,6 @@ class Camera2System(
                 val videoSize = Size(3840, 2160)
                 val frameRate = if (caps.supports4k60) 60 else 30
 
-
                 val orientationHint = calculateOrientationHint(caps.sensorOrientation)
 
                 val recorderSurface =
@@ -557,7 +555,6 @@ class Camera2System(
         return File(outputDirectory, filename)
     }
 
-
     private fun calculateOrientationHint(sensorOrientation: Int): Int {
         return try {
             val windowManager =
@@ -580,7 +577,6 @@ class Camera2System(
                     else -> 0
                 }
             }
-
 
             val orientationHint = (sensorOrientation - deviceRotation + 360) % 360
             Log.d(

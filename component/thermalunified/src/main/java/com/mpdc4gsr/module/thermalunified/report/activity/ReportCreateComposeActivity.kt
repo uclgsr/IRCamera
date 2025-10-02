@@ -39,7 +39,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-
 class ReportCreateComposeActivity : ComponentActivity() {
 
     private lateinit var viewModel: ReportCreateViewModel
@@ -796,7 +795,6 @@ fun DrawScope.drawTemperatureDistribution(distribution: List<Float>) {
         )
     }
 }
-
 
 class ReportCreateViewModel : ViewModel() {
 

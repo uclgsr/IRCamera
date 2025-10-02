@@ -7,18 +7,15 @@ versionCode = "1100"
 versionName = "1.10.000"
 ndkVersion = "21.3.6528147"
 
-
 softcodeTopinfrared = "TC001_DisplaySW_Topinfrared_Adr"
 softcodeTopinfrared10 = "TC001_DisplaySW_TopinfraredAndroid10_Adr"
 softcodeTopinfraredCn = "TC001_DisplaySW_Topinfrared_GB_Adr"
 softcodeTopinfraredCn10 = "TC001_DisplaySW_TopinfraredAndroid10_GB_Adr"
 
-
 appkeyTopinfrared = "5B2F6F1FD80844FCB6E50BCA19222E76"
 appkeyTopinfrared10 = "AD782A05757B458391BFD695A3967EDD"
 appkeyTopinfraredCn = "19F791D993B042E2B22D42A974DE92E8"
 appkeyTopinfraredCn10 = "058F710E6D3545168F3D19010320F8C3"
-
 
 appsecretTopinfrared = "A4A2EE33347A4D7885C26689515567EC"
 appsecretTopinfrared10 = "2870276D969B45C1B4A312B336274079"
@@ -45,16 +42,13 @@ androidxPreference = "1.2.1"
 material = "1.13.0"
 multidex = "2.0.1"
 
-
 lifecycle = "2.9.4"
-
 
 room = "2.8.1"
 work = "2.10.5"
 camerax = "1.5.0"
 coroutines = "1.10.2"
 kotlinxSerialization = "1.9.0"
-
 
 fastjson2 = "2.0.59"
 jsbridge = "1.0.4"
@@ -167,18 +161,14 @@ androidx-preference = { group = "androidx.preference", name = "preference", vers
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 multidex = { group = "androidx.multidex", name = "multidex", version.ref = "multidex" }
 
-
 lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle" }
 lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
 lifecycle-livedata-ktx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycle" }
 
-
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 
-
 work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "work" }
-
 
 kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlin" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
@@ -279,14 +269,10 @@ media3-exoplayer = { group = "androidx.media3", name = "media3-exoplayer", versi
 media3-exoplayer-dash = { group = "androidx.media3", name = "media3-exoplayer-dash", version.ref = "media3" }
 media3-ui = { group = "androidx.media3", name = "media3-ui", version.ref = "media3" }
 
-
-
-
 android-gradle-plugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
 kotlin-gradle-plugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlinGradlePlugin" }
 ksp-gradle-plugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
 desugar-jdk-libs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "desugarJdkLibs" }
-
 
 huawei-agconnect = { group = "com.huawei.agconnect", name = "agcp", version.ref = "huaweiAgcp" }
 identity-jvm = { group = "com.android.identity", name = "identity-jvm", version.ref = "identityJvm" }
@@ -307,7 +293,6 @@ retrofit = ["retrofit2", "converter-gson", "adapter-rxjava2", "logging-intercept
 smart-refresh = ["smart-refresh-layout", "smart-refresh-header"]
 smart-refresh-v2 = ["refresh-layout-kernel", "refresh-header-classics", "refresh-header-material"]
 
-
 ui-common = ["androidx-core-ktx", "androidx-appcompat", "material", "glide"]
 
 thermal-common = ["androidx-core-ktx", "androidx-appcompat", "material", "glide", "eventbus"]
@@ -319,7 +304,6 @@ umeng = ["umeng-common", "umeng-asms", "umeng-analytics"]
 andromeda = ["andromeda-core", "andromeda-sense", "andromeda-views"]
 javacv-core = ["javacv", "javacpp"]
 ffmpeg-android = ["ffmpeg-android-arm64", "ffmpeg-android-arm", "ffmpeg-android-x86-64", "ffmpeg-android-x86"]
-
 
 test-unit = ["junit", "junit-jupiter", "hamcrest", "mockk", "kotlinx-coroutines-test", "robolectric", "mockwebserver", "truth", "javafaker"]
 test-android = ["test-ext-junit", "test-espresso-core", "test-runner", "test-rules", "test-ext-junit-ktx", "test-espresso-contrib", "test-espresso-intents", "test-uiautomator", "benchmark-junit4", "truth"]

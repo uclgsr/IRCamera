@@ -12,7 +12,6 @@ import android.util.Log;
 
 import com.mpdc4gsr.libunified.app.BaseApplication;
 
-
 public class EasyWifi {
     private static volatile EasyWifi mInstance;
     private final WifiManager wifiManager = (WifiManager) BaseApplication.instance.getSystemService(Context.WIFI_SERVICE);

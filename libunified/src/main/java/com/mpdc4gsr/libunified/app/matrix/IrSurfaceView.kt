@@ -58,7 +58,6 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
 //        mMatrix.getValues(mBeforeRotateMatrixValues)
 //    }
 
-
     fun setMatrix(rotate: Float, w: Float, h: Float) {
         mMatrix.reset()
         when (rotate) {
@@ -90,7 +89,6 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
             }
         }
     }
-
 
     fun doDraw(bitmap: Bitmap?, shutterFlag: Int) {
 
@@ -127,7 +125,6 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
         }
     }
 
-
     private var mColorMatrix = ColorMatrix(
         floatArrayOf(
             1f, 0f, 0f, 0f, 0f,
@@ -136,7 +133,6 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
             0f, 0f, 0f, 01f, 0f
         )
     )
-
 
     private var mColorMatrixLut = ColorMatrix(
         floatArrayOf(
@@ -147,7 +143,6 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
         )
     )
     private val n = 1f
-
 
     private var mColorMatrixEnhance = ColorMatrix(
 //        floatArrayOf(
@@ -171,7 +166,6 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
         openLut = true
     }
 
-
     fun setSaturationValue(saturation: Int) {
         this.saturation = saturation
     }
@@ -186,7 +180,6 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
         }
     }
 
-
     override fun surfaceCreated(holder: SurfaceHolder) {
         isPrepare = true
         if (callback != null)
@@ -194,11 +187,9 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
         Logger.d(TAG, "holder onSurfaceCreated")
     }
 
-
     override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
         Logger.d(TAG, "holder surfaceChanged")
     }
-
 
     override fun surfaceDestroyed(holder: SurfaceHolder) {
         synchronized(this) {

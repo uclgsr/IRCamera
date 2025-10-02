@@ -5,7 +5,6 @@ import android.graphics.Rect
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
-
 @Parcelize
 data class SelectPositionBean(
     val type: Int = 0,

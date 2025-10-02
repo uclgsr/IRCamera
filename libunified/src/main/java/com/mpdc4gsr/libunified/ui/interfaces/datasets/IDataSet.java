@@ -15,7 +15,6 @@ import java.util.List;
 
 public interface IDataSet<T extends Entry> {
 
-
     float getYMin();
 
     float getYMax();
@@ -61,7 +60,6 @@ public interface IDataSet<T extends Entry> {
     boolean contains(T entry);
 
     void clear();
-
 
     String getLabel();
 

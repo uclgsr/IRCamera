@@ -20,11 +20,6 @@ import androidx.compose.ui.unit.sp
 import mpdc4gsr.core.ui.model.*
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 
-
-/**
- * Unified Sensor Status Component
- * Shows overall system status and provides system-level controls
- */
 @Composable
 fun UnifiedSensorStatus(
     systemState: UnifiedSystemState,
@@ -191,9 +186,6 @@ fun UnifiedSensorStatus(
     }
 }
 
-/**
- * Sensor status visualization with connection lines
- */
 @Composable
 private fun SensorStatusVisualization(
     sensors: List<SensorInfo>,
@@ -296,9 +288,6 @@ private fun SensorStatusVisualization(
     }
 }
 
-/**
- * Metric display item
- */
 @Composable
 private fun MetricItem(
     label: String,
@@ -324,9 +313,6 @@ private fun MetricItem(
     }
 }
 
-/**
- * Get system status text
- */
 private fun getSystemStatusText(state: UnifiedSystemState, sensorCount: Int): String {
     return when (state) {
         UnifiedSystemState.Inactive -> "$sensorCount sensors available"
@@ -336,9 +322,6 @@ private fun getSystemStatusText(state: UnifiedSystemState, sensorCount: Int): St
     }
 }
 
-/**
- * Get system status color
- */
 private fun getSystemStatusColor(state: UnifiedSystemState): Color {
     return when (state) {
         UnifiedSystemState.Inactive -> Color.Gray

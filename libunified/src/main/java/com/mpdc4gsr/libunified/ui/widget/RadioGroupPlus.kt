@@ -11,7 +11,6 @@ import android.widget.RadioButton
 import android.widget.RadioGroup
 import androidx.annotation.IdRes
 
-
 class RadioGroupPlus : LinearLayout {
 
     // holds the checked id; the selection is empty by default
@@ -27,12 +26,10 @@ class RadioGroupPlus : LinearLayout {
     private var mOnCheckedChangeListener: OnCheckedChangeListener? = null
     private var mPassThroughListener: PassThroughHierarchyChangeListener? = null
 
-
     constructor(context: Context?) : super(context) {
         orientation = VERTICAL
         init()
     }
-
 
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs) {
         // MVP implementation: Basic attribute handling for RadioGroupPlus
@@ -46,12 +43,10 @@ class RadioGroupPlus : LinearLayout {
         super.setOnHierarchyChangeListener(mPassThroughListener)
     }
 
-
     override fun setOnHierarchyChangeListener(listener: OnHierarchyChangeListener) {
         // the user listener is delegated to our pass-through listener
         mPassThroughListener!!.mOnHierarchyChangeListener = listener
     }
-
 
     override fun onFinishInflate() {
         super.onFinishInflate()
@@ -79,7 +74,6 @@ class RadioGroupPlus : LinearLayout {
         }
         super.addView(child, index, params)
     }
-
 
     fun check(@IdRes id: Int) {
         // don't even bother
@@ -109,21 +103,17 @@ class RadioGroupPlus : LinearLayout {
         }
     }
 
-
     fun clearCheck() {
         check(-1)
     }
-
 
     fun setOnCheckedChangeListener(listener: OnCheckedChangeListener) {
         mOnCheckedChangeListener = listener
     }
 
-
     override fun generateLayoutParams(attrs: AttributeSet): LayoutParams {
         return LayoutParams(context, attrs)
     }
-
 
     override fun checkLayoutParams(p: ViewGroup.LayoutParams): Boolean {
         return p is RadioGroup.LayoutParams
@@ -140,23 +130,17 @@ class RadioGroupPlus : LinearLayout {
         return RadioGroup::class.java.name
     }
 
-
     class LayoutParams : LinearLayout.LayoutParams {
 
         constructor(c: Context?, attrs: AttributeSet?) : super(c, attrs) {}
 
-
         constructor(w: Int, h: Int) : super(w, h) {}
-
 
         constructor(w: Int, h: Int, initWeight: Float) : super(w, h, initWeight) {}
 
-
         constructor(p: ViewGroup.LayoutParams?) : super(p) {}
 
-
         constructor(source: MarginLayoutParams?) : super(source) {}
-
 
         override fun setBaseAttributes(
             a: TypedArray,
@@ -174,7 +158,6 @@ class RadioGroupPlus : LinearLayout {
             }
         }
     }
-
 
     interface OnCheckedChangeListener {
 
@@ -196,7 +179,6 @@ class RadioGroupPlus : LinearLayout {
             setCheckedId(id)
         }
     }
-
 
     private inner class PassThroughHierarchyChangeListener :
         OnHierarchyChangeListener {
@@ -225,7 +207,6 @@ class RadioGroupPlus : LinearLayout {
             }
         }
 
-
         override fun onChildViewAdded(parent: View, child: View) {
             traverseTree(child)
             if (parent === this@RadioGroupPlus && child is RadioButton) {
@@ -241,7 +222,6 @@ class RadioGroupPlus : LinearLayout {
             }
             mOnHierarchyChangeListener?.onChildViewAdded(parent, child)
         }
-
 
         override fun onChildViewRemoved(parent: View, child: View) {
             if (parent === this@RadioGroupPlus && child is RadioButton) {

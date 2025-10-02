@@ -1,6 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.activity
 
-
 import android.graphics.ImageFormat
 import android.hardware.usb.UsbDevice
 import android.os.Handler
@@ -44,7 +43,6 @@ import kotlinx.coroutines.*
 import java.io.IOException
 import java.io.InputStream
 
-
 abstract class BaseIRPlusFragment :
     BaseFragment(),
     OnUSBConnectListener,
@@ -52,11 +50,9 @@ abstract class BaseIRPlusFragment :
     IIRFrameCallback {
     val INIT_ALIGN_DATA = floatArrayOf(1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f)
 
-
     protected var dualView: DualViewWithExternalCameraCommonApi? = null
 
     protected var pseudoColorModeDual = CommonParams.PseudoColorUsbDualType.IRONBOW_MODE
-
 
     private var hasStartPreview = false
     protected var ircmd: IRCMD? = null
@@ -303,8 +299,6 @@ abstract class BaseIRPlusFragment :
 
         USBMonitorManager.getInstance().registerUSB()
 
-
-
         getTemperatureDualView().setUseIRISP(isUseIRISP)
         if (mCurrentFusionType == DualCameraParams.FusionType.IROnlyNoFusion) {
             getTemperatureDualView().setImageSize(Const.IR_HEIGHT, Const.IR_WIDTH, null)
@@ -337,7 +331,6 @@ abstract class BaseIRPlusFragment :
                         TAG,
                         "USBMonitorManager HANDLE_CONNECT",
                     )
-
 
                     lifecycleScope.launch(Dispatchers.Main) {
                         startVLCamera(vlPid, vlFps, vlCameraWidth, vlCameraHeight)
@@ -394,12 +387,9 @@ abstract class BaseIRPlusFragment :
         getTemperatureDualView().setDualUVCCamera(dualView!!.getDualUVCCamera())
         initPseudocolor()
 
-
-
         dualView?.setHandler(mIrHandler)
         isrun = true
     }
-
 
     open fun startVLCamera(
         pid: Int,
@@ -463,7 +453,6 @@ abstract class BaseIRPlusFragment :
             "ConnectCallback-startVLCamera-onIRCMDCreate",
         )
 
-
     }
 
     override fun onStart() {
@@ -491,7 +480,6 @@ abstract class BaseIRPlusFragment :
                 val emsChar = (config.radiation * 128).toInt()
                 XLog.w("TPD_PROP DISTANCE:$disChar, EMS:$emsChar}")
                 delay(timeMillis)
-
 
                 ircmd?.setPropTPDParams(
                     CommonParams.PropTPDParams.TPD_PROP_EMS,

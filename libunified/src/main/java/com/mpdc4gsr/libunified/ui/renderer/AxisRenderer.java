@@ -13,9 +13,7 @@ import com.mpdc4gsr.libunified.ui.utils.ViewPortHandler;
 
 public abstract class AxisRenderer extends Renderer {
 
-
     protected AxisBase mAxis;
-
 
     protected Transformer mTrans;
 
@@ -71,7 +69,6 @@ public abstract class AxisRenderer extends Renderer {
 
     public void computeAxis(float min, float max, boolean inverted) {
 
-
         if (mViewPortHandler != null && mViewPortHandler.contentWidth() > 10 && !mViewPortHandler.isFullyZoomedOutY()) {
 
             MPPointD p1 = mTrans.getValuesByTouchPoint(mViewPortHandler.contentLeft(), mViewPortHandler.contentTop());
@@ -112,14 +109,12 @@ public abstract class AxisRenderer extends Renderer {
         double rawInterval = range / labelCount;
         double interval = Utils.roundToNextSignificant(rawInterval);
 
-
         if (mAxis.isGranularityEnabled())
             interval = interval < mAxis.getGranularity() ? mAxis.getGranularity() : interval;
 
         double intervalMagnitude = Utils.roundToNextSignificant(Math.pow(10, (int) Math.log10(interval)));
         int intervalSigDigit = (int) (interval / intervalMagnitude);
         if (intervalSigDigit > 5) {
-
 
             interval = Math.floor(10 * intervalMagnitude);
         }

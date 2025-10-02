@@ -24,7 +24,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-
 public enum FileUtils {
     ;
 
@@ -118,7 +117,6 @@ public enum FileUtils {
             e.printStackTrace();
         }
     }
-
 
     public static CommonParams.Y16ModePreviewSrcType getY16SrcTypeByDataFlowMode(CommonParams.DataFlowMode dataFlowMode) {
         switch (dataFlowMode) {
@@ -272,7 +270,6 @@ public enum FileUtils {
         return isFileExists(context, file.getAbsolutePath());
     }
 
-
     public static boolean isFileExists(Context context, final String filePath) {
         File file = new File(filePath);
         if (null == file) {
@@ -302,7 +299,6 @@ public enum FileUtils {
         }
         return false;
     }
-
 
     private static byte[] toByteArray(short[] src) {
         int count = src.length;
@@ -336,7 +332,6 @@ public enum FileUtils {
             e.printStackTrace();
         }
     }
-
 
     private static void createOrExistsDir(File file) {
         // 
@@ -394,7 +389,6 @@ public enum FileUtils {
         }
     }
 
-
     public static void copyAssetsBigDataToSD(Context context, String srcFileName, String strOutFileName) {
         try {
             File file = new File(strOutFileName);
@@ -424,7 +418,6 @@ public enum FileUtils {
         }
     }
 
-
     public static String getISPConfigByGainStatus(CommonParams.GainStatus gainStatus) {
 //        Log.i(TAG, "INFISENSE_SAVE_DIR = " + MyApplication.getInstance().INFISENSE_SAVE_DIR);
         if (CommonParams.GainStatus.HIGH_GAIN == gainStatus) {
@@ -434,7 +427,6 @@ public enum FileUtils {
         }
     }
 
-
     public static String getISPConfigWithEncryptHexByGainStatus(CommonParams.GainStatus gainStatus) {
         if (CommonParams.GainStatus.HIGH_GAIN == gainStatus) {
             return INFISENSE_SAVE_DIR() + File.separator + "isp_H_encrypt_hex.json";
@@ -442,7 +434,6 @@ public enum FileUtils {
             return INFISENSE_SAVE_DIR() + File.separator + "isp_L_encrypt_hex.json";
         }
     }
-
 
     static String INFISENSE_SAVE_DIR() {
         return Utils.getApp().getExternalFilesDir(Environment.DIRECTORY_PICTURES).getAbsolutePath();
@@ -452,7 +443,6 @@ public enum FileUtils {
         return Utils.getApp().getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath();
     }
 
-
     public static String getISPConfigWithEncryptBase64ByGainStatus(CommonParams.GainStatus gainStatus) {
         if (CommonParams.GainStatus.HIGH_GAIN == gainStatus) {
             return INFISENSE_SAVE_DIR() + File.separator + "isp_H_encrypt_base64.json";
@@ -460,7 +450,6 @@ public enum FileUtils {
             return INFISENSE_SAVE_DIR() + File.separator + "isp_L_encrypt_base64.json";
         }
     }
-
 
     public static String getVersionName(Context context) {
         PackageManager manager = context.getPackageManager();
@@ -473,7 +462,6 @@ public enum FileUtils {
         }
         return name;
     }
-
 
     public static String getMD5Key(String string) {
         if (TextUtils.isEmpty(string)) {
@@ -498,14 +486,12 @@ public enum FileUtils {
         return "";
     }
 
-
     public static void makeDirectory(String filePath) {
         File file = new File(filePath);
         if (!file.exists()) {
             file.mkdirs();
         }
     }
-
 
     public static String getSaveFilePath(Context context) {
         boolean useExternalStorage = false;
@@ -529,7 +515,6 @@ public enum FileUtils {
         return directoryPath;
     }
 
-
     private static File makeFile(String filePath, String fileName) throws IOException {
         makeDirectory(filePath);
 
@@ -540,7 +525,6 @@ public enum FileUtils {
 
         return file;
     }
-
 
     public static int writeTxtToFile(byte[] bytes, String filePath, String fileName) {
         int result = -1;
@@ -593,7 +577,6 @@ public enum FileUtils {
         }
     }
 
-
     public static String getStringFromFile(String path) {
         StringBuffer txtContent = new StringBuffer();
         byte[] b = new byte[2048];
@@ -620,7 +603,6 @@ public enum FileUtils {
         }
         return txtContent.toString();
     }
-
 
     public static void float2Byte(float num, byte[] numbyte) {
         int fbit = Float.floatToIntBits(num);

@@ -8,7 +8,6 @@ import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicLong
 
-
 class ReliableMessageService(private val context: Context? = null) {
     companion object {
         private const val TAG = "ReliableMessage"
@@ -196,8 +195,6 @@ class ReliableMessageService(private val context: Context? = null) {
 
             if (requiresAck && messageId.isNotEmpty()) {
                 val ack = createAcknowledgment(messageId, senderId, response != null)
-
-
 
                 return ack
             }

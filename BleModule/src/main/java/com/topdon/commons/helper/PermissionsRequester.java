@@ -17,7 +17,6 @@ import androidx.fragment.app.Fragment;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class PermissionsRequester {
     private static final int PERMISSION_REQUEST_CODE = 10;
     private static final int REQUEST_CODE_WRITE_SETTINGS = 11;
@@ -41,7 +40,6 @@ public class PermissionsRequester {
     public void setCallback(Callback callback) {
         this.callback = callback;
     }
-
 
     public void checkAndRequest(@NonNull List<String> permissions) {
         if (checking) {

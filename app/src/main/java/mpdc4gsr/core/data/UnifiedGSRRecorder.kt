@@ -82,7 +82,6 @@ class UnifiedGSRRecorder(
     private var shimmerManager: ShimmerBluetoothManagerAndroid? = null
     private var connectedShimmer: Shimmer? = null
 
-
     private var shimmerDeviceManager: ShimmerDeviceManager? = null
 
     private val discoveredDevices = mutableListOf<DeviceInfo>()
@@ -100,11 +99,9 @@ class UnifiedGSRRecorder(
     private val recordedSamples = AtomicLong(0)
     private var recordingStartTime: Long = 0
 
-
     private val droppedSamples = AtomicLong(0)
     private var lastExpectedSampleTime: Long = 0
     private val sampleInterval = (1000.0 / samplingRateHz).toLong()
-
 
     private val syncMarkers = mutableListOf<SyncMarker>()
 
@@ -119,7 +116,6 @@ class UnifiedGSRRecorder(
 
     private val _deviceStatus = MutableStateFlow("Disconnected")
     val deviceStatus: StateFlow<String> = _deviceStatus.asStateFlow()
-
 
     private val _statusFlow = MutableSharedFlow<RecordingStatus>(replay = 1)
     private val _errorFlow = MutableSharedFlow<SensorError>(replay = 1)
@@ -148,7 +144,6 @@ class UnifiedGSRRecorder(
             }
 
             shimmerManager = ShimmerBluetoothManagerAndroid(context, mainHandler)
-
 
             shimmerDeviceManager = ShimmerDeviceManager(context, lifecycleOwner)
             val deviceManagerInitialized = shimmerDeviceManager?.initialize() ?: false
@@ -181,7 +176,6 @@ class UnifiedGSRRecorder(
         try {
             _deviceStatus.value = "Discovering..."
             discoveredDevices.clear()
-
 
             val deviceManager = shimmerDeviceManager
             if (deviceManager != null) {
@@ -278,7 +272,6 @@ class UnifiedGSRRecorder(
 
         try {
 
-
             Log.i(
                 TAG,
                 "GSR sensor configured: 128Hz sampling, autorange, 12-bit ADC (simulation mode)"
@@ -289,7 +282,6 @@ class UnifiedGSRRecorder(
             throw e
         }
     }
-
 
     override suspend fun startRecording(
         sessionDirectory: String,
@@ -319,7 +311,6 @@ class UnifiedGSRRecorder(
                     "gsr_data_${sessionMetadata.sessionId}.csv"
                 )
                 csvWriter = FileWriter(csvFile)
-
 
                 csvWriter?.write(sessionMetadata.createTimingHeader())
                 csvWriter?.write("# GSR Recording Session with Synchronized Timing\n")
@@ -483,9 +474,7 @@ class UnifiedGSRRecorder(
                     processGSRData(shimmer, objectCluster)
                 }
 
-
                 updateConnectionQuality()
-
 
                 delay(100)
             } catch (e: Exception) {
@@ -548,7 +537,6 @@ class UnifiedGSRRecorder(
                 val iso = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault()).format(
                     Date(timestampNs / 1_000_000)
                 )
-
 
                 csvWriter?.write("# SYNC_MARKER: $markerType at $timestampNs ($iso)")
                 if (metadata.isNotEmpty()) {
@@ -690,7 +678,6 @@ class UnifiedGSRRecorder(
 
             disconnectDevice()
 
-
             shimmerDeviceManager?.release()
             shimmerDeviceManager = null
 
@@ -705,7 +692,6 @@ class UnifiedGSRRecorder(
         }
     }
 
-
     private suspend fun processGSRData(shimmer: Shimmer, objectCluster: ObjectCluster) {
         if (!_isRecording.get()) return
 
@@ -715,7 +701,6 @@ class UnifiedGSRRecorder(
             val iso = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault()).format(
                 Date(wallClockMs)
             )
-
 
             if (lastExpectedSampleTime > 0) {
                 val expectedInterval = sampleInterval
@@ -734,20 +719,16 @@ class UnifiedGSRRecorder(
             }
             lastExpectedSampleTime = wallClockMs
 
-
             val relativeMs = sessionMetadata?.let { metadata ->
                 (monotonicNs - metadata.sessionStartMonotonicNs) / 1_000_000L
             } ?: 0L
-
 
             val time = System.currentTimeMillis()
             val baseGSR = 15.0
             val variation = Math.sin(time / 5000.0) * 3.0 + Math.random() * 2.0 - 1.0
             val gsrMicrosiemens = baseGSR + variation
 
-
             val gsrRaw = (gsrMicrosiemens * 4095.0 / 100.0).coerceIn(0.0, 4095.0)
-
 
             val ppgRaw = (2048 + Math.sin(time / 1000.0) * 500 + Math.random() * 200 - 100)
 
@@ -769,7 +750,6 @@ class UnifiedGSRRecorder(
             )
 
             gsrDataFlow.tryEmit(gsrSample)
-
 
             if (sessionMetadata != null) {
 

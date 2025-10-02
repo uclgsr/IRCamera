@@ -23,7 +23,6 @@ import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import com.mpdc4gsr.module.user.model.QuestionData
 import com.mpdc4gsr.module.user.viewmodel.QuestionViewModel
 
-
 class QuestionComposeActivity : BaseComposeActivity<QuestionViewModel>() {
 
     override fun createViewModel(): QuestionViewModel {

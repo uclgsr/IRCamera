@@ -66,7 +66,6 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicReference
 import com.mpdc4gsr.libunified.R as LibcoreR
 
-
 @SuppressLint("MissingPermission")
 class VideoRecordFFmpeg(
     private val cameraView: View,
@@ -156,7 +155,6 @@ class VideoRecordFFmpeg(
     private val bufferRef: AtomicReference<ByteBuffer> =
         AtomicReference(ByteBuffer.allocate(pixArray.size))
 
-
     private fun readByteBuffer(): ByteBuffer? {
         return bufferRef.get()?.duplicate()
     }
@@ -169,7 +167,6 @@ class VideoRecordFFmpeg(
         bitmap.recycle()
         bufferRef.set(newPixels)
     }
-
 
     private fun getVideoCodec(): Int {
         return if (Build.BRAND == "motorola" && Build.MODEL == "XT2201-2") {
@@ -246,8 +243,6 @@ class VideoRecordFFmpeg(
             Log.i(TAG, "Thermal video recorder configured: ${customFrameRate}fps, ${customBitrate}bps")
 
             recorder!!.sampleRate = SAMPLE_AUDIO_RETE_INHZ
-
-
 
             recorder!!.timestamp = 0L
             recorder!!.start()
@@ -365,7 +360,6 @@ class VideoRecordFFmpeg(
                                         AUDIO_CHANNELS, tmpAudioData,
                                     )
                                 }
-
 
                             } catch (e: Exception) {
                                 Log.e("[ph][ph][ph][ph]", "Caught an exception: " + e.message)
@@ -545,7 +539,6 @@ class VideoRecordFFmpeg(
         } catch (_: Exception) {
         }
     }
-
 
     private fun createBitmapFromView(): Bitmap {
         var cameraViewBitmap: Bitmap

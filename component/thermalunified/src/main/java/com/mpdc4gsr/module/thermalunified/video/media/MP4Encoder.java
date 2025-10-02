@@ -26,7 +26,6 @@ public class MP4Encoder extends Encoder {
     private static final int TIMEOUT_US = 10000;
     private int addedFrameCount;
 
-
     private MediaCodec audioCodec;
     private int audioTrackIndex;
     private BufferInfo bufferInfo;
@@ -132,7 +131,6 @@ public class MP4Encoder extends Encoder {
             int audioInputBufferIndex = audioCodec.dequeueInputBuffer(TIMEOUT_US);
             if (audioInputBufferIndex >= -1) {
 
-
             }
             addedFrameCount++;
             while (addedFrameCount > encodedFrameCount) {
@@ -206,7 +204,6 @@ public class MP4Encoder extends Encoder {
             Log.i(TAG, "encoderOutputBuffer " + encoderStatus + " was null");
         }
     }
-
 
     private int getColorFormat() {
         if ("GOOGLE".equalsIgnoreCase(Build.BRAND) && "PIXEL 4".equalsIgnoreCase(Build.MODEL)) {

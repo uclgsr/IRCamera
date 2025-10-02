@@ -24,10 +24,6 @@ import mpdc4gsr.core.ui.model.SensorState
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import kotlin.math.sin
 
-/**
- * GSR (Galvanic Skin Response) Sensor Card Component
- * Displays GSR sensor status, real-time data, and controls
- */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GSRSensorCard(
@@ -203,9 +199,6 @@ fun GSRSensorCard(
     }
 }
 
-/**
- * GSR data visualization component with real-time waveform
- */
 @Composable
 private fun GSRDataVisualization(
     gsrValue: Float,
@@ -282,9 +275,6 @@ private fun GSRDataVisualization(
     }
 }
 
-/**
- * Metric display item
- */
 @Composable
 private fun MetricItem(
     label: String,
@@ -310,9 +300,6 @@ private fun MetricItem(
     }
 }
 
-/**
- * Get status color based on sensor state
- */
 @Composable
 private fun getStatusColor(state: SensorState): Color {
     return when (state) {

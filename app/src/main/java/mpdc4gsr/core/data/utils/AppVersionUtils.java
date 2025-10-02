@@ -181,7 +181,6 @@ public class AppVersionUtils {
     private void startDownload(String url) {
         completeReceiver = new DownloadCompleteReceiver();
 
-
         IntentFilter intentFilter = new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
         if (Build.VERSION.SDK_INT < 33) {
             mContext.registerReceiver(completeReceiver, intentFilter);

@@ -143,9 +143,6 @@ object ChartTools {
 
         val xLen = chart.xChartMax - chart.xChartMin
 
-
-
-
         chart.xAxis.setLabelCount(getLabCount(xLen.toInt()), xLen <= 3)
     }
 
@@ -154,7 +151,6 @@ object ChartTools {
             count <= 2 -> 1
             count in 3..4 -> 2
             count in 5..7 -> 3
-
 
             count >= 8 -> 4
             else -> count

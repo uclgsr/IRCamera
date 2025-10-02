@@ -7,7 +7,6 @@ import android.view.WindowManager
 import androidx.preference.PreferenceManager
 import com.mpdc4gsr.libunified.app.utils.NetWorkUtils
 
-
 abstract class BaseWifiActivity : BaseActivity() {
     protected val permissionList by lazy {
         if (this.applicationInfo.targetSdkVersion >= 34) {

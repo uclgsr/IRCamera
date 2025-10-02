@@ -2,7 +2,6 @@ package com.mpdc4gsr.libunified.app.common
 
 import android.text.TextUtils
 
-
 class UserInfoManager {
     companion object {
         @Volatile

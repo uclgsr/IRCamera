@@ -26,9 +26,7 @@ import org.opencv.imgproc.Imgproc;
 import java.nio.ByteBuffer;
 import java.util.LinkedHashMap;
 
-
 public class ImageThreadTC extends Thread {
-
 
     public static final int TYPE_AI_C = -1;
     public static final int TYPE_AI_D = 0;
@@ -64,7 +62,6 @@ public class ImageThreadTC extends Thread {
     private int typeAi = TYPE_AI_C;
     private IRImageHelp irImageHelp;
     private volatile boolean isOpenAmplify = false;
-
 
     public ImageThreadTC(Context context, int imageWidth, int imageHeight) {
         Log.i(TAG, "ImageThread create->imageWidth = " + imageWidth + " imageHeight = " + imageHeight);
@@ -288,7 +285,6 @@ public class ImageThreadTC extends Thread {
         baseBitmap.copyPixelsFromBuffer(ByteBuffer.wrap(imageDst));
         return baseBitmap;
     }
-
 
     private ColorRGB getColorRGBByMap(LinkedHashMap<Integer, ColorRGB> map, Integer key) {
         return map.get(key);

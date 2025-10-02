@@ -9,7 +9,6 @@ import com.topdon.ble.callback.*;
 
 import java.util.UUID;
 
-
 public class RequestBuilderFactory {
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
@@ -24,14 +23,12 @@ public class RequestBuilderFactory {
         return builder;
     }
 
-
     public RequestBuilder<ReadCharacteristicCallback> getReadCharacteristicBuilder(UUID service, UUID characteristic) {
         RequestBuilder<ReadCharacteristicCallback> builder = new RequestBuilder<>(RequestType.READ_CHARACTERISTIC);
         builder.service = service;
         builder.characteristic = characteristic;
         return builder;
     }
-
 
     public RequestBuilder<NotificationChangeCallback> getSetNotificationBuilder(UUID service, UUID characteristic,
                                                                                 boolean enable) {
@@ -42,7 +39,6 @@ public class RequestBuilderFactory {
         return builder;
     }
 
-
     public RequestBuilder<NotificationChangeCallback> getSetIndicationBuilder(UUID service, UUID characteristic,
                                                                               boolean enable) {
         RequestBuilder<NotificationChangeCallback> builder = new RequestBuilder<>(RequestType.SET_INDICATION);
@@ -52,7 +48,6 @@ public class RequestBuilderFactory {
         return builder;
     }
 
-
     public RequestBuilder<NotificationChangeCallback> getReadDescriptorBuilder(UUID service, UUID characteristic,
                                                                                UUID descriptor) {
         RequestBuilder<NotificationChangeCallback> builder = new RequestBuilder<>(RequestType.READ_DESCRIPTOR);
@@ -61,7 +56,6 @@ public class RequestBuilderFactory {
         builder.descriptor = descriptor;
         return builder;
     }
-
 
     public WriteCharacteristicBuilder getWriteCharacteristicBuilder(UUID service, UUID characteristic,
                                                                     byte[] value) {
@@ -73,17 +67,14 @@ public class RequestBuilderFactory {
         return builder;
     }
 
-
     public RequestBuilder<ReadRssiCallback> getReadRssiBuilder() {
         return new RequestBuilder<>(RequestType.READ_RSSI);
     }
-
 
     @RequiresApi(Build.VERSION_CODES.O)
     public RequestBuilder<PhyChangeCallback> getReadPhyBuilder() {
         return new RequestBuilder<>(RequestType.READ_PHY);
     }
-
 
     @RequiresApi(Build.VERSION_CODES.O)
     public RequestBuilder<PhyChangeCallback> getSetPreferredPhyBuilder(int txPhy, int rxPhy, int phyOptions) {

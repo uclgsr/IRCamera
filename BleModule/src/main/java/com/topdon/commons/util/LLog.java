@@ -4,7 +4,6 @@ import android.util.Log;
 
 import com.elvishew.xlog.XLog;
 
-
 public class LLog {
 
     public final static int MAX_LENGTH = 2000;
@@ -37,7 +36,6 @@ public class LLog {
 //            Log.e(tag, value);
 //        }
     }
-
 
     public static void LogMaxPrint(String tag, String msg) {
         if (msg.length() > MAX_LENGTH) {

@@ -3,7 +3,6 @@ package com.mpdc4gsr.libunified.app.lms.feedback.activity;
 import android.app.Activity;
 import android.os.Bundle;
 
-
 public class FeedbackActivity extends Activity {
     public static final String FEEDBACKBEAN = "feedbackBean";
 

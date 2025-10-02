@@ -296,7 +296,6 @@ class RecordingService : LifecycleService() {
                     val sensorsSuccess = recordingController.initializeSensors()
                     val networkSuccess = initializeNetworkClient()
 
-
                     isInitialized = sensorsSuccess
                     isNetworkInitialized = networkSuccess
 
@@ -627,7 +626,6 @@ class RecordingService : LifecycleService() {
             try {
                 updateNotification("Stopping recording session...")
                 Log.i(TAG, "Stopping recording session")
-
 
                 val success = recordingController.stopSession()
 

@@ -25,7 +25,6 @@ import com.mpdc4gsr.module.thermalunified.activity.IRThermalPlusComposeActivity
 import com.mpdc4gsr.module.thermalunified.activity.ThermalIrNightComposeActivity
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRThermalFragmentViewModel
 
-
 class IRThermalComposeFragment : BaseComposeFragment<IRThermalFragmentViewModel>() {
 
     override fun createViewModel(): IRThermalFragmentViewModel {

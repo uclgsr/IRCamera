@@ -94,4 +94,6 @@
     <string name="func_temper_ruler">Temperature Ruler</string>
     <string name="pdf_project_item">Project Item</string>
     <string name="report_remark">Report Remark</string>
+    <string name="error_no_report_to_share">No report loaded to share</string>
+    <string name="error_no_report_to_delete">No report loaded to delete</string>
 </resources>

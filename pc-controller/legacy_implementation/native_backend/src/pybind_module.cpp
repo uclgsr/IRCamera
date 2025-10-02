@@ -3,7 +3,6 @@
 #include <pybind11/numpy.h>
 #include <pybind11/functional.h>
 
-
 #include <fcntl.h>
 #include <unistd.h>
 #include <vector>

@@ -7,11 +7,9 @@ import com.mpdc4gsr.libunified.ui.listener.SingleClickListener
 import com.mpdc4gsr.libunified.ui.widget.CountDownView
 import com.mpdc4gsr.module.thermalunified.R
 
-
 class CameraItemAdapter(
     data: MutableList<CameraItemBean>? = null
 ) : BaseQuickAdapter<CameraItemBean, BaseViewHolder>(R.layout.item_camera, data) {
-
 
     var listener: ((index: Int, item: CameraItemBean) -> Unit)? = null
 

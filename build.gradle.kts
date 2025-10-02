@@ -15,11 +15,6 @@ buildscript {
         classpath(libs.ksp.gradle.plugin)
         classpath(libs.huawei.agconnect)
     }
-    configurations.all {
-        resolutionStrategy {
-            force("org.yaml:snakeyaml:1.33")
-        }
-    }
 }
 
 allprojects {
@@ -29,12 +24,9 @@ allprojects {
         }
     }
 }
-
 tasks.register<Delete>("clean") {
     delete(rootProject.layout.buildDirectory.get().asFile)
 }
-
-// Enhanced clean task that also cleans all subprojects  
 tasks.register("cleanAll") {
     group = "build"
     description = "Clean all modules including build cache"
@@ -52,7 +44,6 @@ tasks.register("cleanAll") {
         println("All modules cleaned successfully (without deleting .gradle cache)")
     }
 }
-
 tasks.register("build") {
     group = "build"
     description = "Builds all modules using only release variants (starts with clean)"

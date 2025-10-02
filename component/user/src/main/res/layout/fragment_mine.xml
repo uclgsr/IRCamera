@@ -84,7 +84,6 @@
                 app:layout_constraintTop_toTopOf="@id/setting_user_img_night"
                 tools:visibility="visible" />
 
-
             <ImageView
                 android:id="@+id/iv_winter"
                 android:layout_width="0dp"
@@ -226,7 +225,6 @@
                     app:setting_line_night="false"
                     app:setting_more_night="true"
                     app:setting_text_night="@string/setting_unit" />
-
 
                 <com.mpdc4gsr.libunified.ui.SettingNightView
                     android:id="@+id/setting_item_clear"

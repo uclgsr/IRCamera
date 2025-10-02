@@ -29,7 +29,6 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 
-
 @Composable
 fun VideoPlayerCompose(
     url: String?,
@@ -384,7 +383,6 @@ private fun VideoBottomControlsCompose(
     }
 }
 
-
 @Composable
 fun ThermalImageLoaderCompose(
     url: String?,
@@ -408,7 +406,6 @@ fun ThermalImageLoaderCompose(
         error = painterResource(android.R.drawable.ic_menu_close_clear_cancel)
     )
 }
-
 
 @Composable
 fun MediaUtilsCompose(

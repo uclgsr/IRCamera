@@ -18,7 +18,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-
 @Composable
 fun MonitorControlPanel(
     onLogQuery: () -> Unit = {},
@@ -90,7 +89,6 @@ fun MonitorControlPanel(
         }
     }
 }
-
 
 @Composable
 fun ChartInfoPanel(
@@ -182,7 +180,6 @@ private fun ChartInfoItem(
     }
 }
 
-
 @Composable
 fun ReportInfoSection(
     reportName: String,
@@ -257,7 +254,6 @@ private fun ReportInfoRow(
         )
     }
 }
-
 
 @Composable
 fun TargetModeItem(
@@ -345,7 +341,6 @@ fun TargetModeItem(
     }
 }
 
-
 @Composable
 fun ConfigurationItem(
     title: String,
@@ -420,7 +415,6 @@ fun ConfigurationItem(
     }
 }
 
-
 @Composable
 fun EmptyStateComponent(
     title: String = "No Data Available",
@@ -472,7 +466,6 @@ fun EmptyStateComponent(
         }
     }
 }
-
 
 @Composable
 fun LayoutComponentsPreview() {

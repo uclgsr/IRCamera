@@ -2,7 +2,6 @@ package com.topdon.ble.util;
 
 import android.util.Log;
 
-
 public class DefaultLogger implements Logger {
     private final String tag;
     private boolean isEnabled;

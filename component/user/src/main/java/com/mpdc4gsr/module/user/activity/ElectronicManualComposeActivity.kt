@@ -23,7 +23,6 @@ import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import com.mpdc4gsr.libunified.app.utils.Constants
 import com.mpdc4gsr.module.user.viewmodel.ElectronicManualViewModel
 
-
 class ElectronicManualComposeActivity : BaseComposeActivity<ElectronicManualViewModel>() {
 
     override fun createViewModel(): ElectronicManualViewModel {

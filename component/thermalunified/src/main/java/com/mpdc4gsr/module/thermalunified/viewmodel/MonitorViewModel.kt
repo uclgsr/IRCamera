@@ -3,7 +3,6 @@ package com.mpdc4gsr.module.thermalunified.viewmodel
 import androidx.lifecycle.MutableLiveData
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 
-
 class MonitorViewModel : BaseViewModel() {
 
     companion object {

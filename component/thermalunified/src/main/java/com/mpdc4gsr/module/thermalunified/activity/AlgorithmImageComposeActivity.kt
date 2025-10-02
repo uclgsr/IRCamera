@@ -23,7 +23,6 @@ import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-
 class AlgorithmImageComposeActivity : BaseComposeActivity<ThermalViewModel>() {
 
     override fun createViewModel(): ThermalViewModel {

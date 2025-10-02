@@ -3,19 +3,14 @@ plugins {
     kotlin("android")
     alias(libs.plugins.kotlin.compose)
 }
-
 android {
     namespace = "com.mpdc4gsr.gsr"
     compileSdk = 36
-
     defaultConfig {
         minSdk = libs.versions.minSdk.get().toInt()
-
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
-
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -25,19 +20,16 @@ android {
             )
         }
     }
-
     androidComponents {
         beforeVariants { variant ->
             variant.enable = variant.buildType == "release" || variant.buildType == "debug"
         }
     }
-
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
         isCoreLibraryDesugaringEnabled = true
     }
-
     kotlin {
         compilerOptions {
             jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
@@ -52,33 +44,23 @@ android {
             )
         }
     }
-
     buildFeatures {
-//        dataBinding = true
-//        viewBinding = true
         compose = true
     }
-
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
     buildToolsVersion = "35.0.0"
 }
-
 dependencies {
     coreLibraryDesugaring(libs.desugar.jdk.libs)
-
-    // Compose dependencies for GSR recording module
     implementation(platform(libs.compose.bom))
     implementation(libs.compose.ui)
     implementation(libs.compose.ui.tooling.preview)
     implementation(libs.compose.material3)
     implementation(libs.compose.activity)
-
-    // Debug Compose dependencies
     debugImplementation(libs.compose.ui.tooling)
     debugImplementation(libs.compose.ui.test.manifest)
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)

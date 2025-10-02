@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import kotlinx.coroutines.flow.*
 
-
 class ThermalRGBPreviewViewModel : BaseViewModel() {
 
     // StateFlow for RGB preview state management

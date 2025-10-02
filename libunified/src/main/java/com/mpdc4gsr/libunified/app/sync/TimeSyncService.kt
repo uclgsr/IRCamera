@@ -9,7 +9,6 @@ import java.net.InetSocketAddress
 import java.net.Socket
 import kotlin.math.abs
 
-
 class TimeSyncService {
     companion object {
         private const val TAG = "TimeSyncService"
@@ -190,7 +189,6 @@ class TimeSyncService {
 
                 val t2 = response.getLong("server_receive_time")
                 val t3 = response.getLong("server_send_time")
-
 
                 val roundTripDelay = (t4 - t1) - (t3 - t2)
 

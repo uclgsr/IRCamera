@@ -33,7 +33,6 @@ class IRGalleryEditViewModel : BaseViewModel() {
         }
     }
 
-
     fun getTailData(bytes: ByteArray) {
     }
 

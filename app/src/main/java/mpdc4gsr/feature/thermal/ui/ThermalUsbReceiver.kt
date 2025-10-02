@@ -11,7 +11,6 @@ import com.mpdc4gsr.libunified.app.bean.event.device.DevicePermissionEvent
 import com.mpdc4gsr.libunified.app.config.DeviceConfig.isTcTsDevice
 import org.greenrobot.eventbus.EventBus
 
-
 class ThermalUsbReceiver : BroadcastReceiver() {
 
     companion object {
@@ -98,7 +97,6 @@ class ThermalUsbReceiver : BroadcastReceiver() {
 
             if (device.isTcTsDevice()) {
                 Log.w(TAG, "Topdon thermal camera disconnected: ${device.productName}")
-
 
                 EventBus.getDefault().post(DeviceConnectEvent(false, device))
             }
