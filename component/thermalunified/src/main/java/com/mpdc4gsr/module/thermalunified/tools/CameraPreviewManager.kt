@@ -6,10 +6,10 @@ import com.elvishew.xlog.XLog
 
 class CameraPreviewManager private constructor() {
 
-    private val TAG = "ThermalCameraPreviewManager"
     private val delegate = com.mpdc4gsr.libunified.ui.camera.CameraPreviewManager.getInstance()
 
     companion object {
+        private const val TAG = "ThermalCameraPreviewManager"
         @Volatile
         private var INSTANCE: CameraPreviewManager? = null
 
