@@ -1,6 +1,7 @@
 package mpdc4gsr.feature.testing.ui
 
 import android.util.Log
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -13,21 +14,24 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewModelScope
-import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
-import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
+import androidx.lifecycle.lifecycleScope
+import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import mpdc4gsr.core.data.ShimmerDeviceManager
 import mpdc4gsr.core.data.UnifiedGSRRecorder
+import mpdc4gsr.core.ui.BaseComposeActivity
 import mpdc4gsr.core.ui.PermissionController
+import mpdc4gsr.feature.testing.presentation.BLEIntegrationTestViewModel
 import kotlin.io.path.createTempDirectory
 
 /**
  * Compose version of BLE Integration Test Activity
+ * Tests BLE functionality in a modern Compose UI
  * Migrated to BaseComposeActivity for consistency
  */
-class BLEIntegrationTestComposeActivity : BaseComposeActivity<BLETestViewModel>() {
+class BLEIntegrationTestComposeActivity : BaseComposeActivity<BLEIntegrationTestViewModel>() {
+
 
     companion object {
         private const val TAG = "BLEIntegrationTestCompose"
@@ -35,19 +39,26 @@ class BLEIntegrationTestComposeActivity : BaseComposeActivity<BLETestViewModel>(
 
     override fun createViewModel(): BLETestViewModel = BLETestViewModel()
 
-    @Composable
-    override fun Content(viewModel: BLETestViewModel) {
-        val testResults by viewModel.testResults.collectAsState()
-        val isTestRunning by viewModel.isTestRunning.collectAsState()
-        val logMessages by viewModel.logMessages.collectAsState()
+    override fun createViewModel(): BLEIntegrationTestViewModel {
+        return viewModels<BLEIntegrationTestViewModel>().value
+    }
 
-        BLEIntegrationTestScreen(
-            testResults = testResults,
-            isTestRunning = isTestRunning,
-            logMessages = logMessages,
-            onRunTest = { testType -> viewModel.runTest(testType, this) },
-            onClearLogs = { viewModel.clearLogs() }
-        )
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        // Initialize components
+        permissionController = PermissionController(this)
+        initializeRecorder()
+    }
+
+    @Composable
+    override fun Content(viewModel: BLEIntegrationTestViewModel) {
+        LibUnifiedTheme {
+            BLEIntegrationTestScreen(
+                onRunTest = { testType -> runTest(testType) },
+                onClearLogs = { /* Clear logs */ }
+            )
+        }
     }
 
     @OptIn(ExperimentalMaterial3Api::class)

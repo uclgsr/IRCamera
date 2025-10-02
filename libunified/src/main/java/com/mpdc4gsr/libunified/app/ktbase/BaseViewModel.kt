@@ -55,7 +55,7 @@ open class BaseViewModel : ViewModel(), LifecycleObserver {
     }
 
     // Error clearing
-    fun clearError() {
+    open fun clearError() {
         _uiState.value = _uiState.value.copy(error = null)
     }
 

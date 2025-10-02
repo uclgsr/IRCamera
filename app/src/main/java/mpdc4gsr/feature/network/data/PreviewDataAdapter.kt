@@ -2,7 +2,7 @@ package mpdc4gsr.feature.network.data
 
 import android.graphics.Bitmap
 import android.util.Log
-import com.mpdc4gsr.module.thermalunified.lite.camera.CameraPreviewManager
+import com.mpdc4gsr.libunified.ui.camera.CameraPreviewManager
 import kotlinx.coroutines.*
 import mpdc4gsr.core.RecordingService
 import mpdc4gsr.feature.gsr.data.GSRSensorRecorder
