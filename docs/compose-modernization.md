@@ -24,28 +24,34 @@ All 54 activities in the app now use Compose:
 - ✅ Thermal camera features (all Compose)
 - ✅ Main features (all Compose)
 
-## Remaining Legacy Code
+## Remaining Legacy Code (Updated)
 
-### Custom View Widgets (12 files)
-These are custom View components that may need evaluation:
+### Migration Progress: 7 of 12 widgets completed
 
-**Camera UI Components:**
-1. `CameraStatusWidget.kt` - Camera status display widget
-2. `CameraSettingsView.kt` - Camera configuration view
-3. `RecordingStatusIndicator.kt` - Recording indicator
-4. `TapToFocusPreviewView.kt` - Custom touch focus overlay
-5. `SensorSelectionDialog.kt` - Sensor picker dialog
+**✅ Completed - Compose Replacements Created:**
+1. `DelPopup.kt` → `DeleteConfirmationDialog.kt` - Material 3 AlertDialog variants
+2. `RecordingStatusIndicator.kt` → `RecordingStatusCompose.kt` - Animated status with timer
+3. `CameraStatusWidget.kt` → `CameraStatusCompose.kt` - Camera preview with AndroidView
+4. `CameraSettingsView.kt` → `CameraSettingsCompose.kt` - Complete camera controls panel
+5. `ComprehensiveSensorStatusWidget.kt` → `ComprehensiveSensorStatusCompose.kt` - Modern sensor dashboard
+6. `SensorSelectionDialog.kt` - Already has `SensorSelectionCompose.kt`
+7. `RecordingControlsWidget.kt` - Already has `RecordingControlsCompose.kt`
 
-**Core UI Components:**
-6. `DelPopup.kt` - Delete confirmation popup
-7. `RecordingControlsWidget.kt` - Recording controls
-8. `ComprehensiveSensorStatusWidget.kt` - Multi-sensor status display
+**⏳ Remaining (5 widgets):**
 
-**Feature-Specific Components:**
+**Camera Integration:**
+8. `TapToFocusPreviewView.kt` - Custom touch focus overlay
+   - **Status**: CameraX integration component
+   - **Recommendation**: Wrap in AndroidView with Compose state management
+   - **Effort**: Low (1-2 hours)
+
+**Feature Components with Mixed Code:**
 9. `ThermalGalleryScreen.kt` - Contains some legacy View code
-10. `ThermalCameraViewModel.kt` - Has View-related code
+10. `ThermalCameraViewModel.kt` - Has View-related code  
 11. `PerformanceBenchmarkComposeActivity.kt` - Mixed View/Compose
 12. `SensorDashboardComposeActivity.kt` - Contains legacy View references
+   - **Status**: Cleanup needed to remove View dependencies
+   - **Effort**: Low-Medium (2-3 hours each)
 
 ### Analysis & Recommendations
 
