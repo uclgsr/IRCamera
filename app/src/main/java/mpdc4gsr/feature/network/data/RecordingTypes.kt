@@ -197,9 +197,6 @@ data class DeviceInfo(
     val batteryLevel: Int
 )
 
-// Legacy compatibility aliases
-typealias ComprehensiveSensorHealthInfo = SensorHealthInfo
-
 // Simple recording status for basic status reporting
 data class SimpleRecordingStatus(
     val isRecording: Boolean,

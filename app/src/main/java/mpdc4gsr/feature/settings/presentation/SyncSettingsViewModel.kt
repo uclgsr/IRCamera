@@ -8,13 +8,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import mpdc4gsr.core.ui.BaseViewModel
+import mpdc4gsr.core.ui.AppBaseViewModel
 
 /**
  * Synchronization Settings ViewModel - MVVM Integration
  * Manages time synchronization and data alignment settings with persistence
  */
-class SyncSettingsViewModel : BaseViewModel() {
+class SyncSettingsViewModel : AppBaseViewModel() {
 
     private lateinit var prefs: SharedPreferences
 

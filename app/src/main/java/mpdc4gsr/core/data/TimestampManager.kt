@@ -142,14 +142,6 @@ object TimestampManager {
         return sessionStartSys + offsetMs
     }
 
-    @Deprecated(
-        "Use convertMonotonicToWallClock for clarity.",
-        ReplaceWith("convertMonotonicToWallClock(monotonicNs)")
-    )
-    fun convertMonotonicToSystemTime(monotonicNs: Long): Long {
-        return convertMonotonicToWallClock(monotonicNs)
-    }
-
     fun getSessionRelativeNanos(currentMonotonicNs: Long = getCurrentTimestampNanos()): Long {
         val sessionStartMono = sessionStartMonotonicNs.get()
         if (sessionStartMono == 0L) {
@@ -160,10 +152,11 @@ object TimestampManager {
     }
 
     inline fun <T> measureExecutionTime(block: () -> T): Pair<T, Long> {
+        var result: T
         val executionTime = measureNanoTime {
-            return block() to 0L
+            result = block()
         }
-        return Pair(block(), executionTime)
+        return Pair(result, executionTime)
     }
 }
 

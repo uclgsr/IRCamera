@@ -1,17 +1,9 @@
 package mpdc4gsr.feature.network.ui
 
-import android.content.ComponentName
-import android.content.Context
-import android.content.Intent
-import android.content.ServiceConnection
-import android.os.Bundle
-import android.os.IBinder
-import android.util.Log
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material.icons.filled.*
@@ -20,396 +12,263 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
-import mpdc4gsr.core.RecordingService
-import mpdc4gsr.core.ui.BaseComposeActivity
-import mpdc4gsr.core.ui.BaseViewModel
-import mpdc4gsr.feature.network.data.CommandConnection
-import mpdc4gsr.feature.network.data.NetworkManager
-
-class NetworkClientTestViewModel : BaseViewModel() {
-    private val _networkConnectionState = MutableStateFlow(CommandConnection.ConnectionState.DISCONNECTED)
-    val networkConnectionState: StateFlow<CommandConnection.ConnectionState> = _networkConnectionState.asStateFlow()
-
-    private val _ipAddress = MutableStateFlow("192.168.1.100")
-    val ipAddress: StateFlow<String> = _ipAddress.asStateFlow()
-
-    private val _port = MutableStateFlow("8080")
-    val port: StateFlow<String> = _port.asStateFlow()
-
-    private val _connectionInfo = MutableStateFlow("")
-    val connectionInfo: StateFlow<String> = _connectionInfo.asStateFlow()
-
-    // Data classes for network testing (shared with NetworkClientTestComposeActivity)
-    enum class TestStatus(val displayName: String) {
-        PASS("Pass"),
-        FAIL("Fail"),
-        WARNING("Warning"),
-        PENDING("Pending")
-    }
-
-    enum class NetworkTestType { CONNECTION, LATENCY, THROUGHPUT, RELIABILITY }
-
-    data class NetworkConfiguration(
-        val serverAddress: String = "192.168.1.100",
-        val port: Int = 8080,
-        val timeoutMs: Long = 5000,
-        val retryAttempts: Int = 3
-    )
-
-    data class NetworkTestCategory(
-        val name: String,
-        val description: String,
-        val type: NetworkTestType,
-        val testCount: Int,
-        val lastResult: TestStatus
-    )
-
-    data class NetworkTestResult(
-        val testName: String,
-        val status: TestStatus,
-        val timestamp: String,
-        val duration: Long,
-        val details: String
-    )
-
-    // UI State for NetworkClientTestComposeActivity
-    data class NetworkTestUiState(
-        val isTestRunning: Boolean = false,
-        val currentTest: String = "",
-        val testProgress: Float = 0f,
-        val networkStatus: String = "Disconnected",
-        val testCategories: List<NetworkTestCategory> = emptyList(),
-        val testResults: List<NetworkTestResult> = emptyList(),
-        val networkConfiguration: NetworkConfiguration = NetworkConfiguration(),
-        val error: String? = null
-    )
-
-    private val _networkTestUiState = MutableStateFlow(NetworkTestUiState())
-    val networkTestUiState: StateFlow<NetworkTestUiState> = _networkTestUiState.asStateFlow()
-
-    fun updateConnectionState(state: CommandConnection.ConnectionState) {
-        _networkConnectionState.value = state
-    }
-
-    fun updateIpAddress(ip: String) {
-        _ipAddress.value = ip
-    }
-
-    fun updatePort(port: String) {
-        _port.value = port
-    }
-
-    fun updateConnectionInfo(info: String) {
-        _connectionInfo.value = info
-    }
-
-    // Methods for NetworkClientTestComposeActivity
-    fun startComprehensiveTest() {
-        _networkTestUiState.value = _networkTestUiState.value.copy(isTestRunning = true)
-    }
-
-    fun stopTest() {
-        _networkTestUiState.value = _networkTestUiState.value.copy(isTestRunning = false)
-    }
-
-    fun refreshNetworkStatus() {
-        _networkTestUiState.value = _networkTestUiState.value.copy(
-            networkStatus = when (_networkConnectionState.value) {
-                CommandConnection.ConnectionState.CONNECTED -> "Connected"
-                CommandConnection.ConnectionState.CONNECTING -> "Connecting"
-                CommandConnection.ConnectionState.ERROR -> "Error"
-                else -> "Disconnected"
-            }
-        )
-    }
-
-    fun runQuickNetworkTest() {
-        // Stub implementation
-    }
-
-    fun runCategoryTest(category: NetworkTestCategory) {
-        // Stub implementation
-    }
-
-    fun viewTestDetails(result: NetworkTestResult) {
-        // Stub implementation
-    }
-
-    fun updateNetworkConfiguration(config: NetworkConfiguration) {
-        _networkTestUiState.value = _networkTestUiState.value.copy(networkConfiguration = config)
-        // Update IP and port from configuration
-        _ipAddress.value = config.serverAddress
-        _port.value = config.port.toString()
-    }
-
-    fun clearNetworkError() {
-        _networkTestUiState.value = _networkTestUiState.value.copy(error = null)
-    }
-}
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
+import mpdc4gsr.core.ui.theme.IRCameraTheme
 
 /**
- * Compose version of NetworkClientTestActivity
- *
- * Test activity for demonstrating bidirectional command/control networking functionality.
- * Shows how Android app can connect as client to PC server via Wi-Fi or Bluetooth.
+ * Modern Compose implementation of Network Client Test
+ * Provides comprehensive network testing with Material 3 UI
  */
 class NetworkClientTestComposeActivity : BaseComposeActivity<NetworkClientTestViewModel>() {
 
-    companion object {
-        private const val TAG = "NetworkClientTestComposeActivity"
-        private const val DEFAULT_PC_IP = "192.168.1.100"
-        private const val DEFAULT_PC_PORT = 8080
-    }
+    override fun createViewModel(): NetworkClientTestViewModel =
+        viewModels<NetworkClientTestViewModel>().value
 
-    private lateinit var testViewModel: NetworkClientTestViewModel
-    private var recordingService: RecordingService? = null
-    private var networkManager: NetworkManager? = null
-    private var isBound = false
-
-    private val serviceConnection = object : ServiceConnection {
-        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-            Log.i(TAG, "Service connected")
-            val binder = service as RecordingService.RecordingServiceBinder
-            recordingService = binder.getService()
-            networkManager = binder.getNetworkManager()
-            isBound = true
-
-            observeConnectionState()
-        }
-
-        override fun onServiceDisconnected(name: ComponentName?) {
-            Log.i(TAG, "Service disconnected")
-            recordingService = null
-            networkManager = null
-            isBound = false
-        }
-    }
-
-    override fun createViewModel(): NetworkClientTestViewModel {
-        testViewModel = NetworkClientTestViewModel()
-        return testViewModel
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        // Bind to RecordingService
-        val serviceIntent = Intent(this, RecordingService::class.java)
-        bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        if (isBound) {
-            unbindService(serviceConnection)
-            isBound = false
-        }
-    }
-
-    private fun observeConnectionState() {
-        networkManager?.let { manager ->
-            lifecycleScope.launch {
-                manager.connectionState.collect { state ->
-                    Log.i(TAG, "Connection state changed: $state")
-                    testViewModel.updateConnectionState(state)
-                    updateConnectionInfo()
-                }
-            }
-        }
-    }
-
-    private fun updateConnectionInfo() {
-        val info = networkManager?.let { manager ->
-            when (val state = testViewModel.networkConnectionState.value) {
-                CommandConnection.ConnectionState.CONNECTED -> {
-                    "Connected to ${testViewModel.ipAddress.value}:${testViewModel.port.value}"
-                }
-
-                CommandConnection.ConnectionState.CONNECTING -> {
-                    "Connecting to ${testViewModel.ipAddress.value}:${testViewModel.port.value}..."
-                }
-
-                CommandConnection.ConnectionState.ERROR -> {
-                    "Connection failed to ${testViewModel.ipAddress.value}:${testViewModel.port.value}"
-                }
-
-                else -> "Not connected"
-            }
-        } ?: "Service not available"
-
-        testViewModel.updateConnectionInfo(info)
-    }
-
-    private fun testWifiConnection(ip: String, port: Int) {
-        lifecycleScope.launch {
-            try {
-                networkManager?.connectWifi(ip, port)
-            } catch (e: Exception) {
-                Log.e(TAG, "WiFi connection failed", e)
-                testViewModel.updateConnectionState(CommandConnection.ConnectionState.ERROR)
-            }
-        }
-    }
-
-    private fun testSendMessage() {
-        lifecycleScope.launch {
-            try {
-                networkManager?.sendResponse("ping")
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to send message", e)
-            }
-        }
-    }
-
-    private fun testBluetoothConnection() {
-        // Placeholder for Bluetooth connection logic
-        Log.i(TAG, "Bluetooth connection test - implementation needed")
-    }
-
-    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: NetworkClientTestViewModel) {
-        val connectionState by testViewModel.networkConnectionState.collectAsState()
-        val ipAddress by testViewModel.ipAddress.collectAsState()
-        val port by testViewModel.port.collectAsState()
-        val connectionInfo by viewModel.connectionInfo.collectAsState()
+        IRCameraTheme {
+            NetworkClientTestScreen(
+                viewModel = viewModel,
+                onNavigateBack = { finish() }
+            )
+        }
+    }
+}
 
-        val scrollState = rememberScrollState()
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun NetworkClientTestScreen(
+    viewModel: NetworkClientTestViewModel = viewModel(),
+    onNavigateBack: () -> Unit = {}
+) {
+    val uiState by viewModel.networkTestUiState.collectAsState()
 
-        Scaffold(
-            topBar = {
-                TopAppBar(
-                    title = {
-                        Text(
-                            "Network Client Test",
-                            fontWeight = FontWeight.Bold
-                        )
-                    },
-                    navigationIcon = {
-                        IconButton(onClick = { finish() }) {
-                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-                        }
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        // Material 3 App Bar
+        CenterAlignedTopAppBar(
+            title = { Text("Network Client Test") },
+            navigationIcon = {
+                IconButton(onClick = onNavigateBack) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "Navigate back"
+                    )
+                }
+            },
+            actions = {
+                IconButton(onClick = { viewModel.startComprehensiveTest() }) {
+                    Icon(
+                        imageVector = if (uiState.isTestRunning) Icons.Default.Stop else Icons.Default.PlayArrow,
+                        contentDescription = if (uiState.isTestRunning) "Stop test" else "Start test",
+                        tint = if (uiState.isTestRunning) Color.Red else MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+
+                IconButton(onClick = { viewModel.refreshNetworkStatus() }) {
+                    Icon(
+                        imageVector = Icons.Default.Refresh,
+                        contentDescription = "Refresh network"
+                    )
+                }
+            },
+            colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
+            )
+        )
+
+        // Content
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            // Network Status Overview
+            item {
+                NetworkStatusOverviewCard(
+                    networkStatus = NetworkTestStatus(
+                        overallStatus = when (uiState.networkStatus) {
+                            "Connected" -> TestStatus.PASS
+                            "Connecting" -> TestStatus.PENDING
+                            "Error" -> TestStatus.FAIL
+                            else -> TestStatus.WARNING
+                        },
+                        latency = 0,
+                        bandwidth = 0f,
+                        packetLoss = 0f,
+                        connectedDevices = if (uiState.networkStatus == "Connected") 1 else 0
+                    ),
+                    onRunQuickTest = { viewModel.runQuickNetworkTest() }
+                )
+            }
+
+            // Test Progress (if running)
+            if (uiState.isTestRunning) {
+                item {
+                    TestProgressCard(
+                        currentTest = uiState.currentTest,
+                        progress = uiState.testProgress,
+                        onStopTest = { viewModel.stopTest() }
+                    )
+                }
+            }
+
+            // Test Categories
+            item {
+                Text(
+                    text = "Network Test Categories",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+            }
+
+            items(uiState.testCategories) { category ->
+                TestCategoryCard(
+                    category = category,
+                    onRunCategoryTest = { viewModel.runCategoryTest(category) }
+                )
+            }
+
+            // Test Results
+            if (uiState.testResults.isNotEmpty()) {
+                item {
+                    Text(
+                        text = "Recent Test Results",
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                }
+
+                items(uiState.testResults.take(5)) { result ->
+                    TestResultCard(
+                        result = result,
+                        onViewDetails = { viewModel.viewTestDetails(result) }
+                    )
+                }
+            }
+
+            // Network Configuration
+            item {
+                NetworkConfigurationCard(
+                    configuration = uiState.networkConfiguration,
+                    onUpdateConfiguration = { config ->
+                        viewModel.updateNetworkConfiguration(config)
                     }
                 )
             }
-        ) { paddingValues ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-                    .padding(16.dp)
-                    .verticalScroll(scrollState),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                // Connection Status Card
-                ConnectionStatusCard(
-                    connectionState = connectionState,
-                    connectionInfo = connectionInfo
-                )
 
-                // Connection Configuration Card
-                ConnectionConfigCard(
-                    ipAddress = ipAddress,
-                    port = port,
-                    onIpAddressChange = viewModel::updateIpAddress,
-                    onPortChange = viewModel::updatePort
-                )
-
-                // Action Buttons Card
-                ActionButtonsCard(
-                    connectionState = connectionState,
-                    onConnectWifi = {
-                        val portInt = port.toIntOrNull() ?: DEFAULT_PC_PORT
-                        if (ipAddress.isNotEmpty() && portInt in 1..65535) {
-                            testWifiConnection(ipAddress, portInt)
-                        }
-                    },
-                    onTestPing = ::testSendMessage,
-                    onConnectBluetooth = ::testBluetoothConnection,
-                    onDisconnect = {
-                        lifecycleScope.launch {
-                            networkManager?.disconnect()
-                        }
-                    }
-                )
-
-                // Test Information Card
-                TestInfoCard()
+            // Error Display
+            uiState.error?.let { errorMessage ->
+                item {
+                    ErrorCard(
+                        error = errorMessage,
+                        onDismiss = { viewModel.clearError() }
+                    )
+                }
             }
         }
     }
 }
 
 @Composable
-private fun ConnectionStatusCard(
-    connectionState: CommandConnection.ConnectionState,
-    connectionInfo: String
+private fun NetworkStatusOverviewCard(
+    networkStatus: NetworkTestStatus,
+    onRunQuickTest: () -> Unit
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
-            containerColor = when (connectionState) {
-                CommandConnection.ConnectionState.CONNECTED ->
-                    MaterialTheme.colorScheme.primaryContainer
-
-                CommandConnection.ConnectionState.ERROR ->
-                    MaterialTheme.colorScheme.errorContainer
-
-                else -> MaterialTheme.colorScheme.surfaceVariant
+            containerColor = when (networkStatus.overallStatus) {
+                TestStatus.PASS -> MaterialTheme.colorScheme.primaryContainer
+                TestStatus.FAIL -> MaterialTheme.colorScheme.errorContainer
+                TestStatus.WARNING -> MaterialTheme.colorScheme.tertiaryContainer
+                TestStatus.PENDING -> MaterialTheme.colorScheme.surfaceVariant
             }
         )
     ) {
         Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            modifier = Modifier.padding(16.dp)
         ) {
             Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
-                    imageVector = when (connectionState) {
-                        CommandConnection.ConnectionState.CONNECTED -> Icons.Default.CheckCircle
-                        CommandConnection.ConnectionState.CONNECTING -> Icons.Default.Sync
-                        CommandConnection.ConnectionState.ERROR -> Icons.Default.Error
-                        else -> Icons.Default.Circle
-                    },
-                    contentDescription = "Connection Status",
-                    tint = when (connectionState) {
-                        CommandConnection.ConnectionState.CONNECTED -> Color.Green
-                        CommandConnection.ConnectionState.CONNECTING -> Color(0xFFFFA500)
-                        CommandConnection.ConnectionState.ERROR -> Color.Red
-                        else -> Color.Gray
-                    }
+                Column {
+                    Text(
+                        text = "Network Status",
+                        style = MaterialTheme.typography.titleMedium,
+                        color = when (networkStatus.overallStatus) {
+                            TestStatus.PASS -> MaterialTheme.colorScheme.onPrimaryContainer
+                            TestStatus.FAIL -> MaterialTheme.colorScheme.onErrorContainer
+                            TestStatus.WARNING -> MaterialTheme.colorScheme.onTertiaryContainer
+                            TestStatus.PENDING -> MaterialTheme.colorScheme.onSurfaceVariant
+                        }
+                    )
+
+                    Text(
+                        text = networkStatus.overallStatus.displayName,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = when (networkStatus.overallStatus) {
+                            TestStatus.PASS -> MaterialTheme.colorScheme.onPrimaryContainer
+                            TestStatus.FAIL -> MaterialTheme.colorScheme.onErrorContainer
+                            TestStatus.WARNING -> MaterialTheme.colorScheme.onTertiaryContainer
+                            TestStatus.PENDING -> MaterialTheme.colorScheme.onSurfaceVariant
+                        }
+                    )
+                }
+
+                Button(onClick = onRunQuickTest) {
+                    Icon(
+                        imageVector = Icons.Default.NetworkCheck,
+                        contentDescription = null,
+                        modifier = Modifier.size(16.dp)
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text("Quick Test")
+                }
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                NetworkMetric(
+                    label = "Latency",
+                    value = "${networkStatus.latency}ms",
+                    status = if (networkStatus.latency < 100) TestStatus.PASS else TestStatus.WARNING
                 )
 
-                Text(
-                    text = when (connectionState) {
-                        CommandConnection.ConnectionState.CONNECTED -> "Connected"
-                        CommandConnection.ConnectionState.CONNECTING -> "Connecting..."
-                        CommandConnection.ConnectionState.ERROR -> "Connection Error"
-                        else -> "Disconnected"
-                    },
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold
+                NetworkMetric(
+                    label = "Bandwidth",
+                    value = "${networkStatus.bandwidth} Mbps",
+                    status = if (networkStatus.bandwidth > 10) TestStatus.PASS else TestStatus.WARNING
+                )
+
+                NetworkMetric(
+                    label = "Packet Loss",
+                    value = "${networkStatus.packetLoss}%",
+                    status = if (networkStatus.packetLoss < 5) TestStatus.PASS else TestStatus.FAIL
                 )
             }
 
-            if (connectionInfo.isNotEmpty()) {
+            if (networkStatus.connectedDevices > 0) {
+                Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = connectionInfo,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    text = "Connected Devices: ${networkStatus.connectedDevices}",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = when (networkStatus.overallStatus) {
+                        TestStatus.PASS -> MaterialTheme.colorScheme.onPrimaryContainer
+                        TestStatus.FAIL -> MaterialTheme.colorScheme.onErrorContainer
+                        TestStatus.WARNING -> MaterialTheme.colorScheme.onTertiaryContainer
+                        TestStatus.PENDING -> MaterialTheme.colorScheme.onSurfaceVariant
+                    }
                 )
             }
         }
@@ -417,136 +276,360 @@ private fun ConnectionStatusCard(
 }
 
 @Composable
-private fun ConnectionConfigCard(
-    ipAddress: String,
-    port: String,
-    onIpAddressChange: (String) -> Unit,
-    onPortChange: (String) -> Unit
+private fun NetworkMetric(
+    label: String,
+    value: String,
+    status: TestStatus
 ) {
-    val keyboardController = LocalSoftwareKeyboardController.current
-
-    Card(
-        modifier = Modifier.fillMaxWidth()
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            Text(
-                text = "Connection Configuration",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.SemiBold
-            )
-
-            OutlinedTextField(
-                value = ipAddress,
-                onValueChange = onIpAddressChange,
-                label = { Text("PC IP Address") },
-                placeholder = { Text("192.168.1.100") },
-                leadingIcon = { Icon(Icons.Default.Computer, contentDescription = null) },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-                keyboardActions = KeyboardActions(
-                    onNext = {
-                        // Focus moves to next field automatically
-                    }
-                )
-            )
-
-            OutlinedTextField(
-                value = port,
-                onValueChange = onPortChange,
-                label = { Text("Port") },
-                placeholder = { Text("8080") },
-                leadingIcon = { Icon(Icons.Default.Router, contentDescription = null) },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Number,
-                    imeAction = ImeAction.Done
-                ),
-                keyboardActions = KeyboardActions(
-                    onDone = {
-                        keyboardController?.hide()
-                    }
-                )
-            )
-        }
+        Text(
+            text = value,
+            style = MaterialTheme.typography.titleSmall,
+            color = when (status) {
+                TestStatus.PASS -> Color.Green
+                TestStatus.WARNING -> Color.Yellow
+                TestStatus.FAIL -> Color.Red
+                TestStatus.PENDING -> MaterialTheme.colorScheme.onSurfaceVariant
+            }
+        )
+        Text(
+            text = label,
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
     }
 }
 
 @Composable
-private fun ActionButtonsCard(
-    connectionState: CommandConnection.ConnectionState,
-    onConnectWifi: () -> Unit,
-    onTestPing: () -> Unit,
-    onConnectBluetooth: () -> Unit,
-    onDisconnect: () -> Unit
+private fun TestProgressCard(
+    currentTest: String,
+    progress: Float,
+    onStopTest: () -> Unit
 ) {
     Card(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.tertiaryContainer
+        )
     ) {
         Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            modifier = Modifier.padding(16.dp)
         ) {
-            Text(
-                text = "Network Actions",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.SemiBold
-            )
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Button(
-                    onClick = onConnectWifi,
-                    modifier = Modifier.weight(1f),
-                    enabled = connectionState == CommandConnection.ConnectionState.DISCONNECTED
-                ) {
-                    Icon(Icons.Default.Wifi, contentDescription = null)
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text("WiFi")
+                Column {
+                    Text(
+                        text = "Testing in Progress",
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.onTertiaryContainer
+                    )
+
+                    Text(
+                        text = currentTest,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onTertiaryContainer
+                    )
                 }
 
                 Button(
-                    onClick = onConnectBluetooth,
-                    modifier = Modifier.weight(1f),
-                    enabled = connectionState == CommandConnection.ConnectionState.DISCONNECTED
-                ) {
-                    Icon(Icons.Default.Bluetooth, contentDescription = null)
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text("Bluetooth")
-                }
-            }
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Button(
-                    onClick = onTestPing,
-                    modifier = Modifier.weight(1f),
-                    enabled = connectionState == CommandConnection.ConnectionState.CONNECTED
-                ) {
-                    Icon(Icons.AutoMirrored.Filled.Send, contentDescription = null)
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text("Test Ping")
-                }
-
-                Button(
-                    onClick = onDisconnect,
-                    modifier = Modifier.weight(1f),
-                    enabled = connectionState == CommandConnection.ConnectionState.CONNECTED,
+                    onClick = onStopTest,
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.error
                     )
                 ) {
-                    Icon(Icons.Default.Close, contentDescription = null)
+                    Icon(
+                        imageVector = Icons.Default.Stop,
+                        contentDescription = null,
+                        modifier = Modifier.size(16.dp)
+                    )
                     Spacer(modifier = Modifier.width(4.dp))
-                    Text("Disconnect")
+                    Text("Stop")
+                }
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            LinearProgressIndicator(
+                progress = { progress },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = "${(progress * 100).toInt()}% Complete",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onTertiaryContainer
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun TestCategoryCard(
+    category: NetworkTestCategory,
+    onRunCategoryTest: () -> Unit
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = when (category.lastResult) {
+                TestStatus.PASS -> MaterialTheme.colorScheme.secondaryContainer
+                TestStatus.FAIL -> MaterialTheme.colorScheme.errorContainer
+                TestStatus.WARNING -> MaterialTheme.colorScheme.tertiaryContainer
+                TestStatus.PENDING -> MaterialTheme.colorScheme.surfaceVariant
+            }
+        )
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = when (category.type) {
+                            NetworkTestType.CONNECTION -> Icons.Default.NetworkCheck
+                            NetworkTestType.LATENCY -> Icons.Default.Speed
+                            NetworkTestType.THROUGHPUT -> Icons.Default.Tune
+                            NetworkTestType.RELIABILITY -> Icons.Default.Security
+                        },
+                        contentDescription = "Test type",
+                        modifier = Modifier.size(24.dp),
+                        tint = when (category.lastResult) {
+                            TestStatus.PASS -> MaterialTheme.colorScheme.onSecondaryContainer
+                            TestStatus.FAIL -> MaterialTheme.colorScheme.onErrorContainer
+                            TestStatus.WARNING -> MaterialTheme.colorScheme.onTertiaryContainer
+                            TestStatus.PENDING -> MaterialTheme.colorScheme.onSurfaceVariant
+                        }
+                    )
+
+                    Spacer(modifier = Modifier.width(12.dp))
+
+                    Column {
+                        Text(
+                            text = category.name,
+                            style = MaterialTheme.typography.titleSmall,
+                            color = when (category.lastResult) {
+                                TestStatus.PASS -> MaterialTheme.colorScheme.onSecondaryContainer
+                                TestStatus.FAIL -> MaterialTheme.colorScheme.onErrorContainer
+                                TestStatus.WARNING -> MaterialTheme.colorScheme.onTertiaryContainer
+                                TestStatus.PENDING -> MaterialTheme.colorScheme.onSurfaceVariant
+                            }
+                        )
+
+                        Text(
+                            text = "${category.testCount} tests",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = when (category.lastResult) {
+                                TestStatus.PASS -> MaterialTheme.colorScheme.onSecondaryContainer
+                                TestStatus.FAIL -> MaterialTheme.colorScheme.onErrorContainer
+                                TestStatus.WARNING -> MaterialTheme.colorScheme.onTertiaryContainer
+                                TestStatus.PENDING -> MaterialTheme.colorScheme.onSurfaceVariant
+                            }
+                        )
+                    }
+                }
+
+                Icon(
+                    imageVector = when (category.lastResult) {
+                        TestStatus.PASS -> Icons.Default.CheckCircle
+                        TestStatus.FAIL -> Icons.Default.Error
+                        TestStatus.WARNING -> Icons.Default.Warning
+                        TestStatus.PENDING -> Icons.Default.Schedule
+                    },
+                    contentDescription = "Test result",
+                    tint = when (category.lastResult) {
+                        TestStatus.PASS -> Color.Green
+                        TestStatus.FAIL -> Color.Red
+                        TestStatus.WARNING -> Color.Yellow
+                        TestStatus.PENDING -> MaterialTheme.colorScheme.onSurfaceVariant
+                    }
+                )
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = category.description,
+                style = MaterialTheme.typography.bodyMedium,
+                color = when (category.lastResult) {
+                    TestStatus.PASS -> MaterialTheme.colorScheme.onSecondaryContainer
+                    TestStatus.FAIL -> MaterialTheme.colorScheme.onErrorContainer
+                    TestStatus.WARNING -> MaterialTheme.colorScheme.onTertiaryContainer
+                    TestStatus.PENDING -> MaterialTheme.colorScheme.onSurfaceVariant
+                }
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Button(
+                onClick = onRunCategoryTest,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Icon(
+                    imageVector = Icons.Default.PlayArrow,
+                    contentDescription = null,
+                    modifier = Modifier.size(16.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text("Run ${category.name} Tests")
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun TestResultCard(
+    result: NetworkTestResult,
+    onViewDetails: () -> Unit
+) {
+    Card(
+        onClick = onViewDetails,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = when (result.status) {
+                    TestStatus.PASS -> Icons.Default.CheckCircle
+                    TestStatus.FAIL -> Icons.Default.Error
+                    TestStatus.WARNING -> Icons.Default.Warning
+                    TestStatus.PENDING -> Icons.Default.Schedule
+                },
+                contentDescription = "Test result",
+                modifier = Modifier.size(24.dp),
+                tint = when (result.status) {
+                    TestStatus.PASS -> Color.Green
+                    TestStatus.FAIL -> Color.Red
+                    TestStatus.WARNING -> Color.Yellow
+                    TestStatus.PENDING -> MaterialTheme.colorScheme.onSurfaceVariant
+                }
+            )
+
+            Spacer(modifier = Modifier.width(12.dp))
+
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(
+                    text = result.testName,
+                    style = MaterialTheme.typography.titleSmall,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+
+                Text(
+                    text = "${result.timestamp} - ${result.duration}ms",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+
+                if (result.details.isNotEmpty()) {
+                    Text(
+                        text = result.details,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+
+            Icon(
+                imageVector = Icons.Default.ChevronRight,
+                contentDescription = "View details",
+                tint = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+    }
+}
+
+@Composable
+private fun NetworkConfigurationCard(
+    configuration: NetworkConfiguration,
+    onUpdateConfiguration: (NetworkConfiguration) -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+
+    Card(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Network Configuration",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+
+                IconButton(onClick = { expanded = !expanded }) {
+                    Icon(
+                        imageVector = if (expanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
+                        contentDescription = if (expanded) "Collapse" else "Expand"
+                    )
+                }
+            }
+
+            if (expanded) {
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    ConfigurationItem(
+                        label = "Server Address",
+                        value = configuration.serverAddress
+                    )
+
+                    ConfigurationItem(
+                        label = "Port",
+                        value = configuration.port.toString()
+                    )
+
+                    ConfigurationItem(
+                        label = "Timeout",
+                        value = "${configuration.timeoutMs}ms"
+                    )
+
+                    ConfigurationItem(
+                        label = "Retry Attempts",
+                        value = configuration.retryAttempts.toString()
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Button(
+                    onClick = { /* Configuration editing would be implemented here */ },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Edit,
+                        contentDescription = null,
+                        modifier = Modifier.size(16.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text("Edit Configuration")
                 }
             }
         }
@@ -554,29 +637,83 @@ private fun ActionButtonsCard(
 }
 
 @Composable
-private fun TestInfoCard() {
+private fun ConfigurationItem(
+    label: String,
+    value: String
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+
+        Text(
+            text = value,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+    }
+}
+
+@Composable
+private fun ErrorCard(
+    error: String,
+    onDismiss: () -> Unit
+) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant
+            containerColor = MaterialTheme.colorScheme.errorContainer
         )
     ) {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = "Test Information",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.SemiBold
+            Icon(
+                imageVector = Icons.Default.Error,
+                contentDescription = "Error",
+                tint = MaterialTheme.colorScheme.onErrorContainer
             )
 
+            Spacer(modifier = Modifier.width(12.dp))
+
             Text(
-                text = "This activity tests bidirectional network communication between the Android app and PC server. " +
-                        "Use WiFi for high-speed data transfer or Bluetooth for reliable short-range communication.",
+                text = error,
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onErrorContainer,
+                modifier = Modifier.weight(1f)
             )
+
+            IconButton(onClick = onDismiss) {
+                Icon(
+                    imageVector = Icons.Default.Close,
+                    contentDescription = "Dismiss",
+                    tint = MaterialTheme.colorScheme.onErrorContainer
+                )
+            }
         }
     }
 }
+
+// Type aliases to use ViewModel types
+typealias NetworkTestCategory = NetworkClientTestViewModel.NetworkTestCategory
+typealias NetworkTestResult = NetworkClientTestViewModel.NetworkTestResult
+typealias TestStatus = NetworkClientTestViewModel.TestStatus
+typealias NetworkTestType = NetworkClientTestViewModel.NetworkTestType
+typealias NetworkConfiguration = NetworkClientTestViewModel.NetworkConfiguration
+
+// Data classes specific to this activity
+data class NetworkTestStatus(
+    val overallStatus: TestStatus,
+    val latency: Int,
+    val bandwidth: Float,
+    val packetLoss: Float,
+    val connectedDevices: Int
+)

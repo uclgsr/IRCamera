@@ -20,8 +20,8 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-import mpdc4gsr.core.ui.BaseComposeActivity
-import mpdc4gsr.core.ui.BaseViewModel
+import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
+import mpdc4gsr.core.ui.AppBaseViewModel
 
 /**
  * GSRDataViewComposeActivity - Advanced Data Processing & Analytics
@@ -1059,7 +1059,7 @@ private fun StatisticItem(label: String, value: String) {
     }
 }
 
-class GSRDataViewViewModel : BaseViewModel() {
+class GSRDataViewViewModel : AppBaseViewModel() {
     // ViewModel implementation for managing data loading, processing, filtering, etc.
     // Future implementation would include:
     // - Data loading from files

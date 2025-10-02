@@ -265,8 +265,8 @@ configurations.all {
         force("com.google.guava:guava:31.1-android")
         force("androidx.core:core:1.13.1")
         force("androidx.core:core-ktx:1.13.1")
-        force("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
-        force("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")
+        force("androidx.lifecycle:lifecycle-runtime-ktx:2.9.4")
+        force("androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.4")
 
         // Force a stable version of snakeyaml to resolve build cache issues with v2.x
         force("org.yaml:snakeyaml:1.33")
@@ -333,6 +333,7 @@ dependencies {
     implementation(libs.logging.interceptor)
     implementation(libs.nordic.ble)
     implementation(libs.nordic.ble.ktx)
+    implementation(libs.lifecycle.service)
 
     implementation(files("libs/shimmerandroidinstrumentdriver-3.2.4_beta.aar"))
     implementation(files("libs/shimmerdriver-0.11.5_beta.jar"))

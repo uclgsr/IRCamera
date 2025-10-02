@@ -1,12 +1,12 @@
 package mpdc4gsr.core.ui
 
 import android.util.Log
-import androidx.fragment.app.FragmentActivity
+import androidx.activity.ComponentActivity
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 
 class PermissionManager(
-    private val activity: androidx.activity.ComponentActivity,
+    private val activity: ComponentActivity,
     private val permissionController: PermissionController
 ) {
     companion object {

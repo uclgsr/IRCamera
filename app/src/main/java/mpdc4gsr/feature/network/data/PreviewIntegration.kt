@@ -104,10 +104,16 @@ object PreviewIntegration {
     }
 }
 
-// Stub: .lite package not available
-// fun CameraPreviewManager.updatePreview(context: Context) {
-//     PreviewIntegration.updateThermalFrame(context, bitmap)
-// }
+fun com.mpdc4gsr.module.thermalunified.tools.CameraPreviewManager.updatePreview(context: Context) {
+    try {
+        val bitmap = this.scaledBitmap()
+        if (bitmap != null && !bitmap.isRecycled) {
+            PreviewIntegration.updateThermalFrame(context, bitmap)
+        }
+    } catch (e: Exception) {
+        Log.w("PreviewIntegration", "Failed to update thermal preview from CameraPreviewManager", e)
+    }
+}
 
 fun Float.updateGsrPreview(context: Context) {
     PreviewIntegration.updateGsrValue(context, this)

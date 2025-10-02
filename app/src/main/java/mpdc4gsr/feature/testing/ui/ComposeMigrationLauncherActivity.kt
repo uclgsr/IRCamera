@@ -362,7 +362,7 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         startActivity(
                             Intent(
                                 this@ComposeMigrationLauncherActivity,
-                                mpdc4gsr.feature.network.ui.NetworkClientTestComposeActivity::class.java
+                                mpdc4gsr.feature.network.ui.NetworkClientTestActivityCompose::class.java
                             )
                         )
                     }
@@ -587,14 +587,14 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                 )
 
                 LauncherCard(
-                    title = "IR Thermal Lite (Compose)",
-                    subtitle = "Lightweight thermal camera interface with essential controls",
+                    title = "IR Thermal (Compose)",
+                    subtitle = "Thermal camera interface with essential controls",
                     icon = Icons.Default.Thermostat,
                     onClick = {
                         startActivity(
                             Intent(
                                 this@ComposeMigrationLauncherActivity,
-                                com.mpdc4gsr.module.thermalunified.activity.ThermalCameraComposeActivity::class.java
+                                com.mpdc4gsr.module.thermalunified.activity.ThermalComposeActivity::class.java
                             )
                         )
                     }
@@ -615,14 +615,14 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                 )
 
                 LauncherCard(
-                    title = "IR Correction Lite (Compose)",
-                    subtitle = "Thermal image correction and calibration tools",
+                    title = "Thermal Camera (Compose)",
+                    subtitle = "Thermal camera interface with correction and calibration tools",
                     icon = Icons.Default.AutoFixHigh,
                     onClick = {
                         startActivity(
                             Intent(
                                 this@ComposeMigrationLauncherActivity,
-                                com.mpdc4gsr.module.thermalunified.activity.IRCorrectionThreeComposeActivity::class.java
+                                com.mpdc4gsr.module.thermalunified.activity.ThermalCameraComposeActivity::class.java
                             )
                         )
                     }
@@ -734,7 +734,7 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         startActivity(
                             Intent(
                                 this@ComposeMigrationLauncherActivity,
-                                SensorDashboardTestComposeActivity::class.java
+                                SensorDashboardTestActivityCompose::class.java
                             )
                         )
                     }

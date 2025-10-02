@@ -5,6 +5,11 @@ package mpdc4gsr.core.ui
  * This allows existing code to continue using the old package name during migration.
  */
 
+// Base Compose Infrastructure
+typealias BaseComposeActivity<VM> = com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity<VM>
+
+// Note: BaseViewModel typealias is in BaseViewModel.kt to maintain proper type hierarchy
+
 // GSR Feature Activities
 typealias GSRGalleryComposeActivity = mpdc4gsr.feature.gsr.ui.GSRGalleryComposeActivity
 typealias GSRQuickRecordingComposeActivity = mpdc4gsr.feature.gsr.ui.GSRQuickRecordingComposeActivity
