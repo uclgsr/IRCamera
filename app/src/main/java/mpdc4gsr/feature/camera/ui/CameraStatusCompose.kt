@@ -99,7 +99,8 @@ fun CameraStatusWidget(
             while (true) {
                 delay(1000)
                 // Update stats periodically
-                statsText = "Camera Statistics:\nResolution: ${cameraRecorder.getResolution()}\nFPS: ${cameraRecorder.getCurrentFps()}"
+                // TODO: Add resolution and FPS methods to RgbCameraRecorder
+                statsText = "Camera Statistics:\nResolution: N/A\nFPS: N/A"
             }
         } else {
             statusText = "Camera Status: Not Initialized"
@@ -117,8 +118,8 @@ private fun CameraPreviewView(cameraRecorder: RgbCameraRecorder) {
         factory = { ctx ->
             PreviewView(ctx).apply {
                 scaleType = PreviewView.ScaleType.FILL_CENTER
-                // Bind camera to preview
-                cameraRecorder.bindPreview(this, lifecycleOwner)
+                // TODO: Add bindPreview method to RgbCameraRecorder
+                // cameraRecorder.bindPreview(this, lifecycleOwner)
             }
         },
         modifier = Modifier.fillMaxSize()
