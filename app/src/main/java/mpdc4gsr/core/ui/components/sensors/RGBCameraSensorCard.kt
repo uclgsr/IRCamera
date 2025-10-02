@@ -32,6 +32,7 @@ fun RGBCameraSensorCard(
     onAction: (CameraAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    // TODO: Replace with real camera parameters from Camera API via ViewModel
     var resolution by remember { mutableStateOf("1920×1080") }
     var frameRate by remember { mutableIntStateOf(30) }
     var exposureTime by remember { mutableStateOf("1/60") }

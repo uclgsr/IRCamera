@@ -59,6 +59,8 @@ class SensorDashboardComposeActivity : ComponentActivity() {
         val gsrConnectionState by viewModel.gsrConnectionState.collectAsState()
         val gsrBatteryLevel by viewModel.gsrBatteryLevel.collectAsState()
 
+        // TODO: ViewModel should expose gsrData as StateFlow with real-time sensor values
+        // Real implementation needs: currentValue, recentReadings, averageValue from GSRSensorRecorder
         val gsrData by remember {
             derivedStateOf {
                 GSRData(

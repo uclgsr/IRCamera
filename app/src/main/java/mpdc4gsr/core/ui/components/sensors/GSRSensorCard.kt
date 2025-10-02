@@ -33,11 +33,12 @@ fun GSRSensorCard(
     onAction: (GSRAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    // TODO: Replace with real GSR data from GSRSensorRecorder via ViewModel
     var gsrValue by remember { mutableFloatStateOf(2.45f) }
     var skinConductance by remember { mutableFloatStateOf(0.82f) }
     var isRecording by remember { mutableStateOf(false) }
 
-    // Simulate GSR data updates
+    // Simulate GSR data updates when streaming
     LaunchedEffect(state) {
         if (state == SensorState.Streaming) {
             while (true) {

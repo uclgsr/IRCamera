@@ -135,6 +135,24 @@ class IRMonitorCaptureViewModel : BaseViewModel() {
 
     fun exportCaptures() {
         viewModelScope.launch {
+            val captures = _captureHistory.value
+            if (captures.isEmpty()) {
+                return@launch
+            }
+            
+            // Create export data with capture information
+            val exportData = captures.map { capture ->
+                mapOf(
+                    "id" to capture.id,
+                    "timestamp" to capture.timestamp,
+                    "temperature" to capture.temperature,
+                    "imagePath" to capture.imagePath
+                )
+            }
+            
+            // In a real implementation, this would write to a file or share the data
+            // For now, we log the export action
+            android.util.Log.d("IRMonitorCaptureVM", "Exporting ${captures.size} captures")
         }
     }
 

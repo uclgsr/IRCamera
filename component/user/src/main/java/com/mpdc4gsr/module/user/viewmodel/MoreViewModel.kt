@@ -114,6 +114,10 @@ class MoreViewModel : BaseViewModel() {
 
     fun checkForUpdates() {
         launchWithErrorHandling {
+            // Check for firmware/app updates
+            // In a real implementation, this would call an update service or check a remote version API
+            // For now, simulate the check and set to false (no updates available)
+            kotlinx.coroutines.delay(500) // Simulate network delay
             _isUpgradeAvailable.value = false
         }
     }
