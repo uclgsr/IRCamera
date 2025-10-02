@@ -58,7 +58,7 @@ object NavigationManager {
         RouterConfig.GSR_MULTI_MODAL to "mpdc4gsr.gsr.MultiModalRecordingActivity",
         RouterConfig.GSR_DEMO to "com.mpdc4gsr.component.gsr.activity.GSRDemoActivity",
 
-        RouterConfig.IR_GALLERY_HOME to "com.mpdc4gsr.module.thermalunified.activity.IRGalleryActivity",
+        RouterConfig.IR_GALLERY_HOME to "com.mpdc4gsr.module.thermalunified.activity.IRGalleryHomeComposeActivity",
         RouterConfig.IR_CAMERA_SETTING to "com.mpdc4gsr.module.thermalunified.activity.IRCameraSettingActivity",
 
         RouterConfig.QUESTION_DETAILS to "com.mpdc4gsr.module.user.activity.QuestionDetailsComposeActivity",
