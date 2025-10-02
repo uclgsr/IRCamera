@@ -25,10 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlin.math.*
 
-/**
- * Compose equivalent of LinearCompassView
- * Simple compass implementation showing direction and bearing
- */
+
 @Composable
 fun CompassCompose(
     bearing: Float,
@@ -79,9 +76,7 @@ fun CompassCompose(
     }
 }
 
-/**
- * Linear compass bar showing directional indicators
- */
+
 @Composable
 fun LinearCompassCompose(
     bearing: Float,
@@ -271,9 +266,7 @@ private fun getCardinalDirection(bearing: Float): String {
     }
 }
 
-/**
- * Compass status indicator with direction and quality
- */
+
 @Composable
 fun CompassStatusCompose(
     bearing: Float,
@@ -322,9 +315,7 @@ enum class CompassQuality(
     UNRELIABLE("Unreliable", Color.Red)
 }
 
-/**
- * Preview helper for CompassCompose
- */
+
 @Composable
 fun CompassComposePreview() {
     Column(

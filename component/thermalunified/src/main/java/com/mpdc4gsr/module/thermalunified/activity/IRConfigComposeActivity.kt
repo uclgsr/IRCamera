@@ -26,10 +26,7 @@ import com.mpdc4gsr.libunified.app.tools.UnitTools
 import com.mpdc4gsr.module.thermalunified.bean.ModelBean
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRConfigViewModel
 
-/**
- * Modern Compose implementation of thermal camera configuration
- * Enhanced UI for thermal settings and material presets
- */
+
 class IRConfigComposeActivity : BaseComposeActivity<IRConfigViewModel>() {
 
     private var isTC007 = false

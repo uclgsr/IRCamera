@@ -40,18 +40,9 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import kotlin.math.*
 
-/**
- * Modern Compose replacement for thermal module builders and video components
- *
- * This file contains Compose implementations for:
- * - GSYVideoOptionBuilder.kt → VideoPlayerCompose
- * - Video media utilities → MediaUtilsCompose
- * - Image loading utilities → ImageLoadingCompose
- */
 
-/**
- * Modern video player configuration and builder pattern
- */
+
+
 @Composable
 fun VideoPlayerCompose(
     url: String?,
@@ -406,9 +397,7 @@ private fun VideoBottomControlsCompose(
     }
 }
 
-/**
- * Image loading utilities with Coil integration
- */
+
 @Composable
 fun ThermalImageLoaderCompose(
     url: String?,
@@ -433,9 +422,7 @@ fun ThermalImageLoaderCompose(
     )
 }
 
-/**
- * Media utilities for thermal video processing
- */
+
 @Composable
 fun MediaUtilsCompose(
     mediaFiles: List<MediaFile>,

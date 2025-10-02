@@ -24,16 +24,7 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.module.user.viewmodel.StorageSpaceViewModel
 import com.mpdc4gsr.libunified.R as RCore
 
-/**
- * User Management Module - Storage Space Compose Activity
- *
- * Storage management screen with usage visualization and format functionality.
- * Features:
- * - Storage usage progress indicator
- * - Breakdown by content type (photos, videos, system)
- * - Format storage functionality
- * - Modern Material 3 design
- */
+
 class StorageSpaceComposeActivity : BaseComposeActivity<StorageSpaceViewModel>() {
 
     override fun createViewModel(): StorageSpaceViewModel {

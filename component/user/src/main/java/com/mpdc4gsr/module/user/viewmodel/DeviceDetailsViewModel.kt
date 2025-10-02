@@ -6,10 +6,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-/**
- * ViewModel for Device Details
- * Manages device information display and copy functionality
- */
+
 class DeviceDetailsViewModel : BaseViewModel() {
 
     companion object {

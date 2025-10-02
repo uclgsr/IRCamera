@@ -25,10 +25,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.roundToInt
 
-/**
- * Compose equivalent of ChartLogView
- * Thermal data logging chart with multiple data series and time-based visualization
- */
+
 @Composable
 fun ChartLogCompose(
     thermalData: List<ThermalDataEntry>,
@@ -518,9 +515,7 @@ private data class LegendItem(
     val color: Color
 )
 
-/**
- * Preview helper for ChartLogCompose
- */
+
 @Composable
 fun ChartLogComposePreview() {
     val sampleData = remember {

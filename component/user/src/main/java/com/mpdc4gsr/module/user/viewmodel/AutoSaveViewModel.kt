@@ -7,10 +7,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-/**
- * ViewModel for AutoSave settings
- * Manages the auto save toggle state using SharedManager
- */
+
 class AutoSaveViewModel : BaseViewModel() {
 
     private val _isAutoSaveEnabled = MutableStateFlow(false)

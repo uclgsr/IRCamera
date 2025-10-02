@@ -17,10 +17,7 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 
-/**
- * GSY Video Player Integration - Advanced thermal video player
- * Frame-by-frame thermal analysis with temperature tracking
- */
+
 class IRVideoGSYComposeActivity : BaseComposeActivity<IRVideoGSYViewModel>() {
 
     override fun createViewModel(): IRVideoGSYViewModel {

@@ -22,11 +22,7 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRMonitorChartLiteViewModel
 
-/**
- * Lite version of IR Monitor Chart activity with Compose
- * Simplified chart display for thermal monitoring
- * Integrated with IRMonitorChartLiteViewModel
- */
+
 class IRMonitorChartLiteComposeActivity : BaseComposeActivity<IRMonitorChartLiteViewModel>() {
 
     override fun createViewModel(): IRMonitorChartLiteViewModel {

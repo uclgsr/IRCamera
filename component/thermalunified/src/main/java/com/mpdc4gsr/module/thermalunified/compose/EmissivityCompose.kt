@@ -18,10 +18,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-/**
- * Compose equivalent of EmissivityView
- * Displays emissivity data in a table-like layout with custom borders
- */
+
 @Composable
 fun EmissivityCompose(
     textList: List<String>,
@@ -119,9 +116,7 @@ fun EmissivityCompose(
     }
 }
 
-/**
- * Preview helper for EmissivityCompose
- */
+
 @Composable
 fun EmissivityComposePreview() {
     Column(

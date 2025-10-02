@@ -33,10 +33,7 @@ import com.mpdc4gsr.module.user.viewmodel.MoreComposeFragmentViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
 
-/**
- * Modern Compose implementation of thermal main hub activity
- * Preserves the 5-tab ViewPager structure with enhanced Material 3 UI
- */
+
 class IRMainComposeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

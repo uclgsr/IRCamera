@@ -19,11 +19,7 @@ import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import com.mpdc4gsr.module.user.viewmodel.MoreComposeFragmentViewModel
 import com.mpdc4gsr.libunified.R as RCore
 
-/**
- * Compose equivalent of MoreFragment.kt
- *
- * Device settings and configuration screen
- */
+
 @Composable
 fun MoreComposeFragment(
     viewModel: MoreComposeFragmentViewModel,

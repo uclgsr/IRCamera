@@ -8,10 +8,7 @@ import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
-/**
- * Modern Thermal RGB Preview ViewModel - MVVM StateFlow Implementation
- * Manages RGB camera preview overlay for thermal imaging with reactive patterns
- */
+
 class ThermalRGBPreviewViewModel : BaseViewModel() {
 
     // StateFlow for RGB preview state management

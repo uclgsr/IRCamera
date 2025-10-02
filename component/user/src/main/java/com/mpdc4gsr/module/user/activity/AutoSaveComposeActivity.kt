@@ -16,15 +16,7 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.module.user.viewmodel.AutoSaveViewModel
 import com.mpdc4gsr.libunified.R as RCore
 
-/**
- * User Management Module - AutoSave Settings Compose Activity
- *
- * Simple settings screen that allows users to toggle auto-save functionality.
- * Demonstrates modern Compose migration from XML with:
- * - Material 3 components
- * - State management with ViewModel
- * - Settings UI components
- */
+
 class AutoSaveComposeActivity : BaseComposeActivity<AutoSaveViewModel>() {
 
     override fun createViewModel(): AutoSaveViewModel {

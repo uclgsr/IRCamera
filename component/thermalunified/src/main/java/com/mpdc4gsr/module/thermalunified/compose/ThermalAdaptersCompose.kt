@@ -31,14 +31,9 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.mpdc4gsr.module.thermalunified.model.AlbumItem
 
-/**
- * Compose equivalents of thermal adapters
- * Modern list and grid components replacing RecyclerView adapters
- */
 
-/**
- * Camera item list - replaces CameraItemAdapter
- */
+
+
 @Composable
 fun CameraItemListCompose(
     items: List<CameraItem>,
@@ -151,9 +146,7 @@ private fun CameraItemCard(
     }
 }
 
-/**
- * Measure item grid - replaces MeasureItemAdapter
- */
+
 @Composable
 fun MeasureItemGridCompose(
     items: List<MeasureItem>,
@@ -253,9 +246,7 @@ private fun MeasureItemCard(
     }
 }
 
-/**
- * Gallery album adapter - replaces ReportPreviewAlbumAdapter
- */
+
 @Composable
 fun GalleryAlbumListCompose(
     albums: List<AlbumItem>,
@@ -361,9 +352,7 @@ private fun GalleryAlbumCard(
     }
 }
 
-/**
- * Menu tab adapter - replaces MenuTabAdapter
- */
+
 @Composable
 fun MenuTabBarCompose(
     tabs: List<MenuTab>,
@@ -403,9 +392,7 @@ fun MenuTabBarCompose(
     }
 }
 
-/**
- * Setting options list - replaces SettingCheckAdapter
- */
+
 @Composable
 fun SettingOptionsListCompose(
     options: List<SettingOption>,
@@ -533,9 +520,7 @@ enum class SettingOptionType {
     SIMPLE, CHECKBOX, SWITCH
 }
 
-/**
- * Preview helpers
- */
+
 @Composable
 fun ThermalAdaptersPreview() {
     val sampleCameraItems = listOf(

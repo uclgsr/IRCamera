@@ -23,10 +23,7 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 
-/**
- * Professional thermal report generation with Compose
- * Advanced PDF creation and thermal analysis reporting
- */
+
 class ThermalReportComposeActivity : BaseComposeActivity<ThermalReportViewModel>() {
 
     override fun createViewModel(): ThermalReportViewModel {

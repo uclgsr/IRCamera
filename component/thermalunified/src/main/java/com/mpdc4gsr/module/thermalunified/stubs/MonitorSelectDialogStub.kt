@@ -2,10 +2,7 @@ package com.mpdc4gsr.module.thermalunified.stubs
 
 import android.content.Context
 
-/**
- * Stub implementation for MonitorSelectDialog
- * This is a placeholder to resolve compilation issues
- */
+
 class MonitorSelectDialog {
 
     class Builder(private val context: Context) {

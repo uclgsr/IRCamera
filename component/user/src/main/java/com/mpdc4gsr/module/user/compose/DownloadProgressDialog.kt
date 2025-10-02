@@ -15,11 +15,7 @@ import androidx.compose.ui.window.DialogProperties
 import java.text.DecimalFormat
 import com.mpdc4gsr.libunified.R as RCore
 
-/**
- * Compose equivalent of DownloadProDialog.kt
- *
- * Download progress dialog with progress bar and file size display
- */
+
 @Composable
 fun DownloadProgressDialog(
     isVisible: Boolean,

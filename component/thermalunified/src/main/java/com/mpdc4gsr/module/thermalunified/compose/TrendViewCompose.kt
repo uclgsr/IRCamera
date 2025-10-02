@@ -26,10 +26,7 @@ import androidx.compose.ui.unit.dp
 import kotlin.math.max
 import kotlin.math.min
 
-/**
- * Compose equivalent of TrendView
- * Expandable/collapsible trend chart with temperature data visualization
- */
+
 @Composable
 fun TrendViewCompose(
     temperatureData: List<Float>,
@@ -222,9 +219,7 @@ private fun DrawScope.drawTrendChart(temperatureData: List<Float>) {
     )
 }
 
-/**
- * Stateful version with built-in expand/collapse
- */
+
 @Composable
 fun TrendViewStatefulCompose(
     temperatureData: List<Float>,
@@ -241,9 +236,7 @@ fun TrendViewStatefulCompose(
     )
 }
 
-/**
- * Preview helper for TrendViewCompose
- */
+
 @Composable
 fun TrendViewComposePreview() {
     Column(
