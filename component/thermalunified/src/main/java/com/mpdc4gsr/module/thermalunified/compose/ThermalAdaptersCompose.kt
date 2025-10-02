@@ -344,6 +344,7 @@ private fun GalleryAlbumCard(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MenuTabBarCompose(
     tabs: List<MenuTab>,
