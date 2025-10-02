@@ -213,6 +213,10 @@ private fun MoreTabContent() {
         update = { view ->
             activity?.let {
                 val fragment = MoreComposeWrapperFragment()
+                val args = Bundle().apply {
+                    putBoolean("IS_TC007", false) // Set to true if required by business logic
+                }
+                fragment.arguments = args
                 it.supportFragmentManager.beginTransaction()
                     .replace(view.id, fragment)
                     .commitAllowingStateLoss()
