@@ -240,7 +240,7 @@ fun ThermalToolbar(
             .padding(horizontal = 8.dp),
         horizontalArrangement = Arrangement.spacedBy(4.dp)
     ) {
-        ThermalTools.entries.forEach { tool ->
+        ThermalTool.entries.forEach { tool ->
             val isSelected = selectedTool == tool
 
             FilterChip(
