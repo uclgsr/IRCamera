@@ -173,10 +173,18 @@ fun MyDialogCompose(
 
 ## Deprecation Timeline
 
-- **Phase 1 (Current)**: All Compose equivalents created, both systems coexist
-- **Phase 2 (Next)**: Mark XML components as @Deprecated
-- **Phase 3 (Future)**: Remove XML layouts and legacy drawable resources
-- **Phase 4 (Final)**: Complete transition, XML system removed
+- **Phase 1 (Completed)**: All Compose equivalents created
+- **Phase 2 (Completed)**: Mark XML components as @Deprecated
+- **Phase 3 (In Progress)**: Remove deprecated dialog classes with Compose equivalents
+  - ✅ Removed: ConfigGuideDialog, HomeGuideDialog, IRConfigInputDialog
+  - ✅ Removed: ColorSelectDialog, ConfirmSelectDialog, EmissivityTipPopup
+  - ✅ Removed: FirmwareUpDialog, LongTextDialog, NotTipsSelectDialog
+  - ✅ Removed: TipChangeDeviceDialog, TipEmissivityDialog, TipObserveDialog
+  - ✅ Removed: TipOtgDialog, TipProgressDialog, TipShutterDialog
+  - ✅ Removed: TipTargetColorDialog, TipWaterMarkDialog, DownloadProDialog
+  - ⏳ Remaining: Legacy base classes still using LoadingDialog, MsgDialog, TipDialog, TipCameraProgressDialog, CarDetectDialog
+- **Phase 4 (Future)**: Remove XML layouts and legacy drawable resources
+- **Phase 5 (Final)**: Complete transition, XML system removed
 
 ## Notes
 
