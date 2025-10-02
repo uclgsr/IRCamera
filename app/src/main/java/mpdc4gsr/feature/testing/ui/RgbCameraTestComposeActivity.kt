@@ -68,8 +68,8 @@ class RgbCameraTestComposeActivity : BaseComposeActivity<RgbCameraTestViewModel>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        permissionController = PermissionController(this as androidx.fragment.app.FragmentActivity)
-        permissionManager = PermissionManager(this as androidx.fragment.app.FragmentActivity, permissionController!!)
+        permissionController = PermissionController(this)
+        permissionManager = PermissionManager(this, permissionController!!)
         checkPermissions()
     }
 

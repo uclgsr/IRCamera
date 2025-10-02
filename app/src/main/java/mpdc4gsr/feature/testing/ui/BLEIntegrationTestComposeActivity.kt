@@ -47,7 +47,7 @@ class BLEIntegrationTestComposeActivity : BaseComposeActivity<BLEIntegrationTest
         super.onCreate(savedInstanceState)
 
         // Initialize components
-        permissionController = PermissionController(this as androidx.fragment.app.FragmentActivity)
+        permissionController = PermissionController(this)
         initializeRecorder()
     }
 
