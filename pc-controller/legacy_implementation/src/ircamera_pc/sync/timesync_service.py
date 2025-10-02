@@ -10,6 +10,7 @@ try:
 except ImportError:
     from ..utils.simple_logger import logger
 
+
 @dataclass
 class TimeSyncMeasurement:
     t1_client_send: float
@@ -33,6 +34,7 @@ class TimeSyncMeasurement:
         else:
 
             self.clock_offset_ns = self.t2_server_receive - self.t1_client_send
+
 
 @dataclass
 class DeviceTimeSyncStats:
@@ -102,6 +104,7 @@ class DeviceTimeSyncStats:
         else:
             self.sync_quality = "POOR"
             self.is_synchronized = False
+
 
 class AdvancedTimeSyncService:
 
