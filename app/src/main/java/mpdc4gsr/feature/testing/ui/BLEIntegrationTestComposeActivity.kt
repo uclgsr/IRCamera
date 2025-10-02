@@ -2,7 +2,7 @@ package mpdc4gsr.feature.testing.ui
 
 import android.os.Bundle
 import android.util.Log
-import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -15,21 +15,23 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import mpdc4gsr.core.data.ShimmerDeviceManager
 import mpdc4gsr.core.data.UnifiedGSRRecorder
+import mpdc4gsr.core.ui.BaseComposeActivity
 import mpdc4gsr.core.ui.PermissionController
+import mpdc4gsr.feature.testing.presentation.BLEIntegrationTestViewModel
 import kotlin.io.path.createTempDirectory
 
 /**
  * Compose version of BLE Integration Test Activity
  * Tests BLE functionality in a modern Compose UI
+ * Migrated to BaseComposeActivity for consistency
  */
-class BLEIntegrationTestComposeActivity : FragmentActivity() {
+class BLEIntegrationTestComposeActivity : BaseComposeActivity<BLEIntegrationTestViewModel>() {
 
     companion object {
         private const val TAG = "BLEIntegrationTestCompose"
@@ -39,20 +41,25 @@ class BLEIntegrationTestComposeActivity : FragmentActivity() {
     private var gsrRecorder: UnifiedGSRRecorder? = null
     private var deviceManager: ShimmerDeviceManager? = null
 
+    override fun createViewModel(): BLEIntegrationTestViewModel {
+        return viewModels<BLEIntegrationTestViewModel>().value
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         // Initialize components
-        permissionController = PermissionController(this)
+        permissionController = PermissionController(this as androidx.fragment.app.FragmentActivity)
         initializeRecorder()
+    }
 
-        setContent {
-            LibUnifiedTheme {
-                BLEIntegrationTestScreen(
-                    onRunTest = { testType -> runTest(testType) },
-                    onClearLogs = { /* Clear logs */ }
-                )
-            }
+    @Composable
+    override fun Content(viewModel: BLEIntegrationTestViewModel) {
+        LibUnifiedTheme {
+            BLEIntegrationTestScreen(
+                onRunTest = { testType -> runTest(testType) },
+                onClearLogs = { /* Clear logs */ }
+            )
         }
     }
 

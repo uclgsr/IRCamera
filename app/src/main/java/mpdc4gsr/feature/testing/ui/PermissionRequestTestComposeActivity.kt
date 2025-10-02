@@ -4,8 +4,8 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
-import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -20,21 +20,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import mpdc4gsr.core.ui.BaseComposeActivity
 import mpdc4gsr.core.ui.PermissionController
 import mpdc4gsr.core.ui.PermissionManager
+import mpdc4gsr.feature.testing.presentation.PermissionRequestTestViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
 /**
  * Compose version of Permission Request Activity
  * Tests permission system functionality and validation
+ * Migrated to BaseComposeActivity for consistency
  */
-class PermissionRequestTestComposeActivity : FragmentActivity() {
+class PermissionRequestTestComposeActivity : BaseComposeActivity<PermissionRequestTestViewModel>() {
 
     companion object {
         private const val TAG = "PermissionRequestTestCompose"
@@ -70,15 +72,19 @@ class PermissionRequestTestComposeActivity : FragmentActivity() {
         handlePermissionResults(permissions)
     }
 
+    override fun createViewModel(): PermissionRequestTestViewModel {
+        return viewModels<PermissionRequestTestViewModel>().value
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         initializePermissionSystem()
+    }
 
-        setContent {
-            LibUnifiedTheme {
-                PermissionRequestTestScreen()
-            }
+    @Composable
+    override fun Content(viewModel: PermissionRequestTestViewModel) {
+        LibUnifiedTheme {
+            PermissionRequestTestScreen()
         }
     }
 
