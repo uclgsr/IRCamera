@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import com.mpdc4gsr.libunified.R
 import com.mpdc4gsr.libunified.app.bean.event.SocketStateEvent
 import com.mpdc4gsr.libunified.app.bean.event.device.DeviceConnectEvent
-import com.mpdc4gsr.libunified.app.dialog.LoadingDialog
+import com.mpdc4gsr.libunified.app.compose.dialogs.LoadingDialogState
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -56,28 +56,21 @@ abstract class BaseFragment : Fragment() {
         EventBus.getDefault().unregister(this)
     }
 
-    private var loadingDialog: LoadingDialog? = null
+    private val loadingDialogState by lazy { LoadingDialogState(requireContext()) }
 
     fun showLoadingDialog(
         @StringRes resId: Int = 0,
     ) {
-        if (loadingDialog == null) {
-            loadingDialog = LoadingDialog(requireContext())
-        }
-        loadingDialog?.setTips(if (resId == 0) R.string.tip_loading else resId)
-        loadingDialog?.show()
+        val message = if (resId == 0) getString(R.string.tip_loading) else getString(resId)
+        loadingDialogState.show(message)
     }
 
     fun showLoadingDialog(text: CharSequence) {
-        if (loadingDialog == null) {
-            loadingDialog = LoadingDialog(requireContext())
-        }
-        loadingDialog?.setTips(text)
-        loadingDialog?.show()
+        loadingDialogState.show(text.toString())
     }
 
     fun dismissLoadingDialog() {
-        loadingDialog?.dismiss()
+        loadingDialogState.dismiss()
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

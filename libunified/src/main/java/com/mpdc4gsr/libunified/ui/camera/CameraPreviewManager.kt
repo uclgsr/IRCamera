@@ -3,6 +3,7 @@ package com.mpdc4gsr.libunified.ui.camera
 import android.graphics.Bitmap
 import android.os.Handler
 import com.elvishew.xlog.XLog
+import com.infisense.usbir.view.CameraView
 import com.mpdc4gsr.libunified.app.bean.AlarmBean
 import com.mpdc4gsr.libunified.common.RotateDegree
 

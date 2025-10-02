@@ -26,7 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.csl.irCamera.R
-import com.mpdc4gsr.libunified.app.dialog.TipDialog
+import com.mpdc4gsr.libunified.app.compose.dialogs.TipDialogState
 import com.mpdc4gsr.libunified.app.utils.Constants
 import mpdc4gsr.core.ui.BaseComposeActivity
 import mpdc4gsr.core.ui.components.TitleBar
@@ -309,10 +309,14 @@ class MoreHelpComposeActivity : BaseComposeActivity<MoreHelpViewModel>() {
     }
 
     private fun showSettingsError(settingType: String) {
-        TipDialog.Builder(this)
-            .setMessage("Unable to open $settingType. Please access it manually from your device settings.")
-            .setPositiveListener(R.string.app_got_it) { }
-            .create().show()
+        val tipDialogState = TipDialogState(this)
+        tipDialogState.show(
+            title = "",
+            message = "Unable to open $settingType. Please access it manually from your device settings.",
+            showCancel = false,
+            positiveText = getString(R.string.app_got_it),
+            onPositive = { }
+        )
     }
 }
 

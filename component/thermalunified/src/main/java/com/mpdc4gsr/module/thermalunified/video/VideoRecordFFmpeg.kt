@@ -36,7 +36,7 @@ import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.comm.view.TempLayout
 import com.mpdc4gsr.libunified.app.common.SharedManager
 import com.mpdc4gsr.libunified.app.config.FileConfig
-import com.mpdc4gsr.libunified.app.dialog.TipDialog
+import com.mpdc4gsr.libunified.app.compose.dialogs.TipDialogState
 import com.mpdc4gsr.libunified.app.tools.TimeTools
 import com.mpdc4gsr.libunified.app.utils.BitmapUtils
 import com.mpdc4gsr.libunified.ir.usbdual.camera.DualViewWithExternalCameraCommonApi
@@ -108,13 +108,15 @@ class VideoRecordFFmpeg(
                         ) > (500L * 1000 * 1000)
             if (!canStart) {
                 ThreadUtils.runOnUiThread {
-                    TipDialog.Builder(context)
-                        .setTitleMessage(getString(LibcoreR.string.app_tip))
-                        .setMessage(LibcoreR.string.album_report_aleart)
-                        .setPositiveListener(LibcoreR.string.app_confirm) {
-                        }
-                        .setCanceled(true)
-                        .create().show()
+                    val tipDialogState = TipDialogState(context)
+                    tipDialogState.show(
+                        title = getString(LibcoreR.string.app_tip),
+                        message = getString(LibcoreR.string.album_report_aleart),
+                        showCancel = false,
+                        positiveText = getString(LibcoreR.string.app_confirm),
+                        cancelable = true,
+                        onPositive = { }
+                    )
                 }
             }
             return canStart
@@ -459,13 +461,15 @@ class VideoRecordFFmpeg(
 
         if (!canStart) {
             ThreadUtils.runOnUiThread {
-                TipDialog.Builder(cameraView.context)
-                    .setTitleMessage(getString(LibcoreR.string.app_tip))
-                    .setMessage(LibcoreR.string.album_report_aleart)
-                    .setPositiveListener(LibcoreR.string.app_confirm) {
-                    }
-                    .setCanceled(true)
-                    .create().show()
+                val tipDialogState = TipDialogState(cameraView.context)
+                tipDialogState.show(
+                    title = getString(LibcoreR.string.app_tip),
+                    message = getString(LibcoreR.string.album_report_aleart),
+                    showCancel = false,
+                    positiveText = getString(LibcoreR.string.app_confirm),
+                    cancelable = true,
+                    onPositive = { }
+                )
             }
         }
         return canStart
