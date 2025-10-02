@@ -10,6 +10,7 @@ import android.os.Build
 import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import com.csl.irCamera.R
 import com.mpdc4gsr.gsr.model.SessionInfo
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.launchIn
