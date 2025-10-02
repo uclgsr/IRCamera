@@ -35,7 +35,6 @@ abstract class BaseComposeActivity<VM : BaseViewModel> : ComponentActivity() {
                 val viewModel = createViewModel()
                 Content(viewModel)
 
-                // Handle connection state changes in Compose
                 HandleConnectionEvents(viewModel)
             }
         }

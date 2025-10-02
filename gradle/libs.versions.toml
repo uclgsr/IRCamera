@@ -26,7 +26,7 @@ kotlin = "2.2.20"
 agp = "8.11.0"
 
 # Jetpack Compose BOM and core versions
-compose-bom = "2025.09.01"
+compose-bom = "2024.11.00"
 compose-compiler = "1.5.15"
 compose-activity = "1.11.0"
 compose-navigation = "2.9.5"
