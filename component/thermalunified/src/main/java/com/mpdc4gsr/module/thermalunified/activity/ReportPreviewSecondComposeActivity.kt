@@ -24,10 +24,7 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 
-/**
- * Advanced Report Preview - Enhanced preview with section highlighting
- * Interactive navigation with click-to-edit functionality
- */
+
 class ReportPreviewSecondComposeActivity : BaseComposeActivity<ReportPreviewSecondViewModel>() {
 
     override fun createViewModel(): ReportPreviewSecondViewModel {

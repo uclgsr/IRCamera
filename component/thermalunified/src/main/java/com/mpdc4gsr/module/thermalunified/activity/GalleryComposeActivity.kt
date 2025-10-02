@@ -26,10 +26,7 @@ import com.mpdc4gsr.module.thermalunified.fragment.GalleryVideoComposeFragment
 import com.mpdc4gsr.module.thermalunified.viewmodel.GalleryActivityViewModel
 import kotlinx.coroutines.launch
 
-/**
- * Modern Compose implementation of thermal gallery activity
- * Enhanced gallery management with tabbed picture/video interface
- */
+
 class GalleryComposeActivity : BaseComposeActivity<GalleryActivityViewModel>() {
 
     override fun createViewModel(): GalleryActivityViewModel {

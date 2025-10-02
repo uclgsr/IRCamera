@@ -8,16 +8,12 @@ import java.io.ByteArrayOutputStream
 object SupRUtils {
 
 
-    /**
-     *
-     */
+    
     fun canOpenSupR(): Boolean {
         return true
     }
 
-    /**
-     *
-     */
+    
     fun showOpenSupRTipsDialog(activity: Activity) {
 
     }

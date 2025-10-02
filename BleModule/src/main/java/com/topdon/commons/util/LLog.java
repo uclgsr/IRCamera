@@ -4,16 +4,9 @@ import android.util.Log;
 
 import com.elvishew.xlog.XLog;
 
-/**
- * LLog
- *
- * @author chuanfeng.bi
- * @date 2021/11/16 16:34
- */
+
 public class LLog {
-    /**
-     *
-     */
+    
     public final static int MAX_LENGTH = 2000;
     private static boolean isDebug = true; // Simplified for now
 
@@ -45,12 +38,7 @@ public class LLog {
 //        }
     }
 
-    /**
-     *
-     *
-     * @param tag
-     * @param msg
-     */
+    
     public static void LogMaxPrint(String tag, String msg) {
         if (msg.length() > MAX_LENGTH) {
             int length = MAX_LENGTH + 1;

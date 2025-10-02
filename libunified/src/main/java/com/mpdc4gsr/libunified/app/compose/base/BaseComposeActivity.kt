@@ -15,14 +15,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-/**
- * Base Compose Activity that provides:
- * - Theme integration
- * - EventBus registration (backward compatibility)
- * - Language handling
- * - Connection state handling
- * - ViewModel integration patterns
- */
+
 abstract class BaseComposeActivity<VM : BaseViewModel> : ComponentActivity() {
 
     protected abstract fun createViewModel(): VM

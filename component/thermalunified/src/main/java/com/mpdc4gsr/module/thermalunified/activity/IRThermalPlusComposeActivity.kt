@@ -22,10 +22,7 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 
-/**
- * Plus Mode Thermal - Premium features with AI enhancement
- * Advanced thermal processing with professional tools
- */
+
 class IRThermalPlusComposeActivity : BaseComposeActivity<IRThermalPlusViewModel>() {
 
     override fun createViewModel(): IRThermalPlusViewModel {

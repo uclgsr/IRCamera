@@ -17,12 +17,7 @@ import androidx.fragment.app.Fragment;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- * <p>
- * date: 2019/8/6 15:33
- * author: chuanfeng.bi
- */
+
 public class PermissionsRequester {
     private static final int PERMISSION_REQUEST_CODE = 10;
     private static final int REQUEST_CODE_WRITE_SETTINGS = 11;
@@ -47,11 +42,7 @@ public class PermissionsRequester {
         this.callback = callback;
     }
 
-    /**
-     *
-     *
-     * @param permissions
-     */
+    
     public void checkAndRequest(@NonNull List<String> permissions) {
         if (checking) {
             return;
@@ -166,11 +157,7 @@ public class PermissionsRequester {
     }
 
     public interface Callback {
-        /**
-         *
-         *
-         * @param refusedPermissions 。size == 0，
-         */
+        
         void onRequestResult(List<String> refusedPermissions);
     }
 }

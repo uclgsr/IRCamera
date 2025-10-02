@@ -4,13 +4,7 @@ import java.util.Arrays
 import java.util.Locale
 import java.util.UUID
 
-/**
- * Consolidated byte utilities replacing multiple ByteUtils classes
- * Replaces:
- * - BleModule/src/main/java/com/topdon/commons/util/MathUtils.java (byte operations)
- * - libunified/src/main/java/com/mpdc4gsr/libunified/app/utils/ByteUtils.kt
- * - libunified/src/main/java/com/mpdc4gsr/libunified/app/matrix/utils/ByteUtils.kt
- */
+
 @OptIn(ExperimentalUnsignedTypes::class)
 object UnifiedByteUtils {
 

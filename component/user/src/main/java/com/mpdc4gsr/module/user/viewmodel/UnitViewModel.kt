@@ -7,10 +7,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-/**
- * ViewModel for Unit (Temperature) Settings
- * Manages temperature unit selection (Celsius/Fahrenheit)
- */
+
 class UnitViewModel : BaseViewModel() {
 
     companion object {

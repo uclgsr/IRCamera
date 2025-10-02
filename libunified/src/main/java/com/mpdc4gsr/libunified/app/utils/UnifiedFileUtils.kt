@@ -6,15 +6,10 @@ import android.os.Environment
 import com.energy.iruvc.utils.CommonParams
 import java.io.*
 
-/**
- * Consolidated file utilities replacing multiple FileUtils classes
- * All duplicate FileUtils files have been consolidated into this single utility.
- */
+
 object UnifiedFileUtils {
 
-    /**
-     * Check if file exists and is a file (not directory)
-     */
+    
     fun isFileExist(filePath: String): Boolean {
         if (UnifiedStringUtils.isBlank(filePath)) {
             return false
@@ -23,9 +18,7 @@ object UnifiedFileUtils {
         return file.exists() && file.isFile
     }
 
-    /**
-     * Check if directory exists
-     */
+    
     fun isDirectoryExist(dirPath: String): Boolean {
         if (UnifiedStringUtils.isBlank(dirPath)) {
             return false
@@ -34,9 +27,7 @@ object UnifiedFileUtils {
         return dir.exists() && dir.isDirectory
     }
 
-    /**
-     * Create directory if it doesn't exist
-     */
+    
     fun createDirectory(dirPath: String): Boolean {
         if (UnifiedStringUtils.isBlank(dirPath)) {
             return false
@@ -49,9 +40,7 @@ object UnifiedFileUtils {
         }
     }
 
-    /**
-     * Delete directory and all its contents
-     */
+    
     fun deleteDirectory(dirPath: String): Boolean {
         return try {
             val dir = File(dirPath)
@@ -72,9 +61,7 @@ object UnifiedFileUtils {
         return file.delete()
     }
 
-    /**
-     * Delete file
-     */
+    
     fun deleteFile(filePath: String): Boolean {
         return try {
             val file = File(filePath)
@@ -84,9 +71,7 @@ object UnifiedFileUtils {
         }
     }
 
-    /**
-     * Get file size in bytes
-     */
+    
     fun getFileSize(filePath: String): Long {
         return try {
             val file = File(filePath)
@@ -96,9 +81,7 @@ object UnifiedFileUtils {
         }
     }
 
-    /**
-     * Read text file content
-     */
+    
     fun readTextFile(filePath: String): String? {
         return try {
             File(filePath).readText()
@@ -107,9 +90,7 @@ object UnifiedFileUtils {
         }
     }
 
-    /**
-     * Write text to file
-     */
+    
     fun writeTextFile(filePath: String, content: String): Boolean {
         return try {
             File(filePath).writeText(content)
@@ -119,9 +100,7 @@ object UnifiedFileUtils {
         }
     }
 
-    /**
-     * Append text to file
-     */
+    
     fun appendTextFile(filePath: String, content: String): Boolean {
         return try {
             File(filePath).appendText(content)
@@ -131,9 +110,7 @@ object UnifiedFileUtils {
         }
     }
 
-    /**
-     * Copy file from source to destination
-     */
+    
     fun copyFile(sourcePath: String, destPath: String): Boolean {
         return try {
             val sourceFile = File(sourcePath)
@@ -149,23 +126,17 @@ object UnifiedFileUtils {
         }
     }
 
-    /**
-     * Get external storage directory
-     */
+    
     fun getExternalStorageDirectory(): String {
         return Environment.getExternalStorageDirectory().absolutePath
     }
 
-    /**
-     * Get app-specific external files directory
-     */
+    
     fun getAppExternalFilesDir(context: Context, type: String? = null): String? {
         return context.getExternalFilesDir(type)?.absolutePath
     }
 
-    /**
-     * Save bitmap to file
-     */
+    
     fun saveBitmapToFile(
         bitmap: Bitmap,
         filePath: String,
@@ -185,9 +156,7 @@ object UnifiedFileUtils {
         }
     }
 
-    /**
-     * Get Y16 source type by data flow mode for IR camera
-     */
+    
     @JvmStatic
     fun getY16SrcTypeByDataFlowMode(dataFlowMode: CommonParams.DataFlowMode): CommonParams.Y16ModePreviewSrcType {
         return when (dataFlowMode) {

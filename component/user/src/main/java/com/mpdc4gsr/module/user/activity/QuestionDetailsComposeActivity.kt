@@ -15,15 +15,7 @@ import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.module.user.viewmodel.QuestionDetailsViewModel
 
-/**
- * User Management Module - FAQ Question Details Compose Activity
- *
- * Question details screen showing question and answer.
- * Features:
- * - Scrollable content for long answers
- * - Clean question/answer layout
- * - Material 3 design
- */
+
 class QuestionDetailsComposeActivity : BaseComposeActivity<QuestionDetailsViewModel>() {
 
     override fun createViewModel(): QuestionDetailsViewModel {

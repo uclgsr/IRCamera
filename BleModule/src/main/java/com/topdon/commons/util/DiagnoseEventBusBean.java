@@ -1,12 +1,6 @@
 package com.topdon.commons.util;
 
-/**
- * @Desc
- * @ClassName DiagnoseLanguageBean
- * @Email 616862466@qq.com
- * @Author
- * @Date 2022/9/13 15:40
- */
+
 
 public class DiagnoseEventBusBean {
     private int what;//1   2 sn  3 4   5 Folder sn   6 diagMenuMask

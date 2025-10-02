@@ -36,17 +36,7 @@ import com.mpdc4gsr.module.thermalunified.viewmodel.IRGalleryViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
-/**
- * Compose migration of IRGalleryFragment
- *
- * This fragment demonstrates:
- * - Complete migration of IR gallery UI to Compose
- * - Enhanced file management and organization
- * - Multi-directory support (LINE, TS004 devices)
- * - Modern Material 3 gallery interface
- * - Advanced filtering and sorting capabilities
- * - Pull-to-refresh functionality
- */
+
 class IRGalleryComposeFragment : BaseComposeFragment<IRGalleryViewModel>() {
 
     override fun createViewModel(): IRGalleryViewModel {

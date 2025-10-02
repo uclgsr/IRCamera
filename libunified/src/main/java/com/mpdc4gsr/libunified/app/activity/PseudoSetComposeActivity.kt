@@ -29,10 +29,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-/**
- * Modern Compose implementation of PseudoSetActivity
- * Provides advanced pseudo-color temperature configuration for thermal cameras
- */
+
 class PseudoSetComposeActivity : ComponentActivity() {
 
     private val viewModel: PseudoSetViewModel by viewModels()

@@ -5,17 +5,10 @@ import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 
-/**
- * Consolidated temperature and thermal utilities
- * Replaces:
- * - libunified/src/main/java/com/mpdc4gsr/libunified/ir/utils/TempUtils.kt
- * - Various temperature calculation utilities across modules
- */
+
 object UnifiedTemperatureUtils {
 
-    /**
-     * Get temperature values along a line between two points
-     */
+    
     @JvmStatic
     fun getLineTemperatures(
         point1: Point,
@@ -43,9 +36,7 @@ object UnifiedTemperatureUtils {
         return temperatures
     }
 
-    /**
-     * Get temperature values within a rectangular region
-     */
+    
     fun getRectangleTemperatures(
         topLeft: Point,
         bottomRight: Point,
@@ -72,9 +63,7 @@ object UnifiedTemperatureUtils {
         return temperatures
     }
 
-    /**
-     * Get temperature value at a specific point
-     */
+    
     fun getPointTemperature(
         point: Point,
         temperatureArray: ByteArray,
@@ -93,30 +82,22 @@ object UnifiedTemperatureUtils {
         }
     }
 
-    /**
-     * Find maximum temperature in region
-     */
+    
     fun findMaxTemperature(temperatures: List<Float>): Float? {
         return temperatures.maxOrNull()
     }
 
-    /**
-     * Find minimum temperature in region
-     */
+    
     fun findMinTemperature(temperatures: List<Float>): Float? {
         return temperatures.minOrNull()
     }
 
-    /**
-     * Calculate average temperature in region
-     */
+    
     fun calculateAverageTemperature(temperatures: List<Float>): Float {
         return if (temperatures.isEmpty()) 0f else temperatures.average().toFloat()
     }
 
-    /**
-     * Find hotspot (maximum temperature point) in region
-     */
+    
     fun findHotspot(
         topLeft: Point,
         bottomRight: Point,
@@ -148,9 +129,7 @@ object UnifiedTemperatureUtils {
         return hotspotPoint?.let { Pair(it, maxTemp) }
     }
 
-    /**
-     * Find coldspot (minimum temperature point) in region
-     */
+    
     fun findColdspot(
         topLeft: Point,
         bottomRight: Point,
@@ -182,37 +161,27 @@ object UnifiedTemperatureUtils {
         return coldspotPoint?.let { Pair(it, minTemp) }
     }
 
-    /**
-     * Convert Celsius to Fahrenheit
-     */
+    
     fun celsiusToFahrenheit(celsius: Float): Float {
         return celsius * 9f / 5f + 32f
     }
 
-    /**
-     * Convert Fahrenheit to Celsius
-     */
+    
     fun fahrenheitToCelsius(fahrenheit: Float): Float {
         return (fahrenheit - 32f) * 5f / 9f
     }
 
-    /**
-     * Convert Celsius to Kelvin
-     */
+    
     fun celsiusToKelvin(celsius: Float): Float {
         return celsius + 273.15f
     }
 
-    /**
-     * Convert Kelvin to Celsius
-     */
+    
     fun kelvinToCelsius(kelvin: Float): Float {
         return kelvin - 273.15f
     }
 
-    /**
-     * Format temperature with unit
-     */
+    
     @JvmStatic
     fun formatTemperature(
         temperature: Float,
@@ -229,17 +198,13 @@ object UnifiedTemperatureUtils {
         CELSIUS, FAHRENHEIT, KELVIN
     }
 
-    /**
-     * Convert byte value to temperature (implementation specific to thermal sensor)
-     */
+    
     private fun byteToTemperature(byte: Byte): Float {
         // This is a simplified conversion - actual implementation depends on sensor specs
         return byte.toFloat() / 10f
     }
 
-    /**
-     * Get all points along a line using Bresenham's algorithm
-     */
+    
     private fun getLinePoints(point1: Point, point2: Point): List<Point> {
         val points = mutableListOf<Point>()
 

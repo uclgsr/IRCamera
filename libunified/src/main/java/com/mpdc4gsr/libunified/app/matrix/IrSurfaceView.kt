@@ -58,13 +58,7 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
 //        mMatrix.getValues(mBeforeRotateMatrixValues)
 //    }
 
-    /**
-     * @param rotate
-     * 0
-     * 90
-     * 180
-     * 270
-     */
+    
     fun setMatrix(rotate: Float, w: Float, h: Float) {
         mMatrix.reset()
         when (rotate) {

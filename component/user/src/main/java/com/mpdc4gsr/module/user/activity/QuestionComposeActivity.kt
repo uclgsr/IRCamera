@@ -20,15 +20,7 @@ import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import com.mpdc4gsr.module.user.model.QuestionData
 import com.mpdc4gsr.module.user.viewmodel.QuestionViewModel
 
-/**
- * User Management Module - FAQ Questions Compose Activity
- *
- * FAQ questions list screen demonstrating RecyclerView → LazyColumn migration.
- * Features:
- * - Lazy scrolling list of FAQ items
- * - Navigation to question details
- * - Modern Material 3 card design
- */
+
 class QuestionComposeActivity : BaseComposeActivity<QuestionViewModel>() {
 
     override fun createViewModel(): QuestionViewModel {

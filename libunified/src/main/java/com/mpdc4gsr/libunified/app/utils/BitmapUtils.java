@@ -54,9 +54,7 @@ public enum BitmapUtils {
         return returnBm;
     }
 
-    /**
-     * bitmapbytes
-     */
+    
     public static byte[] bitmapToBytes(Bitmap bitmap, int quality) {
         if (null == bitmap) {
             return null;
@@ -73,14 +71,7 @@ public enum BitmapUtils {
         }
     }
 
-    /**
-     *
-     *
-     * @param bitmap
-     * @param file   ——
-     * @param path   ——
-     * @return
-     */
+    
     public static boolean saveBitmap(Bitmap bitmap, File file, File path) {
         boolean success = false;
         byte[] bytes = bitmapToBytes(bitmap, 100);
@@ -107,12 +98,7 @@ public enum BitmapUtils {
         return success;
     }
 
-    /**
-     *
-     *
-     * @param bitmap
-     * @param width  ，
-     */
+    
     public static Bitmap imageZoom(Bitmap bitmap, double width) {
         // bitmap，bitmap（）
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -125,13 +111,7 @@ public enum BitmapUtils {
                 width * newBitmap.getHeight() / newBitmap.getWidth());
     }
 
-    /***
-     *
-     *@param bitmap
-     * @param w
-     * @param h
-     * @return Bitmap
-     */
+    
     public static Bitmap scaleWithWH(Bitmap bitmap, double w, double h) {
         if (0 == w || 0 == h || null == bitmap) {
             return bitmap;
@@ -149,13 +129,7 @@ public enum BitmapUtils {
         }
     }
 
-    /**
-     * bitmap
-     *
-     * @param bmp  file
-     * @param file
-     * @return bitmap
-     */
+    
     public static boolean saveFile(String file, Bitmap bmp) {
         if (TextUtils.isEmpty(file) || null == bmp) return false;
 
@@ -180,13 +154,7 @@ public enum BitmapUtils {
         return true;
     }
 
-    /**
-     * ，
-     *
-     * @param backBitmap
-     * @param frontBitmap
-     * @return
-     */
+    
     public static Bitmap mergeBitmap(Bitmap backBitmap, Bitmap frontBitmap, int leftFront, int topFront) {
         if (null == backBitmap || backBitmap.isRecycled()
                 || null == frontBitmap || frontBitmap.isRecycled()) {
@@ -274,12 +242,7 @@ public enum BitmapUtils {
     }
 
 
-    /**
-     * ，
-     *
-     * @param bytes
-     * @param bytes2
-     */
+    
     public static void savaRawFile(byte[] bytes, byte[] bytes2) {
         try {
             File path = new File("/sdcard");
@@ -298,16 +261,7 @@ public enum BitmapUtils {
         }
     }
 
-    /**
-     *
-     *
-     * @param bmp
-     * @param title
-     * @param address
-     * @param time
-     * @param seekBarWidth : ，
-     * @return
-     */
+    
     public static Bitmap drawCenterLable(Bitmap bmp, String title, String address, String time, int seekBarWidth) {
         //
         Bitmap newBmp = Bitmap.createBitmap(bmp.getWidth(), bmp.getHeight(), Bitmap.Config.ARGB_8888);

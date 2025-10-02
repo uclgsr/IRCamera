@@ -24,10 +24,7 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.fragment.GalleryComposeFragment
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRGalleryEditViewModel
 
-/**
- * Modern Compose implementation of thermal gallery detail activity
- * Enhanced gallery detail view with editing and analysis tools
- */
+
 class IRGalleryDetail01ComposeActivity : BaseComposeActivity<IRGalleryEditViewModel>() {
 
     override fun createViewModel(): IRGalleryEditViewModel {

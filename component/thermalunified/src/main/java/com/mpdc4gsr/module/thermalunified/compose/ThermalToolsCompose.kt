@@ -49,19 +49,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlin.math.*
 
-/**
- * Modern Compose replacement for thermal module tools and utilities
- *
- * This file contains Compose implementations for:
- * - Fence.kt → FenceCompose
- * - ThermalTools.kt → ThermalToolCompose
- * - FenceTools.kt → FenceToolCompose
- * - GlideImageEngine.kt → ImageLoadingCompose (utilities)
- */
 
-/**
- * Thermal fence visualization for temperature boundaries
- */
+
+
 @OptIn(ExperimentalTextApi::class)
 @Composable
 fun FenceCompose(
@@ -195,9 +185,7 @@ fun FenceCompose(
     }
 }
 
-/**
- * Thermal tool selection and management interface
- */
+
 @Composable
 fun ThermalToolCompose(
     selectedTool: ThermalToolType,
@@ -303,9 +291,7 @@ private fun ThermalToolItemCompose(
     }
 }
 
-/**
- * Advanced fence tool with measurement capabilities
- */
+
 @OptIn(ExperimentalTextApi::class)
 @Composable
 fun FenceToolCompose(

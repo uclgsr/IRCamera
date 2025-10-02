@@ -19,10 +19,7 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalIrNightViewModel
 
-/**
- * Compose implementation of Thermal IR Night activity
- * Night mode thermal imaging interface
- */
+
 class ThermalIrNightComposeActivity : BaseComposeActivity<ThermalIrNightViewModel>() {
 
     override fun createViewModel(): ThermalIrNightViewModel {

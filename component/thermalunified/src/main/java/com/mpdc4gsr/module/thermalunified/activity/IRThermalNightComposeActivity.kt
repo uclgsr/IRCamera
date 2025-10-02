@@ -23,10 +23,7 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 
-/**
- * Night Vision Thermal - Dark theme optimized for low-light usage
- * Enhanced sensitivity with specialized thermal processing for night conditions
- */
+
 class IRThermalNightComposeActivity : BaseComposeActivity<IRThermalNightViewModel>() {
 
     override fun createViewModel(): IRThermalNightViewModel {

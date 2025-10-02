@@ -15,16 +15,7 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalFragmentViewModel
 
-/**
- * Task B: Complete Thermal Camera Activity using Compose
- *
- * This activity demonstrates:
- * - Complete migration of thermal camera UI to Compose
- * - Uses shared BaseComposeActivity from libunified module
- * - Modern Material 3 UI with thermal imaging colors
- * - Enhanced temperature data visualization
- * - Improved recording controls and status indicators
- */
+
 class ThermalCameraComposeActivity : BaseComposeActivity<ThermalFragmentViewModel>() {
 
     override fun createViewModel(): ThermalFragmentViewModel {

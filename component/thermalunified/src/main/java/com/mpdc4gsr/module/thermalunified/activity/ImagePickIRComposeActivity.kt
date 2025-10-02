@@ -26,10 +26,7 @@ import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-/**
- * Modern Compose implementation of thermal image picker activity
- * Enhanced image selection with thermal preview and capture
- */
+
 class ImagePickIRComposeActivity : BaseComposeActivity<ThermalViewModel>() {
 
     override fun createViewModel(): ThermalViewModel {

@@ -24,17 +24,7 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.app.matrix.IrSurfaceView
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalFragmentViewModel
 
-/**
- * Compose migration of ThermalFragment
- *
- * This fragment demonstrates:
- * - Complete migration of thermal camera UI to Compose
- * - Integration with existing IrSurfaceView for camera display
- * - Modern Material 3 UI with thermal imaging optimized colors
- * - Enhanced temperature data visualization
- * - Improved recording controls and status indicators
- * - Seamless integration with ThermalFragmentViewModel
- */
+
 class ThermalComposeFragment : BaseComposeFragment<ThermalFragmentViewModel>() {
 
     override fun createViewModel(): ThermalFragmentViewModel {

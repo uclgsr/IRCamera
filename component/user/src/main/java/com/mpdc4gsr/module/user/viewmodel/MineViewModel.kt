@@ -6,10 +6,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-/**
- * ViewModel for Mine Fragment Compose
- * Manages user profile, device info and app settings
- */
+
 class MineViewModel : BaseViewModel() {
 
     data class UserInfo(

@@ -14,16 +14,9 @@ import com.topdon.ble.callback.ReadRssiCallback;
 
 import java.util.UUID;
 
-/**
- * date: 2019/9/20 18:06
- * author: bichuanfeng
- */
+
 public class RequestBuilderFactory {
-    /**
-     *
-     *
-     * @param mtu
-     */
+    
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     public RequestBuilder<MtuChangeCallback> getChangeMtuBuilder(@IntRange(from = 23, to = 517) int mtu) {
         if (mtu < 23) {
@@ -36,12 +29,7 @@ public class RequestBuilderFactory {
         return builder;
     }
 
-    /**
-     *
-     *
-     * @param service        UUID
-     * @param characteristic UUID
-     */
+    
     public RequestBuilder<ReadCharacteristicCallback> getReadCharacteristicBuilder(UUID service, UUID characteristic) {
         RequestBuilder<ReadCharacteristicCallback> builder = new RequestBuilder<>(RequestType.READ_CHARACTERISTIC);
         builder.service = service;
@@ -49,13 +37,7 @@ public class RequestBuilderFactory {
         return builder;
     }
 
-    /**
-     *
-     *
-     * @param service        UUID
-     * @param characteristic UUID
-     * @param enable
-     */
+    
     public RequestBuilder<NotificationChangeCallback> getSetNotificationBuilder(UUID service, UUID characteristic,
                                                                                 boolean enable) {
         RequestBuilder<NotificationChangeCallback> builder = new RequestBuilder<>(RequestType.SET_NOTIFICATION);
@@ -65,13 +47,7 @@ public class RequestBuilderFactory {
         return builder;
     }
 
-    /**
-     * Indication
-     *
-     * @param service        UUID
-     * @param characteristic UUID
-     * @param enable
-     */
+    
     public RequestBuilder<NotificationChangeCallback> getSetIndicationBuilder(UUID service, UUID characteristic,
                                                                               boolean enable) {
         RequestBuilder<NotificationChangeCallback> builder = new RequestBuilder<>(RequestType.SET_INDICATION);
@@ -81,13 +57,7 @@ public class RequestBuilderFactory {
         return builder;
     }
 
-    /**
-     *
-     *
-     * @param service        UUID
-     * @param characteristic UUID
-     * @param descriptor     UUID
-     */
+    
     public RequestBuilder<NotificationChangeCallback> getReadDescriptorBuilder(UUID service, UUID characteristic,
                                                                                UUID descriptor) {
         RequestBuilder<NotificationChangeCallback> builder = new RequestBuilder<>(RequestType.READ_DESCRIPTOR);
@@ -97,13 +67,7 @@ public class RequestBuilderFactory {
         return builder;
     }
 
-    /**
-     *
-     *
-     * @param service        UUID
-     * @param characteristic UUID
-     * @param value
-     */
+    
     public WriteCharacteristicBuilder getWriteCharacteristicBuilder(UUID service, UUID characteristic,
                                                                     byte[] value) {
         Inspector.requireNonNull(value, "value can't be null");
@@ -114,28 +78,18 @@ public class RequestBuilderFactory {
         return builder;
     }
 
-    /**
-     *
-     */
+    
     public RequestBuilder<ReadRssiCallback> getReadRssiBuilder() {
         return new RequestBuilder<>(RequestType.READ_RSSI);
     }
 
-    /**
-     *
-     */
+    
     @RequiresApi(Build.VERSION_CODES.O)
     public RequestBuilder<PhyChangeCallback> getReadPhyBuilder() {
         return new RequestBuilder<>(RequestType.READ_PHY);
     }
 
-    /**
-     *
-     *
-     * @param txPhy      。{@link BluetoothDevice#PHY_LE_1M_MASK}
-     * @param rxPhy      。{@link BluetoothDevice#PHY_LE_1M_MASK}
-     * @param phyOptions BLE。{@link BluetoothDevice#PHY_OPTION_NO_PREFERRED}
-     */
+    
     @RequiresApi(Build.VERSION_CODES.O)
     public RequestBuilder<PhyChangeCallback> getSetPreferredPhyBuilder(int txPhy, int rxPhy, int phyOptions) {
         RequestBuilder<PhyChangeCallback> builder = new RequestBuilder<>(RequestType.SET_PREFERRED_PHY);

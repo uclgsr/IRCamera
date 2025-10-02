@@ -22,10 +22,7 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ReportPreviewViewModel
 
-/**
- * Compose implementation of Report Preview First activity
- * First step in report preview workflow
- */
+
 class ReportPreviewFirstComposeActivity : BaseComposeActivity<ReportPreviewViewModel>() {
 
     override fun createViewModel(): ReportPreviewViewModel {

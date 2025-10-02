@@ -27,17 +27,7 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 
-/**
- * ThermalMonitoringComposeActivity - Advanced Thermal Monitoring Dashboard with Compose
- *
- * Comprehensive thermal monitoring interface featuring:
- * - Real-time thermal data monitoring with multiple sensors
- * - Advanced temperature trending and analytics
- * - Automated alert system with threshold management
- * - Historical data visualization with charts and graphs
- * - Multi-zone thermal monitoring with custom boundaries
- * - Export capabilities for monitoring reports and data
- */
+
 class ThermalMonitoringComposeActivity : BaseComposeActivity<BaseViewModel>() {
 
     companion object {
