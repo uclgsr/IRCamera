@@ -8,10 +8,12 @@ import androidx.compose.material.icons.filled.Today
 import com.mpdc4gsr.libunified.app.db.AppDatabase
 import com.mpdc4gsr.libunified.app.db.dao.ThermalDao
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
+import com.mpdc4gsr.libunified.app.config.FileConfig
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.withContext
-import java.util.*
+import java.io.File
+import java.util.Calendar
 
 class IRMonitorHistoryViewModel : BaseViewModel() {
 
@@ -164,7 +166,7 @@ class IRMonitorHistoryViewModel : BaseViewModel() {
                                 "area" -> SessionType.CAPTURE
                                 else -> SessionType.MONITORING
                             },
-                            dataFilePath = "" // TODO: Add image path when available
+                            dataFilePath = findThermalImagePath(record.startTime, detailList.firstOrNull()?.thermalId)
                         )
                     }
                 }
@@ -259,6 +261,40 @@ class IRMonitorHistoryViewModel : BaseViewModel() {
         val monthEnd = calendar.timeInMillis
 
         return allHistoryItems.filter { it.startTime in monthStart until monthEnd }
+    }
+
+    /**
+     * Searches for a thermal image file by checking multiple directories and filename patterns.
+     *
+     * Search order:
+     * 1. Directories are checked in the following order:
+     *    - FileConfig.gallerySourDir
+     *    - FileConfig.lineIrGalleryDir
+     *    - FileConfig.tc007IrGalleryDir
+     * 2. For each directory, filenames are checked in this order:
+     *    - If thermalId is provided: "<thermalId>.jpg"
+     *    - "<startTime>.jpg"
+     *    - "<startTime>.png"
+     *
+     * The first matching file found is returned. If no file is found, returns an empty string.
+     */
+    private fun findThermalImagePath(startTime: Long, thermalId: String?): String {
+        val possibleDirs = sequenceOf(
+            FileConfig.gallerySourDir,
+            FileConfig.lineIrGalleryDir,
+            FileConfig.tc007IrGalleryDir
+        )
+
+        val possibleNames = sequenceOf(
+            thermalId?.let { "$it.jpg" },
+            thermalId?.let { "$it.png" },
+            "${startTime}.jpg",
+            "${startTime}.png"
+        ).filterNotNull()
+
+        return possibleDirs.flatMap { dir ->
+            possibleNames.map { name -> File(dir, name) }
+        }.firstOrNull { it.exists() }?.absolutePath ?: ""
     }
 
     // History UI Event sealed class for one-time events
