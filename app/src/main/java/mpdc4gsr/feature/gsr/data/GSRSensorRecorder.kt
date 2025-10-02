@@ -51,10 +51,8 @@ class GSRSensorRecorder(
     companion object {
         private const val TAG = "GSRSensorRecorder"
 
-        // Connection health thresholds - keeping these as they are specific to this recorder
         private const val TIMING_HEALTH_POOR_MS = 2000L
 
-        // Health score weights - specific to this implementation
         private const val HEALTH_SCORE_WEIGHT_HISTORICAL = 0.8
         private const val HEALTH_SCORE_WEIGHT_SAMPLE = 0.15
         private const val HEALTH_SCORE_WEIGHT_TIMING = 0.05
@@ -63,6 +61,9 @@ class GSRSensorRecorder(
         private const val SHIMMER_DEFAULT_SAMPLING_RATE = 128.0
         private const val GSR_CHANNEL_ID = 0x01
         private const val GSR_RANGE_AUTO = 0x00
+        
+        private const val SHIMMER_MIN_SAMPLING_RATE = 1.0
+        private const val SHIMMER_MAX_SAMPLING_RATE = 512.0
 
         // Enhanced batch writing configuration for improved performance
         private const val CSV_BATCH_SIZE = 50 // Write every 50 samples for better performance
@@ -132,7 +133,8 @@ class GSRSensorRecorder(
     }
 
     override val sensorType: String = "GSR Shimmer3"
-    override val samplingRate: Double = samplingRateHz.toDouble()
+    private var _samplingRate: Double = samplingRateHz.toDouble()
+    override val samplingRate: Double get() = _samplingRate
 
     private var _isRecording = AtomicBoolean(false)
     override val isRecording: Boolean get() = _isRecording.get()
@@ -147,6 +149,9 @@ class GSRSensorRecorder(
     private var isShimmerConnected = false
 
     private var legacyGSRRecorder: LegacyGSRRecorder? = null
+    
+    private var gsrSettingsRepository: GSRSettingsRepository? = null
+    private var effectiveSamplingRate: Double = samplingRateHz.toDouble()
 
     private var gsrNetworkStreamer: GSRNetworkStreamer? = null
     private var isNetworkStreamingEnabled = true
@@ -199,11 +204,21 @@ class GSRSensorRecorder(
                     startConnectionStateMonitoring()
                 }
 
+                gsrSettingsRepository = GSRSettingsRepository(context)
+                val gsrSettings = gsrSettingsRepository?.gsrSettings?.value
+                
+                effectiveSamplingRate = gsrSettings?.samplingRate?.toDouble() ?: samplingRateHz.toDouble()
+                effectiveSamplingRate = effectiveSamplingRate.coerceIn(SHIMMER_MIN_SAMPLING_RATE, SHIMMER_MAX_SAMPLING_RATE)
+                _samplingRate = effectiveSamplingRate
+                
+                Log.i(TAG, "GSR Settings loaded: samplingRate=${gsrSettings?.samplingRate}Hz, filtering=${gsrSettings?.enableFiltering}, bufferSize=${gsrSettings?.bufferSize}")
+                Log.i(TAG, "Effective sampling rate for Shimmer: ${effectiveSamplingRate}Hz (within Shimmer range: $SHIMMER_MIN_SAMPLING_RATE-$SHIMMER_MAX_SAMPLING_RATE Hz)")
+
                 realShimmerGSRRecorder =
                     ShimmerGSRRecorder(
                         context,
                         GSRRealShimmerDeviceFactory(context),
-                        samplingRateHz
+                        effectiveSamplingRate.toInt()
                     )
 
                 val shimmerRecorder = realShimmerGSRRecorder
@@ -212,7 +227,7 @@ class GSRSensorRecorder(
 
                         val deviceInitialized = shimmerRecorder.initializeDevice()
                         if (deviceInitialized) {
-                            Log.i(TAG, "Shimmer GSR device initialized and ready")
+                            Log.i(TAG, "Shimmer GSR device initialized and ready with ${effectiveSamplingRate}Hz sampling rate")
                             isShimmerConnected = true
                         } else {
                             Log.w(
@@ -231,7 +246,7 @@ class GSRSensorRecorder(
                 }
 
                 legacyGSRRecorder =
-                    LegacyGSRRecorder(context, GSRRealShimmerDeviceFactory(context), samplingRateHz)
+                    LegacyGSRRecorder(context, GSRRealShimmerDeviceFactory(context), effectiveSamplingRate.toInt())
 
                 if (isNetworkStreamingEnabled) {
                     try {
@@ -1641,23 +1656,29 @@ class GSRSensorRecorder(
 
     private suspend fun startShimmerStreaming(device: Shimmer): Boolean {
         return try {
-            // Configure GSR sensor (methods may not be available in current SDK)
+            // Configure GSR sensor with settings from repository
             try {
-                // Use the local constant since Shimmer.GSR_RANGE_AUTO may not exist
+                val gsrSettings = gsrSettingsRepository?.gsrSettings?.value
+                
+                // Apply GSR-specific configurations if available in SDK
+                Log.d(TAG, "Configuring GSR sensor with settings: filtering=${gsrSettings?.enableFiltering}, bufferSize=${gsrSettings?.bufferSize}")
+                
+                // Note: Some methods may not be available in all Shimmer SDK versions
                 // device.setGSRRange(GSR_RANGE_AUTO)
                 // device.enableGSRSensor(true)
-                Log.d(TAG, "GSR sensor configuration attempted (methods may not be available)")
+                
             } catch (e: Exception) {
-                Log.w(TAG, "GSR sensor configuration not available in current SDK: ${e.message}")
+                Log.w(TAG, "Some GSR sensor configurations not available in current SDK: ${e.message}")
             }
 
+            // Apply sampling rate from settings (already validated in initialize)
+            device.setSamplingRateShimmer(effectiveSamplingRate)
+            Log.i(TAG, "Shimmer sampling rate configured: ${effectiveSamplingRate}Hz")
 
-            device.setSamplingRateShimmer(51.2)
-
-
+            // Start streaming
             device.startStreaming()
 
-            Log.i(TAG, "Shimmer streaming started successfully")
+            Log.i(TAG, "Shimmer streaming started successfully with ${samplingRate}Hz sampling rate")
             true
         } catch (e: Exception) {
             Log.e(TAG, "Failed to start Shimmer streaming", e)

@@ -319,6 +319,13 @@ class GSRSettingsViewModel : BaseViewModel() {
         }
     }
 
+    fun updateSamplingRate(samplingRate: Int) {
+        launchWithErrorHandling {
+            val currentSettings = repository.gsrSettings.value
+            repository.updateGSRSettings(currentSettings.copy(samplingRate = samplingRate))
+        }
+    }
+
     fun updateDeviceSettings(settings: GSRSettingsRepository.DeviceSettings) {
         launchWithErrorHandling {
             repository.updateDeviceSettings(settings)

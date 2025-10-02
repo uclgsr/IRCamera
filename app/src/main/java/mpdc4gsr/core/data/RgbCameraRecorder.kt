@@ -73,6 +73,10 @@ class RgbCameraRecorder(
         private const val VIDEO_HEIGHT_4K = 2160
         private const val VIDEO_WIDTH_1080P = 1920
         private const val VIDEO_HEIGHT_1080P = 1080
+        private const val VIDEO_WIDTH_720P = 1280
+        private const val VIDEO_HEIGHT_720P = 720
+        private const val VIDEO_WIDTH_480P = 854
+        private const val VIDEO_HEIGHT_480P = 480
         private const val VIDEO_FPS_60 = 60
         private const val VIDEO_FPS_TARGET = 30
         private const val VIDEO_FPS_FALLBACK = 24
@@ -145,6 +149,8 @@ class RgbCameraRecorder(
     private var deviceSupports4K = false
     private var deviceSupportsRAW = false
     private var actualFrameRateAchieved = 0.0
+    
+    private var recordingSettings: mpdc4gsr.feature.settings.data.RecordingSettingsRepository.RecordingSettings? = null
 
     private var cameraProvider: ProcessCameraProvider? = null
     private var preview: Preview? = null
@@ -213,6 +219,9 @@ class RgbCameraRecorder(
 
     override suspend fun initialize(): Boolean = withContext(Dispatchers.Main) {
         try {
+            recordingSettings = mpdc4gsr.feature.settings.data.RecordingSettingsRepository.getInstance(context).getSettings()
+            Log.d(TAG, "Recording settings loaded: quality=${recordingSettings?.recordingQuality}, fps=${recordingSettings?.videoFrameRate}, audio=${recordingSettings?.audioEnabled}")
+            
             Log.d(
                 TAG,
                 "Initializing CameraX with ${if (useFrontCamera) "front" else "back"} camera"
@@ -532,20 +541,31 @@ class RgbCameraRecorder(
     private fun optimizeVideoConfiguration() {
         try {
             val supports60fps = checkDevice60fpsSupport()
+            
+            val qualityConfig = recordingSettings?.let { settings ->
+                mpdc4gsr.feature.settings.data.RecordingSettingsRepository.getInstance(context)
+                    .getQualityConfig(settings.recordingQuality)
+            }
+            
+            val preferredFps = recordingSettings?.videoFrameRate ?: VIDEO_FPS_TARGET
 
-            if (deviceSupports4K) {
+            if (qualityConfig != null) {
+                Log.i(TAG, "Applying user settings: quality=${recordingSettings?.recordingQuality}, fps=$preferredFps")
+                selectedVideoWidth = qualityConfig.videoWidth
+                selectedVideoHeight = qualityConfig.videoHeight
+                selectedVideoBitrate = qualityConfig.videoBitrate
+                selectedVideoFps = preferredFps.coerceIn(VIDEO_FPS_FALLBACK, if (supports60fps) VIDEO_FPS_60 else VIDEO_FPS_TARGET)
+            } else if (deviceSupports4K) {
                 Log.i(TAG, "Configuring for 4K recording on supported device")
                 selectedVideoWidth = VIDEO_WIDTH_4K
                 selectedVideoHeight = VIDEO_HEIGHT_4K
                 selectedVideoBitrate = VIDEO_BITRATE_4K
-                // Use 60fps if supported, otherwise fall back to 30fps
                 selectedVideoFps = if (supports60fps) VIDEO_FPS_60 else VIDEO_FPS_TARGET
             } else {
                 Log.i(TAG, "Configuring for 1080p recording with fallback safety")
                 selectedVideoWidth = VIDEO_WIDTH_1080P
                 selectedVideoHeight = VIDEO_HEIGHT_1080P
                 selectedVideoBitrate = VIDEO_BITRATE_1080P
-                // Use 60fps if supported, otherwise fall back to 30fps
                 selectedVideoFps = if (supports60fps) VIDEO_FPS_60 else VIDEO_FPS_TARGET
             }
 
@@ -555,7 +575,7 @@ class RgbCameraRecorder(
             )
             Log.i(
                 TAG,
-                "Advanced capabilities: 4K=${deviceSupports4K}, RAW=${deviceSupportsRAW}, 60fps=${supports60fps}"
+                "Advanced capabilities: 4K=${deviceSupports4K}, RAW=${deviceSupportsRAW}, 60fps=${supports60fps}, UserSettings=${qualityConfig != null}"
             )
 
         } catch (e: Exception) {
@@ -862,7 +882,10 @@ class RgbCameraRecorder(
                     return@withContext true
                 }
 
+                mpdc4gsr.feature.settings.data.RecordingSettingsValidator.validateAndLogSettings(context)
+                
                 Log.i(TAG, "Starting RGB camera recording with Samsung Galaxy S22 optimization")
+                Log.i(TAG, "Recording config from settings: ${selectedVideoWidth}x${selectedVideoHeight}@${selectedVideoFps}fps, audio=${recordingSettings?.audioEnabled}")
                 _isRecording.set(true)
                 sessionStartTime.set(System.currentTimeMillis())
 
@@ -883,6 +906,8 @@ class RgbCameraRecorder(
                         "sensor_type" to "rgb_camera",
                         "sensor_id" to sensorId,
                         "recording_config" to "${selectedVideoWidth}x${selectedVideoHeight}@${selectedVideoFps}fps",
+                        "audio_enabled" to "${recordingSettings?.audioEnabled}",
+                        "recording_quality" to "${recordingSettings?.recordingQuality}",
                         "sync_verification" to "enabled"
                     )
                 )
@@ -1050,11 +1075,15 @@ class RgbCameraRecorder(
             activeRecording = videoCapture.output
                 .prepareRecording(context, mediaStoreOutput)
                 .apply {
-
-                    if (context.checkSelfPermission(android.Manifest.permission.RECORD_AUDIO) ==
+                    val audioEnabled = recordingSettings?.audioEnabled ?: true
+                    if (audioEnabled &&
+                        context.checkSelfPermission(android.Manifest.permission.RECORD_AUDIO) ==
                         android.content.pm.PackageManager.PERMISSION_GRANTED
                     ) {
                         withAudioEnabled()
+                        Log.i(TAG, "Audio recording enabled per user settings")
+                    } else {
+                        Log.i(TAG, "Audio recording disabled per user settings or permission not granted")
                     }
                 }
                 .start(ContextCompat.getMainExecutor(context)) { recordEvent ->
