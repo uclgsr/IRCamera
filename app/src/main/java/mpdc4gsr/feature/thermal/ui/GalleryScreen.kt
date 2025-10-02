@@ -29,6 +29,7 @@ import mpdc4gsr.core.ui.theme.IRCameraTheme
  * Gallery Screen - Media gallery for thermal images, recordings, and data
  * Replaces thermal gallery activities with unified Compose implementation
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GalleryScreen(
     onBackClick: (() -> Unit)? = null,
