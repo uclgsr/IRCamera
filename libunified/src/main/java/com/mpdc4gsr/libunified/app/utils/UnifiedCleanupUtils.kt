@@ -8,7 +8,7 @@ object UnifiedCleanupUtils {
 
     // ==================== FINAL BLE MODULE CONSOLIDATION ====================
 
-    
+
     fun setDoubleAccuracy(num: Double, scale: Int): Double {
         val factor = Math.pow(10.0, scale.toDouble())
         return Math.floor(num * factor) / factor
@@ -49,7 +49,7 @@ object UnifiedCleanupUtils {
 
     // ==================== FINAL LIBUNIFIED CONSOLIDATION ====================
 
-    
+
     fun getScreenDensity(context: Context): Float {
         return context.resources.displayMetrics.density
     }
@@ -78,7 +78,7 @@ object UnifiedCleanupUtils {
 
     // ==================== FINAL COMPONENT CONSOLIDATION ====================
 
-    
+
     fun calculateThermalAverage(temperatures: FloatArray): Float {
         return if (temperatures.isEmpty()) 0f else temperatures.average().toFloat()
     }
@@ -104,7 +104,7 @@ object UnifiedCleanupUtils {
 
     // ==================== FINAL APP UTILITIES CONSOLIDATION ====================
 
-    
+
     fun cleanupTempFiles(context: Context, maxAgeHours: Int = 24): Int {
         val tempDir = File(context.cacheDir, "temp")
         if (!tempDir.exists()) return 0
@@ -135,7 +135,7 @@ object UnifiedCleanupUtils {
 
     // ==================== REPOSITORY-WIDE CLEANUP UTILITIES ====================
 
-    
+
     fun validateRepositoryStructure(rootPath: String): RepositoryValidationResult {
         val root = File(rootPath)
         val issues = mutableListOf<String>()
@@ -179,7 +179,7 @@ object UnifiedCleanupUtils {
         val consolidationComplete: Boolean
     )
 
-    
+
     fun generateConsolidationReport(rootPath: String): String {
         val validation = validateRepositoryStructure(rootPath)
 

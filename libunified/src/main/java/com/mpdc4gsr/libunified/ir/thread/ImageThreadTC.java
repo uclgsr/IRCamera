@@ -13,11 +13,11 @@ import com.energy.iruvc.utils.CommonParams;
 import com.energy.iruvc.utils.SynchronizedBitmap;
 import com.example.suplib.wrapper.SupHelp;
 import com.mpdc4gsr.libunified.app.bean.AlarmBean;
+import com.mpdc4gsr.libunified.app.utils.UnifiedColorUtils;
 import com.mpdc4gsr.libunified.ir.bean.ColorRGB;
 import com.mpdc4gsr.libunified.ir.utils.IRImageHelp;
 import com.mpdc4gsr.libunified.ir.utils.JNITools;
 import com.mpdc4gsr.libunified.ir.utils.OpencvTools;
-import com.mpdc4gsr.libunified.app.utils.UnifiedColorUtils;
 
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;

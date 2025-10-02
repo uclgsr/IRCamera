@@ -1,7 +1,7 @@
 package com.mpdc4gsr.libunified.app.utils
 
 import android.content.Context
-import java.util.UUID
+import java.util.*
 
 
 object UnifiedStringUtils {

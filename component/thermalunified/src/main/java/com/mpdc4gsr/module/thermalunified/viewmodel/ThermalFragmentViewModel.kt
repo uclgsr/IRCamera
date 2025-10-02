@@ -6,9 +6,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
-import com.mpdc4gsr.module.thermalunified.tools.Fence
-import com.mpdc4gsr.module.thermalunified.tools.ThermalTools
-import com.mpdc4gsr.module.thermalunified.utils.ArrayUtils
 import com.mpdc4gsr.libunified.app.matrix.IrSurfaceView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -19,8 +16,6 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
-import java.math.BigDecimal
-import java.math.RoundingMode
 
 class ThermalFragmentViewModel : BaseViewModel() {
 

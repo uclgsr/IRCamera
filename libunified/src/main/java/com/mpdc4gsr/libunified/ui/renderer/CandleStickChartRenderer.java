@@ -11,12 +11,7 @@ import com.mpdc4gsr.libunified.ui.formatter.ValueFormatter;
 import com.mpdc4gsr.libunified.ui.highlight.Highlight;
 import com.mpdc4gsr.libunified.ui.interfaces.dataprovider.CandleDataProvider;
 import com.mpdc4gsr.libunified.ui.interfaces.datasets.ICandleDataSet;
-import com.mpdc4gsr.libunified.ui.utils.ColorTemplate;
-import com.mpdc4gsr.libunified.ui.utils.MPPointD;
-import com.mpdc4gsr.libunified.ui.utils.MPPointF;
-import com.mpdc4gsr.libunified.ui.utils.Transformer;
-import com.mpdc4gsr.libunified.ui.utils.Utils;
-import com.mpdc4gsr.libunified.ui.utils.ViewPortHandler;
+import com.mpdc4gsr.libunified.ui.utils.*;
 
 import java.util.List;
 

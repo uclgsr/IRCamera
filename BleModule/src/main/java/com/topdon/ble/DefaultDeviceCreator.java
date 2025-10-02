@@ -6,7 +6,6 @@ import android.bluetooth.le.ScanResult;
 import androidx.annotation.Nullable;
 
 
-
 class DefaultDeviceCreator implements DeviceCreator {
     @Nullable
     @Override

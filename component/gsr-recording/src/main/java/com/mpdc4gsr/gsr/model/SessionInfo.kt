@@ -9,7 +9,7 @@ data class SessionInfo(
     var participantId: String? = null,
     var studyName: String? = null,
     var sampleCount: Long = 0,
-    
+
     var totalDataSize: Long = 0,
     val metadata: MutableMap<String, String> = mutableMapOf(),
     val syncMarks: MutableList<SyncMark> = mutableListOf(),

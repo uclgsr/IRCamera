@@ -1,15 +1,13 @@
 package mpdc4gsr.feature.gsr.ui
 
-import android.os.Bundle
-import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.automirrored.filled.*
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -17,12 +15,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import mpdc4gsr.core.ui.BaseComposeActivity
-import mpdc4gsr.feature.gsr.presentation.SessionExportViewModel
-import mpdc4gsr.feature.gsr.presentation.ExportFormat
-import mpdc4gsr.feature.gsr.presentation.ExportDestination
-import mpdc4gsr.feature.gsr.presentation.GSRSession
-
 import mpdc4gsr.core.ui.theme.IRCameraTheme
+import mpdc4gsr.feature.gsr.presentation.ExportDestination
+import mpdc4gsr.feature.gsr.presentation.ExportFormat
+import mpdc4gsr.feature.gsr.presentation.GSRSession
+import mpdc4gsr.feature.gsr.presentation.SessionExportViewModel
 
 /**
  * Modern Compose implementation of GSR Session Export

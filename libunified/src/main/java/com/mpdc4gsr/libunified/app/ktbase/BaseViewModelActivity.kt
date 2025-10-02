@@ -2,15 +2,14 @@ package com.mpdc4gsr.libunified.app.ktbase
 
 import android.os.Bundle
 import android.util.Log
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.mpdc4gsr.libunified.R
-import kotlinx.coroutines.TimeoutCancellationException
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
-import androidx.lifecycle.Lifecycle
 import com.mpdc4gsr.libunified.app.compose.dialogs.SimpleMessageDialogState
+import kotlinx.coroutines.TimeoutCancellationException
+import kotlinx.coroutines.launch
 import kotlin.coroutines.cancellation.CancellationException
 
 abstract class BaseViewModelActivity<VM : BaseViewModel> : BaseActivity() {

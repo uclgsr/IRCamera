@@ -4,12 +4,10 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.RectF
-import kotlin.math.*
 
 
 object UnifiedFinalUtils {
 
-    
 
     // Convert byte array to various numeric types with endianness support
     fun bytesToShort(bytes: ByteArray, offset: Int = 0, littleEndian: Boolean = true): Short {
@@ -69,7 +67,6 @@ object UnifiedFinalUtils {
         return Double.fromBits(longBits)
     }
 
-    
 
     data class TemperatureDrawConfig(
         val showGrid: Boolean = true,
@@ -204,7 +201,6 @@ object UnifiedFinalUtils {
         }
     }
 
-    
 
     data class InitializationConfig(
         val enableDebugMode: Boolean = false,
@@ -294,7 +290,6 @@ object UnifiedFinalUtils {
         }
     }
 
-    
 
     fun validateRepositoryConsolidation(): Map<String, Any> {
         return mapOf(

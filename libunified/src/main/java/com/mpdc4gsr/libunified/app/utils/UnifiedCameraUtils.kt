@@ -24,7 +24,7 @@ object UnifiedCameraUtils {
     private const val TYPE_RGB = 2
     private const val TYPE_THERMAL = 3
 
-    
+
     data class CameraConfig(
         var productType: Int = TYPE_IR,
         var isOpenAmplify: Boolean = false,
@@ -36,7 +36,7 @@ object UnifiedCameraUtils {
         var enableNetworking: Boolean = false
     )
 
-    
+
     class UnifiedCameraView @JvmOverloads constructor(
         context: Context,
         attrs: AttributeSet? = null,
@@ -133,7 +133,7 @@ object UnifiedCameraUtils {
         }
     }
 
-    
+
     data class CameraItem(
         val id: String,
         val name: String,
@@ -142,7 +142,7 @@ object UnifiedCameraUtils {
         val previewBitmap: Bitmap? = null
     )
 
-    
+
     class UnifiedCameraAdapter(
         private val items: MutableList<CameraItem> = mutableListOf(),
         private val onItemClick: (CameraItem) -> Unit = {}
@@ -169,7 +169,7 @@ object UnifiedCameraUtils {
         }
     }
 
-    
+
     class CameraMenuManager(private val context: Context) {
 
         private var popupWindow: PopupWindow? = null
@@ -189,7 +189,7 @@ object UnifiedCameraUtils {
         }
     }
 
-    
+
     object CameraNetworkIntegration {
 
         private val TAG = "CameraNetwork"
@@ -227,7 +227,7 @@ object UnifiedCameraUtils {
         }
     }
 
-    
+
     class CameraPreviewManager {
 
         private var previewView: UnifiedCameraView? = null
@@ -254,7 +254,7 @@ object UnifiedCameraUtils {
         }
     }
 
-    
+
     object JpegUtils {
 
         fun compressBitmapToJpeg(bitmap: Bitmap, quality: Int = 85): ByteArray {
@@ -273,7 +273,7 @@ object UnifiedCameraUtils {
         }
     }
 
-    
+
     fun getCameraTypeName(type: Int): String = when (type) {
         TYPE_IR -> "IR Camera"
         TYPE_RGB -> "RGB Camera"
@@ -283,7 +283,7 @@ object UnifiedCameraUtils {
 
     fun isValidCameraType(type: Int): Boolean = type in listOf(TYPE_IR, TYPE_RGB, TYPE_THERMAL)
 
-    
+
     fun createCameraView(
         context: Context,
         config: CameraConfig = CameraConfig()
@@ -301,7 +301,7 @@ object UnifiedCameraUtils {
         return CameraPreviewManager()
     }
 
-    
+
     fun validateCameraConsolidation(): Boolean {
         Log.d(
             TAG,

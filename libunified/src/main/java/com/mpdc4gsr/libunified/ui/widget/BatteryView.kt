@@ -9,14 +9,14 @@ import androidx.appcompat.widget.AppCompatImageView
 
 
 class BatteryView : AppCompatImageView {
-    
+
     var battery = -1
         set(value) {
             field = value
             invalidate()
         }
 
-    
+
     var isCharging = false
         set(value) {
             field = value

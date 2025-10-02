@@ -6,7 +6,6 @@ import android.view.Surface
 import androidx.lifecycle.viewModelScope
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 
 
 class ThermalRGBPreviewViewModel : BaseViewModel() {

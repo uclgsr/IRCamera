@@ -2,14 +2,7 @@ package com.mpdc4gsr.libunified.ui.data;
 
 import com.mpdc4gsr.libunified.ui.charts.ScatterChart;
 import com.mpdc4gsr.libunified.ui.interfaces.datasets.IScatterDataSet;
-import com.mpdc4gsr.libunified.ui.renderer.scatter.ChevronDownShapeRenderer;
-import com.mpdc4gsr.libunified.ui.renderer.scatter.ChevronUpShapeRenderer;
-import com.mpdc4gsr.libunified.ui.renderer.scatter.CircleShapeRenderer;
-import com.mpdc4gsr.libunified.ui.renderer.scatter.CrossShapeRenderer;
-import com.mpdc4gsr.libunified.ui.renderer.scatter.IShapeRenderer;
-import com.mpdc4gsr.libunified.ui.renderer.scatter.SquareShapeRenderer;
-import com.mpdc4gsr.libunified.ui.renderer.scatter.TriangleShapeRenderer;
-import com.mpdc4gsr.libunified.ui.renderer.scatter.XShapeRenderer;
+import com.mpdc4gsr.libunified.ui.renderer.scatter.*;
 import com.mpdc4gsr.libunified.ui.utils.ColorTemplate;
 
 import java.util.ArrayList;

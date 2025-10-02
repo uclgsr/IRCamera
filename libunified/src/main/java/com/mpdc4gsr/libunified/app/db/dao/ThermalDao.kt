@@ -1,10 +1,6 @@
 package com.mpdc4gsr.libunified.app.db.dao
 
-import androidx.room.Dao
-import androidx.room.Ignore
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.mpdc4gsr.libunified.app.db.entity.ThermalEntity
 
 @Dao

@@ -6,7 +6,7 @@ import com.mpdc4gsr.libunified.app.config.FileConfig
 import com.mpdc4gsr.libunified.app.tools.TimeTools
 import com.mpdc4gsr.libunified.app.tools.VideoTools
 import java.io.File
-import java.util.TimeZone
+import java.util.*
 
 open class FileBean(
     val id: Int,

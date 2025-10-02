@@ -1,7 +1,5 @@
 package mpdc4gsr.feature.gsr.ui
 
-import android.os.Bundle
-import androidx.activity.compose.setContent
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -15,18 +13,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.Job
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import mpdc4gsr.core.ui.BaseComposeActivity
-import mpdc4gsr.core.ui.theme.IRCameraTheme
-import mpdc4gsr.core.ui.components.settings.*
 import mpdc4gsr.core.ui.BaseViewModel
-import androidx.lifecycle.viewModelScope
+import mpdc4gsr.core.ui.components.settings.*
+import mpdc4gsr.core.ui.theme.IRCameraTheme
 import kotlin.random.Random
 
 /**

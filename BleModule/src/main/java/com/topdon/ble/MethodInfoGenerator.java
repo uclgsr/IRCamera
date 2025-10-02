@@ -6,7 +6,6 @@ import com.topdon.commons.poster.MethodInfo;
 import java.util.UUID;
 
 
-
 class MethodInfoGenerator {
     static MethodInfo onBluetoothAdapterStateChanged(int state) {
         return new MethodInfo("onBluetoothAdapterStateChanged", new MethodInfo.Parameter(int.class, state));

@@ -3,11 +3,7 @@ package mpdc4gsr.feature.thermal.ui
 import android.content.Context
 import android.graphics.Bitmap
 import android.util.Log
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import mpdc4gsr.core.data.SessionMetadata
 import mpdc4gsr.core.data.TimestampManager
 import java.io.File
@@ -15,8 +11,7 @@ import java.io.FileOutputStream
 import java.io.FileWriter
 import java.nio.ByteBuffer
 import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 import kotlin.math.max

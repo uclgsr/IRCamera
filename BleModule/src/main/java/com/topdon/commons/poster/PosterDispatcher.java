@@ -23,24 +23,24 @@ public class PosterDispatcher {
         asyncPoster = new AsyncPoster(executorService);
     }
 
-    
+
     public ThreadMode getDefaultMode() {
         return defaultMode;
     }
 
-    
+
     public ExecutorService getExecutorService() {
         return executorService;
     }
 
-    
+
     public void clearTasks() {
         backgroundPoster.clear();
         mainThreadPoster.clear();
         asyncPoster.clear();
     }
 
-    
+
     public void post(@Nullable Method method, @NonNull Runnable runnable) {
         if (method != null) {
             RunOn annotation = method.getAnnotation(RunOn.class);
@@ -52,7 +52,7 @@ public class PosterDispatcher {
         }
     }
 
-    
+
     public void post(@NonNull ThreadMode mode, @NonNull Runnable runnable) {
         if (mode == ThreadMode.UNSPECIFIED) {
             mode = defaultMode;
@@ -73,7 +73,7 @@ public class PosterDispatcher {
         }
     }
 
-    
+
     public void post(@NonNull Object owner, @NonNull String methodName, @NonNull String tag,
                      @Nullable MethodInfo.Parameter... parameters) {
         Class<?>[] classes = new Class[0];
@@ -132,12 +132,12 @@ public class PosterDispatcher {
         return false;
     }
 
-    
+
     public void post(@NonNull final Object owner, @NonNull String methodName, @Nullable MethodInfo.Parameter... parameters) {
         post(owner, methodName, "", parameters);
     }
 
-    
+
     public void post(@NonNull Object owner, @NonNull MethodInfo methodInfo) {
         post(owner, methodInfo.getName(), methodInfo.getTag(), methodInfo.getParameters());
     }

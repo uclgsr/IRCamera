@@ -25,8 +25,6 @@ import com.mpdc4gsr.libunified.app.utils.UnifiedMathUtils
 import kotlin.math.roundToInt
 
 
-
-
 @Composable
 fun TemperatureIndicator(
     temperature: Float,

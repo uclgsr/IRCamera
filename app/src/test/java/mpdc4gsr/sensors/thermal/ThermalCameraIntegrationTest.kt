@@ -5,10 +5,10 @@ import android.hardware.usb.UsbDevice
 import android.hardware.usb.UsbManager
 import io.mockk.*
 import kotlinx.coroutines.test.runTest
+import mpdc4gsr.core.ui.PermissionController
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
-import org.junit.Assert.*
-import mpdc4gsr.core.ui.PermissionController
 
 /**
  * MVP-focused unit tests for Topdon TC001 thermal camera integration

@@ -7,10 +7,9 @@ import java.io.File
 import java.io.FileWriter
 import java.io.IOException
 import java.text.SimpleDateFormat
-import java.util.Date
+import java.util.*
 
 object Logger {
-
 
 
     @JvmStatic
@@ -43,7 +42,6 @@ object Logger {
     }
 
 
-
     @JvmStatic
     fun i(clazz: Class<*>, msg: String) {
         if (BuildConfig.DEBUG) {
@@ -59,7 +57,6 @@ object Logger {
     }
 
 
-
     @JvmStatic
     fun d(clazz: Class<*>, msg: String) {
         if (BuildConfig.DEBUG) {
@@ -73,7 +70,6 @@ object Logger {
             Log.d(tag, msg + "")
         }
     }
-
 
 
     @JvmStatic

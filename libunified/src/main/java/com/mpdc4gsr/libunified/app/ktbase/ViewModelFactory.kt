@@ -70,7 +70,7 @@ class BaseViewModelFactory(
         throw IllegalArgumentException("Cannot create ViewModel ${modelClass.simpleName}")
     }
 
-    
+
     class Builder(private val application: Application) {
         private val repositories = mutableMapOf<Class<*>, Any>()
 
