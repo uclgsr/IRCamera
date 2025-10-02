@@ -5,14 +5,15 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageManager
 import android.net.wifi.ScanResult
 import android.net.wifi.WifiInfo
 import android.net.wifi.WifiManager
 import android.os.Build
 import androidx.activity.ComponentActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import com.hjq.permissions.XXPermissions
 
 object WifiUtils {
 
@@ -31,7 +32,11 @@ object WifiUtils {
     }
 
     fun getCurrentWifiSSID(context: Context): String? {
-        if (!XXPermissions.isGranted(context, Manifest.permission.ACCESS_FINE_LOCATION)) {
+        if (ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
             return null
         }
         val wifiManager: WifiManager = context.getSystemService(Context.WIFI_SERVICE) as WifiManager
