@@ -14,8 +14,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-import mpdc4gsr.core.ui.BaseComposeActivity
-import mpdc4gsr.core.ui.BaseViewModel
+import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
+import mpdc4gsr.core.ui.AppBaseViewModel
 
 /**
  * Comprehensive Integration Test Activity
@@ -41,7 +41,7 @@ class ComprehensiveIntegrationTestActivity : BaseComposeActivity<IntegrationTest
     }
 }
 
-class IntegrationTestViewModel : BaseViewModel() {
+class IntegrationTestViewModel : AppBaseViewModel() {
 
     data class TestItem(
         val name: String,

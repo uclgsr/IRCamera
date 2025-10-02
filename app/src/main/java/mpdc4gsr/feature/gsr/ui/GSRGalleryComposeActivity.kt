@@ -23,8 +23,8 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import mpdc4gsr.core.ui.BaseComposeActivity
-import mpdc4gsr.core.ui.BaseViewModel
+import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
+import mpdc4gsr.core.ui.AppBaseViewModel
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 
 /**
@@ -559,7 +559,7 @@ data class GSRGalleryUiState(
 )
 
 // ViewModel
-class GSRGalleryViewModel : BaseViewModel() {
+class GSRGalleryViewModel : AppBaseViewModel() {
     private val _galleryState = MutableStateFlow(GSRGalleryUiState())
     val galleryState: StateFlow<GSRGalleryUiState> = _galleryState.asStateFlow()
 

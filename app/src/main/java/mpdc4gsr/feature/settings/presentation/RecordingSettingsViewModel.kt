@@ -6,10 +6,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import mpdc4gsr.core.ui.BaseViewModel
+import mpdc4gsr.core.ui.AppBaseViewModel
 import mpdc4gsr.feature.settings.data.RecordingSettingsRepository
 
-class RecordingSettingsViewModel : BaseViewModel() {
+class RecordingSettingsViewModel : AppBaseViewModel() {
 
     private lateinit var repository: RecordingSettingsRepository
 

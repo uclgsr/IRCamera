@@ -1,6 +1,7 @@
 package mpdc4gsr.core.ui.navigation
 
 import android.content.Intent
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
@@ -95,11 +96,7 @@ fun UnifiedNavHost(
             MainScreen(
                 onNavigateToSensors = { navController.navigate(UnifiedRoute.Dashboard.route) },
                 onNavigateToGallery = { navController.navigate(UnifiedRoute.ThermalGallery.route) },
-                onNavigateToSettings = { navController.navigate(UnifiedRoute.Settings.route) },
-                onCaptureThermal = { navController.navigate(UnifiedRoute.ThermalCamera.route) },
-                onStartGSRSession = { navController.navigate(UnifiedRoute.GSRSettings.route) },
-                onThermalRGBCapture = { navController.navigate(UnifiedRoute.DualModeCamera.route) },
-                onViewRecentSessions = { navController.navigate(UnifiedRoute.GSRDataView.route) }
+                onNavigateToSettings = { navController.navigate(UnifiedRoute.Settings.route) }
             )
         }
 
@@ -178,7 +175,7 @@ fun UnifiedNavHost(
                 try {
                     // Use class reference instead of hard-coded string
                     val activityClass = try {
-                        mpdc4gsr.activities.DualModeCameraActivityCompose::class.java
+                        mpdc4gsr.feature.camera.ui.DualModeCameraActivityCompose::class.java
                     } catch (e: NoClassDefFoundError) {
                         null
                     }
@@ -205,20 +202,11 @@ fun UnifiedNavHost(
         composable(UnifiedRoute.DevicePairing.route) {
             LaunchedEffect(Unit) {
                 try {
-                    // Use class reference instead of hard-coded string
-                    val activityClass = try {
-                        mpdc4gsr.network.DevicePairingComposeActivity::class.java
-                    } catch (e: NoClassDefFoundError) {
-                        // Fallback to activities package
-                        try {
-                            mpdc4gsr.activities.DevicePairingActivityCompose::class.java
-                        } catch (e2: NoClassDefFoundError) {
-                            null
-                        }
-                    }
-
-                    if (activityClass != null) {
-                        context.startActivity(Intent(context, activityClass))
+                    // Try to launch permission request activity if it exists
+                    try {
+                        mpdc4gsr.core.ui.PermissionRequestComposeActivity.startActivity(context)
+                    } catch (e: Exception) {
+                        Log.e("UnifiedNavigation", "Failed to start permission request activity", e)
                     }
                 } catch (e: Exception) {
                     // Final fallback - just show loading screen

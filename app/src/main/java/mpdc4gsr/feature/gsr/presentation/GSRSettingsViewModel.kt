@@ -5,7 +5,7 @@ import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.*
-import mpdc4gsr.core.ui.BaseViewModel
+import mpdc4gsr.core.ui.AppBaseViewModel
 import mpdc4gsr.feature.gsr.data.GSRSensorRecorder
 import mpdc4gsr.feature.gsr.data.GSRSettingsRepository
 import mpdc4gsr.feature.network.data.RecordingController
@@ -14,7 +14,7 @@ import mpdc4gsr.feature.network.data.RecordingController
  * Modern GSR Settings ViewModel - MVVM StateFlow Implementation
  * Manages GSR sensor configuration, permissions, and device management with Repository pattern
  */
-class GSRSettingsViewModel : BaseViewModel() {
+class GSRSettingsViewModel : AppBaseViewModel() {
 
     private lateinit var repository: GSRSettingsRepository
     private var gsrSensorRecorder: GSRSensorRecorder? = null

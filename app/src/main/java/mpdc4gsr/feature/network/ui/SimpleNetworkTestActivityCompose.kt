@@ -24,8 +24,8 @@ import androidx.lifecycle.viewModelScope
 import com.csl.irCamera.BuildConfig
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import mpdc4gsr.core.ui.BaseComposeActivity
-import mpdc4gsr.core.ui.BaseViewModel
+import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
+import mpdc4gsr.core.ui.AppBaseViewModel
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 
@@ -47,7 +47,7 @@ data class TestResult(
     val timestamp: Long
 )
 
-class SimpleNetworkTestViewModel : BaseViewModel() {
+class SimpleNetworkTestViewModel : AppBaseViewModel() {
     private val _connectionStatus = mutableStateOf(NetworkConnectionStatus.DISCONNECTED)
     val connectionStatus: State<NetworkConnectionStatus> = _connectionStatus
 

@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.mpdc4gsr.gsr.model.GSRSample
 import com.mpdc4gsr.gsr.model.SessionInfo
 import com.mpdc4gsr.gsr.model.SyncMark
+import com.mpdc4gsr.gsr.network.NetworkClient
 import com.mpdc4gsr.gsr.service.GSRRecorder
 import com.mpdc4gsr.gsr.service.SessionManager
 import com.mpdc4gsr.gsr.util.TimeUtils
@@ -16,19 +17,19 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import mpdc4gsr.core.data.RgbCameraRecorder
-import mpdc4gsr.core.ui.BaseViewModel
+import mpdc4gsr.core.ui.AppBaseViewModel
 import mpdc4gsr.feature.gsr.data.RealShimmerDeviceFactory
 
 /**
  * MultiModalRecordingViewModel - Advanced MVVM Implementation
  * Coordinates multiple recording modalities (GSR, RGB Camera, Network) with proper state management
  */
-class MultiModalRecordingViewModel : BaseViewModel() {
+class MultiModalRecordingViewModel : AppBaseViewModel() {
 
     private lateinit var gsrRecorder: GSRRecorder
     private lateinit var sessionManager: SessionManager
     private var rgbCameraRecorder: RgbCameraRecorder? = null
-    private var networkClient: com.mpdc4gsr.gsr.network.NetworkClient? = null
+    private var networkClient: NetworkClient? = null
     private lateinit var context: Context
 
     // Recording State Management
@@ -108,7 +109,7 @@ class MultiModalRecordingViewModel : BaseViewModel() {
 
     data class NetworkState(
         val isConnected: Boolean = false,
-        val controllerInfo: com.mpdc4gsr.gsr.network.NetworkClient.ControllerInfo? = null,
+        val controllerInfo: NetworkClient.ControllerInfo? = null,
         val isSyncing: Boolean = false,
         val lastSyncTime: Long? = null
     )

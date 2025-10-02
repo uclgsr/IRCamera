@@ -18,8 +18,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-import mpdc4gsr.core.ui.BaseComposeActivity
-import mpdc4gsr.core.ui.BaseViewModel
+import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
+import mpdc4gsr.core.ui.AppBaseViewModel
 
 /**
  * SessionDetailComposeActivity - Modern Compose Implementation
@@ -392,7 +392,7 @@ private fun SessionActionsCard(
 }
 
 // Simple ViewModel for the session detail
-class SessionDetailViewModel : BaseViewModel() {
+class SessionDetailViewModel : AppBaseViewModel() {
     // Future implementation would include:
     // - Session data loading
     // - Export functionality
