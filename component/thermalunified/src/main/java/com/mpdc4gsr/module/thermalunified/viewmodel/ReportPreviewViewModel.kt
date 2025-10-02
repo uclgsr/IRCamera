@@ -53,6 +53,7 @@ class ReportPreviewViewModel : BaseViewModel() {
 
     fun generatePreview() {
         launchWithLoading {
+            // TODO: Temporary simulation logic. Replace with actual preview generation implementation in production
             delay(1000)
             _previewGenerated.value = true
         }
