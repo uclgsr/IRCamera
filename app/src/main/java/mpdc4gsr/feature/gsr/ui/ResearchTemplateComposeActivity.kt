@@ -27,8 +27,8 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.gsr.model.ResearchTemplate
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-import mpdc4gsr.core.ui.BaseComposeActivity
-import mpdc4gsr.core.ui.BaseViewModel
+import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
+import mpdc4gsr.core.ui.AppBaseViewModel
 
 /**
  * ResearchTemplateComposeActivity - Modern Research Template Selection with Compose

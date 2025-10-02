@@ -15,13 +15,13 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import mpdc4gsr.core.data.ShimmerDeviceManager
-import mpdc4gsr.core.ui.BaseViewModel
+import mpdc4gsr.core.ui.AppBaseViewModel
 
 /**
  * Network Settings ViewModel - MVVM Integration
  * Manages WiFi, Bluetooth, and device pairing with existing ShimmerDeviceManager
  */
-class NetworkSettingsViewModel : BaseViewModel() {
+class NetworkSettingsViewModel : AppBaseViewModel() {
 
     private lateinit var prefs: SharedPreferences
     private lateinit var context: Context

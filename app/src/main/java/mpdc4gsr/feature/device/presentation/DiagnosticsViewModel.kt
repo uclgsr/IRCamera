@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import mpdc4gsr.core.ui.BaseViewModel
+import mpdc4gsr.core.ui.AppBaseViewModel
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -20,7 +20,7 @@ import java.util.*
  * Diagnostics ViewModel - MVVM Integration
  * Provides real-time system diagnostics and sensor status monitoring
  */
-class DiagnosticsViewModel : BaseViewModel() {
+class DiagnosticsViewModel : AppBaseViewModel() {
 
     private lateinit var context: Context
 

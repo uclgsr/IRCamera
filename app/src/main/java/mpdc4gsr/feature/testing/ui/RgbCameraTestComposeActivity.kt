@@ -4,8 +4,8 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
-import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -19,24 +19,27 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import mpdc4gsr.core.data.RgbCameraRecorder
+import mpdc4gsr.core.ui.BaseComposeActivity
 import mpdc4gsr.core.ui.PermissionController
 import mpdc4gsr.core.ui.PermissionManager
+import mpdc4gsr.feature.testing.presentation.RgbCameraTestViewModel
 import java.io.File
 import kotlin.system.measureTimeMillis
 
 /**
  * Compose version of RGB Camera Test Activity
  * Tests camera functionality, recording quality, and manual controls
+ * Migrated to BaseComposeActivity for consistency
  */
-class RgbCameraTestComposeActivity : FragmentActivity() {
+class RgbCameraTestComposeActivity : BaseComposeActivity<RgbCameraTestViewModel>() {
 
     companion object {
         private const val TAG = "RgbCameraTestCompose"
@@ -58,64 +61,41 @@ class RgbCameraTestComposeActivity : FragmentActivity() {
         }
     }
 
+    override fun createViewModel(): RgbCameraTestViewModel {
+        return viewModels<RgbCameraTestViewModel>().value
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         permissionController = PermissionController(this)
         permissionManager = PermissionManager(this, permissionController!!)
         checkPermissions()
+    }
 
-        setContent {
-            LibUnifiedTheme {
-                RgbCameraTestScreen()
-            }
+    @Composable
+    override fun Content(viewModel: RgbCameraTestViewModel) {
+        val context = LocalContext.current
+        
+        LaunchedEffect(Unit) {
+            viewModel.initializeTestCases()
+            viewModel.initializeCameraRecorder(context)
+        }
+        
+        LibUnifiedTheme {
+            RgbCameraTestScreen(viewModel)
         }
     }
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    fun RgbCameraTestScreen() {
-        var testResults by remember { mutableStateOf(listOf<TestCase>()) }
-        var isTestRunning by remember { mutableStateOf(false) }
-        var cameraCapabilities by remember { mutableStateOf(mapOf<String, Any>()) }
-        var recordingStatus by remember { mutableStateOf("Ready") }
+    fun RgbCameraTestScreen(viewModel: RgbCameraTestViewModel) {
+        val testResults by viewModel.testResults.collectAsState()
+        val isTestRunning by viewModel.isTestRunning.collectAsState()
+        val cameraCapabilities by viewModel.cameraCapabilities.collectAsState()
+        val recordingStatus by viewModel.recordingStatus.collectAsState()
 
-        // Initialize test cases
         LaunchedEffect(Unit) {
-            testResults = listOf(
-                TestCase(
-                    id = "permissions",
-                    name = "Camera Permissions",
-                    description = "Verify camera and storage permissions"
-                ),
-                TestCase(
-                    id = "capability",
-                    name = "Camera Capabilities",
-                    description = "Test camera features and resolutions"
-                ),
-                TestCase(
-                    id = "4k_recording",
-                    name = "4K Recording Test",
-                    description = "Test 4K video recording capability"
-                ),
-                TestCase(
-                    id = "tap_focus",
-                    name = "Tap-to-Focus",
-                    description = "Test tap-to-focus functionality"
-                ),
-                TestCase(
-                    id = "manual_controls",
-                    name = "Manual Controls",
-                    description = "Test manual exposure and focus controls"
-                ),
-                TestCase(
-                    id = "raw_capture",
-                    name = "RAW Capture",
-                    description = "Test RAW image capture capability"
-                )
-            )
-
-            // Load camera capabilities
             initializeCameraCapabilities()
         }
 
@@ -427,6 +407,65 @@ class RgbCameraTestComposeActivity : FragmentActivity() {
                 Log.d(TAG, "Test recording stopped")
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to stop recording: ${e.message}")
+            }
+        }
+    }
+}
+
+@Composable
+private fun TestResultCard(
+    testCase: RgbCameraTestViewModel.TestCase,
+    onRunTest: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Card(
+        modifier = modifier.fillMaxWidth()
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(
+                    text = testCase.name,
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.Medium
+                )
+                Text(
+                    text = testCase.description,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                if (testCase.result != null) {
+                    Text(
+                        text = testCase.result,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = when (testCase.status) {
+                            RgbCameraTestViewModel.TestStatus.PASSED -> MaterialTheme.colorScheme.primary
+                            RgbCameraTestViewModel.TestStatus.FAILED -> MaterialTheme.colorScheme.error
+                            else -> MaterialTheme.colorScheme.onSurfaceVariant
+                        }
+                    )
+                }
+            }
+            
+            OutlinedButton(
+                onClick = onRunTest,
+                enabled = testCase.status != RgbCameraTestViewModel.TestStatus.RUNNING
+            ) {
+                Text(
+                    when (testCase.status) {
+                        RgbCameraTestViewModel.TestStatus.RUNNING -> "Running"
+                        RgbCameraTestViewModel.TestStatus.PASSED -> "Passed"
+                        RgbCameraTestViewModel.TestStatus.FAILED -> "Failed"
+                        else -> "Run"
+                    }
+                )
             }
         }
     }

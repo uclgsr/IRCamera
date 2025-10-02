@@ -28,8 +28,8 @@ import androidx.compose.ui.unit.dp
 import com.csl.irCamera.R
 import com.mpdc4gsr.libunified.app.compose.dialogs.TipDialogState
 import com.mpdc4gsr.libunified.app.utils.Constants
-import mpdc4gsr.core.ui.BaseComposeActivity
-import mpdc4gsr.core.ui.BaseViewModel
+import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
+import mpdc4gsr.core.ui.AppBaseViewModel
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 
@@ -42,7 +42,7 @@ data class HelpStep(
     val action: (() -> Unit)? = null
 )
 
-class MoreHelpViewModel : BaseViewModel() {
+class MoreHelpViewModel : AppBaseViewModel() {
     private val _connectionType = mutableStateOf(0)
     val connectionType: State<Int> = _connectionType
 

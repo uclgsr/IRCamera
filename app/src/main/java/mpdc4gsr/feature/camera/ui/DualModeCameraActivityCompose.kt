@@ -26,10 +26,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
+import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-import mpdc4gsr.core.ui.BaseComposeActivity
 import mpdc4gsr.feature.camera.presentation.DualModeCameraViewModel
-import mpdc4gsr.feature.main.ui.MainActivity
+import mpdc4gsr.feature.main.ui.MainComposeActivity
 
 /**
  * Dual Mode Camera Activity - Compose Implementation
@@ -474,7 +474,7 @@ class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewMode
     }
 
     private fun navigateToMainActivity(pageIndex: Int) {
-        val intent = Intent(this, MainActivity::class.java).apply {
+        val intent = Intent(this, MainComposeActivity::class.java).apply {
             putExtra("page", pageIndex)
         }
         startActivity(intent)
