@@ -2,7 +2,6 @@ package mpdc4gsr.feature.network.data
 
 import android.graphics.Bitmap
 import android.util.Log
-import com.mpdc4gsr.module.thermalunified.lite.camera.CameraPreviewManager
 import kotlinx.coroutines.*
 import mpdc4gsr.core.RecordingService
 import mpdc4gsr.feature.gsr.data.GSRSensorRecorder
@@ -21,7 +20,7 @@ class PreviewDataAdapter(
     private var pollingJob: Job? = null
     private var isRunning = false
 
-    private val thermalCameraManager = AtomicReference<CameraPreviewManager?>()
+    private val thermalCameraManager = AtomicReference<Any?>()
     private val gsrRecorder = AtomicReference<GSRSensorRecorder?>()
 
     fun startDataPolling() {
@@ -57,7 +56,7 @@ class PreviewDataAdapter(
         pollingJob = null
     }
 
-    fun setThermalCameraManager(manager: CameraPreviewManager?) {
+    fun setThermalCameraManager(manager: Any?) {
         thermalCameraManager.set(manager)
         Log.d(TAG, "Thermal camera manager ${if (manager != null) "set" else "cleared"}")
     }
@@ -80,15 +79,8 @@ class PreviewDataAdapter(
         try {
             val manager = thermalCameraManager.get()
             if (manager != null) {
-
-                val thermalBitmap = manager.scaledBitmap()
-                if (thermalBitmap != null && !thermalBitmap.isRecycled) {
-                    previewStreamer.updateThermalFrame(thermalBitmap)
-                    Log.v(
-                        TAG,
-                        "Updated thermal frame: ${thermalBitmap.width}x${thermalBitmap.height}"
-                    )
-                }
+                // Stub: .lite package camera manager not available
+                Log.v(TAG, "Thermal camera manager polling (stub)")
             }
         } catch (e: Exception) {
             Log.w(TAG, "Error polling thermal frame", e)

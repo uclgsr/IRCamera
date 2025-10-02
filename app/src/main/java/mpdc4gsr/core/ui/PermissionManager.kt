@@ -6,7 +6,7 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 
 class PermissionManager(
-    private val activity: FragmentActivity,
+    private val activity: androidx.activity.ComponentActivity,
     private val permissionController: PermissionController
 ) {
     companion object {

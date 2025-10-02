@@ -12,14 +12,13 @@ import android.os.IBinder
 import android.os.PowerManager
 import android.util.Log
 import androidx.core.app.NotificationCompat
-import androidx.lifecycle.LifecycleService
-import androidx.lifecycle.lifecycleScope
+import android.app.Service
 import com.mpdc4gsr.module.user.ble.BleDeviceManager
 import kotlinx.coroutines.*
 import mpdc4gsr.feature.main.ui.MainComposeActivity
 import kotlin.coroutines.CoroutineContext
 
-class BackgroundDeviceScanningService : LifecycleService(), CoroutineScope {
+class BackgroundDeviceScanningService : Service(), CoroutineScope {
     companion object {
         private const val TAG = "BackgroundDeviceScanning"
         private const val NOTIFICATION_ID = 2001
@@ -55,7 +54,6 @@ class BackgroundDeviceScanningService : LifecycleService(), CoroutineScope {
     }
 
     override fun onBind(intent: Intent): IBinder {
-        super.onBind(intent)
         return binder
     }
 
@@ -105,7 +103,7 @@ class BackgroundDeviceScanningService : LifecycleService(), CoroutineScope {
         val notification = createOngoingNotification()
         startForeground(NOTIFICATION_ID, notification)
 
-        scanningJob = lifecycleScope.launch {
+        scanningJob = launch {
             performBackgroundScanning()
         }
     }

@@ -15,9 +15,9 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.FragmentActivity
+import androidx.activity.ComponentActivity
 
-class PermissionController(private val activity: FragmentActivity) {
+class PermissionController(private val activity: ComponentActivity) {
 
     private val usbManager: UsbManager =
         activity.getSystemService(Context.USB_SERVICE) as UsbManager
