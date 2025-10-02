@@ -22,7 +22,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
-import mpdc4gsr.core.ui.BaseViewModel
+import mpdc4gsr.core.ui.AppBaseViewModel
 import mpdc4gsr.core.ui.components.settings.*
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import kotlin.random.Random
@@ -530,7 +530,7 @@ data class GSRQuickRecordingUiState(
 )
 
 // ViewModel
-class GSRQuickRecordingViewModel : BaseViewModel() {
+class GSRQuickRecordingViewModel : AppBaseViewModel() {
     private val _recordingState = MutableStateFlow(GSRQuickRecordingUiState())
     val recordingState: StateFlow<GSRQuickRecordingUiState> = _recordingState.asStateFlow()
 

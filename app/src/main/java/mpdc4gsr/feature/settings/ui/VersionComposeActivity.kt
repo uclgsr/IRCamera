@@ -24,12 +24,12 @@ import com.csl.irCamera.BuildConfig
 import com.csl.irCamera.R
 import com.mpdc4gsr.libunified.app.utils.UnifiedVersionUtils
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
-import mpdc4gsr.core.ui.BaseViewModel
+import mpdc4gsr.core.ui.AppBaseViewModel
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import java.util.*
 
-class VersionViewModel : BaseViewModel() {
+class VersionViewModel : AppBaseViewModel() {
 
     companion object {
         private const val DEFAULT_VERSION = "1.0.0"

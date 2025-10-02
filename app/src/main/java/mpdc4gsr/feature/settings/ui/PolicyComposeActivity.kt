@@ -26,11 +26,11 @@ import com.github.lzyzsd.jsbridge.BridgeWebViewClient
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
-import mpdc4gsr.core.ui.BaseViewModel
+import mpdc4gsr.core.ui.AppBaseViewModel
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 
-class PolicyViewModel : BaseViewModel() {
+class PolicyViewModel : AppBaseViewModel() {
     enum class PolicyType(val title: String, val contentRes: Int) {
         USER_AGREEMENT("User Services Agreement", R.string.user_services_agreement),
         PRIVACY_POLICY("Privacy Policy", R.string.privacy_policy),

@@ -7,14 +7,14 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import mpdc4gsr.core.data.RgbCameraRecorder
-import mpdc4gsr.core.ui.BaseViewModel
+import mpdc4gsr.core.ui.AppBaseViewModel
 import mpdc4gsr.feature.camera.data.SamsungDeviceCompatibility
 
 /**
  * Modernized DualModeCameraViewModel using StateFlow and Repository pattern
  * Manages dual-mode camera operations with reactive state management
  */
-class DualModeCameraViewModel : BaseViewModel() {
+class DualModeCameraViewModel : AppBaseViewModel() {
 
     // StateFlow for reactive state management
     private val _permissionState = MutableStateFlow(PermissionState.UNKNOWN)

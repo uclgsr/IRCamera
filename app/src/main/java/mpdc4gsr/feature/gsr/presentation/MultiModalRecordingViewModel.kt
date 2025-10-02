@@ -17,14 +17,14 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import mpdc4gsr.core.data.RgbCameraRecorder
-import mpdc4gsr.core.ui.BaseViewModel
+import mpdc4gsr.core.ui.AppBaseViewModel
 import mpdc4gsr.feature.gsr.data.RealShimmerDeviceFactory
 
 /**
  * MultiModalRecordingViewModel - Advanced MVVM Implementation
  * Coordinates multiple recording modalities (GSR, RGB Camera, Network) with proper state management
  */
-class MultiModalRecordingViewModel : BaseViewModel() {
+class MultiModalRecordingViewModel : AppBaseViewModel() {
 
     private lateinit var gsrRecorder: GSRRecorder
     private lateinit var sessionManager: SessionManager

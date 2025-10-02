@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import mpdc4gsr.core.ui.BaseViewModel
+import mpdc4gsr.core.ui.AppBaseViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -18,7 +18,7 @@ import java.util.*
  * Calibration ViewModel - MVVM Integration
  * Manages system calibration settings and calibration procedures
  */
-class CalibrationViewModel : BaseViewModel() {
+class CalibrationViewModel : AppBaseViewModel() {
 
     private lateinit var prefs: SharedPreferences
 

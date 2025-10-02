@@ -17,11 +17,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
-import mpdc4gsr.core.ui.BaseViewModel
+import mpdc4gsr.core.ui.AppBaseViewModel
 import mpdc4gsr.core.ui.components.*
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 
-class ComposeComponentsShowcaseViewModel : BaseViewModel() {
+class ComposeComponentsShowcaseViewModel : AppBaseViewModel() {
     private val _showSensorDialog = mutableStateOf(false)
     val showSensorDialog: State<Boolean> = _showSensorDialog
 

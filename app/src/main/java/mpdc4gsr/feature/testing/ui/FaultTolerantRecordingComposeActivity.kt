@@ -20,7 +20,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
-import mpdc4gsr.core.ui.BaseViewModel
+import mpdc4gsr.core.ui.AppBaseViewModel
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.feature.network.data.RecordingState
@@ -46,7 +46,7 @@ data class SensorInfo(
     val errorMessage: String? = null
 )
 
-class FaultTolerantRecordingViewModel : BaseViewModel() {
+class FaultTolerantRecordingViewModel : AppBaseViewModel() {
     private val _recordingState = mutableStateOf(RecordingState.IDLE)
     val recordingState: State<RecordingState> = _recordingState
 

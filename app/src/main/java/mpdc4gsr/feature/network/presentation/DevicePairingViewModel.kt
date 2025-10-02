@@ -4,14 +4,14 @@ import androidx.lifecycle.viewModelScope
 import com.mpdc4gsr.gsr.model.SessionInfo
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import mpdc4gsr.core.ui.BaseViewModel
+import mpdc4gsr.core.ui.AppBaseViewModel
 import mpdc4gsr.feature.network.data.NetworkClient
 
 /**
  * Modernized DevicePairingViewModel using StateFlow and Repository pattern
  * Manages network device discovery and pairing with reactive state management
  */
-class DevicePairingViewModel : BaseViewModel(), NetworkClient.NetworkEventListener {
+class DevicePairingViewModel : AppBaseViewModel(), NetworkClient.NetworkEventListener {
 
     // StateFlow for reactive state management
     private val _discoveredControllers =

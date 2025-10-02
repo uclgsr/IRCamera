@@ -25,7 +25,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
-import mpdc4gsr.core.ui.BaseViewModel
+import mpdc4gsr.core.ui.AppBaseViewModel
 import kotlin.math.sin
 
 /**
@@ -798,7 +798,7 @@ private fun generateHistogramData(bins: Int): List<Float> {
     }
 }
 
-class GSRPlotViewModel : BaseViewModel() {
+class GSRPlotViewModel : AppBaseViewModel() {
     // ViewModel implementation for managing plot data, zoom state, filters, etc.
     // Future implementation would include:
     // - Data loading from files or database

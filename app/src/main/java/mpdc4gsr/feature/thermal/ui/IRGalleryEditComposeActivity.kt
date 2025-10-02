@@ -24,7 +24,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
-import mpdc4gsr.core.ui.BaseViewModel
+import mpdc4gsr.core.ui.AppBaseViewModel
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 
@@ -60,7 +60,7 @@ data class ImageEditState(
     val annotations: List<String> = emptyList()
 )
 
-class IRGalleryEditViewModel : BaseViewModel() {
+class IRGalleryEditViewModel : AppBaseViewModel() {
     private val _editState = mutableStateOf(ImageEditState())
     val editState: State<ImageEditState> = _editState
 

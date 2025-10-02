@@ -26,7 +26,7 @@ import com.csl.irCamera.R
 import com.mpdc4gsr.libunified.app.config.RouterConfig
 import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
-import mpdc4gsr.core.ui.BaseViewModel
+import mpdc4gsr.core.ui.AppBaseViewModel
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 
@@ -50,7 +50,7 @@ enum class IRDeviceType(
     )
 }
 
-class DeviceTypeViewModel : BaseViewModel() {
+class DeviceTypeViewModel : AppBaseViewModel() {
     private val _selectedDevice = mutableStateOf<IRDeviceType?>(null)
     val selectedDevice: State<IRDeviceType?> = _selectedDevice
 
