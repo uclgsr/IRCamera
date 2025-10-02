@@ -30,7 +30,6 @@ open class BufferedDataWriter(
     private var flushJob: Job? = null
     private val writerScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
-
     suspend fun start(): Boolean = withContext(Dispatchers.IO) {
         if (isRunning.get()) {
             Log.w(TAG, "Writer already running for ${outputFile.name}")

@@ -45,7 +45,6 @@ class VideoEngine(private val context: Context? = null) {
                 setVideoSize(videoSize.width, videoSize.height)
                 setVideoEncoder(MediaRecorder.VideoEncoder.H264)
 
-
                 setOrientationHint(orientationHint)
                 Log.d(TAG, "Video orientation hint set to: $orientationHint degrees")
 

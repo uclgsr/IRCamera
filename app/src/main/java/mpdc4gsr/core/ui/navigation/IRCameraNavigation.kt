@@ -93,7 +93,6 @@ fun IRCameraNavHost(
         startDestination = startDestination
     ) {
 
-
         // Main dashboard screens
         composable(IRCameraScreen.Main.route) {
             // Launch main activity

@@ -25,14 +25,12 @@ from .protocol import (
 )
 from .security import SecurityManager
 
-
 class DeviceState(Enum):
     DISCONNECTED = "disconnected"
     CONNECTING = "connecting"
     CONNECTED = "connected"
     RECORDING = "recording"
     ERROR = "error"
-
 
 class MessageType(Enum):
     DEVICE_REGISTER = "device_register"
@@ -59,7 +57,6 @@ class MessageType(Enum):
     ACK = "ack"
     ERROR = "error"
 
-
 @dataclass
 class DeviceInfo:
     device_id: str
@@ -75,7 +72,6 @@ class DeviceInfo:
 
     def to_dict(self) -> Dict[str, Any]:
         return asdict(self)
-
 
 class NetworkServer:
 

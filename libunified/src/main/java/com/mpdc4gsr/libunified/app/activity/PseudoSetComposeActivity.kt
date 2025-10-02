@@ -30,7 +30,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-
 class PseudoSetComposeActivity : ComponentActivity() {
 
     private val viewModel: PseudoSetViewModel by viewModels()

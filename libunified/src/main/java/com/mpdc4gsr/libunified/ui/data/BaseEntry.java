@@ -4,12 +4,9 @@ import android.graphics.drawable.Drawable;
 
 public abstract class BaseEntry {
 
-
     private float y = 0f;
 
-
     private Object mData = null;
-
 
     private Drawable mIcon = null;
 

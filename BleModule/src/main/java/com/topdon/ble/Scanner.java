@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.topdon.ble.callback.ScanListener;
 
-
 interface Scanner {
 
     void addScanListener(ScanListener listener);

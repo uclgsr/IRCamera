@@ -23,7 +23,6 @@ import com.mpdc4gsr.libunified.ir.view.TemperatureView
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRPlushViewModel
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRPlushViewModel.*
 
-
 class IRPlushComposeFragment : BaseComposeFragment<IRPlushViewModel>() {
 
     override fun createViewModel(): IRPlushViewModel {

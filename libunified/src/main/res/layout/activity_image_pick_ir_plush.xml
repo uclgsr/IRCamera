@@ -15,7 +15,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:titleText="@string/ir_camera_take_photo" />
 
-
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment_container_view"
         android:layout_width="192dp"

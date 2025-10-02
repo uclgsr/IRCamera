@@ -18,13 +18,11 @@ class SessionManager(
     companion object {
         private const val TAG = "SessionManager"
 
-
         private const val SESSION_HEARTBEAT_INTERVAL_MS = 10000L
         private const val SESSION_TIMEOUT_MS = 60000L
         private const val MAX_DEVICES_PER_SESSION = 10
         private const val STATE_SYNC_INTERVAL_MS = 5000L
     }
-
 
     private val currentSession = AtomicReference<SessionInfo?>(null)
     private val connectedDevices = ConcurrentHashMap<String, DeviceInfo>()
@@ -34,13 +32,11 @@ class SessionManager(
     private val sessionId = AtomicReference<String?>(null)
     private val sessionStartTime = AtomicLong(0L)
 
-
     private val _sessionWorkflowState = MutableStateFlow(SessionWorkflowState.IDLE)
     val sessionWorkflowState: StateFlow<SessionWorkflowState> = _sessionWorkflowState.asStateFlow()
 
     private val workflowSteps = mutableListOf<WorkflowStep>()
     private var currentStepIndex = 0
-
 
     private val sessionScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
@@ -173,7 +169,6 @@ class SessionManager(
     fun stop() {
         if (!isRunning.get()) return
 
-
         val session = currentSession.get()
         if (session != null && session.state != SessionState.ENDED) {
             endSession(session.id, "Service stopping")
@@ -245,7 +240,6 @@ class SessionManager(
 
         connectedDevices[deviceId] = deviceInfo
 
-
         updateSessionParticipants()
 
         onDeviceJoined?.invoke(deviceInfo)
@@ -297,7 +291,6 @@ class SessionManager(
             return false
         }
 
-
         val recordingCapableDevices = devices.filter { "recording" in it.capabilities }
         if (recordingCapableDevices.isEmpty()) {
             Log.w(TAG, "No recording-capable devices in session")
@@ -306,9 +299,7 @@ class SessionManager(
 
         updateSessionState(SessionState.SYNCING)
 
-
         onSyncRequired?.invoke(recordingCapableDevices)
-
 
         @OptIn(kotlinx.coroutines.DelicateCoroutinesApi::class)
         GlobalScope.launch {
@@ -316,7 +307,6 @@ class SessionManager(
 
             if (currentSession.get()?.state == SessionState.SYNCING) {
                 updateSessionState(SessionState.RECORDING)
-
 
                 recordingCapableDevices.forEach { device ->
                     connectedDevices[device.deviceId] = device.copy(isRecording = true)
@@ -339,7 +329,6 @@ class SessionManager(
 
     fun stopSyncRecording() {
         val session = currentSession.get() ?: return
-
 
         connectedDevices.keys.forEach { deviceId ->
             val device = connectedDevices[deviceId]
@@ -369,14 +358,11 @@ class SessionManager(
 
         updateSessionState(SessionState.ENDING)
 
-
         if (session.state == SessionState.RECORDING) {
             stopSyncRecording()
         }
 
-
         connectedDevices.clear()
-
 
         val endedSession =
             session.copy(
@@ -442,7 +428,6 @@ class SessionManager(
         }
     }
 
-
     private fun generateSessionId(): String {
         return "session_${System.currentTimeMillis()}_${(Math.random() * 1000).toInt()}"
     }
@@ -499,7 +484,6 @@ class SessionManager(
             }
         }
 
-
         staleDevices.forEach { deviceId ->
             removeDevice(deviceId, "Heartbeat timeout")
         }
@@ -510,7 +494,6 @@ class SessionManager(
         val devices = connectedDevices.values.toList()
 
         if (devices.isEmpty()) return
-
 
         val needsSync =
             devices.any { device ->
@@ -534,7 +517,6 @@ class SessionManager(
         }
     }
 
-
     suspend fun initializeSessionWithWorkflow(
         sessionConfig: SessionConfig,
         permissionController: mpdc4gsr.core.ui.PermissionController? = null
@@ -548,9 +530,7 @@ class SessionManager(
             )
             _sessionWorkflowState.value = SessionWorkflowState.INITIALIZING
 
-
             setupWorkflowSteps(sessionConfig, permissionController)
-
 
             executeWorkflow()
 
@@ -573,7 +553,6 @@ class SessionManager(
         workflowSteps.clear()
         currentStepIndex = 0
 
-
         workflowSteps.add(
             WorkflowStep(
                 name = "Permission Check",
@@ -584,7 +563,6 @@ class SessionManager(
                 timeout = 15000L
             )
         )
-
 
         workflowSteps.add(
             WorkflowStep(
@@ -597,7 +575,6 @@ class SessionManager(
             )
         )
 
-
         workflowSteps.add(
             WorkflowStep(
                 name = "Device Connection",
@@ -609,7 +586,6 @@ class SessionManager(
             )
         )
 
-
         workflowSteps.add(
             WorkflowStep(
                 name = "Time Synchronization",
@@ -620,7 +596,6 @@ class SessionManager(
                 timeout = 15000L
             )
         )
-
 
         workflowSteps.add(
             WorkflowStep(
@@ -775,11 +750,9 @@ class SessionManager(
         return true
     }
 
-
     fun setWorkflowStateChangeCallback(callback: (SessionWorkflowState) -> Unit) {
         onWorkflowStateChanged = callback
     }
-
 
     fun setWorkflowStepCallback(callback: (String, Boolean) -> Unit) {
         onWorkflowStepCompleted = callback

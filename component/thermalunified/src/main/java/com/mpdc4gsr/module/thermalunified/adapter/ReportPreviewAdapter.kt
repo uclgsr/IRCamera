@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.CollectionUtils
 
-
 import com.mpdc4gsr.libunified.app.bean.HouseRepPreviewItemBean
 import com.mpdc4gsr.libunified.app.lms.weiget.TToast
 import com.mpdc4gsr.module.thermalunified.R
@@ -64,7 +63,6 @@ class ReportPreviewAdapter(private val cxt: Context, var dataList: List<HouseRep
                 holder.rcyAlbum.adapter = albumAdapter
                 albumAdapter.jumpListener = { _, position ->
 
-
                     TToast.shortToast(cxt, "Image detail view disabled - house module removed")
                 }
             } else {
@@ -74,11 +72,9 @@ class ReportPreviewAdapter(private val cxt: Context, var dataList: List<HouseRep
             holder.hsvReport.setOnTouchListener { _, event ->
                 if (event.action == MotionEvent.ACTION_UP) {
 
-
                 }
                 false
             }
-
 
         }
     }

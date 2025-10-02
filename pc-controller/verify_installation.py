@@ -9,13 +9,11 @@ import sys
 import subprocess
 from pathlib import Path
 
-
 def print_header(text):
     """Print a formatted header"""
     print("\n" + "="*70)
     print(f"  {text}")
     print("="*70)
-
 
 def check_python_version():
     """Check Python version"""
@@ -27,7 +25,6 @@ def check_python_version():
     else:
         print(f"   Python {version.major}.{version.minor} (requires 3.8+)")
         return False
-
 
 def check_dependencies():
     """Check required Python packages"""
@@ -66,7 +63,6 @@ def check_dependencies():
     
     return True
 
-
 def check_native_backend():
     """Check if native backend is built"""
     print("\n[3/8] Checking C++ native backend...")
@@ -84,7 +80,6 @@ def check_native_backend():
         print(f"    Build with: cd native_backend && python3 setup.py build_ext --inplace")
         print(f"    Controller will use Python fallback")
         return None  # None means optional, not critical
-
 
 def check_controllers():
     """Check if controller files exist and are importable"""
@@ -107,7 +102,6 @@ def check_controllers():
     
     return all_ok
 
-
 def check_config_files():
     """Check for configuration files"""
     print("\n[5/8] Checking configuration files...")
@@ -122,7 +116,6 @@ def check_config_files():
             print(f"    {filename} (optional)")
     
     return True
-
 
 def check_certificates():
     """Check SSL certificates"""
@@ -140,7 +133,6 @@ def check_certificates():
         print(f"    No certificates (will auto-generate on first run)")
     
     return True
-
 
 def check_tests():
     """Check if test files exist"""
@@ -163,7 +155,6 @@ def check_tests():
     
     return True
 
-
 def check_documentation():
     """Check if documentation exists"""
     print("\n[8/8] Checking documentation...")
@@ -183,7 +174,6 @@ def check_documentation():
             print(f"    {filename:40s} (optional)")
     
     return True
-
 
 def run_quick_test():
     """Run a quick smoke test"""
@@ -221,7 +211,6 @@ def run_quick_test():
         return False
     
     return True
-
 
 def main():
     """Main verification function"""
@@ -292,7 +281,6 @@ def main():
         print("     python3 verify_installation.py")
     
     return critical_count == 0
-
 
 if __name__ == '__main__':
     success = main()

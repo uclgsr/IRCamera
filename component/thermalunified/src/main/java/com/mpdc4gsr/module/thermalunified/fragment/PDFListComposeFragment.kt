@@ -31,7 +31,6 @@ import java.util.*
 // Type alias for cleaner code
 typealias PDFItem = PDFListViewModel.PDFItem
 
-
 class PDFListComposeFragment : BaseComposeFragment<PDFListViewModel>() {
 
     private var isTC007 by mutableStateOf(false)

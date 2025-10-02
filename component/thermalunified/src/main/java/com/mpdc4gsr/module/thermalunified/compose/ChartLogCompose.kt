@@ -27,7 +27,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.roundToInt
 
-
 @Composable
 fun ChartLogCompose(
     thermalData: List<ThermalDataEntry>,
@@ -516,7 +515,6 @@ private data class LegendItem(
     val label: String,
     val color: Color
 )
-
 
 @Composable
 fun ChartLogComposePreview() {

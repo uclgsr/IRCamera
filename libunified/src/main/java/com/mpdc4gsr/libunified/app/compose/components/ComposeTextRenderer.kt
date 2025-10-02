@@ -16,7 +16,6 @@ import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-
 @Composable
 fun ComposeLegendTextDemo(
     modifier: Modifier = Modifier
@@ -36,7 +35,6 @@ fun ComposeLegendTextDemo(
         )
     }
 }
-
 
 private fun DrawScope.drawComposeLegendText(
     textMeasurer: TextMeasurer,
@@ -64,7 +62,6 @@ private fun DrawScope.drawComposeLegendText(
         )
     }
 }
-
 
 @Composable
 fun rememberThemeAwarePaintColor(): Int {

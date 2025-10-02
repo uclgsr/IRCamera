@@ -10,7 +10,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 
-
 import com.mpdc4gsr.libunified.app.bean.HouseRepPreviewAlbumItemBean
 import com.mpdc4gsr.module.thermalunified.R
 

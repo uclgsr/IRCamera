@@ -59,7 +59,6 @@ public class USBMonitorDualManager {
             mUSBMonitor = new USBMonitor(Utils.getApp(),
                     new USBMonitor.OnDeviceConnectListener() {
 
-
                         @Override
                         public void onAttach(UsbDevice device) {
                             Log.w(TAG, "USBMonitor-onAttach-getProductId = " + device.getProductId());
@@ -78,7 +77,6 @@ public class USBMonitorDualManager {
                             }
                         }
 
-
                         @Override
                         public void onDettach(UsbDevice device) {
                             Log.d(TAG, "USBMonitor-onDettach");
@@ -88,7 +86,6 @@ public class USBMonitorDualManager {
                             }
 
                         }
-
 
                         @Override
                         public void onConnect(final UsbDevice device, USBMonitor.UsbControlBlock ctrlBlock,
@@ -108,7 +105,6 @@ public class USBMonitorDualManager {
                                 }
                             }
                         }
-
 
                         @Override
                         public void onDisconnect(UsbDevice device, USBMonitor.UsbControlBlock ctrlBlock) {
@@ -162,7 +158,6 @@ public class USBMonitorDualManager {
 
                 mIrUvcCamera.openUVCCamera(controlBlock);
 
-
                 initIRCMD();
                 mIrUvcCamera.setUSBPreviewSize(irWidth, irHeight);
                 mIrUvcCamera.onStartPreview();
@@ -208,7 +203,6 @@ public class USBMonitorDualManager {
                 mVlUvcCamera.setDefaultPreviewMaxFps(vlFps);
 
                 mVlUvcCamera.openUVCCamera(controlBlock);
-
 
                 mVlUvcCamera.setUSBPreviewSize(vlWidth, vlHeight);
                 if (mVlIFrameCallback != null) {

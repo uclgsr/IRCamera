@@ -3,7 +3,6 @@
 #include <pybind11/numpy.h>
 #include <pybind11/functional.h>
 
-
 #include <fcntl.h>
 #include <unistd.h>
 #include <vector>
@@ -18,7 +17,6 @@ PYBIND11_MODULE(native_backend, m
 m.
 
 doc() = "IRCamera Native Backend - High-performance sensor interfacing (Shimmer GSR only)";
-
 
 py::class_<ircamera::GSRData>(m,
 "GSRData")
@@ -42,7 +40,6 @@ std::to_string(data
 std::to_string(data
 .gsr_microsiemens) + "μS>";
 });
-
 
 py::class_<ircamera::NativeShimmer>(m,
 "NativeShimmer")
@@ -89,7 +86,6 @@ py::arg("callback"),
 .def("perform_self_test", &ircamera::NativeShimmer::perform_self_test,
 "Perform device self-test");
 
-
 m.def("get_available_serial_ports", []() {
 std::vector <std::string> ports;
 
@@ -118,7 +114,6 @@ for (int i = 1; i <= 20; i++) {
 return
 ports;
 }, "Get list of available serial ports for Shimmer devices");
-
 
 m.def("detect_shimmer_device", []() {
 auto ports = []() {
@@ -152,7 +147,6 @@ return ports[0];
 
 return std::string("");
 }, "Detect if a Shimmer device is connected and return port");
-
 
 m.attr("__version__") = "1.0.0";
 m.attr("__author__") = "IRCamera Team";

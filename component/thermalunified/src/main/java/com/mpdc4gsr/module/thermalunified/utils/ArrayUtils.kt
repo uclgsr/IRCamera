@@ -15,7 +15,6 @@ object ArrayUtils {
         return index
     }
 
-
     fun getMinIndex(
         data: FloatArray,
         rotateType: Int = 0,
@@ -28,7 +27,6 @@ object ArrayUtils {
             }
         return index
     }
-
 
     fun matrixRotate(
         srcData: FloatArray,
@@ -103,7 +101,6 @@ object ArrayUtils {
         }
     }
 
-
     private fun getRotateMaxIndex(
         data: FloatArray,
         rotateType: Int = 0,
@@ -133,7 +130,6 @@ object ArrayUtils {
             return selectIndexList[maxIndex]
         }
     }
-
 
     private fun getRotateMinIndex(
         data: FloatArray,
@@ -218,7 +214,6 @@ object ArrayUtils {
         }
         return data
     }
-
 
     private fun matrixRotate270(srcData: FloatArray): FloatArray {
         val row = 192

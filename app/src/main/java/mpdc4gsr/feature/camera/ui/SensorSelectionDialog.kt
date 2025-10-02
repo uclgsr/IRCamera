@@ -14,7 +14,6 @@ import android.widget.*
 import androidx.core.content.ContextCompat
 import com.shimmerresearch.android.manager.ShimmerBluetoothManagerAndroid
 
-
 // Use simple feature checks for MVP; avoid direct Shimmer API calls
 
 class SensorSelectionDialog(

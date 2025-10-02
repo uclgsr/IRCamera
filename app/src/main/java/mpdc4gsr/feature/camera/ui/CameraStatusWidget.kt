@@ -13,7 +13,6 @@ import kotlinx.coroutines.launch
 import mpdc4gsr.core.data.RgbCameraRecorder
 import mpdc4gsr.core.ui.PermissionManager
 
-
 class CameraStatusWidget @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -46,7 +45,6 @@ class CameraStatusWidget @JvmOverloads constructor(
         }
         addView(statusText)
 
-
         previewView = PreviewView(context).apply {
             layoutParams = LayoutParams(
                 LayoutParams.MATCH_PARENT,
@@ -58,7 +56,6 @@ class CameraStatusWidget @JvmOverloads constructor(
         }
         addView(previewView)
 
-
         statsText = TextView(context).apply {
             text = "Camera Statistics:\nNot Available"
             textSize = 12f
@@ -68,7 +65,6 @@ class CameraStatusWidget @JvmOverloads constructor(
         }
         addView(statsText)
     }
-
 
     fun initializeWithCamera(
         lifecycleOwner: LifecycleOwner,
@@ -85,9 +81,7 @@ class CameraStatusWidget @JvmOverloads constructor(
                 permissionManager = permissionManager
             )
 
-
             startStatusMonitoring(lifecycleOwner)
-
 
             lifecycleOwner.lifecycleScope.launch {
                 val success = cameraRecorder?.initialize() ?: false
@@ -106,13 +100,11 @@ class CameraStatusWidget @JvmOverloads constructor(
     private fun startStatusMonitoring(lifecycleOwner: LifecycleOwner) {
         val recorder = cameraRecorder ?: return
 
-
         lifecycleOwner.lifecycleScope.launch {
             recorder.cameraStatus.collect { status ->
                 updateStatusText("Camera: $status", getStatusColor(status))
             }
         }
-
 
         lifecycleOwner.lifecycleScope.launch {
             while (true) {
@@ -169,7 +161,6 @@ class CameraStatusWidget @JvmOverloads constructor(
         }
     }
 
-
     fun startRecording(sessionDirectory: String, callback: (Boolean) -> Unit) {
         cameraRecorder?.let { recorder ->
             Thread {
@@ -187,7 +178,6 @@ class CameraStatusWidget @JvmOverloads constructor(
             }.start()
         }
     }
-
 
     fun stopRecording(callback: (Boolean) -> Unit) {
         cameraRecorder?.let { recorder ->
@@ -207,7 +197,6 @@ class CameraStatusWidget @JvmOverloads constructor(
         }
     }
 
-
     fun cleanup() {
         cameraRecorder?.let { recorder ->
             Thread {
@@ -218,7 +207,6 @@ class CameraStatusWidget @JvmOverloads constructor(
         }
         cameraRecorder = null
     }
-
 
     fun getCameraRecorder(): RgbCameraRecorder? = cameraRecorder
 }

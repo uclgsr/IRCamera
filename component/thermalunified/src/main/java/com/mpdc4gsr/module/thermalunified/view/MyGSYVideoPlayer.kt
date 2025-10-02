@@ -6,7 +6,6 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import com.mpdc4gsr.module.thermalunified.R
 
-
 class MyGSYVideoPlayer : FrameLayout {
 
     companion object {
@@ -25,7 +24,6 @@ class MyGSYVideoPlayer : FrameLayout {
     }
 
     private fun init(context: Context) {
-
 
     }
 

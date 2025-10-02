@@ -17,7 +17,6 @@ import time
 import sys
 from protocol_adapter import ProtocolAdapter
 
-
 class SimplePCController:
     """Simple PC controller for Android recording"""
     
@@ -197,7 +196,6 @@ class SimplePCController:
             return data.split('\n')[0].strip()
         return data.strip() if data else None
 
-
 def main():
     """Main example function"""
     print("="*70)
@@ -292,7 +290,6 @@ def main():
         
     finally:
         controller.disconnect()
-
 
 if __name__ == '__main__':
     sys.exit(main())

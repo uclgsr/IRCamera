@@ -17,7 +17,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 
-
 @Composable
 fun HomeGuideDialogCompose(
     initialStep: Int = 1,
@@ -219,7 +218,6 @@ private fun GuideStep3Content(onNext: () -> Unit) {
         }
     }
 }
-
 
 @Composable
 fun HomeGuideDialogComposePreview() {

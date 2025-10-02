@@ -12,7 +12,6 @@ from typing import Dict, List, Optional, Tuple, Any
 
 logger = logging.getLogger(__name__)
 
-
 class BiometricPattern(Enum):
     BASELINE = "baseline"
     ACUTE_STRESS = "acute_stress"
@@ -24,7 +23,6 @@ class BiometricPattern(Enum):
     FATIGUE = "fatigue"
     ANOMALY = "anomaly"
 
-
 class SensorModality(Enum):
     GSR = "gsr"
     THERMAL = "thermal"
@@ -33,7 +31,6 @@ class SensorModality(Enum):
     MOTION = "motion"
     AUDIO = "audio"
     ENVIRONMENTAL = "environmental"
-
 
 @dataclass
 class SensorReading:
@@ -46,7 +43,6 @@ class SensorReading:
     quality_score: float
     confidence: float
     metadata: Dict[str, Any]
-
 
 @dataclass
 class MultiModalFeatures:
@@ -75,7 +71,6 @@ class MultiModalFeatures:
     data_quality: float
     sensor_coverage: float
 
-
 @dataclass
 class BehavioralInsight:
     timestamp: float
@@ -85,7 +80,6 @@ class BehavioralInsight:
     confidence: float
     recommended_action: str
     data_support: Dict[str, Any]
-
 
 @dataclass
 class ResearchMetrics:
@@ -106,7 +100,6 @@ class ResearchMetrics:
 
     bids_compliance: bool
     metadata_completeness: float
-
 
 class AdvancedAnalyticsEngine:
 
@@ -982,7 +975,6 @@ class AdvancedAnalyticsEngine:
         self.executor.shutdown(wait=True)
         logger.info("Advanced Analytics Engine shutdown complete")
 
-
 def create_gsr_reading(device_id: str, session_id: str, timestamp: float,
                        gsr_value: float, quality: float = 95.0) -> SensorReading:
     return SensorReading(
@@ -996,7 +988,6 @@ def create_gsr_reading(device_id: str, session_id: str, timestamp: float,
         confidence=quality / 100.0,
         metadata={"unit": "microsiemens", "sensor_type": "GSR"}
     )
-
 
 def create_thermal_reading(device_id: str, session_id: str, timestamp: float,
                            temperature: float, quality: float = 90.0) -> SensorReading:

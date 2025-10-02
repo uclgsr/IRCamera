@@ -15,10 +15,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import mpdc4gsr.core.ui.ConnectionState
 
-/**
- * Compose component for displaying comprehensive sensor status
- * Replaces or complements existing sensor status widgets
- */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SensorStatusCard(

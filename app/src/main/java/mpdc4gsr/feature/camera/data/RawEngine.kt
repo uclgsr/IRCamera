@@ -121,7 +121,6 @@ class RawEngine(private val context: Context) {
         Log.i(TAG, "RAW engine released")
     }
 
-
     private val rawImageAvailableListener =
         ImageReader.OnImageAvailableListener { reader ->
             if (!isCapturing) return@OnImageAvailableListener

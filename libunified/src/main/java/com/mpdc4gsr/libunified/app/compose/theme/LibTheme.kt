@@ -30,7 +30,6 @@ private val DarkColorScheme = darkColorScheme(
     surface = ThermalDark
 )
 
-
 @Composable
 fun LibUnifiedTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),

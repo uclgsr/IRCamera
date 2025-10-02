@@ -4,7 +4,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import java.util.concurrent.ConcurrentHashMap
 
-
 class ReportRepository : BaseRepository() {
 
     private val reportCache = ConcurrentHashMap<String, CachedReportData>()

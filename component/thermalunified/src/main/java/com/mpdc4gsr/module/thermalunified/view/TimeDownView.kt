@@ -46,7 +46,6 @@ public class TimeDownView : AppCompatTextView {
         init()
     }
 
-
     fun downSecond(seconds: Int) {
         downSecond(seconds, true)
     }
@@ -66,7 +65,6 @@ public class TimeDownView : AppCompatTextView {
             downTime(seconds, 1, 0, 1000, openAnimation)
         }
     }
-
 
     fun downTime(
         downCount: Int,
@@ -139,7 +137,6 @@ public class TimeDownView : AppCompatTextView {
 
     var downTimeWatcher: DownTimeWatcher? = null
 
-
     fun setOnTimeDownListener(downTimeWatcher: DownTimeWatcher?) {
         this.downTimeWatcher = downTimeWatcher
     }
@@ -165,7 +162,6 @@ public class TimeDownView : AppCompatTextView {
                             downTimeWatcher!!.onLastTime(downCount)
                         }
                     } else if (downCount == lastDown - 1) {
-
 
                         if (afterDownDimissFlag == AFTER_LAST_TIME_DIMISS) {
                             drawTextFlag = DRAW_TEXT_NO

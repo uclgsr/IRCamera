@@ -24,7 +24,6 @@ import com.mpdc4gsr.module.thermalunified.event.ThermalActionEvent
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRMonitorViewModel
 import org.greenrobot.eventbus.EventBus
 
-
 class IRMonitorComposeActivity : BaseComposeActivity<IRMonitorViewModel>() {
 
     override fun createViewModel(): IRMonitorViewModel {

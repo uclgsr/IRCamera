@@ -198,7 +198,6 @@ class MultiDeviceCoordination(
 
                 checkDeviceHealth()
 
-
                 processScheduledEvents()
 
                 delay(SYNC_INTERVAL_MS)
@@ -242,7 +241,6 @@ class MultiDeviceCoordination(
             }
         }
 
-
         sendHeartbeat()
     }
 
@@ -278,7 +276,6 @@ class MultiDeviceCoordination(
 
             syncEvents[eventId] = syncEvent
 
-
             val eventMessage =
                 JSONObject().apply {
                     put("type", "coordination_event")
@@ -298,7 +295,6 @@ class MultiDeviceCoordination(
         val eventId = message.optString("event_id")
         val eventType = message.optString("event_type")
         val scheduledTime = message.optLong("scheduled_time")
-
 
         coordinationScope.launch {
             val delay = scheduledTime - System.currentTimeMillis()
@@ -348,9 +344,7 @@ class MultiDeviceCoordination(
 
     private suspend fun handleSyncFlash() {
 
-
         Log.d(TAG, "Executing sync flash at ${System.currentTimeMillis()}")
-
 
         val flashIntent = android.content.Intent("com.mpdc4gsr.gsr.SYNC_FLASH")
         flashIntent.putExtra("timestamp", System.currentTimeMillis())
@@ -376,7 +370,6 @@ class MultiDeviceCoordination(
         val activeEvents: Int,
         val currentSessionId: String?,
     )
-
 
     private fun jsonArrayToList(jsonArray: JSONArray?): List<String> {
         val list = mutableListOf<String>()

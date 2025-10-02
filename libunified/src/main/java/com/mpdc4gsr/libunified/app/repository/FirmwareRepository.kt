@@ -4,7 +4,6 @@ import android.app.Application
 import kotlinx.coroutines.flow.Flow
 import java.io.File
 
-
 class FirmwareRepository(
     private val application: Application
 ) : BaseRepository() {
@@ -33,7 +32,6 @@ class FirmwareRepository(
         val currentFirmwareVersion: String
     )
 
-
     fun checkFirmwareUpdate(
         isTC007: Boolean,
         deviceInfo: DeviceInfo
@@ -45,7 +43,6 @@ class FirmwareRepository(
         }
     }
 
-
     suspend fun downloadFirmware(
         firmwareInfo: FirmwareInfo,
         outputDir: File
@@ -55,7 +52,6 @@ class FirmwareRepository(
         outputFile.createNewFile()
         outputFile
     }
-
 
     suspend fun getFirmwareFromAssets(isTC007: Boolean): BaseRepository.Result<FirmwareInfo> =
         safeCall {

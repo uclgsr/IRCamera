@@ -10,7 +10,6 @@ import java.util.concurrent.LinkedBlockingQueue
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
 
-
 class UnifiedDataWriterUtils(
     private val outputFile: File,
     private val bufferSize: Int = 8192,
@@ -25,7 +24,6 @@ class UnifiedDataWriterUtils(
     private var writerJob: Job? = null
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
-
     fun start() {
         if (isRunning.compareAndSet(false, true)) {
             writerJob = scope.launch {
@@ -34,7 +32,6 @@ class UnifiedDataWriterUtils(
             Log.d(TAG, "BufferedDataWriter started for ${outputFile.name}")
         }
     }
-
 
     fun stop() {
         if (isRunning.compareAndSet(true, false)) {
@@ -46,7 +43,6 @@ class UnifiedDataWriterUtils(
         }
     }
 
-
     fun writeData(data: String) {
         if (isRunning.get()) {
             if (!dataQueue.offer(data)) {
@@ -54,7 +50,6 @@ class UnifiedDataWriterUtils(
             }
         }
     }
-
 
     fun writeCSVRow(vararg values: Any) {
         val csvLine = values.joinToString(",") { value ->
@@ -66,11 +61,9 @@ class UnifiedDataWriterUtils(
         writeData(csvLine)
     }
 
-
     fun writeCSVHeader(vararg headers: String) {
         writeCSVRow(*headers)
     }
-
 
     data class WriterStats(
         val bytesWritten: Long,
@@ -170,7 +163,6 @@ class UnifiedDataWriterUtils(
     companion object {
         private const val TAG = "UnifiedDataWriter"
 
-
         fun writeToFile(file: File, data: String, append: Boolean = false) {
             try {
                 file.parentFile?.mkdirs()
@@ -179,7 +171,6 @@ class UnifiedDataWriterUtils(
                 Log.e(TAG, "Error writing to file: ${file.name}", e)
             }
         }
-
 
         fun writeCSVToFile(file: File, headers: Array<String>, rows: List<Array<Any>>) {
             try {
@@ -206,7 +197,6 @@ class UnifiedDataWriterUtils(
                 Log.e(TAG, "Error writing CSV to file: ${file.name}", e)
             }
         }
-
 
         fun createWriter(
             outputFile: File,

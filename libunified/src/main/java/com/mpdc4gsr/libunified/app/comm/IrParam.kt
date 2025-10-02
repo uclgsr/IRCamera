@@ -1,6 +1,5 @@
 package com.mpdc4gsr.libunified.app.comm
 
-
 enum class IrParam {
     ParamLevel,
     ParamAlarm,

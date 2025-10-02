@@ -42,14 +42,12 @@ public class YAxisRendererRadarChart extends YAxisRenderer {
         double rawInterval = range / labelCount;
         double interval = Utils.roundToNextSignificant(rawInterval);
 
-
         if (mAxis.isGranularityEnabled())
             interval = interval < mAxis.getGranularity() ? mAxis.getGranularity() : interval;
 
         double intervalMagnitude = Utils.roundToNextSignificant(Math.pow(10, (int) Math.log10(interval)));
         int intervalSigDigit = (int) (interval / intervalMagnitude);
         if (intervalSigDigit > 5) {
-
 
             interval = Math.floor(10 * intervalMagnitude);
         }
@@ -178,7 +176,6 @@ public class YAxisRendererRadarChart extends YAxisRenderer {
             return;
 
         float sliceangle = mChart.getSliceAngle();
-
 
         float factor = mChart.getFactor();
 

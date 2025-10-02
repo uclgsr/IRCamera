@@ -63,7 +63,6 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_default_title" />
 
-
                 <TextView
                     android:id="@+id/tv_default_temp_title"
                     android:layout_width="0dp"
@@ -123,7 +122,6 @@
                     app:layout_constraintTop_toTopOf="@id/view_default_temp_bg"
                     tools:text="°C" />
 
-
                 <TextView
                     android:id="@+id/tv_default_dis_title"
                     android:layout_width="0dp"
@@ -182,7 +180,6 @@
                     app:layout_constraintEnd_toEndOf="@id/view_default_dis_bg"
                     app:layout_constraintTop_toTopOf="@id/view_default_dis_bg"
                     tools:ignore="HardcodedText" />
-
 
                 <TextView
                     android:id="@+id/tv_default_em_title"

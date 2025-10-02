@@ -20,19 +20,15 @@ class AdaptiveThermalStreamer {
     companion object {
         private const val TAG = "AdaptiveThermalStreamer"
 
-
         private const val MIN_INTERVAL = 1
         private const val MAX_INTERVAL = 5
-
 
         private const val EXCELLENT_LATENCY = 50
         private const val GOOD_LATENCY = 100
         private const val FAIR_LATENCY = 200
 
-
         private const val MAX_BUFFER_SIZE = 10
         private const val OVERFLOW_DROP_COUNT = 3
-
 
         private const val ADAPTATION_INTERVAL_MS = 5000L
         private const val NETWORK_SAMPLE_SIZE = 10
@@ -42,22 +38,18 @@ class AdaptiveThermalStreamer {
     private var currentFrameCount = 0
     private var isStreamingEnabled = false
 
-
     private val latencyMeasurements = LinkedList<Long>()
     private val packetLossMeasurements = LinkedList<Double>()
     private var averageLatency = 100L
     private var packetLossRate = 0.0
-
 
     private val frameBuffer = LinkedList<ThermalFrameData>()
     private var totalFramesGenerated = 0L
     private var framesStreamed = 0L
     private var framesDropped = 0L
 
-
     private var adaptationJob: Job? = null
     private val streamingScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
-
 
     data class ThermalFrameData(
         val frameIndex: Long,
@@ -70,7 +62,6 @@ class AdaptiveThermalStreamer {
             LOW, NORMAL, HIGH, CRITICAL
         }
     }
-
 
     data class NetworkPerformance(
         val latency: Long,
@@ -97,12 +88,10 @@ class AdaptiveThermalStreamer {
     fun initialize() {
         Log.i(TAG, "Initializing adaptive thermal streamer")
 
-
         startNetworkMonitoring()
 
         Log.i(TAG, "Adaptive thermal streamer initialized with interval: $streamingFrameInterval")
     }
-
 
     fun startStreaming() {
         if (isStreamingEnabled) {
@@ -115,7 +104,6 @@ class AdaptiveThermalStreamer {
 
         Log.i(TAG, "Started adaptive thermal streaming")
     }
-
 
     fun stopStreaming() {
         if (!isStreamingEnabled) {
@@ -130,7 +118,6 @@ class AdaptiveThermalStreamer {
         Log.i(TAG, "Stopped adaptive thermal streaming")
     }
 
-
     fun processFrame(frameData: ThermalFrameData): Boolean {
         if (!isStreamingEnabled) {
             return false
@@ -138,7 +125,6 @@ class AdaptiveThermalStreamer {
 
         totalFramesGenerated++
         currentFrameCount++
-
 
         val shouldStream = (currentFrameCount % streamingFrameInterval == 0)
 
@@ -151,20 +137,16 @@ class AdaptiveThermalStreamer {
         }
     }
 
-
     private fun attemptFrameStreaming(frameData: ThermalFrameData): Boolean {
 
         if (frameBuffer.size >= MAX_BUFFER_SIZE) {
             handleBufferOverflow()
         }
 
-
         frameBuffer.offer(frameData)
-
 
         return processBufferedFrames()
     }
-
 
     private fun processBufferedFrames(): Boolean {
         var streamed = false
@@ -191,13 +173,11 @@ class AdaptiveThermalStreamer {
         return streamed
     }
 
-
     private fun handleBufferOverflow() {
         Log.w(TAG, "Frame buffer overflow, dropping frames")
 
         var droppedCount = 0
         val iterator = frameBuffer.iterator()
-
 
         while (iterator.hasNext() && droppedCount < OVERFLOW_DROP_COUNT) {
             val frame = iterator.next()
@@ -251,7 +231,6 @@ class AdaptiveThermalStreamer {
             val endTime = System.currentTimeMillis()
             val latency = endTime - startTime
 
-
             recordNetworkPerformance(latency, isPacketLost = false)
 
             Log.v(TAG, "Frame ${frame.frameIndex} streamed successfully (latency: ${latency}ms)")
@@ -272,12 +251,10 @@ class AdaptiveThermalStreamer {
         val simulatedLatency = (50..200).random()
         Thread.sleep(simulatedLatency.toLong())
 
-
         if (Math.random() < 0.02) {
             throw RuntimeException("Simulated packet loss")
         }
     }
-
 
     private fun recordNetworkPerformance(latency: Long, isPacketLost: Boolean) {
 
@@ -286,12 +263,10 @@ class AdaptiveThermalStreamer {
             latencyMeasurements.poll()
         }
 
-
         packetLossMeasurements.offer(if (isPacketLost) 1.0 else 0.0)
         if (packetLossMeasurements.size > NETWORK_SAMPLE_SIZE) {
             packetLossMeasurements.poll()
         }
-
 
         averageLatency = if (latencyMeasurements.isNotEmpty()) {
             latencyMeasurements.average().toLong()
@@ -306,7 +281,6 @@ class AdaptiveThermalStreamer {
         }
     }
 
-
     private fun startNetworkMonitoring() {
         adaptationJob = streamingScope.launch {
             while (isActive && isStreamingEnabled) {
@@ -320,10 +294,8 @@ class AdaptiveThermalStreamer {
         }
     }
 
-
     private fun updateStreamingInterval() {
         val oldInterval = streamingFrameInterval
-
 
         val newInterval = when {
             averageLatency <= EXCELLENT_LATENCY && packetLossRate < 0.01 -> {
@@ -343,7 +315,6 @@ class AdaptiveThermalStreamer {
             }
         }
 
-
         streamingFrameInterval = max(MIN_INTERVAL, min(MAX_INTERVAL, newInterval))
 
         if (oldInterval != streamingFrameInterval) {
@@ -358,10 +329,8 @@ class AdaptiveThermalStreamer {
             )
         }
 
-
         logPerformanceStatistics()
     }
-
 
     fun getNetworkPerformance(): NetworkPerformance {
         val quality = when {
@@ -386,7 +355,6 @@ class AdaptiveThermalStreamer {
         )
     }
 
-
     private fun calculateEstimatedBandwidth(): Long {
 
         val averageFrameSize = 50 * 1024L
@@ -398,7 +366,6 @@ class AdaptiveThermalStreamer {
 
         return (streamingRate * averageFrameSize).toLong()
     }
-
 
     fun getStreamingStatistics(): Map<String, Any> {
         val efficiency = if (totalFramesGenerated > 0) {
@@ -420,7 +387,6 @@ class AdaptiveThermalStreamer {
         )
     }
 
-
     private fun logPerformanceStatistics() {
         val stats = getStreamingStatistics()
 
@@ -431,7 +397,6 @@ class AdaptiveThermalStreamer {
                     "Quality: ${stats["network_quality"]}"
         )
     }
-
 
     private fun logFinalStatistics() {
         val stats = getStreamingStatistics()

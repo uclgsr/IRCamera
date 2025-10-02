@@ -28,7 +28,6 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.mpdc4gsr.module.thermalunified.model.AlbumItem
 
-
 @Composable
 fun CameraItemListCompose(
     items: List<CameraItem>,
@@ -141,7 +140,6 @@ private fun CameraItemCard(
     }
 }
 
-
 @Composable
 fun MeasureItemGridCompose(
     items: List<MeasureItem>,
@@ -240,7 +238,6 @@ private fun MeasureItemCard(
         }
     }
 }
-
 
 @Composable
 fun GalleryAlbumListCompose(
@@ -347,7 +344,6 @@ private fun GalleryAlbumCard(
     }
 }
 
-
 @Composable
 fun MenuTabBarCompose(
     tabs: List<MenuTab>,
@@ -386,7 +382,6 @@ fun MenuTabBarCompose(
         }
     }
 }
-
 
 @Composable
 fun SettingOptionsListCompose(
@@ -514,7 +509,6 @@ data class SettingOption(
 enum class SettingOptionType {
     SIMPLE, CHECKBOX, SWITCH
 }
-
 
 @Composable
 fun ThermalAdaptersPreview() {

@@ -102,7 +102,6 @@
             app:layout_constraintStart_toStartOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-
     <FrameLayout
         android:id="@+id/thermal_lay"
         android:layout_width="0dp"
@@ -112,7 +111,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/title_view">
-
 
         <com.infisense.usbir.view.CameraView
             android:id="@+id/cameraView"
@@ -180,7 +178,6 @@
             android:layout_marginBottom="20dp"
             android:visibility="gone" />
     </FrameLayout>
-
 
     <Space
         android:id="@+id/space_chart"
@@ -253,7 +250,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
     </LinearLayout>
-
 
     <com.mpdc4gsr.libunified.ui.widget.BitmapConstraintLayout
         android:id="@+id/cl_seek_bar"
@@ -362,7 +358,6 @@
         app:layout_constraintBottom_toTopOf="@id/thermal_menu_lay"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-
 
     <ViewStub
         android:id="@+id/view_stub_camera"

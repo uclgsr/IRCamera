@@ -25,7 +25,6 @@ import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
 import com.mpdc4gsr.libunified.app.tools.UnitTools
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRConfigViewModel
 
-
 class IRConfigComposeActivity : BaseComposeActivity<IRConfigViewModel>() {
 
     private var isTC007 = false

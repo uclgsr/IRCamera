@@ -233,7 +233,6 @@ class ImageEditView : View {
                     canvas?.drawPath(path, paint)
                 } else {
 
-
                     val k1: Float = (downY - currentY).toFloat() / (downX - currentX).toFloat()
                     val b1: Float = downY - k1 * downX
                     val a1: Float = -b1 / k1

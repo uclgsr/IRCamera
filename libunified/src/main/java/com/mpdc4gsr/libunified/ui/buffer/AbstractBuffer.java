@@ -2,19 +2,15 @@ package com.mpdc4gsr.libunified.ui.buffer;
 
 public abstract class AbstractBuffer<T> {
 
-
     public final float[] buffer;
 
     protected int index = 0;
 
     protected float phaseX = 1f;
 
-
     protected float phaseY = 1f;
 
-
     protected int mFrom = 0;
-
 
     protected int mTo = 0;
 
@@ -23,13 +19,11 @@ public abstract class AbstractBuffer<T> {
         buffer = new float[size];
     }
 
-
     public void limitFrom(int from) {
         if (from < 0)
             from = 0;
         mFrom = from;
     }
-
 
     public void limitTo(int to) {
         if (to < 0)

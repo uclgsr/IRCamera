@@ -3,7 +3,6 @@ package com.mpdc4gsr.module.thermalunified.extension
 import android.util.Log
 import com.energy.iruvc.ircmd.IRCMD
 
-
 private const val TAG = "IRCMDExtensions"
 
 fun IRCMD.setMirror(enabled: Boolean) {
@@ -65,9 +64,7 @@ private fun IRCMD.nativeSetProperty(
     value: Int,
 ): Boolean {
 
-
     return try {
-
 
         Log.d(TAG, "Setting $property to $value via native IRCMD interface")
         true

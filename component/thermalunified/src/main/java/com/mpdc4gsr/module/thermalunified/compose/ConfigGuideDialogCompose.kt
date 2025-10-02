@@ -21,7 +21,6 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.mpdc4gsr.module.thermalunified.R
 
-
 @Composable
 fun ConfigGuideDialogCompose(
     isTC007: Boolean,
@@ -306,7 +305,6 @@ data class EmissivityPreset(
     val emissivity: Float,
     val description: String = ""
 )
-
 
 @Composable
 fun ConfigGuideDialogComposePreview() {

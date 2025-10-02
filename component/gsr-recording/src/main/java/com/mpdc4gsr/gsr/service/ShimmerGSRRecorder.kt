@@ -1,6 +1,5 @@
 package com.mpdc4gsr.gsr.service
 
-
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.content.Context
@@ -44,14 +43,11 @@ class ShimmerGSRRecorder(
         private const val SYNC_MARKS_FILENAME = "sync_marks.csv"
         private const val SESSION_METADATA_FILENAME = "session_metadata.json"
 
-
         private const val ADC_12BIT_MAX = 4095
-
 
         private const val GSR_SENSOR_BIT = 0x08.toByte()
         private const val GSR_RANGE_AUTO = 0x00.toByte()
         private const val TIMESTAMP_CHANNEL_BIT = 0x01.toByte()
-
 
         private const val SENSOR_GSR_BIT = 0x10L
         private const val SENSOR_TIMESTAMP_BIT = 0x08L
@@ -165,7 +161,6 @@ class ShimmerGSRRecorder(
 
                     try {
 
-
                         Log.d(TAG, "Using official Shimmer API configuration")
 
                     } catch (e: Exception) {
@@ -176,7 +171,6 @@ class ShimmerGSRRecorder(
 
                         device.connect(deviceAddress, "default")
                     } else {
-
 
                         if (ActivityCompat.checkSelfPermission(
                                 context,
@@ -502,7 +496,6 @@ class ShimmerGSRRecorder(
 
     fun isDeviceConnected(): Boolean = isDeviceConnected.get()
 
-
     private fun startShimmerLogging() {
         try {
             // Shimmer internal logging is not implemented in this wrapper
@@ -520,7 +513,6 @@ class ShimmerGSRRecorder(
             Log.w(TAG, "Failed to stop Shimmer logging: ${e.message}")
         }
     }
-
 
     fun getRecordingMode(): RecordingMode = recordingMode
 }

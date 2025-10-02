@@ -3,7 +3,6 @@ package com.mpdc4gsr.libunified.app.utils
 import android.util.Log
 import java.util.*
 
-
 object ByteUtils {
 
     fun byteMerger(byte1: ByteArray, byte2: Int, byte3: Int, byte4: Int): ByteArray {

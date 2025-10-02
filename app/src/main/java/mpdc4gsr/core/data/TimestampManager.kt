@@ -12,7 +12,6 @@ object TimestampManager {
     private val clockOffset = AtomicLong(0L)
     private val sessionStartTime = AtomicLong(0L)
 
-
     private val sessionStartSystemMs = AtomicLong(0L)
     private val sessionStartMonotonicNs = AtomicLong(0L)
 
@@ -25,11 +24,9 @@ object TimestampManager {
         Log.i(TAG, "Timestamp system initialized with boot reference: ${bootTimeReference.get()}")
     }
 
-
     fun nowNanos(): Long {
         return System.nanoTime()
     }
-
 
     fun getCurrentTimestampNanos(): Long {
         return SystemClock.elapsedRealtimeNanos()
@@ -49,7 +46,6 @@ object TimestampManager {
         val date = java.util.Date(timestampMillis)
         return iso8601Format.format(date)
     }
-
 
     fun getCurrentSystemTimeMs(): Long {
         return System.currentTimeMillis()
@@ -71,7 +67,6 @@ object TimestampManager {
         }
         return getCurrentElapsedRealtimeMs() - sessionStart
     }
-
 
     fun startSession(): SessionTimestampReference {
         val sessionStart = getCurrentElapsedRealtimeMs()
@@ -115,7 +110,6 @@ object TimestampManager {
         return getDeviceTimestampMs() + clockOffset.get()
     }
 
-
     fun createTimestampRecord(): TimestampRecord {
         val currentNanos = getCurrentTimestampNanos()
         val systemMs = getCurrentSystemTimeMs()
@@ -133,7 +127,6 @@ object TimestampManager {
             synchronizedTimestampMs = synchronizedMs,
         )
     }
-
 
     fun convertMonotonicToWallClock(monotonicNs: Long): Long {
         val sessionStartMono = sessionStartMonotonicNs.get()
@@ -157,7 +150,6 @@ object TimestampManager {
         return convertMonotonicToWallClock(monotonicNs)
     }
 
-
     fun getSessionRelativeNanos(currentMonotonicNs: Long = getCurrentTimestampNanos()): Long {
         val sessionStartMono = sessionStartMonotonicNs.get()
         if (sessionStartMono == 0L) {
@@ -174,7 +166,6 @@ object TimestampManager {
         return Pair(block(), executionTime)
     }
 }
-
 
 data class SessionTimestampReference(
     val sessionStartElapsedMs: Long,

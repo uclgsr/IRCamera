@@ -148,7 +148,6 @@ class TemperatureEditView : TemperatureBaseView {
         }
     }
 
-
     private fun drawOnePoint(
         canvas: Canvas,
         point: Point,
@@ -164,7 +163,6 @@ class TemperatureEditView : TemperatureBaseView {
                 )
             } catch (_: IllegalArgumentException) {
 
-
                 return null
             }
         drawPoint(canvas, point)
@@ -175,7 +173,6 @@ class TemperatureEditView : TemperatureBaseView {
         }
         return result
     }
-
 
     private fun drawOneLine(
         canvas: Canvas,
@@ -202,7 +199,6 @@ class TemperatureEditView : TemperatureBaseView {
                 )
             } catch (_: IllegalArgumentException) {
 
-
                 return null
             }
         val maxX: Int = (result.maxTemperaturePixel.x * xScale).correct(width)
@@ -219,7 +215,6 @@ class TemperatureEditView : TemperatureBaseView {
         }
         return result
     }
-
 
     private fun drawOneRect(
         canvas: Canvas,
@@ -239,7 +234,6 @@ class TemperatureEditView : TemperatureBaseView {
             try {
                 irtemp.getTemperatureOfRect(Rect(left, top, right, bottom))
             } catch (_: IllegalArgumentException) {
-
 
                 return null
             }

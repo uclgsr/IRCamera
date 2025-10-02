@@ -11,23 +11,19 @@ import com.topdon.commons.poster.PosterDispatcher;
 import java.lang.reflect.Method;
 import java.util.*;
 
-
 public final class Observable {
     private final List<ObserverInfo> observerInfos = new ArrayList<>();
     private final PosterDispatcher posterDispatcher;
     private final ObserverMethodHelper helper;
-
 
     public Observable(@NonNull PosterDispatcher posterDispatcher, boolean isObserveAnnotationRequired) {
         this.posterDispatcher = posterDispatcher;
         helper = new ObserverMethodHelper(isObserveAnnotationRequired);
     }
 
-
     public PosterDispatcher getPosterDispatcher() {
         return posterDispatcher;
     }
-
 
     public void registerObserver(@NonNull Observer observer) {
         Objects.requireNonNull(observer, "observer can't be null");
@@ -51,7 +47,6 @@ public final class Observable {
         }
     }
 
-
     public boolean isRegistered(@NonNull Observer observer) {
         synchronized (observerInfos) {
             for (ObserverInfo info : observerInfos) {
@@ -62,7 +57,6 @@ public final class Observable {
             return false;
         }
     }
-
 
     public void unregisterObserver(@NonNull Observer observer) {
         synchronized (observerInfos) {
@@ -75,7 +69,6 @@ public final class Observable {
             }
         }
     }
-
 
     public void unregisterAll() {
         synchronized (observerInfos) {
@@ -97,11 +90,9 @@ public final class Observable {
         }
     }
 
-
     public void notifyObservers(@NonNull String methodName, @Nullable MethodInfo.Parameter... parameters) {
         notifyObservers(new MethodInfo(methodName, parameters));
     }
-
 
     public void notifyObservers(@NonNull MethodInfo info) {
         List<ObserverInfo> infos = getObserverInfos();

@@ -21,7 +21,6 @@ import com.energy.iruvc.utils.Line
 import com.mpdc4gsr.libunified.ir.utils.TempDrawHelper.Companion.correct
 import com.mpdc4gsr.libunified.ir.utils.TempUtils
 
-
 class TemperatureHikView : TemperatureBaseView {
 
     @Volatile
@@ -212,7 +211,6 @@ class TemperatureHikView : TemperatureBaseView {
     @SuppressLint("DrawAllocation")
     override fun onDraw(canvas: Canvas) {
 
-
         if (isShowFull || pointList.isNotEmpty() || lineList.isNotEmpty() || rectList.isNotEmpty()) {
             drawPoint(canvas, Point(width / 2, height / 2))
             tempInfo.center?.let {
@@ -344,7 +342,6 @@ class TemperatureHikView : TemperatureBaseView {
                         trendResult = libIRTemp.getTemperatureOfLine(Line(startPoint, endPoint))
                     } catch (_: IllegalArgumentException) {
 
-
                     }
 
                     val tempList: List<Float> =
@@ -362,7 +359,6 @@ class TemperatureHikView : TemperatureBaseView {
                         pointResultList.add(libIRTemp.getTemperatureOfPoint(sourcePoint))
                     } catch (_: IllegalArgumentException) {
 
-
                     }
                 }
 
@@ -377,7 +373,6 @@ class TemperatureHikView : TemperatureBaseView {
                     try {
                         lineResultList.add(libIRTemp.getTemperatureOfLine(sourceLine))
                     } catch (_: IllegalArgumentException) {
-
 
                     }
                 }
@@ -395,7 +390,6 @@ class TemperatureHikView : TemperatureBaseView {
                     try {
                         rectResultList.add(libIRTemp.getTemperatureOfRect(sourceRect))
                     } catch (_: IllegalArgumentException) {
-
 
                     }
                 }

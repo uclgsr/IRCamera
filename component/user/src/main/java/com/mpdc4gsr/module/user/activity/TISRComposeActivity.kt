@@ -18,7 +18,6 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.module.user.viewmodel.TISRViewModel
 import com.mpdc4gsr.libunified.R as RCore
 
-
 class TISRComposeActivity : BaseComposeActivity<TISRViewModel>() {
 
     override fun createViewModel(): TISRViewModel {

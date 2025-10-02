@@ -128,8 +128,6 @@ fun UnifiedNavHost(
             )
         }
 
-
-
         composable(UnifiedRoute.GSRSessionDetail.route) { backStackEntry ->
             NavigationPerformanceHelper.TrackNavigation("GSRSessionDetail")
             val sessionId = backStackEntry.arguments?.getString("sessionId") ?: "unknown"
@@ -302,8 +300,6 @@ fun UnifiedNavHost(
                 onBackClick = { navController.popBackStack() }
             )
         }
-
-
 
         composable(UnifiedRoute.ComponentShowcase.route) {
             NavigationPerformanceHelper.TrackNavigation("ComponentShowcase")

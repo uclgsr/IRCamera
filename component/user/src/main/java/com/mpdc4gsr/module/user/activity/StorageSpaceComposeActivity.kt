@@ -23,7 +23,6 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.module.user.viewmodel.StorageSpaceViewModel
 import com.mpdc4gsr.libunified.R as RCore
 
-
 class StorageSpaceComposeActivity : BaseComposeActivity<StorageSpaceViewModel>() {
 
     override fun createViewModel(): StorageSpaceViewModel {

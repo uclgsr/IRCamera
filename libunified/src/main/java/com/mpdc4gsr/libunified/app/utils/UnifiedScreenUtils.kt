@@ -8,9 +8,7 @@ import android.view.View
 import android.view.WindowManager
 import com.energy.iruvc.utils.CommonParams
 
-
 object UnifiedScreenUtils {
-
 
     fun getScreenWidth(context: Context): Int {
         val wm = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
@@ -20,7 +18,6 @@ object UnifiedScreenUtils {
         return displayMetrics.widthPixels
     }
 
-
     fun getScreenHeight(context: Context): Int {
         val wm = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
         val displayMetrics = DisplayMetrics()
@@ -29,7 +26,6 @@ object UnifiedScreenUtils {
         return displayMetrics.heightPixels
     }
 
-
     fun getDisplayMetrics(context: Context): DisplayMetrics {
         val wm = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
         val displayMetrics = DisplayMetrics()
@@ -37,7 +33,6 @@ object UnifiedScreenUtils {
         wm.defaultDisplay.getMetrics(displayMetrics)
         return displayMetrics
     }
-
 
     fun getScreenSize(context: Context): Point {
         val wm = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
@@ -50,28 +45,23 @@ object UnifiedScreenUtils {
         return size
     }
 
-
     fun getScreenDensity(context: Context): Float {
         return getDisplayMetrics(context).density
     }
 
-
     fun getScreenDensityDpi(context: Context): Int {
         return getDisplayMetrics(context).densityDpi
     }
-
 
     fun dpToPx(context: Context, dp: Float): Int {
         val density = getScreenDensity(context)
         return (dp * density + 0.5f).toInt()
     }
 
-
     fun pxToDp(context: Context, px: Float): Int {
         val density = getScreenDensity(context)
         return (px / density + 0.5f).toInt()
     }
-
 
     fun getStatusBarHeight(context: Context): Int {
         var result = 0
@@ -81,7 +71,6 @@ object UnifiedScreenUtils {
         }
         return result
     }
-
 
     fun getNavigationBarHeight(context: Context): Int {
         var result = 0
@@ -93,7 +82,6 @@ object UnifiedScreenUtils {
         return result
     }
 
-
     fun hasNavigationBar(context: Context): Boolean {
         val resourceId =
             context.resources.getIdentifier("config_showNavigationBar", "bool", "android")
@@ -104,25 +92,21 @@ object UnifiedScreenUtils {
         }
     }
 
-
     fun getViewLocationOnScreen(view: View): IntArray {
         val location = IntArray(2)
         view.getLocationOnScreen(location)
         return location
     }
 
-
     fun getViewBoundsOnScreen(view: View): Rect {
         val location = getViewLocationOnScreen(view)
         return Rect(location[0], location[1], location[0] + view.width, location[1] + view.height)
     }
 
-
     fun isPointInsideView(x: Float, y: Float, view: View): Boolean {
         val bounds = getViewBoundsOnScreen(view)
         return x >= bounds.left && x <= bounds.right && y >= bounds.top && y <= bounds.bottom
     }
-
 
     @JvmStatic
     fun getPreviewFPSByDataFlowMode(dataFlowMode: CommonParams.DataFlowMode): Int {
@@ -133,18 +117,15 @@ object UnifiedScreenUtils {
         }
     }
 
-
     @JvmStatic
     fun correct(value: Float, maxValue: Int): Int {
         return kotlin.math.max(0, kotlin.math.min(value.toInt(), maxValue - 1))
     }
 
-
     @JvmStatic
     fun correctPoint(value: Float, maxValue: Int): Int {
         return kotlin.math.max(0, kotlin.math.min(value.toInt(), maxValue - 1))
     }
-
 
     @JvmStatic
     fun getRect(width: Int, height: Int): android.graphics.Rect {

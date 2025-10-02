@@ -15,7 +15,6 @@ import kotlinx.coroutines.withContext
 import java.io.File
 import java.util.Calendar
 
-
 class IRMonitorHistoryViewModel : BaseViewModel() {
 
     // Data classes for history management

@@ -6,7 +6,6 @@ import android.util.AttributeSet
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.drawToBitmap
 
-
 open class BitmapConstraintLayout : ConstraintLayout {
 
     constructor(context: Context) : super(context)

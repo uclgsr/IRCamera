@@ -7,7 +7,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-
 class IRCorrectionViewModel : BaseViewModel() {
 
     // State management for correction functionality
@@ -36,7 +35,6 @@ class IRCorrectionViewModel : BaseViewModel() {
         )
     }
 
-
     fun toggleCorrection() {
         viewModelScope.launch {
             try {
@@ -63,12 +61,10 @@ class IRCorrectionViewModel : BaseViewModel() {
         }
     }
 
-
     fun updateTemperaturePoint(temp: Float, x: Int, y: Int) {
         currentTemperaturePoint = Triple(temp, x, y)
         updateTemperatureData(temp)
     }
-
 
     fun updateCorrectionValue(value: Float) {
         currentCorrectionValue = value
@@ -76,7 +72,6 @@ class IRCorrectionViewModel : BaseViewModel() {
             updateTemperatureData(baseTemp)
         }
     }
-
 
     fun startCalibration() {
         launchWithErrorHandling {
@@ -101,7 +96,6 @@ class IRCorrectionViewModel : BaseViewModel() {
         }
     }
 
-
     fun resetCorrection() {
         launchWithErrorHandling {
             currentCorrectionValue = 0f
@@ -117,7 +111,6 @@ class IRCorrectionViewModel : BaseViewModel() {
             )
         }
     }
-
 
     fun saveSettings() {
         launchWithErrorHandling {
@@ -137,7 +130,6 @@ class IRCorrectionViewModel : BaseViewModel() {
         }
     }
 
-
     private fun startTemperatureMonitoring() {
         viewModelScope.launch {
             // Simulate temperature monitoring with some variation
@@ -152,11 +144,9 @@ class IRCorrectionViewModel : BaseViewModel() {
         }
     }
 
-
     private fun stopTemperatureMonitoring() {
         // Temperature monitoring is stopped by the coroutine condition check
     }
-
 
     private fun updateTemperatureData(currentTemp: Float) {
         val correctedTemp = currentTemp + currentCorrectionValue
@@ -168,18 +158,15 @@ class IRCorrectionViewModel : BaseViewModel() {
     }
 }
 
-
 data class TemperatureData(
     val currentTemp: Float,
     val correctedTemp: Float,
     val offsetValue: Float
 )
 
-
 enum class CorrectionState {
     INACTIVE, ACTIVE, CALIBRATING
 }
-
 
 enum class CalibrationStatus {
     NONE, CALIBRATED, NEEDS_CALIBRATION

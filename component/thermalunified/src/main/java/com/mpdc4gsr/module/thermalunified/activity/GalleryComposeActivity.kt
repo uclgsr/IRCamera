@@ -26,7 +26,6 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.GalleryActivityViewModel
 import kotlinx.coroutines.launch
 
-
 class GalleryComposeActivity : BaseComposeActivity<GalleryActivityViewModel>() {
 
     override fun createViewModel(): GalleryActivityViewModel {

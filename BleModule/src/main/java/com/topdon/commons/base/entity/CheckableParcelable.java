@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-
 public class CheckableParcelable<T extends Parcelable> extends CheckableItem<T> implements Parcelable {
     public static final Creator<CheckableParcelable> CREATOR = new Creator<CheckableParcelable>() {
         @Override

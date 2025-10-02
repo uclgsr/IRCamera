@@ -25,7 +25,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 
-
 @Composable
 fun ThermalCameraFragment(
     onCapturePhoto: () -> Unit = {},
@@ -144,7 +143,6 @@ private fun ThermalCameraControls(
     }
 }
 
-
 @Composable
 fun ThermalGalleryFragment(
     images: List<ThermalGalleryItem>,
@@ -256,7 +254,6 @@ private fun ThermalGalleryItemCard(
         }
     }
 }
-
 
 @Composable
 fun MonitorCaptureFragment(
@@ -427,7 +424,6 @@ private fun MonitorFrameCard(
     }
 }
 
-
 @Composable
 private fun AndroidViewPlaceholder(
     viewType: String,
@@ -476,7 +472,6 @@ data class MonitorFrame(
     val timestamp: String,
     val temperature: Float? = null
 )
-
 
 @Composable
 fun ThermalFragmentPatternsPreview() {

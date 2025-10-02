@@ -2,7 +2,6 @@ package com.mpdc4gsr.module.thermalunified.stubs
 
 import android.content.Context
 
-
 class MonitorSelectDialog {
 
     class Builder(private val context: Context) {

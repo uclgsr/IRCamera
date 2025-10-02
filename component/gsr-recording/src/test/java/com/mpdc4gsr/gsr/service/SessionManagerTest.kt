@@ -138,14 +138,12 @@ class SessionManagerTest {
 
             val session = sessionManager.createSession(sessionId, "participant", "study")
 
-
             val existingSession = sessionManager.getSession(sessionId)
             assertNotNull("Session should exist for metadata test", existingSession)
 
             sessionManager.completeSession(sessionId)
 
             assertTrue("Listener callbacks should work", true)
-
 
             assertTrue("Test completed successfully", true)
 

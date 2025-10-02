@@ -251,7 +251,6 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
 
         Log.e(TAG, "Critical job failure: $name ($id)", exception)
 
-
     }
 
     private fun scheduleJobRestart(

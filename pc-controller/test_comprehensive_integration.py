@@ -529,7 +529,6 @@ class PCControllerIntegrationTest(unittest.TestCase):
         
         return thermal_matrix
 
-
 if __name__ == '__main__':
     # Run tests with verbose output
     unittest.main(verbosity=2, buffer=True)

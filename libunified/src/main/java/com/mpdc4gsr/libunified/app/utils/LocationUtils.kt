@@ -20,7 +20,6 @@ import kotlinx.coroutines.withContext
 import java.util.*
 import kotlin.coroutines.resume
 
-
 object LocationUtils {
 
     @RequiresPermission(Permission.ACCESS_FINE_LOCATION)
@@ -66,7 +65,6 @@ object LocationUtils {
             return@withContext null
         }
     }
-
 
     fun addBtStateListener(activity: ComponentActivity, listener: ((isEnable: Boolean) -> Unit)) {
         if (Build.VERSION.SDK_INT >= 28) {//Android 9

@@ -168,12 +168,10 @@ class GSRRecorder(
                 return false
             }
 
-
             if (!initializeCsvWriters()) {
                 notifyError("Failed to initialize CSV writers")
                 return false
             }
-
 
             currentSession =
                 SessionInfo(
@@ -183,10 +181,8 @@ class GSRRecorder(
                     studyName = studyName ?: "GSR_Study",
                 )
 
-
             sampleIndex.set(0)
             isRecording.set(true)
-
 
             recordingJob =
                 CoroutineScope(Dispatchers.IO).launch {
@@ -219,7 +215,6 @@ class GSRRecorder(
                 val utcTime = TimeUtils.getUtcTimestamp()
                 val currentIndex = sampleIndex.getAndIncrement()
 
-
                 val elapsedMs = currentTime - baseTime
 
                 currentSession?.let { session ->
@@ -229,14 +224,12 @@ class GSRRecorder(
                     val breathingFreq = timeOffset / 2000.0
                     val noiseFreq = timeOffset / 500.0
 
-
                     val conductance =
                         20.0 +
                                 Math.sin(baseFreq) * 10.0 +
                                 Math.sin(breathingFreq) * 3.0 +
                                 Math.sin(noiseFreq) * 1.0 +
                                 Math.random() * 2.0
-
 
                     val finalConductance = Math.max(5.0, Math.min(50.0, conductance))
                     val resistance = 1.0 / (finalConductance / 1000000.0)
@@ -251,12 +244,10 @@ class GSRRecorder(
                             sessionId = session.sessionId,
                         )
 
-
                     signalsWriter?.writeNext(sample.toCsvRow())
                     if (currentIndex % 10 == 0L) {
                         signalsWriter?.flush()
                     }
-
 
                     listeners.forEach { it.onSampleRecorded(sample) }
                 }
@@ -293,7 +284,6 @@ class GSRRecorder(
         currentSession?.let { session ->
             session.endTime = System.currentTimeMillis()
             session.sampleCount = sampleIndex.get()
-
 
             saveSessionMetadata(session)
 
@@ -338,10 +328,8 @@ class GSRRecorder(
                         metadata = if (metadata.isNotEmpty()) mapOf("data" to metadata) else emptyMap(),
                     )
 
-
                 syncMarksWriter?.writeNext(syncMark.toCsvRow())
                 syncMarksWriter?.flush()
-
 
                 listeners.forEach { it.onSyncMarkAdded(syncMark) }
 
@@ -385,7 +373,6 @@ class GSRRecorder(
                         writeNext(SIGNALS_HEADER)
                         flush()
                     }
-
 
                 val syncMarksFile = File(dir, SYNC_MARKS_FILENAME)
                 syncMarksWriter =

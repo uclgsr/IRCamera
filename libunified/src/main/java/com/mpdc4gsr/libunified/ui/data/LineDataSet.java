@@ -16,7 +16,6 @@ import java.util.List;
 
 public class LineDataSet extends LineRadarDataSet<Entry> implements ILineDataSet {
 
-
     private Mode mMode = Mode.LINEAR;
 
     private List<Integer> mCircleColors = null;
@@ -40,12 +39,10 @@ public class LineDataSet extends LineRadarDataSet<Entry> implements ILineDataSet
     public LineDataSet(List<Entry> yVals, String label) {
         super(yVals, label);
 
-
         if (mCircleColors == null) {
             mCircleColors = new ArrayList<Integer>();
         }
         mCircleColors.clear();
-
 
         mCircleColors.add(Color.rgb(140, 234, 255));
     }
@@ -177,7 +174,6 @@ public class LineDataSet extends LineRadarDataSet<Entry> implements ILineDataSet
     public boolean isDrawSteppedEnabled() {
         return mMode == Mode.STEPPED;
     }
-
 
     public List<Integer> getCircleColors() {
         return mCircleColors;

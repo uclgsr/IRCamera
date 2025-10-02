@@ -6,15 +6,11 @@ import android.graphics.drawable.Drawable;
 @SuppressLint("ParcelCreator")
 public class CandleEntry extends Entry {
 
-
     private float mShadowHigh = 0f;
-
 
     private float mShadowLow = 0f;
 
-
     private float mClose = 0f;
-
 
     private float mOpen = 0f;
 

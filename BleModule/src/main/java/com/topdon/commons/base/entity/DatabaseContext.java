@@ -10,10 +10,8 @@ import androidx.annotation.NonNull;
 import java.io.File;
 import java.util.Objects;
 
-
 public class DatabaseContext extends ContextWrapper {
     private File dbDir;
-
 
     public DatabaseContext(Context base, @NonNull File dbDir) {
         super(base);

@@ -1,9 +1,7 @@
 package com.mpdc4gsr.libunified.ir.view;
 
-
 import android.view.MotionEvent;
 import android.view.View;
-
 
 public enum DragViewUtils {
     ;
@@ -11,7 +9,6 @@ public enum DragViewUtils {
     public static void registerDragAction(View v) {
 //        registerDragAction(v, 0);
     }
-
 
     public static void registerDragAction(View v, long delay) {
         v.setOnTouchListener(new TouchListener(delay));

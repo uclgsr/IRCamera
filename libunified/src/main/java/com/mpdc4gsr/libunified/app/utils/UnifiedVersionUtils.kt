@@ -3,9 +3,7 @@ package com.mpdc4gsr.libunified.app.utils
 import android.content.Context
 import android.text.TextUtils
 
-
 object UnifiedVersionUtils {
-
 
     fun getVersionName(context: Context): String {
         return try {
@@ -16,7 +14,6 @@ object UnifiedVersionUtils {
         }
     }
 
-
     fun getVersionCode(context: Context): Long {
         return try {
             val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
@@ -25,7 +22,6 @@ object UnifiedVersionUtils {
             0L
         }
     }
-
 
     fun compareVersions(serverVersion: String, currentVersion: String): Boolean {
         if (TextUtils.isEmpty(serverVersion) || TextUtils.isEmpty(currentVersion)) {
@@ -50,7 +46,6 @@ object UnifiedVersionUtils {
 
         return false // Versions are equal
     }
-
 
     fun isUpdateNeeded(context: Context, serverVersion: String): Boolean {
         val currentVersion = getVersionName(context)

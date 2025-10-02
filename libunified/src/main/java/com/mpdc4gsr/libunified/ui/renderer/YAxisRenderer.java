@@ -250,7 +250,6 @@ public class YAxisRenderer extends AxisRenderer {
             c.drawPath(limitLinePath, mLimitLinePaint);
             limitLinePath.reset();
 
-
             String label = l.getLabel();
 
             if (label != null && !label.equals("")) {

@@ -1,6 +1,5 @@
 package com.topdon.ble.util;
 
-
 public interface Logger {
 
     int TYPE_GENERAL = 0;
@@ -24,15 +23,11 @@ public interface Logger {
     int TYPE_CHARACTERISTIC_WRITE = 11;
     int TYPE_PHY_CHANGE = 12;
 
-
     void log(int priority, int type, String msg);
-
 
     void log(int priority, int type, String msg, Throwable th);
 
-
     boolean isEnabled();
-
 
     void setEnabled(boolean isEnabled);
 }
