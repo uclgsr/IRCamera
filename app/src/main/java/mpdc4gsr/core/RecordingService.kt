@@ -35,8 +35,9 @@ import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.coroutines.CoroutineContext
 
 class RecordingService : Service(), CoroutineScope {
+    private val serviceJob = SupervisorJob()
     override val coroutineContext: CoroutineContext
-        get() = Dispatchers.Main + SupervisorJob()
+        get() = Dispatchers.IO + serviceJob
 
     companion object {
         private const val TAG = "RecordingService"
@@ -506,6 +507,9 @@ class RecordingService : Service(), CoroutineScope {
                 "service_cleanup_error",
                 mapOf("error" to (e.message ?: "Unknown error"))
             )
+        } finally {
+            // Cancel all coroutines launched in this service's scope
+            serviceJob.cancel()
         }
         Log.i(TAG, "RecordingService destroyed")
     }
@@ -1480,29 +1484,37 @@ class RecordingService : Service(), CoroutineScope {
     fun getNetworkClient(): NetworkClient = networkClient
 
     private fun setupNetworkServer() {
-        launch {
+        launch(Dispatchers.IO) {
             try {
                 val serverStarted = connectionManager.startServer()
                 if (serverStarted) {
                     Log.i(TAG, "Network server started automatically, listening on port 8080")
-                    updateNotification("Listening for PC Controller on port 8080")
+                    withContext(Dispatchers.Main) {
+                        updateNotification("Listening for PC Controller on port 8080")
+                    }
                 } else {
                     Log.e(TAG, "Failed to start network server automatically")
-                    updateNotification("Network server failed to start")
+                    withContext(Dispatchers.Main) {
+                        updateNotification("Network server failed to start")
+                    }
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Error setting up network server", e)
-                updateNotification("Network server error: ${e.message}")
+                withContext(Dispatchers.Main) {
+                    updateNotification("Network server error: ${e.message}")
+                }
             }
         }
 
-        launch {
+        launch(Dispatchers.IO) {
             connectionManager.connectionState.collect { state ->
                 when (state) {
                     NetworkConnectionManager.ConnectionState.CONNECTED -> {
                         isConnectedToPC = true
                         Log.i(TAG, "PC Controller connected to network server")
-                        updateNotification("PC Controller connected")
+                        withContext(Dispatchers.Main) {
+                            updateNotification("PC Controller connected")
+                        }
                         previewStreamer.startStreaming()
                         previewDataAdapter.startDataPolling()
                     }
@@ -1510,7 +1522,9 @@ class RecordingService : Service(), CoroutineScope {
                     NetworkConnectionManager.ConnectionState.DISCONNECTED -> {
                         isConnectedToPC = false
                         Log.i(TAG, "PC Controller disconnected, still listening on port 8080")
-                        updateNotification("Listening for PC Controller on port 8080")
+                        withContext(Dispatchers.Main) {
+                            updateNotification("Listening for PC Controller on port 8080")
+                        }
                         previewDataAdapter.stopDataPolling()
                         previewStreamer.stopStreaming()
                     }
@@ -1518,24 +1532,30 @@ class RecordingService : Service(), CoroutineScope {
                     NetworkConnectionManager.ConnectionState.ERROR -> {
                         isConnectedToPC = false
                         Log.e(TAG, "Network connection error")
-                        updateNotification("Network connection error")
+                        withContext(Dispatchers.Main) {
+                            updateNotification("Network connection error")
+                        }
                     }
 
                     NetworkConnectionManager.ConnectionState.RECONNECTING -> {
                         isConnectedToPC = false
                         Log.i(TAG, "Attempting to reconnect to PC Controller")
-                        updateNotification("Reconnecting to PC Controller...")
+                        withContext(Dispatchers.Main) {
+                            updateNotification("Reconnecting to PC Controller...")
+                        }
                     }
 
                     NetworkConnectionManager.ConnectionState.CONNECTING -> {
                         Log.i(TAG, "Connecting to PC Controller...")
-                        updateNotification("Connecting...")
+                        withContext(Dispatchers.Main) {
+                            updateNotification("Connecting...")
+                        }
                     }
                 }
             }
         }
 
-        launch {
+        launch(Dispatchers.IO) {
             networkServer.messageFlow.collect { message ->
                 handleProtocolMessage(message)
             }
