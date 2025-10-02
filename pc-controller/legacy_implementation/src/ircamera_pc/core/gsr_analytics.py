@@ -15,12 +15,14 @@ warnings.filterwarnings("ignore", category=RuntimeWarning)
 
 logger = logging.getLogger(__name__)
 
+
 class StressLevel(Enum):
     VERY_LOW = "very_low"
     LOW = "low"
     MODERATE = "moderate"
     HIGH = "high"
     VERY_HIGH = "very_high"
+
 
 @dataclass
 class GSRFeatures:
@@ -54,6 +56,7 @@ class GSRFeatures:
     stress_level: StressLevel
     confidence: float
 
+
 @dataclass
 class GSRAnalysisReport:
     session_id: str
@@ -76,6 +79,7 @@ class GSRAnalysisReport:
     trend_confidence: float
 
     recommendations: List[str]
+
 
 class GSRAnalytics:
 

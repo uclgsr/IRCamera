@@ -50,16 +50,19 @@ try:
 except ImportError:
     CLASSIC_BT_AVAILABLE = False
 
+
 class BluetoothDeviceType(Enum):
     BLE = "ble"
     CLASSIC = "classic"
     UNKNOWN = "unknown"
+
 
 class ConnectionState(Enum):
     DISCONNECTED = "disconnected"
     CONNECTING = "connecting"
     CONNECTED = "connected"
     ERROR = "error"
+
 
 @dataclass
 class BluetoothDevice:
@@ -71,6 +74,7 @@ class BluetoothDevice:
     last_seen: datetime
     is_ircamera: bool = False
     connection_state: ConnectionState = ConnectionState.DISCONNECTED
+
 
 class BluetoothManager(BaseManager):
     if PYQT_AVAILABLE:

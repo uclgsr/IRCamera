@@ -22,6 +22,7 @@ except ImportError:
     h5py = None
     logger.warning("h5py not available - HDF5 export will not be available")
 
+
 @dataclass
 class GSRDataPoint:
     timestamp: float
@@ -30,6 +31,7 @@ class GSRDataPoint:
     device_id: str
     session_id: str
     quality: str = "good"
+
 
 @dataclass
 class ThermalDataPoint:
@@ -42,6 +44,7 @@ class ThermalDataPoint:
     session_id: str
     frame_number: int
 
+
 @dataclass
 class RGBDataPoint:
     timestamp: float
@@ -51,6 +54,7 @@ class RGBDataPoint:
     session_id: str
     image_width: int
     image_height: int
+
 
 class GSRIngestor:
 
@@ -143,6 +147,7 @@ class GSRIngestor:
             for point in self.data_buffer
             if point.session_id == session_id and point.timestamp >= cutoff_time
         ]
+
 
 class DataProcessor:
 
@@ -351,6 +356,7 @@ class DataProcessor:
                        / max(1, time.time() - session_data["start_time"]),
             },
         }
+
 
 __all__ = [
     "DataProcessor",

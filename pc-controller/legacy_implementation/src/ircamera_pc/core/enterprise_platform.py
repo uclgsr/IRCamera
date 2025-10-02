@@ -12,12 +12,14 @@ from typing import Dict, List, Any
 
 logger = logging.getLogger(__name__)
 
+
 class DeploymentEnvironment(Enum):
     AWS = "aws"
     AZURE = "azure"
     GCP = "gcp"
     INSTITUTIONAL = "institutional"
     LOCAL = "local"
+
 
 class AuthenticationMethod(Enum):
     SAML_SSO = "saml_sso"
@@ -26,6 +28,7 @@ class AuthenticationMethod(Enum):
     LOCAL_AUTH = "local_auth"
     API_KEY = "api_key"
 
+
 class ComplianceFramework(Enum):
     BIDS = "bids"
     GDPR = "gdpr"
@@ -33,6 +36,7 @@ class ComplianceFramework(Enum):
     FDA_21CFR11 = "fda_21cfr11"
     ISO27001 = "iso27001"
     IRB = "irb"
+
 
 @dataclass
 class InstitutionalConfig:
@@ -58,6 +62,7 @@ class InstitutionalConfig:
     principal_investigator: str
     study_protocol_version: str
 
+
 @dataclass
 class StudyConfiguration:
     study_id: str
@@ -78,6 +83,7 @@ class StudyConfiguration:
     consent_form_version: str
     data_retention_policy: str
 
+
 @dataclass
 class MultiSiteCoordinator:
     coordinator_id: str
@@ -92,6 +98,7 @@ class MultiSiteCoordinator:
 
     notification_endpoints: List[str]
     status_reporting_interval: int
+
 
 class EnterpriseResearchPlatform:
 
@@ -1078,6 +1085,7 @@ When using this dataset, please cite the IRCamera platform and this specific dat
         except Exception as e:
             logger.error(f"Cleanup failed: {e}")
 
+
 # Placeholder storage adapters (would be implemented for each cloud provider)
 
 class AWSStorageAdapter:
@@ -1094,6 +1102,7 @@ class AWSStorageAdapter:
     def cleanup(self) -> None:
         pass
 
+
 class AzureStorageAdapter:
     def __init__(self, config: Dict):
         self.config = config
@@ -1107,6 +1116,7 @@ class AzureStorageAdapter:
 
     def cleanup(self) -> None:
         pass
+
 
 class GCPStorageAdapter:
     def __init__(self, config: Dict):
@@ -1122,6 +1132,7 @@ class GCPStorageAdapter:
     def cleanup(self) -> None:
         pass
 
+
 class InstitutionalStorageAdapter:
     def __init__(self, config: Dict):
         self.config = config
@@ -1134,6 +1145,7 @@ class InstitutionalStorageAdapter:
 
     def cleanup(self) -> None:
         pass
+
 
 class LocalStorageAdapter:
     def __init__(self, config: Dict):
@@ -1148,26 +1160,32 @@ class LocalStorageAdapter:
     def cleanup(self) -> None:
         pass
 
+
 # Placeholder auth providers
 class AWSAuthProvider:
     def __init__(self, config: Dict):
         self.config = config
 
+
 class AzureADProvider:
     def __init__(self, config: Dict):
         self.config = config
+
 
 class GCPAuthProvider:
     def __init__(self, config: Dict):
         self.config = config
 
+
 class LDAPAuthProvider:
     def __init__(self, config: Dict):
         self.config = config
 
+
 class LocalAuthProvider:
     def __init__(self, config: Dict):
         self.config = config
+
 
 # Placeholder notification services
 class AWSNotificationService:
@@ -1177,12 +1195,14 @@ class AWSNotificationService:
     def send_alert(self, message: str, alert_type: str, session_id: str) -> None:
         logger.info(f"AWS Alert ({alert_type}): {message}")
 
+
 class AzureNotificationService:
     def __init__(self, config: Dict):
         self.config = config
 
     def send_alert(self, message: str, alert_type: str, session_id: str) -> None:
         logger.info(f"Azure Alert ({alert_type}): {message}")
+
 
 class GCPNotificationService:
     def __init__(self, config: Dict):
@@ -1191,12 +1211,14 @@ class GCPNotificationService:
     def send_alert(self, message: str, alert_type: str, session_id: str) -> None:
         logger.info(f"GCP Alert ({alert_type}): {message}")
 
+
 class EmailNotificationService:
     def __init__(self, config: Dict):
         self.config = config
 
     def send_alert(self, message: str, alert_type: str, session_id: str) -> None:
         logger.info(f"Email Alert ({alert_type}): {message}")
+
 
 class LocalNotificationService:
     def __init__(self, config: Dict):

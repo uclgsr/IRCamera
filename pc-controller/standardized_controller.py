@@ -15,6 +15,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Optional, Any, Tuple
 
+
 class SimpleLogger:
     def info(self, msg): print(f"[INFO] {datetime.now().strftime('%H:%M:%S')} - {msg}")
 
@@ -24,7 +25,9 @@ class SimpleLogger:
 
     def debug(self, msg): print(f"[DEBUG] {datetime.now().strftime('%H:%M:%S')} - {msg}")
 
+
 logger = SimpleLogger()
+
 
 class Protocol:
     """Standardized networking protocol messages"""
@@ -90,6 +93,7 @@ class Protocol:
             logger.error(f"Error parsing message '{message}': {e}")
             return None
 
+
 class DeviceConnection:
     """Manages connection to a single Android device"""
 
@@ -139,6 +143,7 @@ class DeviceConnection:
         except Exception as e:
             logger.error(f"Error closing connection to {self.device_id}: {e}")
 
+
 class DeviceRegistry:
     """Registry of connected devices"""
 
@@ -170,6 +175,7 @@ class DeviceRegistry:
         with self.lock:
             if device_id in self.devices:
                 self.devices[device_id].capabilities = capabilities
+
 
 class SessionManager:
     """Manages recording sessions"""
@@ -210,6 +216,7 @@ class SessionManager:
         if self.current_session:
             logger.info(f"Finalized session: {self.current_session}")
             self.current_session = None
+
 
 class TimeSyncManager:
     """Handles clock synchronization with devices with enhanced validation and retry logic"""
@@ -342,6 +349,7 @@ class TimeSyncManager:
 
         logger.error(f"Time sync failed for {connection.device_id} after {retry_count} retries: {last_error}")
         return False
+
 
 class PCController:
     """Main PC controller for orchestrating multiple Android devices"""
@@ -608,6 +616,7 @@ class PCController:
             'recording_devices': len(self.session_manager.recording_devices)
         }
 
+
 def main():
     """Main CLI interface for the PC controller"""
     controller = PCController()
@@ -659,6 +668,7 @@ def main():
 
     finally:
         controller.stop()
+
 
 if __name__ == "__main__":
     main()
