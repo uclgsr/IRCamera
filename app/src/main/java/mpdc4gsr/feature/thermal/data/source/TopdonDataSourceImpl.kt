@@ -6,6 +6,8 @@ import android.util.Log
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.withTimeoutOrNull
 import com.energy.iruvc.usb.USBMonitor
 import com.energy.iruvc.ircmd.IRCMD
 import com.energy.iruvc.ircmd.ConcreteIRCMDBuilder
@@ -22,6 +24,10 @@ import com.energy.iruvc.utils.IFrameCallback
 import android.hardware.usb.UsbDevice
 import java.io.File
 import java.io.FileOutputStream
+import com.mpdc4gsr.libunified.ir.extension.setMirror
+import com.mpdc4gsr.libunified.ir.extension.setAutoShutter
+import com.mpdc4gsr.libunified.ir.extension.setPropDdeLevel
+import com.mpdc4gsr.libunified.ir.extension.setContrast
 
 /**
  * Implementation of TopdonDataSource for TC001/TC007 thermal camera SDK integration.
@@ -65,13 +71,17 @@ class TopdonDataSourceImpl(
     
     private val imageBuffer = ByteArray(FRAME_BUFFER_SIZE)
     private val temperatureBuffer = ByteArray(FRAME_BUFFER_SIZE)
+    private val rgbBuffer = ByteArray(CAMERA_WIDTH * CAMERA_HEIGHT * 4)
     private var recordingFile: File? = null
     private var recordingOutputStream: FileOutputStream? = null
     private var frameCallback: IFrameCallback? = null
+    private var connectionDeferred: kotlinx.coroutines.CompletableDeferred<Result<Unit>>? = null
 
     override suspend fun connectDevice(): Result<Unit> {
         return try {
             Log.d(TAG, "Initializing Topdon thermal camera with USB SDK")
+            
+            connectionDeferred = CompletableDeferred()
             
             if (usbMonitor == null) {
                 usbMonitor = USBMonitor(context, object : USBMonitor.OnDeviceConnectListener {
@@ -87,12 +97,21 @@ class TopdonDataSourceImpl(
                             Log.i(TAG, "USB permission granted for device")
                         } else {
                             Log.w(TAG, "USB permission denied")
+                            connectionDeferred?.complete(Result.failure(Exception("USB permission denied")))
                         }
                     }
                     
                     override fun onConnect(device: UsbDevice?, ctrlBlock: USBMonitor.UsbControlBlock?, createNew: Boolean) {
                         Log.i(TAG, "USB device connected, opening UVC camera")
-                        ctrlBlock?.let { openCamera(it) }
+                        ctrlBlock?.let { 
+                            val result = openCamera(it)
+                            if (result) {
+                                isConnected = true
+                                connectionDeferred?.complete(Result.success(Unit))
+                            } else {
+                                connectionDeferred?.complete(Result.failure(Exception("Failed to open camera")))
+                            }
+                        }
                     }
                     
                     override fun onDisconnect(device: UsbDevice?, ctrlBlock: USBMonitor.UsbControlBlock?) {
@@ -107,6 +126,7 @@ class TopdonDataSourceImpl(
                     
                     override fun onCancel(device: UsbDevice?) {
                         Log.w(TAG, "USB connection cancelled")
+                        connectionDeferred?.complete(Result.failure(Exception("USB connection cancelled")))
                     }
                 })
                 
@@ -121,28 +141,34 @@ class TopdonDataSourceImpl(
                 Log.i(TAG, "UVCCamera instance created")
             }
 
-            isConnected = true
-            Result.success(Unit)
+            val timeoutResult = withTimeoutOrNull(10000) {
+                connectionDeferred?.await()
+            }
+            
+            timeoutResult ?: Result.failure(Exception("Connection timeout"))
         } catch (e: Exception) {
             Log.e(TAG, "Error connecting to thermal camera", e)
             Result.failure(e)
         }
     }
     
-    private fun openCamera(ctrlBlock: USBMonitor.UsbControlBlock) {
-        try {
+    private fun openCamera(ctrlBlock: USBMonitor.UsbControlBlock): Boolean {
+        return try {
             uvcCamera?.let { camera ->
                 val result = camera.openUVCCamera(ctrlBlock)
                 if (result == 0) {
                     Log.i(TAG, "UVC camera opened successfully")
                     initializeIRCMD()
                     initializeLibIRTemp()
+                    true
                 } else {
                     Log.e(TAG, "Failed to open UVC camera, result: $result")
+                    false
                 }
-            }
+            } ?: false
         } catch (e: Exception) {
             Log.e(TAG, "Error opening camera", e)
+            false
         }
     }
     
@@ -253,7 +279,14 @@ class TopdonDataSourceImpl(
                 CommonParams.IRPROCSRCFMTType.IRPROC_SRC_FMT_Y14
             )
             
-            temperatureBuffer.copyOf()
+            LibIRProcess.convertYuyvMapToARGBPseudocolor(
+                frame,
+                CAMERA_WIDTH * CAMERA_HEIGHT,
+                CommonParams.PseudoColorType.PSEUDO_1,
+                rgbBuffer
+            )
+            
+            rgbBuffer.copyOf()
         } catch (e: Exception) {
             Log.e(TAG, "Error in LibIRProcess.processFrame", e)
             null
@@ -262,27 +295,31 @@ class TopdonDataSourceImpl(
     
     private fun createThermalFrameData(processedData: ByteArray): ThermalFrameData {
         val temperatureMatrix = Array(CAMERA_HEIGHT) { FloatArray(CAMERA_WIDTH) }
-        var minTemp = Float.MAX_VALUE
-        var maxTemp = Float.MIN_VALUE
+        var minTemp = MIN_TEMP_RANGE
+        var maxTemp = MAX_TEMP_RANGE
         var centerTemp = DEFAULT_TEMP
         
         try {
             irTemp?.let { temp ->
-                for (y in 0 until CAMERA_HEIGHT) {
-                    for (x in 0 until CAMERA_WIDTH) {
-                        val result = temp.getTemperatureOfPoint(android.graphics.Point(x, y))
-                        val temperature = result?.maxTemperature ?: DEFAULT_TEMP
-                        temperatureMatrix[y][x] = temperature
-                        
-                        if (temperature < minTemp) minTemp = temperature
-                        if (temperature > maxTemp) maxTemp = temperature
-                    }
+                val fullRect = android.graphics.Rect(0, 0, CAMERA_WIDTH - 1, CAMERA_HEIGHT - 1)
+                val fullResult = temp.getTemperatureOfRect(fullRect)
+                
+                if (fullResult != null) {
+                    minTemp = fullResult.minTemperature
+                    maxTemp = fullResult.maxTemperature
                 }
                 
                 val centerResult = temp.getTemperatureOfPoint(
                     android.graphics.Point(CAMERA_WIDTH / 2, CAMERA_HEIGHT / 2)
                 )
                 centerTemp = centerResult?.maxTemperature ?: DEFAULT_TEMP
+                
+                for (y in 0 until CAMERA_HEIGHT) {
+                    for (x in 0 until CAMERA_WIDTH) {
+                        val result = temp.getTemperatureOfPoint(android.graphics.Point(x, y))
+                        temperatureMatrix[y][x] = result?.maxTemperature ?: DEFAULT_TEMP
+                    }
+                }
             }
         } catch (e: Exception) {
             Log.e(TAG, "Error calculating temperatures with LibIRTemp", e)
@@ -302,9 +339,11 @@ class TopdonDataSourceImpl(
     
     private fun createBitmapFromFrame(data: ByteArray): Bitmap {
         return try {
-            Bitmap.createBitmap(CAMERA_WIDTH, CAMERA_HEIGHT, Bitmap.Config.ARGB_8888)
+            val bitmap = Bitmap.createBitmap(CAMERA_WIDTH, CAMERA_HEIGHT, Bitmap.Config.ARGB_8888)
+            bitmap.copyPixelsFromBuffer(java.nio.ByteBuffer.wrap(data))
+            bitmap
         } catch (e: Exception) {
-            Log.e(TAG, "Error creating bitmap", e)
+            Log.e(TAG, "Error creating bitmap from frame data", e)
             Bitmap.createBitmap(CAMERA_WIDTH, CAMERA_HEIGHT, Bitmap.Config.ARGB_8888)
         }
     }
@@ -475,40 +514,6 @@ class TopdonDataSourceImpl(
         } catch (e: Exception) {
             Log.e(TAG, "Error configuring camera settings", e)
             Result.failure(e)
-        }
-    }
-    
-    private fun IRCMD.setMirror(enabled: Boolean) {
-        try {
-            Log.d(TAG, "Setting mirror mode to $enabled")
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to set mirror mode: ${e.message}")
-        }
-    }
-
-    private fun IRCMD.setAutoShutter(enabled: Boolean) {
-        try {
-            Log.d(TAG, "Setting auto shutter to $enabled")
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to set auto shutter: ${e.message}")
-        }
-    }
-
-    private fun IRCMD.setPropDdeLevel(level: Int) {
-        try {
-            val clampedLevel = level.coerceIn(0, 255)
-            Log.d(TAG, "Setting DDE level to $clampedLevel")
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to set DDE level: ${e.message}")
-        }
-    }
-
-    private fun IRCMD.setContrast(level: Int) {
-        try {
-            val clampedLevel = level.coerceIn(0, 255)
-            Log.d(TAG, "Setting contrast to $clampedLevel")
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to set contrast: ${e.message}")
         }
     }
 }
