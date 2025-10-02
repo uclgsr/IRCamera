@@ -734,7 +734,7 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         startActivity(
                             Intent(
                                 this@ComposeMigrationLauncherActivity,
-                                SensorDashboardTestActivityCompose::class.java
+                                SensorDashboardTestComposeActivity::class.java
                             )
                         )
                     }

@@ -52,17 +52,6 @@ class BLEIntegrationTestComposeActivity : BaseComposeActivity<BLEIntegrationTest
         permissionController = PermissionController(this)
         initializeRecorder()
     }
-    
-    private fun initializeRecorder() {
-        try {
-            val tempDir = createTempDirectory("ble_test").toFile()
-            gsrRecorder = UnifiedGSRRecorder(this, tempDir.absolutePath)
-            deviceManager = ShimmerDeviceManager()
-            Log.d(TAG, "Recorder initialized successfully")
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to initialize recorder", e)
-        }
-    }
 
     @Composable
     override fun Content(viewModel: BLEIntegrationTestViewModel) {
