@@ -1,23 +1,27 @@
 # Recording Settings Verification Guide
 
 ## Summary
-This PR implements recording settings integration to ensure that user preferences in the Recording Settings screen actually affect the recording behavior and sensor configuration.
+
+This PR implements recording settings integration to ensure that user preferences in the Recording Settings screen
+actually affect the recording behavior and sensor configuration.
 
 ## Changes Made
 
 ### 1. RecordingSettingsRepository (NEW)
+
 **File**: `app/src/main/java/mpdc4gsr/feature/settings/data/RecordingSettingsRepository.kt`
 
 - Centralized repository for recording settings using Repository Pattern
 - Singleton pattern for global access
 - Manages SharedPreferences persistence
 - Provides quality configuration mapping:
-  - Ultra: 4K (3840x2160) @ 60fps, 50Mbps
-  - High: 1080p (1920x1080) @ 30fps, 20Mbps
-  - Medium: 720p (1280x720) @ 30fps, 10Mbps
-  - Low: 480p (854x480) @ 24fps, 5Mbps
+    - Ultra: 4K (3840x2160) @ 60fps, 50Mbps
+    - High: 1080p (1920x1080) @ 30fps, 20Mbps
+    - Medium: 720p (1280x720) @ 30fps, 10Mbps
+    - Low: 480p (854x480) @ 24fps, 5Mbps
 
 ### 2. RecordingSettingsViewModel (UPDATED)
+
 **File**: `app/src/main/java/mpdc4gsr/feature/settings/presentation/RecordingSettingsViewModel.kt`
 
 - Now uses RecordingSettingsRepository instead of direct SharedPreferences
@@ -25,20 +29,23 @@ This PR implements recording settings integration to ensure that user preference
 - Cleaner separation of concerns
 
 ### 3. RgbCameraRecorder (UPDATED)
+
 **File**: `app/src/main/java/mpdc4gsr/core/data/RgbCameraRecorder.kt`
 
 **Changes**:
+
 - Loads recording settings in `initialize()` method
 - Applies quality settings in `optimizeVideoConfiguration()`:
-  - Uses quality config from repository
-  - Respects user's frame rate preference
-  - Falls back to device capabilities when needed
+    - Uses quality config from repository
+    - Respects user's frame rate preference
+    - Falls back to device capabilities when needed
 - Applies audio settings in video preparation:
-  - Checks audioEnabled setting before enabling audio
-  - Logs audio configuration
+    - Checks audioEnabled setting before enabling audio
+    - Logs audio configuration
 - Added logging for settings validation
 
 **Lines Changed**:
+
 - Added constants for 720p and 480p resolutions
 - Line 222: Load settings during initialization
 - Line 533-570: Apply quality and FPS settings
@@ -46,9 +53,11 @@ This PR implements recording settings integration to ensure that user preference
 - Line 1074-1085: Apply audio settings
 
 ### 4. MainRecordingController (UPDATED)
+
 **File**: `app/src/main/java/mpdc4gsr/feature/network/data/MainRecordingController.kt`
 
 **Changes**:
+
 - Added RecordingSettingsRepository instance
 - Reads simultaneousRecording setting
 - Starts sensors simultaneously or sequentially based on setting
@@ -56,11 +65,13 @@ This PR implements recording settings integration to ensure that user preference
 - Logs settings at recording start
 
 **Lines Changed**:
+
 - Line 9: Added delay import
 - Line 54: Added repository instance
 - Line 60-146: Apply simultaneousRecording setting
 
 ### 5. RecordingSettingsValidator (NEW)
+
 **File**: `app/src/main/java/mpdc4gsr/feature/settings/data/RecordingSettingsValidator.kt`
 
 - Utility object for validating settings application
@@ -69,6 +80,7 @@ This PR implements recording settings integration to ensure that user preference
 - Helps debug configuration issues
 
 ### 6. RecordingSettingsRepositoryTest (NEW)
+
 **File**: `app/src/test/java/mpdc4gsr/feature/settings/data/RecordingSettingsRepositoryTest.kt`
 
 - Unit tests for repository quality configurations
@@ -76,6 +88,7 @@ This PR implements recording settings integration to ensure that user preference
 - Tests quality config for all quality levels
 
 ### 7. Documentation (NEW)
+
 **File**: `docs/RECORDING_SETTINGS_INTEGRATION.md`
 
 - Comprehensive documentation of settings architecture
@@ -86,12 +99,13 @@ This PR implements recording settings integration to ensure that user preference
 ## How to Verify Settings Work
 
 ### Method 1: Check Logs
+
 1. Open the app and navigate to Settings > Recording Settings
 2. Change settings:
-   - Set Recording Quality to "Low" or "High"
-   - Set Video Frame Rate to 15 or 60
-   - Toggle Audio Recording on/off
-   - Toggle Simultaneous Recording
+    - Set Recording Quality to "Low" or "High"
+    - Set Video Frame Rate to 15 or 60
+    - Toggle Audio Recording on/off
+    - Toggle Simultaneous Recording
 3. Navigate to recording screen and start recording
 4. Check logcat for these log tags:
    ```
@@ -109,18 +123,20 @@ This PR implements recording settings integration to ensure that user preference
    ```
 
 ### Method 2: Verify Video File Properties
+
 1. Change Recording Quality setting
 2. Record a short video
 3. Check video file properties:
-   - Low quality: Should be ~854x480 resolution
-   - Medium quality: Should be ~1280x720 resolution
-   - High quality: Should be ~1920x1080 resolution
-   - Ultra quality: Should be ~3840x2160 resolution
+    - Low quality: Should be ~854x480 resolution
+    - Medium quality: Should be ~1280x720 resolution
+    - High quality: Should be ~1920x1080 resolution
+    - Ultra quality: Should be ~3840x2160 resolution
 4. Check audio track:
-   - If Audio Recording was ON: Video should have audio track
-   - If Audio Recording was OFF: Video should have NO audio track
+    - If Audio Recording was ON: Video should have audio track
+    - If Audio Recording was OFF: Video should have NO audio track
 
 ### Method 3: Check Session Metadata
+
 1. Start recording with specific settings
 2. Stop recording
 3. Navigate to session directory
@@ -130,11 +146,13 @@ This PR implements recording settings integration to ensure that user preference
 ## Expected Behavior
 
 ### Before Changes
+
 - Recording settings were displayed but not applied
 - All recordings used hardcoded defaults
 - No way to control quality, frame rate, or audio
 
 ### After Changes
+
 - Recording Quality setting controls video resolution and bitrate
 - Video Frame Rate setting controls recording FPS (within device limits)
 - Audio Enabled setting controls audio recording
@@ -160,11 +178,13 @@ This PR implements recording settings integration to ensure that user preference
 ## Sensor-Specific Notes
 
 ### RGB Camera
+
 - Fully integrated with recording settings
 - Quality, FPS, and audio settings all applied
 - Device capabilities still respected (can't force 4K on non-4K device)
 
 ### Thermal Camera (Topdon TC001)
+
 - **NEW**: Now uses ThermalSettingsRepository for configuration
 - Frame rate configurable: 10-30 fps (hardware limited)
 - Bitrate automatically adjusts based on frame rate
@@ -172,6 +192,7 @@ This PR implements recording settings integration to ensure that user preference
 - Topdon SDK fully utilized with FFmpeg integration
 
 ### GSR Sensor (Shimmer3 GSR+)
+
 - **ENHANCED**: Shimmer SDK fully utilized with configurable sampling rate
 - Sampling rate: 1-512 Hz (configured via GSRSettingsRepository)
 - Settings: sampling rate, filtering, buffering, real-time monitoring

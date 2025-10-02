@@ -17,7 +17,7 @@ class ThermalSettingsViewModel : BaseViewModel() {
     fun initialize(context: Context) {
         repository = ThermalSettingsRepository.getInstance(context)
         loadSettings()
-        
+
         viewModelScope.launch {
             repository.thermalSettings.collect { repoSettings ->
                 _thermalSettings.value = repoSettings

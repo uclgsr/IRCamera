@@ -1,7 +1,9 @@
 # UI Settings Integration Guide
 
 ## Overview
-This document describes the complete UI integration of recording settings across all sensor configuration screens in the IRCamera application.
+
+This document describes the complete UI integration of recording settings across all sensor configuration screens in the
+IRCamera application.
 
 ## Architecture
 
@@ -28,6 +30,7 @@ Sensor Recorders (SDK Integration)
 **Repository**: `RecordingSettingsRepository`
 
 **Settings Available**:
+
 - **Auto Recording**: Start recording automatically when devices are connected
 - **Recording Quality**: Ultra (4K), High (1080p), Medium (720p), Low (480p)
 - **Video Frame Rate**: 15-60 fps slider
@@ -36,6 +39,7 @@ Sensor Recorders (SDK Integration)
 - **Timestamp Synchronization**: Sync timestamps across recordings
 
 **UI Integration**:
+
 ```kotlin
 @Composable
 fun RecordingSettingsScreen(
@@ -56,6 +60,7 @@ fun RecordingSettingsScreen(
 ```
 
 **User Flow**:
+
 1. User opens Recording Settings screen
 2. ViewModel loads current settings from repository
 3. UI displays current settings values
@@ -73,6 +78,7 @@ fun RecordingSettingsScreen(
 **Repository**: `ThermalSettingsRepository`
 
 **Settings Available**:
+
 - **Frame Rate**: 10-30 fps slider for thermal video recording
 - **Save Raw Images**: Save individual thermal frames during recording
 - **Color Palette**: Iron, Rainbow, Gray, Hot, Cool
@@ -83,6 +89,7 @@ fun RecordingSettingsScreen(
 - **Show Crosshair**: Display center point crosshair
 
 **UI Integration**:
+
 ```kotlin
 @Composable
 fun ThermalSettingsScreen(
@@ -111,6 +118,7 @@ fun ThermalSettingsScreen(
 ```
 
 **User Flow**:
+
 1. User opens Thermal Settings screen
 2. ViewModel loads settings from ThermalSettingsRepository
 3. UI displays current thermal camera configuration
@@ -128,6 +136,7 @@ fun ThermalSettingsScreen(
 **Repository**: `GSRSettingsRepository`
 
 **Settings Available**:
+
 - **Sampling Rate**: 1-512 Hz slider for Shimmer3 GSR sampling
 - **Device Name**: Display connected device name
 - **Auto Reconnect**: Automatically reconnect after disconnection
@@ -138,6 +147,7 @@ fun ThermalSettingsScreen(
 - **Connection Timeout**: Timeout for device connections
 
 **UI Integration**:
+
 ```kotlin
 @Composable
 fun GSRSettingsScreen(
@@ -171,6 +181,7 @@ fun GSRSettingsScreen(
 ```
 
 **User Flow**:
+
 1. User opens GSR Settings screen
 2. ViewModel loads GSR and device settings from repository
 3. UI displays current Shimmer3 configuration
@@ -199,6 +210,7 @@ onNavigateToRecordingSettings?.invoke()
 ### Direct Access
 
 Settings screens can also be accessed directly from:
+
 - Recording screen (quick access to recording settings)
 - Thermal camera screen (thermal settings shortcut)
 - GSR sensor screen (device configuration)
@@ -219,6 +231,7 @@ val settings by viewModel.settings.collectAsState()
 ```
 
 **Benefits**:
+
 - **Reactive**: UI automatically updates when settings change
 - **Lifecycle-aware**: No memory leaks with Compose integration
 - **Type-safe**: Compile-time checking of setting values
@@ -237,6 +250,7 @@ val frameRate = prefs.getInt("thermal_frame_rate", 25)
 ```
 
 **Persistence Keys**:
+
 - Recording: `recording_*` prefix
 - Thermal: `thermal_*` prefix
 - GSR: `gsr_*` prefix
@@ -315,29 +329,29 @@ effectiveSamplingRate = effectiveSamplingRate.coerceIn(
 ### Manual Testing
 
 1. **Recording Settings**:
-   - Open Recording Settings screen
-   - Change Quality to "Low"
-   - Change Frame Rate to 15 fps
-   - Toggle Audio Recording off
-   - Start recording
-   - Verify video is 480p @ 15fps with no audio
+    - Open Recording Settings screen
+    - Change Quality to "Low"
+    - Change Frame Rate to 15 fps
+    - Toggle Audio Recording off
+    - Start recording
+    - Verify video is 480p @ 15fps with no audio
 
 2. **Thermal Settings**:
-   - Open Thermal Settings screen
-   - Set Frame Rate to 15 fps
-   - Enable Save Raw Images
-   - Change Palette to "Rainbow"
-   - Start thermal recording
-   - Verify 15 fps in video properties
-   - Check for individual thermal frame images
+    - Open Thermal Settings screen
+    - Set Frame Rate to 15 fps
+    - Enable Save Raw Images
+    - Change Palette to "Rainbow"
+    - Start thermal recording
+    - Verify 15 fps in video properties
+    - Check for individual thermal frame images
 
 3. **GSR Settings**:
-   - Open GSR Settings screen
-   - Set Sampling Rate to 64 Hz
-   - Enable Data Filtering
-   - Start GSR recording
-   - Check logs for "Shimmer sampling rate configured: 64.0Hz"
-   - Verify CSV has ~64 samples per second
+    - Open GSR Settings screen
+    - Set Sampling Rate to 64 Hz
+    - Enable Data Filtering
+    - Start GSR recording
+    - Check logs for "Shimmer sampling rate configured: 64.0Hz"
+    - Verify CSV has ~64 samples per second
 
 ### Verification Logs
 
@@ -368,6 +382,7 @@ All settings screens use common components from `mpdc4gsr.core.ui.components.set
 - **SettingsRow**: Read-only setting display
 
 Example:
+
 ```kotlin
 SettingsCard(
     title = "Recording Settings",
@@ -389,7 +404,8 @@ SettingsCard(
 
 **Symptom**: Changes lost after app restart
 
-**Solution**: 
+**Solution**:
+
 - Verify `viewModel.initialize(context)` is called in LaunchedEffect
 - Check SharedPreferences keys match between save and load
 - Ensure `.apply()` is called after edit
@@ -399,6 +415,7 @@ SettingsCard(
 **Symptom**: Recording uses default values
 
 **Solution**:
+
 - Check sensor recorder loads settings from repository
 - Verify repository singleton is used (not new instances)
 - Check logs for settings loading messages
@@ -409,6 +426,7 @@ SettingsCard(
 **Symptom**: UI shows old values after changing settings
 
 **Solution**:
+
 - Verify `collectAsState()` is used in Composable
 - Check ViewModel updates StateFlow when settings change
 - Ensure repository emits to StateFlow after save
