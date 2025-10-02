@@ -31,7 +31,8 @@ fun ProgressDialog(
 
     @Suppress("UNCHECKED_CAST")
     Dialog(
-        onDismissRequest = (if (cancelable) onDismiss else {}) as () -> Unit,
+        onDismissRequest = (if (cancelable) onDismiss else {
+        }) as () -> Unit,
         properties = DialogProperties(
             dismissOnBackPress = cancelable,
             dismissOnClickOutside = cancelable
@@ -126,7 +127,7 @@ fun ColorPickerDialog(
                     Color.Cyan, Color.Magenta, Color.White, Color.Gray,
                     Color.Black, Color(0xFFFFA500), Color(0xFF800080), Color(0xFFFFC0CB)
                 )
-                
+
                 androidx.compose.foundation.lazy.grid.LazyVerticalGrid(
                     columns = androidx.compose.foundation.lazy.grid.GridCells.Fixed(4),
                     modifier = Modifier

@@ -1,16 +1,21 @@
 # File Naming and Commenting Standardization Summary
 
 ## Overview
-This document summarizes the standardization work performed on the IRCamera project codebase to improve consistency in file naming conventions, commenting practices, and timestamp formats.
+
+This document summarizes the standardization work performed on the IRCamera project codebase to improve consistency in
+file naming conventions, commenting practices, and timestamp formats.
 
 ## Changes Made
 
 ### 1. FileUtil.java Standardization
 
 #### Chinese Comments Removed
-All non-ASCII Chinese characters have been removed and replaced with English equivalents or removed entirely when not adding value:
+
+All non-ASCII Chinese characters have been removed and replaced with English equivalents or removed entirely when not
+adding value:
 
 **Lines affected:**
+
 - Line 158: `" ："` -> `" save error: "`
 - Line 156: `" "` -> `" saved"`
 - Line 192: Removed inline Chinese comment
@@ -19,34 +24,41 @@ All non-ASCII Chinese characters have been removed and replaced with English equ
 - Line 684: Removed Chinese comment from method header
 
 #### Timestamp Format Standardization
+
 All `SimpleDateFormat` patterns have been standardized to `yyyyMMdd_HHmmss_SSS` format:
 
 **Before:**
+
 ```java
 new SimpleDateFormat("_HHmmss_yyMMdd")
 ```
 
 **After:**
+
 ```java
 new SimpleDateFormat("yyyyMMdd_HHmmss_SSS", Locale.getDefault())
 ```
 
 **Lines updated:**
+
 - Line 86: `saveByteFile()` method
-- Line 125: `saveShortFile()` method  
+- Line 125: `saveShortFile()` method
 - Line 236: `savaRawFile()` method
 - Line 253: `savaIRFile()` method
 - Line 270: `savaTempFile()` method
 
 **Added import:**
+
 ```java
 import java.util.Locale;
 ```
 
 #### Minimal Javadoc Comments Removed
+
 Empty or minimal Javadoc comments that provided no meaningful documentation were removed:
 
 **Pattern removed:**
+
 ```java
 /**
  * @param bytes
@@ -55,6 +67,7 @@ Empty or minimal Javadoc comments that provided no meaningful documentation were
 ```
 
 **Methods cleaned:**
+
 - `getDiskCacheDir()`
 - `copyAssetsDataToSD()`
 - `saveByteFile()` (both overloads)
@@ -76,7 +89,9 @@ Empty or minimal Javadoc comments that provided no meaningful documentation were
 - `saveStringToFile()`
 
 #### File Header Comment Updated
+
 **Before:**
+
 ```java
 /**
  * @ProjectName: ANDROID_IRUVC_SDK
@@ -93,6 +108,7 @@ Empty or minimal Javadoc comments that provided no meaningful documentation were
 ```
 
 **After:**
+
 ```java
 /**
  * File utility functions for thermal camera data handling.
@@ -106,26 +122,31 @@ Empty or minimal Javadoc comments that provided no meaningful documentation were
 Updated `showDateSecond()` method to use standardized timestamp format:
 
 **Before:**
+
 ```kotlin
 val dateFormat = SimpleDateFormat("yyyyMMddHHmmss")
 ```
 
 **After:**
+
 ```kotlin
 val dateFormat = SimpleDateFormat("yyyyMMdd_HHmmss_SSS")
 ```
 
 ### 3. File Renaming: Util to Utils Standardization
 
-All utility class files with `Util` (singular) suffix have been renamed to `Utils` (plural) to enforce consistency across the codebase.
+All utility class files with `Util` (singular) suffix have been renamed to `Utils` (plural) to enforce consistency
+across the codebase.
 
 **Files Renamed (20 total):**
 
 **App Module:**
+
 - `AppVersionUtil.java` → `AppVersionUtils.java`
 - `InitUtil.kt` → `InitUtils.kt`
 
 **LibUnified Module:**
+
 - `ExcelUtil.java` → `ExcelUtils.java`
 - `SaveSettingUtil.kt` → `SaveSettingUtils.kt`
 - `WifiSaveSettingUtil.kt` → `WifiSaveSettingUtils.kt`
@@ -146,12 +167,14 @@ All utility class files with `Util` (singular) suffix have been renamed to `Util
 - `DragViewUtil.java` → `DragViewUtils.java`
 
 **Changes Applied:**
+
 1. Files renamed using `git mv` to preserve history
 2. Class/object/enum names updated inside each file
 3. All import statements updated across the entire codebase
 4. All class usage references updated (e.g., `FileUtil.method()` → `FileUtils.method()`)
 
 **Impact:**
+
 - 20 files renamed
 - 68 files total modified (including files with updated imports)
 - Zero breaking changes - all references updated automatically
@@ -172,6 +195,7 @@ A comprehensive coding standards document has been created covering:
 ## Statistics
 
 ### Lines Changed
+
 - **FileUtils.java** (renamed from FileUtil.java): 143 lines modified (131 deleted, 12 added)
 - **TimeTool.kt:** 1 line changed
 - **File renames:** 20 files renamed with class names updated
@@ -181,18 +205,22 @@ A comprehensive coding standards document has been created covering:
 - **Total impact:** 100+ files affected across the renaming process
 
 ### Non-ASCII Characters Removed
+
 - **FileUtils.java:** 7 instances of Chinese text removed
 - **TimeTool.kt:** 0 (no non-ASCII characters found)
 
 ### Timestamp Formats Standardized
+
 - **FileUtils.java:** 5 occurrences updated
 - **TimeTool.kt:** 1 occurrence updated
 - **Total:** 6 timestamp formats standardized across both files
 
 ### Minimal Javadocs Removed
+
 - **FileUtils.java:** 20+ minimal/empty Javadoc blocks removed
 
 ### File Naming Standardized
+
 - **Util → Utils renames:** 20 files renamed
 - **Class names updated:** 20 class/object declarations updated
 - **Import statements updated:** All import statements across codebase updated
@@ -201,19 +229,25 @@ A comprehensive coding standards document has been created covering:
 ## Verification
 
 ### Non-ASCII Character Check
+
 ```bash
 perl -ne 'print "$.: $_" if /[^\x00-\x7F]/' FileUtil.java
 # Result: 0 lines (all removed)
 ```
 
 ### Timestamp Format Check
+
 All SimpleDateFormat patterns now use:
+
 - Format: `yyyyMMdd_HHmmss_SSS`
 - Locale: `Locale.getDefault()`
 - Separators: underscore (`_`)
 
 ### Build Status
-The changes to FileUtil.java and TimeTool.kt do not introduce any new compilation errors. Pre-existing build issues (unrelated to this work) include:
+
+The changes to FileUtil.java and TimeTool.kt do not introduce any new compilation errors. Pre-existing build issues (
+unrelated to this work) include:
+
 - Duplicate class issues with Kotlin Parcelize (dependency conflict)
 - Configuration cache issues with cleanAll task
 - DataBinding resolution errors in other files
@@ -231,6 +265,7 @@ These are pre-existing issues and were not introduced by the standardization cha
 ## Guidelines for Future Work
 
 See `CODING_STANDARDS.md` for:
+
 - File naming conventions to follow
 - When and how to write comments
 - Timestamp format to use
