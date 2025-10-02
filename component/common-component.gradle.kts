@@ -1,6 +1,3 @@
-// Common build configuration for components
-// This file defines shared build patterns to reduce duplication
-
 plugins {
     id("com.android.library")
     kotlin("android")
@@ -14,7 +11,6 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
-
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -24,35 +20,26 @@ android {
             )
         }
     }
-
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-
     kotlinOptions {
         jvmTarget = "17"
     }
-
     buildFeatures {
-//        viewBinding = true
-//        dataBinding = true
         compose = true
     }
-
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
 }
 
-// Common dependencies
 dependencies {
     implementation(project(":libunified"))
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
-
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

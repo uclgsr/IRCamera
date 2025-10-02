@@ -13,7 +13,6 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
-
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -23,20 +22,17 @@ android {
             )
         }
     }
-
     androidComponents {
         beforeVariants { variant ->
 
             variant.enable = variant.buildType == "release" || variant.buildType == "debug"
         }
     }
-
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
         isCoreLibraryDesugaringEnabled = true
     }
-
     kotlin {
         compilerOptions {
             jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
@@ -51,23 +47,16 @@ android {
             )
         }
     }
-
     buildFeatures {
-//        viewBinding = true
-//        dataBinding = true
         compose = true
     }
-
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
-
     lint {
-
         abortOnError = false
         checkReleaseBuilds = false
         ignoreWarnings = true
-
         disable.addAll(
             listOf(
                 "MissingClass",
@@ -90,19 +79,13 @@ android {
     }
     buildToolsVersion = "35.0.0"
 }
-
 dependencies {
     coreLibraryDesugaring(libs.desugar.jdk.libs)
-
     implementation(project(":libunified"))
     implementation(project(":BleModule"))
-
-    // Core Android dependencies
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
-
-    // Compose BOM and dependencies
     implementation(platform(libs.compose.bom))
     implementation(libs.compose.ui)
     implementation(libs.compose.ui.tooling.preview)
@@ -114,12 +97,8 @@ dependencies {
     implementation(libs.compose.material.icons.extended)
     debugImplementation(libs.compose.ui.tooling)
     debugImplementation(libs.compose.ui.test.manifest)
-
-    // Utilities
     implementation(libs.utilcode)
     implementation(libs.glide)
-
-    // Testing dependencies - use version catalog
     testImplementation(libs.junit)
     testImplementation(libs.robolectric)
     testImplementation(libs.test.core)

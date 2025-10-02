@@ -5,18 +5,15 @@ plugins {
     id("kotlin-parcelize")
     id("com.google.devtools.ksp")
 }
-
 android {
     namespace = "com.mpdc4gsr.module.thermalunified"
     compileSdk = libs.versions.compileSdk.get().toInt()
-
     defaultConfig {
         minSdk = libs.versions.minSdk.get().toInt()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
-
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -26,20 +23,16 @@ android {
             )
         }
     }
-
     androidComponents {
         beforeVariants { variant ->
-
             variant.enable = variant.buildType == "release" || variant.buildType == "debug"
         }
     }
-
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
         isCoreLibraryDesugaringEnabled = true
     }
-
     kotlin {
         compilerOptions {
             jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
@@ -54,17 +47,8 @@ android {
             )
         }
     }
-
     buildFeatures {
-//        viewBinding = true  // Disabled - migrated to Jetpack Compose
-//        dataBinding = true  // Disabled - migrated to Jetpack Compose
         compose = true
-    }
-
-    lint {
-        abortOnError = false
-        ignoreWarnings = true
-        checkReleaseBuilds = false
     }
 }
 
@@ -73,15 +57,11 @@ dependencies {
     implementation(project(":BleModule"))
     implementation(project(":libunified"))
     implementation(project(":component:user"))
-
-    // Jetpack Compose
     implementation(platform(libs.compose.bom))
     implementation(libs.bundles.compose.core)
     implementation("androidx.compose.material:material-icons-extended")
     implementation(libs.coil.compose)
     debugImplementation(libs.bundles.compose.debug)
-
-    // Core Android libraries
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.bundles.camerax)
