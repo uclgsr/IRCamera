@@ -15,23 +15,13 @@ previous versions.
 
 ## Unified Implementation
 
-The current controller consolidates features from three previous implementations:
+The PC Controller (`pc_controller.py`) is the single, definitive application that consolidates all features:
 
-### Original Components Integrated
-
-1. **Basic GUI Framework** (from tkinter controller)
-    - Device status tracking and session management
-    - Simple but functional interface design
-
-2. **Advanced Protocol Handling** (from standardized controller)
-    - Robust message parsing and time synchronization
-    - Connection lifecycle management
-    - Support for both legacy and JSON message formats
-
-3. **High-Performance Visualization** (from enhanced PyQt6 controller)
-    - Professional PyQt6 interface with responsive design
-    - Real-time plotting with PyQtGraph backend
-    - Optional SSL/TLS encryption support
+- **Modern PyQt6 GUI** with professional interface and responsive design
+- **Protocol Compatibility** supporting both legacy text and JSON message formats
+- **Advanced Features** including real-time visualization, SSL/TLS security, and C++ backend integration
+- **Robust Error Handling** with proper exception handling and socket timeouts
+- **Multi-device Support** with simultaneous connections and session coordination
 
 ## Architecture
 
@@ -69,34 +59,24 @@ The PC Controller implements a **Hub-and-Spoke Model** where:
 - **Real-Time Communication**: TCP/JSON protocol with command acknowledgments
 - **Professional GUI**: Comprehensive PyQt6 interface for researchers
 
-### Implementation Options
+### Main Application
 
-#### 1. Unified Controller (Recommended - Production Ready)
+**File**: `pc_controller.py` (launched via `run_unified_controller.py`)
 
-**File**: `run_unified_controller.py`
-
-- Consolidated implementation combining best features from all previous versions
-- Automatic dependency detection and optimal controller selection
+- Single, definitive PC controller application
 - Complete PyQt6 interface with advanced features
 - Device dashboard with real-time status monitoring
 - Session controls and metadata management
 - Comprehensive logging and error handling
+- Production-ready with proper exception handling
 
-#### 2. Component Demonstration
+### Additional Tools
 
-**File**: `demo_features.py`
+**Component Demonstration**: `demo_features.py` - Validates framework functionality
 
-- Demonstrates Hub-and-Spoke architecture components
-- Validates framework functionality
-- Useful for understanding system capabilities
+**Command Client**: `command_client.py` - CLI tool for sending commands to running controller
 
-#### 3. Legacy MVP Implementations (Archived)
-
-**Location**: `legacy_implementation/`
-
-- MVP simple, CLI, and app versions archived for reference
-- Use unified controller for all new development
-- See `legacy_implementation/README.md` for historical context
+**Legacy Implementations**: `legacy_implementation/` - Archived MVP versions for reference
 
 ## Quick Start
 
@@ -110,58 +90,77 @@ pip install PyQt6 loguru zeroconf numpy pandas h5py pyqtgraph
 pip install scipy opencv-python bleak psutil
 ```
 
-### Usage Options
+### Usage
 
-#### Unified Controller (Recommended)
+#### Start the Controller
 
 ```bash
-# Launch unified controller (auto-selects best available option)
+# Launch the PC controller (recommended)
 python run_unified_controller.py
+
+# Or run directly with options
+python pc_controller.py --port 8080 --cli
 ```
 
-#### Component Demonstration
+#### Command-Line Options
 
 ```bash
-# Component demonstration and validation
+python pc_controller.py --help
+  --port PORT       Server port (default: 8080)
+  --cli             Force CLI mode (no GUI)
+  --ssl             Enable SSL/TLS encryption
+```
+
+#### Testing and Validation
+
+```bash
+# Component demonstration
 python demo_features.py
+
+# Protocol compatibility tests
+python test_protocol_compatibility.py
+
+# Feature tests
+python test_pc_controller_features.py
 ```
-
-#### Development and Testing
-
-```bash
-# Run comprehensive tests
-python test_*.py
-```
-
-**Note**: Legacy MVP implementations (`mvp_simple.py`, `run_mvp_app.py`, etc.) have been archived to
-`legacy_implementation/` for historical reference. Use `run_unified_controller.py` for all new development.
 
 ## Project Structure
 
 ```
 pc-controller/
-+-- Core Implementation Files
-    +-- run_unified_controller.py  # Main unified controller (recommended)
-    +-- pc_controller.py           # Application core
-    +-- demo_features.py          # Feature demonstration
++-- Main Application
+    +-- pc_controller.py           # Single unified PC controller application
+    +-- run_unified_controller.py  # Launcher script (recommended entry point)
+    +-- protocol_adapter.py        # Protocol parsing and compatibility layer
     
-+-- Configuration and Setup
-    +-- requirements.txt           # Full dependency list
-    +-- setup.py                  # Package setup
-    +-- config/                   # Configuration files
++-- Utilities
+    +-- command_client.py          # CLI command tool
+    +-- demo_features.py           # Feature demonstration
+    +-- verify_installation.py     # Installation validator
     
-+-- Testing and Validation
-    +-- test_*.py                 # Test suite files
++-- Configuration
+    +-- requirements.txt           # Python dependencies
+    +-- setup.py                   # Package setup
+    +-- config.yaml                # Application configuration
+    
++-- Testing
+    +-- test_protocol_compatibility.py    # Protocol tests
+    +-- test_pc_controller_features.py    # Feature tests
+    +-- test_comprehensive_integration.py # Integration tests
+    +-- test_protocol_verification.py     # Protocol verification
 
-+-- Supporting Files
-    +-- connect_to_android.sh     # Android connection helper
-    +-- data/                     # Session data directory
-    +-- legacy_implementation/    # Archived MVP implementations
-        +-- mvp_simple.py         # Legacy single-file MVP
-        +-- run_mvp_app.py        # Legacy GUI launcher
-        +-- run_mvp_cli.py        # Legacy CLI version
-        +-- requirements_mvp.txt  # Legacy dependencies
-        +-- config_mvp.yaml       # Legacy config
++-- Data and Output
+    +-- data/                      # Session data storage
+    +-- exports/                   # Data exports
+    +-- certificates/              # SSL/TLS certificates
+    
++-- Documentation
+    +-- docs/                      # Documentation files
+    +-- CODE_REVIEW_SUMMARY.txt    # Code review findings
+    +-- PROTOCOL_FLOW.txt          # Protocol documentation
+    
++-- Legacy
+    +-- legacy_implementation/     # Archived MVP implementations
         +-- README.md             # Legacy documentation
 ```
 
