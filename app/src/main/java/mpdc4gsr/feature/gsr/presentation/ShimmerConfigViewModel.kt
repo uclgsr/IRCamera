@@ -23,7 +23,7 @@ class ShimmerConfigViewModel(
     private val disconnectDeviceUseCase: DisconnectShimmerDeviceUseCase,
     private val getBatteryLevelUseCase: GetDeviceBatteryUseCase,
     private val checkConnectionUseCase: CheckDeviceConnectionUseCase
-) : BaseViewModel() {
+) : AppBaseViewModel() {
 
     companion object {
         private val REQUIRED_PERMISSIONS =

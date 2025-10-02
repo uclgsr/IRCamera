@@ -41,7 +41,7 @@ import mpdc4gsr.core.ui.AppBaseViewModel
  * - Research protocol validation and guidance
  * - Template version management and history
  */
-class ResearchTemplateComposeActivity : BaseComposeActivity<BaseViewModel>() {
+class ResearchTemplateComposeActivity : BaseComposeActivity<AppBaseViewModel>() {
 
     companion object {
         fun startActivity(context: Context) {
@@ -49,13 +49,13 @@ class ResearchTemplateComposeActivity : BaseComposeActivity<BaseViewModel>() {
         }
     }
 
-    override fun createViewModel(): BaseViewModel {
-        return viewModels<BaseViewModel>().value
+    override fun createViewModel(): AppBaseViewModel {
+        return viewModels<AppBaseViewModel>().value
     }
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    override fun Content(viewModel: BaseViewModel) {
+    override fun Content(viewModel: AppBaseViewModel) {
         var selectedTemplate by remember { mutableStateOf<ResearchTemplate?>(null) }
         var selectedCategory by remember { mutableStateOf<ResearchTemplate.TemplateCategory?>(null) }
         var showTemplateDetails by remember { mutableStateOf(false) }

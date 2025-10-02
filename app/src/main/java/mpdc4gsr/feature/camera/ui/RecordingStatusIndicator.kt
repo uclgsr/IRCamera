@@ -38,7 +38,7 @@ constructor(
     private var isRecording = false
     private var startTime = 0L
     private var sessionId = ""
-    private var activeSensors = emptySet<SensorType>()
+    private var activeSensors = emptySet<String>()
 
     init {
         orientation = VERTICAL
@@ -86,7 +86,7 @@ constructor(
 
     fun startRecording(
         sessionId: String,
-        sensors: Set<SensorType>,
+        sensors: Set<String>,
     ) {
         this.sessionId = sessionId
         this.activeSensors = sensors
@@ -104,7 +104,7 @@ constructor(
     }
 
     fun updateSensorStatus(
-        sensor: SensorType,
+        sensor: String,
         status: String,
     ) {
 
@@ -183,13 +183,7 @@ constructor(
             statusText.setTextColor(Color.RED)
 
             sensorsText.text =
-                activeSensors.joinToString(" • ") {
-                    when (it) {
-                        SensorType.THERMAL -> "[THM]"
-                        SensorType.RGB -> "[CAM]"
-                        SensorType.GSR -> "[GSR]"
-                    }
-                }
+                activeSensors.joinToString(" • ") { it }
 
             visibility = VISIBLE
         } else {

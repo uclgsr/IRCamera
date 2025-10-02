@@ -476,6 +476,22 @@ class RgbCameraRecorder(
         }
     }
 
+    fun getResolution(): String {
+        return "${selectedVideoWidth}x${selectedVideoHeight}"
+    }
+
+    fun getCurrentFps(): Int {
+        return if (actualFrameRateAchieved > 0) {
+            actualFrameRateAchieved.toInt()
+        } else {
+            selectedVideoFps
+        }
+    }
+
+    fun bindPreview(previewView: PreviewView, lifecycleOwner: LifecycleOwner) {
+        this.preview?.setSurfaceProvider(previewView.surfaceProvider)
+    }
+
     interface CameraDisplayInfo {
         val isUsingFrontCamera: Boolean
         val backAvailable: Boolean

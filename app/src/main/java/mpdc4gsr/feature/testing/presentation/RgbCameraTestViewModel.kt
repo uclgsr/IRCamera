@@ -8,10 +8,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import mpdc4gsr.core.data.RgbCameraRecorder
-import mpdc4gsr.core.ui.BaseViewModel
+import mpdc4gsr.core.ui.AppBaseViewModel
 import java.io.File
 
-class RgbCameraTestViewModel : BaseViewModel() {
+class RgbCameraTestViewModel : AppBaseViewModel() {
 
     companion object {
         private const val TAG = "RgbCameraTestViewModel"

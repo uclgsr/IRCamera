@@ -35,7 +35,7 @@ import mpdc4gsr.core.ui.AppBaseViewModel
  * - Historical connection logs and performance analytics
  * - Advanced troubleshooting tools and device diagnostics
  */
-class GSRDeviceManagementComposeActivity : BaseComposeActivity<BaseViewModel>() {
+class GSRDeviceManagementComposeActivity : BaseComposeActivity<AppBaseViewModel>() {
 
     companion object {
         fun startActivity(context: Context) {
@@ -43,13 +43,13 @@ class GSRDeviceManagementComposeActivity : BaseComposeActivity<BaseViewModel>() 
         }
     }
 
-    override fun createViewModel(): BaseViewModel {
-        return viewModels<BaseViewModel>().value
+    override fun createViewModel(): AppBaseViewModel {
+        return viewModels<AppBaseViewModel>().value
     }
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    override fun Content(viewModel: BaseViewModel) {
+    override fun Content(viewModel: AppBaseViewModel) {
         var isScanning by remember { mutableStateOf(false) }
         var selectedDevice by remember { mutableStateOf<GSRDeviceInfo?>(null) }
         var showDeviceDetails by remember { mutableStateOf(false) }
@@ -128,7 +128,7 @@ private fun GSRDeviceManagementContent(
     isScanning: Boolean,
     selectedDevice: GSRDeviceInfo?,
     onDeviceSelect: (GSRDeviceInfo) -> Unit,
-    viewModel: BaseViewModel,
+    viewModel: AppBaseViewModel,
     modifier: Modifier = Modifier
 ) {
     Column(
