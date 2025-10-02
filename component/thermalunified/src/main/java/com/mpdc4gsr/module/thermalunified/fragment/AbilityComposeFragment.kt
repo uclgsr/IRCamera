@@ -32,16 +32,7 @@ import com.mpdc4gsr.module.thermalunified.activity.ThermalIrNightComposeActivity
 import com.mpdc4gsr.module.thermalunified.activity.IRThermalPlusComposeActivity
 import com.mpdc4gsr.module.thermalunified.activity.MonitoryHomeComposeActivity
 
-/**
- * Compose migration of AbilityFragment
- *
- * This fragment demonstrates:
- * - Complete migration of ability/features UI to Compose
- * - Modern grid-based layout for feature discovery
- * - Enhanced navigation with visual indicators
- * - Thermal imaging specialized feature sets
- * - Material 3 design with thermal optimizations
- */
+
 class AbilityComposeFragment : Fragment() {
 
     override fun onCreateView(

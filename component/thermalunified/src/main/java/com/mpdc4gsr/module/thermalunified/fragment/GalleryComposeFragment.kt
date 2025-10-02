@@ -34,16 +34,7 @@ import com.mpdc4gsr.module.thermalunified.viewmodel.GalleryViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
-/**
- * Compose migration of GalleryFragment
- *
- * This fragment demonstrates:
- * - Complete migration of gallery UI to Compose
- * - Grid and list view switching
- * - Modern image loading with Coil
- * - Enhanced file management capabilities
- * - Material 3 design with thermal imaging optimizations
- */
+
 class GalleryComposeFragment : BaseComposeFragment<GalleryViewModel>() {
 
     override fun createViewModel(): GalleryViewModel {

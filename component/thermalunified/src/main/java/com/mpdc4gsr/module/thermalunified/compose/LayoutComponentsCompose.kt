@@ -24,14 +24,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-/**
- * Common layout components used throughout thermal activities
- * These replace various XML layout patterns with modern Compose implementations
- */
 
-/**
- * Monitor control panel - replaces motion_action_lay pattern
- */
+
+
 @Composable
 fun MonitorControlPanel(
     onLogQuery: () -> Unit = {},
@@ -104,9 +99,7 @@ fun MonitorControlPanel(
     }
 }
 
-/**
- * Chart information panel - replaces monitor_vol_lay pattern
- */
+
 @Composable
 fun ChartInfoPanel(
     currentValue: String,
@@ -197,9 +190,7 @@ private fun ChartInfoItem(
     }
 }
 
-/**
- * Report info section - replaces view_report_info pattern
- */
+
 @Composable
 fun ReportInfoSection(
     reportName: String,
@@ -275,9 +266,7 @@ private fun ReportInfoRow(
     }
 }
 
-/**
- * Target mode item - replaces itme_target_mode pattern
- */
+
 @Composable
 fun TargetModeItem(
     title: String,
@@ -364,9 +353,7 @@ fun TargetModeItem(
     }
 }
 
-/**
- * Configuration list item - replaces various config item patterns
- */
+
 @Composable
 fun ConfigurationItem(
     title: String,
@@ -441,9 +428,7 @@ fun ConfigurationItem(
     }
 }
 
-/**
- * Empty state component - replaces layout_empty pattern
- */
+
 @Composable
 fun EmptyStateComponent(
     title: String = "No Data Available",
@@ -496,9 +481,7 @@ fun EmptyStateComponent(
     }
 }
 
-/**
- * Preview helpers
- */
+
 @Composable
 fun LayoutComponentsPreview() {
     Column(

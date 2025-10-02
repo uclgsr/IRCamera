@@ -3,10 +3,7 @@ package com.mpdc4gsr.libunified.app.utils
 import android.util.Log
 import java.util.*
 
-/**
- * ByteUtils based on reference repository implementation
- * Adapted from BleModule/src/main/java/com/topdon/ble/util/ByteUtil.java
- */
+
 object ByteUtils {
 
     fun byteMerger(byte1: ByteArray, byte2: Int, byte3: Int, byte4: Int): ByteArray {

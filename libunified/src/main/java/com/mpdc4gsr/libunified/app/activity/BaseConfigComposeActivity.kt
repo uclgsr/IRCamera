@@ -27,10 +27,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-/**
- * Modern Compose implementation for base configuration settings
- * Provides unified configuration management for all modules
- */
+
 class BaseConfigComposeActivity : ComponentActivity() {
 
     private val viewModel: BaseConfigViewModel by viewModels()

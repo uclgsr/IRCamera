@@ -22,16 +22,7 @@ import com.mpdc4gsr.libunified.app.lms.weiget.TToast
 import com.mpdc4gsr.module.user.viewmodel.DeviceDetailsViewModel
 import com.mpdc4gsr.libunified.R as RCore
 
-/**
- * User Management Module - Device Details Compose Activity
- *
- * Displays device information (Serial Number, Model) with copy functionality.
- * Demonstrates:
- * - Device information display
- * - Copy to clipboard functionality
- * - Loading states
- * - Material 3 cards and layouts
- */
+
 class DeviceDetailsComposeActivity : BaseComposeActivity<DeviceDetailsViewModel>() {
 
     override fun createViewModel(): DeviceDetailsViewModel {

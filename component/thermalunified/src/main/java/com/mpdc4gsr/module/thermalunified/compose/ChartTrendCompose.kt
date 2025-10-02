@@ -20,10 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-/**
- * Compose equivalent of ChartTrendView
- * Simple trend chart with customizable data visualization
- */
+
 @Composable
 fun ChartTrendCompose(
     dataPoints: List<Float>,
@@ -206,9 +203,7 @@ private fun DrawScope.drawTrendChart(
     }
 }
 
-/**
- * Temperature-specific trend chart with color-coded zones
- */
+
 @Composable
 fun TemperatureTrendCompose(
     temperatures: List<Float>,
@@ -236,9 +231,7 @@ fun TemperatureTrendCompose(
     )
 }
 
-/**
- * Preview helper for ChartTrendCompose
- */
+
 @Composable
 fun ChartTrendComposePreview() {
     Column(

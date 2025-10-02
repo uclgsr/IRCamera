@@ -5,12 +5,7 @@ import android.content.Context;
 import com.topdon.ble.callback.ScanListener;
 
 
-/**
- *
- * <p>
- * date: 2019/10/1 14:41
- * author: bichuanfeng
- */
+
 interface Scanner {
 
     void addScanListener(ScanListener listener);

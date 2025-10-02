@@ -17,10 +17,7 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 
-/**
- * MP Chart Logging - Professional thermal data visualization
- * Multi-series support with interactive charts
- */
+
 class IRLogMPChartComposeActivity : BaseComposeActivity<IRLogMPChartViewModel>() {
 
     override fun createViewModel(): IRLogMPChartViewModel {

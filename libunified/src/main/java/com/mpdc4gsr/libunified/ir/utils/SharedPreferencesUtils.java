@@ -6,21 +6,13 @@ import android.util.Base64;
 
 import java.nio.charset.StandardCharsets;
 
-/**
- * Created by fengjibo on 2023/4/12.
- */
+
 public enum SharedPreferencesUtils {
     ;
 
     private static final String FILE_NAME = "usb_ir";
 
-    /**
-     *
-     *
-     * @param context
-     * @param key
-     * @param data
-     */
+    
     public static void saveData(Context context, String key, Object data) {
         String type = data.getClass().getSimpleName();
         SharedPreferences sharedPreferences = context
@@ -41,14 +33,7 @@ public enum SharedPreferencesUtils {
         editor.commit();
     }
 
-    /**
-     *
-     *
-     * @param context
-     * @param key
-     * @param defValue
-     * @return
-     */
+    
     public static Object getData(Context context, String key, Object defValue) {
         String type = defValue.getClass().getSimpleName();
         SharedPreferences sharedPreferences = context.getSharedPreferences
@@ -68,12 +53,7 @@ public enum SharedPreferencesUtils {
         return null;
     }
 
-    /**
-     *
-     * @param context
-     * @param key
-     * @param data
-     */
+    
     public static void saveByteData(Context context, String key, byte[] data) {
         String type = data.getClass().getSimpleName();
         SharedPreferences sharedPreferences = context
@@ -86,12 +66,7 @@ public enum SharedPreferencesUtils {
         editor.commit();
     }
 
-    /**
-     *
-     * @param context
-     * @param key
-     * @return
-     */
+    
     public static byte[] getByteData(Context context, String key) {
         SharedPreferences sharedPreferences = context.getSharedPreferences
                 (FILE_NAME, Context.MODE_PRIVATE);

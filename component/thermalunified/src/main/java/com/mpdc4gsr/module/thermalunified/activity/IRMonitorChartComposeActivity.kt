@@ -22,10 +22,7 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
 
-/**
- * Modern Compose implementation of IR monitor chart activity
- * Enhanced real-time thermal data visualization with Material 3 design
- */
+
 class IRMonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
 
     override fun createViewModel(): ThermalViewModel {

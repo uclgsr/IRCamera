@@ -2,13 +2,7 @@ package com.topdon.commons.base.entity;
 
 import java.io.Serializable;
 
-/**
- * @Desc
- * @ClassName UnitDBBean
- * @Email 616862466@qq.com
- * @Author
- * @Date 2022/12/21 15:38
- */
+
 public class UnitDBBean implements Serializable {
 //    {
 //        "": "",

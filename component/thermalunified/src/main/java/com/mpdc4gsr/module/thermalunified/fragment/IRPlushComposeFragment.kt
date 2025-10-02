@@ -25,16 +25,7 @@ import com.mpdc4gsr.module.thermalunified.viewmodel.IRPlushViewModel.DualViewSta
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRPlushViewModel.ProcessingMode
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRPlushViewModel.TemperatureData
 
-/**
- * Compose migration of IRPlushFragment
- *
- * This fragment demonstrates:
- * - Complete migration of IR Plus features to Compose
- * - Advanced dual-camera thermal imaging interface
- * - Modern Material 3 UI with enhanced controls
- * - Integration with dual-view thermal processing
- * - Professional thermal imaging features
- */
+
 class IRPlushComposeFragment : BaseComposeFragment<IRPlushViewModel>() {
 
     override fun createViewModel(): IRPlushViewModel {

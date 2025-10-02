@@ -11,9 +11,7 @@ import java.util.Date
 
 object Logger {
 
-    /**
-     * ERROR
-     */
+
 
     @JvmStatic
     fun e(clazz: Class<*>, msg: String) {
@@ -29,9 +27,7 @@ object Logger {
         }
     }
 
-    /**
-     * WARN
-     */
+
     @JvmStatic
     fun w(clazz: Class<*>, msg: String) {
         if (BuildConfig.DEBUG) {
@@ -46,9 +42,7 @@ object Logger {
         }
     }
 
-    /**
-     * INFO
-     */
+
 
     @JvmStatic
     fun i(clazz: Class<*>, msg: String) {
@@ -64,9 +58,7 @@ object Logger {
         }
     }
 
-    /**
-     * DEBUG
-     */
+
 
     @JvmStatic
     fun d(clazz: Class<*>, msg: String) {
@@ -82,9 +74,7 @@ object Logger {
         }
     }
 
-    /**
-     * VERBOSE
-     */
+
 
     @JvmStatic
     fun v(clazz: Class<*>, msg: String) {

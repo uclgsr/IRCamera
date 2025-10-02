@@ -1,8 +1,6 @@
 package com.mpdc4gsr.libunified.ui
 
-/**
- * UI Resources for thermal module drawable resources
- */
+
 object R {
     object drawable {
         // Target thermal menu items - reference existing drawables

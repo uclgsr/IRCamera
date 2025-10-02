@@ -4,10 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 
-/**
- * Stub implementations for Fence UI components
- * These are placeholders to resolve compilation issues
- */
+
 
 class FenceView @JvmOverloads constructor(
     context: Context,

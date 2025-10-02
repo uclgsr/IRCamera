@@ -7,26 +7,19 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
 
-/**
- * Base Repository class implementing common patterns for data access
- * Provides standardized error handling, caching, and coroutine management
- */
+
 abstract class BaseRepository(
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) {
 
-    /**
-     * Result wrapper for repository operations
-     */
+    
     sealed class Result<out T> {
         data class Success<T>(val data: T) : Result<T>()
         data class Error(val exception: Throwable) : Result<Nothing>()
         object Loading : Result<Nothing>()
     }
 
-    /**
-     * Cached data wrapper with expiration
-     */
+    
     data class CachedData<T>(
         val data: T,
         val timestamp: Long = System.currentTimeMillis(),
@@ -39,9 +32,7 @@ abstract class BaseRepository(
     // Simple in-memory cache
     private val cache = mutableMapOf<String, CachedData<Any>>()
 
-    /**
-     * Execute operation with Result wrapper
-     */
+    
     protected suspend fun <T> safeCall(
         operation: suspend () -> T
     ): Result<T> {
@@ -55,9 +46,7 @@ abstract class BaseRepository(
         }
     }
 
-    /**
-     * Execute operation as Flow with loading state
-     */
+    
     protected fun <T> safeFlow(
         operation: suspend () -> T
     ): Flow<Result<T>> = flow {
@@ -70,9 +59,7 @@ abstract class BaseRepository(
         }
     }.flowOn(ioDispatcher)
 
-    /**
-     * Get cached data or execute operation
-     */
+    
     // The unchecked cast from CachedData<Any> to CachedData<T> is safe here because
     // each cacheKey is always associated with a single type T for the lifetime of the cache entry.
     // The function contract ensures that the same key is not reused for different types.
@@ -93,9 +80,7 @@ abstract class BaseRepository(
         }
     }
 
-    /**
-     * Clear cache for specific key or all cache
-     */
+    
     protected fun clearCache(key: String? = null) {
         if (key != null) {
             cache.remove(key)
@@ -104,9 +89,7 @@ abstract class BaseRepository(
         }
     }
 
-    /**
-     * Network and cache strategy
-     */
+    
     protected fun <T> networkBoundResource(
         query: () -> Flow<T?>,
         fetch: suspend () -> T,

@@ -1,9 +1,6 @@
 package com.mpdc4gsr.libunified.app.utils
 
-/**
- * WsCmdConstants based on reference repository implementation
- * Adapted from libapp/src/main/java/com/topdon/lib/core/utils/WsCmdConstants.kt
- */
+
 object WsCmdConstants {
     const val AR_COMMAND_IP: String = "127.0.0.1"
     const val AR_COMMAND_LOGIN: Int = 1

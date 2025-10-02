@@ -6,25 +6,10 @@ import android.content.pm.PackageManager
 import android.os.Build
 import java.util.*
 
-/**
- * Unified Package Utilities
- *
- * Consolidates package management utilities from across the repository:
- * - Package information retrieval and validation
- * - Version comparison and management
- * - Application metadata handling
- * - System compatibility checks
- *
- * This utility replaces scattered package utilities from:
- * - BleModule package utilities
- * - libapp package management
- * - app module version utilities
- */
+
 object UnifiedPackageUtils {
 
-    /**
-     * Get detailed package information for the current application
-     */
+    
     fun getPackageInfo(context: Context): PackageInfo? {
         return try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -41,16 +26,12 @@ object UnifiedPackageUtils {
         }
     }
 
-    /**
-     * Get application version name
-     */
+    
     fun getVersionName(context: Context): String {
         return getPackageInfo(context)?.versionName ?: "Unknown"
     }
 
-    /**
-     * Get application version code
-     */
+    
     fun getVersionCode(context: Context): Long {
         val packageInfo = getPackageInfo(context) ?: return 0L
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
@@ -61,10 +42,7 @@ object UnifiedPackageUtils {
         }
     }
 
-    /**
-     * Compare two version strings
-     * Returns: -1 if version1 < version2, 0 if equal, 1 if version1 > version2
-     */
+    
     fun compareVersions(version1: String, version2: String): Int {
         val v1Parts = version1.split(".").map { it.toIntOrNull() ?: 0 }
         val v2Parts = version2.split(".").map { it.toIntOrNull() ?: 0 }
@@ -84,16 +62,12 @@ object UnifiedPackageUtils {
         return 0
     }
 
-    /**
-     * Check if a version meets minimum requirements
-     */
+    
     fun isVersionAtLeast(currentVersion: String, minimumVersion: String): Boolean {
         return compareVersions(currentVersion, minimumVersion) >= 0
     }
 
-    /**
-     * Get application label/name
-     */
+    
     fun getApplicationLabel(context: Context): String {
         return try {
             val applicationInfo = context.applicationInfo
@@ -103,9 +77,7 @@ object UnifiedPackageUtils {
         }
     }
 
-    /**
-     * Check if application is debuggable
-     */
+    
     fun isDebuggable(context: Context): Boolean {
         return try {
             val applicationInfo = context.applicationInfo
@@ -115,9 +87,7 @@ object UnifiedPackageUtils {
         }
     }
 
-    /**
-     * Get build configuration information
-     */
+    
     data class BuildInfo(
         val versionName: String,
         val versionCode: Long,
@@ -128,9 +98,7 @@ object UnifiedPackageUtils {
         val buildTime: Long = System.currentTimeMillis()
     )
 
-    /**
-     * Get comprehensive build information
-     */
+    
     fun getBuildInfo(context: Context): BuildInfo {
         val packageInfo = getPackageInfo(context)
         return BuildInfo(
@@ -147,9 +115,7 @@ object UnifiedPackageUtils {
         )
     }
 
-    /**
-     * Format version information for display
-     */
+    
     fun formatVersionInfo(context: Context): String {
         val buildInfo = getBuildInfo(context)
         return buildString {
@@ -164,9 +130,7 @@ object UnifiedPackageUtils {
         }
     }
 
-    /**
-     * Validate package name format
-     */
+    
     fun isValidPackageName(packageName: String): Boolean {
         if (packageName.isEmpty()) return false
 
@@ -180,9 +144,7 @@ object UnifiedPackageUtils {
         }
     }
 
-    /**
-     * Get installed package names
-     */
+    
     fun getInstalledPackages(context: Context): List<String> {
         return try {
             val packages = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -199,9 +161,7 @@ object UnifiedPackageUtils {
         }
     }
 
-    /**
-     * Check if a specific package is installed
-     */
+    
     fun isPackageInstalled(context: Context, packageName: String): Boolean {
         return try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {

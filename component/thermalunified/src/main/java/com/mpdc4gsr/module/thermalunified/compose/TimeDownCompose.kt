@@ -15,10 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
 
-/**
- * Compose equivalent of TimeDownView
- * Animated countdown timer with scale and fade effects
- */
+
 @Composable
 fun TimeDownCompose(
     initialSeconds: Int,
@@ -102,9 +99,7 @@ fun TimeDownCompose(
     }
 }
 
-/**
- * Stateful version that manages its own visibility
- */
+
 @Composable
 fun TimeDownStatefulCompose(
     seconds: Int,
@@ -124,9 +119,7 @@ fun TimeDownStatefulCompose(
     )
 }
 
-/**
- * Preview helper for TimeDownCompose
- */
+
 @Composable
 fun TimeDownComposePreview() {
     var seconds by remember { mutableIntStateOf(5) }

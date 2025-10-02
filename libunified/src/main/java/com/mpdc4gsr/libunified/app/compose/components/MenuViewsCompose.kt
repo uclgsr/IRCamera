@@ -19,10 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-/**
- * MenuEditView Compose equivalent
- * Provides a menu bar with selectable items including a special bar toggle
- */
+
 @Composable
 fun MenuEditView(
     @DrawableRes menu1Icon: Int,
@@ -123,10 +120,7 @@ private fun MenuEditItem(
     }
 }
 
-/**
- * CameraMenuView Compose equivalent
- * Provides camera control buttons with photo/video mode toggle
- */
+
 @Composable
 fun CameraMenuView(
     @DrawableRes actionIcon: Int,

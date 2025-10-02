@@ -27,10 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlin.math.roundToInt
 
-/**
- * Compose equivalent of TemperatureEditView
- * Temperature measurement and editing interface with point, line, and rectangle measurements
- */
+
 @Composable
 fun TemperatureEditCompose(
     mode: TemperatureMode = TemperatureMode.POINT,
@@ -509,9 +506,7 @@ sealed class TemperatureMeasurementResult(
     )
 }
 
-/**
- * Preview helper for TemperatureEditCompose
- */
+
 @Composable
 fun TemperatureEditComposePreview() {
     var mode by remember { mutableStateOf(TemperatureMode.POINT) }
