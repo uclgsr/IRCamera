@@ -32,8 +32,11 @@ fun MainScreen(
     onNavigateToGallery: () -> Unit = {},
     onNavigateToSettings: () -> Unit = {},
     onNavigateToProfile: () -> Unit = {},
+    onNavigateToSensor: (mpdc4gsr.core.ui.model.SensorType) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
+    var selectedTab by remember { mutableIntStateOf(0) }
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -57,7 +60,13 @@ fun MainScreen(
                 .fillMaxSize()
                 .weight(1f)
         ) {
-            SensorDashboardTab()
+            when (selectedTab) {
+                0 -> SensorDashboardTab(
+                    onSensorClick = onNavigateToSensor
+                )
+                1 -> GalleryTab(onNavigateToGallery = onNavigateToGallery)
+                2 -> ProfileTab(onNavigateToProfile = onNavigateToProfile)
+            }
         }
 
         // Bottom navigation
@@ -67,8 +76,8 @@ fun MainScreen(
             NavigationBarItem(
                 icon = { Icon(Icons.Default.Dashboard, contentDescription = "Sensors") },
                 label = { Text("Sensors") },
-                selected = true,
-                onClick = { },
+                selected = selectedTab == 0,
+                onClick = { selectedTab = 0 },
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = MaterialTheme.colorScheme.primary,
                     unselectedIconColor = Color.Gray,
@@ -79,8 +88,8 @@ fun MainScreen(
             NavigationBarItem(
                 icon = { Icon(Icons.Default.Photo, contentDescription = "Gallery") },
                 label = { Text("Gallery") },
-                selected = false,
-                onClick = { onNavigateToGallery() },
+                selected = selectedTab == 1,
+                onClick = { selectedTab = 1 },
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = MaterialTheme.colorScheme.primary,
                     unselectedIconColor = Color.Gray,
@@ -103,8 +112,8 @@ fun MainScreen(
             NavigationBarItem(
                 icon = { Icon(Icons.Default.Person, contentDescription = "Profile") },
                 label = { Text("Profile") },
-                selected = false,
-                onClick = { onNavigateToProfile() },
+                selected = selectedTab == 2,
+                onClick = { selectedTab = 2 },
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = MaterialTheme.colorScheme.primary,
                     unselectedIconColor = Color.Gray,
@@ -118,11 +127,25 @@ fun MainScreen(
 
 /**
  * Sensor Dashboard Tab - Main sensor interface
+ * 
+ * TODO: State management should be hoisted to a MainViewModel
+ * Current limitation: Sensor states are managed locally and hardcoded to Connected.
+ * This is a temporary implementation for UI demonstration purposes.
+ * Future work should:
+ * - Create MainViewModel to manage sensor states
+ * - Connect to actual sensor hardware/services
+ * - Make state lifecycle-aware and survive configuration changes
+ * - Implement real business logic in onAction handlers
  */
 @Composable
 private fun SensorDashboardTab(
+    onSensorClick: (mpdc4gsr.core.ui.model.SensorType) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
+    var gsrState by remember { mutableStateOf(mpdc4gsr.core.ui.model.SensorState.Connected) }
+    var thermalState by remember { mutableStateOf(mpdc4gsr.core.ui.model.SensorState.Connected) }
+    var rgbState by remember { mutableStateOf(mpdc4gsr.core.ui.model.SensorState.Connected) }
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -158,6 +181,164 @@ private fun SensorDashboardTab(
 
         // System status overview
         SystemStatusOverview()
+
+        // Sensor cards for direct access
+        mpdc4gsr.core.ui.components.sensors.GSRSensorCard(
+            state = gsrState,
+            onStateChange = { gsrState = it },
+            onClick = { onSensorClick(mpdc4gsr.core.ui.model.SensorType.GSR) },
+            onAction = { action ->
+                when (action) {
+                    is mpdc4gsr.core.ui.model.GSRAction.Connect -> gsrState = mpdc4gsr.core.ui.model.SensorState.Connecting
+                    is mpdc4gsr.core.ui.model.GSRAction.Disconnect -> gsrState = mpdc4gsr.core.ui.model.SensorState.Disconnected
+                    is mpdc4gsr.core.ui.model.GSRAction.StartStream -> gsrState = mpdc4gsr.core.ui.model.SensorState.Streaming
+                    is mpdc4gsr.core.ui.model.GSRAction.StopStream -> gsrState = mpdc4gsr.core.ui.model.SensorState.Connected
+                    is mpdc4gsr.core.ui.model.GSRAction.ConfigureDevice -> {}
+                }
+            }
+        )
+
+        mpdc4gsr.core.ui.components.sensors.ThermalSensorCard(
+            state = thermalState,
+            onStateChange = { thermalState = it },
+            onClick = { onSensorClick(mpdc4gsr.core.ui.model.SensorType.ThermalIR) },
+            onAction = { action ->
+                when (action) {
+                    is mpdc4gsr.core.ui.model.ThermalAction.Connect -> thermalState = mpdc4gsr.core.ui.model.SensorState.Connecting
+                    is mpdc4gsr.core.ui.model.ThermalAction.Disconnect -> thermalState = mpdc4gsr.core.ui.model.SensorState.Disconnected
+                    is mpdc4gsr.core.ui.model.ThermalAction.StartPreview -> thermalState = mpdc4gsr.core.ui.model.SensorState.Streaming
+                    is mpdc4gsr.core.ui.model.ThermalAction.StopPreview -> thermalState = mpdc4gsr.core.ui.model.SensorState.Connected
+                    is mpdc4gsr.core.ui.model.ThermalAction.Calibrate -> {}
+                }
+            }
+        )
+
+        mpdc4gsr.core.ui.components.sensors.RGBCameraSensorCard(
+            state = rgbState,
+            onStateChange = { rgbState = it },
+            onClick = { onSensorClick(mpdc4gsr.core.ui.model.SensorType.RGBCamera) },
+            onAction = { action ->
+                when (action) {
+                    is mpdc4gsr.core.ui.model.CameraAction.Connect -> rgbState = mpdc4gsr.core.ui.model.SensorState.Connecting
+                    is mpdc4gsr.core.ui.model.CameraAction.Disconnect -> rgbState = mpdc4gsr.core.ui.model.SensorState.Disconnected
+                    is mpdc4gsr.core.ui.model.CameraAction.StartPreview -> rgbState = mpdc4gsr.core.ui.model.SensorState.Streaming
+                    is mpdc4gsr.core.ui.model.CameraAction.StopPreview -> rgbState = mpdc4gsr.core.ui.model.SensorState.Connected
+                    is mpdc4gsr.core.ui.model.CameraAction.SetResolution -> {}
+                }
+            }
+        )
+    }
+}
+
+/**
+ * Gallery Tab - Image and video gallery
+ */
+@Composable
+private fun GalleryTab(
+    onNavigateToGallery: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(20.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Icon(
+                    Icons.Default.Photo,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(64.dp)
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = "Media Gallery",
+                    color = Color.White,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "View thermal images, recordings, and data exports",
+                    color = Color.Gray,
+                    fontSize = 14.sp,
+                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Button(
+                    onClick = onNavigateToGallery,
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
+                ) {
+                    Text("Open Gallery")
+                }
+            }
+        }
+    }
+}
+
+/**
+ * Profile Tab - User profile and account
+ */
+@Composable
+private fun ProfileTab(
+    onNavigateToProfile: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(20.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Icon(
+                    Icons.Default.Person,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(64.dp)
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = "Profile",
+                    color = Color.White,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "User account, research templates, and data management",
+                    color = Color.Gray,
+                    fontSize = 14.sp,
+                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Button(
+                    onClick = onNavigateToProfile,
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
+                ) {
+                    Text("View Profile")
+                }
+            }
+        }
     }
 }
 
