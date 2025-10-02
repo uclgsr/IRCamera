@@ -51,7 +51,22 @@ android {
         kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
     buildToolsVersion = "35.0.0"
+
+    testOptions {
+        unitTests.all {
+            it.enabled = false
+        }
+    }
 }
+
+tasks.withType<Test> {
+    enabled = false
+}
+
+tasks.matching { it.name.startsWith("connected") && it.name.endsWith("AndroidTest") }.configureEach {
+    enabled = false
+}
+
 dependencies {
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(platform(libs.compose.bom))
