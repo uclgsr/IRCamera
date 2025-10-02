@@ -11,6 +11,7 @@ except ImportError:
 
 from ..network.discovery import DeviceType, DiscoveredDevice, NetworkDiscoveryService
 
+
 class DeviceConnectionState(Enum):
     DISCOVERED = "discovered"
     ONLINE = "online"
@@ -18,11 +19,13 @@ class DeviceConnectionState(Enum):
     DISCONNECTED = "disconnected"
     ERROR = "error"
 
+
 class ConnectionQuality(Enum):
     EXCELLENT = "excellent"
     GOOD = "good"
     POOR = "poor"
     UNSTABLE = "unstable"
+
 
 @dataclass
 class DeviceCapabilities:
@@ -34,6 +37,7 @@ class DeviceCapabilities:
     max_resolution: str = "1080p"
     sampling_rates: List[int] = field(default_factory=list)
     custom_capabilities: Dict[str, Any] = field(default_factory=dict)
+
 
 @dataclass
 class DeviceInfo:
@@ -72,6 +76,7 @@ class DeviceInfo:
         if self.last_heartbeat:
             result['last_heartbeat'] = self.last_heartbeat.isoformat()
         return result
+
 
 class DeviceRegistry:
 
@@ -246,6 +251,7 @@ class DeviceRegistry:
     def get_device_count_by_state(self, state: DeviceConnectionState) -> int:
 
         return len(self.get_devices_by_state(state))
+
 
 class DeviceManager:
 

@@ -12,14 +12,14 @@ This implementation addresses the key requirements:
 """
 
 import json
+import logging
+import queue
 import socket
 import threading
 import time
-import queue
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Optional, Any, Tuple
-import logging
 
 # Try to import optional visualization libraries
 try:
@@ -47,6 +47,7 @@ try:
 except ImportError:
     HAS_NATIVE_BACKEND = False
 
+
 class EnhancedLogger:
     def __init__(self, name: str = "PCController"):
         self.logger = logging.getLogger(name)
@@ -69,6 +70,7 @@ class EnhancedLogger:
 
     def debug(self, msg): self.logger.debug(msg)
 
+
 class DeviceInfo:
     """Enhanced device information tracking"""
 
@@ -89,6 +91,7 @@ class DeviceInfo:
         self.data_packets_received = 0
         self.last_data_time = None
 
+
 class SessionInfo:
     """Session tracking and management"""
 
@@ -106,6 +109,7 @@ class SessionInfo:
 
     def get_duration(self) -> float:
         return time.time() - self.start_time
+
 
 class DataBuffer:
     """Thread-safe data buffer for real-time visualization"""
@@ -132,6 +136,7 @@ class DataBuffer:
                 return self.timestamps.copy(), self.gsr_data.copy()
             else:
                 return self.timestamps[-count:], self.gsr_data[-count:]
+
 
 class DeviceConnection:
     """Enhanced device connection management"""
@@ -178,6 +183,7 @@ class DeviceConnection:
             self.socket.close()
         except:
             pass
+
 
 class EnhancedPCController:
     """Enhanced PC Controller with complete functionality"""
@@ -635,6 +641,7 @@ class EnhancedPCController:
             self.logger.error(f"Error exporting session data: {e}")
             return None
 
+
 def main():
     """Main function for standalone execution"""
     controller = EnhancedPCController(port=8080)
@@ -665,6 +672,7 @@ def main():
     except KeyboardInterrupt:
         print("\n Shutting down...")
         controller.stop()
+
 
 if __name__ == "__main__":
     main()

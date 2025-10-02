@@ -17,6 +17,7 @@ except ImportError:
         def __getattr__(self, name):
             return "default"
 
+
     config = MockConfig()
 
 try:
@@ -26,12 +27,15 @@ try:
 except ImportError:
     GUI_AVAILABLE = False
 
+
     # Mock classes for headless mode
     class QObject:
         pass
 
+
     def pyqtSignal(*args, **kwargs):
         return None
+
 
 class LogHandler(QObject):
     log_message = pyqtSignal(str, str, str)
@@ -45,6 +49,7 @@ class LogHandler(QObject):
         timestamp = record["time"].strftime("%Y-%m-%d %H:%M:%S")
 
         self.log_message.emit(level, message, timestamp)
+
 
 def setup_logging() -> LogHandler:
     logger.remove()
@@ -119,8 +124,10 @@ def setup_logging() -> LogHandler:
     logger.info("Logging system initialized")
     return gui_handler
 
+
 def get_app_icon() -> Any:
     return None
+
 
 def apply_theme(app: Any, theme_name: str = "default") -> Any:
     if theme_name == "dark":
@@ -242,6 +249,7 @@ def apply_theme(app: Any, theme_name: str = "default") -> Any:
 
         app.setStyleSheet(dark_style)
 
+
 def format_file_size(size_bytes: int) -> str:
     if size_bytes == 0:
         return "0 B"
@@ -252,6 +260,7 @@ def format_file_size(size_bytes: int) -> str:
         size_bytes /= 1024.0
 
     return f"{size_bytes:.1f} PB"
+
 
 def format_duration(seconds: float) -> str:
     total_seconds = int(seconds)
@@ -264,6 +273,7 @@ def format_duration(seconds: float) -> str:
     else:
         return f"{minutes:02d}:{secs:02d}"
 
+
 def get_status_color(status: str) -> str:
     status = status.lower()
 
@@ -275,6 +285,7 @@ def get_status_color(status: str) -> str:
         return "orange"
     else:
         return "gray"
+
 
 def validate_session_name(name: str) -> tuple[bool, str]:
     if not name or not name.strip():
@@ -291,6 +302,7 @@ def validate_session_name(name: str) -> tuple[bool, str]:
             return False, f"Session name cannot contain '{char}'"
 
     return True, ""
+
 
 def confirm_action(parent, title: str, message: str) -> bool:
     from PyQt6.QtWidgets import QMessageBox

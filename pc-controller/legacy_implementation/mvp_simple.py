@@ -14,6 +14,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Optional, Any
 
+
 # Simple logging without external dependencies
 class SimpleLogger:
     def info(self, msg): print(f"[INFO] {datetime.now().strftime('%H:%M:%S')} - {msg}")
@@ -22,7 +23,9 @@ class SimpleLogger:
 
     def error(self, msg): print(f"[ERROR] {datetime.now().strftime('%H:%M:%S')} - {msg}")
 
+
 logger = SimpleLogger()
+
 
 class DeviceRegistry:
     """Simple device registry for connected Android devices"""
@@ -50,6 +53,7 @@ class DeviceRegistry:
             if device_id in self.devices:
                 self.devices[device_id]['status'] = status
                 self.devices[device_id]['last_seen'] = time.time()
+
 
 class SessionManager:
     """Simple session management"""
@@ -87,6 +91,7 @@ class SessionManager:
         if self.current_session:
             logger.info(f"Finalized session: {self.current_session}")
             self.current_session = None
+
 
 class SimpleTCPServer:
     """Basic TCP server for device communication"""
@@ -226,6 +231,7 @@ class SimpleTCPServer:
             'current_session': self.session_manager.current_session
         }
 
+
 def print_status(server):
     """Print current server status"""
     status = server.get_status()
@@ -241,6 +247,7 @@ def print_status(server):
         for device_id, info in status['devices'].items():
             print(f"  {device_id}: {info['status']} - {info['capabilities']}")
     print()
+
 
 def main():
     """Main application entry point"""
@@ -267,6 +274,7 @@ def main():
     except KeyboardInterrupt:
         print("\nShutting down...")
         server.stop()
+
 
 if __name__ == "__main__":
     main()

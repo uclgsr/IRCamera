@@ -61,7 +61,7 @@ class SensorDashboardComposeActivity : ComponentActivity() {
 
         // Use real GSR data from ViewModel
         val gsrDataState by viewModel.gsrData.collectAsState()
-        
+
         // Map ViewModel GSRDataState to UI GSRData with battery level
         val gsrData by remember {
             derivedStateOf {

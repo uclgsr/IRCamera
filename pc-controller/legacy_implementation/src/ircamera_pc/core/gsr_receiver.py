@@ -13,6 +13,7 @@ from typing import Any, Dict, List, Optional, Set
 
 from .gsr_analytics import GSRAnalytics
 
+
 @dataclass
 class GSRSample:
     timestamp: float
@@ -21,6 +22,7 @@ class GSRSample:
     quality: int
     device_id: str
     received_time: float = field(default_factory=time.time)
+
 
 @dataclass
 class DeviceSession:
@@ -32,6 +34,7 @@ class DeviceSession:
     last_sample_time: float = 0
     quality_stats: Dict[str, float] = field(default_factory=dict)
     network_stats: Dict[str, int] = field(default_factory=dict)
+
 
 class GSRReceiver:
 

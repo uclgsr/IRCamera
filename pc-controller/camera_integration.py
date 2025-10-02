@@ -6,16 +6,16 @@ Provides webcam integration, thermal/RGB preview, and multi-modal data export.
 Supports both native OpenCV and fallback implementations.
 """
 
-import cv2
-import numpy as np
 import base64
+import cv2
+import io
 import json
-import time
+import numpy as np
 import threading
+import time
 from datetime import datetime
 from pathlib import Path
 from typing import Optional, Dict, List, Callable, Tuple
-import io
 
 try:
     from PIL import Image
@@ -28,6 +28,7 @@ import logging
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
+
 
 class CameraManager:
     """Manages webcam capture and multi-modal camera data processing"""
@@ -267,6 +268,7 @@ class CameraManager:
         self.thermal_frames.clear()
         self.rgb_frames.clear()
 
+
 class DataExporter:
     """Handles export of multi-modal session data"""
 
@@ -478,6 +480,7 @@ class DataExporter:
         except Exception as e:
             logger.error(f" Failed to create session summary: {e}")
 
+
 def main():
     """Test camera manager and data export functionality"""
     print(" IRCamera Camera Manager & Data Export Test")
@@ -558,6 +561,7 @@ def main():
     # Cleanup
     camera_manager.cleanup()
     print(" Cleanup completed")
+
 
 if __name__ == "__main__":
     main()

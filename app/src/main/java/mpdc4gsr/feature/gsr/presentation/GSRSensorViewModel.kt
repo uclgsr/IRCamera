@@ -2,13 +2,15 @@ package mpdc4gsr.feature.gsr.presentation
 
 import android.app.Application
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import mpdc4gsr.core.data.UnifiedGSRRecorder
 import mpdc4gsr.core.ui.AppBaseViewModel
 import java.text.SimpleDateFormat
-import java.util.Locale
-import java.util.TimeZone
+import java.util.*
 
 /**
  * ViewModel for GSR Sensor Screen
@@ -56,7 +58,7 @@ class GSRSensorViewModel(
                     lifecycleOwner = lifecycleOwner,
                     samplingRateHz = 128
                 )
-                
+
                 val initialized = gsrRecorder?.initialize() ?: false
                 if (initialized) {
                     _sensorState.update { it.copy(isConnected = true, error = null) }
@@ -82,7 +84,7 @@ class GSRSensorViewModel(
                     _sensorState.update { it.copy(error = "No devices found. Please scan first.") }
                     return@launch
                 }
-                
+
                 // Connect to first available device
                 val device = devices.firstOrNull()
                 if (device != null) {
@@ -122,19 +124,19 @@ class GSRSensorViewModel(
     fun startRecording() {
         viewModelScope.launch {
             try {
-                val sessionDir = application.getExternalFilesDir("gsr_sessions")?.absolutePath 
+                val sessionDir = application.getExternalFilesDir("gsr_sessions")?.absolutePath
                     ?: application.filesDir.absolutePath
-                
+
                 val currentTimeMs = System.currentTimeMillis()
                 val currentMonotonicNs = System.nanoTime()
-                
+
                 val metadata = mpdc4gsr.core.data.SessionMetadata(
                     sessionId = "gsr_${currentTimeMs}",
                     sessionStartTimestampMs = currentTimeMs,
                     sessionStartMonotonicNs = currentMonotonicNs,
                     sessionStartIso = ISO_DATE_FORMAT.format(java.util.Date(currentTimeMs))
                 )
-                
+
                 gsrRecorder?.startRecording(sessionDir, metadata)
                 _sensorState.update { it.copy(isRecording = true, error = null) }
             } catch (e: Exception) {
@@ -172,17 +174,17 @@ class GSRSensorViewModel(
                 }
             }
         }
-        
+
         // Collect actual GSR data samples
         viewModelScope.launch {
             gsrRecorder?.getDataStream()?.collect { gsrSample ->
                 _sensorState.update { currentState ->
                     val newGSR = gsrSample.gsrMicrosiemens.toFloat()
                     val newHistory = (currentState.gsrHistory + newGSR).takeLast(MAX_HISTORY_SIZE)
-                    
+
                     // Calculate skin conductance (same as GSR in microsiemens)
                     val skinConductance = newGSR
-                    
+
                     currentState.copy(
                         currentGSR = newGSR,
                         skinConductance = skinConductance,

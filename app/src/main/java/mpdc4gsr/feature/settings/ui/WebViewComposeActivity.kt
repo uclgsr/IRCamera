@@ -24,8 +24,8 @@ import androidx.compose.ui.viewinterop.AndroidView
 import com.csl.irCamera.R
 import com.github.lzyzsd.jsbridge.BridgeWebView
 import com.github.lzyzsd.jsbridge.BridgeWebViewClient
-import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
+import com.mpdc4gsr.libunified.app.config.ExtraKeyConfig
 import mpdc4gsr.core.ui.AppBaseViewModel
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.theme.IRCameraTheme

@@ -2,12 +2,7 @@ package com.mpdc4gsr.module.thermalunified.viewmodel
 
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import com.mpdc4gsr.libunified.app.repository.BaseRepository
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.*
 
 class ReportDetailViewModel : BaseViewModel() {
 
@@ -43,7 +38,7 @@ class ReportDetailViewModel : BaseViewModel() {
         launchWithLoading {
             _reportId.value = reportId
             val result = reportRepository.getReportById(reportId)
-            
+
             when (result) {
                 is BaseRepository.Result.Success -> {
                     val report = result.data
@@ -53,9 +48,11 @@ class ReportDetailViewModel : BaseViewModel() {
                     _inspector.value = report.inspector
                     _equipment.value = report.equipment
                 }
+
                 is BaseRepository.Result.Error -> {
                     throw result.exception
                 }
+
                 else -> {}
             }
         }

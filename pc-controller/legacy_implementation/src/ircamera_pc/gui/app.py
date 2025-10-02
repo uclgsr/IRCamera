@@ -17,6 +17,7 @@ except ImportError as e:
     logger.warning(f"GUI libraries not available, running in headless mode: {e}")
     GUI_AVAILABLE = False
 
+
     # Mock classes for headless mode
     class QApplication:
         def __init__(self, *args):
@@ -33,6 +34,7 @@ except ImportError as e:
 
         def exec(self) -> Any:
             return 0
+
 
     class QTimer:
         def __init__(self):
@@ -74,6 +76,7 @@ else:
 
         def resize(self, w, h) -> Any:
             pass
+
 
 class IRCameraApp:
 
@@ -276,6 +279,7 @@ class IRCameraApp:
         if self.qt_app:
             self.qt_app.quit()
 
+
 def main() -> int:
     import argparse
 
@@ -305,6 +309,7 @@ def main() -> int:
         return 0
 
     return app.run()
+
 
 if __name__ == "__main__":
     sys.exit(main())

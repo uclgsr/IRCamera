@@ -14,6 +14,7 @@ try:
 except ImportError:
     OPENCV_AVAILABLE = False
 
+
     # Mock numpy and cv2 for environments without OpenCV
     class MockOpenCV:
         def findChessboardCorners(self, *args, **kwargs) -> Any:
@@ -27,6 +28,7 @@ except ImportError:
 
         TERM_CRITERIA_EPS = 1
         TERM_CRITERIA_MAX_ITER = 2
+
 
     cv2 = MockOpenCV()
     try:
@@ -43,20 +45,24 @@ except ImportError:
             float32 = float
             ndarray = type([])
 
+
         np = MockNumPy()
 
 from loguru import logger
+
 
 class CameraType(Enum):
     THERMAL = "thermal"
     VISUAL = "visual"
     DEPTH = "depth"
 
+
 class CalibrationStatus(Enum):
     NOT_STARTED = "not_started"
     IN_PROGRESS = "in_progress"
     COMPLETED = "completed"
     FAILED = "failed"
+
 
 @dataclass
 class CameraIntrinsics:
@@ -81,6 +87,7 @@ class CameraIntrinsics:
     def to_dict(self) -> Dict[str, float]:
         return asdict(self)
 
+
 @dataclass
 class StereoCalibration:
     rotation_matrix: List[List[float]]
@@ -95,6 +102,7 @@ class StereoCalibration:
 
     def to_dict(self) -> Dict[str, Any]:
         return asdict(self)
+
 
 @dataclass
 class CalibrationResult:
@@ -119,6 +127,7 @@ class CalibrationResult:
         if self.stereo:
             data["stereo"] = self.stereo.to_dict()
         return data
+
 
 class ChessboardDetector:
 
@@ -169,6 +178,7 @@ class ChessboardDetector:
         except (OSError, ValueError, RuntimeError) as e:
             logger.error(f"Error detecting chessboard corners: {e}")
             return False, None
+
 
 class CameraCalibrator:
 

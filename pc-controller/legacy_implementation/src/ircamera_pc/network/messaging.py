@@ -26,6 +26,7 @@ except ImportError:
             def error(self, msg) -> Any:
                 print(f"ERROR: {msg}")
 
+
         logger = FallbackLogger()
 
 try:
@@ -42,7 +43,9 @@ except ImportError:
             }
             return config_map.get(key, default)
 
+
     config = FallbackConfig()
+
 
 class MessagePriority(Enum):
     LOW = 1
@@ -50,12 +53,14 @@ class MessagePriority(Enum):
     HIGH = 3
     CRITICAL = 4
 
+
 class MessageStatus(Enum):
     PENDING = "pending"
     SENT = "sent"
     ACKNOWLEDGED = "acknowledged"
     FAILED = "failed"
     EXPIRED = "expired"
+
 
 @dataclass
 class ReliableMessage:
@@ -73,11 +78,13 @@ class ReliableMessage:
     last_attempt: Optional[float] = None
     error_message: Optional[str] = None
 
+
 @dataclass
 class MessageCallback:
     on_acknowledged: Optional[Callable[[str], None]] = None
     on_failed: Optional[Callable[[str, str], None]] = None
     on_retrying: Optional[Callable[[str, int], None]] = None
+
 
 class ReliableMessageService:
 

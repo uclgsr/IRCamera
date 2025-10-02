@@ -10,14 +10,9 @@ import com.mpdc4gsr.libunified.app.BaseApplication
 import com.mpdc4gsr.libunified.app.common.SharedManager
 import com.mpdc4gsr.libunified.app.config.HttpConfig
 import com.mpdc4gsr.libunified.app.lms.Config
-import com.mpdc4gsr.libunified.app.lms.LMS.mContext
 import com.mpdc4gsr.libunified.app.lms.UrlConstants
 import com.mpdc4gsr.libunified.app.lms.utils.SPUtils
-
 import io.reactivex.plugins.RxJavaPlugins
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import mpdc4gsr.core.ui.InitUtils.initJPush
 import mpdc4gsr.core.ui.InitUtils.initLms
 import mpdc4gsr.core.ui.InitUtils.initLog
