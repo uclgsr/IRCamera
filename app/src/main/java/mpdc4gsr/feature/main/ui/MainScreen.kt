@@ -62,7 +62,7 @@ fun MainScreen(
             when (selectedTab) {
                 0 -> SensorDashboardTab()
                 1 -> GalleryTab(onNavigateToGallery = onNavigateToGallery)
-                3 -> ProfileTab(onNavigateToProfile = onNavigateToProfile)
+                2 -> ProfileTab(onNavigateToProfile = onNavigateToProfile)
             }
         }
 
@@ -97,7 +97,7 @@ fun MainScreen(
             NavigationBarItem(
                 icon = { Icon(Icons.Default.Settings, contentDescription = "Settings") },
                 label = { Text("Settings") },
-                selected = selectedTab == 2,
+                selected = false,
                 onClick = { onNavigateToSettings() },
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = MaterialTheme.colorScheme.primary,
@@ -109,8 +109,8 @@ fun MainScreen(
             NavigationBarItem(
                 icon = { Icon(Icons.Default.Person, contentDescription = "Profile") },
                 label = { Text("Profile") },
-                selected = selectedTab == 3,
-                onClick = { selectedTab = 3 },
+                selected = selectedTab == 2,
+                onClick = { selectedTab = 2 },
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = MaterialTheme.colorScheme.primary,
                     unselectedIconColor = Color.Gray,
