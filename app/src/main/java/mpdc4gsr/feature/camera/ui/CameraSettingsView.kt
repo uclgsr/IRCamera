@@ -7,7 +7,18 @@ import android.widget.LinearLayout
 /**
  * Camera settings view for manual camera controls
  * MVP implementation with basic callback support
+ * 
+ * @deprecated Use CameraSettingsPanel (Compose) instead.
+ * See docs/legacy-widget-migration-guide.md for migration instructions.
  */
+@Deprecated(
+    message = "Legacy View-based settings. Use CameraSettingsPanel (Compose) for new code.",
+    replaceWith = ReplaceWith(
+        "CameraSettingsPanel",
+        "mpdc4gsr.feature.camera.ui.CameraSettingsPanel"
+    ),
+    level = DeprecationLevel.WARNING
+)
 class CameraSettingsView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,

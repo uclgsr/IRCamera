@@ -13,6 +13,18 @@ import kotlinx.coroutines.launch
 import mpdc4gsr.core.data.RgbCameraRecorder
 import mpdc4gsr.core.ui.PermissionManager
 
+/**
+ * @deprecated Use CameraStatusWidget (Compose) instead.
+ * See docs/legacy-widget-migration-guide.md for migration instructions.
+ */
+@Deprecated(
+    message = "Legacy View-based widget. Use CameraStatusCompose for new code.",
+    replaceWith = ReplaceWith(
+        "CameraStatusWidget",
+        "mpdc4gsr.feature.camera.ui.CameraStatusWidget"
+    ),
+    level = DeprecationLevel.WARNING
+)
 class CameraStatusWidget @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,

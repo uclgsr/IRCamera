@@ -16,6 +16,18 @@ import com.shimmerresearch.android.manager.ShimmerBluetoothManagerAndroid
 
 // Use simple feature checks for MVP; avoid direct Shimmer API calls
 
+/**
+ * @deprecated Use SensorSelectionDialog (Compose) instead.
+ * See docs/legacy-widget-migration-guide.md for migration instructions.
+ */
+@Deprecated(
+    message = "Legacy View-based dialog. Use SensorSelectionCompose for new code.",
+    replaceWith = ReplaceWith(
+        "SensorSelectionDialog",
+        "mpdc4gsr.core.ui.components.SensorSelectionDialog"
+    ),
+    level = DeprecationLevel.WARNING
+)
 class SensorSelectionDialog(
     context: Context,
     private val availableSensors: Set<SensorType>,

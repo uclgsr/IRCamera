@@ -11,6 +11,18 @@ import androidx.core.content.ContextCompat
 import mpdc4gsr.feature.network.data.DetailedSensorStatus
 import mpdc4gsr.feature.network.data.SensorStatusSummary
 
+/**
+ * @deprecated Use RecordingStatusIndicator (Compose) instead.
+ * See docs/legacy-widget-migration-guide.md for migration instructions.
+ */
+@Deprecated(
+    message = "Legacy View-based indicator. Use RecordingStatusCompose for new code.",
+    replaceWith = ReplaceWith(
+        "RecordingStatusIndicator",
+        "mpdc4gsr.core.ui.components.RecordingStatusIndicator"
+    ),
+    level = DeprecationLevel.WARNING
+)
 class RecordingStatusIndicator
 @JvmOverloads
 constructor(

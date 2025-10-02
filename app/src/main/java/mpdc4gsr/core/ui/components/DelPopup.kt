@@ -12,6 +12,18 @@ import com.blankj.utilcode.util.SizeUtils
 import com.csl.irCamera.R
 import com.kylecorry.andromeda.core.ui.setCompoundDrawables
 
+/**
+ * @deprecated Use DeleteConfirmationDialog (Compose) instead.
+ * See docs/legacy-widget-migration-guide.md for migration instructions.
+ */
+@Deprecated(
+    message = "Legacy View-based popup. Use DeleteConfirmationDialog (Compose) for new code.",
+    replaceWith = ReplaceWith(
+        "DeleteConfirmationDialog",
+        "mpdc4gsr.core.ui.components.DeleteConfirmationDialog"
+    ),
+    level = DeprecationLevel.WARNING
+)
 class DelPopup(val context: Context) : PopupWindow() {
     var onDelListener: (() -> Unit)? = null
 

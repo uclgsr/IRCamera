@@ -13,7 +13,18 @@ import androidx.camera.view.PreviewView
 /**
  * Custom FrameLayout that contains a PreviewView and supports tap-to-focus functionality
  * with visual feedback for focus point
+ * 
+ * @deprecated Use TapToFocusPreview (Compose) instead.
+ * See docs/legacy-widget-migration-guide.md for migration instructions.
  */
+@Deprecated(
+    message = "Legacy View-based tap-to-focus. Use TapToFocusCompose for new code.",
+    replaceWith = ReplaceWith(
+        "TapToFocusPreview",
+        "mpdc4gsr.feature.camera.ui.TapToFocusPreview"
+    ),
+    level = DeprecationLevel.WARNING
+)
 class TapToFocusPreviewView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,

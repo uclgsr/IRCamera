@@ -21,7 +21,18 @@ import kotlinx.coroutines.launch
  * - Local start/stop controls integration
  * - Session state display with remote trigger indication
  * - Unified control logic for both local and remote triggers
+ * 
+ * @deprecated Use RecordingControls (Compose) instead.
+ * See docs/legacy-widget-migration-guide.md for migration instructions.
  */
+@Deprecated(
+    message = "Legacy View-based recording controls. Use RecordingControlsCompose for new code.",
+    replaceWith = ReplaceWith(
+        "RecordingControls",
+        "mpdc4gsr.core.ui.components.RecordingControls"
+    ),
+    level = DeprecationLevel.WARNING
+)
 class RecordingControlsWidget @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
