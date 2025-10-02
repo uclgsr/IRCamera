@@ -2,7 +2,8 @@
 
 ## Overview
 
-The `PermissionTools` utility class provides a centralized way to request runtime permissions in the app. It uses the standard `ActivityCompat.requestPermissions()` API which requires activities/fragments to handle permission results.
+The `PermissionTools` utility class provides a centralized way to request runtime permissions in the app. It uses the
+standard `ActivityCompat.requestPermissions()` API which requires activities/fragments to handle permission results.
 
 ## Usage in Activities/Fragments
 
@@ -44,7 +45,8 @@ class MyActivity : FragmentActivity() {
 
 ### 2. Handle Permission Results
 
-**IMPORTANT**: You **must** override `onRequestPermissionsResult()` in your Activity/Fragment and forward the result to `PermissionTools`:
+**IMPORTANT**: You **must** override `onRequestPermissionsResult()` in your Activity/Fragment and forward the result to
+`PermissionTools`:
 
 ```kotlin
 class MyActivity : FragmentActivity() {
@@ -74,6 +76,7 @@ class MyActivity : FragmentActivity() {
 ## Implementation Details
 
 The implementation uses:
+
 - `ActivityCompat.requestPermissions()` for requesting permissions
 - `ContextCompat.checkSelfPermission()` for checking permission status
 - Callbacks stored with `WeakReference` to avoid memory leaks
@@ -82,4 +85,6 @@ The implementation uses:
 
 ## Migration Notes
 
-This implementation replaces the previous `registerForActivityResult()` approach which was incorrectly called dynamically. The current implementation follows Android best practices by using the standard permission request API that doesn't require registration during initialization.
+This implementation replaces the previous `registerForActivityResult()` approach which was incorrectly called
+dynamically. The current implementation follows Android best practices by using the standard permission request API that
+doesn't require registration during initialization.

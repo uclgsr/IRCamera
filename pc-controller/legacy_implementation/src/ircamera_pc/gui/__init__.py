@@ -10,6 +10,7 @@ try:
 except ImportError:
     GUI_AVAILABLE = False
 
+
     # Create dummy main function for headless mode
     def main(args=None):
         import sys
@@ -31,6 +32,7 @@ except ImportError:
             logger.info("Running in headless mode - GUI not available")
 
         return 0
+
 
     # Create dummy app class
     class IRCameraApp:

@@ -4,6 +4,7 @@ import logging
 import sys
 from datetime import datetime
 
+
 class SimpleLogger:
     """Simple logger implementation that mimics loguru interface"""
 
@@ -31,5 +32,6 @@ class SimpleLogger:
 
     def error(self, message: str) -> None:
         self._logger.error(message)
+
 
 logger = SimpleLogger()

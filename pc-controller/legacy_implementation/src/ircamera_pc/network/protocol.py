@@ -7,13 +7,16 @@ from loguru import logger
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
+
 class ValidationError(Exception):
     pass
+
 
 class MessageDirection(Enum):
     PC_TO_DEVICE = "pc_to_device"
     DEVICE_TO_PC = "device_to_pc"
     BIDIRECTIONAL = "bidirectional"
+
 
 @dataclass
 class MessageDefinition:
@@ -23,6 +26,7 @@ class MessageDefinition:
     required_fields: List[str]
     optional_fields: List[str]
     schema: Dict[str, Any]
+
 
 class ProtocolManager:
 
@@ -245,7 +249,9 @@ class ProtocolManager:
         self._load_protocol()
         logger.info("Protocol definition reloaded")
 
+
 _protocol_manager: Optional[ProtocolManager] = None
+
 
 def get_protocol_manager() -> ProtocolManager:
     global _protocol_manager
@@ -253,8 +259,10 @@ def get_protocol_manager() -> ProtocolManager:
         _protocol_manager = ProtocolManager()
     return _protocol_manager
 
+
 def validate_message(message: Dict[str, Any], strict: bool = True) -> bool:
     return get_protocol_manager().validate_message(message, strict)
+
 
 def create_message(message_type: str, **kwargs) -> Dict[str, Any]:
     return get_protocol_manager().create_message(message_type, **kwargs)

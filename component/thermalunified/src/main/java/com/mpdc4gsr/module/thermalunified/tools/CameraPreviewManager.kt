@@ -12,6 +12,7 @@ class CameraPreviewManager private constructor() {
 
     companion object {
         private const val TAG = "ThermalCameraPreviewManager"
+
         @Volatile
         private var INSTANCE: CameraPreviewManager? = null
 

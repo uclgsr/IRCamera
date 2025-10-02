@@ -8,6 +8,7 @@ from collections import deque
 from loguru import logger
 from typing import Any, Dict, List, Optional
 
+
 class GSRPlotWidget(pg.PlotWidget):
     data_updated = pyqtSignal(float, float)
 
@@ -154,6 +155,7 @@ class GSRPlotWidget(pg.PlotWidget):
             self.removeItem(marker)
         self.sync_markers.clear()
 
+
 class VideoPreviewWidget(QLabel):
     frame_updated = pyqtSignal(int, int)
 
@@ -245,6 +247,7 @@ class VideoPreviewWidget(QLabel):
     def set_status_text(self, text: str) -> None:
 
         self.setText(f"{self.device_type} Camera\\n{self.device_id}\\n{text}")
+
 
 class MultiModalDashboard(QWidget):
 
@@ -351,6 +354,7 @@ class MultiModalDashboard(QWidget):
         if device_id in self.video_widgets:
             return self.video_widgets[device_id].get_fps()
         return 0.0
+
 
 class DataAggregationWidget(QWidget):
 

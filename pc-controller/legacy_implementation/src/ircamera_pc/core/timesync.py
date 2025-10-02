@@ -12,6 +12,7 @@ except ImportError:
 
 from .config import config
 
+
 @dataclass
 class TimeSyncStats:
     device_id: str
@@ -26,6 +27,7 @@ class TimeSyncStats:
     def __post_init__(self):
         if self.recent_offsets is None:
             self.recent_offsets = []
+
 
 class TimeSyncService:
 
@@ -237,6 +239,7 @@ class TimeSyncService:
     def is_running(self) -> bool:
 
         return self._is_running
+
 
 class TimeSyncProtocol(asyncio.DatagramProtocol):
 

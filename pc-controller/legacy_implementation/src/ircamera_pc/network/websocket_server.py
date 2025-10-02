@@ -20,6 +20,7 @@ from .security_manager import AuthLevel, AdvancedSecurityManager
 from .protocol import create_message, get_protocol_manager
 from .security import SecurityManager
 
+
 @dataclass
 class ClientConnection:
     websocket: websockets.WebSocketServerProtocol
@@ -36,6 +37,7 @@ class ClientConnection:
         if self.capabilities is None:
             self.capabilities = set()
         self.connected_at = time.time()
+
 
 class WebSocketServer:
 
@@ -1000,8 +1002,10 @@ class WebSocketServer:
             logger.error(f"Error getting manifest for {session_id}: {e}")
             return {}
 
+
 def create_websocket_server(host: str = "0.0.0.0", port: int = 8443) -> WebSocketServer:
     return WebSocketServer(host, port)
+
 
 class WebSocketServerPhase4Extension:
 
@@ -1322,6 +1326,7 @@ class WebSocketServerPhase4Extension:
         except Exception as e:
             logger.error(f"Error handling role change request from {client_id}: {e}")
             await self.server._send_error(client_id, "role_change_error", str(e))
+
 
 def extend_websocket_server_with_phase4(server: Any = WebSocketServer) -> Any:
     extension = WebSocketServerPhase4Extension(server)

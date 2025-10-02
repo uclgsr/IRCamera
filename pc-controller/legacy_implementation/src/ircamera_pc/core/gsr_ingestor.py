@@ -9,9 +9,11 @@ from loguru import logger
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
+
 class GSRMode(Enum):
     LOCAL = "local"
     BRIDGED = "bridged"
+
 
 @dataclass
 class GSRSample:
@@ -22,6 +24,7 @@ class GSRSample:
 
     def to_dict(self) -> Dict[str, Any]:
         return asdict(self)
+
 
 @dataclass
 class GSRDataSet:
@@ -45,6 +48,7 @@ class GSRDataSet:
             "sample_rate": self.sample_rate,
             "quality_stats": self.quality_stats,
         }
+
 
 class GSRIngestor:
 

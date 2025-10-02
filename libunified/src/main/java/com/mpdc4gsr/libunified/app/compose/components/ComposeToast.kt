@@ -1,25 +1,20 @@
 package com.mpdc4gsr.libunified.app.compose.components
 
 import android.content.Context
-import android.widget.Toast
 import androidx.annotation.StringRes
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import kotlinx.coroutines.delay
 
@@ -64,7 +59,7 @@ object ComposeToastHelper {
 
     fun show(context: Context, message: String, duration: Long = 2000L) {
         dismiss()
-        
+
         currentToast = android.app.Dialog(context, android.R.style.Theme_Translucent_NoTitleBar).apply {
             val composeView = ComposeView(context).apply {
                 setContent {

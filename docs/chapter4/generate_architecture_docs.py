@@ -23,28 +23,29 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 class ArchitectureDocumentationGenerator:
     """Generate comprehensive architecture documentation from code analysis"""
-    
+
     def __init__(self, project_root: str, output_dir: str = "./docs/chapter4"):
         self.project_root = Path(project_root)
         self.output_dir = Path(output_dir)
         self.output_dir.mkdir(parents=True, exist_ok=True)
-        
+
         # Android source paths
         self.android_src = self.project_root / "app" / "src" / "main" / "java" / "mpdc4gsr"
         self.pc_controller_src = self.project_root / "pc-controller"
-        
+
         self.components = {}
         self.dependencies = {}
-        
+
     def generate_all_documentation(self):
         """Generate all Chapter 4 deliverables"""
         logger.info("Generating comprehensive architecture documentation for Chapter 4")
-        
+
         # Analyze codebase structure
         self.analyze_component_structure()
-        
+
         # Generate all deliverables
         self.generate_system_architecture_diagram()
         self.generate_command_sequence_diagram()
@@ -52,22 +53,22 @@ class ArchitectureDocumentationGenerator:
         self.generate_software_design_diagrams()
         self.generate_component_specification_table()
         self.generate_implementation_details_doc()
-        
+
         logger.info(f"Architecture documentation generated in {self.output_dir}")
-    
+
     def analyze_component_structure(self):
         """Analyze the actual code structure to document components"""
         logger.info("Analyzing component structure from codebase")
-        
+
         # Analyze Android components
         self.components['android'] = self._analyze_android_components()
-        
+
         # Analyze PC controller components
         self.components['pc'] = self._analyze_pc_components()
-        
+
         # Map dependencies
         self.dependencies = self._analyze_component_dependencies()
-    
+
     def _analyze_android_components(self) -> Dict[str, Any]:
         """Analyze Android app component structure"""
         android_components = {
@@ -76,7 +77,7 @@ class ArchitectureDocumentationGenerator:
             'controllers': {},
             'utilities': {}
         }
-        
+
         # Scan sensor managers
         managers_dir = self.android_src / "sensors" / "managers"
         if managers_dir.exists():
@@ -87,7 +88,7 @@ class ArchitectureDocumentationGenerator:
                     'purpose': self._extract_class_purpose(kt_file),
                     'type': 'sensor_manager'
                 }
-        
+
         # Scan network components
         network_dir = self.android_src / "network"
         if network_dir.exists():
@@ -98,7 +99,7 @@ class ArchitectureDocumentationGenerator:
                     'purpose': self._extract_class_purpose(kt_file),
                     'type': 'network_component'
                 }
-        
+
         # Scan controllers
         controller_dir = self.android_src / "controller"
         if controller_dir.exists():
@@ -109,9 +110,9 @@ class ArchitectureDocumentationGenerator:
                     'purpose': self._extract_class_purpose(kt_file),
                     'type': 'controller'
                 }
-        
+
         return android_components
-    
+
     def _analyze_pc_components(self) -> Dict[str, Any]:
         """Analyze PC controller component structure"""
         pc_components = {
@@ -119,15 +120,15 @@ class ArchitectureDocumentationGenerator:
             'controllers': {},
             'utilities': {}
         }
-        
+
         if self.pc_controller_src.exists():
             for py_file in self.pc_controller_src.glob("**/*.py"):
                 if py_file.name == "__init__.py":
                     continue
-                    
+
                 component_name = py_file.stem
                 purpose = self._extract_python_purpose(py_file)
-                
+
                 if 'client' in component_name.lower():
                     pc_components['command_client'][component_name] = {
                         'file': str(py_file.relative_to(self.project_root)),
@@ -146,19 +147,19 @@ class ArchitectureDocumentationGenerator:
                         'purpose': purpose,
                         'type': 'utility'
                     }
-        
+
         return pc_components
-    
+
     def _extract_class_purpose(self, kt_file: Path) -> str:
         """Extract class purpose from Kotlin file docstring"""
         try:
             with open(kt_file, 'r') as f:
                 content = f.read()
-                
+
             # Look for class-level comments
             lines = content.split('\n')
             purpose = "Component for multi-sensor system"
-            
+
             for i, line in enumerate(lines):
                 if '/**' in line:
                     # Extract multi-line comment
@@ -168,16 +169,16 @@ class ArchitectureDocumentationGenerator:
                             break
                         if lines[j].strip().startswith('*'):
                             comment_lines.append(lines[j].strip()[1:].strip())
-                    
+
                     if comment_lines:
                         purpose = ' '.join(comment_lines[:2])  # First 2 lines
                         break
-                
+
                 elif line.strip().startswith('//'):
                     # Single line comment
                     purpose = line.strip()[2:].strip()
                     break
-                    
+
                 elif 'class' in line and 'Manager' in line:
                     # Infer from class name
                     if 'ThermalCamera' in line:
@@ -191,24 +192,24 @@ class ArchitectureDocumentationGenerator:
                     elif 'Command' in line:
                         purpose = "Processes commands from PC controller and coordinates responses"
                     break
-            
+
             return purpose
-            
+
         except Exception as e:
             logger.warning(f"Could not extract purpose from {kt_file}: {e}")
             return "Multi-sensor system component"
-    
+
     def _extract_python_purpose(self, py_file: Path) -> str:
         """Extract purpose from Python file docstring"""
         try:
             with open(py_file, 'r') as f:
                 content = f.read()
-            
+
             # Look for module docstring
             lines = content.split('\n')
             in_docstring = False
             purpose = "PC controller component"
-            
+
             for line in lines:
                 if '"""' in line and not in_docstring:
                     in_docstring = True
@@ -217,25 +218,25 @@ class ArchitectureDocumentationGenerator:
                         purpose = line.split('"""')[1].strip()
                         break
                     continue
-                    
+
                 if in_docstring and '"""' not in line:
                     # First line of docstring
                     purpose = line.strip()
                     break
-                    
+
                 if in_docstring and '"""' in line:
                     break
-            
+
             return purpose
-            
+
         except Exception as e:
             logger.warning(f"Could not extract purpose from {py_file}: {e}")
             return "PC controller component"
-    
+
     def _analyze_component_dependencies(self) -> Dict[str, List[str]]:
         """Analyze component dependencies from import statements"""
         dependencies = {}
-        
+
         # This would analyze import statements in real implementation
         # For now, return known architectural dependencies
         dependencies = {
@@ -247,13 +248,13 @@ class ArchitectureDocumentationGenerator:
             'RecordingController': ['sensor_managers', 'TimeSynchronizationService'],
             'CommandClient': ['socket', 'json', 'threading']
         }
-        
+
         return dependencies
-    
+
     def generate_system_architecture_diagram(self):
         """Generate system architecture diagram in Mermaid format"""
         logger.info("Generating system architecture diagram")
-        
+
         mermaid_content = '''```mermaid
 graph TB
     subgraph "PC Controller Hub"
@@ -323,11 +324,12 @@ graph TB
     class ThermalMgr,GSRMgr,RGBMgr sensorClass
     class TC001,Shimmer,PhoneCam hwClass
 ```'''
-        
+
         # Save Mermaid diagram
         with open(self.output_dir / "system_architecture.md", 'w') as f:
             f.write("# System Architecture Overview\n\n")
-            f.write("This diagram shows the complete system architecture with PC controller, Android sensor node, and hardware components.\n\n")
+            f.write(
+                "This diagram shows the complete system architecture with PC controller, Android sensor node, and hardware components.\n\n")
             f.write(mermaid_content)
             f.write("\n\n## Architecture Principles\n\n")
             f.write("1. **Hub-and-Spoke Model**: PC acts as central coordinator for multiple Android devices\n")
@@ -335,13 +337,13 @@ graph TB
             f.write("3. **Synchronized Recording**: All sensors share common time base via NTP-style sync\n")
             f.write("4. **Fault Tolerance**: System continues operation if individual sensors fail\n")
             f.write("5. **Scalable Protocol**: TCP/JSON protocol supports dynamic device addition\n")
-        
+
         logger.info("System architecture diagram generated")
-    
+
     def generate_command_sequence_diagram(self):
         """Generate command sequence flow diagram"""
         logger.info("Generating command sequence diagram")
-        
+
         mermaid_content = '''```mermaid
 sequenceDiagram
     participant PC as PC Controller
@@ -416,10 +418,11 @@ sequenceDiagram
     Android->>PC: Data transfer ready
     Note over PC: Session complete
 ```'''
-        
+
         with open(self.output_dir / "command_sequence_flow.md", 'w') as f:
             f.write("# Command Sequence Flow Documentation\n\n")
-            f.write("This sequence diagram shows the complete message exchange between PC and Android during a recording session.\n\n")
+            f.write(
+                "This sequence diagram shows the complete message exchange between PC and Android during a recording session.\n\n")
             f.write(mermaid_content)
             f.write("\n\n## Key Sequence Points\n\n")
             f.write("1. **Connection Establishment**: TCP handshake and capability exchange\n")
@@ -433,13 +436,13 @@ sequenceDiagram
             f.write("- Sensor start coordination: <100ms spread\n")
             f.write("- Command acknowledgment: <500ms\n")
             f.write("- Data consistency: All samples timestamped with synchronized clock\n")
-        
+
         logger.info("Command sequence diagram generated")
-    
+
     def generate_time_sync_documentation(self):
         """Generate time synchronization algorithm documentation"""
         logger.info("Generating time synchronization documentation")
-        
+
         content = """# Time Synchronization Algorithm Documentation
 
 ## Overview
@@ -567,16 +570,16 @@ The time sync accuracy is validated through automated tests that:
 
 See Chapter 5 for detailed test results and performance analysis.
 """
-        
+
         with open(self.output_dir / "time_synchronization_algorithm.md", 'w') as f:
             f.write(content)
-        
+
         logger.info("Time synchronization documentation generated")
-    
+
     def generate_software_design_diagrams(self):
         """Generate internal software design diagrams"""
         logger.info("Generating software design diagrams")
-        
+
         # Class diagram
         class_diagram = '''```mermaid
 classDiagram
@@ -680,7 +683,7 @@ classDiagram
     class CommandServer,NetworkServer,ProtocolHandler networkClass
     class CommandClient pcClass
 ```'''
-        
+
         # Data flow diagram
         data_flow_diagram = '''```mermaid
 flowchart TD
@@ -745,14 +748,15 @@ flowchart TD
     class TC001,SHIMMER,PHONE_CAM hwClass
     class THERMAL_DATA,GSR_DATA,RGB_DATA,FILES,CSV,VIDEO,META dataClass
 ```'''
-        
+
         with open(self.output_dir / "software_design_diagrams.md", 'w') as f:
             f.write("# Internal Software Design Diagrams\n\n")
             f.write("## Class Diagram\n\n")
             f.write("This diagram shows the key classes and their relationships in the multi-sensor system.\n\n")
             f.write(class_diagram)
             f.write("\n\n## Data Flow Diagram\n\n")
-            f.write("This diagram illustrates how data flows from PC commands through the Android system to sensor hardware and back to data storage.\n\n")
+            f.write(
+                "This diagram illustrates how data flows from PC commands through the Android system to sensor hardware and back to data storage.\n\n")
             f.write(data_flow_diagram)
             f.write("\n\n## Design Patterns Used\n\n")
             f.write("1. **Manager Pattern**: Each sensor type has a dedicated manager class\n")
@@ -760,13 +764,13 @@ flowchart TD
             f.write("3. **Command Pattern**: PC commands are encapsulated as discrete operations\n")
             f.write("4. **Factory Pattern**: Sensor recorders are created through factory methods\n")
             f.write("5. **Singleton Pattern**: TimeSyncManager maintains single time reference\n")
-        
+
         logger.info("Software design diagrams generated")
-    
+
     def generate_component_specification_table(self):
         """Generate system components specification table"""
         logger.info("Generating component specification table")
-        
+
         components_data = [
             {
                 'Component': 'Topdon TC001 Thermal Camera',
@@ -811,35 +815,36 @@ flowchart TD
                 'Performance': 'Reliable delivery, Automatic reconnection'
             }
         ]
-        
+
         # Generate CSV table
         import csv
         with open(self.output_dir / "component_specifications.csv", 'w', newline='') as f:
             writer = csv.DictWriter(f, fieldnames=components_data[0].keys())
             writer.writeheader()
             writer.writerows(components_data)
-        
+
         # Generate formatted markdown table
         with open(self.output_dir / "component_specifications.md", 'w') as f:
             f.write("# System Components and Specifications\n\n")
             f.write("| Component | Specification | Integration Method | Data Output | Performance |\n")
             f.write("|-----------|---------------|-------------------|-------------|-------------|\n")
-            
+
             for comp in components_data:
-                f.write(f"| {comp['Component']} | {comp['Specification']} | {comp['Integration Method']} | {comp['Data Output']} | {comp['Performance']} |\n")
-            
+                f.write(
+                    f"| {comp['Component']} | {comp['Specification']} | {comp['Integration Method']} | {comp['Data Output']} | {comp['Performance']} |\n")
+
             f.write("\n\n## Integration Notes\n\n")
             f.write("- All sensors are timestamped with synchronized clock\n")
             f.write("- Data formats chosen for easy analysis and reproducibility\n")
             f.write("- Network protocol supports multiple concurrent Android devices\n")
             f.write("- System designed for research reproducibility and extensibility\n")
-        
+
         logger.info("Component specification table generated")
-    
+
     def generate_implementation_details_doc(self):
         """Generate comprehensive implementation details documentation"""
         logger.info("Generating implementation details documentation")
-        
+
         content = f"""# Implementation Details Documentation
 
 Generated: {datetime.now().isoformat()}
@@ -1029,36 +1034,38 @@ python command_client.py
 
 This implementation provides a solid foundation for multi-modal physiological research with emphasis on timing accuracy, data integrity, and system reliability.
 """
-        
+
         with open(self.output_dir / "implementation_details.md", 'w') as f:
             f.write(content)
-        
+
         logger.info("Implementation details documentation generated")
+
 
 def main():
     """Main entry point for architecture documentation generation"""
     import argparse
-    
+
     parser = argparse.ArgumentParser(description='Generate Chapter 4 architecture documentation from codebase')
     parser.add_argument('--project_root', default='.', help='Root directory of project')
     parser.add_argument('--output', default='./docs/chapter4', help='Output directory for documentation')
-    
+
     args = parser.parse_args()
-    
+
     # Setup logging
     logging.basicConfig(
         level=logging.INFO,
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
     )
-    
+
     # Generate documentation
     generator = ArchitectureDocumentationGenerator(args.project_root, args.output)
     generator.generate_all_documentation()
-    
+
     print(f"\nChapter 4 documentation generated in {generator.output_dir}")
     print("\nGenerated files:")
     for file in generator.output_dir.glob("*"):
         print(f"  - {file.name}")
+
 
 if __name__ == "__main__":
     main()

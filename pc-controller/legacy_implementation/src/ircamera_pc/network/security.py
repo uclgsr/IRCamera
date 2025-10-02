@@ -31,6 +31,7 @@ except ImportError:
             def error(self, msg) -> Any:
                 print(f"ERROR: {msg}")
 
+
         logger = FallbackLogger()
 
 try:
@@ -44,7 +45,9 @@ except ImportError:
             }
             return config_map.get(key, default)
 
+
     config = FallbackConfig()
+
 
 class SecurityManager:
 

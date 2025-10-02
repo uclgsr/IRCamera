@@ -5,15 +5,17 @@ PC Controller Installation Verification Script
 Checks that all required components are installed and working correctly.
 """
 
-import sys
 import subprocess
+import sys
 from pathlib import Path
+
 
 def print_header(text):
     """Print a formatted header"""
-    print("\n" + "="*70)
+    print("\n" + "=" * 70)
     print(f"  {text}")
-    print("="*70)
+    print("=" * 70)
+
 
 def check_python_version():
     """Check Python version"""
@@ -26,10 +28,11 @@ def check_python_version():
         print(f"   Python {version.major}.{version.minor} (requires 3.8+)")
         return False
 
+
 def check_dependencies():
     """Check required Python packages"""
     print("\n[2/8] Checking Python dependencies...")
-    
+
     required = {
         'PyQt6': 'GUI framework',
         'pyqtgraph': 'Real-time plotting',
@@ -38,7 +41,7 @@ def check_dependencies():
         'cryptography': 'SSL/TLS security',
         'pybind11': 'C++ bindings'
     }
-    
+
     missing = []
     for package, description in required.items():
         try:
@@ -55,20 +58,21 @@ def check_dependencies():
         except ImportError:
             print(f"   {package:20s} - {description} (MISSING)")
             missing.append(package)
-    
+
     if missing:
         print(f"\n  Install missing packages:")
         print(f"  pip install {' '.join(missing)}")
         return False
-    
+
     return True
+
 
 def check_native_backend():
     """Check if native backend is built"""
     print("\n[3/8] Checking C++ native backend...")
-    
+
     sys.path.insert(0, str(Path(__file__).parent / 'native_backend'))
-    
+
     try:
         import enhanced_native_backend
         print(f"   Native backend found")
@@ -81,16 +85,17 @@ def check_native_backend():
         print(f"    Controller will use Python fallback")
         return None  # None means optional, not critical
 
+
 def check_controllers():
     """Check if controller files exist and are importable"""
     print("\n[4/8] Checking controller modules...")
-    
+
     files = {
         'advanced_pc_controller.py': 'PyQt6 GUI controller',
         'pc_controller.py': 'Unified controller',
         'tls_server.py': 'Secure TLS server'
     }
-    
+
     all_ok = True
     for filename, description in files.items():
         filepath = Path(__file__).parent / filename
@@ -99,30 +104,32 @@ def check_controllers():
         else:
             print(f"   {filename:30s} - MISSING")
             all_ok = False
-    
+
     return all_ok
+
 
 def check_config_files():
     """Check for configuration files"""
     print("\n[5/8] Checking configuration files...")
-    
+
     files = ['config.yaml', 'config_mvp.yaml']
-    
+
     for filename in files:
         filepath = Path(__file__).parent / filename
         if filepath.exists():
             print(f"   {filename}")
         else:
             print(f"    {filename} (optional)")
-    
+
     return True
+
 
 def check_certificates():
     """Check SSL certificates"""
     print("\n[6/8] Checking SSL certificates...")
-    
+
     cert_dir = Path(__file__).parent / 'certificates'
-    
+
     if cert_dir.exists():
         cert_files = list(cert_dir.glob('*.crt')) + list(cert_dir.glob('*.key'))
         if cert_files:
@@ -131,40 +138,42 @@ def check_certificates():
             print(f"    Certificate directory empty (will auto-generate)")
     else:
         print(f"    No certificates (will auto-generate on first run)")
-    
+
     return True
+
 
 def check_tests():
     """Check if test files exist"""
     print("\n[7/8] Checking test suite...")
-    
+
     test_file = Path(__file__).parent / 'test_pc_controller_features.py'
     demo_file = Path(__file__).parent / 'demo_features.py'
-    
+
     if test_file.exists():
         print(f"   test_pc_controller_features.py")
     else:
         print(f"   test_pc_controller_features.py (MISSING)")
         return False
-    
+
     if demo_file.exists():
         print(f"   demo_features.py")
     else:
         print(f"   demo_features.py (MISSING)")
         return False
-    
+
     return True
+
 
 def check_documentation():
     """Check if documentation exists"""
     print("\n[8/8] Checking documentation...")
-    
+
     docs = {
         'README.md': 'Project overview',
         'PC_CONTROLLER_IMPLEMENTATION.md': 'Implementation guide',
         'QUICK_START.md': 'Quick start guide'
     }
-    
+
     for filename, description in docs.items():
         filepath = Path(__file__).parent / filename
         if filepath.exists():
@@ -172,15 +181,16 @@ def check_documentation():
             print(f"   {filename:40s} ({size_kb:.1f} KB)")
         else:
             print(f"    {filename:40s} (optional)")
-    
+
     return True
+
 
 def run_quick_test():
     """Run a quick smoke test"""
-    print("\n" + "="*70)
+    print("\n" + "=" * 70)
     print("  Running Quick Smoke Test")
-    print("="*70)
-    
+    print("=" * 70)
+
     print("\nTesting native backend import...")
     sys.path.insert(0, str(Path(__file__).parent / 'native_backend'))
     try:
@@ -193,7 +203,7 @@ def run_quick_test():
     except Exception as e:
         print(f"   Native backend error: {e}")
         return False
-    
+
     print("\nTesting protocol message handling...")
     import json
     test_msg = {
@@ -209,13 +219,14 @@ def run_quick_test():
     except Exception as e:
         print(f"   Protocol error: {e}")
         return False
-    
+
     return True
+
 
 def main():
     """Main verification function"""
     print_header("PC Controller Installation Verification")
-    
+
     results = {
         'Python version': check_python_version(),
         'Dependencies': check_dependencies(),
@@ -226,22 +237,22 @@ def main():
         'Tests': check_tests(),
         'Documentation': check_documentation()
     }
-    
+
     # Run smoke test if basics are OK
     if all(r for r in [results['Python version'], results['Dependencies'], results['Controllers']]):
         results['Smoke test'] = run_quick_test()
     else:
         print("\n  Skipping smoke test due to missing components")
         results['Smoke test'] = None
-    
+
     # Print summary
-    print("\n" + "="*70)
+    print("\n" + "=" * 70)
     print("  VERIFICATION SUMMARY")
-    print("="*70)
-    
+    print("=" * 70)
+
     critical_count = 0
     warning_count = 0
-    
+
     for check, result in results.items():
         if result is True:
             status = " PASS"
@@ -251,11 +262,11 @@ def main():
         else:  # None means optional/warning
             status = "  WARN"
             warning_count += 1
-        
+
         print(f"  {check:.<50} {status}")
-    
-    print("\n" + "-"*70)
-    
+
+    print("\n" + "-" * 70)
+
     if critical_count == 0:
         print("   All critical checks passed!")
         if warning_count > 0:
@@ -264,9 +275,9 @@ def main():
     else:
         print(f"   {critical_count} critical check(s) failed")
         print("  Please fix the issues above before running the controller")
-    
-    print("="*70)
-    
+
+    print("=" * 70)
+
     # Print next steps
     print("\nNext steps:")
     if critical_count == 0:
@@ -279,8 +290,9 @@ def main():
         print("     pip install -r requirements.txt")
         print("  2. Run verification again:")
         print("     python3 verify_installation.py")
-    
+
     return critical_count == 0
+
 
 if __name__ == '__main__':
     success = main()

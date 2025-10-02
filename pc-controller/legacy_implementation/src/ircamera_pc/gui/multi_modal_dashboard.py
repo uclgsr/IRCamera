@@ -22,6 +22,7 @@ from ..network.websocket_server import WebSocketServer
 
 pg.setConfigOptions(antialias=True, useOpenGL=True)
 
+
 @dataclass
 class DeviceStatus:
     device_id: str
@@ -44,6 +45,7 @@ class DeviceStatus:
     is_samsung_s22: bool = False
     thermal_throttling: bool = False
 
+
 @dataclass
 class SensorData:
     timestamp: float
@@ -51,6 +53,7 @@ class SensorData:
     sensor_type: str
     data: np.ndarray
     metadata: Dict
+
 
 class GSRPlotWidget(PlotWidget):
 
@@ -127,6 +130,7 @@ class GSRPlotWidget(PlotWidget):
                 time_buffer, gsr_buffer = self.device_buffers[device_id]
                 curve.setData(time_buffer, gsr_buffer)
 
+
 class ThermalVideoWidget(ImageView):
 
     def __init__(self, parent=None):
@@ -161,6 +165,7 @@ class ThermalVideoWidget(ImageView):
                 self.setLevels(*temperature_range)
 
             self.setImage(thermal_data, autoRange=False, autoLevels=False)
+
 
 class RGBVideoWidget(QLabel):
 
@@ -220,6 +225,7 @@ class RGBVideoWidget(QLabel):
 
         self.frame_count = 0
         self.last_fps_time = current_time
+
 
 class DeviceStatusWidget(QGroupBox):
 
@@ -366,6 +372,7 @@ class DeviceStatusWidget(QGroupBox):
         if device_id in self.device_status_widgets:
             self.remove_device(device_id)
             self.add_device(device_status)
+
 
 class SessionControlPanel(QGroupBox):
     start_recording_signal = pyqtSignal(str)
@@ -526,6 +533,7 @@ class SessionControlPanel(QGroupBox):
 
             duration_str = f"Duration: {int(hours):02d}:{int(minutes):02d}:{int(seconds):02d}"
             self.duration_label.setText(duration_str)
+
 
 class MultiModalDashboard(QMainWindow):
 
@@ -829,6 +837,7 @@ class MultiModalDashboard(QMainWindow):
         logger.info("Multi-Modal Dashboard closed")
         event.accept()
 
+
 def main():
     import sys
     from PyQt6.QtWidgets import QApplication
@@ -842,6 +851,7 @@ def main():
     dashboard.show()
 
     return app.exec()
+
 
 if __name__ == "__main__":
     sys.exit(main())
