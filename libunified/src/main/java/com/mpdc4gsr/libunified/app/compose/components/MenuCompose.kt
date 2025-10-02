@@ -97,6 +97,7 @@ private fun MenuTabItem(
                         tint = if (isSelected) Color.White else Color.Gray
                     )
                 }
+
                 iconRes != null -> {
                     Image(
                         painter = painterResource(id = iconRes),
@@ -136,9 +137,15 @@ fun MenuFirstTab(
         if (isObserveMode) {
             listOf(
                 MenuTabItem(iconRes = com.mpdc4gsr.libunified.R.drawable.selector_menu_first_1, label = "Menu 1"),
-                MenuTabItem(iconRes = com.mpdc4gsr.libunified.R.drawable.selector_menu_first_observe_2, label = "Observe 2"),
+                MenuTabItem(
+                    iconRes = com.mpdc4gsr.libunified.R.drawable.selector_menu_first_observe_2,
+                    label = "Observe 2"
+                ),
                 MenuTabItem(iconRes = com.mpdc4gsr.libunified.R.drawable.selector_menu_first_4_3, label = "Menu 4-3"),
-                MenuTabItem(iconRes = com.mpdc4gsr.libunified.R.drawable.selector_menu_first_observe_4, label = "Observe 4"),
+                MenuTabItem(
+                    iconRes = com.mpdc4gsr.libunified.R.drawable.selector_menu_first_observe_4,
+                    label = "Observe 4"
+                ),
                 MenuTabItem(iconRes = com.mpdc4gsr.libunified.R.drawable.selector_menu_first_2_5, label = "Menu 2-5"),
                 MenuTabItem(iconRes = com.mpdc4gsr.libunified.R.drawable.selector_menu_first_5_6, label = "Menu 5-6")
             )
@@ -146,10 +153,16 @@ fun MenuFirstTab(
             listOf(
                 MenuTabItem(iconRes = com.mpdc4gsr.libunified.R.drawable.selector_menu_first_1, label = "Menu 1"),
                 MenuTabItem(iconRes = com.mpdc4gsr.libunified.R.drawable.selector_menu_first_2_5, label = "Menu 2-5"),
-                MenuTabItem(iconRes = com.mpdc4gsr.libunified.R.drawable.selector_menu_first_normal_3, label = "Normal 3"),
+                MenuTabItem(
+                    iconRes = com.mpdc4gsr.libunified.R.drawable.selector_menu_first_normal_3,
+                    label = "Normal 3"
+                ),
                 MenuTabItem(iconRes = com.mpdc4gsr.libunified.R.drawable.selector_menu_first_4_3, label = "Menu 4-3"),
                 MenuTabItem(iconRes = com.mpdc4gsr.libunified.R.drawable.selector_menu_first_5_6, label = "Menu 5-6"),
-                MenuTabItem(iconRes = com.mpdc4gsr.libunified.R.drawable.selector_menu_first_normal_6, label = "Normal 6")
+                MenuTabItem(
+                    iconRes = com.mpdc4gsr.libunified.R.drawable.selector_menu_first_normal_6,
+                    label = "Normal 6"
+                )
             )
         }
     }
