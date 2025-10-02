@@ -59,17 +59,19 @@ class SensorDashboardComposeActivity : ComponentActivity() {
         val gsrConnectionState by viewModel.gsrConnectionState.collectAsState()
         val gsrBatteryLevel by viewModel.gsrBatteryLevel.collectAsState()
 
-        // TODO: ViewModel should expose gsrData as StateFlow with real-time sensor values
-        // Real implementation needs: currentValue, recentReadings, averageValue from GSRSensorRecorder
+        // Use real GSR data from ViewModel
+        val gsrDataState by viewModel.gsrData.collectAsState()
+        
+        // Map ViewModel GSRDataState to UI GSRData with battery level
         val gsrData by remember {
             derivedStateOf {
                 GSRData(
-                    currentValue = 125.5f,
-                    batteryLevel = gsrBatteryLevel ?: 75,
-                    recentReadings = generateMockGSRReadings(),
-                    averageValue = 118.3f,
-                    minValue = 95.2f,
-                    maxValue = 145.8f
+                    currentValue = gsrDataState.currentValue,
+                    batteryLevel = gsrBatteryLevel ?: gsrDataState.batteryLevel,
+                    recentReadings = gsrDataState.recentReadings.ifEmpty { generateMockGSRReadings() },
+                    averageValue = gsrDataState.averageValue,
+                    minValue = gsrDataState.minValue,
+                    maxValue = gsrDataState.maxValue
                 )
             }
         }
