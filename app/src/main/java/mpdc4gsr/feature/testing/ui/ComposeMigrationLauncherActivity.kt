@@ -13,11 +13,15 @@ import androidx.compose.material.icons.automirrored.filled.Help
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.feature.camera.ui.DualModeCameraComposeActivity
 import mpdc4gsr.feature.main.ui.DeviceTypeComposeActivity
@@ -37,9 +41,42 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
 
         setContent {
             IRCameraTheme {
-                MigrationLauncherScreen()
+                LifecycleAwareMigrationLauncherScreen()
             }
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        window.decorView.post {
+            window.decorView.clearAnimation()
+        }
+    }
+
+    @Composable
+    private fun LifecycleAwareMigrationLauncherScreen() {
+        val lifecycleOwner = LocalLifecycleOwner.current
+        
+        DisposableEffect(lifecycleOwner) {
+            val observer = LifecycleEventObserver { _, event ->
+                when (event) {
+                    Lifecycle.Event.ON_STOP, Lifecycle.Event.ON_PAUSE -> {
+                        window.decorView.post {
+                            window.decorView.clearAnimation()
+                        }
+                    }
+                    else -> {}
+                }
+            }
+            
+            lifecycleOwner.lifecycle.addObserver(observer)
+            
+            onDispose {
+                lifecycleOwner.lifecycle.removeObserver(observer)
+            }
+        }
+        
+        MigrationLauncherScreen()
     }
 
     @OptIn(ExperimentalMaterial3Api::class)
