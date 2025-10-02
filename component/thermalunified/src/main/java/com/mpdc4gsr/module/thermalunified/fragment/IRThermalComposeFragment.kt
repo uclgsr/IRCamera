@@ -352,7 +352,7 @@ class IRThermalComposeFragment : BaseComposeFragment<IRThermalFragmentViewModel>
                     title = "Gallery",
                     description = "View thermal images",
                     icon = Icons.Default.PhotoLibrary,
-                    onClick = { onNavigateToFeature(RouterConfig.GALLERY) },
+                    onClick = { onNavigateToFeature(RouterConfig.IR_GALLERY_HOME) },
                     modifier = Modifier.weight(1f)
                 )
 
