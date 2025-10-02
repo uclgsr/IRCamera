@@ -323,7 +323,6 @@ dependencies {
     implementation(libs.jsbridge)
     implementation(libs.ucrop)
     implementation(libs.play.app.update)
-    implementation(libs.immersionbar)
     implementation(libs.opencsv)
     implementation(libs.gson)
     implementation(libs.jmdns)
@@ -342,10 +341,10 @@ dependencies {
 
     // Testing dependencies  
     testImplementation(libs.junit)
-    testImplementation("org.robolectric:robolectric:4.10.3")
-    testImplementation("androidx.test:core:1.5.0")
-    testImplementation("androidx.test.ext:junit:1.1.5")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
+    testImplementation(libs.robolectric)
+    testImplementation(libs.test.core)
+    testImplementation(libs.test.ext.junit)
+    testImplementation(libs.kotlinx.coroutines.test)
 
     // Compose testing dependencies
     androidTestImplementation(platform(libs.compose.bom))
@@ -365,9 +364,9 @@ dependencies {
     testImplementation(libs.kotlinx.coroutines.test)
 
     // Mockito dependencies for integration tests
-    testImplementation("org.mockito:mockito-core:5.8.0")
-    testImplementation("org.mockito:mockito-inline:5.2.0")
-    testImplementation("org.mockito:mockito-android:5.8.0")
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.inline)
+    testImplementation(libs.mockito.android)
 
     androidTestImplementation(libs.test.ext.junit)
     androidTestImplementation(libs.test.espresso.core)
