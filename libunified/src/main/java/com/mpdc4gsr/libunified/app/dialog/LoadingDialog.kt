@@ -20,7 +20,6 @@ import com.mpdc4gsr.libunified.R
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.app.utils.ScreenUtils
 
-
 class LoadingDialog(context: Context) : Dialog(context, R.style.TransparentDialog) {
     private val tipsState = mutableStateOf<String?>(null)
 

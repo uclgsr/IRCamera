@@ -24,7 +24,6 @@ import com.mpdc4gsr.libunified.ir.usbdual.Const;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class IRUVCDual {
     private final Context mContext;
     public String TAG = "IRUVC";
@@ -77,7 +76,6 @@ public class IRUVCDual {
         initUVCCamera(cameraWidth, cameraHeight);
         mUSBMonitor = new USBMonitor(context, new USBMonitor.OnDeviceConnectListener() {
 
-
             @Override
             public void onAttach(UsbDevice device) {
                 if (mPid != 0) {
@@ -96,7 +94,6 @@ public class IRUVCDual {
 
             }
 
-
             @Override
             public void onConnect(final UsbDevice device, USBMonitor.UsbControlBlock ctrlBlock, boolean createNew) {
                 Log.w(TAG, "onConnect");
@@ -110,13 +107,11 @@ public class IRUVCDual {
                 }
             }
 
-
             @Override
             public void onDisconnect(UsbDevice device, USBMonitor.UsbControlBlock ctrlBlock) {
                 Log.w(TAG, "onDisconnect");
                 Const.isDeviceConnected = false;
             }
-
 
             @Override
             public void onDettach(UsbDevice device) {
@@ -162,7 +157,6 @@ public class IRUVCDual {
 
         mUSBMonitor = new USBMonitor(context, new USBMonitor.OnDeviceConnectListener() {
 
-
             @Override
             public void onAttach(UsbDevice device) {
                 Log.w(TAG, "USBMonitor-onAttach mPid = " + pid + " getProductId = " + device.getProductId());
@@ -180,7 +174,6 @@ public class IRUVCDual {
                 Log.w(TAG, "USBMonitor-onGranted");
             }
 
-
             @Override
             public void onDettach(UsbDevice device) {
                 Log.w(TAG, "USBMonitor-onDettach mPid = " + pid);
@@ -193,7 +186,6 @@ public class IRUVCDual {
                     status = 2;
                 }
             }
-
 
             @Override
             public void onConnect(final UsbDevice device, USBMonitor.UsbControlBlock ctrlBlock, boolean createNew) {
@@ -213,7 +205,6 @@ public class IRUVCDual {
                     status = 3;
                 }
             }
-
 
             @Override
             public void onDisconnect(UsbDevice device, USBMonitor.UsbControlBlock ctrlBlock) {
@@ -244,7 +235,6 @@ public class IRUVCDual {
 
         mUSBMonitor = new USBMonitor(context, new USBMonitor.OnDeviceConnectListener() {
 
-
             @Override
             public void onAttach(UsbDevice device) {
                 Log.w(TAG, "USBMonitor-onAttach mPid = " + pid + " getProductId = " + device.getProductId());
@@ -262,7 +252,6 @@ public class IRUVCDual {
                 Log.w(TAG, "USBMonitor-onGranted");
             }
 
-
             @Override
             public void onDettach(UsbDevice device) {
                 Log.w(TAG, "USBMonitor-onDettach mPid = " + pid);
@@ -275,7 +264,6 @@ public class IRUVCDual {
                     status = 2;
                 }
             }
-
 
             @Override
             public void onConnect(final UsbDevice device, USBMonitor.UsbControlBlock ctrlBlock, boolean createNew) {
@@ -295,7 +283,6 @@ public class IRUVCDual {
                     status = 3;
                 }
             }
-
 
             @Override
             public void onDisconnect(UsbDevice device, USBMonitor.UsbControlBlock ctrlBlock) {
@@ -326,7 +313,6 @@ public class IRUVCDual {
 
         mUSBMonitor = new USBMonitor(context, new USBMonitor.OnDeviceConnectListener() {
 
-
             @Override
             public void onAttach(UsbDevice device) {
                 Log.w(TAG, "onAttach" + device.getProductId());
@@ -342,7 +328,6 @@ public class IRUVCDual {
             public void onGranted(UsbDevice usbDevice, boolean granted) {
             }
 
-
             @Override
             public void onDettach(UsbDevice device) {
                 Log.w(TAG, "onDettach");
@@ -353,7 +338,6 @@ public class IRUVCDual {
                     }
                 }
             }
-
 
             @Override
             public void onConnect(final UsbDevice device, USBMonitor.UsbControlBlock ctrlBlock, boolean createNew) {
@@ -374,7 +358,6 @@ public class IRUVCDual {
                     }
                 }
             }
-
 
             @Override
             public void onDisconnect(UsbDevice device, USBMonitor.UsbControlBlock ctrlBlock) {
@@ -575,7 +558,6 @@ public class IRUVCDual {
         }
     }
 
-
     public void setConnectCallback(ConnectCallback mConnectCallback) {
         Log.d(TAG, "setConnectCallback");
         this.mConnectCallback = mConnectCallback;
@@ -614,6 +596,5 @@ public class IRUVCDual {
         }
 
     }
-
 
 }

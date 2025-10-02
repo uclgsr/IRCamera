@@ -151,7 +151,6 @@ public class BarChartRenderer extends BarLineScatterCandleBubbleRenderer {
 
             if (!isSingleColor) {
 
-
                 mRenderPaint.setColor(dataSet.getColor(j / 4));
             }
 
@@ -224,7 +223,6 @@ public class BarChartRenderer extends BarLineScatterCandleBubbleRenderer {
                 applyValueTextStyle(dataSet);
 
                 boolean isInverted = mChart.isInverted(dataSet.getAxisDependency());
-
 
                 float valueTextHeight = Utils.calcTextHeight(mValuePaint, "8");
                 posOffset = (drawValueAboveBar ? -valueOffsetPlus : valueTextHeight + valueOffsetPlus);
@@ -305,7 +303,6 @@ public class BarChartRenderer extends BarLineScatterCandleBubbleRenderer {
                         float x = (buffer.buffer[bufferIndex] + buffer.buffer[bufferIndex + 2]) / 2f;
 
                         int color = dataSet.getValueTextColor(index);
-
 
                         if (vals == null) {
 

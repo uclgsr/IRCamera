@@ -25,7 +25,6 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 
-
 class ThermalMonitoringComposeActivity : BaseComposeActivity<BaseViewModel>() {
 
     companion object {

@@ -10,7 +10,6 @@ import android.view.View
 import com.elvishew.xlog.XLog
 import com.energy.iruvc.utils.SynchronizedBitmap
 
-
 class CameraView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,

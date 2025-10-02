@@ -283,7 +283,6 @@ class AdvancedAuthenticationManager(private val context: Context) {
         credentials: Map<String, Any>,
     ): AuthenticationResult {
 
-
         val hardwareKey = credentials["hardware_key"] as? ByteArray
         val biometricSignature = credentials["biometric_signature"] as? ByteArray
 

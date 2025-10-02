@@ -5,7 +5,6 @@ import android.graphics.RectF
 import com.mpdc4gsr.libunified.R
 import com.mpdc4gsr.libunified.app.bean.ObserveBean
 
-
 object TargetUtils {
 
     fun calculateTargetBounds(observeBean: ObserveBean): RectF {
@@ -56,7 +55,6 @@ object TargetUtils {
         observeBean.observeY += deltaY
     }
 
-
     fun getMeasureSize(targetMeasureMode: Int): Float {
         return when (targetMeasureMode) {
             ObserveBean.TYPE_MEASURE_PERSON -> 180f
@@ -66,7 +64,6 @@ object TargetUtils {
             else -> 180f
         }
     }
-
 
     fun getSelectTargetDraw(targetMeasureMode: Int, targetType: Int, targetColorType: Int): Int {
         return when {

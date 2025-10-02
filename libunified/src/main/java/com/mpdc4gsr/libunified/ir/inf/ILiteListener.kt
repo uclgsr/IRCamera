@@ -1,6 +1,5 @@
 package com.mpdc4gsr.libunified.ir.inf
 
-
 interface ILiteListener {
     fun getDeltaNucAndVTemp(): Float
 

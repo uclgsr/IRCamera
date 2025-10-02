@@ -8,7 +8,6 @@ import mpdc4gsr.core.RecordingService
 import mpdc4gsr.feature.gsr.data.GSRSensorRecorder
 import java.util.concurrent.atomic.AtomicReference
 
-
 class PreviewDataAdapter(
     private val previewStreamer: PreviewStreamer,
     private val recordingService: RecordingService
@@ -22,10 +21,8 @@ class PreviewDataAdapter(
     private var pollingJob: Job? = null
     private var isRunning = false
 
-
     private val thermalCameraManager = AtomicReference<CameraPreviewManager?>()
     private val gsrRecorder = AtomicReference<GSRSensorRecorder?>()
-
 
     fun startDataPolling() {
         if (isRunning) {
@@ -49,7 +46,6 @@ class PreviewDataAdapter(
         }
     }
 
-
     fun stopDataPolling() {
         if (!isRunning) {
             return
@@ -61,12 +57,10 @@ class PreviewDataAdapter(
         pollingJob = null
     }
 
-
     fun setThermalCameraManager(manager: CameraPreviewManager?) {
         thermalCameraManager.set(manager)
         Log.d(TAG, "Thermal camera manager ${if (manager != null) "set" else "cleared"}")
     }
-
 
     fun setGsrRecorder(recorder: GSRSensorRecorder?) {
         gsrRecorder.set(recorder)
@@ -77,9 +71,7 @@ class PreviewDataAdapter(
 
         pollThermalFrame()
 
-
         pollGsrData()
-
 
         updateRecordingStatus()
     }
@@ -107,7 +99,6 @@ class PreviewDataAdapter(
         try {
             val recorder = gsrRecorder.get()
             if (recorder != null && recorder.isRecording) {
-
 
                 val stats = recorder.getRecordingStats()
 
@@ -143,7 +134,6 @@ class PreviewDataAdapter(
         }
     }
 
-
     fun updateRgbFrame(bitmap: Bitmap) {
         previewStreamer.updateRgbFrame(bitmap)
     }
@@ -155,7 +145,6 @@ class PreviewDataAdapter(
     fun updateGsrValueDirect(gsrValue: Float) {
         previewStreamer.updateGsrValue(gsrValue)
     }
-
 
     fun cleanup() {
         stopDataPolling()

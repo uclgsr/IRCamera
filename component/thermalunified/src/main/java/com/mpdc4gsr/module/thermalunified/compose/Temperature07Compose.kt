@@ -26,7 +26,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-
 @Composable
 fun Temperature07Compose(
     mode: TemperatureMeasurementMode = TemperatureMeasurementMode.POINT,
@@ -240,7 +239,6 @@ private fun MeasurementModeIndicator(
     }
 }
 
-
 @Composable
 fun TemperatureModeSelector(
     selectedMode: TemperatureMeasurementMode,
@@ -316,7 +314,6 @@ sealed class TemperatureMeasurement {
         val temperatures: List<Float>
     ) : TemperatureMeasurement()
 }
-
 
 @Composable
 fun Temperature07ComposePreview() {

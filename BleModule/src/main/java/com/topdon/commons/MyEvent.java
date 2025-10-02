@@ -1,6 +1,5 @@
 package com.topdon.commons;
 
-
 public class MyEvent {
     public String msg;
 

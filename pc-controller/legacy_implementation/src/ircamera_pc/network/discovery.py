@@ -35,7 +35,6 @@ except ImportError:
             def error(self, msg) -> Any:
                 print(f"ERROR: {e}")
 
-
         logger = FallbackLogger()
 
 try:
@@ -50,9 +49,7 @@ except ImportError:
             }
             return config_map.get(key, default)
 
-
     config = FallbackConfig()
-
 
 class DeviceType(Enum):
     PC_CONTROLLER = "PC_CONTROLLER"
@@ -61,7 +58,6 @@ class DeviceType(Enum):
     ANDROID_SENSOR_NODE = "ANDROID_SENSOR_NODE"
     ANDROID_NODE = "ANDROID_NODE"
     UNKNOWN = "UNKNOWN"
-
 
 @dataclass
 class DiscoveredDevice:
@@ -80,7 +76,6 @@ class DiscoveredDevice:
             self.discovered_at = datetime.now()
         if self.last_seen is None:
             self.last_seen = datetime.now()
-
 
 class NetworkDiscoveryService:
     SERVICE_TYPE_PC_CONTROLLER = "_topdon-pc._tcp.local."
@@ -372,7 +367,6 @@ class NetworkDiscoveryService:
 
         except Exception as e:
             logger.error(f"Error processing lost device: {e}")
-
 
 class ServiceBrowserHandler:
 

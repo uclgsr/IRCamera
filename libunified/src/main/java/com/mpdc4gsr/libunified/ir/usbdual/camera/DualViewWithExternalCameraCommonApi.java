@@ -158,7 +158,6 @@ public class DualViewWithExternalCameraCommonApi extends BaseDualView {
         ;
         iFrameCallback = new IFrameCallback() {
 
-
             @Override
             public void onFrame(byte[] frame) {
                 if (frame.length == 1) {
@@ -193,7 +192,6 @@ public class DualViewWithExternalCameraCommonApi extends BaseDualView {
                 System.arraycopy(frame, 0, frameData, 0, FRAME_LEN);
 
                 System.arraycopy(frame, dualCameraWidth * dualCameraHeight * 4, frameIrAndTempData, 0, frameIrAndTempData.length);
-
 
                 if (mCurrentFusionType == DualCameraParams.FusionType.IROnlyNoFusion) {
                     for (OnFrameCallback onFrameCallback : onFrameCallbacks) {
@@ -249,7 +247,6 @@ public class DualViewWithExternalCameraCommonApi extends BaseDualView {
                         handler.sendEmptyMessage(Const.HIDE_LOADING);
                     }
                 }
-
 
                 if (dataFlowMode == CommonParams.DataFlowMode.IMAGE_AND_TEMP_OUTPUT) {
                     System.arraycopy(frame, fusionLength + irSize * 2, normalTempData, 0, irSize * 2);

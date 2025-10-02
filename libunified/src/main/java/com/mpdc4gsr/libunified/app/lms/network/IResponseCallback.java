@@ -1,6 +1,5 @@
 package com.mpdc4gsr.libunified.app.lms.network;
 
-
 public interface IResponseCallback {
     void onResponse(String response);
 

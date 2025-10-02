@@ -7,7 +7,6 @@ try:
 except ImportError:
     from ..utils.simple_logger import logger
 
-
 class ConfigManager:
 
     def __init__(self, config_path: Optional[str] = None):
@@ -125,6 +124,5 @@ class ConfigManager:
     def get_all(self) -> Dict[str, Any]:
 
         return self._config.copy()
-
 
 config = ConfigManager()

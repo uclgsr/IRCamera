@@ -155,7 +155,6 @@ class NetworkErrorRecoveryManager(
                     put("timestamp", System.currentTimeMillis())
                 }
 
-
             withTimeout(5000) {
                 networkClient.sendMeasurementData("health_check", pingMessage)
             }
@@ -229,7 +228,6 @@ class NetworkErrorRecoveryManager(
                 TAG,
                 "Attempting reconnection to ${controller.deviceName} at ${controller.ipAddress}"
             )
-
 
             networkClient.disconnect()
             delay(1000)

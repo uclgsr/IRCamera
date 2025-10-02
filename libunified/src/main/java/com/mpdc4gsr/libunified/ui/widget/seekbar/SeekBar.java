@@ -24,7 +24,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.text.DecimalFormat;
 import java.util.Locale;
 
-
 public class SeekBar {
 
     public static final int INDICATOR_SHOW_WHEN_TOUCH = 0;
@@ -142,7 +141,6 @@ public class SeekBar {
         bottom = y + getThumbHeight() / 2;
     }
 
-
     public void scaleThumb() {
         scaleThumbWidth = (int) getThumbScaleWidth();
         scaleThumbHeight = (int) getThumbScaleHeight();
@@ -182,7 +180,6 @@ public class SeekBar {
             onDrawIndicator(canvas, paint, formatCurrentIndicatorText(userText2Draw)); //
         }
 
-
         if (thumbShow) {
             onDrawThumb(canvas);
         } else {
@@ -216,7 +213,6 @@ public class SeekBar {
                 matrix.postRotate(270);
                 offX = offX + 5;
             }
-
 
         }
     }
@@ -271,7 +267,6 @@ public class SeekBar {
             indicatorRect.bottom = indicatorRect.top + realIndicatorHeight;
 
             if (indicatorBitmap == null) {
-
 
                 int ax = scaleThumbWidth / 2;
                 int ay = indicatorRect.bottom;

@@ -43,13 +43,11 @@ except ImportError:
     GUI_AVAILABLE = False
     logger.info("PyQt6 not available - running in CLI mode")
 
-
 # Configuration constants
 SOCKET_TIMEOUT = 30.0  # seconds
 MAX_MESSAGE_SIZE = 1024 * 1024  # 1MB
 MAX_CONNECTIONS = 100
 RECV_BUFFER_SIZE = 4096
-
 
 class DeviceConnection:
     """Represents a connected Android device"""
@@ -76,7 +74,6 @@ class DeviceConnection:
         self.gsr_data = []  # [(timestamp, value), ...]
         self.message_count = 0
         self.bytes_received = 0
-
 
 class NetworkThread(QThread if GUI_AVAILABLE else threading.Thread):
     """Network thread with Android protocol support and best practices"""
@@ -525,7 +522,6 @@ class NetworkThread(QThread if GUI_AVAILABLE else threading.Thread):
                     pass
             self.connections.clear()
 
-
 # Import the main controller class from unified_pc_controller
 # This improved version only provides the NetworkThread implementation
 try:
@@ -567,7 +563,6 @@ try:
 except ImportError:
     logger.warning("Could not import UnifiedPCController base class")
     UnifiedPCControllerImproved = None
-
 
 def main():
     """Main entry point"""
@@ -613,7 +608,6 @@ def main():
             network.stop()
         
         return 0
-
 
 if __name__ == '__main__':
     sys.exit(main())

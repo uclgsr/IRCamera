@@ -10,7 +10,6 @@ import java.util.Objects;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-
 final class MainThreadPoster extends Handler implements Poster {
     private final Queue<Runnable> queue;
     private boolean handlerActive;

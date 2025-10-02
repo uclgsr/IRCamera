@@ -1,6 +1,5 @@
 package com.mpdc4gsr.libunified.app.lms.utils;
 
-
 public class TLog {
     public static void d(String tag, String message) {
     }

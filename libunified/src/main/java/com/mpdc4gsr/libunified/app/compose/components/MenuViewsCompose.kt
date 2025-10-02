@@ -19,7 +19,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-
 @Composable
 fun MenuEditView(
     @DrawableRes menu1Icon: Int,
@@ -119,7 +118,6 @@ private fun MenuEditItem(
         )
     }
 }
-
 
 @Composable
 fun CameraMenuView(

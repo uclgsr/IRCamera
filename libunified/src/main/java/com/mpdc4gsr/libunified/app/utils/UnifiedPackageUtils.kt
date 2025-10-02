@@ -5,9 +5,7 @@ import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.os.Build
 
-
 object UnifiedPackageUtils {
-
 
     fun getPackageInfo(context: Context): PackageInfo? {
         return try {
@@ -25,11 +23,9 @@ object UnifiedPackageUtils {
         }
     }
 
-
     fun getVersionName(context: Context): String {
         return getPackageInfo(context)?.versionName ?: "Unknown"
     }
-
 
     fun getVersionCode(context: Context): Long {
         val packageInfo = getPackageInfo(context) ?: return 0L
@@ -40,7 +36,6 @@ object UnifiedPackageUtils {
             packageInfo.versionCode.toLong()
         }
     }
-
 
     fun compareVersions(version1: String, version2: String): Int {
         val v1Parts = version1.split(".").map { it.toIntOrNull() ?: 0 }
@@ -61,11 +56,9 @@ object UnifiedPackageUtils {
         return 0
     }
 
-
     fun isVersionAtLeast(currentVersion: String, minimumVersion: String): Boolean {
         return compareVersions(currentVersion, minimumVersion) >= 0
     }
-
 
     fun getApplicationLabel(context: Context): String {
         return try {
@@ -76,7 +69,6 @@ object UnifiedPackageUtils {
         }
     }
 
-
     fun isDebuggable(context: Context): Boolean {
         return try {
             val applicationInfo = context.applicationInfo
@@ -85,7 +77,6 @@ object UnifiedPackageUtils {
             false
         }
     }
-
 
     data class BuildInfo(
         val versionName: String,
@@ -96,7 +87,6 @@ object UnifiedPackageUtils {
         val minSdk: Int,
         val buildTime: Long = System.currentTimeMillis()
     )
-
 
     fun getBuildInfo(context: Context): BuildInfo {
         val packageInfo = getPackageInfo(context)
@@ -114,7 +104,6 @@ object UnifiedPackageUtils {
         )
     }
 
-
     fun formatVersionInfo(context: Context): String {
         val buildInfo = getBuildInfo(context)
         return buildString {
@@ -129,7 +118,6 @@ object UnifiedPackageUtils {
         }
     }
 
-
     fun isValidPackageName(packageName: String): Boolean {
         if (packageName.isEmpty()) return false
 
@@ -142,7 +130,6 @@ object UnifiedPackageUtils {
                     part.all { it.isLetterOrDigit() || it == '_' }
         }
     }
-
 
     fun getInstalledPackages(context: Context): List<String> {
         return try {
@@ -159,7 +146,6 @@ object UnifiedPackageUtils {
             emptyList()
         }
     }
-
 
     fun isPackageInstalled(context: Context, packageName: String): Boolean {
         return try {

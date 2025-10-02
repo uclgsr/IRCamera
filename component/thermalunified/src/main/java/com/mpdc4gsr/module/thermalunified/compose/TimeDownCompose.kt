@@ -20,7 +20,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
 
-
 @Composable
 fun TimeDownCompose(
     initialSeconds: Int,
@@ -104,7 +103,6 @@ fun TimeDownCompose(
     }
 }
 
-
 @Composable
 fun TimeDownStatefulCompose(
     seconds: Int,
@@ -123,7 +121,6 @@ fun TimeDownStatefulCompose(
         modifier = modifier
     )
 }
-
 
 @Composable
 fun TimeDownComposePreview() {

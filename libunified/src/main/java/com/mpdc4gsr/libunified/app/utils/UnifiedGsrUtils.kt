@@ -1,6 +1,5 @@
 package com.mpdc4gsr.libunified.app.utils
 
-
 object UnifiedGsrUtils {
 
     private const val TAG = "UnifiedGsrUtils"
@@ -12,13 +11,11 @@ object UnifiedGsrUtils {
     private var detectedProcessor: String = "Unknown"
     private var deviceModel: String = "Unknown"
 
-
     fun getUtcTimestamp(): Long {
         val currentDeviceTime = System.currentTimeMillis()
         val deviceOffset = currentDeviceTime - deviceGroundTruthBase
         return deviceGroundTruthBase + deviceOffset + pcTimeOffset
     }
-
 
     fun initializeGroundTruthTiming() {
         deviceGroundTruthBase = System.currentTimeMillis()
@@ -31,14 +28,11 @@ object UnifiedGsrUtils {
         }
     }
 
-
     fun setPcTimeOffset(offset: Long) {
         pcTimeOffset = offset
     }
 
-
     fun getPcTimeOffset(): Long = pcTimeOffset
-
 
     private fun detectSamsungS22Processor() {
         try {
@@ -61,7 +55,6 @@ object UnifiedGsrUtils {
         }
     }
 
-
     data class DeviceTimingInfo(
         val processor: String,
         val model: String,
@@ -80,12 +73,10 @@ object UnifiedGsrUtils {
         )
     }
 
-
     fun calculateGsrSampleTimestamp(sampleIndex: Long, samplingRate: Double): Long {
         val sampleTimeMs = (sampleIndex / samplingRate * 1000).toLong()
         return deviceGroundTruthBase + sampleTimeMs + pcTimeOffset
     }
-
 
     fun resistanceToMicrosiemens(resistance: Double): Double {
         return if (resistance > 0) {
@@ -95,7 +86,6 @@ object UnifiedGsrUtils {
         }
     }
 
-
     fun microsiemensToResistance(microsiemens: Double): Double {
         return if (microsiemens > 0) {
             1_000_000.0 / microsiemens
@@ -104,11 +94,9 @@ object UnifiedGsrUtils {
         }
     }
 
-
     fun applyGsrCalibration(rawValue: Double, gain: Double, offset: Double): Double {
         return (rawValue * gain) + offset
     }
-
 
     fun calculateBaseline(gsrValues: DoubleArray, windowSize: Int = 100): Double {
         if (gsrValues.isEmpty()) return 0.0
@@ -118,7 +106,6 @@ object UnifiedGsrUtils {
 
         return sortedValues.take(baselineWindowSize).average()
     }
-
 
     data class GsrPeak(
         val index: Int,
@@ -160,7 +147,6 @@ object UnifiedGsrUtils {
         return peaks
     }
 
-
     fun smoothGsrData(gsrValues: DoubleArray, windowSize: Int = 5): DoubleArray {
         if (gsrValues.size <= windowSize) return gsrValues.copyOf()
 
@@ -184,7 +170,6 @@ object UnifiedGsrUtils {
 
         return smoothed
     }
-
 
     data class GsrStats(
         val mean: Double,
@@ -221,7 +206,6 @@ object UnifiedGsrUtils {
         return GsrStats(mean, median, standardDeviation, min, max, range, peaks.size)
     }
 
-
     fun exportGsrToCsv(
         gsrValues: DoubleArray,
         timestamps: LongArray,
@@ -242,7 +226,6 @@ object UnifiedGsrUtils {
 
         return csv.toString()
     }
-
 
     data class GsrQualityReport(
         val isValid: Boolean,

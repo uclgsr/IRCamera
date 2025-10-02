@@ -174,7 +174,6 @@ public abstract class PieRadarChartBase<T extends ChartData<? extends IDataSet<?
                     if (mLegend.getVerticalAlignment() == Legend.LegendVerticalAlignment.TOP ||
                             mLegend.getVerticalAlignment() == Legend.LegendVerticalAlignment.BOTTOM) {
 
-
                         float yOffset = getRequiredLegendOffset();
 
                         yLegendOffset = Math.min(mLegend.mNeededHeight + yOffset,
@@ -345,7 +344,6 @@ public abstract class PieRadarChartBase<T extends ChartData<? extends IDataSet<?
 
         return 0;
     }
-
 
     @SuppressLint("NewApi")
     public void spin(int durationmillis, float fromangle, float toangle, EasingFunction easing) {

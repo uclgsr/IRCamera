@@ -172,7 +172,6 @@ class CertificateManager(private val context: Context) {
     private fun createKeyManager(): X509KeyManager? {
         return try {
 
-
             null
         } catch (e: Exception) {
             Log.e(TAG, "Failed to create key manager", e)

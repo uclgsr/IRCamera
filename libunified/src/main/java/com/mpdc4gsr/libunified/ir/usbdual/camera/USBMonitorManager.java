@@ -95,7 +95,6 @@ public class USBMonitorManager {
             mUSBMonitor = new USBMonitor(Utils.getApp(),
                     new USBMonitor.OnDeviceConnectListener() {
 
-
                         @Override
                         public void onAttach(UsbDevice device) {
                             Log.w(TAG, "USBMonitorManager-onAttach-getProductId = " + device.getProductId());
@@ -118,7 +117,6 @@ public class USBMonitorManager {
                             }
                         }
 
-
                         @Override
                         public void onDettach(UsbDevice device) {
                             Log.d(TAG, "USBMonitorManager-onDettach");
@@ -127,7 +125,6 @@ public class USBMonitorManager {
                                 onUSBConnectListener.onDettach(device);
                             }
                         }
-
 
                         @Override
                         public void onConnect(final UsbDevice device, USBMonitor.UsbControlBlock ctrlBlock,
@@ -144,7 +141,6 @@ public class USBMonitorManager {
                                 }
                             }
                         }
-
 
                         @Override
                         public void onDisconnect(UsbDevice device, USBMonitor.UsbControlBlock ctrlBlock) {
@@ -181,7 +177,6 @@ public class USBMonitorManager {
 
     private void initUVCCamera() {
         Log.d(TAG, "initUVCCamera");
-
 
         ConcreateUVCBuilder concreateUVCBuilder = new ConcreateUVCBuilder();
         mUvcCamera = concreateUVCBuilder
@@ -301,7 +296,6 @@ public class USBMonitorManager {
             }
         } else {
 
-
             if (mIrcmd.startPreview(CommonParams.PreviewPathChannel.PREVIEW_PATH0,
                     CommonParams.StartPreviewSource.SOURCE_SENSOR,
                     25, CommonParams.StartPreviewMode.VOC_DVP_MODE,
@@ -336,6 +330,5 @@ public class USBMonitorManager {
             mUvcCamera.onResumePreview();
         }
     }
-
 
 }

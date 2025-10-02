@@ -78,7 +78,6 @@ class IRImageHelp {
                     temperature0 = (temperature0 / 64 - 273.15).toFloat()
                     if (temperature0 >= customMinTemp && temperature0 <= customMaxTemp) {
 
-
                         val intensity =
                             ((temperature0 - customMinTemp) / (customMaxTemp - customMinTemp) * 255).toInt()
                                 .coerceIn(0, 255)

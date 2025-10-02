@@ -35,7 +35,6 @@ except ImportError:
     GUI_AVAILABLE = False
     print("PyQt6 not available - running in CLI mode")
 
-
 class DeviceConnection:
     """Represents a connected Android device"""
     
@@ -61,7 +60,6 @@ class DeviceConnection:
         self.gsr_data = []  # [(timestamp, value), ...]
         self.message_count = 0
         self.bytes_received = 0
-
 
 class NetworkThread(QThread if GUI_AVAILABLE else threading.Thread):
     """Network thread with Android protocol support"""
@@ -374,7 +372,6 @@ class NetworkThread(QThread if GUI_AVAILABLE else threading.Thread):
             except:
                 pass
 
-
 class UnifiedPCController(QMainWindow if GUI_AVAILABLE else object):
     """Unified PC Controller with Android protocol compatibility"""
     
@@ -557,7 +554,6 @@ class UnifiedPCController(QMainWindow if GUI_AVAILABLE else object):
         self.network.stop()
         event.accept()
 
-
 def main():
     """Main entry point"""
     if GUI_AVAILABLE:
@@ -575,7 +571,6 @@ def main():
         except KeyboardInterrupt:
             print("\nShutting down...")
             controller.network.stop()
-
 
 if __name__ == '__main__':
     main()

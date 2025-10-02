@@ -51,9 +51,7 @@ public class OnlineMethod {
         tem.put(0, 0, temp);
         tem.convertTo(tem, CV_8UC1);
 
-
         Mat thres_gray = new Mat();
-
 
         threshold(tem, thres_gray, high_t, 255, THRESH_BINARY);
 
@@ -88,7 +86,6 @@ public class OnlineMethod {
             }
 
         }
-
 
         return im;
 

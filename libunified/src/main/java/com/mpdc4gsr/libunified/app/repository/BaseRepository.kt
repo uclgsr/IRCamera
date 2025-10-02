@@ -7,18 +7,15 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
 
-
 abstract class BaseRepository(
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) {
-
 
     sealed class Result<out T> {
         data class Success<T>(val data: T) : Result<T>()
         data class Error(val exception: Throwable) : Result<Nothing>()
         object Loading : Result<Nothing>()
     }
-
 
     data class CachedData<T>(
         val data: T,
@@ -31,7 +28,6 @@ abstract class BaseRepository(
 
     // Simple in-memory cache
     private val cache = mutableMapOf<String, CachedData<Any>>()
-
 
     protected suspend fun <T> safeCall(
         operation: suspend () -> T
@@ -46,7 +42,6 @@ abstract class BaseRepository(
         }
     }
 
-
     protected fun <T> safeFlow(
         operation: suspend () -> T
     ): Flow<Result<T>> = flow {
@@ -58,7 +53,6 @@ abstract class BaseRepository(
             emit(Result.Error(e))
         }
     }.flowOn(ioDispatcher)
-
 
     // The unchecked cast from CachedData<Any> to CachedData<T> is safe here because
     // each cacheKey is always associated with a single type T for the lifetime of the cache entry.
@@ -80,7 +74,6 @@ abstract class BaseRepository(
         }
     }
 
-
     protected fun clearCache(key: String? = null) {
         if (key != null) {
             cache.remove(key)
@@ -88,7 +81,6 @@ abstract class BaseRepository(
             cache.clear()
         }
     }
-
 
     protected fun <T> networkBoundResource(
         query: () -> Flow<T?>,

@@ -10,7 +10,6 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
-
 object CommUtils {
 
     fun getAppName(): String {

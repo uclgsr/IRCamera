@@ -17,7 +17,6 @@ import mpdc4gsr.feature.network.ui.NetworkSettingsScreen
 import mpdc4gsr.feature.settings.ui.*
 import mpdc4gsr.feature.thermal.ui.*
 
-
 /**
  * Main Compose Activity - Unified entry point for the IR Camera application
  * Replaces the traditional MainActivity with a complete Compose implementation

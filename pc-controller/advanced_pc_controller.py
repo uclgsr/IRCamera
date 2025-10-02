@@ -58,7 +58,6 @@ except ImportError:
     CV2_AVAILABLE = False
     print("Warning: OpenCV not available, video processing will be limited")
 
-
 class DeviceStatus:
     """Enhanced device status with more detailed tracking"""
     
@@ -92,7 +91,6 @@ class DeviceStatus:
         # Data buffers for real-time display
         self.gsr_buffer = []
         self.frame_count = {'RGB': 0, 'Thermal': 0}
-
 
 class NetworkThread(QThread):
     """Thread for handling network communication"""
@@ -383,7 +381,6 @@ class NetworkThread(QThread):
                 self.server_socket.close()
             except:
                 pass
-
 
 class EnhancedPCController(QMainWindow):
     """Enhanced PC Session Controller with PyQt6 and real-time visualization"""
@@ -1223,7 +1220,6 @@ class EnhancedPCController(QMainWindow):
         
         event.accept()
 
-
 def main():
     """Main application entry point"""
     app = QApplication(sys.argv)
@@ -1236,7 +1232,6 @@ def main():
     
     # Start event loop
     sys.exit(app.exec())
-
 
 if __name__ == "__main__":
     main()

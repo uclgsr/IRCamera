@@ -10,7 +10,6 @@ public interface IRadarDataSet extends ILineRadarDataSet<RadarEntry> {
 
     int getHighlightCircleFillColor();
 
-
     int getHighlightCircleStrokeColor();
 
     int getHighlightCircleStrokeAlpha();

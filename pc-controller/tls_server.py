@@ -26,7 +26,6 @@ import logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-
 class TLSSecurityManager:
     """Manages TLS certificates and secure connections for PC Controller"""
 
@@ -289,7 +288,6 @@ class TLSSecurityManager:
         # Set appropriate permissions (readable by owner only)
         os.chmod(self.ca_key_path, 0o600)
         os.chmod(self.server_key_path, 0o600)
-
 
 class SecureTCPServer:
     """Enhanced TCP server with TLS/SSL encryption support"""
@@ -619,7 +617,6 @@ class SecureTCPServer:
             'uptime_seconds': time.time() - getattr(self, 'start_time', time.time())
         }
 
-
 def main():
     """Test the secure TLS server"""
     print(" IRCamera Secure TLS Server Test")
@@ -664,7 +661,6 @@ def main():
             server.stop()
     else:
         print(" Failed to start secure server")
-
 
 if __name__ == "__main__":
     main()

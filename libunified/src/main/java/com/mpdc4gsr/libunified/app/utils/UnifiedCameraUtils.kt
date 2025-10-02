@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.energy.iruvc.utils.SynchronizedBitmap
 import java.util.concurrent.CopyOnWriteArrayList
 
-
 object UnifiedCameraUtils {
 
     private const val TAG = "UnifiedCameraUtils"
@@ -23,7 +22,6 @@ object UnifiedCameraUtils {
     private const val TYPE_IR = 1
     private const val TYPE_RGB = 2
     private const val TYPE_THERMAL = 3
-
 
     data class CameraConfig(
         var productType: Int = TYPE_IR,
@@ -35,7 +33,6 @@ object UnifiedCameraUtils {
         var drawLine: Boolean = true,
         var enableNetworking: Boolean = false
     )
-
 
     class UnifiedCameraView @JvmOverloads constructor(
         context: Context,
@@ -133,7 +130,6 @@ object UnifiedCameraUtils {
         }
     }
 
-
     data class CameraItem(
         val id: String,
         val name: String,
@@ -141,7 +137,6 @@ object UnifiedCameraUtils {
         val isConnected: Boolean = false,
         val previewBitmap: Bitmap? = null
     )
-
 
     class UnifiedCameraAdapter(
         private val items: MutableList<CameraItem> = mutableListOf(),
@@ -169,7 +164,6 @@ object UnifiedCameraUtils {
         }
     }
 
-
     class CameraMenuManager(private val context: Context) {
 
         private var popupWindow: PopupWindow? = null
@@ -188,7 +182,6 @@ object UnifiedCameraUtils {
             popupWindow?.dismiss()
         }
     }
-
 
     object CameraNetworkIntegration {
 
@@ -227,7 +220,6 @@ object UnifiedCameraUtils {
         }
     }
 
-
     class CameraPreviewManager {
 
         private var previewView: UnifiedCameraView? = null
@@ -254,7 +246,6 @@ object UnifiedCameraUtils {
         }
     }
 
-
     object JpegUtils {
 
         fun compressBitmapToJpeg(bitmap: Bitmap, quality: Int = 85): ByteArray {
@@ -273,7 +264,6 @@ object UnifiedCameraUtils {
         }
     }
 
-
     fun getCameraTypeName(type: Int): String = when (type) {
         TYPE_IR -> "IR Camera"
         TYPE_RGB -> "RGB Camera"
@@ -282,7 +272,6 @@ object UnifiedCameraUtils {
     }
 
     fun isValidCameraType(type: Int): Boolean = type in listOf(TYPE_IR, TYPE_RGB, TYPE_THERMAL)
-
 
     fun createCameraView(
         context: Context,
@@ -300,7 +289,6 @@ object UnifiedCameraUtils {
     fun createPreviewManager(): CameraPreviewManager {
         return CameraPreviewManager()
     }
-
 
     fun validateCameraConsolidation(): Boolean {
         Log.d(

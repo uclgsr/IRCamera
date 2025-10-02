@@ -11,7 +11,6 @@ import com.mpdc4gsr.libunified.app.bean.ContinuousBean
 import com.mpdc4gsr.libunified.app.bean.WatermarkBean
 import com.mpdc4gsr.libunified.app.utils.CarDetectData
 
-
 object SharedManager {
 
     var hasClickWinter: Boolean
@@ -280,7 +279,6 @@ object SharedManager {
     private const val SP_SETTING_IS_PUSH = "sp_setting_is_push"
     private const val SP_SETTING_IS_RECOMMEND = "sp_setting_is_recommend"
 
-
     private const val SP_HOT_MODE = "sp_hot_mode"
     private const val SP_CHANGE_DEVICE = "sp_change_device"
     private const val SP_TC007_CUSTOM_PSEUDO = "sp_tc007_custom_pseudo"
@@ -447,7 +445,6 @@ object SharedManager {
     fun setImagePermissionsState(value: Boolean) {
         return SPUtils.getInstance().put("storage_permissions_state", value)
     }
-
 
     fun getHotMode(): Int {
         return SPUtils.getInstance().getInt(SP_HOT_MODE, 1)

@@ -71,7 +71,6 @@ class IRConfigViewModel : BaseViewModel() {
         }
     }
 
-
     fun checkConfig(
         isTC007: Boolean,
         id: Int,
@@ -86,7 +85,6 @@ class IRConfigViewModel : BaseViewModel() {
             configLiveData.postValue(modelBean)
         }
     }
-
 
     fun deleteConfig(
         isTC007: Boolean,

@@ -16,7 +16,6 @@ except ImportError:
 from ..core.config import config
 from ..core.session import SessionManager
 
-
 class MVPCLI:
     """Command-line interface for MVP functionality"""
 
@@ -262,7 +261,6 @@ class MVPCLI:
         except Exception as e:
             print(f"\n Demo failed: {e}")
 
-
 def main():
     """Main entry point for CLI interface"""
     try:
@@ -271,7 +269,6 @@ def main():
     except Exception as e:
         logger.error(f"CLI application failed: {e}")
         return 1
-
 
 if __name__ == "__main__":
     sys.exit(main())

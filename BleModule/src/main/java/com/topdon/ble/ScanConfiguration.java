@@ -8,7 +8,6 @@ import androidx.annotation.RequiresApi;
 
 import java.util.List;
 
-
 public class ScanConfiguration {
     int scanPeriodMillis = 10000;
     boolean acceptSysConnectedDevice;
@@ -20,7 +19,6 @@ public class ScanConfiguration {
     public int getScanPeriodMillis() {
         return scanPeriodMillis;
     }
-
 
     public ScanConfiguration setScanPeriodMillis(int scanPeriodMillis) {
         //1
@@ -34,7 +32,6 @@ public class ScanConfiguration {
         return acceptSysConnectedDevice;
     }
 
-
     public ScanConfiguration setAcceptSysConnectedDevice(boolean acceptSysConnectedDevice) {
         this.acceptSysConnectedDevice = acceptSysConnectedDevice;
         return this;
@@ -43,7 +40,6 @@ public class ScanConfiguration {
     public ScanSettings getScanSettings() {
         return scanSettings;
     }
-
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     public ScanConfiguration setScanSettings(ScanSettings scanSettings) {
@@ -56,7 +52,6 @@ public class ScanConfiguration {
         return onlyAcceptBleDevice;
     }
 
-
     public ScanConfiguration setOnlyAcceptBleDevice(boolean onlyAcceptBleDevice) {
         this.onlyAcceptBleDevice = onlyAcceptBleDevice;
         return this;
@@ -66,7 +61,6 @@ public class ScanConfiguration {
         return rssiLowLimit;
     }
 
-
     public ScanConfiguration setRssiLowLimit(int rssiLowLimit) {
         this.rssiLowLimit = rssiLowLimit;
         return this;
@@ -75,7 +69,6 @@ public class ScanConfiguration {
     public List<ScanFilter> getFilters() {
         return filters;
     }
-
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     public ScanConfiguration setFilters(List<ScanFilter> filters) {

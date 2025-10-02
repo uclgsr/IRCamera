@@ -16,10 +16,8 @@ from pathlib import Path
 import tempfile
 import json
 
-
 # Add native backend to path
 sys.path.insert(0, str(Path(__file__).parent / 'native_backend'))
-
 
 class TestNativeBackend(unittest.TestCase):
     """Test C++ native backend integration"""
@@ -91,7 +89,6 @@ class TestNativeBackend(unittest.TestCase):
         std = enhanced_native_backend.processing.calculate_std(test_data)
         self.assertGreater(std, 0)
 
-
 class TestNetworkProtocol(unittest.TestCase):
     """Test network protocol and messaging"""
     
@@ -125,7 +122,6 @@ class TestNetworkProtocol(unittest.TestCase):
         # Test deserialization
         parsed = json.loads(json_str)
         self.assertEqual(parsed['device_id'], 'test_device_001')
-
 
 class TestDataExport(unittest.TestCase):
     """Test data export functionality"""
@@ -183,7 +179,6 @@ class TestDataExport(unittest.TestCase):
                 loaded_status = json.load(f)
                 self.assertEqual(loaded_status['device_001']['device_name'], 'Test Device 1')
 
-
 class TestWebcamIntegration(unittest.TestCase):
     """Test webcam integration"""
     
@@ -206,7 +201,6 @@ class TestWebcamIntegration(unittest.TestCase):
             self.assertIsNotNone(backends)
         except ImportError:
             self.skipTest("OpenCV not available - this is expected in CI environment")
-
 
 class TestSecurityLayer(unittest.TestCase):
     """Test TLS/SSL security implementation"""
@@ -234,7 +228,6 @@ class TestSecurityLayer(unittest.TestCase):
             
         except ImportError:
             self.skipTest("cryptography library not available")
-
 
 def run_tests():
     """Run all tests"""
@@ -265,7 +258,6 @@ def run_tests():
     print("="*70)
     
     return result.wasSuccessful()
-
 
 if __name__ == '__main__':
     success = run_tests()

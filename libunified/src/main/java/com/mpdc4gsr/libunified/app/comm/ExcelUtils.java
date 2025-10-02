@@ -25,7 +25,6 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.io.*;
 import java.util.ArrayList;
 
-
 public class ExcelUtils {
 
     @NonNull
@@ -91,7 +90,6 @@ public class ExcelUtils {
             return null;
         }
     }
-
 
     public static String exportExcel(ArrayList<ThermalEntity> listData, boolean isPoint) {
         boolean isShowC = SharedManager.INSTANCE.getTemperature() == 1;

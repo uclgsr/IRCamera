@@ -15,10 +15,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 
-/**
- * Reusable TitleBar composable to replace TitleView
- * Maintains the same layout and functionality as the custom TitleView
- */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TitleBar(
@@ -68,10 +64,6 @@ fun TitleBar(
     )
 }
 
-/**
- * Convenience composable for right-side action icons
- * Matches TitleView's tvRight1, tvRight2, tvRight3 functionality
- */
 @Composable
 fun TitleBarAction(
     icon: ImageVector,
@@ -91,9 +83,6 @@ fun TitleBarAction(
     }
 }
 
-/**
- * Action button for drawable resources
- */
 @Composable
 fun TitleBarAction(
     iconRes: Int,

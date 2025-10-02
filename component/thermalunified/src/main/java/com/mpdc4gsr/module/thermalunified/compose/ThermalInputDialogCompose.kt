@@ -21,7 +21,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 
-
 @Composable
 fun ThermalInputDialogCompose(
     message: String,
@@ -226,7 +225,6 @@ private fun handleConfirm(
     }
 }
 
-
 class ThermalInputDialogComposeBuilder {
     private var message: String = ""
     private var maxTemp: Float = 100f
@@ -287,7 +285,6 @@ class ThermalInputDialogComposeBuilder {
         )
     }
 }
-
 
 @Composable
 fun ThermalInputDialogComposePreview() {

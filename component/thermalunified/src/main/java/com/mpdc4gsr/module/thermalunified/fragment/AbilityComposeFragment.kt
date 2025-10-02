@@ -30,7 +30,6 @@ import com.mpdc4gsr.module.thermalunified.activity.IRThermalPlusComposeActivity
 import com.mpdc4gsr.module.thermalunified.activity.MonitoryHomeComposeActivity
 import com.mpdc4gsr.module.thermalunified.activity.ThermalIrNightComposeActivity
 
-
 class AbilityComposeFragment : Fragment() {
 
     override fun onCreateView(

@@ -108,7 +108,6 @@ class ChartMonitorView : LineChart, OnChartGestureListener {
 
     private var startTime = 0L
 
-
     fun addPointToChart(
         bean: ThermalEntity,
         timeType: Int = 1,
@@ -193,7 +192,6 @@ class ChartMonitorView : LineChart, OnChartGestureListener {
                 setVisibleXRangeMinimum(ChartTools.getMinimum(type = timeType) / 2)
                 setVisibleXRangeMaximum(ChartTools.getMaximum(type = timeType))
                 ChartTools.setX(this, timeType)
-
 
                 if ((highestVisibleX + ChartTools.getMinimum(timeType) / 2f) > xChartMax) {
                     moveViewToX(xChartMax)

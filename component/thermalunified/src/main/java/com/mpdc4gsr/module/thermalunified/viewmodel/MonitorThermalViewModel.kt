@@ -6,7 +6,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import java.util.*
 
-
 class MonitorThermalViewModel : BaseViewModel() {
 
     // Monitoring State

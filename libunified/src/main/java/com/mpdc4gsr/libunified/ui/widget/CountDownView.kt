@@ -47,15 +47,11 @@ class CountDownView : View {
 
     private var valueAnimator: ValueAnimator? = null
 
-
     private var mListener: OnCountDownListener? = null
-
 
     constructor(context: Context) : this(context, null)
 
-
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
-
 
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
         context,
@@ -119,13 +115,11 @@ class CountDownView : View {
         )
     }
 
-
     fun setCountdownTime(mCountdownTime: Int) {
         this.mCountdownTime = mCountdownTime
         mRingText = mCountdownTime.toString()
         invalidate()
     }
-
 
     private fun getValueAnimator(countdownTime: Long): ValueAnimator? {
         val valueAnimator = ValueAnimator.ofFloat(0f, 100f)
@@ -160,7 +154,6 @@ class CountDownView : View {
         canvas.drawText(mRingText!!, mRectF!!.centerX(), baseline.toFloat(), mTextPaint)
     }
 
-
     fun startCountDown() {
         if (!isAttachedToWindow) {
             return
@@ -184,7 +177,6 @@ class CountDownView : View {
             }
         })
     }
-
 
     fun stopCountDown() {
         if (valueAnimator!!.isRunning) {

@@ -206,7 +206,6 @@ class GuideUsbManager {
     fun upgrade(data: ByteArray): Boolean {
         val PAGE_SIZE = 3000
 
-
         val header = byteArrayOf(0x02)
         val cmd = byteArrayOf(0x07, 0x00)
         val reserve = byteArrayOf(0x00)
@@ -226,7 +225,6 @@ class GuideUsbManager {
         if (!send(upgradeHead)) {
             return false
         }
-
 
         if (data.size <= PAGE_SIZE) {
             if (!send(data)) {
@@ -254,7 +252,6 @@ class GuideUsbManager {
         if (!send(tail)) {
             return false
         }
-
 
         val upgradeResultCmd = byteArrayOf(0x08, 0x00)
         return receive(upgradeResultCmd)

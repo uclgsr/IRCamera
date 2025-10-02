@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.io.File
 
-
 class ModernFirmwareViewModel(
     application: Application,
     private val firmwareRepository: FirmwareRepository = FirmwareRepository(application)

@@ -7,7 +7,6 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.text.DecimalFormat
 
-
 object FileUtils {
 
     const val SIZETYPE_B = 1    // Bdouble

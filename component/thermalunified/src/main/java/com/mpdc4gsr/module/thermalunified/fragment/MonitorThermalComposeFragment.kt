@@ -27,7 +27,6 @@ import com.mpdc4gsr.module.thermalunified.viewmodel.MonitorThermalViewModel.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-
 class MonitorThermalComposeFragment : BaseComposeFragment<MonitorThermalViewModel>() {
 
     override fun createViewModel(): MonitorThermalViewModel {
@@ -643,6 +642,5 @@ class MonitorThermalComposeFragment : BaseComposeFragment<MonitorThermalViewMode
         MonitoringState.PAUSED -> Color(0xFFFFA500)
         MonitoringState.STOPPED -> Color.Gray
     }
-
 
 }

@@ -24,7 +24,6 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
-
 @Composable
 fun TrendViewCompose(
     temperatureData: List<Float>,
@@ -217,7 +216,6 @@ private fun DrawScope.drawTrendChart(temperatureData: List<Float>) {
     )
 }
 
-
 @Composable
 fun TrendViewStatefulCompose(
     temperatureData: List<Float>,
@@ -233,7 +231,6 @@ fun TrendViewStatefulCompose(
         modifier = modifier
     )
 }
-
 
 @Composable
 fun TrendViewComposePreview() {

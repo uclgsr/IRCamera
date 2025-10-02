@@ -1,13 +1,11 @@
 #!/usr/bin/env python3
 
-
 import os
 import sys
 from pathlib import Path
 
 src_dir = Path(__file__).parent / "src"
 sys.path.insert(0, str(src_dir))
-
 
 def main():
     print("=" * 70)
@@ -64,7 +62,6 @@ def main():
     except Exception as e:
         print(f" Application error: {e}")
         return 1
-
 
 if __name__ == "__main__":
     sys.exit(main())
