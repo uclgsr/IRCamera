@@ -362,7 +362,7 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         startActivity(
                             Intent(
                                 this@ComposeMigrationLauncherActivity,
-                                mpdc4gsr.feature.network.ui.NetworkClientTestActivityCompose::class.java
+                                mpdc4gsr.feature.network.ui.NetworkClientTestComposeActivity::class.java
                             )
                         )
                     }
@@ -734,7 +734,7 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         startActivity(
                             Intent(
                                 this@ComposeMigrationLauncherActivity,
-                                SensorDashboardTestActivityCompose::class.java
+                                SensorDashboardTestComposeActivity::class.java
                             )
                         )
                     }

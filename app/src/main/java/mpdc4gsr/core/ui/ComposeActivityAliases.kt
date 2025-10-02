@@ -15,13 +15,11 @@ typealias ShimmerConfigComposeActivity = mpdc4gsr.feature.gsr.ui.ShimmerConfigCo
 // Note: Additional GSR activity aliases are in sensors/gsr/ActivityAliases.kt to maintain backward compatibility
 
 // Network Feature Activities
-typealias NetworkClientTestActivityCompose = mpdc4gsr.feature.network.ui.NetworkClientTestActivityCompose
 typealias NetworkClientTestComposeActivity = mpdc4gsr.feature.network.ui.NetworkClientTestComposeActivity
 typealias NetworkConfigComposeActivity = mpdc4gsr.feature.network.ui.NetworkConfigComposeActivity
-typealias SimpleNetworkTestActivityCompose = mpdc4gsr.feature.network.ui.SimpleNetworkTestActivityCompose
 
 // Camera Feature Activities
-typealias DualModeCameraActivityCompose = mpdc4gsr.feature.camera.ui.DualModeCameraActivityCompose
+typealias DualModeCameraComposeActivity = mpdc4gsr.feature.camera.ui.DualModeCameraComposeActivity
 
 // Settings Feature Activities
 typealias SettingsComposeActivity = mpdc4gsr.feature.settings.ui.SettingsComposeActivity
@@ -33,7 +31,7 @@ typealias WebViewComposeActivity = mpdc4gsr.feature.settings.ui.WebViewComposeAc
 typealias PdfComposeActivity = mpdc4gsr.feature.settings.ui.PdfComposeActivity
 
 // Testing Feature Activities
-typealias SensorDashboardTestActivityCompose = mpdc4gsr.feature.testing.ui.SensorDashboardTestActivityCompose
+typealias SensorDashboardTestComposeActivity = mpdc4gsr.feature.testing.ui.SensorDashboardTestComposeActivity
 typealias FaultTolerantRecordingComposeActivity = mpdc4gsr.feature.testing.ui.FaultTolerantRecordingComposeActivity
 typealias ComposeComponentsShowcaseActivity = mpdc4gsr.feature.testing.ui.ComposeComponentsShowcaseActivity
 typealias ComposeMigrationLauncherActivity = mpdc4gsr.feature.testing.ui.ComposeMigrationLauncherActivity

@@ -178,7 +178,7 @@ fun UnifiedNavHost(
                 try {
                     // Use class reference instead of hard-coded string
                     val activityClass = try {
-                        mpdc4gsr.activities.DualModeCameraActivityCompose::class.java
+                        mpdc4gsr.feature.camera.ui.DualModeCameraComposeActivity::class.java
                     } catch (e: NoClassDefFoundError) {
                         null
                     }
