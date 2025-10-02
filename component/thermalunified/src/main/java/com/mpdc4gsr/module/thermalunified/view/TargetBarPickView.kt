@@ -209,9 +209,6 @@ class TargetBarPickView : View {
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        if (canvas == null) {
-            return
-        }
 
         computeBarRect()
         computeThumbRect()

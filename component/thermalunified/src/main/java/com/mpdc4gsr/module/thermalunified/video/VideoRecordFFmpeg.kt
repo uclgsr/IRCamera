@@ -224,9 +224,9 @@ class VideoRecordFFmpeg(
         startRecord(FileConfig.lineGalleryDir)
     }
 
-    override fun startRecord(downloadDir: String) {
+    override fun startRecord(fileDir: String) {
         try {
-            exportedFile = File(downloadDir, "${Date().time}.mp4")
+            exportedFile = File(fileDir, "${Date().time}.mp4")
             if (exportedFile!!.exists()) {
                 exportedFile!!.delete()
             }
@@ -525,17 +525,17 @@ class VideoRecordFFmpeg(
         }
     }
 
-    override fun updateAudioState(openAudioRecord: Boolean) {
-        if (this@VideoRecordFFmpeg.openAudioRecord == openAudioRecord) {
+    override fun updateAudioState(audioRecord: Boolean) {
+        if (this@VideoRecordFFmpeg.openAudioRecord == audioRecord) {
             return
         }
         try {
-            if (openAudioRecord && isRunning) {
+            if (audioRecord && isRunning) {
                 startAudioRecording()
             } else {
                 stopAudioRecording()
             }
-            this@VideoRecordFFmpeg.openAudioRecord = openAudioRecord
+            this@VideoRecordFFmpeg.openAudioRecord = audioRecord
         } catch (_: Exception) {
         }
     }
@@ -671,12 +671,7 @@ class VideoRecordFFmpeg(
             }
         }
 
-        var dstBitmap =
-            if (cameraViewBitmap != null) {
-                Bitmap.createScaledBitmap(cameraViewBitmap!!, width, height, true)
-            } else {
-                Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-            }
+        var dstBitmap = Bitmap.createScaledBitmap(cameraViewBitmap, width, height, true)
 
         val watermarkBean =
             if (isTC007) {
