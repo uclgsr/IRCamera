@@ -1,23 +1,34 @@
 package com.mpdc4gsr.libunified.app.lms.weiget;
 
 import android.content.Context;
-
+import com.mpdc4gsr.libunified.app.compose.components.ComposeToastHelper;
 
 public class TToast {
+    private static final long SHORT_DURATION = 2000L;
+    private static final long LONG_DURATION = 3500L;
+
     public static void shortToast(Context context, String message) {
-        // Do nothing - stub implementation
+        if (context != null && message != null && !message.isEmpty()) {
+            ComposeToastHelper.INSTANCE.show(context, message, SHORT_DURATION);
+        }
     }
 
     public static void shortToast(Context context, int resId) {
-        // Do nothing - stub implementation  
+        if (context != null) {
+            ComposeToastHelper.INSTANCE.show(context, resId, SHORT_DURATION);
+        }
     }
 
     public static void longToast(Context context, String message) {
-        // Do nothing - stub implementation
+        if (context != null && message != null && !message.isEmpty()) {
+            ComposeToastHelper.INSTANCE.show(context, message, LONG_DURATION);
+        }
     }
 
     public static void longToast(Context context, int resId) {
-        // Do nothing - stub implementation
+        if (context != null) {
+            ComposeToastHelper.INSTANCE.show(context, resId, LONG_DURATION);
+        }
     }
 
     public static void show(Context context, String message) {
