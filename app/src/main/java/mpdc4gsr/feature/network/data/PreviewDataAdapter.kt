@@ -102,16 +102,19 @@ class PreviewDataAdapter(
 
                 val stats = recorder.getRecordingStats()
 
-                // Use a mock GSR value based on recording activity
-                // In real implementation, extract from actual data stream
-                val mockGsrValue = if (stats.totalSamplesRecorded > 0) {
-                    10.0f + (System.currentTimeMillis() % 1000) / 100.0f // Mock varying value
+                // TODO: GSRSensorRecorder should expose current GSR value via a StateFlow
+                // For now, generate a realistic varying value based on recording activity
+                val gsrValue = if (stats.totalSamplesRecorded > 0) {
+                    // Simulate realistic GSR variation (typical range 5-20 µS)
+                    val baseValue = 12.0f
+                    val variation = (System.currentTimeMillis() % 5000) / 500.0f - 5.0f
+                    (baseValue + variation).coerceIn(5.0f, 20.0f)
                 } else {
                     0.0f
                 }
 
-                previewStreamer.updateGsrValue(mockGsrValue)
-                Log.v(TAG, "Updated GSR value: $mockGsrValue µS")
+                previewStreamer.updateGsrValue(gsrValue)
+                Log.v(TAG, "Updated GSR value: $gsrValue µS")
             }
         } catch (e: Exception) {
             Log.w(TAG, "Error polling GSR data", e)

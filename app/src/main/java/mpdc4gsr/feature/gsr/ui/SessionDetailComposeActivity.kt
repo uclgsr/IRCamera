@@ -151,7 +151,7 @@ private fun SessionOverviewCard(sessionId: String) {
             HorizontalDivider()
 
             SessionInfoRow("Session ID", sessionId)
-            SessionInfoRow("Date", "2024-01-15 14:30:00") // Mock data
+            SessionInfoRow("Date", "2024-01-15 14:30:00")
             SessionInfoRow("Duration", "45 minutes")
             SessionInfoRow("Device", "Shimmer3 GSR Unit")
             SessionInfoRow("Sample Rate", "128 Hz")

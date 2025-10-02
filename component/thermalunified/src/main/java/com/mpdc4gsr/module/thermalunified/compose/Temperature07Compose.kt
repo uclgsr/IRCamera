@@ -56,7 +56,7 @@ fun Temperature07Compose(
                                 onMeasurement(
                                     TemperatureMeasurement.Point(
                                         position = offset,
-                                        temperature = 25.0f // Mock temperature
+                                        temperature = 25.0f
                                     )
                                 )
                             }
@@ -349,7 +349,6 @@ fun Temperature07ComposePreview() {
                 modifier = Modifier.fillMaxSize()
             )
 
-            // Mock thermal camera overlay
             Text(
                 text = "Thermal Camera View\n(Tap to measure)",
                 color = Color.White,

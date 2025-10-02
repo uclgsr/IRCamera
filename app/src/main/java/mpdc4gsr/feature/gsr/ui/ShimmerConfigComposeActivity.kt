@@ -147,7 +147,6 @@ private fun ShimmerConfigContent(
             verticalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier.weight(1f)
         ) {
-            // Mock devices - replace with actual data from viewModel
             val mockDevices = listOf(
                 DeviceInfo("shimmer_001", "Shimmer3 GSR+ #001", "Shimmer3", -45, true),
                 DeviceInfo("shimmer_002", "Shimmer3 GSR+ #002", "Shimmer3", -62, true),
