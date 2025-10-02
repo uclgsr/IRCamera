@@ -66,8 +66,8 @@ fun RGBCameraScreen(
     val frameRate = cameraState.frameRate
     val exposureTime = cameraState.exposureTime
     val iso = cameraState.iso
-    val focusMode = cameraState.focusMode
-    val whiteBalance = cameraState.whiteBalance
+    val focusMode = cameraState.focusMode.displayName
+    val whiteBalance = cameraState.whiteBalance.displayName
     val recordingDuration = cameraState.recordingDuration
     val capturedFrames = cameraState.capturedFrames
 
@@ -163,10 +163,10 @@ fun RGBCameraScreen(
                 whiteBalance = whiteBalance,
                 onResolutionChange = { viewModel.updateResolution(it) },
                 onFrameRateChange = { viewModel.updateFrameRate(it) },
-                onExposureChange = { /* Can be added to ViewModel */ },
-                onISOChange = { /* Can be added to ViewModel */ },
-                onFocusModeChange = { /* Can be added to ViewModel */ },
-                onWhiteBalanceChange = { /* Can be added to ViewModel */ }
+                onExposureChange = { viewModel.updateExposureTime(it) },
+                onISOChange = { viewModel.updateISO(it) },
+                onFocusModeChange = { viewModel.updateFocusMode(it) },
+                onWhiteBalanceChange = { viewModel.updateWhiteBalance(it) }
             )
         }
     }
@@ -607,8 +607,8 @@ private fun CameraSettingsCard(
     onFrameRateChange: (Int) -> Unit,
     onExposureChange: (String) -> Unit,
     onISOChange: (Int) -> Unit,
-    onFocusModeChange: (String) -> Unit,
-    onWhiteBalanceChange: (String) -> Unit,
+    onFocusModeChange: (mpdc4gsr.feature.camera.presentation.FocusMode) -> Unit,
+    onWhiteBalanceChange: (mpdc4gsr.feature.camera.presentation.WhiteBalance) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -628,7 +628,7 @@ private fun CameraSettingsCard(
                 fontWeight = FontWeight.Bold
             )
 
-            // Quick setting buttons
+            // Quick setting buttons - Resolution and Frame Rate
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
@@ -666,9 +666,37 @@ private fun CameraSettingsCard(
                 }
             }
 
+            // Additional camera controls - Focus and White Balance
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                Button(
+                    onClick = { 
+                        onFocusModeChange(viewModel.cameraState.value.focusMode.getNext())
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = Orange),
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text("Focus: $focusMode", fontSize = 9.sp)
+                }
+
+                Spacer(modifier = Modifier.width(4.dp))
+
+                Button(
+                    onClick = { 
+                        onWhiteBalanceChange(viewModel.cameraState.value.whiteBalance.getNext())
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = Purple),
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text("WB: $whiteBalance", fontSize = 9.sp)
+                }
+            }
+
             // Advanced settings info
             Text(
-                text = "Advanced settings available in camera settings menu",
+                text = "Advanced exposure and ISO controls available in camera settings menu",
                 color = Color.Gray,
                 fontSize = 12.sp
             )

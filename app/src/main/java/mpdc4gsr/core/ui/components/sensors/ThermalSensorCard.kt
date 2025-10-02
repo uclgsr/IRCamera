@@ -161,7 +161,9 @@ fun ThermalSensorCard(
 
                     SensorState.Connected -> {
                         Button(
-                            onClick = { onAction(ThermalAction.StartPreview) },
+                            onClick = { 
+                                onClick()
+                            },
                             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
                         ) {
                             Icon(Icons.Default.PlayArrow, contentDescription = null)
