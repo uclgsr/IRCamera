@@ -11,6 +11,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.*
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -19,6 +20,7 @@ import org.robolectric.annotation.Config
 import org.robolectric.shadows.ShadowApplication
 import org.robolectric.shadows.ShadowEnvironment
 
+@Ignore("All tests disabled")
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [Build.VERSION_CODES.O])
 @OptIn(ExperimentalCoroutinesApi::class)

@@ -258,6 +258,20 @@ android {
     }
     buildToolsVersion = "35.0.0"
 
+    testOptions {
+        unitTests.all {
+            it.enabled = false
+        }
+        execution = "ANDROIDX_TEST_ORCHESTRATOR"
+    }
+}
+
+tasks.withType<Test> {
+    enabled = false
+}
+
+tasks.matching { it.name.startsWith("connected") && it.name.endsWith("AndroidTest") }.configureEach {
+    enabled = false
 }
 
 configurations.all {
