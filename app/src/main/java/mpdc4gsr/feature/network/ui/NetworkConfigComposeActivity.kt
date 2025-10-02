@@ -212,7 +212,7 @@ class NetworkConfigComposeActivity : BaseComposeActivity<NetworkConfigViewModel>
         super.onCreate(savedInstanceState)
 
         networkSettings = NetworkSettings(this)
-        permissionManager = PermissionManager(this, PermissionController(this))
+        permissionManager = PermissionManager(this as androidx.fragment.app.FragmentActivity, PermissionController(this as androidx.fragment.app.FragmentActivity))
         val bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
         bluetoothAdapter = bluetoothManager?.adapter
     }
