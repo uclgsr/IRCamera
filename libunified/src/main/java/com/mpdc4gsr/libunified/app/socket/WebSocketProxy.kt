@@ -1,17 +1,18 @@
 package com.mpdc4gsr.libunified.app.socket
 
 import android.Manifest
+import android.content.pm.PackageManager
 import android.net.Network
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import androidx.activity.ComponentActivity
+import androidx.core.content.ContextCompat
 import androidx.core.os.postDelayed
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.blankj.utilcode.util.Utils
 import com.elvishew.xlog.XLog
-import com.hjq.permissions.XXPermissions
 import com.mpdc4gsr.libunified.app.bean.event.SocketStateEvent
 import com.mpdc4gsr.libunified.app.security.CertificateManager
 import com.mpdc4gsr.libunified.app.utils.WifiUtils
@@ -319,10 +320,10 @@ class WebSocketProxy {
             if (!isNeedReconnect) {
                 return false
             }
-            if (!XXPermissions.isGranted(
+            if (ContextCompat.checkSelfPermission(
                     Utils.getApp(),
                     Manifest.permission.ACCESS_FINE_LOCATION
-                )
+                ) != PackageManager.PERMISSION_GRANTED
             ) {
                 return true
             }
