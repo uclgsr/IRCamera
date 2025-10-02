@@ -10,7 +10,7 @@ import kotlin.math.roundToInt
 
 
 class CommSeekBar : AppCompatSeekBar {
-    
+
     private val orientation: Int
 
     private var mMaxWidth = 48
@@ -191,7 +191,7 @@ class CommSeekBar : AppCompatSeekBar {
         return true
     }
 
-    
+
     fun stopTrackTouchLevel() {
         if (level > 0) {
             val newLevel = (progress.toFloat() / 100 * 4).roundToInt()

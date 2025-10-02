@@ -7,13 +7,14 @@ import android.content.IntentFilter
 import android.os.BatteryManager
 import android.os.Build
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import mpdc4gsr.core.ui.BaseViewModel
 import java.io.File
 import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
-import mpdc4gsr.core.ui.BaseViewModel
+import java.util.*
 
 /**
  * Diagnostics ViewModel - MVVM Integration

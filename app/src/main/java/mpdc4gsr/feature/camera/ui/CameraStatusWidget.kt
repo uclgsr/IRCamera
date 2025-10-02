@@ -7,12 +7,11 @@ import android.view.Gravity
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.camera.view.PreviewView
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
-import mpdc4gsr.core.ui.PermissionManager
 import mpdc4gsr.core.data.RgbCameraRecorder
+import mpdc4gsr.core.ui.PermissionManager
 
 
 class CameraStatusWidget @JvmOverloads constructor(

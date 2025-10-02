@@ -8,8 +8,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -24,9 +24,7 @@ import kotlinx.coroutines.launch
 import mpdc4gsr.feature.network.data.RecordingController
 import java.io.File
 import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
-import kotlin.system.measureTimeMillis
+import java.util.*
 
 /**
  * Compose version of Complete Session Trial Activity

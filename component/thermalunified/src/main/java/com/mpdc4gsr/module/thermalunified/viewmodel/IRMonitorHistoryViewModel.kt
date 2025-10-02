@@ -1,21 +1,16 @@
 package com.mpdc4gsr.module.thermalunified.viewmodel
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.automirrored.filled.*
-import androidx.lifecycle.viewModelScope
+import androidx.compose.material.icons.automirrored.filled.ViewList
+import androidx.compose.material.icons.filled.CalendarMonth
+import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Today
 import com.mpdc4gsr.libunified.app.db.AppDatabase
 import com.mpdc4gsr.libunified.app.db.dao.ThermalDao
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import com.mpdc4gsr.libunified.app.config.FileConfig
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.util.Calendar

@@ -1,6 +1,10 @@
 package com.mpdc4gsr.module.thermalunified.fragment
 
 import android.content.Intent
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -13,24 +17,18 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.app.navigation.NavigationManager
-import com.mpdc4gsr.libunified.app.config.RouterConfig
 import com.mpdc4gsr.module.thermalunified.R
-import com.mpdc4gsr.module.thermalunified.activity.ThermalIrNightComposeActivity
 import com.mpdc4gsr.module.thermalunified.activity.IRThermalPlusComposeActivity
 import com.mpdc4gsr.module.thermalunified.activity.MonitoryHomeComposeActivity
+import com.mpdc4gsr.module.thermalunified.activity.ThermalIrNightComposeActivity
 
 
 class AbilityComposeFragment : Fragment() {

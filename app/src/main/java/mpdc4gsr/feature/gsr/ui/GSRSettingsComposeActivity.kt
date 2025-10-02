@@ -1,16 +1,12 @@
 package mpdc4gsr.feature.gsr.ui
 
-import mpdc4gsr.core.ui.components.settings.*
-
 import android.content.Context
 import android.content.Intent
-import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material.icons.filled.Bluetooth
 import androidx.compose.material.icons.filled.Settings
@@ -21,9 +17,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import mpdc4gsr.core.ui.BaseComposeActivity
-import mpdc4gsr.feature.gsr.presentation.GSRSettingsViewModel
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
+import mpdc4gsr.core.ui.BaseComposeActivity
+import mpdc4gsr.core.ui.components.settings.*
+import mpdc4gsr.feature.gsr.presentation.GSRSettingsViewModel
 
 /**
  * GSRSettingsComposeActivity - Compose Migration Demonstration

@@ -33,7 +33,7 @@ class FirmwareRepository(
         val currentFirmwareVersion: String
     )
 
-    
+
     fun checkFirmwareUpdate(
         isTC007: Boolean,
         deviceInfo: DeviceInfo
@@ -45,7 +45,7 @@ class FirmwareRepository(
         }
     }
 
-    
+
     suspend fun downloadFirmware(
         firmwareInfo: FirmwareInfo,
         outputDir: File
@@ -56,7 +56,7 @@ class FirmwareRepository(
         outputFile
     }
 
-    
+
     suspend fun getFirmwareFromAssets(isTC007: Boolean): BaseRepository.Result<FirmwareInfo> =
         safeCall {
             val version = if (isTC007) TC007_FIRMWARE_VERSION else TS004_FIRMWARE_VERSION

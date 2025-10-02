@@ -36,7 +36,7 @@ class IRCorrectionViewModel : BaseViewModel() {
         )
     }
 
-    
+
     fun toggleCorrection() {
         viewModelScope.launch {
             try {
@@ -63,13 +63,13 @@ class IRCorrectionViewModel : BaseViewModel() {
         }
     }
 
-    
+
     fun updateTemperaturePoint(temp: Float, x: Int, y: Int) {
         currentTemperaturePoint = Triple(temp, x, y)
         updateTemperatureData(temp)
     }
 
-    
+
     fun updateCorrectionValue(value: Float) {
         currentCorrectionValue = value
         currentTemperaturePoint?.let { (baseTemp, _, _) ->
@@ -77,7 +77,7 @@ class IRCorrectionViewModel : BaseViewModel() {
         }
     }
 
-    
+
     fun startCalibration() {
         launchWithErrorHandling {
             _isProcessing.value = true
@@ -101,7 +101,7 @@ class IRCorrectionViewModel : BaseViewModel() {
         }
     }
 
-    
+
     fun resetCorrection() {
         launchWithErrorHandling {
             currentCorrectionValue = 0f
@@ -118,7 +118,7 @@ class IRCorrectionViewModel : BaseViewModel() {
         }
     }
 
-    
+
     fun saveSettings() {
         launchWithErrorHandling {
             _isProcessing.value = true
@@ -137,7 +137,7 @@ class IRCorrectionViewModel : BaseViewModel() {
         }
     }
 
-    
+
     private fun startTemperatureMonitoring() {
         viewModelScope.launch {
             // Simulate temperature monitoring with some variation
@@ -152,12 +152,12 @@ class IRCorrectionViewModel : BaseViewModel() {
         }
     }
 
-    
+
     private fun stopTemperatureMonitoring() {
         // Temperature monitoring is stopped by the coroutine condition check
     }
 
-    
+
     private fun updateTemperatureData(currentTemp: Float) {
         val correctedTemp = currentTemp + currentCorrectionValue
         _temperatureData.value = TemperatureData(

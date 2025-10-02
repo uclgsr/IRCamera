@@ -1,11 +1,6 @@
 package com.mpdc4gsr.libunified.app.db.dao
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Transaction
-import androidx.room.Update
+import androidx.room.*
 import com.mpdc4gsr.libunified.app.db.entity.DirDetect
 import com.mpdc4gsr.libunified.app.db.entity.HouseDetect
 import com.mpdc4gsr.libunified.app.db.entity.ItemDetect

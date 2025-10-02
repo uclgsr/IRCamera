@@ -1,7 +1,5 @@
 package mpdc4gsr.feature.testing.ui
 
-import android.os.Bundle
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -17,7 +15,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import mpdc4gsr.core.ui.BaseComposeActivity
-import mpdc4gsr.core.ui.navigation.UnifiedRoute
 import mpdc4gsr.core.ui.BaseViewModel
 
 /**

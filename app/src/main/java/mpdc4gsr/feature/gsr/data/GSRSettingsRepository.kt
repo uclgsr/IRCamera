@@ -3,7 +3,6 @@ package mpdc4gsr.feature.gsr.data
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 

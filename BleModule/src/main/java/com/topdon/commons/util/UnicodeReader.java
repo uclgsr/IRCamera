@@ -1,10 +1,6 @@
 package com.topdon.commons.util;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.PushbackInputStream;
-import java.io.Reader;
+import java.io.*;
 
 
 public class UnicodeReader extends Reader {
@@ -13,7 +9,7 @@ public class UnicodeReader extends Reader {
     InputStreamReader internalIn2 = null;
     String defaultEnc;
 
-    
+
     UnicodeReader(InputStream in, String defaultEnc) {
         internalIn = new PushbackInputStream(in, BOM_SIZE);
         this.defaultEnc = defaultEnc;
@@ -23,14 +19,14 @@ public class UnicodeReader extends Reader {
         return defaultEnc;
     }
 
-    
+
     public String getEncoding() {
         if (internalIn2 == null)
             return null;
         return internalIn2.getEncoding();
     }
 
-    
+
     protected void init() throws IOException {
         if (internalIn2 != null)
             return;

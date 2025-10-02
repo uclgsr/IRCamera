@@ -1,13 +1,14 @@
 package com.mpdc4gsr.module.thermalunified.fragment
 
 import android.content.Intent
-import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -18,10 +19,10 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeFragment
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import com.mpdc4gsr.libunified.app.config.RouterConfig
-import com.mpdc4gsr.module.thermalunified.activity.ThermalIrNightComposeActivity
+import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import com.mpdc4gsr.module.thermalunified.activity.IRThermalPlusComposeActivity
+import com.mpdc4gsr.module.thermalunified.activity.ThermalIrNightComposeActivity
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRThermalFragmentViewModel
 
 

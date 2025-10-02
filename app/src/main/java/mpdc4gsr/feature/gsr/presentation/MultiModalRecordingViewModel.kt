@@ -10,14 +10,14 @@ import com.mpdc4gsr.gsr.model.SyncMark
 import com.mpdc4gsr.gsr.service.GSRRecorder
 import com.mpdc4gsr.gsr.service.SessionManager
 import com.mpdc4gsr.gsr.util.TimeUtils
-import mpdc4gsr.core.ui.BaseViewModel
-import mpdc4gsr.feature.gsr.data.RealShimmerDeviceFactory
 import com.shimmerresearch.android.Shimmer
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import mpdc4gsr.core.data.RgbCameraRecorder
+import mpdc4gsr.core.ui.BaseViewModel
+import mpdc4gsr.feature.gsr.data.RealShimmerDeviceFactory
 
 /**
  * MultiModalRecordingViewModel - Advanced MVVM Implementation

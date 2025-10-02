@@ -1,23 +1,26 @@
 package mpdc4gsr.feature.camera.ui
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.*
+import androidx.compose.material.icons.filled.CameraAlt
+import androidx.compose.material.icons.filled.GridOn
+import androidx.compose.material.icons.filled.Videocam
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import mpdc4gsr.core.ui.components.TitleBar
-import mpdc4gsr.core.ui.components.settings.*
-import mpdc4gsr.core.ui.components.*
+import mpdc4gsr.core.ui.components.settings.SettingsCard
+import mpdc4gsr.core.ui.components.settings.SettingsDropdown
+import mpdc4gsr.core.ui.components.settings.SettingsSlider
+import mpdc4gsr.core.ui.components.settings.SettingsToggle
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 
 /**

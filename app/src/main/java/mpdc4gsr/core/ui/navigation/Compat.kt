@@ -7,6 +7,4 @@ package mpdc4gsr.core.ui.navigation
  */
 
 // Import and re-export for backward compatibility
-import mpdc4gsr.core.ui.navigation.UnifiedNavHost
-import mpdc4gsr.core.ui.navigation.UnifiedRoute
 

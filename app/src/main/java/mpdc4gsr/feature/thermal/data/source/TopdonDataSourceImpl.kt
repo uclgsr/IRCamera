@@ -2,32 +2,31 @@ package mpdc4gsr.feature.thermal.data.source
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.hardware.usb.UsbDevice
 import android.util.Log
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.CompletableDeferred
-import kotlinx.coroutines.withTimeoutOrNull
-import com.energy.iruvc.usb.USBMonitor
-import com.energy.iruvc.ircmd.IRCMD
 import com.energy.iruvc.ircmd.ConcreteIRCMDBuilder
+import com.energy.iruvc.ircmd.IRCMD
 import com.energy.iruvc.ircmd.IRCMDType
 import com.energy.iruvc.sdkisp.LibIRProcess
 import com.energy.iruvc.sdkisp.LibIRTemp
-import com.energy.iruvc.uvc.UVCCamera
-import com.energy.iruvc.uvc.ConcreateUVCBuilder
-import com.energy.iruvc.uvc.UVCType
-import com.energy.iruvc.uvc.ConnectCallback
-import com.energy.iruvc.utils.SynchronizedBitmap
+import com.energy.iruvc.usb.USBMonitor
 import com.energy.iruvc.utils.CommonParams
 import com.energy.iruvc.utils.IFrameCallback
-import android.hardware.usb.UsbDevice
+import com.energy.iruvc.utils.SynchronizedBitmap
+import com.energy.iruvc.uvc.ConcreateUVCBuilder
+import com.energy.iruvc.uvc.UVCCamera
+import com.energy.iruvc.uvc.UVCType
+import com.mpdc4gsr.libunified.ir.extension.setAutoShutter
+import com.mpdc4gsr.libunified.ir.extension.setContrast
+import com.mpdc4gsr.libunified.ir.extension.setMirror
+import com.mpdc4gsr.libunified.ir.extension.setPropDdeLevel
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.withTimeoutOrNull
 import java.io.File
 import java.io.FileOutputStream
-import com.mpdc4gsr.libunified.ir.extension.setMirror
-import com.mpdc4gsr.libunified.ir.extension.setAutoShutter
-import com.mpdc4gsr.libunified.ir.extension.setPropDdeLevel
-import com.mpdc4gsr.libunified.ir.extension.setContrast
 
 /**
  * Implementation of TopdonDataSource for TC001/TC007 thermal camera SDK integration.

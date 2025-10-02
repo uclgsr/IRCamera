@@ -12,7 +12,7 @@ public enum SharedPreferencesUtils {
 
     private static final String FILE_NAME = "usb_ir";
 
-    
+
     public static void saveData(Context context, String key, Object data) {
         String type = data.getClass().getSimpleName();
         SharedPreferences sharedPreferences = context
@@ -33,7 +33,7 @@ public enum SharedPreferencesUtils {
         editor.commit();
     }
 
-    
+
     public static Object getData(Context context, String key, Object defValue) {
         String type = defValue.getClass().getSimpleName();
         SharedPreferences sharedPreferences = context.getSharedPreferences
@@ -53,7 +53,7 @@ public enum SharedPreferencesUtils {
         return null;
     }
 
-    
+
     public static void saveByteData(Context context, String key, byte[] data) {
         String type = data.getClass().getSimpleName();
         SharedPreferences sharedPreferences = context
@@ -66,7 +66,7 @@ public enum SharedPreferencesUtils {
         editor.commit();
     }
 
-    
+
     public static byte[] getByteData(Context context, String key) {
         SharedPreferences sharedPreferences = context.getSharedPreferences
                 (FILE_NAME, Context.MODE_PRIVATE);

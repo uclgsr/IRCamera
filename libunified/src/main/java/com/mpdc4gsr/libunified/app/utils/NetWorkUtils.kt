@@ -4,15 +4,12 @@ package com.mpdc4gsr.libunified.app.utils
 
 import android.content.Context
 import android.net.ConnectivityManager
-import android.net.LinkProperties
 import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
-import android.net.wifi.WifiConfiguration
 import android.net.wifi.WifiManager
 import android.net.wifi.WifiNetworkSpecifier
 import android.os.Build
-import android.util.Log
 import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.BaseApplication
 

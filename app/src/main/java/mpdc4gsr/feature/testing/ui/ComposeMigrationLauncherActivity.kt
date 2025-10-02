@@ -8,8 +8,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.automirrored.filled.*
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -18,25 +18,13 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import mpdc4gsr.core.ui.theme.IRCameraTheme
-import mpdc4gsr.feature.main.ui.MainActivity
-import mpdc4gsr.feature.main.ui.DeviceTypeComposeActivity
-import mpdc4gsr.feature.gsr.ui.*
-import mpdc4gsr.feature.network.ui.*
 import mpdc4gsr.feature.camera.ui.*
-import mpdc4gsr.feature.settings.ui.SettingsComposeActivity
-import mpdc4gsr.feature.settings.ui.VersionComposeActivity
-import mpdc4gsr.feature.settings.ui.WebViewComposeActivity
-import mpdc4gsr.feature.settings.ui.PolicyComposeActivity
-import mpdc4gsr.feature.settings.ui.MoreHelpComposeActivity
-import mpdc4gsr.feature.settings.ui.PdfComposeActivity
-import mpdc4gsr.feature.settings.ui.ClauseComposeActivity
+import mpdc4gsr.feature.gsr.ui.*
+import mpdc4gsr.feature.main.ui.DeviceTypeComposeActivity
+import mpdc4gsr.feature.main.ui.MainActivity
+import mpdc4gsr.feature.network.ui.*
+import mpdc4gsr.feature.settings.ui.*
 import mpdc4gsr.feature.thermal.ui.IRGalleryEditComposeActivity
-import mpdc4gsr.feature.testing.ui.NavigationTestActivity
-import mpdc4gsr.feature.testing.ui.TestingSuiteHubActivity
-import mpdc4gsr.feature.testing.ui.SensorDashboardTestActivityCompose
-import mpdc4gsr.feature.testing.ui.FaultTolerantRecordingComposeActivity
-import mpdc4gsr.feature.testing.ui.ComposeComponentsShowcaseActivity
-import mpdc4gsr.core.ui.PermissionRequestComposeActivity
 
 /**
  * Launch Activity for demonstrating the complete Compose migration
