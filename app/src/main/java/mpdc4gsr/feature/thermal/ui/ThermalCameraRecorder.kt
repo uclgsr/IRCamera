@@ -15,6 +15,8 @@ import com.mpdc4gsr.libunified.app.bean.event.device.DevicePermissionEvent
 import com.mpdc4gsr.libunified.app.config.DeviceConfig.isTcTsDevice
 import com.mpdc4gsr.libunified.app.tools.DeviceTools
 import com.mpdc4gsr.libunified.ir.camera.IRUVCTC
+import com.mpdc4gsr.libunified.ir.camera.IRUVCTC.IFrameCallBackListener
+import com.mpdc4gsr.libunified.ir.utils.USBMonitorCallback
 import com.opencsv.CSVWriter
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
@@ -892,7 +894,7 @@ class ThermalCameraRecorder(
                 }
 
                 val usbMonitorCallback =
-                    object : com.mpdc4gsr.libunified.ir.utils.USBMonitorCallback {
+                    object : USBMonitorCallback {
                         override fun onAttach() {
                             Log.d(TAG, "USB thermal camera attached")
                         }
@@ -937,7 +939,7 @@ class ThermalCameraRecorder(
                 )
 
                 iruvctc?.setIFrameCallBackListener(object :
-                    com.mpdc4gsr.libunified.ir.camera.IRUVCTC.IFrameCallBackListener {
+                    IFrameCallBackListener {
                     override fun updateData() {
 
                         if (_isRecording.get()) {

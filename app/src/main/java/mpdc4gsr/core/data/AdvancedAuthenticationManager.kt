@@ -4,6 +4,7 @@ import android.content.Context
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
 import android.util.Log
+import com.mpdc4gsr.libunified.app.security.CertificateManager
 import kotlinx.coroutines.*
 import mpdc4gsr.core.StructuredLogger
 import org.json.JSONObject
@@ -47,7 +48,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
     private val logger = StructuredLogger.getInstance(context)
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
-    private var certificateManager: com.mpdc4gsr.libunified.app.security.CertificateManager? = null
+    private var certificateManager: CertificateManager? = null
     private var roleManager: RoleBasedAccessControl? = null
 
     private var securityMonitor: SecurityMonitor? = null
@@ -129,7 +130,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
             Log.i(TAG, "Initializing advanced authentication system")
 
             certificateManager =
-                com.mpdc4gsr.libunified.app.security.CertificateManager(context).apply {
+                CertificateManager(context).apply {
                     initialize()
                 }
 
