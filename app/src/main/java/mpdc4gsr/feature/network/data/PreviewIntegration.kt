@@ -104,7 +104,7 @@ object PreviewIntegration {
     }
 }
 
-fun com.mpdc4gsr.libunified.ui.camera.CameraPreviewManager.updatePreview(context: Context) {
+fun com.mpdc4gsr.module.thermalunified.tools.CameraPreviewManager.updatePreview(context: Context) {
     try {
         val bitmap = this.scaledBitmap()
         if (bitmap != null && !bitmap.isRecycled) {
