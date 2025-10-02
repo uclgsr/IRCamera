@@ -30,7 +30,6 @@ compose-bom = "2025.09.01"
 compose-compiler = "1.5.15"
 compose-activity = "1.11.0"
 compose-navigation = "2.9.5"
-compose-lifecycle = "2.9.4"
 coil = "2.7.0"
 
 androidxCore = "1.17.0"
@@ -59,7 +58,6 @@ rxandroid = "2.1.1"
 rxlifecycle3 = "3.1.0"
 ucrop = "2.2.11-native"
 playAppUpdate = "2.1.0"
-immersionbar = "3.2.2"
 smartRefreshLayout = "2.1.1"
 # NOTE: V3.0.0-alpha available but using stable 2.x versions for production reliability
 brvah = "3.0.11"
@@ -95,6 +93,7 @@ testEspressoIntents = "3.7.0"
 testUiautomator = "2.3.0"
 robolectric = "4.16"
 mockwebserver = "5.1.0"
+mockito = "5.8.0"
 benchmark = "1.4.1"
 truth = "1.4.5"
 javafaker = "1.0.2"
@@ -112,7 +111,6 @@ vecmath = "1.3.1"
 commonsLang3 = "3.19.0"
 fastBle = "2.4.0"
 easySwipeMenuLayout = "1.1.4"
-lifecycleService = "2.9.4"
 media3 = "1.8.0"
 huaweiAgcp = "1.6.0.300"
 androidGradlePlugin = "8.11.2"
@@ -139,9 +137,9 @@ compose-material3-window-size = { group = "androidx.compose.material3", name = "
 compose-material-icons-core = { group = "androidx.compose.material", name = "material-icons-core" }
 compose-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended" }
 compose-activity = { group = "androidx.activity", name = "activity-compose", version.ref = "compose-activity" }
-compose-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "compose-lifecycle" }
+compose-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycle" }
 compose-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata" }
-compose-lifecycle-runtime = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "compose-lifecycle" }
+compose-lifecycle-runtime = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "lifecycle" }
 compose-navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "compose-navigation" }
 compose-animation = { group = "androidx.compose.animation", name = "animation" }
 
@@ -188,7 +186,6 @@ rxlifecycle-ktx = { group = "com.trello.rxlifecycle3", name = "rxlifecycle-kotli
 rxlifecycle-android-lifecycle-ktx = { group = "com.trello.rxlifecycle3", name = "rxlifecycle-android-lifecycle-kotlin", version.ref = "rxlifecycle3" }
 ucrop = { group = "com.github.yalantis", name = "ucrop", version.ref = "ucrop" }
 play-app-update = { group = "com.google.android.play", name = "app-update", version.ref = "playAppUpdate" }
-immersionbar = { group = "com.geyifeng.immersionbar", name = "immersionbar", version.ref = "immersionbar" }
 refresh-layout-kernel = { group = "io.github.scwang90", name = "refresh-layout-kernel", version.ref = "smartRefreshLayout" }
 refresh-header-classics = { group = "io.github.scwang90", name = "refresh-header-classics", version.ref = "smartRefreshLayout" }
 refresh-header-material = { group = "io.github.scwang90", name = "refresh-header-material", version.ref = "smartRefreshLayout" }
@@ -239,6 +236,9 @@ test-espresso-intents = { group = "androidx.test.espresso", name = "espresso-int
 test-uiautomator = { group = "androidx.test.uiautomator", name = "uiautomator", version.ref = "testUiautomator" }
 robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectric" }
 mockwebserver = { group = "com.squareup.okhttp3", name = "mockwebserver", version.ref = "mockwebserver" }
+mockito-core = { group = "org.mockito", name = "mockito-core", version.ref = "mockito" }
+mockito-inline = { group = "org.mockito", name = "mockito-inline", version.ref = "mockito" }
+mockito-android = { group = "org.mockito", name = "mockito-android", version.ref = "mockito" }
 benchmark-junit4 = { group = "androidx.benchmark", name = "benchmark-junit4", version.ref = "benchmark" }
 truth = { group = "com.google.truth", name = "truth", version.ref = "truth" }
 test-core = { group = "androidx.test", name = "core", version.ref = "testCore" }
@@ -256,7 +256,7 @@ vecmath = { group = "java3d", name = "vecmath", version.ref = "vecmath" }
 commons-lang3 = { group = "org.apache.commons", name = "commons-lang3", version.ref = "commonsLang3" }
 fastble = { group = "com.github.Jasonchenlijian", name = "FastBle", version.ref = "fastBle" }
 easyswipemenulayout = { group = "com.github.anzaizai", name = "EasySwipeMenuLayout", version.ref = "easySwipeMenuLayout" }
-lifecycle-service = { group = "androidx.lifecycle", name = "lifecycle-service", version.ref = "lifecycleService" }
+lifecycle-service = { group = "androidx.lifecycle", name = "lifecycle-service", version.ref = "lifecycle" }
 gsy-video-player-thermal = { group = "com.github.CarGuo.GSYVideoPlayer", name = "gsyVideoPlayer-java", version.ref = "gsyVideoPlayerThermal" }
 media3-exoplayer = { group = "androidx.media3", name = "media3-exoplayer", version.ref = "media3" }
 media3-exoplayer-dash = { group = "androidx.media3", name = "media3-exoplayer-dash", version.ref = "media3" }
