@@ -252,7 +252,12 @@ class AdvancedAuthenticationManager(private val context: Context) {
             return AuthenticationResult.CERTIFICATE_INVALID
         }
 
-        return AuthenticationResult.CERTIFICATE_INVALID
+        // Use CertificateManager to validate the certificate
+        return if (CertificateManager.validateCertificate(certificate, signature, challenge)) {
+            AuthenticationResult.SUCCESS
+        } else {
+            AuthenticationResult.CERTIFICATE_INVALID
+        }
     }
 
     private suspend fun authenticateToken(
