@@ -575,7 +575,7 @@ class EnhancedRecordingService : Service() {
         return NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("Enhanced Recording Service")
             .setContentText(content)
-            .setSmallIcon(android.R.drawable.ic_media_ff)
+            .setSmallIcon(R.drawable.ic_fast_forward)
             .setOngoing(true)
             .setSilent(true)
             .build()

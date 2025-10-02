@@ -245,7 +245,7 @@ class BackgroundDeviceScanningService : Service(), CoroutineScope {
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
             NotificationCompat.Action(
-                android.R.drawable.ic_media_play,
+                R.drawable.ic_play,
                 "Resume",
                 resumePendingIntent
             )
@@ -258,7 +258,7 @@ class BackgroundDeviceScanningService : Service(), CoroutineScope {
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
             NotificationCompat.Action(
-                android.R.drawable.ic_media_pause,
+                R.drawable.ic_pause,
                 "Pause",
                 pausePendingIntent
             )
@@ -267,14 +267,14 @@ class BackgroundDeviceScanningService : Service(), CoroutineScope {
         return NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("Background Device Scanning")
             .setContentText("Continuously scanning for BLE devices")
-            .setSmallIcon(android.R.drawable.stat_sys_data_bluetooth)
+            .setSmallIcon(R.drawable.ic_bluetooth)
             .setContentIntent(pendingIntent)
             .setOngoing(true)
             .setPriority(NotificationCompat.PRIORITY_LOW)
             .addAction(pauseResumeAction)
             .addAction(
                 NotificationCompat.Action(
-                    android.R.drawable.ic_menu_close_clear_cancel,
+                    R.drawable.ic_close,
                     "Stop",
                     stopPendingIntent
                 )
@@ -290,7 +290,7 @@ class BackgroundDeviceScanningService : Service(), CoroutineScope {
         val updatedNotification = NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("Background Device Scanning")
             .setContentText(statusText)
-            .setSmallIcon(android.R.drawable.stat_sys_data_bluetooth)
+            .setSmallIcon(R.drawable.ic_bluetooth)
             .setOngoing(true)
             .setPriority(NotificationCompat.PRIORITY_LOW)
             .build()
