@@ -33,11 +33,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-/**
- * File utility functions for thermal camera data handling.
- * Provides methods for file I/O operations including saving thermal data,
- * managing directories, and handling various file formats.
- */
+
 public enum FileUtils {
     ;
 
@@ -132,12 +128,7 @@ public enum FileUtils {
         }
     }
 
-    /**
-     * Y16
-     *
-     * @param dataFlowMode
-     * @return
-     */
+    
     public static CommonParams.Y16ModePreviewSrcType getY16SrcTypeByDataFlowMode(CommonParams.DataFlowMode dataFlowMode) {
         switch (dataFlowMode) {
             case TEMP_OUTPUT: {
@@ -290,12 +281,7 @@ public enum FileUtils {
         return isFileExists(context, file.getAbsolutePath());
     }
 
-    /**
-     * Return whether the file exists.
-     *
-     * @param filePath The path of file.
-     * @return {@code true}: yes<br>{@code false}: no
-     */
+    
     public static boolean isFileExists(Context context, final String filePath) {
         File file = new File(filePath);
         if (null == file) {
@@ -326,12 +312,7 @@ public enum FileUtils {
         return false;
     }
 
-    /**
-     * shortbyte
-     *
-     * @param src
-     * @return
-     */
+    
     private static byte[] toByteArray(short[] src) {
         int count = src.length;
         byte[] dest = new byte[count << 1];
@@ -365,9 +346,7 @@ public enum FileUtils {
         }
     }
 
-    /**
-     * @param file
-     */
+    
     private static void createOrExistsDir(File file) {
         // 
         if (!file.exists()) {
@@ -424,14 +403,7 @@ public enum FileUtils {
         }
     }
 
-    /**
-     * AssetsSD
-     *
-     * @param context
-     * @param srcFileName
-     * @param strOutFileName
-     * @throws IOException
-     */
+    
     public static void copyAssetsBigDataToSD(Context context, String srcFileName, String strOutFileName) {
         try {
             File file = new File(strOutFileName);
@@ -461,12 +433,7 @@ public enum FileUtils {
         }
     }
 
-    /**
-     * ISP
-     *
-     * @param gainStatus
-     * @return
-     */
+    
     public static String getISPConfigByGainStatus(CommonParams.GainStatus gainStatus) {
 //        Log.i(TAG, "INFISENSE_SAVE_DIR = " + MyApplication.getInstance().INFISENSE_SAVE_DIR);
         if (CommonParams.GainStatus.HIGH_GAIN == gainStatus) {
@@ -476,10 +443,7 @@ public enum FileUtils {
         }
     }
 
-    /**
-     * @param gainStatus
-     * @return hex
-     */
+    
     public static String getISPConfigWithEncryptHexByGainStatus(CommonParams.GainStatus gainStatus) {
         if (CommonParams.GainStatus.HIGH_GAIN == gainStatus) {
             return INFISENSE_SAVE_DIR() + File.separator + "isp_H_encrypt_hex.json";
@@ -497,10 +461,7 @@ public enum FileUtils {
         return Utils.getApp().getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath();
     }
 
-    /**
-     * @param gainStatus
-     * @return base64
-     */
+    
     public static String getISPConfigWithEncryptBase64ByGainStatus(CommonParams.GainStatus gainStatus) {
         if (CommonParams.GainStatus.HIGH_GAIN == gainStatus) {
             return INFISENSE_SAVE_DIR() + File.separator + "isp_H_encrypt_base64.json";
@@ -509,12 +470,7 @@ public enum FileUtils {
         }
     }
 
-    /**
-     *
-     *
-     * @param context
-     * @return
-     */
+    
     public static String getVersionName(Context context) {
         PackageManager manager = context.getPackageManager();
         String name = null;
@@ -527,10 +483,7 @@ public enum FileUtils {
         return name;
     }
 
-    /**
-     * @param string
-     * @return
-     */
+    
     public static String getMD5Key(String string) {
         if (TextUtils.isEmpty(string)) {
             return "";
@@ -554,9 +507,7 @@ public enum FileUtils {
         return "";
     }
 
-    /**
-     * @param filePath
-     */
+    
     public static void makeDirectory(String filePath) {
         File file = new File(filePath);
         if (!file.exists()) {
@@ -564,10 +515,7 @@ public enum FileUtils {
         }
     }
 
-    /**
-     * @param context
-     * @return
-     */
+    
     public static String getSaveFilePath(Context context) {
         boolean useExternalStorage = false;
         String directoryPath = "";
@@ -590,12 +538,7 @@ public enum FileUtils {
         return directoryPath;
     }
 
-    /**
-     * @param filePath
-     * @param fileName
-     * @return
-     * @throws IOException
-     */
+    
     private static File makeFile(String filePath, String fileName) throws IOException {
         makeDirectory(filePath);
 
@@ -607,12 +550,7 @@ public enum FileUtils {
         return file;
     }
 
-    /**
-     * @param bytes
-     * @param filePath
-     * @param fileName
-     * @return
-     */
+    
     public static int writeTxtToFile(byte[] bytes, String filePath, String fileName) {
         int result = -1;
 
@@ -664,10 +602,7 @@ public enum FileUtils {
         }
     }
 
-    /**
-     * @param path
-     * @return
-     */
+    
     public static String getStringFromFile(String path) {
         StringBuffer txtContent = new StringBuffer();
         byte[] b = new byte[2048];
@@ -695,10 +630,7 @@ public enum FileUtils {
         return txtContent.toString();
     }
 
-    /**
-     * @param num
-     * @param numbyte
-     */
+    
     public static void float2Byte(float num, byte[] numbyte) {
         int fbit = Float.floatToIntBits(num);
         for (int i = 0; 4 > i; i++) {

@@ -14,32 +14,22 @@ import androidx.annotation.ColorInt
 import com.blankj.utilcode.util.SizeUtils
 import com.mpdc4gsr.libunified.R
 
-/**
- * 3D ， SeekBar .
- */
+
 class BarPickView : View {
 
     companion object {
-        /**
-         * .
-         */
+        
         @ColorInt
         private const val DEFAULT_BG_COLOR = 0xff787878.toInt()
 
-        /**
-         * .
-         */
+        
         @ColorInt
         private const val DEFAULT_PROGRESS_COLOR = 0xffffffff.toInt()
 
-        /**
-         * Thumb ， dp.
-         */
+        
         private const val THUMB_CORNERS = 11f
 
-        /**
-         * Thumb ， dp.
-         */
+        
         private const val THUMB_STROKE_WIDTH = 1.5f
     }
 
@@ -49,16 +39,12 @@ class BarPickView : View {
 
     var onStopTrackingTouch: ((progress: Int, max: Int) -> Unit)? = null
 
-    /**
-     *  View .
-     */
+    
     var valueFormatListener: ((progress: Int) -> String) = {
         it.toString()
     }
 
-    /**
-     * .
-     */
+    
     var max: Int = 100
         set(value) {
             if (field != value) {
@@ -76,9 +62,7 @@ class BarPickView : View {
         }
 
 
-    /**
-     * .
-     */
+    
     private var progress: Int = 0
         set(value) {
             if (field != value) {
@@ -92,19 +76,13 @@ class BarPickView : View {
         onProgressChanged?.invoke(this.progress, max)
     }
 
-    /**
-     * ， px（，）
-     */
+    
     private val barSize: Int
 
-    /**
-     * ， 0、90、180、270.
-     */
+    
     private val rotate: Int
 
-    /**
-     * .
-     */
+    
     private val labelText: String
 
 
@@ -183,9 +161,7 @@ class BarPickView : View {
         return true
     }
 
-    /**
-     *  Thumb ， px.
-     */
+    
     private fun computeThumbWidth(): Int {
         val minTextWidth = paint.measureText(valueFormatListener.invoke(min)).toInt()
         val maxTextWidth = paint.measureText(valueFormatListener.invoke(max)).toInt()

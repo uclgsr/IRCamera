@@ -18,10 +18,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.Calendar
 
-/**
- * ViewModel for IR Monitor History functionality
- * Manages thermal monitoring session history with filtering and selection capabilities
- */
+
 class IRMonitorHistoryViewModel : BaseViewModel() {
 
     // Data classes for history management

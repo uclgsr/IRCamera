@@ -16,15 +16,7 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.module.user.viewmodel.TISRViewModel
 import com.mpdc4gsr.libunified.R as RCore
 
-/**
- * User Management Module - TISR Settings Compose Activity
- *
- * TISR (Temperature Image Super Resolution) toggle settings screen.
- * Demonstrates:
- * - Socket communication with device
- * - Real-time settings update
- * - Error handling for network operations
- */
+
 class TISRComposeActivity : BaseComposeActivity<TISRViewModel>() {
 
     override fun createViewModel(): TISRViewModel {

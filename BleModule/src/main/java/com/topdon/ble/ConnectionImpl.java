@@ -39,10 +39,7 @@ import java.util.Locale;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-/**
- * date: 2021/8/12 19:47
- * author: bichuanfeng
- */
+
 // Permission checks are expected to be handled by the calling code before using this connection
 @SuppressLint("MissingPermission")
 class ConnectionImpl implements Connection, ScanListener {
@@ -278,11 +275,7 @@ class ConnectionImpl implements Connection, ScanListener {
         connHandler.postDelayed(connectRunnable, 500);
     }
 
-    /**
-     *
-     *
-     * @param reconnect
-     */
+    
     private void doDisconnect(boolean reconnect) {
         clearRequestQueueAndNotify();
         connHandler.removeCallbacks(connectRunnable);
@@ -912,9 +905,7 @@ class ConnectionImpl implements Connection, ScanListener {
         }
     }
 
-    /**
-     *
-     */
+    
     private void clearRequestQueueAndNotify() {
         synchronized (this) {
             for (GenericRequest request : requestQueue) {

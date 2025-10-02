@@ -18,15 +18,7 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.module.user.viewmodel.UnitViewModel
 import com.mpdc4gsr.libunified.R as RCore
 
-/**
- * User Management Module - Unit Settings Compose Activity
- *
- * Temperature unit selection screen (Celsius/Fahrenheit).
- * Demonstrates:
- * - Radio button selection pattern
- * - Save functionality with confirmation
- * - Material 3 cards and selection UI
- */
+
 class UnitComposeActivity : BaseComposeActivity<UnitViewModel>() {
 
     override fun createViewModel(): UnitViewModel {

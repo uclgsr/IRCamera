@@ -26,10 +26,7 @@ import com.mpdc4gsr.module.thermalunified.fragment.IRMonitorHistoryComposeFragme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
 import kotlinx.coroutines.launch
 
-/**
- * Modern Compose implementation of thermal monitor home activity
- * Enhanced monitoring interface with history and real-time tabs
- */
+
 class MonitoryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
 
     override fun createViewModel(): ThermalViewModel {

@@ -1,11 +1,6 @@
 package com.mpdc4gsr.libunified.app.bean
 
-/**
- * .
- * @param isOpen
- * @param continuaTime ，
- * @param count
- */
+
 data class ContinuousBean(
     var isOpen: Boolean = false,
     var continuaTime: Long = 1000,

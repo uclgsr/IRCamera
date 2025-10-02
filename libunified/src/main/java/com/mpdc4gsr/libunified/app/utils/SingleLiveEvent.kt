@@ -7,11 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import java.util.concurrent.atomic.AtomicBoolean
 
-/**
- * SingleLiveEvent based on reference repository implementation
- * Adapted from libapp/src/main/java/com/topdon/lib/core/utils/SingleLiveEvent.kt
- * LiveData
- */
+
 class SingleLiveEvent<T> : MutableLiveData<T>() {
 
     private val mPending: AtomicBoolean = AtomicBoolean(false)
@@ -30,9 +26,7 @@ class SingleLiveEvent<T> : MutableLiveData<T>() {
         super.setValue(t)
     }
 
-    /**
-     * Used for cases where T is Void, to make calls cleaner.
-     */
+    
     @MainThread
     fun call() {
         value = null

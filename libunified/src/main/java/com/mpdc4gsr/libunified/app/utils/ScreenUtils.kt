@@ -3,10 +3,7 @@ package com.mpdc4gsr.libunified.app.utils
 import android.content.Context
 import android.content.res.Configuration
 
-/**
- * ScreenUtils based on reference repository implementation
- * Adapted from libapp/src/main/java/com/topdon/lib/core/utils/ScreenUtils.kt
- */
+
 object ScreenUtils {
     @JvmStatic
     fun getScreenWidth(context: Context): Int = context.resources.displayMetrics.widthPixels

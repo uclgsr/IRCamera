@@ -6,10 +6,7 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 
-/**
- * Functional implementation for ThermalInputDialog
- * This provides basic input functionality for thermal parameters
- */
+
 class ThermalInputDialog {
 
     class Builder(private val context: Context) {

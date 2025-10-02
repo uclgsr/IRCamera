@@ -25,10 +25,7 @@ import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-/**
- * Modern Compose implementation of algorithm image processing activity
- * Enhanced thermal image analysis with Material 3 design
- */
+
 class AlgorithmImageComposeActivity : BaseComposeActivity<ThermalViewModel>() {
 
     override fun createViewModel(): ThermalViewModel {

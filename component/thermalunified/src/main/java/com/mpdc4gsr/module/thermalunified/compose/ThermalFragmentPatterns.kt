@@ -27,14 +27,9 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import coil.compose.AsyncImage
 
-/**
- * Common fragment patterns used throughout thermal activities
- * These replace fragment layouts with reusable Compose components
- */
 
-/**
- * Thermal camera view container - replaces fragment_ir_thermal pattern
- */
+
+
 @Composable
 fun ThermalCameraFragment(
     onCapturePhoto: () -> Unit = {},
@@ -153,9 +148,7 @@ private fun ThermalCameraControls(
     }
 }
 
-/**
- * Gallery fragment pattern - replaces fragment_gallery pattern
- */
+
 @Composable
 fun ThermalGalleryFragment(
     images: List<ThermalGalleryItem>,
@@ -268,9 +261,7 @@ private fun ThermalGalleryItemCard(
     }
 }
 
-/**
- * Monitor capture fragment pattern - replaces fragment_ir_monitor_capture
- */
+
 @Composable
 fun MonitorCaptureFragment(
     isMonitoring: Boolean,
@@ -440,9 +431,7 @@ private fun MonitorFrameCard(
     }
 }
 
-/**
- * Placeholder for AndroidView integration
- */
+
 @Composable
 private fun AndroidViewPlaceholder(
     viewType: String,
@@ -492,9 +481,7 @@ data class MonitorFrame(
     val temperature: Float? = null
 )
 
-/**
- * Preview helpers
- */
+
 @Composable
 fun ThermalFragmentPatternsPreview() {
     Column(

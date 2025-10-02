@@ -20,15 +20,9 @@ import kotlinx.coroutines.withContext
 import java.util.Locale
 import kotlin.coroutines.resume
 
-/**
- *
- * Created by LCG on 2024/6/27.
- */
+
 object LocationUtils {
-    /**
-     * ， .
-     * @return --， null
-     */
+    
     @RequiresPermission(Permission.ACCESS_FINE_LOCATION)
     suspend fun getLastLocationStr(context: Context): String? = withContext(Dispatchers.IO) {
         val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
@@ -74,9 +68,7 @@ object LocationUtils {
     }
 
 
-    /**
-     *  activity   .
-     */
+    
     fun addBtStateListener(activity: ComponentActivity, listener: ((isEnable: Boolean) -> Unit)) {
         if (Build.VERSION.SDK_INT >= 28) {//Android 9
             activity.lifecycle.addObserver(ModeChangeObserver(activity, listener))

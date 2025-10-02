@@ -4,12 +4,7 @@ package com.mpdc4gsr.libunified.ir.view;
 import android.view.MotionEvent;
 import android.view.View;
 
-/**
- * view。
- *
- * @author: CaiSongL
- * @date: 2023/10/25 11:42
- */
+
 public enum DragViewUtils {
     ;
 
@@ -17,12 +12,7 @@ public enum DragViewUtils {
 //        registerDragAction(v, 0);
     }
 
-    /**
-     * View
-     *
-     * @param v     view
-     * @param delay
-     */
+    
     public static void registerDragAction(View v, long delay) {
         v.setOnTouchListener(new TouchListener(delay));
     }

@@ -25,10 +25,7 @@ import com.mpdc4gsr.module.thermalunified.event.ThermalActionEvent
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRMonitorViewModel
 import org.greenrobot.eventbus.EventBus
 
-/**
- * Modern Compose implementation of IR monitoring activity
- * Enhanced monitor controls with Material 3 design
- */
+
 class IRMonitorComposeActivity : BaseComposeActivity<IRMonitorViewModel>() {
 
     override fun createViewModel(): IRMonitorViewModel {

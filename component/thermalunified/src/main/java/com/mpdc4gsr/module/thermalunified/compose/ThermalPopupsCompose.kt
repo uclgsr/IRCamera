@@ -37,18 +37,9 @@ import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import kotlin.math.roundToInt
 
-/**
- * Modern Compose replacement for thermal module popup components
- *
- * This file contains Compose implementations for:
- * - SeekBarPopup → SeekBarPopupCompose
- * - OptionPickPopup → OptionPickPopupCompose
- * - GalleryChangePopup → GalleryChangePopupCompose
- */
 
-/**
- * Modern SeekBar popup with Material 3 design
- */
+
+
 @Composable
 fun SeekBarPopupCompose(
     visible: Boolean,
@@ -166,9 +157,7 @@ fun SeekBarPopupCompose(
     }
 }
 
-/**
- * Modern option picker popup with Material 3 design
- */
+
 @Composable
 fun OptionPickPopupCompose(
     visible: Boolean,
@@ -284,9 +273,7 @@ private fun OptionItemCompose(
     }
 }
 
-/**
- * Gallery change popup for thermal image gallery operations
- */
+
 @Composable
 fun GalleryChangePopupCompose(
     visible: Boolean,

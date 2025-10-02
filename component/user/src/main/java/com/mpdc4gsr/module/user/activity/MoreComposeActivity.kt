@@ -21,16 +21,7 @@ import com.mpdc4gsr.libunified.app.config.RouterConfig
 import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import com.mpdc4gsr.module.user.viewmodel.MoreViewModel
 
-/**
- * User Management Module - More (Settings Hub) Compose Activity
- *
- * Central settings hub with navigation to all User Management features.
- * Features:
- * - Complete settings menu
- * - Navigation to individual setting screens
- * - Modern Material 3 design with cards
- * - Update notification badge
- */
+
 class MoreComposeActivity : BaseComposeActivity<MoreViewModel>() {
 
     override fun createViewModel(): MoreViewModel {

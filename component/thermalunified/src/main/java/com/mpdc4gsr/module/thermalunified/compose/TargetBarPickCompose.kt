@@ -26,10 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlin.math.roundToInt
 
-/**
- * Compose equivalent of TargetBarPickView
- * Customizable progress bar with vertical or horizontal orientation
- */
+
 @Composable
 fun TargetBarPickCompose(
     progress: Int,
@@ -327,9 +324,7 @@ private fun calculateProgressFromOffset(
     return (min + ratio * totalRange).roundToInt().coerceIn(min, max)
 }
 
-/**
- * Simplified target bar for basic use cases
- */
+
 @Composable
 fun SimpleTargetBarCompose(
     value: Float,
@@ -367,9 +362,7 @@ fun SimpleTargetBarCompose(
     }
 }
 
-/**
- * Preview helper for TargetBarPickCompose
- */
+
 @Composable
 fun TargetBarPickComposePreview() {
     var horizontalProgress by remember { mutableIntStateOf(50) }

@@ -28,10 +28,7 @@ import com.mpdc4gsr.module.thermalunified.fragment.ThermalComposeFragment
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
 import org.greenrobot.eventbus.EventBus
 
-/**
- * Modern Compose implementation of thermal processing activity
- * Enhanced thermal tools and controls with tabbed interface
- */
+
 class ThermalComposeActivity : BaseComposeActivity<ThermalViewModel>() {
 
     override fun createViewModel(): ThermalViewModel {
