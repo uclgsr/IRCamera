@@ -152,7 +152,7 @@ class NetworkClientTestViewModel : BaseViewModel() {
         _port.value = config.port.toString()
     }
 
-    override fun clearError() {
+    fun clearNetworkError() {
         _networkTestUiState.value = _networkTestUiState.value.copy(error = null)
     }
 }
