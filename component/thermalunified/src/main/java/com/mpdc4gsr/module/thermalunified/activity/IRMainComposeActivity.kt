@@ -28,7 +28,9 @@ import com.mpdc4gsr.module.thermalunified.fragment.IRThermalComposeFragment
 import com.mpdc4gsr.module.thermalunified.fragment.IRGalleryTabComposeFragment
 import com.mpdc4gsr.module.thermalunified.fragment.AbilityComposeFragment
 import com.mpdc4gsr.module.thermalunified.fragment.PDFListComposeFragment
-import com.mpdc4gsr.module.user.fragment.MoreComposeWrapperFragment
+import com.mpdc4gsr.module.user.compose.MoreComposeFragment
+import com.mpdc4gsr.module.user.viewmodel.MoreComposeFragmentViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
 
 /**
@@ -193,28 +195,10 @@ private fun PDFTabContent() {
 
 @Composable
 private fun MoreTabContent() {
-    val context = LocalContext.current
-    val activity = context as? IRMainComposeActivity
-
-    // Embed existing more fragment using AndroidView with proper FragmentManager integration
-    AndroidView(
-        factory = { context ->
-            androidx.fragment.app.FragmentContainerView(context).apply {
-                id = androidx.core.R.id.accessibility_custom_action_4
-            }
-        },
-        update = { view ->
-            activity?.let {
-                val fragment = MoreComposeWrapperFragment()
-                val args = Bundle().apply {
-                    putBoolean("IS_TC007", false) // Set to true if required by business logic
-                }
-                fragment.arguments = args
-                it.supportFragmentManager.beginTransaction()
-                    .replace(view.id, fragment)
-                    .commitAllowingStateLoss()
-            }
-        },
+    val viewModel: MoreComposeFragmentViewModel = viewModel()
+    MoreComposeFragment(
+        viewModel = viewModel,
+        isTC007 = false,
         modifier = Modifier.fillMaxSize()
     )
 }
