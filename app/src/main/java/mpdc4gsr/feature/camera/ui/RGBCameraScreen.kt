@@ -672,7 +672,7 @@ private fun CameraSettingsCard(
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 Button(
-                    onClick = { 
+                    onClick = {
                         onFocusModeChange(viewModel.cameraState.value.focusMode.getNext())
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = Orange),
@@ -684,7 +684,7 @@ private fun CameraSettingsCard(
                 Spacer(modifier = Modifier.width(4.dp))
 
                 Button(
-                    onClick = { 
+                    onClick = {
                         onWhiteBalanceChange(viewModel.cameraState.value.whiteBalance.getNext())
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = Purple),

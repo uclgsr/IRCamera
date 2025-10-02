@@ -27,5 +27,6 @@ python -m unittest -v tests.test_protocol_compatibility
 ## Test Dependencies
 
 Some tests require additional dependencies:
+
 - Native backend tests require C++ backend to be built
 - Integration tests may require running services or mock devices
