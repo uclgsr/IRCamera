@@ -161,6 +161,8 @@ fun RGBCameraScreen(
                 iso = iso,
                 focusMode = focusMode,
                 whiteBalance = whiteBalance,
+                currentFocusMode = cameraState.focusMode,
+                currentWhiteBalance = cameraState.whiteBalance,
                 onResolutionChange = { viewModel.updateResolution(it) },
                 onFrameRateChange = { viewModel.updateFrameRate(it) },
                 onExposureChange = { viewModel.updateExposureTime(it) },
@@ -603,6 +605,8 @@ private fun CameraSettingsCard(
     iso: Int,
     focusMode: String,
     whiteBalance: String,
+    currentFocusMode: mpdc4gsr.feature.camera.presentation.FocusMode,
+    currentWhiteBalance: mpdc4gsr.feature.camera.presentation.WhiteBalance,
     onResolutionChange: (String) -> Unit,
     onFrameRateChange: (Int) -> Unit,
     onExposureChange: (String) -> Unit,
@@ -673,7 +677,7 @@ private fun CameraSettingsCard(
             ) {
                 Button(
                     onClick = { 
-                        onFocusModeChange(viewModel.cameraState.value.focusMode.getNext())
+                        onFocusModeChange(currentFocusMode.getNext())
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = Orange),
                     modifier = Modifier.weight(1f)
@@ -685,7 +689,7 @@ private fun CameraSettingsCard(
 
                 Button(
                     onClick = { 
-                        onWhiteBalanceChange(viewModel.cameraState.value.whiteBalance.getNext())
+                        onWhiteBalanceChange(currentWhiteBalance.getNext())
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = Purple),
                     modifier = Modifier.weight(1f)
