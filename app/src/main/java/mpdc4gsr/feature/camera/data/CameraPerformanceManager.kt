@@ -6,12 +6,20 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import java.util.concurrent.ConcurrentLinkedQueue
+import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicLong
 
 /**
  * Manages camera performance optimization including memory usage,
- * frame capture pipeline efficiency, and resource monitoring
+ * frame capture pipeline efficiency, and resource monitoring.
+ * 
+ * CRITICAL ANR FIX: All frame processing is now done on a background thread
+ * to prevent blocking the main UI thread. This resolves the ANR issue where
+ * the main thread was blocked for 10+ seconds due to synchronous processing.
+ * 
+ * The frame processing queue uses a dedicated single-thread executor to ensure
+ * sequential processing without blocking the main thread or causing race conditions.
  */
 class CameraPerformanceManager(private val context: Context) {
 
@@ -35,6 +43,13 @@ class CameraPerformanceManager(private val context: Context) {
 
     // Frame processing queue with backpressure handling
     private val frameProcessingQueue = ConcurrentLinkedQueue<FrameProcessingTask>()
+    
+    // Background executor for frame processing to avoid blocking main thread
+    private val frameProcessingExecutor = Executors.newSingleThreadExecutor { r ->
+        Thread(r, "CameraFrameProcessor").apply {
+            priority = Thread.NORM_PRIORITY
+        }
+    }
 
     data class FrameProcessingTask(
         val frameData: ByteArray,
@@ -79,6 +94,7 @@ class CameraPerformanceManager(private val context: Context) {
         isMonitoring = false
         memoryCheckHandler.removeCallbacksAndMessages(null)
         frameProcessingQueue.clear()
+        frameProcessingExecutor.shutdownNow()
 
         Log.i(TAG, "Performance monitoring stopped")
     }
@@ -137,8 +153,10 @@ class CameraPerformanceManager(private val context: Context) {
 
         frameProcessingQueue.offer(task)
 
-        // Process the task (in a real implementation, this would be on a background thread)
-        processNextFrame()
+        // Process the task on a background thread to avoid blocking main thread
+        frameProcessingExecutor.execute {
+            processNextFrame()
+        }
 
         return true
     }
@@ -244,11 +262,15 @@ class CameraPerformanceManager(private val context: Context) {
     private fun processNextFrame() {
         val task = frameProcessingQueue.poll() ?: return
 
-        // Simulate frame processing (in real implementation, this would be actual processing)
+        // Process frame data on background thread to avoid blocking main thread
         try {
-            // Process the frame data
-            Thread.sleep(10) // Simulate processing time
+            // Simulate frame processing with minimal delay
+            // In real implementation, this would be actual processing
+            Thread.sleep(10)
             task.onComplete(true)
+        } catch (e: InterruptedException) {
+            Log.d(TAG, "Frame processing interrupted")
+            task.onComplete(false)
         } catch (e: Exception) {
             Log.e(TAG, "Frame processing failed", e)
             task.onComplete(false)
