@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -20,6 +21,7 @@ import androidx.compose.ui.unit.sp
 fun SettingItem(
     text: String,
     @DrawableRes iconRes: Int? = null,
+    icon: ImageVector? = null,
     showIcon: Boolean = true,
     showMoreArrow: Boolean = true,
     showLine: Boolean = false,
@@ -39,12 +41,24 @@ fun SettingItem(
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 modifier = Modifier.weight(1f)
             ) {
-                if (showIcon && iconRes != null) {
-                    Image(
-                        painter = painterResource(id = iconRes),
-                        contentDescription = text,
-                        modifier = Modifier.size(24.dp)
-                    )
+                if (showIcon) {
+                    when {
+                        icon != null -> {
+                            Icon(
+                                imageVector = icon,
+                                contentDescription = text,
+                                modifier = Modifier.size(24.dp),
+                                tint = Color.Gray
+                            )
+                        }
+                        iconRes != null -> {
+                            Image(
+                                painter = painterResource(id = iconRes),
+                                contentDescription = text,
+                                modifier = Modifier.size(24.dp)
+                            )
+                        }
+                    }
                 }
 
                 Text(
@@ -104,6 +118,7 @@ fun SettingsSection(
                 SettingItem(
                     text = item.text,
                     iconRes = item.iconRes,
+                    icon = item.icon,
                     showIcon = item.showIcon,
                     showMoreArrow = item.showMoreArrow,
                     showLine = index < items.size - 1,
@@ -117,6 +132,7 @@ fun SettingsSection(
 data class SettingItemData(
     val text: String,
     @DrawableRes val iconRes: Int? = null,
+    val icon: ImageVector? = null,
     val showIcon: Boolean = true,
     val showMoreArrow: Boolean = true
 )

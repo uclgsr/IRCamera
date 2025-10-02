@@ -8,22 +8,31 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 data class MenuTabItem(
-    @DrawableRes val iconRes: Int,
+    @DrawableRes val iconRes: Int? = null,
+    val icon: ImageVector? = null,
     val label: String = "",
     val isSelected: Boolean = false
-)
+) {
+    init {
+        require(iconRes != null || icon != null) {
+            "Either iconRes or icon must be provided"
+        }
+    }
+}
 
 @Composable
 fun MenuTabBar(
@@ -44,6 +53,7 @@ fun MenuTabBar(
         itemsIndexed(items) { index, item ->
             MenuTabItem(
                 iconRes = item.iconRes,
+                icon = item.icon,
                 label = item.label,
                 isSelected = index == selectedIndex,
                 showLabel = showLabels,
@@ -55,7 +65,8 @@ fun MenuTabBar(
 
 @Composable
 private fun MenuTabItem(
-    @DrawableRes iconRes: Int,
+    @DrawableRes iconRes: Int? = null,
+    icon: ImageVector? = null,
     label: String,
     isSelected: Boolean,
     showLabel: Boolean,
@@ -77,16 +88,28 @@ private fun MenuTabItem(
                 ),
             contentAlignment = Alignment.Center
         ) {
-            Image(
-                painter = painterResource(id = iconRes),
-                contentDescription = label,
-                modifier = Modifier.size(32.dp),
-                colorFilter = if (isSelected) {
-                    ColorFilter.tint(Color.White)
-                } else {
-                    ColorFilter.tint(Color.Gray)
+            when {
+                icon != null -> {
+                    Icon(
+                        imageVector = icon,
+                        contentDescription = label,
+                        modifier = Modifier.size(32.dp),
+                        tint = if (isSelected) Color.White else Color.Gray
+                    )
                 }
-            )
+                iconRes != null -> {
+                    Image(
+                        painter = painterResource(id = iconRes),
+                        contentDescription = label,
+                        modifier = Modifier.size(32.dp),
+                        colorFilter = if (isSelected) {
+                            ColorFilter.tint(Color.White)
+                        } else {
+                            ColorFilter.tint(Color.Gray)
+                        }
+                    )
+                }
+            }
         }
 
         if (showLabel && label.isNotEmpty()) {
