@@ -18,7 +18,6 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import com.mpdc4gsr.libunified.R
 import com.mpdc4gsr.libunified.app.utils.ScreenUtils
-import com.mpdc4gsr.libunified.databinding.DialogConfirmSelectBinding
 
 
 class ConfirmSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog),

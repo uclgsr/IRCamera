@@ -79,7 +79,7 @@ open class TitleView : ViewGroup {
         }
         if (a.getBoolean(R.styleable.TitleView_isInitLeft, true)) {
             tvLeft?.isVisible = true
-            tvLeft?.setOnlyDrawableStart(R.drawable.ic_back_white_svg)
+            tvLeft?.setOnlyDrawableStart(R.drawable.ic_back_white_night_svg)
             tvLeft?.setOnClickListener {
                 if (context is Activity) {
                     context.finish()

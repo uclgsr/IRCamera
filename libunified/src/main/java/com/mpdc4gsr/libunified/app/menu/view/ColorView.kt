@@ -53,7 +53,7 @@ class ColorView : View {
         defStyleRes,
     ) {
         paint.color = 0xffffffff.toInt()
-        triangleDrawable = ContextCompat.getDrawable(context, R.drawable.svg_color_select)!!
+        triangleDrawable = ContextCompat.getDrawable(context, R.drawable.ic_color_select_svg)!!
     }
 
     @SuppressLint("DrawAllocation")

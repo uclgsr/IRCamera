@@ -15,7 +15,6 @@ import android.widget.TextView
 import androidx.core.view.isVisible
 import com.mpdc4gsr.libunified.R
 import com.mpdc4gsr.libunified.app.utils.ScreenUtils
-import com.mpdc4gsr.libunified.databinding.DialogFirmwareUpBinding
 
 class FirmwareUpDialog(context: Context) : Dialog(context, R.style.InfoDialog),
     View.OnClickListener {
