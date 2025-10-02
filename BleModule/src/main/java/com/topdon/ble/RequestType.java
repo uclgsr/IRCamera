@@ -1,6 +1,5 @@
 package com.topdon.ble;
 
-
 public enum RequestType {
 
     SET_NOTIFICATION,

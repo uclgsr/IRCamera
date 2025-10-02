@@ -29,7 +29,6 @@ import logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-
 class CameraManager:
     """Manages webcam capture and multi-modal camera data processing"""
 
@@ -268,7 +267,6 @@ class CameraManager:
         self.thermal_frames.clear()
         self.rgb_frames.clear()
 
-
 class DataExporter:
     """Handles export of multi-modal session data"""
 
@@ -480,7 +478,6 @@ class DataExporter:
         except Exception as e:
             logger.error(f" Failed to create session summary: {e}")
 
-
 def main():
     """Test camera manager and data export functionality"""
     print(" IRCamera Camera Manager & Data Export Test")
@@ -561,7 +558,6 @@ def main():
     # Cleanup
     camera_manager.cleanup()
     print(" Cleanup completed")
-
 
 if __name__ == "__main__":
     main()

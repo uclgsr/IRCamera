@@ -177,7 +177,6 @@ class FileTransferProtocol(
 
         networkClient.sendMessage(initMessage)
 
-
         val response = networkClient.waitForResponse("file_transfer_ack", TRANSFER_TIMEOUT_MS)
         if (response.optString("status") != "ready") {
             throw IOException("PC Controller not ready for transfer")
@@ -208,14 +207,11 @@ class FileTransferProtocol(
                             buffer
                         }
 
-
                     sendFileChunk(session, chunkIndex, chunkData)
-
 
                     session.bytesTransferred.addAndGet(bytesRead.toLong())
                     session.checksumAccumulator.update(chunkData, 0, bytesRead)
                     totalBytesTransferred.addAndGet(bytesRead.toLong())
-
 
                     val elapsedTime = System.currentTimeMillis() - startTime
                     if (elapsedTime > 0) {
@@ -225,11 +221,9 @@ class FileTransferProtocol(
 
                     chunkIndex++
 
-
                     if (session.bytesTransferred.get() % INTEGRITY_CHECK_INTERVAL == 0L) {
                         verifyPartialIntegrity(session)
                     }
-
 
                     yield()
                 }
@@ -249,10 +243,8 @@ class FileTransferProtocol(
                 put("chunk_size", data.size)
             }
 
-
         networkClient.sendMessage(chunkMessage)
         networkClient.sendBinaryData(data)
-
 
         val ack = networkClient.waitForResponse("chunk_ack", 5000L)
         if (ack.optString("transfer_id") != session.request.transferId ||
@@ -310,7 +302,6 @@ class FileTransferProtocol(
         error: Exception,
     ) {
         Log.e(TAG, "Transfer error for ${session.request.transferId}", error)
-
 
         if (error is IOException && session.resumeOffset < session.request.fileSize) {
 

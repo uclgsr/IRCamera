@@ -33,7 +33,6 @@ public class XAxisRendererRadarChart extends XAxisRenderer {
 
         float sliceangle = mChart.getSliceAngle();
 
-
         float factor = mChart.getFactor();
 
         MPPointF center = mChart.getCenterOffsets();

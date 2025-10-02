@@ -18,7 +18,6 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.module.user.viewmodel.AutoSaveViewModel
 import com.mpdc4gsr.libunified.R as RCore
 
-
 class AutoSaveComposeActivity : BaseComposeActivity<AutoSaveViewModel>() {
 
     override fun createViewModel(): AutoSaveViewModel {

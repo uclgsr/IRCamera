@@ -77,7 +77,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/space" />
 
-
         <!-- Observation mode - Menu 2 - High/Low temperature source -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_temp_source"

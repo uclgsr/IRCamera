@@ -14,7 +14,6 @@ import com.blankj.utilcode.util.SizeUtils
 import com.mpdc4gsr.libunified.app.view.MyTextView
 import com.mpdc4gsr.module.thermalunified.R
 
-
 class OptionPickPopup(
     private val context: Context,
     private val strArray: Array<String>,

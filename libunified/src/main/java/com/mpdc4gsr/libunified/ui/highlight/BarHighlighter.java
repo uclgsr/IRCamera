@@ -94,7 +94,6 @@ public class BarHighlighter extends ChartHighlighter<BarDataProvider> {
         return (value > ranges[length].to) ? length : 0;
     }
 
-
     @Override
     protected float getDistance(float x1, float y1, float x2, float y2) {
         return Math.abs(x1 - x2);

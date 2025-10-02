@@ -349,7 +349,6 @@ private fun StatusItem(
     }
 }
 
-
 @Preview(showBackground = true)
 @Composable
 private fun MainScreenPreview() {

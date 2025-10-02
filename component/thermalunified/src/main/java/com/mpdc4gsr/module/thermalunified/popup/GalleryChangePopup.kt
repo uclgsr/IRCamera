@@ -11,7 +11,6 @@ import com.blankj.utilcode.util.SizeUtils
 import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.libunified.R as LibR
 
-
 class GalleryChangePopup(private val context: Context) : PopupWindow() {
 
     private val tvLine: TextView by lazy { contentView.findViewById(R.id.tv_line) }

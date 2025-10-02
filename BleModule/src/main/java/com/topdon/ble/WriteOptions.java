@@ -2,7 +2,6 @@ package com.topdon.ble;
 
 import android.bluetooth.BluetoothGattCharacteristic;
 
-
 public class WriteOptions {
     final int packageWriteDelayMillis;
     final int requestWriteDelayMillis;
@@ -20,26 +19,21 @@ public class WriteOptions {
         useMtuAsPackageSize = builder.useMtuAsPackageSize;
     }
 
-
     public int getPackageWriteDelayMillis() {
         return packageWriteDelayMillis;
     }
-
 
     public int getRequestWriteDelayMillis() {
         return requestWriteDelayMillis;
     }
 
-
     public int getPackageSize() {
         return packageSize;
     }
 
-
     public boolean isWaitWriteResult() {
         return isWaitWriteResult;
     }
-
 
     public int getWriteType() {
         return writeType;
@@ -53,18 +47,15 @@ public class WriteOptions {
         private int writeType = -1;
         private boolean useMtuAsPackageSize = false;
 
-
         public Builder setPackageWriteDelayMillis(int packageWriteDelayMillis) {
             this.packageWriteDelayMillis = packageWriteDelayMillis;
             return this;
         }
 
-
         public Builder setRequestWriteDelayMillis(int requestWriteDelayMillis) {
             this.requestWriteDelayMillis = requestWriteDelayMillis;
             return this;
         }
-
 
         public Builder setPackageSize(int packageSize) {
             if (packageSize > 0) {
@@ -73,12 +64,10 @@ public class WriteOptions {
             return this;
         }
 
-
         public Builder setWaitWriteResult(boolean waitWriteResult) {
             isWaitWriteResult = waitWriteResult;
             return this;
         }
-
 
         public Builder setWriteType(int writeType) {
             if (writeType == BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT ||
@@ -88,7 +77,6 @@ public class WriteOptions {
             }
             return this;
         }
-
 
         public Builder setMtuAsPackageSize() {
             useMtuAsPackageSize = true;

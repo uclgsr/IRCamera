@@ -11,7 +11,6 @@ logging.basicConfig(
     ],
 )
 
-
 class SimpleLogger:
 
     def __init__(self, name: str = "ircamera_pc"):
@@ -38,29 +37,22 @@ class SimpleLogger:
     def add(self, *args, **kwargs) -> None:
         pass
 
-
 logger = SimpleLogger()
-
 
 def debug(message: str, *args, **kwargs) -> None:
     logger.debug(message, *args, **kwargs)
 
-
 def info(message: str, *args, **kwargs) -> None:
     logger.info(message, *args, **kwargs)
-
 
 def warning(message: str, *args, **kwargs) -> None:
     logger.warning(message, *args, **kwargs)
 
-
 def error(message: str, *args, **kwargs) -> None:
     logger.error(message, *args, **kwargs)
 
-
 def critical(message: str, *args, **kwargs) -> None:
     logger.critical(message, *args, **kwargs)
-
 
 def get_logger(name: str = "ircamera_pc") -> SimpleLogger:
     return SimpleLogger(name)

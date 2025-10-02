@@ -28,7 +28,6 @@ import com.mpdc4gsr.module.thermalunified.fragment.ThermalComposeFragment
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
 import org.greenrobot.eventbus.EventBus
 
-
 class ThermalComposeActivity : BaseComposeActivity<ThermalViewModel>() {
 
     override fun createViewModel(): ThermalViewModel {

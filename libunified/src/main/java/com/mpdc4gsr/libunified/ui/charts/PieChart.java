@@ -96,7 +96,6 @@ public class PieChart extends PieRadarChartBase<PieData> {
 
         float shift = mData.getDataSet().getSelectionShift();
 
-
         mCircleBox.set(c.x - radius + shift,
                 c.y - radius + shift,
                 c.x + radius - shift,
@@ -203,7 +202,6 @@ public class PieChart extends PieRadarChartBase<PieData> {
         }
 
         if (hasMinAngle) {
-
 
             for (int i = 0; i < entryCount; i++) {
                 minAngles[i] -= (minAngles[i] - mMinAngleForSlices) / diff * offset;

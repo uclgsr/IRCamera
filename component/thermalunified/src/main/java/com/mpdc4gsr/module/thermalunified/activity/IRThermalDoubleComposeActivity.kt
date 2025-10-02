@@ -20,7 +20,6 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRThermalDoubleViewModel
 
-
 class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewModel>() {
 
     override fun createViewModel(): IRThermalDoubleViewModel {

@@ -4,7 +4,6 @@ import android.util.Log
 import java.io.File
 import java.util.concurrent.atomic.AtomicBoolean
 
-
 class CSVBufferedWriter(
     outputFile: File,
     private val headers: List<String>,
@@ -18,7 +17,6 @@ class CSVBufferedWriter(
 
     private val headerWritten = AtomicBoolean(false)
 
-
     suspend fun startWithHeaders(): Boolean {
         val started = start()
         if (started && !headerWritten.get()) {
@@ -27,7 +25,6 @@ class CSVBufferedWriter(
         return started
     }
 
-
     private suspend fun writeHeaders() {
         if (headerWritten.compareAndSet(false, true)) {
             val headerLine = headers.joinToString(",")
@@ -35,7 +32,6 @@ class CSVBufferedWriter(
             Log.d(TAG, "CSV headers written: $headerLine")
         }
     }
-
 
     fun writeRow(values: List<Any>): Boolean {
         val csvLine = values.joinToString(",") { value ->
@@ -47,7 +43,6 @@ class CSVBufferedWriter(
         return writeLine(csvLine)
     }
 
-
     private fun escapeCSVValue(value: String): String {
         return if (value.contains(",") || value.contains("\"") || value.contains("\n")) {
             "\"${value.replace("\"", "\"\"")}\""
@@ -55,7 +50,6 @@ class CSVBufferedWriter(
             value
         }
     }
-
 
     fun getCSVStats(): CSVWriteStats {
         val stats = getWriteStats()
@@ -67,7 +61,6 @@ class CSVBufferedWriter(
         )
     }
 }
-
 
 data class CSVWriteStats(
     val baseStats: WriteStats,

@@ -12,7 +12,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 
-
 @Composable
 fun FirmwareInstallDialog(
     isVisible: Boolean,

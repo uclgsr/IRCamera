@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatImageView
 import com.mpdc4gsr.libunified.R
 
-
 class CaliperImageView : AppCompatImageView {
     private var showBitmapWidth: Float = 0f
     private var showBitmapHeight: Float = 0F

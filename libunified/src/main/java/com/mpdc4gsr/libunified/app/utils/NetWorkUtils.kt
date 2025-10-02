@@ -13,7 +13,6 @@ import android.os.Build
 import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.BaseApplication
 
-
 object NetWorkUtils {
 
     private var mNetworkCallback: ConnectivityManager.NetworkCallback? = null

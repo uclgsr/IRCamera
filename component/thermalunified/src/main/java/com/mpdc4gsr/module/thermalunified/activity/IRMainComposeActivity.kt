@@ -34,7 +34,6 @@ import com.mpdc4gsr.module.user.compose.MoreComposeFragment
 import com.mpdc4gsr.module.user.viewmodel.MoreComposeFragmentViewModel
 import kotlinx.coroutines.launch
 
-
 class IRMainComposeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

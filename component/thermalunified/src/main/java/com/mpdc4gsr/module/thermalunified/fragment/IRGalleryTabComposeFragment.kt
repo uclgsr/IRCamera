@@ -20,7 +20,6 @@ import com.mpdc4gsr.libunified.app.repository.GalleryRepository.DirType
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRGalleryTabViewModel
 import kotlinx.coroutines.launch
 
-
 class IRGalleryTabComposeFragment : BaseComposeFragment<IRGalleryTabViewModel>() {
 
     override fun createViewModel(): IRGalleryTabViewModel {

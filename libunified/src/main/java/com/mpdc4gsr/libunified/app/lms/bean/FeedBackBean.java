@@ -2,7 +2,6 @@ package com.mpdc4gsr.libunified.app.lms.bean;
 
 import java.io.Serializable;
 
-
 public class FeedBackBean implements Serializable {
     public String feedback = "";
     public String contact = "";

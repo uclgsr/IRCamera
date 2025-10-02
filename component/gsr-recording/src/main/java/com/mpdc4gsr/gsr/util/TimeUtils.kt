@@ -181,7 +181,6 @@ object TimeUtils {
         )
     }
 
-
     fun getMonotonicTimestampNs(): Long {
         return try {
             android.os.SystemClock.elapsedRealtimeNanos()
@@ -191,16 +190,13 @@ object TimeUtils {
         }
     }
 
-
     fun getMonotonicTimestampMs(): Long {
         return getMonotonicTimestampNs() / 1_000_000L
     }
 
-
     fun getElapsedTimeMs(startMonotonicNs: Long): Long {
         return (getMonotonicTimestampNs() - startMonotonicNs) / 1_000_000L
     }
-
 
     fun createSessionTimingMetadata(sessionId: String): Map<String, Any> {
         val wallClockMs = getSynchronizedTimestamp()

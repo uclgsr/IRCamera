@@ -27,7 +27,6 @@ namespace ircamera {
                   sampling_rate_(128), gsr_range_(4), should_stop_(false), data_callback_(nullptr),
                   packet_sequence_(0) {
 
-
             gsr_calibration_factor_ = 1.0 / 4095.0;
             gsr_ref_voltage_ = 3.0;
             gsr_gain_ = 5.0;
@@ -253,7 +252,6 @@ namespace ircamera {
             return send_inquiry_command();
         }
 
-
         bool is_connected() const { return is_connected_.load(); }
 
         bool is_streaming() const { return is_streaming_.load(); }
@@ -352,7 +350,6 @@ namespace ircamera {
 
             if (bytes_read > 0) {
 
-
                 std::string response_str(reinterpret_cast<char *>(response), bytes_read);
                 return response_str.find("Shimmer") != std::string::npos;
             }
@@ -407,7 +404,6 @@ namespace ircamera {
         }
 
         void parse_shimmer_data(const uint8_t *data, int length) {
-
 
             for (int i = 0; i < length;) {
 
@@ -475,7 +471,6 @@ namespace ircamera {
         int port_fd_ = -1;
 #endif
     };
-
 
     NativeShimmer::NativeShimmer(const std::string &port_name)
             : pimpl(std::make_unique<Impl>(port_name)) {

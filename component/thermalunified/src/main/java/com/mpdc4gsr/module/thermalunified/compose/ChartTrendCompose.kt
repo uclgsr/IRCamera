@@ -22,7 +22,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-
 @Composable
 fun ChartTrendCompose(
     dataPoints: List<Float>,
@@ -205,7 +204,6 @@ private fun DrawScope.drawTrendChart(
     }
 }
 
-
 @Composable
 fun TemperatureTrendCompose(
     temperatures: List<Float>,
@@ -232,7 +230,6 @@ fun TemperatureTrendCompose(
         modifier = modifier
     )
 }
-
 
 @Composable
 fun ChartTrendComposePreview() {

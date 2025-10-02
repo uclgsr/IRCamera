@@ -3,7 +3,6 @@ package com.mpdc4gsr.module.thermalunified.report.bean
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
-
 @Parcelize
 data class ReportConditionBean(
     val ambient_humidity: String?,

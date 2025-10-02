@@ -167,7 +167,6 @@ public class CombinedData extends BarLineScatterCandleBubbleData<IBarLineScatter
         if (highlight.getDataSetIndex() >= data.getDataSetCount())
             return null;
 
-
         List<Entry> entries = data.getDataSetByIndex(highlight.getDataSetIndex())
                 .getEntriesForXValue(highlight.getX());
         for (Entry entry : entries)

@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
 
-
 class BaseViewModelFactory(
     private val application: Application,
     private val repositories: Map<Class<*>, Any> = emptyMap()
@@ -70,7 +69,6 @@ class BaseViewModelFactory(
         throw IllegalArgumentException("Cannot create ViewModel ${modelClass.simpleName}")
     }
 
-
     class Builder(private val application: Application) {
         private val repositories = mutableMapOf<Class<*>, Any>()
 
@@ -88,7 +86,6 @@ class BaseViewModelFactory(
         }
     }
 }
-
 
 inline fun <reified T : ViewModel> androidx.lifecycle.ViewModelStoreOwner.createViewModelWithFactory(
     factory: BaseViewModelFactory

@@ -41,7 +41,6 @@ class RgbCameraRecorder(
     companion object {
         private const val TAG = "RgbCameraRecorder"
 
-
         private const val VIDEO_WIDTH_4K = 3840
         private const val VIDEO_HEIGHT_4K = 2160
         private const val VIDEO_WIDTH_1080P = 1920
@@ -68,15 +67,12 @@ class RgbCameraRecorder(
         private const val ADAPTIVE_OPTIMIZATION_THRESHOLD =
             5 // Switch to more aggressive optimization if needed
 
-
         private const val ENABLE_RAW_CAPTURE = true
         private const val RAW_FILE_EXTENSION = ".dng"
         private const val JPEG_FILE_EXTENSION = ".jpg"
 
-
         private const val MAX_CONSECUTIVE_FRAME_ERRORS = 10
         private const val FRAME_ERROR_RESET_INTERVAL = 30000L
-
 
         private val KNOWN_4K_DEVICES = setOf(
             "SM-S906B",
@@ -86,7 +82,6 @@ class RgbCameraRecorder(
             "SM-S911B",
             "SM-S918B"
         )
-
 
         private val KNOWN_RAW_DEVICES = setOf(
             "SM-S906B",
@@ -113,7 +108,6 @@ class RgbCameraRecorder(
 
     private val _isRecording = AtomicBoolean(false)
     override val isRecording: Boolean get() = _isRecording.get()
-
 
     private var selectedVideoWidth = VIDEO_WIDTH_1080P
     private var selectedVideoHeight = VIDEO_HEIGHT_1080P
@@ -164,7 +158,6 @@ class RgbCameraRecorder(
     private val syncMarkersRecorded = AtomicLong(0)
     private val framesCaptured = AtomicLong(0)
 
-
     private val frameTimestamps = mutableListOf<Long>()
     private var lastFrameRateCheck = AtomicLong(0)
     private val frameRateCheckInterval = 5000L
@@ -180,13 +173,11 @@ class RgbCameraRecorder(
         CameraSelector.DEFAULT_BACK_CAMERA
     }
 
-
     private var isUsingFrontCamera = useFrontCamera
     private var supportsFrontCamera = false
     private var supportsBackCamera = false
 
     private val recordingScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
-
 
     private var frameCaptureJob: Job? = null
 
@@ -296,7 +287,6 @@ class RgbCameraRecorder(
         }
     }
 
-
     private fun detectDeviceCapabilities() {
         try {
             val deviceModel = android.os.Build.MODEL
@@ -304,13 +294,11 @@ class RgbCameraRecorder(
 
             Log.d(TAG, "Detecting capabilities for device: $deviceManufacturer $deviceModel")
 
-
             deviceSupports4K = KNOWN_4K_DEVICES.contains(deviceModel) ||
                     (deviceModel.contains("S22", ignoreCase = true) && deviceManufacturer.equals(
                         "samsung",
                         ignoreCase = true
                     ))
-
 
             deviceSupportsRAW = KNOWN_RAW_DEVICES.contains(deviceModel) ||
                     (deviceModel.contains("S22", ignoreCase = true) && deviceManufacturer.equals(
@@ -318,14 +306,11 @@ class RgbCameraRecorder(
                         ignoreCase = true
                     ))
 
-
             cameraProvider?.let { provider ->
                 val camera = provider.bindToLifecycle(lifecycleOwner, currentCameraSelector)
                 val cameraInfo = camera.cameraInfo
 
-
                 deviceSupports4K = deviceSupports4K || checkVideoProfileSupport(cameraInfo)
-
 
                 try {
                     val cameraCharacteristics =
@@ -353,7 +338,6 @@ class RgbCameraRecorder(
         }
     }
 
-
     private fun checkVideoProfileSupport(cameraInfo: androidx.camera.core.CameraInfo): Boolean {
         return try {
             // Check if camera supports high-quality video recording
@@ -363,7 +347,6 @@ class RgbCameraRecorder(
             false
         }
     }
-
 
     private fun detectAvailableCameras() {
         try {
@@ -380,7 +363,6 @@ class RgbCameraRecorder(
                     TAG,
                     "  • Front camera: ${if (supportsFrontCamera) "Available" else "Not available"}"
                 )
-
 
                 if (isUsingFrontCamera && !supportsFrontCamera) {
                     Log.w(
@@ -405,16 +387,13 @@ class RgbCameraRecorder(
         }
     }
 
-
     suspend fun switchToFrontCamera(): Boolean {
         return switchCamera(useFrontCamera = true)
     }
 
-
     suspend fun switchToBackCamera(): Boolean {
         return switchCamera(useFrontCamera = false)
     }
-
 
     private suspend fun switchCamera(useFrontCamera: Boolean): Boolean =
         withContext(Dispatchers.Main) {
@@ -424,7 +403,6 @@ class RgbCameraRecorder(
                 } else {
                     CameraSelector.DEFAULT_BACK_CAMERA
                 }
-
 
                 val isAvailable = cameraProvider?.hasCamera(targetCameraSelector) ?: false
                 if (!isAvailable) {
@@ -436,7 +414,6 @@ class RgbCameraRecorder(
                     )
                     return@withContext false
                 }
-
 
                 if (isUsingFrontCamera == useFrontCamera) {
                     Log.d(TAG, "Already using ${if (useFrontCamera) "front" else "back"} camera")
@@ -456,10 +433,8 @@ class RgbCameraRecorder(
                 Log.i(TAG, " Switching to ${if (useFrontCamera) "front" else "back"} camera")
                 _cameraStatus.value = "Switching Camera..."
 
-
                 currentCameraSelector = targetCameraSelector
                 isUsingFrontCamera = useFrontCamera
-
 
                 cameraProvider?.unbindAll()
                 val rebindSuccess = bindUseCasesToCamera()
@@ -485,7 +460,6 @@ class RgbCameraRecorder(
                 false
             }
         }
-
 
     fun getCurrentCameraInfo(): CameraDisplayInfo {
         return object : CameraDisplayInfo {
@@ -513,7 +487,6 @@ class RgbCameraRecorder(
         val currentResolution: String
         val currentFormat: String
     }
-
 
     private fun optimizeVideoConfiguration() {
         try {
@@ -594,7 +567,6 @@ class RgbCameraRecorder(
         }
     }
 
-
     private suspend fun setupCameraUseCases() = withContext(Dispatchers.Main) {
         try {
 
@@ -608,7 +580,6 @@ class RgbCameraRecorder(
                 @Suppress("DEPRECATION")
                 setTargetResolution(previewSize)
 
-
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                     setTargetFrameRate(Range(24, 30))
                 }
@@ -619,10 +590,8 @@ class RgbCameraRecorder(
                 )
             }.build()
 
-
             val recorder = createOptimizedRecorder()
             videoCapture = VideoCapture.withOutput(recorder)
-
 
             imageCapture = ImageCapture.Builder().apply {
                 @Suppress("DEPRECATION")
@@ -630,7 +599,6 @@ class RgbCameraRecorder(
                 setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
                 setJpegQuality(JPEG_QUALITY)
                 setFlashMode(ImageCapture.FLASH_MODE_AUTO)
-
 
                 if (deviceSupportsRAW && ENABLE_RAW_CAPTURE) {
                     try {
@@ -687,19 +655,15 @@ class RgbCameraRecorder(
         }
     }
 
-
     private suspend fun bindUseCases(): Boolean = withContext(Dispatchers.Main) {
         return@withContext bindUseCasesToCamera()
     }
-
 
     private suspend fun bindUseCasesToCamera(): Boolean = withContext(Dispatchers.Main) {
         try {
             cameraProvider?.unbindAll()
 
-
             val useCases = mutableListOf<UseCase>()
-
 
             videoCapture?.let { useCases.add(it) }
             imageCapture?.let { useCases.add(it) }
@@ -707,7 +671,6 @@ class RgbCameraRecorder(
                 useCases.add(it)
                 Log.i(TAG, " RAW ImageCapture added for Stage 3/Level 3 DNG capture")
             }
-
 
             preview?.let { preview ->
                 previewView?.let { previewView ->
@@ -718,7 +681,6 @@ class RgbCameraRecorder(
                             TAG,
                             " Preview bound to PreviewView successfully - live camera feed enabled"
                         )
-
 
                         previewView.implementationMode = PreviewView.ImplementationMode.PERFORMANCE
                         previewView.scaleType = PreviewView.ScaleType.FILL_CENTER
@@ -735,7 +697,6 @@ class RgbCameraRecorder(
                 }
             }
 
-
             if (useCases.isEmpty()) {
                 Log.e(TAG, "No use cases available for binding")
                 return@withContext false
@@ -746,7 +707,6 @@ class RgbCameraRecorder(
                 currentCameraSelector,
                 *useCases.toTypedArray()
             )
-
 
             camera?.let { cam ->
                 val cameraInfo = cam.cameraInfo
@@ -807,7 +767,6 @@ class RgbCameraRecorder(
             false
         }
     }
-
 
     private fun createOptimizedRecorder(): Recorder {
         return try {
@@ -870,11 +829,9 @@ class RgbCameraRecorder(
                 _isRecording.set(true)
                 sessionStartTime.set(System.currentTimeMillis())
 
-
                 sessionReferenceTimestampNs.set(sessionMetadata.sessionStartMonotonicNs)
                 val localStartNs = TimestampManager.getCurrentTimestampNanos()
                 sessionStartOffsetNs.set(localStartNs - sessionMetadata.sessionStartMonotonicNs)
-
 
                 val sessionDir = File(sessionDirectory)
                 if (!sessionDir.exists()) sessionDir.mkdirs()
@@ -893,7 +850,6 @@ class RgbCameraRecorder(
                     )
                 )
 
-
                 if (cameraProvider == null) {
                     withContext(Dispatchers.Main) {
                         if (!initialize()) {
@@ -903,14 +859,12 @@ class RgbCameraRecorder(
                     }
                 }
 
-
                 withContext(Dispatchers.Main) {
                     if (!startVideoRecording()) {
                         _isRecording.set(false)
                         return@withContext false
                     }
                 }
-
 
                 startFrameCapture()
                 _cameraStatus.value =
@@ -946,7 +900,6 @@ class RgbCameraRecorder(
                 sessionDir.mkdirs()
             }
 
-
             if (cameraProvider == null) {
                 withContext(Dispatchers.Main) {
                     if (!initialize()) {
@@ -958,7 +911,6 @@ class RgbCameraRecorder(
 
             setupOutputFiles()
 
-
             val videoRecordingStarted = startVideoRecording()
             if (!videoRecordingStarted) {
                 Log.e(TAG, "Failed to start video recording")
@@ -967,11 +919,9 @@ class RgbCameraRecorder(
 
             initializeSessionTiming()
 
-
             recordingScope.launch {
                 initializeCsvWriter()
             }
-
 
             startFrameCapture()
 
@@ -997,12 +947,10 @@ class RgbCameraRecorder(
             rgbDir.mkdirs()
         }
 
-
         val framesDir = File(rgbDir, "frames")
         if (!framesDir.exists()) {
             framesDir.mkdirs()
         }
-
 
         videoFile = File(rgbDir, SessionDirectoryManager.RGB_VIDEO_FILE)
         csvFile = File(rgbDir, "rgb_timestamps.csv")
@@ -1044,7 +992,6 @@ class RgbCameraRecorder(
         val alignedNs = alignedTimestampNs(timestampNs)
         return metadata.monotonicToWallClock(alignedNs)
     }
-
 
     private fun startVideoRecording(): Boolean {
         return try {
@@ -1100,7 +1047,6 @@ class RgbCameraRecorder(
         }
     }
 
-
     private fun startFrameCapture() {
         frameCaptureJob = recordingScope.launch {
             val framesDir = File(sessionDirectory, "frames")
@@ -1113,10 +1059,8 @@ class RgbCameraRecorder(
             var frameSkipCounter = 0 // Counter for frame throttling
             var adaptiveSkipMultiplier = 1 // For adaptive optimization
 
-
             var pendingCaptureCount = 0
             var consecutiveDroppedFrames = 0 // Track dropped frames for adaptive optimization
-
 
             frameTimestamps.clear()
             lastFrameRateCheck.set(System.currentTimeMillis())
@@ -1174,7 +1118,6 @@ class RgbCameraRecorder(
                     val frameStartTime = TimestampManager.getCurrentTimestampNanos()
                     pendingCaptureCount++
 
-
                     captureFrameAsync(framesDir, frameStartTime) {
                         pendingCaptureCount--
 
@@ -1189,26 +1132,21 @@ class RgbCameraRecorder(
                     consecutiveFrameErrors.incrementAndGet()
                     droppedFrames.incrementAndGet()
 
-
                     pendingCaptureCount = 0
-
 
                     delay(1000)
                 }
             }
-
 
             logFinalFrameRateStats()
             Log.i(TAG, " Enhanced frame capture completed")
         }
     }
 
-
     private fun captureFrameAsync(framesDir: File, frameStartTime: Long, onComplete: () -> Unit) {
         try {
             val timestampRecord = TimestampManager.createTimestampRecord()
             val frameNumber = framesCaptured.incrementAndGet()
-
 
             val jpegFile = File(
                 framesDir,
@@ -1231,7 +1169,6 @@ class RgbCameraRecorder(
                 )
             } else null
 
-
             val jpegOptions = ImageCapture.OutputFileOptions.Builder(jpegFile).build()
 
             imageCapture?.takePicture(
@@ -1242,11 +1179,9 @@ class RgbCameraRecorder(
                         try {
                             resetFrameErrorTracking()
 
-
                             recordingScope.launch(Dispatchers.IO) {
                                 logFrameCapture(timestampRecord, frameNumber, jpegFile)
                             }
-
 
                             if (rawFile != null && deviceSupportsRAW && ENABLE_RAW_CAPTURE) {
                                 captureRawFrameAsync(rawFile, timestampRecord, frameNumber)
@@ -1276,7 +1211,6 @@ class RgbCameraRecorder(
             onComplete()
         }
     }
-
 
     /**
      * Capture RAW DNG frame asynchronously with Stage 3/Level 3 processing
@@ -1441,7 +1375,6 @@ class RgbCameraRecorder(
         }
     }
 
-
     private fun monitorFrameRate(frameTimestamp: Long) {
         synchronized(frameTimestamps) {
             frameTimestamps.add(frameTimestamp)
@@ -1453,7 +1386,6 @@ class RgbCameraRecorder(
             }
         }
     }
-
 
     private fun calculateAndValidateFrameRate() {
         if (frameTimestamps.size < 10) return
@@ -1476,7 +1408,6 @@ class RgbCameraRecorder(
                 } fps (target: ${CAPTURE_FPS} fps)"
             )
 
-
             val frameRateDeviation = Math.abs(actualFrameRateAchieved - CAPTURE_FPS) / CAPTURE_FPS
             if (frameRateDeviation > 0.15) {
                 Log.w(
@@ -1489,7 +1420,6 @@ class RgbCameraRecorder(
                     } from target ${CAPTURE_FPS} fps"
                 )
 
-
                 if (frameRateDeviation > 0.3) {
                     Log.e(
                         TAG,
@@ -1498,13 +1428,11 @@ class RgbCameraRecorder(
                 }
             }
 
-
             if (frameTimestamps.size > 300) {
                 frameTimestamps.subList(0, frameTimestamps.size - 300).clear()
             }
         }
     }
-
 
     private fun logFinalFrameRateStats() {
         try {
@@ -1525,7 +1453,6 @@ class RgbCameraRecorder(
                 "  Video configuration: ${selectedVideoWidth}x${selectedVideoHeight}@${selectedVideoFps}fps"
             )
 
-
             val frameRateSuccess = Math.abs(averageFrameRate - CAPTURE_FPS) / CAPTURE_FPS < 0.2
             if (frameRateSuccess) {
                 Log.i(TAG, " Frame rate validation PASSED - achieved target 30 FPS ± 20%")
@@ -1540,7 +1467,6 @@ class RgbCameraRecorder(
             Log.e(TAG, "Error calculating final frame rate statistics", e)
         }
     }
-
 
     private fun logFrameCapture(
         timestampRecord: TimestampRecord,
@@ -1685,14 +1611,12 @@ class RgbCameraRecorder(
         }
     }
 
-
     private fun handleFrameCaptureError(exception: ImageCaptureException) {
         val currentTime = System.currentTimeMillis()
         val errorCount = consecutiveFrameErrors.incrementAndGet()
         droppedFrames.incrementAndGet()
 
         Log.w(TAG, "Frame capture failed (error $errorCount): ${exception.message}", exception)
-
 
         if (errorCount >= MAX_CONSECUTIVE_FRAME_ERRORS) {
             val timeSinceLastError = currentTime - lastFrameErrorTime.get()
@@ -1719,12 +1643,10 @@ class RgbCameraRecorder(
 
         lastFrameErrorTime.set(currentTime)
 
-
         if (errorCount > 3) {
             _cameraStatus.value = "Recording (Frame Capture Issues: $errorCount errors)"
         }
     }
-
 
     private fun resetFrameErrorTracking() {
         if (consecutiveFrameErrors.get() > 0) {
@@ -1732,7 +1654,6 @@ class RgbCameraRecorder(
             _cameraStatus.value = "Recording (${framesCaptured.get()} frames)"
         }
     }
-
 
     override suspend fun stopRecording(): Boolean {
         return try {
@@ -1744,7 +1665,6 @@ class RgbCameraRecorder(
             Log.i(TAG, " Stopping RGB camera recording with enhanced cleanup...")
             _isRecording.set(false)
             _cameraStatus.value = "Stopping Recording..."
-
 
             frameCaptureJob?.let { job ->
                 Log.d(TAG, "Cancelling frame capture job...")
@@ -1758,7 +1678,6 @@ class RgbCameraRecorder(
                 frameCaptureJob = null
             }
 
-
             activeRecording?.let { recording ->
                 Log.d(TAG, "Stopping active video recording...")
                 try {
@@ -1769,9 +1688,6 @@ class RgbCameraRecorder(
                 }
                 activeRecording = null
             }
-
-
-
 
             try {
                 csvWriter?.let { writer ->
@@ -1790,14 +1706,12 @@ class RgbCameraRecorder(
                 Log.w(TAG, "Error during CSV cleanup", e)
             }
 
-
             try {
                 cameraProvider?.unbindAll()
                 Log.d(TAG, "Camera provider unbound successfully")
             } catch (e: Exception) {
                 Log.w(TAG, "Error unbinding camera provider", e)
             }
-
 
             val sessionStats = generateSessionStats()
             Log.i(TAG, " RGB Camera Session Complete:")
@@ -1816,7 +1730,6 @@ class RgbCameraRecorder(
             Log.i(TAG, "  • Video file: ${videoFile?.name ?: "N/A"}")
             Log.i(TAG, "  • Storage used: ${String.format("%.1f", sessionStats.storageMB)} MB")
 
-
             updateStatus(isRecording = false)
             sessionReferenceTimestampNs.set(0)
             sessionStartOffsetNs.set(0)
@@ -1833,7 +1746,6 @@ class RgbCameraRecorder(
             false
         }
     }
-
 
     private fun generateSessionStats(): SessionStats {
         val totalFrames = framesCaptured.get()
@@ -1907,26 +1819,21 @@ class RgbCameraRecorder(
             Log.i(TAG, "Starting RGB CameraX recorder cleanup")
             _cameraStatus.value = "Cleaning up..."
 
-
             if (_isRecording.get()) {
                 Log.d(TAG, "Stopping active recording during cleanup")
                 stopRecording()
             }
 
-
             frameCaptureJob?.cancel()
             frameCaptureJob = null
 
-
             activeRecording?.stop()
             activeRecording = null
-
 
             csvWriter?.close()
             csvWriter = null
             csvBufferedWriter?.stop()
             csvBufferedWriter = null
-
 
             withContext(Dispatchers.Main) {
                 try {
@@ -1936,7 +1843,6 @@ class RgbCameraRecorder(
                     Log.w(TAG, "Error unbinding camera use cases", e)
                 }
             }
-
 
             camera = null
             preview = null
@@ -1955,9 +1861,7 @@ class RgbCameraRecorder(
                 Log.w(TAG, "Error shutting down camera executor", e)
             }
 
-
             recordingScope.cancel()
-
 
             consecutiveFrameErrors.set(0)
             lastFrameErrorTime.set(0)
@@ -1980,7 +1884,6 @@ class RgbCameraRecorder(
             (currentTime - sessionStartTime.get()) / 1_000_000
         } else 0L
 
-
         val totalSamples = framesCaptured.get()
 
         return RecordingStats(
@@ -2001,7 +1904,6 @@ class RgbCameraRecorder(
     private fun calculateStorageUsed(): Double {
         var totalBytes = 0L
 
-
         if (sessionDirectory.isNotEmpty()) {
             val sessionDir = File(sessionDirectory)
             if (sessionDir.exists()) {
@@ -2011,7 +1913,6 @@ class RgbCameraRecorder(
                     .sum()
             }
         }
-
 
         csvFile?.let { file ->
             if (file.exists()) {
@@ -2063,12 +1964,10 @@ class RgbCameraRecorder(
         errorFlow.emit(error)
     }
 
-
     fun hasCameraPermission(): Boolean {
         return context.checkSelfPermission(android.Manifest.permission.CAMERA) ==
                 android.content.pm.PackageManager.PERMISSION_GRANTED
     }
-
 
     fun supportsHighResolution(): Boolean {
         return try {
@@ -2078,19 +1977,15 @@ class RgbCameraRecorder(
         }
     }
 
-
     fun getStatusText(): String {
         return _cameraStatus.value
     }
-
 
     fun getCameraType(): String {
         return if (useFrontCamera) "Front Camera" else "Back Camera"
     }
 
-
     fun isUsingFrontCamera(): Boolean = useFrontCamera
-
 
     fun getFrameCaptureStats(): Map<String, Any> {
         return mapOf(

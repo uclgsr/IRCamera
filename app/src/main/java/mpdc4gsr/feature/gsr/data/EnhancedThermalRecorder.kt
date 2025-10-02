@@ -13,7 +13,6 @@ import mpdc4gsr.feature.thermal.ui.ThermalCameraRecorder
 import java.io.File
 import java.io.FileWriter
 
-
 class EnhancedThermalRecorder(private val context: Context) {
 
     companion object {
@@ -24,11 +23,9 @@ class EnhancedThermalRecorder(private val context: Context) {
     private var currentSessionDirectory: File? = null
     private var syncEventWriter: FileWriter? = null
 
-
     suspend fun initialize(): Boolean {
         return thermalCameraRecorder.initialize()
     }
-
 
     fun startRecording(
         sessionId: String,
@@ -41,9 +38,7 @@ class EnhancedThermalRecorder(private val context: Context) {
             currentSessionDirectory = File(externalDir, sessionId)
             currentSessionDirectory?.mkdirs()
 
-
             setupSyncEventsFile()
-
 
             @OptIn(kotlinx.coroutines.DelicateCoroutinesApi::class)
             GlobalScope.launch {
@@ -70,7 +65,6 @@ class EnhancedThermalRecorder(private val context: Context) {
         }
     }
 
-
     fun stopRecording(): SessionInfo? {
         return try {
 
@@ -91,7 +85,6 @@ class EnhancedThermalRecorder(private val context: Context) {
             null
         }
     }
-
 
     fun triggerSyncEvent(eventType: String, eventData: Map<String, String>) {
         try {
@@ -116,11 +109,9 @@ class EnhancedThermalRecorder(private val context: Context) {
         }
     }
 
-
     fun getSessionDirectory(): File? {
         return currentSessionDirectory
     }
-
 
     fun cleanup() {
         try {
@@ -136,7 +127,6 @@ class EnhancedThermalRecorder(private val context: Context) {
             Log.e(TAG, "Error during cleanup", e)
         }
     }
-
 
     fun getStatusFlow(): Flow<RecordingStatus> = thermalCameraRecorder.getStatusFlow()
     fun getErrorFlow(): Flow<SensorError> = thermalCameraRecorder.getErrorFlow()
@@ -163,7 +153,6 @@ class EnhancedThermalRecorder(private val context: Context) {
             Log.e(TAG, "Failed to close sync events file", e)
         }
     }
-
 
     data class SessionInfo(
         val sessionDirectory: File?,

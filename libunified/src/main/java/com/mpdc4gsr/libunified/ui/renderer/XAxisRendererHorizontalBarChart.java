@@ -29,7 +29,6 @@ public class XAxisRendererHorizontalBarChart extends XAxisRenderer {
     @Override
     public void computeAxis(float min, float max, boolean inverted) {
 
-
         if (mViewPortHandler.contentWidth() > 10 && !mViewPortHandler.isFullyZoomedOutY()) {
 
             MPPointD p1 = mTrans.getValuesByTouchPoint(mViewPortHandler.contentLeft(), mViewPortHandler.contentBottom());
@@ -240,7 +239,6 @@ public class XAxisRendererHorizontalBarChart extends XAxisRenderer {
 
             c.drawPath(limitLinePath, mLimitLinePaint);
             limitLinePath.reset();
-
 
             String label = l.getLabel();
 

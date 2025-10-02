@@ -14,7 +14,6 @@ import org.opencv.imgproc.Imgproc;
 
 import java.nio.ByteBuffer;
 
-
 public class ImageColorTools {
 
     static {
@@ -58,7 +57,6 @@ public class ImageColorTools {
         Mat imageMat = new Mat(192, 256, CvType.CV_8UC2);
         imageMat.put(0, 0, convertIntArrayToByteArray(image));
 
-
         int[] colorList = new int[]{
                 Color.parseColor("#ff0000"),
                 Color.parseColor("#00ff00"),
@@ -90,10 +88,8 @@ public class ImageColorTools {
             j += 2;
         }
 
-
         Bitmap outputBitmap = Bitmap.createBitmap(256, 192, Bitmap.Config.ARGB_8888);
         outputBitmap.copyPixelsFromBuffer(ByteBuffer.wrap(imageDst));
-
 
         src.release();
         imageMat.release();
@@ -148,7 +144,6 @@ public class ImageColorTools {
         Mat imageMat = new Mat(192, 256, CvType.CV_8UC2);
         imageMat.put(0, 0, convertIntArrayToByteArray(image));
 
-
         Imgproc.cvtColor(imageMat, imageMat, Imgproc.COLOR_YUV2GRAY_YUYV);
         double srcValue = 0.1f;
         long time = System.currentTimeMillis();
@@ -189,10 +184,8 @@ public class ImageColorTools {
         }
         Log.e("Execution Time：", System.currentTimeMillis() - time + "//");
 
-
         Bitmap outputBitmap = Bitmap.createBitmap(imageColor.cols(), imageColor.rows(), Bitmap.Config.ARGB_8888);
         Utils.matToBitmap(imageColor, outputBitmap);
-
 
         src.release();
         imageMat.release();
@@ -234,23 +227,18 @@ public class ImageColorTools {
         Mat imageMat = new Mat(192, 256, CvType.CV_8UC2);
         imageMat.put(0, 0, image);
 
-
         Imgproc.cvtColor(imageMat, imageMat, Imgproc.COLOR_YUV2GRAY_YUYV);
 
         double srcValue = 0.1f;
         long time = System.currentTimeMillis();
 
-
         Log.e("Execution Time：", System.currentTimeMillis() - time + "//");
-
 
         Bitmap outputBitmap = Bitmap.createBitmap(imageMat.cols(), imageMat.rows(), Bitmap.Config.ARGB_8888);
         Utils.matToBitmap(imageMat, outputBitmap, true);
 
-
         src.release();
         imageMat.release();
-
 
         return outputBitmap;
     }
@@ -261,7 +249,6 @@ public class ImageColorTools {
         mat.release();
         return outputBitmap;
     }
-
 
     public static int[] getOneColorByTempEx(float customMaxTemp, float customMinTemp, float nowTemp, int[] colorList) {
         if (colorList == null) {
@@ -308,7 +295,6 @@ public class ImageColorTools {
         result[2] = b;
         return result;
     }
-
 
     private static int interpolateR(int startColor, int endColor, double ratio) {
         int startR = (startColor >> 16) & 0xFF;

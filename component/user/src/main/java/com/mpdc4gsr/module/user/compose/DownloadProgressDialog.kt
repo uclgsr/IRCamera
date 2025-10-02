@@ -15,7 +15,6 @@ import androidx.compose.ui.window.DialogProperties
 import java.text.DecimalFormat
 import com.mpdc4gsr.libunified.R as RCore
 
-
 @Composable
 fun DownloadProgressDialog(
     isVisible: Boolean,

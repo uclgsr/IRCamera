@@ -5,10 +5,8 @@ import android.graphics.Bitmap
 import android.util.Log
 import mpdc4gsr.core.RecordingService
 
-
 object PreviewIntegration {
     private const val TAG = "PreviewIntegration"
-
 
     fun updateRgbFrame(context: Context, rgbFrame: Bitmap) {
         try {
@@ -19,7 +17,6 @@ object PreviewIntegration {
             Log.w(TAG, "Failed to update RGB frame for preview", e)
         }
     }
-
 
     fun updateThermalFrame(context: Context, thermalFrame: Bitmap) {
         try {
@@ -34,7 +31,6 @@ object PreviewIntegration {
         }
     }
 
-
     fun updateGsrValue(context: Context, gsrValue: Float) {
         try {
             val adapter = getPreviewDataAdapter(context)
@@ -44,7 +40,6 @@ object PreviewIntegration {
             Log.w(TAG, "Failed to update GSR value for preview", e)
         }
     }
-
 
     fun isPreviewStreamingActive(context: Context): Boolean {
         return try {
@@ -56,10 +51,8 @@ object PreviewIntegration {
         }
     }
 
-
     fun getStreamingConfig(context: Context): Map<String, Any> {
         return try {
-
 
             emptyMap()
         } catch (e: Exception) {
@@ -67,7 +60,6 @@ object PreviewIntegration {
             emptyMap()
         }
     }
-
 
     fun configureStreaming(
         context: Context,
@@ -95,7 +87,6 @@ object PreviewIntegration {
         }
     }
 
-
     private fun getPreviewDataAdapter(context: Context): PreviewDataAdapter? {
         val service = getRecordingService(context)
         return service?.previewDataAdapter
@@ -108,12 +99,10 @@ object PreviewIntegration {
 
     private fun getRecordingService(context: Context): RecordingService? {
 
-
         Log.d(TAG, "Note: RecordingService access needs proper implementation via service binding")
         return null
     }
 }
-
 
 fun com.mpdc4gsr.module.thermalunified.lite.camera.CameraPreviewManager.updatePreview(context: Context) {
     try {
@@ -125,7 +114,6 @@ fun com.mpdc4gsr.module.thermalunified.lite.camera.CameraPreviewManager.updatePr
         Log.w("PreviewIntegration", "Failed to update thermal preview from CameraPreviewManager", e)
     }
 }
-
 
 fun Float.updateGsrPreview(context: Context) {
     PreviewIntegration.updateGsrValue(context, this)

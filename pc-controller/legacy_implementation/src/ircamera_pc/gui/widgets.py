@@ -22,12 +22,10 @@ except ImportError:
 
     logging.warning("Plotting widgets not available - using placeholder classes")
 
-
     class MultiModalDashboard(QWidget):
         def __init__(self):
             super().__init__()
             self.setMinimumSize(400, 300)
-
 
     class DataAggregationWidget(QWidget):
         def __init__(self):
@@ -36,7 +34,6 @@ except ImportError:
 
         def set_sync_quality(self, quality) -> None:
             pass
-
 
 class DeviceListWidget(QWidget):
     device_selected = pyqtSignal(str)
@@ -90,7 +87,6 @@ class DeviceListWidget(QWidget):
         device_id = item.text().split(" ")[0]
         self.device_selected.emit(device_id)
 
-
 class SessionControlWidget(QWidget):
     start_session_requested = pyqtSignal()
     stop_session_requested = pyqtSignal()
@@ -143,7 +139,6 @@ class SessionControlWidget(QWidget):
             self.stop_btn.setEnabled(False)
             self.new_session_btn.setEnabled(True)
             self.timer_label.setText("00:00:00")
-
 
 class StatusDisplayWidget(QWidget):
 
@@ -207,7 +202,6 @@ class StatusDisplayWidget(QWidget):
 
             self.session_data_size_label.setText("Data Size: --")
 
-
 class SystemIntegrationWidget(QWidget):
     elevation_requested = pyqtSignal(str)
 
@@ -243,7 +237,6 @@ class SystemIntegrationWidget(QWidget):
         self.status_label.setText(message)
         color = "red" if is_error else "green"
         self.status_label.setStyleSheet(f"color: {color};")
-
 
 class BluetoothControlWidget(QWidget):
     scan_requested = pyqtSignal()
@@ -312,7 +305,6 @@ class BluetoothControlWidget(QWidget):
 
         self.status_label.setText(f"Error: {error}")
         self.status_label.setStyleSheet("color: red;")
-
 
 class IntegrationManagementWidget(QWidget):
     integration_status_changed = pyqtSignal(str, bool)
@@ -481,7 +473,6 @@ class IntegrationManagementWidget(QWidget):
 
         if "critical" in error.lower() or "fatal" in error.lower():
             QMessageBox.critical(self, "Critical Integration Error", error)
-
 
 class WiFiControlWidget(QWidget):
     scan_requested = pyqtSignal()

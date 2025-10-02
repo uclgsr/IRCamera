@@ -14,7 +14,6 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-
 abstract class BaseFragment : Fragment() {
     val TAG = BaseFragment::class.java.simpleName
 

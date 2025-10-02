@@ -9,7 +9,6 @@ import android.view.MotionEvent
 import android.view.View
 import kotlin.math.abs
 
-
 class SeekBarIndicator {
     var indicatorBackgroundColor: Int = Color.LTGRAY
 }

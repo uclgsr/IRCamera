@@ -28,7 +28,6 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class RangeSeekBar extends View {
 
     public final static int SEEKBAR_MODE_SINGLE = 1;
@@ -216,7 +215,6 @@ public class RangeSeekBar extends View {
             float thumbHeight = Math.max(leftSB.getThumbScaleHeight(), rightSB.getThumbScaleHeight());
             thumbHeight -= progressHeight / 2f;
 
-
             progressTop = (int) (maxIndicatorHeight + (thumbHeight - progressHeight) / 2f);
             if (tickMarkTextArray != null && tickMarkLayoutGravity == Gravity.TOP) {
                 progressTop = (int) Math.max(getTickMarkRawHeight(), maxIndicatorHeight + (thumbHeight - progressHeight) / 2f);
@@ -370,7 +368,6 @@ public class RangeSeekBar extends View {
 
     protected void onDrawProgressBar(Canvas canvas, Paint paint) {
 
-
         paint.setShader(null);
         if (Utils.verifyBitmap(progressDefaultBitmap)) {
             canvas.drawBitmap(progressDefaultBitmap, null, progressDefaultDstRect, paint);
@@ -384,7 +381,6 @@ public class RangeSeekBar extends View {
             }
             canvas.drawRoundRect(progressDefaultDstRect, progressRadius, progressRadius, paint);
         }
-
 
         if (seekBarMode == SEEKBAR_MODE_RANGE) {
 
@@ -816,7 +812,6 @@ public class RangeSeekBar extends View {
 
     public void setRange(float min, float max, float minInterval) {
 
-
         if (maxProgress == max && min == minProgress) {
 
             return;
@@ -837,7 +832,6 @@ public class RangeSeekBar extends View {
     }
 
     public void setRangeNoInvalidate(float min, float max, float minInterval) {
-
 
         if (maxProgress == max && min == minProgress) {
 
@@ -1187,13 +1181,11 @@ public class RangeSeekBar extends View {
 
     public void setStepsBitmaps(List<Bitmap> stepsBitmaps) {
 
-
         this.stepsBitmaps.clear();
         this.stepsBitmaps.addAll(stepsBitmaps);
     }
 
     public void setStepsDrawable(List<Integer> stepsDrawableIds) {
-
 
         if (!verifyStepsMode()) {
             throw new IllegalArgumentException("stepsWidth must > 0, stepsHeight must > 0,steps must > 0 First!!");
@@ -1248,7 +1240,6 @@ public class RangeSeekBar extends View {
     @Retention(RetentionPolicy.SOURCE)
     public @interface TickMarkGravityDef {
     }
-
 
     @IntDef({Gravity.TOP, Gravity.BOTTOM})
     @Retention(RetentionPolicy.SOURCE)

@@ -21,7 +21,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ThermalNavigationDrawer(
@@ -113,7 +112,6 @@ fun ThermalNavigationDrawer(
     }
 }
 
-
 @Composable
 fun ThermalActionMenu(
     isExpanded: Boolean,
@@ -181,7 +179,6 @@ fun ThermalActionMenu(
     }
 }
 
-
 @Composable
 fun ThermalBottomNavigation(
     destinations: List<ThermalDestination>,
@@ -213,7 +210,6 @@ fun ThermalBottomNavigation(
         }
     }
 }
-
 
 @Composable
 fun ThermalMenuGrid(
@@ -302,7 +298,6 @@ private fun ThermalMenuCard(
         }
     }
 }
-
 
 @Composable
 fun ThermalStatusBar(
@@ -408,7 +403,6 @@ data class ThermalStatus(
 enum class ThermalStatusLevel {
     NORMAL, WARNING, CRITICAL
 }
-
 
 @Composable
 fun ThermalNavigationPreview() {

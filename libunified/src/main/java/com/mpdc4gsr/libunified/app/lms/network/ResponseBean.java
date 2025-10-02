@@ -3,7 +3,6 @@ package com.mpdc4gsr.libunified.app.lms.network;
 import com.blankj.utilcode.util.GsonUtils;
 import com.mpdc4gsr.libunified.app.lms.bean.CommonBean;
 
-
 public class ResponseBean {
     public String code = "2000";
     public String message = "success";

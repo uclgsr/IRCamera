@@ -1,6 +1,5 @@
 package com.mpdc4gsr.libunified.app.lms.xutils.common;
 
-
 public interface Callback<T> {
     void onSuccess(T result);
 

@@ -13,7 +13,6 @@
 .externalNativeBuild/
 /captures/
 
-
 # Build
 # -------------------------------------------------------------------
 /build/
@@ -39,7 +38,6 @@ captures/
 .cxx/
 obj/
 
-
 # Gradle
 # -------------------------------------------------------------------
 .gradle/
@@ -55,19 +53,16 @@ gradle/wrapper/gradle-wrapper.jar
 *.log
 build_*.log
 
-
 # Local configuration
 # -------------------------------------------------------------------
 # Contains SDK path, API keys, and other user-specific information.
 local.properties
-
 
 # Signing files
 # -------------------------------------------------------------------
 # Keep these files private and out of version control.
 *.jks
 *.keystore
-
 
 # OS-generated files
 # -------------------------------------------------------------------
@@ -113,7 +108,6 @@ android.tests.runner/
 .metadata/
 .recommenders/
 .gradle-wrapper/
-
 
 # App/Project specific directories
 # -------------------------------------------------------------------

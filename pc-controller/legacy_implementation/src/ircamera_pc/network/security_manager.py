@@ -22,14 +22,12 @@ MAX_FAILED_ATTEMPTS = 5
 LOCKOUT_DURATION_MINUTES = 15
 MONITORING_INTERVAL_SECONDS = 30
 
-
 class AuthLevel(Enum):
     NONE = 0
     BASIC = 1
     CERTIFICATE = 2
     TOKEN = 3
     BIOMETRIC = 4
-
 
 class DeviceRole(Enum):
     GUEST = (0, {"view_status"})
@@ -65,13 +63,11 @@ class DeviceRole(Enum):
     def has_permission(self, permission: str) -> bool:
         return "*" in self.permissions or permission in self.permissions
 
-
 class AlertSeverity(Enum):
     LOW = 1
     MEDIUM = 2
     HIGH = 3
     CRITICAL = 4
-
 
 @dataclass
 class AuthenticationContext:
@@ -101,7 +97,6 @@ class AuthenticationContext:
             "created_at": self.created_at,
         }
 
-
 @dataclass
 class SecurityAlert:
     id: str
@@ -124,7 +119,6 @@ class SecurityAlert:
             "details": self.details,
             "acknowledged": self.acknowledged,
         }
-
 
 class AdvancedAuthenticationManager:
 
@@ -392,7 +386,6 @@ class AdvancedAuthenticationManager:
             "supported_auth_levels": [level.name for level in AuthLevel],
         }
 
-
 class AdvancedSecurityMonitor:
 
     def __init__(self):
@@ -564,7 +557,6 @@ class AdvancedSecurityMonitor:
             ),
             "monitored_devices": len(self.connection_attempts),
         }
-
 
 class EnhancedSecurityManager:
 

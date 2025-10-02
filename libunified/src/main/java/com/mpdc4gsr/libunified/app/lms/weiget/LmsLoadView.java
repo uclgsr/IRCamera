@@ -8,7 +8,6 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 
-
 public class LmsLoadView extends View {
     private static final int DEFAULT_DOT_COUNT = 3;
     private static final int DEFAULT_DOT_RADIUS = 5;

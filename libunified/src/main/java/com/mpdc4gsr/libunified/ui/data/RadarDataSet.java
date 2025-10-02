@@ -14,7 +14,6 @@ public class RadarDataSet extends LineRadarDataSet<RadarEntry> implements IRadar
 
     protected int mHighlightCircleFillColor = Color.WHITE;
 
-
     protected int mHighlightCircleStrokeColor = ColorTemplate.COLOR_NONE;
 
     protected int mHighlightCircleStrokeAlpha = (int) (0.3 * 255);
@@ -45,12 +44,10 @@ public class RadarDataSet extends LineRadarDataSet<RadarEntry> implements IRadar
         mHighlightCircleFillColor = color;
     }
 
-
     @Override
     public int getHighlightCircleStrokeColor() {
         return mHighlightCircleStrokeColor;
     }
-
 
     public void setHighlightCircleStrokeColor(int color) {
         mHighlightCircleStrokeColor = color;

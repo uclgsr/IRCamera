@@ -1,6 +1,5 @@
 package com.mpdc4gsr.libunified.app.lms;
 
-
 public class UrlConstants {
     public static volatile String BASE_URL = "https://example.com/";
 

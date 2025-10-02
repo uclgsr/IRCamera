@@ -18,7 +18,6 @@ import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.module.user.viewmodel.QuestionDetailsViewModel
 
-
 class QuestionDetailsComposeActivity : BaseComposeActivity<QuestionDetailsViewModel>() {
 
     override fun createViewModel(): QuestionDetailsViewModel {

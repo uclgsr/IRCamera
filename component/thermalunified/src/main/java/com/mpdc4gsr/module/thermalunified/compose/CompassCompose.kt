@@ -24,7 +24,6 @@ import kotlin.math.cos
 import kotlin.math.roundToInt
 import kotlin.math.sin
 
-
 @Composable
 fun CompassCompose(
     bearing: Float,
@@ -74,7 +73,6 @@ fun CompassCompose(
         }
     }
 }
-
 
 @Composable
 fun LinearCompassCompose(
@@ -265,7 +263,6 @@ private fun getCardinalDirection(bearing: Float): String {
     }
 }
 
-
 @Composable
 fun CompassStatusCompose(
     bearing: Float,
@@ -313,7 +310,6 @@ enum class CompassQuality(
     POOR("Poor", Color(0xFFFF6600)),
     UNRELIABLE("Unreliable", Color.Red)
 }
-
 
 @Composable
 fun CompassComposePreview() {

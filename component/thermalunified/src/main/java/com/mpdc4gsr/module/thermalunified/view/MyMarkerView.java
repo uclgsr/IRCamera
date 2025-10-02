@@ -27,7 +27,6 @@ public class MyMarkerView extends MarkerView {
         timeText = findViewById(R.id.time_text);
     }
 
-
     @SuppressLint("DefaultLocale")
     @Override
     public void refreshContent(Entry e, Highlight highlight) {

@@ -11,7 +11,6 @@ from pathlib import Path
 from queue import Empty, Queue
 from typing import Any, Dict, List, Optional, Tuple
 
-
 @dataclass
 class DataStream:
     device_id: str
@@ -24,14 +23,12 @@ class DataStream:
     dropped_samples: int = 0
     is_active: bool = True
 
-
 @dataclass
 class SyncEvent:
     timestamp_ns: int
     event_type: str
     source_device: str
     metadata: Dict[str, Any] = field(default_factory=dict)
-
 
 @dataclass
 class AggregationStats:
@@ -43,7 +40,6 @@ class AggregationStats:
     dropped_frames_total: int = 0
     last_sync_seconds_ago: float = 0.0
     session_duration_seconds: float = 0.0
-
 
 class DataAggregationEngine:
 
@@ -553,7 +549,6 @@ class DataAggregationEngine:
         except Exception as e:
             logger.error(f"Error finalizing exports: {e}")
 
-
 def calculate_temporal_alignment(
         sync_events: List[SyncEvent], tolerance_ms: float = 5.0
 ) -> Dict[str, float]:
@@ -586,7 +581,6 @@ def calculate_temporal_alignment(
                 )
 
     return device_offsets
-
 
 def validate_data_synchronization(
         streams: Dict[str, DataStream], tolerance_ms: float = 5.0

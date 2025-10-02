@@ -233,8 +233,6 @@ class ZoomCaliperView : LinearLayout, ScaleGestureDetector.OnScaleGestureListene
             canTouch = lis.onTouchEvent(event)
         }
 
-
-
         return canTouch
     }
 
@@ -278,7 +276,6 @@ class ZoomCaliperView : LinearLayout, ScaleGestureDetector.OnScaleGestureListene
 
     override fun onScaleEnd(detector: ScaleGestureDetector) {
     }
-
 
     private var mPreviewSize: Size? = null
 

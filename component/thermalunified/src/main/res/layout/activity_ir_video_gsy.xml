@@ -27,7 +27,6 @@
         app:layout_constraintStart_toStartOf="parent"
         tools:visibility="visible">
 
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_download"
             android:layout_width="0dp"
@@ -52,7 +51,6 @@
                 app:layout_constraintWidth_percent="0.5" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_share"
             android:layout_width="0dp"
@@ -75,7 +73,6 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintWidth_percent="0.5" />
         </androidx.constraintlayout.widget.ConstraintLayout>
-
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_delete"

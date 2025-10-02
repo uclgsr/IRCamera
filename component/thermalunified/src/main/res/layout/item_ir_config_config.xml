@@ -10,7 +10,6 @@
     android:paddingBottom="12dp"
     tools:background="#16131e">
 
-
     <ImageView
         android:id="@+id/iv_selector"
         android:layout_width="44dp"
@@ -22,7 +21,6 @@
         android:src="@drawable/selector_radio"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
 
     <ImageView
         android:id="@+id/iv_del"
@@ -55,7 +53,6 @@
         android:layout_height="wrap_content"
         app:barrierDirection="bottom"
         app:constraint_referenced_ids="tv_name,iv_selector" />
-
 
     <TextView
         android:id="@+id/tv_temp_title"
@@ -115,7 +112,6 @@
         app:layout_constraintTop_toTopOf="@id/view_temp_bg"
         tools:text="°C" />
 
-
     <TextView
         android:id="@+id/tv_dis_title"
         android:layout_width="0dp"
@@ -174,7 +170,6 @@
         app:layout_constraintEnd_toEndOf="@id/view_dis_bg"
         app:layout_constraintTop_toTopOf="@id/view_dis_bg"
         tools:ignore="HardcodedText" />
-
 
     <TextView
         android:id="@+id/tv_em_title"

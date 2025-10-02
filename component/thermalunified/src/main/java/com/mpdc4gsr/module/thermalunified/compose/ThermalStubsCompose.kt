@@ -22,7 +22,6 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 
-
 // Data classes for component state
 data class MonitorOption(
     val id: Int,
@@ -42,7 +41,6 @@ data class TipDialogData(
 enum class TipType {
     INFO, WARNING, ERROR, SUCCESS
 }
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -204,7 +202,6 @@ private fun MonitorOptionItem(
     }
 }
 
-
 @Composable
 fun TipDialogCompose(
     showDialog: Boolean,
@@ -264,7 +261,6 @@ fun TipDialogCompose(
         )
     }
 }
-
 
 @Composable
 fun FenceViewsCompose(
@@ -338,7 +334,6 @@ private fun FenceItemCompose(
         }
     }
 }
-
 
 @Composable
 fun GuideStubsCompose(
@@ -423,7 +418,6 @@ fun GuideStubsCompose(
         }
     }
 }
-
 
 @Composable
 fun UIWidgetsCompose(

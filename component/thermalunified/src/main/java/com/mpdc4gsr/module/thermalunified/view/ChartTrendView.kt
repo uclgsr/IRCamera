@@ -110,7 +110,6 @@ class ChartTrendView : LineChart {
         invalidate()
     }
 
-
     fun refresh(tempList: List<Float>) {
         if (tempList.isEmpty()) {
             setToEmpty()

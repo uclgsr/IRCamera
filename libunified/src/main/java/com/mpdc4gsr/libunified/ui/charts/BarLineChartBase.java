@@ -111,7 +111,6 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
 
         mGridBackgroundPaint.setColor(Color.rgb(240, 240, 240));
 
-
         mBorderPaint = new Paint();
         mBorderPaint.setStyle(Style.STROKE);
         mBorderPaint.setColor(Color.BLACK);
@@ -287,7 +286,6 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
         mData.calcMinMaxY(fromX, toX);
 
         mXAxis.calculate(mData.getXMin(), mData.getXMax());
-
 
         if (mAxisLeft.isEnabled())
             mAxisLeft.calculate(mData.getYMin(AxisDependency.LEFT),
@@ -494,7 +492,6 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
 
         MPPointF.recycleInstance(center);
 
-
         calculateOffsets();
         postInvalidate();
     }
@@ -508,7 +505,6 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
 
         MPPointF.recycleInstance(center);
 
-
         calculateOffsets();
         postInvalidate();
     }
@@ -518,7 +514,6 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
         mViewPortHandler.resetZoom(mZoomMatrixBuffer);
         mViewPortHandler.refresh(mZoomMatrixBuffer, this, false);
 
-
         calculateOffsets();
         postInvalidate();
     }
@@ -527,7 +522,6 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
 
         mViewPortHandler.zoom(scaleX, scaleY, x, -y, mZoomMatrixBuffer);
         mViewPortHandler.refresh(mZoomMatrixBuffer, this, false);
-
 
         calculateOffsets();
         postInvalidate();
@@ -700,7 +694,6 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
         mCustomViewPortEnabled = false;
         calculateOffsets();
     }
-
 
     protected float getAxisRange(AxisDependency axis) {
         if (axis == AxisDependency.LEFT)

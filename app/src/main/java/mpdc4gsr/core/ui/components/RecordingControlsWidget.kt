@@ -151,9 +151,6 @@ class RecordingControlsWidget @JvmOverloads constructor(
         }
     }
 
-    /**
-     * Update session state - handles both local and remote triggers
-     */
     fun updateSessionState(
         state: SessionState,
         sessionId: String? = null,
@@ -277,9 +274,6 @@ class RecordingControlsWidget @JvmOverloads constructor(
         }
     }
 
-    /**
-     * Enable/disable local controls (useful when only remote control is desired)
-     */
     fun setLocalControlsEnabled(enabled: Boolean) {
         recordButton.isEnabled =
             enabled && (currentState == SessionState.IDLE || currentState == SessionState.RECORDING)
@@ -290,9 +284,6 @@ class RecordingControlsWidget @JvmOverloads constructor(
         }
     }
 
-    /**
-     * Get current recording duration in milliseconds
-     */
     fun getCurrentDuration(): Long {
         return if (currentState == SessionState.RECORDING) {
             System.currentTimeMillis() - sessionStartTime

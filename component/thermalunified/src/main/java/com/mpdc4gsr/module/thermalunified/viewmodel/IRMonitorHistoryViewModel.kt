@@ -13,7 +13,6 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.withContext
 import java.util.*
 
-
 class IRMonitorHistoryViewModel : BaseViewModel() {
 
     // Data classes for history management

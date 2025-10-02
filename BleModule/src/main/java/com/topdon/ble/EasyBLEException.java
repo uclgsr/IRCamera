@@ -1,6 +1,5 @@
 package com.topdon.ble;
 
-
 public class EasyBLEException extends RuntimeException {
     private static final long serialVersionUID = -7775315841108791634L;
 

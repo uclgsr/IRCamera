@@ -8,7 +8,6 @@ import com.topdon.ble.callback.RequestCallback;
 import java.util.Queue;
 import java.util.UUID;
 
-
 class GenericRequest implements Request, Comparable<GenericRequest> {
     private final String tag;
     Device device;
@@ -43,18 +42,15 @@ class GenericRequest implements Request, Comparable<GenericRequest> {
         return Integer.compare(other.priority, priority);
     }
 
-
     @NonNull
     public Device getDevice() {
         return device;
     }
 
-
     @NonNull
     public RequestType getType() {
         return type;
     }
-
 
     @Nullable
     public String getTag() {

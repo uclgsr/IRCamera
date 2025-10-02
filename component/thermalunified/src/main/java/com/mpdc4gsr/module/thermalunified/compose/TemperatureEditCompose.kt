@@ -26,7 +26,6 @@ import androidx.compose.ui.unit.sp
 import java.util.*
 import kotlin.math.roundToInt
 
-
 @Composable
 fun TemperatureEditCompose(
     mode: TemperatureMode = TemperatureMode.POINT,
@@ -504,7 +503,6 @@ sealed class TemperatureMeasurementResult(
         rectId, "Rectangle", Color(0xFFFF9800), Icons.Default.CropFree
     )
 }
-
 
 @Composable
 fun TemperatureEditComposePreview() {

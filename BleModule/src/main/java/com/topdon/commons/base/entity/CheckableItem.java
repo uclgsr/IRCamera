@@ -1,8 +1,6 @@
 package com.topdon.commons.base.entity;
 
-
 import com.topdon.commons.base.interfaces.Checkable;
-
 
 public class CheckableItem<T> implements Checkable<CheckableItem<T>> {
     private T data;

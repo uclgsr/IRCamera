@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
-
 class IRMonitorCaptureViewModel : BaseViewModel() {
 
     // Data classes matching the fragment requirements
@@ -58,7 +57,6 @@ class IRMonitorCaptureViewModel : BaseViewModel() {
         startTemperatureMonitoring()
     }
 
-
     fun toggleCapture() {
         viewModelScope.launch {
             when (_captureState.value) {
@@ -83,7 +81,6 @@ class IRMonitorCaptureViewModel : BaseViewModel() {
             }
         }
     }
-
 
     fun captureFrame() {
         if (_deviceConnectionState.value != DeviceConnectionState.CONNECTED) return
@@ -117,7 +114,6 @@ class IRMonitorCaptureViewModel : BaseViewModel() {
         }
     }
 
-
     fun toggleContinuousCapture() {
         if (_deviceConnectionState.value != DeviceConnectionState.CONNECTED) return
 
@@ -131,13 +127,11 @@ class IRMonitorCaptureViewModel : BaseViewModel() {
         }
     }
 
-
     fun clearCaptureHistory() {
         viewModelScope.launch {
             _captureHistory.value = emptyList()
         }
     }
-
 
     fun exportCaptures() {
         viewModelScope.launch {
@@ -145,7 +139,6 @@ class IRMonitorCaptureViewModel : BaseViewModel() {
             // In real implementation, this would handle file operations
         }
     }
-
 
     fun deleteCapture(capture: CaptureData) {
         viewModelScope.launch {

@@ -18,7 +18,6 @@ import java.lang.annotation.RetentionPolicy;
 
 public class VerticalRangeSeekBar extends RangeSeekBar {
 
-
     public final static int TEXT_DIRECTION_VERTICAL = 1;
     public final static int TEXT_DIRECTION_HORIZONTAL = 2;
     public final static int DIRECTION_LEFT = 1;

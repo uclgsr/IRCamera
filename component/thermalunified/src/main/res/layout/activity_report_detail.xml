@@ -55,7 +55,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/report_info_view" />
 
-
             <com.mpdc4gsr.module.thermalunified.report.view.WatermarkView
                 android:id="@+id/watermark_view"
                 android:layout_width="0dp"

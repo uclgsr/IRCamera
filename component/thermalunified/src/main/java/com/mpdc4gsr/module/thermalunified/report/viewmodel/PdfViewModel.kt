@@ -20,7 +20,6 @@ import kotlinx.coroutines.withContext
 import java.util.concurrent.CountDownLatch
 import com.mpdc4gsr.libunified.R as LibR
 
-
 class PdfViewModel : BaseViewModel() {
     val listData = MutableLiveData<ReportData?>()
 
@@ -51,19 +50,6 @@ class PdfViewModel : BaseViewModel() {
             object : IResponseCallback {
                 override fun onResponse(p0: String?) {
                     result = Gson().fromJson(p0, ReportData::class.java)
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                     downLatch.countDown()
                 }

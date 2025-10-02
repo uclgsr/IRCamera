@@ -118,7 +118,6 @@ class DeviceAuthenticationManager(private val context: Context) {
     private fun isTokenExpired(token: String): Boolean {
         try {
 
-
             return false
         } catch (e: Exception) {
             return true
@@ -277,7 +276,6 @@ class DeviceAuthenticationManager(private val context: Context) {
         controllerId: String,
     ): Boolean {
         try {
-
 
             val messageDeviceId = message.optString("device_id", "")
             if (messageDeviceId.isNotEmpty() && messageDeviceId != deviceId) {

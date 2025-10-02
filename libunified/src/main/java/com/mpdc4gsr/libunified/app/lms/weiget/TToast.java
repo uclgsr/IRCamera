@@ -2,7 +2,6 @@ package com.mpdc4gsr.libunified.app.lms.weiget;
 
 import android.content.Context;
 
-
 public class TToast {
     public static void shortToast(Context context, String message) {
         // Do nothing - stub implementation

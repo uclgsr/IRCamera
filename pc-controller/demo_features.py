@@ -17,7 +17,6 @@ import time
 # Add native backend to path
 sys.path.insert(0, str(Path(__file__).parent / 'native_backend'))
 
-
 def demo_native_backend():
     """Demonstrate C++ native backend capabilities"""
     print("\n" + "="*70)
@@ -84,7 +83,6 @@ def demo_native_backend():
     
     return True
 
-
 def demo_protocol():
     """Demonstrate protocol message handling"""
     print("\n" + "="*70)
@@ -139,7 +137,6 @@ def demo_protocol():
     
     print("\n Protocol handling working!")
     return True
-
 
 def demo_data_export():
     """Demonstrate data export capabilities"""
@@ -202,7 +199,6 @@ def demo_data_export():
         
     return True
 
-
 def demo_security():
     """Demonstrate security features"""
     print("\n" + "="*70)
@@ -240,7 +236,6 @@ def demo_security():
     
     return True
 
-
 def demo_opencv():
     """Demonstrate OpenCV webcam integration"""
     print("\n" + "="*70)
@@ -277,7 +272,6 @@ def demo_opencv():
         return False
     
     return True
-
 
 def main():
     """Run all demonstrations"""
@@ -318,7 +312,6 @@ def main():
     print("="*70)
     
     return passed == total
-
 
 if __name__ == '__main__':
     success = main()

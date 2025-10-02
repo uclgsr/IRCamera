@@ -14,7 +14,6 @@ except ImportError:
 
 from .device_manager import DeviceConnectionState, DeviceInfo, DeviceManager
 
-
 class SessionState(Enum):
     IDLE = "idle"
     INITIALIZING = "initializing"
@@ -24,7 +23,6 @@ class SessionState(Enum):
     STOPPED = "stopped"
     COMPLETE = "complete"
     ERROR = "error"
-
 
 @dataclass
 class SessionConfiguration:
@@ -36,7 +34,6 @@ class SessionConfiguration:
     sync_flash_enabled: bool = True
     auto_start_recording: bool = False
     notes: str = ""
-
 
 @dataclass
 class SessionMetadata:
@@ -79,7 +76,6 @@ class SessionMetadata:
         result['state'] = self.state.value
 
         return result
-
 
 class AdvancedSessionManager:
     MIN_SUCCESS_RATE_FOR_START = 0.5

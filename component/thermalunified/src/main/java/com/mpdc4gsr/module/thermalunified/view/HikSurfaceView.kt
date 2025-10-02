@@ -17,7 +17,6 @@ import com.mpdc4gsr.libunified.ir.utils.PseudocodeUtils
 import com.mpdc4gsr.module.thermalunified.bean.DataBean
 import java.nio.ByteBuffer
 
-
 class HikSurfaceView : SurfaceView {
     companion object {
 
@@ -53,12 +52,10 @@ class HikSurfaceView : SurfaceView {
 
     fun refreshCustomPseudo(it: DataBean) {
 
-
     }
 
     @Volatile
     private var pseudoType: PseudoColorType = PseudoColorType.PSEUDO_3
-
 
     fun setPseudoCode(code: Int) {
         pseudoType = PseudocodeUtils.changePseudocodeModeByOld(code)

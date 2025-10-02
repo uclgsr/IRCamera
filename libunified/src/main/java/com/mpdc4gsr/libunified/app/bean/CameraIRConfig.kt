@@ -1,12 +1,10 @@
 package com.mpdc4gsr.libunified.app.bean
 
-
 data class ContinuousBean(
     var isOpen: Boolean = false,
     var continuaTime: Long = 1000,
     var count: Int = 3
 )
-
 
 class ObserveBean {
     companion object {
@@ -72,7 +70,6 @@ data class CameraItemBean(
             }
         }
     }
-
 
     companion object {
         const val TYPE_DELAY = 0
