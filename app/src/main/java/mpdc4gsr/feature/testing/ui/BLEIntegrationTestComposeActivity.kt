@@ -1,8 +1,6 @@
 package mpdc4gsr.feature.testing.ui
 
-import android.os.Bundle
 import android.util.Log
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -15,9 +13,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.lifecycleScope
-import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
+import androidx.lifecycle.viewModelScope
+import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
+import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import mpdc4gsr.core.data.ShimmerDeviceManager
@@ -27,33 +25,29 @@ import kotlin.io.path.createTempDirectory
 
 /**
  * Compose version of BLE Integration Test Activity
- * Tests BLE functionality in a modern Compose UI
+ * Migrated to BaseComposeActivity for consistency
  */
-class BLEIntegrationTestComposeActivity : FragmentActivity() {
+class BLEIntegrationTestComposeActivity : BaseComposeActivity<BLETestViewModel>() {
 
     companion object {
         private const val TAG = "BLEIntegrationTestCompose"
     }
 
-    private lateinit var permissionController: PermissionController
-    private var gsrRecorder: UnifiedGSRRecorder? = null
-    private var deviceManager: ShimmerDeviceManager? = null
+    override fun createViewModel(): BLETestViewModel = BLETestViewModel()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    @Composable
+    override fun Content(viewModel: BLETestViewModel) {
+        val testResults by viewModel.testResults.collectAsState()
+        val isTestRunning by viewModel.isTestRunning.collectAsState()
+        val logMessages by viewModel.logMessages.collectAsState()
 
-        // Initialize components
-        permissionController = PermissionController(this)
-        initializeRecorder()
-
-        setContent {
-            LibUnifiedTheme {
-                BLEIntegrationTestScreen(
-                    onRunTest = { testType -> runTest(testType) },
-                    onClearLogs = { /* Clear logs */ }
-                )
-            }
-        }
+        BLEIntegrationTestScreen(
+            testResults = testResults,
+            isTestRunning = isTestRunning,
+            logMessages = logMessages,
+            onRunTest = { testType -> viewModel.runTest(testType, this) },
+            onClearLogs = { viewModel.clearLogs() }
+        )
     }
 
     @OptIn(ExperimentalMaterial3Api::class)
