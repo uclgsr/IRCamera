@@ -7,6 +7,7 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
+import mpdc4gsr.feature.thermal.ui.ThermalCameraRecorder
 import org.junit.After
 import org.junit.Assert.*
 import org.junit.Before
@@ -102,8 +103,8 @@ class TC001HardwareIntegrationTest {
         val testDurationMs = 3000L // 3 seconds test
 
         // Set up frame capture monitoring
-        thermalRecorder.setFrameListener(object : ThermalRecorder.ThermalFrameListener {
-            override fun onFrameProcessed(stats: ThermalRecorder.ThermalFrameStats) {
+        thermalRecorder.setFrameListener(object : ThermalCameraRecorder.ThermalFrameListener {
+            override fun onFrameProcessed(stats: ThermalCameraRecorder.ThermalFrameStats) {
                 frameCount.incrementAndGet()
             }
 
@@ -155,8 +156,8 @@ class TC001HardwareIntegrationTest {
         val recordingContinued = AtomicBoolean(false)
 
         // Monitor recording continuity
-        thermalRecorder.setFrameListener(object : ThermalRecorder.ThermalFrameListener {
-            override fun onFrameProcessed(stats: ThermalRecorder.ThermalFrameStats) {
+        thermalRecorder.setFrameListener(object : ThermalCameraRecorder.ThermalFrameListener {
+            override fun onFrameProcessed(stats: ThermalCameraRecorder.ThermalFrameStats) {
                 recordingContinued.set(true)
             }
 
