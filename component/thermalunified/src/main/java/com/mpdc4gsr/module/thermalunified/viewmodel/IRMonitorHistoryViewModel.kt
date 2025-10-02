@@ -280,29 +280,22 @@ class IRMonitorHistoryViewModel : BaseViewModel() {
      * The first matching file found is returned. If no file is found, returns an empty string.
      */
     private fun findThermalImagePath(startTime: Long, thermalId: String?): String {
-        val possibleDirs = listOf(
+        val possibleDirs = sequenceOf(
             FileConfig.gallerySourDir,
             FileConfig.lineIrGalleryDir,
             FileConfig.tc007IrGalleryDir
         )
 
-        val possibleNames = listOfNotNull(
+        val possibleNames = sequenceOf(
             thermalId?.let { "$it.jpg" },
             thermalId?.let { "$it.png" },
             "${startTime}.jpg",
             "${startTime}.png"
-        )
+        ).filterNotNull()
 
-        for (dir in possibleDirs) {
-            for (name in possibleNames) {
-                val file = File(dir, name)
-                if (file.exists()) {
-                    return file.absolutePath
-                }
-            }
-        }
-
-        return ""
+        return possibleDirs.flatMap { dir ->
+            possibleNames.map { name -> File(dir, name) }
+        }.firstOrNull { it.exists() }?.absolutePath ?: ""
     }
 
     // History UI Event sealed class for one-time events
