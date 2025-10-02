@@ -15,6 +15,19 @@ buildscript {
         classpath(libs.ksp.gradle.plugin)
         classpath(libs.huawei.agconnect)
     }
+    configurations.all {
+        resolutionStrategy {
+            force("org.yaml:snakeyaml:1.33")
+        }
+    }
+}
+
+allprojects {
+    configurations.all {
+        resolutionStrategy {
+            force("org.yaml:snakeyaml:1.33")
+        }
+    }
 }
 
 tasks.register<Delete>("clean") {
