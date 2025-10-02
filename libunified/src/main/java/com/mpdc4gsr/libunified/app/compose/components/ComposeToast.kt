@@ -86,7 +86,7 @@ object ComposeToastHelper {
                 setBackgroundDrawableResource(android.R.color.transparent)
                 clearFlags(android.view.WindowManager.LayoutParams.FLAG_DIM_BEHIND)
             }
-            setCancelable(true)
+            setCancelable(false)
             setCanceledOnTouchOutside(false)
             show()
         }
