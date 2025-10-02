@@ -99,24 +99,28 @@ class RecordingSettingsRepository(context: Context) {
                 videoHeight = 2160,
                 preferredFps = 60
             )
+
             "High" -> QualityConfig(
                 videoBitrate = 20_000_000,
                 videoWidth = 1920,
                 videoHeight = 1080,
                 preferredFps = 30
             )
+
             "Medium" -> QualityConfig(
                 videoBitrate = 10_000_000,
                 videoWidth = 1280,
                 videoHeight = 720,
                 preferredFps = 30
             )
+
             "Low" -> QualityConfig(
                 videoBitrate = 5_000_000,
                 videoWidth = 854,
                 videoHeight = 480,
                 preferredFps = 24
             )
+
             else -> QualityConfig(
                 videoBitrate = 20_000_000,
                 videoWidth = 1920,

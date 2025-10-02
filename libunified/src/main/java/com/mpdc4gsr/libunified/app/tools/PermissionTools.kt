@@ -181,9 +181,9 @@ object PermissionTools {
                             }
 
                             val tipDialogState = TipDialogState(context)
-                            val messageResId = if (!isLocationNever || (isBtNever && isBtFirst)) 
-                                R.string.app_bluetooth_content 
-                            else 
+                            val messageResId = if (!isLocationNever || (isBtNever && isBtFirst))
+                                R.string.app_bluetooth_content
+                            else
                                 R.string.app_location_content
                             tipDialogState.show(
                                 title = context.getString(R.string.app_tip),
