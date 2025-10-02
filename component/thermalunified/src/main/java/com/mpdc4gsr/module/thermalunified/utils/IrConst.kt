@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermalunified.lite
+package com.mpdc4gsr.module.thermalunified.utils
 
 object IrConst {
     const val TAU_HIGH_GAIN_ASSET_PATH = "tau_data/tau_high_gain.bin"

@@ -1,4 +1,4 @@
-package com.mpdc4gsr.module.thermalunified.lite.camera
+package com.mpdc4gsr.module.thermalunified.tools
 
 import android.graphics.Bitmap
 import android.os.Handler
@@ -6,7 +6,7 @@ import com.elvishew.xlog.XLog
 
 class CameraPreviewManager private constructor() {
 
-    private val TAG = "LiteCameraPreviewManager"
+    private val TAG = "ThermalCameraPreviewManager"
     private val delegate = com.mpdc4gsr.libunified.ui.camera.CameraPreviewManager.getInstance()
 
     companion object {
@@ -73,6 +73,6 @@ class CameraPreviewManager private constructor() {
 
     fun init(cameraView: Any, handler: Handler) {
         delegate.init(cameraView, handler)
-        XLog.d(TAG, "Lite CameraPreviewManager initialized (delegating to libunified)")
+        XLog.d(TAG, "Thermal CameraPreviewManager initialized (delegating to libunified)")
     }
 }
