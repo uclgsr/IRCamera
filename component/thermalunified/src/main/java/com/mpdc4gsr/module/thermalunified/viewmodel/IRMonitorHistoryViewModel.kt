@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.mpdc4gsr.libunified.app.db.AppDatabase
 import com.mpdc4gsr.libunified.app.db.dao.ThermalDao
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
+import com.mpdc4gsr.libunified.app.config.FileConfig
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,6 +17,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
 import java.util.Calendar
 
 /**
@@ -173,7 +175,7 @@ class IRMonitorHistoryViewModel : BaseViewModel() {
                                 "area" -> SessionType.CAPTURE
                                 else -> SessionType.MONITORING
                             },
-                            dataFilePath = "" // TODO: Add image path when available
+                            dataFilePath = findThermalImagePath(record.startTime, detailList.firstOrNull()?.thermalId)
                         )
                     }
                 }
@@ -268,6 +270,31 @@ class IRMonitorHistoryViewModel : BaseViewModel() {
         val monthEnd = calendar.timeInMillis
 
         return allHistoryItems.filter { it.startTime in monthStart until monthEnd }
+    }
+
+    private fun findThermalImagePath(startTime: Long, thermalId: String?): String {
+        val possibleDirs = listOf(
+            FileConfig.gallerySourDir,
+            FileConfig.lineIrGalleryDir,
+            FileConfig.tc007IrGalleryDir
+        )
+
+        val possibleNames = listOfNotNull(
+            thermalId?.let { "$it.jpg" },
+            "${startTime}.jpg",
+            "${startTime}.png"
+        )
+
+        for (dir in possibleDirs) {
+            for (name in possibleNames) {
+                val file = File(dir, name)
+                if (file.exists()) {
+                    return file.absolutePath
+                }
+            }
+        }
+
+        return ""
     }
 
     // History UI Event sealed class for one-time events
