@@ -47,4 +47,5 @@
     <color name="color_bg_min">@color/chart_line_min</color>
     <color name="lms_red">#FFFF0000</color>
     <color name="toastTextColor">@color/temp_font_color</color>
+    <color name="tab_text">#FFFFFFFF</color>
 </resources>
