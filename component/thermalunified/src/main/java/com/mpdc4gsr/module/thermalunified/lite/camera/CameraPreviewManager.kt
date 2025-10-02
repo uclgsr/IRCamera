@@ -1,0 +1,78 @@
+package com.mpdc4gsr.module.thermalunified.lite.camera
+
+import android.graphics.Bitmap
+import android.os.Handler
+import com.elvishew.xlog.XLog
+
+class CameraPreviewManager private constructor() {
+
+    private val TAG = "LiteCameraPreviewManager"
+    private val delegate = com.mpdc4gsr.libunified.ui.camera.CameraPreviewManager.getInstance()
+
+    companion object {
+        @Volatile
+        private var INSTANCE: CameraPreviewManager? = null
+
+        fun getInstance(): CameraPreviewManager {
+            return INSTANCE ?: synchronized(this) {
+                INSTANCE ?: CameraPreviewManager().also { INSTANCE = it }
+            }
+        }
+    }
+
+    fun scaledBitmap(cached: Boolean = false): Bitmap? {
+        return delegate.scaledBitmap(cached)
+    }
+
+    fun getCameraBitmap(): Bitmap? {
+        return delegate.getCameraBitmap()
+    }
+
+    fun updateCameraBitmap(bitmap: Bitmap?) {
+        delegate.updateCameraBitmap(bitmap)
+    }
+
+    fun startPreview() {
+        delegate.startPreview()
+    }
+
+    fun stopPreview() {
+        delegate.stopPreview()
+    }
+
+    fun pausePreview() {
+        delegate.pausePreview()
+    }
+
+    fun resumePreview() {
+        delegate.resumePreview()
+    }
+
+    fun release() {
+        delegate.release()
+    }
+
+    fun setImageRotation(rotation: Int) {
+        delegate.setImageRotation(rotation)
+    }
+
+    fun getImageRotation(): Int = delegate.getImageRotation()
+
+    fun setTemperatureLimits(min: Float, max: Float) {
+        delegate.setTemperatureLimits(min, max)
+    }
+
+    fun getMinTemperature(): Float = delegate.getMinTemperature()
+    fun getMaxTemperature(): Float = delegate.getMaxTemperature()
+
+    fun getPseudocolorMode(): Int = delegate.getPseudocolorMode()
+
+    fun applyPseudocolor(bitmap: Bitmap): Bitmap {
+        return delegate.applyPseudocolor(bitmap)
+    }
+
+    fun init(cameraView: Any, handler: Handler) {
+        delegate.init(cameraView, handler)
+        XLog.d(TAG, "Lite CameraPreviewManager initialized (delegating to libunified)")
+    }
+}
