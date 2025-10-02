@@ -11,8 +11,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import mpdc4gsr.core.ui.BaseComposeActivity
-import mpdc4gsr.core.ui.BaseViewModel
+import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
+import mpdc4gsr.core.ui.AppBaseViewModel
 import mpdc4gsr.core.ui.components.settings.*
 
 /**
@@ -291,7 +291,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
 /**
  * SettingsViewModel - Manages settings state
  */
-class SettingsViewModel : BaseViewModel() {
+class SettingsViewModel : AppBaseViewModel() {
     // Settings-specific state management
     private val _settingsState = mutableStateOf(SettingsState())
     val settingsState: State<SettingsState> = _settingsState

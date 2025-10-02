@@ -23,8 +23,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-import mpdc4gsr.core.ui.BaseComposeActivity
-import mpdc4gsr.core.ui.BaseViewModel
+import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
+import mpdc4gsr.core.ui.AppBaseViewModel
 
 /**
  * GSRVideoPlayerComposeActivity - Modern Video Playback with Compose
@@ -713,7 +713,7 @@ private fun formatTime(seconds: Float): String {
     return String.format("%02d:%02d", minutes, remainingSeconds)
 }
 
-class GSRVideoPlayerViewModel : BaseViewModel() {
+class GSRVideoPlayerViewModel : AppBaseViewModel() {
     // ViewModel implementation for managing video playback state, GSR data synchronization, etc.
     // Future implementation would include:
     // - Video playback state management

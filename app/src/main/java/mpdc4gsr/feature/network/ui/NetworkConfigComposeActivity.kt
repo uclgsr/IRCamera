@@ -28,8 +28,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
-import mpdc4gsr.core.ui.BaseComposeActivity
-import mpdc4gsr.core.ui.BaseViewModel
+import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
+import mpdc4gsr.core.ui.AppBaseViewModel
 import mpdc4gsr.core.ui.PermissionController
 import mpdc4gsr.core.ui.PermissionManager
 import mpdc4gsr.core.ui.components.TitleBar
@@ -55,7 +55,7 @@ data class NetworkDevice(
     val signalStrength: Int = 0
 )
 
-class NetworkConfigViewModel : BaseViewModel() {
+class NetworkConfigViewModel : AppBaseViewModel() {
     private val _selectedConnectionType = mutableStateOf<ConnectionType?>(null)
     val selectedConnectionType: State<ConnectionType?> = _selectedConnectionType
 

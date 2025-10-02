@@ -10,13 +10,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import mpdc4gsr.core.ui.BaseViewModel
+import mpdc4gsr.core.ui.AppBaseViewModel
 
 /**
  * Storage Settings ViewModel - MVVM Integration
  * Manages storage configuration and monitors available space
  */
-class StorageSettingsViewModel : BaseViewModel() {
+class StorageSettingsViewModel : AppBaseViewModel() {
 
     private lateinit var prefs: SharedPreferences
     private lateinit var context: Context

@@ -1,6 +1,5 @@
 package mpdc4gsr.feature.testing.ui
 
-import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
@@ -33,13 +32,12 @@ import kotlin.io.path.createTempDirectory
  */
 class BLEIntegrationTestComposeActivity : BaseComposeActivity<BLEIntegrationTestViewModel>() {
 
+
     companion object {
         private const val TAG = "BLEIntegrationTestCompose"
     }
 
-    private lateinit var permissionController: PermissionController
-    private var gsrRecorder: UnifiedGSRRecorder? = null
-    private var deviceManager: ShimmerDeviceManager? = null
+    override fun createViewModel(): BLETestViewModel = BLETestViewModel()
 
     override fun createViewModel(): BLEIntegrationTestViewModel {
         return viewModels<BLEIntegrationTestViewModel>().value

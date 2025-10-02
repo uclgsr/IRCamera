@@ -8,14 +8,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.withContext
 import mpdc4gsr.core.data.utils.SessionDirectoryManager
-import mpdc4gsr.core.ui.BaseViewModel
+import mpdc4gsr.core.ui.AppBaseViewModel
 import java.io.File
 
 /**
  * Modern Session Manager ViewModel - MVVM StateFlow Implementation
  * Manages session lifecycle, filtering, and storage with reactive patterns
  */
-class SessionManagerViewModel : BaseViewModel() {
+class SessionManagerViewModel : AppBaseViewModel() {
 
     // StateFlow for session management
     private val _allSessions = MutableStateFlow<List<SessionInfo>>(emptyList())
