@@ -1,0 +1,115 @@
+package mpdc4gsr.core.threading
+
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
+
+object MonitoredMainThreadPoster {
+    
+    private const val TAG = "MonitoredMainThread"
+    private const val WARNING_THRESHOLD_MS = 100L
+    private const val CRITICAL_THRESHOLD_MS = 1000L
+    
+    private val handler = Handler(Looper.getMainLooper())
+    
+    @Volatile
+    private var totalPosts = 0L
+    
+    @Volatile
+    private var slowPosts = 0L
+    
+    @Volatile
+    private var criticalPosts = 0L
+    
+    fun post(componentName: String, runnable: Runnable) {
+        handler.post(MonitoredRunnable(componentName, runnable))
+    }
+    
+    fun post(componentName: String, action: () -> Unit) {
+        handler.post(MonitoredRunnable(componentName, Runnable(action)))
+    }
+    
+    fun postDelayed(componentName: String, delayMillis: Long, runnable: Runnable) {
+        handler.postDelayed(MonitoredRunnable(componentName, runnable), delayMillis)
+    }
+    
+    fun postDelayed(componentName: String, delayMillis: Long, action: () -> Unit) {
+        handler.postDelayed(MonitoredRunnable(componentName, Runnable(action)), delayMillis)
+    }
+    
+    fun removeCallbacksAndMessages() {
+        handler.removeCallbacksAndMessages(null)
+    }
+    
+    fun getStatistics(): PostStatistics {
+        return PostStatistics(
+            totalPosts = totalPosts,
+            slowPosts = slowPosts,
+            criticalPosts = criticalPosts
+        )
+    }
+    
+    fun resetStatistics() {
+        totalPosts = 0
+        slowPosts = 0
+        criticalPosts = 0
+    }
+    
+    private class MonitoredRunnable(
+        private val componentName: String,
+        private val wrapped: Runnable
+    ) : Runnable {
+        override fun run() {
+            val startTime = System.currentTimeMillis()
+            totalPosts++
+            
+            try {
+                wrapped.run()
+            } catch (e: Exception) {
+                Log.e(TAG, "[$componentName] Exception in main thread runnable", e)
+                throw e
+            } finally {
+                val executionTime = System.currentTimeMillis() - startTime
+                
+                when {
+                    executionTime > CRITICAL_THRESHOLD_MS -> {
+                        criticalPosts++
+                        Log.e(
+                            TAG,
+                            "[$componentName] CRITICAL ANR RISK: Main thread blocked for ${executionTime}ms! " +
+                            "This WILL cause ANR. Move work to background thread immediately."
+                        )
+                    }
+                    executionTime > WARNING_THRESHOLD_MS -> {
+                        slowPosts++
+                        Log.w(
+                            TAG,
+                            "[$componentName] WARNING: Main thread operation took ${executionTime}ms. " +
+                            "Consider optimizing or moving to background thread to prevent ANR."
+                        )
+                    }
+                }
+            }
+        }
+    }
+    
+    data class PostStatistics(
+        val totalPosts: Long,
+        val slowPosts: Long,
+        val criticalPosts: Long
+    ) {
+        val slowPostRate: Float
+            get() = if (totalPosts > 0) {
+                (slowPosts.toFloat() / totalPosts.toFloat()) * 100f
+            } else 0f
+            
+        val criticalPostRate: Float
+            get() = if (totalPosts > 0) {
+                (criticalPosts.toFloat() / totalPosts.toFloat()) * 100f
+            } else 0f
+            
+        fun hasAnrRisk(): Boolean = criticalPosts > 0
+        
+        fun needsOptimization(): Boolean = slowPostRate > 5f
+    }
+}
