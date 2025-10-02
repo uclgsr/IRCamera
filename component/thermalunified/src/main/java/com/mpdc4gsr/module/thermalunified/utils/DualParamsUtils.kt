@@ -36,7 +36,6 @@ object DualParamsUtils {
             DualCameraParams.FusionType.MeanFusion -> SaveSettingUtils.FusionTypeMeanFusion
             DualCameraParams.FusionType.LPYFusion -> SaveSettingUtils.FusionTypeLPYFusion
             DualCameraParams.FusionType.IROnly -> SaveSettingUtils.FusionTypeIROnly
-            else -> SaveSettingUtils.FusionTypeLPYFusion
         }
     }
 }

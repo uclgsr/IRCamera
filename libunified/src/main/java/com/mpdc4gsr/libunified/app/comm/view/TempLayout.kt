@@ -5,6 +5,7 @@ import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.content.Context
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
@@ -75,7 +76,11 @@ class TempLayout : LinearLayout {
                 }
             }
             if (isAttachedToWindow) {
-                alphaAnimator?.start()
+                try {
+                    alphaAnimator?.start()
+                } catch (e: IllegalStateException) {
+                    Log.w("TempLayout", "Failed to start animator: ${e.message}")
+                }
             }
             this.type = type
         }
@@ -94,7 +99,11 @@ class TempLayout : LinearLayout {
                     } else {
                         bg?.setBackgroundResource(R.drawable.ic_ir_blue_bg)
                     }
-                    alphaAnimator?.start()
+                    try {
+                        alphaAnimator?.start()
+                    } catch (e: IllegalStateException) {
+                        Log.w("TempLayout", "Failed to restart animator in onAnimationEnd: ${e.message}")
+                    }
                 }
             }
 
@@ -112,7 +121,11 @@ class TempLayout : LinearLayout {
 
     fun startAlphaBreathAnimation() {
         if (isAttachedToWindow) {
-            alphaAnimator?.start()
+            try {
+                alphaAnimator?.start()
+            } catch (e: IllegalStateException) {
+                Log.w("TempLayout", "Failed to start breath animation: ${e.message}")
+            }
         }
     }
 }
