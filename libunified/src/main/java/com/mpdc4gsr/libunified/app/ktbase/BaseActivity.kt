@@ -20,8 +20,8 @@ import com.mpdc4gsr.libunified.app.bean.event.device.DeviceConnectEvent
 import com.mpdc4gsr.libunified.app.bean.response.ResponseUserInfo
 import com.mpdc4gsr.libunified.app.common.SharedManager
 import com.mpdc4gsr.libunified.app.common.UserInfoManager
-import com.mpdc4gsr.libunified.app.dialog.LoadingDialog
-import com.mpdc4gsr.libunified.app.dialog.TipCameraProgressDialog
+import com.mpdc4gsr.libunified.app.compose.dialogs.LoadingDialogState
+import com.mpdc4gsr.libunified.app.compose.dialogs.ProgressDialogState
 import com.mpdc4gsr.libunified.app.lms.LMS
 import com.mpdc4gsr.libunified.app.lms.bean.CommonBean
 import com.mpdc4gsr.libunified.app.tools.AppLanguageUtils
@@ -88,7 +88,7 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        cameraDialog?.dismiss()
+        cameraDialogState.dismiss()
         super.onDestroy()
         if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this)
@@ -127,7 +127,7 @@ abstract class BaseActivity : AppCompatActivity() {
     protected open fun onSocketDisConnected(isTS004: Boolean) {
     }
 
-    private var loadingDialog: LoadingDialog? = null
+    private val loadingDialogState by lazy { LoadingDialogState(this) }
 
     fun showLoadingDialog(
         @StringRes resId: Int = R.string.tip_loading,
@@ -136,43 +136,31 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     fun showLoadingDialog(text: CharSequence?) {
-        if (loadingDialog == null) {
-            loadingDialog = LoadingDialog(this)
-        }
-        loadingDialog?.setTips(text)
-        loadingDialog?.show()
+        loadingDialogState.show(text?.toString() ?: "")
     }
 
     fun dismissLoadingDialog() {
-        loadingDialog?.dismiss()
+        loadingDialogState.dismiss()
     }
 
-    private var cameraDialog: TipCameraProgressDialog? = null
+    private val cameraDialogState by lazy { ProgressDialogState(this) }
 
     fun showCameraLoading() {
-        if (cameraDialog != null && cameraDialog!!.isShowing) {
-            return
-        }
-        if (cameraDialog == null) {
-            cameraDialog =
-                TipCameraProgressDialog.Builder(this)
-                    .setCanceleable(false)
-                    .create()
-        }
         try {
             if (!(isFinishing && isDestroyed)) {
-                cameraDialog?.show()
+                cameraDialogState.show(
+                    message = getString(R.string.tip_loading),
+                    progress = -1f,
+                    cancelable = false
+                )
             }
         } catch (e: Exception) {
-
-            Log.e("[ph][ph][ph][ph][ph][ph]", e.message.toString())
+            Log.e(TAG, "Error showing camera loading: ${e.message}")
         }
     }
 
     fun dismissCameraLoading() {
-        if (cameraDialog != null && cameraDialog!!.isShowing) {
-            cameraDialog?.dismiss()
-        }
+        cameraDialogState.dismiss()
     }
 
     private fun synLogin() {

@@ -9,7 +9,7 @@ import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
 import com.mpdc4gsr.libunified.R
 import com.mpdc4gsr.libunified.app.BaseApplication
-import com.mpdc4gsr.libunified.app.dialog.TipDialog
+import com.mpdc4gsr.libunified.app.compose.dialogs.TipDialogState
 import com.mpdc4gsr.libunified.app.lms.weiget.TToast
 
 object PermissionTools {
@@ -101,16 +101,17 @@ object PermissionTools {
                             if (BaseApplication.instance.isDomestic()) {
                                 TToast.shortToast(context, tipsResId)
                             } else {
-                                TipDialog.Builder(context)
-                                    .setTitleMessage(context.getString(R.string.app_tip))
-                                    .setMessage(tipsResId)
-                                    .setPositiveListener(R.string.app_open) {
+                                val tipDialogState = TipDialogState(context)
+                                tipDialogState.show(
+                                    title = context.getString(R.string.app_tip),
+                                    message = context.getString(tipsResId),
+                                    showCancel = true,
+                                    positiveText = context.getString(R.string.app_open),
+                                    negativeText = context.getString(R.string.app_cancel),
+                                    onPositive = {
                                         AppUtils.launchAppDetailsSettings()
                                     }
-                                    .setCancelListener(R.string.app_cancel) {
-                                    }
-                                    .setCanceled(true)
-                                    .create().show()
+                                )
                             }
                         } else {
                             TToast.shortToast(context, R.string.scan_ble_tip_authorize)
@@ -179,20 +180,26 @@ object PermissionTools {
                                 }
                             }
 
-                            TipDialog.Builder(context)
-                                .setTitleMessage(context.getString(R.string.app_tip))
-                                .setMessage(
-                                    if (!isLocationNever || (isBtNever && isBtFirst)) R.string.app_bluetooth_content else R.string.app_location_content,
-                                )
-                                .setPositiveListener(R.string.app_open) {
+                            val tipDialogState = TipDialogState(context)
+                            val messageResId = if (!isLocationNever || (isBtNever && isBtFirst)) 
+                                R.string.app_bluetooth_content 
+                            else 
+                                R.string.app_location_content
+                            tipDialogState.show(
+                                title = context.getString(R.string.app_tip),
+                                message = context.getString(messageResId),
+                                showCancel = true,
+                                positiveText = context.getString(R.string.app_open),
+                                negativeText = context.getString(R.string.app_cancel),
+                                cancelable = true,
+                                onPositive = {
                                     XXPermissions.startPermissionActivity(context, permissions)
                                     callback.onNever(true)
-                                }
-                                .setCancelListener(R.string.app_cancel) {
+                                },
+                                onNegative = {
                                     callback.onNever(false)
                                 }
-                                .setCanceled(true)
-                                .create().show()
+                            )
                         } else {
                             callback.onResult(false)
                         }

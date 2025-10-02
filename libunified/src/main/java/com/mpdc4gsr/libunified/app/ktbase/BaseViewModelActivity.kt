@@ -6,11 +6,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.mpdc4gsr.libunified.R
-import com.mpdc4gsr.libunified.app.dialog.MsgDialog
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import androidx.lifecycle.Lifecycle
+import com.mpdc4gsr.libunified.app.compose.dialogs.SimpleMessageDialogState
 import kotlin.coroutines.cancellation.CancellationException
 
 abstract class BaseViewModelActivity<VM : BaseViewModel> : BaseActivity() {
@@ -115,13 +115,15 @@ abstract class BaseViewModelActivity<VM : BaseViewModel> : BaseActivity() {
         }
     }
 
+    private val messageDialogState by lazy { SimpleMessageDialogState(this) }
+
     open fun httpErrorTip(
         text: String,
         requestUrl: String,
     ) {
-        MsgDialog.Builder(this)
-            .setMessage(text)
-            .setImg(R.drawable.ic_tip_error_svg)
-            .create().show()
+        messageDialogState.show(
+            iconRes = R.drawable.ic_tip_error_svg,
+            message = text
+        )
     }
 }

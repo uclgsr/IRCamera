@@ -1,8 +1,9 @@
 package com.mpdc4gsr.libunified.app.dialog
 
 /*
- * SIMPLIFIED: This file has been simplified to work without dataBinding.
- * For new code, prefer Jetpack Compose alternatives. See COMPOSE_MIGRATION.md.
+ * DEPRECATED: This class is deprecated and will be removed in a future release.
+ * Use ConfirmDialogCompose from app.compose.dialogs instead.
+ * See docs/ComposeGuide.md for migration examples.
  */
 
 import android.app.Dialog
@@ -19,7 +20,14 @@ import androidx.core.view.isVisible
 import com.mpdc4gsr.libunified.R
 import com.mpdc4gsr.libunified.app.utils.ScreenUtils
 
-
+@Deprecated(
+    message = "Use ConfirmDialog from app.compose.dialogs instead",
+    replaceWith = ReplaceWith(
+        "ConfirmDialog",
+        "com.mpdc4gsr.libunified.app.compose.dialogs.ConfirmDialog"
+    ),
+    level = DeprecationLevel.WARNING
+)
 class ConfirmSelectDialog(context: Context) : Dialog(context, R.style.InfoDialog),
     View.OnClickListener {
     var onConfirmClickListener: ((isSelect: Boolean) -> Unit)? = null

@@ -1,8 +1,9 @@
 package com.mpdc4gsr.libunified.app.dialog
 
 /*
- * SIMPLIFIED: This file has been simplified to work without dataBinding.
- * For new code, prefer Jetpack Compose alternatives. See COMPOSE_MIGRATION.md.
+ * DEPRECATED: This class is deprecated and will be removed in a future release.
+ * Use FirmwareUpdateDialog from app.compose.dialogs instead.
+ * See docs/ComposeGuide.md for migration examples.
  */
 
 import android.app.Dialog
@@ -16,6 +17,14 @@ import androidx.core.view.isVisible
 import com.mpdc4gsr.libunified.R
 import com.mpdc4gsr.libunified.app.utils.ScreenUtils
 
+@Deprecated(
+    message = "Use FirmwareUpdateDialog from app.compose.dialogs instead",
+    replaceWith = ReplaceWith(
+        "FirmwareUpdateDialog",
+        "com.mpdc4gsr.libunified.app.compose.dialogs.FirmwareUpdateDialog"
+    ),
+    level = DeprecationLevel.WARNING
+)
 class FirmwareUpDialog(context: Context) : Dialog(context, R.style.InfoDialog),
     View.OnClickListener {
 
