@@ -35,7 +35,17 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-
+/**
+ * @deprecated This XML-based dialog is deprecated. Use ConfigGuideDialogCompose instead.
+ * See docs/XML_TO_COMPOSE_MIGRATION.md for migration guide.
+ */
+@Deprecated(
+    message = "Use ConfigGuideDialogCompose from compose package instead",
+    replaceWith = ReplaceWith(
+        "ConfigGuideDialogCompose",
+        "com.mpdc4gsr.module.thermalunified.compose.ConfigGuideDialogCompose"
+    )
+)
 class ConfigGuideDialog(context: Context, val isTC007: Boolean, val dataBean: DataBean) :
     Dialog(context, R.style.TransparentDialog) {
 

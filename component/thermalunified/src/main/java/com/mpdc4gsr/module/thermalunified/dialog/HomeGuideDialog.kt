@@ -24,7 +24,17 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-
+/**
+ * @deprecated This XML-based dialog is deprecated. Use HomeGuideDialogCompose instead.
+ * See docs/XML_TO_COMPOSE_MIGRATION.md for migration guide.
+ */
+@Deprecated(
+    message = "Use HomeGuideDialogCompose from compose package instead",
+    replaceWith = ReplaceWith(
+        "HomeGuideDialogCompose",
+        "com.mpdc4gsr.module.thermalunified.compose.HomeGuideDialogCompose"
+    )
+)
 class HomeGuideDialog(context: Context, private val currentStep: Int) :
     Dialog(context, R.style.TransparentDialog) {
 

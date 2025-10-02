@@ -14,7 +14,17 @@ import com.mpdc4gsr.libunified.app.tools.UnitTools
 import com.mpdc4gsr.libunified.app.utils.ScreenUtils
 import com.mpdc4gsr.module.thermalunified.R
 
-
+/**
+ * @deprecated This XML-based dialog is deprecated. Use IRConfigInputDialogCompose instead.
+ * See docs/XML_TO_COMPOSE_MIGRATION.md for migration guide.
+ */
+@Deprecated(
+    message = "Use IRConfigInputDialogCompose from compose package instead",
+    replaceWith = ReplaceWith(
+        "IRConfigInputDialogCompose",
+        "com.mpdc4gsr.module.thermalunified.compose.IRConfigInputDialogCompose"
+    )
+)
 class IRConfigInputDialog(context: Context, val type: Type, val isTC007: Boolean) :
     Dialog(context, R.style.TextInputDialog) {
     private var value: Float? = null
