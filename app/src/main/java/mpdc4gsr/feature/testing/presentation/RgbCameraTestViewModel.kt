@@ -112,8 +112,6 @@ class RgbCameraTestViewModel : AppBaseViewModel() {
 
     override fun onCleared() {
         super.onCleared()
-        viewModelScope.launch {
-            cameraRecorder?.cleanup()
-        }
+        cameraRecorder?.cleanup()
     }
 }
