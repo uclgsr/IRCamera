@@ -13,7 +13,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import mpdc4gsr.core.ui.*
-import mpdc4gsr.feature.main.ui.MainActivity
+import mpdc4gsr.feature.main.ui.MainComposeActivity
 import mpdc4gsr.feature.settings.ui.AboutScreen
 
 /**
@@ -34,7 +34,7 @@ sealed class IRCameraScreen(val route: String) {
     object ThermalCamera : IRCameraScreen("thermal_camera")
     object ThermalCameraCompose : IRCameraScreen("thermal_camera_compose")
     object ThermalFragment : IRCameraScreen("thermal_fragment")
-    object ThermalComposeFragment : IRCameraScreen("thermal_fragment_compose")
+    object ThermalFragmentCompose : IRCameraScreen("thermal_fragment_compose")
 
     object SensorDashboard : IRCameraScreen("sensor_dashboard")
     object SensorDashboardCompose : IRCameraScreen("sensor_dashboard_compose")
@@ -43,35 +43,33 @@ sealed class IRCameraScreen(val route: String) {
 
     object Gallery : IRCameraScreen("gallery")
     object GalleryFragment : IRCameraScreen("gallery_fragment")
-    object GalleryComposeFragment : IRCameraScreen("gallery_fragment_compose")
+    object GalleryFragmentCompose : IRCameraScreen("gallery_fragment_compose")
 
     // Priority 3: Specialized Thermal Fragments
     object IRCorrectionFragment : IRCameraScreen("ir_correction_fragment")
-    object IRCorrectionComposeFragment : IRCameraScreen("ir_correction_fragment_compose")
+    object IRCorrectionFragmentCompose : IRCameraScreen("ir_correction_fragment_compose")
     object MonitorThermalFragment : IRCameraScreen("monitor_thermal_fragment")
-    object MonitorThermalComposeFragment : IRCameraScreen("monitor_thermal_fragment_compose")
+    object MonitorThermalFragmentCompose : IRCameraScreen("monitor_thermal_fragment_compose")
 
     // Priority 4: Additional Gallery and Lite Fragments
-    object IRGalleryTabFragment : IRCameraScreen("ir_gallery_tab_fragment")
-    object IRGalleryTabComposeFragment : IRCameraScreen("ir_gallery_tab_fragment_compose")
+    object IRGalleryTabFragmentCompose : IRCameraScreen("ir_gallery_tab_fragment_compose")
     object GalleryPictureFragment : IRCameraScreen("gallery_picture_fragment")
-    object GalleryPictureComposeFragment : IRCameraScreen("gallery_picture_fragment_compose")
+    object GalleryPictureFragmentCompose : IRCameraScreen("gallery_picture_fragment_compose")
     object IRPlushFragment : IRCameraScreen("ir_plush_fragment")
-    object IRPlushComposeFragment : IRCameraScreen("ir_plush_fragment_compose")
+    object IRPlushFragmentCompose : IRCameraScreen("ir_plush_fragment_compose")
     object IRMonitorLiteFragment : IRCameraScreen("ir_monitor_lite_fragment")
-    object IRMonitorLiteComposeFragment : IRCameraScreen("ir_monitor_lite_fragment_compose")
+    object IRMonitorLiteFragmentCompose : IRCameraScreen("ir_monitor_lite_fragment_compose")
 
     // Priority 5: Final Specialized Fragments
     object GalleryVideoFragment : IRCameraScreen("gallery_video_fragment")
-    object GalleryVideoComposeFragment : IRCameraScreen("gallery_video_fragment_compose")
-    object PDFListFragment : IRCameraScreen("pdf_list_fragment")
-    object PDFListComposeFragment : IRCameraScreen("pdf_list_fragment_compose")
+    object GalleryVideoFragmentCompose : IRCameraScreen("gallery_video_fragment_compose")
+    object PDFListFragmentCompose : IRCameraScreen("pdf_list_fragment_compose")
     object IRMonitorCaptureFragment : IRCameraScreen("ir_monitor_capture_fragment")
-    object IRMonitorCaptureComposeFragment : IRCameraScreen("ir_monitor_capture_fragment_compose")
+    object IRMonitorCaptureFragmentCompose : IRCameraScreen("ir_monitor_capture_fragment_compose")
     object IRMonitorHistoryFragment : IRCameraScreen("ir_monitor_history_fragment")
-    object IRMonitorHistoryComposeFragment : IRCameraScreen("ir_monitor_history_fragment_compose")
+    object IRMonitorHistoryFragmentCompose : IRCameraScreen("ir_monitor_history_fragment_compose")
     object IRMonitorThermalFragment : IRCameraScreen("ir_monitor_thermal_fragment")
-    object IRMonitorThermalComposeFragment : IRCameraScreen("ir_monitor_thermal_fragment_compose")
+    object IRMonitorThermalFragmentCompose : IRCameraScreen("ir_monitor_thermal_fragment_compose")
 
     object Settings : IRCameraScreen("settings")
     object SettingsCompose : IRCameraScreen("settings_compose")
@@ -95,15 +93,15 @@ fun IRCameraNavHost(
         composable(IRCameraScreen.Main.route) {
             // Launch main activity
             LaunchedEffect(Unit) {
-                context.startActivity(Intent(context, MainActivity::class.java))
+                context.startActivity(Intent(context, MainComposeActivity::class.java))
             }
             LoadingScreen()
         }
 
         composable(IRCameraScreen.MainCompose.route) {
-            // Launch MainActivity instead of non-existent activity
+            // Launch MainComposeActivity
             LaunchedEffect(Unit) {
-                context.startActivity(Intent(context, MainActivity::class.java))
+                context.startActivity(Intent(context, MainComposeActivity::class.java))
             }
             LoadingScreen()
         }

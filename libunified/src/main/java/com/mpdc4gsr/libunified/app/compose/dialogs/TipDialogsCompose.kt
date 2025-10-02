@@ -40,7 +40,8 @@ fun TipDialog(
 
     @Suppress("UNCHECKED_CAST")
     Dialog(
-        onDismissRequest = (if (cancelable) onDismiss else {}) as () -> Unit,
+        onDismissRequest = (if (cancelable) onDismiss else {
+        }) as () -> Unit,
         properties = DialogProperties(
             dismissOnBackPress = cancelable,
             dismissOnClickOutside = cancelable
@@ -259,7 +260,7 @@ fun EmissivityDialog(
 
                 Slider(
                     value = sliderValue,
-                    onValueChange = { 
+                    onValueChange = {
                         sliderValue = it
                         onValueChange(it)
                     },

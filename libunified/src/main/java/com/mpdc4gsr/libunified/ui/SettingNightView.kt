@@ -36,7 +36,7 @@ class SettingNightView @JvmOverloads constructor(
 
     init {
         LayoutInflater.from(context).inflate(R.layout.ui_setting_view_night, this, true)
-        
+
         itemSettingImage = findViewById(R.id.item_setting_image)
         itemSettingEndImage = findViewById(R.id.item_setting_end_image)
         tvEnd = findViewById(R.id.tv_end)

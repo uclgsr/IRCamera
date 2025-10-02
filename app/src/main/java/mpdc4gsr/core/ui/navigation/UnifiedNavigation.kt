@@ -178,12 +178,18 @@ fun UnifiedNavHost(
         composable(UnifiedRoute.DualModeCamera.route) {
             LaunchedEffect(Unit) {
                 try {
-                    context.startActivity(
-                        Intent(
-                            context,
-                            Class.forName("mpdc4gsr.activities.DualModeCameraActivityCompose")
-                        )
-                    )
+                    // Use class reference instead of hard-coded string
+                    val activityClass = try {
+                        mpdc4gsr.activities.DualModeCameraActivityCompose::class.java
+                    } catch (e: NoClassDefFoundError) {
+                        null
+                    }
+
+                    if (activityClass != null) {
+                        context.startActivity(Intent(context, activityClass))
+                    } else {
+                        navController.navigate("dual_mode_camera_screen")
+                    }
                 } catch (e: Exception) {
                     // Fallback to screen
                     navController.navigate("dual_mode_camera_screen")
@@ -201,24 +207,23 @@ fun UnifiedNavHost(
         composable(UnifiedRoute.DevicePairing.route) {
             LaunchedEffect(Unit) {
                 try {
-                    context.startActivity(
-                        Intent(
-                            context,
-                            Class.forName("mpdc4gsr.network.DevicePairingComposeActivity")
-                        )
-                    )
-                } catch (e: Exception) {
-                    // Fallback to activities package
-                    try {
-                        context.startActivity(
-                            Intent(
-                                context,
-                                Class.forName("mpdc4gsr.activities.DevicePairingActivityCompose")
-                            )
-                        )
-                    } catch (e2: Exception) {
-                        // Final fallback - just show loading screen
+                    // Use class reference instead of hard-coded string
+                    val activityClass = try {
+                        mpdc4gsr.network.DevicePairingComposeActivity::class.java
+                    } catch (e: NoClassDefFoundError) {
+                        // Fallback to activities package
+                        try {
+                            mpdc4gsr.activities.DevicePairingActivityCompose::class.java
+                        } catch (e2: NoClassDefFoundError) {
+                            null
+                        }
                     }
+
+                    if (activityClass != null) {
+                        context.startActivity(Intent(context, activityClass))
+                    }
+                } catch (e: Exception) {
+                    // Final fallback - just show loading screen
                 }
             }
             ThermalLoadingScreen("Loading Device Pairing...")
@@ -228,12 +233,16 @@ fun UnifiedNavHost(
         composable(UnifiedRoute.ThermalGallery.route) {
             LaunchedEffect(Unit) {
                 try {
-                    context.startActivity(
-                        Intent(
-                            context,
-                            Class.forName("com.mpdc4gsr.module.thermalunified.activity.ThermalGalleryComposeActivity")
-                        )
-                    )
+                    // Use class reference instead of hard-coded string
+                    val activityClass = try {
+                        com.mpdc4gsr.module.thermalunified.activity.ThermalGalleryComposeActivity::class.java
+                    } catch (e: NoClassDefFoundError) {
+                        null
+                    }
+
+                    if (activityClass != null) {
+                        context.startActivity(Intent(context, activityClass))
+                    }
                 } catch (e: Exception) {
                     // Fallback to placeholder
                 }
@@ -244,12 +253,16 @@ fun UnifiedNavHost(
         composable(UnifiedRoute.ThermalReport.route) {
             LaunchedEffect(Unit) {
                 try {
-                    context.startActivity(
-                        Intent(
-                            context,
-                            Class.forName("com.mpdc4gsr.module.thermalunified.activity.ThermalReportComposeActivity")
-                        )
-                    )
+                    // Use class reference instead of hard-coded string
+                    val activityClass = try {
+                        com.mpdc4gsr.module.thermalunified.activity.ThermalReportComposeActivity::class.java
+                    } catch (e: NoClassDefFoundError) {
+                        null
+                    }
+
+                    if (activityClass != null) {
+                        context.startActivity(Intent(context, activityClass))
+                    }
                 } catch (e: Exception) {
                     // Fallback to placeholder
                 }
@@ -312,12 +325,16 @@ fun UnifiedNavHost(
         composable(UnifiedRoute.PermissionRequest.route) {
             LaunchedEffect(Unit) {
                 try {
-                    context.startActivity(
-                        Intent(
-                            context,
-                            Class.forName("mpdc4gsr.core.ui.PermissionRequestComposeActivity")
-                        )
-                    )
+                    // Use class reference instead of hard-coded string
+                    val activityClass = try {
+                        mpdc4gsr.core.ui.PermissionRequestComposeActivity::class.java
+                    } catch (e: NoClassDefFoundError) {
+                        null
+                    }
+
+                    if (activityClass != null) {
+                        context.startActivity(Intent(context, activityClass))
+                    }
                 } catch (e: Exception) {
                     // Fallback - just show loading screen
                 }

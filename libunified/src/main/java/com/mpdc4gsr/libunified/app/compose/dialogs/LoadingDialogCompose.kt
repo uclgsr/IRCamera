@@ -50,7 +50,7 @@ fun LoadingDialog(
                     modifier = Modifier.size(48.dp),
                     color = MaterialTheme.colorScheme.primary
                 )
-                
+
                 if (message.isNotEmpty()) {
                     Text(
                         text = message,

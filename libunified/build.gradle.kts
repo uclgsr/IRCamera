@@ -138,7 +138,7 @@ configurations.all {
         force("org.jetbrains.kotlinx:kotlinx-coroutines-core:${libs.versions.coroutines.get()}")
         force("org.jetbrains.kotlinx:kotlinx-coroutines-android:${libs.versions.coroutines.get()}")
     }
-    
+
     exclude(group = "org.jetbrains.kotlin", module = "kotlin-android-extensions-runtime")
 }
 

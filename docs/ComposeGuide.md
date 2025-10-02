@@ -8,13 +8,15 @@ All 30 components have been successfully migrated from DataBinding to Jetpack Co
 
 ## Overview
 
-The module has been fully migrated from traditional Android Views with DataBinding to Jetpack Compose for better maintainability, performance, and modern Android development practices.
+The module has been fully migrated from traditional Android Views with DataBinding to Jetpack Compose for better
+maintainability, performance, and modern Android development practices.
 
 ## Current State
 
 ### Compose Infrastructure
+
 - ✅ BaseComposeActivity - Base class for Compose-based activities
-- ✅ BaseComposeFragment - Base class for Compose-based fragments  
+- ✅ BaseComposeFragment - Base class for Compose-based fragments
 - ✅ LibUnifiedTheme - Shared theme with thermal-specific colors
 - ✅ Compose dependencies configured in build.gradle.kts
 - ✅ DataBinding and ViewBinding disabled
@@ -22,6 +24,7 @@ The module has been fully migrated from traditional Android Views with DataBindi
 ### Compose Components Created
 
 #### Dialogs (app/compose/dialogs/)
+
 - ✅ LoadingDialogCompose.kt - Loading indicator with optional message
 - ✅ ConfirmDialogCompose.kt - Confirmation dialog with customizable buttons and checkbox
 - ✅ MessageDialogCompose.kt - LongTextDialog, NotificationDialog, and FirmwareUpdateDialog
@@ -33,6 +36,7 @@ The module has been fully migrated from traditional Android Views with DataBindi
 - ✅ ComposeDialogHelper.kt - Helper classes to use Compose dialogs in non-Compose contexts
 
 #### UI Components (app/compose/components/)
+
 - ✅ TargetColorPickerCompose.kt - Horizontal color picker with selection indicator
 - ✅ ComposeTextRenderer.kt - Text rendering utilities
 - ✅ SettingsCompose.kt - Settings list item and section components
@@ -42,22 +46,26 @@ The module has been fully migrated from traditional Android Views with DataBindi
 ## Migration Strategy
 
 ### Phase 1: Infrastructure (COMPLETED)
+
 - Set up base Compose classes
 - Configure Compose dependencies
 - Create theme system
 - Disable dataBinding and viewBinding
 
 ### Phase 2: Create Compose Alternatives (COMPLETED)
+
 - Create Compose versions of commonly used components
 - Keep original components during transition
 - Allow gradual migration
 
 ### Phase 3: Migrate Usage (TODO)
+
 - Update activities/fragments to use Compose versions
 - Replace databinding dialogs with Compose dialogs
 - Migrate custom views to Composables
 
 ### Phase 4: Cleanup (TODO)
+
 - Remove databinding/viewbinding dependencies completely
 - Delete old View-based components
 - Update all references
@@ -154,6 +162,7 @@ fun ColorSelectionScreen() {
 ## Components to Migrate
 
 ### High Priority Dialogs
+
 - [x] LoadingDialog → LoadingDialogCompose ✅ (Created)
 - [x] ConfirmSelectDialog → ConfirmDialogCompose ✅ (Created)
 - [x] LongTextDialog → LongTextDialog (in MessageDialogCompose.kt) ✅ (Created)
@@ -165,6 +174,7 @@ fun ColorSelectionScreen() {
 - [x] MsgDialog → MessageDialog (in TipDialogsCompose.kt) ✅ (Created)
 
 ### Medium Priority Dialogs
+
 - [x] TipEmissivityDialog → EmissivityDialog (in TipDialogsCompose.kt) ✅ (Created)
 - [x] TipObserveDialog → ObserveDialog (in SpecializedTipDialogsCompose.kt) ✅ (Created)
 - [x] TipChangeDeviceDialog → ChangeDeviceDialog (in SpecializedTipDialogsCompose.kt) ✅ (Created)
@@ -177,11 +187,13 @@ fun ColorSelectionScreen() {
 - [x] EmissivityTipPopup → EmissivityTipPopup (in PopupDialogsCompose.kt) ✅ (Created)
 
 ### Adapters
+
 - [x] TargetColorAdapter → TargetColorPickerCompose ✅ (Created)
 - [x] MenuTabAdapter → MenuTabBar (in MenuCompose.kt) ✅ (Created)
 - [x] BaseMenuAdapter → BaseMenuCompose (Covered by MenuTabBar)
 
 ### Custom Views
+
 - [x] SettingNightView → SettingItem (in SettingsCompose.kt) ✅ (Created)
 - [x] MenuFirstTabView → MenuFirstTab (in MenuCompose.kt) ✅ (Created)
 - [x] MenuSecondView → MenuSecondTab (in MenuCompose.kt) ✅ (Created)

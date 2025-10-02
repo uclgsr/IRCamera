@@ -113,8 +113,8 @@ private fun CarDetectDialogContent(
                     items(detectBean.detectChildBeans) { childBean ->
                         CarDetectItem(
                             childBean = childBean,
-                            isSelected = currentSelection.type == childBean.type && 
-                                        currentSelection.pos == childBean.pos,
+                            isSelected = currentSelection.type == childBean.type &&
+                                    currentSelection.pos == childBean.pos,
                             onClick = { onItemSelected(childBean) }
                         )
                     }
@@ -146,9 +146,9 @@ private fun CarDetectItem(
             .fillMaxWidth()
             .clickable(onClick = onClick),
         colors = CardDefaults.cardColors(
-            containerColor = if (isSelected) 
-                MaterialTheme.colorScheme.primaryContainer 
-            else 
+            containerColor = if (isSelected)
+                MaterialTheme.colorScheme.primaryContainer
+            else
                 MaterialTheme.colorScheme.surfaceVariant
         ),
         shape = RoundedCornerShape(8.dp)
@@ -173,7 +173,7 @@ private fun CarDetectItem(
                         MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.weight(1f)
                 )
-                
+
                 if (!childBean.temperature.isNullOrEmpty()) {
                     Text(
                         text = childBean.temperature,
@@ -185,7 +185,7 @@ private fun CarDetectItem(
                     )
                 }
             }
-            
+
             if (!childBean.description.isNullOrEmpty()) {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
