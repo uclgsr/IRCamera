@@ -186,9 +186,10 @@ constructor(
             sensorsText.text =
                 activeSensors.joinToString(" • ") {
                     when (it) {
-                        SensorType.ThermalIR -> "[THM]"
-                        SensorType.RGBCamera -> "[CAM]"
-                        SensorType.GSR -> "[GSR]"
+                        "ThermalIR", "THERMAL" -> "[THM]"
+                        "RGBCamera", "RGB", "CAMERA" -> "[CAM]"
+                        "GSR" -> "[GSR]"
+                        else -> "[$it]"
                     }
                 }
             visibility = VISIBLE
