@@ -21,7 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import mpdc4gsr.core.ui.AppBaseViewModel
-import mpdc4gsr.core.ui.BaseComposeActivity
+import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import mpdc4gsr.core.ui.components.SensorStatus
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.theme.IRCameraTheme

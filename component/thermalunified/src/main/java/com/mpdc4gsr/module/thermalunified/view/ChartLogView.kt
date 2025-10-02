@@ -112,6 +112,7 @@ class ChartLogView : LineChart {
         }
     }
 
+    @OptIn(kotlinx.coroutines.DelicateCoroutinesApi::class)
     fun initEntry(
         data: ArrayList<ThermalEntity>,
         type: Int = 1,
@@ -129,107 +130,104 @@ class ChartLogView : LineChart {
                 }
                 Log.w("chart", "update chart start")
                 val lineData: LineData = this@ChartLogView.data
-                if (lineData != null) {
-                    val startTime = data[0].createTime / 1000 * 1000
-                    xAxis.valueFormatter = IRMyValueFormatter(startTime = startTime, type = type)
-                    XLog.w("chart init startTime:$startTime")
+                val startTime = data[0].createTime / 1000 * 1000
+                xAxis.valueFormatter = IRMyValueFormatter(startTime = startTime, type = type)
+                XLog.w("chart init startTime:$startTime")
 
-                    when (data[0].type) {
-                        "point" -> {
-                            var set = lineData.getDataSetByIndex(0)
-                            if (set == null) {
-                                set = createSet(0, "point temp")
-                                lineData.addDataSet(set)
-                            }
-                            Log.w("123", "")
-                            data.forEach {
-                                val x =
-                                    ChartTools.getChartX(
-                                        x = it.createTime,
-                                        startTime = startTime,
-                                        type = type,
-                                    ).toFloat()
-                                val entity = Entry(x, it.thermal)
-                                entity.data = it
-                                set.addEntry(entity)
-                            }
-                            XLog.w("DataSet:${set.entryCount}")
+                when (data[0].type) {
+                    "point" -> {
+                        var set = lineData.getDataSetByIndex(0)
+                        if (set == null) {
+                            set = createSet(0, "point temp")
+                            lineData.addDataSet(set)
                         }
-
-                        "line" -> {
-                            var maxDataSet = lineData.getDataSetByIndex(0)
-                            if (maxDataSet == null) {
-                                maxDataSet = createSet(0, "line max temp")
-                            }
-
-                            var minDataSet = lineData.getDataSetByIndex(1)
-                            if (minDataSet == null) {
-                                minDataSet = createSet(1, "line min temp")
-                            }
-                            Log.w("123", "")
-                            data.forEach {
-                                val x =
-                                    ChartTools.getChartX(
-                                        x = it.createTime,
-                                        startTime = startTime,
-                                        type = type,
-                                    ).toFloat()
-
-                                val entity = Entry(x, it.thermalMax)
-                                entity.data = it
-                                maxDataSet.addEntry(entity)
-
-                                val entityMin = Entry(x, it.thermalMin)
-                                entityMin.data = it
-                                minDataSet.addEntry(entityMin)
-                            }
-                            lineData.addDataSet(maxDataSet)
-                            lineData.addDataSet(minDataSet)
-                            XLog.w("DataSet:${maxDataSet.entryCount}")
+                        Log.w("123", "")
+                        data.forEach {
+                            val x =
+                                ChartTools.getChartX(
+                                    x = it.createTime,
+                                    startTime = startTime,
+                                    type = type,
+                                ).toFloat()
+                            val entity = Entry(x, it.thermal)
+                            entity.data = it
+                            set.addEntry(entity)
                         }
-
-                        else -> {
-
-                            var maxTempDataSet = lineData.getDataSetByIndex(0)
-                            if (maxTempDataSet == null) {
-                                maxTempDataSet = createSet(0, "fence max temp")
-                                lineData.addDataSet(maxTempDataSet)
-                            }
-
-                            var centerTempDataSet = lineData.getDataSetByIndex(1)
-                            if (centerTempDataSet == null) {
-                                centerTempDataSet = createSet(1, "fence min temp")
-                                lineData.addDataSet(centerTempDataSet)
-                            }
-                            Log.w("123", "")
-                            data.forEach {
-                                val x =
-                                    ChartTools.getChartX(
-                                        x = it.createTime,
-                                        startTime = startTime,
-                                        type = type,
-                                    ).toFloat()
-
-                                val entityMax = Entry(x, it.thermalMax)
-                                entityMax.data = it
-                                maxTempDataSet.addEntry(entityMax)
-
-                                val entity = Entry(x, it.thermalMin)
-                                entity.data = it
-                                centerTempDataSet.addEntry(entity)
-                            }
-                            XLog.w("DataSet:${centerTempDataSet.entryCount}")
-                        }
+                        XLog.w("DataSet:${set.entryCount}")
                     }
-                    lineData.notifyDataChanged()
-                    notifyDataSetChanged()
-                    moveViewToX(xChartMin)
-                    setVisibleXRangeMinimum(ChartTools.getMinimum(type = type) / 2)
-                    setVisibleXRangeMaximum(ChartTools.getMaximum(type = type))
-                    zoom(1f, 1f, xChartMin, 0f)
-                    ChartTools.setX(this@ChartLogView, type)
 
+                    "line" -> {
+                        var maxDataSet = lineData.getDataSetByIndex(0)
+                        if (maxDataSet == null) {
+                            maxDataSet = createSet(0, "line max temp")
+                        }
+
+                        var minDataSet = lineData.getDataSetByIndex(1)
+                        if (minDataSet == null) {
+                            minDataSet = createSet(1, "line min temp")
+                        }
+                        Log.w("123", "")
+                        data.forEach {
+                            val x =
+                                ChartTools.getChartX(
+                                    x = it.createTime,
+                                    startTime = startTime,
+                                    type = type,
+                                ).toFloat()
+
+                            val entity = Entry(x, it.thermalMax)
+                            entity.data = it
+                            maxDataSet.addEntry(entity)
+
+                            val entityMin = Entry(x, it.thermalMin)
+                            entityMin.data = it
+                            minDataSet.addEntry(entityMin)
+                        }
+                        lineData.addDataSet(maxDataSet)
+                        lineData.addDataSet(minDataSet)
+                        XLog.w("DataSet:${maxDataSet.entryCount}")
+                    }
+
+                    else -> {
+
+                        var maxTempDataSet = lineData.getDataSetByIndex(0)
+                        if (maxTempDataSet == null) {
+                            maxTempDataSet = createSet(0, "fence max temp")
+                            lineData.addDataSet(maxTempDataSet)
+                        }
+
+                        var centerTempDataSet = lineData.getDataSetByIndex(1)
+                        if (centerTempDataSet == null) {
+                            centerTempDataSet = createSet(1, "fence min temp")
+                            lineData.addDataSet(centerTempDataSet)
+                        }
+                        Log.w("123", "")
+                        data.forEach {
+                            val x =
+                                ChartTools.getChartX(
+                                    x = it.createTime,
+                                    startTime = startTime,
+                                    type = type,
+                                ).toFloat()
+
+                            val entityMax = Entry(x, it.thermalMax)
+                            entityMax.data = it
+                            maxTempDataSet.addEntry(entityMax)
+
+                            val entity = Entry(x, it.thermalMin)
+                            entity.data = it
+                            centerTempDataSet.addEntry(entity)
+                        }
+                        XLog.w("DataSet:${centerTempDataSet.entryCount}")
+                    }
                 }
+                lineData.notifyDataChanged()
+                notifyDataSetChanged()
+                moveViewToX(xChartMin)
+                setVisibleXRangeMinimum(ChartTools.getMinimum(type = type) / 2)
+                setVisibleXRangeMaximum(ChartTools.getMaximum(type = type))
+                zoom(1f, 1f, xChartMin, 0f)
+                ChartTools.setX(this@ChartLogView, type)
                 Log.w("chart", "update chart finish")
             }
         }
