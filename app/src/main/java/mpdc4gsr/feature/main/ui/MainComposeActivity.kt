@@ -18,6 +18,35 @@ import mpdc4gsr.feature.settings.ui.*
 import mpdc4gsr.feature.thermal.ui.*
 
 /**
+ * Navigation routes for MainComposeActivity
+ */
+private object MainNavRoutes {
+    const val MAIN = "main"
+    const val UNIFIED_DASHBOARD = "unified_dashboard"
+    const val GSR_SENSOR = "gsr_sensor"
+    const val RGB_CAMERA = "rgb_camera"
+    const val THERMAL_CONNECT = "thermal_connect"
+    const val THERMAL_MONITOR = "thermal_monitor"
+    const val THERMAL_CALIBRATE = "thermal_calibrate"
+    const val THERMAL_ANNOTATE = "thermal_annotate"
+    const val GALLERY = "gallery"
+    const val SETTINGS = "settings"
+    const val PROFILE = "profile"
+    const val GSR_SETTINGS = "gsr_settings"
+    const val CAMERA_SETTINGS = "camera_settings"
+    const val THERMAL_SETTINGS = "thermal_settings"
+    const val RECORDING_SETTINGS = "recording_settings"
+    const val STORAGE_SETTINGS = "storage_settings"
+    const val SYNC_SETTINGS = "sync_settings"
+    const val CALIBRATION = "calibration"
+    const val NETWORK_SETTINGS = "network_settings"
+    const val DIAGNOSTICS = "diagnostics"
+    const val APP_INFO = "app_info"
+    const val PRIVACY_POLICY = "privacy_policy"
+    const val HELP = "help"
+}
+
+/**
  * Main Compose Activity - Unified entry point for the IR Camera application
  * Replaces the traditional MainActivity with a complete Compose implementation
  */
@@ -38,51 +67,51 @@ fun MainApp() {
 
     NavHost(
         navController = navController,
-        startDestination = "main"
+        startDestination = MainNavRoutes.MAIN
     ) {
         // Main screen with bottom navigation
-        composable("main") {
+        composable(MainNavRoutes.MAIN) {
             MainScreen(
-                onNavigateToSensors = { navController.navigate("unified_dashboard") },
-                onNavigateToGallery = { navController.navigate("gallery") },
-                onNavigateToSettings = { navController.navigate("settings") },
-                onNavigateToProfile = { navController.navigate("profile") },
+                onNavigateToSensors = { navController.navigate(MainNavRoutes.UNIFIED_DASHBOARD) },
+                onNavigateToGallery = { navController.navigate(MainNavRoutes.GALLERY) },
+                onNavigateToSettings = { navController.navigate(MainNavRoutes.SETTINGS) },
+                onNavigateToProfile = { navController.navigate(MainNavRoutes.PROFILE) },
                 onNavigateToSensor = { sensorType ->
                     when (sensorType) {
-                        SensorType.GSR -> navController.navigate("gsr_sensor")
-                        SensorType.ThermalIR -> navController.navigate("thermal_connect")
-                        SensorType.RGBCamera -> navController.navigate("rgb_camera")
+                        SensorType.GSR -> navController.navigate(MainNavRoutes.GSR_SENSOR)
+                        SensorType.ThermalIR -> navController.navigate(MainNavRoutes.THERMAL_CONNECT)
+                        SensorType.RGBCamera -> navController.navigate(MainNavRoutes.RGB_CAMERA)
                     }
                 }
             )
         }
 
         // Unified sensor dashboard
-        composable("unified_dashboard") {
+        composable(MainNavRoutes.UNIFIED_DASHBOARD) {
             UnifiedSensorDashboard(
                 onBackClick = { navController.popBackStack() },
-                onSettingsClick = { navController.navigate("settings") },
+                onSettingsClick = { navController.navigate(MainNavRoutes.SETTINGS) },
                 onSensorClick = { sensorType ->
                     when (sensorType) {
-                        SensorType.GSR -> navController.navigate("gsr_sensor")
-                        SensorType.ThermalIR -> navController.navigate("thermal_connect")
-                        SensorType.RGBCamera -> navController.navigate("rgb_camera")
+                        SensorType.GSR -> navController.navigate(MainNavRoutes.GSR_SENSOR)
+                        SensorType.ThermalIR -> navController.navigate(MainNavRoutes.THERMAL_CONNECT)
+                        SensorType.RGBCamera -> navController.navigate(MainNavRoutes.RGB_CAMERA)
                     }
                 }
             )
         }
 
         // Individual sensor screens
-        composable("gsr_sensor") {
+        composable(MainNavRoutes.GSR_SENSOR) {
             GSRSensorScreen(
                 navController = navController
             )
         }
 
-        composable("rgb_camera") {
+        composable(MainNavRoutes.RGB_CAMERA) {
             RGBCameraScreen(
                 onBackClick = { navController.popBackStack() },
-                onSettingsClick = { navController.navigate("camera_settings") },
+                onSettingsClick = { navController.navigate(MainNavRoutes.CAMERA_SETTINGS) },
                 onCapturePhoto = {
                     // Capture photo functionality
                 }
@@ -90,26 +119,26 @@ fun MainApp() {
         }
 
         // Thermal camera workflow
-        composable("thermal_connect") {
+        composable(MainNavRoutes.THERMAL_CONNECT) {
             ConnectScreen(
                 onDeviceSelected = { device ->
-                    navController.navigate("thermal_monitor")
+                    navController.navigate(MainNavRoutes.THERMAL_MONITOR)
                 },
                 onBackClick = { navController.popBackStack() }
             )
         }
 
-        composable("thermal_monitor") {
+        composable(MainNavRoutes.THERMAL_MONITOR) {
             ThermalMonitorScreen(
                 onBackClick = { navController.popBackStack() },
-                onSettingsClick = { navController.navigate("thermal_settings") },
+                onSettingsClick = { navController.navigate(MainNavRoutes.THERMAL_SETTINGS) },
                 onRecordClick = {
                     // Recording functionality
                 }
             )
         }
 
-        composable("thermal_calibrate") {
+        composable(MainNavRoutes.THERMAL_CALIBRATE) {
             CalibrateScreen(
                 onBackClick = { navController.popBackStack() },
                 onCalibrationComplete = {
@@ -119,7 +148,7 @@ fun MainApp() {
             )
         }
 
-        composable("thermal_annotate") {
+        composable(MainNavRoutes.THERMAL_ANNOTATE) {
             AnnotateScreen(
                 onBackClick = { navController.popBackStack() },
                 onSave = {
@@ -132,13 +161,13 @@ fun MainApp() {
         }
 
         // Additional screens
-        composable("gallery") {
+        composable(MainNavRoutes.GALLERY) {
             GalleryScreen(
                 onBackClick = { navController.popBackStack() }
             )
         }
 
-        composable("settings") {
+        composable(MainNavRoutes.SETTINGS) {
             SettingsScreen(
                 onBackClick = { navController.popBackStack() },
                 onNavigateToGSRSettings = { navController.navigate("gsr_settings") },
@@ -156,80 +185,80 @@ fun MainApp() {
             )
         }
 
-        composable("profile") {
+        composable(MainNavRoutes.PROFILE) {
             ProfileScreen(
                 onBackClick = { navController.popBackStack() }
             )
         }
 
         // Settings screens
-        composable("gsr_settings") {
+        composable(MainNavRoutes.GSR_SETTINGS) {
             GSRSettingsScreen(
                 onBackClick = { navController.popBackStack() }
             )
         }
 
-        composable("camera_settings") {
+        composable(MainNavRoutes.CAMERA_SETTINGS) {
             CameraSettingsScreen(
                 onBackClick = { navController.popBackStack() }
             )
         }
 
-        composable("thermal_settings") {
+        composable(MainNavRoutes.THERMAL_SETTINGS) {
             ThermalSettingsScreen(
                 onBackClick = { navController.popBackStack() }
             )
         }
 
-        composable("recording_settings") {
+        composable(MainNavRoutes.RECORDING_SETTINGS) {
             RecordingSettingsScreen(
                 onBackClick = { navController.popBackStack() }
             )
         }
 
-        composable("storage_settings") {
+        composable(MainNavRoutes.STORAGE_SETTINGS) {
             StorageSettingsScreen(
                 onBackClick = { navController.popBackStack() }
             )
         }
 
-        composable("sync_settings") {
+        composable(MainNavRoutes.SYNC_SETTINGS) {
             SyncSettingsScreen(
                 onBackClick = { navController.popBackStack() }
             )
         }
 
-        composable("calibration") {
+        composable(MainNavRoutes.CALIBRATION) {
             CalibrationScreen(
                 onBackClick = { navController.popBackStack() }
             )
         }
 
-        composable("network_settings") {
+        composable(MainNavRoutes.NETWORK_SETTINGS) {
             NetworkSettingsScreen(
                 onBackClick = { navController.popBackStack() }
             )
         }
 
-        composable("diagnostics") {
+        composable(MainNavRoutes.DIAGNOSTICS) {
             DiagnosticsScreen(
                 onBackClick = { navController.popBackStack() }
             )
         }
 
-        composable("app_info") {
+        composable(MainNavRoutes.APP_INFO) {
             AppInfoScreen(
                 onBackClick = { navController.popBackStack() }
             )
         }
 
-        composable("privacy_policy") {
+        composable(MainNavRoutes.PRIVACY_POLICY) {
             PrivacyPolicyScreen(
                 onBackClick = { navController.popBackStack() }
             )
         }
 
-        composable("help") {
+        composable(MainNavRoutes.HELP) {
             HelpScreen(
                 onBackClick = { navController.popBackStack() }
             )

@@ -13,6 +13,42 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 /**
+ * Focus mode options for camera
+ */
+enum class FocusMode(val displayName: String) {
+    AUTO("Auto"),
+    MANUAL("Manual"),
+    CONTINUOUS("Continuous");
+
+    fun getNext(): FocusMode {
+        return when (this) {
+            AUTO -> MANUAL
+            MANUAL -> CONTINUOUS
+            CONTINUOUS -> AUTO
+        }
+    }
+}
+
+/**
+ * White balance options for camera
+ */
+enum class WhiteBalance(val displayName: String) {
+    AUTO("Auto"),
+    DAYLIGHT("Daylight"),
+    CLOUDY("Cloudy"),
+    TUNGSTEN("Tungsten");
+
+    fun getNext(): WhiteBalance {
+        return when (this) {
+            AUTO -> DAYLIGHT
+            DAYLIGHT -> CLOUDY
+            CLOUDY -> TUNGSTEN
+            TUNGSTEN -> AUTO
+        }
+    }
+}
+
+/**
  * ViewModel for RGB Camera Screen
  * Manages RgbCameraRecorder lifecycle and camera controls
  */
@@ -34,8 +70,8 @@ class RGBCameraViewModel(
         val frameRate: Int = 30,
         val exposureTime: String = "1/60",
         val iso: Int = 200,
-        val focusMode: String = "Auto",
-        val whiteBalance: String = "Auto",
+        val focusMode: FocusMode = FocusMode.AUTO,
+        val whiteBalance: WhiteBalance = WhiteBalance.AUTO,
         val recordingDuration: Int = 0,
         val capturedFrames: Int = 0,
         val error: String? = null
@@ -157,11 +193,11 @@ class RGBCameraViewModel(
         _cameraState.update { it.copy(frameRate = frameRate) }
     }
 
-    fun updateFocusMode(focusMode: String) {
+    fun updateFocusMode(focusMode: FocusMode) {
         _cameraState.update { it.copy(focusMode = focusMode) }
     }
 
-    fun updateWhiteBalance(whiteBalance: String) {
+    fun updateWhiteBalance(whiteBalance: WhiteBalance) {
         _cameraState.update { it.copy(whiteBalance = whiteBalance) }
     }
 

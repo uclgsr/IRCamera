@@ -66,8 +66,8 @@ fun RGBCameraScreen(
     val frameRate = cameraState.frameRate
     val exposureTime = cameraState.exposureTime
     val iso = cameraState.iso
-    val focusMode = cameraState.focusMode
-    val whiteBalance = cameraState.whiteBalance
+    val focusMode = cameraState.focusMode.displayName
+    val whiteBalance = cameraState.whiteBalance.displayName
     val recordingDuration = cameraState.recordingDuration
     val capturedFrames = cameraState.capturedFrames
 
@@ -607,8 +607,8 @@ private fun CameraSettingsCard(
     onFrameRateChange: (Int) -> Unit,
     onExposureChange: (String) -> Unit,
     onISOChange: (Int) -> Unit,
-    onFocusModeChange: (String) -> Unit,
-    onWhiteBalanceChange: (String) -> Unit,
+    onFocusModeChange: (mpdc4gsr.feature.camera.presentation.FocusMode) -> Unit,
+    onWhiteBalanceChange: (mpdc4gsr.feature.camera.presentation.WhiteBalance) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -673,14 +673,9 @@ private fun CameraSettingsCard(
             ) {
                 Button(
                     onClick = { 
-                        val newMode = when (focusMode) {
-                            "Auto" -> "Manual"
-                            "Manual" -> "Continuous"
-                            else -> "Auto"
-                        }
-                        onFocusModeChange(newMode)
+                        onFocusModeChange(viewModel.cameraState.value.focusMode.getNext())
                     },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF9800)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Orange),
                     modifier = Modifier.weight(1f)
                 ) {
                     Text("Focus: $focusMode", fontSize = 9.sp)
@@ -690,15 +685,9 @@ private fun CameraSettingsCard(
 
                 Button(
                     onClick = { 
-                        val newWB = when (whiteBalance) {
-                            "Auto" -> "Daylight"
-                            "Daylight" -> "Cloudy"
-                            "Cloudy" -> "Tungsten"
-                            else -> "Auto"
-                        }
-                        onWhiteBalanceChange(newWB)
+                        onWhiteBalanceChange(viewModel.cameraState.value.whiteBalance.getNext())
                     },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF9C27B0)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Purple),
                     modifier = Modifier.weight(1f)
                 ) {
                     Text("WB: $whiteBalance", fontSize = 9.sp)
