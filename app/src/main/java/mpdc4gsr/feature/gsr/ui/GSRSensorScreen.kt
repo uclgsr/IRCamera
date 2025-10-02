@@ -45,9 +45,22 @@ fun GSRSensorScreen(
     val lifecycleOwner = LocalLifecycleOwner.current
     val sensorState by viewModel.sensorState.collectAsState()
 
-    // Initialize recorder on first composition
+    // Initialize recorder on first composition and manage lifecycle properly
     LaunchedEffect(Unit) {
-        viewModel.initializeRecorder(lifecycleOwner)
+        viewModel.initializeRecorder(context, lifecycleOwner)
+    }
+
+    // Manage lifecycle using DisposableEffect to avoid memory leaks
+    DisposableEffect(lifecycleOwner, viewModel.gsrRecorder) {
+        val recorder = viewModel.gsrRecorder
+        if (recorder != null && recorder is androidx.lifecycle.DefaultLifecycleObserver) {
+            lifecycleOwner.lifecycle.addObserver(recorder)
+        }
+        onDispose {
+            if (recorder != null && recorder is androidx.lifecycle.DefaultLifecycleObserver) {
+                lifecycleOwner.lifecycle.removeObserver(recorder)
+            }
+        }
     }
 
     // Use real data from ViewModel or fallback to simulated data for preview
@@ -58,21 +71,20 @@ fun GSRSensorScreen(
     val deviceBattery = if (sensorState.deviceBattery > 0) sensorState.deviceBattery else 87
     val samplingRate = sensorState.samplingRate
 
-    // Historical data for plotting
-    var gsrHistory by remember { mutableStateOf(generateInitialGSRData()) }
+    // Use GSR history from ViewModel state, with fallback to generated data
+    val gsrHistory = if (sensorState.gsrHistory.isNotEmpty()) {
+        sensorState.gsrHistory
+    } else {
+        remember { generateInitialGSRData() }
+    }
 
-    // Update history with real or simulated data
-    LaunchedEffect(isConnected, currentGSR) {
-        if (isConnected) {
-            while (true) {
-                kotlinx.coroutines.delay(100)
-                // Use real currentGSR value or simulate
-                val newValue = if (sensorState.currentGSR > 0) {
-                    sensorState.currentGSR
-                } else {
-                    2.0f + kotlin.random.Random.nextFloat() * 1.5f
-                }
-                gsrHistory = gsrHistory.drop(1) + newValue
+    // Only simulate data when not connected and for preview purposes
+    LaunchedEffect(isConnected) {
+        if (!isConnected) {
+            // Simulation only runs when not connected for preview
+            while (!isConnected) {
+                kotlinx.coroutines.delay(1000)
+                // This is just for UI preview when no real data
             }
         }
     }

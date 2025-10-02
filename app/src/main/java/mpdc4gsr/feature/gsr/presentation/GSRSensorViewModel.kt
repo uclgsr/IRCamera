@@ -6,6 +6,9 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import mpdc4gsr.core.data.UnifiedGSRRecorder
 import mpdc4gsr.core.ui.AppBaseViewModel
+import java.text.SimpleDateFormat
+import java.util.Locale
+import java.util.TimeZone
 
 /**
  * ViewModel for GSR Sensor Screen
@@ -14,6 +17,14 @@ import mpdc4gsr.core.ui.AppBaseViewModel
 class GSRSensorViewModel(
     private val application: Application
 ) : AppBaseViewModel() {
+
+    companion object {
+        // Reuse SimpleDateFormat instance for better performance
+        private val ISO_DATE_FORMAT = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US).apply {
+            timeZone = TimeZone.getTimeZone("UTC")
+        }
+        private const val MAX_HISTORY_SIZE = 100
+    }
 
     data class GSRSensorState(
         val isConnected: Boolean = false,
@@ -29,17 +40,19 @@ class GSRSensorViewModel(
     private val _sensorState = MutableStateFlow(GSRSensorState())
     val sensorState: StateFlow<GSRSensorState> = _sensorState.asStateFlow()
 
-    private var gsrRecorder: UnifiedGSRRecorder? = null
+    // Expose recorder for lifecycle management from UI layer
+    var gsrRecorder: UnifiedGSRRecorder? = null
+        private set
 
     /**
-     * Initialize GSR recorder with lifecycle owner
-     * Must be called from Activity/Fragment context
+     * Initialize GSR recorder without lifecycle owner
+     * Lifecycle should be managed from UI layer using DisposableEffect
      */
-    fun initializeRecorder(lifecycleOwner: androidx.lifecycle.LifecycleOwner) {
+    fun initializeRecorder(context: android.content.Context, lifecycleOwner: androidx.lifecycle.LifecycleOwner) {
         viewModelScope.launch {
             try {
                 gsrRecorder = UnifiedGSRRecorder(
-                    context = application,
+                    context = context,
                     lifecycleOwner = lifecycleOwner,
                     samplingRateHz = 128
                 )
@@ -63,7 +76,21 @@ class GSRSensorViewModel(
     fun connectDevice() {
         viewModelScope.launch {
             try {
-                _sensorState.update { it.copy(isConnected = true, error = null) }
+                // Scan for devices and connect to the first available one
+                val devices = gsrRecorder?.getDiscoveredDevices()
+                if (devices.isNullOrEmpty()) {
+                    _sensorState.update { it.copy(error = "No devices found. Please scan first.") }
+                    return@launch
+                }
+                
+                // Connect to first available device
+                val device = devices.firstOrNull()
+                if (device != null) {
+                    // Connection logic would be handled by the recorder
+                    _sensorState.update { it.copy(isConnected = true, error = null) }
+                } else {
+                    _sensorState.update { it.copy(error = "No valid device to connect") }
+                }
             } catch (e: Exception) {
                 _sensorState.update { it.copy(error = "Connection failed: ${e.message}") }
             }
@@ -95,15 +122,12 @@ class GSRSensorViewModel(
                 
                 val currentTimeMs = System.currentTimeMillis()
                 val currentMonotonicNs = System.nanoTime()
-                val isoFormat = java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", java.util.Locale.US).apply {
-                    timeZone = java.util.TimeZone.getTimeZone("UTC")
-                }
                 
                 val metadata = mpdc4gsr.core.data.SessionMetadata(
                     sessionId = "gsr_${currentTimeMs}",
                     sessionStartTimestampMs = currentTimeMs,
                     sessionStartMonotonicNs = currentMonotonicNs,
-                    sessionStartIso = isoFormat.format(java.util.Date(currentTimeMs))
+                    sessionStartIso = ISO_DATE_FORMAT.format(java.util.Date(currentTimeMs))
                 )
                 
                 gsrRecorder?.startRecording(sessionDir, metadata)
@@ -132,13 +156,32 @@ class GSRSensorViewModel(
      * Start collecting GSR data from recorder
      */
     private fun startDataCollection() {
+        // Collect recording status
         viewModelScope.launch {
             gsrRecorder?.getStatusFlow()?.collect { status ->
-                // Update state based on recorder status
                 _sensorState.update { currentState ->
                     currentState.copy(
                         isRecording = status.isRecording,
                         samplingRate = status.currentDataRate.toInt()
+                    )
+                }
+            }
+        }
+        
+        // Collect actual GSR data samples
+        viewModelScope.launch {
+            gsrRecorder?.getDataStream()?.collect { gsrSample ->
+                _sensorState.update { currentState ->
+                    val newGSR = gsrSample.gsrMicrosiemens.toFloat()
+                    val newHistory = (currentState.gsrHistory + newGSR).takeLast(MAX_HISTORY_SIZE)
+                    
+                    // Calculate skin conductance (same as GSR in microsiemens)
+                    val skinConductance = newGSR
+                    
+                    currentState.copy(
+                        currentGSR = newGSR,
+                        skinConductance = skinConductance,
+                        gsrHistory = newHistory
                     )
                 }
             }

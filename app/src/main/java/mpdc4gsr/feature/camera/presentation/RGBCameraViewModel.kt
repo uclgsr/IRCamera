@@ -6,6 +6,9 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import mpdc4gsr.core.data.RgbCameraRecorder
 import mpdc4gsr.core.ui.AppBaseViewModel
+import java.text.SimpleDateFormat
+import java.util.Locale
+import java.util.TimeZone
 
 /**
  * ViewModel for RGB Camera Screen
@@ -14,6 +17,13 @@ import mpdc4gsr.core.ui.AppBaseViewModel
 class RGBCameraViewModel(
     private val application: Application
 ) : AppBaseViewModel() {
+
+    companion object {
+        // Reuse SimpleDateFormat instance for better performance
+        private val ISO_DATE_FORMAT = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US).apply {
+            timeZone = TimeZone.getTimeZone("UTC")
+        }
+    }
 
     data class CameraState(
         val isPreviewActive: Boolean = false,
@@ -80,15 +90,12 @@ class RGBCameraViewModel(
                 
                 val currentTimeMs = System.currentTimeMillis()
                 val currentMonotonicNs = System.nanoTime()
-                val isoFormat = java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", java.util.Locale.US).apply {
-                    timeZone = java.util.TimeZone.getTimeZone("UTC")
-                }
                 
                 val metadata = mpdc4gsr.core.data.SessionMetadata(
                     sessionId = "camera_${currentTimeMs}",
                     sessionStartTimestampMs = currentTimeMs,
                     sessionStartMonotonicNs = currentMonotonicNs,
-                    sessionStartIso = isoFormat.format(java.util.Date(currentTimeMs))
+                    sessionStartIso = ISO_DATE_FORMAT.format(java.util.Date(currentTimeMs))
                 )
                 
                 cameraRecorder?.startRecording(sessionDir, metadata)
