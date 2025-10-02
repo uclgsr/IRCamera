@@ -1,18 +1,12 @@
 package com.mpdc4gsr.module.thermalunified.viewmodel
 
-import androidx.lifecycle.viewModelScope
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
-/**
- * ViewModel for Image Color Comparison functionality
- * Manages dual thermal image comparison with color processing
- */
 class ImageColorViewModel : BaseViewModel() {
 
     private val _timestamp = MutableStateFlow("")

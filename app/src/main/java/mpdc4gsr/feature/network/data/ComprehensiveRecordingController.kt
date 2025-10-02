@@ -5,22 +5,16 @@ import android.util.Log
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import mpdc4gsr.core.CrashRecoveryManager
 import mpdc4gsr.core.RecordingService
 import mpdc4gsr.core.data.SensorRecorder
+import mpdc4gsr.core.data.SessionMetadata
 import mpdc4gsr.core.data.utils.SessionDirectory
 import mpdc4gsr.core.data.utils.SessionDirectoryManager
-import mpdc4gsr.feature.network.data.RecordingConstants
-import mpdc4gsr.core.data.SessionMetadata
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
@@ -51,10 +45,8 @@ class ComprehensiveRecordingController(
         private const val GSR_SAMPLING_RATE_HZ = 128
     }
 
-
     private val _isRecording = AtomicBoolean(false)
     val isRecording: Boolean get() = _isRecording.get()
-
 
     private val sensorRecorders = ConcurrentHashMap<String, SensorRecorder>()
     private val activeRecorders = ConcurrentHashMap<String, Boolean>()
@@ -105,7 +97,6 @@ class ComprehensiveRecordingController(
     private var crashRecoveryMarker: File? = null
     private val crashRecoveryManager = CrashRecoveryManager(context)
 
-
     fun addSensorRecorder(name: String, recorder: SensorRecorder) {
         sensorRecorders[name] = recorder
         sensorHealthStatus[name] = SensorHealthInfo(
@@ -153,7 +144,6 @@ class ComprehensiveRecordingController(
             false
         }
     }
-
 
     suspend fun startRecording(
         sessionId: String? = null,
@@ -223,7 +213,6 @@ class ComprehensiveRecordingController(
                     return@withContext false
                 }
 
-
                 val finalSessionId = sessionId ?: sessionDirectoryManager.generateSessionId()
                 val sessionDir = sessionDirectoryManager.createSessionDirectory(finalSessionId)
                 currentSessionDirectory = sessionDir
@@ -232,7 +221,6 @@ class ComprehensiveRecordingController(
 
                 currentSessionId = finalSessionId
                 sessionStartTime.set(System.currentTimeMillis())
-
 
                 createCrashRecoveryMarker(finalSessionId, enabledSensors)
 
@@ -360,7 +348,6 @@ class ComprehensiveRecordingController(
         }
     }
 
-
     private suspend fun validateRecordingPrerequisites(
         enabledSensors: List<String>,
         estimatedDurationMinutes: Int
@@ -389,7 +376,6 @@ class ComprehensiveRecordingController(
                 )
             }
 
-
             val unavailableSensors = enabledSensors.filter { sensorRecorders[it] == null }
             if (unavailableSensors.isNotEmpty()) {
                 return ValidationResult(
@@ -397,7 +383,6 @@ class ComprehensiveRecordingController(
                     "Sensors not available: ${unavailableSensors.joinToString()}"
                 )
             }
-
 
             val unhealthySensors = enabledSensors.filter {
                 sensorHealthStatus[it]?.isHealthy == false
@@ -415,7 +400,6 @@ class ComprehensiveRecordingController(
         }
     }
 
-
     private suspend fun requestRequiredPermissions(enabledSensors: List<String>): Boolean {
         return try {
             Log.i(TAG, "Requesting permissions for sensors: $enabledSensors")
@@ -426,7 +410,6 @@ class ComprehensiveRecordingController(
             false
         }
     }
-
 
     private fun estimateSessionSize(enabledSensors: List<String>, durationMinutes: Int): Double {
         var estimatedMB = 0.0
@@ -442,7 +425,6 @@ class ComprehensiveRecordingController(
         return estimatedMB
     }
 
-
     private fun createCrashRecoveryMarker(sessionId: String, enabledSensors: List<String>) {
         try {
             crashRecoveryMarker = File(context.filesDir, "crash_recovery_$sessionId.marker")
@@ -456,7 +438,6 @@ class ComprehensiveRecordingController(
             Log.w(TAG, "Failed to create crash recovery markers", e)
         }
     }
-
 
     suspend fun stopRecording(triggerSource: TriggerSource = TriggerSource.LOCAL_UI): Boolean {
         return withContext(Dispatchers.IO) {
@@ -636,7 +617,6 @@ class ComprehensiveRecordingController(
             updateSensorHealth(sensorName, false)
         }
     }
-
 
     private fun startStatisticsUpdates() {
         recordingScope.launch {
@@ -1148,7 +1128,6 @@ class ComprehensiveRecordingController(
             Log.e(TAG, "Failed to write session manifest", e)
         }
     }
-
 
     fun getSensorStatusSummary(): String {
         return try {

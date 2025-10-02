@@ -4,10 +4,6 @@ import android.app.Application
 import kotlinx.coroutines.flow.Flow
 import java.io.File
 
-/**
- * Repository for firmware operations following modern architecture patterns
- * Simplified version for MVVM modernization
- */
 class FirmwareRepository(
     private val application: Application
 ) : BaseRepository() {
@@ -36,9 +32,6 @@ class FirmwareRepository(
         val currentFirmwareVersion: String
     )
 
-    /**
-     * Check for firmware updates with caching
-     */
     fun checkFirmwareUpdate(
         isTC007: Boolean,
         deviceInfo: DeviceInfo
@@ -50,9 +43,6 @@ class FirmwareRepository(
         }
     }
 
-    /**
-     * Download firmware file - simplified for MVVM demo
-     */
     suspend fun downloadFirmware(
         firmwareInfo: FirmwareInfo,
         outputDir: File
@@ -63,9 +53,6 @@ class FirmwareRepository(
         outputFile
     }
 
-    /**
-     * Get firmware info from local assets
-     */
     suspend fun getFirmwareFromAssets(isTC007: Boolean): BaseRepository.Result<FirmwareInfo> =
         safeCall {
             val version = if (isTC007) TC007_FIRMWARE_VERSION else TS004_FIRMWARE_VERSION

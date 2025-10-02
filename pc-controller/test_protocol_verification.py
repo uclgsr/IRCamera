@@ -21,7 +21,6 @@ import json
 from typing import Optional, List, Tuple
 from protocol_adapter import ProtocolAdapter
 
-
 class MockAndroidDevice:
     """
     Mock Android device that implements the Protocol.kt specification.
@@ -158,7 +157,6 @@ class MockAndroidDevice:
                 self.server_socket.close()
             except:
                 pass
-
 
 class TestProtocolVerification(unittest.TestCase):
     """Test complete protocol communication flow"""
@@ -499,7 +497,6 @@ class TestProtocolVerification(unittest.TestCase):
         print(f"  - Messages sent by PC: {len(self.mock_android.received_messages)}")
         print(f"  - Messages sent by Android: {len(self.mock_android.sent_messages)}")
 
-
 def run_verification_tests():
     """Run all verification tests"""
     loader = unittest.TestLoader()
@@ -539,7 +536,6 @@ def run_verification_tests():
     print("="*70)
     
     return result.wasSuccessful()
-
 
 if __name__ == '__main__':
     import sys

@@ -6,7 +6,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -16,15 +18,6 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.module.user.viewmodel.AutoSaveViewModel
 import com.mpdc4gsr.libunified.R as RCore
 
-/**
- * User Management Module - AutoSave Settings Compose Activity
- *
- * Simple settings screen that allows users to toggle auto-save functionality.
- * Demonstrates modern Compose migration from XML with:
- * - Material 3 components
- * - State management with ViewModel
- * - Settings UI components
- */
 class AutoSaveComposeActivity : BaseComposeActivity<AutoSaveViewModel>() {
 
     override fun createViewModel(): AutoSaveViewModel {

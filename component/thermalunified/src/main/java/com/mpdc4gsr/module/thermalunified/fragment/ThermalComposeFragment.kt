@@ -1,15 +1,15 @@
 package com.mpdc4gsr.module.thermalunified.fragment
 
-import android.view.View
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Videocam
 import androidx.compose.material.icons.filled.Camera
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Videocam
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -24,17 +24,6 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.app.matrix.IrSurfaceView
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalFragmentViewModel
 
-/**
- * Compose migration of ThermalFragment
- *
- * This fragment demonstrates:
- * - Complete migration of thermal camera UI to Compose
- * - Integration with existing IrSurfaceView for camera display
- * - Modern Material 3 UI with thermal imaging optimized colors
- * - Enhanced temperature data visualization
- * - Improved recording controls and status indicators
- * - Seamless integration with ThermalFragmentViewModel
- */
 class ThermalComposeFragment : BaseComposeFragment<ThermalFragmentViewModel>() {
 
     override fun createViewModel(): ThermalFragmentViewModel {

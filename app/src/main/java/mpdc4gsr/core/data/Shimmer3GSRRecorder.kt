@@ -10,36 +10,19 @@ import androidx.lifecycle.lifecycleScope
 import com.shimmerresearch.android.Shimmer
 import com.shimmerresearch.bluetooth.ShimmerBluetooth.BT_STATE
 import com.shimmerresearch.driver.ObjectCluster
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.BufferOverflow
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import mpdc4gsr.core.data.RecordingStats
-import mpdc4gsr.core.data.RecordingStatus
-import mpdc4gsr.core.data.SensorError
-import mpdc4gsr.core.data.SensorRecorder
-import mpdc4gsr.feature.gsr.data.GSRCalculationUtils
-import mpdc4gsr.feature.gsr.data.GSRConstants
+import kotlinx.coroutines.flow.*
 import mpdc4gsr.core.data.model.DeviceInfo
 import mpdc4gsr.core.data.model.GSRSample
+import mpdc4gsr.feature.gsr.data.GSRCalculationUtils
+import mpdc4gsr.feature.gsr.data.GSRConstants
 import java.io.File
 import java.io.FileWriter
 import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
-
 
 class Shimmer3GSRRecorder(
     private val context: Context,
@@ -98,7 +81,6 @@ class Shimmer3GSRRecorder(
         onBufferOverflow = BufferOverflow.DROP_OLDEST
     )
 
-
     private val _statusFlow = MutableSharedFlow<RecordingStatus>(replay = 1)
     private val _errorFlow = MutableSharedFlow<SensorError>(replay = 1)
 
@@ -124,14 +106,12 @@ class Shimmer3GSRRecorder(
                 return@withContext false
             }
 
-
             deviceManager = ShimmerDeviceManager(context, lifecycleOwner)
             if (!deviceManager!!.initialize()) {
                 Log.e(TAG, "Failed to initialize Shimmer device manager")
                 _deviceStatus.value = "Initialization Failed"
                 return@withContext false
             }
-
 
             lifecycleOwner.lifecycleScope.launch {
                 deviceManager!!.connectionEvents.collect { event ->
@@ -216,10 +196,7 @@ class Shimmer3GSRRecorder(
             @Suppress("DEPRECATION")
             shimmer.writeEnabledSensors(Shimmer.SENSOR_GSR.toLong())
 
-
-
             Log.d(TAG, "Using default sampling rate: ${DEFAULT_SAMPLING_RATE}Hz")
-
 
             shimmer.setGSRRange(GSR_RANGE_AUTO)
 
@@ -243,11 +220,9 @@ class Shimmer3GSRRecorder(
                 return@withContext true
             }
 
-
             val shimmer = connectedShimmer
             if (shimmer == null) {
                 Log.w(TAG, "No Shimmer3 GSR+ device connected - attempting auto-connection")
-
 
                 val deviceManager = this@Shimmer3GSRRecorder.deviceManager
                 if (deviceManager != null) {
@@ -266,7 +241,6 @@ class Shimmer3GSRRecorder(
                     }
                 }
 
-
                 if (connectedShimmer == null) {
                     Log.w(
                         TAG,
@@ -281,11 +255,9 @@ class Shimmer3GSRRecorder(
                 this@Shimmer3GSRRecorder.sessionDirectory = File(sessionDirectory)
                 this@Shimmer3GSRRecorder.sessionDirectory?.mkdirs()
 
-
                 val csvFile =
                     File(this@Shimmer3GSRRecorder.sessionDirectory, "shimmer3_gsr_data.csv")
                 csvWriter = FileWriter(csvFile)
-
 
                 val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault())
                 csvWriter?.write("# Shimmer3 GSR+ Recording Session\n")
@@ -298,13 +270,10 @@ class Shimmer3GSRRecorder(
                 csvWriter?.write("timestamp_ns,timestamp_iso,gsr_microsiemens,gsr_raw_adc,ppg_raw,quality_score,connection_rssi\n")
                 csvWriter?.flush()
 
-
                 recordedSamples.set(0)
                 recordingStartTime = System.nanoTime()
 
-
                 val shimmerDevice = connectedShimmer ?: return@withContext false
-
 
                 try {
                     configureGSRSensor()
@@ -316,10 +285,8 @@ class Shimmer3GSRRecorder(
                     )
                 }
 
-
                 shimmerDevice.startStreaming()
                 _isRecording.set(true)
-
 
                 setupDataProcessingCallback(shimmerDevice)
 
@@ -338,7 +305,6 @@ class Shimmer3GSRRecorder(
             }
         }
 
-
     fun processObjectCluster(objectCluster: ObjectCluster) {
         if (!_isRecording.get()) return
 
@@ -346,7 +312,6 @@ class Shimmer3GSRRecorder(
             val timestamp = System.nanoTime()
             val timestampIso =
                 SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault()).format(Date())
-
 
             val gsrRaw = try {
                 val gsrRawData = objectCluster.getFormatClusterValue("GSR", "CAL")
@@ -356,9 +321,7 @@ class Shimmer3GSRRecorder(
                 0
             }
 
-
             val gsrMicrosiemens = calculateGSRMicrosiemens(gsrRaw)
-
 
             val ppgRaw = try {
                 val ppgRawData = objectCluster.getFormatClusterValue("PPG_A13", "CAL")
@@ -367,9 +330,7 @@ class Shimmer3GSRRecorder(
                 0
             }
 
-
             val qualityScore = calculateQualityScore(gsrRaw, timestamp)
-
 
             val sample = GSRSample(
                 timestamp = timestamp,
@@ -381,16 +342,13 @@ class Shimmer3GSRRecorder(
                 connectionRssi = -50
             )
 
-
             lifecycleOwner.lifecycleScope.launch {
                 gsrDataFlow.emit(sample)
             }
 
-
             csvWriter?.write("${timestamp},${timestampIso},${gsrMicrosiemens},${gsrRaw},${ppgRaw},${qualityScore},-50\n")
 
             val currentSample = recordedSamples.incrementAndGet()
-
 
             if (currentSample % 10 == 0L) {
                 csvWriter?.flush()
@@ -419,7 +377,6 @@ class Shimmer3GSRRecorder(
         try {
             _isRecording.set(false)
 
-
             connectedShimmer?.let { shimmer ->
                 try {
                     shimmer.stopStreaming()
@@ -429,10 +386,8 @@ class Shimmer3GSRRecorder(
                 }
             }
 
-
             recordingJob?.cancel()
             recordingJob = null
-
 
             csvWriter?.let { writer ->
                 try {
@@ -467,19 +422,15 @@ class Shimmer3GSRRecorder(
         }
     }
 
-
     private fun setupDataProcessingCallback(shimmer: Shimmer) {
         try {
             Log.i(TAG, "Setting up Shimmer data processing callback for real GSR streaming")
-
 
             val manager = deviceManager?.shimmerBluetoothManager
 
             if (manager != null) {
 
-
                 Log.i(TAG, "Using ShimmerBluetoothManagerAndroid for real data processing")
-
 
                 recordingJob = lifecycleOwner.lifecycleScope.launch {
                     var sampleCounter = 0
@@ -491,12 +442,10 @@ class Shimmer3GSRRecorder(
                             val currentTime = System.currentTimeMillis()
                             var hasRealData = false
 
-
                             val connectedDevice = connectedShimmer
                             if (connectedDevice != null) {
 
                                 try {
-
 
                                     val realDataAvailable = checkForRealShimmerData(connectedDevice)
 
@@ -504,13 +453,11 @@ class Shimmer3GSRRecorder(
                                         hasRealData = true
                                         lastRealDataTime = currentTime
 
-
                                     }
                                 } catch (e: Exception) {
                                     Log.w(TAG, "Error accessing Shimmer device data: ${e.message}")
                                 }
                             }
-
 
                             if (!hasRealData && (currentTime - lastRealDataTime) > 2000) {
                                 if (sampleCounter % (1000 / samplingRate.toInt()) == 0) {
@@ -539,10 +486,8 @@ class Shimmer3GSRRecorder(
         }
     }
 
-
     private fun checkForRealShimmerData(shimmer: Shimmer): Boolean {
         return try {
-
 
             val isStreaming = shimmer.isStreaming() ?: false
             val isConnected =
@@ -555,7 +500,6 @@ class Shimmer3GSRRecorder(
             false
         }
     }
-
 
     private fun generateRealisticFallbackData(currentTime: Long) {
 
@@ -571,7 +515,6 @@ class Shimmer3GSRRecorder(
 
         processSimulatedGSRData(simulatedRawValue, timestamp)
     }
-
 
     private fun setupFallbackDataGeneration() {
         Log.i(TAG, "Setting up fallback data generation mode")
@@ -597,7 +540,6 @@ class Shimmer3GSRRecorder(
         }
     }
 
-
     private fun processSimulatedGSRData(rawValue: Int, timestamp: Long) {
         if (!_isRecording.get()) return
 
@@ -605,9 +547,7 @@ class Shimmer3GSRRecorder(
             val timestampIso =
                 SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault()).format(Date())
 
-
             val gsrMicrosiemens = calculateGSRMicrosiemens(rawValue)
-
 
             val sample = GSRSample(
                 timestamp = timestamp,
@@ -622,14 +562,11 @@ class Shimmer3GSRRecorder(
                 connectionRssi = -50
             )
 
-
             lifecycleOwner.lifecycleScope.launch {
                 gsrDataFlow.emit(sample)
             }
 
-
             csvWriter?.write("${timestamp},${timestampIso},${gsrMicrosiemens},${rawValue},0,${sample.qualityScore},-50\n")
-
 
             val currentSample = recordedSamples.incrementAndGet()
             if (currentSample % 10 == 0L) {
@@ -705,24 +642,20 @@ class Shimmer3GSRRecorder(
         }
     }
 
-
     private data class AutoConnectionResult(
         val success: Boolean,
         val deviceName: String? = null,
         val reason: String? = null
     )
 
-
     private suspend fun attemptIntelligentAutoConnection(deviceManager: ShimmerDeviceManager): AutoConnectionResult {
         return try {
             Log.i(TAG, "Starting intelligent Shimmer device discovery")
-
 
             val scanStarted = deviceManager.startDeviceScanning()
             if (!scanStarted) {
                 return AutoConnectionResult(false, reason = "Failed to start device scanning")
             }
-
 
             var attempts = 0
             val maxAttempts = 15
@@ -732,12 +665,10 @@ class Shimmer3GSRRecorder(
                 delay(1000)
                 attempts++
 
-
                 deviceManager.scanResults.replayCache.lastOrNull()?.let { devices ->
                     discoveredDevices.clear()
                     discoveredDevices.addAll(devices)
                 }
-
 
                 if (discoveredDevices.isNotEmpty() && attempts >= 5) {
                     break
@@ -753,13 +684,11 @@ class Shimmer3GSRRecorder(
                 )
             }
 
-
             val prioritizedDevice = selectBestShimmerDevice(discoveredDevices)
             Log.i(
                 TAG,
                 "Selected best device for auto-connection: ${prioritizedDevice.name} (RSSI: ${prioritizedDevice.rssi} dBm)"
             )
-
 
             val connectionStartTime = System.currentTimeMillis()
             val maxConnectionTime = 10000
@@ -772,7 +701,6 @@ class Shimmer3GSRRecorder(
                     "Connection attempt returned false"
                 )
             }
-
 
             while (connectedShimmer == null && (System.currentTimeMillis() - connectionStartTime) < maxConnectionTime) {
                 delay(500)
@@ -794,15 +722,12 @@ class Shimmer3GSRRecorder(
         }
     }
 
-
     private fun selectBestShimmerDevice(devices: List<DeviceInfo>): DeviceInfo {
         return devices.sortedWith(compareByDescending<DeviceInfo> { device ->
 
             var score = 0
 
-
             if (device.isGSRCapable) score += 1000
-
 
             val name = device.name.lowercase()
             when {
@@ -812,7 +737,6 @@ class Shimmer3GSRRecorder(
                 name.startsWith("rn4") -> score += 100
             }
 
-
             score += when {
                 device.rssi >= -50 -> 50
                 device.rssi >= -60 -> 40
@@ -820,7 +744,6 @@ class Shimmer3GSRRecorder(
                 device.rssi >= -80 -> 20
                 else -> 10
             }
-
 
             if (device.name.isNotEmpty() && device.name != "Unknown") score += 25
 
@@ -856,7 +779,6 @@ class Shimmer3GSRRecorder(
             "connectionQuality" to _connectionQuality.value
         )
     }
-
 
     override suspend fun addSyncMarker(
         markerType: String,

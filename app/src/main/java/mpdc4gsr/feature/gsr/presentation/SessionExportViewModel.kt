@@ -2,15 +2,14 @@ package mpdc4gsr.feature.gsr.presentation
 
 import android.app.Application
 import android.content.Intent
-import android.net.Uri
 import android.os.Environment
 import androidx.core.content.FileProvider
 import androidx.lifecycle.viewModelScope
-import mpdc4gsr.core.ui.BaseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import mpdc4gsr.core.ui.BaseViewModel
 import java.io.File
 import java.io.FileWriter
 import java.text.SimpleDateFormat

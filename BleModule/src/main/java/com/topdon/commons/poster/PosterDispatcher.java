@@ -7,12 +7,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.concurrent.ExecutorService;
 
-/**
- *
- * <p>
- * date: 2019/8/7 10:18
- * author: chuanfeng.bi
- */
 public class PosterDispatcher {
     private final ThreadMode defaultMode;
     private final Poster backgroundPoster;
@@ -28,35 +22,20 @@ public class PosterDispatcher {
         asyncPoster = new AsyncPoster(executorService);
     }
 
-    /**
-     *
-     */
     public ThreadMode getDefaultMode() {
         return defaultMode;
     }
 
-    /**
-     *
-     */
     public ExecutorService getExecutorService() {
         return executorService;
     }
 
-    /**
-     * ，
-     */
     public void clearTasks() {
         backgroundPoster.clear();
         mainThreadPoster.clear();
         asyncPoster.clear();
     }
 
-    /**
-     * {@link RunOn}，post。，
-     *
-     * @param method
-     * @param runnable
-     */
     public void post(@Nullable Method method, @NonNull Runnable runnable) {
         if (method != null) {
             RunOn annotation = method.getAnnotation(RunOn.class);
@@ -68,12 +47,6 @@ public class PosterDispatcher {
         }
     }
 
-    /**
-     * post。
-     *
-     * @param mode
-     * @param runnable
-     */
     public void post(@NonNull ThreadMode mode, @NonNull Runnable runnable) {
         if (mode == ThreadMode.UNSPECIFIED) {
             mode = defaultMode;
@@ -94,14 +67,6 @@ public class PosterDispatcher {
         }
     }
 
-    /**
-     * post
-     *
-     * @param owner
-     * @param methodName
-     * @param tag        {@link Tag#value()}
-     * @param parameters
-     */
     public void post(@NonNull Object owner, @NonNull String methodName, @NonNull String tag,
                      @Nullable MethodInfo.Parameter... parameters) {
         Class<?>[] classes = new Class[0];
@@ -160,23 +125,10 @@ public class PosterDispatcher {
         return false;
     }
 
-    /**
-     * post
-     *
-     * @param owner
-     * @param methodName
-     * @param parameters
-     */
     public void post(@NonNull final Object owner, @NonNull String methodName, @Nullable MethodInfo.Parameter... parameters) {
         post(owner, methodName, "", parameters);
     }
 
-    /**
-     * post
-     *
-     * @param owner
-     * @param methodInfo
-     */
     public void post(@NonNull Object owner, @NonNull MethodInfo methodInfo) {
         post(owner, methodInfo.getName(), methodInfo.getTag(), methodInfo.getParameters());
     }

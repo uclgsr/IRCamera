@@ -5,15 +5,7 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.util.Log
 import com.mpdc4gsr.gsr.model.SessionInfo
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import org.json.JSONObject
 import java.io.DataInputStream
 import java.io.DataOutputStream
@@ -217,7 +209,6 @@ class NetworkClient(private val context: Context) {
                     return@withContext controllers
                 }
 
-
                 val subnet = "192.168.1"
 
                 Log.i(TAG, "Scanning subnet: $subnet.x for PC Controllers")
@@ -337,7 +328,6 @@ class NetworkClient(private val context: Context) {
         isConnected = false
         heartbeatJob.cancel()
 
-
         errorRecoveryManager.disableAutoRecovery()
 
         try {
@@ -434,7 +424,6 @@ class NetworkClient(private val context: Context) {
 
                 sendMessage(registrationMessage)
 
-
                 val response = receiveMessage(5000)
                 response?.optString("message_type") == "ack" &&
                         response.optString("ack_for") == "device_register"
@@ -486,7 +475,6 @@ class NetworkClient(private val context: Context) {
 
     private fun handleIncomingMessage(message: JSONObject) {
         val messageType = message.optString("message_type")
-
 
         messageHandlers[messageType]?.let { handler ->
             handler(message)
@@ -601,7 +589,6 @@ class NetworkClient(private val context: Context) {
                         val t3 =
                             response.optLong("server_send_timestamp")
 
-
                         val networkDelay = ((t4 - t1) - (t3 - t2)) / 2
                         val offset = ((t2 - t1) + (t3 - t4)) / 2
 
@@ -707,7 +694,6 @@ class NetworkClient(private val context: Context) {
                 val output = DataOutputStream(socket.getOutputStream())
                 val input = DataInputStream(socket.getInputStream())
 
-
                 val query =
                     JSONObject().apply {
                         put("message_type", "info_query")
@@ -718,7 +704,6 @@ class NetworkClient(private val context: Context) {
                 output.writeInt(queryData.size)
                 output.write(queryData)
                 output.flush()
-
 
                 val responseLength = input.readInt()
                 if (responseLength > 1024 * 1024) {
@@ -910,7 +895,6 @@ class NetworkClient(private val context: Context) {
             0.0
         }
     }
-
 
     fun generatePairingPin(): String {
         return authManager.generatePairingPin()

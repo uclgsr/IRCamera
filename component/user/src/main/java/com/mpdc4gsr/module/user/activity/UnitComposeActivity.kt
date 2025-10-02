@@ -8,7 +8,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -18,15 +20,6 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.module.user.viewmodel.UnitViewModel
 import com.mpdc4gsr.libunified.R as RCore
 
-/**
- * User Management Module - Unit Settings Compose Activity
- *
- * Temperature unit selection screen (Celsius/Fahrenheit).
- * Demonstrates:
- * - Radio button selection pattern
- * - Save functionality with confirmation
- * - Material 3 cards and selection UI
- */
 class UnitComposeActivity : BaseComposeActivity<UnitViewModel>() {
 
     override fun createViewModel(): UnitViewModel {

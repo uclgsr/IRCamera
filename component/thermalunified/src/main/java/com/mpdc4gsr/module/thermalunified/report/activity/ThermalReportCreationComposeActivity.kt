@@ -9,8 +9,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -23,17 +24,6 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 
-/**
- * ThermalReportCreationComposeActivity - Modern Thermal Report Creation with Compose
- *
- * Advanced thermal report generation interface featuring:
- * - Interactive report template selection with customization options
- * - Real-time thermal image integration with analysis annotations
- * - Comprehensive report metadata and configuration settings
- * - Multi-format export capabilities (PDF, HTML, Word)
- * - Template-based report generation with professional layouts
- * - Thermal data visualization with charts and thermal maps
- */
 class ThermalReportCreationComposeActivity : BaseComposeActivity<BaseViewModel>() {
 
     companion object {

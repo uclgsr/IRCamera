@@ -97,7 +97,6 @@ try:
 except ImportError:
     logger.info(" Using Python backend (C++ backend not available)")
 
-
 class WebcamCapture:
     """Native webcam capture using OpenCV for PC-side video recording"""
     
@@ -158,7 +157,6 @@ class WebcamCapture:
             self.capture.release()
             self.capture = None
         logger.info(f"Stopped webcam capture (captured {self.frame_count} frames)")
-
 
 class DataProcessor:
     """High-performance data processing with C++ backend integration"""
@@ -233,7 +231,6 @@ class DataProcessor:
             return filtered
         
         return data
-
 
 class Protocol:
     """Unified protocol handler supporting both legacy text and modern JSON protocols"""
@@ -318,7 +315,6 @@ class Protocol:
         message.update(params)
         return json.dumps(message)
 
-
 class DeviceStatus:
     """Enhanced device status tracking"""
     
@@ -367,7 +363,6 @@ class DeviceStatus:
         self.gsr_data.append((timestamp, value))
         if len(self.gsr_data) > self.max_buffer_size:
             self.gsr_data.pop(0)
-
 
 class NetworkThread(QThread if GUI_AVAILABLE else threading.Thread):
     """Network handling thread with SSL support"""
@@ -608,7 +603,6 @@ class NetworkThread(QThread if GUI_AVAILABLE else threading.Thread):
                 logger.info(f" Sent {command} to {client_id}")
             except Exception as e:
                 logger.error(f"Failed to send {command} to {client_id}: {e}")
-
 
 class PCController(QMainWindow if GUI_AVAILABLE else object):
     """Main PC Controller application - unified implementation"""
@@ -1112,7 +1106,6 @@ class PCController(QMainWindow if GUI_AVAILABLE else object):
                 self.network_thread.stop_server()
             logger.info("PC Controller stopped")
 
-
 def main():
     """Main entry point"""
     parser = argparse.ArgumentParser(description="IRCamera PC Controller - Unified")
@@ -1153,7 +1146,6 @@ def main():
         controller = PCController()
         controller.config['port'] = args.port
         controller.config['use_ssl'] = args.ssl
-
 
 if __name__ == "__main__":
     main()

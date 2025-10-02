@@ -6,13 +6,11 @@ import android.net.Uri
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -22,23 +20,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 
-/**
- * ThermalVideoComposeActivity - Modern Thermal Video Player with Compose
- *
- * Advanced thermal video playback interface featuring:
- * - High-performance thermal video rendering with temperature data
- * - Interactive video controls with thermal-specific features
- * - Real-time temperature analysis during playback
- * - Frame-by-frame thermal data extraction and analysis
- * - Video export with thermal overlays and metadata
- * - Professional thermal video annotation tools
- */
 class ThermalVideoComposeActivity : BaseComposeActivity<BaseViewModel>() {
 
     companion object {

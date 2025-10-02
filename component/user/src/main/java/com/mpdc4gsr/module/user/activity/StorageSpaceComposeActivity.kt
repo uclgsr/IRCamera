@@ -7,13 +7,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Build
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -24,16 +23,6 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.module.user.viewmodel.StorageSpaceViewModel
 import com.mpdc4gsr.libunified.R as RCore
 
-/**
- * User Management Module - Storage Space Compose Activity
- *
- * Storage management screen with usage visualization and format functionality.
- * Features:
- * - Storage usage progress indicator
- * - Breakdown by content type (photos, videos, system)
- * - Format storage functionality
- * - Modern Material 3 design
- */
 class StorageSpaceComposeActivity : BaseComposeActivity<StorageSpaceViewModel>() {
 
     override fun createViewModel(): StorageSpaceViewModel {

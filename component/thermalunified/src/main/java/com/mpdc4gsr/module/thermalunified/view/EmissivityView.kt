@@ -10,7 +10,6 @@ import android.util.AttributeSet
 import android.view.View
 import com.blankj.utilcode.util.SizeUtils
 
-
 class EmissivityView : View {
     companion object {
 

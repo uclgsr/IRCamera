@@ -1,6 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.activity
 
-import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -8,9 +7,10 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ShowChart
 import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.automirrored.filled.*
-import androidx.compose.material.icons.outlined.*
+import androidx.compose.material.icons.outlined.Straighten
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -28,10 +28,6 @@ import com.mpdc4gsr.module.thermalunified.fragment.ThermalComposeFragment
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
 import org.greenrobot.eventbus.EventBus
 
-/**
- * Modern Compose implementation of thermal processing activity
- * Enhanced thermal tools and controls with tabbed interface
- */
 class ThermalComposeActivity : BaseComposeActivity<ThermalViewModel>() {
 
     override fun createViewModel(): ThermalViewModel {

@@ -84,6 +84,5 @@ class TargetItemAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVie
         val img: ImageView = itemView.findViewById(R.id.item_menu_tab_img)
         val name: TextView = itemView.findViewById(R.id.item_menu_tab_text)
 
-
     }
 }

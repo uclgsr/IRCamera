@@ -4,8 +4,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -20,16 +20,6 @@ import com.mpdc4gsr.libunified.app.repository.GalleryRepository.DirType
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRGalleryTabViewModel
 import kotlinx.coroutines.launch
 
-/**
- * Compose migration of IRGalleryTabFragment
- *
- * This fragment demonstrates:
- * - Complete migration of gallery tab management to Compose
- * - Modern tab-based navigation with HorizontalPager
- * - Enhanced directory switching capabilities
- * - Material 3 design with improved user experience
- * - Integration with gallery sub-fragments
- */
 class IRGalleryTabComposeFragment : BaseComposeFragment<IRGalleryTabViewModel>() {
 
     override fun createViewModel(): IRGalleryTabViewModel {

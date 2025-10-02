@@ -3,11 +3,7 @@
 package com.mpdc4gsr.module.thermalunified.video.media
 
 import android.graphics.Bitmap
-import android.media.MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420PackedPlanar
-import android.media.MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420PackedSemiPlanar
-import android.media.MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420Planar
-import android.media.MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420SemiPlanar
-
+import android.media.MediaCodecInfo.CodecCapabilities.*
 
 object EncodeYuvTools {
     fun getNV12(

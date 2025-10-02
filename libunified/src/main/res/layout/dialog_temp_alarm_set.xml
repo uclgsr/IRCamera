@@ -144,7 +144,6 @@
                 app:layout_constraintTop_toTopOf="@id/view_high_input_bg"
                 tools:text="56" />
 
-
             <com.mpdc4gsr.libunified.app.view.MyTextView
                 android:id="@+id/tv_alarm_low"
                 android:layout_width="wrap_content"

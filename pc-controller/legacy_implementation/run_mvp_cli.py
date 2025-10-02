@@ -11,7 +11,6 @@ from pathlib import Path
 src_dir = Path(__file__).parent / "src"
 sys.path.insert(0, str(src_dir))
 
-
 def main():
     """Launch the MVP CLI interface directly"""
     try:
@@ -24,7 +23,6 @@ def main():
     except Exception as e:
         print(f"CLI launcher failed: {e}")
         return 1
-
 
 if __name__ == "__main__":
     sys.exit(main())

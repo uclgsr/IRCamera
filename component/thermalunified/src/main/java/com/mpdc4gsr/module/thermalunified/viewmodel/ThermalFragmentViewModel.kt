@@ -7,9 +7,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
-import com.mpdc4gsr.module.thermalunified.tools.Fence
-import com.mpdc4gsr.module.thermalunified.tools.ThermalTools
-import com.mpdc4gsr.module.thermalunified.utils.ArrayUtils
 import com.mpdc4gsr.libunified.app.matrix.IrSurfaceView
 import com.mpdc4gsr.libunified.ir.camera.IRUVCTC
 import com.mpdc4gsr.libunified.ir.extension.setMirror
@@ -31,8 +28,6 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
-import java.math.BigDecimal
-import java.math.RoundingMode
 
 class ThermalFragmentViewModel(
     private val context: Context? = null

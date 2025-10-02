@@ -2,26 +2,20 @@ package mpdc4gsr.core.di
 
 import android.content.Context
 import androidx.lifecycle.LifecycleOwner
+import mpdc4gsr.core.data.ShimmerDeviceManager
 import mpdc4gsr.feature.gsr.data.repository.ShimmerRepositoryImpl
 import mpdc4gsr.feature.gsr.data.source.ShimmerDataSource
 import mpdc4gsr.feature.gsr.data.source.ShimmerDataSourceImpl
 import mpdc4gsr.feature.gsr.domain.repository.ShimmerRepository
-import mpdc4gsr.feature.gsr.domain.usecase.*
+import mpdc4gsr.feature.gsr.domain.usecase.ConnectShimmerDeviceUseCase
+import mpdc4gsr.feature.gsr.domain.usecase.ScanShimmerDevicesUseCase
+import mpdc4gsr.feature.gsr.domain.usecase.StartGSRStreamingUseCase
+import mpdc4gsr.feature.gsr.domain.usecase.StopGSRStreamingUseCase
 import mpdc4gsr.feature.thermal.data.repository.ThermalRepositoryImpl
 import mpdc4gsr.feature.thermal.data.source.TopdonDataSource
 import mpdc4gsr.feature.thermal.domain.repository.ThermalRepository
 import mpdc4gsr.feature.thermal.domain.usecase.*
-import mpdc4gsr.core.data.ShimmerDeviceManager
 
-/**
- * Extended Dependency Injection Container
- *
- * Provides instances of repositories, data sources, and use cases
- * following Clean Architecture principles.
- *
- * This is a manual DI implementation that will be replaced with Hilt
- * in a future migration.
- */
 class AppContainerExt(private val context: Context) {
 
     // Shimmer SDK Integration
@@ -85,9 +79,6 @@ class AppContainerExt(private val context: Context) {
     }
 }
 
-/**
- * Extension function to get AppContainerExt from Context
- */
 fun Context.getAppContainerExt(): AppContainerExt {
     return AppContainerExt(applicationContext)
 }

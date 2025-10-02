@@ -1,14 +1,8 @@
 package com.mpdc4gsr.libunified.ir.utils
 
-import android.widget.Switch
 import com.energy.iruvc.utils.CommonParams
 
-/**
- * @author: CaiSongL
- * @date: 2023/6/2 9:36
- */
 object PseudocodeUtils {
-
 
     fun changeDualPseudocodeModelByOld(oldPseudocodeMode: Int): CommonParams.PseudoColorUsbDualType {
         return when (oldPseudocodeMode) {
@@ -58,9 +52,6 @@ object PseudocodeUtils {
         }
     }
 
-    /**
-     * sdk
-     */
     fun changePseudocodeModeByOld(oldPseudocodeMode: Int): CommonParams.PseudoColorType {
         return when (oldPseudocodeMode) {
             1 -> {
@@ -143,7 +134,6 @@ object PseudocodeUtils {
                 9
             }
 
-
             CommonParams.PseudoColorType.PSEUDO_10 -> {
                 10
             }
@@ -157,6 +147,5 @@ object PseudocodeUtils {
             }
         }
     }
-
 
 } // The file should end here.

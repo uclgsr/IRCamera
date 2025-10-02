@@ -17,8 +17,8 @@ import com.blankj.utilcode.util.ZipUtils;
 import com.csl.irCamera.R;
 import com.elvishew.xlog.XLog;
 import com.mpdc4gsr.libunified.app.common.SharedManager;
-import com.mpdc4gsr.libunified.app.config.HttpConfig;
 import com.mpdc4gsr.libunified.app.compose.dialogs.TipDialogState;
+import com.mpdc4gsr.libunified.app.config.HttpConfig;
 import com.mpdc4gsr.libunified.app.lms.LMS;
 import com.mpdc4gsr.libunified.app.lms.activity.LmsUpdateDialog;
 import com.mpdc4gsr.libunified.app.lms.bean.AppInfoBean;
@@ -180,7 +180,6 @@ public class AppVersionUtils {
 
     private void startDownload(String url) {
         completeReceiver = new DownloadCompleteReceiver();
-
 
         IntentFilter intentFilter = new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
         if (Build.VERSION.SDK_INT < 33) {

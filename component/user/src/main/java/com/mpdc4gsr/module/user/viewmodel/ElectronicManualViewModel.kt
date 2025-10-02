@@ -6,10 +6,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-/**
- * ViewModel for Electronic Manual
- * Manages manual/FAQ option selection
- */
 class ElectronicManualViewModel : BaseViewModel() {
 
     data class ManualOption(

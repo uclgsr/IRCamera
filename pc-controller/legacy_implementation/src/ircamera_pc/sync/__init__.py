@@ -8,7 +8,6 @@ except ImportError:
 
 from .timesync_service import AdvancedTimeSyncService
 
-
 class AdvancedTimeSyncServer:
 
     def __init__(self, port: int = 1234):
@@ -43,6 +42,5 @@ class AdvancedTimeSyncServer:
     def is_running(self) -> bool:
 
         return self._running
-
 
 __all__ = ['AdvancedTimeSyncServer', 'AdvancedTimeSyncService', 'TimeSyncService', 'TimeSyncStats', 'TimeSyncProtocol']

@@ -7,22 +7,8 @@ import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.blankj.utilcode.util.Utils
-import com.mpdc4gsr.libunified.app.db.dao.HouseDetectDao
-import com.mpdc4gsr.libunified.app.db.dao.HouseReportDao
-import com.mpdc4gsr.libunified.app.db.dao.ThermalDao
-import com.mpdc4gsr.libunified.app.db.dao.ThermalDayDao
-import com.mpdc4gsr.libunified.app.db.dao.ThermalHourDao
-import com.mpdc4gsr.libunified.app.db.dao.ThermalMinuteDao
-import com.mpdc4gsr.libunified.app.db.entity.DirDetect
-import com.mpdc4gsr.libunified.app.db.entity.DirReport
-import com.mpdc4gsr.libunified.app.db.entity.HouseDetect
-import com.mpdc4gsr.libunified.app.db.entity.HouseReport
-import com.mpdc4gsr.libunified.app.db.entity.ItemDetect
-import com.mpdc4gsr.libunified.app.db.entity.ItemReport
-import com.mpdc4gsr.libunified.app.db.entity.ThermalDayEntity
-import com.mpdc4gsr.libunified.app.db.entity.ThermalEntity
-import com.mpdc4gsr.libunified.app.db.entity.ThermalHourEntity
-import com.mpdc4gsr.libunified.app.db.entity.ThermalMinuteEntity
+import com.mpdc4gsr.libunified.app.db.dao.*
+import com.mpdc4gsr.libunified.app.db.entity.*
 
 @Database(
     entities = [

@@ -2,7 +2,6 @@ package com.mpdc4gsr.gsr.service
 
 import android.util.Log
 
-
 interface ShimmerDataCluster {
     fun getGSRRawValue(): Double
     fun getGSRCalibratedValue(): Double
@@ -10,7 +9,6 @@ interface ShimmerDataCluster {
     fun getTimestamp(): Long
     fun hasValidGSRData(): Boolean
 }
-
 
 interface ShimmerDeviceInterface {
     fun connect(address: String, name: String): Boolean
@@ -22,15 +20,10 @@ interface ShimmerDeviceInterface {
     fun setConnectionCallback(callback: (String) -> Unit)
 }
 
-
 interface ShimmerDeviceFactory {
     fun createShimmerDevice(): ShimmerDeviceInterface
 }
 
-/**
- * Factory resolver that tries to use real implementation if available from app module,
- * falls back to mock implementation for testing/component-only builds
- */
 object ShimmerDeviceFactoryResolver {
     private const val TAG = "ShimmerFactoryResolver"
 
@@ -50,16 +43,10 @@ object ShimmerDeviceFactoryResolver {
     }
 }
 
-/**
- * Temporary mock implementation for compilation - will be replaced by main app module implementation
- */
 class MockShimmerDeviceFactory : ShimmerDeviceFactory {
     override fun createShimmerDevice(): ShimmerDeviceInterface = MockShimmerDevice()
 }
 
-/**
- * Temporary mock implementation for compilation
- */
 class MockShimmerDevice : ShimmerDeviceInterface {
     private var connected = false
     private var streaming = false
@@ -103,10 +90,6 @@ class MockShimmerDevice : ShimmerDeviceInterface {
     }
 }
 
-/**
- * MVP mock data cluster implementation
- * Provides basic GSR sensor data for testing and development
- */
 class MockShimmerDataCluster : ShimmerDataCluster {
     override fun getGSRRawValue(): Double = 2048.0
     override fun getGSRCalibratedValue(): Double = 1.5

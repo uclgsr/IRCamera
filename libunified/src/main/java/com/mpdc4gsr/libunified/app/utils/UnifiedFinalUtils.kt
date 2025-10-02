@@ -4,26 +4,8 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.RectF
-import kotlin.math.*
 
-/**
- * Unified Final Utilities
- *
- * This is the FINAL consolidated utility class that captures ALL remaining
- * scattered functionality from across the entire repository that wasn't
- * covered by the other 24 unified utilities.
- *
- * Consolidates remaining utilities from:
- * - BaseDataTypeConvertUtils.kt from libunified/matrix
- * - TempDrawHelper.kt from libunified/ir
- * - InitUtils.kt from app module
- * - Any other remaining scattered functionality
- */
 object UnifiedFinalUtils {
-
-    /**
-     * COMPLETE Data Type Conversion Utilities
-     */
 
     // Convert byte array to various numeric types with endianness support
     fun bytesToShort(bytes: ByteArray, offset: Int = 0, littleEndian: Boolean = true): Short {
@@ -82,10 +64,6 @@ object UnifiedFinalUtils {
         val longBits = bytesToLong(bytes, offset, littleEndian)
         return Double.fromBits(longBits)
     }
-
-    /**
-     * COMPLETE Temperature Drawing Utilities
-     */
 
     data class TemperatureDrawConfig(
         val showGrid: Boolean = true,
@@ -220,10 +198,6 @@ object UnifiedFinalUtils {
         }
     }
 
-    /**
-     * COMPLETE Application Initialization Utilities
-     */
-
     data class InitializationConfig(
         val enableDebugMode: Boolean = false,
         val initializeNetworking: Boolean = true,
@@ -311,10 +285,6 @@ object UnifiedFinalUtils {
             )
         }
     }
-
-    /**
-     * FINAL Repository-Wide Validation
-     */
 
     fun validateRepositoryConsolidation(): Map<String, Any> {
         return mapOf(

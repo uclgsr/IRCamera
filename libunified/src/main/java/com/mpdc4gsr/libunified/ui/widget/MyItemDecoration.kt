@@ -8,62 +8,24 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 
-/**
- * RecyclerView ，.
- *
- * Created by LCG on 2023/9/20.
- */
 class MyItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
 
-    /**
-     *  RecyclerView ， dp.
-     *  item ， [itemLeft] （）.
-     */
     var wholeLeft: Float? = null
 
-    /**
-     *  RecyclerView ， dp.
-     *  item ， [itemRight] （）.
-     */
     var wholeRight: Float? = null
 
-    /**
-     *  RecyclerView ， dp.
-     *  item ， [itemTop] （）.
-     */
     var wholeTop: Float? = null
 
-    /**
-     *  RecyclerView ， dp.
-     *  item ， [itemBottom] （）.
-     */
     var wholeBottom: Float? = null
 
-
-    /**
-     *  item ， dp.
-     */
     var itemLeft: Float? = null
 
-    /**
-     *  item ， dp.
-     */
     var itemRight: Float? = null
 
-    /**
-     *  item ， dp.
-     */
     var itemTop: Float? = null
 
-    /**
-     *  item ， dp.
-     */
     var itemBottom: Float? = null
 
-
-    /**
-     * ， dp  px
-     */
     private val density: Float = context.resources.displayMetrics.density
 
     override fun getItemOffsets(
@@ -114,10 +76,6 @@ class MyItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
         }
     }
 
-    /**
-     *  RecyclerView  1 ，.
-     * @param itemCount
-     */
     private fun setVerticalOne(outRect: Rect, position: Int, itemCount: Int) {
         val left: Int = dp2px(wholeLeft ?: ((itemLeft ?: 0f) * 2))
         val right: Int = dp2px(wholeRight ?: ((itemRight ?: 0f) * 2))
@@ -131,10 +89,6 @@ class MyItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
         outRect.set(left, top, right, bottom)
     }
 
-    /**
-     *  RecyclerView  1 ，.
-     * @param itemCount
-     */
     private fun setHorizontalOne(outRect: Rect, position: Int, itemCount: Int) {
         val left: Int =
             dp2px(if (position == 0) wholeLeft ?: ((itemLeft ?: 0f) * 2) else (itemLeft ?: 0f))
@@ -148,11 +102,6 @@ class MyItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
         outRect.set(left, top, right, bottom)
     }
 
-    /**
-     *  RecyclerView ，.
-     * @param itemCount
-     * @param spanCount ()
-     */
     private fun setVerticalMulti(outRect: Rect, position: Int, itemCount: Int, spanCount: Int) {
         val totalRow = itemCount / spanCount + if (itemCount % spanCount == 0) 0 else 1 //
         val rowPosition = position / spanCount    // position [0, totalRow)
@@ -176,12 +125,6 @@ class MyItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
         outRect.set(left, top, right, bottom)
     }
 
-    /**
-     *  RecyclerView ，.
-     * @param itemCount
-     * @param spanCount ()
-     * @param spanIndex index[0, spanCount)，
-     */
     private fun setVerticalMultiStaggered(
         outRect: Rect,
         position: Int,
@@ -209,11 +152,6 @@ class MyItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
         outRect.set(left, top, right, bottom)
     }
 
-    /**
-     *  RecyclerView ，.
-     * @param itemCount
-     * @param spanCount ()
-     */
     private fun setHorizontalMulti(outRect: Rect, position: Int, itemCount: Int, spanCount: Int) {
         // MVP implementation: Basic horizontal multi-row spacing
         // Can be enhanced when horizontal multi-row requirements are clarified
@@ -231,7 +169,6 @@ class MyItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
         val bottom: Int = dp2px(wholeBottom ?: ((itemBottom ?: 0f) * 2))
         outRect.set(left, top, right, bottom)
     }
-
 
     private fun dp2px(dpValue: Float): Int = (dpValue * density + 0.5f).toInt()
 }

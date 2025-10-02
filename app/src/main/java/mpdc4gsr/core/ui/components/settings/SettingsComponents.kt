@@ -6,22 +6,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material3.*
-import androidx.compose.material3.ExposedDropdownMenuDefaults.TrailingIcon
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-
-/**
- * Task D: Settings Migration Components
- *
- * Modern Compose components for settings screens including:
- * - Device configuration settings
- * - Recording preferences
- * - Display options
- * - Data export preferences
- */
 
 @Composable
 fun SettingsSection(

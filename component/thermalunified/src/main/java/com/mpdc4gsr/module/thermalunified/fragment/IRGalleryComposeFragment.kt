@@ -25,9 +25,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-// TODO: Add coil imports when dependency is available
-// import coil.compose.AsyncImage
-// import coil.request.ImageRequest
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
+import androidx.compose.ui.layout.ContentScale
 import com.mpdc4gsr.libunified.app.bean.GalleryBean
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeFragment
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
@@ -36,17 +36,6 @@ import com.mpdc4gsr.module.thermalunified.viewmodel.IRGalleryViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
-/**
- * Compose migration of IRGalleryFragment
- *
- * This fragment demonstrates:
- * - Complete migration of IR gallery UI to Compose
- * - Enhanced file management and organization
- * - Multi-directory support (LINE, TS004 devices)
- * - Modern Material 3 gallery interface
- * - Advanced filtering and sorting capabilities
- * - Pull-to-refresh functionality
- */
 class IRGalleryComposeFragment : BaseComposeFragment<IRGalleryViewModel>() {
 
     override fun createViewModel(): IRGalleryViewModel {
@@ -375,21 +364,17 @@ class IRGalleryComposeFragment : BaseComposeFragment<IRGalleryViewModel>() {
             else null
         ) {
             Box(modifier = Modifier.fillMaxSize()) {
-                // Thumbnail placeholder (TODO: Replace with AsyncImage when Coil is available)
-                Box(
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(item.path)
+                        .crossfade(true)
+                        .build(),
+                    contentDescription = item.name,
                     modifier = Modifier
                         .fillMaxSize()
-                        .clip(RoundedCornerShape(8.dp))
-                        .background(MaterialTheme.colorScheme.surfaceVariant),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        Icons.Default.Image,
-                        contentDescription = item.name,
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.size(32.dp)
-                    )
-                }
+                        .clip(RoundedCornerShape(8.dp)),
+                    contentScale = ContentScale.Crop
+                )
 
                 // Selection indicator
                 if (isSelectionMode && isSelected) {
@@ -467,21 +452,17 @@ class IRGalleryComposeFragment : BaseComposeFragment<IRGalleryViewModel>() {
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Thumbnail placeholder (TODO: Replace with AsyncImage when Coil is available)
-                Box(
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(item.path)
+                        .crossfade(true)
+                        .build(),
+                    contentDescription = item.name,
                     modifier = Modifier
                         .size(60.dp)
-                        .clip(RoundedCornerShape(8.dp))
-                        .background(MaterialTheme.colorScheme.surfaceVariant),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        Icons.Default.Image,
-                        contentDescription = item.name,
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.size(24.dp)
-                    )
-                }
+                        .clip(RoundedCornerShape(8.dp)),
+                    contentScale = ContentScale.Crop
+                )
 
                 // File info
                 Column(

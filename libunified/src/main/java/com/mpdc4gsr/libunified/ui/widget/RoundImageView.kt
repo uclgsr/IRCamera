@@ -9,23 +9,17 @@ import com.mpdc4gsr.libunified.R
 
 class RoundImageView : AppCompatImageView {
     companion object {
-        /**  - .  */
+
         const val LEFT_TOP = 1
 
-        /**  - .  */
         const val RIGHT_TOP = 2
 
-        /**  - .  */
         const val LEFT_BOTTOM = 4
 
-        /**  - .  */
         const val RIGHT_BOTTOM = 8
 
-
-        /**  - 10dp  */
         private const val DEFAULT_RADIUS = 10f
 
-        /**  - 4  */
         private const val DEFAULT_POSITION = 15
     }
 
@@ -40,7 +34,6 @@ class RoundImageView : AppCompatImageView {
     private var radius = 0 //， px
     private val path = Path()//
     private var density = 0f //，dppx
-
 
     constructor(context: Context) : this(context, null)
 
@@ -108,16 +101,12 @@ class RoundImageView : AppCompatImageView {
         super.onDraw(canvas)
     }
 
-    /**
-     * ，**dp**.
-     */
     fun setRadius(radius: Float) {
         if (this.radius != dp2px(radius)) {
             this.radius = dp2px(radius)
             invalidate()
         }
     }
-
 
     private fun dp2px(dpValue: Float): Int {
         return (dpValue * density + 0.5f).toInt()

@@ -10,29 +10,17 @@ import com.mpdc4gsr.libunified.app.lms.network.IResponseCallback
 import com.mpdc4gsr.libunified.app.lms.utils.NetworkUtils
 import com.mpdc4gsr.libunified.app.lms.utils.StringUtils
 import com.mpdc4gsr.libunified.app.lms.utils.TLog
-import com.mpdc4gsr.libunified.app.lms.weiget.TToast
 import com.mpdc4gsr.libunified.app.repository.BaseRepository
 import com.mpdc4gsr.libunified.app.utils.HttpHelp
 import com.mpdc4gsr.module.thermalunified.report.bean.ReportData
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
-import kotlinx.coroutines.withContext
 import java.util.concurrent.CountDownLatch
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
-import com.mpdc4gsr.libunified.R as LibR
 
-/**
- * Modern PdfViewModel demonstrating StateFlow patterns and Repository pattern
- * This is an example of how to modernize existing ViewModels
- */
 class ModernPdfViewModel : BaseViewModel() {
 
     // Modern StateFlow-based state management
@@ -75,9 +63,6 @@ class ModernPdfViewModel : BaseViewModel() {
     // Repository instance
     private val reportRepository = ReportRepository()
 
-    /**
-     * Get report data with modern error handling and state management
-     */
     fun getReportData(
         isTC007: Boolean,
         page: Int = 1,
@@ -143,9 +128,6 @@ class ModernPdfViewModel : BaseViewModel() {
         }
     }
 
-    /**
-     * Load next page of data
-     */
     fun loadNextPage(isTC007: Boolean) {
         val currentState = _paginationState.value
         if (currentState.hasMorePages && !currentState.isLoadingMore) {
@@ -153,34 +135,22 @@ class ModernPdfViewModel : BaseViewModel() {
         }
     }
 
-    /**
-     * Refresh data from scratch
-     */
     fun refreshData(isTC007: Boolean) {
         getReportData(isTC007, 1, forceRefresh = true)
     }
 
-    /**
-     * Navigate to specific report
-     */
     fun navigateToReport(reportId: String) {
         launchWithErrorHandling {
             _events.emit(PdfEvent.NavigateToReport(reportId))
         }
     }
 
-    /**
-     * Share report functionality
-     */
     fun shareReport(reportData: ReportData) {
         launchWithErrorHandling {
             _events.emit(PdfEvent.ShareReport(reportData))
         }
     }
 
-    /**
-     * Clear error state
-     */
     fun clearErrorState() {
         super.clearError()
         if (_reportDataState.value is ReportDataState.Error) {
@@ -188,17 +158,11 @@ class ModernPdfViewModel : BaseViewModel() {
         }
     }
 
-    /**
-     * Reset all states
-     */
     fun resetStates() {
         _reportDataState.value = ReportDataState.Idle
         _paginationState.value = PaginationState()
     }
 
-    /**
-     * Repository implementation for handling data operations
-     */
     private inner class ReportRepository : BaseRepository() {
 
         private val cacheKey = "report_data"

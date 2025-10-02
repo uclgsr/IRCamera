@@ -53,7 +53,6 @@ object CalibrationTools {
         return success
     }
 
-
     fun pointEnd(
         irCmd: IRCMD,
         pointTemp: Int,
@@ -76,11 +75,9 @@ object CalibrationTools {
         return success
     }
 
-
     fun potReady(irCmd: IRCMD): Boolean {
         return irCmd.rmCoverStsSwitch(CommonParams.RMCoverStsSwitchStatus.RMCOVER_DIS) == 0
     }
-
 
     fun potStart(
         irCmd: IRCMD,
@@ -105,13 +102,11 @@ object CalibrationTools {
         irCmd.restoreDefaultConfig(CommonParams.DefaultConfigType.DEF_CFG_ALL)
     }
 
-
     fun queryGain(irCmd: IRCMD): Boolean {
         val value = IntArray(1)
         irCmd.getPropTPDParams(CommonParams.PropTPDParams.TPD_PROP_GAIN_SEL, value)
         return value[0] == 1
     }
-
 
     fun setGain(
         irCmd: IRCMD,
@@ -162,7 +157,6 @@ object CalibrationTools {
         }
     }
 
-
     fun pot(
         irCmd: IRCMD,
         type: Int,
@@ -189,7 +183,6 @@ object CalibrationTools {
         )
     }
 
-
     fun setTpdDis(
         irCmd: IRCMD?,
         value: Int,
@@ -201,7 +194,6 @@ object CalibrationTools {
             value = data
         )
     }
-
 
     fun setTpdEms(
         irCmd: IRCMD?,

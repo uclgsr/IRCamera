@@ -13,7 +13,6 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -22,10 +21,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 
-/**
- * Compose equivalent of ThermalInputDialog
- * Material 3 dialog for thermal parameter input with color and temperature range settings
- */
 @Composable
 fun ThermalInputDialogCompose(
     message: String,
@@ -230,9 +225,6 @@ private fun handleConfirm(
     }
 }
 
-/**
- * Builder-style wrapper for easier usage
- */
 class ThermalInputDialogComposeBuilder {
     private var message: String = ""
     private var maxTemp: Float = 100f
@@ -294,9 +286,6 @@ class ThermalInputDialogComposeBuilder {
     }
 }
 
-/**
- * Preview helper for ThermalInputDialogCompose
- */
 @Composable
 fun ThermalInputDialogComposePreview() {
     var showDialog by remember { mutableStateOf(true) }

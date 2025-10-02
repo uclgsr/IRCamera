@@ -7,10 +7,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -21,20 +21,8 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeFragment
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.ir.view.TemperatureView
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRPlushViewModel
-import com.mpdc4gsr.module.thermalunified.viewmodel.IRPlushViewModel.DualViewState
-import com.mpdc4gsr.module.thermalunified.viewmodel.IRPlushViewModel.ProcessingMode
-import com.mpdc4gsr.module.thermalunified.viewmodel.IRPlushViewModel.TemperatureData
+import com.mpdc4gsr.module.thermalunified.viewmodel.IRPlushViewModel.*
 
-/**
- * Compose migration of IRPlushFragment
- *
- * This fragment demonstrates:
- * - Complete migration of IR Plus features to Compose
- * - Advanced dual-camera thermal imaging interface
- * - Modern Material 3 UI with enhanced controls
- * - Integration with dual-view thermal processing
- * - Professional thermal imaging features
- */
 class IRPlushComposeFragment : BaseComposeFragment<IRPlushViewModel>() {
 
     override fun createViewModel(): IRPlushViewModel {

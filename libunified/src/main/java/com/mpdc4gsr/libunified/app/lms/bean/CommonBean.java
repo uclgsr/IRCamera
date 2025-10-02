@@ -1,6 +1,5 @@
 package com.mpdc4gsr.libunified.app.lms.bean;
 
-
 public class CommonBean {
     public String username = "";
     public String email = "";

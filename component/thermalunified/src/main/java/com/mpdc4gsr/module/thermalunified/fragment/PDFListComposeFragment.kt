@@ -1,20 +1,21 @@
 package com.mpdc4gsr.module.thermalunified.fragment
 
 import android.content.Intent
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Assignment
 import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -30,16 +31,6 @@ import java.util.*
 // Type alias for cleaner code
 typealias PDFItem = PDFListViewModel.PDFItem
 
-/**
- * Compose migration of PDFListFragment
- *
- * This fragment demonstrates:
- * - Complete migration of PDF report list to Compose
- * - Modern list-based PDF document display
- * - Enhanced PDF preview and sharing capabilities
- * - Material 3 design with document management
- * - Integration with thermal analysis report systems
- */
 class PDFListComposeFragment : BaseComposeFragment<PDFListViewModel>() {
 
     private var isTC007 by mutableStateOf(false)

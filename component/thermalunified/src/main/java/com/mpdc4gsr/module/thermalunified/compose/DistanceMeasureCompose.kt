@@ -16,10 +16,6 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import kotlin.math.abs
 
-/**
- * Compose equivalent of DistanceMeasureView
- * Interactive distance measurement tool with draggable dashed lines
- */
 @Composable
 fun DistanceMeasureCompose(
     onDistanceChanged: (Float) -> Unit = {},
@@ -103,9 +99,6 @@ private fun DrawScope.drawDistanceLines(line1Y: Float, line2Y: Float) {
     )
 }
 
-/**
- * Preview helper for DistanceMeasureCompose
- */
 @Composable
 fun DistanceMeasureComposePreview() {
     var distance by remember { mutableFloatStateOf(0f) }

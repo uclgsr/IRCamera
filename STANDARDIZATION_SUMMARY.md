@@ -36,7 +36,7 @@ new SimpleDateFormat("_HHmmss_yyMMdd")
 **After:**
 
 ```java
-new SimpleDateFormat("yyyyMMdd_HHmmss_SSS", Locale.getDefault())
+new SimpleDateFormat("yyyyMMdd_HHmmss_SSS",Locale.getDefault())
 ```
 
 **Lines updated:**

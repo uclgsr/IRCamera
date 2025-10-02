@@ -29,7 +29,6 @@ public class DefaultValueFormatter extends ValueFormatter {
     @Override
     public String getFormattedValue(float value) {
 
-
         return mFormat.format(value);
     }
 

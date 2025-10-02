@@ -8,16 +8,16 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import mpdc4gsr.core.ui.model.SensorType
+import mpdc4gsr.feature.camera.ui.*
+import mpdc4gsr.feature.gsr.ui.*
+import mpdc4gsr.feature.main.ui.ComponentShowcaseScreen
 import mpdc4gsr.feature.main.ui.MainScreen
 import mpdc4gsr.feature.main.ui.UnifiedSensorDashboard
-import mpdc4gsr.feature.main.ui.ComponentShowcaseScreen
-import mpdc4gsr.feature.testing.ui.TestResultsScreen
-import mpdc4gsr.core.ui.model.SensorType
-import mpdc4gsr.feature.settings.ui.*
-import mpdc4gsr.feature.thermal.ui.*
-import mpdc4gsr.feature.gsr.ui.*
-import mpdc4gsr.feature.camera.ui.*
 import mpdc4gsr.feature.network.ui.*
+import mpdc4gsr.feature.settings.ui.*
+import mpdc4gsr.feature.testing.ui.TestResultsScreen
+import mpdc4gsr.feature.thermal.ui.*
 
 /**
  * Unified Navigation System - Phase 2 Implementation
@@ -127,8 +127,6 @@ fun UnifiedNavHost(
                 onBackClick = { navController.popBackStack() }
             )
         }
-
-
 
         composable(UnifiedRoute.GSRSessionDetail.route) { backStackEntry ->
             NavigationPerformanceHelper.TrackNavigation("GSRSessionDetail")
@@ -302,8 +300,6 @@ fun UnifiedNavHost(
                 onBackClick = { navController.popBackStack() }
             )
         }
-
-
 
         composable(UnifiedRoute.ComponentShowcase.route) {
             NavigationPerformanceHelper.TrackNavigation("ComponentShowcase")

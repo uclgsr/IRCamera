@@ -5,7 +5,6 @@ import com.mpdc4gsr.libunified.app.utils.CommUtils
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 
-
 @Parcelize
 data class ReportInfoBean(
     val report_name: String?,

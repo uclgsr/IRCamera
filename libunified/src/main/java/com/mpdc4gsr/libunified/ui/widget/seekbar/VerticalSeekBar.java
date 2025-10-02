@@ -3,9 +3,6 @@ package com.mpdc4gsr.libunified.ui.widget.seekbar;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
 
-/**
- * VerticalSeekBar - A vertical seekbar implementation extending SeekBar
- */
 public class VerticalSeekBar extends SeekBar {
 
     public VerticalSeekBar(VerticalRangeSeekBar parent, AttributeSet attrs, boolean isLeft) {

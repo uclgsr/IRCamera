@@ -9,7 +9,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -22,16 +25,6 @@ import com.mpdc4gsr.libunified.app.lms.weiget.TToast
 import com.mpdc4gsr.module.user.viewmodel.DeviceDetailsViewModel
 import com.mpdc4gsr.libunified.R as RCore
 
-/**
- * User Management Module - Device Details Compose Activity
- *
- * Displays device information (Serial Number, Model) with copy functionality.
- * Demonstrates:
- * - Device information display
- * - Copy to clipboard functionality
- * - Loading states
- * - Material 3 cards and layouts
- */
 class DeviceDetailsComposeActivity : BaseComposeActivity<DeviceDetailsViewModel>() {
 
     override fun createViewModel(): DeviceDetailsViewModel {

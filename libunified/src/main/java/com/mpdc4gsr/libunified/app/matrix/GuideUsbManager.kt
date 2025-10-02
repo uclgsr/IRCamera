@@ -4,19 +4,14 @@ package com.mpdc4gsr.libunified.app.matrix
 
 import android.app.PendingIntent
 import android.content.Context
-import android.hardware.usb.UsbDevice
-import android.hardware.usb.UsbDeviceConnection
-import android.hardware.usb.UsbEndpoint
-import android.hardware.usb.UsbInterface
-import android.hardware.usb.UsbManager
+import android.hardware.usb.*
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import com.mpdc4gsr.libunified.app.matrix.ResultCode.ERROR_CONNECT_DEVICE_FAILD
 import com.mpdc4gsr.libunified.app.matrix.ResultCode.SUCC_CONNECT_INTERFACE
-import com.mpdc4gsr.libunified.app.utils.ByteUtils.toHexString
 import com.mpdc4gsr.libunified.app.matrix.utils.HexDump
-import java.util.Arrays
+import java.util.*
 
 class GuideUsbManager {
 
@@ -211,7 +206,6 @@ class GuideUsbManager {
     fun upgrade(data: ByteArray): Boolean {
         val PAGE_SIZE = 3000
 
-
         val header = byteArrayOf(0x02)
         val cmd = byteArrayOf(0x07, 0x00)
         val reserve = byteArrayOf(0x00)
@@ -231,7 +225,6 @@ class GuideUsbManager {
         if (!send(upgradeHead)) {
             return false
         }
-
 
         if (data.size <= PAGE_SIZE) {
             if (!send(data)) {
@@ -259,7 +252,6 @@ class GuideUsbManager {
         if (!send(tail)) {
             return false
         }
-
 
         val upgradeResultCmd = byteArrayOf(0x08, 0x00)
         return receive(upgradeResultCmd)

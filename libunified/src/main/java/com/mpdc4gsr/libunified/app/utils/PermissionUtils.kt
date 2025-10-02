@@ -6,17 +6,8 @@ import android.os.Build
 import androidx.core.content.ContextCompat
 import com.mpdc4gsr.libunified.app.BaseApplication
 
-/**
- * des: android 14
- * author: CaiSongL
- * date: 2024/9/9 9:45
- **/
 object PermissionUtils {
 
-    /**
-     * android 14
-     * @return Boolean
-     */
     fun isVisualUser(): Boolean {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE &&
                 ContextCompat.checkSelfPermission(

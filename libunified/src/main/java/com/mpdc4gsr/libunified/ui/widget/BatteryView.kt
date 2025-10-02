@@ -7,30 +7,19 @@ import android.graphics.Path
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatImageView
 
-/**
- * TC007 .
- *
- * Created by LCG on 2024/5/22.
- */
 class BatteryView : AppCompatImageView {
-    /**
-     *
-     */
+
     var battery = -1
         set(value) {
             field = value
             invalidate()
         }
 
-    /**
-     *
-     */
     var isCharging = false
         set(value) {
             field = value
             invalidate()
         }
-
 
     private val paint = Paint()
     private val path = Path()

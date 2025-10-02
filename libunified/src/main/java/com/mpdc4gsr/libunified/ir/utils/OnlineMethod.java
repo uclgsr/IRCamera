@@ -2,34 +2,15 @@ package com.mpdc4gsr.libunified.ir.utils;
 
 import static org.opencv.core.Core.NORM_MINMAX;
 import static org.opencv.core.Core.normalize;
-import static org.opencv.core.CvType.CV_64FC1;
-import static org.opencv.core.CvType.CV_8UC1;
-import static org.opencv.core.CvType.CV_8UC2;
-import static org.opencv.imgproc.Imgproc.CHAIN_APPROX_SIMPLE;
-import static org.opencv.imgproc.Imgproc.COLOR_YUV2GRAY_YUYV;
-import static org.opencv.imgproc.Imgproc.RETR_EXTERNAL;
-import static org.opencv.imgproc.Imgproc.THRESH_BINARY;
-import static org.opencv.imgproc.Imgproc.applyColorMap;
-import static org.opencv.imgproc.Imgproc.approxPolyDP;
-import static org.opencv.imgproc.Imgproc.boundingRect;
-import static org.opencv.imgproc.Imgproc.contourArea;
-import static org.opencv.imgproc.Imgproc.cvtColor;
-import static org.opencv.imgproc.Imgproc.drawContours;
-import static org.opencv.imgproc.Imgproc.findContours;
-import static org.opencv.imgproc.Imgproc.rectangle;
-import static org.opencv.imgproc.Imgproc.threshold;
+import static org.opencv.core.CvType.*;
+import static org.opencv.imgproc.Imgproc.*;
 
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.util.Log;
 
 import org.opencv.android.Utils;
-import org.opencv.core.Mat;
-import org.opencv.core.MatOfByte;
-import org.opencv.core.MatOfPoint;
-import org.opencv.core.MatOfPoint2f;
-import org.opencv.core.Rect;
-import org.opencv.core.Scalar;
+import org.opencv.core.*;
 import org.opencv.imgproc.Imgproc;
 
 import java.io.IOException;
@@ -70,9 +51,7 @@ public class OnlineMethod {
         tem.put(0, 0, temp);
         tem.convertTo(tem, CV_8UC1);
 
-
         Mat thres_gray = new Mat();
-
 
         threshold(tem, thres_gray, high_t, 255, THRESH_BINARY);
 
@@ -107,7 +86,6 @@ public class OnlineMethod {
             }
 
         }
-
 
         return im;
 

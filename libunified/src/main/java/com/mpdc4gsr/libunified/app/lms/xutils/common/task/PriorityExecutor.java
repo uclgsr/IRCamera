@@ -1,6 +1,5 @@
 package com.mpdc4gsr.libunified.app.lms.xutils.common.task;
 
-
 public class PriorityExecutor {
     private int corePoolSize;
     private boolean allowCoreThreadTimeOut;

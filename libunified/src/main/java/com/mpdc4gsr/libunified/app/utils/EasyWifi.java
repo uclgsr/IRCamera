@@ -1,7 +1,6 @@
 package com.mpdc4gsr.libunified.app.utils;
 
 import android.content.Context;
-import android.util.Log;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
@@ -9,14 +8,10 @@ import android.net.NetworkRequest;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.net.wifi.WifiNetworkSpecifier;
+import android.util.Log;
 
 import com.mpdc4gsr.libunified.app.BaseApplication;
 
-/**
- * des:
- * author: CaiSongL
- * date: 2024/5/23 17:39
- **/
 public class EasyWifi {
     private static volatile EasyWifi mInstance;
     private final WifiManager wifiManager = (WifiManager) BaseApplication.instance.getSystemService(Context.WIFI_SERVICE);

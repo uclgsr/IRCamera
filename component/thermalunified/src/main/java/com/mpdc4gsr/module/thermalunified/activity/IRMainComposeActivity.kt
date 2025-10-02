@@ -2,7 +2,6 @@ package com.mpdc4gsr.module.thermalunified.activity
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -13,7 +12,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -24,23 +24,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
-import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-import com.mpdc4gsr.module.thermalunified.fragment.IRThermalFragment
-import com.mpdc4gsr.module.thermalunified.fragment.IRGalleryTabFragment
-import com.mpdc4gsr.module.thermalunified.fragment.AbilityFragment
-import com.mpdc4gsr.module.thermalunified.fragment.PDFListFragment
-import com.mpdc4gsr.module.thermalunified.viewmodel.IRMainActivityViewModel
-import com.mpdc4gsr.module.user.fragment.MoreFragment
+import com.mpdc4gsr.module.thermalunified.fragment.AbilityComposeFragment
+import com.mpdc4gsr.module.thermalunified.fragment.IRGalleryTabComposeFragment
+import com.mpdc4gsr.module.thermalunified.fragment.IRThermalComposeFragment
+import com.mpdc4gsr.module.thermalunified.fragment.PDFListComposeFragment
+import com.mpdc4gsr.module.user.compose.MoreComposeFragment
+import com.mpdc4gsr.module.user.viewmodel.MoreComposeFragmentViewModel
 import kotlinx.coroutines.launch
 
-/**
- * Modern Compose implementation of thermal main hub activity
- * Preserves the 5-tab ViewPager structure with enhanced Material 3 UI
- */
 class IRMainComposeActivity : AppCompatActivity() {
-
-    private val viewModel: IRMainActivityViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,45 +51,43 @@ class IRMainComposeActivity : AppCompatActivity() {
         val pagerState = rememberPagerState(pageCount = { 5 })
         val scope = rememberCoroutineScope()
 
-        LibUnifiedTheme {
-            Scaffold(
-                containerColor = Color(0xFF16131E)
-            ) { paddingValues ->
-                Column(
+        Scaffold(
+            containerColor = Color(0xFF16131E)
+        ) { paddingValues ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+                    .background(Color(0xFF16131E))
+            ) {
+                // Main ViewPager content (85% of screen)
+                HorizontalPager(
+                    state = pagerState,
                     modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues)
-                        .background(Color(0xFF16131E))
-                ) {
-                    // Main ViewPager content (85% of screen)
-                    HorizontalPager(
-                        state = pagerState,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(0.85f)
-                    ) { page ->
-                        when (page) {
-                            0 -> ThermalTabContent()
-                            1 -> GalleryTabContent()
-                            2 -> AbilityTabContent()
-                            3 -> PDFTabContent()
-                            4 -> MoreTabContent()
-                        }
+                        .fillMaxWidth()
+                        .weight(0.85f)
+                ) { page ->
+                    when (page) {
+                        0 -> ThermalTabContent()
+                        1 -> GalleryTabContent()
+                        2 -> AbilityTabContent()
+                        3 -> PDFTabContent()
+                        4 -> MoreTabContent()
                     }
-
-                    // Bottom navigation (15% of screen)
-                    ThermalBottomNavigation(
-                        selectedPage = pagerState.currentPage,
-                        onPageSelected = { page ->
-                            scope.launch {
-                                pagerState.animateScrollToPage(page)
-                            }
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(0.15f)
-                    )
                 }
+
+                // Bottom navigation (15% of screen)
+                ThermalBottomNavigation(
+                    selectedPage = pagerState.currentPage,
+                    onPageSelected = { page ->
+                        scope.launch {
+                            pagerState.animateScrollToPage(page)
+                        }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(0.15f)
+                )
             }
         }
     }
@@ -115,7 +107,7 @@ private fun ThermalTabContent() {
         },
         update = { view ->
             activity?.let {
-                val fragment = IRThermalFragment()
+                val fragment = IRThermalComposeFragment()
                 it.supportFragmentManager.beginTransaction()
                     .replace(view.id, fragment)
                     .commitAllowingStateLoss()
@@ -139,7 +131,7 @@ private fun GalleryTabContent() {
         },
         update = { view ->
             activity?.let {
-                val fragment = IRGalleryTabFragment()
+                val fragment = IRGalleryTabComposeFragment()
                 it.supportFragmentManager.beginTransaction()
                     .replace(view.id, fragment)
                     .commitAllowingStateLoss()
@@ -163,7 +155,7 @@ private fun AbilityTabContent() {
         },
         update = { view ->
             activity?.let {
-                val fragment = AbilityFragment()
+                val fragment = AbilityComposeFragment()
                 it.supportFragmentManager.beginTransaction()
                     .replace(view.id, fragment)
                     .commitAllowingStateLoss()
@@ -188,7 +180,7 @@ private fun PDFTabContent() {
         },
         update = { view ->
             activity?.let {
-                val fragment = PDFListFragment()
+                val fragment = PDFListComposeFragment()
                 it.supportFragmentManager.beginTransaction()
                     .replace(view.id, fragment)
                     .commitAllowingStateLoss()
@@ -200,24 +192,10 @@ private fun PDFTabContent() {
 
 @Composable
 private fun MoreTabContent() {
-    val context = LocalContext.current
-    val activity = context as? IRMainComposeActivity
-
-    // Embed existing more fragment using AndroidView with proper FragmentManager integration
-    AndroidView(
-        factory = { context ->
-            androidx.fragment.app.FragmentContainerView(context).apply {
-                id = androidx.core.R.id.accessibility_custom_action_4
-            }
-        },
-        update = { view ->
-            activity?.let {
-                val fragment = MoreFragment()
-                it.supportFragmentManager.beginTransaction()
-                    .replace(view.id, fragment)
-                    .commitAllowingStateLoss()
-            }
-        },
+    val viewModel: MoreComposeFragmentViewModel = viewModel()
+    MoreComposeFragment(
+        viewModel = viewModel,
+        isTC007 = false,
         modifier = Modifier.fillMaxSize()
     )
 }

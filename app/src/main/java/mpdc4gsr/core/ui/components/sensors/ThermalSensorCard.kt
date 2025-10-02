@@ -4,9 +4,9 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Thermostat
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Stop
+import androidx.compose.material.icons.filled.Thermostat
 import androidx.compose.material.icons.filled.Tune
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -22,10 +22,6 @@ import mpdc4gsr.core.ui.model.SensorState
 import mpdc4gsr.core.ui.model.ThermalAction
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 
-/**
- * Thermal IR Sensor Card Component
- * Displays thermal camera status, temperature data, and controls
- */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ThermalSensorCard(
@@ -216,9 +212,6 @@ fun ThermalSensorCard(
     }
 }
 
-/**
- * Thermal preview visualization component
- */
 @Composable
 private fun ThermalPreviewVisualization(
     centerTemp: Float,
@@ -358,9 +351,6 @@ private fun ThermalPreviewVisualization(
     }
 }
 
-/**
- * Metric display item
- */
 @Composable
 private fun MetricItem(
     label: String,
@@ -386,9 +376,6 @@ private fun MetricItem(
     }
 }
 
-/**
- * Get status color based on sensor state
- */
 @Composable
 private fun getStatusColor(state: SensorState): Color {
     return when (state) {

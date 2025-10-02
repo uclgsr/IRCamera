@@ -14,22 +14,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.csl.irCamera.R
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.viewModelScope
-import mpdc4gsr.core.ui.BaseViewModel
 import mpdc4gsr.core.ui.BaseComposeActivity
+import mpdc4gsr.core.ui.BaseViewModel
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.theme.IRCameraTheme
-import mpdc4gsr.feature.network.data.ComprehensiveRecordingController
 import mpdc4gsr.feature.network.data.RecordingState
-import mpdc4gsr.core.ui.PermissionManager
 
 enum class SensorConnectionStatus {
     DISCONNECTED, CONNECTING, CONNECTED, ERROR

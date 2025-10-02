@@ -10,17 +10,8 @@ import com.energy.iruvc.ircmd.IRCMD;
 import com.energy.iruvc.ircmd.IRCMDType;
 import com.energy.iruvc.sdkisp.LibIRProcess;
 import com.energy.iruvc.usb.USBMonitor;
-import com.energy.iruvc.utils.AutoGainSwitchCallback;
-import com.energy.iruvc.utils.AvoidOverexposureCallback;
-import com.energy.iruvc.utils.CommonParams;
-import com.energy.iruvc.utils.DeviceType;
-import com.energy.iruvc.utils.IFrameCallback;
-import com.energy.iruvc.utils.SynchronizedBitmap;
-import com.energy.iruvc.uvc.CameraSize;
-import com.energy.iruvc.uvc.ConcreateUVCBuilder;
-import com.energy.iruvc.uvc.ConnectCallback;
-import com.energy.iruvc.uvc.UVCCamera;
-import com.energy.iruvc.uvc.UVCType;
+import com.energy.iruvc.utils.*;
+import com.energy.iruvc.uvc.*;
 import com.mpdc4gsr.libunified.app.utils.UnifiedFileUtils;
 import com.mpdc4gsr.libunified.app.utils.UnifiedScreenUtils;
 import com.mpdc4gsr.libunified.ir.config.MsgCode;
@@ -80,7 +71,6 @@ public class IRUVCTC {
 
         mUSBMonitor = new USBMonitor(context, new USBMonitor.OnDeviceConnectListener() {
 
-
             @Override
             public void onAttach(UsbDevice device) {
                 Log.w(TAG, "onAttach");
@@ -100,7 +90,6 @@ public class IRUVCTC {
                 }
             }
 
-
             @Override
             public void onConnect(final UsbDevice device, USBMonitor.UsbControlBlock ctrlBlock, boolean createNew) {
                 Log.w(TAG, "onConnect");
@@ -117,7 +106,6 @@ public class IRUVCTC {
 
                         if (ircmd != null) {
                             Log.d(TAG, "startPreview");
-
 
                             isTempReplacedWithTNREnabled = ircmd.isTempReplacedWithTNREnabled(DeviceType.P2);
                             if (isTempReplacedWithTNREnabled) {
@@ -141,7 +129,6 @@ public class IRUVCTC {
                 }
             }
 
-
             @Override
             public void onDisconnect(UsbDevice device, USBMonitor.UsbControlBlock ctrlBlock) {
                 Log.w(TAG, "onDisconnect");
@@ -149,7 +136,6 @@ public class IRUVCTC {
                     usbMonitorCallback.onDisconnect();
                 }
             }
-
 
             @Override
             public void onDettach(UsbDevice device) {
@@ -170,7 +156,6 @@ public class IRUVCTC {
             }
         });
 
-
         gain_switch_param.above_pixel_prop = 0.1f;
         gain_switch_param.above_temp_data = (int) ((130 + 273.15) * 16 * 4);
         gain_switch_param.below_pixel_prop = 0.95f;
@@ -183,7 +168,6 @@ public class IRUVCTC {
         float pixel_above_prop = 0.02f;
         int switch_frame_cnt = 7 * 15;
         int close_frame_cnt = 10 * 15;
-
 
         LibIRProcess.ImageRes_t imageRes = new LibIRProcess.ImageRes_t();
         imageRes.height = (char) (dataFlowMode == CommonParams.DataFlowMode.IMAGE_AND_TEMP_OUTPUT ? cameraHeight / 2
@@ -213,7 +197,6 @@ public class IRUVCTC {
 
                         System.arraycopy(frame, 0, imageEditTemp, 0, length);
                     }
-
 
                     if (dataFlowMode == CommonParams.DataFlowMode.IMAGE_AND_TEMP_OUTPUT) {
 
@@ -344,7 +327,6 @@ public class IRUVCTC {
                     .setIdCamera(uvcCamera.getNativePtr())
                     .build();
 
-
             if (ircmd == null) {
                 EventBus.getDefault().post(new PreviewComplete());
                 return;
@@ -442,7 +424,6 @@ public class IRUVCTC {
             }
         } else {
 
-
             setFrameReady(false);
             if (isRestart) {
                 if (ircmd.stopPreview(CommonParams.PreviewPathChannel.PREVIEW_PATH0) == 0) {
@@ -477,7 +458,6 @@ public class IRUVCTC {
                         "defaultDataFlowMode = others isTempReplacedWithTNREnabled = " + isTempReplacedWithTNREnabled);
                 if (isTempReplacedWithTNREnabled) {
 
-
                     if (ircmd.stopPreview(CommonParams.PreviewPathChannel.PREVIEW_PATH0) == 0) {
                         Log.i(TAG, "stopPreview complete infrared+TNR");
                         if (ircmd.startPreview(CommonParams.PreviewPathChannel.PREVIEW_PATH0,
@@ -505,7 +485,6 @@ public class IRUVCTC {
                         Log.e(TAG, "stopPreview error infrared+TNR");
                     }
                 } else {
-
 
                     if (ircmd.stopPreview(CommonParams.PreviewPathChannel.PREVIEW_PATH0) == 0) {
                         Log.i(TAG, "stopPreview complete [CHINESE_TEXT]TNR");

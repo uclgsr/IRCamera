@@ -3,11 +3,7 @@
 package com.mpdc4gsr.module.thermalunified.tools.medie
 
 import android.graphics.Bitmap
-import android.media.MediaCodec
-import android.media.MediaCodecInfo
-import android.media.MediaCodecList
-import android.media.MediaFormat
-import android.media.MediaMuxer
+import android.media.*
 import android.os.Build
 import android.os.Looper
 import android.util.Log
@@ -15,7 +11,6 @@ import java.io.File
 import java.io.IOException
 import java.nio.ByteBuffer
 import kotlin.concurrent.thread
-
 
 class YapVideoEncoder(
     private val IProvider: IYapVideoProvider<Bitmap>,
@@ -110,10 +105,6 @@ class YapVideoEncoder(
         mediaFormat.setInteger(MediaFormat.KEY_BIT_RATE, widthFix * heightFix)
         mediaFormat.setInteger(MediaFormat.KEY_FRAME_RATE, mFrameRate)
         mediaFormat.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, 10)
-
-
-
-
 
         try {
             mediaCodec = MediaCodec.createEncoderByType(MediaFormat.MIMETYPE_VIDEO_AVC)

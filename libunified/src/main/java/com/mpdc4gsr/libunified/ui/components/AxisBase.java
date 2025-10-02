@@ -279,7 +279,6 @@ public abstract class AxisBase extends ComponentBase {
         return mAxisLineDashPathEffect;
     }
 
-
     public float getAxisMaximum() {
         return mAxisMaximum;
     }

@@ -1,16 +1,7 @@
 package com.mpdc4gsr.libunified.ir.utils;
 
-import static org.opencv.core.Core.BORDER_CONSTANT;
-import static org.opencv.core.Core.DFT_SCALE;
-import static org.opencv.core.Core.NORM_MINMAX;
-import static org.opencv.core.Core.getOptimalDFTSize;
-import static org.opencv.core.Core.magnitude;
-import static org.opencv.core.Core.normalize;
-import static org.opencv.core.CvType.CV_32F;
-import static org.opencv.core.CvType.CV_32FC1;
-import static org.opencv.core.CvType.CV_32FC2;
-import static org.opencv.core.CvType.CV_8UC1;
-import static org.opencv.core.CvType.CV_8UC2;
+import static org.opencv.core.Core.*;
+import static org.opencv.core.CvType.*;
 import static org.opencv.imgproc.Imgproc.COLOR_YUV2GRAY_YUYV;
 import static org.opencv.imgproc.Imgproc.cvtColor;
 
@@ -130,7 +121,6 @@ public class HomoFilter {
         temp = iftCenter(temp);
         Mat result = new Mat();
         temp.convertTo(result, CV_8UC1);
-
 
         return result;
 

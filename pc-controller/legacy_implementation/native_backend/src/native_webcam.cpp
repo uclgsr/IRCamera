@@ -257,7 +257,6 @@ namespace ircamera {
             return true;
         }
 
-
         bool is_open() const { return is_open_.load(); }
 
         bool is_capturing() const { return is_capturing_.load(); }
@@ -375,7 +374,6 @@ namespace ircamera {
 
         std::atomic<int> frame_counter_;
     };
-
 
     NativeWebcam::NativeWebcam(int device_id)
             : pimpl(std::make_unique<Impl>(device_id)) {

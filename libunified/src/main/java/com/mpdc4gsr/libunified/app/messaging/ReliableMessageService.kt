@@ -2,19 +2,11 @@ package com.mpdc4gsr.libunified.app.messaging
 
 import android.content.Context
 import android.util.Log
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import org.json.JSONObject
-import java.util.UUID
+import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicLong
-
 
 class ReliableMessageService(private val context: Context? = null) {
     companion object {
@@ -203,8 +195,6 @@ class ReliableMessageService(private val context: Context? = null) {
 
             if (requiresAck && messageId.isNotEmpty()) {
                 val ack = createAcknowledgment(messageId, senderId, response != null)
-
-
 
                 return ack
             }

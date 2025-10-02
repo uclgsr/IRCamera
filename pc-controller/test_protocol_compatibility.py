@@ -11,7 +11,6 @@ import time
 import threading
 from protocol_adapter import ProtocolAdapter, parse_android, format_android
 
-
 class TestProtocolAdapter(unittest.TestCase):
     """Test protocol adapter functionality"""
     
@@ -187,7 +186,6 @@ class TestProtocolAdapter(unittest.TestCase):
         self.assertIsNotNone(json_msg)
         self.assertEqual(json_msg['type'], 'HEARTBEAT')
 
-
 class TestProtocolCompatibility(unittest.TestCase):
     """Test compatibility with Android Protocol.kt specification"""
     
@@ -241,7 +239,6 @@ class TestProtocolCompatibility(unittest.TestCase):
         self.assertEqual(msg['name'], 'test_device')
         self.assertIsInstance(msg['name'], str)
 
-
 class TestNetworkProtocol(unittest.TestCase):
     """Test network protocol implementation"""
     
@@ -260,7 +257,6 @@ class TestNetworkProtocol(unittest.TestCase):
         
         self.assertEqual(json1['type'], 'HELLO')
         self.assertEqual(json2['type'], 'DATA_GSR')
-
 
 def run_tests():
     """Run all tests"""
@@ -287,7 +283,6 @@ def run_tests():
     print("="*70)
     
     return result.wasSuccessful()
-
 
 if __name__ == '__main__':
     import sys

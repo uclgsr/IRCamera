@@ -12,12 +12,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.annotation.CallSuper;
-import androidx.annotation.Dimension;
-import androidx.annotation.IntRange;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.StyleRes;
+import androidx.annotation.*;
 
 import com.mpdc4gsr.libunified.R;
 
@@ -182,13 +177,11 @@ public abstract class ModalDialog extends BottomDialog implements View.OnClickLi
             cancelDrawable.setColor(DialogConfig.getDialogColor().cancelEllipseColor());
             cancelView.setBackground(cancelDrawable);
 
-
         }
         GradientDrawable okDrawable = new GradientDrawable();
         okDrawable.setCornerRadius(okView.getResources().getDisplayMetrics().density * 999);
         okDrawable.setColor(DialogConfig.getDialogColor().okEllipseColor());
         okView.setBackground(okDrawable);
-
 
     }
 

@@ -1,6 +1,5 @@
 package com.mpdc4gsr.libunified.ir.view;
 
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -59,7 +58,6 @@ public class DragScaleView extends FrameLayout implements View.OnTouchListener {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-
 
     }
 

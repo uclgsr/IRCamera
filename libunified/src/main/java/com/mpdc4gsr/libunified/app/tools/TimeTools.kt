@@ -6,10 +6,7 @@ import com.mpdc4gsr.libunified.app.utils.CommUtils
 import java.io.File
 import java.text.ParsePosition
 import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Formatter
-import java.util.Locale
-import java.util.TimeZone
+import java.util.*
 
 object TimeTools {
     fun formatDetectTime(timeMillis: Long): String {

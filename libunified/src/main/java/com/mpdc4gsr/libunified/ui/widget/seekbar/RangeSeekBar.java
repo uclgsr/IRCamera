@@ -5,14 +5,7 @@ import static com.mpdc4gsr.libunified.ui.widget.seekbar.SeekBar.INDICATOR_ALWAYS
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.LinearGradient;
-import android.graphics.Paint;
-import android.graphics.Rect;
-import android.graphics.RectF;
-import android.graphics.Shader;
-import android.graphics.Typeface;
+import android.graphics.*;
 import android.os.Parcelable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -34,7 +27,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
-
 
 public class RangeSeekBar extends View {
 
@@ -223,7 +215,6 @@ public class RangeSeekBar extends View {
             float thumbHeight = Math.max(leftSB.getThumbScaleHeight(), rightSB.getThumbScaleHeight());
             thumbHeight -= progressHeight / 2f;
 
-
             progressTop = (int) (maxIndicatorHeight + (thumbHeight - progressHeight) / 2f);
             if (tickMarkTextArray != null && tickMarkLayoutGravity == Gravity.TOP) {
                 progressTop = (int) Math.max(getTickMarkRawHeight(), maxIndicatorHeight + (thumbHeight - progressHeight) / 2f);
@@ -377,7 +368,6 @@ public class RangeSeekBar extends View {
 
     protected void onDrawProgressBar(Canvas canvas, Paint paint) {
 
-
         paint.setShader(null);
         if (Utils.verifyBitmap(progressDefaultBitmap)) {
             canvas.drawBitmap(progressDefaultBitmap, null, progressDefaultDstRect, paint);
@@ -391,7 +381,6 @@ public class RangeSeekBar extends View {
             }
             canvas.drawRoundRect(progressDefaultDstRect, progressRadius, progressRadius, paint);
         }
-
 
         if (seekBarMode == SEEKBAR_MODE_RANGE) {
 
@@ -823,7 +812,6 @@ public class RangeSeekBar extends View {
 
     public void setRange(float min, float max, float minInterval) {
 
-
         if (maxProgress == max && min == minProgress) {
 
             return;
@@ -844,7 +832,6 @@ public class RangeSeekBar extends View {
     }
 
     public void setRangeNoInvalidate(float min, float max, float minInterval) {
-
 
         if (maxProgress == max && min == minProgress) {
 
@@ -1194,13 +1181,11 @@ public class RangeSeekBar extends View {
 
     public void setStepsBitmaps(List<Bitmap> stepsBitmaps) {
 
-
         this.stepsBitmaps.clear();
         this.stepsBitmaps.addAll(stepsBitmaps);
     }
 
     public void setStepsDrawable(List<Integer> stepsDrawableIds) {
-
 
         if (!verifyStepsMode()) {
             throw new IllegalArgumentException("stepsWidth must > 0, stepsHeight must > 0,steps must > 0 First!!");
@@ -1255,7 +1240,6 @@ public class RangeSeekBar extends View {
     @Retention(RetentionPolicy.SOURCE)
     public @interface TickMarkGravityDef {
     }
-
 
     @IntDef({Gravity.TOP, Gravity.BOTTOM})
     @Retention(RetentionPolicy.SOURCE)

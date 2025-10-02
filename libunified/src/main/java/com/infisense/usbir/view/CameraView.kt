@@ -10,11 +10,6 @@ import android.view.View
 import com.elvishew.xlog.XLog
 import com.energy.iruvc.utils.SynchronizedBitmap
 
-/**
- * CameraView for Topdon TC001 thermal camera integration
- * This is the proper Topdon SDK CameraView implementation following infisense package structure
- * Based on the Topdon TC001 groundtruth implementation patterns
- */
 class CameraView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,

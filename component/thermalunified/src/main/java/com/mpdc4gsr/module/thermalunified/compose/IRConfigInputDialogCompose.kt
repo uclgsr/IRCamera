@@ -21,10 +21,6 @@ import com.mpdc4gsr.libunified.app.lms.weiget.TToast
 import com.mpdc4gsr.libunified.app.tools.UnitTools
 import com.mpdc4gsr.module.thermalunified.R
 
-/**
- * Compose equivalent of IRConfigInputDialog
- * Material 3 dialog for thermal configuration input
- */
 @Composable
 fun IRConfigInputDialogCompose(
     type: IRConfigInputType,

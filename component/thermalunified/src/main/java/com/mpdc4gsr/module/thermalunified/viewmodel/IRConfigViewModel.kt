@@ -1,6 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.viewmodel
 
-import android.app.Application
 import androidx.lifecycle.viewModelScope
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import com.mpdc4gsr.libunified.app.utils.SingleLiveEvent
@@ -72,7 +71,6 @@ class IRConfigViewModel : BaseViewModel() {
         }
     }
 
-
     fun checkConfig(
         isTC007: Boolean,
         id: Int,
@@ -87,7 +85,6 @@ class IRConfigViewModel : BaseViewModel() {
             configLiveData.postValue(modelBean)
         }
     }
-
 
     fun deleteConfig(
         isTC007: Boolean,

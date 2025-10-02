@@ -30,7 +30,6 @@ from ..core.session import SessionManager, SessionState
 from ..core.timesync import TimeSyncService
 from ..network.websocket_server import WebSocketServer
 
-
 class MainWindow(QMainWindow):
     session_started = pyqtSignal(str)
     session_stopped = pyqtSignal(str)
@@ -302,7 +301,6 @@ class MainWindow(QMainWindow):
                 )
             )
 
-
 self.wifi_control_widget.disconnect_requested.connect(
     lambda: asyncio.create_task(self.wifi_manager.disconnect_from_network())
 )
@@ -365,12 +363,10 @@ self.admin_privileges_manager.elevation_completed.connect(
     )
 )
 
-
 def _start_ui_updates(self) -> None:
     self._update_timer = QTimer()
     self._update_timer.timeout.connect(self._update_displays)
     self._update_timer.start(1000)
-
 
 def _update_displays(self) -> None:
     try:
@@ -425,7 +421,6 @@ def _update_displays(self) -> None:
     except (OSError, ValueError, RuntimeError) as e:
         logger.error(f"Error updating displays: {e}")
 
-
 def _update_ui_state(self) -> None:
     current_session = self.session_manager.get_current_session()
     has_devices = (
@@ -446,7 +441,6 @@ def _update_ui_state(self) -> None:
         self.sync_flash_btn.setEnabled(can_sync)
     if hasattr(self, "sync_mark_btn") and self.sync_mark_btn is not None:
         self.sync_mark_btn.setEnabled(can_sync)
-
 
 def _on_start_session_requested(self) -> None:
     try:
@@ -495,7 +489,6 @@ def _on_start_session_requested(self) -> None:
         logger.error(f"Error starting session: {e}")
         self._show_error("Error", f"Failed to start session: {e}")
 
-
 def _on_stop_session_requested(self) -> None:
     try:
         current_session = self.session_manager.get_current_session()
@@ -534,7 +527,6 @@ def _on_stop_session_requested(self) -> None:
         logger.error(f"Error stopping session: {e}")
         self._show_error("Error", f"Failed to stop session: {e}")
 
-
 def _on_new_session_requested(self) -> None:
     try:
 
@@ -557,7 +549,6 @@ def _on_new_session_requested(self) -> None:
     except (OSError, ValueError, RuntimeError) as e:
         logger.error(f"Error creating session: {e}")
         self._show_error("Error", f"Failed to create session: {e}")
-
 
 def _on_sync_flash_clicked(self) -> None:
     try:
@@ -587,7 +578,6 @@ def _on_sync_flash_clicked(self) -> None:
     except (OSError, ValueError, RuntimeError) as e:
         logger.error(f"Error sending sync flash: {e}")
         self._show_error("Error", f"Failed to send sync flash: {e}")
-
 
 def _on_sync_mark_clicked(self) -> None:
     try:
@@ -630,14 +620,12 @@ def _on_sync_mark_clicked(self) -> None:
         logger.error(f"Error adding sync mark: {e}")
         self._show_error("Error", f"Failed to add sync mark: {e}")
 
-
 def _on_device_selected(self, device_id: str) -> None:
     if self.websocket_server and device_id in self.websocket_server.clients:
         client = self.websocket_server.clients[device_id]
         logger.debug(
             f"WebSocket client selected: {device_id} ({client.device_type})"
         )
-
 
 def _on_device_connected(self, device_info: DeviceInfo) -> None:
     logger.info(f"Device connected: {device_info.device_id}")
@@ -651,7 +639,6 @@ def _on_device_connected(self, device_info: DeviceInfo) -> None:
     if current_session:
         self.session_manager.add_device(device_info.to_dict())
 
-
 def _on_device_disconnected(self, device_info: DeviceInfo) -> None:
     logger.warning(f"Device disconnected: {device_info.device_id}")
     self._add_log_message(f"Device disconnected: {device_info.device_id}")
@@ -663,10 +650,8 @@ def _on_device_disconnected(self, device_info: DeviceInfo) -> None:
             "A new leader will be elected if available.",
         )
 
-
 def _on_device_status_updated(self, device_info: DeviceInfo) -> None:
     logger.debug(f"Device status updated: {device_info.device_id}")
-
 
 def _add_log_message(self, message: str) -> None:
     if self.log_display:
@@ -674,30 +659,24 @@ def _add_log_message(self, message: str) -> None:
         formatted_message = f"[{timestamp}] {message}"
         self.log_display.append(formatted_message)
 
-
 def _show_error(self, title: str, message: str) -> None:
     QMessageBox.critical(self, title, message)
-
 
 def _show_warning(self, title: str, message: str) -> None:
     QMessageBox.warning(self, title, message)
 
-
 def _show_info(self, title: str, message: str) -> None:
     QMessageBox.information(self, title, message)
-
 
 def _update_bluetooth_devices(self) -> None:
     if self.bluetooth_manager and self.bluetooth_control_widget:
         devices = self.bluetooth_manager.discovered_devices
         self.bluetooth_control_widget.update_devices(devices)
 
-
 def _update_wifi_networks(self) -> None:
     if self.wifi_manager and self.wifi_control_widget:
         networks = self.wifi_manager.available_networks
         self.wifi_control_widget.update_networks(networks)
-
 
 def closeEvent(self, event) -> None:
     current_session = self.session_manager.get_current_session()

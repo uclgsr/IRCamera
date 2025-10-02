@@ -3,9 +3,11 @@ package com.mpdc4gsr.libunified.app.comm;
 import android.content.ContentValues;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.blankj.utilcode.util.TimeUtils;
 import com.blankj.utilcode.util.UriUtils;
@@ -17,34 +19,12 @@ import com.mpdc4gsr.libunified.app.db.entity.ThermalEntity;
 import com.mpdc4gsr.libunified.app.tools.TimeTools;
 import com.mpdc4gsr.libunified.app.tools.UnitTools;
 
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.FillPatternType;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.HorizontalAlignment;
-import org.apache.poi.ss.usermodel.IndexedColors;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.VerticalAlignment;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.ArrayList;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import static com.blankj.utilcode.util.ImageUtils.save;
-
-/**
- * @author: CaiSongL
- * @date: 2023/5/11 15:58
- */
 public class ExcelUtils {
 
     @NonNull
@@ -111,10 +91,6 @@ public class ExcelUtils {
         }
     }
 
-    /**
-     * @param listData
-     * @return
-     */
     public static String exportExcel(ArrayList<ThermalEntity> listData, boolean isPoint) {
         boolean isShowC = SharedManager.INSTANCE.getTemperature() == 1;
         try {

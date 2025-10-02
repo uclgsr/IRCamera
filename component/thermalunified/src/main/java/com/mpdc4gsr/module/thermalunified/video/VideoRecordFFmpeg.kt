@@ -4,11 +4,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.Rect
+import android.graphics.*
 import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.AudioRecord.RECORDSTATE_RECORDING
@@ -33,18 +29,18 @@ import com.blankj.utilcode.util.StringUtils.getString
 import com.blankj.utilcode.util.ThreadUtils
 import com.blankj.utilcode.util.Utils
 import com.elvishew.xlog.XLog
+import com.infisense.usbir.view.CameraView
 import com.mpdc4gsr.libunified.app.comm.view.TempLayout
 import com.mpdc4gsr.libunified.app.common.SharedManager
-import com.mpdc4gsr.libunified.app.config.FileConfig
 import com.mpdc4gsr.libunified.app.compose.dialogs.TipDialogState
+import com.mpdc4gsr.libunified.app.config.FileConfig
 import com.mpdc4gsr.libunified.app.tools.TimeTools
 import com.mpdc4gsr.libunified.app.utils.BitmapUtils
 import com.mpdc4gsr.libunified.ir.usbdual.camera.DualViewWithExternalCameraCommonApi
-import com.infisense.usbir.view.CameraView
 import com.mpdc4gsr.libunified.ir.view.TemperatureView
+import com.mpdc4gsr.libunified.ui.camera.CameraPreView
 import com.mpdc4gsr.libunified.ui.widget.BitmapConstraintLayout
 import com.mpdc4gsr.libunified.ui.widget.LiteSurfaceView
-import com.mpdc4gsr.libunified.ui.camera.CameraPreView
 import com.mpdc4gsr.module.thermalunified.view.HikSurfaceView
 import com.mpdc4gsr.module.thermalunified.view.TemperatureHikView
 import com.mpdc4gsr.module.thermalunified.view.compass.LinearCompassView
@@ -64,12 +60,11 @@ import org.bytedeco.opencv.opencv_core.IplImage
 import java.io.File
 import java.nio.ByteBuffer
 import java.nio.ShortBuffer
-import java.util.Date
+import java.util.*
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicReference
 import com.mpdc4gsr.libunified.R as LibcoreR
-
 
 @SuppressLint("MissingPermission")
 class VideoRecordFFmpeg(
@@ -160,7 +155,6 @@ class VideoRecordFFmpeg(
     private val bufferRef: AtomicReference<ByteBuffer> =
         AtomicReference(ByteBuffer.allocate(pixArray.size))
 
-
     private fun readByteBuffer(): ByteBuffer? {
         return bufferRef.get()?.duplicate()
     }
@@ -173,7 +167,6 @@ class VideoRecordFFmpeg(
         bitmap.recycle()
         bufferRef.set(newPixels)
     }
-
 
     private fun getVideoCodec(): Int {
         return if (Build.BRAND == "motorola" && Build.MODEL == "XT2201-2") {
@@ -250,8 +243,6 @@ class VideoRecordFFmpeg(
             Log.i(TAG, "Thermal video recorder configured: ${customFrameRate}fps, ${customBitrate}bps")
 
             recorder!!.sampleRate = SAMPLE_AUDIO_RETE_INHZ
-
-
 
             recorder!!.timestamp = 0L
             recorder!!.start()
@@ -369,7 +360,6 @@ class VideoRecordFFmpeg(
                                         AUDIO_CHANNELS, tmpAudioData,
                                     )
                                 }
-
 
                             } catch (e: Exception) {
                                 Log.e("[ph][ph][ph][ph]", "Caught an exception: " + e.message)
@@ -549,7 +539,6 @@ class VideoRecordFFmpeg(
         } catch (_: Exception) {
         }
     }
-
 
     private fun createBitmapFromView(): Bitmap {
         var cameraViewBitmap: Bitmap

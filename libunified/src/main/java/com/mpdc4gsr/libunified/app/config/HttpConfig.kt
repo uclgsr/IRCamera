@@ -1,6 +1,5 @@
 package com.mpdc4gsr.libunified.app.config
 
-
 object HttpConfig {
     const val HOST = "https://api.topdon.com"
 

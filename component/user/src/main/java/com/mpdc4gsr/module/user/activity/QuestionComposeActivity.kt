@@ -9,7 +9,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -20,15 +23,6 @@ import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import com.mpdc4gsr.module.user.model.QuestionData
 import com.mpdc4gsr.module.user.viewmodel.QuestionViewModel
 
-/**
- * User Management Module - FAQ Questions Compose Activity
- *
- * FAQ questions list screen demonstrating RecyclerView → LazyColumn migration.
- * Features:
- * - Lazy scrolling list of FAQ items
- * - Navigation to question details
- * - Modern Material 3 card design
- */
 class QuestionComposeActivity : BaseComposeActivity<QuestionViewModel>() {
 
     override fun createViewModel(): QuestionViewModel {

@@ -22,7 +22,6 @@
         android:name="android.permission.BLUETOOTH_CONNECT"
         tools:targetApi="31" />
 
-
     <application>
         <provider
             android:name="androidx.core.content.FileProvider"

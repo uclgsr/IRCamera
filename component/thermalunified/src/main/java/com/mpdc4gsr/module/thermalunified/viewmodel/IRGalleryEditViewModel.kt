@@ -3,7 +3,6 @@ package com.mpdc4gsr.module.thermalunified.viewmodel
 import androidx.lifecycle.viewModelScope
 import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
-import com.mpdc4gsr.libunified.app.utils.ByteUtils.bytesToInt
 import com.mpdc4gsr.libunified.app.utils.SingleLiveEvent
 import com.mpdc4gsr.libunified.app.utils.UnifiedByteUtils.bytesToInt
 import kotlinx.coroutines.Dispatchers
@@ -33,7 +32,6 @@ class IRGalleryEditViewModel : BaseViewModel() {
             resultLiveData.postValue(FrameBean(headDataBytes, frameDataBytes))
         }
     }
-
 
     fun getTailData(bytes: ByteArray) {
     }

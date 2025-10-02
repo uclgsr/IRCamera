@@ -9,11 +9,7 @@ import android.os.Environment
 import androidx.test.core.app.ApplicationProvider
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertNotNull
-import org.junit.Assert.assertNotSame
-import org.junit.Assert.assertTrue
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -81,7 +77,6 @@ class ShimmerGSRRecorderTest {
 
             try {
                 val started = recorder.startRecording(sessionId)
-
 
             } catch (e: Exception) {
 
@@ -204,7 +199,6 @@ class ShimmerGSRRecorderTest {
             recordingMode = ShimmerGSRRecorder.RecordingMode.LOG_AND_STREAM
         )
 
-
         assertEquals(
             "Should be streaming mode",
             ShimmerGSRRecorder.RecordingMode.STREAMING,
@@ -229,7 +223,6 @@ class ShimmerGSRRecorderTest {
 
         val apisBridge = ShimmerApiBridge.getInstance()
 
-
         val testValues = arrayOf(0.0, 1024.0, 2048.0, 3072.0, 4095.0)
 
         for (rawValue in testValues) {
@@ -238,7 +231,6 @@ class ShimmerGSRRecorderTest {
                 timestamp = System.currentTimeMillis(),
                 sessionId = "test_session"
             )
-
 
             assertTrue(
                 "Raw value should be preserved: $rawValue",

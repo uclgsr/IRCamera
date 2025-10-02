@@ -20,9 +20,6 @@ import com.mpdc4gsr.libunified.app.tools.PermissionTools
 
 object BluetoothUtils {
 
-    /**
-     *  activity   .
-     */
     fun addBtStateListener(activity: ComponentActivity, listener: ((isEnable: Boolean) -> Unit)) {
         activity.lifecycle.addObserver(BtStateObserver(activity, listener))
     }
@@ -55,21 +52,13 @@ object BluetoothUtils {
         }
     }
 
-
     private val scanCallback = MyScanCallback()
 
-    /**
-     * .
-     */
     fun setLeScanListener(isTS004: Boolean, listener: (name: String) -> Unit) {
         scanCallback.isTS004 = isTS004
         scanCallback.listener = listener
     }
 
-    /**
-     * ，.
-     * @return true- false-
-     */
     @SuppressLint("MissingPermission")
     fun startLeScan(context: Context): Boolean {
         XLog.i("startLeScan()")
@@ -96,10 +85,6 @@ object BluetoothUtils {
         return true
     }
 
-    /**
-     * ，.
-     * @return true- false-
-     */
     @SuppressLint("MissingPermission")
     fun stopLeScan(context: Context): Boolean {
         XLog.i("stopBtScan()")

@@ -6,7 +6,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -16,15 +18,6 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.module.user.viewmodel.TISRViewModel
 import com.mpdc4gsr.libunified.R as RCore
 
-/**
- * User Management Module - TISR Settings Compose Activity
- *
- * TISR (Temperature Image Super Resolution) toggle settings screen.
- * Demonstrates:
- * - Socket communication with device
- * - Real-time settings update
- * - Error handling for network operations
- */
 class TISRComposeActivity : BaseComposeActivity<TISRViewModel>() {
 
     override fun createViewModel(): TISRViewModel {

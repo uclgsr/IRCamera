@@ -24,14 +24,6 @@ import androidx.compose.ui.unit.sp
 import com.mpdc4gsr.libunified.app.utils.UnifiedMathUtils
 import kotlin.math.roundToInt
 
-/**
- * Common Compose utilities for thermal imaging UI components
- * These replace various custom views and utility classes used throughout the thermal module
- */
-
-/**
- * Temperature display with color-coded background
- */
 @Composable
 fun TemperatureIndicator(
     temperature: Float,
@@ -71,9 +63,6 @@ fun TemperatureIndicator(
     }
 }
 
-/**
- * Thermal gradient bar showing temperature range
- */
 @Composable
 fun ThermalGradientBar(
     minTemp: Float,
@@ -123,9 +112,6 @@ fun ThermalGradientBar(
     }
 }
 
-/**
- * Status indicator with icon and text
- */
 @Composable
 fun ThermalStatusIndicator(
     level: ThermalStatusLevel,
@@ -171,9 +157,6 @@ fun ThermalStatusIndicator(
     }
 }
 
-/**
- * Temperature measurement point indicator
- */
 @Composable
 fun MeasurementPoint(
     label: String,
@@ -225,9 +208,6 @@ fun MeasurementPoint(
     }
 }
 
-/**
- * Thermal measurement tools toolbar
- */
 @Composable
 fun ThermalToolbar(
     selectedTool: ThermalTool?,
@@ -279,9 +259,6 @@ enum class ThermalTool(
     AREA("Area", Icons.Default.CropFree)
 }
 
-/**
- * Preview helpers
- */
 @Composable
 fun ThermalUtilsComposePreview() {
     Column(

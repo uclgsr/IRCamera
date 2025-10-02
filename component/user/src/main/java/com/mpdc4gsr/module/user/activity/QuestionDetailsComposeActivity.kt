@@ -8,22 +8,16 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.module.user.viewmodel.QuestionDetailsViewModel
 
-/**
- * User Management Module - FAQ Question Details Compose Activity
- *
- * Question details screen showing question and answer.
- * Features:
- * - Scrollable content for long answers
- * - Clean question/answer layout
- * - Material 3 design
- */
 class QuestionDetailsComposeActivity : BaseComposeActivity<QuestionDetailsViewModel>() {
 
     override fun createViewModel(): QuestionDetailsViewModel {

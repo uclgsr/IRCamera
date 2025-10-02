@@ -124,5 +124,4 @@
         app:layout_constraintStart_toEndOf="@id/space_margin"
         app:layout_constraintTop_toTopOf="@id/space" />
 
-
 </androidx.constraintlayout.widget.ConstraintLayout>

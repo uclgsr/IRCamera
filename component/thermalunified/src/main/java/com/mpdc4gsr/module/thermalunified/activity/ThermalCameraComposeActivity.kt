@@ -1,13 +1,13 @@
 package com.mpdc4gsr.module.thermalunified.activity
 
-import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.automirrored.filled.*
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.CameraAlt
+import androidx.compose.material.icons.filled.VideoCall
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -15,16 +15,6 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalFragmentViewModel
 
-/**
- * Task B: Complete Thermal Camera Activity using Compose
- *
- * This activity demonstrates:
- * - Complete migration of thermal camera UI to Compose
- * - Uses shared BaseComposeActivity from libunified module
- * - Modern Material 3 UI with thermal imaging colors
- * - Enhanced temperature data visualization
- * - Improved recording controls and status indicators
- */
 class ThermalCameraComposeActivity : BaseComposeActivity<ThermalFragmentViewModel>() {
 
     override fun createViewModel(): ThermalFragmentViewModel {

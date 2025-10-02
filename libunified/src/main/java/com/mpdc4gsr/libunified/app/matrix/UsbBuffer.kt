@@ -26,16 +26,13 @@ class UsbBuffer {
         mRingBuffer.write(buffer, offset, length)
     }
 
-
     private var findHeadFrame = false
     private var findHeadFramePos = -1
-
 
     private fun getMark(buf: ByteArray, offset: Int): Int {
         return (buf[offset].toUByte().toInt().shl(0) or ((buf[offset + 1].toUByte()).toInt()
             .shl(8)))
     }
-
 
     private fun isValidFrame(frame: ByteArray): Boolean {
         var i = 0

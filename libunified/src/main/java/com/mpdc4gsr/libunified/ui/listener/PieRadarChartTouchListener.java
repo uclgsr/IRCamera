@@ -34,7 +34,6 @@ public class PieRadarChartTouchListener extends ChartTouchListener<PieRadarChart
         if (mGestureDetector.onTouchEvent(event))
             return true;
 
-
         if (mChart.isRotationEnabled()) {
 
             float x = event.getX();
@@ -185,7 +184,6 @@ public class PieRadarChartTouchListener extends ChartTouchListener<PieRadarChart
         if (timeDelta == 0.f) {
             timeDelta = 0.1f;
         }
-
 
         boolean clockwise = lastSample.angle >= beforeLastSample.angle;
         if (Math.abs(lastSample.angle - beforeLastSample.angle) > 270.0) {

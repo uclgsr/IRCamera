@@ -9,7 +9,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -20,15 +23,6 @@ import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import com.mpdc4gsr.libunified.app.utils.Constants
 import com.mpdc4gsr.module.user.viewmodel.ElectronicManualViewModel
 
-/**
- * User Management Module - Electronic Manual Compose Activity
- *
- * Electronic Manual/FAQ selection screen.
- * Features:
- * - Device model selection (TS001/TS004)
- * - Navigation to manual or FAQ screens
- * - Responsive layout based on content type
- */
 class ElectronicManualComposeActivity : BaseComposeActivity<ElectronicManualViewModel>() {
 
     override fun createViewModel(): ElectronicManualViewModel {

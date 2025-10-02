@@ -4,17 +4,11 @@ import android.content.Context
 import androidx.camera.view.PreviewView
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
-import mpdc4gsr.core.ui.BaseViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import mpdc4gsr.feature.camera.data.SamsungDeviceCompatibility
 import mpdc4gsr.core.data.RgbCameraRecorder
+import mpdc4gsr.core.ui.BaseViewModel
+import mpdc4gsr.feature.camera.data.SamsungDeviceCompatibility
 
 /**
  * Modernized DualModeCameraViewModel using StateFlow and Repository pattern
