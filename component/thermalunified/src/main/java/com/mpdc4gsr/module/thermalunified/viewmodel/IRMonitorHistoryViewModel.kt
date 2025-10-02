@@ -269,6 +269,21 @@ class IRMonitorHistoryViewModel : BaseViewModel() {
         return allHistoryItems.filter { it.startTime in monthStart until monthEnd }
     }
 
+    /**
+     * Searches for a thermal image file by checking multiple directories and filename patterns.
+     *
+     * Search order:
+     * 1. Directories are checked in the following order:
+     *    - FileConfig.gallerySourDir
+     *    - FileConfig.lineIrGalleryDir
+     *    - FileConfig.tc007IrGalleryDir
+     * 2. For each directory, filenames are checked in this order:
+     *    - If thermalId is provided: "<thermalId>.jpg"
+     *    - "<startTime>.jpg"
+     *    - "<startTime>.png"
+     *
+     * The first matching file found is returned. If no file is found, returns an empty string.
+     */
     private fun findThermalImagePath(startTime: Long, thermalId: String?): String {
         val possibleDirs = listOf(
             FileConfig.gallerySourDir,
