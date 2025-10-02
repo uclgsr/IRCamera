@@ -127,6 +127,15 @@ fun MainScreen(
 
 /**
  * Sensor Dashboard Tab - Main sensor interface
+ * 
+ * TODO: State management should be hoisted to a MainViewModel
+ * Current limitation: Sensor states are managed locally and hardcoded to Connected.
+ * This is a temporary implementation for UI demonstration purposes.
+ * Future work should:
+ * - Create MainViewModel to manage sensor states
+ * - Connect to actual sensor hardware/services
+ * - Make state lifecycle-aware and survive configuration changes
+ * - Implement real business logic in onAction handlers
  */
 @Composable
 private fun SensorDashboardTab(
