@@ -380,7 +380,6 @@ dependencies {
 
     // Mockito dependencies for integration tests
     testImplementation(libs.mockito.core)
-    testImplementation(libs.mockito.inline)
     testImplementation(libs.mockito.android)
 
     androidTestImplementation(libs.test.ext.junit)
