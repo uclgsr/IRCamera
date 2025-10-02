@@ -18,7 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import mpdc4gsr.core.ui.BaseComposeActivity
-import mpdc4gsr.core.ui.BaseViewModel
+import mpdc4gsr.core.ui.AppBaseViewModel
 import mpdc4gsr.core.ui.components.SensorStatus
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.theme.IRCameraTheme
@@ -44,7 +44,7 @@ data class SensorTestStatus(
     val dataRate: String = "0 KB/s"
 )
 
-class SensorDashboardTestViewModel : BaseViewModel() {
+class SensorDashboardTestViewModel : AppBaseViewModel() {
     private val _sensorStatuses = mutableStateOf(
         TestSensorType.values().map { type ->
             SensorTestStatus(

@@ -37,18 +37,31 @@ class BLEIntegrationTestComposeActivity : BaseComposeActivity<BLEIntegrationTest
         private const val TAG = "BLEIntegrationTestCompose"
     }
 
-    override fun createViewModel(): BLETestViewModel = BLETestViewModel()
+    private lateinit var permissionController: PermissionController
+    private var gsrRecorder: UnifiedGSRRecorder? = null
+    private var deviceManager: ShimmerDeviceManager? = null
 
     override fun createViewModel(): BLEIntegrationTestViewModel {
         return viewModels<BLEIntegrationTestViewModel>().value
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: android.os.Bundle?) {
         super.onCreate(savedInstanceState)
 
         // Initialize components
         permissionController = PermissionController(this)
         initializeRecorder()
+    }
+    
+    private fun initializeRecorder() {
+        try {
+            val tempDir = createTempDirectory("ble_test").toFile()
+            gsrRecorder = UnifiedGSRRecorder(this, tempDir.absolutePath)
+            deviceManager = ShimmerDeviceManager()
+            Log.d(TAG, "Recorder initialized successfully")
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to initialize recorder", e)
+        }
     }
 
     @Composable

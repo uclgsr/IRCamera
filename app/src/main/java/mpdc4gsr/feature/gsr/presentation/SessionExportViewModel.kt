@@ -51,7 +51,7 @@ data class GSRSession(
  */
 class SessionExportViewModel(
     private val application: Application
-) : BaseViewModel() {
+) : AppBaseViewModel() {
 
     data class SessionExportState(
         val isLoading: Boolean = false,

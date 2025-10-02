@@ -37,7 +37,7 @@ import mpdc4gsr.core.ui.AppBaseViewModel
  * - Export and sharing capabilities
  * - Performance-optimized video rendering
  */
-class GSRVideoPlayerComposeActivity : BaseComposeActivity<BaseViewModel>() {
+class GSRVideoPlayerComposeActivity : BaseComposeActivity<AppBaseViewModel>() {
 
     companion object {
         private const val EXTRA_VIDEO_PATH = "video_path"
@@ -56,13 +56,13 @@ class GSRVideoPlayerComposeActivity : BaseComposeActivity<BaseViewModel>() {
         }
     }
 
-    override fun createViewModel(): BaseViewModel {
-        return viewModels<BaseViewModel>().value
+    override fun createViewModel(): AppBaseViewModel {
+        return viewModels<AppBaseViewModel>().value
     }
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    override fun Content(viewModel: BaseViewModel) {
+    override fun Content(viewModel: AppBaseViewModel) {
         val videoPath = intent.getStringExtra(EXTRA_VIDEO_PATH) ?: ""
         val sessionId = intent.getStringExtra(EXTRA_SESSION_ID)
 

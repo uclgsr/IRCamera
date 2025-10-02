@@ -18,7 +18,7 @@ import java.io.File
  */
 class GSRRawImageViewViewModel(
     private val application: Application
-) : BaseViewModel() {
+) : AppBaseViewModel() {
 
     data class GSRImageViewState(
         val isLoading: Boolean = false,
