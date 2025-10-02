@@ -8,7 +8,6 @@ import androidx.annotation.NonNull;
 import com.topdon.ble.util.Logger;
 
 
-
 class LegacyScanner extends AbstractScanner implements BluetoothAdapter.LeScanCallback {
 
     LegacyScanner(EasyBLE easyBle, BluetoothAdapter bluetoothAdapter) {

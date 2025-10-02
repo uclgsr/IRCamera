@@ -18,19 +18,19 @@ public class MethodInfo {
         this(name, name, parameters);
     }
 
-    
+
     public MethodInfo(@NonNull String name, @NonNull String tag, @Nullable Parameter... parameters) {
         this.name = name;
         this.tag = tag;
         this.parameters = parameters;
     }
 
-    
+
     public MethodInfo(@NonNull String name, @Nullable Class<?>[] parameterTypes) {
         this(name, name, parameterTypes);
     }
 
-    
+
     public MethodInfo(@NonNull String name, @NonNull String tag, @Nullable Class<?>[] parameterTypes) {
         this(name, tag, toParameters(parameterTypes));
     }
@@ -61,13 +61,13 @@ public class MethodInfo {
         this.name = name;
     }
 
-    
+
     @NonNull
     public String getTag() {
         return tag;
     }
 
-    
+
     public void setTag(@NonNull String tag) {
         this.tag = tag;
     }

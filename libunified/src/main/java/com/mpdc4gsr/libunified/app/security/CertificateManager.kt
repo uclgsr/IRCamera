@@ -8,11 +8,7 @@ import java.security.SecureRandom
 import java.security.cert.CertificateException
 import java.security.cert.CertificateFactory
 import java.security.cert.X509Certificate
-import javax.net.ssl.HostnameVerifier
-import javax.net.ssl.SSLContext
-import javax.net.ssl.SSLSocketFactory
-import javax.net.ssl.X509KeyManager
-import javax.net.ssl.X509TrustManager
+import javax.net.ssl.*
 
 class CertificateManager(private val context: Context) {
     companion object {

@@ -14,7 +14,7 @@ import java.util.Objects;
 public class DatabaseContext extends ContextWrapper {
     private File dbDir;
 
-    
+
     public DatabaseContext(Context base, @NonNull File dbDir) {
         super(base);
         Objects.requireNonNull(dbDir, "dbDir is null");

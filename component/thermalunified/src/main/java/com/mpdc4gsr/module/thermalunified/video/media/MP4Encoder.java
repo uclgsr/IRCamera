@@ -1,21 +1,12 @@
 package com.mpdc4gsr.module.thermalunified.video.media;
 
-import static android.media.MediaCodec.CONFIGURE_FLAG_ENCODE;
-import static android.media.MediaCodec.INFO_OUTPUT_FORMAT_CHANGED;
-import static android.media.MediaCodec.INFO_TRY_AGAIN_LATER;
+import static android.media.MediaCodec.*;
 import static android.media.MediaCodecInfo.CodecProfileLevel.MPEG2ProfileHigh;
-import static android.media.MediaFormat.KEY_AAC_PROFILE;
-import static android.media.MediaFormat.KEY_BIT_RATE;
-import static android.media.MediaFormat.KEY_COLOR_FORMAT;
-import static android.media.MediaFormat.KEY_FRAME_RATE;
-import static android.media.MediaFormat.KEY_I_FRAME_INTERVAL;
-import static android.media.MediaFormat.MIMETYPE_AUDIO_AAC;
-import static android.media.MediaFormat.MIMETYPE_VIDEO_AVC;
+import static android.media.MediaFormat.*;
 import static android.media.MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4;
 
 import android.graphics.Bitmap;
 import android.media.MediaCodec;
-import android.media.MediaCodec.BufferInfo;
 import android.media.MediaCodecInfo;
 import android.media.MediaFormat;
 import android.media.MediaMuxer;

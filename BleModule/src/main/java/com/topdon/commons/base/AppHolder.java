@@ -147,7 +147,7 @@ public class AppHolder implements Application.ActivityLifecycleCallbacks {
         return null;
     }
 
-    
+
     public boolean isAppOnForeground() {
         ActivityManager am = (ActivityManager) application.getSystemService(Context.ACTIVITY_SERVICE);
         if (am != null) {
@@ -176,7 +176,7 @@ public class AppHolder implements Application.ActivityLifecycleCallbacks {
         return false;
     }
 
-    
+
     public void finish(String className, String... classNames) {
         List<RunningActivity> list = new ArrayList<>(runningActivities);
         Collections.reverse(list);//，finish
@@ -191,7 +191,7 @@ public class AppHolder implements Application.ActivityLifecycleCallbacks {
         }
     }
 
-    
+
     public void finishAllWithout(@Nullable String className, String... classNames) {
         List<RunningActivity> list = new ArrayList<>(runningActivities);
         Collections.reverse(list);//，finish
@@ -206,12 +206,12 @@ public class AppHolder implements Application.ActivityLifecycleCallbacks {
         }
     }
 
-    
+
     public void finishAll() {
         finishAllWithout(null);
     }
 
-    
+
     public void backTo(String className) {
         List<RunningActivity> list = new ArrayList<>(runningActivities);
         Collections.reverse(list);//，finish
@@ -252,7 +252,7 @@ public class AppHolder implements Application.ActivityLifecycleCallbacks {
         return activities;
     }
 
-    
+
     public void completeExit() {
         isCompleteExit = true;
         List<RunningActivity> list = new ArrayList<>(runningActivities);

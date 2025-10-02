@@ -1,9 +1,13 @@
 package mpdc4gsr.core.ui.navigation
 
 import android.content.Intent
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -12,7 +16,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import mpdc4gsr.core.ui.*
+import mpdc4gsr.core.ui.SensorDashboardComposeActivity
+import mpdc4gsr.core.ui.SettingsComposeActivity
 import mpdc4gsr.feature.main.ui.MainComposeActivity
 import mpdc4gsr.feature.settings.ui.AboutScreen
 

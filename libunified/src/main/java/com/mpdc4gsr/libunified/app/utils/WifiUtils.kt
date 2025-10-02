@@ -17,14 +17,14 @@ import com.hjq.permissions.XXPermissions
 
 object WifiUtils {
 
-    
+
     @Suppress("DEPRECATION")
     fun ScanResult.getWifiName(): String =
         if (Build.VERSION.SDK_INT < 33) SSID else removeQuotation(wifiSsid.toString())
 
     fun WifiInfo.getWifiName(): String = removeQuotation(ssid)
 
-    
+
     private fun removeQuotation(source: String): String {
         return if (source.length > 1 && source[0] == '\"' && source[source.length - 1] == '\"') {
             source.subSequence(1, source.length - 1).toString()
@@ -33,7 +33,7 @@ object WifiUtils {
         }
     }
 
-    
+
     fun getCurrentWifiSSID(context: Context): String? {
         if (!XXPermissions.isGranted(context, Manifest.permission.ACCESS_FINE_LOCATION)) {
             return null

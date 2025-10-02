@@ -1,10 +1,6 @@
 package com.mpdc4gsr.libunified.app.db.entity
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.Ignore
-import androidx.room.PrimaryKey
+import androidx.room.*
 import com.blankj.utilcode.util.Utils
 import com.mpdc4gsr.libunified.R
 

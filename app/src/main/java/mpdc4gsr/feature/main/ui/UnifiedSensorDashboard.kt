@@ -1,34 +1,28 @@
 package mpdc4gsr.feature.main.ui
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Dashboard
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import mpdc4gsr.core.ui.components.NavigationBreadcrumb
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.components.TitleBarAction
-import mpdc4gsr.core.ui.components.NavigationBreadcrumb
 import mpdc4gsr.core.ui.components.sensors.GSRSensorCard
-import mpdc4gsr.core.ui.components.sensors.ThermalSensorCard
 import mpdc4gsr.core.ui.components.sensors.RGBCameraSensorCard
+import mpdc4gsr.core.ui.components.sensors.ThermalSensorCard
 import mpdc4gsr.core.ui.components.sensors.UnifiedSensorStatus
+import mpdc4gsr.core.ui.model.*
 import mpdc4gsr.core.ui.theme.IRCameraTheme
-import mpdc4gsr.core.ui.model.CameraAction
-import mpdc4gsr.core.ui.model.GSRAction
-import mpdc4gsr.core.ui.model.SensorInfo
-import mpdc4gsr.core.ui.model.SensorState
-import mpdc4gsr.core.ui.model.SensorType
-import mpdc4gsr.core.ui.model.SystemAction
-import mpdc4gsr.core.ui.model.ThermalAction
-import mpdc4gsr.core.ui.model.UnifiedSystemState
 
 /**
  * Unified Sensor Dashboard - Comprehensive view of all sensor modalities

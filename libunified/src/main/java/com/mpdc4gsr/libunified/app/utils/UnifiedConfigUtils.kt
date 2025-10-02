@@ -1,13 +1,12 @@
 package com.mpdc4gsr.libunified.app.utils
 
 import android.content.Context
-import java.io.*
-import java.util.*
+import java.io.File
 
 
 object UnifiedConfigUtils {
 
-    
+
     data class ConfigSection(
         val name: String,
         val properties: MutableMap<String, String> = mutableMapOf()
@@ -29,7 +28,7 @@ object UnifiedConfigUtils {
         }
     }
 
-    
+
     fun parseIniContent(content: String): Map<String, ConfigSection> {
         val sections = mutableMapOf<String, ConfigSection>()
         var currentSection: ConfigSection? = null
@@ -64,7 +63,7 @@ object UnifiedConfigUtils {
         return sections
     }
 
-    
+
     fun readIniFromAssets(context: Context, fileName: String): Map<String, ConfigSection> {
         return try {
             val inputStream = context.assets.open(fileName)
@@ -75,7 +74,7 @@ object UnifiedConfigUtils {
         }
     }
 
-    
+
     fun readIniFromFile(file: File): Map<String, ConfigSection> {
         return try {
             val content = file.readText()
@@ -85,7 +84,7 @@ object UnifiedConfigUtils {
         }
     }
 
-    
+
     fun writeIniToFile(file: File, sections: Map<String, ConfigSection>): Boolean {
         return try {
             file.parentFile?.mkdirs()
@@ -104,7 +103,7 @@ object UnifiedConfigUtils {
         }
     }
 
-    
+
     fun mergeSections(
         base: Map<String, ConfigSection>,
         overlay: Map<String, ConfigSection>
@@ -125,7 +124,7 @@ object UnifiedConfigUtils {
         return result
     }
 
-    
+
     data class ConfigValidationRule(
         val section: String,
         val key: String,
@@ -157,7 +156,7 @@ object UnifiedConfigUtils {
         return errors
     }
 
-    
+
     fun createDefaultAppConfig(): Map<String, ConfigSection> {
         return mapOf(
             "app" to ConfigSection(
@@ -199,7 +198,7 @@ object UnifiedConfigUtils {
         )
     }
 
-    
+
     fun getSystemConfig(context: Context): Map<String, String> {
         return mapOf(
             "android_version" to android.os.Build.VERSION.RELEASE,
@@ -213,7 +212,7 @@ object UnifiedConfigUtils {
         )
     }
 
-    
+
     enum class Environment {
         DEVELOPMENT, TESTING, PRODUCTION
     }
@@ -234,7 +233,7 @@ object UnifiedConfigUtils {
         return mergeSections(baseConfig, envConfig)
     }
 
-    
+
     fun backupConfiguration(context: Context, config: Map<String, ConfigSection>): Boolean {
         val backupFile = File(context.filesDir, "config_backup_${System.currentTimeMillis()}.ini")
         return writeIniToFile(backupFile, config)
@@ -252,7 +251,7 @@ object UnifiedConfigUtils {
         }
     }
 
-    
+
     fun calculateConfigHash(config: Map<String, ConfigSection>): String {
         val content = buildString {
             config.values.sortedBy { it.name }.forEach { section ->

@@ -1,10 +1,12 @@
 package mpdc4gsr.integration
 
-import io.mockk.*
+import io.mockk.MockKAnnotations
+import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.test.runTest
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
-import org.junit.Assert.*
 
 /**
  * MVP-focused integration tests for multi-modal sensor coordination

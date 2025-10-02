@@ -1,6 +1,5 @@
 package mpdc4gsr.feature.network.ui
 
-import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -17,26 +16,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.csl.irCamera.BuildConfig
-import com.csl.irCamera.R
 import androidx.lifecycle.viewModelScope
+import com.csl.irCamera.BuildConfig
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import mpdc4gsr.core.ui.BaseComposeActivity
+import mpdc4gsr.core.ui.BaseViewModel
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.theme.IRCameraTheme
-import mpdc4gsr.feature.network.data.CommandConnection
-import mpdc4gsr.feature.network.data.MockRecordingController
-import mpdc4gsr.feature.network.data.NetworkManager
-import mpdc4gsr.feature.network.data.SimpleCommandHandler
-import mpdc4gsr.feature.network.data.TcpClient
-import mpdc4gsr.core.ui.BaseViewModel
 
 enum class NetworkConnectionStatus {
     DISCONNECTED, CONNECTING, CONNECTED, ERROR

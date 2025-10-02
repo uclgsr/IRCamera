@@ -13,8 +13,7 @@ import android.view.animation.AnimationSet
 import android.view.animation.ScaleAnimation
 import androidx.appcompat.widget.AppCompatTextView
 import com.blankj.utilcode.util.SizeUtils
-import java.util.Timer
-import java.util.TimerTask
+import java.util.*
 
 public class TimeDownView : AppCompatTextView {
     private var timer: Timer? = null

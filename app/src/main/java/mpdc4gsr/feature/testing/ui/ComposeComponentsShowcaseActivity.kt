@@ -1,6 +1,5 @@
 package mpdc4gsr.feature.testing.ui
 
-import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -17,12 +16,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.csl.irCamera.R
 import mpdc4gsr.core.ui.BaseComposeActivity
-import mpdc4gsr.core.ui.components.*
-import mpdc4gsr.core.ui.components.TitleBar
-import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.core.ui.BaseViewModel
+import mpdc4gsr.core.ui.components.*
+import mpdc4gsr.core.ui.theme.IRCameraTheme
 
 class ComposeComponentsShowcaseViewModel : BaseViewModel() {
     private val _showSensorDialog = mutableStateOf(false)

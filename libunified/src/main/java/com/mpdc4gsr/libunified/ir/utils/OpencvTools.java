@@ -1,36 +1,9 @@
 package com.mpdc4gsr.libunified.ir.utils;
 
 import static org.bytedeco.opencv.global.opencv_imgproc.MORPH_ELLIPSE;
-import static org.opencv.core.Core.BORDER_CONSTANT;
-import static org.opencv.core.Core.DFT_SCALE;
-import static org.opencv.core.Core.NORM_MINMAX;
-import static org.opencv.core.Core.absdiff;
-import static org.opencv.core.Core.getOptimalDFTSize;
-import static org.opencv.core.Core.magnitude;
-import static org.opencv.core.Core.normalize;
-import static org.opencv.core.CvType.CV_32F;
-import static org.opencv.core.CvType.CV_32FC1;
-import static org.opencv.core.CvType.CV_32FC2;
-import static org.opencv.core.CvType.CV_64FC1;
-import static org.opencv.core.CvType.CV_8UC1;
-import static org.opencv.core.CvType.CV_8UC2;
-import static org.opencv.imgproc.Imgproc.CHAIN_APPROX_SIMPLE;
-import static org.opencv.imgproc.Imgproc.COLOR_RGB2BGR;
-import static org.opencv.imgproc.Imgproc.COLOR_YUV2GRAY_YUYV;
-import static org.opencv.imgproc.Imgproc.RETR_EXTERNAL;
-import static org.opencv.imgproc.Imgproc.THRESH_BINARY;
-import static org.opencv.imgproc.Imgproc.THRESH_BINARY_INV;
-import static org.opencv.imgproc.Imgproc.applyColorMap;
-import static org.opencv.imgproc.Imgproc.approxPolyDP;
-import static org.opencv.imgproc.Imgproc.boundingRect;
-import static org.opencv.imgproc.Imgproc.contourArea;
-import static org.opencv.imgproc.Imgproc.cvtColor;
-import static org.opencv.imgproc.Imgproc.dilate;
-import static org.opencv.imgproc.Imgproc.drawContours;
-import static org.opencv.imgproc.Imgproc.findContours;
-import static org.opencv.imgproc.Imgproc.getStructuringElement;
-import static org.opencv.imgproc.Imgproc.rectangle;
-import static org.opencv.imgproc.Imgproc.threshold;
+import static org.opencv.core.Core.*;
+import static org.opencv.core.CvType.*;
+import static org.opencv.imgproc.Imgproc.*;
 
 import android.graphics.Bitmap;
 import android.util.Log;
@@ -40,28 +13,13 @@ import com.mpdc4gsr.libunified.app.BaseApplication;
 import com.mpdc4gsr.libunified.app.utils.UnifiedDataUtils;
 
 import org.opencv.android.Utils;
-import org.opencv.core.Core;
-import org.opencv.core.CvType;
-import org.opencv.core.Mat;
-import org.opencv.core.MatOfByte;
-import org.opencv.core.MatOfFloat;
-import org.opencv.core.MatOfInt;
-import org.opencv.core.MatOfPoint;
-import org.opencv.core.MatOfPoint2f;
-import org.opencv.core.Point;
-import org.opencv.core.Rect;
-import org.opencv.core.Scalar;
-import org.opencv.core.Size;
+import org.opencv.core.*;
 import org.opencv.imgproc.CLAHE;
 import org.opencv.imgproc.Imgproc;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 
 public class OpencvTools {
 

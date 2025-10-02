@@ -2,14 +2,13 @@ package mpdc4gsr.feature.settings.data
 
 import android.content.Context
 import android.content.SharedPreferences
-import androidx.preference.PreferenceManager
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.*
 import org.mockito.junit.MockitoJUnitRunner
-import org.junit.Assert.*
 
 @RunWith(MockitoJUnitRunner::class)
 class RecordingSettingsRepositoryTest {

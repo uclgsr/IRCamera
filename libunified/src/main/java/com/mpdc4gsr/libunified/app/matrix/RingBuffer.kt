@@ -10,24 +10,24 @@ class RingBuffer {
 
     private var mUnReadLength = 0
 
-    
+
     constructor(size: Int) {
         byteArray = ByteArray(size)
     }
 
-    
+
     constructor(buffer: ByteArray) {
         byteArray = buffer
     }
 
-    
+
     constructor(buffer: ByteArray, tail: Int, length: Int) {
         byteArray = buffer
         mReadPositon = tail
         mUnReadLength = length
     }
 
-    
+
     fun write(buffer: ByteArray?, offset: Int, length: Int): Int {
         var head: Int
         var toEnd: Int
@@ -55,7 +55,7 @@ class RingBuffer {
         return toWrite
     }
 
-    
+
     fun read(buffer: ByteArray?, offset: Int, length: Int): Int {
         if (buffer == null) return 0
 
@@ -106,27 +106,27 @@ class RingBuffer {
         return length
     }
 
-    
+
     fun getUnReadLength(): Int {
         return mUnReadLength
     }
 
-    
+
     fun getMaxLength(): Int {
         return byteArray.size
     }
 
-    
+
     fun getFreeSpace(): Int {
         return byteArray.size - mUnReadLength
     }
 
-    
+
     fun getByteArray(): ByteArray? {
         return byteArray
     }
 
-    
+
     fun getReadPositon(): Int {
         return mReadPositon
     }

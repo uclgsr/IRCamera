@@ -1,8 +1,6 @@
 package com.topdon.ble;
 
 import com.topdon.ble.callback.RequestCallback;
-import com.topdon.commons.observer.Observe;
-import com.topdon.commons.poster.RunOn;
 
 import java.util.UUID;
 
@@ -22,19 +20,19 @@ public class RequestBuilder<T extends RequestCallback> {
         this.type = type;
     }
 
-    
+
     public RequestBuilder<T> setTag(String tag) {
         this.tag = tag;
         return this;
     }
 
-    
+
     public RequestBuilder<T> setPriority(int priority) {
         this.priority = priority;
         return this;
     }
 
-    
+
     public RequestBuilder<T> setCallback(T callback) {
         this.callback = callback;
         return this;

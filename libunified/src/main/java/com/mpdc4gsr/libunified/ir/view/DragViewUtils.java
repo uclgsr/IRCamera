@@ -12,7 +12,7 @@ public enum DragViewUtils {
 //        registerDragAction(v, 0);
     }
 
-    
+
     public static void registerDragAction(View v, long delay) {
         v.setOnTouchListener(new TouchListener(delay));
     }

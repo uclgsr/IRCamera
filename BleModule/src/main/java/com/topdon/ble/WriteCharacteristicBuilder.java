@@ -27,7 +27,7 @@ public final class WriteCharacteristicBuilder extends RequestBuilder<WriteCharac
         return this;
     }
 
-    
+
     public WriteCharacteristicBuilder setWriteOptions(WriteOptions writeOptions) {
         this.writeOptions = writeOptions;
         return this;

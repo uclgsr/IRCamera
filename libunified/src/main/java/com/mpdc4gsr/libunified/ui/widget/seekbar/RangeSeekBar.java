@@ -5,14 +5,7 @@ import static com.mpdc4gsr.libunified.ui.widget.seekbar.SeekBar.INDICATOR_ALWAYS
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.LinearGradient;
-import android.graphics.Paint;
-import android.graphics.Rect;
-import android.graphics.RectF;
-import android.graphics.Shader;
-import android.graphics.Typeface;
+import android.graphics.*;
 import android.os.Parcelable;
 import android.text.TextUtils;
 import android.util.AttributeSet;

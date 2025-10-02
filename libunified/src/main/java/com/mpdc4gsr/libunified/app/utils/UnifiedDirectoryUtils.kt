@@ -22,68 +22,68 @@ object UnifiedDirectoryUtils {
     private const val CONFIG_DIR = "config"
     private const val TEMP_DIR = "temp"
 
-    
+
     fun getAppRootDirectory(context: Context): File {
         val rootDir = context.getExternalFilesDir(null) ?: context.filesDir
         return File(rootDir, APP_ROOT_DIR).apply { mkdirs() }
     }
 
-    
+
     fun getRecordingsDirectory(context: Context): File {
         return File(getAppRootDirectory(context), RECORDINGS_DIR).apply { mkdirs() }
     }
 
-    
+
     fun getThermalDirectory(context: Context): File {
         return File(getRecordingsDirectory(context), THERMAL_DIR).apply { mkdirs() }
     }
 
-    
+
     fun getRGBDirectory(context: Context): File {
         return File(getRecordingsDirectory(context), RGB_DIR).apply { mkdirs() }
     }
 
-    
+
     fun getGSRDirectory(context: Context): File {
         return File(getRecordingsDirectory(context), GSR_DIR).apply { mkdirs() }
     }
 
-    
+
     fun getSessionsDirectory(context: Context): File {
         return File(getAppRootDirectory(context), SESSIONS_DIR).apply { mkdirs() }
     }
 
-    
+
     fun getExportsDirectory(context: Context): File {
         return File(getAppRootDirectory(context), EXPORTS_DIR).apply { mkdirs() }
     }
 
-    
+
     fun getCacheDirectory(context: Context): File {
         return File(getAppRootDirectory(context), CACHE_DIR).apply { mkdirs() }
     }
 
-    
+
     fun getLogsDirectory(context: Context): File {
         return File(getAppRootDirectory(context), LOGS_DIR).apply { mkdirs() }
     }
 
-    
+
     fun getConfigDirectory(context: Context): File {
         return File(getAppRootDirectory(context), CONFIG_DIR).apply { mkdirs() }
     }
 
-    
+
     fun getTempDirectory(context: Context): File {
         return File(getAppRootDirectory(context), TEMP_DIR).apply { mkdirs() }
     }
 
-    
+
     fun getFeatureDirectory(context: Context, featureName: String): File {
         return File(getAppRootDirectory(context), featureName.lowercase()).apply { mkdirs() }
     }
 
-    
+
     fun cleanTempDirectory(context: Context): Boolean {
         return try {
             val tempDir = getTempDirectory(context)
@@ -95,7 +95,7 @@ object UnifiedDirectoryUtils {
         }
     }
 
-    
+
     fun cleanCacheDirectory(context: Context): Boolean {
         return try {
             val cacheDir = getCacheDirectory(context)
@@ -107,7 +107,7 @@ object UnifiedDirectoryUtils {
         }
     }
 
-    
+
     fun getDirectorySize(directory: File): Long {
         if (!directory.exists() || !directory.isDirectory) return 0L
 
@@ -120,13 +120,13 @@ object UnifiedDirectoryUtils {
         return size
     }
 
-    
+
     fun getFormattedDirectorySize(directory: File): String {
         val size = getDirectorySize(directory)
         return UnifiedDataUtils.formatDataSize(size)
     }
 
-    
+
     fun ensureAppDirectoriesExist(context: Context) {
         getAppRootDirectory(context)
         getRecordingsDirectory(context)
@@ -141,7 +141,7 @@ object UnifiedDirectoryUtils {
         getTempDirectory(context)
     }
 
-    
+
     data class DirectoryInfo(
         val name: String,
         val path: String,
@@ -176,7 +176,7 @@ object UnifiedDirectoryUtils {
         }
     }
 
-    
+
     fun initializeAppDirectories(context: Context): Boolean {
         return try {
             getAppRootDirectory(context)
@@ -197,12 +197,12 @@ object UnifiedDirectoryUtils {
         }
     }
 
-    
+
     fun getGsrDirectory(context: Context): File {
         return File(getRecordingsDirectory(context), GSR_DIR).apply { mkdirs() }
     }
 
-    
+
     fun getRgbDirectory(context: Context): File {
         return File(getRecordingsDirectory(context), RGB_DIR).apply { mkdirs() }
     }

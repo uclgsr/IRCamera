@@ -17,12 +17,12 @@ import com.hjq.permissions.Permission
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
-import java.util.Locale
+import java.util.*
 import kotlin.coroutines.resume
 
 
 object LocationUtils {
-    
+
     @RequiresPermission(Permission.ACCESS_FINE_LOCATION)
     suspend fun getLastLocationStr(context: Context): String? = withContext(Dispatchers.IO) {
         val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
@@ -68,7 +68,6 @@ object LocationUtils {
     }
 
 
-    
     fun addBtStateListener(activity: ComponentActivity, listener: ((isEnable: Boolean) -> Unit)) {
         if (Build.VERSION.SDK_INT >= 28) {//Android 9
             activity.lifecycle.addObserver(ModeChangeObserver(activity, listener))
