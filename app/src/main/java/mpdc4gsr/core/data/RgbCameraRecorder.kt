@@ -488,7 +488,7 @@ class RgbCameraRecorder(
         }
     }
 
-    fun bindPreview(previewView: PreviewView, lifecycleOwner: LifecycleOwner) {
+    fun bindPreview(previewView: PreviewView) {
         this.preview?.setSurfaceProvider(previewView.surfaceProvider)
     }
 
