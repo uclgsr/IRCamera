@@ -10,12 +10,7 @@ import com.mpdc4gsr.libunified.ui.charts.BarChart;
 import com.mpdc4gsr.libunified.ui.components.LimitLine;
 import com.mpdc4gsr.libunified.ui.components.XAxis;
 import com.mpdc4gsr.libunified.ui.components.XAxis.XAxisPosition;
-import com.mpdc4gsr.libunified.ui.utils.FSize;
-import com.mpdc4gsr.libunified.ui.utils.MPPointD;
-import com.mpdc4gsr.libunified.ui.utils.MPPointF;
-import com.mpdc4gsr.libunified.ui.utils.Transformer;
-import com.mpdc4gsr.libunified.ui.utils.Utils;
-import com.mpdc4gsr.libunified.ui.utils.ViewPortHandler;
+import com.mpdc4gsr.libunified.ui.utils.*;
 
 import java.util.List;
 
@@ -33,7 +28,6 @@ public class XAxisRendererHorizontalBarChart extends XAxisRenderer {
 
     @Override
     public void computeAxis(float min, float max, boolean inverted) {
-
 
         if (mViewPortHandler.contentWidth() > 10 && !mViewPortHandler.isFullyZoomedOutY()) {
 
@@ -245,7 +239,6 @@ public class XAxisRendererHorizontalBarChart extends XAxisRenderer {
 
             c.drawPath(limitLinePath, mLimitLinePaint);
             limitLinePath.reset();
-
 
             String label = l.getLabel();
 

@@ -1,13 +1,8 @@
 package com.mpdc4gsr.libunified.ui.renderer;
 
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
+import android.graphics.*;
 import android.graphics.Paint.Align;
 import android.graphics.Paint.Style;
-import android.graphics.Path;
-import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.text.Layout;
@@ -154,7 +149,6 @@ public class PieChartRenderer extends DataRenderer {
         double basePointsDistance = Math.sqrt(
                 Math.pow(arcEndPointX - arcStartPointX, 2) +
                         Math.pow(arcEndPointY - arcStartPointY, 2));
-
 
         float containedTriangleHeight = (float) (basePointsDistance / 2.0 *
                 Math.tan((180.0 - angle) / 2.0 * Utils.DEG2RAD));

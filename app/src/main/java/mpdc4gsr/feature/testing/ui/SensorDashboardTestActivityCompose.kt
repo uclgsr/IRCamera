@@ -1,6 +1,5 @@
 package mpdc4gsr.feature.testing.ui
 
-import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -15,18 +14,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.csl.irCamera.R
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import mpdc4gsr.core.ui.BaseComposeActivity
-import mpdc4gsr.core.ui.components.TitleBar
-import mpdc4gsr.core.ui.components.SensorStatus
-import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.core.ui.BaseViewModel
+import mpdc4gsr.core.ui.components.SensorStatus
+import mpdc4gsr.core.ui.components.TitleBar
+import mpdc4gsr.core.ui.theme.IRCameraTheme
 
 enum class TestSensorType(
     val displayName: String,

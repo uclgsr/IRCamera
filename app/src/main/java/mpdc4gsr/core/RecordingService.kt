@@ -16,42 +16,21 @@ import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
 import com.mpdc4gsr.gsr.model.SessionInfo
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.currentCoroutineContext
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import mpdc4gsr.core.data.FeatureFlags
 import mpdc4gsr.core.data.ProtocolVersion
-import mpdc4gsr.feature.network.data.ComprehensiveRecordingController
-import mpdc4gsr.feature.network.data.RecordingController
-import mpdc4gsr.feature.network.data.RecordingState
-import mpdc4gsr.feature.network.data.TriggerSource
-import mpdc4gsr.feature.network.data.NetworkClient
-import mpdc4gsr.feature.network.data.NetworkConnectionManager
-import mpdc4gsr.feature.network.data.NetworkManager
-import mpdc4gsr.feature.network.data.NetworkServer
-import mpdc4gsr.feature.network.data.NetworkUtils
-import mpdc4gsr.feature.network.data.PreviewDataAdapter
-import mpdc4gsr.feature.network.data.PreviewStreamer
-import mpdc4gsr.feature.network.data.ProtocolHandler
-import mpdc4gsr.core.ui.PermissionManager
 import mpdc4gsr.core.data.TimeSyncManager
+import mpdc4gsr.core.ui.PermissionManager
+import mpdc4gsr.feature.network.data.*
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.io.EOFException
 import java.io.File
-import java.net.InetSocketAddress
-import java.net.ServerSocket
-import java.net.Socket
-import java.net.SocketException
-import java.net.SocketTimeoutException
+import java.net.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -316,7 +295,6 @@ class RecordingService : LifecycleService() {
 
                     val sensorsSuccess = recordingController.initializeSensors()
                     val networkSuccess = initializeNetworkClient()
-
 
                     isInitialized = sensorsSuccess
                     isNetworkInitialized = networkSuccess
@@ -648,7 +626,6 @@ class RecordingService : LifecycleService() {
             try {
                 updateNotification("Stopping recording session...")
                 Log.i(TAG, "Stopping recording session")
-
 
                 val success = recordingController.stopSession()
 

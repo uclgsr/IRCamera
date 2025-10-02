@@ -3,27 +3,15 @@ package com.mpdc4gsr.libunified.app.utils
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothGattCharacteristic
-import android.bluetooth.BluetoothGattService
 import android.content.Context
 import android.content.pm.PackageManager
 import android.util.Log
 import java.util.*
 
-/**
- * Repository-wide consolidated BLE utilities
- * Replaces ALL BLE utility classes across the ENTIRE repository:
- * - BleModule/src/main/java/com/topdon/ble/util/HexUtil.java
- * - BleModule/src/main/java/com/topdon/ble/util/ByteUtil.java
- * - BleModule/src/main/java/com/topdon/ble/util/BluetoothPermissionUtils.java
- * - Various BLE utilities scattered across ALL modules
- */
 object UnifiedBleUtils {
 
     private const val TAG = "UnifiedBleUtils"
 
-    /**
-     * Convert byte array to hex string (BLE format)
-     */
     fun bytesToHexString(byteArray: ByteArray?): String {
         if (byteArray == null || byteArray.isEmpty()) {
             return "BYTE IS NULL"
@@ -40,9 +28,6 @@ object UnifiedBleUtils {
         return sb.toString().uppercase(Locale.getDefault())
     }
 
-    /**
-     * Convert hex string to byte array
-     */
     fun hexStringToBytes(hexString: String?): ByteArray {
         if (hexString.isNullOrEmpty()) {
             return ByteArray(0)
@@ -61,41 +46,26 @@ object UnifiedBleUtils {
         return data
     }
 
-    /**
-     * Check if device supports BLE
-     */
     fun isBleSupported(context: Context): Boolean {
         return context.packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)
     }
 
-    /**
-     * Check if Bluetooth is enabled
-     */
     fun isBluetoothEnabled(): Boolean {
         @Suppress("DEPRECATION")
         val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
         return bluetoothAdapter?.isEnabled == true
     }
 
-    /**
-     * Get Bluetooth adapter
-     */
     fun getBluetoothAdapter(): BluetoothAdapter? {
         @Suppress("DEPRECATION")
         return BluetoothAdapter.getDefaultAdapter()
     }
 
-    /**
-     * Check if device has Bluetooth Low Energy capabilities
-     */
     fun hasBluetoothLowEnergyCapabilities(context: Context): Boolean {
         return context.packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE) &&
                 getBluetoothAdapter() != null
     }
 
-    /**
-     * Format device name for display
-     */
     fun formatDeviceName(device: BluetoothDevice?): String {
         if (device == null) return "Unknown Device"
 
@@ -109,9 +79,6 @@ object UnifiedBleUtils {
         }
     }
 
-    /**
-     * Get RSSI strength description
-     */
     fun getRssiDescription(rssi: Int): String {
         return when {
             rssi >= -50 -> "Excellent"
@@ -122,9 +89,6 @@ object UnifiedBleUtils {
         }
     }
 
-    /**
-     * Convert GATT service UUID to readable name
-     */
     fun getServiceName(uuid: UUID?): String {
         if (uuid == null) return "Unknown Service"
 
@@ -140,9 +104,6 @@ object UnifiedBleUtils {
         }
     }
 
-    /**
-     * Convert GATT characteristic UUID to readable name
-     */
     fun getCharacteristicName(uuid: UUID?): String {
         if (uuid == null) return "Unknown Characteristic"
 
@@ -161,9 +122,6 @@ object UnifiedBleUtils {
         }
     }
 
-    /**
-     * Get characteristic properties as readable string
-     */
     fun getCharacteristicProperties(characteristic: BluetoothGattCharacteristic): String {
         val properties = mutableListOf<String>()
         val props = characteristic.properties
@@ -180,9 +138,6 @@ object UnifiedBleUtils {
         return if (properties.isNotEmpty()) properties.joinToString(", ") else "NONE"
     }
 
-    /**
-     * Generate scan record parser
-     */
     fun parseScanRecord(scanRecord: ByteArray?): Map<String, Any> {
         val result = mutableMapOf<String, Any>()
 
@@ -214,38 +169,23 @@ object UnifiedBleUtils {
         return result
     }
 
-    /**
-     * Check if characteristic supports notifications
-     */
     fun supportsNotifications(characteristic: BluetoothGattCharacteristic): Boolean {
         return (characteristic.properties and BluetoothGattCharacteristic.PROPERTY_NOTIFY) != 0
     }
 
-    /**
-     * Check if characteristic supports indications
-     */
     fun supportsIndications(characteristic: BluetoothGattCharacteristic): Boolean {
         return (characteristic.properties and BluetoothGattCharacteristic.PROPERTY_INDICATE) != 0
     }
 
-    /**
-     * Check if characteristic is readable
-     */
     fun isReadable(characteristic: BluetoothGattCharacteristic): Boolean {
         return (characteristic.properties and BluetoothGattCharacteristic.PROPERTY_READ) != 0
     }
 
-    /**
-     * Check if characteristic is writable
-     */
     fun isWritable(characteristic: BluetoothGattCharacteristic): Boolean {
         return (characteristic.properties and (BluetoothGattCharacteristic.PROPERTY_WRITE or
                 BluetoothGattCharacteristic.PROPERTY_WRITE_NO_RESPONSE)) != 0
     }
 
-    /**
-     * Generate connection timeout handler
-     */
     fun calculateConnectionTimeout(rssi: Int): Long {
         return when {
             rssi >= -50 -> 5000L      // 5 seconds for strong signal
@@ -254,9 +194,6 @@ object UnifiedBleUtils {
         }
     }
 
-    /**
-     * Format byte value as signed/unsigned
-     */
     fun formatByteValue(value: Byte, signed: Boolean = false): String {
         return if (signed) {
             value.toString()
@@ -265,9 +202,6 @@ object UnifiedBleUtils {
         }
     }
 
-    /**
-     * Utility for logging BLE operations
-     */
     fun logBleOperation(
         operation: String,
         device: BluetoothDevice?,

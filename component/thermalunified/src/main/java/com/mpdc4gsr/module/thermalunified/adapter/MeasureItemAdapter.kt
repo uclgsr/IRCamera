@@ -57,7 +57,6 @@ class MeasureItemAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVi
             holder.name.setTextColor(
                 ContextCompat.getColor(context, R.color.white),
 
-
                 )
         }
     }
@@ -70,7 +69,6 @@ class MeasureItemAdapter(val context: Context) : RecyclerView.Adapter<RecyclerVi
         val lay: View = itemView.findViewById(R.id.item_menu_tab_lay)
         val img: ImageView = itemView.findViewById(R.id.item_menu_tab_img)
         val name: TextView = itemView.findViewById(R.id.item_menu_tab_text)
-
 
     }
 }

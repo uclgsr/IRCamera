@@ -16,11 +16,7 @@ import com.mpdc4gsr.libunified.app.bean.event.SocketStateEvent
 import com.mpdc4gsr.libunified.app.security.CertificateManager
 import com.mpdc4gsr.libunified.app.utils.WifiUtils
 import com.mpdc4gsr.libunified.app.utils.WsCmdConstants
-import okhttp3.Interceptor
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.Response
-import okhttp3.WebSocket
+import okhttp3.*
 import okio.ByteString
 import org.greenrobot.eventbus.EventBus
 

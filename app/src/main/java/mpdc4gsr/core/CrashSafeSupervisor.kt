@@ -2,17 +2,7 @@ package mpdc4gsr.core
 
 import android.content.Context
 import android.util.Log
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.CoroutineName
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withTimeout
+import kotlinx.coroutines.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
@@ -260,7 +250,6 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
         )
 
         Log.e(TAG, "Critical job failure: $name ($id)", exception)
-
 
     }
 

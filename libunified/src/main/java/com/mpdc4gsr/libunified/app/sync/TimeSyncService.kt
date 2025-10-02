@@ -1,22 +1,13 @@
 package com.mpdc4gsr.libunified.app.sync
 
 import android.util.Log
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import org.json.JSONObject
 import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.net.InetSocketAddress
 import java.net.Socket
 import kotlin.math.abs
-
 
 class TimeSyncService {
     companion object {
@@ -198,7 +189,6 @@ class TimeSyncService {
 
                 val t2 = response.getLong("server_receive_time")
                 val t3 = response.getLong("server_send_time")
-
 
                 val roundTripDelay = (t4 - t1) - (t3 - t2)
 

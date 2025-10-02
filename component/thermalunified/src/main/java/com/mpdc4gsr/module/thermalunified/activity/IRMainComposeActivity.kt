@@ -12,7 +12,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -23,20 +24,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-import com.mpdc4gsr.module.thermalunified.fragment.IRThermalComposeFragment
-import com.mpdc4gsr.module.thermalunified.fragment.IRGalleryTabComposeFragment
 import com.mpdc4gsr.module.thermalunified.fragment.AbilityComposeFragment
+import com.mpdc4gsr.module.thermalunified.fragment.IRGalleryTabComposeFragment
+import com.mpdc4gsr.module.thermalunified.fragment.IRThermalComposeFragment
 import com.mpdc4gsr.module.thermalunified.fragment.PDFListComposeFragment
 import com.mpdc4gsr.module.user.compose.MoreComposeFragment
 import com.mpdc4gsr.module.user.viewmodel.MoreComposeFragmentViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
 
-/**
- * Modern Compose implementation of thermal main hub activity
- * Preserves the 5-tab ViewPager structure with enhanced Material 3 UI
- */
 class IRMainComposeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,43 +54,43 @@ class IRMainComposeActivity : AppCompatActivity() {
         Scaffold(
             containerColor = Color(0xFF16131E)
         ) { paddingValues ->
-                Column(
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+                    .background(Color(0xFF16131E))
+            ) {
+                // Main ViewPager content (85% of screen)
+                HorizontalPager(
+                    state = pagerState,
                     modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues)
-                        .background(Color(0xFF16131E))
-                ) {
-                    // Main ViewPager content (85% of screen)
-                    HorizontalPager(
-                        state = pagerState,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(0.85f)
-                    ) { page ->
-                        when (page) {
-                            0 -> ThermalTabContent()
-                            1 -> GalleryTabContent()
-                            2 -> AbilityTabContent()
-                            3 -> PDFTabContent()
-                            4 -> MoreTabContent()
-                        }
+                        .fillMaxWidth()
+                        .weight(0.85f)
+                ) { page ->
+                    when (page) {
+                        0 -> ThermalTabContent()
+                        1 -> GalleryTabContent()
+                        2 -> AbilityTabContent()
+                        3 -> PDFTabContent()
+                        4 -> MoreTabContent()
                     }
-
-                    // Bottom navigation (15% of screen)
-                    ThermalBottomNavigation(
-                        selectedPage = pagerState.currentPage,
-                        onPageSelected = { page ->
-                            scope.launch {
-                                pagerState.animateScrollToPage(page)
-                            }
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(0.15f)
-                    )
                 }
+
+                // Bottom navigation (15% of screen)
+                ThermalBottomNavigation(
+                    selectedPage = pagerState.currentPage,
+                    onPageSelected = { page ->
+                        scope.launch {
+                            pagerState.animateScrollToPage(page)
+                        }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(0.15f)
+                )
             }
         }
+    }
 }
 
 @Composable

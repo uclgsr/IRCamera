@@ -1,7 +1,6 @@
 package mpdc4gsr.core.data
 
 import kotlinx.coroutines.flow.Flow
-import mpdc4gsr.core.data.SessionMetadata
 
 interface SensorRecorder {
 
@@ -16,7 +15,6 @@ interface SensorRecorder {
     suspend fun initialize(): Boolean
 
     suspend fun startRecording(sessionDirectory: String): Boolean
-
 
     suspend fun startRecording(
         sessionDirectory: String,

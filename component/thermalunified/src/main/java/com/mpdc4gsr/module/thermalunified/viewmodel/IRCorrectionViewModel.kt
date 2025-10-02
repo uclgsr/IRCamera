@@ -7,15 +7,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-/**
- * ViewModel for IR temperature correction functionality
- *
- * Manages:
- * - Temperature correction state and calibration
- * - Real-time temperature data processing
- * - Calibration workflow and settings
- * - UI state for correction controls
- */
 class IRCorrectionViewModel : BaseViewModel() {
 
     // State management for correction functionality
@@ -44,9 +35,6 @@ class IRCorrectionViewModel : BaseViewModel() {
         )
     }
 
-    /**
-     * Toggle the correction state between active and inactive
-     */
     fun toggleCorrection() {
         viewModelScope.launch {
             try {
@@ -73,17 +61,11 @@ class IRCorrectionViewModel : BaseViewModel() {
         }
     }
 
-    /**
-     * Update temperature point from thermal camera touch/selection
-     */
     fun updateTemperaturePoint(temp: Float, x: Int, y: Int) {
         currentTemperaturePoint = Triple(temp, x, y)
         updateTemperatureData(temp)
     }
 
-    /**
-     * Update the correction offset value
-     */
     fun updateCorrectionValue(value: Float) {
         currentCorrectionValue = value
         currentTemperaturePoint?.let { (baseTemp, _, _) ->
@@ -91,9 +73,6 @@ class IRCorrectionViewModel : BaseViewModel() {
         }
     }
 
-    /**
-     * Start calibration process
-     */
     fun startCalibration() {
         launchWithErrorHandling {
             _isProcessing.value = true
@@ -117,9 +96,6 @@ class IRCorrectionViewModel : BaseViewModel() {
         }
     }
 
-    /**
-     * Reset all correction settings
-     */
     fun resetCorrection() {
         launchWithErrorHandling {
             currentCorrectionValue = 0f
@@ -136,9 +112,6 @@ class IRCorrectionViewModel : BaseViewModel() {
         }
     }
 
-    /**
-     * Save current correction settings
-     */
     fun saveSettings() {
         launchWithErrorHandling {
             _isProcessing.value = true
@@ -157,9 +130,6 @@ class IRCorrectionViewModel : BaseViewModel() {
         }
     }
 
-    /**
-     * Start monitoring temperature data
-     */
     private fun startTemperatureMonitoring() {
         viewModelScope.launch {
             // Simulate temperature monitoring with some variation
@@ -174,16 +144,10 @@ class IRCorrectionViewModel : BaseViewModel() {
         }
     }
 
-    /**
-     * Stop temperature monitoring
-     */
     private fun stopTemperatureMonitoring() {
         // Temperature monitoring is stopped by the coroutine condition check
     }
 
-    /**
-     * Update temperature data with correction applied
-     */
     private fun updateTemperatureData(currentTemp: Float) {
         val correctedTemp = currentTemp + currentCorrectionValue
         _temperatureData.value = TemperatureData(
@@ -194,25 +158,16 @@ class IRCorrectionViewModel : BaseViewModel() {
     }
 }
 
-/**
- * Data class representing temperature readings and corrections
- */
 data class TemperatureData(
     val currentTemp: Float,
     val correctedTemp: Float,
     val offsetValue: Float
 )
 
-/**
- * Enum representing correction system states
- */
 enum class CorrectionState {
     INACTIVE, ACTIVE, CALIBRATING
 }
 
-/**
- * Enum representing calibration status
- */
 enum class CalibrationStatus {
     NONE, CALIBRATED, NEEDS_CALIBRATION
 }

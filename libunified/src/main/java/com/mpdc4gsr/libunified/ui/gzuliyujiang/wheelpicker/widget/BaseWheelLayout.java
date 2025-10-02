@@ -6,13 +6,7 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
 
-import androidx.annotation.ColorInt;
-import androidx.annotation.LayoutRes;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.Px;
-import androidx.annotation.StyleRes;
-import androidx.annotation.StyleableRes;
+import androidx.annotation.*;
 
 import com.mpdc4gsr.libunified.R;
 import com.mpdc4gsr.libunified.ui.gzuliyujiang.dialog.DialogLog;

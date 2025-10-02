@@ -1,8 +1,6 @@
 package com.mpdc4gsr.module.thermalunified.activity
 
-import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -22,10 +20,6 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
 
-/**
- * Compose implementation of Monitor Log activity
- * Displays monitoring history and log entries
- */
 class MonitorLogComposeActivity : BaseComposeActivity<ThermalViewModel>() {
 
     override fun createViewModel(): ThermalViewModel {

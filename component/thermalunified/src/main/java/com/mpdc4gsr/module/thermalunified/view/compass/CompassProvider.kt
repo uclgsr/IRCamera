@@ -4,7 +4,6 @@ import android.content.Context
 import android.hardware.Sensor
 import com.kylecorry.andromeda.sense.Sensors
 
-
 import com.kylecorry.andromeda.sense.compass.ICompass
 import com.kylecorry.andromeda.sense.compass.LegacyCompass
 import com.kylecorry.andromeda.sense.orientation.GeomagneticRotationSensor
@@ -49,7 +48,6 @@ class CompassProvider(private val context: Context) {
 
         return compass as ICompass
     }
-
 
     companion object {
 

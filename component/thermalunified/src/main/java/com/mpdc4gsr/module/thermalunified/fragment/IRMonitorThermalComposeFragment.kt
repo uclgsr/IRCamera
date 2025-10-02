@@ -1,6 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.fragment
 
-import android.graphics.Bitmap
 import android.widget.FrameLayout
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -13,7 +12,8 @@ import androidx.compose.material.icons.filled.RecordVoiceOver
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.ThermostatAuto
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,20 +25,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeFragment
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-import com.mpdc4gsr.libunified.ir.view.TemperatureView
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalFragmentViewModel
-import com.infisense.usbir.view.CameraView
 
-/**
- * IRMonitorThermalComposeFragment - Advanced thermal monitoring fragment with Compose UI
- *
- * This fragment provides comprehensive thermal monitoring capabilities with:
- * - Real-time thermal data monitoring with temperature overlays
- * - Advanced monitoring controls and region selection
- * - Integration with thermal recording and analysis tools
- * - Professional monitoring interface for extended thermal analysis
- * - USB thermal device integration and management
- */
 class IRMonitorThermalComposeFragment : BaseComposeFragment<ThermalFragmentViewModel>() {
 
     override fun createViewModel(): ThermalFragmentViewModel {

@@ -8,11 +8,7 @@ import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.view.GestureDetector;
-import android.view.MotionEvent;
-import android.view.ScaleGestureDetector;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 
 import com.mpdc4gsr.libunified.R;
 import com.mpdc4gsr.libunified.app.utils.UnifiedDataUtils;

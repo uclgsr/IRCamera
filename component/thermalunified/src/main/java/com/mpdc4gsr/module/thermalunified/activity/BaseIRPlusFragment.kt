@@ -1,6 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.activity
 
-
 import android.graphics.ImageFormat
 import android.hardware.usb.UsbDevice
 import android.os.Handler
@@ -18,22 +17,18 @@ import com.elvishew.xlog.XLog
 import com.energy.iruvc.ircmd.IRCMD
 import com.energy.iruvc.sdkisp.LibIRProcess
 import com.energy.iruvc.usb.USBMonitor
-import com.energy.iruvc.utils.CommonParams
-import com.energy.iruvc.utils.DualCameraParams
-import com.energy.iruvc.utils.IFrameCallback
-import com.energy.iruvc.utils.IIRFrameCallback
-import com.energy.iruvc.utils.SynchronizedBitmap
+import com.energy.iruvc.utils.*
 import com.energy.iruvc.uvc.ConnectCallback
 import com.energy.iruvc.uvc.UVCCamera
 import com.mpdc4gsr.libunified.app.common.SaveSettingUtils
 import com.mpdc4gsr.libunified.app.ktbase.BaseFragment
+import com.mpdc4gsr.libunified.app.utils.UnifiedScreenUtils
 import com.mpdc4gsr.libunified.ir.usbdual.Const
 import com.mpdc4gsr.libunified.ir.usbdual.camera.DualViewWithExternalCameraCommonApi
 import com.mpdc4gsr.libunified.ir.usbdual.camera.IRUVCDual
 import com.mpdc4gsr.libunified.ir.usbdual.camera.USBMonitorManager
 import com.mpdc4gsr.libunified.ir.usbdual.inf.OnUSBConnectListener
 import com.mpdc4gsr.libunified.ir.utils.PseudocodeUtils
-import com.mpdc4gsr.libunified.app.utils.UnifiedScreenUtils
 import com.mpdc4gsr.libunified.ir.view.ITsTempListener
 import com.mpdc4gsr.libunified.ir.view.TemperatureView
 import com.mpdc4gsr.module.thermalunified.extension.setAutoShutter
@@ -44,15 +39,9 @@ import com.mpdc4gsr.module.thermalunified.repository.ConfigRepository
 import com.mpdc4gsr.module.thermalunified.utils.DualParamsUtils
 import com.mpdc4gsr.module.thermalunified.utils.IRCmdTools
 import com.mpdc4gsr.module.thermalunified.utils.IRCmdTools.getSNStr
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import java.io.IOException
 import java.io.InputStream
-
 
 abstract class BaseIRPlusFragment :
     BaseFragment(),
@@ -61,11 +50,9 @@ abstract class BaseIRPlusFragment :
     IIRFrameCallback {
     val INIT_ALIGN_DATA = floatArrayOf(1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f)
 
-
     protected var dualView: DualViewWithExternalCameraCommonApi? = null
 
     protected var pseudoColorModeDual = CommonParams.PseudoColorUsbDualType.IRONBOW_MODE
-
 
     private var hasStartPreview = false
     protected var ircmd: IRCMD? = null
@@ -312,8 +299,6 @@ abstract class BaseIRPlusFragment :
 
         USBMonitorManager.getInstance().registerUSB()
 
-
-
         getTemperatureDualView().setUseIRISP(isUseIRISP)
         if (mCurrentFusionType == DualCameraParams.FusionType.IROnlyNoFusion) {
             getTemperatureDualView().setImageSize(Const.IR_HEIGHT, Const.IR_WIDTH, null)
@@ -346,7 +331,6 @@ abstract class BaseIRPlusFragment :
                         TAG,
                         "USBMonitorManager HANDLE_CONNECT",
                     )
-
 
                     lifecycleScope.launch(Dispatchers.Main) {
                         startVLCamera(vlPid, vlFps, vlCameraWidth, vlCameraHeight)
@@ -403,12 +387,9 @@ abstract class BaseIRPlusFragment :
         getTemperatureDualView().setDualUVCCamera(dualView!!.getDualUVCCamera())
         initPseudocolor()
 
-
-
         dualView?.setHandler(mIrHandler)
         isrun = true
     }
-
 
     open fun startVLCamera(
         pid: Int,
@@ -472,7 +453,6 @@ abstract class BaseIRPlusFragment :
             "ConnectCallback-startVLCamera-onIRCMDCreate",
         )
 
-
     }
 
     override fun onStart() {
@@ -500,7 +480,6 @@ abstract class BaseIRPlusFragment :
                 val emsChar = (config.radiation * 128).toInt()
                 XLog.w("TPD_PROP DISTANCE:$disChar, EMS:$emsChar}")
                 delay(timeMillis)
-
 
                 ircmd?.setPropTPDParams(
                     CommonParams.PropTPDParams.TPD_PROP_EMS,

@@ -2,14 +2,7 @@ package com.mpdc4gsr.gsr.network
 
 import android.content.Context
 import android.util.Log
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withTimeout
+import kotlinx.coroutines.*
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -162,7 +155,6 @@ class NetworkErrorRecoveryManager(
                     put("timestamp", System.currentTimeMillis())
                 }
 
-
             withTimeout(5000) {
                 networkClient.sendMeasurementData("health_check", pingMessage)
             }
@@ -236,7 +228,6 @@ class NetworkErrorRecoveryManager(
                 TAG,
                 "Attempting reconnection to ${controller.deviceName} at ${controller.ipAddress}"
             )
-
 
             networkClient.disconnect()
             delay(1000)

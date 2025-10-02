@@ -2,11 +2,7 @@ package com.mpdc4gsr.libunified.app.view
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Paint
-import android.graphics.Path
-import android.graphics.PorterDuff
+import android.graphics.*
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
@@ -236,7 +232,6 @@ class ImageEditView : View {
                     path.close()
                     canvas?.drawPath(path, paint)
                 } else {
-
 
                     val k1: Float = (downY - currentY).toFloat() / (downX - currentX).toFloat()
                     val b1: Float = downY - k1 * downX

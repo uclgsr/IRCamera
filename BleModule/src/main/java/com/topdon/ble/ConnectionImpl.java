@@ -1,13 +1,7 @@
 package com.topdon.ble;
 
 import android.annotation.SuppressLint;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothGatt;
-import android.bluetooth.BluetoothGattCallback;
-import android.bluetooth.BluetoothGattCharacteristic;
-import android.bluetooth.BluetoothGattDescriptor;
-import android.bluetooth.BluetoothGattService;
-import android.bluetooth.BluetoothProfile;
+import android.bluetooth.*;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
@@ -18,31 +12,20 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.util.Pair;
 
-import com.android.identity.util.HexUtil;
+import com.mpdc4gsr.libunified.app.utils.UnifiedBleUtils;
+import com.mpdc4gsr.libunified.app.utils.UnifiedMathUtils;
 import com.topdon.ble.callback.RequestCallback;
 import com.topdon.ble.callback.ScanListener;
 import com.topdon.ble.util.Logger;
 import com.topdon.commons.observer.Observable;
 import com.topdon.commons.poster.MethodInfo;
 import com.topdon.commons.poster.PosterDispatcher;
-import com.mpdc4gsr.libunified.app.utils.UnifiedMathUtils;
-import com.mpdc4gsr.libunified.app.utils.UnifiedBleUtils;
 
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-/**
- * date: 2021/8/12 19:47
- * author: bichuanfeng
- */
 // Permission checks are expected to be handled by the calling code before using this connection
 @SuppressLint("MissingPermission")
 class ConnectionImpl implements Connection, ScanListener {
@@ -213,7 +196,6 @@ class ConnectionImpl implements Connection, ScanListener {
         }
     }
 
-
     private void doDiscoverServices() {
         if (bluetoothGatt != null) {
             bluetoothGatt.discoverServices();
@@ -278,11 +260,6 @@ class ConnectionImpl implements Connection, ScanListener {
         connHandler.postDelayed(connectRunnable, 500);
     }
 
-    /**
-     *
-     *
-     * @param reconnect
-     */
     private void doDisconnect(boolean reconnect) {
         clearRequestQueueAndNotify();
         connHandler.removeCallbacks(connectRunnable);
@@ -912,9 +889,6 @@ class ConnectionImpl implements Connection, ScanListener {
         }
     }
 
-    /**
-     *
-     */
     private void clearRequestQueueAndNotify() {
         synchronized (this) {
             for (GenericRequest request : requestQueue) {

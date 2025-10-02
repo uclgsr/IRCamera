@@ -1,7 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.fragment
 
-import android.graphics.Bitmap
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -12,7 +10,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -21,32 +18,15 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeFragment
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-import com.mpdc4gsr.module.thermalunified.stubs.IrSurfaceView
-import com.mpdc4gsr.module.thermalunified.stubs.FenceView
-import com.mpdc4gsr.module.thermalunified.stubs.FencePointView
 import com.mpdc4gsr.module.thermalunified.stubs.FenceLineView
+import com.mpdc4gsr.module.thermalunified.stubs.FencePointView
+import com.mpdc4gsr.module.thermalunified.stubs.FenceView
+import com.mpdc4gsr.module.thermalunified.stubs.IrSurfaceView
 import com.mpdc4gsr.module.thermalunified.viewmodel.MonitorThermalViewModel
-import com.mpdc4gsr.module.thermalunified.viewmodel.MonitorThermalViewModel.ThermalData
-import com.mpdc4gsr.module.thermalunified.viewmodel.MonitorThermalViewModel.FenceData
-import com.mpdc4gsr.module.thermalunified.viewmodel.MonitorThermalViewModel.TemperatureThreshold
-import com.mpdc4gsr.module.thermalunified.viewmodel.MonitorThermalViewModel.AlertSettings
-import com.mpdc4gsr.module.thermalunified.viewmodel.MonitorThermalViewModel.MonitoringAlert
-import com.mpdc4gsr.module.thermalunified.viewmodel.MonitorThermalViewModel.MonitoringState
-import com.mpdc4gsr.module.thermalunified.viewmodel.MonitorThermalViewModel.RecordingStatus
-import com.mpdc4gsr.module.thermalunified.viewmodel.MonitorThermalViewModel.AlertSeverity
+import com.mpdc4gsr.module.thermalunified.viewmodel.MonitorThermalViewModel.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-/**
- * Compose migration of MonitorThermalFragment
- *
- * This fragment demonstrates:
- * - Complete migration of thermal monitoring interface to Compose
- * - Advanced thermal monitoring with real-time data analysis
- * - Modern Material 3 UI with monitoring-optimized design
- * - Enhanced monitoring controls and data visualization
- * - Integration with thermal recording and analysis tools
- */
 class MonitorThermalComposeFragment : BaseComposeFragment<MonitorThermalViewModel>() {
 
     override fun createViewModel(): MonitorThermalViewModel {
@@ -662,6 +642,5 @@ class MonitorThermalComposeFragment : BaseComposeFragment<MonitorThermalViewMode
         MonitoringState.PAUSED -> Color(0xFFFFA500)
         MonitoringState.STOPPED -> Color.Gray
     }
-
 
 }

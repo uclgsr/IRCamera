@@ -7,10 +7,6 @@ import androidx.annotation.Dimension
 import kotlin.math.floor
 import kotlin.math.roundToInt
 
-/**
- * ColorUtils based on reference repository implementation
- * Adapted from libcom/src/main/java/com/topdon/libcom/util/ColorUtils.kt
- */
 object ColorUtils {
 
     fun setColorAlpha(@ColorInt color: Int, alpha: Float): Int {

@@ -16,7 +16,6 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-
 class CommandClient:
     """PC-side client for sending commands to Android devices"""
     
@@ -284,7 +283,6 @@ class CommandClient:
     def __del__(self):
         """Cleanup on destruction"""
         self.disconnect_all()
-
 
 if __name__ == "__main__":
     # Simple test of command client

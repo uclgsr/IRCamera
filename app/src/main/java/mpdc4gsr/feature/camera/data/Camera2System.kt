@@ -9,19 +9,7 @@ import android.os.Build
 import android.util.Log
 import android.util.Size
 import android.view.TextureView
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.suspendCancellableCoroutine
-import kotlinx.coroutines.withContext
-import mpdc4gsr.feature.camera.data.CameraController
-import mpdc4gsr.feature.camera.data.DeviceCaps
-import mpdc4gsr.feature.camera.data.ModeManager
-import mpdc4gsr.feature.camera.data.RawEngine
-import mpdc4gsr.feature.camera.data.UiBridge
-import mpdc4gsr.feature.camera.data.VideoEngine
+import kotlinx.coroutines.*
 import java.io.File
 
 class Camera2System(
@@ -209,7 +197,6 @@ class Camera2System(
 
         Log.i(TAG, "Camera2System released")
     }
-
 
     private fun setupCallbacks() {
 
@@ -409,7 +396,6 @@ class Camera2System(
                 val videoSize = Size(3840, 2160)
                 val frameRate = if (caps.supports4k60) 60 else 30
 
-
                 val orientationHint = calculateOrientationHint(caps.sensorOrientation)
 
                 val recorderSurface =
@@ -569,7 +555,6 @@ class Camera2System(
         return File(outputDirectory, filename)
     }
 
-
     private fun calculateOrientationHint(sensorOrientation: Int): Int {
         return try {
             val windowManager =
@@ -592,7 +577,6 @@ class Camera2System(
                     else -> 0
                 }
             }
-
 
             val orientationHint = (sensorOrientation - deviceRotation + 360) % 360
             Log.d(

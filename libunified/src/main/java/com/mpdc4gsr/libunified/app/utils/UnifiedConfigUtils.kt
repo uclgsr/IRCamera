@@ -1,28 +1,10 @@
 package com.mpdc4gsr.libunified.app.utils
 
 import android.content.Context
-import java.io.*
-import java.util.*
+import java.io.File
 
-/**
- * Unified Configuration Utilities
- *
- * Consolidates configuration management utilities from across the repository:
- * - INI file parsing and management
- * - Configuration file I/O operations
- * - Settings validation and defaults
- * - System configuration handling
- *
- * This utility replaces scattered configuration utilities from:
- * - BleModule IniUtil.java
- * - libunified Config.java and various config utilities
- * - App configuration management
- */
 object UnifiedConfigUtils {
 
-    /**
-     * Configuration data class for structured settings
-     */
     data class ConfigSection(
         val name: String,
         val properties: MutableMap<String, String> = mutableMapOf()
@@ -44,9 +26,6 @@ object UnifiedConfigUtils {
         }
     }
 
-    /**
-     * Parse INI file content into structured configuration
-     */
     fun parseIniContent(content: String): Map<String, ConfigSection> {
         val sections = mutableMapOf<String, ConfigSection>()
         var currentSection: ConfigSection? = null
@@ -81,9 +60,6 @@ object UnifiedConfigUtils {
         return sections
     }
 
-    /**
-     * Read INI file from assets
-     */
     fun readIniFromAssets(context: Context, fileName: String): Map<String, ConfigSection> {
         return try {
             val inputStream = context.assets.open(fileName)
@@ -94,9 +70,6 @@ object UnifiedConfigUtils {
         }
     }
 
-    /**
-     * Read INI file from internal storage
-     */
     fun readIniFromFile(file: File): Map<String, ConfigSection> {
         return try {
             val content = file.readText()
@@ -106,9 +79,6 @@ object UnifiedConfigUtils {
         }
     }
 
-    /**
-     * Write configuration to INI file
-     */
     fun writeIniToFile(file: File, sections: Map<String, ConfigSection>): Boolean {
         return try {
             file.parentFile?.mkdirs()
@@ -127,9 +97,6 @@ object UnifiedConfigUtils {
         }
     }
 
-    /**
-     * Merge configuration sections
-     */
     fun mergeSections(
         base: Map<String, ConfigSection>,
         overlay: Map<String, ConfigSection>
@@ -150,9 +117,6 @@ object UnifiedConfigUtils {
         return result
     }
 
-    /**
-     * Validate configuration against schema
-     */
     data class ConfigValidationRule(
         val section: String,
         val key: String,
@@ -184,9 +148,6 @@ object UnifiedConfigUtils {
         return errors
     }
 
-    /**
-     * Create default application configuration
-     */
     fun createDefaultAppConfig(): Map<String, ConfigSection> {
         return mapOf(
             "app" to ConfigSection(
@@ -228,9 +189,6 @@ object UnifiedConfigUtils {
         )
     }
 
-    /**
-     * Get system configuration information
-     */
     fun getSystemConfig(context: Context): Map<String, String> {
         return mapOf(
             "android_version" to android.os.Build.VERSION.RELEASE,
@@ -244,9 +202,6 @@ object UnifiedConfigUtils {
         )
     }
 
-    /**
-     * Environment-specific configuration loading
-     */
     enum class Environment {
         DEVELOPMENT, TESTING, PRODUCTION
     }
@@ -267,9 +222,6 @@ object UnifiedConfigUtils {
         return mergeSections(baseConfig, envConfig)
     }
 
-    /**
-     * Configuration backup and restore
-     */
     fun backupConfiguration(context: Context, config: Map<String, ConfigSection>): Boolean {
         val backupFile = File(context.filesDir, "config_backup_${System.currentTimeMillis()}.ini")
         return writeIniToFile(backupFile, config)
@@ -287,9 +239,6 @@ object UnifiedConfigUtils {
         }
     }
 
-    /**
-     * Configuration change detection
-     */
     fun calculateConfigHash(config: Map<String, ConfigSection>): String {
         val content = buildString {
             config.values.sortedBy { it.name }.forEach { section ->

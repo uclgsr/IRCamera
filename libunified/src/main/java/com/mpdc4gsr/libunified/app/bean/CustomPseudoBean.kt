@@ -5,10 +5,6 @@ import com.google.gson.Gson
 import com.mpdc4gsr.libunified.app.common.SharedManager
 import kotlinx.parcelize.Parcelize
 
-/**
- * Stub implementation of CustomPseudoBean to replace the removed pseudo module.
- * This provides minimal functionality to maintain compatibility.
- */
 @Parcelize
 data class CustomPseudoBean(
     var selectIndex: Int = 0,

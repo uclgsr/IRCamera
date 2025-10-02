@@ -8,7 +8,6 @@ from loguru import logger
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
-
 @dataclass
 class DataStreamInfo:
     stream_id: str
@@ -23,7 +22,6 @@ class DataStreamInfo:
     total_samples: int = 0
     quality_score: float = 100.0
 
-
 @dataclass
 class SyncMarkerInfo:
     timestamp: float
@@ -31,7 +29,6 @@ class SyncMarkerInfo:
     description: str
     device_id: Optional[str] = None
     sequence_number: int = 0
-
 
 @dataclass
 class SessionMetadata:
@@ -58,7 +55,6 @@ class SessionMetadata:
     def __post_init__(self):
         if self.device_info is None:
             self.device_info = {}
-
 
 class MultiModalHDF5Exporter:
 
@@ -664,7 +660,6 @@ class MultiModalHDF5Exporter:
             json.dump(export_metadata, f, indent=2)
 
         return json_file
-
 
 def create_session_exporter(participant_id: str, experiment_name: str = "",
                             output_dir: Optional[Path] = None) -> MultiModalHDF5Exporter:

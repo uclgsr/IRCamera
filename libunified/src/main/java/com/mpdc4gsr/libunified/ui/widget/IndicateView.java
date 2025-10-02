@@ -12,9 +12,6 @@ import androidx.annotation.Nullable;
 
 import com.mpdc4gsr.libunified.R;
 
-/**
- * IndicateView - A simple indicator/pagination view
- */
 public class IndicateView extends View {
     private int selectColor = Color.parseColor("#06AAFF");
     private int unSelectColor = Color.parseColor("#80FFFFFF");

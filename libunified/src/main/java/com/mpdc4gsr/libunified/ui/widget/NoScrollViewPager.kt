@@ -28,5 +28,4 @@ class NoScrollViewPager : ViewPager {
         super.setCurrentItem(item, false)
     }
 
-
 }

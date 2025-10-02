@@ -43,11 +43,9 @@
         product-id="258"
         vendor-id="9228" />
 
-
     <usb-device
         product-id="258"
         vendor-id="11231" />
-
 
     <usb-device
         product-id="0x0001"

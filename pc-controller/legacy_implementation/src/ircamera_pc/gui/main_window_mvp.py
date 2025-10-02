@@ -27,7 +27,6 @@ from typing import Dict, Optional
 from ..core.device_manager import DeviceConnectionState, DeviceInfo, DeviceManager, DeviceType
 from ..core.session_manager import AdvancedSessionManager, SessionConfiguration, SessionState
 
-
 class DeviceDashboardWidget(QWidget):
     device_connect_requested = pyqtSignal(str)
     device_disconnect_requested = pyqtSignal(str)
@@ -191,7 +190,6 @@ class DeviceDashboardWidget(QWidget):
             status_parts.append(f"{state.title()}: {count}")
 
         self.status_label.setText(" | ".join(status_parts))
-
 
 class SessionControlWidget(QWidget):
     create_session_requested = pyqtSignal(str, dict)
@@ -387,7 +385,6 @@ class SessionControlWidget(QWidget):
             session_state in [SessionState.STOPPED, SessionState.ERROR])
         self.reset_session_btn.setEnabled(session_state != SessionState.RECORDING)
 
-
 class LoggingConsoleWidget(QWidget):
 
     def __init__(self):
@@ -444,7 +441,6 @@ class LoggingConsoleWidget(QWidget):
     def _clear_log(self):
 
         self.log_text.clear()
-
 
 class MVPMainWindow(QMainWindow):
 

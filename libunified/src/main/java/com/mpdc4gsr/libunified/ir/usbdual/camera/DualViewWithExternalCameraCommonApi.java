@@ -16,12 +16,7 @@ import com.energy.iruvc.dual.DualType;
 import com.energy.iruvc.dual.DualUVCCamera;
 import com.energy.iruvc.sdkisp.LibIRParse;
 import com.energy.iruvc.sdkisp.LibIRProcess;
-import com.energy.iruvc.utils.AutoGainSwitchCallback;
-import com.energy.iruvc.utils.AvoidOverexposureCallback;
-import com.energy.iruvc.utils.CommonParams;
-import com.energy.iruvc.utils.DualCameraParams;
-import com.energy.iruvc.utils.IFrameCallback;
-import com.energy.iruvc.utils.IIRFrameCallback;
+import com.energy.iruvc.utils.*;
 import com.energy.iruvc.uvc.UVCCamera;
 import com.mpdc4gsr.libunified.ir.usbdual.Const;
 import com.mpdc4gsr.libunified.ir.utils.OpencvTools;
@@ -163,7 +158,6 @@ public class DualViewWithExternalCameraCommonApi extends BaseDualView {
         ;
         iFrameCallback = new IFrameCallback() {
 
-
             @Override
             public void onFrame(byte[] frame) {
                 if (frame.length == 1) {
@@ -198,7 +192,6 @@ public class DualViewWithExternalCameraCommonApi extends BaseDualView {
                 System.arraycopy(frame, 0, frameData, 0, FRAME_LEN);
 
                 System.arraycopy(frame, dualCameraWidth * dualCameraHeight * 4, frameIrAndTempData, 0, frameIrAndTempData.length);
-
 
                 if (mCurrentFusionType == DualCameraParams.FusionType.IROnlyNoFusion) {
                     for (OnFrameCallback onFrameCallback : onFrameCallbacks) {
@@ -254,7 +247,6 @@ public class DualViewWithExternalCameraCommonApi extends BaseDualView {
                         handler.sendEmptyMessage(Const.HIDE_LOADING);
                     }
                 }
-
 
                 if (dataFlowMode == CommonParams.DataFlowMode.IMAGE_AND_TEMP_OUTPUT) {
                     System.arraycopy(frame, fusionLength + irSize * 2, normalTempData, 0, irSize * 2);

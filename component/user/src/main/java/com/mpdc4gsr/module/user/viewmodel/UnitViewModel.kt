@@ -1,16 +1,11 @@
 package com.mpdc4gsr.module.user.viewmodel
 
-import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import com.mpdc4gsr.libunified.app.common.SharedManager
+import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 
-/**
- * ViewModel for Unit (Temperature) Settings
- * Manages temperature unit selection (Celsius/Fahrenheit)
- */
 class UnitViewModel : BaseViewModel() {
 
     companion object {

@@ -4,12 +4,7 @@ import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 
-/**
- * ViewModel for Device Details
- * Manages device information display and copy functionality
- */
 class DeviceDetailsViewModel : BaseViewModel() {
 
     companion object {

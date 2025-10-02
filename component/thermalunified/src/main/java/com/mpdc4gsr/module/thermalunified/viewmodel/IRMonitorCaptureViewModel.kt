@@ -2,24 +2,13 @@ package com.mpdc4gsr.module.thermalunified.viewmodel
 
 import androidx.lifecycle.viewModelScope
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
-import com.mpdc4gsr.libunified.ir.view.TemperatureView
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.delay
 import kotlin.random.Random
 
-/**
- * ViewModel for IR Monitor Capture functionality
- *
- * Manages:
- * - Capture state and monitoring control
- * - Temperature data collection and processing
- * - Capture history management
- * - Device connection state monitoring
- * - Real-time capture operations
- */
 class IRMonitorCaptureViewModel : BaseViewModel() {
 
     // Data classes matching the fragment requirements
@@ -68,9 +57,6 @@ class IRMonitorCaptureViewModel : BaseViewModel() {
         startTemperatureMonitoring()
     }
 
-    /**
-     * Toggle capture state between active and inactive
-     */
     fun toggleCapture() {
         viewModelScope.launch {
             when (_captureState.value) {
@@ -96,9 +82,6 @@ class IRMonitorCaptureViewModel : BaseViewModel() {
         }
     }
 
-    /**
-     * Capture a single frame
-     */
     fun captureFrame() {
         if (_deviceConnectionState.value != DeviceConnectionState.CONNECTED) return
 
@@ -131,9 +114,6 @@ class IRMonitorCaptureViewModel : BaseViewModel() {
         }
     }
 
-    /**
-     * Toggle continuous capture mode
-     */
     fun toggleContinuousCapture() {
         if (_deviceConnectionState.value != DeviceConnectionState.CONNECTED) return
 
@@ -147,9 +127,6 @@ class IRMonitorCaptureViewModel : BaseViewModel() {
         }
     }
 
-    /**
-     * Clear all capture history
-     */
     fun clearCaptureHistory() {
         viewModelScope.launch {
             _captureHistory.value = emptyList()
@@ -161,9 +138,6 @@ class IRMonitorCaptureViewModel : BaseViewModel() {
         }
     }
 
-    /**
-     * Delete a specific capture
-     */
     fun deleteCapture(capture: CaptureData) {
         viewModelScope.launch {
             val currentHistory = _captureHistory.value.toMutableList()

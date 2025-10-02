@@ -5,9 +5,6 @@ import android.graphics.RectF
 import com.mpdc4gsr.libunified.R
 import com.mpdc4gsr.libunified.app.bean.ObserveBean
 
-/**
- * Utilities for target calculation and manipulation
- */
 object TargetUtils {
 
     fun calculateTargetBounds(observeBean: ObserveBean): RectF {
@@ -58,9 +55,6 @@ object TargetUtils {
         observeBean.observeY += deltaY
     }
 
-    /**
-     * Get the measure size for different target measure modes
-     */
     fun getMeasureSize(targetMeasureMode: Int): Float {
         return when (targetMeasureMode) {
             ObserveBean.TYPE_MEASURE_PERSON -> 180f
@@ -71,9 +65,6 @@ object TargetUtils {
         }
     }
 
-    /**
-     * Get the appropriate drawable resource for target display
-     */
     fun getSelectTargetDraw(targetMeasureMode: Int, targetType: Int, targetColorType: Int): Int {
         return when {
             // Circle targets

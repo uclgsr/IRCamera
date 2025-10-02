@@ -1,27 +1,14 @@
 package com.mpdc4gsr.libunified.app.utils
 
 import kotlin.math.pow
-import kotlin.math.roundToInt
 
-/**
- * Consolidated math utilities replacing multiple math utility classes
- * Replaces:
- * - BleModule/src/main/java/com/topdon/commons/util/MathUtils.java (key functionality)
- * - Various math utility functions scattered across modules
- */
 object UnifiedMathUtils {
 
-    /**
-     * Set double precision to specified decimal places without rounding
-     */
     fun setDoubleAccuracy(num: Double, scale: Int): Double {
         val factor = 10.0.pow(scale)
         return (num * factor).toInt() / factor
     }
 
-    /**
-     * Calculate percentages that sum to 100%
-     */
     fun getPercents(scale: Int, vararg values: Float): FloatArray {
         val total = values.sum()
         if (total == 0f) {
@@ -43,12 +30,6 @@ object UnifiedMathUtils {
         return result
     }
 
-    /**
-     * Convert number to byte array
-     * @param bigEndian true for big-endian (high byte first), false for little-endian
-     * @param value the number to convert
-     * @param len number of bytes to return
-     */
     fun numberToBytes(bigEndian: Boolean, value: Long, len: Int): ByteArray {
         val bytes = ByteArray(8)
         for (i in 0..7) {
@@ -65,9 +46,6 @@ object UnifiedMathUtils {
         }
     }
 
-    /**
-     * Split byte array into smaller chunks
-     */
     fun splitPackage(src: ByteArray, size: Int): List<ByteArray> {
         val result = mutableListOf<ByteArray>()
         var offset = 0
@@ -83,9 +61,6 @@ object UnifiedMathUtils {
         return result
     }
 
-    /**
-     * Join multiple byte arrays into one
-     */
     fun joinPackage(vararg src: ByteArray): ByteArray {
         val totalSize = src.sumOf { it.size }
         val result = ByteArray(totalSize)
@@ -99,9 +74,6 @@ object UnifiedMathUtils {
         return result
     }
 
-    /**
-     * Clamp value between min and max
-     */
     fun clamp(value: Int, min: Int, max: Int): Int {
         return when {
             value < min -> min
@@ -110,9 +82,6 @@ object UnifiedMathUtils {
         }
     }
 
-    /**
-     * Clamp float value between min and max
-     */
     fun clamp(value: Float, min: Float, max: Float): Float {
         return when {
             value < min -> min
@@ -121,9 +90,6 @@ object UnifiedMathUtils {
         }
     }
 
-    /**
-     * Clamp double value between min and max
-     */
     fun clamp(value: Double, min: Double, max: Double): Double {
         return when {
             value < min -> min
@@ -132,44 +98,26 @@ object UnifiedMathUtils {
         }
     }
 
-    /**
-     * Linear interpolation between two values
-     */
     fun lerp(start: Float, end: Float, fraction: Float): Float {
         return start + fraction * (end - start)
     }
 
-    /**
-     * Check if value is within range (inclusive)
-     */
     fun inRange(value: Int, min: Int, max: Int): Boolean {
         return value in min..max
     }
 
-    /**
-     * Check if float value is within range (inclusive)
-     */
     fun inRange(value: Float, min: Float, max: Float): Boolean {
         return value in min..max
     }
 
-    /**
-     * Round to nearest multiple
-     */
     fun roundToNearest(value: Int, multiple: Int): Int {
         return ((value + multiple / 2) / multiple) * multiple
     }
 
-    /**
-     * Calculate average of array
-     */
     fun average(values: IntArray): Double {
         return if (values.isEmpty()) 0.0 else values.average()
     }
 
-    /**
-     * Calculate average of float array
-     */
     fun average(values: FloatArray): Double {
         return if (values.isEmpty()) 0.0 else values.average()
     }

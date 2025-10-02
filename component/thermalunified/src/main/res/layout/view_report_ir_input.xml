@@ -15,7 +15,6 @@
         android:orientation="vertical"
         android:paddingBottom="20dp">
 
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_title"
             android:layout_width="match_parent"
@@ -38,7 +37,6 @@
                 tools:text="This is a[REPORT_FIELD]" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-
         <View
             android:id="@+id/view_line"
             android:layout_width="match_parent"
@@ -48,23 +46,19 @@
             android:background="@drawable/shape_stroke_1_5b5961_dash_5"
             android:visibility="gone" />
 
-
         <include
             android:id="@+id/cl_max"
             layout="@layout/item_report_ir_input" />
-
 
         <include
             android:id="@+id/cl_min"
             layout="@layout/item_report_ir_input"
             android:visibility="gone" />
 
-
         <include
             android:id="@+id/cl_average"
             layout="@layout/item_report_ir_input"
             android:visibility="gone" />
-
 
         <include
             android:id="@+id/cl_explain"

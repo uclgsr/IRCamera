@@ -1,8 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.compose
 
-import androidx.compose.animation.*
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -12,34 +9,18 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-
-/**
- * Thermal Stubs Compose Components
- *
- * Complete collection of stub/placeholder components for thermal module,
- * replacing various stub dialogs and UI widgets with modern Compose implementations.
- *
- * Components:
- * - MonitorSelectDialogCompose: Monitor selection dialog
- * - TipDialogCompose: Information and tip dialogs
- * - FenceViewsCompose: Fence visualization components
- * - GuideStubsCompose: Guide and tutorial stubs
- * - UIWidgetsCompose: Various UI widget stubs
- */
 
 // Data classes for component state
 data class MonitorOption(
@@ -61,10 +42,6 @@ enum class TipType {
     INFO, WARNING, ERROR, SUCCESS
 }
 
-/**
- * Monitor Selection Dialog Compose
- * Replaces MonitorSelectDialogStub with Material 3 design
- */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MonitorSelectDialogCompose(
@@ -225,10 +202,6 @@ private fun MonitorOptionItem(
     }
 }
 
-/**
- * Tip Dialog Compose
- * Replaces TipDialogs with Material 3 design
- */
 @Composable
 fun TipDialogCompose(
     showDialog: Boolean,
@@ -289,10 +262,6 @@ fun TipDialogCompose(
     }
 }
 
-/**
- * Fence Views Compose
- * Replaces FenceViews.kt with Compose implementation
- */
 @Composable
 fun FenceViewsCompose(
     fences: List<FenceData>,
@@ -366,10 +335,6 @@ private fun FenceItemCompose(
     }
 }
 
-/**
- * Guide Stubs Compose
- * Replaces GuideStubs.kt with Compose implementation
- */
 @Composable
 fun GuideStubsCompose(
     guideSteps: List<GuideStep>,
@@ -454,10 +419,6 @@ fun GuideStubsCompose(
     }
 }
 
-/**
- * UI Widgets Compose
- * Replaces UIWidgets.kt with Compose implementation
- */
 @Composable
 fun UIWidgetsCompose(
     widgets: List<WidgetData>,

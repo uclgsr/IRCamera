@@ -60,5 +60,4 @@
         app:layout_constraintTop_toTopOf="@id/progress_bar"
         tools:text="78%" />
 
-
 </androidx.constraintlayout.widget.ConstraintLayout>

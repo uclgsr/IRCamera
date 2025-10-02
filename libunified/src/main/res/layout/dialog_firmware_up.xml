@@ -43,7 +43,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-
     <TextView
         android:id="@+id/tv_title"
         android:layout_width="0dp"
@@ -59,7 +58,6 @@
         app:layout_constraintVertical_chainStyle="packed"
         tools:text="[TEXT]Version V3.50" />
 
-
     <TextView
         android:id="@+id/tv_size"
         android:layout_width="0dp"
@@ -74,7 +72,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_title"
         tools:text="Size: 239.6MB" />
-
 
     <TextView
         android:id="@+id/tv_content_title"
@@ -141,7 +138,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_restart_tips" />
 
-
     <TextView
         android:id="@+id/tv_cancel"
         android:layout_width="0dp"
@@ -155,7 +151,6 @@
         app:layout_constraintEnd_toStartOf="@+id/tv_confirm"
         app:layout_constraintStart_toStartOf="@id/view_space"
         app:layout_constraintTop_toTopOf="@id/view_space" />
-
 
     <TextView
         android:id="@+id/tv_confirm"

@@ -114,7 +114,6 @@ public class ViewPortHandler {
         return Math.min(mContentRect.width(), mContentRect.height());
     }
 
-
     public Matrix zoomIn(float x, float y) {
 
         Matrix save = new Matrix();
@@ -374,7 +373,6 @@ public class ViewPortHandler {
     public Matrix getMatrixTouch() {
         return mMatrixTouch;
     }
-
 
     public boolean isInBoundsX(float x) {
         return isInBoundsLeft(x) && isInBoundsRight(x);

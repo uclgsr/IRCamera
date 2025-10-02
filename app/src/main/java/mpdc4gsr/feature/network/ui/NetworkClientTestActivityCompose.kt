@@ -13,8 +13,8 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.automirrored.filled.*
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -30,11 +30,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import mpdc4gsr.core.ui.BaseComposeActivity
 import mpdc4gsr.core.RecordingService
+import mpdc4gsr.core.ui.BaseComposeActivity
+import mpdc4gsr.core.ui.BaseViewModel
 import mpdc4gsr.feature.network.data.CommandConnection
 import mpdc4gsr.feature.network.data.NetworkManager
-import mpdc4gsr.core.ui.BaseViewModel
 
 class NetworkClientTestViewModel : BaseViewModel() {
     private val _networkConnectionState = MutableStateFlow(CommandConnection.ConnectionState.DISCONNECTED)

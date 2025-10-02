@@ -10,10 +10,6 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
-/**
- * CommUtils based on reference repository implementation
- * Adapted from libapp/src/main/java/com/topdon/lib/core/utils/CommUtils.kt
- */
 object CommUtils {
 
     fun getAppName(): String {

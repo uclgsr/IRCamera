@@ -7,8 +7,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Save
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -23,7 +23,6 @@ import androidx.compose.ui.unit.sp
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.components.TitleBarAction
 import mpdc4gsr.core.ui.theme.IRCameraTheme
-import kotlin.math.sin
 
 /**
  * GSR Sensor Screen - Dedicated interface for GSR data monitoring and recording

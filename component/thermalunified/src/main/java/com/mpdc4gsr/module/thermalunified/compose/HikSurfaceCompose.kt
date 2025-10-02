@@ -2,12 +2,14 @@ package com.mpdc4gsr.module.thermalunified.compose
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.automirrored.filled.*
+import androidx.compose.material.icons.automirrored.filled.RotateRight
+import androidx.compose.material.icons.filled.NotificationsActive
+import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material.icons.filled.ZoomIn
+import androidx.compose.material.icons.filled.ZoomOut
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -15,7 +17,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.*
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.platform.LocalDensity
@@ -23,13 +26,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
-import kotlin.math.cos
 import kotlin.math.sin
 
-/**
- * Compose equivalent of HikSurfaceView
- * Thermal image surface with rotation, amplification, and alarm features
- */
 @Composable
 fun HikSurfaceCompose(
     thermalImageData: ByteArray? = null,
@@ -389,9 +387,6 @@ enum class ThermalAlarmType {
     TEMPERATURE_RANGE
 }
 
-/**
- * Thermal surface with AndroidView integration for complex cases
- */
 @Composable
 fun HikSurfaceWithAndroidView(
     rotateAngle: Int = 270,
@@ -429,9 +424,6 @@ fun HikSurfaceWithAndroidView(
     )
 }
 
-/**
- * Preview helper for HikSurfaceCompose
- */
 @Composable
 fun HikSurfaceComposePreview() {
     var rotateAngle by remember { mutableIntStateOf(270) }

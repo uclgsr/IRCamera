@@ -10,17 +10,9 @@ import androidx.annotation.NonNull;
 import java.io.File;
 import java.util.Objects;
 
-/**
- * date: 2019/8/6 12:49
- * author: chuanfeng.bi
- */
 public class DatabaseContext extends ContextWrapper {
     private File dbDir;
 
-    /**
-     * @param base
-     * @param dbDir
-     */
     public DatabaseContext(Context base, @NonNull File dbDir) {
         super(base);
         Objects.requireNonNull(dbDir, "dbDir is null");

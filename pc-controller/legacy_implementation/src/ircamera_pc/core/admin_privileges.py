@@ -20,7 +20,6 @@ except ImportError:
 
     PYQT_AVAILABLE = False
 
-
     # Mock classes for when PyQt6 is not available
     class QMessageBox:
         StandardButton = type(
@@ -36,7 +35,6 @@ except ImportError:
         @staticmethod
         def warning(*args, **kwargs) -> Any:
             pass
-
 
     class QApplication:
         @staticmethod
@@ -64,7 +62,6 @@ try:
 except ImportError:
     ELEVATE_AVAILABLE = False
 
-
 class PrivilegeLevel(Enum):
     USER = "user"
     ELEVATED = "elevated"
@@ -72,14 +69,12 @@ class PrivilegeLevel(Enum):
     SYSTEM = "system"
     UNKNOWN = "unknown"
 
-
 class ElevationResult(Enum):
     SUCCESS = "success"
     CANCELLED = "cancelled"
     FAILED = "failed"
     ALREADY_ELEVATED = "already_elevated"
     NOT_SUPPORTED = "not_supported"
-
 
 @dataclass
 class SystemPermissions:
@@ -89,7 +84,6 @@ class SystemPermissions:
     registry_access: bool = False
     hardware_access: bool = False
     firewall_control: bool = False
-
 
 class AdminPrivilegesManager(BaseManager):
     if PYQT_AVAILABLE:

@@ -1,14 +1,12 @@
 package com.mpdc4gsr.module.thermalunified.repository
 
 import com.mpdc4gsr.libunified.app.repository.BaseRepository
-import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 
-/**
- * Thermal Data Repository - Advanced Repository Pattern
- * Handles thermal sensor data with real-time streaming and caching
- */
 class ThermalDataRepository : BaseRepository() {
 
     data class ThermalReading(

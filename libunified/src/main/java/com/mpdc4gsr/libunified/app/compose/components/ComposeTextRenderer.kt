@@ -9,7 +9,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextMeasurer
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.drawText
@@ -17,13 +16,6 @@ import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-/**
- * Demonstrates the idiomatic Compose way to render text using TextMeasurer and drawText
- * instead of native Paint and Canvas.drawText
- *
- * This could replace native Paint-based text rendering in legacy components
- * when migrating to Compose-based implementations.
- */
 @Composable
 fun ComposeLegendTextDemo(
     modifier: Modifier = Modifier
@@ -44,9 +36,6 @@ fun ComposeLegendTextDemo(
     }
 }
 
-/**
- * Example of how to draw text using Compose's TextMeasurer instead of native Paint
- */
 private fun DrawScope.drawComposeLegendText(
     textMeasurer: TextMeasurer,
     textStyle: TextStyle
@@ -74,10 +63,6 @@ private fun DrawScope.drawComposeLegendText(
     }
 }
 
-/**
- * For cases where legacy View components need to integrate with Compose theming,
- * this utility function can extract theme colors for use in Paint objects
- */
 @Composable
 fun rememberThemeAwarePaintColor(): Int {
     val color = MaterialTheme.colorScheme.onSurface

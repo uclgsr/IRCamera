@@ -4,19 +4,10 @@ import android.graphics.Bitmap
 import android.util.Base64
 import android.util.Log
 import com.mpdc4gsr.libunified.app.utils.BitmapUtils
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.currentCoroutineContext
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import org.json.JSONObject
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
-
 
 class PreviewStreamer(
     private val networkServer: NetworkServer
@@ -36,19 +27,16 @@ class PreviewStreamer(
     private var frameStreamingJob: Job? = null
     private var sensorStreamingJob: Job? = null
 
-
     private var frameIntervalMs = DEFAULT_FRAME_INTERVAL_MS
     private var sensorIntervalMs = DEFAULT_SENSOR_INTERVAL_MS
     private var previewWidth = DEFAULT_PREVIEW_WIDTH
     private var previewHeight = DEFAULT_PREVIEW_HEIGHT
     private var jpegQuality = DEFAULT_JPEG_QUALITY
 
-
     private val currentRgbFrame = AtomicReference<Bitmap?>()
     private val currentThermalFrame = AtomicReference<Bitmap?>()
     private val currentGsrValue = AtomicReference<Float?>()
     private val currentRecordingStatus = AtomicReference<String>("IDLE")
-
 
     suspend fun startStreaming(): Boolean {
         if (isStreaming.get()) {
@@ -64,11 +52,9 @@ class PreviewStreamer(
         Log.i(TAG, "Starting preview streaming to PC")
         isStreaming.set(true)
 
-
         frameStreamingJob = scope.launch {
             streamFrames()
         }
-
 
         sensorStreamingJob = scope.launch {
             streamSensorData()
@@ -76,7 +62,6 @@ class PreviewStreamer(
 
         return true
     }
-
 
     suspend fun stopStreaming() {
         if (!isStreaming.get()) {
@@ -93,26 +78,21 @@ class PreviewStreamer(
         sensorStreamingJob = null
     }
 
-
     fun updateRgbFrame(bitmap: Bitmap?) {
         currentRgbFrame.set(bitmap)
     }
-
 
     fun updateThermalFrame(bitmap: Bitmap?) {
         currentThermalFrame.set(bitmap)
     }
 
-
     fun updateGsrValue(gsrValue: Float) {
         currentGsrValue.set(gsrValue)
     }
 
-
     fun updateRecordingStatus(status: String) {
         currentRecordingStatus.set(status)
     }
-
 
     fun configure(
         frameIntervalMs: Long = DEFAULT_FRAME_INTERVAL_MS,
@@ -142,7 +122,6 @@ class PreviewStreamer(
                 currentRgbFrame.get()?.let { rgbBitmap ->
                     streamFrame("rgb", rgbBitmap)
                 }
-
 
                 currentThermalFrame.get()?.let { thermalBitmap ->
                     streamFrame("thermal", thermalBitmap)
@@ -199,13 +178,11 @@ class PreviewStreamer(
                 previewHeight.toDouble()
             )
 
-
             val jpegBytes = BitmapUtils.bitmapToBytes(scaledBitmap, jpegQuality)
             if (jpegBytes == null) {
                 Log.w(TAG, "Failed to convert $frameType frame to JPEG")
                 return
             }
-
 
             val base64Data = Base64.encodeToString(jpegBytes, Base64.NO_WRAP)
 
@@ -228,7 +205,6 @@ class PreviewStreamer(
                 "Streamed $frameType frame: ${scaledBitmap.width}x${scaledBitmap.height}, ${jpegBytes.size} bytes"
             )
 
-
             if (scaledBitmap != bitmap && !scaledBitmap.isRecycled) {
                 scaledBitmap.recycle()
             }
@@ -238,9 +214,7 @@ class PreviewStreamer(
         }
     }
 
-
     fun isStreaming(): Boolean = isStreaming.get()
-
 
     fun cleanup() {
         scope.launch {

@@ -3,22 +3,16 @@ package mpdc4gsr.feature.network.data
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LifecycleOwner
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.withContext
-import mpdc4gsr.core.data.SessionMetadata
 import mpdc4gsr.core.data.SensorRecorder
+import mpdc4gsr.core.data.SessionMetadata
 import mpdc4gsr.core.data.utils.SessionDirectoryManager
-import mpdc4gsr.feature.network.data.RecordingConstants
 import java.io.File
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
-
 
 class MainRecordingController(
     private val context: Context,
@@ -32,18 +26,14 @@ class MainRecordingController(
         private const val GSR_SENSOR_NAME = "GSR"
     }
 
-
     private val _isRecording = AtomicBoolean(false)
     val isRecording: Boolean get() = _isRecording.get()
-
 
     private val sensorRecorders = ConcurrentHashMap<String, SensorRecorder>()
     private val activeRecorders = ConcurrentHashMap<String, Boolean>()
 
-
     private val sessionDirectoryManager = SessionDirectoryManager(context)
     private var sessionMetadata: SessionMetadata? = null
-
 
     private val _recordingStateFlow = MutableStateFlow(MainRecordingState.IDLE)
     val recordingStateFlow: StateFlow<MainRecordingState> = _recordingStateFlow.asStateFlow()
@@ -53,12 +43,10 @@ class MainRecordingController(
     private val recordingSettingsRepository =
         mpdc4gsr.feature.settings.data.RecordingSettingsRepository.getInstance(context)
 
-
     fun addSensorRecorder(name: String, recorder: SensorRecorder) {
         sensorRecorders[name] = recorder
         Log.d(TAG, "Added sensor recorder: $name")
     }
-
 
     suspend fun startRecording(
         sessionId: String? = null,
@@ -80,18 +68,15 @@ class MainRecordingController(
                 Log.i(TAG, "Starting simple recording")
                 _recordingStateFlow.value = MainRecordingState.STARTING
 
-
                 if (getAvailableSpaceGB() < 1.0) {
                     Log.e(TAG, "Insufficient storage space")
                     _recordingStateFlow.value = MainRecordingState.ERROR
                     return@withContext false
                 }
 
-
                 val finalSessionId = sessionId ?: sessionDirectoryManager.generateSessionId()
                 val sessionDir = sessionDirectoryManager.createSessionDirectory(finalSessionId)
                 sessionMetadata = SessionMetadata.createSessionStart(finalSessionId)
-
 
                 var sensorsStarted = 0
                 val isSimultaneous = settings.simultaneousRecording
@@ -141,7 +126,6 @@ class MainRecordingController(
         }
     }
 
-
     suspend fun stopRecording(): Boolean {
         return withContext(Dispatchers.IO) {
             try {
@@ -152,7 +136,6 @@ class MainRecordingController(
                 Log.i(TAG, "Stopping recording")
                 _recordingStateFlow.value = MainRecordingState.STOPPING
                 _isRecording.set(false)
-
 
                 for ((sensorName, isActive) in activeRecorders) {
                     if (isActive) {
@@ -178,7 +161,6 @@ class MainRecordingController(
             }
         }
     }
-
 
     fun getRecordingStatus(): SimpleRecordingStatus {
         val activeSensors = activeRecorders.count { it.value }

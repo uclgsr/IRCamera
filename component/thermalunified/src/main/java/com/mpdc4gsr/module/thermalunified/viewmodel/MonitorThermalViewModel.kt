@@ -1,17 +1,11 @@
 package com.mpdc4gsr.module.thermalunified.viewmodel
 
-import androidx.lifecycle.viewModelScope
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 import java.util.*
 
-/**
- * ViewModel for thermal monitoring with Compose
- * Extends existing MonitorViewModel functionality with StateFlow support
- */
 class MonitorThermalViewModel : BaseViewModel() {
 
     // Monitoring State

@@ -10,10 +10,6 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
-/**
- * Test to validate that ShimmerDeviceFactoryResolver works correctly
- * and falls back to mock implementation when real implementation is not available
- */
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [28])
 class ShimmerFactoryResolverTest {

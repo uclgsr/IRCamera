@@ -109,7 +109,6 @@ object IRCmdTools {
         }
     }
 
-
     fun setTpdEms(
         irCmd: IRCMD?,
         value: Int,
@@ -117,7 +116,6 @@ object IRCmdTools {
         val data = CommonParams.PropTPDParamsValue.NumberType(value.toString())
         setTpdParams(irCmd = irCmd, params = CommonParams.PropTPDParams.TPD_PROP_EMS, value = data)
     }
-
 
     fun setTpdDis(
         irCmd: IRCMD?,
@@ -131,7 +129,6 @@ object IRCmdTools {
         )
     }
 
-
     fun setLevelContrast(
         irCmd: IRCMD?,
         value: Int,
@@ -143,7 +140,6 @@ object IRCmdTools {
             value = data
         )
     }
-
 
     fun setLevelDdd(
         irCmd: IRCMD?,
@@ -182,7 +178,6 @@ object IRCmdTools {
         )
     }
 
-
     fun getTpdGainSel(irCmd: IRCMD?): Int {
         val result =
             queryTpdParam(irCmd = irCmd, params = CommonParams.PropTPDParams.TPD_PROP_GAIN_SEL)
@@ -192,7 +187,6 @@ object IRCmdTools {
             0
         }
     }
-
 
     fun setTpdGainSel(
         irCmd: IRCMD?,
@@ -255,7 +249,6 @@ object IRCmdTools {
         }
     }
 
-
     fun setDisp(
         dualView: BaseDualView?,
         value: Int,
@@ -315,7 +308,6 @@ object IRCmdTools {
         )
     }
 
-
     fun setIsoColorOpen(
         dualUVCCamera: DualUVCCamera?,
         highC: Float,
@@ -341,7 +333,6 @@ object IRCmdTools {
     fun setIsoColorClose(dualUVCCamera: DualUVCCamera?) {
         dualUVCCamera?.setIsothermal(DualCameraParams.IsothermalState.OFF)
     }
-
 
     fun setZoomUp(irCmd: IRCMD?) {
         irCmd?.zoomCenterUp(

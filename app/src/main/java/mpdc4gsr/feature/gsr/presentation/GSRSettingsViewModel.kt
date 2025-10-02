@@ -4,12 +4,11 @@ import android.content.Context
 import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.*
 import mpdc4gsr.core.ui.BaseViewModel
 import mpdc4gsr.feature.gsr.data.GSRSensorRecorder
 import mpdc4gsr.feature.gsr.data.GSRSettingsRepository
 import mpdc4gsr.feature.network.data.RecordingController
-import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 
 /**
  * Modern GSR Settings ViewModel - MVVM StateFlow Implementation

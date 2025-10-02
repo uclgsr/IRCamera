@@ -1,6 +1,5 @@
 package mpdc4gsr.feature.settings.ui
 
-import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -19,24 +18,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.launch
 import com.csl.irCamera.R
 import com.mpdc4gsr.libunified.app.BaseApplication
-import com.mpdc4gsr.libunified.app.common.SharedManager
 import com.mpdc4gsr.libunified.app.config.RouterConfig
 import com.mpdc4gsr.libunified.app.lms.utils.NetworkUtils
 import com.mpdc4gsr.libunified.app.navigation.NavigationManager
-import com.mpdc4gsr.libunified.app.utils.CommUtils
-import com.mpdc4gsr.libunified.app.utils.UnifiedVersionUtils
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import androidx.lifecycle.viewModelScope
 import mpdc4gsr.core.ui.BaseComposeActivity
+import mpdc4gsr.core.ui.BaseViewModel
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.theme.IRCameraTheme
-import mpdc4gsr.core.App
-import mpdc4gsr.core.ui.BaseViewModel
-import java.util.Calendar
+import java.util.*
 
 class ClauseViewModel : BaseViewModel() {
     private val _isLoading = mutableStateOf(false)

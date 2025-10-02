@@ -11,7 +11,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -31,16 +34,6 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
-/**
- * Compose migration of GalleryPictureFragment
- *
- * This fragment demonstrates:
- * - Complete migration of picture gallery UI to Compose
- * - Modern grid-based image display with adaptive columns
- * - Enhanced image preview and sharing capabilities
- * - Material 3 design with improved user experience
- * - Integration with thermal image preview systems
- */
 class GalleryPictureComposeFragment : BaseComposeFragment<GalleryViewModel>() {
 
     override fun createViewModel(): GalleryViewModel {

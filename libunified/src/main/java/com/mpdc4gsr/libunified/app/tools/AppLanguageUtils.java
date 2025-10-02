@@ -10,7 +10,6 @@ import android.util.DisplayMetrics;
 
 import java.util.Locale;
 
-
 public class AppLanguageUtils {
 
     public static String getSystemLanguage() {

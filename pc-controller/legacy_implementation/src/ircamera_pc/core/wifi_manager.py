@@ -23,13 +23,11 @@ try:
 
     PYQT_AVAILABLE = True
 
-
     class BaseThread(QThread):
         pass
 
 except ImportError:
     PYQT_AVAILABLE = False
-
 
     class pyqtSignal:
         def __init__(self, *args):
@@ -42,13 +40,11 @@ except ImportError:
         def connect(self, callback) -> Any:
             self._callbacks.append(callback)
 
-
     def pyqtSlot(*args, **kwargs) -> Any:
         def decorator(func) -> Any:
             return func
 
         return decorator
-
 
     class BaseThread:
         def __init__(self):
@@ -80,7 +76,6 @@ try:
 except ImportError:
     COMTYPES_AVAILABLE = False
 
-
 class NetworkSecurityType(Enum):
     OPEN = "open"
     WEP = "wep"
@@ -89,7 +84,6 @@ class NetworkSecurityType(Enum):
     WPA3 = "wpa3"
     ENTERPRISE = "enterprise"
 
-
 class ConnectionState(Enum):
     DISCONNECTED = "disconnected"
     CONNECTING = "connecting"
@@ -97,14 +91,12 @@ class ConnectionState(Enum):
     AUTHENTICATING = "authenticating"
     ERROR = "error"
 
-
 class HotspotState(Enum):
     STOPPED = "stopped"
     STARTING = "starting"
     RUNNING = "running"
     STOPPING = "stopping"
     ERROR = "error"
-
 
 @dataclass
 class WiFiNetwork:
@@ -121,7 +113,6 @@ class WiFiNetwork:
         if self.last_seen is None:
             self.last_seen = datetime.now()
 
-
 @dataclass
 class NetworkInterface:
     name: str
@@ -131,7 +122,6 @@ class NetworkInterface:
     ip_address: Optional[str]
     mac_address: str
     status: str
-
 
 class WiFiScanWorker(BaseThread):
     networks_found = pyqtSignal(list)
@@ -419,7 +409,6 @@ class WiFiScanWorker(BaseThread):
             return NetworkSecurityType.OPEN
         else:
             return NetworkSecurityType.WPA2
-
 
 class WiFiManager(BaseManager):
     networks_discovered = pyqtSignal(list)

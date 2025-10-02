@@ -1,11 +1,10 @@
 package com.mpdc4gsr.module.thermalunified.activity
 
-import android.os.Bundle
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.automirrored.filled.*
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.NavigateNext
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -17,10 +16,6 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 
-/**
- * Correction Step 2 - Geometric corrections and advanced parameters
- * Professional correction tools with real-time preview
- */
 class IRCorrectionTwoComposeActivity : BaseComposeActivity<IRCorrectionTwoViewModel>() {
 
     override fun createViewModel(): IRCorrectionTwoViewModel {

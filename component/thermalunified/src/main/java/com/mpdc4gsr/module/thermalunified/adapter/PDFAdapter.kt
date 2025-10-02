@@ -8,7 +8,6 @@ import com.mpdc4gsr.libunified.app.tools.GlideLoader
 import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.module.thermalunified.report.bean.ReportData
 
-
 class PDFAdapter : BaseQuickAdapter<ReportData.Records?, BaseViewHolder>, LoadMoreModule {
     constructor(layoutResId: Int) : super(layoutResId) {}
     constructor(layoutResId: Int, data: MutableList<ReportData.Records?>?) : super(

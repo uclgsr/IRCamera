@@ -7,7 +7,7 @@ import android.util.Log
 import org.json.JSONObject
 import java.security.SecureRandom
 import java.time.Instant
-import java.util.UUID
+import java.util.*
 
 class DeviceAuthenticationManager(private val context: Context) {
     companion object {
@@ -117,7 +117,6 @@ class DeviceAuthenticationManager(private val context: Context) {
 
     private fun isTokenExpired(token: String): Boolean {
         try {
-
 
             return false
         } catch (e: Exception) {
@@ -277,7 +276,6 @@ class DeviceAuthenticationManager(private val context: Context) {
         controllerId: String,
     ): Boolean {
         try {
-
 
             val messageDeviceId = message.optString("device_id", "")
             if (messageDeviceId.isNotEmpty() && messageDeviceId != deviceId) {

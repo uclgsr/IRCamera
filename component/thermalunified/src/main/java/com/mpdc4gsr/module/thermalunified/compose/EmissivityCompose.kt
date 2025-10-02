@@ -2,26 +2,19 @@ package com.mpdc4gsr.module.thermalunified.compose
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-/**
- * Compose equivalent of EmissivityView
- * Displays emissivity data in a table-like layout with custom borders
- */
 @Composable
 fun EmissivityCompose(
     textList: List<String>,
@@ -119,9 +112,6 @@ fun EmissivityCompose(
     }
 }
 
-/**
- * Preview helper for EmissivityCompose
- */
 @Composable
 fun EmissivityComposePreview() {
     Column(

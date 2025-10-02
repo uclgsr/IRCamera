@@ -5,16 +5,13 @@ import android.util.Log;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 
-/**
- * JNITool implementation for thermal image processing using app/libs thermal processing libraries
- * Utilizes libAC020sdk_USB_IR, libirutils, and libcommon from app/libs for enhanced thermal analysis
- */
 public class JNITools {
     public static final JNITools INSTANCE = new JNITools();
     private static final String TAG = "JNITool";
     private static final int DEFAULT_IMAGE_WIDTH = 192;
     private static final int DEFAULT_IMAGE_HEIGHT = 256;
     private static final int BGR_CHANNELS = 3;
+
     // Private constructor to enforce singleton pattern
     private JNITools() {
     }

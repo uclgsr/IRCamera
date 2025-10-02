@@ -3,27 +3,15 @@ package mpdc4gsr.feature.network
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withTimeout
-import mpdc4gsr.core.data.SessionConfig
-import mpdc4gsr.core.data.SessionType
-import mpdc4gsr.core.data.UnifiedSessionManager
 import mpdc4gsr.feature.network.data.NetworkServer
 import mpdc4gsr.feature.network.data.Protocol
 import mpdc4gsr.feature.network.data.ProtocolHandler
 import org.junit.After
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertNotNull
-import org.junit.Assert.assertTrue
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.io.BufferedReader
-import java.io.BufferedWriter
-import java.io.InputStreamReader
-import java.io.OutputStreamWriter
 import java.net.Socket
 
 /**

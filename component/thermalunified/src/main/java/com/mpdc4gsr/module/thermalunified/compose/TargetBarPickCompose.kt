@@ -4,14 +4,10 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
@@ -26,10 +22,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlin.math.roundToInt
 
-/**
- * Compose equivalent of TargetBarPickView
- * Customizable progress bar with vertical or horizontal orientation
- */
 @Composable
 fun TargetBarPickCompose(
     progress: Int,
@@ -327,9 +319,6 @@ private fun calculateProgressFromOffset(
     return (min + ratio * totalRange).roundToInt().coerceIn(min, max)
 }
 
-/**
- * Simplified target bar for basic use cases
- */
 @Composable
 fun SimpleTargetBarCompose(
     value: Float,
@@ -367,9 +356,6 @@ fun SimpleTargetBarCompose(
     }
 }
 
-/**
- * Preview helper for TargetBarPickCompose
- */
 @Composable
 fun TargetBarPickComposePreview() {
     var horizontalProgress by remember { mutableIntStateOf(50) }

@@ -8,24 +8,17 @@ import com.mpdc4gsr.libunified.ui.utils.Utils;
 
 public class LimitLine extends ComponentBase {
 
-
     private float mLimit = 0f;
-
 
     private float mLineWidth = 2f;
 
-
     private int mLineColor = Color.rgb(237, 91, 91);
-
 
     private Paint.Style mTextStyle = Paint.Style.FILL_AND_STROKE;
 
-
     private String mLabel = "";
 
-
     private DashPathEffect mDashPathEffect = null;
-
 
     private LimitLabelPosition mLabelPosition = LimitLabelPosition.RIGHT_TOP;
 
@@ -104,7 +97,6 @@ public class LimitLine extends ComponentBase {
     public void setLabel(String label) {
         mLabel = label;
     }
-
 
     public enum LimitLabelPosition {
         LEFT_TOP, LEFT_BOTTOM, RIGHT_TOP, RIGHT_BOTTOM

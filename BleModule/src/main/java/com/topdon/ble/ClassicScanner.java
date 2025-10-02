@@ -6,11 +6,6 @@ import androidx.annotation.NonNull;
 
 import com.topdon.ble.util.Logger;
 
-
-/**
- * date: 2020/5/9 16:20
- * author: bichuanfeng
- */
 class ClassicScanner extends AbstractScanner {
     private boolean stopQuietly = false;
 

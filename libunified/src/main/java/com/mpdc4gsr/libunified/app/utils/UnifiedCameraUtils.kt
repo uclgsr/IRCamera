@@ -15,22 +15,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.energy.iruvc.utils.SynchronizedBitmap
 import java.util.concurrent.CopyOnWriteArrayList
 
-/**
- * Unified Camera Utilities
- * Consolidates ALL camera functionality from across the repository:
- * - libunified/ui/camera/CameraView.kt
- * - libunified/ir/view/CameraView.java
- * - infisense/usbir/view/CameraView.kt ( Topdon TC001 implementation)
- * - libunified/ir/view/CameraJpegView.java
- * - libunified/ui/camera/CameraPreView.kt
- * - libunified/app/bean/CameraIRConfig.kt
- * - libunified/app/menu/view/CameraMenuView.kt
- * - component/thermalunified/adapter/CameraItemAdapter.kt
- * - component/thermalunified/popup/CameraItemPopup.kt
- * - component/thermalunified/lite/camera/CameraPreviewManager.java
- * - component/gsr-recording/network/CameraNetworkIntegration.kt
- * - libunified/ir/camera/IRUVCTCOld.java
- */
 object UnifiedCameraUtils {
 
     private const val TAG = "UnifiedCameraUtils"
@@ -39,10 +23,6 @@ object UnifiedCameraUtils {
     private const val TYPE_RGB = 2
     private const val TYPE_THERMAL = 3
 
-    /**
-     * Unified Camera Configuration
-     * Consolidates CameraIRConfig and other configuration classes
-     */
     data class CameraConfig(
         var productType: Int = TYPE_IR,
         var isOpenAmplify: Boolean = false,
@@ -54,10 +34,6 @@ object UnifiedCameraUtils {
         var enableNetworking: Boolean = false
     )
 
-    /**
-     * Unified Camera View Implementation
-     * Combines functionality from multiple CameraView implementations
-     */
     class UnifiedCameraView @JvmOverloads constructor(
         context: Context,
         attrs: AttributeSet? = null,
@@ -154,10 +130,6 @@ object UnifiedCameraUtils {
         }
     }
 
-    /**
-     * Camera Item for Lists and Adapters
-     * Consolidates camera item management
-     */
     data class CameraItem(
         val id: String,
         val name: String,
@@ -166,10 +138,6 @@ object UnifiedCameraUtils {
         val previewBitmap: Bitmap? = null
     )
 
-    /**
-     * Unified Camera Adapter
-     * Consolidates CameraItemAdapter functionality
-     */
     class UnifiedCameraAdapter(
         private val items: MutableList<CameraItem> = mutableListOf(),
         private val onItemClick: (CameraItem) -> Unit = {}
@@ -196,10 +164,6 @@ object UnifiedCameraUtils {
         }
     }
 
-    /**
-     * Camera Menu Management
-     * Consolidates CameraMenuView functionality
-     */
     class CameraMenuManager(private val context: Context) {
 
         private var popupWindow: PopupWindow? = null
@@ -219,10 +183,6 @@ object UnifiedCameraUtils {
         }
     }
 
-    /**
-     * Camera Network Integration
-     * Consolidates network camera functionality
-     */
     object CameraNetworkIntegration {
 
         private val TAG = "CameraNetwork"
@@ -260,10 +220,6 @@ object UnifiedCameraUtils {
         }
     }
 
-    /**
-     * Camera Preview Management
-     * Consolidates preview management functionality
-     */
     class CameraPreviewManager {
 
         private var previewView: UnifiedCameraView? = null
@@ -290,10 +246,6 @@ object UnifiedCameraUtils {
         }
     }
 
-    /**
-     * JPEG Handling Utilities
-     * Consolidates JPEG view and processing functionality
-     */
     object JpegUtils {
 
         fun compressBitmapToJpeg(bitmap: Bitmap, quality: Int = 85): ByteArray {
@@ -312,9 +264,6 @@ object UnifiedCameraUtils {
         }
     }
 
-    /**
-     * Camera Type Utilities
-     */
     fun getCameraTypeName(type: Int): String = when (type) {
         TYPE_IR -> "IR Camera"
         TYPE_RGB -> "RGB Camera"
@@ -324,9 +273,6 @@ object UnifiedCameraUtils {
 
     fun isValidCameraType(type: Int): Boolean = type in listOf(TYPE_IR, TYPE_RGB, TYPE_THERMAL)
 
-    /**
-     * Factory Methods
-     */
     fun createCameraView(
         context: Context,
         config: CameraConfig = CameraConfig()
@@ -344,9 +290,6 @@ object UnifiedCameraUtils {
         return CameraPreviewManager()
     }
 
-    /**
-     * Repository Validation
-     */
     fun validateCameraConsolidation(): Boolean {
         Log.d(
             TAG,

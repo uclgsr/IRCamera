@@ -1,6 +1,5 @@
 package mpdc4gsr.feature.gsr.ui
 
-import android.net.Uri
 import android.widget.VideoView
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*

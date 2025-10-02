@@ -5,10 +5,8 @@
     <issue id="StringFormatMatches" severity="ignore" />
     <issue id="StringFormatCount" severity="ignore" />
 
-
     <issue id="ResourceType" severity="ignore" />
     <issue id="MissingTranslation" severity="ignore" />
-
 
     <issue id="UnsafeOptInUsageError" severity="ignore" />
     <issue id="ObsoleteSdkInt" severity="ignore" />

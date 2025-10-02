@@ -10,7 +10,6 @@ from typing import Dict, List, Optional, Any, Tuple
 
 logger = logging.getLogger(__name__)
 
-
 class DeviceType(Enum):
     SAMSUNG_S22 = "samsung_s22"
     GOOGLE_PIXEL_7 = "google_pixel_7"
@@ -19,7 +18,6 @@ class DeviceType(Enum):
     TABLET_STATION = "tablet_station"
     WEARABLE_DEVICE = "wearable_device"
     SPECIALIZED_SENSOR = "specialized_sensor"
-
 
 class SensorType(Enum):
     GSR_SHIMMER = "gsr_shimmer"
@@ -51,7 +49,6 @@ class SensorType(Enum):
     GESTURE_RECOGNITION = "gesture_recognition"
     FACIAL_EXPRESSION = "facial_expression"
 
-
 class DeviceCapability(Enum):
     REAL_TIME_STREAMING = "real_time_streaming"
     LOCAL_STORAGE = "local_storage"
@@ -61,7 +58,6 @@ class DeviceCapability(Enum):
     MULTI_SENSOR = "multi_sensor"
     HIGH_PRECISION = "high_precision"
     CLINICAL_GRADE = "clinical_grade"
-
 
 @dataclass
 class DeviceSpecification:
@@ -92,7 +88,6 @@ class DeviceSpecification:
     medical_certifications: List[str]
     research_grade: bool
 
-
 @dataclass
 class SensorConfiguration:
     sensor_type: SensorType
@@ -108,7 +103,6 @@ class SensorConfiguration:
     output_format: str
     data_compression: bool
     encryption_enabled: bool
-
 
 @dataclass
 class DeviceStatus:
@@ -135,7 +129,6 @@ class DeviceStatus:
     error_count: int
     warnings: List[str]
     last_error: Optional[str]
-
 
 class DeviceDriver(ABC):
 
@@ -199,7 +192,6 @@ class DeviceDriver(ABC):
 
     def set_status_callback(self, callback):
         self.status_callback = callback
-
 
 class SamsungS22Driver(DeviceDriver):
 
@@ -366,7 +358,6 @@ class SamsungS22Driver(DeviceDriver):
         logger.info(f"Calibrated {sensor_type.value} on Samsung S22")
         return True
 
-
 class GooglePixel7Driver(DeviceDriver):
 
     def __init__(self, device_id: str):
@@ -489,7 +480,6 @@ class GooglePixel7Driver(DeviceDriver):
 
         logger.info(f"Calibrated {sensor_type.value} on Pixel 7")
         return True
-
 
 class DesktopStationDriver(DeviceDriver):
 
@@ -625,7 +615,6 @@ class DesktopStationDriver(DeviceDriver):
         logger.info(f"Calibrated {sensor_type.value} on Desktop Station")
         return True
 
-
 class WearableDeviceDriver(DeviceDriver):
 
     def __init__(self, device_id: str, wearable_type: str = "smartwatch"):
@@ -746,7 +735,6 @@ class WearableDeviceDriver(DeviceDriver):
 
         logger.info(f"Calibrated {sensor_type.value} on Wearable")
         return True
-
 
 class HardwareEcosystemManager:
 

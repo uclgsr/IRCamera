@@ -5,7 +5,6 @@ import android.hardware.SensorManager
 import com.kylecorry.andromeda.sense.Sensors
 import com.kylecorry.andromeda.sense.compass.ICompass
 
-
 class SensorService(ctx: Context) {
     private var context = ctx.applicationContext
 

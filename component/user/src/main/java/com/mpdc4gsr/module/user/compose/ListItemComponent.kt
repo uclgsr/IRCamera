@@ -10,11 +10,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
-/**
- * Reusable Compose component equivalent to ListItemView.kt
- *
- * A customizable list item with optional left icon, left text, right text, and line separator
- */
 @Composable
 fun ListItemComponent(
     leftText: String,

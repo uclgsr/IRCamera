@@ -7,10 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.elvishew.xlog.XLog
 
-/**
- * Camera preview view for lite thermal camera integration
- * Based on IRCamera groundtruth implementation patterns
- */
 class CameraPreView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,

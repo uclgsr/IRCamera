@@ -10,7 +10,6 @@ import com.mpdc4gsr.libunified.ui.animation.Easing.EasingFunction;
 
 public class ChartAnimator {
 
-
     @SuppressWarnings("WeakerAccess")
     protected float mPhaseY = 1f;
 

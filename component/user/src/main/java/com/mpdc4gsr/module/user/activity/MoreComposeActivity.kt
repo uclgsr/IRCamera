@@ -10,7 +10,10 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -21,16 +24,6 @@ import com.mpdc4gsr.libunified.app.config.RouterConfig
 import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import com.mpdc4gsr.module.user.viewmodel.MoreViewModel
 
-/**
- * User Management Module - More (Settings Hub) Compose Activity
- *
- * Central settings hub with navigation to all User Management features.
- * Features:
- * - Complete settings menu
- * - Navigation to individual setting screens
- * - Modern Material 3 design with cards
- * - Update notification badge
- */
 class MoreComposeActivity : BaseComposeActivity<MoreViewModel>() {
 
     override fun createViewModel(): MoreViewModel {

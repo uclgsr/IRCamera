@@ -6,16 +6,7 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.graphics.Path;
-import android.graphics.Rect;
-import android.graphics.RectF;
-import android.graphics.Typeface;
+import android.graphics.*;
 import android.os.Build;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -32,7 +23,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.text.DecimalFormat;
 import java.util.Locale;
-
 
 public class SeekBar {
 
@@ -151,7 +141,6 @@ public class SeekBar {
         bottom = y + getThumbHeight() / 2;
     }
 
-
     public void scaleThumb() {
         scaleThumbWidth = (int) getThumbScaleWidth();
         scaleThumbHeight = (int) getThumbScaleHeight();
@@ -191,7 +180,6 @@ public class SeekBar {
             onDrawIndicator(canvas, paint, formatCurrentIndicatorText(userText2Draw)); //
         }
 
-
         if (thumbShow) {
             onDrawThumb(canvas);
         } else {
@@ -225,7 +213,6 @@ public class SeekBar {
                 matrix.postRotate(270);
                 offX = offX + 5;
             }
-
 
         }
     }
@@ -280,7 +267,6 @@ public class SeekBar {
             indicatorRect.bottom = indicatorRect.top + realIndicatorHeight;
 
             if (indicatorBitmap == null) {
-
 
                 int ax = scaleThumbWidth / 2;
                 int ay = indicatorRect.bottom;

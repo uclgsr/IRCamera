@@ -6,10 +6,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-/**
- * ViewModel for TISR (Temperature Image Super Resolution) Settings
- * Manages TISR toggle state
- */
 class TISRViewModel : BaseViewModel() {
 
     private val _isTISREnabled = MutableStateFlow(false)

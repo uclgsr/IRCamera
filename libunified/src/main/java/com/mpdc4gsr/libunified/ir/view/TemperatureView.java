@@ -2,14 +2,7 @@ package com.mpdc4gsr.libunified.ir.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.PixelFormat;
-import android.graphics.Point;
-import android.graphics.PorterDuff;
-import android.graphics.Rect;
+import android.graphics.*;
 import android.os.SystemClock;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -32,18 +25,17 @@ import com.energy.iruvc.utils.SynchronizedBitmap;
 import com.mpdc4gsr.libunified.R;
 import com.mpdc4gsr.libunified.app.common.SharedManager;
 import com.mpdc4gsr.libunified.app.tools.UnitTools;
+import com.mpdc4gsr.libunified.app.utils.UnifiedScreenUtils;
+import com.mpdc4gsr.libunified.app.utils.UnifiedTemperatureUtils;
 import com.mpdc4gsr.libunified.ir.inf.ILiteListener;
 import com.mpdc4gsr.libunified.ir.usbdual.Const;
 import com.mpdc4gsr.libunified.ir.usbdual.camera.BaseDualView;
-import com.mpdc4gsr.libunified.app.utils.UnifiedScreenUtils;
-import com.mpdc4gsr.libunified.app.utils.UnifiedTemperatureUtils;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
-
 
 public class TemperatureView extends SurfaceView implements SurfaceHolder.Callback,
         View.OnTouchListener, BaseDualView.OnFrameCallback {
@@ -565,7 +557,6 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
         }
     }
 
-
     public void stop() {
         runflag = false;
         isShow = getVisibility() == View.VISIBLE;
@@ -633,7 +624,6 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
         lineList.add(line);
     }
 
-
     public void addScaleRectangle(Rect r) {
         float sx = getMeasuredWidth() / (float) temperatureWidth;
         float sy = getMeasuredHeight() / (float) temperatureHeight;
@@ -659,7 +649,6 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
         }
         return new Point((int) (pointList.get(0).x / xScale), (int) (pointList.get(0).y / yScale));
     }
-
 
     public Line getLine() {
         if (!lineList.isEmpty()) {
@@ -1236,9 +1225,7 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
         canvas.drawCircle(x, y, 8f, tempPaint);
     }
 
-
     private void drawLine(Canvas canvas, int x1, int y1, int x2, int y2, boolean isTrend) {
-
 
         int startX = (int) ((int) (x1 / xScale) * xScale);
         int startY = (int) ((int) (y1 / yScale) * yScale);

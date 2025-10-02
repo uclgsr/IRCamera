@@ -4,12 +4,7 @@ import android.content.Context
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
 import android.util.Log
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import mpdc4gsr.core.StructuredLogger
 import org.json.JSONObject
 import java.security.KeyStore
@@ -287,7 +282,6 @@ class AdvancedAuthenticationManager(private val context: Context) {
         deviceId: String,
         credentials: Map<String, Any>,
     ): AuthenticationResult {
-
 
         val hardwareKey = credentials["hardware_key"] as? ByteArray
         val biometricSignature = credentials["biometric_signature"] as? ByteArray

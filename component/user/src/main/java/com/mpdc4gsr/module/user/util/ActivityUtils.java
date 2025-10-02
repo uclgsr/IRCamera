@@ -17,7 +17,6 @@ public class ActivityUtils {
         goSystemBrowser(mContext, url);
     }
 
-
     public static void goSystemBrowser(Context mContext, String url) {
         Log.w("bcf", "goSystemBrowser");
         if (!NetworkUtils.isConnected(mContext)) {

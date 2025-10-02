@@ -33,7 +33,6 @@ public class YAxisRendererHorizontalBarChart extends YAxisRenderer {
     @Override
     public void computeAxis(float yMin, float yMax, boolean inverted) {
 
-
         if (mViewPortHandler.contentHeight() > 10 && !mViewPortHandler.isFullyZoomedOutX()) {
 
             MPPointD p1 = mTrans.getValuesByTouchPoint(mViewPortHandler.contentLeft(),

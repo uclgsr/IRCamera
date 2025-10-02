@@ -2,16 +2,13 @@ package mpdc4gsr.feature.network.data
 
 import android.content.Context
 import android.util.Log
-import android.view.TextureView
 import androidx.lifecycle.LifecycleOwner
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
-import mpdc4gsr.core.data.RgbCameraRecorder
 import mpdc4gsr.core.ui.PermissionController
 import mpdc4gsr.feature.gsr.data.GSRSensorRecorder
 import mpdc4gsr.feature.thermal.ui.ThermalCameraRecorder
-import mpdc4gsr.feature.network.data.RecordingConstants
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.system.measureTimeMillis
@@ -133,7 +130,6 @@ class HardwareValidationController(
                 context.checkSelfPermission(android.Manifest.permission.CAMERA) == android.content.pm.PackageManager.PERMISSION_GRANTED
             val initTime = measureTimeMillis {
 
-
             }
 
             sensorCapabilities["rgb_camera"] = SensorCapability(
@@ -176,13 +172,6 @@ class HardwareValidationController(
             }
 
             val thermalRecorder = ThermalCameraRecorder(context, "thermal_validation_1")
-
-
-
-
-
-
-
 
             sensorCapabilities["thermal_camera"] = SensorCapability(
                 name = "Topdon TC001 Thermal Camera",
@@ -229,14 +218,6 @@ class HardwareValidationController(
                 128,
                 RecordingController(context, lifecycleOwner)
             )
-
-
-
-
-
-
-
-
 
             sensorCapabilities["gsr_sensor"] = SensorCapability(
                 name = "Shimmer3 GSR+ Sensor",
@@ -293,8 +274,6 @@ class HardwareValidationController(
     private suspend fun validateNetworkCapabilities() {
         Log.i(TAG, "Validating network capabilities...")
 
-
-
         validationResults["network"] = HardwareValidationResult(
             "network", true, emptyList(), emptyList()
         )
@@ -303,8 +282,6 @@ class HardwareValidationController(
     private suspend fun validateBackgroundRecording() {
         Log.i(TAG, "Validating background recording...")
 
-
-
         validationResults["background_recording"] = HardwareValidationResult(
             "background_recording", true, emptyList(), emptyList()
         )
@@ -312,7 +289,6 @@ class HardwareValidationController(
 
     private suspend fun validateBatteryOptimization() {
         Log.i(TAG, "Validating battery optimization...")
-
 
         validationResults["battery_optimization"] = HardwareValidationResult(
             "battery_optimization", true, emptyList(), emptyList()

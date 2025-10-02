@@ -6,24 +6,13 @@ import android.net.nsd.NsdServiceInfo
 import android.util.Base64
 import android.util.Log
 import com.mpdc4gsr.libunified.app.sync.TimeSyncService
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import mpdc4gsr.core.data.FeatureFlags
-import mpdc4gsr.core.data.ProtocolVersion
+import kotlinx.coroutines.*
 import mpdc4gsr.core.SessionManager
 import mpdc4gsr.core.StructuredLogger
 import mpdc4gsr.core.data.AdvancedAuthenticationManager
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.Response
-import okhttp3.WebSocket
-import okhttp3.WebSocketListener
+import mpdc4gsr.core.data.FeatureFlags
+import mpdc4gsr.core.data.ProtocolVersion
+import okhttp3.*
 import org.json.JSONObject
 import java.security.cert.X509Certificate
 import java.util.concurrent.TimeUnit
@@ -799,7 +788,6 @@ class WebSocketClient(private val context: Context) {
     private fun stopServerDiscovery() {
         try {
 
-
             discoveryJob?.cancel()
         } catch (e: Exception) {
             Log.e(TAG, "Error stopping server discovery", e)
@@ -892,7 +880,6 @@ class WebSocketClient(private val context: Context) {
             android.provider.Settings.Secure.ANDROID_ID,
         ) ?: "unknown"
     }
-
 
     private fun initializePhase2Services() {
 
@@ -994,7 +981,6 @@ class WebSocketClient(private val context: Context) {
 
         Log.i(TAG, "Phase 2 services stopped")
     }
-
 
     private fun initializePhase3Services() {
 
@@ -1123,7 +1109,6 @@ class WebSocketClient(private val context: Context) {
         }
     }
 
-
     fun createRecordingSession(
         sessionId: String,
         participantId: String? = null,
@@ -1246,7 +1231,6 @@ class WebSocketClient(private val context: Context) {
     suspend fun performDataCleanup(maxAgeMs: Long = 7 * 24 * 60 * 60 * 1000L) {
         dataManagementService?.performCleanup(maxAgeMs)
     }
-
 
     private fun initializePhase4Services() {
 

@@ -5,11 +5,6 @@ import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
 
-/**
- * Functional implementations for missing dialogs
- * These provide basic working functionality for an MVP
- */
-
 class TipGuideDialog : DialogFragment() {
 
     var closeEvent: ((Boolean) -> Unit)? = null

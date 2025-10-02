@@ -12,8 +12,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.automirrored.filled.*
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -29,9 +29,9 @@ import com.csl.irCamera.R
 import com.mpdc4gsr.libunified.app.compose.dialogs.TipDialogState
 import com.mpdc4gsr.libunified.app.utils.Constants
 import mpdc4gsr.core.ui.BaseComposeActivity
+import mpdc4gsr.core.ui.BaseViewModel
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.theme.IRCameraTheme
-import mpdc4gsr.core.ui.BaseViewModel
 
 data class HelpStep(
     val icon: ImageVector,

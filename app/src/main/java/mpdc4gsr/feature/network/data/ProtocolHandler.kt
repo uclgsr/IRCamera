@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.Log
 import mpdc4gsr.core.data.TimeSyncManager
 import mpdc4gsr.core.data.utils.TimeManager
-import org.json.JSONObject
 
 /**
  * Handles protocol messages according to the standardized networking specification.

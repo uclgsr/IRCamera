@@ -9,7 +9,6 @@ import com.mpdc4gsr.libunified.app.common.ProductType.PRODUCT_NAME_TC007
 import com.mpdc4gsr.libunified.app.utils.ByteUtils
 import com.mpdc4gsr.libunified.app.utils.ByteUtils.toBytes
 
-
 class FrameStruct() {
     companion object {
 

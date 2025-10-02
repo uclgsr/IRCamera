@@ -9,44 +9,22 @@ import com.topdon.commons.poster.MethodInfo;
 import com.topdon.commons.poster.PosterDispatcher;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
-/**
- * 、
- * <p>
- * date: 2019/8/3 13:14
- * author: chuanfeng.bi
- */
 public final class Observable {
     private final List<ObserverInfo> observerInfos = new ArrayList<>();
     private final PosterDispatcher posterDispatcher;
     private final ObserverMethodHelper helper;
 
-    /**
-     * @param posterDispatcher
-     * @param isObserveAnnotationRequired {@link Observe}。，
-     */
     public Observable(@NonNull PosterDispatcher posterDispatcher, boolean isObserveAnnotationRequired) {
         this.posterDispatcher = posterDispatcher;
         helper = new ObserverMethodHelper(isObserveAnnotationRequired);
     }
 
-    /**
-     *
-     */
     public PosterDispatcher getPosterDispatcher() {
         return posterDispatcher;
     }
 
-    /**
-     *
-     *
-     * @param observer
-     */
     public void registerObserver(@NonNull Observer observer) {
         Objects.requireNonNull(observer, "observer can't be null");
         synchronized (observerInfos) {
@@ -69,11 +47,6 @@ public final class Observable {
         }
     }
 
-    /**
-     *
-     *
-     * @param observer
-     */
     public boolean isRegistered(@NonNull Observer observer) {
         synchronized (observerInfos) {
             for (ObserverInfo info : observerInfos) {
@@ -85,11 +58,6 @@ public final class Observable {
         }
     }
 
-    /**
-     *
-     *
-     * @param observer
-     */
     public void unregisterObserver(@NonNull Observer observer) {
         synchronized (observerInfos) {
             for (Iterator<ObserverInfo> it = observerInfos.iterator(); it.hasNext(); ) {
@@ -102,9 +70,6 @@ public final class Observable {
         }
     }
 
-    /**
-     *
-     */
     public void unregisterAll() {
         synchronized (observerInfos) {
             observerInfos.clear();
@@ -125,21 +90,10 @@ public final class Observable {
         }
     }
 
-    /**
-     *
-     *
-     * @param methodName
-     * @param parameters
-     */
     public void notifyObservers(@NonNull String methodName, @Nullable MethodInfo.Parameter... parameters) {
         notifyObservers(new MethodInfo(methodName, parameters));
     }
 
-    /**
-     *
-     *
-     * @param info
-     */
     public void notifyObservers(@NonNull MethodInfo info) {
         List<ObserverInfo> infos = getObserverInfos();
         for (ObserverInfo oi : infos) {

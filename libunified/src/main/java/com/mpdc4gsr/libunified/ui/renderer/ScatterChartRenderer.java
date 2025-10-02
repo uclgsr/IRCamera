@@ -12,11 +12,7 @@ import com.mpdc4gsr.libunified.ui.highlight.Highlight;
 import com.mpdc4gsr.libunified.ui.interfaces.dataprovider.ScatterDataProvider;
 import com.mpdc4gsr.libunified.ui.interfaces.datasets.IScatterDataSet;
 import com.mpdc4gsr.libunified.ui.renderer.scatter.IShapeRenderer;
-import com.mpdc4gsr.libunified.ui.utils.MPPointD;
-import com.mpdc4gsr.libunified.ui.utils.MPPointF;
-import com.mpdc4gsr.libunified.ui.utils.Transformer;
-import com.mpdc4gsr.libunified.ui.utils.Utils;
-import com.mpdc4gsr.libunified.ui.utils.ViewPortHandler;
+import com.mpdc4gsr.libunified.ui.utils.*;
 
 import java.util.List;
 

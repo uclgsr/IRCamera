@@ -2,10 +2,6 @@ package com.mpdc4gsr.libunified.app.utils
 
 import com.mpdc4gsr.libunified.app.common.SharedManager
 
-/**
- * @author: lvqiang
- * @date: 2024/8/26 9:59
- */
 object TemperatureUtils {
     private const val CELSIUS_TO_FAHRENHEIT_MULTIPLIER = 1.8
     private const val CELSIUS_TO_FAHRENHEIT_OFFSET = 32

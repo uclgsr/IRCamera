@@ -10,7 +10,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 
-
 public class LMS {
     public static final String SUCCESS = "2000";
     public static Context mContext;

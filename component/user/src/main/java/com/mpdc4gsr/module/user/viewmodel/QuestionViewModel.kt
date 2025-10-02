@@ -7,10 +7,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-/**
- * ViewModel for FAQ Questions List
- * Manages FAQ data loading and navigation
- */
 class QuestionViewModel : BaseViewModel() {
 
     private val _questions = MutableStateFlow<List<QuestionData>>(emptyList())

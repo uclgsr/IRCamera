@@ -8,10 +8,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -22,23 +22,10 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeFragment
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.ir.view.TemperatureView
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRMonitorCaptureViewModel
-import com.mpdc4gsr.module.thermalunified.viewmodel.IRMonitorCaptureViewModel.CaptureState
-import com.mpdc4gsr.module.thermalunified.viewmodel.IRMonitorCaptureViewModel.DeviceConnectionState
-import com.mpdc4gsr.module.thermalunified.viewmodel.IRMonitorCaptureViewModel.TemperatureData
-import com.mpdc4gsr.module.thermalunified.viewmodel.IRMonitorCaptureViewModel.CaptureData
+import com.mpdc4gsr.module.thermalunified.viewmodel.IRMonitorCaptureViewModel.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-/**
- * Compose migration of IRMonitorCaptureFragment
- *
- * This fragment demonstrates:
- * - Complete migration of IR monitor capture interface to Compose
- * - Modern capture management with real-time preview
- * - Enhanced capture controls and data visualization
- * - Material 3 design optimized for monitoring workflows
- * - Integration with thermal monitoring and capture systems
- */
 class IRMonitorCaptureComposeFragment : BaseComposeFragment<IRMonitorCaptureViewModel>() {
 
     override fun createViewModel(): IRMonitorCaptureViewModel {

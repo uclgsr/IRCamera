@@ -9,17 +9,13 @@ import android.net.wifi.WifiManager
 import android.util.Log
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import mpdc4gsr.feature.network.data.WebSocketClient
 import mpdc4gsr.core.data.model.NetworkStatus
 import mpdc4gsr.core.data.model.PCControllerInfo
+import mpdc4gsr.feature.network.data.WebSocketClient
 import org.json.JSONObject
 import java.net.InetAddress
 import java.util.concurrent.atomic.AtomicBoolean
@@ -256,7 +252,6 @@ class UnifiedNetworkController(
                     setEventListener(createWebSocketEventListener(controllerInfo))
                 }
 
-
                 val connected = true
 
                 if (connected) {
@@ -286,7 +281,6 @@ class UnifiedNetworkController(
 
             try {
                 val webSocketClient = activeConnections.remove(controllerName)
-
 
                 if (activeConnections.isEmpty()) {
                     _networkStatus.value = NetworkStatus.READY
@@ -468,7 +462,6 @@ class UnifiedNetworkController(
             return@withContext false
         }
     }
-
 
     private fun hasNetworkPermissions(): Boolean {
 

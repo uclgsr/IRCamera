@@ -12,29 +12,19 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.viewinterop.AndroidView
 import coil.compose.AsyncImage
 
-/**
- * Common fragment patterns used throughout thermal activities
- * These replace fragment layouts with reusable Compose components
- */
-
-/**
- * Thermal camera view container - replaces fragment_ir_thermal pattern
- */
 @Composable
 fun ThermalCameraFragment(
     onCapturePhoto: () -> Unit = {},
@@ -153,9 +143,6 @@ private fun ThermalCameraControls(
     }
 }
 
-/**
- * Gallery fragment pattern - replaces fragment_gallery pattern
- */
 @Composable
 fun ThermalGalleryFragment(
     images: List<ThermalGalleryItem>,
@@ -268,9 +255,6 @@ private fun ThermalGalleryItemCard(
     }
 }
 
-/**
- * Monitor capture fragment pattern - replaces fragment_ir_monitor_capture
- */
 @Composable
 fun MonitorCaptureFragment(
     isMonitoring: Boolean,
@@ -440,9 +424,6 @@ private fun MonitorFrameCard(
     }
 }
 
-/**
- * Placeholder for AndroidView integration
- */
 @Composable
 private fun AndroidViewPlaceholder(
     viewType: String,
@@ -492,9 +473,6 @@ data class MonitorFrame(
     val temperature: Float? = null
 )
 
-/**
- * Preview helpers
- */
 @Composable
 fun ThermalFragmentPatternsPreview() {
     Column(

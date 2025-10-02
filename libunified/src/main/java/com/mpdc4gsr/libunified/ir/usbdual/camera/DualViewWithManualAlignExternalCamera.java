@@ -30,7 +30,6 @@ public class DualViewWithManualAlignExternalCamera extends BaseParamDualView {
     private Surface mSurface;
     private IFrameCallback iFrameCallback = new IFrameCallback() {
 
-
         @Override
         public void onFrame(byte[] frame) {
             Log.d(TAG, "onFrame");

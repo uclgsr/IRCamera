@@ -1,6 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.activity
 
-import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -8,7 +7,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -19,10 +20,6 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalIrNightViewModel
 
-/**
- * Compose implementation of Thermal IR Night activity
- * Night mode thermal imaging interface
- */
 class ThermalIrNightComposeActivity : BaseComposeActivity<ThermalIrNightViewModel>() {
 
     override fun createViewModel(): ThermalIrNightViewModel {

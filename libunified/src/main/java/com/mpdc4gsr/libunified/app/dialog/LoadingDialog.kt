@@ -20,11 +20,6 @@ import com.mpdc4gsr.libunified.R
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.app.utils.ScreenUtils
 
-
-/**
- * LoadingDialog - Migrated to Jetpack Compose
- * Maintains API compatibility with the old databinding version
- */
 class LoadingDialog(context: Context) : Dialog(context, R.style.TransparentDialog) {
     private val tipsState = mutableStateOf<String?>(null)
 

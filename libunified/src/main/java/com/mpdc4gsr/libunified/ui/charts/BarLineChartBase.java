@@ -3,12 +3,8 @@ package com.mpdc4gsr.libunified.ui.charts;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Matrix;
-import android.graphics.Paint;
+import android.graphics.*;
 import android.graphics.Paint.Style;
-import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -114,7 +110,6 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
         mGridBackgroundPaint.setStyle(Style.FILL);
 
         mGridBackgroundPaint.setColor(Color.rgb(240, 240, 240));
-
 
         mBorderPaint = new Paint();
         mBorderPaint.setStyle(Style.STROKE);
@@ -291,7 +286,6 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
         mData.calcMinMaxY(fromX, toX);
 
         mXAxis.calculate(mData.getXMin(), mData.getXMax());
-
 
         if (mAxisLeft.isEnabled())
             mAxisLeft.calculate(mData.getYMin(AxisDependency.LEFT),
@@ -498,7 +492,6 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
 
         MPPointF.recycleInstance(center);
 
-
         calculateOffsets();
         postInvalidate();
     }
@@ -512,7 +505,6 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
 
         MPPointF.recycleInstance(center);
 
-
         calculateOffsets();
         postInvalidate();
     }
@@ -522,7 +514,6 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
         mViewPortHandler.resetZoom(mZoomMatrixBuffer);
         mViewPortHandler.refresh(mZoomMatrixBuffer, this, false);
 
-
         calculateOffsets();
         postInvalidate();
     }
@@ -531,7 +522,6 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
 
         mViewPortHandler.zoom(scaleX, scaleY, x, -y, mZoomMatrixBuffer);
         mViewPortHandler.refresh(mZoomMatrixBuffer, this, false);
-
 
         calculateOffsets();
         postInvalidate();
@@ -704,7 +694,6 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
         mCustomViewPortEnabled = false;
         calculateOffsets();
     }
-
 
     protected float getAxisRange(AxisDependency axis) {
         if (axis == AxisDependency.LEFT)

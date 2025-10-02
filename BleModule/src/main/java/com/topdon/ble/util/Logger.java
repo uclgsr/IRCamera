@@ -1,41 +1,21 @@
 package com.topdon.ble.util;
 
-/**
- * date: 2019/8/2 23:56
- * author: bichuanfeng
- */
 public interface Logger {
-    /**
-     *
-     */
+
     int TYPE_GENERAL = 0;
-    /**
-     *
-     */
+
     int TYPE_SCAN_STATE = 1;
-    /**
-     *
-     */
+
     int TYPE_CONNECTION_STATE = 2;
-    /**
-     *
-     */
+
     int TYPE_CHARACTERISTIC_READ = 3;
-    /**
-     *
-     */
+
     int TYPE_CHARACTERISTIC_CHANGED = 4;
-    /**
-     *
-     */
+
     int TYPE_READ_REMOTE_RSSI = 5;
-    /**
-     *
-     */
+
     int TYPE_MTU_CHANGED = 6;
-    /**
-     *
-     */
+
     int TYPE_REQUEST_FAILED = 7;
     int TYPE_DESCRIPTOR_READ = 8;
     int TYPE_NOTIFICATION_CHANGED = 9;
@@ -43,32 +23,11 @@ public interface Logger {
     int TYPE_CHARACTERISTIC_WRITE = 11;
     int TYPE_PHY_CHANGE = 12;
 
-    /**
-     *
-     *
-     * @param priority 。{@link android.util.Log#DEBUG}
-     * @param type     。{@link #TYPE_CONNECTION_STATE}
-     * @param msg
-     */
     void log(int priority, int type, String msg);
 
-    /**
-     *
-     *
-     * @param priority 。{@link android.util.Log#DEBUG}
-     * @param type     。{@link #TYPE_CONNECTION_STATE}
-     * @param msg
-     * @param th
-     */
     void log(int priority, int type, String msg, Throwable th);
 
-    /**
-     *
-     */
     boolean isEnabled();
 
-    /**
-     *
-     */
     void setEnabled(boolean isEnabled);
 }

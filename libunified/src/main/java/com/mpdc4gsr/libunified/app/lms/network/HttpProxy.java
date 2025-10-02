@@ -1,6 +1,5 @@
 package com.mpdc4gsr.libunified.app.lms.network;
 
-
 public class HttpProxy {
     private static volatile HttpProxy instance;
 

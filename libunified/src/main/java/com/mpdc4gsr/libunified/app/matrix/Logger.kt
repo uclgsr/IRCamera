@@ -7,13 +7,9 @@ import java.io.File
 import java.io.FileWriter
 import java.io.IOException
 import java.text.SimpleDateFormat
-import java.util.Date
+import java.util.*
 
 object Logger {
-
-    /**
-     * ERROR
-     */
 
     @JvmStatic
     fun e(clazz: Class<*>, msg: String) {
@@ -29,9 +25,6 @@ object Logger {
         }
     }
 
-    /**
-     * WARN
-     */
     @JvmStatic
     fun w(clazz: Class<*>, msg: String) {
         if (BuildConfig.DEBUG) {
@@ -45,10 +38,6 @@ object Logger {
             Log.w(tag, msg + "")
         }
     }
-
-    /**
-     * INFO
-     */
 
     @JvmStatic
     fun i(clazz: Class<*>, msg: String) {
@@ -64,10 +53,6 @@ object Logger {
         }
     }
 
-    /**
-     * DEBUG
-     */
-
     @JvmStatic
     fun d(clazz: Class<*>, msg: String) {
         if (BuildConfig.DEBUG) {
@@ -82,10 +67,6 @@ object Logger {
         }
     }
 
-    /**
-     * VERBOSE
-     */
-
     @JvmStatic
     fun v(clazz: Class<*>, msg: String) {
         if (BuildConfig.DEBUG) {
@@ -99,7 +80,6 @@ object Logger {
         }
     }
 
-
     private val MYLOG_PATH_SDCARD_DIR = "/sdcard/Guide/log"
 
     private val MYLOGFILEName = "Log.txt"
@@ -107,7 +87,6 @@ object Logger {
     private val myLogSdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
 
     private val logfile = SimpleDateFormat("yyyy-MM-dd")
-
 
     fun f(tag: String, text: String) {
         val nowtime = Date()

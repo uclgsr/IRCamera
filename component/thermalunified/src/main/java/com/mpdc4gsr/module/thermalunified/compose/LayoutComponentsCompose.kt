@@ -1,21 +1,15 @@
 package com.mpdc4gsr.module.thermalunified.compose
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
@@ -24,14 +18,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-/**
- * Common layout components used throughout thermal activities
- * These replace various XML layout patterns with modern Compose implementations
- */
-
-/**
- * Monitor control panel - replaces motion_action_lay pattern
- */
 @Composable
 fun MonitorControlPanel(
     onLogQuery: () -> Unit = {},
@@ -104,9 +90,6 @@ fun MonitorControlPanel(
     }
 }
 
-/**
- * Chart information panel - replaces monitor_vol_lay pattern
- */
 @Composable
 fun ChartInfoPanel(
     currentValue: String,
@@ -197,9 +180,6 @@ private fun ChartInfoItem(
     }
 }
 
-/**
- * Report info section - replaces view_report_info pattern
- */
 @Composable
 fun ReportInfoSection(
     reportName: String,
@@ -275,9 +255,6 @@ private fun ReportInfoRow(
     }
 }
 
-/**
- * Target mode item - replaces itme_target_mode pattern
- */
 @Composable
 fun TargetModeItem(
     title: String,
@@ -364,9 +341,6 @@ fun TargetModeItem(
     }
 }
 
-/**
- * Configuration list item - replaces various config item patterns
- */
 @Composable
 fun ConfigurationItem(
     title: String,
@@ -441,9 +415,6 @@ fun ConfigurationItem(
     }
 }
 
-/**
- * Empty state component - replaces layout_empty pattern
- */
 @Composable
 fun EmptyStateComponent(
     title: String = "No Data Available",
@@ -496,9 +467,6 @@ fun EmptyStateComponent(
     }
 }
 
-/**
- * Preview helpers
- */
 @Composable
 fun LayoutComponentsPreview() {
     Column(

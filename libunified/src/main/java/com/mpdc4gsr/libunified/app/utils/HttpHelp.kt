@@ -7,16 +7,8 @@ import com.mpdc4gsr.libunified.app.lms.network.IResponseCallback
 import com.mpdc4gsr.libunified.app.lms.utils.LanguageUtils
 import com.mpdc4gsr.libunified.app.lms.xutils.http.RequestParams
 
-/**
- * @author: CaiSongL
- * @date: 2023/5/12 17:17
- */
 object HttpHelp {
 
-    /**
-     *
-     * modelId：TC001 950, TC002 951, TC003952
-     */
     fun getFirstReportData(
         isTC007: Boolean,
         pageNumber: Int,

@@ -1,36 +1,9 @@
 package com.mpdc4gsr.libunified.ir.utils;
 
 import static org.bytedeco.opencv.global.opencv_imgproc.MORPH_ELLIPSE;
-import static org.opencv.core.Core.BORDER_CONSTANT;
-import static org.opencv.core.Core.DFT_SCALE;
-import static org.opencv.core.Core.NORM_MINMAX;
-import static org.opencv.core.Core.absdiff;
-import static org.opencv.core.Core.getOptimalDFTSize;
-import static org.opencv.core.Core.magnitude;
-import static org.opencv.core.Core.normalize;
-import static org.opencv.core.CvType.CV_32F;
-import static org.opencv.core.CvType.CV_32FC1;
-import static org.opencv.core.CvType.CV_32FC2;
-import static org.opencv.core.CvType.CV_64FC1;
-import static org.opencv.core.CvType.CV_8UC1;
-import static org.opencv.core.CvType.CV_8UC2;
-import static org.opencv.imgproc.Imgproc.CHAIN_APPROX_SIMPLE;
-import static org.opencv.imgproc.Imgproc.COLOR_RGB2BGR;
-import static org.opencv.imgproc.Imgproc.COLOR_YUV2GRAY_YUYV;
-import static org.opencv.imgproc.Imgproc.RETR_EXTERNAL;
-import static org.opencv.imgproc.Imgproc.THRESH_BINARY;
-import static org.opencv.imgproc.Imgproc.THRESH_BINARY_INV;
-import static org.opencv.imgproc.Imgproc.applyColorMap;
-import static org.opencv.imgproc.Imgproc.approxPolyDP;
-import static org.opencv.imgproc.Imgproc.boundingRect;
-import static org.opencv.imgproc.Imgproc.contourArea;
-import static org.opencv.imgproc.Imgproc.cvtColor;
-import static org.opencv.imgproc.Imgproc.dilate;
-import static org.opencv.imgproc.Imgproc.drawContours;
-import static org.opencv.imgproc.Imgproc.findContours;
-import static org.opencv.imgproc.Imgproc.getStructuringElement;
-import static org.opencv.imgproc.Imgproc.rectangle;
-import static org.opencv.imgproc.Imgproc.threshold;
+import static org.opencv.core.Core.*;
+import static org.opencv.core.CvType.*;
+import static org.opencv.imgproc.Imgproc.*;
 
 import android.graphics.Bitmap;
 import android.util.Log;
@@ -40,28 +13,13 @@ import com.mpdc4gsr.libunified.app.BaseApplication;
 import com.mpdc4gsr.libunified.app.utils.UnifiedDataUtils;
 
 import org.opencv.android.Utils;
-import org.opencv.core.Core;
-import org.opencv.core.CvType;
-import org.opencv.core.Mat;
-import org.opencv.core.MatOfByte;
-import org.opencv.core.MatOfFloat;
-import org.opencv.core.MatOfInt;
-import org.opencv.core.MatOfPoint;
-import org.opencv.core.MatOfPoint2f;
-import org.opencv.core.Point;
-import org.opencv.core.Rect;
-import org.opencv.core.Scalar;
-import org.opencv.core.Size;
+import org.opencv.core.*;
 import org.opencv.imgproc.CLAHE;
 import org.opencv.imgproc.Imgproc;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 
 public class OpencvTools {
 
@@ -114,7 +72,6 @@ public class OpencvTools {
         return UnifiedDataUtils.byteArrayToBitmap(byteArray);
     }
 
-
     public static byte[] supImageFourExToByte(byte[] imgByte) {
         long startTime = System.currentTimeMillis();
         ByteBuffer dataIn = ByteBuffer.wrap(imgByte);
@@ -164,7 +121,6 @@ public class OpencvTools {
         return finalBitmap;
     }
 
-
     public static Bitmap supImageFourExToBitmap(Bitmap inBitmap) {
         long startTime = System.currentTimeMillis();
 
@@ -197,7 +153,6 @@ public class OpencvTools {
         Log.e("4[CHINESE_TEXT]Minute[CHINESE_TEXT]：", String.valueOf((System.currentTimeMillis() - startTime)));
         return finalBitmap;
     }
-
 
     public static byte[] supImage(byte[] imageARGB, int width, int height, byte[] resulARGB) {
 
@@ -232,9 +187,7 @@ public class OpencvTools {
 
         for (int i = 0; i < singleLength; i++) {
 
-
             doubleByteImage[2 * i] = singleByteImage[i];
-
 
         }
         return doubleByteImage;
@@ -301,7 +254,6 @@ public class OpencvTools {
         return map;
     }
 
-
     public static byte[] matToByteArray(Mat mat) {
         int rows = mat.rows();
         int cols = mat.cols();
@@ -337,7 +289,6 @@ public class OpencvTools {
 
         Mat colorMat = generateColorBar(colorList, maxTemp, minTemp, customMaxTemp, customMinTemp, isGrayUse);
 
-
         if (colorMat != null) {
             applyColorMap(im, im, colorMat);
             Imgproc.cvtColor(im, im, Imgproc.COLOR_BGR2RGBA);
@@ -370,16 +321,13 @@ public class OpencvTools {
         Size colorSize = new Size(1.0, 256.0);
         Imgproc.resize(colorMat, colorMat, colorSize);
 
-
         applyColorMap(im, im, colorMat);
         Mat tem;
         tem = new Mat(rows, cols, CV_64FC1);
         tem.put(0, 0, temp);
         tem.convertTo(tem, CV_8UC1);
 
-
         Mat thres_gray = new Mat();
-
 
         threshold(tem, thres_gray, high_t, 255, THRESH_BINARY);
 
@@ -413,10 +361,8 @@ public class OpencvTools {
 
         }
 
-
         return im;
     }
-
 
     private static Mat draw_high_temp_edge_argb_pse(byte[] image, byte[] temperature, int cols, int rows, double high_t, int color_h, int type) throws IOException {
         double[] temp = new double[cols * rows];
@@ -435,14 +381,11 @@ public class OpencvTools {
         im.put(0, 0, image);
         cvtColor(im, im, Imgproc.COLOR_RGBA2BGR);
 
-
         Mat tem;
         tem = new Mat(rows, cols, CV_64FC1);
         tem.put(0, 0, temp);
 
-
         Mat thres_gray = new Mat();
-
 
         threshold(tem, thres_gray, high_t, 255, THRESH_BINARY);
 
@@ -476,7 +419,6 @@ public class OpencvTools {
             }
 
         }
-
 
         return im;
     }
@@ -516,9 +458,7 @@ public class OpencvTools {
         tem.put(0, 0, temp);
         tem.convertTo(tem, CV_8UC1);
 
-
         Mat thres_gray = new Mat();
-
 
         threshold(tem, thres_gray, high_t, 255, THRESH_BINARY);
 
@@ -551,7 +491,6 @@ public class OpencvTools {
             }
 
         }
-
 
         return im;
     }
@@ -580,9 +519,7 @@ public class OpencvTools {
         tem.put(0, 0, temp);
         tem.convertTo(tem, CV_8UC1);
 
-
         Mat thres_gray = new Mat();
-
 
         threshold(tem, thres_gray, high_t, 255, THRESH_BINARY);
 
@@ -615,7 +552,6 @@ public class OpencvTools {
             }
 
         }
-
 
         return im;
     }
@@ -731,7 +667,6 @@ public class OpencvTools {
         return dstBitmap;
     }
 
-
     public static Mat calcHU(Size size, double t2) {
         Mat hu = new Mat(size, CV_32FC1);
         int row = hu.rows();
@@ -825,7 +760,6 @@ public class OpencvTools {
         Core.idft(image_padd_2c, image_padd_2c, DFT_SCALE);
         System.out.println(image_padd_2c.channels());
 
-
         Core.exp(image_padd_2c, image_padd_2c);
         Core.subtract(image_padd_2c, new Scalar(1), image_padd_2c);
         List<Mat> image_padd_s = new ArrayList<Mat>();
@@ -844,7 +778,6 @@ public class OpencvTools {
         cvtColor(result, result, COLOR_RGB2BGR);
 
         Log.w("1234", result.toString());
-
 
         return result;
 
@@ -921,11 +854,9 @@ public class OpencvTools {
                 colors[2] = grey;
             } else if (maxTemp < customMaxTemp && minTemp < customMinTemp) {
 
-
                 colors = capColor(getStartColor(colorList, customMaxTemp, customMinTemp, maxTemp),
                         maxTemp, minTemp, maxTemp, customMinTemp, isGrayUse, ratio);
             } else if (maxTemp > customMaxTemp && minTemp > customMinTemp) {
-
 
                 colors = capColor(getEndColor(colorList, customMaxTemp, customMinTemp, minTemp),
                         maxTemp, minTemp, customMaxTemp, minTemp, isGrayUse, ratio);
@@ -1415,7 +1346,6 @@ public class OpencvTools {
 
     public static Mat highTemTrack(byte[] image, byte[] temperature) throws IOException {
 
-
         Mat im = getImageData(image);
 
         Mat tempMat = getTempData(temperature);
@@ -1450,7 +1380,6 @@ public class OpencvTools {
                 }
             }
         }
-
 
         return im;
 
@@ -1491,12 +1420,10 @@ public class OpencvTools {
             }
         }
 
-
         return im;
     }
 
     public static boolean getStatus(Mat image1, Mat image2) {
-
 
         final double similarity = calculateHistogram(image1, image2);
         return similarity > 0.9;
@@ -1508,7 +1435,6 @@ public class OpencvTools {
         Mat background_gray = new Mat();
         background.convertTo(background_gray, CV_8UC1);
         Mat es = getStructuringElement(MORPH_ELLIPSE, new Size(9, 4));
-
 
         Mat diff = new Mat();
         absdiff(background_gray, add_target_gray, diff);

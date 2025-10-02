@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-
 import asyncio
 import hashlib
 import json
@@ -11,7 +10,6 @@ from loguru import logger
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional
 
-
 class TransferStatus(Enum):
     PENDING = "pending"
     IN_PROGRESS = "in_progress"
@@ -19,7 +17,6 @@ class TransferStatus(Enum):
     COMPLETED = "completed"
     FAILED = "failed"
     CANCELLED = "cancelled"
-
 
 class FileType(Enum):
     THERMAL_VIDEO = "thermal_video"
@@ -29,7 +26,6 @@ class FileType(Enum):
     AUDIO = "audio"
     METADATA = "metadata"
     CALIBRATION = "calibration"
-
 
 @dataclass
 class FileManifest:
@@ -47,7 +43,6 @@ class FileManifest:
         data = asdict(self)
         data["file_type"] = self.file_type.value
         return data
-
 
 @dataclass
 class TransferJob:
@@ -87,7 +82,6 @@ class TransferJob:
         data["manifest"] = self.manifest.to_dict()
         data["local_path"] = str(self.local_path)
         return data
-
 
 class FileTransferManager:
 

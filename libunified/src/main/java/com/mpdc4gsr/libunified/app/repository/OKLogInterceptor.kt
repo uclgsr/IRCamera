@@ -7,7 +7,6 @@ import okhttp3.Response
 import okio.Buffer
 import java.nio.charset.StandardCharsets
 
-
 class OKLogInterceptor(val isTC007: Boolean) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()

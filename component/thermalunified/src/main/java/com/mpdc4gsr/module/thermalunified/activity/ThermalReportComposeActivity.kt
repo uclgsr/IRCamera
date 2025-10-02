@@ -1,15 +1,14 @@
 package com.mpdc4gsr.module.thermalunified.activity
 
-import android.os.Bundle
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.TrendingUp
 import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -20,13 +19,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
-import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 
-/**
- * Professional thermal report generation with Compose
- * Advanced PDF creation and thermal analysis reporting
- */
 class ThermalReportComposeActivity : BaseComposeActivity<ThermalReportViewModel>() {
 
     override fun createViewModel(): ThermalReportViewModel {

@@ -1,6 +1,5 @@
 package com.mpdc4gsr.libunified.ir.usbdual.view;
 
-
 public class SurfaceNativeWindow {
 
     static {
