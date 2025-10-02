@@ -75,6 +75,7 @@ sealed class UnifiedRoute(val route: String, val displayName: String = "") {
     // System Routes
     object Settings : UnifiedRoute("settings", "Settings")
     object About : UnifiedRoute("about", "About")
+    object Profile : UnifiedRoute("profile", "Profile")
     object NetworkConfig : UnifiedRoute("network_config", "Network")
 
     // Development and Demo Routes
@@ -104,7 +105,8 @@ fun UnifiedNavHost(
             MainScreen(
                 onNavigateToSensors = { navController.navigate(UnifiedRoute.Dashboard.route) },
                 onNavigateToGallery = { navController.navigate(UnifiedRoute.ThermalGallery.route) },
-                onNavigateToSettings = { navController.navigate(UnifiedRoute.Settings.route) }
+                onNavigateToSettings = { navController.navigate(UnifiedRoute.Settings.route) },
+                onNavigateToProfile = { navController.navigate(UnifiedRoute.Profile.route) }
             )
         }
 
@@ -293,6 +295,14 @@ fun UnifiedNavHost(
             NavigationPerformanceHelper.TrackNavigation("About")
 
             AboutScreen(
+                onBackClick = { navController.popBackStack() }
+            )
+        }
+
+        composable(UnifiedRoute.Profile.route) {
+            NavigationPerformanceHelper.TrackNavigation("Profile")
+
+            mpdc4gsr.feature.settings.ui.ProfileScreen(
                 onBackClick = { navController.popBackStack() }
             )
         }
