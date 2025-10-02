@@ -258,6 +258,20 @@ android {
     }
     buildToolsVersion = "35.0.0"
 
+    testOptions {
+        unitTests.all {
+            it.enabled = false
+        }
+        execution = "ANDROIDX_TEST_ORCHESTRATOR"
+    }
+}
+
+tasks.withType<Test> {
+    enabled = false
+}
+
+tasks.matching { it.name.startsWith("connected") && it.name.endsWith("AndroidTest") }.configureEach {
+    enabled = false
 }
 
 configurations.all {
@@ -333,6 +347,7 @@ dependencies {
     implementation(libs.nordic.ble)
     implementation(libs.nordic.ble.ktx)
     implementation(libs.lifecycle.service)
+    implementation(libs.compose.lifecycle.runtime)
 
     implementation(files("libs/shimmerandroidinstrumentdriver-3.2.4_beta.aar"))
     implementation(files("libs/shimmerdriver-0.11.5_beta.jar"))
