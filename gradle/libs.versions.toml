@@ -310,7 +310,7 @@ smart-refresh-v2 = ["refresh-layout-kernel", "refresh-header-classics", "refresh
 
 ui-common = ["androidx-core-ktx", "androidx-appcompat", "material", "glide"]
 
-thermal-common = ["androidx-core-ktx", "androidx-appcompat", "material", "glide", "xxpermissions", "eventbus"] # TODO: Migrate xxpermissions to androidx-activity-ktx
+thermal-common = ["androidx-core-ktx", "androidx-appcompat", "material", "glide", "eventbus"]
 
 camerax = ["camerax-core", "camerax-camera2", "camerax-lifecycle", "camerax-video", "camerax-view", "camerax-extensions"]
 compose = ["compose-ui", "compose-ui-tooling-preview", "compose-material3", "compose-activity", "compose-viewmodel", "compose-navigation", "compose-constraint-layout"]
