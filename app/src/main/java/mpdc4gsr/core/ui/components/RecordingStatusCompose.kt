@@ -7,17 +7,18 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FiberManualRecord
 import androidx.compose.material.icons.filled.Stop
-import androidx.compose.material3.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
-import mpdc4gsr.feature.network.data.DetailedSensorStatus
 import mpdc4gsr.feature.network.data.SensorStatusSummary
 
 /**
@@ -170,7 +171,7 @@ fun RecordingStatusWithSensorSummary(
         // Sensor Status
         if (summary.sensors.isNotEmpty()) {
             Spacer(modifier = Modifier.height(4.dp))
-            
+
             val sensorDisplay = summary.sensors.map { sensorStatus ->
                 val icon = when {
                     sensorStatus.sensorType.contains("RGB", ignoreCase = true) -> "[CAM]"
@@ -178,16 +179,16 @@ fun RecordingStatusWithSensorSummary(
                     sensorStatus.sensorType.contains("GSR", ignoreCase = true) -> "[GSR]"
                     else -> "[SEN]"
                 }
-                
+
                 val statusIcon = when {
                     sensorStatus.isRecording -> "[OK]"
                     sensorStatus.isInitialized -> "[RDY]"
                     else -> "[ERR]"
                 }
-                
+
                 "$icon$statusIcon"
             }.joinToString(" ")
-            
+
             Text(
                 text = if (summary.isSessionActive) sensorDisplay else "$sensorDisplay ready",
                 style = MaterialTheme.typography.labelSmall,

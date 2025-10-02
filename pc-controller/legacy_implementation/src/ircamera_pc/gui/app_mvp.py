@@ -14,6 +14,7 @@ from ..core.session_manager import AdvancedSessionManager
 from ..network.websocket_server import WebSocketServer
 from ..sync import AdvancedTimeSyncServer
 
+
 class IRCameraHubApplication:
 
     def __init__(self):
@@ -352,6 +353,7 @@ class IRCameraHubApplication:
 
         return self.main_window
 
+
 def main() -> int:
     logger.remove()
     logger.add(
@@ -389,6 +391,7 @@ def main() -> int:
     except Exception as e:
         logger.error(f"Unhandled application error: {e}")
         return 1
+
 
 if __name__ == "__main__":
     sys.exit(main())

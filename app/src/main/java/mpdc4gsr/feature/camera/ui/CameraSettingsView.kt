@@ -7,7 +7,7 @@ import android.widget.LinearLayout
 /**
  * Camera settings view for manual camera controls
  * MVP implementation with basic callback support
- * 
+ *
  * @deprecated Use CameraSettingsPanel (Compose) instead.
  * See docs/legacy-widget-migration-guide.md for migration instructions.
  */

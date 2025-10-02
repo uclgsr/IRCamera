@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
  * - Local start/stop controls integration
  * - Session state display with remote trigger indication
  * - Unified control logic for both local and remote triggers
- * 
+ *
  * @deprecated Use RecordingControls (Compose) instead.
  * See docs/legacy-widget-migration-guide.md for migration instructions.
  */

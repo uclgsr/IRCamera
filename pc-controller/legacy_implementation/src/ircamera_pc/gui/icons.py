@@ -3,6 +3,7 @@
 from pathlib import Path
 from typing import Any, Dict, List
 
+
 class IconRegistry:
     ICONS = {
         "settings": {
@@ -58,12 +59,14 @@ class IconRegistry:
         use_cases = icon_info.get("use_cases", [])
         return [str(case) for case in use_cases] if use_cases else []
 
+
 def get_project_icon_path(icon_name: str) -> Path:
     android_path = IconRegistry.get_android_resource_path(icon_name)
     if android_path:
         project_root = Path(__file__).parent.parent.parent.parent
         return project_root / android_path
     return Path()
+
 
 ICON_USAGE_GUIDE = """
 Generic Icon Usage Guide for IRCamera PC Controller

@@ -38,6 +38,7 @@ except ImportError as e:
 
 from loguru import logger
 
+
 class GSRDeviceStatusWidget(QWidget):
 
     def __init__(self, parent=None):
@@ -165,6 +166,7 @@ class GSRDeviceStatusWidget(QWidget):
         export_dialog = GSRExportDialog(list(self.devices.keys()), self)
         export_dialog.exec()
 
+
 class GSRPlotWidget(QWidget):
 
     def __init__(self, parent=None):
@@ -275,6 +277,7 @@ class GSRPlotWidget(QWidget):
             self.plot_widget.removeItem(self.plot_items[device_id])
             del self.plot_items[device_id]
 
+
 class GSRStatisticsWidget(QWidget):
 
     def __init__(self, parent=None):
@@ -370,6 +373,7 @@ class GSRStatisticsWidget(QWidget):
         else:
             self.avg_quality_label.setText("Average Quality: N/A")
 
+
 class GSRExportDialog(QWidget):
 
     def __init__(self, available_devices: List[str], parent=None):
@@ -442,6 +446,7 @@ class GSRExportDialog(QWidget):
             self.parent().export_gsr_data(selected_devices, format_str, export_dir)
 
         self.close()
+
 
 class GSRMainWidget(QWidget):
 
@@ -549,6 +554,7 @@ class GSRMainWidget(QWidget):
         except Exception as e:
             logger.error(f"Error exporting GSR data: {e}")
             QMessageBox.critical(self, "Export Error", f"Export failed: {str(e)}")
+
 
 class GSRAnalyticsWidget(QWidget):
 
@@ -1027,6 +1033,7 @@ class GSRAnalyticsWidget(QWidget):
         self.summary_table.setRowCount(0)
 
         logger.info("Cleared GSR analytics history")
+
 
 class GSRMainTabWidget(QTabWidget):
 

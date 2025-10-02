@@ -9,6 +9,7 @@ try:
 except ImportError:
     from ..utils.simple_logger import logger
 
+
 class ConfigManager:
     """Configuration manager for MVP implementation"""
 
@@ -106,6 +107,7 @@ class ConfigManager:
     def get_all(self) -> Dict[str, Any]:
         """Get all configuration values"""
         return self._config.copy()
+
 
 # Global configuration instance
 config = ConfigManager()

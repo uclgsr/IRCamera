@@ -2,13 +2,15 @@ package mpdc4gsr.feature.camera.presentation
 
 import android.app.Application
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import mpdc4gsr.core.data.RgbCameraRecorder
 import mpdc4gsr.core.ui.AppBaseViewModel
 import java.text.SimpleDateFormat
-import java.util.Locale
-import java.util.TimeZone
+import java.util.*
 
 /**
  * ViewModel for RGB Camera Screen
@@ -54,10 +56,10 @@ class RGBCameraViewModel(
                     context = application,
                     lifecycleOwner = lifecycleOwner
                 )
-                
+
                 val initialized = cameraRecorder?.initialize() ?: false
                 if (initialized) {
-                    _cameraState.update { 
+                    _cameraState.update {
                         it.copy(
                             isPreviewActive = true,
                             resolution = cameraRecorder?.getResolution() ?: "1920×1080",
@@ -85,22 +87,22 @@ class RGBCameraViewModel(
     fun startRecording() {
         viewModelScope.launch {
             try {
-                val sessionDir = application.getExternalFilesDir("camera_recordings")?.absolutePath 
+                val sessionDir = application.getExternalFilesDir("camera_recordings")?.absolutePath
                     ?: application.filesDir.absolutePath
-                
+
                 val currentTimeMs = System.currentTimeMillis()
                 val currentMonotonicNs = System.nanoTime()
-                
+
                 val metadata = mpdc4gsr.core.data.SessionMetadata(
                     sessionId = "camera_${currentTimeMs}",
                     sessionStartTimestampMs = currentTimeMs,
                     sessionStartMonotonicNs = currentMonotonicNs,
                     sessionStartIso = ISO_DATE_FORMAT.format(java.util.Date(currentTimeMs))
                 )
-                
+
                 cameraRecorder?.startRecording(sessionDir, metadata)
                 _cameraState.update { it.copy(isRecording = true, recordingDuration = 0, error = null) }
-                
+
                 // Start duration tracking
                 trackRecordingDuration()
             } catch (e: Exception) {
@@ -162,7 +164,7 @@ class RGBCameraViewModel(
         viewModelScope.launch {
             while (_cameraState.value.isRecording) {
                 kotlinx.coroutines.delay(1000)
-                _cameraState.update { 
+                _cameraState.update {
                     it.copy(
                         recordingDuration = it.recordingDuration + 1,
                         capturedFrames = it.capturedFrames + it.frameRate

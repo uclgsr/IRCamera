@@ -13,7 +13,10 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Stop
 import androidx.compose.material.icons.filled.VideoCall
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -136,7 +139,7 @@ fun RGBCameraScreen(
                 isPreviewActive = isPreviewActive,
                 recordingDuration = recordingDuration,
                 capturedFrames = capturedFrames,
-                onToggleRecording = { 
+                onToggleRecording = {
                     if (isRecording) {
                         viewModel.stopRecording()
                     } else {
@@ -144,7 +147,7 @@ fun RGBCameraScreen(
                     }
                 },
                 onTogglePreview = { viewModel.togglePreview() },
-                onCapturePhoto = { 
+                onCapturePhoto = {
                     viewModel.capturePhoto()
                     onCapturePhoto()
                 }

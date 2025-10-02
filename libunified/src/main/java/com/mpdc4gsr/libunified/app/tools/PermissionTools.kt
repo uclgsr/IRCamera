@@ -10,7 +10,6 @@ import android.provider.Settings
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
-import com.blankj.utilcode.util.AppUtils
 import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.R
 import com.mpdc4gsr.libunified.app.BaseApplication
@@ -22,9 +21,9 @@ object PermissionTools {
 
     private const val REQUEST_CODE_PERMISSIONS = 1001
     private const val REQUEST_CODE_BLUETOOTH = 1002
-    
+
     private var permissionCallbacks = mutableMapOf<Int, PermissionCallback>()
-    
+
     private data class PermissionCallback(
         val activityRef: WeakReference<FragmentActivity>,
         val type: Type,
@@ -97,7 +96,7 @@ object PermissionTools {
         val allGranted = permissions.all { permission ->
             ContextCompat.checkSelfPermission(activity, permission) == PackageManager.PERMISSION_GRANTED
         }
-        
+
         if (allGranted) {
             callback.invoke()
             return
@@ -117,7 +116,7 @@ object PermissionTools {
             REQUEST_CODE_PERMISSIONS
         )
     }
-    
+
     fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String>,
@@ -128,7 +127,7 @@ object PermissionTools {
             REQUEST_CODE_BLUETOOTH -> handleBluetoothPermissionResult(requestCode, permissions, grantResults)
         }
     }
-    
+
     private fun handlePermissionResult(
         requestCode: Int,
         permissions: Array<String>,
@@ -136,20 +135,20 @@ object PermissionTools {
     ) {
         val callbackData = permissionCallbacks.remove(requestCode) ?: return
         val activity = callbackData.activityRef.get() ?: return
-        
+
         val allGranted = grantResults.isNotEmpty() && grantResults.all { it == PackageManager.PERMISSION_GRANTED }
-        
+
         if (allGranted) {
             callbackData.callback.invoke()
         } else {
             val deniedPermissions = permissions.filterIndexed { index, _ ->
                 grantResults.getOrNull(index) != PackageManager.PERMISSION_GRANTED
             }
-            
+
             val shouldShowRationale = deniedPermissions.any { permission ->
                 ActivityCompat.shouldShowRequestPermissionRationale(activity, permission)
             }
-            
+
             if (!shouldShowRationale && deniedPermissions.isNotEmpty()) {
                 val tipsResId: Int =
                     when (callbackData.type) {
@@ -198,14 +197,14 @@ object PermissionTools {
                 context,
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED &&
-            ContextCompat.checkSelfPermission(
-                context,
-                Manifest.permission.BLUETOOTH_SCAN
-            ) == PackageManager.PERMISSION_GRANTED &&
-            ContextCompat.checkSelfPermission(
-                context,
-                Manifest.permission.BLUETOOTH_CONNECT
-            ) == PackageManager.PERMISSION_GRANTED
+                    ContextCompat.checkSelfPermission(
+                        context,
+                        Manifest.permission.BLUETOOTH_SCAN
+                    ) == PackageManager.PERMISSION_GRANTED &&
+                    ContextCompat.checkSelfPermission(
+                        context,
+                        Manifest.permission.BLUETOOTH_CONNECT
+                    ) == PackageManager.PERMISSION_GRANTED
         }
     }
 
@@ -230,7 +229,7 @@ object PermissionTools {
         val allGranted = permissionList.all { permission ->
             ContextCompat.checkSelfPermission(activity, permission) == PackageManager.PERMISSION_GRANTED
         }
-        
+
         if (allGranted) {
             callback.onResult(true)
             return
@@ -252,7 +251,7 @@ object PermissionTools {
             REQUEST_CODE_BLUETOOTH
         )
     }
-    
+
     private fun handleBluetoothPermissionResult(
         requestCode: Int,
         permissions: Array<String>,
@@ -262,23 +261,23 @@ object PermissionTools {
         val activity = callbackData.activityRef.get() ?: return
         val callback = callbackData.btCallback ?: return
         val isBtFirst = callbackData.isBtFirst
-        
+
         val allGranted = grantResults.isNotEmpty() && grantResults.all { it == PackageManager.PERMISSION_GRANTED }
         XLog.i("onGranted($allGranted)")
-        
+
         if (allGranted) {
             callback.onResult(true)
         } else {
             val deniedPermissions = permissions.filterIndexed { index, _ ->
                 grantResults.getOrNull(index) != PackageManager.PERMISSION_GRANTED
             }
-            
+
             val shouldShowRationale = deniedPermissions.any { permission ->
                 ActivityCompat.shouldShowRequestPermissionRationale(activity, permission)
             }
-            
+
             XLog.i("onDenied(never=${!shouldShowRationale})")
-            
+
             if (!shouldShowRationale && deniedPermissions.isNotEmpty()) {
                 var isBtNever = false
                 var isLocationNever = false

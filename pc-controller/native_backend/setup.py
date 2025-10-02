@@ -3,10 +3,10 @@
 Setup script for enhanced_native_backend C++ module
 """
 
-from setuptools import setup, Extension
-from pybind11.setup_helpers import Pybind11Extension, build_ext
-from pybind11 import get_cmake_dir
 import pybind11
+from pybind11 import get_cmake_dir
+from pybind11.setup_helpers import Pybind11Extension, build_ext
+from setuptools import setup, Extension
 
 # Define the extension module
 ext_modules = [
@@ -14,7 +14,7 @@ ext_modules = [
         "enhanced_native_backend",
         [
             "src/shimmer.cpp",
-            "src/data_processor.cpp", 
+            "src/data_processor.cpp",
             "src/pybind_module.cpp",
         ],
         include_dirs=[

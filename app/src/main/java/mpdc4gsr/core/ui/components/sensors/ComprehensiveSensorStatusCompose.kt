@@ -7,14 +7,15 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.Camera
+import androidx.compose.material.icons.filled.Mic
+import androidx.compose.material.icons.filled.Sensors
+import androidx.compose.material.icons.filled.Thermostat
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -108,7 +109,7 @@ private fun OverallStatusCard(
 ) {
     val activeSensors = sensors.count { it.status == SensorStatus.CONNECTED || it.status == SensorStatus.STREAMING }
     val errorSensors = sensors.count { it.status == SensorStatus.ERROR }
-    
+
     val statusText = when {
         recordingState.isRecording -> "🔴 RECORDING - Session: ${recordingState.sessionId ?: "Unknown"}"
         errorSensors > 0 -> "⚠️ $errorSensors Sensor Error(s) Detected"
@@ -116,7 +117,7 @@ private fun OverallStatusCard(
         activeSensors < sensors.size -> "🟡 $activeSensors/${sensors.size} Sensors Connected"
         else -> "🟢 All Sensors Connected"
     }
-    
+
     val statusColor = when {
         recordingState.isRecording -> MaterialTheme.colorScheme.error
         errorSensors > 0 -> MaterialTheme.colorScheme.error
@@ -167,9 +168,9 @@ private fun RecordingStatusCard(recordingState: RecordingState) {
             modifier = Modifier
                 .size(24.dp)
                 .background(
-                    color = if (recordingState.isRecording) 
-                        Color.Red.copy(alpha = alpha) 
-                    else 
+                    color = if (recordingState.isRecording)
+                        Color.Red.copy(alpha = alpha)
+                    else
                         Color.Gray,
                     shape = CircleShape
                 )
@@ -261,7 +262,7 @@ private fun SensorStatusCard(
                         style = MaterialTheme.typography.bodyLarge,
                         fontWeight = FontWeight.Medium
                     )
-                    
+
                     Text(
                         text = getStatusText(sensor),
                         style = MaterialTheme.typography.bodySmall,

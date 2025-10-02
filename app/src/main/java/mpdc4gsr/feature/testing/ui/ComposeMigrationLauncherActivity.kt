@@ -8,21 +8,21 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.*
+import androidx.compose.material.icons.automirrored.filled.Assignment
+import androidx.compose.material.icons.automirrored.filled.Help
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import mpdc4gsr.core.ui.theme.IRCameraTheme
-import mpdc4gsr.feature.camera.ui.*
-import mpdc4gsr.feature.gsr.ui.*
+import mpdc4gsr.feature.camera.ui.DualModeCameraComposeActivity
 import mpdc4gsr.feature.main.ui.DeviceTypeComposeActivity
 import mpdc4gsr.feature.main.ui.MainActivity
-import mpdc4gsr.feature.network.ui.*
+import mpdc4gsr.feature.network.ui.DevicePairingComposeActivity
 import mpdc4gsr.feature.settings.ui.*
 import mpdc4gsr.feature.thermal.ui.IRGalleryEditComposeActivity
 

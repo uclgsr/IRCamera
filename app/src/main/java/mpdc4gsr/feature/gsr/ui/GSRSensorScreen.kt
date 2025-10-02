@@ -125,7 +125,7 @@ fun GSRSensorScreen(
                 isConnected = isConnected,
                 deviceBattery = deviceBattery,
                 samplingRate = samplingRate,
-                onConnectionToggle = { 
+                onConnectionToggle = {
                     if (isConnected) {
                         viewModel.disconnectDevice()
                     } else {
@@ -152,14 +152,14 @@ fun GSRSensorScreen(
             GSRRecordingControls(
                 isRecording = isRecording,
                 isConnected = isConnected,
-                onRecordingToggle = { 
+                onRecordingToggle = {
                     if (isRecording) {
                         viewModel.stopRecording()
                     } else {
                         viewModel.startRecording()
                     }
                 },
-                onExportData = { 
+                onExportData = {
                     viewModel.exportData()
                     onSaveData()
                 }

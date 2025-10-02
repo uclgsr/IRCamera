@@ -10,7 +10,6 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import mpdc4gsr.feature.network.data.DetailedSensorStatus
 import mpdc4gsr.feature.network.data.SensorStatusSummary
-import mpdc4gsr.core.ui.model.SensorType
 
 /**
  * @deprecated Use RecordingStatusIndicator (Compose) instead.

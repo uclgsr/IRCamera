@@ -13,7 +13,7 @@ import androidx.camera.view.PreviewView
 /**
  * Custom FrameLayout that contains a PreviewView and supports tap-to-focus functionality
  * with visual feedback for focus point
- * 
+ *
  * @deprecated Use TapToFocusPreview (Compose) instead.
  * See docs/legacy-widget-migration-guide.md for migration instructions.
  */

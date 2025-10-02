@@ -1,9 +1,6 @@
 package mpdc4gsr.core
 
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
+import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.os.Binder
@@ -12,7 +9,6 @@ import android.os.IBinder
 import android.os.PowerManager
 import android.util.Log
 import androidx.core.app.NotificationCompat
-import android.app.Service
 import com.mpdc4gsr.module.user.ble.BleDeviceManager
 import kotlinx.coroutines.*
 import mpdc4gsr.feature.main.ui.MainComposeActivity
@@ -20,7 +16,7 @@ import kotlin.coroutines.CoroutineContext
 
 class BackgroundDeviceScanningService : Service(), CoroutineScope {
     private val serviceJob = SupervisorJob()
-    
+
     companion object {
         private const val TAG = "BackgroundDeviceScanning"
         private const val NOTIFICATION_ID = 2001

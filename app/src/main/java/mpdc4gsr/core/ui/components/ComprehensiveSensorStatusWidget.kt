@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
  * Enhanced Comprehensive Sensor Status Dashboard
  * Implements TODO requirement: "Provide clear UI indicators for each sensor's status
  * (connected, streaming, error). Connection status indicators for each sensor."
- * 
+ *
  * @deprecated Use ComprehensiveSensorStatusDashboard (Compose) instead.
  * See docs/legacy-widget-migration-guide.md for migration instructions.
  */

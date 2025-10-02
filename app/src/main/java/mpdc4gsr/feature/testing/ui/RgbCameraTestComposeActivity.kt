@@ -16,7 +16,10 @@ import androidx.compose.material.icons.filled.FiberManualRecord
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Stop
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -76,12 +79,12 @@ class RgbCameraTestComposeActivity : BaseComposeActivity<RgbCameraTestViewModel>
     @Composable
     override fun Content(viewModel: RgbCameraTestViewModel) {
         val context = LocalContext.current
-        
+
         LaunchedEffect(Unit) {
             viewModel.initializeTestCases()
             viewModel.initializeCameraRecorder(context, this@RgbCameraTestComposeActivity)
         }
-        
+
         LibUnifiedTheme {
             RgbCameraTestScreen(viewModel)
         }
@@ -453,7 +456,7 @@ private fun TestResultCard(
                     )
                 }
             }
-            
+
             OutlinedButton(
                 onClick = onRunTest,
                 enabled = testCase.status != RgbCameraTestViewModel.TestStatus.RUNNING
