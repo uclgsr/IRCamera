@@ -333,6 +333,7 @@ dependencies {
     implementation(libs.logging.interceptor)
     implementation(libs.nordic.ble)
     implementation(libs.nordic.ble.ktx)
+    implementation(libs.lifecycle.service)
 
     implementation(files("libs/shimmerandroidinstrumentdriver-3.2.4_beta.aar"))
     implementation(files("libs/shimmerdriver-0.11.5_beta.jar"))
