@@ -7,6 +7,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -14,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -79,7 +81,8 @@ fun MenuEditView(
 
 @Composable
 private fun MenuEditItem(
-    @DrawableRes iconRes: Int,
+    @DrawableRes iconRes: Int? = null,
+    icon: ImageVector? = null,
     label: String,
     isSelected: Boolean,
     onClick: () -> Unit
@@ -100,14 +103,26 @@ private fun MenuEditItem(
                 ),
             contentAlignment = Alignment.Center
         ) {
-            Image(
-                painter = painterResource(id = iconRes),
-                contentDescription = label,
-                modifier = Modifier.size(32.dp),
-                colorFilter = ColorFilter.tint(
-                    if (isSelected) Color.White else Color.Gray
-                )
-            )
+            when {
+                icon != null -> {
+                    Icon(
+                        imageVector = icon,
+                        contentDescription = label,
+                        modifier = Modifier.size(32.dp),
+                        tint = if (isSelected) Color.White else Color.Gray
+                    )
+                }
+                iconRes != null -> {
+                    Image(
+                        painter = painterResource(id = iconRes),
+                        contentDescription = label,
+                        modifier = Modifier.size(32.dp),
+                        colorFilter = ColorFilter.tint(
+                            if (isSelected) Color.White else Color.Gray
+                        )
+                    )
+                }
+            }
         }
 
         Text(
@@ -121,9 +136,12 @@ private fun MenuEditItem(
 
 @Composable
 fun CameraMenuView(
-    @DrawableRes actionIcon: Int,
-    @DrawableRes galleryIcon: Int,
-    @DrawableRes moreIcon: Int,
+    @DrawableRes actionIcon: Int? = null,
+    actionIconVector: ImageVector? = null,
+    @DrawableRes galleryIcon: Int? = null,
+    galleryIconVector: ImageVector? = null,
+    @DrawableRes moreIcon: Int? = null,
+    moreIconVector: ImageVector? = null,
     isVideoMode: Boolean = false,
     canSwitchMode: Boolean = true,
     onPhotoClick: () -> Unit = {},
@@ -187,16 +205,33 @@ fun CameraMenuView(
             verticalAlignment = Alignment.CenterVertically
         ) {
             // Gallery button
-            Image(
-                painter = painterResource(id = galleryIcon),
-                contentDescription = "Gallery",
+            Box(
                 modifier = Modifier
                     .size(48.dp)
                     .clip(RoundedCornerShape(8.dp))
                     .clickable(onClick = onGalleryClick)
                     .padding(8.dp),
-                colorFilter = ColorFilter.tint(Color.White)
-            )
+                contentAlignment = Alignment.Center
+            ) {
+                when {
+                    galleryIconVector != null -> {
+                        Icon(
+                            imageVector = galleryIconVector,
+                            contentDescription = "Gallery",
+                            tint = Color.White,
+                            modifier = Modifier.fillMaxSize()
+                        )
+                    }
+                    galleryIcon != null -> {
+                        Image(
+                            painter = painterResource(id = galleryIcon),
+                            contentDescription = "Gallery",
+                            modifier = Modifier.fillMaxSize(),
+                            colorFilter = ColorFilter.tint(Color.White)
+                        )
+                    }
+                }
+            }
 
             // Main action button (Photo or Video)
             Box(
@@ -225,16 +260,33 @@ fun CameraMenuView(
             }
 
             // More button
-            Image(
-                painter = painterResource(id = moreIcon),
-                contentDescription = "More",
+            Box(
                 modifier = Modifier
                     .size(48.dp)
                     .clip(RoundedCornerShape(8.dp))
                     .clickable(onClick = onMoreClick)
                     .padding(8.dp),
-                colorFilter = ColorFilter.tint(Color.White)
-            )
+                contentAlignment = Alignment.Center
+            ) {
+                when {
+                    moreIconVector != null -> {
+                        Icon(
+                            imageVector = moreIconVector,
+                            contentDescription = "More",
+                            tint = Color.White,
+                            modifier = Modifier.fillMaxSize()
+                        )
+                    }
+                    moreIcon != null -> {
+                        Image(
+                            painter = painterResource(id = moreIcon),
+                            contentDescription = "More",
+                            modifier = Modifier.fillMaxSize(),
+                            colorFilter = ColorFilter.tint(Color.White)
+                        )
+                    }
+                }
+            }
         }
     }
 }
