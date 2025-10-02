@@ -186,8 +186,8 @@ constructor(
             sensorsText.text =
                 activeSensors.joinToString(" • ") {
                     when (it) {
-                        SensorType.THERMAL -> "[THM]"
-                        SensorType.RGB -> "[CAM]"
+                        SensorType.ThermalIR -> "[THM]"
+                        SensorType.RGBCamera -> "[CAM]"
                         SensorType.GSR -> "[GSR]"
                     }
                 }
