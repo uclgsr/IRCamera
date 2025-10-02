@@ -12,6 +12,9 @@ import org.opencv.core.Mat;
 public class JNITools {
     public static final JNITools INSTANCE = new JNITools();
     private static final String TAG = "JNITool";
+
+    // Private constructor to enforce singleton pattern
+    private JNITools() {}
     private static final int DEFAULT_IMAGE_WIDTH = 192;
     private static final int DEFAULT_IMAGE_HEIGHT = 256;
     private static final int BGR_CHANNELS = 3;
