@@ -31,10 +31,7 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 
-/**
- * date: 2019/10/1 14:44
- * author: bichuanfeng
- */
+
 abstract class AbstractScanner implements Scanner {
     final ScanConfiguration configuration;
     final BluetoothAdapter bluetoothAdapter;
@@ -304,19 +301,13 @@ abstract class AbstractScanner implements Scanner {
         scanListeners.clear();
     }
 
-    /**
-     *
-     */
+    
     protected abstract boolean isReady();
 
-    /**
-     *
-     */
+    
     protected abstract void performStartScan();
 
-    /**
-     *
-     */
+    
     protected abstract void performStopScan();
 
     private final Runnable stopScanRunnable = () -> stopScan(false);
