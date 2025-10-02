@@ -79,4 +79,5 @@
     <color name="color_bg_min">#FF4CAF50</color>
     <color name="lms_red">#FFFF0000</color>
     <color name="toastTextColor">@color/font_color</color>
+    <color name="tab_text">#FFFFFFFF</color>
 </resources>
