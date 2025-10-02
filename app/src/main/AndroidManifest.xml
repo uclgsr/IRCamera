@@ -78,11 +78,11 @@
             android:theme="@style/AppTheme" />
 
         <activity
-            android:name="mpdc4gsr.sensors.gsr.MultiModalRecordingComposeActivity"
+            android:name="mpdc4gsr.feature.gsr.ui.MultiModalRecordingComposeActivity"
             android:exported="false" />
 
         <activity
-            android:name="mpdc4gsr.sensors.gsr.GSRQuickRecordingActivity"
+            android:name="mpdc4gsr.feature.gsr.ui.GSRQuickRecordingActivity"
             android:exported="false"
             android:label="@string/gsr_quick_access" />
 
@@ -92,37 +92,37 @@
             android:label="@string/enhanced_recording_label" />
 
         <activity
-            android:name="mpdc4gsr.sensors.gsr.SessionManagerComposeActivity"
+            android:name="mpdc4gsr.feature.gsr.ui.SessionManagerComposeActivity"
             android:exported="false"
             android:label="Session Manager" />
         <activity
-            android:name="mpdc4gsr.sensors.gsr.ResearchTemplateComposeActivity"
+            android:name="mpdc4gsr.feature.gsr.ui.ResearchTemplateComposeActivity"
             android:exported="false"
             android:label="Research Templates" />
         <activity
-            android:name="mpdc4gsr.sensors.gsr.SessionDetailComposeActivity"
+            android:name="mpdc4gsr.feature.gsr.ui.SessionDetailComposeActivity"
             android:exported="false"
             android:label="Session Details" />
 
         <activity
-            android:name="mpdc4gsr.sensors.gsr.GSRPlotComposeActivity"
+            android:name="mpdc4gsr.feature.gsr.ui.GSRPlotComposeActivity"
             android:exported="false"
             android:label="GSR Data Analysis (Compose)"
             android:theme="@style/AppTheme" />
 
         <activity
-            android:name="mpdc4gsr.sensors.gsr.GSRDataViewComposeActivity"
+            android:name="mpdc4gsr.feature.gsr.ui.GSRDataViewComposeActivity"
             android:exported="false"
             android:label="GSR Data Viewer (Compose)"
             android:theme="@style/AppTheme" />
 
         <activity
-            android:name="mpdc4gsr.sensors.gsr.GSRVideoPlayerComposeActivity"
+            android:name="mpdc4gsr.feature.gsr.ui.GSRVideoPlayerComposeActivity"
             android:exported="false"
             android:label="GSR Video Player (Compose)"
             android:theme="@style/AppTheme" />
         <activity
-            android:name="mpdc4gsr.sensors.gsr.SessionExportComposeActivity"
+            android:name="mpdc4gsr.feature.gsr.ui.SessionExportComposeActivity"
             android:exported="false"
             android:label="Export Session" />
 
@@ -154,19 +154,19 @@
             android:theme="@style/AppTheme" />
 
         <activity
-            android:name="mpdc4gsr.sensors.gsr.GSRDeviceManagementComposeActivity"
+            android:name="mpdc4gsr.feature.gsr.ui.GSRDeviceManagementComposeActivity"
             android:exported="false"
             android:label="GSR Device Management (Compose)"
             android:theme="@style/AppTheme" />
 
         <!-- Note: Thermal Camera Module Compose Activities are declared in component/thermalunified/src/main/AndroidManifest.xml -->
         <activity
-            android:name="mpdc4gsr.sensors.gsr.GSRRawImageViewComposeActivity"
+            android:name="mpdc4gsr.feature.gsr.ui.GSRRawImageViewComposeActivity"
             android:exported="false"
             android:label="GSR Raw Image Viewer (Compose)" />
         <!-- Note: GSRGalleryComposeActivity not implemented yet -->
         <activity
-            android:name="mpdc4gsr.sensors.gsr.ShimmerConfigComposeActivity"
+            android:name="mpdc4gsr.feature.gsr.ui.ShimmerConfigComposeActivity"
             android:exported="false"
             android:label="Shimmer Configuration (Compose)" />
 
