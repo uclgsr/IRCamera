@@ -11,28 +11,36 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.components.NavigationBreadcrumb
 import mpdc4gsr.core.ui.components.settings.*
 import mpdc4gsr.core.ui.theme.IRCameraTheme
+import mpdc4gsr.feature.gsr.presentation.GSRSettingsViewModel
 
 /**
  * GSR Settings Screen - Configure GSR sensor parameters and Shimmer3 device
+ * Integrated with GSRSettingsViewModel and GSRSettingsRepository
  */
 @Composable
 fun GSRSettingsScreen(
     onBackClick: (() -> Unit)? = null,
+    viewModel: GSRSettingsViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
-    var samplingRate by remember { mutableIntStateOf(128) }
-    var autoConnect by remember { mutableStateOf(true) }
-    var dataLogging by remember { mutableStateOf(true) }
-    var batteryWarning by remember { mutableStateOf(false) }
-    var deviceId by remember { mutableStateOf("Shimmer3_001") }
+    val context = LocalContext.current
+    val uiState by viewModel.settingsUiState.collectAsState()
+    val gsrSettings = uiState.gsrSettings
+    val deviceSettings = uiState.deviceSettings
+
+    LaunchedEffect(Unit) {
+        viewModel.initialize(context)
+    }
 
     Column(
         modifier = modifier
@@ -62,22 +70,30 @@ fun GSRSettingsScreen(
                 title = "Device Configuration",
                 icon = Icons.Default.DeviceHub
             ) {
-                SettingsRow(
-                    label = "Device ID",
-                    value = deviceId
-                )
+                deviceSettings.deviceName?.let { name ->
+                    SettingsRow(
+                        label = "Device Name",
+                        value = name
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
                 SettingsSlider(
                     label = "Sampling Rate",
-                    value = samplingRate.toFloat(),
+                    value = gsrSettings.samplingRate.toFloat(),
                     valueRange = 1f..512f,
-                    onValueChange = { samplingRate = it.toInt() },
+                    onValueChange = { viewModel.updateSamplingRate(it.toInt()) },
                     unit = " Hz"
                 )
+                Spacer(modifier = Modifier.height(8.dp))
                 SettingsToggle(
-                    label = "Auto Connect",
-                    description = "Automatically connect to known devices",
-                    checked = autoConnect,
-                    onCheckedChange = { autoConnect = it }
+                    label = "Auto Reconnect",
+                    description = "Automatically reconnect to devices after disconnection",
+                    checked = deviceSettings.autoReconnect,
+                    onCheckedChange = { 
+                        viewModel.updateDeviceSettings(
+                            deviceSettings.copy(autoReconnect = it)
+                        )
+                    }
                 )
             }
 
@@ -87,16 +103,36 @@ fun GSRSettingsScreen(
                 icon = Icons.Default.DataUsage
             ) {
                 SettingsToggle(
-                    label = "Data Logging",
-                    description = "Enable continuous data logging",
-                    checked = dataLogging,
-                    onCheckedChange = { dataLogging = it }
+                    label = "Real-Time Monitoring",
+                    description = "Enable real-time data monitoring",
+                    checked = gsrSettings.enableRealTimeMonitoring,
+                    onCheckedChange = { 
+                        viewModel.updateGSRSettings(
+                            gsrSettings.copy(enableRealTimeMonitoring = it)
+                        )
+                    }
                 )
+                Spacer(modifier = Modifier.height(8.dp))
                 SettingsToggle(
-                    label = "Battery Warnings",
-                    description = "Show low battery notifications",
-                    checked = batteryWarning,
-                    onCheckedChange = { batteryWarning = it }
+                    label = "Data Filtering",
+                    description = "Apply filtering to GSR data",
+                    checked = gsrSettings.enableFiltering,
+                    onCheckedChange = { 
+                        viewModel.updateGSRSettings(
+                            gsrSettings.copy(enableFiltering = it)
+                        )
+                    }
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                SettingsToggle(
+                    label = "Notifications",
+                    description = "Show data collection notifications",
+                    checked = gsrSettings.notificationEnabled,
+                    onCheckedChange = { 
+                        viewModel.updateGSRSettings(
+                            gsrSettings.copy(notificationEnabled = it)
+                        )
+                    }
                 )
             }
 
