@@ -1,12 +1,10 @@
 package mpdc4gsr.feature.settings.ui
 
-import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -14,8 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import mpdc4gsr.core.ui.BaseComposeActivity
-import mpdc4gsr.core.ui.components.settings.*
 import mpdc4gsr.core.ui.BaseViewModel
+import mpdc4gsr.core.ui.components.settings.*
 
 /**
  * Task D: Complete Settings Activity using Compose

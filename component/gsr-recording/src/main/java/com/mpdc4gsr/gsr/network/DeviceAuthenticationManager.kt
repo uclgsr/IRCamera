@@ -7,7 +7,7 @@ import android.util.Log
 import org.json.JSONObject
 import java.security.SecureRandom
 import java.time.Instant
-import java.util.UUID
+import java.util.*
 
 class DeviceAuthenticationManager(private val context: Context) {
     companion object {

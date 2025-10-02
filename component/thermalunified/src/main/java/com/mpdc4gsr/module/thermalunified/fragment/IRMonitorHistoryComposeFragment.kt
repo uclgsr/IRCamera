@@ -1,14 +1,15 @@
 package com.mpdc4gsr.module.thermalunified.fragment
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.background
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -19,9 +20,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeFragment
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRMonitorHistoryViewModel
-import com.mpdc4gsr.module.thermalunified.viewmodel.IRMonitorHistoryViewModel.HistoryFilter
-import com.mpdc4gsr.module.thermalunified.viewmodel.IRMonitorHistoryViewModel.HistoryItem
-import com.mpdc4gsr.module.thermalunified.viewmodel.IRMonitorHistoryViewModel.SessionType
+import com.mpdc4gsr.module.thermalunified.viewmodel.IRMonitorHistoryViewModel.*
 import java.text.SimpleDateFormat
 import java.util.*
 

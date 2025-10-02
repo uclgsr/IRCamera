@@ -6,7 +6,7 @@ import com.elvishew.xlog.XLog;
 
 
 public class LLog {
-    
+
     public final static int MAX_LENGTH = 2000;
     private static boolean isDebug = true; // Simplified for now
 
@@ -38,7 +38,7 @@ public class LLog {
 //        }
     }
 
-    
+
     public static void LogMaxPrint(String tag, String msg) {
         if (msg.length() > MAX_LENGTH) {
             int length = MAX_LENGTH + 1;

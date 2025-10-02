@@ -1,6 +1,5 @@
 package com.mpdc4gsr.libunified.ir.utils
 
-import android.widget.Switch
 import com.energy.iruvc.utils.CommonParams
 
 
@@ -55,7 +54,7 @@ object PseudocodeUtils {
         }
     }
 
-    
+
     fun changePseudocodeModeByOld(oldPseudocodeMode: Int): CommonParams.PseudoColorType {
         return when (oldPseudocodeMode) {
             1 -> {

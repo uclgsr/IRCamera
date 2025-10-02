@@ -1,10 +1,6 @@
 package com.mpdc4gsr.libunified.ui.renderer;
 
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Path;
+import android.graphics.*;
 import android.graphics.drawable.Drawable;
 
 import com.mpdc4gsr.libunified.ui.animation.ChartAnimator;
@@ -16,12 +12,7 @@ import com.mpdc4gsr.libunified.ui.highlight.Highlight;
 import com.mpdc4gsr.libunified.ui.interfaces.dataprovider.LineDataProvider;
 import com.mpdc4gsr.libunified.ui.interfaces.datasets.IDataSet;
 import com.mpdc4gsr.libunified.ui.interfaces.datasets.ILineDataSet;
-import com.mpdc4gsr.libunified.ui.utils.ColorTemplate;
-import com.mpdc4gsr.libunified.ui.utils.MPPointD;
-import com.mpdc4gsr.libunified.ui.utils.MPPointF;
-import com.mpdc4gsr.libunified.ui.utils.Transformer;
-import com.mpdc4gsr.libunified.ui.utils.Utils;
-import com.mpdc4gsr.libunified.ui.utils.ViewPortHandler;
+import com.mpdc4gsr.libunified.ui.utils.*;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;

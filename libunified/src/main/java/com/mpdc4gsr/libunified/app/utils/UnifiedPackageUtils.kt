@@ -4,12 +4,11 @@ import android.content.Context
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.os.Build
-import java.util.*
 
 
 object UnifiedPackageUtils {
 
-    
+
     fun getPackageInfo(context: Context): PackageInfo? {
         return try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -26,12 +25,12 @@ object UnifiedPackageUtils {
         }
     }
 
-    
+
     fun getVersionName(context: Context): String {
         return getPackageInfo(context)?.versionName ?: "Unknown"
     }
 
-    
+
     fun getVersionCode(context: Context): Long {
         val packageInfo = getPackageInfo(context) ?: return 0L
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
@@ -42,7 +41,7 @@ object UnifiedPackageUtils {
         }
     }
 
-    
+
     fun compareVersions(version1: String, version2: String): Int {
         val v1Parts = version1.split(".").map { it.toIntOrNull() ?: 0 }
         val v2Parts = version2.split(".").map { it.toIntOrNull() ?: 0 }
@@ -62,12 +61,12 @@ object UnifiedPackageUtils {
         return 0
     }
 
-    
+
     fun isVersionAtLeast(currentVersion: String, minimumVersion: String): Boolean {
         return compareVersions(currentVersion, minimumVersion) >= 0
     }
 
-    
+
     fun getApplicationLabel(context: Context): String {
         return try {
             val applicationInfo = context.applicationInfo
@@ -77,7 +76,7 @@ object UnifiedPackageUtils {
         }
     }
 
-    
+
     fun isDebuggable(context: Context): Boolean {
         return try {
             val applicationInfo = context.applicationInfo
@@ -87,7 +86,7 @@ object UnifiedPackageUtils {
         }
     }
 
-    
+
     data class BuildInfo(
         val versionName: String,
         val versionCode: Long,
@@ -98,7 +97,7 @@ object UnifiedPackageUtils {
         val buildTime: Long = System.currentTimeMillis()
     )
 
-    
+
     fun getBuildInfo(context: Context): BuildInfo {
         val packageInfo = getPackageInfo(context)
         return BuildInfo(
@@ -115,7 +114,7 @@ object UnifiedPackageUtils {
         )
     }
 
-    
+
     fun formatVersionInfo(context: Context): String {
         val buildInfo = getBuildInfo(context)
         return buildString {
@@ -130,7 +129,7 @@ object UnifiedPackageUtils {
         }
     }
 
-    
+
     fun isValidPackageName(packageName: String): Boolean {
         if (packageName.isEmpty()) return false
 
@@ -144,7 +143,7 @@ object UnifiedPackageUtils {
         }
     }
 
-    
+
     fun getInstalledPackages(context: Context): List<String> {
         return try {
             val packages = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -161,7 +160,7 @@ object UnifiedPackageUtils {
         }
     }
 
-    
+
     fun isPackageInstalled(context: Context, packageName: String): Boolean {
         return try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {

@@ -2,11 +2,10 @@ package com.mpdc4gsr.libunified.app.ktbase
 
 import android.os.Bundle
 import android.view.View
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.lifecycle.Lifecycle
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 abstract class BaseViewModelFragment<VM : BaseViewModel> : BaseFragment() {

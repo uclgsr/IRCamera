@@ -12,12 +12,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.annotation.CallSuper;
-import androidx.annotation.Dimension;
-import androidx.annotation.IntRange;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.StyleRes;
+import androidx.annotation.*;
 
 import com.mpdc4gsr.libunified.R;
 

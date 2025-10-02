@@ -1,8 +1,6 @@
 package com.mpdc4gsr.module.thermalunified.model
 
 
-
-
 data class LogEntry(
     val timestamp: String,
     val temperature: Float,

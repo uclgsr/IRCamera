@@ -19,7 +19,8 @@ import kotlinx.coroutines.delay
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.components.TitleBarAction
 import mpdc4gsr.core.ui.theme.IRCameraTheme
-import kotlin.math.*
+import kotlin.math.sin
+import kotlin.math.sqrt
 
 data class GSRReading(
     val timestamp: Long,

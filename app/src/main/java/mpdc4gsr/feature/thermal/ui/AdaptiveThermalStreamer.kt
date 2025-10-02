@@ -1,16 +1,9 @@
 package mpdc4gsr.feature.thermal.ui
 
 import android.util.Log
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import org.json.JSONObject
-import java.util.LinkedList
+import java.util.*
 import kotlin.math.max
 import kotlin.math.min
 

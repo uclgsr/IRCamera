@@ -17,20 +17,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.csl.irCamera.R
 import com.github.lzyzsd.jsbridge.BridgeWebView
 import com.github.lzyzsd.jsbridge.BridgeWebViewClient
-import com.mpdc4gsr.libunified.app.BaseApplication
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import mpdc4gsr.core.ui.BaseComposeActivity
+import mpdc4gsr.core.ui.BaseViewModel
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.theme.IRCameraTheme
-import mpdc4gsr.core.ui.BaseViewModel
 
 class PolicyViewModel : BaseViewModel() {
     enum class PolicyType(val title: String, val contentRes: Int) {

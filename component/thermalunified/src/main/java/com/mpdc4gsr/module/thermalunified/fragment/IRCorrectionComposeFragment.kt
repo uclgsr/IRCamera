@@ -1,6 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.fragment
 
-import android.view.View
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -10,21 +9,20 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.infisense.usbir.view.CameraView
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeFragment
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.ir.view.TemperatureView
-import com.infisense.usbir.view.CameraView
+import com.mpdc4gsr.module.thermalunified.viewmodel.CalibrationStatus
+import com.mpdc4gsr.module.thermalunified.viewmodel.CorrectionState
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRCorrectionViewModel
 import com.mpdc4gsr.module.thermalunified.viewmodel.TemperatureData
-import com.mpdc4gsr.module.thermalunified.viewmodel.CorrectionState
-import com.mpdc4gsr.module.thermalunified.viewmodel.CalibrationStatus
 
 
 class IRCorrectionComposeFragment : BaseComposeFragment<IRCorrectionViewModel>() {

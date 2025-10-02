@@ -8,7 +8,7 @@ import kotlin.math.min
 
 object UnifiedTemperatureUtils {
 
-    
+
     @JvmStatic
     fun getLineTemperatures(
         point1: Point,
@@ -36,7 +36,7 @@ object UnifiedTemperatureUtils {
         return temperatures
     }
 
-    
+
     fun getRectangleTemperatures(
         topLeft: Point,
         bottomRight: Point,
@@ -63,7 +63,7 @@ object UnifiedTemperatureUtils {
         return temperatures
     }
 
-    
+
     fun getPointTemperature(
         point: Point,
         temperatureArray: ByteArray,
@@ -82,22 +82,22 @@ object UnifiedTemperatureUtils {
         }
     }
 
-    
+
     fun findMaxTemperature(temperatures: List<Float>): Float? {
         return temperatures.maxOrNull()
     }
 
-    
+
     fun findMinTemperature(temperatures: List<Float>): Float? {
         return temperatures.minOrNull()
     }
 
-    
+
     fun calculateAverageTemperature(temperatures: List<Float>): Float {
         return if (temperatures.isEmpty()) 0f else temperatures.average().toFloat()
     }
 
-    
+
     fun findHotspot(
         topLeft: Point,
         bottomRight: Point,
@@ -129,7 +129,7 @@ object UnifiedTemperatureUtils {
         return hotspotPoint?.let { Pair(it, maxTemp) }
     }
 
-    
+
     fun findColdspot(
         topLeft: Point,
         bottomRight: Point,
@@ -161,27 +161,27 @@ object UnifiedTemperatureUtils {
         return coldspotPoint?.let { Pair(it, minTemp) }
     }
 
-    
+
     fun celsiusToFahrenheit(celsius: Float): Float {
         return celsius * 9f / 5f + 32f
     }
 
-    
+
     fun fahrenheitToCelsius(fahrenheit: Float): Float {
         return (fahrenheit - 32f) * 5f / 9f
     }
 
-    
+
     fun celsiusToKelvin(celsius: Float): Float {
         return celsius + 273.15f
     }
 
-    
+
     fun kelvinToCelsius(kelvin: Float): Float {
         return kelvin - 273.15f
     }
 
-    
+
     @JvmStatic
     fun formatTemperature(
         temperature: Float,
@@ -198,13 +198,13 @@ object UnifiedTemperatureUtils {
         CELSIUS, FAHRENHEIT, KELVIN
     }
 
-    
+
     private fun byteToTemperature(byte: Byte): Float {
         // This is a simplified conversion - actual implementation depends on sensor specs
         return byte.toFloat() / 10f
     }
 
-    
+
     private fun getLinePoints(point1: Point, point2: Point): List<Point> {
         val points = mutableListOf<Point>()
 

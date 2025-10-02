@@ -2,16 +2,10 @@ package mpdc4gsr.feature.network.presentation
 
 import androidx.lifecycle.viewModelScope
 import com.mpdc4gsr.gsr.model.SessionInfo
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import mpdc4gsr.core.ui.BaseViewModel
 import mpdc4gsr.feature.network.data.NetworkClient
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.launch
 
 /**
  * Modernized DevicePairingViewModel using StateFlow and Repository pattern

@@ -2,13 +2,13 @@ package mpdc4gsr.feature.gsr.presentation
 
 import android.content.Context
 import android.util.Log
-import androidx.lifecycle.viewModelScope
 import com.mpdc4gsr.gsr.model.SessionInfo
 import com.mpdc4gsr.gsr.service.SessionManager
-import mpdc4gsr.core.ui.BaseViewModel
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.withContext
 import mpdc4gsr.core.data.utils.SessionDirectoryManager
+import mpdc4gsr.core.ui.BaseViewModel
 import java.io.File
 
 /**

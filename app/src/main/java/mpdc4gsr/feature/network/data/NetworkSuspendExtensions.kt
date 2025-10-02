@@ -3,7 +3,6 @@ package mpdc4gsr.feature.network.data
 import android.util.Log
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
 
 /**
  * Modern suspend function extensions for NetworkClient replacing callback patterns

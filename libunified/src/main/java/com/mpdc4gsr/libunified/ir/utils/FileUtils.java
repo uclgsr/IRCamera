@@ -11,19 +11,10 @@ import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.blankj.utilcode.util.SizeUtils;
 import com.blankj.utilcode.util.Utils;
 import com.energy.iruvc.utils.CommonParams;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.charset.StandardCharsets;
@@ -128,7 +119,7 @@ public enum FileUtils {
         }
     }
 
-    
+
     public static CommonParams.Y16ModePreviewSrcType getY16SrcTypeByDataFlowMode(CommonParams.DataFlowMode dataFlowMode) {
         switch (dataFlowMode) {
             case TEMP_OUTPUT: {
@@ -281,7 +272,7 @@ public enum FileUtils {
         return isFileExists(context, file.getAbsolutePath());
     }
 
-    
+
     public static boolean isFileExists(Context context, final String filePath) {
         File file = new File(filePath);
         if (null == file) {
@@ -312,7 +303,7 @@ public enum FileUtils {
         return false;
     }
 
-    
+
     private static byte[] toByteArray(short[] src) {
         int count = src.length;
         byte[] dest = new byte[count << 1];
@@ -346,7 +337,7 @@ public enum FileUtils {
         }
     }
 
-    
+
     private static void createOrExistsDir(File file) {
         // 
         if (!file.exists()) {
@@ -403,7 +394,7 @@ public enum FileUtils {
         }
     }
 
-    
+
     public static void copyAssetsBigDataToSD(Context context, String srcFileName, String strOutFileName) {
         try {
             File file = new File(strOutFileName);
@@ -433,7 +424,7 @@ public enum FileUtils {
         }
     }
 
-    
+
     public static String getISPConfigByGainStatus(CommonParams.GainStatus gainStatus) {
 //        Log.i(TAG, "INFISENSE_SAVE_DIR = " + MyApplication.getInstance().INFISENSE_SAVE_DIR);
         if (CommonParams.GainStatus.HIGH_GAIN == gainStatus) {
@@ -443,7 +434,7 @@ public enum FileUtils {
         }
     }
 
-    
+
     public static String getISPConfigWithEncryptHexByGainStatus(CommonParams.GainStatus gainStatus) {
         if (CommonParams.GainStatus.HIGH_GAIN == gainStatus) {
             return INFISENSE_SAVE_DIR() + File.separator + "isp_H_encrypt_hex.json";
@@ -461,7 +452,7 @@ public enum FileUtils {
         return Utils.getApp().getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath();
     }
 
-    
+
     public static String getISPConfigWithEncryptBase64ByGainStatus(CommonParams.GainStatus gainStatus) {
         if (CommonParams.GainStatus.HIGH_GAIN == gainStatus) {
             return INFISENSE_SAVE_DIR() + File.separator + "isp_H_encrypt_base64.json";
@@ -470,7 +461,7 @@ public enum FileUtils {
         }
     }
 
-    
+
     public static String getVersionName(Context context) {
         PackageManager manager = context.getPackageManager();
         String name = null;
@@ -483,7 +474,7 @@ public enum FileUtils {
         return name;
     }
 
-    
+
     public static String getMD5Key(String string) {
         if (TextUtils.isEmpty(string)) {
             return "";
@@ -507,7 +498,7 @@ public enum FileUtils {
         return "";
     }
 
-    
+
     public static void makeDirectory(String filePath) {
         File file = new File(filePath);
         if (!file.exists()) {
@@ -515,7 +506,7 @@ public enum FileUtils {
         }
     }
 
-    
+
     public static String getSaveFilePath(Context context) {
         boolean useExternalStorage = false;
         String directoryPath = "";
@@ -538,7 +529,7 @@ public enum FileUtils {
         return directoryPath;
     }
 
-    
+
     private static File makeFile(String filePath, String fileName) throws IOException {
         makeDirectory(filePath);
 
@@ -550,7 +541,7 @@ public enum FileUtils {
         return file;
     }
 
-    
+
     public static int writeTxtToFile(byte[] bytes, String filePath, String fileName) {
         int result = -1;
 
@@ -602,7 +593,7 @@ public enum FileUtils {
         }
     }
 
-    
+
     public static String getStringFromFile(String path) {
         StringBuffer txtContent = new StringBuffer();
         byte[] b = new byte[2048];
@@ -630,7 +621,7 @@ public enum FileUtils {
         return txtContent.toString();
     }
 
-    
+
     public static void float2Byte(float num, byte[] numbyte) {
         int fbit = Float.floatToIntBits(num);
         for (int i = 0; 4 > i; i++) {

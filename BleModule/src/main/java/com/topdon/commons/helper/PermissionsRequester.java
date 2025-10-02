@@ -42,7 +42,7 @@ public class PermissionsRequester {
         this.callback = callback;
     }
 
-    
+
     public void checkAndRequest(@NonNull List<String> permissions) {
         if (checking) {
             return;
@@ -157,7 +157,7 @@ public class PermissionsRequester {
     }
 
     public interface Callback {
-        
+
         void onRequestResult(List<String> refusedPermissions);
     }
 }

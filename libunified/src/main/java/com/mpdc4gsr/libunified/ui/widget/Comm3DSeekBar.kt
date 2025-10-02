@@ -13,11 +13,10 @@ import com.mpdc4gsr.libunified.R
 import kotlin.math.roundToInt
 
 
-
 class Comm3DSeekBar : AppCompatSeekBar {
     private lateinit var mPaint: TextPaint
 
-    
+
     private val orientation: Int
 
     private var mMaxWidth = 48
@@ -219,7 +218,7 @@ class Comm3DSeekBar : AppCompatSeekBar {
         return true
     }
 
-    
+
     fun stopTrackTouchLevel() {
         if (level > 0) {
             val newLevel = (progress.toFloat() / 100 * 4).roundToInt()

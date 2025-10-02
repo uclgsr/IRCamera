@@ -4,8 +4,7 @@ import android.annotation.SuppressLint
 import com.mpdc4gsr.libunified.ui.formatter.IndexAxisValueFormatter
 import com.mpdc4gsr.module.thermalunified.utils.ChartTools
 import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.TimeZone
+import java.util.*
 
 class IRMyValueFormatter(private val startTime: Long, private val type: Int = 1) :
     IndexAxisValueFormatter() {

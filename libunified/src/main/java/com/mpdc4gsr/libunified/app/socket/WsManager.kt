@@ -3,14 +3,9 @@ package com.mpdc4gsr.libunified.app.socket
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.Response
-import okhttp3.WebSocket
-import okhttp3.WebSocketListener
+import okhttp3.*
 import okio.ByteString
-import java.util.Timer
-import java.util.TimerTask
+import java.util.*
 import java.util.concurrent.locks.ReentrantLock
 
 class WsManager(

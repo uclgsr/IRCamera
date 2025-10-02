@@ -7,7 +7,6 @@ import androidx.annotation.NonNull;
 import com.topdon.ble.util.Logger;
 
 
-
 class ClassicScanner extends AbstractScanner {
     private boolean stopQuietly = false;
 
