@@ -377,7 +377,11 @@ public class SeekBar {
                 if (rangeSeekBar != null) rangeSeekBar.invalidate();
             }
         });
-        anim.start();
+        try {
+            anim.start();
+        } catch (IllegalStateException e) {
+            Log.w("SeekBar", "Failed to start material restore animation: " + e.getMessage());
+        }
     }
 
     public void setIndicatorText(String text) {

@@ -50,6 +50,8 @@ class App : BaseApplication() {
         super.onCreate()
         instance = this
 
+        setupGlobalExceptionHandler()
+
         try {
             SPUtils.getInstance(this).put(Config.KEY_PRIVACY_AGREEMENT, true)
 
@@ -120,6 +122,18 @@ class App : BaseApplication() {
         } catch (e: Exception) {
             XLog.e("App: Error during WebSocket initialization: ${e.message}")
             // Continue even if WebSocket initialization fails to avoid breaking app startup
+        }
+    }
+
+    private fun setupGlobalExceptionHandler() {
+        val defaultHandler = Thread.getDefaultUncaughtExceptionHandler()
+        Thread.setDefaultUncaughtExceptionHandler { thread, throwable ->
+            if (throwable is IllegalStateException &&
+                throwable.message?.contains("Cannot start this animator on a detached view") == true) {
+                XLog.w("App: Caught detached view animator exception: ${throwable.message}")
+                return@setDefaultUncaughtExceptionHandler
+            }
+            defaultHandler?.uncaughtException(thread, throwable)
         }
     }
 }
