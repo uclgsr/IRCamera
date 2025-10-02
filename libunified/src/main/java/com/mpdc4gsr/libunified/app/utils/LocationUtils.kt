@@ -1,5 +1,6 @@
 package com.mpdc4gsr.libunified.app.utils
 
+import android.Manifest
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -13,7 +14,6 @@ import androidx.annotation.RequiresApi
 import androidx.annotation.RequiresPermission
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import com.hjq.permissions.Permission
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
@@ -21,8 +21,7 @@ import java.util.*
 import kotlin.coroutines.resume
 
 object LocationUtils {
-
-    @RequiresPermission(Permission.ACCESS_FINE_LOCATION)
+    @RequiresPermission(Manifest.permission.ACCESS_FINE_LOCATION)
     suspend fun getLastLocationStr(context: Context): String? = withContext(Dispatchers.IO) {
         val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         var location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
