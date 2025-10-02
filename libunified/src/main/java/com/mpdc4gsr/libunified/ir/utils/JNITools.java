@@ -12,12 +12,12 @@ import org.opencv.core.Mat;
 public class JNITools {
     public static final JNITools INSTANCE = new JNITools();
     private static final String TAG = "JNITool";
-
-    // Private constructor to enforce singleton pattern
-    private JNITools() {}
     private static final int DEFAULT_IMAGE_WIDTH = 192;
     private static final int DEFAULT_IMAGE_HEIGHT = 256;
     private static final int BGR_CHANNELS = 3;
+    // Private constructor to enforce singleton pattern
+    private JNITools() {
+    }
 
     public static byte[] diff2firstFrameU1(byte[] buffer, byte[] bufferB) {
         if (buffer == null || bufferB == null) {

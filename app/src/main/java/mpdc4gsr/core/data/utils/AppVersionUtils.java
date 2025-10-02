@@ -113,7 +113,7 @@ public class AppVersionUtils {
             }
         }
         TipDialogState tipDialogState = new TipDialogState(mContext);
-        
+
         if (Integer.parseInt(bean.forcedUpgradeFlag) == 1) {
             tipDialogState.show(
                     mContext.getString(R.string.updata_new_version_update),

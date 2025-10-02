@@ -89,7 +89,7 @@ fun GSRSettingsScreen(
                     label = "Auto Reconnect",
                     description = "Automatically reconnect to devices after disconnection",
                     checked = deviceSettings.autoReconnect,
-                    onCheckedChange = { 
+                    onCheckedChange = {
                         viewModel.updateDeviceSettings(
                             deviceSettings.copy(autoReconnect = it)
                         )
@@ -106,7 +106,7 @@ fun GSRSettingsScreen(
                     label = "Real-Time Monitoring",
                     description = "Enable real-time data monitoring",
                     checked = gsrSettings.enableRealTimeMonitoring,
-                    onCheckedChange = { 
+                    onCheckedChange = {
                         viewModel.updateGSRSettings(
                             gsrSettings.copy(enableRealTimeMonitoring = it)
                         )
@@ -117,7 +117,7 @@ fun GSRSettingsScreen(
                     label = "Data Filtering",
                     description = "Apply filtering to GSR data",
                     checked = gsrSettings.enableFiltering,
-                    onCheckedChange = { 
+                    onCheckedChange = {
                         viewModel.updateGSRSettings(
                             gsrSettings.copy(enableFiltering = it)
                         )
@@ -128,7 +128,7 @@ fun GSRSettingsScreen(
                     label = "Notifications",
                     description = "Show data collection notifications",
                     checked = gsrSettings.notificationEnabled,
-                    onCheckedChange = { 
+                    onCheckedChange = {
                         viewModel.updateGSRSettings(
                             gsrSettings.copy(notificationEnabled = it)
                         )
