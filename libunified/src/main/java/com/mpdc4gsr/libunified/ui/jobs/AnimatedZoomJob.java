@@ -64,30 +64,38 @@ public class AnimatedZoomJob extends AnimatedViewPortJob implements Animator.Ani
             return;
         }
 
-        float scaleX = xOrigin + (xValue - xOrigin) * phase;
-        float scaleY = yOrigin + (yValue - yOrigin) * phase;
+        try {
+            float scaleX = xOrigin + (xValue - xOrigin) * phase;
+            float scaleY = yOrigin + (yValue - yOrigin) * phase;
 
-        Matrix save = mOnAnimationUpdateMatrixBuffer;
-        mViewPortHandler.setZoom(scaleX, scaleY, save);
-        mViewPortHandler.refresh(save, view, false);
+            Matrix save = mOnAnimationUpdateMatrixBuffer;
+            mViewPortHandler.setZoom(scaleX, scaleY, save);
+            mViewPortHandler.refresh(save, view, false);
 
-        float valsInView = yAxis.mAxisRange / mViewPortHandler.getScaleY();
-        float xsInView = xAxisRange / mViewPortHandler.getScaleX();
+            float valsInView = yAxis.mAxisRange / mViewPortHandler.getScaleY();
+            float xsInView = xAxisRange / mViewPortHandler.getScaleX();
 
-        pts[0] = zoomOriginX + ((zoomCenterX - xsInView / 2f) - zoomOriginX) * phase;
-        pts[1] = zoomOriginY + ((zoomCenterY + valsInView / 2f) - zoomOriginY) * phase;
+            pts[0] = zoomOriginX + ((zoomCenterX - xsInView / 2f) - zoomOriginX) * phase;
+            pts[1] = zoomOriginY + ((zoomCenterY + valsInView / 2f) - zoomOriginY) * phase;
 
-        mTrans.pointValuesToPixel(pts);
+            mTrans.pointValuesToPixel(pts);
 
-        mViewPortHandler.translate(pts, save);
-        mViewPortHandler.refresh(save, view, true);
+            mViewPortHandler.translate(pts, save);
+            mViewPortHandler.refresh(save, view, true);
+        } catch (IllegalStateException e) {
+            // View may have been detached during update
+        }
     }
 
     @Override
     public void onAnimationEnd(Animator animation) {
         if (view != null && view.isAttachedToWindow()) {
-            ((BarLineChartBase) view).calculateOffsets();
-            view.postInvalidate();
+            try {
+                ((BarLineChartBase) view).calculateOffsets();
+                view.postInvalidate();
+            } catch (IllegalStateException e) {
+                // View may have been detached during animation end
+            }
         }
     }
 
