@@ -10,7 +10,7 @@ import org.opencv.core.Mat;
  * Utilizes libAC020sdk_USB_IR, libirutils, and libcommon from app/libs for enhanced thermal analysis
  */
 public class JNITools {
-    public static final JNITool INSTANCE = new JNITool();
+    public static final JNITools INSTANCE = new JNITools();
     private static final String TAG = "JNITool";
     private static final int DEFAULT_IMAGE_WIDTH = 192;
     private static final int DEFAULT_IMAGE_HEIGHT = 256;
