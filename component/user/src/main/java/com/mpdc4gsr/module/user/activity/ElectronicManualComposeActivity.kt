@@ -20,15 +20,7 @@ import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import com.mpdc4gsr.libunified.app.utils.Constants
 import com.mpdc4gsr.module.user.viewmodel.ElectronicManualViewModel
 
-/**
- * User Management Module - Electronic Manual Compose Activity
- *
- * Electronic Manual/FAQ selection screen.
- * Features:
- * - Device model selection (TS001/TS004)
- * - Navigation to manual or FAQ screens
- * - Responsive layout based on content type
- */
+
 class ElectronicManualComposeActivity : BaseComposeActivity<ElectronicManualViewModel>() {
 
     override fun createViewModel(): ElectronicManualViewModel {

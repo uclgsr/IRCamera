@@ -23,10 +23,7 @@ import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-/**
- * Modern Compose implementation of manual setup step 2 activity
- * Enhanced thermal camera connection and calibration interface
- */
+
 class ManualStep2ComposeActivity : BaseComposeActivity<ThermalViewModel>() {
 
     override fun createViewModel(): ThermalViewModel {

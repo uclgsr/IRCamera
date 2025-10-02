@@ -5,10 +5,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-/**
- * ViewModel for More (Settings Hub) Activity
- * Manages the settings menu options and navigation
- */
+
 class MoreViewModel : BaseViewModel() {
 
     data class SettingsItem(

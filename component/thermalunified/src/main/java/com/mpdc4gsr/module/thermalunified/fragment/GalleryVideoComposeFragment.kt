@@ -31,16 +31,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.time.Duration.Companion.milliseconds
 
-/**
- * Compose migration of GalleryVideoFragment
- *
- * This fragment demonstrates:
- * - Complete migration of video gallery UI to Compose
- * - Modern grid-based video display with thumbnails
- * - Enhanced video preview and playback capabilities
- * - Material 3 design with thermal video support
- * - Integration with thermal video recording systems
- */
+
 class GalleryVideoComposeFragment : BaseComposeFragment<GalleryViewModel>() {
 
     override fun createViewModel(): GalleryViewModel {

@@ -22,10 +22,7 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ReportDetailViewModel
 
-/**
- * Compose implementation of Report Detail activity
- * Displays detailed view of a thermal imaging report
- */
+
 class ReportDetailComposeActivity : BaseComposeActivity<ReportDetailViewModel>() {
 
     override fun createViewModel(): ReportDetailViewModel {

@@ -24,10 +24,7 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
 
-/**
- * Modern Compose implementation of thermal video player
- * Enhanced video controls with thermal analysis tools
- */
+
 class VideoComposeActivity : BaseComposeActivity<ThermalViewModel>() {
 
     companion object {

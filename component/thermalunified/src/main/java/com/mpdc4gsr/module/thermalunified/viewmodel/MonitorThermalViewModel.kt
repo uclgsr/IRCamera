@@ -8,10 +8,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.util.*
 
-/**
- * ViewModel for thermal monitoring with Compose
- * Extends existing MonitorViewModel functionality with StateFlow support
- */
+
 class MonitorThermalViewModel : BaseViewModel() {
 
     // Monitoring State

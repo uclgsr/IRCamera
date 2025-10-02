@@ -16,10 +16,7 @@ import android.util.Log
 import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.BaseApplication
 
-/**
- * NetWorkUtils based on reference repository implementation
- * Adapted from libapp/src/main/java/com/topdon/lib/core/utils/NetWorkUtils.kt
- */
+
 object NetWorkUtils {
 
     private var mNetworkCallback: ConnectivityManager.NetworkCallback? = null

@@ -28,10 +28,7 @@ import com.mpdc4gsr.module.thermalunified.fragment.MonitorThermalComposeFragment
 import com.mpdc4gsr.module.thermalunified.viewmodel.MonitorViewModel
 import org.greenrobot.eventbus.EventBus
 
-/**
- * Modern Compose implementation of thermal monitoring activity
- * Preserves existing thermal functionality while providing modern UI
- */
+
 class MonitorComposeActivity : BaseComposeActivity<MonitorViewModel>() {
 
     override fun createViewModel(): MonitorViewModel {

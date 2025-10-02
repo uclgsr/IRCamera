@@ -15,9 +15,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.io.File
 
-/**
- * Modern FirmwareViewModel using Repository pattern and StateFlow
- */
+
 class ModernFirmwareViewModel(
     application: Application,
     private val firmwareRepository: FirmwareRepository = FirmwareRepository(application)

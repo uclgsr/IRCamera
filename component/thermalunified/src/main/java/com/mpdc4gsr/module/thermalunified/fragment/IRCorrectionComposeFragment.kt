@@ -26,16 +26,7 @@ import com.mpdc4gsr.module.thermalunified.viewmodel.TemperatureData
 import com.mpdc4gsr.module.thermalunified.viewmodel.CorrectionState
 import com.mpdc4gsr.module.thermalunified.viewmodel.CalibrationStatus
 
-/**
- * Compose migration of IRCorrectionFragment
- *
- * This fragment demonstrates:
- * - Complete migration of IR temperature correction tools to Compose
- * - Advanced calibration and correction interface
- * - Modern Material 3 UI with thermal data visualization
- * - Enhanced temperature correction controls
- * - Integration with native thermal imaging components
- */
+
 class IRCorrectionComposeFragment : BaseComposeFragment<IRCorrectionViewModel>() {
 
     // Compatibility property for legacy code that checks frameReady

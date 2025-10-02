@@ -7,10 +7,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-/**
- * ViewModel for More Fragment Compose
- * Manages device settings and configuration options
- */
+
 class MoreComposeFragmentViewModel : BaseViewModel() {
 
     companion object {

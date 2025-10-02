@@ -3,17 +3,10 @@ package com.mpdc4gsr.libunified.app.utils
 import android.content.Context
 import android.text.TextUtils
 
-/**
- * Consolidated version utilities replacing multiple VersionUtils classes
- * Replaces:
- * - app/src/main/java/mpdc4gsr/utils/VersionUtils.kt
- * - BleModule/src/main/java/com/topdon/commons/util/VersionUtils.java
- */
+
 object UnifiedVersionUtils {
 
-    /**
-     * Get version name string from package info
-     */
+    
     fun getVersionName(context: Context): String {
         return try {
             val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
@@ -23,9 +16,7 @@ object UnifiedVersionUtils {
         }
     }
 
-    /**
-     * Get version code from package info
-     */
+    
     fun getVersionCode(context: Context): Long {
         return try {
             val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
@@ -35,12 +26,7 @@ object UnifiedVersionUtils {
         }
     }
 
-    /**
-     * Compare two version strings
-     * @param serverVersion Server version (e.g., "1.2.0")
-     * @param currentVersion Current version (e.g., "1.1.0")
-     * @return true if server version is greater than current version (update needed)
-     */
+    
     fun compareVersions(serverVersion: String, currentVersion: String): Boolean {
         if (TextUtils.isEmpty(serverVersion) || TextUtils.isEmpty(currentVersion)) {
             return false
@@ -65,9 +51,7 @@ object UnifiedVersionUtils {
         return false // Versions are equal
     }
 
-    /**
-     * Check if an update is needed
-     */
+    
     fun isUpdateNeeded(context: Context, serverVersion: String): Boolean {
         val currentVersion = getVersionName(context)
         return compareVersions(serverVersion, currentVersion)

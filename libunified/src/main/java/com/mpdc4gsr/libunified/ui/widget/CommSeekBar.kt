@@ -8,14 +8,9 @@ import androidx.appcompat.widget.AppCompatSeekBar
 import com.mpdc4gsr.libunified.R
 import kotlin.math.roundToInt
 
-/**
- *  SeekBar。
- *  thumbOffset.
- */
+
 class CommSeekBar : AppCompatSeekBar {
-    /**
-     * 0- 1-
-     */
+    
     private val orientation: Int
 
     private var mMaxWidth = 48
@@ -196,9 +191,7 @@ class CommSeekBar : AppCompatSeekBar {
         return true
     }
 
-    /**
-     *
-     */
+    
     fun stopTrackTouchLevel() {
         if (level > 0) {
             val newLevel = (progress.toFloat() / 100 * 4).roundToInt()

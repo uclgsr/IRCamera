@@ -26,10 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-/**
- * Compose equivalent of Temperature07View
- * Interactive temperature measurement overlay with point, line, and rectangle tools
- */
+
 @Composable
 fun Temperature07Compose(
     mode: TemperatureMeasurementMode = TemperatureMeasurementMode.POINT,
@@ -243,9 +240,7 @@ private fun MeasurementModeIndicator(
     }
 }
 
-/**
- * Temperature measurement mode selector
- */
+
 @Composable
 fun TemperatureModeSelector(
     selectedMode: TemperatureMeasurementMode,
@@ -322,9 +317,7 @@ sealed class TemperatureMeasurement {
     ) : TemperatureMeasurement()
 }
 
-/**
- * Preview helper for Temperature07Compose
- */
+
 @Composable
 fun Temperature07ComposePreview() {
     var selectedMode by remember { mutableStateOf(TemperatureMeasurementMode.POINT) }

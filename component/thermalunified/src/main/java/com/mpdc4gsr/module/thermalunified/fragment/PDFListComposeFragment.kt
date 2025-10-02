@@ -30,16 +30,7 @@ import java.util.*
 // Type alias for cleaner code
 typealias PDFItem = PDFListViewModel.PDFItem
 
-/**
- * Compose migration of PDFListFragment
- *
- * This fragment demonstrates:
- * - Complete migration of PDF report list to Compose
- * - Modern list-based PDF document display
- * - Enhanced PDF preview and sharing capabilities
- * - Material 3 design with document management
- * - Integration with thermal analysis report systems
- */
+
 class PDFListComposeFragment : BaseComposeFragment<PDFListViewModel>() {
 
     private var isTC007 by mutableStateOf(false)

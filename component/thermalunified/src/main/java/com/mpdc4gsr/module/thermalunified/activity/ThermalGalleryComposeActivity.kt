@@ -24,10 +24,7 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 
-/**
- * Modern Compose thermal gallery implementation
- * Professional thermal image management with advanced filtering
- */
+
 class ThermalGalleryComposeActivity : BaseComposeActivity<ThermalGalleryViewModel>() {
 
     override fun createViewModel(): ThermalGalleryViewModel {

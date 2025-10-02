@@ -22,10 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 
-/**
- * Compose equivalent of ThermalInputDialog
- * Material 3 dialog for thermal parameter input with color and temperature range settings
- */
+
 @Composable
 fun ThermalInputDialogCompose(
     message: String,
@@ -230,9 +227,7 @@ private fun handleConfirm(
     }
 }
 
-/**
- * Builder-style wrapper for easier usage
- */
+
 class ThermalInputDialogComposeBuilder {
     private var message: String = ""
     private var maxTemp: Float = 100f
@@ -294,9 +289,7 @@ class ThermalInputDialogComposeBuilder {
     }
 }
 
-/**
- * Preview helper for ThermalInputDialogCompose
- */
+
 @Composable
 fun ThermalInputDialogComposePreview() {
     var showDialog by remember { mutableStateOf(true) }

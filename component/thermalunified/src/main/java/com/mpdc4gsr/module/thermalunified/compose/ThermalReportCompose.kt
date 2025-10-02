@@ -35,18 +35,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 
-/**
- * Thermal Report Compose Components
- *
- * Complete collection of report-related components for thermal module,
- * replacing report view components with modern Compose implementations.
- *
- * Components:
- * - ReportIRInputCompose: IR report input interface
- * - ReportIRShowCompose: IR report display interface
- * - ReportInfoCompose: Report information display
- * - WatermarkCompose: Watermark overlay component
- */
+
 
 // Data classes for report components
 data class ReportData(
@@ -93,10 +82,7 @@ enum class WatermarkPosition {
     TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT, CENTER
 }
 
-/**
- * Report IR Input Compose
- * Replaces ReportIRInputView with Material 3 design
- */
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ReportIRInputCompose(
@@ -541,10 +527,7 @@ private fun ReportMetadataCompose(
     }
 }
 
-/**
- * Report IR Show Compose
- * Replaces ReportIRShowView with Material 3 design
- */
+
 @Composable
 fun ReportIRShowCompose(
     reportData: ReportData,
@@ -782,10 +765,7 @@ private fun MetadataRow(
     }
 }
 
-/**
- * Watermark Compose
- * Replaces WatermarkView with Compose implementation
- */
+
 @Composable
 fun WatermarkCompose(
     watermarkData: WatermarkData,

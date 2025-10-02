@@ -23,10 +23,7 @@ import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-/**
- * Modern Compose implementation of device connection activity
- * Enhanced connection status display with Material 3 design
- */
+
 class ConnectComposeActivity : BaseComposeActivity<ThermalViewModel>() {
 
     override fun createViewModel(): ThermalViewModel {

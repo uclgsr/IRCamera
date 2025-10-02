@@ -37,11 +37,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-/**
- * Modern Compose version for creating comprehensive thermal reports
- * Combines data from ReportCreateFirstActivity and ReportCreateSecondActivity
- * into a single modern interface with step-by-step report creation
- */
+
 class ReportCreateComposeActivity : ComponentActivity() {
 
     private lateinit var viewModel: ReportCreateViewModel
@@ -799,9 +795,7 @@ fun DrawScope.drawTemperatureDistribution(distribution: List<Float>) {
     }
 }
 
-/**
- * ViewModel for Report Create Compose Activity
- */
+
 class ReportCreateViewModel : ViewModel() {
 
     private val _uiState = MutableStateFlow(ReportCreateUiState())

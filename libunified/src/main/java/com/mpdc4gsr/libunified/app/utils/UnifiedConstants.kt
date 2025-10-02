@@ -1,9 +1,6 @@
 package com.mpdc4gsr.libunified.app.utils
 
-/**
- * Consolidated constants combining related constants from multiple files
- * Provides a single source of truth for application constants
- */
+
 object UnifiedConstants {
 
     // Product Configuration Constants
