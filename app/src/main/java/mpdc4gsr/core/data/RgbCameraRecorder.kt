@@ -554,11 +554,7 @@ class RgbCameraRecorder(
                 selectedVideoWidth = qualityConfig.videoWidth
                 selectedVideoHeight = qualityConfig.videoHeight
                 selectedVideoBitrate = qualityConfig.videoBitrate
-                selectedVideoFps = when {
-                    preferredFps == 60 && supports60fps -> VIDEO_FPS_60
-                    preferredFps >= 30 -> VIDEO_FPS_TARGET
-                    else -> VIDEO_FPS_FALLBACK
-                }
+                selectedVideoFps = preferredFps.coerceIn(VIDEO_FPS_FALLBACK, if (supports60fps) VIDEO_FPS_60 else VIDEO_FPS_TARGET)
             } else if (deviceSupports4K) {
                 Log.i(TAG, "Configuring for 4K recording on supported device")
                 selectedVideoWidth = VIDEO_WIDTH_4K

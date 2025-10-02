@@ -58,7 +58,7 @@ class RecordingSettingsRepository(context: Context) {
     }
 
     fun getSettings(): RecordingSettings {
-        return loadSettings()
+        return _settings.value
     }
 
     fun updateAutoRecording(enabled: Boolean) {

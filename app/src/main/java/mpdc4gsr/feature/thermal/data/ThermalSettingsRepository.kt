@@ -34,6 +34,10 @@ class ThermalSettingsRepository(context: Context) {
         private const val KEY_AUTO_SCALE = "thermal_auto_scale"
         private const val KEY_SHOW_CROSSHAIR = "thermal_show_crosshair"
         private const val KEY_TEMP_RANGE = "thermal_temp_range"
+        
+        private const val BITRATE_LOW = 800_000
+        private const val BITRATE_MEDIUM = 1_500_000
+        private const val BITRATE_HIGH = 2_000_000
 
         @Volatile
         private var instance: ThermalSettingsRepository? = null
@@ -61,7 +65,7 @@ class ThermalSettingsRepository(context: Context) {
     }
 
     fun getSettings(): ThermalSettings {
-        return loadSettings()
+        return _thermalSettings.value
     }
 
     fun updateFrameRate(frameRate: Int) {
@@ -109,9 +113,9 @@ class ThermalSettingsRepository(context: Context) {
         val frameRate = settings.frameRate.coerceIn(10, 30)
         
         val bitrate = when {
-            frameRate <= 15 -> 800_000
-            frameRate <= 25 -> 1_500_000
-            else -> 2_000_000
+            frameRate <= 15 -> BITRATE_LOW
+            frameRate <= 25 -> BITRATE_MEDIUM
+            else -> BITRATE_HIGH
         }
         
         return ThermalVideoConfig(

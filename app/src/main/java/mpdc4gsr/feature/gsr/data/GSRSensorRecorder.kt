@@ -133,7 +133,8 @@ class GSRSensorRecorder(
     }
 
     override val sensorType: String = "GSR Shimmer3"
-    override val samplingRate: Double = samplingRateHz.toDouble()
+    private var _samplingRate: Double = samplingRateHz.toDouble()
+    override val samplingRate: Double get() = _samplingRate
 
     private var _isRecording = AtomicBoolean(false)
     override val isRecording: Boolean get() = _isRecording.get()
@@ -208,6 +209,7 @@ class GSRSensorRecorder(
                 
                 effectiveSamplingRate = gsrSettings?.samplingRate?.toDouble() ?: samplingRateHz.toDouble()
                 effectiveSamplingRate = effectiveSamplingRate.coerceIn(SHIMMER_MIN_SAMPLING_RATE, SHIMMER_MAX_SAMPLING_RATE)
+                _samplingRate = effectiveSamplingRate
                 
                 Log.i(TAG, "GSR Settings loaded: samplingRate=${gsrSettings?.samplingRate}Hz, filtering=${gsrSettings?.enableFiltering}, bufferSize=${gsrSettings?.bufferSize}")
                 Log.i(TAG, "Effective sampling rate for Shimmer: ${effectiveSamplingRate}Hz (within Shimmer range: $SHIMMER_MIN_SAMPLING_RATE-$SHIMMER_MAX_SAMPLING_RATE Hz)")
@@ -1669,10 +1671,9 @@ class GSRSensorRecorder(
                 Log.w(TAG, "Some GSR sensor configurations not available in current SDK: ${e.message}")
             }
 
-            // Apply sampling rate from settings
-            val samplingRate = effectiveSamplingRate.coerceIn(SHIMMER_MIN_SAMPLING_RATE, SHIMMER_MAX_SAMPLING_RATE)
-            device.setSamplingRateShimmer(samplingRate)
-            Log.i(TAG, "Shimmer sampling rate configured: ${samplingRate}Hz")
+            // Apply sampling rate from settings (already validated in initialize)
+            device.setSamplingRateShimmer(effectiveSamplingRate)
+            Log.i(TAG, "Shimmer sampling rate configured: ${effectiveSamplingRate}Hz")
 
             // Start streaming
             device.startStreaming()

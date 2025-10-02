@@ -90,49 +90,30 @@ class MainRecordingController(
 
 
                 var sensorsStarted = 0
-                if (settings.simultaneousRecording) {
-                    Log.i(TAG, "Starting sensors simultaneously")
-                    for (sensorName in enabledSensors) {
-                        val sensor = sensorRecorders[sensorName]
-                        if (sensor != null) {
-                            try {
-                                val sensorDir = File(sessionDir.rootDir, sensorName.lowercase())
-                                sensorDir.mkdirs()
+                val isSimultaneous = settings.simultaneousRecording
+                Log.i(TAG, "Starting sensors ${if (isSimultaneous) "simultaneously" else "sequentially"}")
+                
+                for (sensorName in enabledSensors) {
+                    val sensor = sensorRecorders[sensorName]
+                    if (sensor != null) {
+                        try {
+                            val sensorDir = File(sessionDir.rootDir, sensorName.lowercase())
+                            sensorDir.mkdirs()
 
-                                sessionMetadata?.let { meta ->
-                                    val success = sensor.startRecording(sensorDir.absolutePath, meta)
-                                    if (success) {
-                                        activeRecorders[sensorName] = true
-                                        sensorsStarted++
-                                        Log.i(TAG, "Started sensor: $sensorName")
-                                    }
+                            sessionMetadata?.let { meta ->
+                                val success = sensor.startRecording(sensorDir.absolutePath, meta)
+                                if (success) {
+                                    activeRecorders[sensorName] = true
+                                    sensorsStarted++
+                                    Log.i(TAG, "Started sensor: $sensorName")
                                 }
-                            } catch (e: Exception) {
-                                Log.w(TAG, "Failed to start sensor $sensorName", e)
                             }
-                        }
-                    }
-                } else {
-                    Log.i(TAG, "Starting sensors sequentially")
-                    for (sensorName in enabledSensors) {
-                        val sensor = sensorRecorders[sensorName]
-                        if (sensor != null) {
-                            try {
-                                val sensorDir = File(sessionDir.rootDir, sensorName.lowercase())
-                                sensorDir.mkdirs()
-
-                                sessionMetadata?.let { meta ->
-                                    val success = sensor.startRecording(sensorDir.absolutePath, meta)
-                                    if (success) {
-                                        activeRecorders[sensorName] = true
-                                        sensorsStarted++
-                                        Log.i(TAG, "Started sensor: $sensorName")
-                                        delay(100)
-                                    }
-                                }
-                            } catch (e: Exception) {
-                                Log.w(TAG, "Failed to start sensor $sensorName", e)
+                            
+                            if (!isSimultaneous && sensorsStarted > 0) {
+                                delay(100)
                             }
+                        } catch (e: Exception) {
+                            Log.w(TAG, "Failed to start sensor $sensorName", e)
                         }
                     }
                 }

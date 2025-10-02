@@ -48,18 +48,20 @@ class RecordingSettingsViewModel : BaseViewModel() {
     }
 
     private fun loadSettings() {
-        val settings = repository.getSettings()
-        _recordingSettings.value = RecordingSettings(
-            autoRecording = settings.autoRecording,
-            recordingQuality = settings.recordingQuality,
-            videoFrameRate = settings.videoFrameRate,
-            audioEnabled = settings.audioEnabled,
-            simultaneousRecording = settings.simultaneousRecording,
-            timestampSync = settings.timestampSync,
-            videoFormat = settings.videoFormat,
-            audioFormat = settings.audioFormat,
-            sensorDataFormat = settings.sensorDataFormat
-        )
+        if (::repository.isInitialized) {
+            val settings = repository.getSettings()
+            _recordingSettings.value = RecordingSettings(
+                autoRecording = settings.autoRecording,
+                recordingQuality = settings.recordingQuality,
+                videoFrameRate = settings.videoFrameRate,
+                audioEnabled = settings.audioEnabled,
+                simultaneousRecording = settings.simultaneousRecording,
+                timestampSync = settings.timestampSync,
+                videoFormat = settings.videoFormat,
+                audioFormat = settings.audioFormat,
+                sensorDataFormat = settings.sensorDataFormat
+            )
+        }
     }
 
     fun updateAutoRecording(enabled: Boolean) {
