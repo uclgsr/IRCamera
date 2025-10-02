@@ -26,12 +26,12 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-import com.mpdc4gsr.module.thermalunified.fragment.IRThermalFragment
-import com.mpdc4gsr.module.thermalunified.fragment.IRGalleryTabFragment
-import com.mpdc4gsr.module.thermalunified.fragment.AbilityFragment
-import com.mpdc4gsr.module.thermalunified.fragment.PDFListFragment
+import com.mpdc4gsr.module.thermalunified.fragment.IRThermalComposeFragment
+import com.mpdc4gsr.module.thermalunified.fragment.IRGalleryTabComposeFragment
+import com.mpdc4gsr.module.thermalunified.fragment.AbilityComposeFragment
+import com.mpdc4gsr.module.thermalunified.fragment.PDFListComposeFragment
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRMainActivityViewModel
-import com.mpdc4gsr.module.user.fragment.MoreFragment
+import com.mpdc4gsr.module.user.fragment.MoreComposeWrapperFragment
 import kotlinx.coroutines.launch
 
 /**
@@ -115,7 +115,7 @@ private fun ThermalTabContent() {
         },
         update = { view ->
             activity?.let {
-                val fragment = IRThermalFragment()
+                val fragment = IRThermalComposeFragment()
                 it.supportFragmentManager.beginTransaction()
                     .replace(view.id, fragment)
                     .commitAllowingStateLoss()
@@ -139,7 +139,7 @@ private fun GalleryTabContent() {
         },
         update = { view ->
             activity?.let {
-                val fragment = IRGalleryTabFragment()
+                val fragment = IRGalleryTabComposeFragment()
                 it.supportFragmentManager.beginTransaction()
                     .replace(view.id, fragment)
                     .commitAllowingStateLoss()
@@ -163,7 +163,7 @@ private fun AbilityTabContent() {
         },
         update = { view ->
             activity?.let {
-                val fragment = AbilityFragment()
+                val fragment = AbilityComposeFragment()
                 it.supportFragmentManager.beginTransaction()
                     .replace(view.id, fragment)
                     .commitAllowingStateLoss()
@@ -188,7 +188,7 @@ private fun PDFTabContent() {
         },
         update = { view ->
             activity?.let {
-                val fragment = PDFListFragment()
+                val fragment = PDFListComposeFragment()
                 it.supportFragmentManager.beginTransaction()
                     .replace(view.id, fragment)
                     .commitAllowingStateLoss()
@@ -212,7 +212,7 @@ private fun MoreTabContent() {
         },
         update = { view ->
             activity?.let {
-                val fragment = MoreFragment()
+                val fragment = MoreComposeWrapperFragment()
                 it.supportFragmentManager.beginTransaction()
                     .replace(view.id, fragment)
                     .commitAllowingStateLoss()
