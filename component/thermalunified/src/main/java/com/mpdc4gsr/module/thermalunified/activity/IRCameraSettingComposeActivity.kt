@@ -263,7 +263,7 @@ private fun SettingsDropdownItem(
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable, true)
+                    .menuAnchor()
             )
 
             ExposedDropdownMenu(

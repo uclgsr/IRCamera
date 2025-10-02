@@ -33,7 +33,11 @@ public abstract class AnimatedViewPortJob extends ViewPortJob implements ValueAn
     @Override
     public void run() {
         if (view != null && view.isAttachedToWindow()) {
-            animator.start();
+            try {
+                animator.start();
+            } catch (IllegalStateException e) {
+                // View may have been detached between check and start
+            }
         }
     }
 
@@ -74,6 +78,8 @@ public abstract class AnimatedViewPortJob extends ViewPortJob implements ValueAn
             recycleSelf();
         } catch (IllegalArgumentException e) {
 
+        } catch (IllegalStateException e) {
+
         }
     }
 
@@ -82,6 +88,8 @@ public abstract class AnimatedViewPortJob extends ViewPortJob implements ValueAn
         try {
             recycleSelf();
         } catch (IllegalArgumentException e) {
+
+        } catch (IllegalStateException e) {
 
         }
     }

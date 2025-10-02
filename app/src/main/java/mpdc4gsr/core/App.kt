@@ -129,7 +129,8 @@ class App : BaseApplication() {
         val defaultHandler = Thread.getDefaultUncaughtExceptionHandler()
         Thread.setDefaultUncaughtExceptionHandler { thread, throwable ->
             if (throwable is IllegalStateException &&
-                throwable.message?.contains("Cannot start this animator on a detached view") == true) {
+                throwable.message?.contains("Cannot start this animator on a detached view") == true
+            ) {
                 XLog.w("App: Caught detached view animator exception: ${throwable.message}")
                 return@setDefaultUncaughtExceptionHandler
             }

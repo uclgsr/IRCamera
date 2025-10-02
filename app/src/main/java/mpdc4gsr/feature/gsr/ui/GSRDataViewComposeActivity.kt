@@ -106,6 +106,7 @@ class GSRDataViewComposeActivity : BaseComposeActivity<GSRDataViewViewModel>() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun GSRDataViewContent(
     filePath: String,
