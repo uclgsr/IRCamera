@@ -1,5 +1,6 @@
 package mpdc4gsr.feature.camera.ui
 
+import androidx.camera.view.PreviewView
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -18,55 +19,54 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.viewmodel.compose.viewModel
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.components.TitleBarAction
 import mpdc4gsr.core.ui.theme.Green
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.core.ui.theme.Orange
 import mpdc4gsr.core.ui.theme.Purple
+import mpdc4gsr.feature.camera.presentation.RGBCameraViewModel
 
 /**
  * RGB Camera Screen - Dedicated interface for RGB camera control and recording
- * Provides comprehensive camera controls and preview functionality
+ * Now connected to RgbCameraRecorder via ViewModel
  */
 @Composable
 fun RGBCameraScreen(
+    viewModel: RGBCameraViewModel = viewModel(),
     onBackClick: (() -> Unit)? = null,
     onSettingsClick: () -> Unit = {},
     onCapturePhoto: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
-    // Camera state
-    var isPreviewActive by remember { mutableStateOf(true) }
-    var isRecording by remember { mutableStateOf(false) }
-    var resolution by remember { mutableStateOf("1920×1080") }
-    var frameRate by remember { mutableIntStateOf(30) }
-    var exposureTime by remember { mutableStateOf("1/60") }
-    var iso by remember { mutableIntStateOf(200) }
-    var focusMode by remember { mutableStateOf("Auto") }
-    var whiteBalance by remember { mutableStateOf("Auto") }
+    val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val cameraState by viewModel.cameraState.collectAsState()
 
-    // Recording statistics
-    var recordingDuration by remember { mutableIntStateOf(0) }
-    var capturedFrames by remember { mutableIntStateOf(0) }
-
-    // Simulate recording duration
-    LaunchedEffect(isRecording) {
-        if (isRecording) {
-            while (isRecording) {
-                kotlinx.coroutines.delay(1000)
-                recordingDuration++
-                capturedFrames += frameRate
-            }
-        } else {
-            recordingDuration = 0
-            capturedFrames = 0
-        }
+    // Initialize camera on first composition
+    LaunchedEffect(Unit) {
+        viewModel.initializeCamera(lifecycleOwner)
     }
+
+    // Use real data from ViewModel
+    val isPreviewActive = cameraState.isPreviewActive
+    val isRecording = cameraState.isRecording
+    val resolution = cameraState.resolution
+    val frameRate = cameraState.frameRate
+    val exposureTime = cameraState.exposureTime
+    val iso = cameraState.iso
+    val focusMode = cameraState.focusMode
+    val whiteBalance = cameraState.whiteBalance
+    val recordingDuration = cameraState.recordingDuration
+    val capturedFrames = cameraState.capturedFrames
 
     Column(
         modifier = modifier
@@ -99,13 +99,24 @@ fun RGBCameraScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // Camera preview
-            RGBCameraPreview(
-                isActive = isPreviewActive,
-                isRecording = isRecording,
-                resolution = resolution,
-                frameRate = frameRate
-            )
+            // Camera preview - use real camera if available
+            if (viewModel.getCameraRecorder() != null) {
+                RealCameraPreview(
+                    cameraRecorder = viewModel.getCameraRecorder()!!,
+                    isRecording = isRecording,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(16f / 9f)
+                )
+            } else {
+                // Fallback to simulated preview during initialization
+                RGBCameraPreview(
+                    isActive = isPreviewActive,
+                    isRecording = isRecording,
+                    resolution = resolution,
+                    frameRate = frameRate
+                )
+            }
 
             // Camera status and metrics
             CameraStatusCard(
@@ -125,9 +136,18 @@ fun RGBCameraScreen(
                 isPreviewActive = isPreviewActive,
                 recordingDuration = recordingDuration,
                 capturedFrames = capturedFrames,
-                onToggleRecording = { isRecording = !isRecording },
-                onTogglePreview = { isPreviewActive = !isPreviewActive },
-                onCapturePhoto = onCapturePhoto
+                onToggleRecording = { 
+                    if (isRecording) {
+                        viewModel.stopRecording()
+                    } else {
+                        viewModel.startRecording()
+                    }
+                },
+                onTogglePreview = { viewModel.togglePreview() },
+                onCapturePhoto = { 
+                    viewModel.capturePhoto()
+                    onCapturePhoto()
+                }
             )
 
             // Camera settings
@@ -138,12 +158,12 @@ fun RGBCameraScreen(
                 iso = iso,
                 focusMode = focusMode,
                 whiteBalance = whiteBalance,
-                onResolutionChange = { resolution = it },
-                onFrameRateChange = { frameRate = it },
-                onExposureChange = { exposureTime = it },
-                onISOChange = { iso = it },
-                onFocusModeChange = { focusMode = it },
-                onWhiteBalanceChange = { whiteBalance = it }
+                onResolutionChange = { viewModel.updateResolution(it) },
+                onFrameRateChange = { viewModel.updateFrameRate(it) },
+                onExposureChange = { /* Can be added to ViewModel */ },
+                onISOChange = { /* Can be added to ViewModel */ },
+                onFocusModeChange = { /* Can be added to ViewModel */ },
+                onWhiteBalanceChange = { /* Can be added to ViewModel */ }
             )
         }
     }
@@ -327,6 +347,53 @@ private fun RGBCameraPreview(
                             fontSize = 14.sp
                         )
                     }
+                }
+            }
+        }
+    }
+}
+
+/**
+ * Real camera preview using actual RgbCameraRecorder
+ */
+@Composable
+private fun RealCameraPreview(
+    cameraRecorder: mpdc4gsr.core.data.RgbCameraRecorder,
+    isRecording: Boolean,
+    modifier: Modifier = Modifier
+) {
+    Card(
+        modifier = modifier,
+        colors = CardDefaults.cardColors(containerColor = Color.Black)
+    ) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            AndroidView(
+                factory = { ctx ->
+                    PreviewView(ctx).apply {
+                        scaleType = PreviewView.ScaleType.FILL_CENTER
+                        // Bind camera preview
+                        cameraRecorder.bindPreview(this)
+                    }
+                },
+                modifier = Modifier.fillMaxSize()
+            )
+
+            // Recording indicator
+            if (isRecording) {
+                Surface(
+                    modifier = Modifier
+                        .align(Alignment.TopStart)
+                        .padding(16.dp),
+                    color = Color.Red,
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Text(
+                        text = "REC",
+                        color = Color.White,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                    )
                 }
             }
         }

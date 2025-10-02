@@ -13,6 +13,9 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -82,9 +85,19 @@ private fun GSRSettingsContent(
 ) {
     val context = LocalContext.current
 
-    // Observe ViewModel states (these would need to be implemented in the ViewModel)
-    // val settingsState by viewModel.settingsState.collectAsState()
-    // val bluetoothState by viewModel.bluetoothState.collectAsState()
+    // Initialize ViewModel with context
+    LaunchedEffect(Unit) {
+        viewModel.initialize(context)
+        viewModel.checkPermissions(context)
+    }
+
+    // Observe ViewModel states
+    val gsrSettings by viewModel.gsrSettings.collectAsState()
+    val deviceSettings by viewModel.deviceSettings.collectAsState()
+    val permissionState by viewModel.permissionState.collectAsState()
+    val deviceConnectionState by viewModel.deviceConnectionState.collectAsState()
+    val availableDevices by viewModel.availableDevices.collectAsState()
+    val scanningState by viewModel.scanningState.collectAsState()
 
     Column(
         modifier = modifier
@@ -95,26 +108,30 @@ private fun GSRSettingsContent(
     ) {
         // Bluetooth Settings Card
         BluetoothSettingsCard(
-            onScanClick = { /* viewModel.startBluetoothScan() */ },
-            onPermissionRequest = { /* viewModel.requestBluetoothPermissions() */ }
+            onScanClick = { viewModel.startDeviceScan() },
+            onPermissionRequest = { viewModel.requestPermissions() }
         )
 
         // Device Connection Card
         DeviceConnectionCard(
-            onConnectClick = { /* viewModel.connectToDevice(it) */ },
-            onDisconnectClick = { /* viewModel.disconnectDevice() */ }
+            onConnectClick = { deviceId -> 
+                availableDevices.find { it.id == deviceId }?.let { device ->
+                    viewModel.connectToDevice(device)
+                }
+            },
+            onDisconnectClick = { viewModel.disconnectDevice() }
         )
 
         // Recording Settings Card
         RecordingSettingsCard(
-            onSampleRateChange = { /* viewModel.updateSampleRate(it) */ },
-            onSessionTimeoutChange = { /* viewModel.updateSessionTimeout(it) */ }
+            onSampleRateChange = { viewModel.updateSamplingRate(it) },
+            onSessionTimeoutChange = { /* Can be added to ViewModel if needed */ }
         )
 
         // Export Settings Card
         ExportSettingsCard(
-            onExportFormatChange = { /* viewModel.updateExportFormat(it) */ },
-            onExportLocationChange = { /* viewModel.updateExportLocation(it) */ }
+            onExportFormatChange = { /* Can be added to ViewModel if needed */ },
+            onExportLocationChange = { /* Can be added to ViewModel if needed */ }
         )
     }
 }

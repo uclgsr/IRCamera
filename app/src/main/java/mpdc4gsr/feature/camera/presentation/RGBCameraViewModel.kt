@@ -1,0 +1,179 @@
+package mpdc4gsr.feature.camera.presentation
+
+import android.app.Application
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
+import mpdc4gsr.core.data.RgbCameraRecorder
+import mpdc4gsr.core.ui.AppBaseViewModel
+
+/**
+ * ViewModel for RGB Camera Screen
+ * Manages RgbCameraRecorder lifecycle and camera controls
+ */
+class RGBCameraViewModel(
+    private val application: Application
+) : AppBaseViewModel() {
+
+    data class CameraState(
+        val isPreviewActive: Boolean = false,
+        val isRecording: Boolean = false,
+        val resolution: String = "1920×1080",
+        val frameRate: Int = 30,
+        val exposureTime: String = "1/60",
+        val iso: Int = 200,
+        val focusMode: String = "Auto",
+        val whiteBalance: String = "Auto",
+        val recordingDuration: Int = 0,
+        val capturedFrames: Int = 0,
+        val error: String? = null
+    )
+
+    private val _cameraState = MutableStateFlow(CameraState())
+    val cameraState: StateFlow<CameraState> = _cameraState.asStateFlow()
+
+    private var cameraRecorder: RgbCameraRecorder? = null
+
+    /**
+     * Initialize camera recorder with lifecycle owner
+     */
+    fun initializeCamera(lifecycleOwner: androidx.lifecycle.LifecycleOwner) {
+        viewModelScope.launch {
+            try {
+                cameraRecorder = RgbCameraRecorder(
+                    context = application,
+                    lifecycleOwner = lifecycleOwner
+                )
+                
+                val initialized = cameraRecorder?.initialize() ?: false
+                if (initialized) {
+                    _cameraState.update { 
+                        it.copy(
+                            isPreviewActive = true,
+                            resolution = cameraRecorder?.getResolution() ?: "1920×1080",
+                            frameRate = cameraRecorder?.getCurrentFps() ?: 30,
+                            error = null
+                        )
+                    }
+                } else {
+                    _cameraState.update { it.copy(error = "Failed to initialize camera") }
+                }
+            } catch (e: Exception) {
+                _cameraState.update { it.copy(error = "Camera initialization error: ${e.message}") }
+            }
+        }
+    }
+
+    /**
+     * Get camera recorder instance for preview binding
+     */
+    fun getCameraRecorder(): RgbCameraRecorder? = cameraRecorder
+
+    /**
+     * Start recording
+     */
+    fun startRecording() {
+        viewModelScope.launch {
+            try {
+                val sessionDir = application.getExternalFilesDir("camera_recordings")?.absolutePath 
+                    ?: application.filesDir.absolutePath
+                
+                val currentTimeMs = System.currentTimeMillis()
+                val currentMonotonicNs = System.nanoTime()
+                val isoFormat = java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", java.util.Locale.US).apply {
+                    timeZone = java.util.TimeZone.getTimeZone("UTC")
+                }
+                
+                val metadata = mpdc4gsr.core.data.SessionMetadata(
+                    sessionId = "camera_${currentTimeMs}",
+                    sessionStartTimestampMs = currentTimeMs,
+                    sessionStartMonotonicNs = currentMonotonicNs,
+                    sessionStartIso = isoFormat.format(java.util.Date(currentTimeMs))
+                )
+                
+                cameraRecorder?.startRecording(sessionDir, metadata)
+                _cameraState.update { it.copy(isRecording = true, recordingDuration = 0, error = null) }
+                
+                // Start duration tracking
+                trackRecordingDuration()
+            } catch (e: Exception) {
+                _cameraState.update { it.copy(error = "Recording start failed: ${e.message}") }
+            }
+        }
+    }
+
+    /**
+     * Stop recording
+     */
+    fun stopRecording() {
+        viewModelScope.launch {
+            try {
+                cameraRecorder?.stopRecording()
+                _cameraState.update { it.copy(isRecording = false, error = null) }
+            } catch (e: Exception) {
+                _cameraState.update { it.copy(error = "Recording stop failed: ${e.message}") }
+            }
+        }
+    }
+
+    /**
+     * Toggle preview
+     */
+    fun togglePreview() {
+        _cameraState.update { it.copy(isPreviewActive = !it.isPreviewActive) }
+    }
+
+    /**
+     * Capture photo
+     */
+    fun capturePhoto() {
+        viewModelScope.launch {
+            try {
+                // Photo capture functionality would be implemented here
+                android.util.Log.d("RGBCameraViewModel", "Photo capture requested")
+            } catch (e: Exception) {
+                _cameraState.update { it.copy(error = "Photo capture failed: ${e.message}") }
+            }
+        }
+    }
+
+    /**
+     * Update camera settings
+     */
+    fun updateResolution(resolution: String) {
+        _cameraState.update { it.copy(resolution = resolution) }
+    }
+
+    fun updateFrameRate(frameRate: Int) {
+        _cameraState.update { it.copy(frameRate = frameRate) }
+    }
+
+    /**
+     * Track recording duration
+     */
+    private fun trackRecordingDuration() {
+        viewModelScope.launch {
+            while (_cameraState.value.isRecording) {
+                kotlinx.coroutines.delay(1000)
+                _cameraState.update { 
+                    it.copy(
+                        recordingDuration = it.recordingDuration + 1,
+                        capturedFrames = it.capturedFrames + it.frameRate
+                    )
+                }
+            }
+        }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        viewModelScope.launch {
+            try {
+                cameraRecorder?.stopRecording()
+                cameraRecorder?.cleanup()
+            } catch (e: Exception) {
+                android.util.Log.e("RGBCameraViewModel", "Error during cleanup", e)
+            }
+        }
+    }
+}
