@@ -265,8 +265,8 @@ configurations.all {
         force("com.google.guava:guava:31.1-android")
         force("androidx.core:core:1.13.1")
         force("androidx.core:core-ktx:1.13.1")
-        force("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
-        force("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")
+        force("androidx.lifecycle:lifecycle-runtime-ktx:2.9.4")
+        force("androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.4")
 
         // Force a stable version of snakeyaml to resolve build cache issues with v2.x
         force("org.yaml:snakeyaml:1.33")
