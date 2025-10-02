@@ -7,22 +7,27 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.PopupWindow
 import android.widget.SeekBar
+import android.widget.TextView
 import androidx.core.view.isVisible
-import com.mpdc4gsr.module.thermalunified.databinding.PopSeekBarBinding
+import com.mpdc4gsr.module.thermalunified.R
 
 
 @SuppressLint("SetTextI18n")
 class SeekBarPopup(context: Context, hasTitle: Boolean = false) : PopupWindow() {
+    private val seekBar: SeekBar
+    private val tvTitle: TextView
+    private val tvValue: TextView
+    
     var progress: Int
-        get() = binding.seekBar.progress
+        get() = seekBar.progress
         set(value) {
-            binding.seekBar.progress = value
+            seekBar.progress = value
         }
 
     var max: Int
-        get() = binding.seekBar.max
+        get() = seekBar.max
         set(value) {
-            binding.seekBar.max = value
+            seekBar.max = value
         }
 
 
@@ -30,9 +35,13 @@ class SeekBarPopup(context: Context, hasTitle: Boolean = false) : PopupWindow() 
 
     var onValuePickListener: ((progress: Int) -> Unit)? = null
 
-    private val binding: PopSeekBarBinding = PopSeekBarBinding.inflate(LayoutInflater.from(context))
-
     init {
+        contentView = LayoutInflater.from(context).inflate(R.layout.pop_seek_bar, null)
+        
+        seekBar = contentView.findViewById(R.id.seek_bar)
+        tvTitle = contentView.findViewById(R.id.tv_title)
+        tvValue = contentView.findViewById(R.id.tv_value)
+        
         val widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(
             context.resources.displayMetrics.widthPixels,
             View.MeasureSpec.EXACTLY
@@ -41,17 +50,17 @@ class SeekBarPopup(context: Context, hasTitle: Boolean = false) : PopupWindow() 
             context.resources.displayMetrics.heightPixels,
             View.MeasureSpec.AT_MOST
         )
-        binding.tvTitle.isVisible = hasTitle
-        binding.root.measure(widthMeasureSpec, heightMeasureSpec)
-        binding.tvValue.text = "$progress%"
-        binding.seekBar.setOnSeekBarChangeListener(
+        tvTitle.isVisible = hasTitle
+        contentView.measure(widthMeasureSpec, heightMeasureSpec)
+        tvValue.text = "$progress%"
+        seekBar.setOnSeekBarChangeListener(
             object : SeekBar.OnSeekBarChangeListener {
                 override fun onProgressChanged(
                     seekBar: SeekBar?,
                     progress: Int,
                     fromUser: Boolean,
                 ) {
-                    binding.tvValue.text = "$progress%"
+                    tvValue.text = "$progress%"
                     if (isRealTimeTrigger) {
                         onValuePickListener?.invoke(progress)
                     }
@@ -66,7 +75,6 @@ class SeekBarPopup(context: Context, hasTitle: Boolean = false) : PopupWindow() 
             },
         )
 
-        contentView = binding.root
         width = contentView.measuredWidth
         height = contentView.measuredHeight
         isOutsideTouchable = false
