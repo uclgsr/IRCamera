@@ -269,6 +269,8 @@ configurations.all {
         force("com.google.guava:guava:31.1-android")
         force("androidx.core:core:1.13.1")
         force("androidx.core:core-ktx:1.13.1")
+        force("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
+        force("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")
 
         // Force a stable version of snakeyaml to resolve build cache issues with v2.x
         force("org.yaml:snakeyaml:1.33")
@@ -292,24 +294,14 @@ configurations.all {
 dependencies {
 
     coreLibraryDesugaring(libs.desugar.jdk.libs)
-
     implementation(libs.guava)
-
-    // Jetpack Compose BOM and core dependencies
     implementation(platform(libs.compose.bom))
     implementation(libs.bundles.compose.core)
     implementation(libs.bundles.compose.navigation.bundle)
     implementation(libs.bundles.compose.icons)
-
-    // Compose debug tools - only in debug builds
     debugImplementation(libs.bundles.compose.debug)
-
-    // Compose testing
     androidTestImplementation(libs.bundles.compose.test)
-
-    // Coil for image loading in Compose
     implementation(libs.coil.compose)
-
     implementation(project(":component:thermalunified"))
     implementation(project(":component:gsr-recording"))
     implementation(project(":component:user"))
@@ -318,9 +310,6 @@ dependencies {
     implementation(files("libs/libAC020sdk_USB_IR_1.1.1_2408291439.aar"))
     implementation(files("libs/libirutils_1.2.0_2409241055.aar"))
     implementation(files("libs/libcommon_1.2.0_24052117.aar"))
-//    implementation(files("libs/abtest-1.0.1.aar"))
-//    implementation(files("libs/auth-number-2.13.2.1.aar"))
-//    implementation(files("libs/logger-2.2.1-release.aar"))
     implementation(files("libs/main-2.2.1-release.aar"))
     implementation(files("libs/topdon.aar"))
 
@@ -336,14 +325,9 @@ dependencies {
     implementation(files("../libunified/libs/libusbdualsdk_1.3.4_2406271906_standard.aar"))
 
     implementation(libs.jsbridge)
-//    implementation(libs.fastjson2)
     implementation(libs.ucrop)
     implementation(libs.play.app.update)
     implementation(libs.immersionbar)
-//    implementation(libs.xpopup)  // Removed - not in libs.versions.toml
-//    implementation(libs.wechat.sdk)
-//    implementation(libs.umeng.apm)
-//    implementation(libs.umeng.common)
     implementation(libs.opencsv)
     implementation(libs.gson)
     implementation(libs.jmdns)
