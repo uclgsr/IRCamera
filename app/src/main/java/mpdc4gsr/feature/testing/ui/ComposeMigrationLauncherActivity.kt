@@ -594,7 +594,7 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         startActivity(
                             Intent(
                                 this@ComposeMigrationLauncherActivity,
-                                com.mpdc4gsr.module.thermalunified.lite.activity.IRThermalLiteComposeActivity::class.java
+                                com.mpdc4gsr.module.thermalunified.activity.ThermalCameraComposeActivity::class.java
                             )
                         )
                     }
@@ -622,7 +622,7 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                         startActivity(
                             Intent(
                                 this@ComposeMigrationLauncherActivity,
-                                com.mpdc4gsr.module.thermalunified.lite.activity.IRCorrectionLiteComposeActivity::class.java
+                                com.mpdc4gsr.module.thermalunified.activity.IRCorrectionThreeComposeActivity::class.java
                             )
                         )
                     }

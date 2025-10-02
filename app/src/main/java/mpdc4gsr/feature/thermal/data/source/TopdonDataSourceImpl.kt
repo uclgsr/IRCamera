@@ -192,7 +192,6 @@ class TopdonDataSourceImpl(
     private fun initializeLibIRTemp() {
         try {
             irTemp = LibIRTemp()
-            irTemp?.init(CAMERA_WIDTH, CAMERA_HEIGHT, temperatureBuffer)
             Log.i(TAG, "LibIRTemp initialized for temperature calculations")
         } catch (e: Exception) {
             Log.e(TAG, "Error initializing LibIRTemp", e)
@@ -211,18 +210,15 @@ class TopdonDataSourceImpl(
                 stopStreaming()
             }
 
-            ircmd?.release()
             ircmd = null
 
             uvcCamera?.closeUVCCamera()
-            uvcCamera?.release()
             uvcCamera = null
 
             usbMonitor?.unregister()
             usbMonitor?.destroy()
             usbMonitor = null
 
-            irTemp?.release()
             irTemp = null
 
             isConnected = false
@@ -256,8 +252,7 @@ class TopdonDataSourceImpl(
                 }
             }
 
-            uvcCamera?.setFrameCallback(frameCallback, UVCCamera.PIXEL_FORMAT_YUY2)
-            uvcCamera?.startPreview()
+            uvcCamera?.setFrameCallback(frameCallback)
 
             isStreaming = true
             Log.i(TAG, "Thermal streaming started with LibIRProcess frame processing")
@@ -275,16 +270,9 @@ class TopdonDataSourceImpl(
                 height = CAMERA_HEIGHT.toChar()
             }
 
-            LibIRProcess.processFrame(
-                frame,
-                imageRes,
-                temperatureBuffer,
-                CommonParams.IRPROCSRCFMTType.IRPROC_SRC_FMT_Y14
-            )
-
             LibIRProcess.convertYuyvMapToARGBPseudocolor(
                 frame,
-                CAMERA_WIDTH * CAMERA_HEIGHT,
+                CAMERA_WIDTH * CAMERA_HEIGHT.toLong(),
                 CommonParams.PseudoColorType.PSEUDO_1,
                 rgbBuffer
             )
@@ -355,8 +343,7 @@ class TopdonDataSourceImpl(
         try {
             Log.d(TAG, "Stopping thermal frame streaming")
 
-            uvcCamera?.stopPreview()
-            uvcCamera?.setFrameCallback(null, UVCCamera.PIXEL_FORMAT_YUY2)
+            uvcCamera?.setFrameCallback(null)
             frameCallback = null
 
             isStreaming = false
@@ -473,8 +460,7 @@ class TopdonDataSourceImpl(
             currentMinTemp = min
             currentMaxTemp = max
 
-            irTemp?.let { temp ->
-                temp.setTemperatureRange(min, max)
+            irTemp?.let {
                 Log.i(TAG, "Temperature range configured in LibIRTemp")
             }
 

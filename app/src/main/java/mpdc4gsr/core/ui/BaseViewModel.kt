@@ -8,10 +8,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
+typealias BaseViewModel = com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
+
 /**
  * Base ViewModel for the app module with connection state support
  */
-open class BaseViewModel : ViewModel(), LifecycleObserver {
+open class AppBaseViewModel : ViewModel(), LifecycleObserver {
 
     // Common UI states
     data class UiState(
