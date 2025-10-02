@@ -36,7 +36,6 @@ fun RGBCameraSensorCard(
     onAction: (CameraAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // Mock camera data for demonstration
     var resolution by remember { mutableStateOf("1920×1080") }
     var frameRate by remember { mutableIntStateOf(30) }
     var exposureTime by remember { mutableStateOf("1/60") }

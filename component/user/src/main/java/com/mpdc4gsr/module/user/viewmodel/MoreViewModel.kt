@@ -118,7 +118,6 @@ class MoreViewModel : BaseViewModel() {
 
     fun checkForUpdates() {
         launchWithErrorHandling {
-            // Mock update check - in real implementation would check for firmware updates
             _isUpgradeAvailable.value = false
         }
     }

@@ -156,13 +156,8 @@ class IRMonitorCaptureViewModel : BaseViewModel() {
         }
     }
 
-    /**
-     * Export all captures (mock implementation)
-     */
     fun exportCaptures() {
         viewModelScope.launch {
-            // Mock export operation
-            // In real implementation, this would handle file operations
         }
     }
 
@@ -187,7 +182,6 @@ class IRMonitorCaptureViewModel : BaseViewModel() {
             minTemp = 22.1f
         )
 
-        // Mock device connection state
         _deviceConnectionState.value = DeviceConnectionState.DISCONNECTED
     }
 

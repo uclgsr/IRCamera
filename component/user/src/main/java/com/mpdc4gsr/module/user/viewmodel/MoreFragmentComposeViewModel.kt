@@ -14,7 +14,6 @@ import kotlinx.coroutines.flow.asStateFlow
 class MoreComposeFragmentViewModel : BaseViewModel() {
 
     companion object {
-        // Mock data constants for improved maintainability
         private const val DEFAULT_VERSION = "1.0.0"
         private const val DEFAULT_UPGRADE_AVAILABLE = false
     }

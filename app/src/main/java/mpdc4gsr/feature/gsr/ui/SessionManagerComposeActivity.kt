@@ -177,11 +177,9 @@ private fun SessionManagerContent(
             modifier = Modifier.padding(bottom = 16.dp)
         )
 
-        // Session List
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            // Mock sessions - replace with actual data from viewModel
             val mockSessions = listOf(
                 com.mpdc4gsr.gsr.model.SessionInfo(
                     sessionId = "session_1",

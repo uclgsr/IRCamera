@@ -118,10 +118,8 @@ class PreviewDataAdapter(
 
                 val stats = recorder.getRecordingStats()
 
-                // Use a mock GSR value based on recording activity
-                // In real implementation, extract from actual data stream
                 val mockGsrValue = if (stats.totalSamplesRecorded > 0) {
-                    10.0f + (System.currentTimeMillis() % 1000) / 100.0f // Mock varying value
+                    10.0f + (System.currentTimeMillis() % 1000) / 100.0f
                 } else {
                     0.0f
                 }

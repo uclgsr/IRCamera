@@ -37,7 +37,6 @@ fun GSRSensorCard(
     onAction: (GSRAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // Mock GSR data for demonstration
     var gsrValue by remember { mutableFloatStateOf(2.45f) }
     var skinConductance by remember { mutableFloatStateOf(0.82f) }
     var isRecording by remember { mutableStateOf(false) }

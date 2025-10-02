@@ -80,7 +80,6 @@ class PCControllerIntegrationTest(unittest.TestCase):
     def test_android_device_discovery_protocol(self):
         """Test mDNS/Zeroconf device discovery for Android devices"""
         
-        # Mock discovered Android device
         mock_device = {
             "name": "Samsung-Galaxy-S22",
             "ip": self.android_device_ip,
@@ -387,11 +386,9 @@ class PCControllerIntegrationTest(unittest.TestCase):
         num_measurements = 10
         
         for i in range(num_measurements):
-            # Simulate round-trip communication
             send_timestamp = time.time() * 1000
             
-            # Mock network delay (realistic Wi-Fi latency)
-            simulated_network_delay = 50 + (i % 20)  # 50-70ms variation
+            simulated_network_delay = 50 + (i % 20)
             time.sleep(simulated_network_delay / 1000.0)
             
             receive_timestamp = time.time() * 1000

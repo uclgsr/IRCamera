@@ -13,13 +13,12 @@ import java.text.DecimalFormat
 class StorageSpaceViewModel : BaseViewModel() {
 
     companion object {
-        // Mock data constants for improved maintainability
-        private const val MOCK_TOTAL_SPACE = 32_000_000_000L // 32 GB
-        private const val MOCK_USED_SPACE = 12_000_000_000L  // 12 GB
-        private const val MOCK_FREE_SPACE = 20_000_000_000L  // 20 GB
-        private const val MOCK_PHOTO_SPACE = 5_000_000_000L  // 5 GB
-        private const val MOCK_VIDEO_SPACE = 6_000_000_000L  // 6 GB
-        private const val MOCK_SYSTEM_SPACE = 1_000_000_000L // 1 GB
+        private const val MOCK_TOTAL_SPACE = 32_000_000_000L
+        private const val MOCK_USED_SPACE = 12_000_000_000L
+        private const val MOCK_FREE_SPACE = 20_000_000_000L
+        private const val MOCK_PHOTO_SPACE = 5_000_000_000L
+        private const val MOCK_VIDEO_SPACE = 6_000_000_000L
+        private const val MOCK_SYSTEM_SPACE = 1_000_000_000L
     }
 
     data class StorageInfo(
