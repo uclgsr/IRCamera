@@ -86,8 +86,13 @@ class GSRSensorViewModel(
                 // Connect to first available device
                 val device = devices.firstOrNull()
                 if (device != null) {
-                    // Connection logic would be handled by the recorder
-                    _sensorState.update { it.copy(isConnected = true, error = null) }
+                    // Actually connect to the device using the recorder
+                    val connected = gsrRecorder?.connectToDevice(device) ?: false
+                    if (connected) {
+                        _sensorState.update { it.copy(isConnected = true, error = null) }
+                    } else {
+                        _sensorState.update { it.copy(error = "Failed to connect to device") }
+                    }
                 } else {
                     _sensorState.update { it.copy(error = "No valid device to connect") }
                 }
