@@ -272,7 +272,7 @@ class TopdonDataSourceImpl(
 
             LibIRProcess.convertYuyvMapToARGBPseudocolor(
                 frame,
-                CAMERA_WIDTH * CAMERA_HEIGHT,
+                (CAMERA_WIDTH * CAMERA_HEIGHT).toLong(),
                 CommonParams.PseudoColorType.PSEUDO_1,
                 rgbBuffer
             )

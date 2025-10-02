@@ -37,13 +37,15 @@ class BLEIntegrationTestComposeActivity : BaseComposeActivity<BLEIntegrationTest
         private const val TAG = "BLEIntegrationTestCompose"
     }
 
-    override fun createViewModel(): BLETestViewModel = BLETestViewModel()
+    private lateinit var permissionController: PermissionController
+    private var gsrRecorder: UnifiedGSRRecorder? = null
+    private var deviceManager: ShimmerDeviceManager? = null
 
     override fun createViewModel(): BLEIntegrationTestViewModel {
         return viewModels<BLEIntegrationTestViewModel>().value
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: android.os.Bundle?) {
         super.onCreate(savedInstanceState)
 
         // Initialize components

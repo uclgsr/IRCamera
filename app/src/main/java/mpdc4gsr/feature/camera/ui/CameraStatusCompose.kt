@@ -7,11 +7,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import kotlinx.coroutines.delay
 import mpdc4gsr.core.data.RgbCameraRecorder
 
@@ -98,8 +98,10 @@ fun CameraStatusWidget(
             statusText = "Camera Status: Initialized"
             while (true) {
                 delay(1000)
-                // Update stats periodically
-                statsText = "Camera Statistics:\nResolution: ${cameraRecorder.getResolution()}\nFPS: ${cameraRecorder.getCurrentFps()}"
+                // Update stats periodically using existing methods
+                val resolution = cameraRecorder.getResolution()
+                val fps = cameraRecorder.getCurrentFps()
+                statsText = "Camera Statistics:\nResolution: $resolution\nFPS: $fps"
             }
         } else {
             statusText = "Camera Status: Not Initialized"
@@ -117,8 +119,8 @@ private fun CameraPreviewView(cameraRecorder: RgbCameraRecorder) {
         factory = { ctx ->
             PreviewView(ctx).apply {
                 scaleType = PreviewView.ScaleType.FILL_CENTER
-                // Bind camera to preview
-                cameraRecorder.bindPreview(this, lifecycleOwner)
+                // Bind camera preview to this PreviewView
+                cameraRecorder.bindPreview(this)
             }
         },
         modifier = Modifier.fillMaxSize()

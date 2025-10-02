@@ -38,6 +38,19 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
     private val _gsrBatteryLevel = MutableStateFlow<Int?>(null)
     val gsrBatteryLevel: StateFlow<Int?> = _gsrBatteryLevel.asStateFlow()
 
+    // GSR Data StateFlow for real-time sensor values
+    data class GSRDataState(
+        val currentValue: Float = 0f,
+        val batteryLevel: Int = 0,
+        val recentReadings: List<Float> = emptyList(),
+        val averageValue: Float = 0f,
+        val minValue: Float = 0f,
+        val maxValue: Float = 0f
+    )
+
+    private val _gsrData = MutableStateFlow(GSRDataState())
+    val gsrData: StateFlow<GSRDataState> = _gsrData.asStateFlow()
+
     private val _networkConnectionState = MutableStateFlow(NetworkConnectionState.DISCONNECTED)
     val networkConnectionState: StateFlow<NetworkConnectionState> =
         _networkConnectionState.asStateFlow()

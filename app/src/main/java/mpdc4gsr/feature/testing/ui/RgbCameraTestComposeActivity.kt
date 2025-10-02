@@ -79,7 +79,7 @@ class RgbCameraTestComposeActivity : BaseComposeActivity<RgbCameraTestViewModel>
         
         LaunchedEffect(Unit) {
             viewModel.initializeTestCases()
-            viewModel.initializeCameraRecorder(context)
+            viewModel.initializeCameraRecorder(context, this@RgbCameraTestComposeActivity)
         }
         
         LibUnifiedTheme {
@@ -164,9 +164,9 @@ class RgbCameraTestComposeActivity : BaseComposeActivity<RgbCameraTestViewModel>
                 // Test Progress
                 TestProgressIndicator(
                     totalTests = testResults.size,
-                    completedTests = testResults.count { it.status != TestStatus.PENDING },
-                    passedTests = testResults.count { it.status == TestStatus.PASSED },
-                    failedTests = testResults.count { it.status == TestStatus.FAILED }
+                    completedTests = testResults.count { it.status != RgbCameraTestViewModel.TestStatus.PENDING },
+                    passedTests = testResults.count { it.status == RgbCameraTestViewModel.TestStatus.PASSED },
+                    failedTests = testResults.count { it.status == RgbCameraTestViewModel.TestStatus.FAILED }
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))

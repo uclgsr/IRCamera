@@ -78,10 +78,10 @@ class RgbCameraTestViewModel : AppBaseViewModel() {
         )
     }
 
-    fun initializeCameraRecorder(context: Context) {
+    fun initializeCameraRecorder(context: Context, lifecycleOwner: androidx.lifecycle.LifecycleOwner) {
         viewModelScope.launch {
             try {
-                cameraRecorder = RgbCameraRecorder(context)
+                cameraRecorder = RgbCameraRecorder(context, lifecycleOwner)
                 _recordingStatus.value = "Camera Initialized"
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to initialize camera recorder", e)

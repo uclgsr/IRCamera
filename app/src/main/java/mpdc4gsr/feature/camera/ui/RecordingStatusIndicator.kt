@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import mpdc4gsr.feature.network.data.DetailedSensorStatus
 import mpdc4gsr.feature.network.data.SensorStatusSummary
+import mpdc4gsr.core.ui.model.SensorType
 
 /**
  * @deprecated Use RecordingStatusIndicator (Compose) instead.
@@ -183,8 +184,14 @@ constructor(
             statusText.setTextColor(Color.RED)
 
             sensorsText.text =
-                activeSensors.joinToString(" • ") { it }
-
+                activeSensors.joinToString(" • ") {
+                    when (it) {
+                        "ThermalIR", "THERMAL" -> "[THM]"
+                        "RGBCamera", "RGB", "CAMERA" -> "[CAM]"
+                        "GSR" -> "[GSR]"
+                        else -> "[$it]"
+                    }
+                }
             visibility = VISIBLE
         } else {
             statusIcon.setBackgroundColor(Color.GRAY)
