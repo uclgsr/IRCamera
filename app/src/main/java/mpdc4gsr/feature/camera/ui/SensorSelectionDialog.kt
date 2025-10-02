@@ -81,11 +81,12 @@ fun detectAvailableSensors(context: Context): Set<SensorType> {
 @Composable
 fun SensorSelectionDialog(
     availableSensors: Set<SensorType>,
+    initialSelection: Set<SensorType> = setOf(SensorType.THERMAL),
     onDismiss: () -> Unit,
     onSensorsSelected: (Set<SensorType>) -> Unit
 ) {
     var selectedSensors by remember {
-        mutableStateOf(setOf(SensorType.THERMAL))
+        mutableStateOf(initialSelection.intersect(availableSensors))
     }
 
     Dialog(onDismissRequest = onDismiss) {

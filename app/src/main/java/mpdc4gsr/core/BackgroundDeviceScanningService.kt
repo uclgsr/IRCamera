@@ -19,6 +19,8 @@ import mpdc4gsr.feature.main.ui.MainComposeActivity
 import kotlin.coroutines.CoroutineContext
 
 class BackgroundDeviceScanningService : Service(), CoroutineScope {
+    private val serviceJob = SupervisorJob()
+    
     companion object {
         private const val TAG = "BackgroundDeviceScanning"
         private const val NOTIFICATION_ID = 2001
@@ -37,7 +39,7 @@ class BackgroundDeviceScanningService : Service(), CoroutineScope {
         const val ACTION_RESUME_SCANNING = "mpdc4gsr.action.RESUME_BACKGROUND_SCANNING"
     }
 
-    override val coroutineContext: CoroutineContext = Dispatchers.Main + Job()
+    override val coroutineContext: CoroutineContext = Dispatchers.IO + serviceJob
 
     private var bleDeviceManager: BleDeviceManager? = null
     private var scanningJob: Job? = null
@@ -342,6 +344,9 @@ class BackgroundDeviceScanningService : Service(), CoroutineScope {
         bleDeviceManager?.release()
 
         releaseWakeLock()
+
+        // Cancel all coroutines launched in this service's scope
+        serviceJob.cancel()
 
         super.onDestroy()
     }
