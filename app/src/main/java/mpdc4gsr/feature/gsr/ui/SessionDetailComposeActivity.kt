@@ -30,7 +30,7 @@ import mpdc4gsr.core.ui.AppBaseViewModel
  * - Enhanced user interactions with action buttons
  * - Consistent theming with other modernized activities
  */
-class SessionDetailComposeActivity : BaseComposeActivity<BaseViewModel>() {
+class SessionDetailComposeActivity : BaseComposeActivity<AppBaseViewModel>() {
     companion object {
         private const val EXTRA_SESSION_ID = "session_id"
 
@@ -45,13 +45,13 @@ class SessionDetailComposeActivity : BaseComposeActivity<BaseViewModel>() {
         }
     }
 
-    override fun createViewModel(): BaseViewModel {
-        return viewModels<BaseViewModel>().value
+    override fun createViewModel(): AppBaseViewModel {
+        return viewModels<AppBaseViewModel>().value
     }
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    override fun Content(viewModel: BaseViewModel) {
+    override fun Content(viewModel: AppBaseViewModel) {
         val sessionId = intent.getStringExtra(EXTRA_SESSION_ID) ?: "Unknown"
 
         LibUnifiedTheme {
