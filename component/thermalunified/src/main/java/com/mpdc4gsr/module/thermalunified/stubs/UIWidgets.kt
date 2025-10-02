@@ -9,10 +9,7 @@ import android.view.MotionEvent
 import android.view.View
 import kotlin.math.abs
 
-/**
- * Functional implementations for missing UI widgets
- * These provide basic working functionality for an MVP
- */
+
 
 class SeekBarIndicator {
     var indicatorBackgroundColor: Int = Color.LTGRAY

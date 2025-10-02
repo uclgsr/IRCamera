@@ -37,16 +37,7 @@ import com.mpdc4gsr.module.thermalunified.viewmodel.MonitorThermalViewModel.Aler
 import java.text.SimpleDateFormat
 import java.util.*
 
-/**
- * Compose migration of MonitorThermalFragment
- *
- * This fragment demonstrates:
- * - Complete migration of thermal monitoring interface to Compose
- * - Advanced thermal monitoring with real-time data analysis
- * - Modern Material 3 UI with monitoring-optimized design
- * - Enhanced monitoring controls and data visualization
- * - Integration with thermal recording and analysis tools
- */
+
 class MonitorThermalComposeFragment : BaseComposeFragment<MonitorThermalViewModel>() {
 
     override fun createViewModel(): MonitorThermalViewModel {

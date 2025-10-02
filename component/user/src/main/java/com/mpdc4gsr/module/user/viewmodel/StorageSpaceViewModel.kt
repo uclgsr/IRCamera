@@ -6,10 +6,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import java.text.DecimalFormat
 
-/**
- * ViewModel for Storage Space Management
- * Manages storage information display and format operations
- */
+
 class StorageSpaceViewModel : BaseViewModel() {
 
     companion object {

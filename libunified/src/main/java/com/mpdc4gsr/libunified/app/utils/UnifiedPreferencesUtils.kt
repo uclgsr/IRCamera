@@ -4,12 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
 
-/**
- * Consolidated SharedPreferences utilities for centralized configuration management
- * Replaces:
- * - libunified/src/main/java/com/mpdc4gsr/libunified/ir/utils/SharedPreferencesUtils.java
- * - Various scattered preferences handling across modules
- */
+
 object UnifiedPreferencesUtils {
 
     private const val TAG = "UnifiedPreferences"
@@ -56,9 +51,7 @@ object UnifiedPreferencesUtils {
         const val UI_SHOW_GUIDELINES = "ui_show_guidelines"
     }
 
-    /**
-     * Get default SharedPreferences instance
-     */
+    
     private fun getPreferences(
         context: Context,
         prefsName: String = DEFAULT_PREFS_NAME
@@ -66,9 +59,7 @@ object UnifiedPreferencesUtils {
         return context.getSharedPreferences(prefsName, Context.MODE_PRIVATE)
     }
 
-    /**
-     * Save string value
-     */
+    
     fun putString(
         context: Context,
         key: String,
@@ -82,9 +73,7 @@ object UnifiedPreferencesUtils {
         }
     }
 
-    /**
-     * Get string value
-     */
+    
     fun getString(
         context: Context,
         key: String,
@@ -99,9 +88,7 @@ object UnifiedPreferencesUtils {
         }
     }
 
-    /**
-     * Save int value
-     */
+    
     fun putInt(context: Context, key: String, value: Int, prefsName: String = DEFAULT_PREFS_NAME) {
         try {
             getPreferences(context, prefsName).edit().putInt(key, value).apply()
@@ -110,9 +97,7 @@ object UnifiedPreferencesUtils {
         }
     }
 
-    /**
-     * Get int value
-     */
+    
     fun getInt(
         context: Context,
         key: String,
@@ -127,9 +112,7 @@ object UnifiedPreferencesUtils {
         }
     }
 
-    /**
-     * Save boolean value
-     */
+    
     fun putBoolean(
         context: Context,
         key: String,
@@ -143,9 +126,7 @@ object UnifiedPreferencesUtils {
         }
     }
 
-    /**
-     * Get boolean value
-     */
+    
     fun getBoolean(
         context: Context,
         key: String,
@@ -160,9 +141,7 @@ object UnifiedPreferencesUtils {
         }
     }
 
-    /**
-     * Save float value
-     */
+    
     fun putFloat(
         context: Context,
         key: String,
@@ -176,9 +155,7 @@ object UnifiedPreferencesUtils {
         }
     }
 
-    /**
-     * Get float value
-     */
+    
     fun getFloat(
         context: Context,
         key: String,
@@ -193,9 +170,7 @@ object UnifiedPreferencesUtils {
         }
     }
 
-    /**
-     * Save long value
-     */
+    
     fun putLong(
         context: Context,
         key: String,
@@ -209,9 +184,7 @@ object UnifiedPreferencesUtils {
         }
     }
 
-    /**
-     * Get long value
-     */
+    
     fun getLong(
         context: Context,
         key: String,
@@ -226,9 +199,7 @@ object UnifiedPreferencesUtils {
         }
     }
 
-    /**
-     * Save string set
-     */
+    
     fun putStringSet(
         context: Context,
         key: String,
@@ -242,9 +213,7 @@ object UnifiedPreferencesUtils {
         }
     }
 
-    /**
-     * Get string set
-     */
+    
     fun getStringSet(
         context: Context,
         key: String,
@@ -259,9 +228,7 @@ object UnifiedPreferencesUtils {
         }
     }
 
-    /**
-     * Remove a preference
-     */
+    
     fun remove(context: Context, key: String, prefsName: String = DEFAULT_PREFS_NAME) {
         try {
             getPreferences(context, prefsName).edit().remove(key).apply()
@@ -270,9 +237,7 @@ object UnifiedPreferencesUtils {
         }
     }
 
-    /**
-     * Clear all preferences
-     */
+    
     fun clear(context: Context, prefsName: String = DEFAULT_PREFS_NAME) {
         try {
             getPreferences(context, prefsName).edit().clear().apply()
@@ -281,9 +246,7 @@ object UnifiedPreferencesUtils {
         }
     }
 
-    /**
-     * Check if key exists
-     */
+    
     fun contains(context: Context, key: String, prefsName: String = DEFAULT_PREFS_NAME): Boolean {
         return try {
             getPreferences(context, prefsName).contains(key)
@@ -293,9 +256,7 @@ object UnifiedPreferencesUtils {
         }
     }
 
-    /**
-     * Get all preference keys
-     */
+    
     fun getAllKeys(context: Context, prefsName: String = DEFAULT_PREFS_NAME): Set<String> {
         return try {
             getPreferences(context, prefsName).all.keys
@@ -305,9 +266,7 @@ object UnifiedPreferencesUtils {
         }
     }
 
-    /**
-     * Register preference change listener
-     */
+    
     fun registerOnSharedPreferenceChangeListener(
         context: Context,
         listener: SharedPreferences.OnSharedPreferenceChangeListener,
@@ -320,9 +279,7 @@ object UnifiedPreferencesUtils {
         }
     }
 
-    /**
-     * Unregister preference change listener
-     */
+    
     fun unregisterOnSharedPreferenceChangeListener(
         context: Context,
         listener: SharedPreferences.OnSharedPreferenceChangeListener,
@@ -335,9 +292,7 @@ object UnifiedPreferencesUtils {
         }
     }
 
-    /**
-     * Export preferences to JSON string
-     */
+    
     fun exportPreferences(context: Context, prefsName: String = DEFAULT_PREFS_NAME): String {
         return try {
             val prefs = getPreferences(context, prefsName).all
@@ -352,9 +307,7 @@ object UnifiedPreferencesUtils {
         }
     }
 
-    /**
-     * Get default preferences map
-     */
+    
     fun getDefaultPreferences(): Map<String, Any> {
         return mapOf(
             Keys.FIRST_LAUNCH to true,
@@ -370,9 +323,7 @@ object UnifiedPreferencesUtils {
         )
     }
 
-    /**
-     * Initialize preferences with default values
-     */
+    
     fun initializePreferences(context: Context, defaults: Map<String, Any>) {
         val prefs = getSharedPreferences(context)
         val editor = prefs.edit()
@@ -392,9 +343,7 @@ object UnifiedPreferencesUtils {
         editor.apply()
     }
 
-    /**
-     * Get SharedPreferences instance
-     */
+    
     fun getSharedPreferences(context: Context): SharedPreferences {
         return context.getSharedPreferences(DEFAULT_PREFS_NAME, Context.MODE_PRIVATE)
     }

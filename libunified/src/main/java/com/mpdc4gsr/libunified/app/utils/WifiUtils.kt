@@ -15,24 +15,17 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 
-/**
- * WifiUtils based on reference repository implementation
- * Adapted from libapp/src/main/java/com/topdon/lib/core/utils/WifiUtils.kt
- */
+
 object WifiUtils {
 
-    /**
-     *  SSID.
-     */
+    
     @Suppress("DEPRECATION")
     fun ScanResult.getWifiName(): String =
         if (Build.VERSION.SDK_INT < 33) SSID else removeQuotation(wifiSsid.toString())
 
     fun WifiInfo.getWifiName(): String = removeQuotation(ssid)
 
-    /**
-     * ，
-     */
+    
     private fun removeQuotation(source: String): String {
         return if (source.length > 1 && source[0] == '\"' && source[source.length - 1] == '\"') {
             source.subSequence(1, source.length - 1).toString()
@@ -41,10 +34,7 @@ object WifiUtils {
         }
     }
 
-    /**
-     *  Wifi ssid，，。
-     * @return  WIFI   [Manifest.permission.ACCESS_FINE_LOCATION] ， null
-     */
+    
     fun getCurrentWifiSSID(context: Context): String? {
         if (ContextCompat.checkSelfPermission(
                 context,

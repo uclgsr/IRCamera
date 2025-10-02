@@ -10,46 +10,24 @@ class RingBuffer {
 
     private var mUnReadLength = 0
 
-    /**
-     * Create a new RingBuffer of the specified size.
-     * @param size The size in bytes of the RingBuffer.
-     */
+    
     constructor(size: Int) {
         byteArray = ByteArray(size)
     }
 
-    /**
-     * Turn an existing byte array into a RingBuffer.
-     * @param buffer A byte array to be used as a RingBuffer.
-     */
+    
     constructor(buffer: ByteArray) {
         byteArray = buffer
     }
 
-    /**
-     * Turn a byte array which already contains data into a RingBuffer.
-     * @param buffer A byte array to be used as a RingBuffer.
-     * @param tail The pointer to the beginning of the data in the array.
-     * @param length The length of the data in the array.
-     */
+    
     constructor(buffer: ByteArray, tail: Int, length: Int) {
         byteArray = buffer
         mReadPositon = tail
         mUnReadLength = length
     }
 
-    /**
-     * Write to the RingBuffer from a byte array.
-     * If the write exceeds the free space in the RingBuffer, only part of the
-     * data will be written.
-     *
-     * @param buffer A byte array from which the data will be copied.
-     * @param offset The offset in the byte array where the data begins.
-     * @param length The number of bytes to be written.
-     * @return The number of bytes successfully written to the RingBuffer.
-     * This may be less than the requested length if there is insufficient free
-     * space in the RingBuffer, or zero if the RingBuffer is full.
-     */
+    
     fun write(buffer: ByteArray?, offset: Int, length: Int): Int {
         var head: Int
         var toEnd: Int
@@ -77,16 +55,7 @@ class RingBuffer {
         return toWrite
     }
 
-    /**
-     * Read from the RingBuffer into a byte array.
-     *
-     * @param buffer A byte array in which the read data will be placed.
-     * @param offset The offset in the byte array where the read data should be placed.
-     * @param length The number of bytes to be read.
-     * @return The number of bytes successfully read from the RingBuffer.
-     * This may be less than the requested length if there were fewer bytes in
-     * the buffer, or zero if the buffer was empty.
-     */
+    
     fun read(buffer: ByteArray?, offset: Int, length: Int): Int {
         if (buffer == null) return 0
 
@@ -137,42 +106,27 @@ class RingBuffer {
         return length
     }
 
-    /**
-     * Get the length of the data contained in the RingBuffer.
-     * @return The length of the data in bytes.
-     */
+    
     fun getUnReadLength(): Int {
         return mUnReadLength
     }
 
-    /**
-     * Get the maximum capacity of the RingBuffer.
-     * @return The maximum capacity in bytes.
-     */
+    
     fun getMaxLength(): Int {
         return byteArray.size
     }
 
-    /**
-     * Get the size of the unused space in the RingBuffer.
-     * @return The unused capacity in bytes.
-     */
+    
     fun getFreeSpace(): Int {
         return byteArray.size - mUnReadLength
     }
 
-    /**
-     * Get the underlying byte array.
-     * @return The underlying byte array.
-     */
+    
     fun getByteArray(): ByteArray? {
         return byteArray
     }
 
-    /**
-     * Get the tail pointer for the underlying byte array.
-     * @return The tail pointer.
-     */
+    
     fun getReadPositon(): Int {
         return mReadPositon
     }

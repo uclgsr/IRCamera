@@ -24,16 +24,7 @@ import com.mpdc4gsr.module.thermalunified.activity.ThermalIrNightComposeActivity
 import com.mpdc4gsr.module.thermalunified.activity.IRThermalPlusComposeActivity
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRThermalFragmentViewModel
 
-/**
- * Compose migration of IRThermalFragment
- *
- * This fragment demonstrates:
- * - Complete migration of IR thermal entry point to Compose
- * - Enhanced device connection status display
- * - Modern Material 3 UI with thermal imaging optimizations
- * - Improved connection flow and user guidance
- * - Integration with specialized thermal activities
- */
+
 class IRThermalComposeFragment : BaseComposeFragment<IRThermalFragmentViewModel>() {
 
     override fun createViewModel(): IRThermalFragmentViewModel {

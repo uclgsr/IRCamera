@@ -25,16 +25,7 @@ import com.mpdc4gsr.module.thermalunified.viewmodel.IRMonitorHistoryViewModel.Se
 import java.text.SimpleDateFormat
 import java.util.*
 
-/**
- * Compose migration of IRMonitorHistoryFragment
- *
- * This fragment demonstrates:
- * - Complete migration of IR monitor history interface to Compose
- * - Modern history management with filtering capabilities
- * - Enhanced data visualization and export features
- * - Material 3 design optimized for data review workflows
- * - Integration with thermal monitoring history systems
- */
+
 class IRMonitorHistoryComposeFragment : BaseComposeFragment<IRMonitorHistoryViewModel>() {
 
     override fun createViewModel(): IRMonitorHistoryViewModel {

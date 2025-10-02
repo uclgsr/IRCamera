@@ -3,25 +3,12 @@ package com.mpdc4gsr.libunified.app.utils
 import android.content.Context
 import java.io.File
 
-/**
- * UnifiedCleanupUtils - Final utility consolidation addressing ALL remaining scattered utilities
- *
- * This utility consolidates the last remaining utility functions from:
- * - BleModule utilities (MathUtils, StringUtils, VersionUtils, etc.)
- * - libunified scattered utilities (ScreenUtils, ColorUtils, etc.)
- * - Component utilities (remaining thermal, user, GSR utilities)
- * - App utilities (remaining app-level utilities)
- *
- * Represents the FINAL step in achieving 99.9% duplicate code elimination
- * across the ENTIRE repository.
- */
+
 object UnifiedCleanupUtils {
 
     // ==================== FINAL BLE MODULE CONSOLIDATION ====================
 
-    /**
-     * Consolidates remaining BleModule MathUtils functionality
-     */
+    
     fun setDoubleAccuracy(num: Double, scale: Int): Double {
         val factor = Math.pow(10.0, scale.toDouble())
         return Math.floor(num * factor) / factor
@@ -62,9 +49,7 @@ object UnifiedCleanupUtils {
 
     // ==================== FINAL LIBUNIFIED CONSOLIDATION ====================
 
-    /**
-     * Consolidates remaining libunified scattered utilities
-     */
+    
     fun getScreenDensity(context: Context): Float {
         return context.resources.displayMetrics.density
     }
@@ -93,9 +78,7 @@ object UnifiedCleanupUtils {
 
     // ==================== FINAL COMPONENT CONSOLIDATION ====================
 
-    /**
-     * Consolidates remaining component utilities (thermal, user, GSR)
-     */
+    
     fun calculateThermalAverage(temperatures: FloatArray): Float {
         return if (temperatures.isEmpty()) 0f else temperatures.average().toFloat()
     }
@@ -121,9 +104,7 @@ object UnifiedCleanupUtils {
 
     // ==================== FINAL APP UTILITIES CONSOLIDATION ====================
 
-    /**
-     * Consolidates remaining app-level utilities
-     */
+    
     fun cleanupTempFiles(context: Context, maxAgeHours: Int = 24): Int {
         val tempDir = File(context.cacheDir, "temp")
         if (!tempDir.exists()) return 0
@@ -154,9 +135,7 @@ object UnifiedCleanupUtils {
 
     // ==================== REPOSITORY-WIDE CLEANUP UTILITIES ====================
 
-    /**
-     * Final cleanup and validation utilities for repository-wide consistency
-     */
+    
     fun validateRepositoryStructure(rootPath: String): RepositoryValidationResult {
         val root = File(rootPath)
         val issues = mutableListOf<String>()
@@ -200,9 +179,7 @@ object UnifiedCleanupUtils {
         val consolidationComplete: Boolean
     )
 
-    /**
-     * Generate final consolidation report
-     */
+    
     fun generateConsolidationReport(rootPath: String): String {
         val validation = validateRepositoryStructure(rootPath)
 

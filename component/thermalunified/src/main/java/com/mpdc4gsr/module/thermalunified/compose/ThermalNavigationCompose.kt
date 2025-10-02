@@ -24,14 +24,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-/**
- * Thermal navigation and menu systems in Compose
- * Modern navigation patterns for thermal imaging workflows
- */
 
-/**
- * Main thermal navigation drawer
- */
+
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ThermalNavigationDrawer(
@@ -123,9 +118,7 @@ fun ThermalNavigationDrawer(
     }
 }
 
-/**
- * Thermal action menu - floating action button with expandable menu
- */
+
 @Composable
 fun ThermalActionMenu(
     isExpanded: Boolean,
@@ -193,9 +186,7 @@ fun ThermalActionMenu(
     }
 }
 
-/**
- * Thermal bottom navigation
- */
+
 @Composable
 fun ThermalBottomNavigation(
     destinations: List<ThermalDestination>,
@@ -228,9 +219,7 @@ fun ThermalBottomNavigation(
     }
 }
 
-/**
- * Thermal menu grid - for main menu screens
- */
+
 @Composable
 fun ThermalMenuGrid(
     menuItems: List<ThermalMenuItem>,
@@ -319,9 +308,7 @@ private fun ThermalMenuCard(
     }
 }
 
-/**
- * Thermal status bar - for displaying current thermal status
- */
+
 @Composable
 fun ThermalStatusBar(
     status: ThermalStatus,
@@ -427,9 +414,7 @@ enum class ThermalStatusLevel {
     NORMAL, WARNING, CRITICAL
 }
 
-/**
- * Preview helpers
- */
+
 @Composable
 fun ThermalNavigationPreview() {
     val sampleMenuItems = listOf(

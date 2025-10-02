@@ -3,13 +3,7 @@ package com.mpdc4gsr.libunified.app.utils
 import android.content.Context
 import java.util.UUID
 
-/**
- * Consolidated string utilities replacing multiple StringUtils classes
- * Replaces:
- * - BleModule/src/main/java/com/topdon/commons/util/StringUtils.java
- * - libunified/src/main/java/com/mpdc4gsr/libunified/app/lms/utils/StringUtils.java
- * - libunified/src/main/java/com/mpdc4gsr/libunified/app/matrix/utils/StringUtils.kt
- */
+
 object UnifiedStringUtils {
 
     fun randomUuid(): String {

@@ -30,10 +30,7 @@ private val DarkColorScheme = darkColorScheme(
     surface = ThermalDark
 )
 
-/**
- * Basic theme that can be used across modules
- * Individual modules can wrap this with their own theme customizations
- */
+
 @Composable
 fun LibUnifiedTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),

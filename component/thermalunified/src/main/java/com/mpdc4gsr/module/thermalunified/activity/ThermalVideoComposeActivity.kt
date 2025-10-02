@@ -28,17 +28,7 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 
-/**
- * ThermalVideoComposeActivity - Modern Thermal Video Player with Compose
- *
- * Advanced thermal video playback interface featuring:
- * - High-performance thermal video rendering with temperature data
- * - Interactive video controls with thermal-specific features
- * - Real-time temperature analysis during playback
- * - Frame-by-frame thermal data extraction and analysis
- * - Video export with thermal overlays and metadata
- * - Professional thermal video annotation tools
- */
+
 class ThermalVideoComposeActivity : BaseComposeActivity<BaseViewModel>() {
 
     companion object {

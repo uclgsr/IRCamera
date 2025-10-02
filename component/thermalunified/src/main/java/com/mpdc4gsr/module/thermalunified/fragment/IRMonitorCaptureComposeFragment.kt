@@ -29,16 +29,7 @@ import com.mpdc4gsr.module.thermalunified.viewmodel.IRMonitorCaptureViewModel.Ca
 import java.text.SimpleDateFormat
 import java.util.*
 
-/**
- * Compose migration of IRMonitorCaptureFragment
- *
- * This fragment demonstrates:
- * - Complete migration of IR monitor capture interface to Compose
- * - Modern capture management with real-time preview
- * - Enhanced capture controls and data visualization
- * - Material 3 design optimized for monitoring workflows
- * - Integration with thermal monitoring and capture systems
- */
+
 class IRMonitorCaptureComposeFragment : BaseComposeFragment<IRMonitorCaptureViewModel>() {
 
     override fun createViewModel(): IRMonitorCaptureViewModel {

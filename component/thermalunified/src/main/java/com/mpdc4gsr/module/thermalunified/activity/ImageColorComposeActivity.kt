@@ -23,12 +23,7 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ImageColorViewModel
 
-/**
- * Compose implementation of Image Color activity
- * Displays thermal images with color processing and comparison
- *
- * Integrated with ImageColorViewModel for state management
- */
+
 class ImageColorComposeActivity : BaseComposeActivity<ImageColorViewModel>() {
 
     override fun createViewModel(): ImageColorViewModel {

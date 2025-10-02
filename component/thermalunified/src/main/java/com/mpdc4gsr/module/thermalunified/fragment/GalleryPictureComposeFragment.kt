@@ -31,16 +31,7 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
-/**
- * Compose migration of GalleryPictureFragment
- *
- * This fragment demonstrates:
- * - Complete migration of picture gallery UI to Compose
- * - Modern grid-based image display with adaptive columns
- * - Enhanced image preview and sharing capabilities
- * - Material 3 design with improved user experience
- * - Integration with thermal image preview systems
- */
+
 class GalleryPictureComposeFragment : BaseComposeFragment<GalleryViewModel>() {
 
     override fun createViewModel(): GalleryViewModel {

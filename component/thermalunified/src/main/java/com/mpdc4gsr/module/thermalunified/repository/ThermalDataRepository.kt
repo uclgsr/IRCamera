@@ -5,10 +5,7 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.Dispatchers
 
-/**
- * Thermal Data Repository - Advanced Repository Pattern
- * Handles thermal sensor data with real-time streaming and caching
- */
+
 class ThermalDataRepository : BaseRepository() {
 
     data class ThermalReading(

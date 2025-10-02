@@ -7,12 +7,7 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
-/**
- * Consolidated session and directory management utilities
- * Replaces:
- * - app/src/main/java/mpdc4gsr/utils/SessionDirectoryManager.kt
- * - Various session management utilities scattered across modules
- */
+
 object UnifiedSessionUtils {
 
     // Directory constants
@@ -29,9 +24,7 @@ object UnifiedSessionUtils {
     const val THERMAL_METADATA_FILE = "thermal_metadata.csv"
     const val SESSION_INFO_FILE = "session_info.json"
 
-    /**
-     * Create a new session directory with timestamp
-     */
+    
     fun createSessionDirectory(context: Context, sessionName: String? = null): File {
         val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
         val dirName = sessionName?.let { "${it}_$timestamp" } ?: "session_$timestamp"
@@ -40,9 +33,7 @@ object UnifiedSessionUtils {
         return createSessionDirectoryStructure(sessionDir)
     }
 
-    /**
-     * Create complete session directory structure
-     */
+    
     private fun createSessionDirectoryStructure(sessionDir: File): File {
         sessionDir.mkdirs()
 
@@ -55,45 +46,33 @@ object UnifiedSessionUtils {
         return sessionDir
     }
 
-    /**
-     * Get sessions root directory
-     */
+    
     fun getSessionsRootDirectory(context: Context): File {
         val rootDir = context.getExternalFilesDir(null) ?: context.filesDir
         return File(rootDir, SESSIONS_ROOT_DIR).apply { mkdirs() }
     }
 
-    /**
-     * Get RGB directory for session
-     */
+    
     fun getRGBDirectory(sessionDir: File): File {
         return File(sessionDir, RGB_SUBDIR).apply { mkdirs() }
     }
 
-    /**
-     * Get thermal directory for session
-     */
+    
     fun getThermalDirectory(sessionDir: File): File {
         return File(sessionDir, THERMAL_SUBDIR).apply { mkdirs() }
     }
 
-    /**
-     * Get Shimmer directory for session
-     */
+    
     fun getShimmerDirectory(sessionDir: File): File {
         return File(sessionDir, SHIMMER_SUBDIR).apply { mkdirs() }
     }
 
-    /**
-     * Get metadata directory for session
-     */
+    
     fun getMetadataDirectory(sessionDir: File): File {
         return File(sessionDir, METADATA_SUBDIR).apply { mkdirs() }
     }
 
-    /**
-     * Create session info file
-     */
+    
     fun createSessionInfo(
         sessionDir: File,
         sessionId: String,
@@ -118,9 +97,7 @@ object UnifiedSessionUtils {
         return infoFile
     }
 
-    /**
-     * Get available storage space in bytes
-     */
+    
     fun getAvailableStorageSpace(context: Context): Long {
         return try {
             val sessionDir = getSessionsRootDirectory(context)
@@ -131,9 +108,7 @@ object UnifiedSessionUtils {
         }
     }
 
-    /**
-     * Get total storage space in bytes
-     */
+    
     fun getTotalStorageSpace(context: Context): Long {
         return try {
             val sessionDir = getSessionsRootDirectory(context)
@@ -144,9 +119,7 @@ object UnifiedSessionUtils {
         }
     }
 
-    /**
-     * Clean up old sessions (older than specified days)
-     */
+    
     fun cleanupOldSessions(context: Context, olderThanDays: Int): Int {
         val cutoffTime = System.currentTimeMillis() - (olderThanDays * 24 * 60 * 60 * 1000L)
         val sessionsDir = getSessionsRootDirectory(context)
@@ -163,9 +136,7 @@ object UnifiedSessionUtils {
         return deletedCount
     }
 
-    /**
-     * List all session directories
-     */
+    
     fun listSessionDirectories(context: Context): List<File> {
         val sessionsDir = getSessionsRootDirectory(context)
         return sessionsDir.listFiles()?.filter { it.isDirectory }
@@ -173,16 +144,12 @@ object UnifiedSessionUtils {
             ?: emptyList()
     }
 
-    /**
-     * Generate unique session ID
-     */
+    
     fun generateSessionId(): String {
         return UUID.randomUUID().toString()
     }
 
-    /**
-     * Validate session directory structure
-     */
+    
     fun validateSessionDirectory(sessionDir: File): Boolean {
         return sessionDir.exists() &&
                 sessionDir.isDirectory &&

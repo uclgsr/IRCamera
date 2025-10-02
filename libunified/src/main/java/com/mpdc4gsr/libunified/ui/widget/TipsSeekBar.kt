@@ -30,9 +30,7 @@ class TipsSeekBar : ViewGroup, SeekBar.OnSeekBarChangeListener {
             }
         }
 
-    /**
-     *  View .
-     */
+    
     var valueText: String
         get() {
             return tvTips.text.toString()
@@ -41,19 +39,13 @@ class TipsSeekBar : ViewGroup, SeekBar.OnSeekBarChangeListener {
             tvTips.text = value
         }
 
-    /**
-     * seekBar  onProgressChange .
-     */
+    
     var onProgressChangeListener: ((progress: Int, fromUser: Boolean) -> Unit)? = null
 
-    /**
-     * seekBar  onStopTrackingTouch .
-     */
+    
     var onStopTrackingTouch: ((progress: Int) -> Unit)? = null
 
-    /**
-     *  View .
-     */
+    
     var valueFormatListener: ((progress: Int) -> CharSequence?)? = null
         set(value) {
             tvTips.text = value?.invoke(seekBar.progress)

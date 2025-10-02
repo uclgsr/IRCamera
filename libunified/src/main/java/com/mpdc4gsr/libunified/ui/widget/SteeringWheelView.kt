@@ -9,9 +9,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.mpdc4gsr.libunified.R
 
-/**
- *
- */
+
 class SteeringWheelView : LinearLayout, OnClickListener {
 
     private lateinit var tvConfirm: TextView

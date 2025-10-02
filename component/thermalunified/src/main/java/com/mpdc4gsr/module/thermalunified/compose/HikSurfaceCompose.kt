@@ -26,10 +26,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import kotlin.math.cos
 import kotlin.math.sin
 
-/**
- * Compose equivalent of HikSurfaceView
- * Thermal image surface with rotation, amplification, and alarm features
- */
+
 @Composable
 fun HikSurfaceCompose(
     thermalImageData: ByteArray? = null,
@@ -389,9 +386,7 @@ enum class ThermalAlarmType {
     TEMPERATURE_RANGE
 }
 
-/**
- * Thermal surface with AndroidView integration for complex cases
- */
+
 @Composable
 fun HikSurfaceWithAndroidView(
     rotateAngle: Int = 270,
@@ -429,9 +424,7 @@ fun HikSurfaceWithAndroidView(
     )
 }
 
-/**
- * Preview helper for HikSurfaceCompose
- */
+
 @Composable
 fun HikSurfaceComposePreview() {
     var rotateAngle by remember { mutableIntStateOf(270) }

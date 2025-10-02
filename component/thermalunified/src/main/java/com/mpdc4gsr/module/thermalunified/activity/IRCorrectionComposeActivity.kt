@@ -23,10 +23,7 @@ import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-/**
- * Modern Compose implementation of thermal correction activity
- * Advanced thermal image correction and calibration interface
- */
+
 class IRCorrectionComposeActivity : BaseComposeActivity<ThermalViewModel>() {
 
     override fun createViewModel(): ThermalViewModel {

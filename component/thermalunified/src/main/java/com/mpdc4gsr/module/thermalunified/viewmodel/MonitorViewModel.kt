@@ -3,10 +3,7 @@ package com.mpdc4gsr.module.thermalunified.viewmodel
 import androidx.lifecycle.MutableLiveData
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 
-/**
- * ViewModel for thermal monitoring functionality
- * Manages monitor states and thermal action events
- */
+
 class MonitorViewModel : BaseViewModel() {
 
     companion object {

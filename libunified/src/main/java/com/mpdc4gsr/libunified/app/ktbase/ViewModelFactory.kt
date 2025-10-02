@@ -5,10 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
 
-/**
- * Modern ViewModel Factory for dependency injection
- * Supports Repository pattern and Application context injection
- */
+
 class BaseViewModelFactory(
     private val application: Application,
     private val repositories: Map<Class<*>, Any> = emptyMap()
@@ -73,9 +70,7 @@ class BaseViewModelFactory(
         throw IllegalArgumentException("Cannot create ViewModel ${modelClass.simpleName}")
     }
 
-    /**
-     * Builder pattern for creating factory with repositories
-     */
+    
     class Builder(private val application: Application) {
         private val repositories = mutableMapOf<Class<*>, Any>()
 
@@ -94,9 +89,7 @@ class BaseViewModelFactory(
     }
 }
 
-/**
- * Extension function for easier ViewModel creation with factory
- */
+
 inline fun <reified T : ViewModel> androidx.lifecycle.ViewModelStoreOwner.createViewModelWithFactory(
     factory: BaseViewModelFactory
 ): T {

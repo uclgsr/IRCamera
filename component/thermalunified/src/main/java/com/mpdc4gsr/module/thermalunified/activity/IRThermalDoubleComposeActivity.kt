@@ -20,10 +20,7 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRThermalDoubleViewModel
 
-/**
- * Compose implementation of IR Thermal Double activity
- * Dual-mode thermal imaging with temperature and observation modes
- */
+
 class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewModel>() {
 
     override fun createViewModel(): IRThermalDoubleViewModel {

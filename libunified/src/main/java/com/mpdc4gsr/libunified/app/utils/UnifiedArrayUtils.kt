@@ -1,16 +1,9 @@
 package com.mpdc4gsr.libunified.app.utils
 
-/**
- * Repository-wide consolidated array utilities
- * Replaces ALL array utility classes across the ENTIRE repository:
- * - component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/utils/ArrayUtils.kt
- * - Various array manipulation utilities scattered across ALL modules
- */
+
 object UnifiedArrayUtils {
 
-    /**
-     * Get maximum value index in array with rotation support
-     */
+    
     fun getMaxIndex(
         data: FloatArray,
         rotateType: Int = 0,
@@ -22,9 +15,7 @@ object UnifiedArrayUtils {
         }
     }
 
-    /**
-     * Get minimum value index in array with rotation support
-     */
+    
     fun getMinIndex(
         data: FloatArray,
         rotateType: Int = 0,
@@ -36,9 +27,7 @@ object UnifiedArrayUtils {
         }
     }
 
-    /**
-     * Get maximum value index in array
-     */
+    
     private fun getMaxIndex(data: FloatArray, selectIndexList: ArrayList<Int>): Int {
         if (data.isEmpty()) return -1
 
@@ -57,9 +46,7 @@ object UnifiedArrayUtils {
         return maxIndex
     }
 
-    /**
-     * Get minimum value index in array
-     */
+    
     private fun getMinIndex(data: FloatArray, selectIndexList: ArrayList<Int>): Int {
         if (data.isEmpty()) return -1
 
@@ -78,9 +65,7 @@ object UnifiedArrayUtils {
         return minIndex
     }
 
-    /**
-     * Get rotated maximum index
-     */
+    
     private fun getRotateMaxIndex(
         data: FloatArray,
         rotateType: Int,
@@ -90,9 +75,7 @@ object UnifiedArrayUtils {
         return rotateIndex(maxIndex, data.size, rotateType)
     }
 
-    /**
-     * Get rotated minimum index
-     */
+    
     private fun getRotateMinIndex(
         data: FloatArray,
         rotateType: Int,
@@ -102,9 +85,7 @@ object UnifiedArrayUtils {
         return rotateIndex(minIndex, data.size, rotateType)
     }
 
-    /**
-     * Rotate index based on rotation type
-     */
+    
     private fun rotateIndex(
         index: Int,
         arraySize: Int,
@@ -141,9 +122,7 @@ object UnifiedArrayUtils {
         return newY * newWidth + newX
     }
 
-    /**
-     * Find all indices of maximum value
-     */
+    
     fun findAllMaxIndices(data: FloatArray): List<Int> {
         if (data.isEmpty()) return emptyList()
 
@@ -151,9 +130,7 @@ object UnifiedArrayUtils {
         return data.indices.filter { data[it] == maxValue }
     }
 
-    /**
-     * Find all indices of minimum value
-     */
+    
     fun findAllMinIndices(data: FloatArray): List<Int> {
         if (data.isEmpty()) return emptyList()
 
@@ -161,16 +138,12 @@ object UnifiedArrayUtils {
         return data.indices.filter { data[it] == minValue }
     }
 
-    /**
-     * Get indices within value range
-     */
+    
     fun getIndicesInRange(data: FloatArray, minValue: Float, maxValue: Float): List<Int> {
         return data.indices.filter { data[it] in minValue..maxValue }
     }
 
-    /**
-     * Calculate array statistics
-     */
+    
     data class ArrayStats(
         val min: Float,
         val max: Float,
@@ -199,9 +172,7 @@ object UnifiedArrayUtils {
         return ArrayStats(min, max, mean, median, standardDeviation)
     }
 
-    /**
-     * Apply gaussian filter to array
-     */
+    
     fun applyGaussianFilter(
         data: FloatArray,
         width: Int,
@@ -256,9 +227,7 @@ object UnifiedArrayUtils {
         return result
     }
 
-    /**
-     * Generate Gaussian kernel
-     */
+    
     private fun generateGaussianKernel(size: Int, sigma: Float): FloatArray {
         val kernel = FloatArray(size)
         val center = size / 2
@@ -278,9 +247,7 @@ object UnifiedArrayUtils {
         return kernel
     }
 
-    /**
-     * Downsample array
-     */
+    
     fun downsample(data: FloatArray, width: Int, height: Int, factor: Int): FloatArray {
         val newWidth = width / factor
         val newHeight = height / factor
@@ -310,9 +277,7 @@ object UnifiedArrayUtils {
         return result
     }
 
-    /**
-     * Normalize array to 0-1 range
-     */
+    
     fun normalize(data: FloatArray): FloatArray {
         if (data.isEmpty()) return data.copyOf()
 

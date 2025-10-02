@@ -21,10 +21,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.mpdc4gsr.module.thermalunified.R
 
-/**
- * Compose equivalent of HomeGuideDialog
- * Multi-step guide dialog with smooth transitions
- */
+
 @Composable
 fun HomeGuideDialogCompose(
     initialStep: Int = 1,
@@ -227,9 +224,7 @@ private fun GuideStep3Content(onNext: () -> Unit) {
     }
 }
 
-/**
- * Preview helper for HomeGuideDialogCompose
- */
+
 @Composable
 fun HomeGuideDialogComposePreview() {
     var showDialog by remember { mutableStateOf(true) }

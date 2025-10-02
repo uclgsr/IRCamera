@@ -12,11 +12,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 
-/**
- * Compose equivalent of FirmwareInstallDialog.kt
- *
- * Simple loading dialog for firmware installation
- */
+
 @Composable
 fun FirmwareInstallDialog(
     isVisible: Boolean,
