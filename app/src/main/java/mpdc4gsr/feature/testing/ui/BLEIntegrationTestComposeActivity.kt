@@ -20,7 +20,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import mpdc4gsr.core.data.ShimmerDeviceManager
 import mpdc4gsr.core.data.UnifiedGSRRecorder
-import mpdc4gsr.core.ui.BaseComposeActivity
+import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import mpdc4gsr.core.ui.PermissionController
 import mpdc4gsr.feature.testing.presentation.BLEIntegrationTestViewModel
 import kotlin.io.path.createTempDirectory
