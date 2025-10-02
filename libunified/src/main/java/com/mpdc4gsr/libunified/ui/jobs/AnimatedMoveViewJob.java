@@ -46,11 +46,15 @@ public class AnimatedMoveViewJob extends AnimatedViewPortJob {
             return;
         }
 
-        pts[0] = xOrigin + (xValue - xOrigin) * phase;
-        pts[1] = yOrigin + (yValue - yOrigin) * phase;
+        try {
+            pts[0] = xOrigin + (xValue - xOrigin) * phase;
+            pts[1] = yOrigin + (yValue - yOrigin) * phase;
 
-        mTrans.pointValuesToPixel(pts);
-        mViewPortHandler.centerViewPort(pts, view);
+            mTrans.pointValuesToPixel(pts);
+            mViewPortHandler.centerViewPort(pts, view);
+        } catch (IllegalStateException e) {
+            // View may have been detached during update
+        }
     }
 
     public void recycleSelf() {
