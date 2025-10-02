@@ -117,11 +117,12 @@ python pc_controller.py --help
 # Component demonstration
 python demo_features.py
 
-# Protocol compatibility tests
-python test_protocol_compatibility.py
+# Run tests (note: most tests are currently disabled)
+python -m unittest tests.test_protocol_compatibility
+python -m unittest tests.test_pc_controller_features
 
-# Feature tests
-python test_pc_controller_features.py
+# Or with pytest if installed
+pytest tests/
 ```
 
 ## Project Structure
@@ -144,10 +145,12 @@ pc-controller/
     +-- config.yaml                # Application configuration
     
 +-- Testing
-    +-- test_protocol_compatibility.py    # Protocol tests
-    +-- test_pc_controller_features.py    # Feature tests
-    +-- test_comprehensive_integration.py # Integration tests
-    +-- test_protocol_verification.py     # Protocol verification
+    +-- tests/                     # Test suite directory
+        +-- test_protocol_compatibility.py
+        +-- test_pc_controller_features.py
+        +-- test_comprehensive_integration.py
+        +-- test_protocol_verification.py
+        +-- README.md              # Test documentation
 
 +-- Data and Output
     +-- data/                      # Session data storage
