@@ -46,7 +46,14 @@ fun MainApp() {
                 onNavigateToSensors = { navController.navigate("unified_dashboard") },
                 onNavigateToGallery = { navController.navigate("gallery") },
                 onNavigateToSettings = { navController.navigate("settings") },
-                onNavigateToProfile = { navController.navigate("profile") }
+                onNavigateToProfile = { navController.navigate("profile") },
+                onNavigateToSensor = { sensorType ->
+                    when (sensorType) {
+                        SensorType.GSR -> navController.navigate("gsr_sensor")
+                        SensorType.ThermalIR -> navController.navigate("thermal_connect")
+                        SensorType.RGBCamera -> navController.navigate("rgb_camera")
+                    }
+                }
             )
         }
 

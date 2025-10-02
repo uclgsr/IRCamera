@@ -32,6 +32,7 @@ fun MainScreen(
     onNavigateToGallery: () -> Unit = {},
     onNavigateToSettings: () -> Unit = {},
     onNavigateToProfile: () -> Unit = {},
+    onNavigateToSensor: (mpdc4gsr.core.ui.model.SensorType) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     var selectedTab by remember { mutableIntStateOf(0) }
@@ -60,7 +61,9 @@ fun MainScreen(
                 .weight(1f)
         ) {
             when (selectedTab) {
-                0 -> SensorDashboardTab()
+                0 -> SensorDashboardTab(
+                    onSensorClick = onNavigateToSensor
+                )
                 1 -> GalleryTab(onNavigateToGallery = onNavigateToGallery)
                 2 -> ProfileTab(onNavigateToProfile = onNavigateToProfile)
             }
@@ -127,8 +130,13 @@ fun MainScreen(
  */
 @Composable
 private fun SensorDashboardTab(
+    onSensorClick: (mpdc4gsr.core.ui.model.SensorType) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
+    var gsrState by remember { mutableStateOf(mpdc4gsr.core.ui.model.SensorState.Connected) }
+    var thermalState by remember { mutableStateOf(mpdc4gsr.core.ui.model.SensorState.Connected) }
+    var rgbState by remember { mutableStateOf(mpdc4gsr.core.ui.model.SensorState.Connected) }
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -164,6 +172,52 @@ private fun SensorDashboardTab(
 
         // System status overview
         SystemStatusOverview()
+
+        // Sensor cards for direct access
+        mpdc4gsr.core.ui.components.sensors.GSRSensorCard(
+            state = gsrState,
+            onStateChange = { gsrState = it },
+            onClick = { onSensorClick(mpdc4gsr.core.ui.model.SensorType.GSR) },
+            onAction = { action ->
+                when (action) {
+                    is mpdc4gsr.core.ui.model.GSRAction.Connect -> gsrState = mpdc4gsr.core.ui.model.SensorState.Connecting
+                    is mpdc4gsr.core.ui.model.GSRAction.Disconnect -> gsrState = mpdc4gsr.core.ui.model.SensorState.Disconnected
+                    is mpdc4gsr.core.ui.model.GSRAction.StartStream -> gsrState = mpdc4gsr.core.ui.model.SensorState.Streaming
+                    is mpdc4gsr.core.ui.model.GSRAction.StopStream -> gsrState = mpdc4gsr.core.ui.model.SensorState.Connected
+                    is mpdc4gsr.core.ui.model.GSRAction.ConfigureDevice -> {}
+                }
+            }
+        )
+
+        mpdc4gsr.core.ui.components.sensors.ThermalSensorCard(
+            state = thermalState,
+            onStateChange = { thermalState = it },
+            onClick = { onSensorClick(mpdc4gsr.core.ui.model.SensorType.ThermalIR) },
+            onAction = { action ->
+                when (action) {
+                    is mpdc4gsr.core.ui.model.ThermalAction.Connect -> thermalState = mpdc4gsr.core.ui.model.SensorState.Connecting
+                    is mpdc4gsr.core.ui.model.ThermalAction.Disconnect -> thermalState = mpdc4gsr.core.ui.model.SensorState.Disconnected
+                    is mpdc4gsr.core.ui.model.ThermalAction.StartPreview -> thermalState = mpdc4gsr.core.ui.model.SensorState.Streaming
+                    is mpdc4gsr.core.ui.model.ThermalAction.StopPreview -> thermalState = mpdc4gsr.core.ui.model.SensorState.Connected
+                    is mpdc4gsr.core.ui.model.ThermalAction.Calibrate -> {}
+                }
+            }
+        )
+
+        mpdc4gsr.core.ui.components.sensors.RGBCameraSensorCard(
+            state = rgbState,
+            onStateChange = { rgbState = it },
+            onClick = { onSensorClick(mpdc4gsr.core.ui.model.SensorType.RGBCamera) },
+            onAction = { action ->
+                when (action) {
+                    is mpdc4gsr.core.ui.model.CameraAction.Connect -> rgbState = mpdc4gsr.core.ui.model.SensorState.Connecting
+                    is mpdc4gsr.core.ui.model.CameraAction.Disconnect -> rgbState = mpdc4gsr.core.ui.model.SensorState.Disconnected
+                    is mpdc4gsr.core.ui.model.CameraAction.StartPreview -> rgbState = mpdc4gsr.core.ui.model.SensorState.Streaming
+                    is mpdc4gsr.core.ui.model.CameraAction.StopPreview -> rgbState = mpdc4gsr.core.ui.model.SensorState.Connected
+                    is mpdc4gsr.core.ui.model.CameraAction.SetResolution -> {}
+                }
+            }
+        )
     }
 }
 
