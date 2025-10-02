@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.mpdc4gsr.ble"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         minSdk = libs.versions.minSdk.get().toInt()
