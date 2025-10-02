@@ -11,7 +11,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import mpdc4gsr.core.ui.BaseComposeActivity
+import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import mpdc4gsr.core.ui.BaseViewModel
 import mpdc4gsr.core.ui.components.settings.*
 

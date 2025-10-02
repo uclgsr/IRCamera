@@ -28,7 +28,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
-import mpdc4gsr.core.ui.BaseComposeActivity
+import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import mpdc4gsr.core.ui.BaseViewModel
 import mpdc4gsr.core.ui.PermissionController
 import mpdc4gsr.core.ui.PermissionManager

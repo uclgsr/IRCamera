@@ -19,8 +19,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-import mpdc4gsr.core.ui.BaseComposeActivity
+import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 
 /**
  * PermissionRequestComposeActivity - Modern Permission Management with Compose

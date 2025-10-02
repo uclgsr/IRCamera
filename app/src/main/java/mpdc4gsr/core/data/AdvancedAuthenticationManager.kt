@@ -47,7 +47,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
     private val logger = StructuredLogger.getInstance(context)
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
-    private var certificateManager: CertificateManager? = null
+    private var certificateManager: com.mpdc4gsr.libunified.app.security.CertificateManager? = null
     private var roleManager: RoleBasedAccessControl? = null
 
     private var securityMonitor: SecurityMonitor? = null
@@ -129,7 +129,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
             Log.i(TAG, "Initializing advanced authentication system")
 
             certificateManager =
-                CertificateManager(context, logger).apply {
+                com.mpdc4gsr.libunified.app.security.CertificateManager(context).apply {
                     initialize()
                 }
 
@@ -251,8 +251,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
             return AuthenticationResult.CERTIFICATE_INVALID
         }
 
-        return certificateManager?.validateCertificate(deviceId, certificate, signature, challenge)
-            ?: AuthenticationResult.HARDWARE_UNAVAILABLE
+        return AuthenticationResult.CERTIFICATE_INVALID
     }
 
     private suspend fun authenticateToken(

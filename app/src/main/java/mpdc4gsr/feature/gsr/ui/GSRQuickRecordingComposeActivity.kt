@@ -21,7 +21,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import mpdc4gsr.core.ui.BaseComposeActivity
+import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import mpdc4gsr.core.ui.BaseViewModel
 import mpdc4gsr.core.ui.components.settings.*
 import mpdc4gsr.core.ui.theme.IRCameraTheme

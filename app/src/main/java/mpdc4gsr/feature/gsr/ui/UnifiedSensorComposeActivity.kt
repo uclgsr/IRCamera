@@ -25,7 +25,7 @@ import mpdc4gsr.core.data.model.DeviceInfo
 import mpdc4gsr.core.data.model.SessionQuality
 import mpdc4gsr.core.data.model.SessionStatus
 import mpdc4gsr.core.data.model.SessionType
-import mpdc4gsr.core.ui.BaseComposeActivity
+import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import mpdc4gsr.core.ui.BaseViewModel
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.theme.IRCameraTheme
