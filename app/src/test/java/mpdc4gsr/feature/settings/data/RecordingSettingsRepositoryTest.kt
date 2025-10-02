@@ -32,7 +32,7 @@ class RecordingSettingsRepositoryTest {
         `when`(mockEditor.putBoolean(anyString(), anyBoolean())).thenReturn(mockEditor)
         `when`(mockEditor.putString(anyString(), anyString())).thenReturn(mockEditor)
         `when`(mockEditor.putInt(anyString(), anyInt())).thenReturn(mockEditor)
-        
+
         `when`(mockSharedPreferences.getBoolean(eq("recording_auto_recording"), anyBoolean())).thenReturn(false)
         `when`(mockSharedPreferences.getString(eq("recording_quality"), anyString())).thenReturn("High")
         `when`(mockSharedPreferences.getInt(eq("recording_video_frame_rate"), anyInt())).thenReturn(30)
@@ -44,7 +44,7 @@ class RecordingSettingsRepositoryTest {
     @Test
     fun `test default settings`() {
         val settings = RecordingSettingsRepository.RecordingSettings()
-        
+
         assertEquals(false, settings.autoRecording)
         assertEquals("High", settings.recordingQuality)
         assertEquals(30, settings.videoFrameRate)
@@ -56,9 +56,9 @@ class RecordingSettingsRepositoryTest {
     @Test
     fun `test quality config for Ultra quality`() {
         repository = RecordingSettingsRepository(mockContext)
-        
+
         val qualityConfig = repository.getQualityConfig("Ultra")
-        
+
         assertEquals(50_000_000, qualityConfig.videoBitrate)
         assertEquals(3840, qualityConfig.videoWidth)
         assertEquals(2160, qualityConfig.videoHeight)
@@ -68,9 +68,9 @@ class RecordingSettingsRepositoryTest {
     @Test
     fun `test quality config for High quality`() {
         repository = RecordingSettingsRepository(mockContext)
-        
+
         val qualityConfig = repository.getQualityConfig("High")
-        
+
         assertEquals(20_000_000, qualityConfig.videoBitrate)
         assertEquals(1920, qualityConfig.videoWidth)
         assertEquals(1080, qualityConfig.videoHeight)
@@ -80,9 +80,9 @@ class RecordingSettingsRepositoryTest {
     @Test
     fun `test quality config for Medium quality`() {
         repository = RecordingSettingsRepository(mockContext)
-        
+
         val qualityConfig = repository.getQualityConfig("Medium")
-        
+
         assertEquals(10_000_000, qualityConfig.videoBitrate)
         assertEquals(1280, qualityConfig.videoWidth)
         assertEquals(720, qualityConfig.videoHeight)
@@ -92,9 +92,9 @@ class RecordingSettingsRepositoryTest {
     @Test
     fun `test quality config for Low quality`() {
         repository = RecordingSettingsRepository(mockContext)
-        
+
         val qualityConfig = repository.getQualityConfig("Low")
-        
+
         assertEquals(5_000_000, qualityConfig.videoBitrate)
         assertEquals(854, qualityConfig.videoWidth)
         assertEquals(480, qualityConfig.videoHeight)

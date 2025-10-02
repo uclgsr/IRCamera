@@ -29,7 +29,7 @@ class RecordingSettingsViewModel : BaseViewModel() {
     fun initialize(context: Context) {
         repository = RecordingSettingsRepository.getInstance(context)
         loadSettings()
-        
+
         viewModelScope.launch {
             repository.settings.collect { repoSettings ->
                 _recordingSettings.value = RecordingSettings(

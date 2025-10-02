@@ -149,7 +149,7 @@ class RgbCameraRecorder(
     private var deviceSupports4K = false
     private var deviceSupportsRAW = false
     private var actualFrameRateAchieved = 0.0
-    
+
     private var recordingSettings: mpdc4gsr.feature.settings.data.RecordingSettingsRepository.RecordingSettings? = null
 
     private var cameraProvider: ProcessCameraProvider? = null
@@ -219,9 +219,13 @@ class RgbCameraRecorder(
 
     override suspend fun initialize(): Boolean = withContext(Dispatchers.Main) {
         try {
-            recordingSettings = mpdc4gsr.feature.settings.data.RecordingSettingsRepository.getInstance(context).getSettings()
-            Log.d(TAG, "Recording settings loaded: quality=${recordingSettings?.recordingQuality}, fps=${recordingSettings?.videoFrameRate}, audio=${recordingSettings?.audioEnabled}")
-            
+            recordingSettings =
+                mpdc4gsr.feature.settings.data.RecordingSettingsRepository.getInstance(context).getSettings()
+            Log.d(
+                TAG,
+                "Recording settings loaded: quality=${recordingSettings?.recordingQuality}, fps=${recordingSettings?.videoFrameRate}, audio=${recordingSettings?.audioEnabled}"
+            )
+
             Log.d(
                 TAG,
                 "Initializing CameraX with ${if (useFrontCamera) "front" else "back"} camera"
@@ -541,12 +545,12 @@ class RgbCameraRecorder(
     private fun optimizeVideoConfiguration() {
         try {
             val supports60fps = checkDevice60fpsSupport()
-            
+
             val qualityConfig = recordingSettings?.let { settings ->
                 mpdc4gsr.feature.settings.data.RecordingSettingsRepository.getInstance(context)
                     .getQualityConfig(settings.recordingQuality)
             }
-            
+
             val preferredFps = recordingSettings?.videoFrameRate ?: VIDEO_FPS_TARGET
 
             if (qualityConfig != null) {
@@ -554,7 +558,8 @@ class RgbCameraRecorder(
                 selectedVideoWidth = qualityConfig.videoWidth
                 selectedVideoHeight = qualityConfig.videoHeight
                 selectedVideoBitrate = qualityConfig.videoBitrate
-                selectedVideoFps = preferredFps.coerceIn(VIDEO_FPS_FALLBACK, if (supports60fps) VIDEO_FPS_60 else VIDEO_FPS_TARGET)
+                selectedVideoFps =
+                    preferredFps.coerceIn(VIDEO_FPS_FALLBACK, if (supports60fps) VIDEO_FPS_60 else VIDEO_FPS_TARGET)
             } else if (deviceSupports4K) {
                 Log.i(TAG, "Configuring for 4K recording on supported device")
                 selectedVideoWidth = VIDEO_WIDTH_4K
@@ -883,9 +888,12 @@ class RgbCameraRecorder(
                 }
 
                 mpdc4gsr.feature.settings.data.RecordingSettingsValidator.validateAndLogSettings(context)
-                
+
                 Log.i(TAG, "Starting RGB camera recording with Samsung Galaxy S22 optimization")
-                Log.i(TAG, "Recording config from settings: ${selectedVideoWidth}x${selectedVideoHeight}@${selectedVideoFps}fps, audio=${recordingSettings?.audioEnabled}")
+                Log.i(
+                    TAG,
+                    "Recording config from settings: ${selectedVideoWidth}x${selectedVideoHeight}@${selectedVideoFps}fps, audio=${recordingSettings?.audioEnabled}"
+                )
                 _isRecording.set(true)
                 sessionStartTime.set(System.currentTimeMillis())
 

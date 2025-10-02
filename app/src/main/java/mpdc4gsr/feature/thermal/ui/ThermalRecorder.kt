@@ -39,7 +39,7 @@ class ThermalRecorder(private val context: Context) {
     private var sessionMetadata: SessionMetadata? = null
 
     private val recordingScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
-    
+
     private var thermalSettings: mpdc4gsr.feature.thermal.data.ThermalSettingsRepository.ThermalSettings? = null
 
 
@@ -82,11 +82,14 @@ class ThermalRecorder(private val context: Context) {
             try {
                 val thermalSettingsRepo = mpdc4gsr.feature.thermal.data.ThermalSettingsRepository.getInstance(context)
                 thermalSettings = thermalSettingsRepo.getSettings()
-                
+
                 val effectiveSaveImages = saveImages || (thermalSettings?.saveRawImages ?: false)
-                
-                Log.i(TAG, "Thermal settings loaded: frameRate=${thermalSettings?.frameRate}fps, saveImages=$effectiveSaveImages, palette=${thermalSettings?.palette}")
-                
+
+                Log.i(
+                    TAG,
+                    "Thermal settings loaded: frameRate=${thermalSettings?.frameRate}fps, saveImages=$effectiveSaveImages, palette=${thermalSettings?.palette}"
+                )
+
                 this@ThermalRecorder.saveImages = effectiveSaveImages
                 this@ThermalRecorder.sessionMetadata = sessionMetadata
                 sessionDirectory = File(sessionDir)
