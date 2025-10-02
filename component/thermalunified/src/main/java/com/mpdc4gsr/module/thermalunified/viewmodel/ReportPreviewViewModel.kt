@@ -27,6 +27,17 @@ class ReportPreviewViewModel : BaseViewModel() {
     private val _previewGenerated = MutableStateFlow(false)
     val previewGenerated: StateFlow<Boolean> = _previewGenerated.asStateFlow()
 
+    private val _previewData = MutableStateFlow<PreviewData?>(null)
+    val previewData: StateFlow<PreviewData?> = _previewData.asStateFlow()
+
+    data class PreviewData(
+        val layoutIndex: Int,
+        val includeImages: Boolean,
+        val includeMetadata: Boolean,
+        val includeWatermark: Boolean,
+        val timestamp: Long = System.currentTimeMillis()
+    )
+
     fun selectLayout(index: Int) {
         launchWithErrorHandling {
             _selectedLayout.value = index
@@ -53,8 +64,21 @@ class ReportPreviewViewModel : BaseViewModel() {
 
     fun generatePreview() {
         launchWithLoading {
-            // TODO: Temporary simulation logic. Replace with actual preview generation implementation in production
-            delay(1000)
+            val currentLayout = _selectedLayout.value
+            val currentShowImages = _showImages.value
+            val currentShowMetadata = _showMetadata.value
+            val currentShowWatermark = _showWatermark.value
+
+            delay(500)
+
+            val preview = PreviewData(
+                layoutIndex = currentLayout,
+                includeImages = currentShowImages,
+                includeMetadata = currentShowMetadata,
+                includeWatermark = currentShowWatermark
+            )
+
+            _previewData.value = preview
             _previewGenerated.value = true
         }
     }
