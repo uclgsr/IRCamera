@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Dashboard
 import androidx.compose.material.icons.filled.Photo
@@ -25,7 +24,7 @@ import mpdc4gsr.core.ui.theme.IRCameraTheme
 
 /**
  * Main Screen - Replaces MainActivity with Compose implementation
- * Primary entry point for the IR Camera application with Quick Actions
+ * Primary entry point for the IR Camera application
  */
 @Composable
 fun MainScreen(
@@ -33,10 +32,6 @@ fun MainScreen(
     onNavigateToGallery: () -> Unit = {},
     onNavigateToSettings: () -> Unit = {},
     onNavigateToProfile: () -> Unit = {},
-    onCaptureThermal: () -> Unit = {},
-    onStartGSRSession: () -> Unit = {},
-    onThermalRGBCapture: () -> Unit = {},
-    onViewRecentSessions: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     var selectedTab by remember { mutableIntStateOf(0) }
@@ -65,17 +60,9 @@ fun MainScreen(
                 .weight(1f)
         ) {
             when (selectedTab) {
-                0 -> SensorDashboardTab(
-                    onCaptureThermal = onCaptureThermal,
-                    onStartGSRSession = onStartGSRSession,
-                    onThermalRGBCapture = onThermalRGBCapture,
-                    onViewGallery = onNavigateToGallery,
-                    onViewRecentSessions = onViewRecentSessions
-                )
-
+                0 -> SensorDashboardTab()
                 1 -> GalleryTab(onNavigateToGallery = onNavigateToGallery)
-                2 -> SettingsTab(onNavigateToSettings = onNavigateToSettings)
-                3 -> ProfileTab(onNavigateToProfile = onNavigateToProfile)
+                2 -> ProfileTab(onNavigateToProfile = onNavigateToProfile)
             }
         }
 
@@ -110,8 +97,8 @@ fun MainScreen(
             NavigationBarItem(
                 icon = { Icon(Icons.Default.Settings, contentDescription = "Settings") },
                 label = { Text("Settings") },
-                selected = selectedTab == 2,
-                onClick = { selectedTab = 2 },
+                selected = false,
+                onClick = { onNavigateToSettings() },
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = MaterialTheme.colorScheme.primary,
                     unselectedIconColor = Color.Gray,
@@ -122,8 +109,8 @@ fun MainScreen(
             NavigationBarItem(
                 icon = { Icon(Icons.Default.Person, contentDescription = "Profile") },
                 label = { Text("Profile") },
-                selected = selectedTab == 3,
-                onClick = { selectedTab = 3 },
+                selected = selectedTab == 2,
+                onClick = { selectedTab = 2 },
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = MaterialTheme.colorScheme.primary,
                     unselectedIconColor = Color.Gray,
@@ -136,15 +123,10 @@ fun MainScreen(
 }
 
 /**
- * Sensor Dashboard Tab - Main sensor interface with Quick Actions
+ * Sensor Dashboard Tab - Main sensor interface
  */
 @Composable
 private fun SensorDashboardTab(
-    onCaptureThermal: () -> Unit,
-    onStartGSRSession: () -> Unit,
-    onThermalRGBCapture: () -> Unit,
-    onViewGallery: () -> Unit,
-    onViewRecentSessions: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -176,61 +158,6 @@ private fun SensorDashboardTab(
                     color = Color.Gray,
                     fontSize = 14.sp,
                     lineHeight = 20.sp
-                )
-            }
-        }
-
-        // Quick Actions - User-centric design
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                Text(
-                    text = "Quick Actions",
-                    color = Color.White,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold
-                )
-
-                QuickActionButton(
-                    icon = "🔥",
-                    title = "Capture Thermal Image",
-                    subtitle = "Most recent: 2 min ago",
-                    onClick = onCaptureThermal
-                )
-
-                QuickActionButton(
-                    icon = "📊",
-                    title = "Start GSR Session",
-                    subtitle = "Last session: 1 hour ago",
-                    onClick = onStartGSRSession
-                )
-
-                QuickActionButton(
-                    icon = "📷",
-                    title = "Thermal + RGB Capture",
-                    subtitle = "Multi-sensor recording",
-                    onClick = onThermalRGBCapture
-                )
-
-                QuickActionButton(
-                    icon = "🖼️",
-                    title = "View Gallery",
-                    subtitle = "12 new images",
-                    onClick = onViewGallery
-                )
-
-                QuickActionButton(
-                    icon = "📈",
-                    title = "Recent Sessions",
-                    subtitle = "3 sessions today",
-                    onClick = onViewRecentSessions
                 )
             }
         }
@@ -290,62 +217,6 @@ private fun GalleryTab(
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
                 ) {
                     Text("Open Gallery")
-                }
-            }
-        }
-    }
-}
-
-/**
- * Settings Tab - Application settings
- */
-@Composable
-private fun SettingsTab(
-    onNavigateToSettings: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(20.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Icon(
-                    Icons.Default.Settings,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(64.dp)
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    text = "Settings",
-                    color = Color.White,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = "Configure sensors, calibration, and app preferences",
-                    color = Color.Gray,
-                    fontSize = 14.sp,
-                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                Button(
-                    onClick = onNavigateToSettings,
-                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
-                ) {
-                    Text("Open Settings")
                 }
             }
         }
@@ -478,57 +349,7 @@ private fun StatusItem(
     }
 }
 
-/**
- * Quick Action Button - Action-oriented button with icon and subtitle
- */
-@Composable
-private fun QuickActionButton(
-    icon: String,
-    title: String,
-    subtitle: String,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Card(
-        modifier = modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF353535)),
-        onClick = onClick
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = icon,
-                fontSize = 28.sp
-            )
-            Column(
-                modifier = Modifier.weight(1f)
-            ) {
-                Text(
-                    text = title,
-                    color = Color.White,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Medium
-                )
-                Text(
-                    text = subtitle,
-                    color = Color.Gray,
-                    fontSize = 12.sp
-                )
-            }
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                contentDescription = "Navigate",
-                tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.size(24.dp)
-            )
-        }
-    }
-}
+
 
 @Preview(showBackground = true)
 @Composable
