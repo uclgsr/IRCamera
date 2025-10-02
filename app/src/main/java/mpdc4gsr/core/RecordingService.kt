@@ -10,6 +10,7 @@ import android.os.Build
 import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import com.csl.irCamera.R
 import com.mpdc4gsr.gsr.model.SessionInfo
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.launchIn
@@ -1105,10 +1106,10 @@ class RecordingService : Service(), CoroutineScope {
         return NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("IRCamera Recording")
             .setContentText(contentText)
-            .setSmallIcon(android.R.drawable.ic_media_play)
+            .setSmallIcon(R.drawable.ic_play)
             .setOngoing(true)
             .addAction(
-                android.R.drawable.ic_media_pause,
+                R.drawable.ic_pause,
                 "Stop",
                 stopPendingIntent
             )
@@ -2119,10 +2120,10 @@ class RecordingService : Service(), CoroutineScope {
         return NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("IRCamera Server")
             .setContentText(contentText)
-            .setSmallIcon(android.R.drawable.ic_dialog_info)
+            .setSmallIcon(R.drawable.ic_info)
             .setOngoing(true)
             .addAction(
-                android.R.drawable.ic_media_pause,
+                R.drawable.ic_pause,
                 "Stop Server",
                 stopPendingIntent
             )

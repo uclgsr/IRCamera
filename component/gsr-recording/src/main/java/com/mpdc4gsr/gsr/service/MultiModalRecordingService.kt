@@ -10,6 +10,7 @@ import android.os.Build
 import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import com.mpdc4gsr.gsr.R
 import com.mpdc4gsr.gsr.model.GSRSample
 import com.mpdc4gsr.gsr.model.SessionInfo
 import com.mpdc4gsr.gsr.model.SyncMark
@@ -217,7 +218,7 @@ class MultiModalRecordingService : Service() {
         return NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("Multi-Modal Recording")
             .setContentText(content)
-            .setSmallIcon(android.R.drawable.ic_media_ff)
+            .setSmallIcon(R.drawable.ic_fast_forward)
             .setOngoing(true)
             .setSilent(true)
             .build()

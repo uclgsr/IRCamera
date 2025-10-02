@@ -12,6 +12,7 @@ import android.os.IBinder
 import android.os.PowerManager
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import com.mpdc4gsr.gsr.R
 import com.mpdc4gsr.gsr.model.GSRSample
 import com.mpdc4gsr.gsr.model.SessionInfo
 import com.mpdc4gsr.gsr.model.SyncMark
@@ -575,7 +576,7 @@ class EnhancedRecordingService : Service() {
         return NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("Enhanced Recording Service")
             .setContentText(content)
-            .setSmallIcon(android.R.drawable.ic_media_ff)
+            .setSmallIcon(R.drawable.ic_fast_forward)
             .setOngoing(true)
             .setSilent(true)
             .build()
