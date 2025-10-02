@@ -327,6 +327,26 @@ class ThermalCameraRecorder(
         this.previewCallback = callback
     }
 
+    data class ThermalFrameStats(
+        val timestampNs: Long,
+        val frameSequence: Long,
+        val minTemp: Float,
+        val avgTemp: Float,
+        val maxTemp: Float,
+        val pixelCount: Int
+    )
+
+    interface ThermalFrameListener {
+        fun onFrameProcessed(stats: ThermalFrameStats)
+        fun onError(error: String)
+    }
+
+    private var frameListener: ThermalFrameListener? = null
+
+    fun setFrameListener(listener: ThermalFrameListener) {
+        this.frameListener = listener
+    }
+
     fun enableNetworkStreaming(networkServer: NetworkServer) {
         this.networkServer = networkServer
         this.enableNetworkStreaming = true
@@ -2036,6 +2056,23 @@ class ThermalCameraRecorder(
             thermalResolution.first,
             thermalResolution.second
         )
+
+        frameListener?.let { listener ->
+            try {
+                val stats = ThermalFrameStats(
+                    timestampNs = timestampRecord.systemNanos,
+                    frameSequence = frameNumber,
+                    minTemp = thermalData.minTemperature,
+                    avgTemp = thermalData.avgTemperature,
+                    maxTemp = thermalData.maxTemperature,
+                    pixelCount = thermalResolution.first * thermalResolution.second
+                )
+                listener.onFrameProcessed(stats)
+            } catch (e: Exception) {
+                Log.e(TAG, "Error in frame listener callback", e)
+                listener.onError("Frame listener error: ${e.message}")
+            }
+        }
 
         if (frameNumber % 10 == 0L) {
             emitStatus()
