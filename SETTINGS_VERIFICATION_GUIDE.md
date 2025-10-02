@@ -164,15 +164,19 @@ This PR implements recording settings integration to ensure that user preference
 - Quality, FPS, and audio settings all applied
 - Device capabilities still respected (can't force 4K on non-4K device)
 
-### Thermal Camera
-- No user-configurable settings at this time
-- Frame rate determined by thermal camera hardware
-- saveImages parameter controlled programmatically
+### Thermal Camera (Topdon TC001)
+- **NEW**: Now uses ThermalSettingsRepository for configuration
+- Frame rate configurable: 10-30 fps (hardware limited)
+- Bitrate automatically adjusts based on frame rate
+- Settings: frame rate, save raw images, palette, emissivity, temperature unit
+- Topdon SDK fully utilized with FFmpeg integration
 
-### GSR Sensor
-- Has its own settings repository (GSRSettingsRepository)
-- Sampling rate and device settings managed separately
-- No integration needed with main recording settings
+### GSR Sensor (Shimmer3 GSR+)
+- **ENHANCED**: Shimmer SDK fully utilized with configurable sampling rate
+- Sampling rate: 1-512 Hz (configured via GSRSettingsRepository)
+- Settings: sampling rate, filtering, buffering, real-time monitoring
+- Advanced features: ObjectCluster processing, auto-reconnect
+- SDK methods: setSamplingRateShimmer, startStreaming, data callbacks
 
 ## Testing Checklist
 
