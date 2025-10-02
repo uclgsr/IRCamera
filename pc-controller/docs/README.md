@@ -19,6 +19,32 @@ This directory contains detailed technical documentation for the PC Controller i
 - Development progress
 - Component details
 
+### Protocol Documentation
+
+**PROTOCOL_BRIDGE_GUIDE.md** - Protocol bridge implementation
+
+- Communication protocol details
+- PC-Android harmonization
+- Message format specifications
+
+**PROTOCOL_FLOW.txt** - Protocol message flow documentation
+
+- Message sequence diagrams
+- Communication patterns
+- Protocol states
+
+**PROTOCOL_VERIFICATION_README.md** - Protocol verification overview
+
+- Verification approach
+- Test methodology
+
+**PROTOCOL_VERIFICATION_REPORT.md** - Protocol verification results
+
+- Test results
+- Compatibility confirmation
+
+**protocol_bridge_summary.txt** - Quick protocol reference
+
 ### Integration Documentation
 
 **INTEGRATION_READY.md** - PC-Android integration status
@@ -26,12 +52,6 @@ This directory contains detailed technical documentation for the PC Controller i
 - Compatibility verification
 - Integration testing results
 - Protocol alignment confirmation
-
-**PROTOCOL_BRIDGE_GUIDE.md** - Protocol bridge implementation
-
-- Communication protocol details
-- PC-Android harmonization
-- Message format specifications
 
 **GAP_ANALYSIS.md** - Protocol gap analysis
 
@@ -41,11 +61,18 @@ This directory contains detailed technical documentation for the PC Controller i
 
 ### Code Quality Documentation
 
-**CODE_REVIEW.md** - Initial code review findings
+**CODE_REVIEW.md** - Detailed code review findings
 
 - Architecture assessment
 - Code quality analysis
 - Improvement recommendations
+- Anti-pattern analysis
+
+**CODE_REVIEW_SUMMARY.txt** - Code review summary
+
+- Key findings overview
+- Issue priorities
+- Resolution status
 
 **CODE_REVIEW_FIXES.md** - Code review resolution
 
@@ -58,7 +85,7 @@ This directory contains detailed technical documentation for the PC Controller i
 For quick start and general usage, see:
 
 - **../README.md** - Main PC Controller guide
-- **../QUICK_START.md** - Quick start guide
+- **QUICK_START.md** - Detailed quick start guide with installation
 
 ## Organization
 
