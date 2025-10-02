@@ -53,7 +53,8 @@ class NetworkClient(private val context: Context) {
     private val messageHandlers = ConcurrentHashMap<String, (JSONObject) -> Unit>()
     private val discoveredControllers = ConcurrentHashMap<String, ControllerInfo>()
 
-    private lateinit var errorRecoveryManager: NetworkErrorRecoveryManager
+    // Stub: NetworkErrorRecoveryManager not available
+    // private lateinit var errorRecoveryManager: NetworkErrorRecoveryManager
 
     private val certificateManager = CertificateManager(context)
     private val discoveryService = NetworkDiscoveryService(context)
@@ -94,9 +95,9 @@ class NetworkClient(private val context: Context) {
     private var eventListener: NetworkEventListener? = null
 
     init {
-
-        errorRecoveryManager = NetworkErrorRecoveryManager(context, this)
-        setupErrorRecoveryListener()
+        // Stub: NetworkErrorRecoveryManager not available
+        // errorRecoveryManager = NetworkErrorRecoveryManager(context, this)
+        // setupErrorRecoveryListener()
     }
 
     fun initialize(): Boolean {
@@ -208,39 +209,7 @@ class NetworkClient(private val context: Context) {
     }
 
     private fun setupErrorRecoveryListener() {
-        errorRecoveryManager.setEventListener(
-            object : NetworkErrorRecoveryManager.RecoveryEventListener {
-                override fun onRecoveryStarted(reason: String) {
-                    Log.i(TAG, "Network recovery started: $reason")
-                }
-
-                override fun onRecoveryAttempt(
-                    attempt: Int,
-                    maxAttempts: Int,
-                ) {
-                    Log.i(TAG, "Recovery attempt $attempt/$maxAttempts")
-                }
-
-                override fun onRecoverySuccess(controller: ControllerInfo) {
-                    Log.i(TAG, "Network recovery successful")
-                    eventListener?.onConnected(controller)
-                }
-
-                override fun onRecoveryFailed(reason: String) {
-                    Log.e(TAG, "Network recovery failed: $reason")
-                    eventListener?.onError("recovery", reason)
-                }
-
-                override fun onConnectionHealthChanged(isHealthy: Boolean) {
-                    Log.d(TAG, "Connection health: ${if (isHealthy) "good" else "poor"}")
-                }
-
-                override fun onRapidFailureDetected(failureCount: Int) {
-                    Log.w(TAG, "Rapid failure detected: $failureCount failures")
-                    eventListener?.onError("rapid_failure", "Detected $failureCount rapid failures")
-                }
-            },
-        )
+        // Stub: NetworkErrorRecoveryManager not available
     }
 
     suspend fun discoverControllers(): List<ControllerInfo> =
@@ -396,9 +365,9 @@ class NetworkClient(private val context: Context) {
                         discoveredControllers[ipAddress]
                             ?: ControllerInfo(ipAddress, port, "PC Controller", listOf("recording"))
 
-                    errorRecoveryManager.recordSuccessfulConnection(controller)
+                    // errorRecoveryManager.recordSuccessfulConnection(controller)
 
-                    errorRecoveryManager.enableAutoRecovery()
+                    // errorRecoveryManager.enableAutoRecovery()
 
                     eventListener?.onConnected(controller)
 
@@ -414,7 +383,7 @@ class NetworkClient(private val context: Context) {
                 connectPlaintext(ipAddress, port)
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to connect to PC Controller", e)
-                errorRecoveryManager.handleNetworkError("connect", e.message ?: "Connection failed")
+                // errorRecoveryManager.handleNetworkError("connect", e.message ?: "Connection failed")
                 eventListener?.onError("connect", e.message ?: "Connection failed")
                 disconnect()
                 false
@@ -470,7 +439,7 @@ class NetworkClient(private val context: Context) {
         timeSyncService.stopPeriodicSync()
         discoveryService.stopDiscovery()
 
-        errorRecoveryManager.disableAutoRecovery()
+        // errorRecoveryManager.disableAutoRecovery()
 
         try {
             outputStream?.close()
@@ -512,7 +481,7 @@ class NetworkClient(private val context: Context) {
                 true
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to send measurement data", e)
-                errorRecoveryManager.handleNetworkError("send_data", e.message ?: "Send failed")
+                // errorRecoveryManager.handleNetworkError("send_data", e.message ?: "Send failed")
                 eventListener?.onError("send_data", e.message ?: "Send failed")
                 false
             }
@@ -726,11 +695,11 @@ class NetworkClient(private val context: Context) {
             output.write(messageData)
             output.flush()
 
-            errorRecoveryManager.recordDataTransfer(messageData.size.toLong() + 4)
+            // errorRecoveryManager.recordDataTransfer(messageData.size.toLong() + 4)
 
             if (message.optString("message_type") == "device_heartbeat") {
                 val latency = System.currentTimeMillis() - startTime
-                errorRecoveryManager.recordLatency(latency)
+                // errorRecoveryManager.recordLatency(latency)
             }
         }
 
@@ -781,7 +750,7 @@ class NetworkClient(private val context: Context) {
                 true
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to send message", e)
-                errorRecoveryManager.handleNetworkError("send_message", e.message ?: "Send failed")
+                // errorRecoveryManager.handleNetworkError("send_message", e.message ?: "Send failed")
                 false
             }
         }
@@ -952,7 +921,8 @@ class NetworkClient(private val context: Context) {
         Log.i(TAG, "Secure connection default ${if (enabled) "enabled" else "disabled"}")
     }
 
-    fun getErrorRecoveryManager(): NetworkErrorRecoveryManager = errorRecoveryManager
+    // Stub: NetworkErrorRecoveryManager not available
+    // fun getErrorRecoveryManager(): NetworkErrorRecoveryManager = errorRecoveryManager
 
     fun startDiscovery(callback: (Boolean) -> Unit) {
         heartbeatScope.launch {
@@ -983,11 +953,11 @@ class NetworkClient(private val context: Context) {
     }
 
     fun getLatencyMs(): Long {
-        return errorRecoveryManager.getAverageLatency()
+        return 0L // Stub: errorRecoveryManager not available
     }
 
     fun getThroughputKBps(): Double {
-        return errorRecoveryManager.getThroughputKBps()
+        return 0.0 // Stub: errorRecoveryManager not available
     }
 
     fun cleanup() {
@@ -995,7 +965,7 @@ class NetworkClient(private val context: Context) {
         discoveryService.cleanup()
         timeSyncService.cleanup()
         reliableMessaging.shutdown()
-        errorRecoveryManager.cleanup()
+        // errorRecoveryManager.cleanup()
         discoveredControllers.clear()
         eventListener = null
     }

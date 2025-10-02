@@ -38,7 +38,7 @@ constructor(
     private var isRecording = false
     private var startTime = 0L
     private var sessionId = ""
-    private var activeSensors = emptySet<SensorSelectionDialog.SensorType>()
+    private var activeSensors = emptySet<SensorType>()
 
     init {
         orientation = VERTICAL
@@ -86,7 +86,7 @@ constructor(
 
     fun startRecording(
         sessionId: String,
-        sensors: Set<SensorSelectionDialog.SensorType>,
+        sensors: Set<SensorType>,
     ) {
         this.sessionId = sessionId
         this.activeSensors = sensors
@@ -104,7 +104,7 @@ constructor(
     }
 
     fun updateSensorStatus(
-        sensor: SensorSelectionDialog.SensorType,
+        sensor: SensorType,
         status: String,
     ) {
 
@@ -185,9 +185,9 @@ constructor(
             sensorsText.text =
                 activeSensors.joinToString(" • ") {
                     when (it) {
-                        SensorSelectionDialog.SensorType.THERMAL -> "[THM]"
-                        SensorSelectionDialog.SensorType.RGB -> "[CAM]"
-                        SensorSelectionDialog.SensorType.GSR -> "[GSR]"
+                        SensorType.THERMAL -> "[THM]"
+                        SensorType.RGB -> "[CAM]"
+                        SensorType.GSR -> "[GSR]"
                     }
                 }
 

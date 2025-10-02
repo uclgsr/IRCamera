@@ -78,7 +78,7 @@ private fun ThermalCameraContent(
     var selectedPalette by remember { mutableStateOf(ThermalPalette.IRON) }
     var temperatureUnit by remember { mutableStateOf(TemperatureUnit.CELSIUS) }
     var isRecording by remember { mutableStateOf(false) }
-    var measurementMode by remember { mutableStateOf(MeasurementMode.POINT) }
+    var measurementMode by remember { mutableStateOf(MeasurementMode.SPOT) }
 
     Column(
         modifier = modifier
@@ -194,7 +194,7 @@ private fun ThermalPreviewCard(
 
                     // Temperature overlay
                     when (measurementMode) {
-                        MeasurementMode.POINT -> {
+                        MeasurementMode.SPOT -> {
                             Text(
                                 "Center Point: ${formatTemperature(25.6f, temperatureUnit)}",
                                 color = Color.White,
@@ -218,9 +218,9 @@ private fun ThermalPreviewCard(
                             )
                         }
 
-                        MeasurementMode.ISOTHERMAL -> {
+                        MeasurementMode.CONTINUOUS -> {
                             Text(
-                                "Isothermal: ${formatTemperature(30.0f, temperatureUnit)}",
+                                "Continuous: ${formatTemperature(30.0f, temperatureUnit)}",
                                 color = Color.White,
                                 style = MaterialTheme.typography.bodyMedium
                             )
@@ -680,12 +680,12 @@ private fun getThermalPreviewColor(palette: ThermalPalette): Color {
     return when (palette) {
         ThermalPalette.IRON -> Color(0xFF8B4513)
         ThermalPalette.RAINBOW -> Color(0xFF4169E1)
-        ThermalPalette.WHITE_HOT -> Color(0xFF696969)
-        ThermalPalette.BLACK_HOT -> Color(0xFF2F2F2F)
-        ThermalPalette.RED_HOT -> Color(0xFFDC143C)
         ThermalPalette.ARCTIC -> Color(0xFF4682B4)
         ThermalPalette.GRAYSCALE -> Color(0xFF808080)
         ThermalPalette.HOT -> Color(0xFFFF6600)
+        ThermalPalette.MEDICAL -> Color(0xFF00CED1)
+        ThermalPalette.LAVA -> Color(0xFFDC143C)
+        ThermalPalette.CONTRAST -> Color(0xFF696969)
     }
 }
 
@@ -693,12 +693,12 @@ private fun getThermalGradient(palette: ThermalPalette): Color {
     return when (palette) {
         ThermalPalette.IRON -> Color(0xFFFF4500)
         ThermalPalette.RAINBOW -> Color(0xFF32CD32)
-        ThermalPalette.WHITE_HOT -> Color(0xFFFFFFFF)
-        ThermalPalette.BLACK_HOT -> Color(0xFF000000)
-        ThermalPalette.RED_HOT -> Color(0xFFFF0000)
         ThermalPalette.ARCTIC -> Color(0xFF00CED1)
         ThermalPalette.GRAYSCALE -> Color(0xFFFFFFFF)
         ThermalPalette.HOT -> Color(0xFFFFFF00)
+        ThermalPalette.MEDICAL -> Color(0xFF32CD32)
+        ThermalPalette.LAVA -> Color(0xFFFF0000)
+        ThermalPalette.CONTRAST -> Color(0xFFFFFFFF)
     }
 }
 

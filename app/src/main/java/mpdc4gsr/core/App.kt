@@ -13,8 +13,7 @@ import com.mpdc4gsr.libunified.app.lms.Config
 import com.mpdc4gsr.libunified.app.lms.LMS.mContext
 import com.mpdc4gsr.libunified.app.lms.UrlConstants
 import com.mpdc4gsr.libunified.app.lms.utils.SPUtils
-import com.mpdc4gsr.module.thermalunified.utils.IrConst
-import com.mpdc4gsr.module.thermalunified.utils.CommonUtils
+
 import io.reactivex.plugins.RxJavaPlugins
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -74,14 +73,7 @@ class App : BaseApplication() {
                 SharedManager.setBaseHost(UrlConstants.BASE_URL)
             }
 
-            CoroutineScope(Dispatchers.IO).launch {
-                try {
-                    tau_data_H = CommonUtils.getAssetData(mContext, IrConst.TAU_HIGH_GAIN_ASSET_PATH)
-                    tau_data_L = CommonUtils.getAssetData(mContext, IrConst.TAU_LOW_GAIN_ASSET_PATH)
-                } catch (e: Exception) {
-                    XLog.e("App: Failed to load tau data assets: ${e.message}")
-                }
-            }
+
         } catch (e: Exception) {
             XLog.e("App: Critical error during onCreate: ${e.message}")
         }

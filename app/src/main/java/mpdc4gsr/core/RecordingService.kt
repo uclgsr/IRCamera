@@ -13,8 +13,7 @@ import android.os.Build
 import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
-import androidx.lifecycle.LifecycleService
-import androidx.lifecycle.lifecycleScope
+import android.app.Service
 import com.mpdc4gsr.gsr.model.SessionInfo
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.launchIn
@@ -33,8 +32,12 @@ import java.io.File
 import java.net.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
+import kotlin.coroutines.CoroutineContext
 
-class RecordingService : LifecycleService() {
+class RecordingService : Service(), CoroutineScope {
+    private val serviceJob = SupervisorJob()
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.IO + serviceJob
 
     companion object {
         private const val TAG = "RecordingService"
@@ -247,8 +250,9 @@ class RecordingService : LifecycleService() {
         nsdManager = getSystemService(Context.NSD_SERVICE) as NsdManager
 
         // Initialize ComprehensiveRecordingController without PermissionManager for service context
-        // PermissionManager requires FragmentActivity which is not available in service context
-        recordingController = ComprehensiveRecordingController(this, this, null)
+        // PermissionManager requires ComponentActivity which is not available in service context
+        // Note: Second parameter needs LifecycleOwner - passing null for service context
+        recordingController = ComprehensiveRecordingController(this, null, null)
 
         // Initialize crash recovery manager for session orchestration
         crashRecoveryManager = CrashRecoveryManager(this)
@@ -286,7 +290,7 @@ class RecordingService : LifecycleService() {
             critical = true,
             restartable = false
         ) {
-            lifecycleScope.launch {
+            launch {
                 try {
                     Log.i(TAG, "Initializing RecordingService with enhanced fault tolerance")
 
@@ -448,7 +452,6 @@ class RecordingService : LifecycleService() {
     }
 
     override fun onBind(intent: Intent): IBinder {
-        super.onBind(intent)
         return binder
     }
 
@@ -493,7 +496,7 @@ class RecordingService : LifecycleService() {
                 networkManager.cleanup()
             }
 
-            lifecycleScope.launch {
+            launch {
                 recordingController.cleanup()
             }
             crashSafeSupervisor.shutdown()
@@ -504,6 +507,9 @@ class RecordingService : LifecycleService() {
                 "service_cleanup_error",
                 mapOf("error" to (e.message ?: "Unknown error"))
             )
+        } finally {
+            // Cancel all coroutines launched in this service's scope
+            serviceJob.cancel()
         }
         Log.i(TAG, "RecordingService destroyed")
     }
@@ -534,7 +540,7 @@ class RecordingService : LifecycleService() {
             return
         }
 
-        lifecycleScope.launch {
+        launch {
             try {
                 val sessionDir = File(sessionDirectory)
                 if (!sessionDir.exists()) {
@@ -568,7 +574,7 @@ class RecordingService : LifecycleService() {
                 )
 
                 // Perform session start sync
-                lifecycleScope.launch {
+                launch {
                     try {
                         timeSyncManager?.performSessionStartSync()
                     } catch (e: Exception) {
@@ -622,7 +628,7 @@ class RecordingService : LifecycleService() {
     }
 
     private fun stopRecordingSession() {
-        lifecycleScope.launch {
+        launch {
             try {
                 updateNotification("Stopping recording session...")
                 Log.i(TAG, "Stopping recording session")
@@ -1023,7 +1029,7 @@ class RecordingService : LifecycleService() {
     }
 
     private fun addSyncMarker(markerType: String, timestampNs: Long) {
-        lifecycleScope.launch {
+        launch {
             try {
                 recordingController.addSyncMarker(markerType, timestampNs)
                 Log.i(TAG, "Sync marker added: $markerType")
@@ -1052,7 +1058,7 @@ class RecordingService : LifecycleService() {
                     RecordingState.ERROR -> updateNotification("Recording error")
                 }
             }
-            .launchIn(lifecycleScope)
+            .launchIn(this)
 
         recordingController.sensorStatusFlow
             .onEach { statusList ->
@@ -1070,7 +1076,7 @@ class RecordingService : LifecycleService() {
                     updateNotification(statusText)
                 }
             }
-            .launchIn(lifecycleScope)
+            .launchIn(this)
 
         recordingController.errorFlow
             .onEach { error ->
@@ -1088,7 +1094,7 @@ class RecordingService : LifecycleService() {
                     }
                 }
             }
-            .launchIn(lifecycleScope)
+            .launchIn(this)
     }
 
     private fun createRecordingNotification(contentText: String): Notification {
@@ -1338,7 +1344,7 @@ class RecordingService : LifecycleService() {
     }
 
     private fun startAcceptLoop() {
-        serverJob = lifecycleScope.launch(Dispatchers.IO) {
+        serverJob = launch(Dispatchers.IO) {
             while (isServerRunning.get() && isActive) {
                 try {
                     val clientSocket = serverSocket?.accept()
@@ -1373,7 +1379,7 @@ class RecordingService : LifecycleService() {
             val inputStream = DataInputStream(clientSocket.getInputStream())
             val outputStream = DataOutputStream(clientSocket.getOutputStream())
 
-            val clientJob = lifecycleScope.launch(Dispatchers.IO) {
+            val clientJob = launch(Dispatchers.IO) {
                 try {
                     handleClientMessages(clientId, inputStream, outputStream)
                 } catch (e: Exception) {
@@ -1478,29 +1484,37 @@ class RecordingService : LifecycleService() {
     fun getNetworkClient(): NetworkClient = networkClient
 
     private fun setupNetworkServer() {
-        lifecycleScope.launch {
+        launch(Dispatchers.IO) {
             try {
                 val serverStarted = connectionManager.startServer()
                 if (serverStarted) {
                     Log.i(TAG, "Network server started automatically, listening on port 8080")
-                    updateNotification("Listening for PC Controller on port 8080")
+                    withContext(Dispatchers.Main) {
+                        updateNotification("Listening for PC Controller on port 8080")
+                    }
                 } else {
                     Log.e(TAG, "Failed to start network server automatically")
-                    updateNotification("Network server failed to start")
+                    withContext(Dispatchers.Main) {
+                        updateNotification("Network server failed to start")
+                    }
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Error setting up network server", e)
-                updateNotification("Network server error: ${e.message}")
+                withContext(Dispatchers.Main) {
+                    updateNotification("Network server error: ${e.message}")
+                }
             }
         }
 
-        lifecycleScope.launch {
+        launch(Dispatchers.IO) {
             connectionManager.connectionState.collect { state ->
                 when (state) {
                     NetworkConnectionManager.ConnectionState.CONNECTED -> {
                         isConnectedToPC = true
                         Log.i(TAG, "PC Controller connected to network server")
-                        updateNotification("PC Controller connected")
+                        withContext(Dispatchers.Main) {
+                            updateNotification("PC Controller connected")
+                        }
                         previewStreamer.startStreaming()
                         previewDataAdapter.startDataPolling()
                     }
@@ -1508,7 +1522,9 @@ class RecordingService : LifecycleService() {
                     NetworkConnectionManager.ConnectionState.DISCONNECTED -> {
                         isConnectedToPC = false
                         Log.i(TAG, "PC Controller disconnected, still listening on port 8080")
-                        updateNotification("Listening for PC Controller on port 8080")
+                        withContext(Dispatchers.Main) {
+                            updateNotification("Listening for PC Controller on port 8080")
+                        }
                         previewDataAdapter.stopDataPolling()
                         previewStreamer.stopStreaming()
                     }
@@ -1516,24 +1532,30 @@ class RecordingService : LifecycleService() {
                     NetworkConnectionManager.ConnectionState.ERROR -> {
                         isConnectedToPC = false
                         Log.e(TAG, "Network connection error")
-                        updateNotification("Network connection error")
+                        withContext(Dispatchers.Main) {
+                            updateNotification("Network connection error")
+                        }
                     }
 
                     NetworkConnectionManager.ConnectionState.RECONNECTING -> {
                         isConnectedToPC = false
                         Log.i(TAG, "Attempting to reconnect to PC Controller")
-                        updateNotification("Reconnecting to PC Controller...")
+                        withContext(Dispatchers.Main) {
+                            updateNotification("Reconnecting to PC Controller...")
+                        }
                     }
 
                     NetworkConnectionManager.ConnectionState.CONNECTING -> {
                         Log.i(TAG, "Connecting to PC Controller...")
-                        updateNotification("Connecting...")
+                        withContext(Dispatchers.Main) {
+                            updateNotification("Connecting...")
+                        }
                     }
                 }
             }
         }
 
-        lifecycleScope.launch {
+        launch(Dispatchers.IO) {
             networkServer.messageFlow.collect { message ->
                 handleProtocolMessage(message)
             }
@@ -1633,7 +1655,7 @@ class RecordingService : LifecycleService() {
     }
 
     private fun connectToPC(ipAddress: String, port: Int) {
-        lifecycleScope.launch {
+        launch {
             try {
                 Log.i(TAG, "Attempting connection to PC Controller at $ipAddress:$port")
                 val serverStarted = connectionManager.startServer()
@@ -1652,7 +1674,7 @@ class RecordingService : LifecycleService() {
     }
 
     private fun disconnectFromPC() {
-        lifecycleScope.launch {
+        launch {
             try {
                 if (isNetworkInitialized) {
                     networkClient.disconnect()
@@ -1915,7 +1937,7 @@ class RecordingService : LifecycleService() {
     }
 
     private fun startPCDiscovery() {
-        lifecycleScope.launch {
+        launch {
             try {
                 if (isNetworkInitialized) {
                     startNetworkDiscovery()
@@ -2021,7 +2043,7 @@ class RecordingService : LifecycleService() {
 
                 "start_preview_streaming" -> {
                     Log.i(TAG, "PC Controller requested to start preview streaming")
-                    lifecycleScope.launch {
+                    launch {
                         val success = previewStreamer.startStreaming()
                         sendResponseToPC("preview_streaming_response", JSONObject().apply {
                             put("status", if (success) "started" else "failed")
@@ -2035,7 +2057,7 @@ class RecordingService : LifecycleService() {
 
                 "stop_preview_streaming" -> {
                     Log.i(TAG, "PC Controller requested to stop preview streaming")
-                    lifecycleScope.launch {
+                    launch {
                         previewStreamer.stopStreaming()
                         sendResponseToPC("preview_streaming_response", JSONObject().apply {
                             put("status", "stopped")
@@ -2114,7 +2136,7 @@ class RecordingService : LifecycleService() {
     }
 
     fun startNetworkDiscovery() {
-        lifecycleScope.launch {
+        launch {
             try {
                 networkClient.startDiscovery { success ->
                     if (success) {
@@ -2130,7 +2152,7 @@ class RecordingService : LifecycleService() {
     }
 
     fun handleStartRecordingCommand(message: JSONObject) {
-        lifecycleScope.launch {
+        launch {
             try {
                 val sessionId =
                     message.optString("session_id", "session_${System.currentTimeMillis()}")
@@ -2281,7 +2303,7 @@ class RecordingService : LifecycleService() {
     private fun handleQueryStatusCommand(message: JSONObject) {
         try {
             Log.d(TAG, "Handling query status command")
-            lifecycleScope.launch {
+            launch {
                 sendStatusToPC()
             }
         } catch (e: Exception) {
@@ -2294,7 +2316,7 @@ class RecordingService : LifecycleService() {
             val durationMs = message.optInt("duration_ms", 100)
             Log.d(TAG, "Handling sync flash command: ${durationMs}ms")
             addSyncMarker("pc_sync_flash", System.nanoTime())
-            lifecycleScope.launch {
+            launch {
                 sendResponseToPC("sync_flash_response", JSONObject().apply {
                     put("status", "completed")
                     put("duration_ms", durationMs)
@@ -2324,7 +2346,7 @@ class RecordingService : LifecycleService() {
                     put("timestamp_sync")
                 })
             }
-            lifecycleScope.launch {
+            launch {
                 sendResponseToPC("capabilities_response", capabilities)
             }
         } catch (e: Exception) {
@@ -2335,7 +2357,7 @@ class RecordingService : LifecycleService() {
     private fun handleStopRecordingCommand(message: JSONObject) {
         try {
             Log.d(TAG, "Handling stop recording command")
-            lifecycleScope.launch {
+            launch {
                 if (recordingController.isRecording) {
                     stopRecordingSession()
                     sendResponseToPC("stop_recording_response", JSONObject().apply {
@@ -2356,7 +2378,7 @@ class RecordingService : LifecycleService() {
     // New client-side PC connection methods
 
     private fun connectToPCClient(ipAddress: String, port: Int) {
-        lifecycleScope.launch {
+        launch {
             try {
                 Log.i(TAG, "Connecting to PC server as client at $ipAddress:$port")
                 updateNotification("Connecting to PC server...")
@@ -2380,7 +2402,7 @@ class RecordingService : LifecycleService() {
     }
 
     private fun connectToPCBluetooth(bluetoothDevice: android.bluetooth.BluetoothDevice) {
-        lifecycleScope.launch {
+        launch {
             try {
                 Log.i(TAG, "Connecting to PC via Bluetooth: ${bluetoothDevice.name}")
                 updateNotification("Connecting to PC via Bluetooth...")
@@ -2404,7 +2426,7 @@ class RecordingService : LifecycleService() {
     }
 
     private fun disconnectFromPCClient() {
-        lifecycleScope.launch {
+        launch {
             try {
                 Log.i(TAG, "Disconnecting from PC server")
                 updateNotification("Disconnecting from PC...")
