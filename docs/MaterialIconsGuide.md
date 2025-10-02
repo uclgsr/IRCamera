@@ -2,11 +2,13 @@
 
 ## Overview
 
-This guide documents the integration of Material Design icons from Android Jetpack Compose into the IRCamera application. All core UI components now support both Material Icons (ImageVector) and custom drawable resources.
+This guide documents the integration of Material Design icons from Android Jetpack Compose into the IRCamera
+application. All core UI components now support both Material Icons (ImageVector) and custom drawable resources.
 
 ## Updated Components
 
 ### 1. MenuCompose.kt
+
 **MenuTabItem** data class and composable now support both icon types:
 
 ```kotlin
@@ -24,6 +26,7 @@ MenuTabItem(
 ```
 
 ### 2. SettingsCompose.kt
+
 **SettingItem** and **SettingItemData** support both icon types:
 
 ```kotlin
@@ -41,6 +44,7 @@ SettingItemData(
 ```
 
 ### 3. MenuViewsCompose.kt
+
 **CameraMenuView** accepts both icon parameter types:
 
 ```kotlin
@@ -51,6 +55,7 @@ CameraMenuView(
 ```
 
 ### 4. TitleBar.kt
+
 Already supports both via overloading:
 
 ```kotlin
@@ -63,18 +68,18 @@ TitleBarAction(
 
 ## Common Icon Mappings
 
-| Custom Drawable | Material Icon | Usage |
-|----------------|---------------|--------|
-| ic_settings.xml | Icons.Default.Settings | Settings |
-| ic_share.xml | Icons.Default.Share | Share |
-| ic_delete.xml | Icons.Default.Delete | Delete |
-| ic_camera_alt.xml | Icons.Default.CameraAlt | Camera |
-| ic_videocam.xml | Icons.Default.Videocam | Video |
-| ic_photo_library.xml | Icons.Default.PhotoLibrary | Gallery |
-| ic_info.xml | Icons.Default.Info | Info |
-| ic_warning.xml | Icons.Default.Warning | Warning |
-| ic_microphone.xml | Icons.Default.Mic | Audio |
-| ic_folder_open.xml | Icons.Default.FolderOpen | Folder |
+| Custom Drawable      | Material Icon              | Usage    |
+|----------------------|----------------------------|----------|
+| ic_settings.xml      | Icons.Default.Settings     | Settings |
+| ic_share.xml         | Icons.Default.Share        | Share    |
+| ic_delete.xml        | Icons.Default.Delete       | Delete   |
+| ic_camera_alt.xml    | Icons.Default.CameraAlt    | Camera   |
+| ic_videocam.xml      | Icons.Default.Videocam     | Video    |
+| ic_photo_library.xml | Icons.Default.PhotoLibrary | Gallery  |
+| ic_info.xml          | Icons.Default.Info         | Info     |
+| ic_warning.xml       | Icons.Default.Warning      | Warning  |
+| ic_microphone.xml    | Icons.Default.Mic          | Audio    |
+| ic_folder_open.xml   | Icons.Default.FolderOpen   | Folder   |
 | ic_file_download.xml | Icons.Default.FileDownload | Download |
 
 ## Domain-Specific Icons (Keep as Custom)

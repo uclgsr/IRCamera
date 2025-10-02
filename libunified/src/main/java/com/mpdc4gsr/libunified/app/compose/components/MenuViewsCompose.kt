@@ -112,6 +112,7 @@ private fun MenuEditItem(
                         tint = if (isSelected) Color.White else Color.Gray
                     )
                 }
+
                 iconRes != null -> {
                     Image(
                         painter = painterResource(id = iconRes),
@@ -222,6 +223,7 @@ fun CameraMenuView(
                             modifier = Modifier.fillMaxSize()
                         )
                     }
+
                     galleryIcon != null -> {
                         Image(
                             painter = painterResource(id = galleryIcon),
@@ -277,6 +279,7 @@ fun CameraMenuView(
                             modifier = Modifier.fillMaxSize()
                         )
                     }
+
                     moreIcon != null -> {
                         Image(
                             painter = painterResource(id = moreIcon),
