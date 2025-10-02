@@ -11,28 +11,33 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.components.settings.*
 import mpdc4gsr.core.ui.theme.IRCameraTheme
+import mpdc4gsr.feature.thermal.presentation.ThermalSettingsViewModel
 
 /**
  * Thermal Settings Screen - Configure thermal camera parameters
+ * Integrated with ThermalSettingsViewModel and ThermalSettingsRepository
  */
 @Composable
 fun ThermalSettingsScreen(
     onBackClick: (() -> Unit)? = null,
+    viewModel: ThermalSettingsViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
-    var palette by remember { mutableStateOf("Iron") }
-    var temperatureUnit by remember { mutableStateOf("Celsius") }
-    var emissivity by remember { mutableFloatStateOf(0.95f) }
-    var autoScale by remember { mutableStateOf(true) }
-    var showCrosshair by remember { mutableStateOf(true) }
-    var temperatureRange by remember { mutableStateOf("Auto") }
+    val context = LocalContext.current
+    val settings by viewModel.thermalSettings.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.initialize(context)
+    }
 
     Column(
         modifier = modifier
@@ -52,6 +57,27 @@ fun ThermalSettingsScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+            // Recording Settings
+            SettingsCard(
+                title = "Recording Settings",
+                icon = Icons.Default.Videocam
+            ) {
+                SettingsSlider(
+                    label = "Frame Rate",
+                    value = settings.frameRate.toFloat(),
+                    valueRange = 10f..30f,
+                    onValueChange = { viewModel.updateFrameRate(it.toInt()) },
+                    unit = " fps"
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                SettingsToggle(
+                    label = "Save Raw Images",
+                    description = "Save individual thermal frames during recording",
+                    checked = settings.saveRawImages,
+                    onCheckedChange = { viewModel.updateSaveRawImages(it) }
+                )
+            }
+
             // Display Settings
             SettingsCard(
                 title = "Display Settings",
@@ -59,21 +85,23 @@ fun ThermalSettingsScreen(
             ) {
                 SettingsDropdown(
                     label = "Color Palette",
-                    value = palette,
+                    value = settings.palette,
                     options = listOf("Iron", "Rainbow", "Gray", "Hot", "Cool"),
-                    onValueChange = { palette = it }
+                    onValueChange = { viewModel.updatePalette(it) }
                 )
+                Spacer(modifier = Modifier.height(8.dp))
                 SettingsDropdown(
                     label = "Temperature Unit",
-                    value = temperatureUnit,
+                    value = settings.temperatureUnit,
                     options = listOf("Celsius", "Fahrenheit", "Kelvin"),
-                    onValueChange = { temperatureUnit = it }
+                    onValueChange = { viewModel.updateTemperatureUnit(it) }
                 )
+                Spacer(modifier = Modifier.height(8.dp))
                 SettingsDropdown(
                     label = "Temperature Range",
-                    value = temperatureRange,
+                    value = settings.temperatureRange,
                     options = listOf("Auto", "-20°C to 120°C", "0°C to 100°C", "Custom"),
-                    onValueChange = { temperatureRange = it }
+                    onValueChange = { viewModel.updateTemperatureRange(it) }
                 )
             }
 
@@ -84,22 +112,24 @@ fun ThermalSettingsScreen(
             ) {
                 SettingsSlider(
                     label = "Emissivity",
-                    value = emissivity,
+                    value = settings.emissivity,
                     valueRange = 0.1f..1.0f,
-                    onValueChange = { emissivity = it },
+                    onValueChange = { viewModel.updateEmissivity(it) },
                     unit = ""
                 )
+                Spacer(modifier = Modifier.height(8.dp))
                 SettingsToggle(
                     label = "Auto Scale",
                     description = "Automatically adjust temperature scale",
-                    checked = autoScale,
-                    onCheckedChange = { autoScale = it }
+                    checked = settings.autoScale,
+                    onCheckedChange = { viewModel.updateAutoScale(it) }
                 )
+                Spacer(modifier = Modifier.height(8.dp))
                 SettingsToggle(
                     label = "Show Crosshair",
                     description = "Display center point crosshair",
-                    checked = showCrosshair,
-                    onCheckedChange = { showCrosshair = it }
+                    checked = settings.showCrosshair,
+                    onCheckedChange = { viewModel.updateShowCrosshair(it) }
                 )
             }
 
