@@ -16,46 +16,63 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.viewmodel.compose.viewModel
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.components.TitleBarAction
 import mpdc4gsr.core.ui.theme.IRCameraTheme
+import mpdc4gsr.feature.gsr.presentation.GSRSensorViewModel
 
 /**
  * GSR Sensor Screen - Dedicated interface for GSR data monitoring and recording
  * Replaces GSR-related activities with unified Compose implementation
+ * Now integrated with UnifiedGSRRecorder
  */
 @Composable
 fun GSRSensorScreen(
+    viewModel: GSRSensorViewModel = viewModel(),
     onBackClick: (() -> Unit)? = null,
     onSettingsClick: () -> Unit = {},
     onSaveData: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
-    // GSR sensor state
-    var isConnected by remember { mutableStateOf(true) }
-    var isRecording by remember { mutableStateOf(false) }
-    var currentGSR by remember { mutableFloatStateOf(2.45f) }
-    var skinConductance by remember { mutableFloatStateOf(0.82f) }
-    var deviceBattery by remember { mutableIntStateOf(87) }
-    var samplingRate by remember { mutableIntStateOf(128) }
+    val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val sensorState by viewModel.sensorState.collectAsState()
+
+    // Initialize recorder on first composition
+    LaunchedEffect(Unit) {
+        viewModel.initializeRecorder(lifecycleOwner)
+    }
+
+    // Use real data from ViewModel or fallback to simulated data for preview
+    val isConnected = sensorState.isConnected
+    val isRecording = sensorState.isRecording
+    val currentGSR = if (sensorState.currentGSR > 0) sensorState.currentGSR else 2.45f
+    val skinConductance = if (sensorState.skinConductance > 0) sensorState.skinConductance else 0.82f
+    val deviceBattery = if (sensorState.deviceBattery > 0) sensorState.deviceBattery else 87
+    val samplingRate = sensorState.samplingRate
 
     // Historical data for plotting
     var gsrHistory by remember { mutableStateOf(generateInitialGSRData()) }
 
-    // Simulate real-time GSR updates
-    LaunchedEffect(isConnected) {
+    // Update history with real or simulated data
+    LaunchedEffect(isConnected, currentGSR) {
         if (isConnected) {
             while (true) {
                 kotlinx.coroutines.delay(100)
-                currentGSR = 2.0f + kotlin.random.Random.nextFloat() * 1.5f
-                skinConductance = 0.5f + kotlin.random.Random.nextFloat() * 0.8f
-
-                // Update history
-                gsrHistory = gsrHistory.drop(1) + currentGSR
+                // Use real currentGSR value or simulate
+                val newValue = if (sensorState.currentGSR > 0) {
+                    sensorState.currentGSR
+                } else {
+                    2.0f + kotlin.random.Random.nextFloat() * 1.5f
+                }
+                gsrHistory = gsrHistory.drop(1) + newValue
             }
         }
     }
@@ -96,7 +113,13 @@ fun GSRSensorScreen(
                 isConnected = isConnected,
                 deviceBattery = deviceBattery,
                 samplingRate = samplingRate,
-                onConnectionToggle = { isConnected = !isConnected }
+                onConnectionToggle = { 
+                    if (isConnected) {
+                        viewModel.disconnectDevice()
+                    } else {
+                        viewModel.connectDevice()
+                    }
+                }
             )
 
             // Real-time GSR metrics
@@ -117,8 +140,17 @@ fun GSRSensorScreen(
             GSRRecordingControls(
                 isRecording = isRecording,
                 isConnected = isConnected,
-                onRecordingToggle = { isRecording = !isRecording },
-                onExportData = onSaveData
+                onRecordingToggle = { 
+                    if (isRecording) {
+                        viewModel.stopRecording()
+                    } else {
+                        viewModel.startRecording()
+                    }
+                },
+                onExportData = { 
+                    viewModel.exportData()
+                    onSaveData()
+                }
             )
 
             // GSR analysis summary
