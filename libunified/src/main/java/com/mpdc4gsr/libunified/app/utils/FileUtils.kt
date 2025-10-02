@@ -8,11 +8,7 @@ import java.io.IOException
 import java.nio.channels.FileChannel
 import java.text.DecimalFormat
 
-/**
- * FileUtils based on reference repository implementation
- * Adapted from BleModule/src/main/java/com/topdon/commons/util/FileSizeUtil.java
- * and BleModule/src/main/java/com/topdon/commons/util/FolderUtil.java
- */
+
 object FileUtils {
 
     const val SIZETYPE_B = 1    // Bdouble

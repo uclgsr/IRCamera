@@ -3,10 +3,7 @@ package com.mpdc4gsr.libunified.ir.utils
 import android.widget.Switch
 import com.energy.iruvc.utils.CommonParams
 
-/**
- * @author: CaiSongL
- * @date: 2023/6/2 9:36
- */
+
 object PseudocodeUtils {
 
 
@@ -58,9 +55,7 @@ object PseudocodeUtils {
         }
     }
 
-    /**
-     * sdk
-     */
+    
     fun changePseudocodeModeByOld(oldPseudocodeMode: Int): CommonParams.PseudoColorType {
         return when (oldPseudocodeMode) {
             1 -> {

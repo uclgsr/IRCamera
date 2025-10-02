@@ -5,10 +5,7 @@ import com.google.gson.Gson
 import org.json.JSONException
 import org.json.JSONObject
 
-/**
- * SocketCmdUtils based on reference repository implementation
- * Adapted from libapp/src/main/java/com/topdon/lib/core/socket/SocketCmdUtils.kt
- */
+
 object SocketCmdUtils {
     fun getSocketCmd(cmd: Int): String? {
         var cmdJson: String? = null

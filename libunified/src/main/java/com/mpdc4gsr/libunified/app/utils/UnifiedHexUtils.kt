@@ -2,17 +2,12 @@ package com.mpdc4gsr.libunified.app.utils
 
 import java.util.Locale
 
-/**
- * Consolidated hex and conversion utilities
- * All duplicate hex utility files have been consolidated into this single utility.
- */
+
 object UnifiedHexUtils {
 
     private const val HEX_CHARS = "0123456789ABCDEF"
 
-    /**
-     * Convert byte array to hex string with spaces
-     */
+    
     fun binaryToHexString(bytes: ByteArray): String {
         val result = StringBuilder()
         for (b in bytes) {
@@ -22,9 +17,7 @@ object UnifiedHexUtils {
         return result.toString().trim()
     }
 
-    /**
-     * Convert byte array to hex string without spaces
-     */
+    
     fun bytesToHex(bytes: ByteArray): String {
         val result = StringBuilder()
         for (b in bytes) {
@@ -33,9 +26,7 @@ object UnifiedHexUtils {
         return result.toString()
     }
 
-    /**
-     * Convert hex string to byte array
-     */
+    
     fun hexToBytes(hex: String): ByteArray {
         val cleanHex = hex.replace(" ", "").replace("-", "").replace(":", "")
         val len = cleanHex.length
@@ -51,44 +42,32 @@ object UnifiedHexUtils {
         return data
     }
 
-    /**
-     * Convert single byte to hex string
-     */
+    
     fun byteToHex(byte: Byte): String {
         return String.format("%02X", byte)
     }
 
-    /**
-     * Convert int to hex string
-     */
+    
     fun intToHex(value: Int): String {
         return String.format("%08X", value)
     }
 
-    /**
-     * Convert long to hex string
-     */
+    
     fun longToHex(value: Long): String {
         return String.format("%016X", value)
     }
 
-    /**
-     * Convert hex string to int
-     */
+    
     fun hexToInt(hex: String): Int {
         return hex.toInt(16)
     }
 
-    /**
-     * Convert hex string to long
-     */
+    
     fun hexToLong(hex: String): Long {
         return hex.toLong(16)
     }
 
-    /**
-     * Check if string is valid hex
-     */
+    
     fun isValidHex(hex: String): Boolean {
         return try {
             hex.toLong(16)
@@ -98,9 +77,7 @@ object UnifiedHexUtils {
         }
     }
 
-    /**
-     * Convert byte array to formatted hex dump
-     */
+    
     fun hexDump(bytes: ByteArray, bytesPerLine: Int = 16): String {
         val result = StringBuilder()
         for (i in bytes.indices step bytesPerLine) {
@@ -132,16 +109,12 @@ object UnifiedHexUtils {
         return result.toString()
     }
 
-    /**
-     * Convert string to hex representation
-     */
+    
     fun stringToHex(str: String): String {
         return bytesToHex(str.toByteArray())
     }
 
-    /**
-     * Convert hex string back to string
-     */
+    
     fun hexToString(hex: String): String {
         return String(hexToBytes(hex))
     }

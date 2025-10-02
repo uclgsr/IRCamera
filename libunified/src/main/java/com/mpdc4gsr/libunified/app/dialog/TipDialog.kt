@@ -20,10 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.R
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 
-/**
- * TipDialog - Migrated to Jetpack Compose
- * Maintains Builder API compatibility with the old databinding version
- */
+
 class TipDialog : Dialog {
     constructor(context: Context) : super(context)
 
