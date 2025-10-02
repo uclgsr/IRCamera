@@ -6,6 +6,7 @@ import androidx.lifecycle.LifecycleOwner
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -26,7 +27,6 @@ class MainRecordingController(
     companion object {
         private const val TAG = "MainRecordingController"
 
-        // Sensor name constants for consistency
         private const val RGB_SENSOR_NAME = "RGB"
         private const val THERMAL_SENSOR_NAME = "Thermal"
         private const val GSR_SENSOR_NAME = "GSR"
@@ -49,6 +49,8 @@ class MainRecordingController(
     val recordingStateFlow: StateFlow<MainRecordingState> = _recordingStateFlow.asStateFlow()
 
     private val recordingScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+    
+    private val recordingSettingsRepository = mpdc4gsr.feature.settings.data.RecordingSettingsRepository.getInstance(context)
 
 
     fun addSensorRecorder(name: String, recorder: SensorRecorder) {
@@ -68,6 +70,9 @@ class MainRecordingController(
                     return@withContext true
                 }
 
+                val settings = recordingSettingsRepository.getSettings()
+                Log.i(TAG, "Starting recording with settings: simultaneousRecording=${settings.simultaneousRecording}, timestampSync=${settings.timestampSync}")
+                
                 Log.i(TAG, "Starting simple recording")
                 _recordingStateFlow.value = MainRecordingState.STARTING
 
@@ -85,6 +90,9 @@ class MainRecordingController(
 
 
                 var sensorsStarted = 0
+                val isSimultaneous = settings.simultaneousRecording
+                Log.i(TAG, "Starting sensors ${if (isSimultaneous) "simultaneously" else "sequentially"}")
+                
                 for (sensorName in enabledSensors) {
                     val sensor = sensorRecorders[sensorName]
                     if (sensor != null) {
@@ -99,6 +107,10 @@ class MainRecordingController(
                                     sensorsStarted++
                                     Log.i(TAG, "Started sensor: $sensorName")
                                 }
+                            }
+                            
+                            if (!isSimultaneous && sensorsStarted > 0) {
+                                delay(100)
                             }
                         } catch (e: Exception) {
                             Log.w(TAG, "Failed to start sensor $sensorName", e)

@@ -83,6 +83,8 @@ class VideoRecordFFmpeg(
     private val dualView: DualViewWithExternalCameraCommonApi? = null,
     private val isTC007: Boolean = false,
     private val carView: View? = null,
+    private var customFrameRate: Int = 25,
+    private var customBitrate: Int = 1500000
 ) : VideoRecord() {
     companion object {
         const val TAG = "VideoRecordFFmpeg"
@@ -239,10 +241,11 @@ class VideoRecordFFmpeg(
                     AUDIO_CHANNELS,
                 )
             recorder!!.format = FORMAT
-            recorder!!.frameRate = RATE.toDouble()
-            recorder!!.videoBitrate = VIDEO_BITRATE
+            recorder!!.frameRate = customFrameRate.toDouble()
+            recorder!!.videoBitrate = customBitrate
 
             recorder!!.videoCodec = VIDEO_CODEC
+            Log.i(TAG, "Thermal video recorder configured: ${customFrameRate}fps, ${customBitrate}bps")
 
             recorder!!.sampleRate = SAMPLE_AUDIO_RETE_INHZ
 
