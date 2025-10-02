@@ -293,6 +293,7 @@ class IRMonitorHistoryViewModel : BaseViewModel() {
 
         val possibleNames = listOfNotNull(
             thermalId?.let { "$it.jpg" },
+            thermalId?.let { "$it.png" },
             "${startTime}.jpg",
             "${startTime}.png"
         )
