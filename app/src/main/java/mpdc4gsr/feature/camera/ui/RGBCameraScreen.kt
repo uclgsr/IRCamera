@@ -163,10 +163,10 @@ fun RGBCameraScreen(
                 whiteBalance = whiteBalance,
                 onResolutionChange = { viewModel.updateResolution(it) },
                 onFrameRateChange = { viewModel.updateFrameRate(it) },
-                onExposureChange = { /* Can be added to ViewModel */ },
-                onISOChange = { /* Can be added to ViewModel */ },
-                onFocusModeChange = { /* Can be added to ViewModel */ },
-                onWhiteBalanceChange = { /* Can be added to ViewModel */ }
+                onExposureChange = { viewModel.updateExposureTime(it) },
+                onISOChange = { viewModel.updateISO(it) },
+                onFocusModeChange = { viewModel.updateFocusMode(it) },
+                onWhiteBalanceChange = { viewModel.updateWhiteBalance(it) }
             )
         }
     }
@@ -628,7 +628,7 @@ private fun CameraSettingsCard(
                 fontWeight = FontWeight.Bold
             )
 
-            // Quick setting buttons
+            // Quick setting buttons - Resolution and Frame Rate
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
@@ -666,9 +666,48 @@ private fun CameraSettingsCard(
                 }
             }
 
+            // Additional camera controls - Focus and White Balance
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                Button(
+                    onClick = { 
+                        val newMode = when (focusMode) {
+                            "Auto" -> "Manual"
+                            "Manual" -> "Continuous"
+                            else -> "Auto"
+                        }
+                        onFocusModeChange(newMode)
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF9800)),
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text("Focus: $focusMode", fontSize = 9.sp)
+                }
+
+                Spacer(modifier = Modifier.width(4.dp))
+
+                Button(
+                    onClick = { 
+                        val newWB = when (whiteBalance) {
+                            "Auto" -> "Daylight"
+                            "Daylight" -> "Cloudy"
+                            "Cloudy" -> "Tungsten"
+                            else -> "Auto"
+                        }
+                        onWhiteBalanceChange(newWB)
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF9C27B0)),
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text("WB: $whiteBalance", fontSize = 9.sp)
+                }
+            }
+
             // Advanced settings info
             Text(
-                text = "Advanced settings available in camera settings menu",
+                text = "Advanced exposure and ISO controls available in camera settings menu",
                 color = Color.Gray,
                 fontSize = 12.sp
             )

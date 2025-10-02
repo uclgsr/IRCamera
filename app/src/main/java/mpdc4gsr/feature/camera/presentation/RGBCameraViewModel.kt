@@ -157,6 +157,22 @@ class RGBCameraViewModel(
         _cameraState.update { it.copy(frameRate = frameRate) }
     }
 
+    fun updateFocusMode(focusMode: String) {
+        _cameraState.update { it.copy(focusMode = focusMode) }
+    }
+
+    fun updateWhiteBalance(whiteBalance: String) {
+        _cameraState.update { it.copy(whiteBalance = whiteBalance) }
+    }
+
+    fun updateExposureTime(exposureTime: String) {
+        _cameraState.update { it.copy(exposureTime = exposureTime) }
+    }
+
+    fun updateISO(iso: Int) {
+        _cameraState.update { it.copy(iso = iso) }
+    }
+
     /**
      * Track recording duration
      */
