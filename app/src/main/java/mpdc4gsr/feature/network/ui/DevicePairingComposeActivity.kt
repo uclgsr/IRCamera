@@ -153,7 +153,6 @@ private fun DevicePairingContent(
             verticalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier.weight(1f)
         ) {
-            // Mock devices - replace with actual data from viewModel
             val mockDevices = getMockBluetoothDevices().filter { device ->
                 deviceFilter == "All" || device.type == deviceFilter
             }

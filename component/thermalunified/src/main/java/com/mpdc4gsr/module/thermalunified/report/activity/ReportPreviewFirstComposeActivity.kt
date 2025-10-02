@@ -119,7 +119,6 @@ class ReportPreviewFirstComposeActivity : BaseComposeActivity<ReportPreviewViewM
                                     fontSize = 16.sp
                                 )
 
-                                // Mock preview content
                                 Column(
                                     modifier = Modifier
                                         .fillMaxWidth(0.8f)

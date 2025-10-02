@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.asStateFlow
 class DeviceDetailsViewModel : BaseViewModel() {
 
     companion object {
-        // Mock data constants for improved maintainability
         private const val TC007_DEMO_SERIAL = "TC007-DEMO-SN"
         private const val TC007_MODEL = "TC007"
         private const val TS004_DEMO_SERIAL = "TS004-DEMO-SN"

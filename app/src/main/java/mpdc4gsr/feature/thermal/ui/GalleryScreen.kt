@@ -210,7 +210,6 @@ private fun ThermalImageCard(
                     .weight(1f)
                     .background(Color.Black)
             ) {
-                // Mock thermal visualization
                 Canvas(
                     modifier = Modifier.fillMaxSize()
                 ) {

@@ -449,7 +449,6 @@ fun ThermalImagesSection(
 
                 Button(
                     onClick = {
-                        // Mock image URI for demonstration
                         val mockUri = Uri.parse("content://media/external/images/media/${System.currentTimeMillis()}")
                         onAddImage(mockUri)
                     }

@@ -31,13 +31,13 @@ fun ThermalSensorCard(
     onAction: (ThermalAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // Mock thermal data for demonstration
+    // TODO: Replace with real thermal data from ThermalRecorder via ViewModel
     var centerTemp by remember { mutableFloatStateOf(25.6f) }
     var maxTemp by remember { mutableFloatStateOf(45.2f) }
     var minTemp by remember { mutableFloatStateOf(18.9f) }
     var deviceType by remember { mutableStateOf("TC001") }
 
-    // Simulate thermal data updates
+    // Simulate thermal data updates when streaming
     LaunchedEffect(state) {
         if (state == SensorState.Streaming) {
             while (true) {

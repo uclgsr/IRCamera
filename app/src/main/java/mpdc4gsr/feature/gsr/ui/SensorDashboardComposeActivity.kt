@@ -59,7 +59,8 @@ class SensorDashboardComposeActivity : ComponentActivity() {
         val gsrConnectionState by viewModel.gsrConnectionState.collectAsState()
         val gsrBatteryLevel by viewModel.gsrBatteryLevel.collectAsState()
 
-        // Mock GSR data for demonstration (in real implementation, this would come from ViewModel)
+        // TODO: ViewModel should expose gsrData as StateFlow with real-time sensor values
+        // Real implementation needs: currentValue, recentReadings, averageValue from GSRSensorRecorder
         val gsrData by remember {
             derivedStateOf {
                 GSRData(
@@ -324,7 +325,6 @@ class SensorDashboardComposeActivity : ComponentActivity() {
         }
     }
 
-    // Mock data generation for demo purposes
     private fun generateMockGSRReadings(): List<Float> {
         return (0..50).map {
             100f + (kotlin.random.Random.nextFloat() - 0.5f) * 40f
