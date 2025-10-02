@@ -3,10 +3,12 @@ package com.mpdc4gsr.module.thermalunified.tools
 import android.graphics.Bitmap
 import android.os.Handler
 import com.elvishew.xlog.XLog
+import com.infisense.usbir.view.CameraView
+import com.mpdc4gsr.libunified.ui.camera.CameraPreviewManager as LibUnifiedCameraPreviewManager
 
 class CameraPreviewManager private constructor() {
 
-    private val delegate = com.mpdc4gsr.libunified.ui.camera.CameraPreviewManager.getInstance()
+    private val delegate = LibUnifiedCameraPreviewManager.getInstance()
 
     companion object {
         private const val TAG = "ThermalCameraPreviewManager"
@@ -71,7 +73,7 @@ class CameraPreviewManager private constructor() {
         return delegate.applyPseudocolor(bitmap)
     }
 
-    fun init(cameraView: Any, handler: Handler) {
+    fun init(cameraView: CameraView, handler: Handler) {
         delegate.init(cameraView, handler)
         XLog.d(TAG, "Thermal CameraPreviewManager initialized (delegating to libunified)")
     }
