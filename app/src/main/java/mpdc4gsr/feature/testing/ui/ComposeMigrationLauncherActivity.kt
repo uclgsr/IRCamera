@@ -56,7 +56,7 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
     @Composable
     private fun LifecycleAwareMigrationLauncherScreen() {
         val lifecycleOwner = LocalLifecycleOwner.current
-        
+
         DisposableEffect(lifecycleOwner) {
             val observer = LifecycleEventObserver { _, event ->
                 when (event) {
@@ -65,17 +65,18 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
                             window.decorView.clearAnimation()
                         }
                     }
+
                     else -> {}
                 }
             }
-            
+
             lifecycleOwner.lifecycle.addObserver(observer)
-            
+
             onDispose {
                 lifecycleOwner.lifecycle.removeObserver(observer)
             }
         }
-        
+
         MigrationLauncherScreen()
     }
 

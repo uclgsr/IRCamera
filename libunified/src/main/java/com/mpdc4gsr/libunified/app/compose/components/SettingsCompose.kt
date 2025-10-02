@@ -51,6 +51,7 @@ fun SettingItem(
                                 tint = Color.Gray
                             )
                         }
+
                         iconRes != null -> {
                             Image(
                                 painter = painterResource(id = iconRes),

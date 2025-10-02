@@ -1,6 +1,7 @@
 # Material Icons Usage Examples
 
-This document provides practical examples of using Material Icons with the updated UI components in the IRCamera application.
+This document provides practical examples of using Material Icons with the updated UI components in the IRCamera
+application.
 
 ## Component Examples
 
@@ -330,12 +331,14 @@ class MySettingsActivity : BaseComposeActivity<MyViewModel>() {
 ## Icon Selection Guidelines
 
 ### When to Use Material Icons
+
 - Common UI actions (save, share, delete, search, etc.)
 - Navigation elements (back, forward, menu, etc.)
 - Standard system concepts (settings, info, warning, etc.)
 - Media controls (play, pause, volume, etc.)
 
 ### When to Use Custom Drawables
+
 - Device-specific hardware (GSR sensors, thermal cameras)
 - Domain-specific concepts (measurement types, specialized modes)
 - Branding elements (company logos, product icons)
@@ -345,14 +348,14 @@ class MySettingsActivity : BaseComposeActivity<MyViewModel>() {
 
 Commonly used Material Icons in IRCamera:
 
-| Category | Icons |
-|----------|-------|
-| **Actions** | Share, Delete, Save, Upload, Download, Edit, Add, Remove |
-| **Navigation** | ArrowBack, ArrowForward, Menu, Close, MoreVert, MoreHoriz |
-| **Media** | PlayArrow, Pause, Stop, FastForward, FastRewind, Mic, Videocam |
-| **Device** | Camera, CameraAlt, PhotoLibrary, VideoLibrary, Bluetooth |
-| **UI** | Search, Settings, Info, Warning, Error, CheckCircle, Cancel |
-| **Data** | Folder, FolderOpen, InsertChart, Assessment, Timeline |
+| Category       | Icons                                                          |
+|----------------|----------------------------------------------------------------|
+| **Actions**    | Share, Delete, Save, Upload, Download, Edit, Add, Remove       |
+| **Navigation** | ArrowBack, ArrowForward, Menu, Close, MoreVert, MoreHoriz      |
+| **Media**      | PlayArrow, Pause, Stop, FastForward, FastRewind, Mic, Videocam |
+| **Device**     | Camera, CameraAlt, PhotoLibrary, VideoLibrary, Bluetooth       |
+| **UI**         | Search, Settings, Info, Warning, Error, CheckCircle, Cancel    |
+| **Data**       | Folder, FolderOpen, InsertChart, Assessment, Timeline          |
 
 For a complete list, see: [Material Icons](https://fonts.google.com/icons)
 
