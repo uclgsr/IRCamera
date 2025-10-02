@@ -518,7 +518,6 @@ class FileUploadService(private val context: Context) {
                     put("device_id", job.deviceId)
                 }
 
-
             0L
         } catch (e: Exception) {
             logger.log(

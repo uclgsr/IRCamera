@@ -7,7 +7,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import java.util.concurrent.atomic.AtomicBoolean
 
-
 class SingleLiveEvent<T> : MutableLiveData<T>() {
 
     private val mPending: AtomicBoolean = AtomicBoolean(false)
@@ -25,7 +24,6 @@ class SingleLiveEvent<T> : MutableLiveData<T>() {
         mPending.set(true)
         super.setValue(t)
     }
-
 
     @MainThread
     fun call() {

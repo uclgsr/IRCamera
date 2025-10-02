@@ -5,7 +5,6 @@ package com.mpdc4gsr.module.thermalunified.video.media
 import android.graphics.Bitmap
 import android.media.MediaCodecInfo.CodecCapabilities.*
 
-
 object EncodeYuvTools {
     fun getNV12(
         inputWidth: Int,

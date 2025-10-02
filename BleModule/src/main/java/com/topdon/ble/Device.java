@@ -12,7 +12,6 @@ import androidx.annotation.RequiresApi;
 
 import java.util.Objects;
 
-
 public class Device implements Comparable<Device>, Cloneable, Parcelable {
     public static final Creator<Device> CREATOR = new Creator<Device>() {
         @Override
@@ -109,17 +108,14 @@ public class Device implements Comparable<Device>, Cloneable, Parcelable {
         return null;
     }
 
-
     public boolean isConnected() {
         return getConnectionState() == ConnectionState.SERVICE_DISCOVERED;
     }
-
 
     public boolean isDisconnected() {
         ConnectionState state = getConnectionState();
         return state == ConnectionState.DISCONNECTED || state == ConnectionState.RELEASED;
     }
-
 
     public boolean isConnecting() {
         ConnectionState state = getConnectionState();

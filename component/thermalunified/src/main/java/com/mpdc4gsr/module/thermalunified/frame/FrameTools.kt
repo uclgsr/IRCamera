@@ -243,7 +243,6 @@ class FrameTool {
         var scrBitmap: Bitmap? = null
         if (isAmplify) {
 
-
             SupHelp.getInstance().initA4KCPP()
             if (SupHelp.getInstance().loadOpenclSuccess) {
                 OpencvTools.supImage(
@@ -340,7 +339,6 @@ class FrameTool {
             else -> System.arraycopy(argbBytes, 0, dstArgbBytes, 0, argbBytes.size)
         }
     }
-
 
     fun getSrcTemp(): LibIRTemp.TemperatureSampleResult {
 

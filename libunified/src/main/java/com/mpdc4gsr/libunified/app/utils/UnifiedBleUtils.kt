@@ -8,11 +8,9 @@ import android.content.pm.PackageManager
 import android.util.Log
 import java.util.*
 
-
 object UnifiedBleUtils {
 
     private const val TAG = "UnifiedBleUtils"
-
 
     fun bytesToHexString(byteArray: ByteArray?): String {
         if (byteArray == null || byteArray.isEmpty()) {
@@ -29,7 +27,6 @@ object UnifiedBleUtils {
         }
         return sb.toString().uppercase(Locale.getDefault())
     }
-
 
     fun hexStringToBytes(hexString: String?): ByteArray {
         if (hexString.isNullOrEmpty()) {
@@ -49,11 +46,9 @@ object UnifiedBleUtils {
         return data
     }
 
-
     fun isBleSupported(context: Context): Boolean {
         return context.packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)
     }
-
 
     fun isBluetoothEnabled(): Boolean {
         @Suppress("DEPRECATION")
@@ -61,18 +56,15 @@ object UnifiedBleUtils {
         return bluetoothAdapter?.isEnabled == true
     }
 
-
     fun getBluetoothAdapter(): BluetoothAdapter? {
         @Suppress("DEPRECATION")
         return BluetoothAdapter.getDefaultAdapter()
     }
 
-
     fun hasBluetoothLowEnergyCapabilities(context: Context): Boolean {
         return context.packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE) &&
                 getBluetoothAdapter() != null
     }
-
 
     fun formatDeviceName(device: BluetoothDevice?): String {
         if (device == null) return "Unknown Device"
@@ -87,7 +79,6 @@ object UnifiedBleUtils {
         }
     }
 
-
     fun getRssiDescription(rssi: Int): String {
         return when {
             rssi >= -50 -> "Excellent"
@@ -97,7 +88,6 @@ object UnifiedBleUtils {
             else -> "Very Weak"
         }
     }
-
 
     fun getServiceName(uuid: UUID?): String {
         if (uuid == null) return "Unknown Service"
@@ -113,7 +103,6 @@ object UnifiedBleUtils {
             else -> "Custom Service"
         }
     }
-
 
     fun getCharacteristicName(uuid: UUID?): String {
         if (uuid == null) return "Unknown Characteristic"
@@ -133,7 +122,6 @@ object UnifiedBleUtils {
         }
     }
 
-
     fun getCharacteristicProperties(characteristic: BluetoothGattCharacteristic): String {
         val properties = mutableListOf<String>()
         val props = characteristic.properties
@@ -149,7 +137,6 @@ object UnifiedBleUtils {
 
         return if (properties.isNotEmpty()) properties.joinToString(", ") else "NONE"
     }
-
 
     fun parseScanRecord(scanRecord: ByteArray?): Map<String, Any> {
         val result = mutableMapOf<String, Any>()
@@ -182,27 +169,22 @@ object UnifiedBleUtils {
         return result
     }
 
-
     fun supportsNotifications(characteristic: BluetoothGattCharacteristic): Boolean {
         return (characteristic.properties and BluetoothGattCharacteristic.PROPERTY_NOTIFY) != 0
     }
-
 
     fun supportsIndications(characteristic: BluetoothGattCharacteristic): Boolean {
         return (characteristic.properties and BluetoothGattCharacteristic.PROPERTY_INDICATE) != 0
     }
 
-
     fun isReadable(characteristic: BluetoothGattCharacteristic): Boolean {
         return (characteristic.properties and BluetoothGattCharacteristic.PROPERTY_READ) != 0
     }
-
 
     fun isWritable(characteristic: BluetoothGattCharacteristic): Boolean {
         return (characteristic.properties and (BluetoothGattCharacteristic.PROPERTY_WRITE or
                 BluetoothGattCharacteristic.PROPERTY_WRITE_NO_RESPONSE)) != 0
     }
-
 
     fun calculateConnectionTimeout(rssi: Int): Long {
         return when {
@@ -212,7 +194,6 @@ object UnifiedBleUtils {
         }
     }
 
-
     fun formatByteValue(value: Byte, signed: Boolean = false): String {
         return if (signed) {
             value.toString()
@@ -220,7 +201,6 @@ object UnifiedBleUtils {
             (value.toInt() and 0xFF).toString()
         }
     }
-
 
     fun logBleOperation(
         operation: String,

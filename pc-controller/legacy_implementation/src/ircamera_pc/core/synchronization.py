@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-
 import asyncio
 
 import logging
@@ -12,7 +11,6 @@ from typing import Dict, List, Tuple, Any
 
 logger = logging.getLogger(__name__)
 
-
 @dataclass
 class SyncTestResult:
     device_id: str
@@ -22,7 +20,6 @@ class SyncTestResult:
     test_type: str
     success: bool
     details: str = ""
-
 
 @dataclass
 class DeviceCoordinationStatus:
@@ -34,7 +31,6 @@ class DeviceCoordinationStatus:
     temperature_celsius: float
     recording_active: bool
     sync_markers_received: int
-
 
 class FlashSyncValidator:
 
@@ -97,7 +93,6 @@ class FlashSyncValidator:
         await asyncio.sleep(0.001)
 
         return master_timestamp + (0.001 * 1000)
-
 
 class MultiDeviceCoordinator:
 
@@ -266,7 +261,6 @@ class MultiDeviceCoordinator:
 
         await asyncio.sleep(0.01)
         return True
-
 
 class SynchronizationValidator:
 
@@ -437,7 +431,6 @@ class SynchronizationValidator:
         compliance["system_reliability"] = success_rate >= 0.95
 
         return compliance
-
 
 __all__ = [
     'SynchronizationValidator',

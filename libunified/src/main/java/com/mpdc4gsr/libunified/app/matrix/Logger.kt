@@ -11,7 +11,6 @@ import java.util.*
 
 object Logger {
 
-
     @JvmStatic
     fun e(clazz: Class<*>, msg: String) {
         if (BuildConfig.DEBUG) {
@@ -25,7 +24,6 @@ object Logger {
             Log.e(tag, msg + "")
         }
     }
-
 
     @JvmStatic
     fun w(clazz: Class<*>, msg: String) {
@@ -41,7 +39,6 @@ object Logger {
         }
     }
 
-
     @JvmStatic
     fun i(clazz: Class<*>, msg: String) {
         if (BuildConfig.DEBUG) {
@@ -55,7 +52,6 @@ object Logger {
             Log.i(tag, msg + "")
         }
     }
-
 
     @JvmStatic
     fun d(clazz: Class<*>, msg: String) {
@@ -71,7 +67,6 @@ object Logger {
         }
     }
 
-
     @JvmStatic
     fun v(clazz: Class<*>, msg: String) {
         if (BuildConfig.DEBUG) {
@@ -85,7 +80,6 @@ object Logger {
         }
     }
 
-
     private val MYLOG_PATH_SDCARD_DIR = "/sdcard/Guide/log"
 
     private val MYLOGFILEName = "Log.txt"
@@ -93,7 +87,6 @@ object Logger {
     private val myLogSdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
 
     private val logfile = SimpleDateFormat("yyyy-MM-dd")
-
 
     fun f(tag: String, text: String) {
         val nowtime = Date()

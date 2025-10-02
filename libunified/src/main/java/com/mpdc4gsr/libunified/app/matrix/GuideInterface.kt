@@ -50,7 +50,6 @@ class GuideInterface {
         fun processIrData(yuv: ByteArray, temp: FloatArray)
     }
 
-
     private fun startUsbBufferWriteThread() {
         mWriteThreadFlag = true
         mUsbBufferWriteThread = Thread {
@@ -74,7 +73,6 @@ class GuideInterface {
     }
 
     var startTime = 0L
-
 
     private fun startUsbBufferReadThread() {
         mReadThreadFlag = true
@@ -218,7 +216,6 @@ class GuideInterface {
         return getParam(PARAM_INDEX_DISTANCE * 2, 1, 0) * 1.0f / 10
     }
 
-
     fun setBright(bright: Int) {
         if (mGuideUsbManager == null) {
             return
@@ -236,7 +233,6 @@ class GuideInterface {
         val PARAM_INDEX_BRIGHT = 164
         return getParam(PARAM_INDEX_BRIGHT * 2, 1, 0).toInt()
     }
-
 
     fun setContrast(contrast: Int) {
         if (mGuideUsbManager == null) {

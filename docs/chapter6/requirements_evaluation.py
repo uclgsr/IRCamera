@@ -30,7 +30,6 @@ except ImportError:
 
 logger = logging.getLogger(__name__)
 
-
 class RequirementsEvaluationFramework:
     """Evaluate system outcomes against original requirements"""
     
@@ -878,7 +877,6 @@ class RequirementsEvaluationFramework:
         
         logger.info("Final evaluation report generated")
 
-
 def main():
     """Main entry point for requirements evaluation"""
     import argparse
@@ -900,7 +898,6 @@ def main():
     evaluator.generate_all_evaluation(args.test_results)
     
     print(f"\nChapter 6 evaluation complete! Check {evaluator.output_dir} for generated reports.")
-
 
 if __name__ == "__main__":
     main()

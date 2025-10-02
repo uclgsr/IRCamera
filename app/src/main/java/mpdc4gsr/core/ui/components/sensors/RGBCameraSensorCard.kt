@@ -23,10 +23,6 @@ import mpdc4gsr.core.ui.model.CameraAction
 import mpdc4gsr.core.ui.model.SensorState
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 
-/**
- * RGB Camera Sensor Card Component
- * Displays RGB camera status, preview, and controls
- */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RGBCameraSensorCard(
@@ -206,9 +202,6 @@ fun RGBCameraSensorCard(
     }
 }
 
-/**
- * RGB camera preview visualization component
- */
 @Composable
 private fun RGBPreviewVisualization(
     resolution: String,
@@ -378,9 +371,6 @@ private fun RGBPreviewVisualization(
     }
 }
 
-/**
- * Metric display item
- */
 @Composable
 private fun MetricItem(
     label: String,
@@ -406,9 +396,6 @@ private fun MetricItem(
     }
 }
 
-/**
- * Get status color based on sensor state
- */
 @Composable
 private fun getStatusColor(state: SensorState): Color {
     return when (state) {

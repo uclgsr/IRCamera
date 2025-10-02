@@ -5,7 +5,6 @@ import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
 
-
 class TipGuideDialog : DialogFragment() {
 
     var closeEvent: ((Boolean) -> Unit)? = null

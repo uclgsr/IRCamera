@@ -21,7 +21,6 @@ import java.util.concurrent.CountDownLatch
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
-
 class ModernPdfViewModel : BaseViewModel() {
 
     // Modern StateFlow-based state management
@@ -63,7 +62,6 @@ class ModernPdfViewModel : BaseViewModel() {
 
     // Repository instance
     private val reportRepository = ReportRepository()
-
 
     fun getReportData(
         isTC007: Boolean,
@@ -130,7 +128,6 @@ class ModernPdfViewModel : BaseViewModel() {
         }
     }
 
-
     fun loadNextPage(isTC007: Boolean) {
         val currentState = _paginationState.value
         if (currentState.hasMorePages && !currentState.isLoadingMore) {
@@ -138,11 +135,9 @@ class ModernPdfViewModel : BaseViewModel() {
         }
     }
 
-
     fun refreshData(isTC007: Boolean) {
         getReportData(isTC007, 1, forceRefresh = true)
     }
-
 
     fun navigateToReport(reportId: String) {
         launchWithErrorHandling {
@@ -150,13 +145,11 @@ class ModernPdfViewModel : BaseViewModel() {
         }
     }
 
-
     fun shareReport(reportData: ReportData) {
         launchWithErrorHandling {
             _events.emit(PdfEvent.ShareReport(reportData))
         }
     }
-
 
     fun clearErrorState() {
         super.clearError()
@@ -165,12 +158,10 @@ class ModernPdfViewModel : BaseViewModel() {
         }
     }
 
-
     fun resetStates() {
         _reportDataState.value = ReportDataState.Idle
         _paginationState.value = PaginationState()
     }
-
 
     private inner class ReportRepository : BaseRepository() {
 

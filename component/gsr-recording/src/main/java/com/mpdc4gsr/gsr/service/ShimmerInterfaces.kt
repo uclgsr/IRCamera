@@ -2,7 +2,6 @@ package com.mpdc4gsr.gsr.service
 
 import android.util.Log
 
-
 interface ShimmerDataCluster {
     fun getGSRRawValue(): Double
     fun getGSRCalibratedValue(): Double
@@ -10,7 +9,6 @@ interface ShimmerDataCluster {
     fun getTimestamp(): Long
     fun hasValidGSRData(): Boolean
 }
-
 
 interface ShimmerDeviceInterface {
     fun connect(address: String, name: String): Boolean
@@ -22,11 +20,9 @@ interface ShimmerDeviceInterface {
     fun setConnectionCallback(callback: (String) -> Unit)
 }
 
-
 interface ShimmerDeviceFactory {
     fun createShimmerDevice(): ShimmerDeviceInterface
 }
-
 
 object ShimmerDeviceFactoryResolver {
     private const val TAG = "ShimmerFactoryResolver"
@@ -47,11 +43,9 @@ object ShimmerDeviceFactoryResolver {
     }
 }
 
-
 class MockShimmerDeviceFactory : ShimmerDeviceFactory {
     override fun createShimmerDevice(): ShimmerDeviceInterface = MockShimmerDevice()
 }
-
 
 class MockShimmerDevice : ShimmerDeviceInterface {
     private var connected = false
@@ -95,7 +89,6 @@ class MockShimmerDevice : ShimmerDeviceInterface {
         this.connectionCallback = callback
     }
 }
-
 
 class MockShimmerDataCluster : ShimmerDataCluster {
     override fun getGSRRawValue(): Double = 2048.0

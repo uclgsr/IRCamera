@@ -167,7 +167,6 @@ class QualityOfServiceManager(
         val rssi = wifiInfo.rssi
         val linkSpeed = wifiInfo.linkSpeed
 
-
         val signalQuality =
             when {
                 rssi >= -50 -> 1.0f
@@ -176,7 +175,6 @@ class QualityOfServiceManager(
                 rssi >= -80 -> 0.4f
                 else -> 0.2f
             }
-
 
         return (linkSpeed * 1024 * 1024 / 8 * signalQuality).toLong()
     }
@@ -225,7 +223,6 @@ class QualityOfServiceManager(
                 delay(100L)
             }
 
-
             samples.sorted()[samples.size / 2]
         }
 
@@ -267,7 +264,6 @@ class QualityOfServiceManager(
         val latency = networkLatency.get()
         val utilization = calculateBandwidthUtilization()
 
-
         adaptiveBatchSize =
             when {
                 bandwidth > 5 * 1024 * 1024L && latency < 50L -> ADAPTIVE_BATCH_MAX
@@ -275,7 +271,6 @@ class QualityOfServiceManager(
                 bandwidth > 500 * 1024L -> (ADAPTIVE_BATCH_MAX * 0.5).toInt()
                 else -> ADAPTIVE_BATCH_MIN
             }
-
 
         if (utilization > CONGESTION_THRESHOLD) {
             adaptiveBatchSize = (adaptiveBatchSize * 0.7).toInt()
@@ -293,7 +288,6 @@ class QualityOfServiceManager(
     }
 
     private fun calculateCurrentUsage(): Long {
-
 
         val queueSize = getTotalQueueSize()
         return queueSize * 100L
@@ -324,7 +318,6 @@ class QualityOfServiceManager(
                 Priority.LOW -> lowPriorityQueue
             }
 
-
         while (targetQueue.size >= PRIORITY_QUEUE_SIZE) {
             val dropped = targetQueue.poll()
             Log.w(TAG, "Dropped packet due to queue overflow: ${dropped?.dataType}")
@@ -346,28 +339,23 @@ class QualityOfServiceManager(
         val batch = mutableListOf<QoSDataPacket>()
         val maxBatchSize = adaptiveBatchSize
 
-
         while (criticalQueue.isNotEmpty() && batch.size < maxBatchSize) {
             criticalQueue.poll()?.let { batch.add(it) }
         }
-
 
         while (highPriorityQueue.isNotEmpty() && batch.size < maxBatchSize) {
             highPriorityQueue.poll()?.let { batch.add(it) }
         }
 
-
         while (normalPriorityQueue.isNotEmpty() && batch.size < maxBatchSize) {
             normalPriorityQueue.poll()?.let { batch.add(it) }
         }
-
 
         if (calculateBandwidthUtilization() < CONGESTION_THRESHOLD) {
             while (lowPriorityQueue.isNotEmpty() && batch.size < maxBatchSize) {
                 lowPriorityQueue.poll()?.let { batch.add(it) }
             }
         }
-
 
         if (batch.isNotEmpty()) {
             sendBatch(batch)
@@ -383,7 +371,6 @@ class QualityOfServiceManager(
         } catch (e: Exception) {
             Log.e(TAG, "Failed to send batch", e)
 
-
             batch.filter { it.priority.level >= Priority.HIGH.level }
                 .forEach { queueData(it.data, it.dataType, it.priority, it.sessionId, it.metadata) }
         }
@@ -391,7 +378,6 @@ class QualityOfServiceManager(
 
     private fun compressBatch(batch: List<QoSDataPacket>): List<QoSDataPacket> {
         if (compressionLevel == CompressionLevel.NONE) return batch
-
 
         return batch.map { packet ->
             when (packet.dataType) {
@@ -405,12 +391,10 @@ class QualityOfServiceManager(
 
     private fun compressThermalData(packet: QoSDataPacket): QoSDataPacket {
 
-
         return packet
     }
 
     private fun compressVideoMetadata(packet: QoSDataPacket): QoSDataPacket {
-
 
         return packet
     }
@@ -464,7 +448,6 @@ class QualityOfServiceManager(
 
     fun stopQoSMonitoring() {
         isMonitoring.set(false)
-
 
         criticalQueue.clear()
         highPriorityQueue.clear()

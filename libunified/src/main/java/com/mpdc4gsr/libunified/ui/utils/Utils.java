@@ -321,7 +321,6 @@ public abstract class Utils {
     public static void velocityTrackerPointerUpCleanUpIfNecessary(MotionEvent ev,
                                                                   VelocityTracker tracker) {
 
-
         tracker.computeCurrentVelocity(1000, mMaximumFlingVelocity);
         final int upIndex = ev.getActionIndex();
         final int id1 = ev.getPointerId(upIndex);
@@ -401,7 +400,6 @@ public abstract class Utils {
 
         drawOffsetX -= mDrawTextRectBuffer.left;
 
-
         drawOffsetY += -mFontMetricsBuffer.ascent;
 
         Paint.Align originalTextAlign = paint.getTextAlign();
@@ -465,7 +463,6 @@ public abstract class Utils {
         drawHeight = textLayout.getLineCount() * lineHeight;
 
         drawOffsetX -= mDrawTextRectBuffer.left;
-
 
         drawOffsetY += drawHeight;
 

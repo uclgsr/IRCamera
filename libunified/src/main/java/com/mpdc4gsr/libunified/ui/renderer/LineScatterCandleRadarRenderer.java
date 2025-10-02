@@ -43,7 +43,6 @@ public abstract class LineScatterCandleRadarRenderer extends BarLineScatterCandl
             c.drawPath(mHighlightLinePath, mHighlightPaint);
         }
 
-
         mHighlightDotPaint.setColor(Color.rgb(243, 129, 47));
         mHighlightDotPaint.setStyle(Paint.Style.FILL);
         c.drawCircle(x, y, SizeUtils.dp2px(4f), mHighlightDotPaint);

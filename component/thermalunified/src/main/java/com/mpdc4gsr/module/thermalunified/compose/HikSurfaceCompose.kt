@@ -28,7 +28,6 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import kotlin.math.sin
 
-
 @Composable
 fun HikSurfaceCompose(
     thermalImageData: ByteArray? = null,
@@ -388,7 +387,6 @@ enum class ThermalAlarmType {
     TEMPERATURE_RANGE
 }
 
-
 @Composable
 fun HikSurfaceWithAndroidView(
     rotateAngle: Int = 270,
@@ -425,7 +423,6 @@ fun HikSurfaceWithAndroidView(
         }
     )
 }
-
 
 @Composable
 fun HikSurfaceComposePreview() {

@@ -345,7 +345,6 @@ class SecurityMonitor(
 
     private fun checkCertificateViolations() {
 
-
     }
 
     private fun analyzeThreatPatterns() {

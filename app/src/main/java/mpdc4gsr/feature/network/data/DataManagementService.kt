@@ -11,7 +11,6 @@ import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
 
-
 class DataManagementService(private val context: Context) {
     companion object {
         private const val TAG = "DataManagementService"
@@ -40,9 +39,7 @@ class DataManagementService(private val context: Context) {
             ERROR,
         }
 
-
     }
-
 
     private val logger = StructuredLogger.getInstance(context)
     private val activeSessions = ConcurrentHashMap<String, SessionData>()
@@ -131,7 +128,6 @@ class DataManagementService(private val context: Context) {
         setupStorageDirectories()
         loadExistingSessions()
         isInitialized.set(true)
-
 
         logger.log(
             StructuredLogger.LogLevel.INFO,
@@ -484,7 +480,6 @@ class DataManagementService(private val context: Context) {
 
             exportSessionAsZIP(session, archiveFile, includeFiles = true)
 
-
             sessionDir.deleteRecursively()
 
             activeSessions.remove(sessionId)
@@ -793,7 +788,6 @@ class DataManagementService(private val context: Context) {
 
     private fun exportSessionAsHDF5(session: SessionData, exportFile: File) {
 
-
         try {
             val hdf5Structure = JSONObject().apply {
                 put("format", "HDF5-Compatible JSON")
@@ -804,7 +798,6 @@ class DataManagementService(private val context: Context) {
                         Date()
                     )
                 )
-
 
                 val rootGroup = JSONObject().apply {
                     put("attributes", JSONObject().apply {
@@ -820,9 +813,7 @@ class DataManagementService(private val context: Context) {
                         )
                     })
 
-
                     val dataGroups = JSONObject()
-
 
                     if (session.files.any { it.type == "gsr_data" }) {
                         dataGroups.put("gsr", JSONObject().apply {
@@ -835,7 +826,6 @@ class DataManagementService(private val context: Context) {
                                     put("ppg", "arbitrary_units")
                                 })
                             })
-
 
                             put("datasets", JSONObject().apply {
                                 put("timestamps", JSONObject().apply {
@@ -867,7 +857,6 @@ class DataManagementService(private val context: Context) {
                         })
                     }
 
-
                     if (session.files.any { it.type == "rgb_video" }) {
                         dataGroups.put("rgb_video", JSONObject().apply {
                             put("attributes", JSONObject().apply {
@@ -893,7 +882,6 @@ class DataManagementService(private val context: Context) {
                             })
                         })
                     }
-
 
                     if (session.files.any { it.type == "thermal_data" }) {
                         dataGroups.put("thermal", JSONObject().apply {
@@ -927,7 +915,6 @@ class DataManagementService(private val context: Context) {
 
                     put("groups", dataGroups)
 
-
                     put("sync_markers", JSONObject().apply {
                         put("attributes", JSONObject().apply {
                             put("description", "Synchronization markers for multi-modal alignment")
@@ -950,7 +937,6 @@ class DataManagementService(private val context: Context) {
                 }
 
                 put("root", rootGroup)
-
 
                 val fileManifest = JSONArray()
                 session.files.forEach { file ->
@@ -987,7 +973,6 @@ class DataManagementService(private val context: Context) {
         try {
             val zipOutputStream = java.util.zip.ZipOutputStream(exportFile.outputStream())
 
-
             val sessionMetadata = JSONObject().apply {
                 put("session_id", session.sessionId)
                 put("participant_id", session.participantId)
@@ -1008,11 +993,9 @@ class DataManagementService(private val context: Context) {
                 )
             }
 
-
             zipOutputStream.putNextEntry(java.util.zip.ZipEntry("session_metadata.json"))
             zipOutputStream.write(sessionMetadata.toString(2).toByteArray())
             zipOutputStream.closeEntry()
-
 
             val manifest = JSONArray()
             session.files.forEach { fileInfo ->
@@ -1051,7 +1034,6 @@ class DataManagementService(private val context: Context) {
                     }
                 }
             }
-
 
             val readme = """
                 IRCamera Session Export (ZIP Format)

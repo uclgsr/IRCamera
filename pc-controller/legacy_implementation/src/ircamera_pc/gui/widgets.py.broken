@@ -27,7 +27,6 @@ from datetime import datetime
 from ..network.server import DeviceInfo, DeviceState
 from ..core.session import SessionMetadata, SessionState
 
-
 class DeviceListWidget(QListWidget):
     """
     Custom widget for displaying connected devices with status indicators.
@@ -143,7 +142,6 @@ class DeviceListWidget(QListWidget):
         if device_id:
             self.device_selected.emit(device_id)
 
-
 class SessionControlWidget(QWidget):
     """
     Widget for session control operations.
@@ -257,7 +255,6 @@ class SessionControlWidget(QWidget):
 
         # Stop recording: enabled when recording is active
         self.stop_session_btn.setEnabled(is_recording)
-
 
 class StatusDisplayWidget(QWidget):
     """
@@ -376,7 +373,6 @@ class StatusDisplayWidget(QWidget):
             )
         else:
             self.gsr_leader_label.setText("No leader")
-
 
 class BluetoothControlWidget(QGroupBox):
     """
@@ -526,7 +522,6 @@ class BluetoothControlWidget(QGroupBox):
         address = item_text.split("(")[1].split(")")[0]
 
         self.disconnect_requested.emit(address)
-
 
 class WiFiControlWidget(QGroupBox):
     """
@@ -837,7 +832,6 @@ class WiFiControlWidget(QGroupBox):
             return
 
         self.hotspot_start_requested.emit(ssid, password, channel)
-
 
 class SystemIntegrationWidget(QGroupBox):
     """

@@ -37,7 +37,6 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class TemperatureView extends SurfaceView implements SurfaceHolder.Callback,
         View.OnTouchListener, BaseDualView.OnFrameCallback {
 
@@ -558,7 +557,6 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
         }
     }
 
-
     public void stop() {
         runflag = false;
         isShow = getVisibility() == View.VISIBLE;
@@ -626,7 +624,6 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
         lineList.add(line);
     }
 
-
     public void addScaleRectangle(Rect r) {
         float sx = getMeasuredWidth() / (float) temperatureWidth;
         float sy = getMeasuredHeight() / (float) temperatureHeight;
@@ -652,7 +649,6 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
         }
         return new Point((int) (pointList.get(0).x / xScale), (int) (pointList.get(0).y / yScale));
     }
-
 
     public Line getLine() {
         if (!lineList.isEmpty()) {
@@ -1229,9 +1225,7 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
         canvas.drawCircle(x, y, 8f, tempPaint);
     }
 
-
     private void drawLine(Canvas canvas, int x1, int y1, int x2, int y2, boolean isTrend) {
-
 
         int startX = (int) ((int) (x1 / xScale) * xScale);
         int startY = (int) ((int) (y1 / yScale) * yScale);

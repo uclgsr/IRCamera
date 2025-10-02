@@ -11,7 +11,6 @@ import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileWriter
 
-
 class TimeSynchronizationService {
     companion object {
         private const val TAG = "TimeSynchronizationService"
@@ -24,7 +23,6 @@ class TimeSynchronizationService {
 
     private val _syncEvents = MutableSharedFlow<SyncEvent>()
     val syncEvents: SharedFlow<SyncEvent> = _syncEvents.asSharedFlow()
-
 
     fun initializeSession(sessionDirectory: String): SessionTimestampReference {
         this.sessionDirectory = sessionDirectory
@@ -56,14 +54,11 @@ class TimeSynchronizationService {
         }
     }
 
-
     fun getSessionReference(): SessionTimestampReference? = sessionReference
-
 
     fun createSynchronizedTimestamp(): TimestampRecord {
         return TimestampManager.createTimestampRecord()
     }
-
 
     fun convertDeviceTimestamp(deviceTimestamp: Long, sensorId: String): TimestampRecord {
         val unifiedTimestamp = TimestampManager.createTimestampRecord()
@@ -75,7 +70,6 @@ class TimeSynchronizationService {
 
         return unifiedTimestamp
     }
-
 
     suspend fun emitSyncEvent(eventType: String, metadata: Map<String, String> = emptyMap()) {
         val timestampRecord = createSynchronizedTimestamp()
@@ -89,7 +83,6 @@ class TimeSynchronizationService {
         Log.i(TAG, "Sync event emitted: $eventType at ${timestampRecord.systemTimeMs}ms")
     }
 
-
     fun finalizeSession(): Long {
         val sessionDuration = TimestampManager.endSession()
         sessionReference = null
@@ -98,7 +91,6 @@ class TimeSynchronizationService {
         Log.i(TAG, "Session finalized. Duration: ${sessionDuration}ms")
         return sessionDuration
     }
-
 
     private fun writeSessionSyncMetadata() {
         val reference = sessionReference ?: return
@@ -123,7 +115,6 @@ class TimeSynchronizationService {
             Log.e(TAG, "Failed to write session sync metadata", e)
         }
     }
-
 
     suspend fun logSyncEvent(eventType: String, metadata: Map<String, String> = emptyMap()) {
         val timestampRecord = createSynchronizedTimestamp()
@@ -171,7 +162,6 @@ class TimeSynchronizationService {
         }
     }
 
-
     fun validateTimestampConsistency(
         gsrTimestamp: Long,
         thermalTimestamp: Long,
@@ -195,13 +185,11 @@ class TimeSynchronizationService {
     }
 }
 
-
 data class SyncEvent(
     val eventType: String,
     val timestampRecord: TimestampRecord,
     val metadata: Map<String, String>
 )
-
 
 data class TimestampConsistencyReport(
     val isConsistent: Boolean,

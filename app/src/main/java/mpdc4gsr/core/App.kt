@@ -1,6 +1,5 @@
 package mpdc4gsr.core
 
-
 import android.app.Activity
 import android.app.Application
 import android.os.Bundle
@@ -27,7 +26,6 @@ import mpdc4gsr.core.ui.InitUtils.initReceiver
 import mpdc4gsr.core.ui.InitUtils.initUM
 
 class App : BaseApplication() {
-
 
     companion object {
         lateinit var instance: App

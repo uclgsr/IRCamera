@@ -200,7 +200,6 @@ public class HorizontalBarChart extends BarChart {
         return result;
     }
 
-
     @Override
     public void setVisibleXRangeMaximum(float maxXRange) {
         float xScale = mXAxis.mAxisRange / (maxXRange);

@@ -122,7 +122,6 @@ public class HomoFilter {
         Mat result = new Mat();
         temp.convertTo(result, CV_8UC1);
 
-
         return result;
 
     }

@@ -120,7 +120,6 @@ public class HorizontalBarChartRenderer extends BarChartRenderer {
 
             if (!isSingleColor) {
 
-
                 mRenderPaint.setColor(dataSet.getColor(j / 4));
             }
 
@@ -237,7 +236,6 @@ public class HorizontalBarChartRenderer extends BarChartRenderer {
 
                         int color = dataSet.getValueTextColor(index);
                         float[] vals = entry.getYVals();
-
 
                         if (vals == null) {
 

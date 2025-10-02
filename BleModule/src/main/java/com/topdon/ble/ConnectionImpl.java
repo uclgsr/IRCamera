@@ -26,7 +26,6 @@ import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-
 // Permission checks are expected to be handled by the calling code before using this connection
 @SuppressLint("MissingPermission")
 class ConnectionImpl implements Connection, ScanListener {
@@ -197,7 +196,6 @@ class ConnectionImpl implements Connection, ScanListener {
         }
     }
 
-
     private void doDiscoverServices() {
         if (bluetoothGatt != null) {
             bluetoothGatt.discoverServices();
@@ -261,7 +259,6 @@ class ConnectionImpl implements Connection, ScanListener {
         logD(Logger.TYPE_CONNECTION_STATE, "connecting [name: %s, addr: %s]", device.name, device.address);
         connHandler.postDelayed(connectRunnable, 500);
     }
-
 
     private void doDisconnect(boolean reconnect) {
         clearRequestQueueAndNotify();
@@ -891,7 +888,6 @@ class ConnectionImpl implements Connection, ScanListener {
             }
         }
     }
-
 
     private void clearRequestQueueAndNotify() {
         synchronized (this) {

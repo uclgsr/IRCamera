@@ -6,7 +6,6 @@ import android.content.res.Configuration;
 
 import java.util.Locale;
 
-
 public class LocaleContextWrapper extends ContextWrapper {
 
     public LocaleContextWrapper(Context base) {

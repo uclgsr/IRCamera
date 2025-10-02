@@ -15,14 +15,12 @@ import time
 from typing import Dict, Optional, List, Any
 from dataclasses import dataclass
 
-
 @dataclass
 class ProtocolMessage:
     """Represents a parsed protocol message"""
     type: str
     parameters: Dict[str, str]
     raw: str
-
 
 class ProtocolAdapter:
     """
@@ -250,25 +248,20 @@ class ProtocolAdapter:
             'parse_errors': self.parse_errors
         }
 
-
 # Global adapter instance
 _adapter = ProtocolAdapter()
-
 
 def parse_android(message: str) -> Optional[Dict[str, Any]]:
     """Parse Android text message to JSON (convenience function)"""
     return _adapter.android_to_json(message)
 
-
 def format_android(json_msg: Dict[str, Any]) -> str:
     """Format JSON message as Android text (convenience function)"""
     return _adapter.json_to_android(json_msg)
 
-
 def get_adapter() -> ProtocolAdapter:
     """Get global protocol adapter instance"""
     return _adapter
-
 
 if __name__ == '__main__':
     # Test the protocol adapter

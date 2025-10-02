@@ -107,7 +107,6 @@
                     android:background="#33ffffff"
                     app:layout_constraintTop_toBottomOf="@+id/tv_device_model" />
 
-
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/cl_layout_copy"
                     android:layout_width="match_parent"
@@ -142,7 +141,6 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
-
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

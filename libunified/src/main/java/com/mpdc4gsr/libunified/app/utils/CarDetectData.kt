@@ -5,7 +5,6 @@ import com.mpdc4gsr.libunified.app.BaseApplication
 import com.mpdc4gsr.libunified.app.bean.CarDetectBean
 import com.mpdc4gsr.libunified.app.bean.CarDetectChildBean
 
-
 object CarDetectData {
     @JvmStatic
     fun getDetectList(): MutableList<CarDetectBean> {

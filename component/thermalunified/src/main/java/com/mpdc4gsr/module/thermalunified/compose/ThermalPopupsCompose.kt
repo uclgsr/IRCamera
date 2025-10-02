@@ -28,7 +28,6 @@ import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import kotlin.math.roundToInt
 
-
 @Composable
 fun SeekBarPopupCompose(
     visible: Boolean,
@@ -146,7 +145,6 @@ fun SeekBarPopupCompose(
     }
 }
 
-
 @Composable
 fun OptionPickPopupCompose(
     visible: Boolean,
@@ -261,7 +259,6 @@ private fun OptionItemCompose(
         }
     }
 }
-
 
 @Composable
 fun GalleryChangePopupCompose(

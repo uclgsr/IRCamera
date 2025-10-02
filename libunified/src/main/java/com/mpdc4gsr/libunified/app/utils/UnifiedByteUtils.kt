@@ -2,7 +2,6 @@ package com.mpdc4gsr.libunified.app.utils
 
 import java.util.*
 
-
 @OptIn(ExperimentalUnsignedTypes::class)
 object UnifiedByteUtils {
 

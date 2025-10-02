@@ -40,7 +40,6 @@ public class XAxisRenderer extends AxisRenderer {
     @Override
     public void computeAxis(float min, float max, boolean inverted) {
 
-
         if (mViewPortHandler.contentWidth() > 10 && !mViewPortHandler.isFullyZoomedOutX()) {
 
             MPPointD p1 = mTrans.getValuesByTouchPoint(mViewPortHandler.contentLeft(), mViewPortHandler.contentTop());
@@ -209,9 +208,7 @@ public class XAxisRenderer extends AxisRenderer {
                     }
                 }
 
-
                 if (i == 0 && mXAxis.isJumpFirstLabel()) {
-
 
                     continue;
                 }
@@ -252,7 +249,6 @@ public class XAxisRenderer extends AxisRenderer {
         gridLinePath.reset();
 
         for (int i = 0; i < positions.length; i += 2) {
-
 
             if (i == 0) {
                 continue;

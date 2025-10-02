@@ -58,7 +58,6 @@ public abstract class BaseDataSet<T extends Entry> implements IDataSet<T> {
         calcMinMax();
     }
 
-
     @Override
     public List<Integer> getColors() {
         return mColors;
@@ -320,7 +319,6 @@ public abstract class BaseDataSet<T extends Entry> implements IDataSet<T> {
     public void setAxisDependency(YAxis.AxisDependency dependency) {
         mAxisDependency = dependency;
     }
-
 
     @Override
     public int getIndexInEntries(int xIndex) {

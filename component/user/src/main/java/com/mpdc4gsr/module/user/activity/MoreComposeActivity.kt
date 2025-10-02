@@ -24,7 +24,6 @@ import com.mpdc4gsr.libunified.app.config.RouterConfig
 import com.mpdc4gsr.libunified.app.navigation.NavigationManager
 import com.mpdc4gsr.module.user.viewmodel.MoreViewModel
 
-
 class MoreComposeActivity : BaseComposeActivity<MoreViewModel>() {
 
     override fun createViewModel(): MoreViewModel {

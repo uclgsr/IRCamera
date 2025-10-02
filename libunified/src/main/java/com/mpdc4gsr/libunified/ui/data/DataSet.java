@@ -247,14 +247,11 @@ public abstract class DataSet<T extends Entry> extends BaseDataSet<T> {
 
             if (ad2 < ad1) {
 
-
                 low = m + 1;
             } else if (ad1 < ad2) {
 
-
                 high = m;
             } else {
-
 
                 if (d1 >= 0.0) {
 

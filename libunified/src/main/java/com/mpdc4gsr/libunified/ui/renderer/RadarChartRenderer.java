@@ -50,7 +50,6 @@ public class RadarChartRenderer extends LineRadarRenderer {
     @Override
     public void initBuffers() {
 
-
     }
 
     @Override
@@ -74,7 +73,6 @@ public class RadarChartRenderer extends LineRadarRenderer {
         float phaseY = mAnimator.getPhaseY();
 
         float sliceangle = mChart.getSliceAngle();
-
 
         float factor = mChart.getFactor();
 
@@ -142,7 +140,6 @@ public class RadarChartRenderer extends LineRadarRenderer {
         float phaseY = mAnimator.getPhaseY();
 
         float sliceangle = mChart.getSliceAngle();
-
 
         float factor = mChart.getFactor();
 
@@ -226,7 +223,6 @@ public class RadarChartRenderer extends LineRadarRenderer {
 
         float sliceangle = mChart.getSliceAngle();
 
-
         float factor = mChart.getFactor();
         float rotationangle = mChart.getRotationAngle();
 
@@ -281,7 +277,6 @@ public class RadarChartRenderer extends LineRadarRenderer {
     public void drawHighlighted(Canvas c, Highlight[] indices) {
 
         float sliceangle = mChart.getSliceAngle();
-
 
         float factor = mChart.getFactor();
 

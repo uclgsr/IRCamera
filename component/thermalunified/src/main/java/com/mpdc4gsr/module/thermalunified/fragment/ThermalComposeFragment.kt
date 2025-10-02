@@ -24,7 +24,6 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.app.matrix.IrSurfaceView
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalFragmentViewModel
 
-
 class ThermalComposeFragment : BaseComposeFragment<ThermalFragmentViewModel>() {
 
     override fun createViewModel(): ThermalFragmentViewModel {

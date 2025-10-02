@@ -6,7 +6,6 @@ import android.graphics.Canvas
 import android.util.AttributeSet
 import android.view.MotionEvent
 
-
 class Temperature07View : TemperatureBaseView {
     constructor(context: Context) : this(context, null)
 
@@ -47,7 +46,6 @@ class Temperature07View : TemperatureBaseView {
             }
         }
     }
-
 
     private var isTouching = false
 

@@ -25,7 +25,6 @@ import com.mpdc4gsr.libunified.app.lms.weiget.TToast
 import com.mpdc4gsr.module.user.viewmodel.DeviceDetailsViewModel
 import com.mpdc4gsr.libunified.R as RCore
 
-
 class DeviceDetailsComposeActivity : BaseComposeActivity<DeviceDetailsViewModel>() {
 
     override fun createViewModel(): DeviceDetailsViewModel {

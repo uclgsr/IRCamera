@@ -6,7 +6,6 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 
-
 class ThermalInputDialog {
 
     class Builder(private val context: Context) {

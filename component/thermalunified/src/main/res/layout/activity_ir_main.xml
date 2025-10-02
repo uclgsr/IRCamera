@@ -50,7 +50,6 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintWidth_percent="0.2" />
 
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_icon_monitor"
             android:layout_width="0dp"
@@ -91,7 +90,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/iv_icon_monitor" />
         </androidx.constraintlayout.widget.ConstraintLayout>
-
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_icon_gallery"
@@ -134,7 +132,6 @@
                 app:layout_constraintTop_toBottomOf="@id/iv_icon_gallery" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_icon_report"
             android:layout_width="0dp"
@@ -175,7 +172,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/iv_icon_report" />
         </androidx.constraintlayout.widget.ConstraintLayout>
-
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_icon_mine"

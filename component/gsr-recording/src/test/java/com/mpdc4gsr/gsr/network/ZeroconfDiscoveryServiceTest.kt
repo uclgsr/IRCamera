@@ -71,7 +71,6 @@ class ZeroconfDiscoveryServiceTest {
 
         discoveryService.setServiceListener(listener)
 
-
         assertTrue("Setting service listener should succeed", true)
 
         discoveryService.setServiceListener(null)
@@ -91,7 +90,6 @@ class ZeroconfDiscoveryServiceTest {
 
         val deviceName1 = "Device One"
         val deviceName2 = "Device Two"
-
 
         assertTrue(
             "Different device names should be handled",

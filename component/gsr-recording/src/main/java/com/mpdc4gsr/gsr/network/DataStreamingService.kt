@@ -203,7 +203,6 @@ class DataStreamingService(
                             sendVideoMetadataBatch()
                         }
 
-
                         delay(BATCH_TIMEOUT_MS)
                     } catch (e: Exception) {
                         if (isActive) {
@@ -360,11 +359,9 @@ class DataStreamingService(
             sendGSRBatch()
         }
 
-
         while (thermalQueue.isNotEmpty()) {
             sendThermalBatch()
         }
-
 
         while (videoMetadataQueue.isNotEmpty()) {
             sendVideoMetadataBatch()
@@ -390,7 +387,6 @@ class DataStreamingService(
     suspend fun cleanup() {
 
         stopStreaming()
-
 
         streamingJob.cancel()
         clearQueues()

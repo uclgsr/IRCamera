@@ -26,7 +26,6 @@ import com.mpdc4gsr.module.thermalunified.fragment.MonitorThermalComposeFragment
 import com.mpdc4gsr.module.thermalunified.viewmodel.MonitorViewModel
 import org.greenrobot.eventbus.EventBus
 
-
 class MonitorComposeActivity : BaseComposeActivity<MonitorViewModel>() {
 
     override fun createViewModel(): MonitorViewModel {

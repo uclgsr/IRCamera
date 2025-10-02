@@ -34,7 +34,6 @@ import com.mpdc4gsr.module.thermalunified.viewmodel.GalleryViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
-
 class GalleryComposeFragment : BaseComposeFragment<GalleryViewModel>() {
 
     override fun createViewModel(): GalleryViewModel {

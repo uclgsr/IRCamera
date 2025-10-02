@@ -2,7 +2,6 @@ package com.topdon.commons.base.entity;
 
 import java.io.Serializable;
 
-
 public class UnitDBBean implements Serializable {
 //    {
 //        "": "",
@@ -25,7 +24,6 @@ public class UnitDBBean implements Serializable {
     String afterName;//
     String conversionFormula;//
     String calcFactor;//
-
 
     public Long getDbid() {
         return dbid;
@@ -106,6 +104,5 @@ public class UnitDBBean implements Serializable {
     public void setCalcFactor(String calcFactor) {
         this.calcFactor = calcFactor;
     }
-
 
 }

@@ -2,7 +2,6 @@ package com.mpdc4gsr.module.thermalunified.report.bean
 
 import com.blankj.utilcode.util.GsonUtils
 
-
 class ReportData {
 
     var code = 0

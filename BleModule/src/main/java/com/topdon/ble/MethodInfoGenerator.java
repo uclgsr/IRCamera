@@ -1,10 +1,8 @@
 package com.topdon.ble;
 
-
 import com.topdon.commons.poster.MethodInfo;
 
 import java.util.UUID;
-
 
 class MethodInfoGenerator {
     static MethodInfo onBluetoothAdapterStateChanged(int state) {

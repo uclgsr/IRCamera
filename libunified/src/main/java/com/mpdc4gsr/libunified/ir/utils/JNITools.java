@@ -5,7 +5,6 @@ import android.util.Log;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 
-
 public class JNITools {
     public static final JNITools INSTANCE = new JNITools();
     private static final String TAG = "JNITool";

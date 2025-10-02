@@ -16,7 +16,6 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import kotlin.math.abs
 
-
 @Composable
 fun DistanceMeasureCompose(
     onDistanceChanged: (Float) -> Unit = {},
@@ -99,7 +98,6 @@ private fun DrawScope.drawDistanceLines(line1Y: Float, line2Y: Float) {
         pathEffect = dashEffect
     )
 }
-
 
 @Composable
 fun DistanceMeasureComposePreview() {

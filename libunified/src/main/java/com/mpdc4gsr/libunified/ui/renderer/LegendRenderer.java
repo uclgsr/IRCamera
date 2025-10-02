@@ -258,7 +258,6 @@ public class LegendRenderer extends Renderer {
                         ? +xoffset
                         : -xoffset);
 
-
                 if (orientation == Legend.LegendOrientation.VERTICAL) {
                     originPosX += (direction == Legend.LegendDirection.LEFT_TO_RIGHT
                             ? -mLegend.mNeededWidth / 2.0 + xoffset

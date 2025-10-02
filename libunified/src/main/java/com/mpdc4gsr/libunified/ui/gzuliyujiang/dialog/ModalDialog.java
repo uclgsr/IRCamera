@@ -177,13 +177,11 @@ public abstract class ModalDialog extends BottomDialog implements View.OnClickLi
             cancelDrawable.setColor(DialogConfig.getDialogColor().cancelEllipseColor());
             cancelView.setBackground(cancelDrawable);
 
-
         }
         GradientDrawable okDrawable = new GradientDrawable();
         okDrawable.setCornerRadius(okView.getResources().getDisplayMetrics().density * 999);
         okDrawable.setColor(DialogConfig.getDialogColor().okEllipseColor());
         okView.setBackground(okDrawable);
-
 
     }
 

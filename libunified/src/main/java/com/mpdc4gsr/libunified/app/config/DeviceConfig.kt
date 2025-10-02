@@ -38,10 +38,8 @@ object DeviceConfig {
     const val SKU = "TDTC001A11"
     const val SN = "TC001A11000001"
 
-
     const val ROTATE_ANGLE = 0
     const val IS_PORTRAIT = false
-
 
     const val S_ROTATE_ANGLE = 270
     const val S_IS_PORTRAIT = true

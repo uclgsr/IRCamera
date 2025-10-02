@@ -157,7 +157,6 @@
                             tools:text="GB" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
-
                     <com.mpdc4gsr.module.user.view.ListItemView
                         android:id="@+id/list_storage_photo"
                         android:layout_width="match_parent"

@@ -18,7 +18,6 @@ import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.R
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 
-
 class TipDialog : Dialog {
     constructor(context: Context) : super(context)
 

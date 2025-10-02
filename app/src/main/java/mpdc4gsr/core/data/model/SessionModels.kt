@@ -2,7 +2,6 @@ package mpdc4gsr.core.data.model
 
 import org.json.JSONObject
 
-
 data class SessionConfig(
     val sessionName: String,
     val studyName: String,

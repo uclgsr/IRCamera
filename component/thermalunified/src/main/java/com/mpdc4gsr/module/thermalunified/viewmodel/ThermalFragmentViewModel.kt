@@ -1,5 +1,6 @@
 package com.mpdc4gsr.module.thermalunified.viewmodel
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Matrix
 import androidx.lifecycle.LiveData
@@ -7,6 +8,17 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import com.mpdc4gsr.libunified.app.matrix.IrSurfaceView
+import com.mpdc4gsr.libunified.ir.camera.IRUVCTC
+import com.mpdc4gsr.libunified.ir.extension.setMirror
+import com.mpdc4gsr.libunified.ir.extension.setAutoShutter
+import com.mpdc4gsr.libunified.ir.extension.setPropDdeLevel
+import com.mpdc4gsr.libunified.ir.extension.setContrast
+import com.energy.iruvc.utils.SynchronizedBitmap
+import com.energy.iruvc.utils.CommonParams
+import com.energy.iruvc.uvc.ConnectCallback
+import com.energy.iruvc.ircmd.IRCMD
+import com.energy.iruvc.uvc.UVCCamera
+import com.mpdc4gsr.libunified.ir.utils.USBMonitorCallback
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,7 +29,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 
-class ThermalFragmentViewModel : BaseViewModel() {
+class ThermalFragmentViewModel(
+    private val context: Context? = null
+) : BaseViewModel() {
 
     // Thermal image processing state
     private val _thermalImageState = MutableStateFlow(ThermalImageState())
@@ -64,6 +78,10 @@ class ThermalFragmentViewModel : BaseViewModel() {
         private set
     var rawHeight: Int = 0
         private set
+
+    private var iruvctc: IRUVCTC? = null
+    private var syncBitmap: SynchronizedBitmap? = null
+    private var ircmd: IRCMD? = null
 
     init {
         setupThermalDataProcessing()
@@ -153,22 +171,16 @@ class ThermalFragmentViewModel : BaseViewModel() {
     }
 
     private fun extractTemperatureData(bitmap: Bitmap): FloatArray {
-        // Extract temperature data from thermal bitmap
         val pixels = IntArray(bitmap.width * bitmap.height)
         bitmap.getPixels(pixels, 0, bitmap.width, 0, 0, bitmap.width, bitmap.height)
 
         return pixels.map { pixel: Int ->
-            // Convert pixel data to temperature values using proper thermal scaling
-            // Extract color components and apply thermal mapping
             val red = (pixel shr 16) and 0xFF
             val green = (pixel shr 8) and 0xFF
             val blue = pixel and 0xFF
 
-            // Weighted conversion based on thermal intensity
-            // Assumes thermal palette where blue=cold, red=hot
             val intensity = (red * 0.3f + green * 0.59f + blue * 0.11f) / 255f
 
-            // Map to typical thermal range: -20°C to 120°C
             val minTemp = -20f
             val maxTemp = 120f
             minTemp + (intensity * (maxTemp - minTemp))
@@ -306,29 +318,65 @@ class ThermalFragmentViewModel : BaseViewModel() {
 
     // Public methods for UI interaction
     fun initializeThermalCamera(surfaceView: IrSurfaceView) {
-        // Initialize thermal camera with surface view
         _connectionStatus.value = "Connecting"
 
         viewModelScope.launch {
             try {
-                // Initialize the thermal camera surface view
-                surfaceView.let { surface ->
-                    withContext(Dispatchers.Main) {
-                        // Set up surface view dimensions and rendering
-                        surface.holder.setFixedSize(640, 480) // Standard thermal resolution
+                if (context == null) {
+                    _connectionStatus.value = "Connection Failed"
+                    handleError(Exception("Context not provided"))
+                    return@launch
+                }
+
+                withContext(Dispatchers.Main) {
+                    surfaceView.holder.setFixedSize(256, 192)
+                }
+
+                syncBitmap = SynchronizedBitmap()
+
+                val connectCallback = object : ConnectCallback {
+                    override fun onCameraOpened(camera: UVCCamera?) {
+                        _connectionStatus.value = "Connected"
+                        _temperatureData.value = TemperatureData(
+                            centerTemp = "25.0°C",
+                            maxTemp = "30.0°C",
+                            minTemp = "20.0°C"
+                        )
+                    }
+
+                    override fun onIRCMDCreate(cmd: IRCMD?) {
+                        ircmd = cmd
+                        cmd?.let {
+                            it.setMirror(false)
+                            it.setAutoShutter(true)
+                            it.setPropDdeLevel(128)
+                            it.setContrast(128)
+                        }
                     }
                 }
 
-                // Simulate connection process with proper error handling
-                delay(1000)
-                _connectionStatus.value = "Connected"
+                val usbMonitorCallback = object : USBMonitorCallback {
+                    override fun onAttach() {}
+                    override fun onGranted() {}
+                    override fun onDettach() {}
+                    override fun onCancel() {}
+                    override fun onConnect() {}
+                    override fun onDisconnect() {}
+                }
 
-                // Initialize with default temperature data
-                _temperatureData.value = TemperatureData(
-                    centerTemp = "25.0°C",
-                    maxTemp = "30.0°C",
-                    minTemp = "20.0°C"
+                iruvctc = IRUVCTC(
+                    256,
+                    192,
+                    context,
+                    syncBitmap!!,
+                    CommonParams.DataFlowMode.TEMP_OUTPUT,
+                    connectCallback,
+                    usbMonitorCallback
                 )
+
+                iruvctc?.registerUSB()
+                rawWidth = 256
+                rawHeight = 192
             } catch (e: Exception) {
                 _connectionStatus.value = "Connection Failed"
                 handleError(e)
@@ -337,27 +385,24 @@ class ThermalFragmentViewModel : BaseViewModel() {
     }
 
     fun capturePhoto() {
-        // Capture thermal photo
         viewModelScope.launch {
             try {
-                // Generate unique filename with timestamp
                 val timestamp = System.currentTimeMillis()
                 val fileName = "thermal_photo_$timestamp.jpg"
 
-                // Capture current thermal frame state
                 val thermalState = _thermalImageState.value
                 val tempAnalysis = _temperatureAnalysis.value
 
-                // Create photo metadata
                 val metadata = mapOf(
                     "timestamp" to timestamp,
                     "centerTemp" to tempAnalysis.averageTemperature,
                     "maxTemp" to tempAnalysis.maxTemperature,
                     "minTemp" to tempAnalysis.minTemperature,
-                    "averageTemp" to tempAnalysis.averageTemperature
+                    "averageTemp" to tempAnalysis.averageTemperature,
+                    "deviceConnected" to (ircmd != null),
+                    "sdkInitialized" to (iruvctc != null)
                 )
 
-                // Store photo capture data
                 _thermalProcessingAction.postValue(
                     ThermalProcessingAction.PhotoCaptured(fileName, metadata)
                 )
@@ -567,11 +612,9 @@ class ThermalFragmentViewModel : BaseViewModel() {
 
     fun configureRegions() {
         viewModelScope.launch {
-            // Configure thermal regions for measurement and analysis
             try {
                 val currentFence = _fenceState.value
 
-                // Update region configuration based on current fence state
                 val nextFenceType = when (currentFence.fenceType) {
                     FenceType.POINT -> FenceType.LINE
                     FenceType.LINE -> FenceType.AREA
@@ -583,7 +626,6 @@ class ThermalFragmentViewModel : BaseViewModel() {
                     fenceType = nextFenceType
                 )
 
-                // Emit action to update UI
                 _thermalProcessingAction.postValue(
                     ThermalProcessingAction.RegionConfigured(nextFenceType)
                 )
@@ -591,5 +633,25 @@ class ThermalFragmentViewModel : BaseViewModel() {
                 handleError(e)
             }
         }
+    }
+
+    fun disconnectCamera() {
+        viewModelScope.launch {
+            try {
+                iruvctc?.unregisterUSB()
+                iruvctc?.stopPreview()
+                iruvctc = null
+                ircmd = null
+                syncBitmap = null
+                _connectionStatus.value = "Disconnected"
+            } catch (e: Exception) {
+                handleError(e)
+            }
+        }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        disconnectCamera()
     }
 }

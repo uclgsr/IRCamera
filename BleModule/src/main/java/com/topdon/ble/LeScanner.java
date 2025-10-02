@@ -12,7 +12,6 @@ import androidx.annotation.NonNull;
 import com.topdon.ble.callback.ScanListener;
 import com.topdon.ble.util.Logger;
 
-
 class LeScanner extends AbstractScanner {
     private final ScanCallback scanCallback = new ScanCallback() {
         @Override

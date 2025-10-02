@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
 
-
 object UnifiedPreferencesUtils {
 
     private const val TAG = "UnifiedPreferences"
@@ -51,14 +50,12 @@ object UnifiedPreferencesUtils {
         const val UI_SHOW_GUIDELINES = "ui_show_guidelines"
     }
 
-
     private fun getPreferences(
         context: Context,
         prefsName: String = DEFAULT_PREFS_NAME
     ): SharedPreferences {
         return context.getSharedPreferences(prefsName, Context.MODE_PRIVATE)
     }
-
 
     fun putString(
         context: Context,
@@ -72,7 +69,6 @@ object UnifiedPreferencesUtils {
             Log.e(TAG, "Error saving string preference: $key", e)
         }
     }
-
 
     fun getString(
         context: Context,
@@ -88,7 +84,6 @@ object UnifiedPreferencesUtils {
         }
     }
 
-
     fun putInt(context: Context, key: String, value: Int, prefsName: String = DEFAULT_PREFS_NAME) {
         try {
             getPreferences(context, prefsName).edit().putInt(key, value).apply()
@@ -96,7 +91,6 @@ object UnifiedPreferencesUtils {
             Log.e(TAG, "Error saving int preference: $key", e)
         }
     }
-
 
     fun getInt(
         context: Context,
@@ -112,7 +106,6 @@ object UnifiedPreferencesUtils {
         }
     }
 
-
     fun putBoolean(
         context: Context,
         key: String,
@@ -125,7 +118,6 @@ object UnifiedPreferencesUtils {
             Log.e(TAG, "Error saving boolean preference: $key", e)
         }
     }
-
 
     fun getBoolean(
         context: Context,
@@ -141,7 +133,6 @@ object UnifiedPreferencesUtils {
         }
     }
 
-
     fun putFloat(
         context: Context,
         key: String,
@@ -154,7 +145,6 @@ object UnifiedPreferencesUtils {
             Log.e(TAG, "Error saving float preference: $key", e)
         }
     }
-
 
     fun getFloat(
         context: Context,
@@ -170,7 +160,6 @@ object UnifiedPreferencesUtils {
         }
     }
 
-
     fun putLong(
         context: Context,
         key: String,
@@ -183,7 +172,6 @@ object UnifiedPreferencesUtils {
             Log.e(TAG, "Error saving long preference: $key", e)
         }
     }
-
 
     fun getLong(
         context: Context,
@@ -199,7 +187,6 @@ object UnifiedPreferencesUtils {
         }
     }
 
-
     fun putStringSet(
         context: Context,
         key: String,
@@ -212,7 +199,6 @@ object UnifiedPreferencesUtils {
             Log.e(TAG, "Error saving string set preference: $key", e)
         }
     }
-
 
     fun getStringSet(
         context: Context,
@@ -228,7 +214,6 @@ object UnifiedPreferencesUtils {
         }
     }
 
-
     fun remove(context: Context, key: String, prefsName: String = DEFAULT_PREFS_NAME) {
         try {
             getPreferences(context, prefsName).edit().remove(key).apply()
@@ -237,7 +222,6 @@ object UnifiedPreferencesUtils {
         }
     }
 
-
     fun clear(context: Context, prefsName: String = DEFAULT_PREFS_NAME) {
         try {
             getPreferences(context, prefsName).edit().clear().apply()
@@ -245,7 +229,6 @@ object UnifiedPreferencesUtils {
             Log.e(TAG, "Error clearing preferences", e)
         }
     }
-
 
     fun contains(context: Context, key: String, prefsName: String = DEFAULT_PREFS_NAME): Boolean {
         return try {
@@ -256,7 +239,6 @@ object UnifiedPreferencesUtils {
         }
     }
 
-
     fun getAllKeys(context: Context, prefsName: String = DEFAULT_PREFS_NAME): Set<String> {
         return try {
             getPreferences(context, prefsName).all.keys
@@ -265,7 +247,6 @@ object UnifiedPreferencesUtils {
             emptySet()
         }
     }
-
 
     fun registerOnSharedPreferenceChangeListener(
         context: Context,
@@ -279,7 +260,6 @@ object UnifiedPreferencesUtils {
         }
     }
 
-
     fun unregisterOnSharedPreferenceChangeListener(
         context: Context,
         listener: SharedPreferences.OnSharedPreferenceChangeListener,
@@ -291,7 +271,6 @@ object UnifiedPreferencesUtils {
             Log.e(TAG, "Error unregistering preference change listener", e)
         }
     }
-
 
     fun exportPreferences(context: Context, prefsName: String = DEFAULT_PREFS_NAME): String {
         return try {
@@ -307,7 +286,6 @@ object UnifiedPreferencesUtils {
         }
     }
 
-
     fun getDefaultPreferences(): Map<String, Any> {
         return mapOf(
             Keys.FIRST_LAUNCH to true,
@@ -322,7 +300,6 @@ object UnifiedPreferencesUtils {
             Keys.RECORDING_AUTO_SAVE to true
         )
     }
-
 
     fun initializePreferences(context: Context, defaults: Map<String, Any>) {
         val prefs = getSharedPreferences(context)
@@ -342,7 +319,6 @@ object UnifiedPreferencesUtils {
 
         editor.apply()
     }
-
 
     fun getSharedPreferences(context: Context): SharedPreferences {
         return context.getSharedPreferences(DEFAULT_PREFS_NAME, Context.MODE_PRIVATE)

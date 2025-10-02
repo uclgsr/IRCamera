@@ -15,7 +15,6 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-
 abstract class BaseComposeActivity<VM : BaseViewModel> : ComponentActivity() {
 
     protected abstract fun createViewModel(): VM

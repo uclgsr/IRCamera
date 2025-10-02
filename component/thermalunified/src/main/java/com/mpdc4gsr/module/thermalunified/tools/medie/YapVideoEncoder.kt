@@ -12,7 +12,6 @@ import java.io.IOException
 import java.nio.ByteBuffer
 import kotlin.concurrent.thread
 
-
 class YapVideoEncoder(
     private val IProvider: IYapVideoProvider<Bitmap>,
     private val out: File,
@@ -106,10 +105,6 @@ class YapVideoEncoder(
         mediaFormat.setInteger(MediaFormat.KEY_BIT_RATE, widthFix * heightFix)
         mediaFormat.setInteger(MediaFormat.KEY_FRAME_RATE, mFrameRate)
         mediaFormat.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, 10)
-
-
-
-
 
         try {
             mediaCodec = MediaCodec.createEncoderByType(MediaFormat.MIMETYPE_VIDEO_AVC)

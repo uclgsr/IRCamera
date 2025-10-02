@@ -146,7 +146,6 @@ object ImageTools {
         return (tempInt.toDouble() / scale.toDouble() - 273.15).toFloat()
     }
 
-
     fun dualReadFrame(
         imageBytes: ByteArray,
         tempBytes: ByteArray,

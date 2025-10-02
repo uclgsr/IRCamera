@@ -36,7 +36,6 @@ import com.mpdc4gsr.module.thermalunified.viewmodel.IRGalleryViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
-
 class IRGalleryComposeFragment : BaseComposeFragment<IRGalleryViewModel>() {
 
     override fun createViewModel(): IRGalleryViewModel {

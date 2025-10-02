@@ -99,7 +99,6 @@ class ZeroconfDiscoveryService(private val context: Context) {
                         serviceType = SERVICE_TYPE
                         setPort(port)
 
-
                     }
 
                 registrationListener = createRegistrationListener()
@@ -159,11 +158,9 @@ class ZeroconfDiscoveryService(private val context: Context) {
             override fun onServiceFound(service: NsdServiceInfo) {
                 Log.d(TAG, "Service discovery success: ${service.serviceName}")
 
-
                 if (service.serviceName.startsWith(SERVICE_NAME)) {
                     return
                 }
-
 
                 @Suppress("DEPRECATION")
                 nsdManager.resolveService(service, createResolveListener())
@@ -216,7 +213,6 @@ class ZeroconfDiscoveryService(private val context: Context) {
                 )
 
                 discoveredServices[serviceInfo.serviceName] = serviceInfo
-
 
                 try {
                     val host = serviceInfo.host?.hostAddress ?: return

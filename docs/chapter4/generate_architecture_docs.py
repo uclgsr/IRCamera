@@ -23,7 +23,6 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-
 class ArchitectureDocumentationGenerator:
     """Generate comprehensive architecture documentation from code analysis"""
     
@@ -1036,7 +1035,6 @@ This implementation provides a solid foundation for multi-modal physiological re
         
         logger.info("Implementation details documentation generated")
 
-
 def main():
     """Main entry point for architecture documentation generation"""
     import argparse
@@ -1061,7 +1059,6 @@ def main():
     print("\nGenerated files:")
     for file in generator.output_dir.glob("*"):
         print(f"  - {file.name}")
-
 
 if __name__ == "__main__":
     main()

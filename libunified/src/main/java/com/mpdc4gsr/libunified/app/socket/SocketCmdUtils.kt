@@ -5,7 +5,6 @@ import com.google.gson.Gson
 import org.json.JSONException
 import org.json.JSONObject
 
-
 object SocketCmdUtils {
     fun getSocketCmd(cmd: Int): String? {
         var cmdJson: String? = null

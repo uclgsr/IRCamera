@@ -43,9 +43,6 @@ class VideoRecordMedia(
         }
         encoder.setOutputFilePath(exportedFile.path)
 
-
-
-
         encoder.setOutputSize(width, height)
         encoder.startEncode()
         isRunning = true

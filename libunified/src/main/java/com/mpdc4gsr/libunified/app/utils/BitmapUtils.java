@@ -43,7 +43,6 @@ public enum BitmapUtils {
         return returnBm;
     }
 
-
     public static byte[] bitmapToBytes(Bitmap bitmap, int quality) {
         if (null == bitmap) {
             return null;
@@ -59,7 +58,6 @@ public enum BitmapUtils {
             return null;
         }
     }
-
 
     public static boolean saveBitmap(Bitmap bitmap, File file, File path) {
         boolean success = false;
@@ -87,7 +85,6 @@ public enum BitmapUtils {
         return success;
     }
 
-
     public static Bitmap imageZoom(Bitmap bitmap, double width) {
         // bitmap，bitmap（）
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -99,7 +96,6 @@ public enum BitmapUtils {
         return scaleWithWH(newBitmap, width,
                 width * newBitmap.getHeight() / newBitmap.getWidth());
     }
-
 
     public static Bitmap scaleWithWH(Bitmap bitmap, double w, double h) {
         if (0 == w || 0 == h || null == bitmap) {
@@ -117,7 +113,6 @@ public enum BitmapUtils {
                     matrix, true);
         }
     }
-
 
     public static boolean saveFile(String file, Bitmap bmp) {
         if (TextUtils.isEmpty(file) || null == bmp) return false;
@@ -142,7 +137,6 @@ public enum BitmapUtils {
         }
         return true;
     }
-
 
     public static Bitmap mergeBitmap(Bitmap backBitmap, Bitmap frontBitmap, int leftFront, int topFront) {
         if (null == backBitmap || backBitmap.isRecycled()
@@ -173,7 +167,6 @@ public enum BitmapUtils {
 //        }
         return bitmap;
     }
-
 
     public static Bitmap mergeBitmapByView(Bitmap backBitmap, Bitmap frontBitmap, BitmapViewListener view) {
         if (null == backBitmap || backBitmap.isRecycled()
@@ -230,7 +223,6 @@ public enum BitmapUtils {
         canvas.drawBitmap(frontBitmap, view.getViewX(), view.getViewY(), paint);
     }
 
-
     public static void savaRawFile(byte[] bytes, byte[] bytes2) {
         try {
             File path = new File("/sdcard");
@@ -248,7 +240,6 @@ public enum BitmapUtils {
             e.printStackTrace();
         }
     }
-
 
     public static Bitmap drawCenterLable(Bitmap bmp, String title, String address, String time, int seekBarWidth) {
         //

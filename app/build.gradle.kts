@@ -241,8 +241,6 @@ android {
         }
     }
 
-
-
     buildFeatures {
         buildConfig = true
 //        dataBinding = true  // Disabled - migrated to Jetpack Compose
@@ -259,7 +257,6 @@ android {
         includeInBundle = false
     }
     buildToolsVersion = "35.0.0"
-
 
 }
 
@@ -356,7 +353,6 @@ dependencies {
 
     androidTestImplementation(libs.test.ext.junit)
     androidTestImplementation(libs.test.espresso.core)
-
 
     implementation(libs.bundles.camerax)
 

@@ -252,7 +252,6 @@ class UnifiedNetworkController(
                     setEventListener(createWebSocketEventListener(controllerInfo))
                 }
 
-
                 val connected = true
 
                 if (connected) {
@@ -282,7 +281,6 @@ class UnifiedNetworkController(
 
             try {
                 val webSocketClient = activeConnections.remove(controllerName)
-
 
                 if (activeConnections.isEmpty()) {
                     _networkStatus.value = NetworkStatus.READY
@@ -464,7 +462,6 @@ class UnifiedNetworkController(
             return@withContext false
         }
     }
-
 
     private fun hasNetworkPermissions(): Boolean {
 

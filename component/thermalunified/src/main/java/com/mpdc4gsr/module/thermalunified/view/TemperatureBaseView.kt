@@ -19,7 +19,6 @@ import com.mpdc4gsr.libunified.ir.utils.TempDrawHelper.Companion.correctPoint
 import com.mpdc4gsr.module.thermalunified.R
 import kotlin.math.*
 
-
 abstract class TemperatureBaseView : View {
     companion object {
 
@@ -89,7 +88,6 @@ abstract class TemperatureBaseView : View {
     var onLineListener: ((lineList: List<Point>) -> Unit)? = null
 
     var onRectListener: ((rectList: List<Rect>) -> Unit)? = null
-
 
     var onTrendOperateListener: ((isAdd: Boolean) -> Unit)? = null
 
@@ -195,7 +193,6 @@ abstract class TemperatureBaseView : View {
         yScale = measuredHeight.toFloat() / imageHeight
     }
 
-
     protected fun drawPoint(
         canvas: Canvas,
         point: Point,
@@ -207,7 +204,6 @@ abstract class TemperatureBaseView : View {
         canvas: Canvas,
         line: Line,
     ) {
-
 
         val startX: Int = ((line.start.x / xScale).toInt() * xScale).toInt()
         val startY: Int = ((line.start.y / yScale).toInt() * yScale).toInt()
@@ -227,7 +223,6 @@ abstract class TemperatureBaseView : View {
         helper.drawRect(canvas, left, top, right, bottom)
     }
 
-
     protected fun drawCircle(
         canvas: Canvas,
         x: Int,
@@ -237,7 +232,6 @@ abstract class TemperatureBaseView : View {
         helper.drawCircle(canvas, x, y, isMax)
     }
 
-
     protected fun drawTempText(
         canvas: Canvas,
         x: Int,
@@ -246,7 +240,6 @@ abstract class TemperatureBaseView : View {
     ) {
         helper.drawTempText(canvas, UnitTools.showC(temp), width, x, y)
     }
-
 
     protected fun drawTrendText(
         canvas: Canvas,
@@ -263,19 +256,16 @@ abstract class TemperatureBaseView : View {
         )
     }
 
-
     protected fun drawPointName(
         canvas: Canvas,
         name: String,
         point: Point,
     ) {
 
-
         val x = ((point.x / xScale).toInt() * xScale).toInt()
         val y = ((point.y / yScale).toInt() * yScale).toInt()
         helper.drawPointName(canvas, name, width, height, x, y)
     }
-
 
     protected fun drawLineName(
         canvas: Canvas,
@@ -289,7 +279,6 @@ abstract class TemperatureBaseView : View {
         helper.drawPointRectName(canvas, name, width, height, startX, startY, stopX, stopY)
     }
 
-
     protected fun drawRectName(
         canvas: Canvas,
         name: String,
@@ -302,10 +291,8 @@ abstract class TemperatureBaseView : View {
         helper.drawPointRectName(canvas, name, width, height, left, top, right, bottom)
     }
 
-
     private var downX = 0
     private var downY = 0
-
 
     private var isAddAction = true
 
@@ -322,7 +309,6 @@ abstract class TemperatureBaseView : View {
             else -> super.onTouchEvent(event)
         }
     }
-
 
     protected var operatePoint: Point? = null
 
@@ -384,7 +370,6 @@ abstract class TemperatureBaseView : View {
         }
         return null
     }
-
 
     protected var operateLine: Line? = null
 
@@ -568,7 +553,6 @@ abstract class TemperatureBaseView : View {
             line.end.x
         ) - TOUCH_TOLERANCE && x < max(line.start.x, line.end.x) + TOUCH_TOLERANCE
     }
-
 
     protected var operateRect: Rect? = null
 

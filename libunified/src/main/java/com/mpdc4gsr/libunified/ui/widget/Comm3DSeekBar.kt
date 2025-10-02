@@ -12,10 +12,8 @@ import com.blankj.utilcode.util.SizeUtils
 import com.mpdc4gsr.libunified.R
 import kotlin.math.roundToInt
 
-
 class Comm3DSeekBar : AppCompatSeekBar {
     private lateinit var mPaint: TextPaint
-
 
     private val orientation: Int
 
@@ -122,7 +120,6 @@ class Comm3DSeekBar : AppCompatSeekBar {
         }
     }
 
-
     private fun calculateDrawable(w: Int, h: Int) {
         val paddingWidth: Int = w - paddingLeft - paddingRight
         val paddingHeight: Int = h - paddingTop - paddingBottom
@@ -218,14 +215,12 @@ class Comm3DSeekBar : AppCompatSeekBar {
         return true
     }
 
-
     fun stopTrackTouchLevel() {
         if (level > 0) {
             val newLevel = (progress.toFloat() / 100 * 4).roundToInt()
             setProgress((newLevel.toFloat() / level * 100).toInt())
         }
     }
-
 
     private fun trackTouchEvent(event: MotionEvent) {
         val y = event.y.roundToInt()

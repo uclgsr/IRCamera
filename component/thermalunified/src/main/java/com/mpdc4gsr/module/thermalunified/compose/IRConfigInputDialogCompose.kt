@@ -21,7 +21,6 @@ import com.mpdc4gsr.libunified.app.lms.weiget.TToast
 import com.mpdc4gsr.libunified.app.tools.UnitTools
 import com.mpdc4gsr.module.thermalunified.R
 
-
 @Composable
 fun IRConfigInputDialogCompose(
     type: IRConfigInputType,

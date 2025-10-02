@@ -16,15 +16,6 @@ import mpdc4gsr.feature.thermal.data.source.TopdonDataSource
 import mpdc4gsr.feature.thermal.domain.repository.ThermalRepository
 import mpdc4gsr.feature.thermal.domain.usecase.*
 
-/**
- * Extended Dependency Injection Container
- *
- * Provides instances of repositories, data sources, and use cases
- * following Clean Architecture principles.
- *
- * This is a manual DI implementation that will be replaced with Hilt
- * in a future migration.
- */
 class AppContainerExt(private val context: Context) {
 
     // Shimmer SDK Integration
@@ -88,9 +79,6 @@ class AppContainerExt(private val context: Context) {
     }
 }
 
-/**
- * Extension function to get AppContainerExt from Context
- */
 fun Context.getAppContainerExt(): AppContainerExt {
     return AppContainerExt(applicationContext)
 }

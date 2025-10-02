@@ -7,9 +7,7 @@ import com.energy.iruvc.utils.CommonParams
 import java.io.File
 import java.io.FileOutputStream
 
-
 object UnifiedFileUtils {
-
 
     fun isFileExist(filePath: String): Boolean {
         if (UnifiedStringUtils.isBlank(filePath)) {
@@ -19,7 +17,6 @@ object UnifiedFileUtils {
         return file.exists() && file.isFile
     }
 
-
     fun isDirectoryExist(dirPath: String): Boolean {
         if (UnifiedStringUtils.isBlank(dirPath)) {
             return false
@@ -27,7 +24,6 @@ object UnifiedFileUtils {
         val dir = File(dirPath)
         return dir.exists() && dir.isDirectory
     }
-
 
     fun createDirectory(dirPath: String): Boolean {
         if (UnifiedStringUtils.isBlank(dirPath)) {
@@ -40,7 +36,6 @@ object UnifiedFileUtils {
             true
         }
     }
-
 
     fun deleteDirectory(dirPath: String): Boolean {
         return try {
@@ -62,7 +57,6 @@ object UnifiedFileUtils {
         return file.delete()
     }
 
-
     fun deleteFile(filePath: String): Boolean {
         return try {
             val file = File(filePath)
@@ -71,7 +65,6 @@ object UnifiedFileUtils {
             false
         }
     }
-
 
     fun getFileSize(filePath: String): Long {
         return try {
@@ -82,7 +75,6 @@ object UnifiedFileUtils {
         }
     }
 
-
     fun readTextFile(filePath: String): String? {
         return try {
             File(filePath).readText()
@@ -90,7 +82,6 @@ object UnifiedFileUtils {
             null
         }
     }
-
 
     fun writeTextFile(filePath: String, content: String): Boolean {
         return try {
@@ -101,7 +92,6 @@ object UnifiedFileUtils {
         }
     }
 
-
     fun appendTextFile(filePath: String, content: String): Boolean {
         return try {
             File(filePath).appendText(content)
@@ -110,7 +100,6 @@ object UnifiedFileUtils {
             false
         }
     }
-
 
     fun copyFile(sourcePath: String, destPath: String): Boolean {
         return try {
@@ -127,16 +116,13 @@ object UnifiedFileUtils {
         }
     }
 
-
     fun getExternalStorageDirectory(): String {
         return Environment.getExternalStorageDirectory().absolutePath
     }
 
-
     fun getAppExternalFilesDir(context: Context, type: String? = null): String? {
         return context.getExternalFilesDir(type)?.absolutePath
     }
-
 
     fun saveBitmapToFile(
         bitmap: Bitmap,
@@ -156,7 +142,6 @@ object UnifiedFileUtils {
             false
         }
     }
-
 
     @JvmStatic
     fun getY16SrcTypeByDataFlowMode(dataFlowMode: CommonParams.DataFlowMode): CommonParams.Y16ModePreviewSrcType {

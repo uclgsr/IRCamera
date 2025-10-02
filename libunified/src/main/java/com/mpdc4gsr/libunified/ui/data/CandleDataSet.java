@@ -118,7 +118,6 @@ public class CandleDataSet extends LineScatterCandleRadarDataSet<CandleEntry> im
         return mNeutralColor;
     }
 
-
     public void setNeutralColor(int color) {
         mNeutralColor = color;
     }

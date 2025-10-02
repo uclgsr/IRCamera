@@ -25,7 +25,6 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import mpdc4gsr.core.ui.BaseComposeActivity
 import mpdc4gsr.feature.network.presentation.DevicePairingViewModel
 
-
 /**
  * DevicePairingComposeActivity - Modern Device Discovery & Pairing with Compose
  *

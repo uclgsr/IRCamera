@@ -2,7 +2,6 @@
 <resources>
     <string name="app_name">MPDC4GSR</string>
 
-
     <string name="version_year">Copyright %s MPDC4GSR Technology Co.,Ltd.\nAll Rights Reserved.</string>
     <string name="privacy_tips">If you disagree, you will not be able to use our product or service.</string>
     <string name="privacy_confirm">Agree and Use</string>
@@ -11,15 +10,12 @@
     <string name="set_version">Version</string>
     <string name="privacy_agreement_tips_new">To enhance your experience with %s and ensure the secure and stable operation of our app, we have integrated a third-party software development kit (SDK) to enable certain functionalities. \nRest assured that we prioritize your data security and conduct rigorous testing on the SDK. We will not collect information in a coercive or bundled manner solely based on your agreement with the privacy policy. \nBy tapping the button, you agree to accept our services.</string>
 
-
     <string name="lms_setting_http_error">Network Error</string>
     <string name="tc_connect_line">Wired Connection</string>
     <string name="tc_connect_wifi">Wireless Connection</string>
     <string name="tc_connect_bluetooth">Bluetooth Connection</string>
 
-
     <string name="report_delete">Delete</string>
-
 
     <string name="tc_delete_device">Delete Device</string>
     <string name="tc_delete_device_tips">Are you sure you want to delete this device?</string>
@@ -35,7 +31,6 @@
     <string name="start_enhanced_recording">Start Enhanced Recording</string>
     <string name="stop_recording">Stop Recording</string>
     <string name="back">Back</string>
-
 
     <string name="app_tip">Tip</string>
     <string name="app_open">Open</string>
@@ -69,20 +64,15 @@
     <string name="see_more_than">See More Than</string>
     <string name="english">English</string>
 
-
     <string name="app_album_content">Album access permission is required</string>
     <string name="app_camera_content">Camera access permission is required</string>
-
 
     <string name="device_reset_alert">Device has been reset</string>
     <string name="device_disconnect_alert">Device disconnected</string>
 
-
     <string name="main_exit">Exit Application</string>
 
-
     <string name="tip_otg">OTG connection detected</string>
-
 
     <string name="updata_new_version_update">New version available for update</string>
     <string name="installation_package_downloading">Installation package downloading</string>
@@ -90,25 +80,19 @@
     <string name="tips_download_information">Download Information</string>
     <string name="installation_package_download_progress">Installation package download progress</string>
 
-
     <string name="testing_guidance">Testing Guidance</string>
     <string name="loading_failed_hint">Loading failed, please check your network connection</string>
     <string name="app_error_reload">Reload</string>
 
-
     <string name="permission_request_camera_app">Camera permission is required</string>
     <string name="permission_request_storage_app">Storage permission is required</string>
 
-
     <string name="tip_photo_saved">Photo saved successfully</string>
-
 
     <string name="tip_change_pseudo_mode">Change pseudo color mode</string>
 
-
     <string name="app_next">Next</string>
     <string name="person_save">Save</string>
-
 
     <string name="ts004_guide_text6">Connection Guide</string>
     <string name="ts004_guide_text8">How to Connect</string>
@@ -121,18 +105,14 @@
     <string name="ts004_disconnect_tips4">Go to Settings</string>
     <string name="ts004_wlan_tips">WiFi is not enabled</string>
 
-
     <string name="tc_local_album">Album</string>
     <string name="main_mine">Mine</string>
-
 
     <string name="user_services_agreement">User Service Agreement</string>
     <string name="privacy_policy">Privacy Policy</string>
     <string name="third_party_components">Third Party Components</string>
 
-
     <string name="app_manual">Manual</string>
-
 
     <string name="gsr_multi_modal_recording">GSR Multi-Modal Recording</string>
     <string name="gsr_physiological_monitoring">Physiological Monitoring</string>

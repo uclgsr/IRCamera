@@ -175,7 +175,6 @@ class ChartLogView : LineChart {
                                         type = type,
                                     ).toFloat()
 
-
                                 val entity = Entry(x, it.thermalMax)
                                 entity.data = it
                                 maxDataSet.addEntry(entity)

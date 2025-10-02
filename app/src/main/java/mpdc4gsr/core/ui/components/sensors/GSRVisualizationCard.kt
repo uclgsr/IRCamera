@@ -16,15 +16,6 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
-/**
- * Task C: GSR Sensor Visualization Component
- *
- * Modern Compose visualization for GSR sensor data including:
- * - Real-time data charts
- * - Connection status indicators
- * - Battery level display
- * - Statistics and data export
- */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GSRVisualizationCard(

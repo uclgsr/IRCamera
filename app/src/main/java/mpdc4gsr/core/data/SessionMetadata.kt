@@ -6,39 +6,29 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
-
 data class SessionMetadata(
     val sessionId: String,
-
 
     val sessionStartTimestampMs: Long,
     val sessionEndTimestampMs: Long? = null,
 
-
     val sessionStartMonotonicNs: Long,
     val sessionEndMonotonicNs: Long? = null,
 
-
     val sessionStartIso: String,
     val sessionEndIso: String? = null,
-
 
     val deviceModel: String = android.os.Build.MODEL,
     val deviceManufacturer: String = android.os.Build.MANUFACTURER,
     val timingSource: String = "android_monotonic_realtime",
 
-
     val modalityFiles: MutableMap<String, String> = mutableMapOf(),
-
 
     val syncEvents: MutableList<SessionSyncEvent> = mutableListOf(),
 
-
     val sensorSummaries: MutableMap<String, SensorSummary> = mutableMapOf(),
 
-
     val stopResults: MutableMap<String, Boolean> = mutableMapOf(),
-
 
     val recordingDurationMs: Long? = null,
 
@@ -49,22 +39,17 @@ data class SessionMetadata(
     val userNotes: String? = null,
     val experimentalConditions: Map<String, Any> = emptyMap(),
 
-
     val deviceInfo: DeviceInfo = DeviceInfo(),
     val environmentalConditions: EnvironmentalConditions = EnvironmentalConditions(),
 
-
     val networkSyncInfo: NetworkSyncInfo = NetworkSyncInfo(),
-
 
     val softwareVersions: Map<String, String> = emptyMap(),
     val calibrationInfo: Map<String, CalibrationData> = emptyMap(),
 
-
     val qualityMetrics: QualityMetrics = QualityMetrics(),
     val dataIntegrityChecks: Map<String, Boolean> = emptyMap()
 ) {
-
 
     data class DeviceInfo(
         val model: String = android.os.Build.MODEL,
@@ -115,7 +100,6 @@ data class SessionMetadata(
         }
     }
 
-
     data class EnvironmentalConditions(
         val ambientTemperatureC: Double? = null,
         val humidityPercent: Double? = null,
@@ -125,7 +109,6 @@ data class SessionMetadata(
         val weatherConditions: String? = null,
         val roomConditions: Map<String, Any> = emptyMap()
     )
-
 
     data class NetworkSyncInfo(
         val pcControllerAddress: String? = null,
@@ -137,7 +120,6 @@ data class SessionMetadata(
         val driftMeasurements: List<Long> = emptyList()
     )
 
-
     data class CalibrationData(
         val sensorType: String,
         val calibrationTimestamp: Long,
@@ -146,7 +128,6 @@ data class SessionMetadata(
         val validationStatus: String,
         val calibrationNotes: String? = null
     )
-
 
     data class QualityMetrics(
         val overallQualityScore: Double = 0.0,
@@ -162,7 +143,6 @@ data class SessionMetadata(
     companion object {
         private const val TAG = "SessionMetadata"
 
-
         fun createSessionStart(sessionId: String): SessionMetadata {
             val wallClockStartMs = System.currentTimeMillis()
             val monotonicStartNs = SystemClock.elapsedRealtimeNanos()
@@ -177,7 +157,6 @@ data class SessionMetadata(
             )
         }
     }
-
 
     fun markSessionEnd(): SessionMetadata {
         val wallClockEndMs = System.currentTimeMillis()
@@ -195,10 +174,8 @@ data class SessionMetadata(
         )
     }
 
-
     fun addModalityFile(modalityType: String, fileName: String, startOffsetMs: Long = 0) {
         modalityFiles[modalityType] = fileName
-
 
         syncEvents.add(
             SessionSyncEvent(
@@ -213,7 +190,6 @@ data class SessionMetadata(
             )
         )
     }
-
 
     fun addSyncEvent(eventType: String, metadata: Map<String, String> = emptyMap()) {
         val currentWallMs = System.currentTimeMillis()
@@ -234,7 +210,6 @@ data class SessionMetadata(
         return (monotonicNs - sessionStartMonotonicNs) / 1_000_000L
     }
 
-
     fun markSensorStart(
         sensorName: String,
         sensorId: String,
@@ -252,7 +227,6 @@ data class SessionMetadata(
         summary.metadata.putAll(metadata)
         sensorSummaries[sensorName] = summary
     }
-
 
     fun markSensorStop(
         sensorName: String,
@@ -293,18 +267,15 @@ data class SessionMetadata(
         sensorSummaries[sensorName] = summary
     }
 
-
     fun recordStopResults(results: Map<String, Boolean>) {
         stopResults.clear()
         stopResults.putAll(results)
     }
 
-
     fun getRelativeTimestamp(): Long {
         val currentMonotonicNs = SystemClock.elapsedRealtimeNanos()
         return (currentMonotonicNs - sessionStartMonotonicNs) / 1_000_000L
     }
-
 
     fun monotonicToWallClock(monotonicNs: Long): Long {
         return try {
@@ -314,7 +285,6 @@ data class SessionMetadata(
             sessionStartTimestampMs + (offsetFromStartNs / 1_000_000L)
         }
     }
-
 
     fun saveToFile(sessionDirectory: File): File {
         val metadataFile = File(sessionDirectory, "session_metadata.json")
@@ -334,7 +304,6 @@ data class SessionMetadata(
      * Enhanced metadata export functionality for TODO requirement:
      * "Unify contributions from each recorder (RGB, GSR, audio) into one metadata file at session end"
      */
-
 
     fun exportToUnifiedMetadataFile(sessionDirectory: File): Boolean {
         return try {
@@ -357,7 +326,6 @@ data class SessionMetadata(
             false
         }
     }
-
 
     private fun buildComprehensiveMetadata(): Map<String, Any> {
         return mapOf(
@@ -471,7 +439,6 @@ data class SessionMetadata(
         )
     }
 
-
     fun updateQualityMetrics(
         sensorQualityScores: Map<String, Double>,
         syncAccuracy: Double,
@@ -495,13 +462,11 @@ data class SessionMetadata(
         return this.copy(qualityMetrics = updatedQualityMetrics)
     }
 
-
     fun addCalibrationInfo(sensorType: String, calibrationData: CalibrationData): SessionMetadata {
         val updatedCalibrationInfo = calibrationInfo.toMutableMap()
         updatedCalibrationInfo[sensorType] = calibrationData
         return this.copy(calibrationInfo = updatedCalibrationInfo)
     }
-
 
     fun updateNetworkSyncInfo(
         pcAddress: String?,
@@ -520,7 +485,6 @@ data class SessionMetadata(
 
         return this.copy(networkSyncInfo = updatedNetworkSyncInfo)
     }
-
 
     fun generateSessionSummaryText(): String {
         return buildString {
@@ -583,7 +547,6 @@ data class SessionMetadata(
         }
     }
 
-
     fun createTimingHeader(): String {
         return buildString {
             appendLine("# Multi-Modal Recording Session Timing Information")
@@ -601,7 +564,6 @@ data class SessionMetadata(
         }
     }
 }
-
 
 data class SessionSyncEvent(
     val eventType: String,

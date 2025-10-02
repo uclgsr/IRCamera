@@ -12,7 +12,6 @@ import org.opencv.imgproc.Imgproc
 import kotlin.math.pow
 import com.mpdc4gsr.libunified.R as UiR
 
-
 object IRImageUtils {
 
     fun showContrast(
@@ -65,7 +64,6 @@ object IRImageUtils {
         }
     }
 
-
     private fun lutGamma(
         @FloatRange(from = 0.0, to = 1.0) x: Double,
         a: Double = 0.5,
@@ -79,7 +77,6 @@ object IRImageUtils {
             }
         return y
     }
-
 
     private fun showSharpen(
         imageView: ImageView,
