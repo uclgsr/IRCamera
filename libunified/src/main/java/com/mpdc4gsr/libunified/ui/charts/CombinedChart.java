@@ -5,13 +5,7 @@ import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.util.Log;
 
-import com.mpdc4gsr.libunified.ui.data.BarData;
-import com.mpdc4gsr.libunified.ui.data.BubbleData;
-import com.mpdc4gsr.libunified.ui.data.CandleData;
-import com.mpdc4gsr.libunified.ui.data.CombinedData;
-import com.mpdc4gsr.libunified.ui.data.Entry;
-import com.mpdc4gsr.libunified.ui.data.LineData;
-import com.mpdc4gsr.libunified.ui.data.ScatterData;
+import com.mpdc4gsr.libunified.ui.data.*;
 import com.mpdc4gsr.libunified.ui.highlight.CombinedHighlighter;
 import com.mpdc4gsr.libunified.ui.highlight.Highlight;
 import com.mpdc4gsr.libunified.ui.interfaces.dataprovider.CombinedDataProvider;

@@ -2,7 +2,10 @@ package com.mpdc4gsr.libunified.app.utils
 
 import android.util.Log
 import kotlinx.coroutines.*
-import java.io.*
+import java.io.BufferedWriter
+import java.io.File
+import java.io.FileWriter
+import java.io.IOException
 import java.util.concurrent.LinkedBlockingQueue
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
@@ -22,7 +25,7 @@ class UnifiedDataWriterUtils(
     private var writerJob: Job? = null
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
-    
+
     fun start() {
         if (isRunning.compareAndSet(false, true)) {
             writerJob = scope.launch {
@@ -32,7 +35,7 @@ class UnifiedDataWriterUtils(
         }
     }
 
-    
+
     fun stop() {
         if (isRunning.compareAndSet(true, false)) {
             writerJob?.cancel()
@@ -43,7 +46,7 @@ class UnifiedDataWriterUtils(
         }
     }
 
-    
+
     fun writeData(data: String) {
         if (isRunning.get()) {
             if (!dataQueue.offer(data)) {
@@ -52,7 +55,7 @@ class UnifiedDataWriterUtils(
         }
     }
 
-    
+
     fun writeCSVRow(vararg values: Any) {
         val csvLine = values.joinToString(",") { value ->
             when (value) {
@@ -63,12 +66,12 @@ class UnifiedDataWriterUtils(
         writeData(csvLine)
     }
 
-    
+
     fun writeCSVHeader(vararg headers: String) {
         writeCSVRow(*headers)
     }
 
-    
+
     data class WriterStats(
         val bytesWritten: Long,
         val linesWritten: Long,
@@ -167,7 +170,7 @@ class UnifiedDataWriterUtils(
     companion object {
         private const val TAG = "UnifiedDataWriter"
 
-        
+
         fun writeToFile(file: File, data: String, append: Boolean = false) {
             try {
                 file.parentFile?.mkdirs()
@@ -177,7 +180,7 @@ class UnifiedDataWriterUtils(
             }
         }
 
-        
+
         fun writeCSVToFile(file: File, headers: Array<String>, rows: List<Array<Any>>) {
             try {
                 file.parentFile?.mkdirs()
@@ -204,7 +207,7 @@ class UnifiedDataWriterUtils(
             }
         }
 
-        
+
         fun createWriter(
             outputFile: File,
             bufferSize: Int = 8192,

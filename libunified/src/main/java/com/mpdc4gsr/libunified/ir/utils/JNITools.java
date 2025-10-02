@@ -12,6 +12,7 @@ public class JNITools {
     private static final int DEFAULT_IMAGE_WIDTH = 192;
     private static final int DEFAULT_IMAGE_HEIGHT = 256;
     private static final int BGR_CHANNELS = 3;
+
     // Private constructor to enforce singleton pattern
     private JNITools() {
     }

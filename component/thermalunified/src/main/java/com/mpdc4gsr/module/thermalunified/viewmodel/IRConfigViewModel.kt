@@ -1,6 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.viewmodel
 
-import android.app.Application
 import androidx.lifecycle.viewModelScope
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import com.mpdc4gsr.libunified.app.utils.SingleLiveEvent

@@ -56,7 +56,7 @@ object TargetUtils {
         observeBean.observeY += deltaY
     }
 
-    
+
     fun getMeasureSize(targetMeasureMode: Int): Float {
         return when (targetMeasureMode) {
             ObserveBean.TYPE_MEASURE_PERSON -> 180f
@@ -67,7 +67,7 @@ object TargetUtils {
         }
     }
 
-    
+
     fun getSelectTargetDraw(targetMeasureMode: Int, targetType: Int, targetColorType: Int): Int {
         return when {
             // Circle targets

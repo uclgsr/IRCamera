@@ -6,7 +6,7 @@ import android.text.TextUtils
 
 object UnifiedVersionUtils {
 
-    
+
     fun getVersionName(context: Context): String {
         return try {
             val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
@@ -16,7 +16,7 @@ object UnifiedVersionUtils {
         }
     }
 
-    
+
     fun getVersionCode(context: Context): Long {
         return try {
             val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
@@ -26,7 +26,7 @@ object UnifiedVersionUtils {
         }
     }
 
-    
+
     fun compareVersions(serverVersion: String, currentVersion: String): Boolean {
         if (TextUtils.isEmpty(serverVersion) || TextUtils.isEmpty(currentVersion)) {
             return false
@@ -51,7 +51,7 @@ object UnifiedVersionUtils {
         return false // Versions are equal
     }
 
-    
+
     fun isUpdateNeeded(context: Context, serverVersion: String): Boolean {
         val currentVersion = getVersionName(context)
         return compareVersions(serverVersion, currentVersion)

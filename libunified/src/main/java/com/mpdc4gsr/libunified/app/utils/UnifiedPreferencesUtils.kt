@@ -51,7 +51,7 @@ object UnifiedPreferencesUtils {
         const val UI_SHOW_GUIDELINES = "ui_show_guidelines"
     }
 
-    
+
     private fun getPreferences(
         context: Context,
         prefsName: String = DEFAULT_PREFS_NAME
@@ -59,7 +59,7 @@ object UnifiedPreferencesUtils {
         return context.getSharedPreferences(prefsName, Context.MODE_PRIVATE)
     }
 
-    
+
     fun putString(
         context: Context,
         key: String,
@@ -73,7 +73,7 @@ object UnifiedPreferencesUtils {
         }
     }
 
-    
+
     fun getString(
         context: Context,
         key: String,
@@ -88,7 +88,7 @@ object UnifiedPreferencesUtils {
         }
     }
 
-    
+
     fun putInt(context: Context, key: String, value: Int, prefsName: String = DEFAULT_PREFS_NAME) {
         try {
             getPreferences(context, prefsName).edit().putInt(key, value).apply()
@@ -97,7 +97,7 @@ object UnifiedPreferencesUtils {
         }
     }
 
-    
+
     fun getInt(
         context: Context,
         key: String,
@@ -112,7 +112,7 @@ object UnifiedPreferencesUtils {
         }
     }
 
-    
+
     fun putBoolean(
         context: Context,
         key: String,
@@ -126,7 +126,7 @@ object UnifiedPreferencesUtils {
         }
     }
 
-    
+
     fun getBoolean(
         context: Context,
         key: String,
@@ -141,7 +141,7 @@ object UnifiedPreferencesUtils {
         }
     }
 
-    
+
     fun putFloat(
         context: Context,
         key: String,
@@ -155,7 +155,7 @@ object UnifiedPreferencesUtils {
         }
     }
 
-    
+
     fun getFloat(
         context: Context,
         key: String,
@@ -170,7 +170,7 @@ object UnifiedPreferencesUtils {
         }
     }
 
-    
+
     fun putLong(
         context: Context,
         key: String,
@@ -184,7 +184,7 @@ object UnifiedPreferencesUtils {
         }
     }
 
-    
+
     fun getLong(
         context: Context,
         key: String,
@@ -199,7 +199,7 @@ object UnifiedPreferencesUtils {
         }
     }
 
-    
+
     fun putStringSet(
         context: Context,
         key: String,
@@ -213,7 +213,7 @@ object UnifiedPreferencesUtils {
         }
     }
 
-    
+
     fun getStringSet(
         context: Context,
         key: String,
@@ -228,7 +228,7 @@ object UnifiedPreferencesUtils {
         }
     }
 
-    
+
     fun remove(context: Context, key: String, prefsName: String = DEFAULT_PREFS_NAME) {
         try {
             getPreferences(context, prefsName).edit().remove(key).apply()
@@ -237,7 +237,7 @@ object UnifiedPreferencesUtils {
         }
     }
 
-    
+
     fun clear(context: Context, prefsName: String = DEFAULT_PREFS_NAME) {
         try {
             getPreferences(context, prefsName).edit().clear().apply()
@@ -246,7 +246,7 @@ object UnifiedPreferencesUtils {
         }
     }
 
-    
+
     fun contains(context: Context, key: String, prefsName: String = DEFAULT_PREFS_NAME): Boolean {
         return try {
             getPreferences(context, prefsName).contains(key)
@@ -256,7 +256,7 @@ object UnifiedPreferencesUtils {
         }
     }
 
-    
+
     fun getAllKeys(context: Context, prefsName: String = DEFAULT_PREFS_NAME): Set<String> {
         return try {
             getPreferences(context, prefsName).all.keys
@@ -266,7 +266,7 @@ object UnifiedPreferencesUtils {
         }
     }
 
-    
+
     fun registerOnSharedPreferenceChangeListener(
         context: Context,
         listener: SharedPreferences.OnSharedPreferenceChangeListener,
@@ -279,7 +279,7 @@ object UnifiedPreferencesUtils {
         }
     }
 
-    
+
     fun unregisterOnSharedPreferenceChangeListener(
         context: Context,
         listener: SharedPreferences.OnSharedPreferenceChangeListener,
@@ -292,7 +292,7 @@ object UnifiedPreferencesUtils {
         }
     }
 
-    
+
     fun exportPreferences(context: Context, prefsName: String = DEFAULT_PREFS_NAME): String {
         return try {
             val prefs = getPreferences(context, prefsName).all
@@ -307,7 +307,7 @@ object UnifiedPreferencesUtils {
         }
     }
 
-    
+
     fun getDefaultPreferences(): Map<String, Any> {
         return mapOf(
             Keys.FIRST_LAUNCH to true,
@@ -323,7 +323,7 @@ object UnifiedPreferencesUtils {
         )
     }
 
-    
+
     fun initializePreferences(context: Context, defaults: Map<String, Any>) {
         val prefs = getSharedPreferences(context)
         val editor = prefs.edit()
@@ -343,7 +343,7 @@ object UnifiedPreferencesUtils {
         editor.apply()
     }
 
-    
+
     fun getSharedPreferences(context: Context): SharedPreferences {
         return context.getSharedPreferences(DEFAULT_PREFS_NAME, Context.MODE_PRIVATE)
     }

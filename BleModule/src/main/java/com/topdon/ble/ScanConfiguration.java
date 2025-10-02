@@ -1,7 +1,5 @@
 package com.topdon.ble;
 
-import android.bluetooth.le.BluetoothLeScanner;
-import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanFilter;
 import android.bluetooth.le.ScanSettings;
 import android.os.Build;
@@ -23,7 +21,7 @@ public class ScanConfiguration {
         return scanPeriodMillis;
     }
 
-    
+
     public ScanConfiguration setScanPeriodMillis(int scanPeriodMillis) {
         //1
         if (scanPeriodMillis >= 1000) {
@@ -36,7 +34,7 @@ public class ScanConfiguration {
         return acceptSysConnectedDevice;
     }
 
-    
+
     public ScanConfiguration setAcceptSysConnectedDevice(boolean acceptSysConnectedDevice) {
         this.acceptSysConnectedDevice = acceptSysConnectedDevice;
         return this;
@@ -46,7 +44,7 @@ public class ScanConfiguration {
         return scanSettings;
     }
 
-    
+
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     public ScanConfiguration setScanSettings(ScanSettings scanSettings) {
         Inspector.requireNonNull(scanSettings, "scanSettings can't be null");
@@ -58,7 +56,7 @@ public class ScanConfiguration {
         return onlyAcceptBleDevice;
     }
 
-    
+
     public ScanConfiguration setOnlyAcceptBleDevice(boolean onlyAcceptBleDevice) {
         this.onlyAcceptBleDevice = onlyAcceptBleDevice;
         return this;
@@ -68,7 +66,7 @@ public class ScanConfiguration {
         return rssiLowLimit;
     }
 
-    
+
     public ScanConfiguration setRssiLowLimit(int rssiLowLimit) {
         this.rssiLowLimit = rssiLowLimit;
         return this;
@@ -78,7 +76,7 @@ public class ScanConfiguration {
         return filters;
     }
 
-    
+
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     public ScanConfiguration setFilters(List<ScanFilter> filters) {
         this.filters = filters;

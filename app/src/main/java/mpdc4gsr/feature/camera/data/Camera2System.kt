@@ -9,19 +9,7 @@ import android.os.Build
 import android.util.Log
 import android.util.Size
 import android.view.TextureView
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.suspendCancellableCoroutine
-import kotlinx.coroutines.withContext
-import mpdc4gsr.feature.camera.data.CameraController
-import mpdc4gsr.feature.camera.data.DeviceCaps
-import mpdc4gsr.feature.camera.data.ModeManager
-import mpdc4gsr.feature.camera.data.RawEngine
-import mpdc4gsr.feature.camera.data.UiBridge
-import mpdc4gsr.feature.camera.data.VideoEngine
+import kotlinx.coroutines.*
 import java.io.File
 
 class Camera2System(

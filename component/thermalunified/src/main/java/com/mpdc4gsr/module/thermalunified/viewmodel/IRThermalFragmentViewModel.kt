@@ -3,14 +3,14 @@ package com.mpdc4gsr.module.thermalunified.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.mpdc4gsr.libunified.app.common.SharedManager
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import com.mpdc4gsr.libunified.app.socket.WebSocketProxy
 import com.mpdc4gsr.libunified.app.tools.DeviceTools
-import com.mpdc4gsr.libunified.app.common.SharedManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
 class IRThermalFragmentViewModel : BaseViewModel() {

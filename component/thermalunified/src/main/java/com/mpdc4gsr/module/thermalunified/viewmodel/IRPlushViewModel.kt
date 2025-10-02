@@ -2,13 +2,14 @@ package com.mpdc4gsr.module.thermalunified.viewmodel
 
 import android.view.SurfaceView
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.lifecycle.viewModelScope
+import androidx.compose.material.icons.filled.AutoAwesome
+import androidx.compose.material.icons.filled.CameraAlt
+import androidx.compose.material.icons.filled.Merge
+import androidx.compose.material.icons.filled.WorkspacePremium
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 
 class IRPlushViewModel : BaseViewModel() {
 
@@ -39,23 +40,23 @@ class IRPlushViewModel : BaseViewModel() {
     private val _isRecording = MutableStateFlow(false)
     val isRecording: StateFlow<Boolean> = _isRecording.asStateFlow()
 
-    
+
     fun toggleRecording() {
         _isRecording.value = !_isRecording.value
     }
 
-    
+
     fun initializeDualView(surfaceView: SurfaceView) {
         // Only update state, don't store the SurfaceView reference
         _dualViewState.value = DualViewState.ACTIVE
     }
 
-    
+
     fun changeProcessingMode(mode: ProcessingMode) {
         _processingMode.value = mode
     }
 
-    
+
     fun calibrateDualView() {
         launchWithErrorHandling {
             _dualViewState.value = DualViewState.CALIBRATING
@@ -65,7 +66,7 @@ class IRPlushViewModel : BaseViewModel() {
         }
     }
 
-    
+
     fun resetSettings() {
         _processingMode.value = ProcessingMode.STANDARD
         _isRecording.value = false
@@ -77,7 +78,7 @@ class IRPlushViewModel : BaseViewModel() {
         )
     }
 
-    
+
     fun updateTemperatureData(
         centerTemp: Float,
         maxTemp: Float,

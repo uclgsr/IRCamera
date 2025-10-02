@@ -8,7 +8,7 @@ import com.mpdc4gsr.libunified.app.tools.TimeTools
 import com.mpdc4gsr.libunified.app.tools.VideoTools
 import kotlinx.parcelize.Parcelize
 import java.io.File
-import java.util.TimeZone
+import java.util.*
 
 @Parcelize
 open class GalleryBean(

@@ -1,18 +1,13 @@
 package mpdc4gsr.core.ui
 
-import android.content.Context
 import android.content.IntentFilter
 import com.csl.irCamera.BuildConfig
 import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.BaseApplication
 import com.mpdc4gsr.libunified.app.broadcast.DeviceBroadcastReceiver
-import com.mpdc4gsr.libunified.app.common.SharedManager
-import com.mpdc4gsr.libunified.app.config.HttpConfig
 import com.mpdc4gsr.libunified.app.lms.LMS
 import com.mpdc4gsr.libunified.app.lms.utils.ConstantUtils
 import com.mpdc4gsr.libunified.app.lms.utils.LanguageUtils
-import com.mpdc4gsr.libunified.app.utils.AppUtils
-import mpdc4gsr.core.App
 
 /**
  * Application initialization utility functions

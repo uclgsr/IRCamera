@@ -17,11 +17,7 @@ import com.energy.iruvc.usb.USBMonitor;
 import com.energy.iruvc.utils.CommonParams;
 import com.energy.iruvc.utils.IFrameCallback;
 import com.energy.iruvc.utils.SynchronizedBitmap;
-import com.energy.iruvc.uvc.CameraSize;
-import com.energy.iruvc.uvc.ConcreateUVCBuilder;
-import com.energy.iruvc.uvc.ConnectCallback;
-import com.energy.iruvc.uvc.UVCCamera;
-import com.energy.iruvc.uvc.UVCType;
+import com.energy.iruvc.uvc.*;
 import com.mpdc4gsr.libunified.R;
 import com.mpdc4gsr.libunified.ir.usbdual.Const;
 

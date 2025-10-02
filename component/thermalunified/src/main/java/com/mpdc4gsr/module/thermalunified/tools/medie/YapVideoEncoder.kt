@@ -3,11 +3,7 @@
 package com.mpdc4gsr.module.thermalunified.tools.medie
 
 import android.graphics.Bitmap
-import android.media.MediaCodec
-import android.media.MediaCodecInfo
-import android.media.MediaCodecList
-import android.media.MediaFormat
-import android.media.MediaMuxer
+import android.media.*
 import android.os.Build
 import android.os.Looper
 import android.util.Log

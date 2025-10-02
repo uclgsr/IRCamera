@@ -1,6 +1,5 @@
 package mpdc4gsr.feature.gsr.ui
 
-import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.camera.view.PreviewView
 import androidx.compose.foundation.background
@@ -16,28 +15,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.viewModelScope
-import com.csl.irCamera.R
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import mpdc4gsr.core.ui.BaseComposeActivity
-import mpdc4gsr.core.ui.components.TitleBar
-import mpdc4gsr.core.ui.theme.IRCameraTheme
-import mpdc4gsr.feature.network.data.RecordingController
-import mpdc4gsr.core.data.RgbCameraRecorder
-import mpdc4gsr.core.data.UnifiedGSRRecorder
-import mpdc4gsr.core.data.UnifiedNetworkController
-import mpdc4gsr.core.data.UnifiedSessionManager
 import mpdc4gsr.core.data.model.DeviceInfo
 import mpdc4gsr.core.data.model.SessionQuality
 import mpdc4gsr.core.data.model.SessionStatus
 import mpdc4gsr.core.data.model.SessionType
+import mpdc4gsr.core.ui.BaseComposeActivity
 import mpdc4gsr.core.ui.BaseViewModel
+import mpdc4gsr.core.ui.components.TitleBar
+import mpdc4gsr.core.ui.theme.IRCameraTheme
 
 enum class UnifiedSensorType(
     val displayName: String,

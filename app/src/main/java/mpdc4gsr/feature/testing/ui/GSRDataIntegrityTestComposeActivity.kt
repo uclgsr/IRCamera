@@ -8,8 +8,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ShowChart
 import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -21,10 +22,9 @@ import androidx.lifecycle.lifecycleScope
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import mpdc4gsr.feature.network.data.RecordingController
 import mpdc4gsr.feature.gsr.data.GSRSensorRecorder
+import mpdc4gsr.feature.network.data.RecordingController
 import kotlin.math.abs
-import kotlin.system.measureTimeMillis
 
 /**
  * Compose version of GSR Data Integrity Test Activity

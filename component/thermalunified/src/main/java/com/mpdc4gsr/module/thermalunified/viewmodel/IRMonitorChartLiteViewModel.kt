@@ -1,11 +1,9 @@
 package com.mpdc4gsr.module.thermalunified.viewmodel
 
-import androidx.lifecycle.viewModelScope
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 
 class IRMonitorChartLiteViewModel : BaseViewModel() {
 

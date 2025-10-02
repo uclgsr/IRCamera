@@ -1,11 +1,7 @@
 package com.mpdc4gsr.libunified.ui.renderer;
 
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
+import android.graphics.*;
 import android.graphics.Paint.Align;
-import android.graphics.Path;
-import android.graphics.RectF;
 
 import com.mpdc4gsr.libunified.ui.components.LimitLine;
 import com.mpdc4gsr.libunified.ui.components.YAxis;

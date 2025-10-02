@@ -1,11 +1,7 @@
 package com.mpdc4gsr.libunified.ui.renderer;
 
-import android.graphics.Canvas;
-import android.graphics.DashPathEffect;
-import android.graphics.Paint;
+import android.graphics.*;
 import android.graphics.Paint.Align;
-import android.graphics.Path;
-import android.graphics.Typeface;
 
 import com.mpdc4gsr.libunified.ui.components.Legend;
 import com.mpdc4gsr.libunified.ui.components.LegendEntry;

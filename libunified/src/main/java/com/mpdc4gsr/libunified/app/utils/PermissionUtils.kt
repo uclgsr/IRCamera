@@ -9,7 +9,7 @@ import com.mpdc4gsr.libunified.app.BaseApplication
 
 object PermissionUtils {
 
-    
+
     fun isVisualUser(): Boolean {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE &&
                 ContextCompat.checkSelfPermission(

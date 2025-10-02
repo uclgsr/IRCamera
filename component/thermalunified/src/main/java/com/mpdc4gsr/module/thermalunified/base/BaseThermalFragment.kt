@@ -1,11 +1,7 @@
 package com.mpdc4gsr.module.thermalunified.base
 
 import android.graphics.Bitmap
-import android.widget.EditText
-import android.widget.FrameLayout
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.mpdc4gsr.libunified.app.ktbase.BaseFragment
 import kotlinx.coroutines.Job

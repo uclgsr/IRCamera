@@ -1,10 +1,6 @@
 package com.mpdc4gsr.libunified.ui.renderer;
 
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.LinearGradient;
-import android.graphics.Paint;
-import android.graphics.RectF;
+import android.graphics.*;
 import android.graphics.drawable.Drawable;
 
 import com.mpdc4gsr.libunified.ui.animation.ChartAnimator;

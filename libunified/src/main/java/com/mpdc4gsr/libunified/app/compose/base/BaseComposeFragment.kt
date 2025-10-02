@@ -14,10 +14,10 @@ import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 
 abstract class BaseComposeFragment<VM : ViewModel> : Fragment() {
 
-    
+
     abstract fun createViewModel(): VM
 
-    
+
     @Composable
     abstract fun Content(viewModel: VM)
 
@@ -39,7 +39,7 @@ abstract class BaseComposeFragment<VM : ViewModel> : Fragment() {
         }
     }
 
-    
+
     open fun onFragmentCreated() {
         // Default implementation does nothing
         // Override in subclasses for specific initialization
@@ -54,15 +54,15 @@ abstract class BaseComposeFragment<VM : ViewModel> : Fragment() {
 
 abstract class EnhancedBaseComposeFragment<VM : ViewModel> : BaseComposeFragment<VM>() {
 
-    
+
     open val handlesBackPress: Boolean = false
 
-    
+
     open fun onBackPressed(): Boolean {
         return false
     }
 
-    
+
     open fun onFragmentDestroyed() {
         // Default implementation does nothing
         // Override in subclasses for specific cleanup
@@ -77,12 +77,12 @@ abstract class EnhancedBaseComposeFragment<VM : ViewModel> : BaseComposeFragment
 
 abstract class BaseThermalComposeFragment<VM : ViewModel> : EnhancedBaseComposeFragment<VM>() {
 
-    
+
     open fun onThermalFragmentCreated() {
         // Thermal-specific initialization
     }
 
-    
+
     open fun onThermalDeviceStateChanged(connected: Boolean) {
         // Default implementation does nothing
     }

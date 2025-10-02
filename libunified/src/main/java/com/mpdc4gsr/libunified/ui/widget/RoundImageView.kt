@@ -9,23 +9,22 @@ import com.mpdc4gsr.libunified.R
 
 class RoundImageView : AppCompatImageView {
     companion object {
-        
+
         const val LEFT_TOP = 1
 
-        
+
         const val RIGHT_TOP = 2
 
-        
+
         const val LEFT_BOTTOM = 4
 
-        
+
         const val RIGHT_BOTTOM = 8
 
 
-        
         private const val DEFAULT_RADIUS = 10f
 
-        
+
         private const val DEFAULT_POSITION = 15
     }
 
@@ -108,7 +107,7 @@ class RoundImageView : AppCompatImageView {
         super.onDraw(canvas)
     }
 
-    
+
     fun setRadius(radius: Float) {
         if (this.radius != dp2px(radius)) {
             this.radius = dp2px(radius)
