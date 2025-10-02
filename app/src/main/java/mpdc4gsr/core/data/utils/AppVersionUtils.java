@@ -18,7 +18,7 @@ import com.csl.irCamera.R;
 import com.elvishew.xlog.XLog;
 import com.mpdc4gsr.libunified.app.common.SharedManager;
 import com.mpdc4gsr.libunified.app.config.HttpConfig;
-import com.mpdc4gsr.libunified.app.dialog.TipDialog;
+import com.mpdc4gsr.libunified.app.compose.dialogs.TipDialogState;
 import com.mpdc4gsr.libunified.app.lms.LMS;
 import com.mpdc4gsr.libunified.app.lms.activity.LmsUpdateDialog;
 import com.mpdc4gsr.libunified.app.lms.bean.AppInfoBean;
@@ -112,12 +112,19 @@ public class AppVersionUtils {
                 }
             }
         }
+        TipDialogState tipDialogState = new TipDialogState(mContext);
+        
         if (Integer.parseInt(bean.forcedUpgradeFlag) == 1) {
-
-            new TipDialog.Builder(mContext)
-                    .setMessage(information)
-                    .setTitleMessage(mContext.getString(R.string.updata_new_version_update))
-                    .setPositiveListener(R.string.app_confirm, new Function0<Unit>() {
+            tipDialogState.show(
+                    mContext.getString(R.string.updata_new_version_update),
+                    information,
+                    mContext.getString(R.string.app_confirm),
+                    "",
+                    false,
+                    false,
+                    "",
+                    false,
+                    new Function0<Unit>() {
                         @Override
                         public Unit invoke() {
                             if (mDownloadId > 0l) {
@@ -129,13 +136,25 @@ public class AppVersionUtils {
                             startDownload(bean.downloadPackageUrl);
                             return null;
                         }
-                    })
-                    .create().show();
+                    },
+                    new Function0<Unit>() {
+                        @Override
+                        public Unit invoke() {
+                            return null;
+                        }
+                    }
+            );
         } else {
-            new TipDialog.Builder(mContext)
-                    .setMessage(information)
-                    .setTitleMessage(mContext.getString(R.string.updata_new_version_update))
-                    .setPositiveListener(R.string.app_confirm, new Function0<Unit>() {
+            tipDialogState.show(
+                    mContext.getString(R.string.updata_new_version_update),
+                    information,
+                    mContext.getString(R.string.app_confirm),
+                    mContext.getString(R.string.app_cancel),
+                    true,
+                    false,
+                    "",
+                    false,
+                    new Function0<Unit>() {
                         @Override
                         public Unit invoke() {
                             if (mDownloadId > 0l) {
@@ -147,15 +166,15 @@ public class AppVersionUtils {
                             startDownload(bean.downloadPackageUrl);
                             return null;
                         }
-                    })
-                    .setCancelListener(R.string.app_cancel, new Function0<Unit>() {
+                    },
+                    new Function0<Unit>() {
                         @Override
                         public Unit invoke() {
                             SharedManager.INSTANCE.setVersionCheckDate(System.currentTimeMillis());
                             return null;
                         }
-                    })
-                    .create().show();
+                    }
+            );
         }
     }
 
