@@ -69,7 +69,6 @@ mnImageBrowser = "V3.1.2X"
 gsyVideoPlayerThermal = "v8.6.0-release-jitpack"
 nordicBle = "2.11.0"
 utilcodex = "1.31.1"
-xxpermissions = "20.0"
 xlog = "1.11.1"
 lottie = "6.6.9"
 eventbus = "3.3.1"
@@ -204,7 +203,6 @@ camerax-view = { group = "androidx.camera", name = "camera-view", version.ref = 
 camerax-extensions = { group = "androidx.camera", name = "camera-extensions", version.ref = "camerax" }
 nordic-ble-ktx = { group = "no.nordicsemi.android", name = "ble-ktx", version.ref = "nordicBle" }
 utilcode = { group = "com.blankj", name = "utilcodex", version.ref = "utilcodex" }
-xxpermissions = { group = "com.github.getActivity", name = "XXPermissions", version.ref = "xxpermissions" }
 xlog = { group = "com.elvishew", name = "xlog", version.ref = "xlog" }
 lottie = { group = "com.airbnb.android", name = "lottie", version.ref = "lottie" }
 eventbus = { group = "org.greenrobot", name = "eventbus", version.ref = "eventbus" }
