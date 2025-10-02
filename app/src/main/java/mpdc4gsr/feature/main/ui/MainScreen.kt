@@ -34,8 +34,6 @@ fun MainScreen(
     onNavigateToProfile: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
-    var selectedTab by remember { mutableIntStateOf(0) }
-
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -59,11 +57,7 @@ fun MainScreen(
                 .fillMaxSize()
                 .weight(1f)
         ) {
-            when (selectedTab) {
-                0 -> SensorDashboardTab()
-                1 -> GalleryTab(onNavigateToGallery = onNavigateToGallery)
-                2 -> ProfileTab(onNavigateToProfile = onNavigateToProfile)
-            }
+            SensorDashboardTab()
         }
 
         // Bottom navigation
@@ -73,8 +67,8 @@ fun MainScreen(
             NavigationBarItem(
                 icon = { Icon(Icons.Default.Dashboard, contentDescription = "Sensors") },
                 label = { Text("Sensors") },
-                selected = selectedTab == 0,
-                onClick = { selectedTab = 0 },
+                selected = true,
+                onClick = { },
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = MaterialTheme.colorScheme.primary,
                     unselectedIconColor = Color.Gray,
@@ -85,8 +79,8 @@ fun MainScreen(
             NavigationBarItem(
                 icon = { Icon(Icons.Default.Photo, contentDescription = "Gallery") },
                 label = { Text("Gallery") },
-                selected = selectedTab == 1,
-                onClick = { selectedTab = 1 },
+                selected = false,
+                onClick = { onNavigateToGallery() },
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = MaterialTheme.colorScheme.primary,
                     unselectedIconColor = Color.Gray,
@@ -109,8 +103,8 @@ fun MainScreen(
             NavigationBarItem(
                 icon = { Icon(Icons.Default.Person, contentDescription = "Profile") },
                 label = { Text("Profile") },
-                selected = selectedTab == 2,
-                onClick = { selectedTab = 2 },
+                selected = false,
+                onClick = { onNavigateToProfile() },
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = MaterialTheme.colorScheme.primary,
                     unselectedIconColor = Color.Gray,
@@ -164,118 +158,6 @@ private fun SensorDashboardTab(
 
         // System status overview
         SystemStatusOverview()
-    }
-}
-
-/**
- * Gallery Tab - Image and video gallery
- */
-@Composable
-private fun GalleryTab(
-    onNavigateToGallery: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(20.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Icon(
-                    Icons.Default.Photo,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(64.dp)
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    text = "Media Gallery",
-                    color = Color.White,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = "View thermal images, recordings, and data exports",
-                    color = Color.Gray,
-                    fontSize = 14.sp,
-                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                Button(
-                    onClick = onNavigateToGallery,
-                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
-                ) {
-                    Text("Open Gallery")
-                }
-            }
-        }
-    }
-}
-
-/**
- * Profile Tab - User profile and account
- */
-@Composable
-private fun ProfileTab(
-    onNavigateToProfile: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(20.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Icon(
-                    Icons.Default.Person,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(64.dp)
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    text = "Profile",
-                    color = Color.White,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = "User account, research templates, and data management",
-                    color = Color.Gray,
-                    fontSize = 14.sp,
-                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                Button(
-                    onClick = onNavigateToProfile,
-                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
-                ) {
-                    Text("View Profile")
-                }
-            }
-        }
     }
 }
 
