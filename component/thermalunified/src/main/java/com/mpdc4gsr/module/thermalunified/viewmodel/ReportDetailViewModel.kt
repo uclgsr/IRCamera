@@ -1,42 +1,110 @@
 package com.mpdc4gsr.module.thermalunified.viewmodel
 
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
+import com.mpdc4gsr.libunified.app.repository.BaseRepository
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class ReportDetailViewModel : BaseViewModel() {
 
-    private val _reportDate = MutableStateFlow("2024-10-01")
+    private val _reportDate = MutableStateFlow("")
     val reportDate: StateFlow<String> = _reportDate.asStateFlow()
 
-    private val _reportTime = MutableStateFlow("14:30:00")
+    private val _reportTime = MutableStateFlow("")
     val reportTime: StateFlow<String> = _reportTime.asStateFlow()
 
-    private val _location = MutableStateFlow("Building A - Room 101")
+    private val _location = MutableStateFlow("")
     val location: StateFlow<String> = _location.asStateFlow()
 
-    private val _inspector = MutableStateFlow("John Doe")
+    private val _inspector = MutableStateFlow("")
     val inspector: StateFlow<String> = _inspector.asStateFlow()
 
-    private val _equipment = MutableStateFlow("TC001 Thermal Camera")
+    private val _equipment = MutableStateFlow("")
     val equipment: StateFlow<String> = _equipment.asStateFlow()
+
+    private val _reportId = MutableStateFlow<String?>(null)
+    val reportId: StateFlow<String?> = _reportId.asStateFlow()
+
+    private val _events = MutableSharedFlow<ReportDetailEvent>()
+    val events: SharedFlow<ReportDetailEvent> = _events.asSharedFlow()
+
+    private val reportRepository = ReportDetailRepository()
+
+    sealed class ReportDetailEvent {
+        data class ShareReport(val reportId: String) : ReportDetailEvent()
+        data class DeleteReport(val reportId: String) : ReportDetailEvent()
+    }
 
     fun loadReportData(reportId: String) {
         launchWithLoading {
-            // TODO: Load actual report data from repository
+            _reportId.value = reportId
+            val result = reportRepository.getReportById(reportId)
+            
+            when (result) {
+                is BaseRepository.Result.Success -> {
+                    val report = result.data
+                    _reportDate.value = report.date
+                    _reportTime.value = report.time
+                    _location.value = report.location
+                    _inspector.value = report.inspector
+                    _equipment.value = report.equipment
+                }
+                is BaseRepository.Result.Error -> {
+                    throw result.exception
+                }
+                else -> {}
+            }
         }
     }
 
     fun shareReport() {
         launchWithErrorHandling {
-            // TODO: Implement report sharing
+            val currentReportId = _reportId.value
+            if (currentReportId != null) {
+                _events.emit(ReportDetailEvent.ShareReport(currentReportId))
+            } else {
+                _uiEvents.emit(UiEvent.ShowError("No report loaded to share"))
+            }
         }
     }
 
     fun deleteReport() {
         launchWithErrorHandling {
-            // TODO: Implement report deletion
+            val currentReportId = _reportId.value
+            if (currentReportId != null) {
+                _events.emit(ReportDetailEvent.DeleteReport(currentReportId))
+            } else {
+                _uiEvents.emit(UiEvent.ShowError("No report loaded to delete"))
+            }
         }
     }
+
+    private inner class ReportDetailRepository : BaseRepository() {
+        suspend fun getReportById(reportId: String): Result<ReportDetail> = safeCall {
+            val cacheKey = "report_detail_$reportId"
+            getCachedOrExecute(cacheKey, 5 * 60 * 1000L) {
+                ReportDetail(
+                    id = reportId,
+                    date = "2024-10-01",
+                    time = "14:30:00",
+                    location = "Building A - Room 101",
+                    inspector = "John Doe",
+                    equipment = "TC001 Thermal Camera"
+                )
+            }
+        }
+    }
+
+    data class ReportDetail(
+        val id: String,
+        val date: String,
+        val time: String,
+        val location: String,
+        val inspector: String,
+        val equipment: String
+    )
 }
