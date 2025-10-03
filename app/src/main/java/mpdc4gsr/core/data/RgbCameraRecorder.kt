@@ -389,10 +389,22 @@ class RgbCameraRecorder(
         }
     }
 
+    /**
+     * Switch to the front-facing camera.
+     * Cannot be called while recording is active.
+     * 
+     * @return true if switch was successful, false otherwise
+     */
     suspend fun switchToFrontCamera(): Boolean {
         return switchCamera(useFrontCamera = true)
     }
 
+    /**
+     * Switch to the back-facing camera.
+     * Cannot be called while recording is active.
+     * 
+     * @return true if switch was successful, false otherwise
+     */
     suspend fun switchToBackCamera(): Boolean {
         return switchCamera(useFrontCamera = false)
     }
@@ -490,6 +502,14 @@ class RgbCameraRecorder(
         }
     }
 
+    /**
+     * Bind camera preview to a PreviewView for live display.
+     * This can be called after initialize() to enable live preview.
+     * The Preview use case is always part of the camera lifecycle, 
+     * so binding can occur at any time after initialization.
+     *
+     * @param previewView The PreviewView to display the camera feed
+     */
     fun bindPreview(previewView: PreviewView) {
         try {
             this.preview?.let { preview ->
@@ -1887,6 +1907,7 @@ class RgbCameraRecorder(
                     AppLogger.w(TAG, "Camera executor did not terminate gracefully, forcing shutdown")
                     cameraExecutor.shutdownNow()
                 }
+                // Recreate executor to allow re-initialization for multiple recording sessions
                 cameraExecutor = Executors.newSingleThreadExecutor()
                 AppLogger.d(TAG, "Camera executor recreated for potential reuse")
             } catch (e: Exception) {
