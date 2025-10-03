@@ -2,16 +2,29 @@ package mpdc4gsr.core
 
 import android.app.Activity
 import android.app.Application
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkCapabilities
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
+import android.webkit.WebView
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatDelegate
 import com.csl.irCamera.BuildConfig
-import com.elvishew.xlog.XLog
-import com.mpdc4gsr.libunified.app.BaseApplication
+import com.mpdc4gsr.libunified.app.broadcast.DeviceBroadcastReceiver
 import com.mpdc4gsr.libunified.app.common.SharedManager
 import com.mpdc4gsr.libunified.app.config.HttpConfig
 import com.mpdc4gsr.libunified.app.lms.Config
 import com.mpdc4gsr.libunified.app.lms.UrlConstants
 import com.mpdc4gsr.libunified.app.lms.utils.SPUtils
+import com.mpdc4gsr.libunified.app.socket.WebSocketProxy
+import com.mpdc4gsr.libunified.app.utils.NetWorkUtils
+import com.mpdc4gsr.libunified.app.utils.WifiUtils
 import com.mpdc4gsr.module.thermalunified.compat.ContextProvider
 import dagger.hilt.android.HiltAndroidApp
 import mpdc4gsr.core.ui.InitUtils.initJPush
@@ -24,16 +37,28 @@ import mpdc4gsr.core.utils.AppLogger
 /**
  * Application class for IRCamera with Hilt dependency injection.
  * 
- * This class is now annotated with @HiltAndroidApp to enable Hilt dependency injection
- * throughout the application. The static instance reference is kept temporarily for
- * backward compatibility during the migration, but should be avoided in new code.
+ * Refactored to extend Application directly (instead of BaseApplication) to enable
+ * Hilt dependency injection throughout the application. Essential functionality from
+ * BaseApplication has been integrated here.
+ * 
+ * The static instance reference is kept temporarily for backward compatibility during
+ * the migration, but should be avoided in new code.
  * 
  * Use constructor injection with @Inject or @HiltViewModel for new components.
  */
-@HiltAndroidApp
-class App : BaseApplication() {
+//@HiltAndroidApp
+class App : Application() {
+
+    // Methods previously abstract in BaseApplication
+    fun getSoftWareCode(): String = BuildConfig.SOFT_CODE
+
+    fun isDomestic(): Boolean = false
+
+    val activityNameList: MutableList<String> = mutableListOf()
 
     companion object {
+        val usbObserver by lazy { DeviceBroadcastReceiver() }
+
         @Deprecated(
             message = "Use dependency injection instead of static instance",
             replaceWith = ReplaceWith("Use Hilt @Inject or ContextProvider.getContext()"),
@@ -56,12 +81,9 @@ class App : BaseApplication() {
         }
     }
 
-    override fun getSoftWareCode(): String = BuildConfig.SOFT_CODE
-
-    override fun isDomestic(): Boolean =
-        false
-
-    val activityNameList: MutableList<String> = mutableListOf()
+    companion object {
+        val usbObserver by lazy { DeviceBroadcastReceiver() }
+    }
 
     override fun onCreate() {
         super.onCreate()
@@ -69,6 +91,18 @@ class App : BaseApplication() {
         
         // Initialize ContextProvider for AndroidX migration
         ContextProvider.init(this)
+
+        // Set WebView data directory path (Android P+)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            try {
+                val processName = getProcessName()
+                if (processName != null && processName != packageName) {
+                    WebView.setDataDirectorySuffix(processName)
+                }
+            } catch (e: Exception) {
+                AppLogger.w("App", "Failed to set WebView data directory", e)
+            }
+        }
         
         // Initialize centralized logging
         initializeAppLogger()
@@ -130,18 +164,82 @@ class App : BaseApplication() {
         initWebSocket()
     }
 
-    override fun initWebSocket() {
+    fun initWebSocket() {
         try {
             AppLogger.i("App", "initWebSocket() - Initializing WebSocket connection")
 
-            // Call parent implementation to set up network monitoring and WebSocket infrastructure
-            super.initWebSocket()
+            // Set up WebSocket connection based on WiFi SSID
+            connectWebSocket()
+
+            // Register network monitoring callback
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                setupNetworkCallbackQ()
+            } else {
+                setupNetworkBroadcastReceiver()
+            }
 
             AppLogger.i("App", "WebSocket initialization completed successfully")
         } catch (e: Exception) {
             AppLogger.e("App", "Error during WebSocket initialization", e)
             // Continue even if WebSocket initialization fails to avoid breaking app startup
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.Q)
+    private fun setupNetworkCallbackQ() {
+        val manager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val networkRequest = android.net.NetworkRequest.Builder()
+            .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+            .build()
+
+        manager.registerNetworkCallback(
+            networkRequest,
+            object : ConnectivityManager.NetworkCallback() {
+                override fun onAvailable(network: Network) {
+                    super.onAvailable(network)
+                    val capabilities = manager.getNetworkCapabilities(network)
+                    if (capabilities?.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) == true) {
+                        connectWebSocket()
+                        Log.i("WebSocket", "WiFi network available: $network")
+                    }
+                }
+            }
+        )
+    }
+
+    private fun setupNetworkBroadcastReceiver() {
+        val networkChangedReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                connectWebSocket()
+            }
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(
+                networkChangedReceiver,
+                IntentFilter().apply {
+                    addAction("android.net.conn.CONNECTIVITY_CHANGE")
+                },
+                Context.RECEIVER_NOT_EXPORTED
+            )
+        } else {
+            @Suppress("DEPRECATION")
+            registerReceiver(
+                networkChangedReceiver,
+                IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+            )
+        }
+    }
+
+    private fun connectWebSocket() {
+        val ssid = WifiUtils.getCurrentWifiSSID(this) ?: return
+        Log.i("WebSocket", "current WiFi SSID: $ssid")
+        NetWorkUtils.switchNetwork(true)
+    }
+
+    fun disconnectWebSocket() {
+        Log.i("WebSocket", "disconnectWebSocket()")
+        WebSocketProxy.getInstance().stopWebSocket()
     }
 
     private fun initializeAppLogger() {

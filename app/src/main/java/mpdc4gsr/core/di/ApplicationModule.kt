@@ -1,23 +1,27 @@
 package mpdc4gsr.core.di
 
-import android.app.Application
-import android.content.Context
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
+// TODO: Uncomment when Hilt is enabled
+// import android.app.Application
+// import android.content.Context
+// import dagger.Module
+// import dagger.Provides
+// import dagger.hilt.InstallIn
+// import dagger.hilt.android.qualifiers.ApplicationContext
+// import dagger.hilt.components.SingletonComponent
+// import javax.inject.Singleton
 
-@Module
-@InstallIn(SingletonComponent::class)
-object ApplicationModule {
+// @Module
+// @InstallIn(SingletonComponent::class)
+// object ApplicationModule {
+//
+//     @Provides
+//     @Singleton
+//     fun provideApplicationContext(@ApplicationContext context: Context): Context = context
+//
+//     @Provides
+//     @Singleton
+//     fun provideApplication(application: Application): Application = application
+// }
 
-    @Provides
-    @Singleton
-    fun provideApplicationContext(@ApplicationContext context: Context): Context = context
-
-    @Provides
-    @Singleton
-    fun provideApplication(application: Application): Application = application
-}
+// Placeholder to keep the file structure
+internal object ApplicationModule
