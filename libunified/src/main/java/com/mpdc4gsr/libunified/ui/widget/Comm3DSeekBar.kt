@@ -28,10 +28,10 @@ class Comm3DSeekBar : AppCompatSeekBar {
     private val mProgressTextRect: Rect = Rect()
 
     // 
-    private val mThumbWidth: Int = 50f.dpToPx(context)
+    private val mThumbWidth: Int = 50f.dpToPx(context).toInt()
 
     // 
-    private val mIndicatorWidth: Int = 50f.dpToPx(context)
+    private val mIndicatorWidth: Int = 50f.dpToPx(context).toInt()
     private var onSeekBarChangeListener: OnSeekBarChangeListener? = null
 
     constructor(context: Context) : this(context, null)

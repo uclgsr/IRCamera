@@ -43,7 +43,7 @@ object FileConfig {
     }
 
     fun getFirmwareFile(filename: String): File =
-        File(ContextProvider.INSTANCE.getContext().getExternalFilesDir("firmware"), filename)
+        File(ContextProvider.getContext().getExternalFilesDir("firmware"), filename)
 
     @JvmStatic
     fun getPdfDir(): String {
@@ -81,8 +81,8 @@ object FileConfig {
     @JvmStatic
     val gallerySourDir: String
         get() {
-            val result = ContextProvider.INSTANCE.getContext()
-                .getExternalFilesDir(Environment.DIRECTORY_PICTURES)!!.absolutePath + File.separator + "MPDC4GSR"
+            val dir = ContextProvider.getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+            val result = dir!!.absolutePath + File.separator + "MPDC4GSR"
             val file = File(result)
             if (!file.exists()) {
                 file.mkdirs()
@@ -152,7 +152,8 @@ object FileConfig {
     @JvmStatic
     val lineIrGalleryDir: String
         get() {
-            val dir = ContextProvider.INSTANCE.getContext().getExternalFilesDir(Environment.DIRECTORY_DCIM)!!.absolutePath
+            val dcimDir = ContextProvider.getContext().getExternalFilesDir(Environment.DIRECTORY_DCIM)
+            val dir = dcimDir!!.absolutePath
             val path = dir + File.separator + "${CommUtils.getAppName()}-ir"
             val file = File(path)
             if (!file.exists()) {
@@ -164,7 +165,8 @@ object FileConfig {
     @JvmStatic
     val tc007IrGalleryDir: String
         get() {
-            val dir = ContextProvider.INSTANCE.getContext().getExternalFilesDir(Environment.DIRECTORY_DCIM)!!.absolutePath
+            val dcimDir = ContextProvider.getContext().getExternalFilesDir(Environment.DIRECTORY_DCIM)
+            val dir = dcimDir!!.absolutePath
             val path = dir + File.separator + "TC007-ir"
             val file = File(path)
             if (!file.exists()) {

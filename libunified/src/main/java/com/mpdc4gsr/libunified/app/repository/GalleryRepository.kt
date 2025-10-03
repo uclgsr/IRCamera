@@ -159,7 +159,7 @@ object GalleryRepository {
                 if (isSuccess) {
                     sourFile.deleteRecursively()
                     MediaScannerConnection.scanFile(
-                        ContextProvider.INSTANCE.getContext(),
+                        ContextProvider.getContext(),
                         arrayOf(FileConfig.lineGalleryDir),
                         null,
                         null
@@ -208,7 +208,7 @@ object GalleryRepository {
             }
         val selectionArgs = arrayOf(path)
 
-        val contentResolver: ContentResolver = ContextProvider.INSTANCE.getContext().contentResolver
+        val contentResolver: ContentResolver = ContextProvider.getContext().contentResolver
 
         val queryUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
         val cursor =

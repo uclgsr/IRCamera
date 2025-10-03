@@ -19,7 +19,7 @@ object ToastTools {
     fun showShort(
         @StringRes textStr: Int,
     ) {
-        showShort(ContextProvider.INSTANCE.getContext().getString(textStr))
+        showShort(ContextProvider.getContext().getString(textStr))
     }
 
     fun showShort(textStr: String) {
@@ -32,20 +32,20 @@ object ToastTools {
         duration: Int,
     ) {
         GlobalScope.launch(Dispatchers.Main) {
-            val inflater =
-                ContextProvider.INSTANCE.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+            val context = ContextProvider.getContext()
+            val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             val view = inflater.inflate(R.layout.toast_tip, null)
             val text = view.findViewById(R.id.toast_tip_text) as TextView
             text.text = textStr
-            val screenHeight = ContextProvider.getContext().resources.displayMetrics.heightPixels
+            val screenHeight = context.resources.displayMetrics.heightPixels
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
 
-                mPublicToast = Toast.makeText(ContextProvider.getContext(), textStr, duration)
+                mPublicToast = Toast.makeText(context, textStr, duration)
                 mPublicToast?.setGravity(Gravity.BOTTOM, 0, screenHeight / 8)
             } else {
 
                 if (mPublicToast == null) {
-                    mPublicToast = Toast(ContextProvider.INSTANCE.getContext())
+                    mPublicToast = Toast(context)
                 }
                 mPublicToast?.duration = duration
                 mPublicToast?.setGravity(Gravity.BOTTOM, 0, screenHeight / 8)

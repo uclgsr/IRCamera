@@ -29,12 +29,13 @@ object FileTools {
     }
 
     fun getUri(file: File): Uri {
-        val authority = "${ContextProvider.INSTANCE.getContext().packageName}.fileprovider"
-        return FileProvider.getUriForFile(ContextProvider.INSTANCE.getContext(), authority, file)
+        val context = ContextProvider.getContext()
+        val authority = "${context.packageName}.fileprovider"
+        return FileProvider.getUriForFile(context, authority, file)
     }
 
     fun getImagePathFromURI(path: String): Uri? {
-        val cr: ContentResolver = ContextProvider.INSTANCE.getContext().contentResolver
+        val cr: ContentResolver = ContextProvider.getContext().contentResolver
         val buffer = StringBuffer()
         buffer.append("(").append(MediaStore.Images.ImageColumns.DATA)
             .append("=").append("'").append(path).append("'")

@@ -88,7 +88,7 @@ object GlideLoader {
     ) {
         Glide.with(img)
             .load(resourceId)
-            .apply(getPhotoOptions())
+            .apply(getPhotoOptions(img.context))
             .into(img)
     }
 
@@ -98,7 +98,7 @@ object GlideLoader {
     ) {
         Glide.with(img)
             .load(url)
-            .apply(getPhotoOptions())
+            .apply(getPhotoOptions(img.context))
             .into(img)
     }
 
@@ -108,7 +108,7 @@ object GlideLoader {
     ) {
         Glide.with(img)
             .load(drawable)
-            .apply(getPhotoOptions())
+            .apply(getPhotoOptions(img.context))
             .into(img)
     }
 
@@ -118,7 +118,7 @@ object GlideLoader {
     ) {
         Glide.with(img)
             .load(uri)
-            .apply(getPhotoOptions())
+            .apply(getPhotoOptions(img.context))
             .into(img)
     }
 

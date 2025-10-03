@@ -211,7 +211,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
             params.addBodyParameter("softCode", softCode)
             params.addBodyParameter(
                 "downloadLanguageId",
-                LanguageUtils.getLanguageId(ContextProvider.INSTANCE.getContext())
+                LanguageUtils.getLanguageId(ContextProvider.getContext())
             )
             params.addBodyParameter("downloadPlatformId", 2)
             params.addBodyParameter(
