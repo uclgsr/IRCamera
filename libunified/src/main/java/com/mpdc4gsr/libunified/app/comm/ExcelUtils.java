@@ -8,9 +8,8 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.documentfile.provider.DocumentFile;
 
-import com.blankj.utilcode.util.TimeUtils;
-import com.blankj.utilcode.util.UriUtils;
 import com.blankj.utilcode.util.Utils;
 import com.mpdc4gsr.libunified.R;
 import com.mpdc4gsr.libunified.app.common.SharedManager;
@@ -23,6 +22,9 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.*;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class ExcelUtils {
@@ -80,8 +82,10 @@ public class ExcelUtils {
                         bos.flush();
                         bos.close();
                     }
-                    Log.w("", UriUtils.uri2File(uri).getAbsolutePath());
-                    return UriUtils.uri2File(uri).getAbsolutePath();
+                    DocumentFile documentFile = DocumentFile.fromSingleUri(Utils.getApp(), uri);
+                    String filePath = documentFile != null ? documentFile.getName() : uri.toString();
+                    Log.w("", filePath);
+                    return filePath;
                 } else {
                     return null;
                 }
@@ -170,7 +174,15 @@ public class ExcelUtils {
                     }
                 }
             }
-            String timeStr = listData.isEmpty() ? TimeTools.INSTANCE.showDateSecond() : TimeUtils.millis2String(listData.get(0).getStartTime(), "yyyyMMddHHmmss");
+            String timeStr;
+            if (listData.isEmpty()) {
+                timeStr = TimeTools.INSTANCE.showDateSecond();
+            } else {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+                timeStr = Instant.ofEpochMilli(listData.get(0).getStartTime())
+                    .atZone(ZoneId.systemDefault())
+                    .format(formatter);
+            }
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
                 File excel = new File(FileConfig.getExcelDir(), "TCView_" + timeStr + ".xlsx");
                 FileOutputStream fos = new FileOutputStream(excel);
@@ -195,8 +207,10 @@ public class ExcelUtils {
                         bos.flush();
                         bos.close();
                     }
-                    Log.w("", UriUtils.uri2File(uri).getAbsolutePath());
-                    return UriUtils.uri2File(uri).getAbsolutePath();
+                    DocumentFile documentFile = DocumentFile.fromSingleUri(Utils.getApp(), uri);
+                    String filePath = documentFile != null ? documentFile.getName() : uri.toString();
+                    Log.w("", filePath);
+                    return filePath;
                 } else {
                     return null;
                 }
