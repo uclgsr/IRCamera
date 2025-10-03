@@ -25,7 +25,7 @@ abstract class TemperatureBaseView : View {
         private const val DEFAULT_MAX_COUNT = 3
     }
 
-    private val TOUCH_TOLERANCE by lazy { 8f.dpToPx(context) }
+    private val TOUCH_TOLERANCE by lazy { 8f.dpToPx(context).toInt() }
 
     private val DELETE_TOLERANCE by lazy { 2f.dpToPx(context)
     }

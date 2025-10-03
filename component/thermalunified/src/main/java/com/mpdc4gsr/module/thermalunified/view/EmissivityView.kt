@@ -25,7 +25,7 @@ class EmissivityView : View {
 
     private val layoutList: ArrayList<StaticLayout> = ArrayList(3)
 
-    private lateinit var strokeWidth: Float
+    private var strokeWidth: Float = 0f
     private val linePaint = Paint()
     private val textPaint = TextPaint(Paint.ANTI_ALIAS_FLAG)
 
