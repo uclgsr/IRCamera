@@ -185,7 +185,6 @@ dependencies {
     ksp(libs.glide.compiler)
     api(libs.rxjava2)
     api(libs.rxandroid)
-    api(libs.utilcode)
     api(libs.xlog)
     api(libs.photoview)
     api(libs.lottie)
