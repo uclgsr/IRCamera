@@ -347,7 +347,7 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
         };
     }
 
-    private static boolean isLineConcat(@NonNull Line line, int x, int y) {
+    private boolean isLineConcat(@NonNull Line line, int x, int y) {
         int tempDistance = ((line.end.y - line.start.y) * x - (line.end.x - line.start.x) * y + line.end.x * line.start.y - line.start.x * line.end.y);
         tempDistance = (int) (tempDistance / Math.sqrt(Math.pow(line.end.y - line.start.y, 2) + Math.pow(line.end.x - line.start.x, 2)));
         return Math.abs(tempDistance) < TOUCH_TOLERANCE && x > Math.min(line.start.x, line.end.x) - TOUCH_TOLERANCE && x < Math.max(line.start.x, line.end.x) + TOUCH_TOLERANCE;

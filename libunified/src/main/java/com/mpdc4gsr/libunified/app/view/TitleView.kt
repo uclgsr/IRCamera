@@ -164,8 +164,8 @@ open class TitleView : ViewGroup {
         }
 
         if (isTitleCenter) {
-            val leftSize =
-                if (tvLeft!!.isVisible) tvLeft?.measuredWidth else ICON_SIZE.dpToPx(context)
+            val leftSize: Int =
+                if (tvLeft!!.isVisible) tvLeft!!.measuredWidth else ICON_SIZE.dpToPx(context).toInt()
             var rightSize = 0
             if (tvRight1!!.isVisible) {
                 rightSize += tvRight1!!.measuredWidth
