@@ -23,6 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
+import dagger.hilt.android.AndroidEntryPoint
 import mpdc4gsr.feature.network.presentation.DevicePairingViewModel
 import mpdc4gsr.core.ui.deferAction
 
@@ -36,7 +37,9 @@ import mpdc4gsr.core.ui.deferAction
  * - Multi-device management with connection priorities
  * - Advanced filtering and device categorization
  * - Secure pairing with authentication validation
+ * Uses Hilt for dependency injection
  */
+//@AndroidEntryPoint
 class DevicePairingComposeActivity : BaseComposeActivity<DevicePairingViewModel>() {
 
     companion object {

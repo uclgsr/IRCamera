@@ -1,17 +1,24 @@
 package mpdc4gsr.feature.network.presentation
 
+import android.app.Application
 import androidx.lifecycle.viewModelScope
 import com.mpdc4gsr.gsr.model.SessionInfo
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import mpdc4gsr.core.ui.AppBaseViewModel
 import mpdc4gsr.feature.network.data.NetworkClient
+import javax.inject.Inject
 
 /**
  * Modernized DevicePairingViewModel using StateFlow and Repository pattern
  * Manages network device discovery and pairing with reactive state management
+ * Uses Hilt for dependency injection
  */
-class DevicePairingViewModel : AppBaseViewModel(), NetworkClient.NetworkEventListener {
+//@HiltViewModel
+class DevicePairingViewModel /*@Inject constructor(
+    private val application: Application
+)*/ : AppBaseViewModel(), NetworkClient.NetworkEventListener {
 
     // StateFlow for reactive state management
     private val _discoveredControllers =

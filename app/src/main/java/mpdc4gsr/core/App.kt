@@ -13,6 +13,7 @@ import com.mpdc4gsr.libunified.app.lms.Config
 import com.mpdc4gsr.libunified.app.lms.UrlConstants
 import com.mpdc4gsr.libunified.app.lms.utils.SPUtils
 import com.mpdc4gsr.module.thermalunified.compat.ContextProvider
+import dagger.hilt.android.HiltAndroidApp
 import mpdc4gsr.core.ui.InitUtils.initJPush
 import mpdc4gsr.core.ui.InitUtils.initLms
 import mpdc4gsr.core.ui.InitUtils.initLog
@@ -21,28 +22,15 @@ import mpdc4gsr.core.ui.InitUtils.initUM
 import mpdc4gsr.core.utils.AppLogger
 
 /**
- * Application class for IRCamera.
+ * Application class for IRCamera with Hilt dependency injection.
  * 
- * ANTI-PATTERN WARNING: Static Application instance
- * This class uses a static `instance` reference which is an anti-pattern that:
- * - Creates tight coupling between components
- * - Makes testing difficult
- * - Hides dependencies
- * - Can lead to memory leaks if misused
+ * This class is now annotated with @HiltAndroidApp to enable Hilt dependency injection
+ * throughout the application. The static instance reference is kept temporarily for
+ * backward compatibility during the migration, but should be avoided in new code.
  * 
- * TODO: Migrate to Hilt Dependency Injection (Estimated: 16-24 hours)
- * 
- * Migration Plan:
- * 1. Add Hilt dependencies to build.gradle.kts
- * 2. Annotate this class with @HiltAndroidApp
- * 3. Create @Module classes for dependencies
- * 4. Replace getInstance() calls with constructor injection
- * 5. Update Activities/Fragments to use @AndroidEntryPoint
- * 6. Remove static instance reference
- * 
- * For now, ContextProvider is available as a safer alternative for accessing
- * application context in most cases.
+ * Use constructor injection with @Inject or @HiltViewModel for new components.
  */
+@HiltAndroidApp
 class App : BaseApplication() {
 
     companion object {

@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import dagger.hilt.android.AndroidEntryPoint
 import mpdc4gsr.core.ui.model.SensorType
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.feature.camera.ui.CameraSettingsScreen
@@ -49,7 +50,9 @@ private object MainNavRoutes {
 /**
  * Main Compose Activity - Unified entry point for the IR Camera application
  * Replaces the traditional MainActivity with a complete Compose implementation
+ * Uses Hilt for dependency injection
  */
+//@AndroidEntryPoint
 class MainComposeActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

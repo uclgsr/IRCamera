@@ -7,6 +7,7 @@ plugins {
     id("kotlin-parcelize")
     alias(libs.plugins.kotlin.compose)
     id("com.google.devtools.ksp")
+    id("com.google.dagger.hilt.android")
 }
 
 val buildDayStr = SimpleDateFormat("yyMMdd", Locale.getDefault()).format(Date())
@@ -357,6 +358,10 @@ dependencies {
     implementation(libs.lifecycle.service)
     implementation(libs.compose.lifecycle.runtime)
 
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
+    implementation(libs.hilt.navigation.compose)
+
     implementation(files("libs/shimmerandroidinstrumentdriver-3.2.4_beta.aar"))
     implementation(files("libs/shimmerdriver-0.11.5_beta.jar"))
     implementation(files("libs/shimmerdriverpc-0.11.5_beta.jar"))
@@ -407,6 +412,11 @@ dependencies {
     testImplementation(libs.truth)
     androidTestImplementation(libs.truth)
     testImplementation(libs.javafaker)
+
+    testImplementation(libs.hilt.android.testing)
+    kspTest(libs.hilt.compiler)
+    androidTestImplementation(libs.hilt.android.testing)
+    kspAndroidTest(libs.hilt.compiler)
 }
 
 fun getYearStr(): String {
