@@ -284,9 +284,9 @@ rx-lifecycle = ["rxlifecycle", "rxlifecycle-android", "rxlifecycle-components", 
 retrofit = ["retrofit2", "converter-gson", "adapter-rxjava2", "logging-interceptor"]
 smart-refresh = ["refresh-layout-kernel", "refresh-header-classics", "refresh-header-material"]
 
-ui-common = ["androidx-core-ktx", "androidx-appcompat", "material", "glide"]
+ui-common = ["androidx-core-ktx", "androidx-appcompat", "material"]
 
-thermal-common = ["androidx-core-ktx", "androidx-appcompat", "material", "glide", "eventbus"]
+thermal-common = ["androidx-core-ktx", "androidx-appcompat", "material", "eventbus"]
 
 camerax = ["camerax-core", "camerax-camera2", "camerax-lifecycle", "camerax-video", "camerax-view", "camerax-extensions"]
 media3 = ["media3-exoplayer", "media3-exoplayer-dash", "media3-ui"]
