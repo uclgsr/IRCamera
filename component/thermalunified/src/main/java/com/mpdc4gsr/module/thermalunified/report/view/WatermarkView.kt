@@ -16,7 +16,7 @@ class WatermarkView : View {
             invalidate()
         }
 
-    private lateinit var marginTop: Float
+    private var marginTop: Float = 0f
 
     private val textPaint: TextPaint = TextPaint()
 

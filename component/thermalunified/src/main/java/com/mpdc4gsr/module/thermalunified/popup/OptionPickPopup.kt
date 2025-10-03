@@ -40,8 +40,8 @@ class OptionPickPopup(
 
         val canSeeItem: Int = strArray.size.coerceAtMost(2)
         val itemHeight: Int =
-            fontMetrics.bottom - fontMetrics.top + TEXT_PADDING.dpToPx(context) * 2
-        val contentHeight = 14f.dpToPx(context) + itemHeight * canSeeItem
+            fontMetrics.bottom - fontMetrics.top + TEXT_PADDING.dpToPx(context).toInt() * 2
+        val contentHeight = 14f.dpToPx(context).toInt() + itemHeight * canSeeItem
         val contentWidth = (contentHeight * 120f / 81f).toInt()
 
         contentView = LayoutInflater.from(context).inflate(R.layout.popup_option_pick, null)
@@ -63,22 +63,22 @@ class OptionPickPopup(
         val locationArray = IntArray(2)
         anchor.getLocationInWindow(locationArray)
 
-        val x = locationArray[0] + anchor.width - width + 5f.dpToPx(context)
+        val x = locationArray[0] + anchor.width - width + 5f.dpToPx(context).toInt()
 
-        if (context.resources.displayMetrics.heightPixels - locationArray[1] - anchor.height > height - 5f.dpToPx(context)
+        if (context.resources.displayMetrics.heightPixels - locationArray[1] - anchor.height > height - 5f.dpToPx(context).toInt()
         ) {
             showAtLocation(
                 anchor,
                 Gravity.NO_GRAVITY,
                 x,
-                locationArray[1] + anchor.height - 5f.dpToPx(context)
+                locationArray[1] + anchor.height - 5f.dpToPx(context).toInt()
             )
         } else {
             showAtLocation(
                 anchor,
                 Gravity.NO_GRAVITY,
                 x,
-                (locationArray[1] - height + 5f.dpToPx(context)).coerceAtLeast(0)
+                (locationArray[1] - height + 5f.dpToPx(context).toInt()).coerceAtLeast(0)
             )
         }
     }
@@ -93,15 +93,15 @@ class OptionPickPopup(
         ): ViewHolder {
             val textView = MyTextView(context)
             textView.textSize = TEXT_SIZE_SP
-            textView.setDrawableHeightPx(18f.spToPx(context))
+            textView.setDrawableHeightPx(18f.spToPx(context).toInt())
             textView.setTextColor(0xffffffff.toInt())
             textView.setPadding(
-                14f.dpToPx(context),
-                TEXT_PADDING.dpToPx(context),
-                14f.dpToPx(context),
-                TEXT_PADDING.dpToPx(context)
+                14f.dpToPx(context).toInt(),
+                TEXT_PADDING.dpToPx(context).toInt(),
+                14f.dpToPx(context).toInt(),
+                TEXT_PADDING.dpToPx(context).toInt()
             )
-            textView.compoundDrawablePadding = 10f.dpToPx(context)
+            textView.compoundDrawablePadding = 10f.dpToPx(context).toInt()
             textView.layoutParams =
                 LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
             return ViewHolder(textView)

@@ -649,7 +649,7 @@ class VideoRecordFFmpeg(
                             cameraViewBitmap,
                             bitmap,
                             ((cameraView.parent as ViewGroup).width - it.width) / 2,
-                            20f.dpToPx(ContextProvider.getContext()),
+                            20f.dpToPx(ContextProvider.getContext()).toInt(),
                         )
                 } catch (e: Exception) {
                     Log.e(TAG, "[ph][ph][ph][ph][ph][ph][ph][ph] exception:${e.message}")
@@ -731,7 +731,7 @@ class VideoRecordFFmpeg(
                         0,
                         address.length,
                         paint,
-                        bmp.width - pix20
+                        bmp.width - pix20.toInt()
                     )
                         .setAlignment(Layout.Alignment.ALIGN_NORMAL)
                         .setLineSpacing(0.0f, 1.0f)
@@ -742,7 +742,7 @@ class VideoRecordFFmpeg(
                     StaticLayout(
                         address,
                         paint,
-                        bmp.width - pix20,
+                        bmp.width - pix20.toInt(),
                         Layout.Alignment.ALIGN_NORMAL,
                         1.0f,
                         0.0f,
@@ -771,7 +771,7 @@ class VideoRecordFFmpeg(
                         0,
                         title.length,
                         paint,
-                        bmp.width - pix20
+                        bmp.width - pix20.toInt()
                     )
                         .setAlignment(Layout.Alignment.ALIGN_NORMAL)
                         .setLineSpacing(0.0f, 1.0f)
@@ -782,7 +782,7 @@ class VideoRecordFFmpeg(
                     StaticLayout(
                         title,
                         paint,
-                        bmp.width - pix20,
+                        bmp.width - pix20.toInt(),
                         Layout.Alignment.ALIGN_NORMAL,
                         1.0f,
                         0.0f,
