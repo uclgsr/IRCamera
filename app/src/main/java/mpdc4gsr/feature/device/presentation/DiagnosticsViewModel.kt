@@ -7,8 +7,8 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.BatteryManager
 import android.os.Build
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -21,7 +21,7 @@ import java.util.*
  * Diagnostics ViewModel - MVVM Integration
  * Provides real-time system diagnostics and sensor status monitoring
  */
-class DiagnosticsViewModel(application: Application) : AndroidViewModel(application) {
+class DiagnosticsViewModel(application: Application) : BaseViewModel() {
 
     private val context: Context = application.applicationContext
 
@@ -48,6 +48,11 @@ class DiagnosticsViewModel(application: Application) : AndroidViewModel(applicat
         private const val TC001_VENDOR_ID = 0x0BDA
         private const val TC001_PRODUCT_ID = 0x5830
         private const val TIMESTAMP_FORMAT = "yyyy-MM-dd HH:mm:ss"
+    }
+
+    init {
+        updateSystemStatus()
+        updateSensorStatus()
     }
 
     fun initialize() {
