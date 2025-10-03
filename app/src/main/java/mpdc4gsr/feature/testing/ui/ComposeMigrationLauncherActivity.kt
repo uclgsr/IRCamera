@@ -934,7 +934,7 @@ class ComposeMigrationLauncherActivity : ComponentActivity() {
         onClick: () -> Unit
     ) {
         Card(
-            onClick = onClick,
+            onClick = mpdc4gsr.core.ui.deferAction(onClick),
             modifier = Modifier.fillMaxWidth(),
             colors = CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.surface

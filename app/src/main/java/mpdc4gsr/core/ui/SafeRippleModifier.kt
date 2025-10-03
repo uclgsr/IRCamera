@@ -181,3 +181,25 @@ fun Modifier.safeClickableDeferred(
         }
     )
 }
+
+/**
+ * Helper function to defer an action by one frame.
+ * Use for navigation actions that need to let ripple animations settle.
+ * 
+ * Example:
+ * ```
+ * IconButton(onClick = deferAction { finish() }) {
+ *     Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+ * }
+ * ```
+ */
+@Composable
+fun deferAction(action: () -> Unit): () -> Unit {
+    val scope = rememberCoroutineScope()
+    return {
+        scope.launch {
+            withFrameNanos { }
+            action()
+        }
+    }
+}
