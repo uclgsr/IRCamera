@@ -40,7 +40,7 @@ fun UnifiedSensorDashboard(
     var gsrState by remember { mutableStateOf(SensorState.Disconnected) }
     var thermalState by remember { mutableStateOf(SensorState.Disconnected) }
     var rgbState by remember { mutableStateOf(SensorState.Disconnected) }
-    var unifiedState by remember { mutableStateOf(UnifiedSystemState.Idle) }
+    var unifiedState by remember { mutableStateOf(UnifiedSystemState.Inactive) }
 
     Column(
         modifier = modifier
