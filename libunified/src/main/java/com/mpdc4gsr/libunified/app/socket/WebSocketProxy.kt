@@ -11,7 +11,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.os.postDelayed
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import com.blankj.utilcode.util.Utils
+import com.mpdc4gsr.libunified.compat.ContextProvider
 import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.bean.event.SocketStateEvent
 import com.mpdc4gsr.libunified.app.security.CertificateManager
@@ -321,13 +321,13 @@ class WebSocketProxy {
                 return false
             }
             if (ContextCompat.checkSelfPermission(
-                    Utils.getApp(),
+                    ContextProvider.getContext(),
                     Manifest.permission.ACCESS_FINE_LOCATION
                 ) != PackageManager.PERMISSION_GRANTED
             ) {
                 return true
             }
-            val wifiName: String = WifiUtils.getCurrentWifiSSID(Utils.getApp()) ?: return true
+            val wifiName: String = WifiUtils.getCurrentWifiSSID(ContextProvider.getContext()) ?: return true
             XLog.tag("WebSocket").i("[ph][ph][ph][ph][ph]，[ph][ph][ph][ph] WIFI：$wifiName")
             return wifiName == ssid
         }

@@ -2,7 +2,7 @@ package com.mpdc4gsr.libunified.app.db.entity
 
 import android.content.Context
 import androidx.room.*
-import com.blankj.utilcode.util.Utils
+import com.mpdc4gsr.libunified.compat.ContextProvider
 import com.mpdc4gsr.libunified.R
 
 open class ItemBase {
@@ -223,66 +223,66 @@ class ItemDetect() : ItemBase() {
             when (position) {
                 0 ->
                     arrayListOf(
-                        ItemDetect(parentId, 0, Utils.getApp().getString(R.string.detect_item1)),
+                        ItemDetect(parentId, 0, ContextProvider.getContext().getString(R.string.detect_item1)),
                         ItemDetect(
                             parentId,
                             1,
-                            Utils.getApp().getString(R.string.detect_dir1_item2)
+                            ContextProvider.getContext().getString(R.string.detect_dir1_item2)
                         ),
                         ItemDetect(
                             parentId,
                             2,
-                            Utils.getApp().getString(R.string.detect_dir1_item3)
+                            ContextProvider.getContext().getString(R.string.detect_dir1_item3)
                         ),
                         ItemDetect(
                             parentId,
                             3,
-                            Utils.getApp().getString(R.string.detect_dir1_item4)
+                            ContextProvider.getContext().getString(R.string.detect_dir1_item4)
                         ),
                         ItemDetect(
                             parentId,
                             4,
-                            Utils.getApp().getString(R.string.detect_dir1_item5)
+                            ContextProvider.getContext().getString(R.string.detect_dir1_item5)
                         ),
                         ItemDetect(
                             parentId,
                             5,
-                            Utils.getApp().getString(R.string.detect_dir1_item6)
+                            ContextProvider.getContext().getString(R.string.detect_dir1_item6)
                         ),
                         ItemDetect(
                             parentId,
                             6,
-                            Utils.getApp().getString(R.string.detect_dir1_item7)
+                            ContextProvider.getContext().getString(R.string.detect_dir1_item7)
                         ),
                     )
 
                 1 ->
                     arrayListOf(
-                        ItemDetect(parentId, 0, Utils.getApp().getString(R.string.detect_item1)),
+                        ItemDetect(parentId, 0, ContextProvider.getContext().getString(R.string.detect_item1)),
                         ItemDetect(
                             parentId,
                             1,
-                            Utils.getApp().getString(R.string.detect_dir2_item2)
+                            ContextProvider.getContext().getString(R.string.detect_dir2_item2)
                         ),
                         ItemDetect(
                             parentId,
                             2,
-                            Utils.getApp().getString(R.string.detect_dir2_item3)
+                            ContextProvider.getContext().getString(R.string.detect_dir2_item3)
                         ),
                         ItemDetect(
                             parentId,
                             3,
-                            Utils.getApp().getString(R.string.detect_dir2_item4)
+                            ContextProvider.getContext().getString(R.string.detect_dir2_item4)
                         ),
                         ItemDetect(
                             parentId,
                             4,
-                            Utils.getApp().getString(R.string.detect_dir2_item5)
+                            ContextProvider.getContext().getString(R.string.detect_dir2_item5)
                         ),
                         ItemDetect(
                             parentId,
                             5,
-                            Utils.getApp().getString(R.string.detect_dir2_item6)
+                            ContextProvider.getContext().getString(R.string.detect_dir2_item6)
                         ),
                     )
 
@@ -291,227 +291,227 @@ class ItemDetect() : ItemBase() {
                         ItemDetect(
                             parentId,
                             0,
-                            Utils.getApp().getString(R.string.detect_dir3_item1)
+                            ContextProvider.getContext().getString(R.string.detect_dir3_item1)
                         ),
                         ItemDetect(
                             parentId,
                             1,
-                            Utils.getApp().getString(R.string.detect_dir3_item2)
+                            ContextProvider.getContext().getString(R.string.detect_dir3_item2)
                         ),
                         ItemDetect(
                             parentId,
                             2,
-                            Utils.getApp().getString(R.string.detect_dir3_item3)
+                            ContextProvider.getContext().getString(R.string.detect_dir3_item3)
                         ),
                     )
 
                 3 ->
                     arrayListOf(
-                        ItemDetect(parentId, 0, Utils.getApp().getString(R.string.detect_item1)),
+                        ItemDetect(parentId, 0, ContextProvider.getContext().getString(R.string.detect_item1)),
                         ItemDetect(
                             parentId,
                             1,
-                            Utils.getApp().getString(R.string.detect_dir4_item2)
+                            ContextProvider.getContext().getString(R.string.detect_dir4_item2)
                         ),
                         ItemDetect(
                             parentId,
                             2,
-                            Utils.getApp().getString(R.string.detect_dir4_item3)
+                            ContextProvider.getContext().getString(R.string.detect_dir4_item3)
                         ),
                         ItemDetect(
                             parentId,
                             3,
-                            Utils.getApp().getString(R.string.detect_dir4_item4)
+                            ContextProvider.getContext().getString(R.string.detect_dir4_item4)
                         ),
                         ItemDetect(
                             parentId,
                             4,
-                            Utils.getApp().getString(R.string.detect_dir4_item5)
+                            ContextProvider.getContext().getString(R.string.detect_dir4_item5)
                         ),
                         ItemDetect(
                             parentId,
                             5,
-                            Utils.getApp().getString(R.string.detect_dir4_item6)
+                            ContextProvider.getContext().getString(R.string.detect_dir4_item6)
                         ),
                         ItemDetect(
                             parentId,
                             6,
-                            Utils.getApp().getString(R.string.detect_dir4_item7)
+                            ContextProvider.getContext().getString(R.string.detect_dir4_item7)
                         ),
                     )
 
                 4 ->
                     arrayListOf(
-                        ItemDetect(parentId, 0, Utils.getApp().getString(R.string.detect_item1)),
+                        ItemDetect(parentId, 0, ContextProvider.getContext().getString(R.string.detect_item1)),
                         ItemDetect(
                             parentId,
                             1,
-                            Utils.getApp().getString(R.string.detect_dir5_item2)
+                            ContextProvider.getContext().getString(R.string.detect_dir5_item2)
                         ),
                         ItemDetect(
                             parentId,
                             2,
-                            Utils.getApp().getString(R.string.detect_dir5_item3)
+                            ContextProvider.getContext().getString(R.string.detect_dir5_item3)
                         ),
                         ItemDetect(
                             parentId,
                             3,
-                            Utils.getApp().getString(R.string.detect_dir5_item4)
+                            ContextProvider.getContext().getString(R.string.detect_dir5_item4)
                         ),
                         ItemDetect(
                             parentId,
                             4,
-                            Utils.getApp().getString(R.string.detect_dir5_item5)
+                            ContextProvider.getContext().getString(R.string.detect_dir5_item5)
                         ),
                         ItemDetect(
                             parentId,
                             5,
-                            Utils.getApp().getString(R.string.detect_dir5_item6)
+                            ContextProvider.getContext().getString(R.string.detect_dir5_item6)
                         ),
                         ItemDetect(
                             parentId,
                             6,
-                            Utils.getApp().getString(R.string.detect_dir5_item7)
+                            ContextProvider.getContext().getString(R.string.detect_dir5_item7)
                         ),
                         ItemDetect(
                             parentId,
                             7,
-                            Utils.getApp().getString(R.string.detect_dir5_item8)
+                            ContextProvider.getContext().getString(R.string.detect_dir5_item8)
                         ),
                         ItemDetect(
                             parentId,
                             8,
-                            Utils.getApp().getString(R.string.detect_dir5_item9)
+                            ContextProvider.getContext().getString(R.string.detect_dir5_item9)
                         ),
                     )
 
                 5 ->
                     arrayListOf(
-                        ItemDetect(parentId, 0, Utils.getApp().getString(R.string.detect_item1)),
+                        ItemDetect(parentId, 0, ContextProvider.getContext().getString(R.string.detect_item1)),
                         ItemDetect(
                             parentId,
                             1,
-                            Utils.getApp().getString(R.string.detect_dir6_item2)
+                            ContextProvider.getContext().getString(R.string.detect_dir6_item2)
                         ),
                         ItemDetect(
                             parentId,
                             2,
-                            Utils.getApp().getString(R.string.detect_dir6_item3)
+                            ContextProvider.getContext().getString(R.string.detect_dir6_item3)
                         ),
                     )
 
                 6 ->
                     arrayListOf(
-                        ItemDetect(parentId, 0, Utils.getApp().getString(R.string.detect_item1)),
+                        ItemDetect(parentId, 0, ContextProvider.getContext().getString(R.string.detect_item1)),
                         ItemDetect(
                             parentId,
                             1,
-                            Utils.getApp().getString(R.string.detect_dir7_item2)
+                            ContextProvider.getContext().getString(R.string.detect_dir7_item2)
                         ),
                         ItemDetect(
                             parentId,
                             2,
-                            Utils.getApp().getString(R.string.detect_dir7_item3)
+                            ContextProvider.getContext().getString(R.string.detect_dir7_item3)
                         ),
                         ItemDetect(
                             parentId,
                             3,
-                            Utils.getApp().getString(R.string.detect_dir7_item4)
+                            ContextProvider.getContext().getString(R.string.detect_dir7_item4)
                         ),
                         ItemDetect(
                             parentId,
                             4,
-                            Utils.getApp().getString(R.string.detect_dir7_item5)
+                            ContextProvider.getContext().getString(R.string.detect_dir7_item5)
                         ),
                         ItemDetect(
                             parentId,
                             5,
-                            Utils.getApp().getString(R.string.detect_dir7_item6)
+                            ContextProvider.getContext().getString(R.string.detect_dir7_item6)
                         ),
                         ItemDetect(
                             parentId,
                             6,
-                            Utils.getApp().getString(R.string.detect_dir7_item7)
+                            ContextProvider.getContext().getString(R.string.detect_dir7_item7)
                         ),
                         ItemDetect(
                             parentId,
                             7,
-                            Utils.getApp().getString(R.string.detect_dir7_item8)
+                            ContextProvider.getContext().getString(R.string.detect_dir7_item8)
                         ),
                         ItemDetect(
                             parentId,
                             8,
-                            Utils.getApp().getString(R.string.detect_dir7_item9)
+                            ContextProvider.getContext().getString(R.string.detect_dir7_item9)
                         ),
                     )
 
                 7 ->
                     arrayListOf(
-                        ItemDetect(parentId, 0, Utils.getApp().getString(R.string.detect_item1)),
+                        ItemDetect(parentId, 0, ContextProvider.getContext().getString(R.string.detect_item1)),
                         ItemDetect(
                             parentId,
                             1,
-                            Utils.getApp().getString(R.string.detect_dir8_item2)
+                            ContextProvider.getContext().getString(R.string.detect_dir8_item2)
                         ),
                         ItemDetect(
                             parentId,
                             2,
-                            Utils.getApp().getString(R.string.detect_dir8_item3)
+                            ContextProvider.getContext().getString(R.string.detect_dir8_item3)
                         ),
                         ItemDetect(
                             parentId,
                             3,
-                            Utils.getApp().getString(R.string.detect_dir8_item4)
+                            ContextProvider.getContext().getString(R.string.detect_dir8_item4)
                         ),
                         ItemDetect(
                             parentId,
                             4,
-                            Utils.getApp().getString(R.string.detect_dir8_item5)
+                            ContextProvider.getContext().getString(R.string.detect_dir8_item5)
                         ),
                     )
 
                 8 ->
                     arrayListOf(
-                        ItemDetect(parentId, 0, Utils.getApp().getString(R.string.detect_item1)),
+                        ItemDetect(parentId, 0, ContextProvider.getContext().getString(R.string.detect_item1)),
                         ItemDetect(
                             parentId,
                             1,
-                            Utils.getApp().getString(R.string.detect_dir9_item2)
+                            ContextProvider.getContext().getString(R.string.detect_dir9_item2)
                         ),
                         ItemDetect(
                             parentId,
                             2,
-                            Utils.getApp().getString(R.string.detect_dir9_item3)
+                            ContextProvider.getContext().getString(R.string.detect_dir9_item3)
                         ),
                         ItemDetect(
                             parentId,
                             3,
-                            Utils.getApp().getString(R.string.detect_dir9_item4)
+                            ContextProvider.getContext().getString(R.string.detect_dir9_item4)
                         ),
                         ItemDetect(
                             parentId,
                             4,
-                            Utils.getApp().getString(R.string.detect_dir9_item5)
+                            ContextProvider.getContext().getString(R.string.detect_dir9_item5)
                         ),
                     )
 
                 9 ->
                     arrayListOf(
-                        ItemDetect(parentId, 0, Utils.getApp().getString(R.string.detect_item1)),
+                        ItemDetect(parentId, 0, ContextProvider.getContext().getString(R.string.detect_item1)),
                         ItemDetect(
                             parentId,
                             1,
-                            Utils.getApp().getString(R.string.detect_dir10_item2)
+                            ContextProvider.getContext().getString(R.string.detect_dir10_item2)
                         ),
                         ItemDetect(
                             parentId,
                             2,
-                            Utils.getApp().getString(R.string.detect_dir10_item3)
+                            ContextProvider.getContext().getString(R.string.detect_dir10_item3)
                         ),
                         ItemDetect(
                             parentId,
                             3,
-                            Utils.getApp().getString(R.string.detect_dir10_item4)
+                            ContextProvider.getContext().getString(R.string.detect_dir10_item4)
                         ),
                     )
 
@@ -519,7 +519,7 @@ class ItemDetect() : ItemBase() {
                     ItemDetect(
                         parentId,
                         0,
-                        Utils.getApp().getString(R.string.detect_item1)
+                        ContextProvider.getContext().getString(R.string.detect_item1)
                     )
                 )
             }

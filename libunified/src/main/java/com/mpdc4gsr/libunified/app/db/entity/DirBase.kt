@@ -1,7 +1,7 @@
 package com.mpdc4gsr.libunified.app.db.entity
 
 import androidx.room.*
-import com.blankj.utilcode.util.Utils
+import com.mpdc4gsr.libunified.compat.ContextProvider
 import com.mpdc4gsr.libunified.R
 
 open class DirBase {
@@ -115,17 +115,17 @@ class DirDetect() : DirBase() {
 
         fun buildDefaultDirList(parentId: Long): ArrayList<DirDetect> =
             arrayListOf(
-                DirDetect(parentId, 0, Utils.getApp().getString(R.string.detect_dir1_root)),
-                DirDetect(parentId, 1, Utils.getApp().getString(R.string.detect_dir2_root)),
-                DirDetect(parentId, 2, Utils.getApp().getString(R.string.detect_dir3_root)),
-                DirDetect(parentId, 3, Utils.getApp().getString(R.string.detect_dir4_root)),
-                DirDetect(parentId, 4, Utils.getApp().getString(R.string.detect_dir5_root)),
-                DirDetect(parentId, 5, Utils.getApp().getString(R.string.detect_dir6_root)),
-                DirDetect(parentId, 6, Utils.getApp().getString(R.string.detect_dir7_root)),
-                DirDetect(parentId, 7, Utils.getApp().getString(R.string.detect_dir8_root)),
-                DirDetect(parentId, 8, Utils.getApp().getString(R.string.detect_dir9_root)),
-                DirDetect(parentId, 9, Utils.getApp().getString(R.string.detect_dir10_root)),
-                DirDetect(parentId, 10, Utils.getApp().getString(R.string.detect_dir11_root)),
+                DirDetect(parentId, 0, ContextProvider.getContext().getString(R.string.detect_dir1_root)),
+                DirDetect(parentId, 1, ContextProvider.getContext().getString(R.string.detect_dir2_root)),
+                DirDetect(parentId, 2, ContextProvider.getContext().getString(R.string.detect_dir3_root)),
+                DirDetect(parentId, 3, ContextProvider.getContext().getString(R.string.detect_dir4_root)),
+                DirDetect(parentId, 4, ContextProvider.getContext().getString(R.string.detect_dir5_root)),
+                DirDetect(parentId, 5, ContextProvider.getContext().getString(R.string.detect_dir6_root)),
+                DirDetect(parentId, 6, ContextProvider.getContext().getString(R.string.detect_dir7_root)),
+                DirDetect(parentId, 7, ContextProvider.getContext().getString(R.string.detect_dir8_root)),
+                DirDetect(parentId, 8, ContextProvider.getContext().getString(R.string.detect_dir9_root)),
+                DirDetect(parentId, 9, ContextProvider.getContext().getString(R.string.detect_dir10_root)),
+                DirDetect(parentId, 10, ContextProvider.getContext().getString(R.string.detect_dir11_root)),
             )
     }
 }
