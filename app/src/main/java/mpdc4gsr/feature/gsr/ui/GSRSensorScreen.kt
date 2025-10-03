@@ -50,10 +50,58 @@ fun GSRSensorScreen(
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val sensorState by viewModel.sensorState.collectAsState()
+    val snackbarHostState = remember { SnackbarHostState() }
 
     // Initialize recorder on first composition and manage lifecycle properly
     LaunchedEffect(Unit) {
         viewModel.initializeRecorder(context, lifecycleOwner)
+    }
+
+    // Track critical errors that need a dialog
+    var showCriticalErrorDialog by remember { mutableStateOf(false) }
+    var criticalErrorMessage by remember { mutableStateOf("") }
+
+    // Show error notifications as Snackbar for non-critical errors
+    LaunchedEffect(sensorState.error) {
+        sensorState.error?.let { error ->
+            // Check if this is a critical error (Bluetooth/permission)
+            if (error.contains("Bluetooth", ignoreCase = true) || 
+                error.contains("permission", ignoreCase = true) ||
+                error.contains("initialization failed", ignoreCase = true)) {
+                criticalErrorMessage = error
+                showCriticalErrorDialog = true
+            } else {
+                snackbarHostState.showSnackbar(
+                    message = error,
+                    duration = SnackbarDuration.Long
+                )
+            }
+        }
+    }
+
+    // Critical error dialog
+    if (showCriticalErrorDialog) {
+        AlertDialog(
+            onDismissRequest = { showCriticalErrorDialog = false },
+            title = { Text("GSR Sensor Error") },
+            text = { Text(criticalErrorMessage) },
+            confirmButton = {
+                TextButton(onClick = { showCriticalErrorDialog = false }) {
+                    Text("OK")
+                }
+            },
+            dismissButton = {
+                if (criticalErrorMessage.contains("Bluetooth", ignoreCase = true)) {
+                    TextButton(onClick = {
+                        showCriticalErrorDialog = false
+                        // Try to re-initialize
+                        viewModel.initializeRecorder(context, lifecycleOwner)
+                    }) {
+                        Text("Retry")
+                    }
+                }
+            }
+        )
     }
 
     // Manage lifecycle using DisposableEffect to avoid memory leaks
@@ -95,37 +143,41 @@ fun GSRSensorScreen(
         }
     }
 
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(Color(0xFF16131e))
-    ) {
-        // Title bar with GSR-specific actions
-        TitleBar(
-            title = "GSR Sensor Monitor",
-            showBackButton = true,
-            onBackClick = onBackClick
-        ) {
-            TitleBarAction(
-                icon = Icons.Default.Save,
-                contentDescription = "Save GSR Data",
-                onClick = onSaveData
-            )
-            TitleBarAction(
-                icon = Icons.Default.Settings,
-                contentDescription = "GSR Settings",
-                onClick = onSettingsClick
-            )
-        }
-
-        // Scrollable content
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+        containerColor = Color(0xFF16131e)
+    ) { paddingValues ->
         Column(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+                .padding(paddingValues)
         ) {
+            // Title bar with GSR-specific actions
+            TitleBar(
+                title = "GSR Sensor Monitor",
+                showBackButton = true,
+                onBackClick = onBackClick
+            ) {
+                TitleBarAction(
+                    icon = Icons.Default.Save,
+                    contentDescription = "Save GSR Data",
+                    onClick = onSaveData
+                )
+                TitleBarAction(
+                    icon = Icons.Default.Settings,
+                    contentDescription = "GSR Settings",
+                    onClick = onSettingsClick
+                )
+            }
+
+            // Scrollable content
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
             // Connection status card
             GSRConnectionCard(
                 isConnected = isConnected,
@@ -183,6 +235,7 @@ fun GSRSensorScreen(
                 )
             }
         }
+    }
     }
 }
 

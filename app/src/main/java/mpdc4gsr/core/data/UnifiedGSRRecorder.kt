@@ -154,6 +154,40 @@ class UnifiedGSRRecorder(
                 AppLogger.w(TAG, "Enhanced device manager initialization failed, using basic mode")
             } else {
                 AppLogger.i(TAG, "Enhanced BLE device manager initialized successfully")
+                
+                lifecycleOwner.lifecycleScope.launch {
+                    shimmerDeviceManager?.connectionEvents?.collect { event ->
+                        when (event.state) {
+                            ShimmerDeviceManager.ConnectionState.CONNECTED -> {
+                                _deviceStatus.value = "Connected"
+                                connectedShimmer = shimmerDeviceManager?.getConnectedShimmer(event.deviceAddress)
+                            }
+                            ShimmerDeviceManager.ConnectionState.DISCONNECTED -> {
+                                _deviceStatus.value = "Disconnected"
+                                connectedShimmer = null
+                            }
+                            ShimmerDeviceManager.ConnectionState.FAILED -> {
+                                _deviceStatus.value = "Connection Failed"
+                                _errorFlow.emit(
+                                    SensorError(
+                                        sensorId = sensorId,
+                                        sensorType = sensorType,
+                                        errorType = ErrorType.CONNECTION_LOST,
+                                        errorMessage = event.message ?: "Connection failed",
+                                        timestampNs = System.nanoTime(),
+                                        isRecoverable = true
+                                    )
+                                )
+                            }
+                            ShimmerDeviceManager.ConnectionState.CONNECTING -> {
+                                _deviceStatus.value = "Connecting..."
+                            }
+                            ShimmerDeviceManager.ConnectionState.TIMEOUT -> {
+                                _deviceStatus.value = "Connection Timeout"
+                            }
+                        }
+                    }
+                }
             }
 
             _deviceStatus.value = "Initialized"
