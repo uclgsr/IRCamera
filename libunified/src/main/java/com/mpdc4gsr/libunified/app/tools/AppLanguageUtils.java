@@ -16,16 +16,21 @@ public class AppLanguageUtils {
         return ConstantLanguages.ENGLISH;
     }
 
-    @SuppressWarnings("deprecation")
     public static void changeAppLanguage(Context context, String newLanguage) {
-        Resources resources = context.getResources();
-        Configuration configuration = resources.getConfiguration();
-
         Locale locale = Locale.ENGLISH;
+        Configuration configuration = context.getResources().getConfiguration();
         configuration.setLocale(locale);
-
-        DisplayMetrics dm = resources.getDisplayMetrics();
-        resources.updateConfiguration(configuration, dm);
+        
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            context.createConfigurationContext(configuration);
+        } else {
+            updateConfigurationLegacy(context.getResources(), configuration);
+        }
+    }
+    
+    @SuppressWarnings("deprecation")
+    private static void updateConfigurationLegacy(Resources resources, Configuration configuration) {
+        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
     }
 
     public static String getSupportLanguage(String language) {

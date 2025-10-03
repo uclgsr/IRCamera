@@ -4,7 +4,8 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
+
+import androidx.core.content.res.ResourcesCompat;
 
 import com.mpdc4gsr.libunified.ui.charts.Chart;
 import com.mpdc4gsr.libunified.ui.data.Entry;
@@ -28,12 +29,7 @@ public class MarkerImage implements IMarker {
 
     public MarkerImage(Context context, int drawableResourceId) {
         mContext = context;
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            mDrawable = mContext.getResources().getDrawable(drawableResourceId, null);
-        } else {
-            mDrawable = mContext.getResources().getDrawable(drawableResourceId);
-        }
+        mDrawable = ResourcesCompat.getDrawable(mContext.getResources(), drawableResourceId, mContext.getTheme());
     }
 
     public void setOffset(float offsetX, float offsetY) {

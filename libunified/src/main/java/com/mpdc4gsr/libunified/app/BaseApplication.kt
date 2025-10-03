@@ -242,14 +242,18 @@ abstract class BaseApplication : Application() {
         }
     }
 
-    @Suppress("DEPRECATION")
     open fun onLanguageChange() {
-
         val locale = AppLanguageUtils.getLocaleByLanguage(ConstantLanguages.ENGLISH)
-        // Apply language using standard Android Configuration API
         val config = resources.configuration
         config.setLocale(locale)
-        resources.updateConfiguration(config, resources.displayMetrics)
+        
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            createConfigurationContext(config)
+        } else {
+            @Suppress("DEPRECATION")
+            resources.updateConfiguration(config, resources.displayMetrics)
+        }
+        
         SharedManager.setLanguage(baseContext, ConstantLanguages.ENGLISH)
         WebView(this).destroy()
     }

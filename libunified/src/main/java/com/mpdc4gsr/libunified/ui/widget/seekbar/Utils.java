@@ -4,11 +4,11 @@ import android.content.Context;
 import android.graphics.*;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.util.Log;
 
 import androidx.annotation.ColorRes;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 
 public class Utils {
 
@@ -28,11 +28,8 @@ public class Utils {
 
     public static Bitmap drawableToBitmap(Context context, int width, int height, int drawableId) {
         if (context == null || width <= 0 || height <= 0 || drawableId == 0) return null;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            return Utils.drawableToBitmap(width, height, context.getResources().getDrawable(drawableId, null));
-        } else {
-            return Utils.drawableToBitmap(width, height, context.getResources().getDrawable(drawableId));
-        }
+        Drawable drawable = ResourcesCompat.getDrawable(context.getResources(), drawableId, context.getTheme());
+        return Utils.drawableToBitmap(width, height, drawable);
     }
 
     public static Bitmap drawableToBitmap(int width, int height, Drawable drawable) {
