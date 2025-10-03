@@ -8,8 +8,8 @@ import android.text.StaticLayout
 import android.text.TextPaint
 import android.util.AttributeSet
 import android.view.View
-import com.mpdc4gsr.module.thermalunified.compat.dp
-import com.mpdc4gsr.module.thermalunified.compat.sp
+import com.mpdc4gsr.module.thermalunified.compat.dpToPx
+import com.mpdc4gsr.module.thermalunified.compat.spToPx
 
 class EmissivityView : View {
     companion object {
@@ -25,7 +25,7 @@ class EmissivityView : View {
 
     private val layoutList: ArrayList<StaticLayout> = ArrayList(3)
 
-    private val strokeWidth = DEFAULT_STROKE_WIDTH.dp.coerceAtLeast(1f)
+    private lateinit var strokeWidth: Float
     private val linePaint = Paint()
     private val textPaint = TextPaint(Paint.ANTI_ALIAS_FLAG)
 
@@ -51,6 +51,7 @@ class EmissivityView : View {
         defStyleAttr,
         defStyleRes,
     ) {
+        strokeWidth = DEFAULT_STROKE_WIDTH.dpToPx(context).coerceAtLeast(1f)
         linePaint.color = 0xff5b5961.toInt()
         linePaint.style = Paint.Style.STROKE
         linePaint.strokeWidth = strokeWidth
@@ -61,7 +62,7 @@ class EmissivityView : View {
         textList.addAll(newList)
 
         textPaint.color = if (textList.size == 1) 0xffffffff.toInt() else 0xccffffff.toInt()
-        textPaint.textSize = (if (textList.size == 1) 12f else 11f).sp.toFloat()
+        textPaint.textSize = (if (textList.size == 1) 12f else 11f).spToPx(context)
 
         requestLayout()
     }
@@ -79,9 +80,9 @@ class EmissivityView : View {
         for (i in textList.indices) {
             val textWidth: Int =
                 if (textList.size == 1) {
-                    contentWidth - 24.dp
+                    contentWidth - 24.dpToPx(context)
                 } else {
-                    (if (i == 0) firstWidth else elseWidth) - 24.dp
+                    (if (i == 0) firstWidth else elseWidth) - 24.dpToPx(context)
                 }
             layoutList.add(
                 StaticLayout.Builder.obtain(
@@ -103,7 +104,7 @@ class EmissivityView : View {
         if (maxHeight == 0) {
             maxHeight = textPaint.fontMetricsInt.bottom - textPaint.fontMetricsInt.top
         }
-        maxHeight += 12.dp
+        maxHeight += 12.dpToPx(context)
 
         setMeasuredDimension(contentWidth + paddingStart + paddingEnd, maxHeight)
     }
@@ -125,12 +126,12 @@ class EmissivityView : View {
         )
         canvas.drawLine(strokeWidth / 2, 0f, strokeWidth / 2, height.toFloat(), linePaint)
 
-        val padding = 12f.dp
+        val padding = 12f.dpToPx(context)
         for (layout in layoutList) {
             canvas.save()
             canvas.translate(
                 padding,
-                if (isAlignTop) 6f.dp else (height - layout.height) / 2f
+                if (isAlignTop) 6f.dpToPx(context) else (height - layout.height) / 2f
             )
             layout.draw(canvas)
             canvas.restore()

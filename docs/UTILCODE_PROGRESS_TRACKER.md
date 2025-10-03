@@ -10,16 +10,19 @@
 
 ### Completed Items ✅
 
-1. **DimensionUtils Implementation** (app module)
+1. **DimensionUtils Implementation** (app module) - **UPDATED TO CONTEXT-AWARE**
    - ✅ Created `app/src/main/java/mpdc4gsr/core/utils/DimensionUtils.kt`
-   - ✅ Provides Int and Float extension functions (dp, px, sp)
-   - ✅ Includes ScreenDimensions object
-   - **Status**: Ready for use in app module
+   - ✅ Provides context-aware extension functions (dpToPx, pxToDp, spToPx)
+   - ✅ Composable-safe extensions using LocalDensity
+   - ✅ Includes ScreenDimensions helper class
+   - ✅ Legacy extensions deprecated with migration guidance
+   - **Status**: Production-ready with best practices
 
-2. **DimensionExt Implementation** (thermalunified component)
+2. **DimensionExt Implementation** (thermalunified component) - **UPDATED TO CONTEXT-AWARE**
    - ✅ Created `component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/compat/DimensionExt.kt`
-   - ✅ Provides dimension conversion extensions for component module
-   - **Status**: Ready for use
+   - ✅ Provides context-aware dimension conversion functions
+   - ✅ Legacy extensions deprecated with migration guidance
+   - **Status**: Production-ready with best practices
 
 3. **ContextProvider Implementation** (thermalunified component)
    - ✅ Created `component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/compat/ContextProvider.kt`
@@ -27,14 +30,15 @@
    - ✅ Initialized in App.onCreate()
    - **Status**: Operational
 
-4. **Example Migrations Completed**
+4. **Example Migrations Completed** - **UPDATED TO CONTEXT-AWARE**
    - ✅ `component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/utils/WriteTools.kt`
      - Migrated from `Utils.getApp()` to `ContextProvider.getContext()`
      - 2 occurrences replaced
    
    - ✅ `component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/view/EmissivityView.kt`
-     - Migrated from `SizeUtils.dp2px()`, `SizeUtils.sp2px()` to extension functions
-     - 7 occurrences replaced
+     - **UPDATED**: Migrated from `SizeUtils` to context-aware `dpToPx(context)`, `spToPx(context)`
+     - Uses context from View for configuration-aware conversions
+     - 7 occurrences replaced with safe, context-aware versions
 
 ### Migration Statistics
 
@@ -147,23 +151,44 @@
 
 When working on files that use utilcode:
 
-1. **Check if compat layer exists** in your module
-2. **Import the appropriate extension functions**:
+1. **Use Context-Aware Patterns** (IMPORTANT)
+   - **For Compose UI**: Use LocalDensity-based extensions
+   - **For Views**: Use context-based extension functions
+   - **Avoid**: `Resources.getSystem()` - it doesn't respect configuration changes
+
+2. **Check if compat layer exists** in your module
+
+3. **Import the appropriate extension functions**:
    ```kotlin
-   // For app module
-   import mpdc4gsr.core.utils.dp
-   import mpdc4gsr.core.utils.sp
+   // For Compose UI (app module)
+   import androidx.compose.ui.platform.LocalDensity
+   @Composable
+   fun MyScreen() {
+       val size = 16.dp  // Uses LocalDensity
+   }
    
-   // For thermalunified component
-   import com.mpdc4gsr.module.thermalunified.compat.dp
+   // For Views (app module or components)
+   import mpdc4gsr.core.utils.dpToPx
+   import com.mpdc4gsr.module.thermalunified.compat.dpToPx
+   
+   class MyView(context: Context) : View(context) {
+       private val padding = 16.dpToPx(context)  // Context-aware
+   }
+   
+   // For context access
    import com.mpdc4gsr.module.thermalunified.compat.ContextProvider
+   val context = ContextProvider.getContext()
    ```
-3. **Replace utilcode calls**:
+
+4. **Replace utilcode calls with context-aware versions**:
    ```kotlin
-   // Old
-   SizeUtils.dp2px(16f) → 16.dp
-   SizeUtils.sp2px(14f) → 14.sp
+   // Old (utilcode)
+   SizeUtils.dp2px(16f) → 16.dpToPx(context)  // Context-aware!
+   SizeUtils.sp2px(14f) → 14.spToPx(context)  // Context-aware!
    Utils.getApp() → ContextProvider.getContext()
+   
+   // For Compose
+   SizeUtils.dp2px(16f) → 16.dp  // Uses LocalDensity automatically
    ```
 
 ### Code Review Checklist
