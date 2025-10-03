@@ -36,11 +36,11 @@ fun UnifiedSensorDashboard(
     onSensorClick: (SensorType) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
-    // Sample sensor states - will be connected to actual ViewModels
-    var gsrState by remember { mutableStateOf(SensorState.Connected) }
-    var thermalState by remember { mutableStateOf(SensorState.Streaming) }
-    var rgbState by remember { mutableStateOf(SensorState.Connected) }
-    var unifiedState by remember { mutableStateOf(UnifiedSystemState.Active) }
+    // Sensor states - showing disconnected until actual ViewModels are connected
+    var gsrState by remember { mutableStateOf(SensorState.Disconnected) }
+    var thermalState by remember { mutableStateOf(SensorState.Disconnected) }
+    var rgbState by remember { mutableStateOf(SensorState.Disconnected) }
+    var unifiedState by remember { mutableStateOf(UnifiedSystemState.Inactive) }
 
     Column(
         modifier = modifier
