@@ -50,7 +50,6 @@ fun Modifier.safeClickable(
 /**
  * Safe clickable modifier with custom ripple configuration
  */
-@Composable
 fun Modifier.safeClickableWithRipple(
     enabled: Boolean = true,
     bounded: Boolean = true,
