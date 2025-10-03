@@ -83,7 +83,7 @@ public class ExcelUtils {
                         bos.close();
                     }
                     DocumentFile documentFile = DocumentFile.fromSingleUri(Utils.getApp(), uri);
-                    String filePath = documentFile != null ? documentFile.getName() : uri.toString();
+                    String filePath = uri.toString();
                     Log.w("", filePath);
                     return filePath;
                 } else {
