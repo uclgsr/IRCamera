@@ -44,6 +44,7 @@
     <application
         android:name="mpdc4gsr.core.App"
         android:allowBackup="true"
+        android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="${app_name}"
         android:theme="@style/AppTheme"

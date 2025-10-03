@@ -3,55 +3,47 @@ package com.mpdc4gsr.libunified.app.tools;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.os.Build;
 import android.os.LocaleList;
-import android.util.DisplayMetrics;
 
 import java.util.Locale;
 
+/**
+ * Language utility for English-only application.
+ * All methods enforce Locale.ENGLISH as the app only supports English.
+ */
 public class AppLanguageUtils {
+
+    private static final Locale ENGLISH_LOCALE = Locale.ENGLISH;
 
     public static String getSystemLanguage() {
         return ConstantLanguages.ENGLISH;
     }
 
-    @SuppressWarnings("deprecation")
-    public static void changeAppLanguage(Context context, String newLanguage) {
-        Resources resources = context.getResources();
-        Configuration configuration = resources.getConfiguration();
-
-        Locale locale = Locale.ENGLISH;
-        configuration.setLocale(locale);
-
-        DisplayMetrics dm = resources.getDisplayMetrics();
-        resources.updateConfiguration(configuration, dm);
-    }
-
-    public static String getSupportLanguage(String language) {
-        return ConstantLanguages.ENGLISH;
-    }
-
     public static Locale getLocaleByLanguage(String language) {
-        return Locale.ENGLISH;
+        return ENGLISH_LOCALE;
     }
 
+    /**
+     * Wraps context with English locale during Activity/Application initialization.
+     * This is the correct approach for setting locale on API 24+.
+     * 
+     * @param context Base context to wrap
+     * @param language Language parameter (ignored - always uses English)
+     * @return Context wrapped with English locale on API 24+, unchanged context on older APIs
+     */
     public static Context attachBaseContext(Context context, String language) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            return updateResources(context, language);
-        } else {
-            return context;
+            return createEnglishContext(context);
         }
+        return context;
     }
 
     @TargetApi(Build.VERSION_CODES.N)
-    private static Context updateResources(Context context, String language) {
-        Resources resources = context.getResources();
-        Locale locale = Locale.ENGLISH;
-
-        Configuration configuration = resources.getConfiguration();
-        configuration.setLocale(locale);
-        configuration.setLocales(new LocaleList(locale));
+    private static Context createEnglishContext(Context context) {
+        Configuration configuration = context.getResources().getConfiguration();
+        configuration.setLocale(ENGLISH_LOCALE);
+        configuration.setLocales(new LocaleList(ENGLISH_LOCALE));
         return context.createConfigurationContext(configuration);
     }
 }

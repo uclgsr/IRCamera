@@ -5,6 +5,8 @@ import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.util.Log;
 
+import androidx.core.content.ContextCompat;
+
 import com.mpdc4gsr.libunified.ui.formatter.DefaultFillFormatter;
 import com.mpdc4gsr.libunified.ui.formatter.IFillFormatter;
 import com.mpdc4gsr.libunified.ui.interfaces.datasets.ILineDataSet;
@@ -206,7 +208,7 @@ public class LineDataSet extends LineRadarDataSet<Entry> implements ILineDataSet
         clrs.clear();
 
         for (int color : colors) {
-            clrs.add(c.getResources().getColor(color));
+            clrs.add(ContextCompat.getColor(c, color));
         }
 
         mCircleColors = clrs;

@@ -34,6 +34,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import java.util.Locale
 
 abstract class BaseApplication : Application() {
     companion object {
@@ -244,11 +245,17 @@ abstract class BaseApplication : Application() {
 
     @Suppress("DEPRECATION")
     open fun onLanguageChange() {
-
-        val locale = AppLanguageUtils.getLocaleByLanguage(ConstantLanguages.ENGLISH)
-        // Apply language using standard Android Configuration API
+        // Force English locale for the application.
+        // Note: updateConfiguration() is deprecated but remains the only way to change
+        // app-wide configuration at runtime. Use attachBaseContext() for proper
+        // locale setting during Activity/Application initialization.
         val config = resources.configuration
-        config.setLocale(locale)
+        config.setLocale(Locale.ENGLISH)
+        
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            config.setLocales(android.os.LocaleList(Locale.ENGLISH))
+        }
+        
         resources.updateConfiguration(config, resources.displayMetrics)
         SharedManager.setLanguage(baseContext, ConstantLanguages.ENGLISH)
         WebView(this).destroy()

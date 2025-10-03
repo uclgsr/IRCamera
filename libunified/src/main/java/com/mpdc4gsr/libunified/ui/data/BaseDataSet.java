@@ -5,6 +5,8 @@ import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.Typeface;
 
+import androidx.core.content.ContextCompat;
+
 import com.mpdc4gsr.libunified.ui.components.Legend;
 import com.mpdc4gsr.libunified.ui.components.YAxis;
 import com.mpdc4gsr.libunified.ui.formatter.ValueFormatter;
@@ -118,7 +120,7 @@ public abstract class BaseDataSet<T extends Entry> implements IDataSet<T> {
         mColors.clear();
 
         for (int color : colors) {
-            mColors.add(c.getResources().getColor(color));
+            mColors.add(ContextCompat.getColor(c, color));
         }
     }
 
