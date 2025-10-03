@@ -362,6 +362,8 @@ dependencies {
     testImplementation(libs.kotlinx.coroutines.test)
 
     // Compose testing dependencies
+    testImplementation(platform(libs.compose.bom))
+    testImplementation(libs.bundles.compose.test)
     androidTestImplementation(platform(libs.compose.bom))
     androidTestImplementation(libs.bundles.compose.test)
     debugImplementation(libs.bundles.compose.debug)
@@ -381,6 +383,7 @@ dependencies {
     // Mockito dependencies for integration tests
     testImplementation(libs.mockito.core)
     testImplementation(libs.mockito.android)
+    testImplementation(libs.mockito.kotlin)
 
     androidTestImplementation(libs.test.ext.junit)
     androidTestImplementation(libs.test.espresso.core)

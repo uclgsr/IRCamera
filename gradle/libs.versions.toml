@@ -93,6 +93,7 @@ testUiautomator = "2.3.0"
 robolectric = "4.16"
 mockwebserver = "5.1.0"
 mockito = "5.8.0"
+mockitoKotlin = "5.4.0"
 benchmark = "1.4.1"
 truth = "1.4.5"
 javafaker = "1.0.2"
@@ -236,6 +237,7 @@ robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "
 mockwebserver = { group = "com.squareup.okhttp3", name = "mockwebserver", version.ref = "mockwebserver" }
 mockito-core = { group = "org.mockito", name = "mockito-core", version.ref = "mockito" }
 mockito-android = { group = "org.mockito", name = "mockito-android", version.ref = "mockito" }
+mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version.ref = "mockitoKotlin" }
 benchmark-junit4 = { group = "androidx.benchmark", name = "benchmark-junit4", version.ref = "benchmark" }
 truth = { group = "com.google.truth", name = "truth", version.ref = "truth" }
 test-core = { group = "androidx.test", name = "core", version.ref = "testCore" }

@@ -4,6 +4,7 @@ import android.content.Context
 import android.hardware.usb.UsbDevice
 import android.hardware.usb.UsbManager
 import io.mockk.*
+import java.io.File
 import kotlinx.coroutines.test.runTest
 import mpdc4gsr.core.ui.PermissionController
 import org.junit.Assert.*
@@ -83,13 +84,13 @@ class ThermalCameraIntegrationTest {
         // Mock USB permission status
         every {
             mockUsbManager.hasPermission(mockUsbDevice)
-        } returns false initially
+        } returns false
 
-                // Verify permission is initially not granted
-                assertFalse(
-                    "USB permission should initially be false",
-                    mockUsbManager.hasPermission(mockUsbDevice)
-                )
+        // Verify permission is initially not granted
+        assertFalse(
+            "USB permission should initially be false",
+            mockUsbManager.hasPermission(mockUsbDevice)
+        )
 
         // Simulate permission granted
         every { mockUsbManager.hasPermission(mockUsbDevice) } returns true
