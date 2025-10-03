@@ -165,7 +165,7 @@ class ThermalRecorder(private val context: Context) {
                 frameSequence.set(0)
 
                 isRecording.set(true)
-                Log.i(TAG, "Thermal recording started (legacy mode): ${csvFile!!.absolutePath}")
+                Log.i(TAG, "Thermal recording started (legacy mode): ${csvFile?.absolutePath ?: "unknown"}")
 
                 if (saveImages) {
                     Log.i(
