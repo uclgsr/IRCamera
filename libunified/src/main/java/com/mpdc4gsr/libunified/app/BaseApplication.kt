@@ -17,7 +17,6 @@ import android.util.Log
 import android.webkit.WebView
 import androidx.annotation.RequiresApi
 import com.elvishew.xlog.XLog
-import com.mpdc4gsr.libunified.app.bean.event.SocketMsgEvent
 import com.mpdc4gsr.libunified.app.broadcast.DeviceBroadcastReceiver
 import com.mpdc4gsr.libunified.app.common.SharedManager
 import com.mpdc4gsr.libunified.app.db.AppDatabase
@@ -34,7 +33,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import org.greenrobot.eventbus.EventBus
 import org.json.JSONObject
 
 abstract class BaseApplication : Application() {
@@ -138,7 +136,6 @@ abstract class BaseApplication : Application() {
 
     private fun parserSocketMessage(msgJson: String) {
         if (TextUtils.isEmpty(msgJson)) return
-        EventBus.getDefault().post(SocketMsgEvent(msgJson))
 
         if (SharedManager.is04AutoSync) {
             when (SocketCmdUtils.getCmdResponse(msgJson)) {

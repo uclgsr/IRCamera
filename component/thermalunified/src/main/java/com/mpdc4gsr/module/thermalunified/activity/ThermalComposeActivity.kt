@@ -23,10 +23,8 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-import com.mpdc4gsr.module.thermalunified.event.ThermalActionEvent
 import com.mpdc4gsr.module.thermalunified.fragment.ThermalComposeFragment
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
-import org.greenrobot.eventbus.EventBus
 
 class ThermalComposeActivity : BaseComposeActivity<ThermalViewModel>() {
 
@@ -88,8 +86,7 @@ class ThermalComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             selectedToolIndex = selectedToolIndex,
                             onToolSelected = { toolIndex ->
                                 selectedToolIndex = toolIndex
-                                // Send thermal action event
-                                EventBus.getDefault().post(ThermalActionEvent(action = toolIndex))
+                                // Thermal action tracking
                             },
                             modifier = Modifier
                                 .fillMaxWidth()

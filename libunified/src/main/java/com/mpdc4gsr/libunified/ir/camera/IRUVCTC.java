@@ -15,11 +15,7 @@ import com.energy.iruvc.uvc.*;
 import com.mpdc4gsr.libunified.app.utils.UnifiedFileUtils;
 import com.mpdc4gsr.libunified.app.utils.UnifiedScreenUtils;
 import com.mpdc4gsr.libunified.ir.config.MsgCode;
-import com.mpdc4gsr.libunified.ir.event.IRMsgEvent;
-import com.mpdc4gsr.libunified.ir.event.PreviewComplete;
 import com.mpdc4gsr.libunified.ir.utils.USBMonitorCallback;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -190,7 +186,7 @@ public class IRUVCTC {
                     int length = frame.length - 1;
                     if (frame[length] == 1) {
 
-                        EventBus.getDefault().post(new IRMsgEvent(MsgCode.RESTART_USB));
+                        Log.w(TAG, "USB restart required (code: " + MsgCode.RESTART_USB + ")");
                         return;
                     }
                     if (imageEditTemp != null && imageEditTemp.length >= length) {
@@ -328,7 +324,7 @@ public class IRUVCTC {
                     .build();
 
             if (ircmd == null) {
-                EventBus.getDefault().post(new PreviewComplete());
+                Log.w(TAG, "IRCMD creation failed, preview complete");
                 return;
             }
             if (mConnectCallback != null) {
@@ -541,7 +537,7 @@ public class IRUVCTC {
 
     private void handleStartPreviewComplete() {
 
-        new Thread(() -> EventBus.getDefault().post(new PreviewComplete())).start();
+        Log.d(TAG, "Preview started and complete");
     }
 
     public interface IFrameCallBackListener {

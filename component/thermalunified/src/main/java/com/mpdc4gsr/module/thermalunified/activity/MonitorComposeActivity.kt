@@ -21,10 +21,8 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.app.config.RouterConfig
 import com.mpdc4gsr.libunified.app.navigation.NavigationManager
-import com.mpdc4gsr.module.thermalunified.event.ThermalActionEvent
 import com.mpdc4gsr.module.thermalunified.fragment.MonitorThermalComposeFragment
 import com.mpdc4gsr.module.thermalunified.viewmodel.MonitorViewModel
-import org.greenrobot.eventbus.EventBus
 
 class MonitorComposeActivity : BaseComposeActivity<MonitorViewModel>() {
 
@@ -105,13 +103,12 @@ class MonitorComposeActivity : BaseComposeActivity<MonitorViewModel>() {
                             selectedType = type
                             monitorState = MonitorViewModel.STATS_FINISH
 
-                            // Send thermal action event based on selection
+                            // Thermal action tracking
                             val action = when (type) {
                                 1 -> 2001 // Point monitoring
                                 2 -> 2002 // Line monitoring  
                                 else -> 2003 // Area monitoring
                             }
-                            EventBus.getDefault().post(ThermalActionEvent(action = action))
                         },
                         modifier = Modifier
                             .fillMaxWidth()

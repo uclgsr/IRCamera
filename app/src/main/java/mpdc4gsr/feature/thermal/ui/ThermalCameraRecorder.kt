@@ -10,9 +10,8 @@ import com.energy.ac020library.IrcamEngine
 import com.energy.ac020library.bean.IIrFrameCallback
 import com.energy.ac020library.bean.UvcHandleParam
 import com.energy.iruvc.uvc.UVCCamera
-import com.mpdc4gsr.libunified.app.bean.event.device.DeviceConnectEvent
-import com.mpdc4gsr.libunified.app.bean.event.device.DevicePermissionEvent
 import com.mpdc4gsr.libunified.app.config.DeviceConfig.isTcTsDevice
+import com.mpdc4gsr.libunified.app.event.DeviceEventManager
 import com.mpdc4gsr.libunified.app.tools.DeviceTools
 import com.mpdc4gsr.libunified.ir.camera.IRUVCTC
 import com.mpdc4gsr.libunified.ir.camera.IRUVCTC.IFrameCallBackListener
@@ -22,15 +21,13 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.collectLatest
 import mpdc4gsr.core.data.*
 import mpdc4gsr.core.data.utils.BufferedDataWriter
 import mpdc4gsr.core.data.utils.CSVBufferedWriter
 import mpdc4gsr.core.data.utils.SessionDirectoryManager
 import mpdc4gsr.core.ui.PermissionController
 import mpdc4gsr.feature.network.data.NetworkServer
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -499,9 +496,7 @@ class ThermalCameraRecorder(
                 "Initializing thermal camera for sensor $sensorId with USB permission handling"
             )
 
-            if (!EventBus.getDefault().isRegistered(this@ThermalCameraRecorder)) {
-                EventBus.getDefault().register(this@ThermalCameraRecorder)
-            }
+            observeDeviceEvents()
 
             usbManager = context.getSystemService(Context.USB_SERVICE) as UsbManager
 
@@ -795,10 +790,12 @@ class ThermalCameraRecorder(
                 DeviceTools.requestUsb(activity, 0, device)
                 Log.i(TAG, "USB permission request sent via DeviceTools.requestUsb()")
             } else {
-                Log.w(TAG, "No Activity context available, using EventBus permission request")
+                Log.w(TAG, "No Activity context available, using DeviceEventManager permission request")
 
-                EventBus.getDefault().post(DevicePermissionEvent(device))
-                Log.i(TAG, "USB permission request sent via DevicePermissionEvent")
+                recordingScope.launch {
+                    DeviceEventManager.emitDevicePermissionRequest(device)
+                }
+                Log.i(TAG, "USB permission request sent via DeviceEventManager")
             }
 
         } catch (e: Exception) {
@@ -2951,10 +2948,6 @@ class ThermalCameraRecorder(
                 stopRecording()
             }
 
-            if (EventBus.getDefault().isRegistered(this@ThermalCameraRecorder)) {
-                EventBus.getDefault().unregister(this@ThermalCameraRecorder)
-            }
-
             ircamEngine?.let { engine ->
                 try {
                     engine.closeVideoStream()
@@ -2993,16 +2986,31 @@ class ThermalCameraRecorder(
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    fun onDeviceConnectEvent(event: DeviceConnectEvent) {
+    private fun observeDeviceEvents() {
+        recordingScope.launch {
+            DeviceEventManager.deviceConnectionState.collectLatest { state ->
+                state?.let {
+                    onDeviceConnectionStateChanged(it.isConnected, it.device)
+                }
+            }
+        }
+
+        recordingScope.launch {
+            DeviceEventManager.devicePermissionRequested.collectLatest { device ->
+                onDevicePermissionRequested(device)
+            }
+        }
+    }
+
+    private fun onDeviceConnectionStateChanged(isConnect: Boolean, device: android.hardware.usb.UsbDevice?) {
         try {
             Log.d(
                 TAG,
-                "USB device connection event: connected=${event.isConnect}, device=${event.device?.productName}"
+                "USB device connection event: connected=$isConnect, device=${device?.productName}"
             )
 
-            if (event.isConnect) {
-                val connectedDevice = event.device
+            if (isConnect) {
+                val connectedDevice = device
                 if (connectedDevice != null) {
 
                     if (connectedDevice.isTcTsDevice()) {
@@ -3110,11 +3118,9 @@ class ThermalCameraRecorder(
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    fun onDevicePermissionEvent(event: DevicePermissionEvent) {
+    private fun onDevicePermissionRequested(device: android.hardware.usb.UsbDevice) {
         try {
-            val device = event.device
-            Log.d(TAG, "USB permission event for device: ${device?.productName}")
+            Log.d(TAG, "USB permission event for device: ${device.productName}")
 
             if (device.isTcTsDevice()) {
                 Log.i(TAG, "Processing USB permission event for thermal camera device")
