@@ -114,10 +114,10 @@ object ViewBindingAdapter {
         bgCornersLB: Int?,
         bgCornersRB: Int?,
     ) {
-        val lt: Int = bgCornersLT?.toFloat(.dpToPx(view.context) ?: bgCorners.toFloat())
-        val rt: Int = bgCornersRT?.toFloat(.dpToPx(view.context) ?: bgCorners.toFloat())
-        val lb: Int = bgCornersLB?.toFloat(.dpToPx(view.context) ?: bgCorners.toFloat())
-        val rb: Int = bgCornersRB?.toFloat(.dpToPx(view.context) ?: bgCorners.toFloat())
+        val lt: Int = (bgCornersLT?.toFloat() ?: bgCorners.toFloat()).dpToPx(view.context).toInt()
+        val rt: Int = (bgCornersRT?.toFloat() ?: bgCorners.toFloat()).dpToPx(view.context).toInt()
+        val lb: Int = (bgCornersLB?.toFloat() ?: bgCorners.toFloat()).dpToPx(view.context).toInt()
+        val rb: Int = (bgCornersRB?.toFloat() ?: bgCorners.toFloat()).dpToPx(view.context).toInt()
         val radii =
             floatArrayOf(
                 lt.toFloat(),
