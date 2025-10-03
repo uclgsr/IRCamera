@@ -3,7 +3,6 @@ package com.mpdc4gsr.libunified.app.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import com.blankj.utilcode.util.FileUtils
 import com.mpdc4gsr.libunified.compat.ContextProvider
 import com.elvishew.xlog.XLog
 import com.google.gson.Gson
@@ -97,7 +96,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
             outputStream.close()
         } catch (e: IOException) {
             XLog.e("${if (isTS004) "TS004" else "TC007"} [ph][ph][ph][ph] - [ph][ph][ph][ph][ph][ph][ph][ph][ph][ph][ph]! ${e.message}")
-            FileUtils.delete(firmwareFile)
+            firmwareFile.delete()
             firmwareDataLD.postValue(null)
             isRequest = false
             return

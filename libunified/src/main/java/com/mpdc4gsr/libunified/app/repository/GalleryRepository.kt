@@ -3,7 +3,6 @@ package com.mpdc4gsr.libunified.app.repository
 import android.content.ContentResolver
 import android.media.MediaScannerConnection
 import android.provider.MediaStore
-import com.blankj.utilcode.util.FileUtils
 import com.mpdc4gsr.libunified.compat.ContextProvider
 import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.bean.GalleryBean
@@ -158,7 +157,7 @@ object GalleryRepository {
             if (sourFile.exists()) {
                 val isSuccess = copySourDir(sourFile, File(FileConfig.lineGalleryDir))
                 if (isSuccess) {
-                    FileUtils.delete(sourFile)
+                    sourFile.deleteRecursively()
                     MediaScannerConnection.scanFile(
                         ContextProvider.INSTANCE.getContext(),
                         arrayOf(FileConfig.lineGalleryDir),

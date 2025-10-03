@@ -1,6 +1,6 @@
 package com.mpdc4gsr.libunified.app.lms.network;
 
-import com.blankj.utilcode.util.GsonUtils;
+import com.google.gson.Gson;
 import com.mpdc4gsr.libunified.app.lms.bean.CommonBean;
 
 public class ResponseBean {
@@ -15,8 +15,8 @@ public class ResponseBean {
         CommonBean bean = new CommonBean();
         if (response != null && !response.isEmpty()) {
             try {
-                // Properly parse JSON response using GsonUtils
-                ResponseBean responseBean = GsonUtils.fromJson(response, ResponseBean.class);
+                // Properly parse JSON response using Gson
+                ResponseBean responseBean = new Gson().fromJson(response, ResponseBean.class);
                 if (responseBean != null) {
                     bean.code = responseBean.code;
                     bean.data = responseBean.data != null ? responseBean.data.toString() : "";

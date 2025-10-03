@@ -23,9 +23,6 @@ import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
 import androidx.core.view.drawToBitmap
 import androidx.core.view.isVisible
-import com.blankj.utilcode.util.SDCardUtils
-import com.blankj.utilcode.util.StringUtils.getString
-import com.blankj.utilcode.util.ThreadUtils
 import com.mpdc4gsr.module.thermalunified.compat.ContextProvider
 import com.mpdc4gsr.module.thermalunified.compat.dpToPx
 import com.mpdc4gsr.module.thermalunified.compat.spToPx
@@ -95,19 +92,14 @@ class VideoRecordFFmpeg(
             context: Context,
             videoFile: File? = null,
         ): Boolean {
-            val canStart =
-                (
-                        SDCardUtils.getExternalAvailableSize() - (
-                                videoFile?.length()
-                                    ?: 0
-                                )
-                        ) > (500L * 1000 * 1000)
+            val availableSpace = context.getExternalFilesDir(null)?.usableSpace ?: 0L
+            val canStart = (availableSpace - (videoFile?.length() ?: 0)) > (500L * 1000 * 1000)
             if (!canStart) {
-                ThreadUtils.runOnUiThread {
+                android.os.Handler(android.os.Looper.getMainLooper()).post {
                     val tipDialogState = TipDialogState(context)
                     tipDialogState.show(
-                        title = getString(LibcoreR.string.app_tip),
-                        message = getString(LibcoreR.string.album_report_aleart),
+                        title = context.getString(LibcoreR.string.app_tip),
+                        message = context.getString(LibcoreR.string.album_report_aleart),
                         showCancel = false,
                         positiveText = getString(LibcoreR.string.app_confirm),
                         cancelable = true,
@@ -442,20 +434,15 @@ class VideoRecordFFmpeg(
     }
 
     fun canStartVideoRecord(videoFile: File?): Boolean {
-        val canStart =
-            (
-                    SDCardUtils.getExternalAvailableSize() - (
-                            videoFile?.length()
-                                ?: 0
-                            )
-                    ) > (500L * 1000 * 1000)
+        val availableSpace = cameraView.context.getExternalFilesDir(null)?.usableSpace ?: 0L
+        val canStart = (availableSpace - (videoFile?.length() ?: 0)) > (500L * 1000 * 1000)
 
         if (!canStart) {
-            ThreadUtils.runOnUiThread {
+            android.os.Handler(android.os.Looper.getMainLooper()).post {
                 val tipDialogState = TipDialogState(cameraView.context)
                 tipDialogState.show(
-                    title = getString(LibcoreR.string.app_tip),
-                    message = getString(LibcoreR.string.album_report_aleart),
+                    title = cameraView.context.getString(LibcoreR.string.app_tip),
+                    message = cameraView.context.getString(LibcoreR.string.album_report_aleart),
                     showCancel = false,
                     positiveText = getString(LibcoreR.string.app_confirm),
                     cancelable = true,

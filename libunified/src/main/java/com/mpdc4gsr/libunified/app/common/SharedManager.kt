@@ -3,7 +3,6 @@ package com.mpdc4gsr.libunified.app.common
 import android.content.Context
 import android.util.Base64
 import androidx.preference.PreferenceManager
-import com.blankj.utilcode.util.GsonUtils
 import com.blankj.utilcode.util.SPUtils
 import com.google.gson.Gson
 import com.mpdc4gsr.libunified.app.bean.CarDetectChildBean
@@ -467,13 +466,13 @@ object SharedManager {
         if (detectInfo.isEmpty()) {
             return CarDetectData.getDetectList()[0].detectChildBeans[0]
         }
-        val detectChildBean = GsonUtils.fromJson(detectInfo, CarDetectChildBean::class.java)
+        val detectChildBean = Gson().fromJson(detectInfo, CarDetectChildBean::class.java)
         val type = detectChildBean.type
         val pos = detectChildBean.pos
         return CarDetectData.getDetectList()[type].detectChildBeans[pos]
     }
 
     fun saveCarDetectInfo(bean: CarDetectChildBean) {
-        SPUtils.getInstance().put(SP_CAR_DETECT, GsonUtils.toJson(bean))
+        SPUtils.getInstance().put(SP_CAR_DETECT, Gson().toJson(bean))
     }
 }

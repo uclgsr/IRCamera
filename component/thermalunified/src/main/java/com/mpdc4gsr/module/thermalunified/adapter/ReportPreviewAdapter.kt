@@ -11,7 +11,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.blankj.utilcode.util.CollectionUtils
 
 import com.mpdc4gsr.libunified.app.bean.HouseRepPreviewItemBean
 import com.mpdc4gsr.libunified.app.lms.weiget.TToast
@@ -46,7 +45,7 @@ class ReportPreviewAdapter(private val cxt: Context, var dataList: List<HouseRep
                 ReportPreviewFloorAdapter(cxt, data.projectItemBeans)
             holder.rcyReport.adapter = reportPreviewAdapter
 
-            if (CollectionUtils.isNotEmpty(data.projectItemBeans)) {
+            if (!data.projectItemBeans.isNullOrEmpty()) {
                 holder.flyProject.visibility = View.VISIBLE
                 holder.rcyCategory.layoutManager = LinearLayoutManager(cxt)
                 val reportCategoryAdapter =
@@ -56,7 +55,7 @@ class ReportPreviewAdapter(private val cxt: Context, var dataList: List<HouseRep
                 holder.flyProject.visibility = View.GONE
             }
 
-            if (CollectionUtils.isNotEmpty(data.albumItemBeans)) {
+            if (!data.albumItemBeans.isNullOrEmpty()) {
                 holder.llyAlbum.visibility = View.VISIBLE
                 holder.rcyAlbum.layoutManager = GridLayoutManager(cxt, 3)
                 val albumAdapter = ReportPreviewAlbumAdapter(cxt, data.albumItemBeans)
