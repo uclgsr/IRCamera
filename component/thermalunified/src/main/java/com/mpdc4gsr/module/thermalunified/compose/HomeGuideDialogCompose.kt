@@ -16,7 +16,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import mpdc4gsr.core.ui.deferAction
+import com.mpdc4gsr.libunified.app.compose.utils.deferAction
 
 @Composable
 fun HomeGuideDialogCompose(
