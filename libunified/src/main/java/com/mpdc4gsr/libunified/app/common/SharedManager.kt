@@ -3,8 +3,8 @@ package com.mpdc4gsr.libunified.app.common
 import android.content.Context
 import android.util.Base64
 import androidx.preference.PreferenceManager
-import com.blankj.utilcode.util.SPUtils
 import com.google.gson.Gson
+import com.mpdc4gsr.libunified.compat.SPUtils
 import com.mpdc4gsr.libunified.app.bean.CarDetectChildBean
 import com.mpdc4gsr.libunified.app.bean.ContinuousBean
 import com.mpdc4gsr.libunified.app.bean.WatermarkBean

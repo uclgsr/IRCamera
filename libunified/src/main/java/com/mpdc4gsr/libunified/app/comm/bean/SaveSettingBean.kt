@@ -1,7 +1,7 @@
 package com.mpdc4gsr.libunified.app.comm.bean
 
-import com.blankj.utilcode.util.SPUtils
 import com.mpdc4gsr.libunified.compat.ContextProvider
+import com.mpdc4gsr.libunified.compat.SPUtils
 import com.google.gson.Gson
 import com.mpdc4gsr.libunified.app.bean.AlarmBean
 import com.mpdc4gsr.libunified.app.bean.CameraItemBean
