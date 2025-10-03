@@ -1,24 +1,33 @@
 package mpdc4gsr.feature.camera.ui
 
+import android.app.Application
 import androidx.camera.view.PreviewView
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CameraAlt
+import androidx.compose.material.icons.filled.FiberManualRecord
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Stop
 import androidx.compose.material.icons.filled.VideoCall
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
@@ -37,14 +46,20 @@ import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.core.ui.theme.Orange
 import mpdc4gsr.core.ui.theme.Purple
 import mpdc4gsr.feature.camera.presentation.RGBCameraViewModel
+import mpdc4gsr.feature.camera.presentation.RGBCameraViewModelFactory
 
 /**
  * RGB Camera Screen - Dedicated interface for RGB camera control and recording
  * Now connected to RgbCameraRecorder via ViewModel
+ * Full-screen design following Material Design 3 and Jetpack Compose best practices
  */
 @Composable
 fun RGBCameraScreen(
-    viewModel: RGBCameraViewModel = viewModel(),
+    viewModel: RGBCameraViewModel = viewModel(
+        factory = RGBCameraViewModelFactory(
+            LocalContext.current.applicationContext as Application
+        )
+    ),
     onBackClick: (() -> Unit)? = null,
     onSettingsClick: () -> Unit = {},
     onCapturePhoto: () -> Unit = {},
@@ -53,6 +68,7 @@ fun RGBCameraScreen(
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val cameraState by viewModel.cameraState.collectAsState()
+    var showControls by remember { mutableStateOf(true) }
 
     // Initialize camera on first composition
     LaunchedEffect(Unit) {
@@ -64,77 +80,53 @@ fun RGBCameraScreen(
     val isRecording = cameraState.isRecording
     val resolution = cameraState.resolution
     val frameRate = cameraState.frameRate
-    val exposureTime = cameraState.exposureTime
-    val iso = cameraState.iso
-    val focusMode = cameraState.focusMode.displayName
-    val whiteBalance = cameraState.whiteBalance.displayName
     val recordingDuration = cameraState.recordingDuration
     val capturedFrames = cameraState.capturedFrames
 
-    Column(
+    Box(
         modifier = modifier
             .fillMaxSize()
-            .background(Color(0xFF16131e))
+            .background(Color.Black)
     ) {
-        // Title bar with camera-specific actions
-        TitleBar(
-            title = "RGB Camera",
-            showBackButton = true,
-            onBackClick = onBackClick
-        ) {
-            TitleBarAction(
-                icon = Icons.Default.CameraAlt,
-                contentDescription = "Capture Photo",
-                onClick = onCapturePhoto
+        // Full-screen camera preview
+        if (viewModel.getCameraRecorder() != null) {
+            FullScreenCameraPreview(
+                cameraRecorder = viewModel.getCameraRecorder()!!,
+                isRecording = isRecording,
+                modifier = Modifier.fillMaxSize()
             )
-            TitleBarAction(
-                icon = Icons.Default.Settings,
-                contentDescription = "Camera Settings",
-                onClick = onSettingsClick
+        } else {
+            FullScreenCameraPreviewSimulated(
+                isActive = isPreviewActive,
+                isRecording = isRecording,
+                modifier = Modifier.fillMaxSize()
             )
         }
 
-        // Scrollable content
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+        // Top overlay with back button and status
+        AnimatedVisibility(
+            visible = showControls,
+            enter = fadeIn() + slideInVertically(),
+            exit = fadeOut() + slideOutVertically(),
+            modifier = Modifier.align(Alignment.TopCenter)
         ) {
-            // Camera preview - use real camera if available
-            if (viewModel.getCameraRecorder() != null) {
-                RealCameraPreview(
-                    cameraRecorder = viewModel.getCameraRecorder()!!,
-                    isRecording = isRecording,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .aspectRatio(16f / 9f)
-                )
-            } else {
-                // Fallback to simulated preview during initialization
-                RGBCameraPreview(
-                    isActive = isPreviewActive,
-                    isRecording = isRecording,
-                    resolution = resolution,
-                    frameRate = frameRate
-                )
-            }
-
-            // Camera status and metrics
-            CameraStatusCard(
-                isPreviewActive = isPreviewActive,
-                isRecording = isRecording,
+            CameraTopBar(
                 resolution = resolution,
                 frameRate = frameRate,
-                exposureTime = exposureTime,
-                iso = iso,
-                focusMode = focusMode,
-                whiteBalance = whiteBalance
+                isRecording = isRecording,
+                onBackClick = onBackClick,
+                onSettingsClick = onSettingsClick
             )
+        }
 
-            // Recording controls
-            RecordingControlsCard(
+        // Bottom overlay with camera controls
+        AnimatedVisibility(
+            visible = showControls,
+            enter = fadeIn() + slideInVertically(initialOffsetY = { it }),
+            exit = fadeOut() + slideOutVertically(targetOffsetY = { it }),
+            modifier = Modifier.align(Alignment.BottomCenter)
+        ) {
+            CameraBottomControls(
                 isRecording = isRecording,
                 isPreviewActive = isPreviewActive,
                 recordingDuration = recordingDuration,
@@ -146,30 +138,268 @@ fun RGBCameraScreen(
                         viewModel.startRecording()
                     }
                 },
-                onTogglePreview = { viewModel.togglePreview() },
                 onCapturePhoto = {
                     viewModel.capturePhoto()
                     onCapturePhoto()
                 }
             )
+        }
 
-            // Camera settings
-            CameraSettingsCard(
-                resolution = resolution,
-                frameRate = frameRate,
-                exposureTime = exposureTime,
-                iso = iso,
-                focusMode = focusMode,
-                whiteBalance = whiteBalance,
-                currentFocusMode = cameraState.focusMode,
-                currentWhiteBalance = cameraState.whiteBalance,
-                onResolutionChange = { viewModel.updateResolution(it) },
-                onFrameRateChange = { viewModel.updateFrameRate(it) },
-                onExposureChange = { viewModel.updateExposureTime(it) },
-                onISOChange = { viewModel.updateISO(it) },
-                onFocusModeChange = { viewModel.updateFocusMode(it) },
-                onWhiteBalanceChange = { viewModel.updateWhiteBalance(it) }
-            )
+        // Toggle controls visibility with tap
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null
+                ) {
+                    showControls = !showControls
+                }
+        )
+    }
+}
+
+/**
+ * Full-screen camera top bar with minimal design
+ */
+@Composable
+private fun CameraTopBar(
+    resolution: String,
+    frameRate: Int,
+    isRecording: Boolean,
+    onBackClick: (() -> Unit)?,
+    onSettingsClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Surface(
+        modifier = modifier.fillMaxWidth(),
+        color = Color.Black.copy(alpha = 0.5f)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            IconButton(
+                onClick = { onBackClick?.invoke() }
+            ) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "Back",
+                    tint = Color.White
+                )
+            }
+
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                if (isRecording) {
+                    Surface(
+                        color = Color.Red,
+                        shape = RoundedCornerShape(4.dp)
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .size(8.dp)
+                                    .clip(CircleShape)
+                                    .background(Color.White)
+                            )
+                            Text(
+                                text = "REC",
+                                color = Color.White,
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
+                }
+                
+                Surface(
+                    color = Color.Black.copy(alpha = 0.6f),
+                    shape = RoundedCornerShape(4.dp)
+                ) {
+                    Text(
+                        text = "$resolution • ${frameRate}fps",
+                        color = Color.White,
+                        fontSize = 12.sp,
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                    )
+                }
+            }
+
+            IconButton(
+                onClick = onSettingsClick
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Settings,
+                    contentDescription = "Settings",
+                    tint = Color.White
+                )
+            }
+        }
+    }
+}
+
+/**
+ * Full-screen camera bottom controls with Material Design 3
+ */
+@Composable
+private fun CameraBottomControls(
+    isRecording: Boolean,
+    isPreviewActive: Boolean,
+    recordingDuration: Int,
+    capturedFrames: Int,
+    onToggleRecording: () -> Unit,
+    onCapturePhoto: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Surface(
+        modifier = modifier.fillMaxWidth(),
+        color = Color.Black.copy(alpha = 0.5f)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            if (isRecording) {
+                Text(
+                    text = String.format("%02d:%02d", recordingDuration / 60, recordingDuration % 60),
+                    color = Color.White,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Medium
+                )
+            }
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // Photo capture button
+                FilledIconButton(
+                    onClick = onCapturePhoto,
+                    enabled = isPreviewActive && !isRecording,
+                    modifier = Modifier.size(56.dp),
+                    colors = IconButtonDefaults.filledIconButtonColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        disabledContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f)
+                    )
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.CameraAlt,
+                        contentDescription = "Capture Photo",
+                        tint = Color.White
+                    )
+                }
+
+                // Video record button - larger, centered
+                FilledIconButton(
+                    onClick = onToggleRecording,
+                    enabled = isPreviewActive,
+                    modifier = Modifier.size(72.dp),
+                    colors = IconButtonDefaults.filledIconButtonColors(
+                        containerColor = if (isRecording) Color.Red else Color.White,
+                        disabledContainerColor = Color.White.copy(alpha = 0.3f)
+                    )
+                ) {
+                    Icon(
+                        imageVector = if (isRecording) Icons.Default.Stop else Icons.Default.FiberManualRecord,
+                        contentDescription = if (isRecording) "Stop Recording" else "Start Recording",
+                        tint = if (isRecording) Color.White else Color.Red,
+                        modifier = Modifier.size(36.dp)
+                    )
+                }
+
+                // Placeholder for symmetry (could be gallery access)
+                Spacer(modifier = Modifier.size(56.dp))
+            }
+        }
+    }
+}
+
+/**
+ * Full-screen real camera preview
+ */
+@Composable
+private fun FullScreenCameraPreview(
+    cameraRecorder: mpdc4gsr.core.data.RgbCameraRecorder,
+    isRecording: Boolean,
+    modifier: Modifier = Modifier
+) {
+    AndroidView(
+        factory = { ctx ->
+            PreviewView(ctx).apply {
+                scaleType = PreviewView.ScaleType.FILL_CENTER
+                cameraRecorder.bindPreview(this)
+            }
+        },
+        modifier = modifier
+    )
+}
+
+/**
+ * Full-screen simulated camera preview
+ */
+@Composable
+private fun FullScreenCameraPreviewSimulated(
+    isActive: Boolean,
+    isRecording: Boolean,
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier.background(Color.Black),
+        contentAlignment = Alignment.Center
+    ) {
+        if (isActive) {
+            Canvas(modifier = Modifier.fillMaxSize()) {
+                val width = size.width
+                val height = size.height
+                
+                drawRect(color = Color(0xFF2E2E2E), size = size)
+                drawRect(
+                    color = Color(0xFF4A4A4A),
+                    topLeft = Offset(0f, height * 0.6f),
+                    size = Size(width, height * 0.4f)
+                )
+                drawCircle(
+                    color = Color(0xFF6A6A6A),
+                    radius = width * 0.1f,
+                    center = Offset(width * 0.3f, height * 0.4f)
+                )
+                drawRect(
+                    color = Color(0xFF5A5A5A),
+                    topLeft = Offset(width * 0.6f, height * 0.2f),
+                    size = Size(width * 0.25f, height * 0.4f)
+                )
+            }
+        } else {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.CameraAlt,
+                    contentDescription = null,
+                    tint = Color.Gray,
+                    modifier = Modifier.size(64.dp)
+                )
+                Text(
+                    text = "Camera Preview Off",
+                    color = Color.Gray,
+                    fontSize = 18.sp
+                )
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 package mpdc4gsr.feature.gsr.ui
 
+import android.app.Application
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -27,6 +28,7 @@ import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.components.TitleBarAction
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.feature.gsr.presentation.GSRSensorViewModel
+import mpdc4gsr.feature.gsr.presentation.GSRSensorViewModelFactory
 
 /**
  * GSR Sensor Screen - Dedicated interface for GSR data monitoring and recording
@@ -35,7 +37,11 @@ import mpdc4gsr.feature.gsr.presentation.GSRSensorViewModel
  */
 @Composable
 fun GSRSensorScreen(
-    viewModel: GSRSensorViewModel = viewModel(),
+    viewModel: GSRSensorViewModel = viewModel(
+        factory = GSRSensorViewModelFactory(
+            LocalContext.current.applicationContext as Application
+        )
+    ),
     onBackClick: (() -> Unit)? = null,
     onSettingsClick: () -> Unit = {},
     onSaveData: () -> Unit = {},

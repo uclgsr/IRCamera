@@ -1,5 +1,6 @@
 package mpdc4gsr.feature.settings.ui
 
+import android.app.Application
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -25,6 +26,7 @@ import mpdc4gsr.core.ui.components.settings.SettingsRow
 import mpdc4gsr.core.ui.components.settings.SettingsToggle
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.feature.settings.presentation.StorageSettingsViewModel
+import mpdc4gsr.feature.settings.presentation.StorageSettingsViewModelFactory
 
 /**
  * Storage Settings Screen - Configure data storage and export options
@@ -33,7 +35,11 @@ import mpdc4gsr.feature.settings.presentation.StorageSettingsViewModel
 @Composable
 fun StorageSettingsScreen(
     onBackClick: (() -> Unit)? = null,
-    viewModel: StorageSettingsViewModel = viewModel(),
+    viewModel: StorageSettingsViewModel = viewModel(
+        factory = StorageSettingsViewModelFactory(
+            LocalContext.current.applicationContext as Application
+        )
+    ),
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current

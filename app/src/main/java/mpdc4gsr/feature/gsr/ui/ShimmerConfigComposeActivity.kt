@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import mpdc4gsr.core.data.model.DeviceInfo
 import mpdc4gsr.feature.gsr.presentation.ShimmerConfigViewModel
+import mpdc4gsr.feature.gsr.presentation.ShimmerConfigViewModelFactory
 
 /**
  * ShimmerConfigComposeActivity - Modern Shimmer Device Configuration with Compose
@@ -46,7 +47,9 @@ class ShimmerConfigComposeActivity : ComponentActivity() {
         }
     }
 
-    private val viewModel: ShimmerConfigViewModel by viewModels()
+    private val viewModel: ShimmerConfigViewModel by viewModels {
+        ShimmerConfigViewModelFactory(application, this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

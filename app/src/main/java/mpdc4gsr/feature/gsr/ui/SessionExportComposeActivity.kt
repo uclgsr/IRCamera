@@ -22,6 +22,7 @@ import mpdc4gsr.feature.gsr.presentation.ExportDestination
 import mpdc4gsr.feature.gsr.presentation.ExportFormat
 import mpdc4gsr.feature.gsr.presentation.GSRSession
 import mpdc4gsr.feature.gsr.presentation.SessionExportViewModel
+import mpdc4gsr.feature.gsr.presentation.SessionExportViewModelFactory
 
 /**
  * Modern Compose implementation of GSR Session Export
@@ -30,7 +31,9 @@ import mpdc4gsr.feature.gsr.presentation.SessionExportViewModel
 class SessionExportComposeActivity : BaseComposeActivity<SessionExportViewModel>() {
 
     override fun createViewModel(): SessionExportViewModel =
-        viewModels<SessionExportViewModel>().value
+        viewModels<SessionExportViewModel> {
+            SessionExportViewModelFactory(application)
+        }.value
 
     @Composable
     override fun Content(viewModel: SessionExportViewModel) {
@@ -46,7 +49,11 @@ class SessionExportComposeActivity : BaseComposeActivity<SessionExportViewModel>
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SessionExportScreen(
-    viewModel: SessionExportViewModel = viewModel(),
+    viewModel: SessionExportViewModel = viewModel(
+        factory = SessionExportViewModelFactory(
+            androidx.compose.ui.platform.LocalContext.current.applicationContext as android.app.Application
+        )
+    ),
     onNavigateBack: () -> Unit = {}
 ) {
     val uiState by viewModel.exportState.collectAsState()

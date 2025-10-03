@@ -22,6 +22,7 @@ import coil.request.ImageRequest
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.feature.gsr.presentation.GSRRawImageViewViewModel
+import mpdc4gsr.feature.gsr.presentation.GSRRawImageViewViewModelFactory
 import java.io.File
 
 /**
@@ -31,7 +32,9 @@ import java.io.File
 class GSRRawImageViewComposeActivity : BaseComposeActivity<GSRRawImageViewViewModel>() {
 
     override fun createViewModel(): GSRRawImageViewViewModel =
-        viewModels<GSRRawImageViewViewModel>().value
+        viewModels<GSRRawImageViewViewModel> {
+            GSRRawImageViewViewModelFactory(application)
+        }.value
 
     @Composable
     override fun Content(viewModel: GSRRawImageViewViewModel) {
@@ -47,7 +50,11 @@ class GSRRawImageViewComposeActivity : BaseComposeActivity<GSRRawImageViewViewMo
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GSRRawImageViewScreen(
-    viewModel: GSRRawImageViewViewModel = viewModel(),
+    viewModel: GSRRawImageViewViewModel = viewModel(
+        factory = GSRRawImageViewViewModelFactory(
+            LocalContext.current.applicationContext as android.app.Application
+        )
+    ),
     onNavigateBack: () -> Unit = {}
 ) {
     val uiState by viewModel.imageViewState.collectAsState()

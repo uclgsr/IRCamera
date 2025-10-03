@@ -1,11 +1,22 @@
 package mpdc4gsr.feature.thermal.ui
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.FiberManualRecord
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Stop
 import androidx.compose.material.icons.filled.VideoCall
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -25,6 +36,7 @@ import mpdc4gsr.core.ui.theme.IRCameraTheme
 /**
  * ThermalMonitorScreen composable - replaces MonitorThermalFragment layout
  * Main screen for thermal camera preview with overlays and controls
+ * Full-screen design following Material Design 3 and Jetpack Compose best practices
  */
 @Composable
 fun ThermalMonitorScreen(
@@ -39,79 +51,231 @@ fun ThermalMonitorScreen(
     var maxTemp by remember { mutableStateOf(45.2f) }
     var minTemp by remember { mutableStateOf(18.9f) }
     var isConnected by remember { mutableStateOf(true) }
+    var showControls by remember { mutableStateOf(true) }
     var showAdvancedControls by remember { mutableStateOf(false) }
 
-    Column(
+    Box(
         modifier = modifier
             .fillMaxSize()
-            .background(Color(0xFF16131e)) // Match reference background
+            .background(Color.Black)
     ) {
-        // Title bar with action buttons
-        TitleBar(
-            title = "Thermal Monitor",
-            showBackButton = true,
-            onBackClick = onBackClick
+        // Full-screen thermal camera preview
+        ThermalCameraPreview(
+            modifier = Modifier.fillMaxSize()
+        )
+
+        // Temperature overlay always visible on preview
+        TemperatureOverlay(
+            currentTemp = currentTemp,
+            maxTemp = maxTemp,
+            minTemp = minTemp,
+            modifier = Modifier.fillMaxSize()
+        )
+
+        // Top overlay with back button and status
+        AnimatedVisibility(
+            visible = showControls,
+            enter = fadeIn() + slideInVertically(),
+            exit = fadeOut() + slideOutVertically(),
+            modifier = Modifier.align(Alignment.TopCenter)
         ) {
-            TitleBarAction(
-                icon = Icons.Default.Settings,
-                contentDescription = "Settings",
-                onClick = onSettingsClick
+            ThermalTopBar(
+                isConnected = isConnected,
+                isRecording = isRecording,
+                onBackClick = onBackClick,
+                onSettingsClick = onSettingsClick
             )
         }
 
-        // Main content area using Column/Box for layout
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(8.dp)
+        // Bottom overlay with recording controls
+        AnimatedVisibility(
+            visible = showControls,
+            enter = fadeIn() + slideInVertically(initialOffsetY = { it }),
+            exit = fadeOut() + slideOutVertically(targetOffsetY = { it }),
+            modifier = Modifier.align(Alignment.BottomCenter)
         ) {
-            // Thermal camera preview area with overlay
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(4f / 3f)
-            ) {
-                // Thermal camera preview area
-                ThermalCameraPreview(
-                    modifier = Modifier.fillMaxSize()
-                )
-
-                // Temperature overlay on top of preview
-                TemperatureOverlay(
-                    currentTemp = currentTemp,
-                    maxTemp = maxTemp,
-                    minTemp = minTemp,
-                    modifier = Modifier.fillMaxSize()
-                )
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Status panel for connection and sensor info
-            StatusPanel(
-                isConnected = isConnected,
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Recording and control buttons
-            ControlPanel(
+            ThermalBottomControls(
                 isRecording = isRecording,
+                isConnected = isConnected,
                 onRecordClick = {
                     isRecording = !isRecording
                     onRecordClick()
                 },
-                onAdvancedClick = { showAdvancedControls = !showAdvancedControls },
-                modifier = Modifier.fillMaxWidth()
+                onAdvancedClick = { showAdvancedControls = !showAdvancedControls }
             )
         }
+
+        // Toggle controls visibility with tap
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null
+                ) {
+                    showControls = !showControls
+                }
+        )
 
         // Advanced controls overlay
         if (showAdvancedControls) {
             AdvancedControlsPanel(
                 onDismiss = { showAdvancedControls = false }
             )
+        }
+    }
+}
+
+/**
+ * Full-screen thermal camera top bar with minimal design
+ */
+@Composable
+private fun ThermalTopBar(
+    isConnected: Boolean,
+    isRecording: Boolean,
+    onBackClick: (() -> Unit)?,
+    onSettingsClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Surface(
+        modifier = modifier.fillMaxWidth(),
+        color = Color.Black.copy(alpha = 0.5f)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            IconButton(
+                onClick = { onBackClick?.invoke() }
+            ) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "Back",
+                    tint = Color.White
+                )
+            }
+
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                if (isRecording) {
+                    Surface(
+                        color = Color.Red,
+                        shape = RoundedCornerShape(4.dp)
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .size(8.dp)
+                                    .clip(CircleShape)
+                                    .background(Color.White)
+                            )
+                            Text(
+                                text = "REC",
+                                color = Color.White,
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
+                }
+                
+                Surface(
+                    color = if (isConnected) Color(0xFF2E7D32) else Color(0xFFD32F2F),
+                    shape = RoundedCornerShape(4.dp)
+                ) {
+                    Text(
+                        text = if (isConnected) "Connected" else "Disconnected",
+                        color = Color.White,
+                        fontSize = 12.sp,
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                    )
+                }
+            }
+
+            IconButton(
+                onClick = onSettingsClick
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Settings,
+                    contentDescription = "Settings",
+                    tint = Color.White
+                )
+            }
+        }
+    }
+}
+
+/**
+ * Full-screen thermal camera bottom controls with Material Design 3
+ */
+@Composable
+private fun ThermalBottomControls(
+    isRecording: Boolean,
+    isConnected: Boolean,
+    onRecordClick: () -> Unit,
+    onAdvancedClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Surface(
+        modifier = modifier.fillMaxWidth(),
+        color = Color.Black.copy(alpha = 0.5f)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // Advanced settings button
+                FilledTonalButton(
+                    onClick = onAdvancedClick,
+                    modifier = Modifier.height(56.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Settings,
+                        contentDescription = "Advanced",
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text("Settings")
+                }
+
+                // Record button - larger, centered
+                FilledIconButton(
+                    onClick = onRecordClick,
+                    enabled = isConnected,
+                    modifier = Modifier.size(72.dp),
+                    colors = IconButtonDefaults.filledIconButtonColors(
+                        containerColor = if (isRecording) Color.Red else Color.White,
+                        disabledContainerColor = Color.White.copy(alpha = 0.3f)
+                    )
+                ) {
+                    Icon(
+                        imageVector = if (isRecording) Icons.Default.Stop else Icons.Default.FiberManualRecord,
+                        contentDescription = if (isRecording) "Stop Recording" else "Start Recording",
+                        tint = if (isRecording) Color.White else Color.Red,
+                        modifier = Modifier.size(36.dp)
+                    )
+                }
+
+                // Placeholder for symmetry
+                Spacer(modifier = Modifier.size(56.dp).height(56.dp))
+            }
         }
     }
 }
@@ -124,22 +288,12 @@ fun ThermalMonitorScreen(
 private fun ThermalCameraPreview(
     modifier: Modifier = Modifier
 ) {
-    val primaryColor = MaterialTheme.colorScheme.primary
-
     // Placeholder for actual thermal camera preview
     // In production, this would use AndroidView to host the IrSurfaceView
     Box(
-        modifier = modifier
-            .background(Color.Black)
-            .aspectRatio(4f / 3f),
+        modifier = modifier.background(Color.Black),
         contentAlignment = Alignment.Center
     ) {
-        Text(
-            text = "Thermal Camera Preview",
-            color = Color.White,
-            fontSize = 16.sp
-        )
-
         // Sample thermal visualization
         Canvas(
             modifier = Modifier.fillMaxSize()
@@ -151,9 +305,14 @@ private fun ThermalCameraPreview(
                 center = Offset(size.width * 0.3f, size.height * 0.4f)
             )
             drawCircle(
-                color = primaryColor,
+                color = Color.Yellow,
                 radius = 20f,
                 center = Offset(size.width * 0.7f, size.height * 0.6f)
+            )
+            drawCircle(
+                color = Color.Blue,
+                radius = 15f,
+                center = Offset(size.width * 0.5f, size.height * 0.5f)
             )
         }
     }
