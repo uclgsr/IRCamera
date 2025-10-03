@@ -5,7 +5,6 @@ import android.util.AttributeSet
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.blankj.utilcode.util.ScreenUtils
 
 class MenuRecyclerView : RecyclerView {
     constructor(context: Context) : this(context, null)
@@ -27,12 +26,9 @@ class MenuRecyclerView : RecyclerView {
                 else -> 4
             }
         if (span == 2) {
-            setPadding(
-                (ScreenUtils.getAppScreenWidth() / 3.5f).toInt(),
-                0,
-                (ScreenUtils.getAppScreenWidth() / 3.5f).toInt(),
-                0,
-            )
+            val screenWidth = context.resources.displayMetrics.widthPixels
+            val horizontalPadding = (screenWidth / 3.5f).toInt()
+            setPadding(horizontalPadding, 0, horizontalPadding, 0)
         } else {
             setPadding(0, 0, 0, 0)
         }
