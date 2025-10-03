@@ -4,7 +4,7 @@
 
 **Start Date**: 2024-10-03  
 **Current Phase**: Phase 1 - Initial Implementation  
-**Overall Progress**: 23% Complete
+**Overall Progress**: 33% Complete
 
 ## Phase 1: Foundation & Initial Migrations ✅ In Progress
 
@@ -58,19 +58,35 @@
      - `dp2px(220f)` → `220f.dpToPx(context)`
      - `sp2px(80f)` → `80f.spToPx(context)`
 
+6. **Additional Migrations Completed** - **BATCH 3**
+   - ✅ `component/thermalunified/report/view/ReportIRShowView.kt`
+     - Migrated 1 `SizeUtils.dp2px()` to context-aware `dpToPx(context)`
+   
+   - ✅ `component/thermalunified/view/ChartLogView.kt`
+     - Migrated 2 `SizeUtils` calls to context-aware `dpToPx(context)`
+   
+   - ✅ `component/thermalunified/utils/IRImageUtils.kt`
+     - Migrated 2 `Utils.getApp()` calls to `ContextProvider.getContext()`
+   
+   - ✅ `component/thermalunified/viewmodel/GalleryViewModel.kt`
+     - Migrated 2 `Utils.getApp()` calls to `ContextProvider.getContext()`
+   
+   - ✅ `component/thermalunified/video/VideoRecordFFmpeg.kt`
+     - Migrated 1 `Utils.getApp()` call to `ContextProvider.getContext()`
+
 ### Migration Statistics
 
 | Utility | Total Usage | Migrated | Remaining | Progress |
 |---------|-------------|----------|-----------|----------|
-| SizeUtils | 32 | 10 | 22 | 31% |
-| Utils.getApp() | 26 | 6 | 20 | 23% |
+| SizeUtils | 32 | 13 | 19 | 41% |
+| Utils.getApp() | 26 | 11 | 15 | 42% |
 | GsonUtils | 5 | 0 | 5 | 0% |
 | SPUtils | 4 | 0 | 4 | 0% |
 | TimeUtils | 3 | 0 | 3 | 0% |
 | ScreenUtils | 3 | 0 | 3 | 0% |
 | Others | <2 each | 0 | ~10 | 0% |
 
-**Overall Migration Progress**: ~23% (16 out of ~87 occurrences)
+**Overall Migration Progress**: ~33% (24 out of ~87 occurrences)
 
 ## Next Steps (Phase 1 Completion)
 

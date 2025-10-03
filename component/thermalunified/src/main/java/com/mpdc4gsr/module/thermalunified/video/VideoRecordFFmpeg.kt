@@ -27,7 +27,7 @@ import com.blankj.utilcode.util.SDCardUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.blankj.utilcode.util.StringUtils.getString
 import com.blankj.utilcode.util.ThreadUtils
-import com.blankj.utilcode.util.Utils
+import com.mpdc4gsr.module.thermalunified.compat.ContextProvider
 import com.elvishew.xlog.XLog
 import com.infisense.usbir.view.CameraView
 import com.mpdc4gsr.libunified.app.comm.view.TempLayout
@@ -808,7 +808,7 @@ class VideoRecordFFmpeg(
 
     private fun refreshAlbum() {
         exportedFile?.let {
-            MediaScannerConnection.scanFile(Utils.getApp(), arrayOf(it.toString()), null, null)
+            MediaScannerConnection.scanFile(ContextProvider.getContext(), arrayOf(it.toString()), null, null)
         }
     }
 }

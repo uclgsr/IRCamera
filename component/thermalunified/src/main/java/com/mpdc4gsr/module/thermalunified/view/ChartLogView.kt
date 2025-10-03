@@ -7,7 +7,6 @@ import android.os.Looper
 import android.util.AttributeSet
 import android.util.Log
 import androidx.core.content.ContextCompat
-import com.blankj.utilcode.util.SizeUtils
 import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.db.entity.ThermalEntity
 import com.mpdc4gsr.libunified.ui.charts.LineChart
@@ -20,6 +19,7 @@ import com.mpdc4gsr.libunified.ui.data.LineDataSet
 import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.module.thermalunified.chart.IRMyValueFormatter
 import com.mpdc4gsr.module.thermalunified.chart.YValueFormatter
+import com.mpdc4gsr.module.thermalunified.compat.dpToPx
 import com.mpdc4gsr.module.thermalunified.utils.ChartTools
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -70,8 +70,8 @@ class ChartLogView : LineChart {
             this.setExtraOffsets(
                 0f,
                 0f,
-                SizeUtils.dp2px(8f).toFloat(),
-                SizeUtils.dp2px(4f).toFloat(),
+                8f.dpToPx(context),
+                4f.dpToPx(context),
             )
             setNoDataText(context.getString(ThermalR.string.lms_http_code998))
             setNoDataTextColor(ContextCompat.getColor(context, LibcoreR.color.chart_text))

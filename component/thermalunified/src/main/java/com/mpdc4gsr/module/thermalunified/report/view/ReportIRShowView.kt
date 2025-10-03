@@ -7,9 +7,9 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.view.isVisible
-import com.blankj.utilcode.util.SizeUtils
 import com.mpdc4gsr.libunified.app.utils.ScreenUtils
 import com.mpdc4gsr.module.thermalunified.R
+import com.mpdc4gsr.module.thermalunified.compat.dpToPx
 import com.mpdc4gsr.module.thermalunified.report.bean.ReportIRBean
 import com.mpdc4gsr.module.thermalunified.report.bean.ReportTempBean
 import com.mpdc4gsr.libunified.R as LibR
@@ -200,7 +200,7 @@ class ReportIRShowView : LinearLayout {
         tvHead.isVisible = isFirst
         viewNotHead.isVisible = !isFirst
         viewImageBg.setBackgroundResource(if (isFirst) R.drawable.layer_report_ir_show_top_bg else R.drawable.layer_report_ir_show_item_bg)
-        clImage.setPadding(0, if (isFirst) SizeUtils.dp2px(20f) else 0, 0, 0)
+        clImage.setPadding(0, if (isFirst) 20f.dpToPx(context).toInt() else 0, 0, 0)
 
         refreshItem(clFull, reportIRBean.full_graph_data, TYPE_FULL, 0)
 
