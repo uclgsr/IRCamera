@@ -4,6 +4,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
+import android.util.TypedValue
 import androidx.annotation.ColorInt
 import com.mpdc4gsr.libunified.compat.ContextProvider
 import com.mpdc4gsr.libunified.compat.dpToPx
@@ -59,7 +60,12 @@ class TempDrawHelper {
 
         redPaint.color = Color.RED
 
-        textPaint.textSize = 14f * ContextProvider.getContext().resources.displayMetrics.scaledDensity
+        val context = ContextProvider.getContext()
+        textPaint.textSize = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_SP,
+            14f,
+            context.resources.displayMetrics
+        )
         textPaint.color = Color.WHITE
 
     }
