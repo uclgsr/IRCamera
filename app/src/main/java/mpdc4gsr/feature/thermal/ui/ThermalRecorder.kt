@@ -116,7 +116,7 @@ class ThermalRecorder(private val context: Context) {
                 )
 
                 isRecording.set(true)
-                Log.i(TAG, "Thermal recording started with session timing: ${csvFile!!.absolutePath}")
+                Log.i(TAG, "Thermal recording started with session timing: ${csvFile?.absolutePath ?: "unknown"}")
                 Log.i(TAG, "Session start: ${sessionMetadata.sessionStartIso}")
                 Log.i(TAG, "Thermal recording SessionSync event logged for alignment verification")
 
