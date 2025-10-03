@@ -91,7 +91,7 @@ fun Modifier.safeClickable(
         onClickLabel = onClickLabel,
         role = role,
         interactionSource = interactionSource,
-        indication = ripple(),
+        indication = LocalIndication.current,
         onClick = onClick
     )
 }

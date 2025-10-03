@@ -1,5 +1,7 @@
 package mpdc4gsr.core.ui
 
+import androidx.compose.foundation.Indication
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
@@ -31,6 +33,7 @@ import androidx.compose.runtime.withFrameNanos
  * - Creates interaction source within the composition scope
  * - Tracks press interactions and cancels them on dispose
  * - Properly manages ripple indication lifecycle
+ * - Uses LocalIndication.current to respect any custom indication set at higher levels
  * 
  * This prevents the ANR scenario where:
  * 1. User taps a button triggering ripple + navigation
@@ -68,7 +71,7 @@ fun Modifier.safeClickable(
         onClickLabel = onClickLabel,
         role = role,
         interactionSource = interactionSource,
-        indication = ripple(),
+        indication = LocalIndication.current,
         onClick = onClick
     )
 }
@@ -140,6 +143,7 @@ fun Modifier.safeClickableNoRipple(
  * Safe clickable modifier with deferred navigation.
  * Waits one frame before executing the onClick callback,
  * allowing ripple animation to settle before navigation.
+ * Uses LocalIndication.current to respect any custom indication set at higher levels.
  */
 @Composable
 fun Modifier.safeClickableDeferred(
@@ -172,7 +176,7 @@ fun Modifier.safeClickableDeferred(
         onClickLabel = onClickLabel,
         role = role,
         interactionSource = interactionSource,
-        indication = ripple(),
+        indication = LocalIndication.current,
         onClick = {
             scope.launch {
                 withFrameNanos { }

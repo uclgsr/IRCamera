@@ -55,13 +55,15 @@ fun Modifier.safeClickable(
         onClickLabel = onClickLabel,
         role = role,
         interactionSource = interactionSource,
-        indication = ripple(),
+        indication = LocalIndication.current,
         onClick = onClick
     )
 }
 ```
 
 **Use for**: List items, cards, or any clickable that navigates or changes screens.
+
+**Note**: Uses `LocalIndication.current` to respect any custom indication set at higher composition levels (e.g., for testing with `CompositionLocalProvider(LocalIndication provides null)`).
 
 ### 2. SafeClickableNoRipple
 
