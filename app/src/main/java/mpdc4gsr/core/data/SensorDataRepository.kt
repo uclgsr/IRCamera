@@ -183,11 +183,11 @@ class SensorDataRepository(
                 deviceId.contains("SHIMMER") -> DeviceType.SHIMMER_GSR
                 else -> DeviceType.UNKNOWN
             },
-            isConnected = Math.random() > 0.2, // 80% chance of being connected
-            batteryLevel = (30..100).random(),
-            signalStrength = (60..100).random(),
+            isConnected = false,
+            batteryLevel = null,
+            signalStrength = null,
             lastSeen = System.currentTimeMillis() - (Math.random() * 60000).toLong(),
-            firmwareVersion = "1.${(0..9).random()}.${(0..9).random()}"
+            firmwareVersion = null
         )
     }
 }

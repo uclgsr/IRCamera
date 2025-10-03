@@ -122,7 +122,7 @@ class ComposeComponentsShowcaseActivity :
                     // Component sections
                     ComponentSection(
                         title = "Sensor Dashboard",
-                        description = "Real-time sensor monitoring with animated status indicators"
+                        description = "Demo component - sensors shown are disconnected. Use actual sensor dashboard for real connections."
                     ) {
                         AnimatedSensorDashboard(
                             onSensorClick = { sensor ->
