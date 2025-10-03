@@ -12,14 +12,11 @@ object MonitoredMainThreadPoster {
     
     private val handler = Handler(Looper.getMainLooper())
     
-    @Volatile
-    private var totalPosts = 0L
+    private val totalPosts = java.util.concurrent.atomic.AtomicLong(0L)
     
-    @Volatile
-    private var slowPosts = 0L
+    private val slowPosts = java.util.concurrent.atomic.AtomicLong(0L)
     
-    @Volatile
-    private var criticalPosts = 0L
+    private val criticalPosts = java.util.concurrent.atomic.AtomicLong(0L)
     
     fun post(componentName: String, runnable: Runnable) {
         handler.post(MonitoredRunnable(componentName, runnable))
