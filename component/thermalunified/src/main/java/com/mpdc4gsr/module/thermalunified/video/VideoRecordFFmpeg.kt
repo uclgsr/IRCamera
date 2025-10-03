@@ -432,7 +432,7 @@ class VideoRecordFFmpeg(
                     title = cameraView.context.getString(LibcoreR.string.app_tip),
                     message = cameraView.context.getString(LibcoreR.string.album_report_aleart),
                     showCancel = false,
-                    positiveText = getString(LibcoreR.string.app_confirm),
+                    positiveText = cameraView.context.getString(LibcoreR.string.app_confirm),
                     cancelable = true,
                     onPositive = { }
                 )
