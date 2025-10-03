@@ -4,6 +4,8 @@ import android.content.Context
 import android.os.Build
 import android.os.StatFs
 import android.util.Log
+import mpdc4gsr.core.utils.AppLogger
+import mpdc4gsr.core.utils.ErrorHandler
 import org.json.JSONObject
 import java.io.File
 import java.text.SimpleDateFormat
@@ -56,7 +58,7 @@ class SessionDirectoryManager(private val context: Context) {
         val thermalDir = File(sessionDir, THERMAL_SUBDIR).also { it.mkdirs() }
         val shimmerDir = File(sessionDir, SHIMMER_SUBDIR).also { it.mkdirs() }
 
-        Log.i(TAG, "Created session directory structure: $sessionId")
+        AppLogger.i(TAG, "Created session directory structure: $sessionId")
 
         return SessionDirectory(
             sessionId = sessionId,
@@ -84,7 +86,7 @@ class SessionDirectoryManager(private val context: Context) {
         }
 
         metadataFile.writeText(jsonMetadata.toString(2))
-        Log.i(TAG, "Created session metadata: ${metadataFile.absolutePath}")
+        AppLogger.i(TAG, "Created session metadata: ${metadataFile.absolutePath}")
 
         return metadataFile
     }
@@ -112,10 +114,10 @@ class SessionDirectoryManager(private val context: Context) {
                 jsonMetadata.put("files", JSONObject(filesInfo))
 
                 metadataFile.writeText(jsonMetadata.toString(2))
-                Log.i(TAG, "Updated session metadata: ${sessionDir.sessionId}")
+                AppLogger.i(TAG, "Updated session metadata: ${sessionDir.sessionId}")
 
             } catch (e: Exception) {
-                Log.e(TAG, "Failed to update session metadata", e)
+                AppLogger.e(TAG, "Failed to update session metadata", e)
             }
         }
     }
@@ -142,9 +144,9 @@ class SessionDirectoryManager(private val context: Context) {
                 try {
                     sessionDir.deleteRecursively()
                     cleanedSessions.add(sessionDir.name)
-                    Log.i(TAG, "Cleaned up failed session: ${sessionDir.name}")
+                    AppLogger.i(TAG, "Cleaned up failed session: ${sessionDir.name}")
                 } catch (e: Exception) {
-                    Log.w(TAG, "Failed to cleanup session: ${sessionDir.name}", e)
+                    AppLogger.w(TAG, "Failed to cleanup session: ${sessionDir.name}", e)
                 }
             }
         }
@@ -208,7 +210,7 @@ class SessionDirectoryManager(private val context: Context) {
                 return !hasDataFiles
             }
         } catch (e: Exception) {
-            Log.w(TAG, "Failed to parse metadata for session ${sessionDir.name}", e)
+            AppLogger.w(TAG, "Failed to parse metadata for session ${sessionDir.name}", e)
             return false
         }
 
@@ -243,17 +245,17 @@ class SessionDirectoryManager(private val context: Context) {
 
             if (sessionDir.exists()) {
                 deleted = sessionDir.deleteRecursively()
-                Log.i(TAG, "Deleted session directory: $sessionId")
+                AppLogger.i(TAG, "Deleted session directory: $sessionId")
             }
 
             if (legacyDir.exists()) {
                 deleted = legacyDir.deleteRecursively() || deleted
-                Log.i(TAG, "Deleted legacy session directory: $sessionId")
+                AppLogger.i(TAG, "Deleted legacy session directory: $sessionId")
             }
 
             deleted
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to delete session: $sessionId", e)
+            AppLogger.e(TAG, "Failed to delete session: $sessionId", e)
             false
         }
     }
@@ -262,17 +264,17 @@ class SessionDirectoryManager(private val context: Context) {
         return try {
             val sessionDir = File(baseDirectory, sessionId)
             if (!sessionDir.exists()) {
-                Log.w(TAG, "Session directory not found for export: $sessionId")
+                AppLogger.w(TAG, "Session directory not found for export: $sessionId")
                 return false
             }
 
             // Export functionality is not implemented yet
-            Log.w(TAG, "Export functionality not implemented for session: $sessionId")
+            AppLogger.w(TAG, "Export functionality not implemented for session: $sessionId")
 
             // Return false to indicate the feature is not implemented
             false
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to export session: $sessionId", e)
+            AppLogger.e(TAG, "Failed to export session: $sessionId", e)
             false
         }
     }

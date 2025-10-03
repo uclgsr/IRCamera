@@ -1,6 +1,8 @@
 package mpdc4gsr.feature.network.data
 
 import android.util.Log
+import mpdc4gsr.core.utils.AppLogger
+import mpdc4gsr.core.utils.ErrorHandler
 
 /**
  * Configurable logging for network components with debug/release level support
@@ -19,7 +21,7 @@ object NetworkLogger {
      */
     fun setLogLevel(level: LogLevel) {
         currentLogLevel = level
-        Log.i("NetworkLogger", "Log level set to: $level")
+        AppLogger.i("NetworkLogger", "Log level set to: $level")
     }
 
     /**
@@ -27,7 +29,7 @@ object NetworkLogger {
      */
     fun setFileLogging(enabled: Boolean) {
         enableFileLogging = enabled
-        Log.i("NetworkLogger", "File logging ${if (enabled) "enabled" else "disabled"}")
+        AppLogger.i("NetworkLogger", "File logging ${if (enabled) "enabled" else "disabled"}")
     }
 
     /**
@@ -36,9 +38,9 @@ object NetworkLogger {
     fun v(tag: String, message: String, throwable: Throwable? = null) {
         if (shouldLog(LogLevel.VERBOSE)) {
             if (throwable != null) {
-                Log.v(tag, message, throwable)
+                AppLogger.v(tag, message, throwable)
             } else {
-                Log.v(tag, message)
+                AppLogger.v(tag, message)
             }
         }
     }
@@ -49,9 +51,9 @@ object NetworkLogger {
     fun d(tag: String, message: String, throwable: Throwable? = null) {
         if (shouldLog(LogLevel.DEBUG)) {
             if (throwable != null) {
-                Log.d(tag, message, throwable)
+                AppLogger.d(tag, message, throwable)
             } else {
-                Log.d(tag, message)
+                AppLogger.d(tag, message)
             }
         }
     }
@@ -62,9 +64,9 @@ object NetworkLogger {
     fun i(tag: String, message: String, throwable: Throwable? = null) {
         if (shouldLog(LogLevel.INFO)) {
             if (throwable != null) {
-                Log.i(tag, message, throwable)
+                AppLogger.i(tag, message, throwable)
             } else {
-                Log.i(tag, message)
+                AppLogger.i(tag, message)
             }
         }
     }
@@ -75,9 +77,9 @@ object NetworkLogger {
     fun w(tag: String, message: String, throwable: Throwable? = null) {
         if (shouldLog(LogLevel.WARN)) {
             if (throwable != null) {
-                Log.w(tag, message, throwable)
+                AppLogger.w(tag, message, throwable)
             } else {
-                Log.w(tag, message)
+                AppLogger.w(tag, message)
             }
         }
     }
@@ -88,9 +90,9 @@ object NetworkLogger {
     fun e(tag: String, message: String, throwable: Throwable? = null) {
         if (shouldLog(LogLevel.ERROR)) {
             if (throwable != null) {
-                Log.e(tag, message, throwable)
+                AppLogger.e(tag, message, throwable)
             } else {
-                Log.e(tag, message)
+                AppLogger.e(tag, message)
             }
         }
     }

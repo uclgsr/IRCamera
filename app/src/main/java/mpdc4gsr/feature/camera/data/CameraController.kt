@@ -9,6 +9,8 @@ import android.os.Build
 import android.os.Handler
 import android.os.HandlerThread
 import android.util.Log
+import mpdc4gsr.core.utils.AppLogger
+import mpdc4gsr.core.utils.ErrorHandler
 import android.util.Size
 import android.view.Surface
 import java.util.concurrent.Executor
@@ -38,14 +40,14 @@ class CameraController(private val context: Context) {
     }
 
     fun openCamera(cameraId: String = "0") {
-        Log.i(TAG, "Opening camera $cameraId")
+        AppLogger.i(TAG, "Opening camera $cameraId")
 
         try {
             val manager = context.getSystemService(Context.CAMERA_SERVICE) as CameraManager
             val characteristics = manager.getCameraCharacteristics(cameraId)
 
             deviceCaps = detectCapabilities(characteristics)
-            Log.i(TAG, "Device capabilities: $deviceCaps")
+            AppLogger.i(TAG, "Device capabilities: $deviceCaps")
 
             if (!cameraOpenCloseLock.tryAcquire(CAMERA_OPEN_TIMEOUT_MS, TimeUnit.MILLISECONDS)) {
                 throw RuntimeException("Time out waiting to lock camera opening.")
@@ -54,10 +56,10 @@ class CameraController(private val context: Context) {
             manager.openCamera(cameraId, stateCallback, backgroundHandler)
             currentCameraId = cameraId
         } catch (e: CameraAccessException) {
-            Log.e(TAG, "Failed to open camera $cameraId", e)
+            AppLogger.e(TAG, "Failed to open camera $cameraId", e)
             onCameraError?.invoke("Failed to open camera: ${e.message}")
         } catch (e: SecurityException) {
-            Log.e(TAG, "Camera permission not granted", e)
+            AppLogger.e(TAG, "Camera permission not granted", e)
             onCameraError?.invoke("Camera permission required")
         }
     }
@@ -72,7 +74,7 @@ class CameraController(private val context: Context) {
                 captureSession?.close()
                 captureSession = null
 
-                Log.i(TAG, "Creating capture session with ${surfaces.size} surfaces")
+                AppLogger.i(TAG, "Creating capture session with ${surfaces.size} surfaces")
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                     val outputConfigs = surfaces.map { OutputConfiguration(it) }
@@ -92,11 +94,11 @@ class CameraController(private val context: Context) {
                     device.createCaptureSession(surfaces, callback, backgroundHandler)
                 }
             } catch (e: CameraAccessException) {
-                Log.e(TAG, "Failed to create capture session", e)
+                AppLogger.e(TAG, "Failed to create capture session", e)
                 onCameraError?.invoke("Failed to create capture session: ${e.message}")
             }
         } ?: run {
-            Log.e(TAG, "Cannot create session - camera device is null")
+            AppLogger.e(TAG, "Cannot create session - camera device is null")
             onCameraError?.invoke("Camera not opened")
         }
     }
@@ -105,7 +107,7 @@ class CameraController(private val context: Context) {
         return try {
             cameraDevice?.createCaptureRequest(template)
         } catch (e: CameraAccessException) {
-            Log.e(TAG, "Failed to create capture request", e)
+            AppLogger.e(TAG, "Failed to create capture request", e)
             null
         }
     }
@@ -127,7 +129,7 @@ class CameraController(private val context: Context) {
                 manager.getCameraCharacteristics(currentCameraId)
             } else null
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to get camera characteristics", e)
+            AppLogger.e(TAG, "Failed to get camera characteristics", e)
             null
         }
     }
@@ -175,7 +177,7 @@ class CameraController(private val context: Context) {
                 }
             }
         } catch (e: Exception) {
-            Log.d(TAG, "High-speed video detection failed: ${e.message}")
+            AppLogger.d(TAG, "High-speed video detection failed: ${e.message}")
         }
 
         val sensorOrientation = characteristics.get(CameraCharacteristics.SENSOR_ORIENTATION) ?: 0
@@ -193,7 +195,7 @@ class CameraController(private val context: Context) {
             override fun onOpened(camera: CameraDevice) {
                 cameraOpenCloseLock.release()
                 cameraDevice = camera
-                Log.i(TAG, "Camera opened successfully")
+                AppLogger.i(TAG, "Camera opened successfully")
 
                 deviceCaps?.let { caps ->
                     onCameraOpened?.invoke(caps)
@@ -204,7 +206,7 @@ class CameraController(private val context: Context) {
                 cameraOpenCloseLock.release()
                 camera.close()
                 cameraDevice = null
-                Log.w(TAG, "Camera disconnected")
+                AppLogger.w(TAG, "Camera disconnected")
                 onCameraError?.invoke("Camera disconnected")
             }
 
@@ -226,7 +228,7 @@ class CameraController(private val context: Context) {
                         else -> "Unknown camera error: $error"
                     }
 
-                Log.e(TAG, "Camera error: $errorMessage")
+                AppLogger.e(TAG, "Camera error: $errorMessage")
                 onCameraError?.invoke("Camera error: $errorMessage")
             }
         }
@@ -244,7 +246,7 @@ class CameraController(private val context: Context) {
             backgroundThread = null
             backgroundHandler = null
         } catch (e: InterruptedException) {
-            Log.e(TAG, "Error stopping background thread", e)
+            AppLogger.e(TAG, "Error stopping background thread", e)
         }
     }
 }

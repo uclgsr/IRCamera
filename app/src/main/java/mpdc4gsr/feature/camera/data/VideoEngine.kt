@@ -4,6 +4,8 @@ import android.content.Context
 import android.media.MediaRecorder
 import android.os.Build
 import android.util.Log
+import mpdc4gsr.core.utils.AppLogger
+import mpdc4gsr.core.utils.ErrorHandler
 import android.util.Size
 import java.io.File
 
@@ -46,7 +48,7 @@ class VideoEngine(private val context: Context? = null) {
                 setVideoEncoder(MediaRecorder.VideoEncoder.H264)
 
                 setOrientationHint(orientationHint)
-                Log.d(TAG, "Video orientation hint set to: $orientationHint degrees")
+                AppLogger.d(TAG, "Video orientation hint set to: $orientationHint degrees")
 
                 if (audioEnabled) {
                     setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
@@ -65,7 +67,7 @@ class VideoEngine(private val context: Context? = null) {
 
             return mediaRecorder?.surface
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to prepare MediaRecorder", e)
+            AppLogger.e(TAG, "Failed to prepare MediaRecorder", e)
             release()
             return null
         }
@@ -74,16 +76,16 @@ class VideoEngine(private val context: Context? = null) {
     fun start(): Boolean {
         return try {
             if (!isPrepared) {
-                Log.e(TAG, "MediaRecorder not prepared")
+                AppLogger.e(TAG, "MediaRecorder not prepared")
                 return false
             }
 
             mediaRecorder?.start()
             isRecording = true
-            Log.i(TAG, "Video recording started")
+            AppLogger.i(TAG, "Video recording started")
             true
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to start video recording", e)
+            AppLogger.e(TAG, "Failed to start video recording", e)
             false
         }
     }
@@ -93,10 +95,10 @@ class VideoEngine(private val context: Context? = null) {
             if (isRecording) {
                 mediaRecorder?.stop()
                 isRecording = false
-                Log.i(TAG, "Video recording stopped")
+                AppLogger.i(TAG, "Video recording stopped")
             }
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to stop video recording", e)
+            AppLogger.e(TAG, "Failed to stop video recording", e)
         }
     }
 
@@ -109,9 +111,9 @@ class VideoEngine(private val context: Context? = null) {
             mediaRecorder = null
             isPrepared = false
             isRecording = false
-            Log.d(TAG, "MediaRecorder released")
+            AppLogger.d(TAG, "MediaRecorder released")
         } catch (e: Exception) {
-            Log.e(TAG, "Error releasing MediaRecorder", e)
+            AppLogger.e(TAG, "Error releasing MediaRecorder", e)
         }
     }
 

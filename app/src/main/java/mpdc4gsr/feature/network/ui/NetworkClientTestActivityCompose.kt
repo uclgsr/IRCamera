@@ -7,6 +7,8 @@ import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
+import mpdc4gsr.core.utils.AppLogger
+import mpdc4gsr.core.utils.ErrorHandler
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
@@ -181,7 +183,7 @@ class NetworkClientTestActivityCompose : BaseComposeActivity<NetworkClientTestVi
 
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-            Log.i(TAG, "Service connected")
+            AppLogger.i(TAG, "Service connected")
             val binder = service as RecordingService.RecordingServiceBinder
             recordingService = binder.getService()
             networkManager = binder.getNetworkManager()
@@ -191,7 +193,7 @@ class NetworkClientTestActivityCompose : BaseComposeActivity<NetworkClientTestVi
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
-            Log.i(TAG, "Service disconnected")
+            AppLogger.i(TAG, "Service disconnected")
             recordingService = null
             networkManager = null
             isBound = false
@@ -223,7 +225,7 @@ class NetworkClientTestActivityCompose : BaseComposeActivity<NetworkClientTestVi
         networkManager?.let { manager ->
             lifecycleScope.launch {
                 manager.connectionState.collect { state ->
-                    Log.i(TAG, "Connection state changed: $state")
+                    AppLogger.i(TAG, "Connection state changed: $state")
                     testViewModel.updateConnectionState(state)
                     updateConnectionInfo()
                 }
@@ -258,7 +260,7 @@ class NetworkClientTestActivityCompose : BaseComposeActivity<NetworkClientTestVi
             try {
                 networkManager?.connectWifi(ip, port)
             } catch (e: Exception) {
-                Log.e(TAG, "WiFi connection failed", e)
+                AppLogger.e(TAG, "WiFi connection failed", e)
                 testViewModel.updateConnectionState(CommandConnection.ConnectionState.ERROR)
             }
         }
@@ -269,14 +271,14 @@ class NetworkClientTestActivityCompose : BaseComposeActivity<NetworkClientTestVi
             try {
                 networkManager?.sendResponse("ping")
             } catch (e: Exception) {
-                Log.e(TAG, "Failed to send message", e)
+                AppLogger.e(TAG, "Failed to send message", e)
             }
         }
     }
 
     private fun testBluetoothConnection() {
         // Placeholder for Bluetooth connection logic
-        Log.i(TAG, "Bluetooth connection test - implementation needed")
+        AppLogger.i(TAG, "Bluetooth connection test - implementation needed")
     }
 
     @OptIn(ExperimentalMaterial3Api::class)

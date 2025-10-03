@@ -2,6 +2,8 @@ package mpdc4gsr.feature.network.data
 
 import android.content.Context
 import android.util.Log
+import mpdc4gsr.core.utils.AppLogger
+import mpdc4gsr.core.utils.ErrorHandler
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import mpdc4gsr.core.data.TimeSyncManager
@@ -76,7 +78,7 @@ class CommandServer(
      * Initialize and start the command server
      */
     suspend fun start(callback: CommandCallback, syncManager: TimeSyncManager) {
-        Log.i(TAG, "Starting command server on port $port")
+        AppLogger.i(TAG, "Starting command server on port $port")
 
         this.commandCallback = callback
         this.timeSyncManager = syncManager
@@ -96,7 +98,7 @@ class CommandServer(
                 val startResult = networkServer?.start()
                 if (startResult == true) {
                     _serverStatus.value = ServerStatus.RUNNING
-                    Log.i(TAG, "Command server started successfully")
+                    AppLogger.i(TAG, "Command server started successfully")
 
                     // Monitor connection status
                     networkServer?.connectionStateFlow?.collect { connected ->
@@ -107,12 +109,12 @@ class CommandServer(
                     }
                 } else {
                     _serverStatus.value = ServerStatus.ERROR
-                    Log.e(TAG, "Failed to start network server")
+                    AppLogger.e(TAG, "Failed to start network server")
                 }
             }
 
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to start command server", e)
+            AppLogger.e(TAG, "Failed to start command server", e)
             _serverStatus.value = ServerStatus.ERROR
             throw e
         }
@@ -122,7 +124,7 @@ class CommandServer(
      * Stop the command server
      */
     suspend fun stop() {
-        Log.i(TAG, "Stopping command server")
+        AppLogger.i(TAG, "Stopping command server")
 
         serverScope.launch {
             networkServer?.stop()
@@ -132,7 +134,7 @@ class CommandServer(
         _serverStatus.value = ServerStatus.STOPPED
         _connectionStatus.value = ConnectionStatus.DISCONNECTED
 
-        Log.i(TAG, "Command server stopped")
+        AppLogger.i(TAG, "Command server stopped")
     }
 
     /**
@@ -155,10 +157,10 @@ class CommandServer(
 
             networkServer?.sendMessage(ackMessage.toString())
 
-            Log.d(TAG, "Sent ACK for message $originalMessageId with status $status")
+            AppLogger.d(TAG, "Sent ACK for message $originalMessageId with status $status")
 
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to send ACK", e)
+            AppLogger.e(TAG, "Failed to send ACK", e)
         }
     }
 
@@ -177,10 +179,10 @@ class CommandServer(
 
             networkServer?.sendMessage(statusMessage.toString())
 
-            Log.d(TAG, "Sent status update: $status")
+            AppLogger.d(TAG, "Sent status update: $status")
 
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to send status update", e)
+            AppLogger.e(TAG, "Failed to send status update", e)
         }
     }
 
@@ -190,7 +192,7 @@ class CommandServer(
     private fun createProtocolCallback(): ProtocolHandler.CommandHandler {
         return object : ProtocolHandler.CommandHandler {
             override suspend fun onStartRecording(sessionId: String): ProtocolHandler.CommandResult {
-                Log.i(TAG, "Starting recording for session: $sessionId")
+                AppLogger.i(TAG, "Starting recording for session: $sessionId")
 
                 return try {
                     // Delegate to recording controller
@@ -207,7 +209,7 @@ class CommandServer(
                         message = "Command callback not available"
                     )
                 } catch (e: Exception) {
-                    Log.e(TAG, "Failed to start recording", e)
+                    AppLogger.e(TAG, "Failed to start recording", e)
                     ProtocolHandler.CommandResult(
                         success = false,
                         message = "Recording start failed: ${e.message}"
@@ -216,7 +218,7 @@ class CommandServer(
             }
 
             override suspend fun onStopRecording(sessionId: String): ProtocolHandler.CommandResult {
-                Log.i(TAG, "Stopping recording for session: $sessionId")
+                AppLogger.i(TAG, "Stopping recording for session: $sessionId")
 
                 return try {
                     commandCallback?.let { callback ->
@@ -231,7 +233,7 @@ class CommandServer(
                         message = "Command callback not available"
                     )
                 } catch (e: Exception) {
-                    Log.e(TAG, "Failed to stop recording", e)
+                    AppLogger.e(TAG, "Failed to stop recording", e)
                     ProtocolHandler.CommandResult(
                         success = false,
                         message = "Recording stop failed: ${e.message}"
@@ -240,7 +242,7 @@ class CommandServer(
             }
 
             override suspend fun onSyncRequest(pcTimestamp: Long): ProtocolHandler.SyncResult {
-                Log.i(TAG, "Processing sync request from PC")
+                AppLogger.i(TAG, "Processing sync request from PC")
 
                 return try {
                     commandCallback?.let { callback ->
@@ -261,7 +263,7 @@ class CommandServer(
                         success = false
                     )
                 } catch (e: Exception) {
-                    Log.e(TAG, "Failed to process sync request", e)
+                    AppLogger.e(TAG, "Failed to process sync request", e)
                     ProtocolHandler.SyncResult(success = false)
                 }
             }

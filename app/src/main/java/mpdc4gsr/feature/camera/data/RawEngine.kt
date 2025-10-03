@@ -9,6 +9,8 @@ import android.hardware.camera2.TotalCaptureResult
 import android.media.Image
 import android.media.ImageReader
 import android.util.Log
+import mpdc4gsr.core.utils.AppLogger
+import mpdc4gsr.core.utils.ErrorHandler
 import android.util.Size
 import android.view.Surface
 import java.io.File
@@ -65,7 +67,7 @@ class RawEngine(private val context: Context) {
                 "RAW engine setup: ${rawSize.width}x${rawSize.height}, Processing: $processingMode"
             )
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to setup RAW engine", e)
+            AppLogger.e(TAG, "Failed to setup RAW engine", e)
             onError?.invoke("RAW setup failed: ${e.message}")
         }
     }
@@ -75,12 +77,12 @@ class RawEngine(private val context: Context) {
     fun startCapture() {
         isCapturing = true
         rawCaptureCount = 0
-        Log.i(TAG, "RAW capture started")
+        AppLogger.i(TAG, "RAW capture started")
     }
 
     fun stopCapture() {
         isCapturing = false
-        Log.i(TAG, "RAW capture stopped, captured $rawCaptureCount images")
+        AppLogger.i(TAG, "RAW capture stopped, captured $rawCaptureCount images")
     }
 
     fun storeCaptureResult(result: TotalCaptureResult) {
@@ -105,7 +107,7 @@ class RawEngine(private val context: Context) {
     fun setStage3ProcessingEnabled(enabled: Boolean) {
         enableStage3Processing = enabled
         val mode = if (enabled) "Stage3/Level3" else "Standard"
-        Log.i(TAG, "RAW processing mode changed to: $mode")
+        AppLogger.i(TAG, "RAW processing mode changed to: $mode")
     }
 
     /**
@@ -118,7 +120,7 @@ class RawEngine(private val context: Context) {
         rawImageReader?.close()
         rawImageReader = null
         pendingCaptureResults.clear()
-        Log.i(TAG, "RAW engine released")
+        AppLogger.i(TAG, "RAW engine released")
     }
 
     private val rawImageAvailableListener =
@@ -134,12 +136,12 @@ class RawEngine(private val context: Context) {
                 if (captureResult != null) {
                     saveRawImageAsDng(image, captureResult)
                 } else {
-                    Log.w(TAG, "No capture result found for timestamp $timestamp")
+                    AppLogger.w(TAG, "No capture result found for timestamp $timestamp")
 
                     saveRawImageAsRaw(image)
                 }
             } catch (e: Exception) {
-                Log.e(TAG, "Failed to process RAW image", e)
+                AppLogger.e(TAG, "Failed to process RAW image", e)
                 onError?.invoke("RAW processing failed: ${e.message}")
             } finally {
                 image.close()
@@ -184,7 +186,7 @@ class RawEngine(private val context: Context) {
                             "Configured DNG for Samsung Stage3/Level3 processing with orientation and no thumbnail"
                         )
                     } catch (e: Exception) {
-                        Log.w(TAG, "Could not set Stage3/Level3 specific metadata: ${e.message}")
+                        AppLogger.w(TAG, "Could not set Stage3/Level3 specific metadata: ${e.message}")
                     }
                 }
 
@@ -201,17 +203,17 @@ class RawEngine(private val context: Context) {
                 onRawImageSaved?.invoke(dngFile)
             } else {
                 // Fallback to raw binary if no characteristics available
-                Log.w(TAG, "No camera characteristics available, falling back to raw binary")
+                AppLogger.w(TAG, "No camera characteristics available, falling back to raw binary")
                 saveRawImageAsRaw(image)
             }
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to save Stage3/Level3 DNG", e)
+            AppLogger.e(TAG, "Failed to save Stage3/Level3 DNG", e)
             onError?.invoke("Stage3/Level3 DNG save failed: ${e.message}")
             // Fallback to raw binary on failure
             try {
                 saveRawImageAsRaw(image)
             } catch (fallbackException: Exception) {
-                Log.e(TAG, "Fallback raw save also failed", fallbackException)
+                AppLogger.e(TAG, "Fallback raw save also failed", fallbackException)
             }
         }
     }
@@ -229,10 +231,10 @@ class RawEngine(private val context: Context) {
             rawFile.writeBytes(bytes)
 
             rawCaptureCount++
-            Log.d(TAG, "Saved RAW binary: ${rawFile.name} (${image.width}x${image.height})")
+            AppLogger.d(TAG, "Saved RAW binary: ${rawFile.name} (${image.width}x${image.height})")
             onRawImageSaved?.invoke(rawFile)
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to save RAW binary", e)
+            AppLogger.e(TAG, "Failed to save RAW binary", e)
             onError?.invoke("RAW save failed: ${e.message}")
         }
     }

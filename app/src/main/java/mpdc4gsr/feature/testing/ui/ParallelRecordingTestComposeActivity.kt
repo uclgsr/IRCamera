@@ -2,6 +2,8 @@ package mpdc4gsr.feature.testing.ui
 
 import android.os.Bundle
 import android.util.Log
+import mpdc4gsr.core.utils.AppLogger
+import mpdc4gsr.core.utils.ErrorHandler
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
@@ -404,7 +406,7 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
         onMetricsUpdate: (Map<String, Any>) -> Unit,
         onComplete: () -> Unit
     ) {
-        Log.i(TAG, "Starting parallel recording test")
+        AppLogger.i(TAG, "Starting parallel recording test")
 
         val testMetricsMap = mutableMapOf<String, Any>()
         val startTime = System.currentTimeMillis()
@@ -452,7 +454,7 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
             onStateUpdate(RecordingState.COMPLETED)
 
         } catch (e: Exception) {
-            Log.e(TAG, "Parallel recording test failed: ${e.message}")
+            AppLogger.e(TAG, "Parallel recording test failed: ${e.message}")
             onStateUpdate(RecordingState.ERROR)
         } finally {
             onComplete()
@@ -460,7 +462,7 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
     }
 
     private suspend fun startParallelRecording(currentStatuses: List<SensorStatus>): List<SensorStatus> {
-        Log.d(TAG, "Starting parallel recording from all sensors")
+        AppLogger.d(TAG, "Starting parallel recording from all sensors")
 
         var statuses = currentStatuses
         // Start GSR recording
@@ -479,7 +481,7 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
     }
 
     private suspend fun stopParallelRecording(currentStatuses: List<SensorStatus>): List<SensorStatus> {
-        Log.d(TAG, "Stopping parallel recording")
+        AppLogger.d(TAG, "Stopping parallel recording")
 
         // Stop all sensors
         return currentStatuses.map { sensor ->
@@ -551,17 +553,17 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
     }
 
     private suspend fun testSensorInitialization() {
-        Log.d(TAG, "Testing sensor initialization")
+        AppLogger.d(TAG, "Testing sensor initialization")
         try {
             delay(3000)
-            Log.d(TAG, "Sensor initialization test completed")
+            AppLogger.d(TAG, "Sensor initialization test completed")
         } catch (e: Exception) {
-            Log.e(TAG, "Sensor initialization test failed: ${e.message}")
+            AppLogger.e(TAG, "Sensor initialization test failed: ${e.message}")
         }
     }
 
     private suspend fun testSynchronizedStart() {
-        Log.d(TAG, "Testing synchronized start")
+        AppLogger.d(TAG, "Testing synchronized start")
         try {
             val sensorStatuses = listOf(
                 SensorStatus(sensorName = "GSR Sensor"),
@@ -570,44 +572,44 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
             )
             startParallelRecording(sensorStatuses)
             delay(2000)
-            Log.d(TAG, "Synchronized start test completed")
+            AppLogger.d(TAG, "Synchronized start test completed")
         } catch (e: Exception) {
-            Log.e(TAG, "Synchronized start test failed: ${e.message}")
+            AppLogger.e(TAG, "Synchronized start test failed: ${e.message}")
         }
     }
 
     private suspend fun testDataCollection() {
-        Log.d(TAG, "Testing data collection")
+        AppLogger.d(TAG, "Testing data collection")
         try {
             delay(5000)
-            Log.d(TAG, "Data collection test completed")
+            AppLogger.d(TAG, "Data collection test completed")
         } catch (e: Exception) {
-            Log.e(TAG, "Data collection test failed: ${e.message}")
+            AppLogger.e(TAG, "Data collection test failed: ${e.message}")
         }
     }
 
     private suspend fun testBufferManagement() {
-        Log.d(TAG, "Testing buffer management")
+        AppLogger.d(TAG, "Testing buffer management")
         try {
             delay(4000)
-            Log.d(TAG, "Buffer management test completed")
+            AppLogger.d(TAG, "Buffer management test completed")
         } catch (e: Exception) {
-            Log.e(TAG, "Buffer management test failed: ${e.message}")
+            AppLogger.e(TAG, "Buffer management test failed: ${e.message}")
         }
     }
 
     private suspend fun testErrorHandling() {
-        Log.d(TAG, "Testing error handling")
+        AppLogger.d(TAG, "Testing error handling")
         try {
             delay(3000)
-            Log.d(TAG, "Error handling test completed")
+            AppLogger.d(TAG, "Error handling test completed")
         } catch (e: Exception) {
-            Log.e(TAG, "Error handling test failed: ${e.message}")
+            AppLogger.e(TAG, "Error handling test failed: ${e.message}")
         }
     }
 
     private suspend fun testSynchronizedStop() {
-        Log.d(TAG, "Testing synchronized stop")
+        AppLogger.d(TAG, "Testing synchronized stop")
         try {
             val sensorStatuses = listOf(
                 SensorStatus(sensorName = "GSR Sensor", isRecording = true),
@@ -616,9 +618,9 @@ class ParallelRecordingTestComposeActivity : ComponentActivity() {
             )
             stopParallelRecording(sensorStatuses)
             delay(2000)
-            Log.d(TAG, "Synchronized stop test completed")
+            AppLogger.d(TAG, "Synchronized stop test completed")
         } catch (e: Exception) {
-            Log.e(TAG, "Synchronized stop test failed: ${e.message}")
+            AppLogger.e(TAG, "Synchronized stop test failed: ${e.message}")
         }
     }
 }

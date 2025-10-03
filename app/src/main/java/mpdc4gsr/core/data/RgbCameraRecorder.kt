@@ -4,6 +4,8 @@ import android.content.Context
 import android.graphics.ImageFormat
 import android.os.Build
 import android.util.Log
+import mpdc4gsr.core.utils.AppLogger
+import mpdc4gsr.core.utils.ErrorHandler
 import android.util.Range
 import android.util.Size
 import androidx.camera.core.*
@@ -210,7 +212,7 @@ class RgbCameraRecorder(
             cameraProvider = try {
                 ProcessCameraProvider.getInstance(context).get()
             } catch (e: Exception) {
-                Log.e(TAG, "Failed to get CameraProvider instance", e)
+                AppLogger.e(TAG, "Failed to get CameraProvider instance", e)
                 _cameraStatus.value = "Camera Service Unavailable"
                 emitError(
                     ErrorType.INITIALIZATION_FAILED,
@@ -221,7 +223,7 @@ class RgbCameraRecorder(
 
             if (!cameraProvider!!.hasCamera(currentCameraSelector)) {
                 val cameraType = if (isUsingFrontCamera) "Front" else "Back"
-                Log.w(TAG, "$cameraType camera not available on this device")
+                AppLogger.w(TAG, "$cameraType camera not available on this device")
                 _cameraStatus.value = "$cameraType Camera Not Available"
                 emitError(
                     ErrorType.INITIALIZATION_FAILED,
@@ -267,12 +269,12 @@ class RgbCameraRecorder(
             return@withContext true
 
         } catch (e: SecurityException) {
-            Log.e(TAG, "Camera security exception - permission issue", e)
+            AppLogger.e(TAG, "Camera security exception - permission issue", e)
             _cameraStatus.value = "Permission Error"
             emitError(ErrorType.PERMISSION_DENIED, "Camera permission required: ${e.message}")
             return@withContext false
         } catch (e: IllegalStateException) {
-            Log.e(TAG, "Camera in use by another application", e)
+            AppLogger.e(TAG, "Camera in use by another application", e)
             _cameraStatus.value = "Camera In Use"
             emitError(
                 ErrorType.INITIALIZATION_FAILED,
@@ -280,7 +282,7 @@ class RgbCameraRecorder(
             )
             return@withContext false
         } catch (e: Exception) {
-            Log.e(TAG, "Unexpected camera initialization error", e)
+            AppLogger.e(TAG, "Unexpected camera initialization error", e)
             _cameraStatus.value = "Initialization Failed"
             emitError(ErrorType.INITIALIZATION_FAILED, "Camera initialization failed: ${e.message}")
             return@withContext false
@@ -292,7 +294,7 @@ class RgbCameraRecorder(
             val deviceModel = android.os.Build.MODEL
             val deviceManufacturer = android.os.Build.MANUFACTURER
 
-            Log.d(TAG, "Detecting capabilities for device: $deviceManufacturer $deviceModel")
+            AppLogger.d(TAG, "Detecting capabilities for device: $deviceManufacturer $deviceModel")
 
             deviceSupports4K = KNOWN_4K_DEVICES.contains(deviceModel) ||
                     (deviceModel.contains("S22", ignoreCase = true) && deviceManufacturer.equals(
@@ -322,7 +324,7 @@ class RgbCameraRecorder(
                         android.hardware.camera2.CameraMetadata.REQUEST_AVAILABLE_CAPABILITIES_RAW
                     ) == true
                 } catch (e: Exception) {
-                    Log.d(TAG, "Could not check RAW capability via Camera2: ${e.message}")
+                    AppLogger.d(TAG, "Could not check RAW capability via Camera2: ${e.message}")
                 }
             }
 
@@ -332,7 +334,7 @@ class RgbCameraRecorder(
             )
 
         } catch (e: Exception) {
-            Log.w(TAG, "Error detecting device capabilities, using safe defaults", e)
+            AppLogger.w(TAG, "Error detecting device capabilities, using safe defaults", e)
             deviceSupports4K = false
             deviceSupportsRAW = false
         }
@@ -343,7 +345,7 @@ class RgbCameraRecorder(
             // Check if camera supports high-quality video recording
             false
         } catch (e: Exception) {
-            Log.w(TAG, "Could not check video profile support", e)
+            AppLogger.w(TAG, "Could not check video profile support", e)
             false
         }
     }
@@ -354,7 +356,7 @@ class RgbCameraRecorder(
                 supportsBackCamera = provider.hasCamera(CameraSelector.DEFAULT_BACK_CAMERA)
                 supportsFrontCamera = provider.hasCamera(CameraSelector.DEFAULT_FRONT_CAMERA)
 
-                Log.i(TAG, " Camera availability detected:")
+                AppLogger.i(TAG, " Camera availability detected:")
                 Log.i(
                     TAG,
                     "  • Back camera: ${if (supportsBackCamera) "Available" else "Not available"}"
@@ -373,14 +375,14 @@ class RgbCameraRecorder(
                         switchToBackCamera()
                     }
                 } else if (!isUsingFrontCamera && !supportsBackCamera) {
-                    Log.w(TAG, " Back camera not available, switching to front camera")
+                    AppLogger.w(TAG, " Back camera not available, switching to front camera")
                     recordingScope.launch {
                         switchToFrontCamera()
                     }
                 }
             }
         } catch (e: Exception) {
-            Log.w(TAG, "Error detecting available cameras", e)
+            AppLogger.w(TAG, "Error detecting available cameras", e)
 
             supportsBackCamera = true
             supportsFrontCamera = false
@@ -407,7 +409,7 @@ class RgbCameraRecorder(
                 val isAvailable = cameraProvider?.hasCamera(targetCameraSelector) ?: false
                 if (!isAvailable) {
                     val cameraType = if (useFrontCamera) "front" else "back"
-                    Log.w(TAG, "Cannot switch to $cameraType camera - not available on this device")
+                    AppLogger.w(TAG, "Cannot switch to $cameraType camera - not available on this device")
                     emitError(
                         ErrorType.INITIALIZATION_FAILED,
                         "$cameraType camera not available"
@@ -416,13 +418,13 @@ class RgbCameraRecorder(
                 }
 
                 if (isUsingFrontCamera == useFrontCamera) {
-                    Log.d(TAG, "Already using ${if (useFrontCamera) "front" else "back"} camera")
+                    AppLogger.d(TAG, "Already using ${if (useFrontCamera) "front" else "back"} camera")
                     return@withContext true
                 }
 
                 val wasRecording = _isRecording.get()
                 if (wasRecording) {
-                    Log.w(TAG, "Cannot switch camera during recording")
+                    AppLogger.w(TAG, "Cannot switch camera during recording")
                     emitError(
                         ErrorType.RECORDING_FAILED,
                         "Cannot switch camera while recording"
@@ -430,7 +432,7 @@ class RgbCameraRecorder(
                     return@withContext false
                 }
 
-                Log.i(TAG, " Switching to ${if (useFrontCamera) "front" else "back"} camera")
+                AppLogger.i(TAG, " Switching to ${if (useFrontCamera) "front" else "back"} camera")
                 _cameraStatus.value = "Switching Camera..."
 
                 currentCameraSelector = targetCameraSelector
@@ -449,12 +451,12 @@ class RgbCameraRecorder(
                     true
                 } else {
                     _cameraStatus.value = "Camera Switch Failed"
-                    Log.e(TAG, " Failed to switch camera")
+                    AppLogger.e(TAG, " Failed to switch camera")
                     false
                 }
 
             } catch (e: Exception) {
-                Log.e(TAG, "Error during camera switch", e)
+                AppLogger.e(TAG, "Error during camera switch", e)
                 _cameraStatus.value = "Camera Switch Error"
                 emitError(ErrorType.INITIALIZATION_FAILED, "Camera switch failed: ${e.message}")
                 false
@@ -516,20 +518,20 @@ class RgbCameraRecorder(
             val preferredFps = recordingSettings?.videoFrameRate ?: VIDEO_FPS_TARGET
 
             if (qualityConfig != null) {
-                Log.i(TAG, "Applying user settings: quality=${recordingSettings?.recordingQuality}, fps=$preferredFps")
+                AppLogger.i(TAG, "Applying user settings: quality=${recordingSettings?.recordingQuality}, fps=$preferredFps")
                 selectedVideoWidth = qualityConfig.videoWidth
                 selectedVideoHeight = qualityConfig.videoHeight
                 selectedVideoBitrate = qualityConfig.videoBitrate
                 selectedVideoFps =
                     preferredFps.coerceIn(VIDEO_FPS_FALLBACK, if (supports60fps) VIDEO_FPS_60 else VIDEO_FPS_TARGET)
             } else if (deviceSupports4K) {
-                Log.i(TAG, "Configuring for 4K recording on supported device")
+                AppLogger.i(TAG, "Configuring for 4K recording on supported device")
                 selectedVideoWidth = VIDEO_WIDTH_4K
                 selectedVideoHeight = VIDEO_HEIGHT_4K
                 selectedVideoBitrate = VIDEO_BITRATE_4K
                 selectedVideoFps = if (supports60fps) VIDEO_FPS_60 else VIDEO_FPS_TARGET
             } else {
-                Log.i(TAG, "Configuring for 1080p recording with fallback safety")
+                AppLogger.i(TAG, "Configuring for 1080p recording with fallback safety")
                 selectedVideoWidth = VIDEO_WIDTH_1080P
                 selectedVideoHeight = VIDEO_HEIGHT_1080P
                 selectedVideoBitrate = VIDEO_BITRATE_1080P
@@ -546,7 +548,7 @@ class RgbCameraRecorder(
             )
 
         } catch (e: Exception) {
-            Log.e(TAG, "Error optimizing video configuration, using safe defaults", e)
+            AppLogger.e(TAG, "Error optimizing video configuration, using safe defaults", e)
             selectedVideoWidth = VIDEO_WIDTH_1080P
             selectedVideoHeight = VIDEO_HEIGHT_1080P
             selectedVideoBitrate = VIDEO_BITRATE_1080P
@@ -578,7 +580,7 @@ class RgbCameraRecorder(
             )
             supports60fps
         } catch (e: Exception) {
-            Log.w(TAG, "Error checking 60fps support, defaulting to false", e)
+            AppLogger.w(TAG, "Error checking 60fps support, defaulting to false", e)
             false
         }
     }
@@ -624,9 +626,9 @@ class RgbCameraRecorder(
                                 android.hardware.camera2.CaptureRequest.CONTROL_MODE,
                                 android.hardware.camera2.CameraMetadata.CONTROL_MODE_USE_SCENE_MODE
                             )
-                        Log.i(TAG, "RAW/DNG capture enabled for supported device")
+                        AppLogger.i(TAG, "RAW/DNG capture enabled for supported device")
                     } catch (e: Exception) {
-                        Log.w(TAG, "Could not enable RAW capture: ${e.message}")
+                        AppLogger.w(TAG, "Could not enable RAW capture: ${e.message}")
                     }
                 }
             }.build()
@@ -653,20 +655,20 @@ class RgbCameraRecorder(
                             android.hardware.camera2.CameraMetadata.NOISE_REDUCTION_MODE_HIGH_QUALITY
                         )
 
-                        Log.i(TAG, "RAW ImageCapture configured for Stage 3/Level 3 DNG capture")
+                        AppLogger.i(TAG, "RAW ImageCapture configured for Stage 3/Level 3 DNG capture")
                     }.build()
 
                     // Store the RAW ImageCapture for use in capture operations
                     this@RgbCameraRecorder.rawImageCapture = rawImageCapture
 
                 } catch (e: Exception) {
-                    Log.w(TAG, "Could not configure RAW ImageCapture for Stage 3: ${e.message}")
+                    AppLogger.w(TAG, "Could not configure RAW ImageCapture for Stage 3: ${e.message}")
                 }
             }
 
-            Log.d(TAG, "Camera use cases configured successfully")
+            AppLogger.d(TAG, "Camera use cases configured successfully")
         } catch (e: Exception) {
-            Log.e(TAG, "Error setting up camera use cases", e)
+            AppLogger.e(TAG, "Error setting up camera use cases", e)
             throw e
         }
     }
@@ -685,7 +687,7 @@ class RgbCameraRecorder(
             imageCapture?.let { useCases.add(it) }
             rawImageCapture?.let {
                 useCases.add(it)
-                Log.i(TAG, " RAW ImageCapture added for Stage 3/Level 3 DNG capture")
+                AppLogger.i(TAG, " RAW ImageCapture added for Stage 3/Level 3 DNG capture")
             }
 
             preview?.let { preview ->
@@ -702,19 +704,19 @@ class RgbCameraRecorder(
                         previewView.scaleType = PreviewView.ScaleType.FILL_CENTER
 
                     } catch (e: Exception) {
-                        Log.w(TAG, "Preview binding failed, continuing without preview", e)
+                        AppLogger.w(TAG, "Preview binding failed, continuing without preview", e)
                         emitError(
                             ErrorType.INITIALIZATION_FAILED,
                             "Camera preview unavailable but recording will continue"
                         )
                     }
                 } ?: run {
-                    Log.w(TAG, "No PreviewView provided - recording without live preview")
+                    AppLogger.w(TAG, "No PreviewView provided - recording without live preview")
                 }
             }
 
             if (useCases.isEmpty()) {
-                Log.e(TAG, "No use cases available for binding")
+                AppLogger.e(TAG, "No use cases available for binding")
                 return@withContext false
             }
 
@@ -729,25 +731,25 @@ class RgbCameraRecorder(
                 val hasFlash = cameraInfo.hasFlashUnit()
                 val zoomRatio = cameraInfo.zoomState.value?.zoomRatio ?: 1.0f
 
-                Log.i(TAG, " Camera bound successfully:")
-                Log.i(TAG, "  - Camera: ${if (isUsingFrontCamera) "Front" else "Back"}")
+                AppLogger.i(TAG, " Camera bound successfully:")
+                AppLogger.i(TAG, "  - Camera: ${if (isUsingFrontCamera) "Front" else "Back"}")
                 Log.i(
                     TAG,
                     "  - Resolution: ${selectedVideoWidth}x${selectedVideoHeight}@${selectedVideoFps}fps"
                 )
-                Log.i(TAG, "  - Flash available: $hasFlash")
-                Log.i(TAG, "  - Zoom ratio: ${String.format("%.1f", zoomRatio)}x")
-                Log.i(TAG, "  - Preview: ${if (previewView != null) "Enabled" else "Disabled"}")
+                AppLogger.i(TAG, "  - Flash available: $hasFlash")
+                AppLogger.i(TAG, "  - Zoom ratio: ${String.format("%.1f", zoomRatio)}x")
+                AppLogger.i(TAG, "  - Preview: ${if (previewView != null) "Enabled" else "Disabled"}")
 
                 return@withContext true
 
             } ?: run {
-                Log.e(TAG, "Camera binding returned null")
+                AppLogger.e(TAG, "Camera binding returned null")
                 return@withContext false
             }
 
         } catch (e: Exception) {
-            Log.e(TAG, " Failed to bind camera use cases", e)
+            AppLogger.e(TAG, " Failed to bind camera use cases", e)
             emitError(
                 ErrorType.INITIALIZATION_FAILED,
                 "Failed to bind camera use cases: ${e.message}"
@@ -788,13 +790,13 @@ class RgbCameraRecorder(
         return try {
             // Use QualitySelector to attempt UHD and fall back to lower quality if unsupported
             val qualitySelector = if (deviceSupports4K) {
-                Log.i(TAG, "Creating 4K UHD quality selector with fallback strategy")
+                AppLogger.i(TAG, "Creating 4K UHD quality selector with fallback strategy")
                 QualitySelector.from(
                     Quality.UHD,
                     FallbackStrategy.lowerQualityThan(Quality.UHD)
                 )
             } else {
-                Log.i(TAG, "Creating FHD quality selector with fallback strategy")
+                AppLogger.i(TAG, "Creating FHD quality selector with fallback strategy")
                 QualitySelector.from(
                     Quality.FHD,
                     FallbackStrategy.lowerQualityThan(Quality.FHD)
@@ -805,11 +807,11 @@ class RgbCameraRecorder(
                 .setQualitySelector(qualitySelector)
                 .build()
 
-            Log.i(TAG, "Optimized recorder created with quality selector configuration")
+            AppLogger.i(TAG, "Optimized recorder created with quality selector configuration")
             recorder
 
         } catch (e: Exception) {
-            Log.e(TAG, "Error creating optimized recorder, using conservative fallback", e)
+            AppLogger.e(TAG, "Error creating optimized recorder, using conservative fallback", e)
             Recorder.Builder()
                 .setQualitySelector(
                     QualitySelector.from(
@@ -831,13 +833,13 @@ class RgbCameraRecorder(
         return withContext(Dispatchers.IO) {
             try {
                 if (_isRecording.get()) {
-                    Log.w(TAG, "Recording already in progress")
+                    AppLogger.w(TAG, "Recording already in progress")
                     return@withContext true
                 }
 
                 mpdc4gsr.feature.settings.data.RecordingSettingsValidator.validateAndLogSettings(context)
 
-                Log.i(TAG, "Starting RGB camera recording with Samsung Galaxy S22 optimization")
+                AppLogger.i(TAG, "Starting RGB camera recording with Samsung Galaxy S22 optimization")
                 Log.i(
                     TAG,
                     "Recording config from settings: ${selectedVideoWidth}x${selectedVideoHeight}@${selectedVideoFps}fps, audio=${recordingSettings?.audioEnabled}"
@@ -893,7 +895,7 @@ class RgbCameraRecorder(
                 return@withContext true
 
             } catch (e: Exception) {
-                Log.e(TAG, "Failed to start RGB camera recording", e)
+                AppLogger.e(TAG, "Failed to start RGB camera recording", e)
                 _isRecording.set(false)
                 _cameraStatus.value = "Recording Failed"
                 emitError(ErrorType.RECORDING_FAILED, "Failed to start recording: ${e.message}")
@@ -905,7 +907,7 @@ class RgbCameraRecorder(
     override suspend fun startRecording(sessionDirectory: String): Boolean {
         return try {
             if (_isRecording.get()) {
-                Log.w(TAG, "Recording already in progress")
+                AppLogger.w(TAG, "Recording already in progress")
                 return false
             }
 
@@ -929,7 +931,7 @@ class RgbCameraRecorder(
 
             val videoRecordingStarted = startVideoRecording()
             if (!videoRecordingStarted) {
-                Log.e(TAG, "Failed to start video recording")
+                AppLogger.e(TAG, "Failed to start video recording")
                 return false
             }
 
@@ -946,11 +948,11 @@ class RgbCameraRecorder(
             droppedFrames.set(0)
             framesCaptured.set(0)
 
-            Log.i(TAG, "RGB CameraX recording started in: $sessionDirectory")
+            AppLogger.i(TAG, "RGB CameraX recording started in: $sessionDirectory")
             updateStatus(isRecording = true)
             true
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to start RGB CameraX recording", e)
+            AppLogger.e(TAG, "Failed to start RGB CameraX recording", e)
             emitError(ErrorType.RECORDING_FAILED, "Failed to start recording: ${e.message}")
             false
         }
@@ -1025,15 +1027,15 @@ class RgbCameraRecorder(
                         android.content.pm.PackageManager.PERMISSION_GRANTED
                     ) {
                         withAudioEnabled()
-                        Log.i(TAG, "Audio recording enabled per user settings")
+                        AppLogger.i(TAG, "Audio recording enabled per user settings")
                     } else {
-                        Log.i(TAG, "Audio recording disabled per user settings or permission not granted")
+                        AppLogger.i(TAG, "Audio recording disabled per user settings or permission not granted")
                     }
                 }
                 .start(ContextCompat.getMainExecutor(context)) { recordEvent ->
                     when (recordEvent) {
                         is VideoRecordEvent.Start -> {
-                            Log.i(TAG, "Video recording started")
+                            AppLogger.i(TAG, "Video recording started")
                             recordingScope.launch {
                                 updateStatus(isRecording = true)
                             }
@@ -1041,9 +1043,9 @@ class RgbCameraRecorder(
 
                         is VideoRecordEvent.Finalize -> {
                             if (!recordEvent.hasError()) {
-                                Log.i(TAG, "Video recording saved: ${outputFile.absolutePath}")
+                                AppLogger.i(TAG, "Video recording saved: ${outputFile.absolutePath}")
                             } else {
-                                Log.e(TAG, "Video recording error: ${recordEvent.error}")
+                                AppLogger.e(TAG, "Video recording error: ${recordEvent.error}")
                                 recordingScope.launch {
                                     emitError(
                                         ErrorType.RECORDING_FAILED,
@@ -1055,10 +1057,10 @@ class RgbCameraRecorder(
                     }
                 }
 
-            Log.d(TAG, "Video recording started to: ${outputFile.absolutePath}")
+            AppLogger.d(TAG, "Video recording started to: ${outputFile.absolutePath}")
             true
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to start video recording", e)
+            AppLogger.e(TAG, "Failed to start video recording", e)
             false
         }
     }
@@ -1068,7 +1070,7 @@ class RgbCameraRecorder(
             val framesDir = File(sessionDirectory, "frames")
             if (!framesDir.exists()) {
                 framesDir.mkdirs()
-                Log.d(TAG, "Created frames directory: ${framesDir.absolutePath}")
+                AppLogger.d(TAG, "Created frames directory: ${framesDir.absolutePath}")
             }
 
             val captureInterval = 1000L / CAPTURE_FPS
@@ -1142,7 +1144,7 @@ class RgbCameraRecorder(
 
                     delay(captureInterval)
                 } catch (e: Exception) {
-                    Log.e(TAG, "Error in enhanced frame capture loop", e)
+                    AppLogger.e(TAG, "Error in enhanced frame capture loop", e)
 
                     val currentTime = System.currentTimeMillis()
                     consecutiveFrameErrors.incrementAndGet()
@@ -1155,7 +1157,7 @@ class RgbCameraRecorder(
             }
 
             logFinalFrameRateStats()
-            Log.i(TAG, " Enhanced frame capture completed")
+            AppLogger.i(TAG, " Enhanced frame capture completed")
         }
     }
 
@@ -1206,24 +1208,24 @@ class RgbCameraRecorder(
                             onComplete()
 
                         } catch (e: Exception) {
-                            Log.w(TAG, "Error in onImageSaved callback", e)
+                            AppLogger.w(TAG, "Error in onImageSaved callback", e)
                             onComplete()
                         }
                     }
 
                     override fun onError(exception: ImageCaptureException) {
-                        Log.w(TAG, "Frame capture failed: ${exception.message}")
+                        AppLogger.w(TAG, "Frame capture failed: ${exception.message}")
                         handleFrameCaptureError(exception)
                         onComplete()
                     }
                 }
             ) ?: run {
-                Log.w(TAG, "ImageCapture not available for frame capture")
+                AppLogger.w(TAG, "ImageCapture not available for frame capture")
                 onComplete()
             }
 
         } catch (e: Exception) {
-            Log.e(TAG, "Error setting up frame capture", e)
+            AppLogger.e(TAG, "Error setting up frame capture", e)
             onComplete()
         }
     }
@@ -1238,7 +1240,7 @@ class RgbCameraRecorder(
         frameNumber: Long
     ) {
         try {
-            Log.d(TAG, "Capturing Stage 3/Level 3 DNG frame $frameNumber - ${rawFile.name}")
+            AppLogger.d(TAG, "Capturing Stage 3/Level 3 DNG frame $frameNumber - ${rawFile.name}")
 
             val useStage3 = deviceSupportsRAW && ENABLE_RAW_CAPTURE &&
                     SamsungDeviceCompatibility.isStage3Compatible()
@@ -1337,7 +1339,7 @@ class RgbCameraRecorder(
                 }
 
                 if (rawImageCapture == null) {
-                    Log.w(TAG, "RAW ImageCapture not available, using fallback")
+                    AppLogger.w(TAG, "RAW ImageCapture not available, using fallback")
                     rawFile.writeText("RAW capture frame $frameNumber - ${timestampRecord.systemNanos}")
                 }
             } else {
@@ -1350,7 +1352,7 @@ class RgbCameraRecorder(
             }
 
         } catch (e: Exception) {
-            Log.w(TAG, "RAW capture error for frame $frameNumber", e)
+            AppLogger.w(TAG, "RAW capture error for frame $frameNumber", e)
         }
     }
 
@@ -1385,9 +1387,9 @@ class RgbCameraRecorder(
             val gson = com.google.gson.Gson()
             metadataFile.writeText(gson.toJson(metadata))
 
-            Log.d(TAG, "Stage 3/Level 3 metadata enhanced for frame $frameNumber")
+            AppLogger.d(TAG, "Stage 3/Level 3 metadata enhanced for frame $frameNumber")
         } catch (e: Exception) {
-            Log.w(TAG, "Could not enhance Stage 3/Level 3 metadata: ${e.message}")
+            AppLogger.w(TAG, "Could not enhance Stage 3/Level 3 metadata: ${e.message}")
         }
     }
 
@@ -1458,12 +1460,12 @@ class RgbCameraRecorder(
             val recordingDurationSeconds = recordingDurationMs / 1000.0
             val averageFrameRate = totalFrames / recordingDurationSeconds
 
-            Log.i(TAG, "Final RGB recording statistics:")
-            Log.i(TAG, "  Total frames captured: $totalFrames")
-            Log.i(TAG, "  Recording duration: ${String.format("%.2f", recordingDurationSeconds)}s")
-            Log.i(TAG, "  Average frame rate: ${String.format("%.2f", averageFrameRate)} fps")
-            Log.i(TAG, "  Recent frame rate: ${String.format("%.2f", actualFrameRateAchieved)} fps")
-            Log.i(TAG, "  Target frame rate: $CAPTURE_FPS fps")
+            AppLogger.i(TAG, "Final RGB recording statistics:")
+            AppLogger.i(TAG, "  Total frames captured: $totalFrames")
+            AppLogger.i(TAG, "  Recording duration: ${String.format("%.2f", recordingDurationSeconds)}s")
+            AppLogger.i(TAG, "  Average frame rate: ${String.format("%.2f", averageFrameRate)} fps")
+            AppLogger.i(TAG, "  Recent frame rate: ${String.format("%.2f", actualFrameRateAchieved)} fps")
+            AppLogger.i(TAG, "  Target frame rate: $CAPTURE_FPS fps")
             Log.i(
                 TAG,
                 "  Video configuration: ${selectedVideoWidth}x${selectedVideoHeight}@${selectedVideoFps}fps"
@@ -1471,7 +1473,7 @@ class RgbCameraRecorder(
 
             val frameRateSuccess = Math.abs(averageFrameRate - CAPTURE_FPS) / CAPTURE_FPS < 0.2
             if (frameRateSuccess) {
-                Log.i(TAG, " Frame rate validation PASSED - achieved target 30 FPS ± 20%")
+                AppLogger.i(TAG, " Frame rate validation PASSED - achieved target 30 FPS ± 20%")
             } else {
                 Log.w(
                     TAG,
@@ -1480,7 +1482,7 @@ class RgbCameraRecorder(
             }
 
         } catch (e: Exception) {
-            Log.e(TAG, "Error calculating final frame rate statistics", e)
+            AppLogger.e(TAG, "Error calculating final frame rate statistics", e)
         }
     }
 
@@ -1525,7 +1527,7 @@ class RgbCameraRecorder(
             lastFrameTime.set(alignedNs)
 
         } catch (e: Exception) {
-            Log.w(TAG, "Failed to log frame capture", e)
+            AppLogger.w(TAG, "Failed to log frame capture", e)
         }
     }
 
@@ -1580,7 +1582,7 @@ class RgbCameraRecorder(
             lastFrameTime.set(alignedNs)
 
         } catch (e: Exception) {
-            Log.w(TAG, "Failed to log RAW frame capture", e)
+            AppLogger.w(TAG, "Failed to log RAW frame capture", e)
         }
     }
 
@@ -1620,9 +1622,9 @@ class RgbCameraRecorder(
 
                 csvBufferedWriter?.startWithHeaders()
             }
-            Log.d(TAG, "Buffered CSV writer initialized for frame timestamps")
+            AppLogger.d(TAG, "Buffered CSV writer initialized for frame timestamps")
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to initialize CSV writer", e)
+            AppLogger.e(TAG, "Failed to initialize CSV writer", e)
             throw e
         }
     }
@@ -1632,7 +1634,7 @@ class RgbCameraRecorder(
         val errorCount = consecutiveFrameErrors.incrementAndGet()
         droppedFrames.incrementAndGet()
 
-        Log.w(TAG, "Frame capture failed (error $errorCount): ${exception.message}", exception)
+        AppLogger.w(TAG, "Frame capture failed (error $errorCount): ${exception.message}", exception)
 
         if (errorCount >= MAX_CONSECUTIVE_FRAME_ERRORS) {
             val timeSinceLastError = currentTime - lastFrameErrorTime.get()
@@ -1674,33 +1676,33 @@ class RgbCameraRecorder(
     override suspend fun stopRecording(): Boolean {
         return try {
             if (!_isRecording.get()) {
-                Log.w(TAG, "No recording in progress to stop")
+                AppLogger.w(TAG, "No recording in progress to stop")
                 return false
             }
 
-            Log.i(TAG, " Stopping RGB camera recording with enhanced cleanup...")
+            AppLogger.i(TAG, " Stopping RGB camera recording with enhanced cleanup...")
             _isRecording.set(false)
             _cameraStatus.value = "Stopping Recording..."
 
             frameCaptureJob?.let { job ->
-                Log.d(TAG, "Cancelling frame capture job...")
+                AppLogger.d(TAG, "Cancelling frame capture job...")
                 job.cancel()
                 try {
                     job.join()
-                    Log.d(TAG, "Frame capture job cancelled successfully")
+                    AppLogger.d(TAG, "Frame capture job cancelled successfully")
                 } catch (e: Exception) {
-                    Log.w(TAG, "Frame capture job cancellation timeout", e)
+                    AppLogger.w(TAG, "Frame capture job cancellation timeout", e)
                 }
                 frameCaptureJob = null
             }
 
             activeRecording?.let { recording ->
-                Log.d(TAG, "Stopping active video recording...")
+                AppLogger.d(TAG, "Stopping active video recording...")
                 try {
                     recording.stop()
-                    Log.d(TAG, "Video recording stopped successfully")
+                    AppLogger.d(TAG, "Video recording stopped successfully")
                 } catch (e: Exception) {
-                    Log.w(TAG, "Error stopping video recording", e)
+                    AppLogger.w(TAG, "Error stopping video recording", e)
                 }
                 activeRecording = null
             }
@@ -1709,31 +1711,31 @@ class RgbCameraRecorder(
                 csvWriter?.let { writer ->
                     writer.flush()
                     writer.close()
-                    Log.d(TAG, "CSV writer closed successfully")
+                    AppLogger.d(TAG, "CSV writer closed successfully")
                 }
                 csvWriter = null
 
                 csvBufferedWriter?.let { bufferedWriter ->
                     bufferedWriter.stop()
-                    Log.d(TAG, "CSV buffered writer stopped successfully")
+                    AppLogger.d(TAG, "CSV buffered writer stopped successfully")
                 }
                 csvBufferedWriter = null
             } catch (e: Exception) {
-                Log.w(TAG, "Error during CSV cleanup", e)
+                AppLogger.w(TAG, "Error during CSV cleanup", e)
             }
 
             try {
                 cameraProvider?.unbindAll()
-                Log.d(TAG, "Camera provider unbound successfully")
+                AppLogger.d(TAG, "Camera provider unbound successfully")
             } catch (e: Exception) {
-                Log.w(TAG, "Error unbinding camera provider", e)
+                AppLogger.w(TAG, "Error unbinding camera provider", e)
             }
 
             val sessionStats = generateSessionStats()
-            Log.i(TAG, " RGB Camera Session Complete:")
-            Log.i(TAG, "  • Frames captured: ${sessionStats.framesCaptured}")
-            Log.i(TAG, "  • Frames dropped: ${sessionStats.framesDropped}")
-            Log.i(TAG, "  • Frame drop rate: ${String.format("%.2f", sessionStats.dropRate)}%")
+            AppLogger.i(TAG, " RGB Camera Session Complete:")
+            AppLogger.i(TAG, "  • Frames captured: ${sessionStats.framesCaptured}")
+            AppLogger.i(TAG, "  • Frames dropped: ${sessionStats.framesDropped}")
+            AppLogger.i(TAG, "  • Frame drop rate: ${String.format("%.2f", sessionStats.dropRate)}%")
             Log.i(
                 TAG,
                 "  • Average frame rate: ${
@@ -1743,8 +1745,8 @@ class RgbCameraRecorder(
                     )
                 } fps"
             )
-            Log.i(TAG, "  • Video file: ${videoFile?.name ?: "N/A"}")
-            Log.i(TAG, "  • Storage used: ${String.format("%.1f", sessionStats.storageMB)} MB")
+            AppLogger.i(TAG, "  • Video file: ${videoFile?.name ?: "N/A"}")
+            AppLogger.i(TAG, "  • Storage used: ${String.format("%.1f", sessionStats.storageMB)} MB")
 
             updateStatus(isRecording = false)
             sessionReferenceTimestampNs.set(0)
@@ -1752,11 +1754,11 @@ class RgbCameraRecorder(
             sessionMetadata = null
             _cameraStatus.value = "Recording Stopped"
 
-            Log.i(TAG, " RGB camera recording stopped successfully with enhanced cleanup")
+            AppLogger.i(TAG, " RGB camera recording stopped successfully with enhanced cleanup")
             true
 
         } catch (e: Exception) {
-            Log.e(TAG, " Failed to stop RGB CameraX recording", e)
+            AppLogger.e(TAG, " Failed to stop RGB CameraX recording", e)
             _cameraStatus.value = "Stop Recording Failed"
             emitError(ErrorType.RECORDING_FAILED, "Failed to stop recording: ${e.message}")
             false
@@ -1823,20 +1825,20 @@ class RgbCameraRecorder(
                 writer.writeRow(row)
             }
 
-            Log.d(TAG, "Sync marker added: $markerType at $timestampNs ns")
+            AppLogger.d(TAG, "Sync marker added: $markerType at $timestampNs ns")
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to add sync marker", e)
+            AppLogger.e(TAG, "Failed to add sync marker", e)
             emitError(ErrorType.SYNC_FAILED, "Failed to add sync marker: ${e.message}")
         }
     }
 
     override suspend fun cleanup() {
         try {
-            Log.i(TAG, "Starting RGB CameraX recorder cleanup")
+            AppLogger.i(TAG, "Starting RGB CameraX recorder cleanup")
             _cameraStatus.value = "Cleaning up..."
 
             if (_isRecording.get()) {
-                Log.d(TAG, "Stopping active recording during cleanup")
+                AppLogger.d(TAG, "Stopping active recording during cleanup")
                 stopRecording()
             }
 
@@ -1854,9 +1856,9 @@ class RgbCameraRecorder(
             withContext(Dispatchers.Main) {
                 try {
                     cameraProvider?.unbindAll()
-                    Log.d(TAG, "Camera use cases unbound")
+                    AppLogger.d(TAG, "Camera use cases unbound")
                 } catch (e: Exception) {
-                    Log.w(TAG, "Error unbinding camera use cases", e)
+                    AppLogger.w(TAG, "Error unbinding camera use cases", e)
                 }
             }
 
@@ -1870,11 +1872,11 @@ class RgbCameraRecorder(
             try {
                 cameraExecutor.shutdown()
                 if (!cameraExecutor.awaitTermination(2, TimeUnit.SECONDS)) {
-                    Log.w(TAG, "Camera executor did not terminate gracefully, forcing shutdown")
+                    AppLogger.w(TAG, "Camera executor did not terminate gracefully, forcing shutdown")
                     cameraExecutor.shutdownNow()
                 }
             } catch (e: Exception) {
-                Log.w(TAG, "Error shutting down camera executor", e)
+                AppLogger.w(TAG, "Error shutting down camera executor", e)
             }
 
             recordingScope.cancel()
@@ -1883,9 +1885,9 @@ class RgbCameraRecorder(
             lastFrameErrorTime.set(0)
             _cameraStatus.value = "Cleaned up"
 
-            Log.i(TAG, "RGB CameraX recorder cleanup completed successfully")
+            AppLogger.i(TAG, "RGB CameraX recorder cleanup completed successfully")
         } catch (e: Exception) {
-            Log.e(TAG, "Error during CameraX cleanup", e)
+            AppLogger.e(TAG, "Error during CameraX cleanup", e)
             _cameraStatus.value = "Cleanup Failed"
         }
     }
@@ -2045,9 +2047,9 @@ class RgbCameraRecorder(
 
                     val index = (evValue / step).toInt().coerceIn(range.lower, range.upper)
                     cameraControl.setExposureCompensationIndex(index)
-                    Log.i(TAG, "Exposure compensation set to ${evValue}EV (index: $index)")
+                    AppLogger.i(TAG, "Exposure compensation set to ${evValue}EV (index: $index)")
                 } ?: run {
-                    Log.w(TAG, "Camera doesn't support exposure compensation")
+                    AppLogger.w(TAG, "Camera doesn't support exposure compensation")
                     recordingScope.launch {
                         emitError(
                             ErrorType.FEATURE_NOT_SUPPORTED,
@@ -2064,7 +2066,7 @@ class RgbCameraRecorder(
                 }
             }
         } catch (e: Exception) {
-            Log.w(TAG, "Failed to set exposure compensation: ${e.message}")
+            AppLogger.w(TAG, "Failed to set exposure compensation: ${e.message}")
             recordingScope.launch {
                 emitError(
                     ErrorType.OPERATION_FAILED,
@@ -2081,10 +2083,10 @@ class RgbCameraRecorder(
         try {
             camera?.cameraControl?.let { cameraControl ->
                 // CameraX doesn't have direct AE lock, but we can implement via Camera2 interop
-                Log.i(TAG, "Auto exposure lock: $locked")
+                AppLogger.i(TAG, "Auto exposure lock: $locked")
             }
         } catch (e: Exception) {
-            Log.w(TAG, "Failed to set AE lock: ${e.message}")
+            AppLogger.w(TAG, "Failed to set AE lock: ${e.message}")
         }
     }
 
@@ -2098,10 +2100,10 @@ class RgbCameraRecorder(
                 if (enabled) {
                     // Cancel any ongoing autofocus
                     cameraControl.cancelFocusAndMetering()
-                    Log.i(TAG, "Manual focus mode enabled")
+                    AppLogger.i(TAG, "Manual focus mode enabled")
                 } else {
                     // Return to continuous autofocus
-                    Log.i(TAG, "Auto focus mode enabled")
+                    AppLogger.i(TAG, "Auto focus mode enabled")
                 }
             } ?: run {
                 recordingScope.launch {
@@ -2112,7 +2114,7 @@ class RgbCameraRecorder(
                 }
             }
         } catch (e: Exception) {
-            Log.w(TAG, "Failed to set focus mode: ${e.message}")
+            AppLogger.w(TAG, "Failed to set focus mode: ${e.message}")
             recordingScope.launch {
                 emitError(ErrorType.OPERATION_FAILED, "Failed to set focus mode: ${e.message}")
             }
@@ -2135,10 +2137,10 @@ class RgbCameraRecorder(
             camera?.cameraControl?.let { cameraControl ->
                 if (locked) {
                     // Lock focus at current position
-                    Log.i(TAG, "Auto focus locked")
+                    AppLogger.i(TAG, "Auto focus locked")
                 } else {
                     // Unlock and resume continuous AF
-                    Log.i(TAG, "Auto focus unlocked")
+                    AppLogger.i(TAG, "Auto focus unlocked")
                 }
             } ?: run {
                 recordingScope.launch {
@@ -2149,7 +2151,7 @@ class RgbCameraRecorder(
                 }
             }
         } catch (e: Exception) {
-            Log.w(TAG, "Failed to set AF lock: ${e.message}")
+            AppLogger.w(TAG, "Failed to set AF lock: ${e.message}")
             recordingScope.launch {
                 emitError(ErrorType.OPERATION_FAILED, "Failed to set AF lock: ${e.message}")
             }
@@ -2173,9 +2175,9 @@ class RgbCameraRecorder(
                         .build()
 
                     cameraControl.startFocusAndMetering(action)
-                    Log.i(TAG, "Tap-to-focus triggered at ($x, $y)")
+                    AppLogger.i(TAG, "Tap-to-focus triggered at ($x, $y)")
                 } ?: run {
-                    Log.w(TAG, "No preview available for tap-to-focus")
+                    AppLogger.w(TAG, "No preview available for tap-to-focus")
                     recordingScope.launch {
                         emitError(
                             ErrorType.FEATURE_NOT_SUPPORTED,
@@ -2192,7 +2194,7 @@ class RgbCameraRecorder(
                 }
             }
         } catch (e: Exception) {
-            Log.w(TAG, "Failed to trigger tap-to-focus: ${e.message}")
+            AppLogger.w(TAG, "Failed to trigger tap-to-focus: ${e.message}")
             recordingScope.launch {
                 emitError(
                     ErrorType.OPERATION_FAILED,
@@ -2220,26 +2222,26 @@ class RgbCameraRecorder(
     fun setCaptureMode(useRawMode: Boolean) {
         try {
             if (_isRecording.get()) {
-                Log.w(TAG, "Cannot change capture mode while recording")
+                AppLogger.w(TAG, "Cannot change capture mode while recording")
                 return
             }
 
             if (useRawMode) {
                 if (!deviceSupportsRAW) {
-                    Log.w(TAG, "RAW capture mode requested but device doesn't support RAW")
+                    AppLogger.w(TAG, "RAW capture mode requested but device doesn't support RAW")
                     return
                 }
-                Log.i(TAG, "Switching to RAW DNG capture mode")
+                AppLogger.i(TAG, "Switching to RAW DNG capture mode")
                 // RAW mode will be activated in the next recording session
             } else {
-                Log.i(TAG, "Switching to video+JPEG capture mode")
+                AppLogger.i(TAG, "Switching to video+JPEG capture mode")
                 // Normal video mode will be used
             }
 
             // Could trigger camera reconfiguration here if needed
 
         } catch (e: Exception) {
-            Log.w(TAG, "Failed to set capture mode: ${e.message}")
+            AppLogger.w(TAG, "Failed to set capture mode: ${e.message}")
         }
     }
 
@@ -2302,18 +2304,18 @@ class RgbCameraRecorder(
                     capabilities["min_focus_distance"] = minFocusDistance ?: 0.0f
 
                 } catch (e: Exception) {
-                    Log.w(TAG, "Could not retrieve Camera2 characteristics: ${e.message}")
+                    AppLogger.w(TAG, "Could not retrieve Camera2 characteristics: ${e.message}")
                     capabilities["camera2_interop_available"] = false
                 }
             } ?: run {
                 capabilities["camera_initialized"] = false
             }
 
-            Log.i(TAG, "Camera capabilities: $capabilities")
+            AppLogger.i(TAG, "Camera capabilities: $capabilities")
             capabilities
 
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to get camera capabilities: ${e.message}")
+            AppLogger.e(TAG, "Failed to get camera capabilities: ${e.message}")
             mapOf(
                 "error" to "Failed to determine camera capabilities: ${e.message}",
                 "supports_4k" to false,
@@ -2351,14 +2353,14 @@ class RgbCameraRecorder(
 
             // Log requirements status
             if (meetsRequirements) {
-                Log.i(TAG, "Device meets all requirements for advanced camera recording")
+                AppLogger.i(TAG, "Device meets all requirements for advanced camera recording")
                 val capabilities = getCaptureMode()
                 Log.i(
                     TAG,
                     "Available features: 4K=${capabilities["supports_4k"]}, RAW=${capabilities["supports_raw"]}, 60fps=${capabilities["supports_60fps"]}"
                 )
             } else {
-                Log.w(TAG, "Device requirements not met: ${requirements.joinToString(", ")}")
+                AppLogger.w(TAG, "Device requirements not met: ${requirements.joinToString(", ")}")
                 recordingScope.launch {
                     emitError(
                         ErrorType.DEVICE_NOT_SUPPORTED,
@@ -2370,7 +2372,7 @@ class RgbCameraRecorder(
             meetsRequirements
 
         } catch (e: Exception) {
-            Log.e(TAG, "Error validating device requirements: ${e.message}")
+            AppLogger.e(TAG, "Error validating device requirements: ${e.message}")
             recordingScope.launch {
                 emitError(
                     ErrorType.DEVICE_NOT_SUPPORTED,

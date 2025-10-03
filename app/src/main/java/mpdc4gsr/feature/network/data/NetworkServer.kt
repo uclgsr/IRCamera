@@ -2,6 +2,8 @@ package mpdc4gsr.feature.network.data
 
 import android.content.Context
 import android.util.Log
+import mpdc4gsr.core.utils.AppLogger
+import mpdc4gsr.core.utils.ErrorHandler
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import java.io.*
@@ -46,11 +48,11 @@ class NetworkServer(
         return withContext(Dispatchers.IO) {
             try {
                 if (isRunning.get()) {
-                    Log.w(TAG, "Server already running")
+                    AppLogger.w(TAG, "Server already running")
                     return@withContext true
                 }
 
-                Log.i(TAG, "Starting TCP server on port $port")
+                AppLogger.i(TAG, "Starting TCP server on port $port")
 
                 serverSocket = ServerSocket().apply {
                     reuseAddress = true
@@ -63,14 +65,14 @@ class NetworkServer(
                         acceptConnections()
                     }
 
-                Log.i(TAG, "TCP server started successfully on port $port")
+                AppLogger.i(TAG, "TCP server started successfully on port $port")
                 return@withContext true
             } catch (e: java.net.BindException) {
-                Log.e(TAG, "Failed to start TCP server - port $port already in use", e)
+                AppLogger.e(TAG, "Failed to start TCP server - port $port already in use", e)
                 isRunning.set(false)
                 return@withContext false
             } catch (e: Exception) {
-                Log.e(TAG, "Failed to start TCP server", e)
+                AppLogger.e(TAG, "Failed to start TCP server", e)
                 isRunning.set(false)
                 return@withContext false
             }
@@ -80,7 +82,7 @@ class NetworkServer(
     suspend fun stop() {
         withContext(Dispatchers.IO) {
             try {
-                Log.i(TAG, "Stopping TCP server")
+                AppLogger.i(TAG, "Stopping TCP server")
 
                 isRunning.set(false)
                 isClientConnected.set(false)
@@ -102,9 +104,9 @@ class NetworkServer(
                 clientSocket = null
                 serverSocket = null
 
-                Log.i(TAG, "TCP server stopped")
+                AppLogger.i(TAG, "TCP server stopped")
             } catch (e: Exception) {
-                Log.e(TAG, "Error stopping TCP server", e)
+                AppLogger.e(TAG, "Error stopping TCP server", e)
             }
         }
     }
@@ -113,17 +115,17 @@ class NetworkServer(
         return withContext(Dispatchers.IO) {
             try {
                 if (!isClientConnected.get() || outputWriter == null) {
-                    Log.w(TAG, "No client connected, cannot send message")
+                    AppLogger.w(TAG, "No client connected, cannot send message")
                     return@withContext false
                 }
 
                 outputWriter!!.write(message + "\n")
                 outputWriter!!.flush()
 
-                Log.d(TAG, "Sent message to PC: $message")
+                AppLogger.d(TAG, "Sent message to PC: $message")
                 return@withContext true
             } catch (e: Exception) {
-                Log.e(TAG, "Error sending message to PC", e)
+                AppLogger.e(TAG, "Error sending message to PC", e)
                 disconnectClient()
                 return@withContext false
             }
@@ -134,7 +136,7 @@ class NetworkServer(
         return withContext(Dispatchers.IO) {
             try {
                 if (!isClientConnected.get() || outputWriter == null || binaryOutputStream == null) {
-                    Log.w(TAG, "No client connected, cannot send binary data")
+                    AppLogger.w(TAG, "No client connected, cannot send binary data")
                     return@withContext false
                 }
 
@@ -147,10 +149,10 @@ class NetworkServer(
                 binaryOutputStream!!.write(data)
                 binaryOutputStream!!.flush()
 
-                Log.d(TAG, "Sent binary data to PC: ${data.size} bytes")
+                AppLogger.d(TAG, "Sent binary data to PC: ${data.size} bytes")
                 return@withContext true
             } catch (e: Exception) {
-                Log.e(TAG, "Error sending binary data to PC", e)
+                AppLogger.e(TAG, "Error sending binary data to PC", e)
                 disconnectClient()
                 return@withContext false
             }
@@ -160,11 +162,11 @@ class NetworkServer(
     private suspend fun acceptConnections() {
         while (isRunning.get() && serverJob?.isCancelled != true) {
             try {
-                Log.i(TAG, "Waiting for PC Controller connection...")
+                AppLogger.i(TAG, "Waiting for PC Controller connection...")
 
                 val socket = serverSocket?.accept()
                 if (socket != null && isRunning.get()) {
-                    Log.i(TAG, "PC Controller connected from ${socket.remoteSocketAddress}")
+                    AppLogger.i(TAG, "PC Controller connected from ${socket.remoteSocketAddress}")
 
                     disconnectClient()
 
@@ -188,13 +190,13 @@ class NetworkServer(
                 }
             } catch (e: SocketException) {
                 if (isRunning.get()) {
-                    Log.e(TAG, "Socket error accepting connections", e)
+                    AppLogger.e(TAG, "Socket error accepting connections", e)
                 } else {
-                    Log.i(TAG, "Server socket closed normally")
+                    AppLogger.i(TAG, "Server socket closed normally")
                 }
                 break
             } catch (e: Exception) {
-                Log.e(TAG, "Error accepting connection", e)
+                AppLogger.e(TAG, "Error accepting connection", e)
                 delay(1000)
             }
         }
@@ -209,16 +211,16 @@ class NetworkServer(
                     if (protocolMessage != null) {
                         _messageFlow.emit(protocolMessage)
                     } else {
-                        Log.w(TAG, "Failed to parse protocol message: $messageText")
+                        AppLogger.w(TAG, "Failed to parse protocol message: $messageText")
                     }
                 } else {
                     break
                 }
             } catch (e: SocketException) {
-                Log.i(TAG, "PC Controller disconnected")
+                AppLogger.i(TAG, "PC Controller disconnected")
                 break
             } catch (e: Exception) {
-                Log.e(TAG, "Error receiving message from PC", e)
+                AppLogger.e(TAG, "Error receiving message from PC", e)
                 break
             }
         }
@@ -233,12 +235,12 @@ class NetworkServer(
                 val line = reader.readLine()
 
                 if (line != null) {
-                    Log.d(TAG, "Received message from PC: $line")
+                    AppLogger.d(TAG, "Received message from PC: $line")
                 }
 
                 return@withContext line
             } catch (e: Exception) {
-                Log.e(TAG, "Error receiving message", e)
+                AppLogger.e(TAG, "Error receiving message", e)
                 return@withContext null
             }
         }
@@ -246,7 +248,7 @@ class NetworkServer(
 
     private fun disconnectClient() {
         if (isClientConnected.get()) {
-            Log.i(TAG, "Disconnecting PC Controller client")
+            AppLogger.i(TAG, "Disconnecting PC Controller client")
 
             isClientConnected.set(false)
             _connectionStateFlow.value = false
@@ -259,7 +261,7 @@ class NetworkServer(
                 binaryOutputStream?.close()
                 clientSocket?.close()
             } catch (e: Exception) {
-                Log.w(TAG, "Error closing client connection", e)
+                AppLogger.w(TAG, "Error closing client connection", e)
             }
 
             outputWriter = null
@@ -276,6 +278,6 @@ class NetworkServer(
     suspend fun cleanup() {
         stop()
         serverScope.cancel()
-        Log.i(TAG, "Network server cleaned up")
+        AppLogger.i(TAG, "Network server cleaned up")
     }
 }

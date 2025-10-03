@@ -1,6 +1,8 @@
 package mpdc4gsr.core.ui.navigation
 
 import android.util.Log
+import mpdc4gsr.core.utils.AppLogger
+import mpdc4gsr.core.utils.ErrorHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -19,7 +21,7 @@ object NavigationPerformanceHelper {
             ComposePerformanceMonitor.trackNavigation(routeName, startTime)
 
             if (latency > WARNING_THRESHOLD_MS) {
-                Log.w(TAG, "Slow navigation to $routeName: ${latency}ms (threshold: ${WARNING_THRESHOLD_MS}ms)")
+                AppLogger.w(TAG, "Slow navigation to $routeName: ${latency}ms (threshold: ${WARNING_THRESHOLD_MS}ms)")
             }
         }
     }
@@ -27,12 +29,12 @@ object NavigationPerformanceHelper {
     fun logPerformanceSummary() {
         val summary = ComposePerformanceMonitor.getPerformanceSummary()
 
-        Log.d(TAG, "=== Navigation Performance Summary ===")
+        AppLogger.d(TAG, "=== Navigation Performance Summary ===")
 
         val navigationMetrics = summary.filter { it.key.startsWith("navigation_") }
 
         if (navigationMetrics.isEmpty()) {
-            Log.d(TAG, "No navigation metrics recorded yet")
+            AppLogger.d(TAG, "No navigation metrics recorded yet")
             return
         }
 
@@ -47,14 +49,14 @@ object NavigationPerformanceHelper {
         val slowRoutes = navigationMetrics.filter { it.value.average > WARNING_THRESHOLD_MS }
 
         if (slowRoutes.isNotEmpty()) {
-            Log.w(TAG, "=== Routes Exceeding Threshold (${WARNING_THRESHOLD_MS}ms) ===")
+            AppLogger.w(TAG, "=== Routes Exceeding Threshold (${WARNING_THRESHOLD_MS}ms) ===")
             slowRoutes.forEach { (route, metric) ->
                 val routeName = route.removePrefix("navigation_")
-                Log.w(TAG, "$routeName: avg=${String.format("%.1f", metric.average)}ms")
+                AppLogger.w(TAG, "$routeName: avg=${String.format("%.1f", metric.average)}ms")
             }
         }
 
-        Log.d(TAG, "======================================")
+        AppLogger.d(TAG, "======================================")
     }
 
     fun getSlowRoutes(thresholdMs: Long = WARNING_THRESHOLD_MS): List<Pair<String, Double>> {

@@ -1,6 +1,8 @@
 package mpdc4gsr.feature.network.data
 
 import android.util.Log
+import mpdc4gsr.core.utils.AppLogger
+import mpdc4gsr.core.utils.ErrorHandler
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -43,11 +45,11 @@ class TcpClient(
     override suspend fun connect(): Boolean = withContext(Dispatchers.IO) {
         try {
             if (isConnected()) {
-                Log.i(TAG, "Already connected to $serverHost:$serverPort")
+                AppLogger.i(TAG, "Already connected to $serverHost:$serverPort")
                 return@withContext true
             }
 
-            Log.i(TAG, "Connecting to PC server at $serverHost:$serverPort")
+            AppLogger.i(TAG, "Connecting to PC server at $serverHost:$serverPort")
             _connectionState.value = CommandConnection.ConnectionState.CONNECTING
             connectionCallback?.invoke(CommandConnection.ConnectionState.CONNECTING)
 
@@ -71,18 +73,18 @@ class TcpClient(
                 // Start reader thread
                 startReaderLoop()
 
-                Log.i(TAG, "Successfully connected to PC server")
+                AppLogger.i(TAG, "Successfully connected to PC server")
                 return@withContext true
             } else {
                 throw IOException("Failed to get socket streams")
             }
 
         } catch (e: SocketTimeoutException) {
-            Log.e(TAG, "Connection timeout to $serverHost:$serverPort")
+            AppLogger.e(TAG, "Connection timeout to $serverHost:$serverPort")
             handleConnectionError("Connection timeout")
             return@withContext false
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to connect to $serverHost:$serverPort", e)
+            AppLogger.e(TAG, "Failed to connect to $serverHost:$serverPort", e)
             handleConnectionError("Connection failed: ${e.message}")
             return@withContext false
         }
@@ -95,21 +97,21 @@ class TcpClient(
                 currentWriter.write(message)
                 currentWriter.write("\n")
                 currentWriter.flush()
-                Log.d(TAG, "Sent message: $message")
+                AppLogger.d(TAG, "Sent message: $message")
                 return@withContext true
             } else {
-                Log.w(TAG, "Cannot send message - not connected")
+                AppLogger.w(TAG, "Cannot send message - not connected")
                 return@withContext false
             }
         } catch (e: IOException) {
-            Log.e(TAG, "Failed to send message: $message", e)
+            AppLogger.e(TAG, "Failed to send message: $message", e)
             handleConnectionError("Send failed: ${e.message}")
             return@withContext false
         }
     }
 
     override suspend fun disconnect(): Unit = withContext(Dispatchers.IO) {
-        Log.i(TAG, "Disconnecting from PC server")
+        AppLogger.i(TAG, "Disconnecting from PC server")
 
         // Cancel reader job first to stop any ongoing reads
         readerJob?.cancel()
@@ -122,17 +124,17 @@ class TcpClient(
                     w.flush()
                     w.close()
                 } catch (e: IOException) {
-                    Log.w(TAG, "Error closing writer", e)
+                    AppLogger.w(TAG, "Error closing writer", e)
                 }
             }
         } catch (e: Exception) {
-            Log.w(TAG, "Error flushing/closing writer", e)
+            AppLogger.w(TAG, "Error flushing/closing writer", e)
         }
 
         try {
             reader?.close()
         } catch (e: IOException) {
-            Log.w(TAG, "Error closing reader", e)
+            AppLogger.w(TAG, "Error closing reader", e)
         }
 
         try {
@@ -142,7 +144,7 @@ class TcpClient(
                 }
             }
         } catch (e: IOException) {
-            Log.w(TAG, "Error closing socket", e)
+            AppLogger.w(TAG, "Error closing socket", e)
         }
 
         // Clear all references
@@ -182,10 +184,10 @@ class TcpClient(
                     try {
                         val message = currentReader.readLine()
                         if (message != null) {
-                            Log.d(TAG, "Received message: $message")
+                            AppLogger.d(TAG, "Received message: $message")
                             messageCallback?.invoke(message)
                         } else {
-                            Log.w(TAG, "Server closed connection")
+                            AppLogger.w(TAG, "Server closed connection")
                             break
                         }
                     } catch (e: SocketTimeoutException) {
@@ -193,14 +195,14 @@ class TcpClient(
                         continue
                     } catch (e: SocketException) {
                         if (isActive) {
-                            Log.w(TAG, "Socket exception in reader loop", e)
+                            AppLogger.w(TAG, "Socket exception in reader loop", e)
                             break
                         }
                     }
                 }
             } catch (e: Exception) {
                 if (isActive) {
-                    Log.e(TAG, "Error in reader loop", e)
+                    AppLogger.e(TAG, "Error in reader loop", e)
                     handleConnectionError("Reader error: ${e.message}")
                 }
             }
@@ -212,7 +214,7 @@ class TcpClient(
     }
 
     private fun handleConnectionError(errorMessage: String) {
-        Log.w(TAG, "Connection error: $errorMessage")
+        AppLogger.w(TAG, "Connection error: $errorMessage")
         _connectionState.value = CommandConnection.ConnectionState.ERROR
         connectionCallback?.invoke(CommandConnection.ConnectionState.ERROR)
 

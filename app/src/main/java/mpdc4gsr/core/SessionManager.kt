@@ -6,6 +6,8 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import mpdc4gsr.core.utils.AppLogger
+import mpdc4gsr.core.utils.ErrorHandler
 import org.json.JSONObject
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicLong
@@ -117,7 +119,7 @@ class SessionManager(
         onSyncRequired: (List<DeviceInfo>) -> Unit,
     ) {
         if (isRunning.get()) {
-            Log.w(TAG, "Session manager already running")
+            AppLogger.w(TAG, "Session manager already running")
             return
         }
 
@@ -148,9 +150,9 @@ class SessionManager(
                         delay(SESSION_HEARTBEAT_INTERVAL_MS)
                     }
                 } catch (e: CancellationException) {
-                    Log.i(TAG, "Session manager cancelled")
+                    AppLogger.i(TAG, "Session manager cancelled")
                 } catch (e: Exception) {
-                    Log.e(TAG, "Session manager error", e)
+                    AppLogger.e(TAG, "Session manager error", e)
                     logger.log(
                         StructuredLogger.LogLevel.ERROR,
                         "SessionManager",
@@ -163,7 +165,7 @@ class SessionManager(
             },
         )
 
-        Log.i(TAG, "Session management service started")
+        AppLogger.i(TAG, "Session management service started")
     }
 
     fun stop() {
@@ -179,7 +181,7 @@ class SessionManager(
         sessionJob.set(null)
 
         logger.log(StructuredLogger.LogLevel.INFO, "SessionManager", "service_stopped", emptyMap())
-        Log.i(TAG, "Session management service stopped")
+        AppLogger.i(TAG, "Session management service stopped")
     }
 
     fun createSession(metadata: Map<String, Any> = emptyMap()): String {
@@ -223,7 +225,7 @@ class SessionManager(
         val session = currentSession.get() ?: return false
 
         if (connectedDevices.size >= MAX_DEVICES_PER_SESSION) {
-            Log.w(TAG, "Maximum devices reached for session ${session.id}")
+            AppLogger.w(TAG, "Maximum devices reached for session ${session.id}")
             return false
         }
 
@@ -287,13 +289,13 @@ class SessionManager(
         val devices = connectedDevices.values.toList()
 
         if (devices.isEmpty()) {
-            Log.w(TAG, "No devices available for synchronized recording")
+            AppLogger.w(TAG, "No devices available for synchronized recording")
             return false
         }
 
         val recordingCapableDevices = devices.filter { "recording" in it.capabilities }
         if (recordingCapableDevices.isEmpty()) {
-            Log.w(TAG, "No recording-capable devices in session")
+            AppLogger.w(TAG, "No recording-capable devices in session")
             return false
         }
 

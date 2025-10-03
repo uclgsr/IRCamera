@@ -2,6 +2,8 @@ package mpdc4gsr.feature.network.data
 
 import android.content.Context
 import android.util.Log
+import mpdc4gsr.core.utils.AppLogger
+import mpdc4gsr.core.utils.ErrorHandler
 import com.mpdc4gsr.gsr.model.GSRSample
 import kotlinx.coroutines.*
 import mpdc4gsr.core.data.TimestampManager
@@ -45,11 +47,11 @@ class UnifiedDataStreamingService(
         return withContext(Dispatchers.IO) {
             try {
                 if (isStreaming.get()) {
-                    Log.w(TAG, "Streaming already active")
+                    AppLogger.w(TAG, "Streaming already active")
                     return@withContext true
                 }
 
-                Log.i(TAG, "Starting unified data streaming service on port $port")
+                AppLogger.i(TAG, "Starting unified data streaming service on port $port")
 
                 currentSessionId = sessionId
                 sessionStartReference = TimestampManager.createTimestampRecord()
@@ -73,7 +75,7 @@ class UnifiedDataStreamingService(
                     distributeHeartbeats()
                 }
 
-                Log.i(TAG, " Unified streaming service started on port $port")
+                AppLogger.i(TAG, " Unified streaming service started on port $port")
 
                 broadcastSessionSyncEvent(
                     "session_start", mapOf(
@@ -85,7 +87,7 @@ class UnifiedDataStreamingService(
                 true
 
             } catch (e: Exception) {
-                Log.e(TAG, "Failed to start streaming service", e)
+                AppLogger.e(TAG, "Failed to start streaming service", e)
                 stopStreaming()
                 false
             }
@@ -95,7 +97,7 @@ class UnifiedDataStreamingService(
     suspend fun stopStreaming() {
         withContext(Dispatchers.IO) {
             try {
-                Log.i(TAG, "Stopping unified streaming service")
+                AppLogger.i(TAG, "Stopping unified streaming service")
 
                 currentSessionId?.let { sessionId ->
                     broadcastSessionSyncEvent(
@@ -121,10 +123,10 @@ class UnifiedDataStreamingService(
 
                 dataQueue.clear()
 
-                Log.i(TAG, "Unified streaming service stopped")
+                AppLogger.i(TAG, "Unified streaming service stopped")
 
             } catch (e: Exception) {
-                Log.e(TAG, "Error stopping streaming service", e)
+                AppLogger.e(TAG, "Error stopping streaming service", e)
             }
         }
     }
@@ -208,7 +210,7 @@ class UnifiedDataStreamingService(
         }
 
         broadcastToClients(syncPacket.toString())
-        Log.d(TAG, "Broadcasted sync marker: $markerType")
+        AppLogger.d(TAG, "Broadcasted sync marker: $markerType")
     }
 
     fun getStreamingStats(): StreamingStats {
@@ -246,14 +248,14 @@ class UnifiedDataStreamingService(
                             clientHandler.sendSessionInfo()
 
                         } else {
-                            Log.w(TAG, "Max clients reached, rejecting connection")
+                            AppLogger.w(TAG, "Max clients reached, rejecting connection")
                             socket.close()
                         }
                     }
                 }
             } catch (e: Exception) {
                 if (isStreaming.get()) {
-                    Log.e(TAG, "Error accepting client connection", e)
+                    AppLogger.e(TAG, "Error accepting client connection", e)
                 }
             }
         }
@@ -304,7 +306,7 @@ class UnifiedDataStreamingService(
                 delay(1)
 
             } catch (e: Exception) {
-                Log.e(TAG, "Error processing streaming data", e)
+                AppLogger.e(TAG, "Error processing streaming data", e)
                 delay(100)
             }
         }
@@ -329,7 +331,7 @@ class UnifiedDataStreamingService(
                 delay(HEARTBEAT_INTERVAL_MS)
 
             } catch (e: Exception) {
-                Log.e(TAG, "Error sending heartbeat", e)
+                AppLogger.e(TAG, "Error sending heartbeat", e)
                 delay(HEARTBEAT_INTERVAL_MS)
             }
         }
@@ -360,7 +362,7 @@ class UnifiedDataStreamingService(
             disconnectedClients.forEach { client ->
                 connectedClients.remove(client)
                 client.disconnect()
-                Log.i(TAG, "Client disconnected (${connectedClients.size} remaining)")
+                AppLogger.i(TAG, "Client disconnected (${connectedClients.size} remaining)")
             }
         }
     }
@@ -378,7 +380,7 @@ class UnifiedDataStreamingService(
                     false
                 }
             } catch (e: Exception) {
-                Log.w(TAG, "Failed to send message to client", e)
+                AppLogger.w(TAG, "Failed to send message to client", e)
                 false
             }
         }
@@ -400,7 +402,7 @@ class UnifiedDataStreamingService(
                 writer.close()
                 socket.close()
             } catch (e: Exception) {
-                Log.w(TAG, "Error closing client connection", e)
+                AppLogger.w(TAG, "Error closing client connection", e)
             }
         }
     }

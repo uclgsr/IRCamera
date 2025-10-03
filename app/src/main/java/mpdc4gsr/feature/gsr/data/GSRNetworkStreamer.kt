@@ -2,6 +2,8 @@ package mpdc4gsr.feature.gsr.data
 
 import android.content.Context
 import android.util.Log
+import mpdc4gsr.core.utils.AppLogger
+import mpdc4gsr.core.utils.ErrorHandler
 import com.mpdc4gsr.gsr.model.GSRSample
 import kotlinx.coroutines.*
 import mpdc4gsr.feature.network.data.NetworkClient
@@ -49,13 +51,13 @@ class GSRNetworkStreamer(
     suspend fun initialize(): Boolean {
         return withContext(Dispatchers.IO) {
             try {
-                Log.i(TAG, "Initializing GSR network streamer for session: $sessionId")
+                AppLogger.i(TAG, "Initializing GSR network streamer for session: $sessionId")
 
                 networkClient = NetworkClient(context)
 
                 val connected = networkClient?.connectToController("192.168.1.100") ?: false
                 if (!connected) {
-                    Log.e(TAG, "Failed to connect to PC hub")
+                    AppLogger.e(TAG, "Failed to connect to PC hub")
                     return@withContext false
                 }
 
@@ -63,10 +65,10 @@ class GSRNetworkStreamer(
 
                 registerGSRStream()
 
-                Log.i(TAG, "GSR network streamer initialized successfully")
+                AppLogger.i(TAG, "GSR network streamer initialized successfully")
                 true
             } catch (e: Exception) {
-                Log.e(TAG, "Failed to initialize GSR network streamer", e)
+                AppLogger.e(TAG, "Failed to initialize GSR network streamer", e)
                 false
             }
         }
@@ -74,7 +76,7 @@ class GSRNetworkStreamer(
 
     suspend fun startStreaming(): Boolean {
         if (_isStreaming.get()) {
-            Log.w(TAG, "GSR streaming already active")
+            AppLogger.w(TAG, "GSR streaming already active")
             return true
         }
 
@@ -97,10 +99,10 @@ class GSRNetworkStreamer(
                     reportQualityMetrics()
                 }
 
-            Log.i(TAG, "GSR streaming started for session: $sessionId")
+            AppLogger.i(TAG, "GSR streaming started for session: $sessionId")
             true
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to start GSR streaming", e)
+            AppLogger.e(TAG, "Failed to start GSR streaming", e)
             _isStreaming.set(false)
             false
         }
@@ -122,10 +124,10 @@ class GSRNetworkStreamer(
 
             sendStreamEndNotification()
 
-            Log.i(TAG, "GSR streaming stopped for session: $sessionId")
+            AppLogger.i(TAG, "GSR streaming stopped for session: $sessionId")
             true
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to stop GSR streaming", e)
+            AppLogger.e(TAG, "Failed to stop GSR streaming", e)
             false
         }
     }
@@ -146,10 +148,10 @@ class GSRNetworkStreamer(
 
             if (sampleBuffer.size > BUFFER_SIZE) {
                 sampleBuffer.poll()
-                Log.w(TAG, "GSR sample buffer overflow, dropping oldest sample")
+                AppLogger.w(TAG, "GSR sample buffer overflow, dropping oldest sample")
             }
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to add GSR sample to buffer", e)
+            AppLogger.e(TAG, "Failed to add GSR sample to buffer", e)
         }
     }
 
@@ -166,7 +168,7 @@ class GSRNetworkStreamer(
 
                 delay(STREAM_INTERVAL_MS)
             } catch (e: Exception) {
-                Log.e(TAG, "Error in GSR streaming loop", e)
+                AppLogger.e(TAG, "Error in GSR streaming loop", e)
                 networkErrors.incrementAndGet()
                 delay(1000)
             }
@@ -195,13 +197,13 @@ class GSRNetworkStreamer(
                     streamingScope.launch {
                         val success = client.sendMessage(jsonMessage)
                         if (success) {
-                            Log.v(TAG, "Sent GSR batch: ${batch.size} samples")
+                            AppLogger.v(TAG, "Sent GSR batch: ${batch.size} samples")
                         } else {
-                            Log.w(TAG, "Failed to send GSR batch via network")
+                            AppLogger.w(TAG, "Failed to send GSR batch via network")
                         }
                     }
                 } catch (e: Exception) {
-                    Log.w(TAG, "Failed to send GSR batch via network", e)
+                    AppLogger.w(TAG, "Failed to send GSR batch via network", e)
                 }
             } ?: run {
                 Log.d(
@@ -214,9 +216,9 @@ class GSRNetworkStreamer(
 
             samplesSent.addAndGet(batch.size.toLong())
             bytesTransmitted.addAndGet(batchMessage.toString().length.toLong())
-            Log.d(TAG, "Simulated sending GSR batch of ${batch.size} samples")
+            AppLogger.d(TAG, "Simulated sending GSR batch of ${batch.size} samples")
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to send GSR batch", e)
+            AppLogger.e(TAG, "Failed to send GSR batch", e)
             networkErrors.incrementAndGet()
         }
     }
@@ -273,21 +275,21 @@ class GSRNetworkStreamer(
                         clockOffset = 0 // Assume zero offset without server response
                         lastSyncTime = System.currentTimeMillis()
 
-                        Log.d(TAG, "Network time sync completed, RTT: ${roundTripTime}ns")
+                        AppLogger.d(TAG, "Network time sync completed, RTT: ${roundTripTime}ns")
                     } else {
-                        Log.w(TAG, "Network time sync request failed, using local fallback")
+                        AppLogger.w(TAG, "Network time sync request failed, using local fallback")
                         performLocalTimeSync(clientSent)
                     }
                 } catch (e: Exception) {
-                    Log.w(TAG, "Network time sync failed, using local fallback", e)
+                    AppLogger.w(TAG, "Network time sync failed, using local fallback", e)
                     performLocalTimeSync(clientSent)
                 }
             } ?: run {
-                Log.d(TAG, "NetworkClient not available, performing local time sync")
+                AppLogger.d(TAG, "NetworkClient not available, performing local time sync")
                 performLocalTimeSync(clientSent)
             }
         } catch (e: Exception) {
-            Log.w(TAG, "Time synchronization failed", e)
+            AppLogger.w(TAG, "Time synchronization failed", e)
         }
     }
 
@@ -297,7 +299,7 @@ class GSRNetworkStreamer(
         clockOffset = 0 // No server available, assume zero offset
         lastSyncTime = System.currentTimeMillis()
 
-        Log.d(TAG, "Local time sync completed, RTT: ${roundTripTime}ns")
+        AppLogger.d(TAG, "Local time sync completed, RTT: ${roundTripTime}ns")
     }
 
     private suspend fun sendHeartbeats() {
@@ -317,19 +319,19 @@ class GSRNetworkStreamer(
                         try {
                             val success = client.sendMessage(heartbeat)
                             if (success) {
-                                Log.v(TAG, "Sent heartbeat")
+                                AppLogger.v(TAG, "Sent heartbeat")
                             } else {
-                                Log.w(TAG, "Failed to send heartbeat via network")
+                                AppLogger.w(TAG, "Failed to send heartbeat via network")
                             }
                         } catch (e: Exception) {
-                            Log.w(TAG, "Failed to send heartbeat via network", e)
+                            AppLogger.w(TAG, "Failed to send heartbeat via network", e)
                         }
                     }
                 } ?: run {
-                    Log.d(TAG, "NetworkClient not available, simulating heartbeat: ${heartbeat}")
+                    AppLogger.d(TAG, "NetworkClient not available, simulating heartbeat: ${heartbeat}")
                 }
             } catch (e: Exception) {
-                Log.w(TAG, "Failed to send heartbeat", e)
+                AppLogger.w(TAG, "Failed to send heartbeat", e)
             }
 
             delay(HEARTBEAT_INTERVAL_MS)
@@ -358,19 +360,19 @@ class GSRNetworkStreamer(
                         try {
                             val success = client.sendMessage(metrics)
                             if (success) {
-                                Log.v(TAG, "Sent quality metrics")
+                                AppLogger.v(TAG, "Sent quality metrics")
                             } else {
-                                Log.w(TAG, "Failed to send quality metrics via network")
+                                AppLogger.w(TAG, "Failed to send quality metrics via network")
                             }
                         } catch (e: Exception) {
-                            Log.w(TAG, "Failed to send quality metrics via network", e)
+                            AppLogger.w(TAG, "Failed to send quality metrics via network", e)
                         }
                     }
                 } ?: run {
-                    Log.d(TAG, "NetworkClient not available, simulating metrics: ${metrics}")
+                    AppLogger.d(TAG, "NetworkClient not available, simulating metrics: ${metrics}")
                 }
             } catch (e: Exception) {
-                Log.w(TAG, "Failed to send quality metrics", e)
+                AppLogger.w(TAG, "Failed to send quality metrics", e)
             }
 
             delay(QUALITY_REPORTING_INTERVAL_MS)
@@ -401,20 +403,20 @@ class GSRNetworkStreamer(
                     try {
                         val success = client.sendMessage(registration)
                         if (success) {
-                            Log.i(TAG, "GSR stream registration sent successfully")
+                            AppLogger.i(TAG, "GSR stream registration sent successfully")
                         } else {
-                            Log.w(TAG, "Failed to send stream registration via network")
+                            AppLogger.w(TAG, "Failed to send stream registration via network")
                         }
                     } catch (e: Exception) {
-                        Log.w(TAG, "Failed to send stream registration via network", e)
+                        AppLogger.w(TAG, "Failed to send stream registration via network", e)
                     }
                 }
             } ?: run {
-                Log.d(TAG, "NetworkClient not available, simulating registration: ${registration}")
-                Log.i(TAG, "GSR stream registration simulated")
+                AppLogger.d(TAG, "NetworkClient not available, simulating registration: ${registration}")
+                AppLogger.i(TAG, "GSR stream registration simulated")
             }
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to register GSR stream", e)
+            AppLogger.e(TAG, "Failed to register GSR stream", e)
         }
     }
 
@@ -436,12 +438,12 @@ class GSRNetworkStreamer(
                     try {
                         val success = client.sendMessage(endNotification)
                         if (success) {
-                            Log.i(TAG, "GSR stream end notification sent successfully")
+                            AppLogger.i(TAG, "GSR stream end notification sent successfully")
                         } else {
-                            Log.w(TAG, "Failed to send stream end notification via network")
+                            AppLogger.w(TAG, "Failed to send stream end notification via network")
                         }
                     } catch (e: Exception) {
-                        Log.w(TAG, "Failed to send stream end notification via network", e)
+                        AppLogger.w(TAG, "Failed to send stream end notification via network", e)
                     }
                 }
             } ?: run {
@@ -449,10 +451,10 @@ class GSRNetworkStreamer(
                     TAG,
                     "NetworkClient not available, simulating end notification: ${endNotification}"
                 )
-                Log.i(TAG, "GSR stream end notification simulated")
+                AppLogger.i(TAG, "GSR stream end notification simulated")
             }
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to send stream end notification", e)
+            AppLogger.e(TAG, "Failed to send stream end notification", e)
         }
     }
 

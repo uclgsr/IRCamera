@@ -2,6 +2,8 @@ package mpdc4gsr.feature.testing.ui
 
 import android.os.Bundle
 import android.util.Log
+import mpdc4gsr.core.utils.AppLogger
+import mpdc4gsr.core.utils.ErrorHandler
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
@@ -391,14 +393,14 @@ class CompleteSessionTrialComposeActivity : ComponentActivity() {
     private fun initializeComponents() {
         try {
             recordingController = RecordingController(this, this)
-            Log.d(TAG, "Recording controller initialized successfully")
+            AppLogger.d(TAG, "Recording controller initialized successfully")
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to initialize components: ${e.message}")
+            AppLogger.e(TAG, "Failed to initialize components: ${e.message}")
         }
     }
 
     private suspend fun startCompleteSessionTrial() {
-        Log.i(TAG, "Starting complete session trial")
+        AppLogger.i(TAG, "Starting complete session trial")
         trialStartTime = System.currentTimeMillis()
 
         try {
@@ -411,41 +413,41 @@ class CompleteSessionTrialComposeActivity : ComponentActivity() {
             // Start recording with all sensors
             recordingController?.startRecording()
 
-            Log.d(TAG, "Complete session trial started successfully")
+            AppLogger.d(TAG, "Complete session trial started successfully")
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to start session trial: ${e.message}")
+            AppLogger.e(TAG, "Failed to start session trial: ${e.message}")
         }
     }
 
     private suspend fun stopCompleteSessionTrial() {
-        Log.i(TAG, "Stopping complete session trial")
+        AppLogger.i(TAG, "Stopping complete session trial")
         trialEndTime = System.currentTimeMillis()
 
         try {
             recordingController?.stopRecording()
-            Log.d(TAG, "Complete session trial stopped successfully")
+            AppLogger.d(TAG, "Complete session trial stopped successfully")
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to stop session trial: ${e.message}")
+            AppLogger.e(TAG, "Failed to stop session trial: ${e.message}")
         }
     }
 
     private suspend fun verifySessionOutput() {
-        Log.d(TAG, "Verifying session output")
+        AppLogger.d(TAG, "Verifying session output")
         try {
             delay(2000) // Simulate verification time
-            Log.d(TAG, "Session output verification completed")
+            AppLogger.d(TAG, "Session output verification completed")
         } catch (e: Exception) {
-            Log.e(TAG, "Session output verification failed: ${e.message}")
+            AppLogger.e(TAG, "Session output verification failed: ${e.message}")
         }
     }
 
     private suspend fun generateCompleteReport() {
-        Log.d(TAG, "Generating complete report")
+        AppLogger.d(TAG, "Generating complete report")
         try {
             delay(3000) // Simulate report generation
-            Log.d(TAG, "Complete report generated successfully")
+            AppLogger.d(TAG, "Complete report generated successfully")
         } catch (e: Exception) {
-            Log.e(TAG, "Report generation failed: ${e.message}")
+            AppLogger.e(TAG, "Report generation failed: ${e.message}")
         }
     }
 
@@ -462,32 +464,32 @@ class CompleteSessionTrialComposeActivity : ComponentActivity() {
     }
 
     private suspend fun testSessionInitialization() {
-        Log.d(TAG, "Testing session initialization")
+        AppLogger.d(TAG, "Testing session initialization")
         try {
             delay(3000)
-            Log.d(TAG, "Session initialization test completed")
+            AppLogger.d(TAG, "Session initialization test completed")
         } catch (e: Exception) {
-            Log.e(TAG, "Session initialization test failed: ${e.message}")
+            AppLogger.e(TAG, "Session initialization test failed: ${e.message}")
         }
     }
 
     private suspend fun testExtendedRecording() {
-        Log.d(TAG, "Testing extended recording")
+        AppLogger.d(TAG, "Testing extended recording")
         try {
             delay(5000) // Simulate extended recording test
-            Log.d(TAG, "Extended recording test completed")
+            AppLogger.d(TAG, "Extended recording test completed")
         } catch (e: Exception) {
-            Log.e(TAG, "Extended recording test failed: ${e.message}")
+            AppLogger.e(TAG, "Extended recording test failed: ${e.message}")
         }
     }
 
     private suspend fun testSessionCleanup() {
-        Log.d(TAG, "Testing session cleanup")
+        AppLogger.d(TAG, "Testing session cleanup")
         try {
             delay(2000)
-            Log.d(TAG, "Session cleanup test completed")
+            AppLogger.d(TAG, "Session cleanup test completed")
         } catch (e: Exception) {
-            Log.e(TAG, "Session cleanup test failed: ${e.message}")
+            AppLogger.e(TAG, "Session cleanup test failed: ${e.message}")
         }
     }
 }

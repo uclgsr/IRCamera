@@ -201,11 +201,7 @@ class StructuredLogger private constructor(private val context: Context) {
         }
     }
 
-    fun logConnection(
-        event: String,
-        connectionId: String,
-        details: Map<String, Any> = emptyMap(),
-    ) {
+    fun logConnection(event: String, connectionId: String, details: Map<String, Any> = emptyMap()) {
         log(LogLevel.INFO, "NetworkConnection", event, details, connectionId)
     }
 
@@ -218,31 +214,16 @@ class StructuredLogger private constructor(private val context: Context) {
         log(LogLevel.INFO, "ProtocolHandler", event, details, connectionId, messageId)
     }
 
-    fun logServerEvent(
-        event: String,
-        details: Map<String, Any> = emptyMap(),
-    ) {
+    fun logServerEvent(event: String, details: Map<String, Any> = emptyMap()) {
         log(LogLevel.INFO, "ServerSocket", event, details)
     }
 
-    fun logSensorEvent(
-        event: String,
-        sensorType: String,
-        details: Map<String, Any> = emptyMap(),
-    ) {
-        val sensorDetails = details.toMutableMap()
-        sensorDetails["sensor_type"] = sensorType
-        log(LogLevel.INFO, "SensorRecorder", event, sensorDetails)
+    fun logSensorEvent(event: String, sensorType: String, details: Map<String, Any> = emptyMap()) {
+        log(LogLevel.INFO, "SensorRecorder", event, details + ("sensor_type" to sensorType))
     }
 
-    fun logSessionEvent(
-        event: String,
-        sessionId: String,
-        details: Map<String, Any> = emptyMap(),
-    ) {
-        val sessionDetails = details.toMutableMap()
-        sessionDetails["session_id"] = sessionId
-        log(LogLevel.INFO, "RecordingSession", event, sessionDetails)
+    fun logSessionEvent(event: String, sessionId: String, details: Map<String, Any> = emptyMap()) {
+        log(LogLevel.INFO, "RecordingSession", event, details + ("session_id" to sessionId))
     }
 
     private fun generateMessageId(): String {

@@ -6,6 +6,8 @@ import android.content.Intent
 import android.hardware.usb.UsbDevice
 import android.hardware.usb.UsbManager
 import android.util.Log
+import mpdc4gsr.core.utils.AppLogger
+import mpdc4gsr.core.utils.ErrorHandler
 import com.mpdc4gsr.libunified.app.config.DeviceConfig.isTcTsDevice
 import com.mpdc4gsr.libunified.app.event.DeviceEventManager
 
@@ -34,7 +36,7 @@ class ThermalUsbReceiver : BroadcastReceiver() {
                 }
             }
         } catch (e: Exception) {
-            Log.e(TAG, "Error handling USB broadcast", e)
+            AppLogger.e(TAG, "Error handling USB broadcast", e)
         }
     }
 
@@ -56,22 +58,22 @@ class ThermalUsbReceiver : BroadcastReceiver() {
             )
 
             if (device.isTcTsDevice()) {
-                Log.i(TAG, "Topdon thermal camera detected: ${device.productName}")
+                AppLogger.i(TAG, "Topdon thermal camera detected: ${device.productName}")
 
                 val usbManager = context.getSystemService(Context.USB_SERVICE) as UsbManager
                 val hasPermission = usbManager.hasPermission(device)
 
                 if (hasPermission) {
 
-                    Log.i(TAG, "Thermal camera attached with existing permission")
+                    AppLogger.i(TAG, "Thermal camera attached with existing permission")
                     DeviceEventManager.emitDeviceConnectionSync(true, device)
                 } else {
 
-                    Log.i(TAG, "Thermal camera attached, requesting USB permission")
+                    AppLogger.i(TAG, "Thermal camera attached, requesting USB permission")
                     DeviceEventManager.emitDevicePermissionRequestSync(device)
                 }
             } else {
-                Log.d(TAG, "Non-thermal USB device attached, ignoring")
+                AppLogger.d(TAG, "Non-thermal USB device attached, ignoring")
             }
         }
     }
@@ -94,7 +96,7 @@ class ThermalUsbReceiver : BroadcastReceiver() {
             )
 
             if (device.isTcTsDevice()) {
-                Log.w(TAG, "Topdon thermal camera disconnected: ${device.productName}")
+                AppLogger.w(TAG, "Topdon thermal camera disconnected: ${device.productName}")
 
                 DeviceEventManager.emitDeviceConnectionSync(false, device)
             }
@@ -113,15 +115,15 @@ class ThermalUsbReceiver : BroadcastReceiver() {
         val granted = intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)
 
         if (device != null) {
-            Log.i(TAG, "USB permission result for ${device.productName}: granted=$granted")
+            AppLogger.i(TAG, "USB permission result for ${device.productName}: granted=$granted")
 
             if (device.isTcTsDevice()) {
                 if (granted) {
-                    Log.i(TAG, "USB permission granted for thermal camera")
+                    AppLogger.i(TAG, "USB permission granted for thermal camera")
 
                     DeviceEventManager.emitDeviceConnectionSync(true, device)
                 } else {
-                    Log.w(TAG, "USB permission denied for thermal camera")
+                    AppLogger.w(TAG, "USB permission denied for thermal camera")
 
                     DeviceEventManager.emitDevicePermissionRequestSync(device)
                 }

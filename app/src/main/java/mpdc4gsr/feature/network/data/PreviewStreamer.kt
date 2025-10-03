@@ -3,6 +3,8 @@ package mpdc4gsr.feature.network.data
 import android.graphics.Bitmap
 import android.util.Base64
 import android.util.Log
+import mpdc4gsr.core.utils.AppLogger
+import mpdc4gsr.core.utils.ErrorHandler
 import com.mpdc4gsr.libunified.app.utils.BitmapUtils
 import kotlinx.coroutines.*
 import org.json.JSONObject
@@ -40,16 +42,16 @@ class PreviewStreamer(
 
     suspend fun startStreaming(): Boolean {
         if (isStreaming.get()) {
-            Log.w(TAG, "Preview streaming already active")
+            AppLogger.w(TAG, "Preview streaming already active")
             return true
         }
 
         if (!networkServer.isClientConnected()) {
-            Log.w(TAG, "No PC client connected, cannot start streaming")
+            AppLogger.w(TAG, "No PC client connected, cannot start streaming")
             return false
         }
 
-        Log.i(TAG, "Starting preview streaming to PC")
+        AppLogger.i(TAG, "Starting preview streaming to PC")
         isStreaming.set(true)
 
         frameStreamingJob = scope.launch {
@@ -68,7 +70,7 @@ class PreviewStreamer(
             return
         }
 
-        Log.i(TAG, "Stopping preview streaming")
+        AppLogger.i(TAG, "Stopping preview streaming")
         isStreaming.set(false)
 
         frameStreamingJob?.cancel()
@@ -114,7 +116,7 @@ class PreviewStreamer(
     }
 
     private suspend fun streamFrames() {
-        Log.i(TAG, "Frame streaming started")
+        AppLogger.i(TAG, "Frame streaming started")
 
         while (currentCoroutineContext().isActive && isStreaming.get()) {
             try {
@@ -129,16 +131,16 @@ class PreviewStreamer(
 
                 delay(frameIntervalMs)
             } catch (e: Exception) {
-                Log.e(TAG, "Error in frame streaming", e)
+                AppLogger.e(TAG, "Error in frame streaming", e)
                 if (currentCoroutineContext().isActive) delay(1000)
             }
         }
 
-        Log.i(TAG, "Frame streaming stopped")
+        AppLogger.i(TAG, "Frame streaming stopped")
     }
 
     private suspend fun streamSensorData() {
-        Log.i(TAG, "Sensor data streaming started")
+        AppLogger.i(TAG, "Sensor data streaming started")
 
         while (currentCoroutineContext().isActive && isStreaming.get()) {
             try {
@@ -161,12 +163,12 @@ class PreviewStreamer(
 
                 delay(sensorIntervalMs)
             } catch (e: Exception) {
-                Log.e(TAG, "Error in sensor data streaming", e)
+                AppLogger.e(TAG, "Error in sensor data streaming", e)
                 if (currentCoroutineContext().isActive) delay(1000)
             }
         }
 
-        Log.i(TAG, "Sensor data streaming stopped")
+        AppLogger.i(TAG, "Sensor data streaming stopped")
     }
 
     private suspend fun streamFrame(frameType: String, bitmap: Bitmap) {
@@ -180,7 +182,7 @@ class PreviewStreamer(
 
             val jpegBytes = BitmapUtils.bitmapToBytes(scaledBitmap, jpegQuality)
             if (jpegBytes == null) {
-                Log.w(TAG, "Failed to convert $frameType frame to JPEG")
+                AppLogger.w(TAG, "Failed to convert $frameType frame to JPEG")
                 return
             }
 
@@ -210,7 +212,7 @@ class PreviewStreamer(
             }
 
         } catch (e: Exception) {
-            Log.e(TAG, "Error streaming $frameType frame", e)
+            AppLogger.e(TAG, "Error streaming $frameType frame", e)
         }
     }
 
@@ -221,6 +223,6 @@ class PreviewStreamer(
             stopStreaming()
         }
         scope.coroutineContext.job.cancel()
-        Log.i(TAG, "PreviewStreamer cleaned up")
+        AppLogger.i(TAG, "PreviewStreamer cleaned up")
     }
 }

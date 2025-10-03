@@ -8,6 +8,8 @@ import android.content.pm.PackageManager
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import mpdc4gsr.core.utils.AppLogger
+import mpdc4gsr.core.utils.ErrorHandler
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
@@ -123,12 +125,12 @@ class UnifiedGSRRecorder(
     private val mainHandler = Handler(Looper.getMainLooper())
 
     override suspend fun initialize(): Boolean = withContext(Dispatchers.IO) {
-        Log.i(TAG, "Initializing Unified GSR Recorder with Shimmer3 GSR+ integration")
+        AppLogger.i(TAG, "Initializing Unified GSR Recorder with Shimmer3 GSR+ integration")
 
         try {
 
             if (!hasRequiredPermissions(context)) {
-                Log.e(TAG, "Missing required BLE permissions for GSR recording")
+                AppLogger.e(TAG, "Missing required BLE permissions for GSR recording")
                 _deviceStatus.value = "Missing Permissions"
                 return@withContext false
             }
@@ -138,7 +140,7 @@ class UnifiedGSRRecorder(
             bluetoothAdapter = bluetoothManager?.adapter
 
             if (bluetoothAdapter == null || !bluetoothAdapter!!.isEnabled) {
-                Log.e(TAG, "Bluetooth not available or disabled")
+                AppLogger.e(TAG, "Bluetooth not available or disabled")
                 _deviceStatus.value = "Bluetooth Disabled"
                 return@withContext false
             }
@@ -149,27 +151,27 @@ class UnifiedGSRRecorder(
             val deviceManagerInitialized = shimmerDeviceManager?.initialize() ?: false
 
             if (!deviceManagerInitialized) {
-                Log.w(TAG, "Enhanced device manager initialization failed, using basic mode")
+                AppLogger.w(TAG, "Enhanced device manager initialization failed, using basic mode")
             } else {
-                Log.i(TAG, "Enhanced BLE device manager initialized successfully")
+                AppLogger.i(TAG, "Enhanced BLE device manager initialized successfully")
             }
 
             _deviceStatus.value = "Initialized"
-            Log.i(TAG, "GSR Recorder initialization completed successfully")
+            AppLogger.i(TAG, "GSR Recorder initialization completed successfully")
             return@withContext true
 
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to initialize GSR recorder", e)
+            AppLogger.e(TAG, "Failed to initialize GSR recorder", e)
             _deviceStatus.value = "Initialization Failed"
             return@withContext false
         }
     }
 
     suspend fun startDeviceDiscovery(): Boolean = withContext(Dispatchers.IO) {
-        Log.i(TAG, "Starting enhanced Shimmer3 GSR+ device discovery with BLE scanning")
+        AppLogger.i(TAG, "Starting enhanced Shimmer3 GSR+ device discovery with BLE scanning")
 
         if (shimmerManager == null) {
-            Log.e(TAG, "Shimmer manager not initialized")
+            AppLogger.e(TAG, "Shimmer manager not initialized")
             return@withContext false
         }
 
@@ -179,7 +181,7 @@ class UnifiedGSRRecorder(
 
             val deviceManager = shimmerDeviceManager
             if (deviceManager != null) {
-                Log.i(TAG, "Using enhanced BLE scanning for device discovery")
+                AppLogger.i(TAG, "Using enhanced BLE scanning for device discovery")
 
                 val scanSuccess = deviceManager.startDeviceScanning()
                 if (scanSuccess) {
@@ -207,7 +209,7 @@ class UnifiedGSRRecorder(
             }
 
             // Don't add dummy devices - require actual hardware detection
-            Log.i(TAG, "BLE scan completed without finding real Shimmer devices")
+            AppLogger.i(TAG, "BLE scan completed without finding real Shimmer devices")
 
             if (discoveredDevices.isNotEmpty()) {
                 _deviceStatus.value = "Found ${discoveredDevices.size} real Shimmer devices"
@@ -219,7 +221,7 @@ class UnifiedGSRRecorder(
             }
 
         } catch (e: Exception) {
-            Log.e(TAG, "Error during enhanced device discovery", e)
+            AppLogger.e(TAG, "Error during enhanced device discovery", e)
             incrementErrorCount()
             _deviceStatus.value = "Discovery Failed"
             return@withContext false
@@ -227,10 +229,10 @@ class UnifiedGSRRecorder(
     }
 
     suspend fun connectToDevice(deviceInfo: DeviceInfo): Boolean = withContext(Dispatchers.IO) {
-        Log.i(TAG, "Connecting to Shimmer device: ${deviceInfo.address} (${deviceInfo.name})")
+        AppLogger.i(TAG, "Connecting to Shimmer device: ${deviceInfo.address} (${deviceInfo.name})")
 
         if (shimmerManager == null) {
-            Log.e(TAG, "Shimmer manager not initialized")
+            AppLogger.e(TAG, "Shimmer manager not initialized")
             return@withContext false
         }
 
@@ -258,7 +260,7 @@ class UnifiedGSRRecorder(
             }
 
         } catch (e: Exception) {
-            Log.e(TAG, "Error connecting to device", e)
+            AppLogger.e(TAG, "Error connecting to device", e)
             incrementErrorCount()
             _deviceStatus.value = "Connection Error"
             return@withContext false
@@ -266,7 +268,7 @@ class UnifiedGSRRecorder(
     }
 
     private suspend fun configureGSRSensor() = withContext(Dispatchers.IO) {
-        Log.i(TAG, "Configuring GSR sensor for research-grade recording")
+        AppLogger.i(TAG, "Configuring GSR sensor for research-grade recording")
 
         val shimmer = connectedShimmer ?: return@withContext
 
@@ -278,7 +280,7 @@ class UnifiedGSRRecorder(
             )
 
         } catch (e: Exception) {
-            Log.e(TAG, "Error configuring GSR sensor", e)
+            AppLogger.e(TAG, "Error configuring GSR sensor", e)
             throw e
         }
     }
@@ -288,16 +290,16 @@ class UnifiedGSRRecorder(
         sessionMetadata: SessionMetadata
     ): Boolean =
         withContext(Dispatchers.IO) {
-            Log.i(TAG, "Starting GSR recording session with metadata: ${sessionMetadata.sessionId}")
+            AppLogger.i(TAG, "Starting GSR recording session with metadata: ${sessionMetadata.sessionId}")
 
             val shimmer = connectedShimmer
             if (shimmer == null) {
-                Log.e(TAG, "No Shimmer device connected for recording")
+                AppLogger.e(TAG, "No Shimmer device connected for recording")
                 return@withContext false
             }
 
             if (_isRecording.get()) {
-                Log.w(TAG, "Recording already in progress")
+                AppLogger.w(TAG, "Recording already in progress")
                 return@withContext true
             }
 
@@ -344,11 +346,11 @@ class UnifiedGSRRecorder(
                     processRecordingData()
                 }
 
-                Log.i(TAG, "GSR recording started successfully with session synchronization")
+                AppLogger.i(TAG, "GSR recording started successfully with session synchronization")
                 return@withContext true
 
             } catch (e: Exception) {
-                Log.e(TAG, "Failed to start GSR recording with session metadata", e)
+                AppLogger.e(TAG, "Failed to start GSR recording with session metadata", e)
                 _deviceStatus.value = "Recording Failed"
                 return@withContext false
             }
@@ -356,16 +358,16 @@ class UnifiedGSRRecorder(
 
     override suspend fun startRecording(sessionDirectory: String): Boolean =
         withContext(Dispatchers.IO) {
-            Log.i(TAG, "Starting GSR recording session (legacy mode)")
+            AppLogger.i(TAG, "Starting GSR recording session (legacy mode)")
 
             val shimmer = connectedShimmer
             if (shimmer == null) {
-                Log.e(TAG, "No Shimmer device connected for recording")
+                AppLogger.e(TAG, "No Shimmer device connected for recording")
                 return@withContext false
             }
 
             if (_isRecording.get()) {
-                Log.w(TAG, "Recording already in progress")
+                AppLogger.w(TAG, "Recording already in progress")
                 return@withContext true
             }
 
@@ -398,21 +400,21 @@ class UnifiedGSRRecorder(
                     processRecordingData()
                 }
 
-                Log.i(TAG, "GSR recording started successfully (legacy mode)")
+                AppLogger.i(TAG, "GSR recording started successfully (legacy mode)")
                 return@withContext true
 
             } catch (e: Exception) {
-                Log.e(TAG, "Failed to start GSR recording", e)
+                AppLogger.e(TAG, "Failed to start GSR recording", e)
                 _deviceStatus.value = "Recording Failed"
                 return@withContext false
             }
         }
 
     override suspend fun stopRecording(): Boolean = withContext(Dispatchers.IO) {
-        Log.i(TAG, "Stopping GSR recording session")
+        AppLogger.i(TAG, "Stopping GSR recording session")
 
         if (!_isRecording.get()) {
-            Log.w(TAG, "No recording in progress")
+            AppLogger.w(TAG, "No recording in progress")
             return@withContext true
         }
 
@@ -455,13 +457,13 @@ class UnifiedGSRRecorder(
             return@withContext true
 
         } catch (e: Exception) {
-            Log.e(TAG, "Error stopping GSR recording", e)
+            AppLogger.e(TAG, "Error stopping GSR recording", e)
             return@withContext false
         }
     }
 
     private suspend fun processRecordingData() = withContext(Dispatchers.IO) {
-        Log.i(TAG, "Starting real-time GSR data processing")
+        AppLogger.i(TAG, "Starting real-time GSR data processing")
 
         while (_isRecording.get()) {
             try {
@@ -478,12 +480,12 @@ class UnifiedGSRRecorder(
 
                 delay(100)
             } catch (e: Exception) {
-                Log.e(TAG, "Error in GSR data processing loop", e)
+                AppLogger.e(TAG, "Error in GSR data processing loop", e)
                 delay(100)
             }
         }
 
-        Log.i(TAG, "GSR data processing stopped")
+        AppLogger.i(TAG, "GSR data processing stopped")
     }
 
     private fun createMockObjectCluster(): ObjectCluster {
@@ -518,7 +520,7 @@ class UnifiedGSRRecorder(
             _connectionQuality.value = quality
 
         } catch (e: Exception) {
-            Log.w(TAG, "Error updating connection quality", e)
+            AppLogger.w(TAG, "Error updating connection quality", e)
             _connectionQuality.value = 0.5
         }
     }
@@ -550,10 +552,10 @@ class UnifiedGSRRecorder(
                     "Added sync marker: $markerType at $timestampNs with ${metadata.size} metadata entries"
                 )
             } else {
-                Log.i(TAG, "Sync marker added to tracking: $markerType (recording not active)")
+                AppLogger.i(TAG, "Sync marker added to tracking: $markerType (recording not active)")
             }
         } catch (e: Exception) {
-            Log.e(TAG, "Error adding sync marker", e)
+            AppLogger.e(TAG, "Error adding sync marker", e)
         }
     }
 
@@ -629,7 +631,7 @@ class UnifiedGSRRecorder(
 
     private fun incrementErrorCount() {
         errorCount.incrementAndGet()
-        Log.w(TAG, "GSR error count increased to: ${errorCount.get()}")
+        AppLogger.w(TAG, "GSR error count increased to: ${errorCount.get()}")
     }
 
     suspend fun flushAndCloseFiles() = withContext(Dispatchers.IO) {
@@ -637,14 +639,14 @@ class UnifiedGSRRecorder(
             csvWriter?.flush()
             csvWriter?.close()
             csvWriter = null
-            Log.i(TAG, "GSR data files flushed and closed")
+            AppLogger.i(TAG, "GSR data files flushed and closed")
         } catch (e: Exception) {
-            Log.e(TAG, "Error flushing and closing GSR files", e)
+            AppLogger.e(TAG, "Error flushing and closing GSR files", e)
         }
     }
 
     suspend fun disconnectDevice(): Boolean = withContext(Dispatchers.IO) {
-        Log.i(TAG, "Disconnecting from Shimmer device")
+        AppLogger.i(TAG, "Disconnecting from Shimmer device")
 
         try {
 
@@ -662,13 +664,13 @@ class UnifiedGSRRecorder(
             return@withContext true
 
         } catch (e: Exception) {
-            Log.e(TAG, "Error disconnecting device", e)
+            AppLogger.e(TAG, "Error disconnecting device", e)
             return@withContext false
         }
     }
 
     override suspend fun cleanup(): Unit = withContext(Dispatchers.IO) {
-        Log.i(TAG, "Cleaning up GSR recorder resources")
+        AppLogger.i(TAG, "Cleaning up GSR recorder resources")
 
         try {
 
@@ -685,10 +687,10 @@ class UnifiedGSRRecorder(
 
             discoveredDevices.clear()
 
-            Log.i(TAG, "GSR recorder cleanup completed")
+            AppLogger.i(TAG, "GSR recorder cleanup completed")
 
         } catch (e: Exception) {
-            Log.e(TAG, "Error during cleanup", e)
+            AppLogger.e(TAG, "Error during cleanup", e)
         }
     }
 
@@ -764,7 +766,7 @@ class UnifiedGSRRecorder(
             }
 
         } catch (e: Exception) {
-            Log.e(TAG, "Error processing GSR data", e)
+            AppLogger.e(TAG, "Error processing GSR data", e)
         }
     }
 }

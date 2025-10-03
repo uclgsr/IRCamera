@@ -6,6 +6,8 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
 import android.util.Log
+import mpdc4gsr.core.utils.AppLogger
+import mpdc4gsr.core.utils.ErrorHandler
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 
@@ -36,7 +38,7 @@ class BackgroundScanningManager(
 
     fun startBackgroundScanning() {
         try {
-            Log.i(TAG, "Starting background device scanning service")
+            AppLogger.i(TAG, "Starting background device scanning service")
 
             val intent = Intent(context, BackgroundDeviceScanningService::class.java).apply {
                 action = BackgroundDeviceScanningService.ACTION_START_SCANNING
@@ -49,13 +51,13 @@ class BackgroundScanningManager(
             bindService()
 
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to start background scanning service", e)
+            AppLogger.e(TAG, "Failed to start background scanning service", e)
         }
     }
 
     fun stopBackgroundScanning() {
         try {
-            Log.i(TAG, "Stopping background device scanning service")
+            AppLogger.i(TAG, "Stopping background device scanning service")
 
             if (isBound) {
                 unbindService()
@@ -70,13 +72,13 @@ class BackgroundScanningManager(
             }
 
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to stop background scanning service", e)
+            AppLogger.e(TAG, "Failed to stop background scanning service", e)
         }
     }
 
     fun pauseBackgroundScanning() {
         try {
-            Log.d(TAG, "Pausing background device scanning")
+            AppLogger.d(TAG, "Pausing background device scanning")
 
             val intent = Intent(context, BackgroundDeviceScanningService::class.java).apply {
                 action = BackgroundDeviceScanningService.ACTION_PAUSE_SCANNING
@@ -84,13 +86,13 @@ class BackgroundScanningManager(
             context.startService(intent)
 
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to pause background scanning", e)
+            AppLogger.e(TAG, "Failed to pause background scanning", e)
         }
     }
 
     fun resumeBackgroundScanning() {
         try {
-            Log.d(TAG, "Resuming background device scanning")
+            AppLogger.d(TAG, "Resuming background device scanning")
 
             val intent = Intent(context, BackgroundDeviceScanningService::class.java).apply {
                 action = BackgroundDeviceScanningService.ACTION_RESUME_SCANNING
@@ -98,7 +100,7 @@ class BackgroundScanningManager(
             context.startService(intent)
 
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to resume background scanning", e)
+            AppLogger.e(TAG, "Failed to resume background scanning", e)
         }
     }
 
@@ -107,7 +109,7 @@ class BackgroundScanningManager(
             val intent = Intent(context, BackgroundDeviceScanningService::class.java)
             context.bindService(intent, this, Context.BIND_AUTO_CREATE)
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to bind to background scanning service", e)
+            AppLogger.e(TAG, "Failed to bind to background scanning service", e)
         }
     }
 
@@ -120,7 +122,7 @@ class BackgroundScanningManager(
                 statusCallback?.onServiceDisconnected()
             }
         } catch (e: Exception) {
-            Log.w(TAG, "Failed to unbind from background scanning service", e)
+            AppLogger.w(TAG, "Failed to unbind from background scanning service", e)
         }
     }
 
@@ -134,7 +136,7 @@ class BackgroundScanningManager(
 
     // ServiceConnection implementation
     override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-        Log.d(TAG, "Connected to background scanning service")
+        AppLogger.d(TAG, "Connected to background scanning service")
 
         val binder = service as BackgroundDeviceScanningService.LocalBinder
         scanningService = binder.getService()
@@ -144,7 +146,7 @@ class BackgroundScanningManager(
     }
 
     override fun onServiceDisconnected(name: ComponentName?) {
-        Log.d(TAG, "Disconnected from background scanning service")
+        AppLogger.d(TAG, "Disconnected from background scanning service")
 
         scanningService = null
         isBound = false

@@ -1,6 +1,8 @@
 package mpdc4gsr.feature.gsr.data.source
 
 import android.util.Log
+import mpdc4gsr.core.utils.AppLogger
+import mpdc4gsr.core.utils.ErrorHandler
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import mpdc4gsr.core.data.ShimmerDeviceManager
@@ -34,10 +36,10 @@ class ShimmerDataSourceImpl(
 
     override suspend fun connect(deviceAddress: String): Result<Unit> {
         return try {
-            Log.d(TAG, "Connecting to device: $deviceAddress")
+            AppLogger.d(TAG, "Connecting to device: $deviceAddress")
 
             val deviceInfo = scannedDevices[deviceAddress] ?: run {
-                Log.w(TAG, "Device info not found in scan results, using defaults for: $deviceAddress")
+                AppLogger.w(TAG, "Device info not found in scan results, using defaults for: $deviceAddress")
                 DeviceInfo(
                     address = deviceAddress,
                     name = DEFAULT_DEVICE_NAME,
@@ -49,14 +51,14 @@ class ShimmerDataSourceImpl(
 
             val success = deviceManager.connectToDevice(deviceInfo)
             if (success) {
-                Log.i(TAG, "Successfully connected to device: $deviceAddress")
+                AppLogger.i(TAG, "Successfully connected to device: $deviceAddress")
                 Result.success(Unit)
             } else {
-                Log.e(TAG, "Failed to connect to device: $deviceAddress")
+                AppLogger.e(TAG, "Failed to connect to device: $deviceAddress")
                 Result.failure(Exception("Connection failed"))
             }
         } catch (e: Exception) {
-            Log.e(TAG, "Error connecting to device: $deviceAddress", e)
+            AppLogger.e(TAG, "Error connecting to device: $deviceAddress", e)
             Result.failure(e)
         }
     }
@@ -73,29 +75,29 @@ class ShimmerDataSourceImpl(
 
     override suspend fun disconnect(deviceAddress: String) {
         try {
-            Log.d(TAG, "Disconnecting device: $deviceAddress")
+            AppLogger.d(TAG, "Disconnecting device: $deviceAddress")
             deviceManager.disconnectDevice(deviceAddress)
-            Log.i(TAG, "Successfully disconnected device: $deviceAddress")
+            AppLogger.i(TAG, "Successfully disconnected device: $deviceAddress")
         } catch (e: Exception) {
-            Log.e(TAG, "Error disconnecting device: $deviceAddress", e)
+            AppLogger.e(TAG, "Error disconnecting device: $deviceAddress", e)
         }
     }
 
     override suspend fun startStreaming(deviceAddress: String): Flow<GSRSample> {
         return flow {
-            Log.d(TAG, "Starting GSR streaming for device: $deviceAddress")
-            Log.w(TAG, "Note: GSR streaming implementation requires Shimmer SDK callback integration")
-            Log.w(TAG, "This is a placeholder that emits no data - actual implementation requires")
-            Log.w(TAG, "registering callbacks with ShimmerBluetoothManagerAndroid for data packets")
+            AppLogger.d(TAG, "Starting GSR streaming for device: $deviceAddress")
+            AppLogger.w(TAG, "Note: GSR streaming implementation requires Shimmer SDK callback integration")
+            AppLogger.w(TAG, "This is a placeholder that emits no data - actual implementation requires")
+            AppLogger.w(TAG, "registering callbacks with ShimmerBluetoothManagerAndroid for data packets")
         }
     }
 
     override suspend fun stopStreaming(deviceAddress: String) {
         try {
-            Log.d(TAG, "Stopping streaming for device: $deviceAddress")
-            Log.w(TAG, "Note: Stopping streaming requires Shimmer SDK integration")
+            AppLogger.d(TAG, "Stopping streaming for device: $deviceAddress")
+            AppLogger.w(TAG, "Note: Stopping streaming requires Shimmer SDK integration")
         } catch (e: Exception) {
-            Log.e(TAG, "Error stopping streaming for device: $deviceAddress", e)
+            AppLogger.e(TAG, "Error stopping streaming for device: $deviceAddress", e)
         }
     }
 
@@ -105,7 +107,7 @@ class ShimmerDataSourceImpl(
                 shimmer.isConnected
             }
         } ?: false
-        Log.d(TAG, "Device $deviceAddress connection status: $connected")
+        AppLogger.d(TAG, "Device $deviceAddress connection status: $connected")
         return connected
     }
 
@@ -113,15 +115,15 @@ class ShimmerDataSourceImpl(
         return try {
             val shimmer = deviceManager.shimmerBluetoothManager?.getShimmerDeviceBtConnectedFromMac(deviceAddress)
             if (shimmer != null) {
-                Log.d(TAG, "Shimmer device found for battery query: $deviceAddress")
-                Log.w(TAG, "Note: Battery level reading requires Shimmer SDK state parsing")
+                AppLogger.d(TAG, "Shimmer device found for battery query: $deviceAddress")
+                AppLogger.w(TAG, "Note: Battery level reading requires Shimmer SDK state parsing")
                 null
             } else {
-                Log.w(TAG, "Shimmer device not found for battery query: $deviceAddress")
+                AppLogger.w(TAG, "Shimmer device not found for battery query: $deviceAddress")
                 null
             }
         } catch (e: Exception) {
-            Log.e(TAG, "Error getting battery level for device: $deviceAddress", e)
+            AppLogger.e(TAG, "Error getting battery level for device: $deviceAddress", e)
             null
         }
     }

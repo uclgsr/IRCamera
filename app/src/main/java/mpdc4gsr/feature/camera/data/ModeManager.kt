@@ -1,6 +1,8 @@
 package mpdc4gsr.feature.camera.data
 
 import android.util.Log
+import mpdc4gsr.core.utils.AppLogger
+import mpdc4gsr.core.utils.ErrorHandler
 
 class ModeManager {
     companion object {
@@ -30,23 +32,23 @@ class ModeManager {
 
     fun initialize(caps: DeviceCaps) {
         deviceCaps = caps
-        Log.i(TAG, "Mode manager initialized with device capabilities")
+        AppLogger.i(TAG, "Mode manager initialized with device capabilities")
     }
 
     fun requestModeSwitch(targetMode: CameraMode): Boolean {
         if (currentState == State.SWITCHING) {
-            Log.w(TAG, "Mode switch already in progress")
+            AppLogger.w(TAG, "Mode switch already in progress")
             return false
         }
 
         if (currentMode == targetMode) {
-            Log.i(TAG, "Already in target mode: $targetMode")
+            AppLogger.i(TAG, "Already in target mode: $targetMode")
             return true
         }
 
         if (!isModeSupported(targetMode)) {
             val error = "Mode $targetMode not supported on this device"
-            Log.e(TAG, error)
+            AppLogger.e(TAG, error)
             onError?.invoke(error)
             return false
         }
@@ -55,7 +57,7 @@ class ModeManager {
         val previousMode = currentMode
         currentMode = targetMode
 
-        Log.i(TAG, "Mode switch: $previousMode -> $targetMode")
+        AppLogger.i(TAG, "Mode switch: $previousMode -> $targetMode")
         onModeChanged?.invoke(currentMode, currentState)
 
         return true
@@ -63,7 +65,7 @@ class ModeManager {
 
     fun confirmModeSwitch() {
         if (currentState != State.SWITCHING) {
-            Log.w(TAG, "No mode switch in progress to confirm")
+            AppLogger.w(TAG, "No mode switch in progress to confirm")
             return
         }
 
@@ -74,17 +76,17 @@ class ModeManager {
                 CameraMode.PREVIEW_ONLY -> State.PREVIEW_ACTIVE
             }
 
-        Log.i(TAG, "Mode switch confirmed: $currentMode active")
+        AppLogger.i(TAG, "Mode switch confirmed: $currentMode active")
         onModeChanged?.invoke(currentMode, currentState)
     }
 
     fun reportModeSwitchFailed(error: String) {
         if (currentState != State.SWITCHING) {
-            Log.w(TAG, "No mode switch in progress to fail")
+            AppLogger.w(TAG, "No mode switch in progress to fail")
             return
         }
 
-        Log.e(TAG, "Mode switch failed: $error")
+        AppLogger.e(TAG, "Mode switch failed: $error")
 
         currentState = State.IDLE
         onError?.invoke("Mode switch failed: $error")

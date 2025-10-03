@@ -3,6 +3,8 @@ package mpdc4gsr.feature.network.data
 import android.content.Context
 import android.graphics.Bitmap
 import android.util.Log
+import mpdc4gsr.core.utils.AppLogger
+import mpdc4gsr.core.utils.ErrorHandler
 import mpdc4gsr.core.RecordingService
 
 object PreviewIntegration {
@@ -12,9 +14,9 @@ object PreviewIntegration {
         try {
             val adapter = getPreviewDataAdapter(context)
             adapter?.updateRgbFrame(rgbFrame)
-            Log.v(TAG, "Updated RGB frame for preview: ${rgbFrame.width}x${rgbFrame.height}")
+            AppLogger.v(TAG, "Updated RGB frame for preview: ${rgbFrame.width}x${rgbFrame.height}")
         } catch (e: Exception) {
-            Log.w(TAG, "Failed to update RGB frame for preview", e)
+            AppLogger.w(TAG, "Failed to update RGB frame for preview", e)
         }
     }
 
@@ -27,7 +29,7 @@ object PreviewIntegration {
                 "Updated thermal frame for preview: ${thermalFrame.width}x${thermalFrame.height}"
             )
         } catch (e: Exception) {
-            Log.w(TAG, "Failed to update thermal frame for preview", e)
+            AppLogger.w(TAG, "Failed to update thermal frame for preview", e)
         }
     }
 
@@ -35,9 +37,9 @@ object PreviewIntegration {
         try {
             val adapter = getPreviewDataAdapter(context)
             adapter?.updateGsrValueDirect(gsrValue)
-            Log.v(TAG, "Updated GSR value for preview: ${gsrValue}µS")
+            AppLogger.v(TAG, "Updated GSR value for preview: ${gsrValue}µS")
         } catch (e: Exception) {
-            Log.w(TAG, "Failed to update GSR value for preview", e)
+            AppLogger.w(TAG, "Failed to update GSR value for preview", e)
         }
     }
 
@@ -46,7 +48,7 @@ object PreviewIntegration {
             val streamer = getPreviewStreamer(context)
             streamer?.isStreaming() == true
         } catch (e: Exception) {
-            Log.w(TAG, "Failed to check preview streaming status", e)
+            AppLogger.w(TAG, "Failed to check preview streaming status", e)
             false
         }
     }
@@ -56,7 +58,7 @@ object PreviewIntegration {
 
             emptyMap()
         } catch (e: Exception) {
-            Log.w(TAG, "Failed to get streaming configuration", e)
+            AppLogger.w(TAG, "Failed to get streaming configuration", e)
             emptyMap()
         }
     }
@@ -83,7 +85,7 @@ object PreviewIntegration {
                 "Configured preview streaming: ${frameIntervalMs}ms frames, ${previewWidth}x${previewHeight}@${jpegQuality}%"
             )
         } catch (e: Exception) {
-            Log.w(TAG, "Failed to configure preview streaming", e)
+            AppLogger.w(TAG, "Failed to configure preview streaming", e)
         }
     }
 
@@ -99,7 +101,7 @@ object PreviewIntegration {
 
     private fun getRecordingService(context: Context): RecordingService? {
 
-        Log.d(TAG, "Note: RecordingService access needs proper implementation via service binding")
+        AppLogger.d(TAG, "Note: RecordingService access needs proper implementation via service binding")
         return null
     }
 }
@@ -111,7 +113,7 @@ fun com.mpdc4gsr.module.thermalunified.tools.CameraPreviewManager.updatePreview(
             PreviewIntegration.updateThermalFrame(context, bitmap)
         }
     } catch (e: Exception) {
-        Log.w("PreviewIntegration", "Failed to update thermal preview from CameraPreviewManager", e)
+        AppLogger.w("PreviewIntegration", "Failed to update thermal preview from CameraPreviewManager", e)
     }
 }
 

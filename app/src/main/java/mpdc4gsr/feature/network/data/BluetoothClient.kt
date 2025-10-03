@@ -5,6 +5,8 @@ import android.bluetooth.BluetoothManager
 import android.bluetooth.BluetoothSocket
 import android.content.Context
 import android.util.Log
+import mpdc4gsr.core.utils.AppLogger
+import mpdc4gsr.core.utils.ErrorHandler
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -57,7 +59,7 @@ class BluetoothClient(
                 context.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
             val bluetoothAdapter = bluetoothManager?.adapter
             if (bluetoothManager == null || bluetoothAdapter == null || !bluetoothAdapter.isEnabled) {
-                Log.e(TAG, "Bluetooth not available or disabled")
+                AppLogger.e(TAG, "Bluetooth not available or disabled")
                 handleConnectionError("Bluetooth not available")
                 return@withContext false
             }
@@ -91,22 +93,22 @@ class BluetoothClient(
                 // Start reader thread
                 startReaderLoop()
 
-                Log.i(TAG, "Successfully connected to PC via Bluetooth")
+                AppLogger.i(TAG, "Successfully connected to PC via Bluetooth")
                 return@withContext true
             } else {
                 throw IOException("Failed to get Bluetooth socket streams")
             }
 
         } catch (e: IOException) {
-            Log.e(TAG, "Failed to connect via Bluetooth to ${bluetoothDevice.address}", e)
+            AppLogger.e(TAG, "Failed to connect via Bluetooth to ${bluetoothDevice.address}", e)
             handleConnectionError("Bluetooth connection failed: ${e.message}")
             return@withContext false
         } catch (e: SecurityException) {
-            Log.e(TAG, "Security exception during Bluetooth connection - missing permissions?", e)
+            AppLogger.e(TAG, "Security exception during Bluetooth connection - missing permissions?", e)
             handleConnectionError("Bluetooth permission denied")
             return@withContext false
         } catch (e: Exception) {
-            Log.e(TAG, "Unexpected error during Bluetooth connection", e)
+            AppLogger.e(TAG, "Unexpected error during Bluetooth connection", e)
             handleConnectionError("Connection failed: ${e.message}")
             return@withContext false
         }
@@ -119,21 +121,21 @@ class BluetoothClient(
                 currentWriter.write(message)
                 currentWriter.write("\n")
                 currentWriter.flush()
-                Log.d(TAG, "Sent Bluetooth message: $message")
+                AppLogger.d(TAG, "Sent Bluetooth message: $message")
                 return@withContext true
             } else {
-                Log.w(TAG, "Cannot send Bluetooth message - not connected")
+                AppLogger.w(TAG, "Cannot send Bluetooth message - not connected")
                 return@withContext false
             }
         } catch (e: IOException) {
-            Log.e(TAG, "Failed to send Bluetooth message: $message", e)
+            AppLogger.e(TAG, "Failed to send Bluetooth message: $message", e)
             handleConnectionError("Send failed: ${e.message}")
             return@withContext false
         }
     }
 
     override suspend fun disconnect(): Unit = withContext(Dispatchers.IO) {
-        Log.i(TAG, "Disconnecting from PC Bluetooth server")
+        AppLogger.i(TAG, "Disconnecting from PC Bluetooth server")
 
         // Cancel reader job first to stop any ongoing reads
         readerJob?.cancel()
@@ -146,17 +148,17 @@ class BluetoothClient(
                     w.flush()
                     w.close()
                 } catch (e: IOException) {
-                    Log.w(TAG, "Error closing Bluetooth writer", e)
+                    AppLogger.w(TAG, "Error closing Bluetooth writer", e)
                 }
             }
         } catch (e: Exception) {
-            Log.w(TAG, "Error flushing/closing Bluetooth writer", e)
+            AppLogger.w(TAG, "Error flushing/closing Bluetooth writer", e)
         }
 
         try {
             reader?.close()
         } catch (e: IOException) {
-            Log.w(TAG, "Error closing Bluetooth reader", e)
+            AppLogger.w(TAG, "Error closing Bluetooth reader", e)
         }
 
         try {
@@ -166,9 +168,9 @@ class BluetoothClient(
                 }
             }
         } catch (e: IOException) {
-            Log.w(TAG, "Error closing Bluetooth socket", e)
+            AppLogger.w(TAG, "Error closing Bluetooth socket", e)
         } catch (e: SecurityException) {
-            Log.w(TAG, "Security exception closing Bluetooth socket", e)
+            AppLogger.w(TAG, "Security exception closing Bluetooth socket", e)
         }
 
         // Clear all references
@@ -208,22 +210,22 @@ class BluetoothClient(
                     try {
                         val message = currentReader.readLine()
                         if (message != null) {
-                            Log.d(TAG, "Received Bluetooth message: $message")
+                            AppLogger.d(TAG, "Received Bluetooth message: $message")
                             messageCallback?.invoke(message)
                         } else {
-                            Log.w(TAG, "PC closed Bluetooth connection")
+                            AppLogger.w(TAG, "PC closed Bluetooth connection")
                             break
                         }
                     } catch (e: IOException) {
                         if (isActive) {
-                            Log.w(TAG, "IOException in Bluetooth reader loop", e)
+                            AppLogger.w(TAG, "IOException in Bluetooth reader loop", e)
                             break
                         }
                     }
                 }
             } catch (e: Exception) {
                 if (isActive) {
-                    Log.e(TAG, "Error in Bluetooth reader loop", e)
+                    AppLogger.e(TAG, "Error in Bluetooth reader loop", e)
                     handleConnectionError("Reader error: ${e.message}")
                 }
             }
@@ -235,7 +237,7 @@ class BluetoothClient(
     }
 
     private fun handleConnectionError(errorMessage: String) {
-        Log.w(TAG, "Bluetooth connection error: $errorMessage")
+        AppLogger.w(TAG, "Bluetooth connection error: $errorMessage")
         _connectionState.value = CommandConnection.ConnectionState.ERROR
         connectionCallback?.invoke(CommandConnection.ConnectionState.ERROR)
 

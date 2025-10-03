@@ -3,6 +3,8 @@ package mpdc4gsr.feature.network.data
 import android.content.Context
 import android.net.wifi.WifiManager
 import android.util.Log
+import mpdc4gsr.core.utils.AppLogger
+import mpdc4gsr.core.utils.ErrorHandler
 import com.mpdc4gsr.gsr.model.SessionInfo
 import com.mpdc4gsr.libunified.app.discovery.NetworkDiscoveryService
 import com.mpdc4gsr.libunified.app.messaging.ReliableMessageService
@@ -105,7 +107,7 @@ class NetworkClient(private val context: Context) {
 
             val certInitialized = certificateManager.initialize()
             if (!certInitialized) {
-                Log.w(TAG, "Certificate manager initialization failed, using insecure connections")
+                AppLogger.w(TAG, "Certificate manager initialization failed, using insecure connections")
             }
 
             discoveryService.setEventListener(
@@ -125,22 +127,22 @@ class NetworkClient(private val context: Context) {
                     }
 
                     override fun onDeviceLost(serviceName: String) {
-                        Log.d(TAG, "Device lost: $serviceName")
+                        AppLogger.d(TAG, "Device lost: $serviceName")
                     }
 
                     override fun onDiscoveryStarted() {
-                        Log.d(TAG, "Network discovery started")
+                        AppLogger.d(TAG, "Network discovery started")
                     }
 
                     override fun onDiscoveryStopped() {
-                        Log.d(TAG, "Network discovery stopped")
+                        AppLogger.d(TAG, "Network discovery stopped")
                     }
 
                     override fun onError(
                         operation: String,
                         error: String,
                     ) {
-                        Log.e(TAG, "Discovery error in $operation: $error")
+                        AppLogger.e(TAG, "Discovery error in $operation: $error")
                         eventListener?.onError("discovery_$operation", error)
                     }
                 },
@@ -152,17 +154,17 @@ class NetworkClient(private val context: Context) {
                         if (result.isSuccess) {
 
                             clockOffset = result.clockOffsetMs * 1_000_000
-                            Log.i(TAG, "Time sync completed: offset=${result.clockOffsetMs}ms")
+                            AppLogger.i(TAG, "Time sync completed: offset=${result.clockOffsetMs}ms")
                             eventListener?.onTimeSynchronized(clockOffset)
                         }
                     }
 
                     override fun onSyncStarted(targetHost: String) {
-                        Log.d(TAG, "Time sync started with $targetHost")
+                        AppLogger.d(TAG, "Time sync started with $targetHost")
                     }
 
                     override fun onSyncError(error: String) {
-                        Log.e(TAG, "Time sync error: $error")
+                        AppLogger.e(TAG, "Time sync error: $error")
                         eventListener?.onError("time_sync", error)
                     }
                 },
@@ -179,7 +181,7 @@ class NetworkClient(private val context: Context) {
                             sendDirectMessage(message)
                             true
                         } catch (e: Exception) {
-                            Log.e(TAG, "Failed to send message via transport", e)
+                            AppLogger.e(TAG, "Failed to send message via transport", e)
                             false
                         }
                     }
@@ -188,10 +190,10 @@ class NetworkClient(private val context: Context) {
 
             reliableMessaging.initialize()
 
-            Log.i(TAG, "Enhanced network client initialized successfully")
+            AppLogger.i(TAG, "Enhanced network client initialized successfully")
             true
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to initialize enhanced network client", e)
+            AppLogger.e(TAG, "Failed to initialize enhanced network client", e)
             false
         }
     }
@@ -205,7 +207,7 @@ class NetworkClient(private val context: Context) {
         handler: (JSONObject) -> Unit,
     ) {
         messageHandlers[messageType] = handler
-        Log.d(TAG, "Message handler registered for type: $messageType")
+        AppLogger.d(TAG, "Message handler registered for type: $messageType")
     }
 
     private fun setupErrorRecoveryListener() {
@@ -218,7 +220,7 @@ class NetworkClient(private val context: Context) {
 
             try {
 
-                Log.i(TAG, "Starting enhanced controller discovery")
+                AppLogger.i(TAG, "Starting enhanced controller discovery")
                 discoveryService.startDiscovery()
 
                 delay(5000)
@@ -240,14 +242,14 @@ class NetworkClient(private val context: Context) {
                 }
 
                 if (controllers.isEmpty()) {
-                    Log.i(TAG, "No controllers found via mDNS, falling back to subnet scan")
+                    AppLogger.i(TAG, "No controllers found via mDNS, falling back to subnet scan")
                     val scanResults = performSubnetScan()
                     controllers.addAll(scanResults)
                 }
 
-                Log.i(TAG, "Enhanced discovery complete: found ${controllers.size} controllers")
+                AppLogger.i(TAG, "Enhanced discovery complete: found ${controllers.size} controllers")
             } catch (e: Exception) {
-                Log.e(TAG, "Error during enhanced controller discovery", e)
+                AppLogger.e(TAG, "Error during enhanced controller discovery", e)
                 eventListener?.onError("discovery", e.message ?: "Unknown error")
             }
 
@@ -266,14 +268,14 @@ class NetworkClient(private val context: Context) {
                 val dhcpInfo = wifiManager.dhcpInfo
 
                 if (dhcpInfo.gateway == 0) {
-                    Log.w(TAG, "No gateway found, cannot scan subnet")
+                    AppLogger.w(TAG, "No gateway found, cannot scan subnet")
                     return@withContext controllers
                 }
 
                 val gateway = intToIp(dhcpInfo.gateway)
                 val subnet = gateway.substring(0, gateway.lastIndexOf('.'))
 
-                Log.i(TAG, "Scanning subnet: $subnet.x for PC Controllers")
+                AppLogger.i(TAG, "Scanning subnet: $subnet.x for PC Controllers")
 
                 val jobs =
                     (1..254).map { hostNum ->
@@ -293,7 +295,7 @@ class NetworkClient(private val context: Context) {
                                     null
                                 }
                             } catch (e: Exception) {
-                                Log.d(TAG, "Host $host unreachable: ${e.message}")
+                                AppLogger.d(TAG, "Host $host unreachable: ${e.message}")
                                 null
                             }
                         }
@@ -301,9 +303,9 @@ class NetworkClient(private val context: Context) {
 
                 jobs.awaitAll().filterNotNull().forEach { controllers.add(it) }
 
-                Log.i(TAG, "Subnet scan complete: found ${controllers.size} controllers")
+                AppLogger.i(TAG, "Subnet scan complete: found ${controllers.size} controllers")
             } catch (e: Exception) {
-                Log.e(TAG, "Error during subnet scan", e)
+                AppLogger.e(TAG, "Error during subnet scan", e)
             }
 
             controllers
@@ -320,7 +322,7 @@ class NetworkClient(private val context: Context) {
                     disconnect()
                 }
 
-                Log.i(TAG, "Connecting to PC Controller at $ipAddress:$port (secure: $useSecure)")
+                AppLogger.i(TAG, "Connecting to PC Controller at $ipAddress:$port (secure: $useSecure)")
 
                 if (useSecure) {
                     val sslContext = certificateManager.createSSLContext()
@@ -335,9 +337,9 @@ class NetworkClient(private val context: Context) {
                         inputStream = DataInputStream(sslSocket?.getInputStream())
                         isSecureConnection = true
 
-                        Log.i(TAG, "Secure SSL connection established")
+                        AppLogger.i(TAG, "Secure SSL connection established")
                     } else {
-                        Log.w(TAG, "SSL context unavailable, falling back to plaintext")
+                        AppLogger.w(TAG, "SSL context unavailable, falling back to plaintext")
                         return@withContext connectPlaintext(ipAddress, port)
                     }
                 } else {
@@ -371,18 +373,18 @@ class NetworkClient(private val context: Context) {
 
                     eventListener?.onConnected(controller)
 
-                    Log.i(TAG, "Successfully connected with enhanced security to PC Controller")
+                    AppLogger.i(TAG, "Successfully connected with enhanced security to PC Controller")
                     true
                 } else {
                     disconnect()
                     false
                 }
             } catch (e: SSLException) {
-                Log.w(TAG, "SSL connection failed, attempting plaintext fallback", e)
+                AppLogger.w(TAG, "SSL connection failed, attempting plaintext fallback", e)
                 disconnect()
                 connectPlaintext(ipAddress, port)
             } catch (e: Exception) {
-                Log.e(TAG, "Failed to connect to PC Controller", e)
+                AppLogger.e(TAG, "Failed to connect to PC Controller", e)
                 // errorRecoveryManager.handleNetworkError("connect", e.message ?: "Connection failed")
                 eventListener?.onError("connect", e.message ?: "Connection failed")
                 disconnect()
@@ -418,14 +420,14 @@ class NetworkClient(private val context: Context) {
                         ?: ControllerInfo(ipAddress, port, "PC Controller", listOf("recording"))
                 eventListener?.onConnected(controller)
 
-                Log.i(TAG, "Successfully connected with plaintext to PC Controller")
+                AppLogger.i(TAG, "Successfully connected with plaintext to PC Controller")
                 true
             } else {
                 disconnect()
                 false
             }
         } catch (e: Exception) {
-            Log.e(TAG, "Plaintext connection failed", e)
+            AppLogger.e(TAG, "Plaintext connection failed", e)
             eventListener?.onError("connect", e.message ?: "Connection failed")
             disconnect()
             false
@@ -447,7 +449,7 @@ class NetworkClient(private val context: Context) {
             sslSocket?.close()
             socket?.close()
         } catch (e: Exception) {
-            Log.e(TAG, "Error during disconnect", e)
+            AppLogger.e(TAG, "Error during disconnect", e)
         } finally {
             outputStream = null
             inputStream = null
@@ -457,7 +459,7 @@ class NetworkClient(private val context: Context) {
         }
 
         eventListener?.onDisconnected("User initiated")
-        Log.i(TAG, "Disconnected from PC Controller")
+        AppLogger.i(TAG, "Disconnected from PC Controller")
     }
 
     suspend fun sendMeasurementData(
@@ -480,7 +482,7 @@ class NetworkClient(private val context: Context) {
                 sendMessageInternal(message)
                 true
             } catch (e: Exception) {
-                Log.e(TAG, "Failed to send measurement data", e)
+                AppLogger.e(TAG, "Failed to send measurement data", e)
                 // errorRecoveryManager.handleNetworkError("send_data", e.message ?: "Send failed")
                 eventListener?.onError("send_data", e.message ?: "Send failed")
                 false
@@ -510,7 +512,7 @@ class NetworkClient(private val context: Context) {
                 sendMessageInternal(message)
                 true
             } catch (e: Exception) {
-                Log.e(TAG, "Failed to report status", e)
+                AppLogger.e(TAG, "Failed to report status", e)
                 false
             }
         }
@@ -547,7 +549,7 @@ class NetworkClient(private val context: Context) {
                 response?.optString("message_type") == "ack" &&
                         response.optString("ack_for") == "device_register"
             } catch (e: Exception) {
-                Log.e(TAG, "Secure device registration failed", e)
+                AppLogger.e(TAG, "Secure device registration failed", e)
                 false
             }
         }
@@ -583,7 +585,7 @@ class NetworkClient(private val context: Context) {
                 response?.optString("message_type") == "ack" &&
                         response.optString("ack_for") == "device_register"
             } catch (e: Exception) {
-                Log.e(TAG, "Device registration failed", e)
+                AppLogger.e(TAG, "Device registration failed", e)
                 false
             }
         }
@@ -596,7 +598,7 @@ class NetworkClient(private val context: Context) {
                     message?.let { handleIncomingMessage(it) }
                 } catch (e: Exception) {
                     if (isConnected) {
-                        Log.e(TAG, "Message listener error", e)
+                        AppLogger.e(TAG, "Message listener error", e)
                         eventListener?.onError("message_listener", e.message ?: "Listener error")
                     }
                     break
@@ -620,7 +622,7 @@ class NetworkClient(private val context: Context) {
                     delay(HEARTBEAT_INTERVAL)
                 } catch (e: Exception) {
                     if (isConnected) {
-                        Log.e(TAG, "Heartbeat failed", e)
+                        AppLogger.e(TAG, "Heartbeat failed", e)
                     }
                     break
                 }
@@ -631,14 +633,14 @@ class NetworkClient(private val context: Context) {
     private fun handleIncomingMessage(message: JSONObject) {
         val messageType = message.optString("message_type")
 
-        Log.d(TAG, "Received message: $messageType")
+        AppLogger.d(TAG, "Received message: $messageType")
 
         messageHandlers[messageType]?.let { handler ->
             try {
-                Log.d(TAG, "Calling registered handler for message type: $messageType")
+                AppLogger.d(TAG, "Calling registered handler for message type: $messageType")
                 handler(message)
             } catch (e: Exception) {
-                Log.e(TAG, "Error in message handler for type $messageType", e)
+                AppLogger.e(TAG, "Error in message handler for type $messageType", e)
             }
         }
 
@@ -665,21 +667,21 @@ class NetworkClient(private val context: Context) {
 
             "session_stop" -> {
 
-                Log.i(TAG, "Remote session stop requested")
+                AppLogger.i(TAG, "Remote session stop requested")
             }
 
             "ack" -> {
-                Log.d(TAG, "Received ACK for: ${message.optString("ack_for")}")
+                AppLogger.d(TAG, "Received ACK for: ${message.optString("ack_for")}")
             }
 
             "error" -> {
                 val errorMsg = message.optString("error_message", "Unknown error")
-                Log.w(TAG, "Received error from PC Controller: $errorMsg")
+                AppLogger.w(TAG, "Received error from PC Controller: $errorMsg")
                 eventListener?.onError("pc_controller", errorMsg)
             }
 
             else -> {
-                Log.w(TAG, "Unknown message type: $messageType")
+                AppLogger.w(TAG, "Unknown message type: $messageType")
             }
         }
     }
@@ -738,7 +740,7 @@ class NetworkClient(private val context: Context) {
         withContext(Dispatchers.IO) {
             try {
                 if (!isConnected) {
-                    Log.w(TAG, "Cannot send message - not connected to PC Controller")
+                    AppLogger.w(TAG, "Cannot send message - not connected to PC Controller")
                     return@withContext false
                 }
 
@@ -749,7 +751,7 @@ class NetworkClient(private val context: Context) {
                 )
                 true
             } catch (e: Exception) {
-                Log.e(TAG, "Failed to send message", e)
+                AppLogger.e(TAG, "Failed to send message", e)
                 // errorRecoveryManager.handleNetworkError("send_message", e.message ?: "Send failed")
                 false
             }
@@ -769,10 +771,10 @@ class NetworkClient(private val context: Context) {
 
                 sendMessageInternal(message)
                 eventListener?.onDataStreamingStarted()
-                Log.i(TAG, "Data streaming started")
+                AppLogger.i(TAG, "Data streaming started")
                 true
             } catch (e: Exception) {
-                Log.e(TAG, "Failed to start data streaming", e)
+                AppLogger.e(TAG, "Failed to start data streaming", e)
                 false
             }
         }
@@ -791,10 +793,10 @@ class NetworkClient(private val context: Context) {
 
                 sendMessageInternal(message)
                 eventListener?.onDataStreamingStopped()
-                Log.i(TAG, "Data streaming stopped")
+                AppLogger.i(TAG, "Data streaming stopped")
                 true
             } catch (e: Exception) {
-                Log.e(TAG, "Failed to stop data streaming", e)
+                AppLogger.e(TAG, "Failed to stop data streaming", e)
                 false
             }
         }
@@ -821,7 +823,7 @@ class NetworkClient(private val context: Context) {
 
                 val responseLength = input.readInt()
                 if (responseLength < 0 || responseLength > 1024 * 1024) { // Max 1MB response
-                    Log.w(TAG, "Invalid response length: $responseLength bytes from $host")
+                    AppLogger.w(TAG, "Invalid response length: $responseLength bytes from $host")
                     socket.close()
                     return@withContext null
                 }
@@ -847,7 +849,7 @@ class NetworkClient(private val context: Context) {
                     null
                 }
             } catch (e: Exception) {
-                Log.d(TAG, "Controller query failed for $host: ${e.message}")
+                AppLogger.d(TAG, "Controller query failed for $host: ${e.message}")
                 null
             }
         }
@@ -891,7 +893,7 @@ class NetworkClient(private val context: Context) {
             val dhcpInfo = wifiManager.dhcpInfo
             return intToIp(dhcpInfo.ipAddress)
         } catch (e: Exception) {
-            Log.w(TAG, "Failed to get local IP address", e)
+            AppLogger.w(TAG, "Failed to get local IP address", e)
             return "127.0.0.1"
         }
     }
@@ -914,11 +916,11 @@ class NetworkClient(private val context: Context) {
 
     fun setSecureConnectionDefault(enabled: Boolean) {
         if (isConnected) {
-            Log.w(TAG, "Cannot change security setting while connected")
+            AppLogger.w(TAG, "Cannot change security setting while connected")
             return
         }
         useSecureDefault = enabled
-        Log.i(TAG, "Secure connection default ${if (enabled) "enabled" else "disabled"}")
+        AppLogger.i(TAG, "Secure connection default ${if (enabled) "enabled" else "disabled"}")
     }
 
     // Stub: NetworkErrorRecoveryManager not available
@@ -930,7 +932,7 @@ class NetworkClient(private val context: Context) {
                 discoverControllers()
                 callback(true)
             } catch (e: Exception) {
-                Log.e(TAG, "Discovery failed", e)
+                AppLogger.e(TAG, "Discovery failed", e)
                 callback(false)
             }
         }
@@ -946,7 +948,7 @@ class NetworkClient(private val context: Context) {
                 val result = connectToController(address, port, useSecureDefault)
                 callback(result)
             } catch (e: Exception) {
-                Log.e(TAG, "Connection failed", e)
+                AppLogger.e(TAG, "Connection failed", e)
                 callback(false)
             }
         }

@@ -3,6 +3,8 @@ package mpdc4gsr.feature.testing.ui
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import mpdc4gsr.core.utils.AppLogger
+import mpdc4gsr.core.utils.ErrorHandler
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
@@ -521,7 +523,7 @@ class TestingSuiteHubActivity : ComponentActivity() {
                 startActivity(intent)
 
             } catch (e: Exception) {
-                Log.e("TestingSuiteHub", "Failed to run comprehensive tests: ${e.message}")
+                AppLogger.e("TestingSuiteHub", "Failed to run comprehensive tests: ${e.message}")
             }
         }
     }

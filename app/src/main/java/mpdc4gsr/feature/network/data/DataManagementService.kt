@@ -2,6 +2,8 @@ package mpdc4gsr.feature.network.data
 
 import android.content.Context
 import android.util.Log
+import mpdc4gsr.core.utils.AppLogger
+import mpdc4gsr.core.utils.ErrorHandler
 import mpdc4gsr.core.StructuredLogger
 import org.json.JSONArray
 import org.json.JSONObject
@@ -958,7 +960,7 @@ class DataManagementService(private val context: Context) {
             )
 
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to export session as HDF5", e)
+            AppLogger.e(TAG, "Failed to export session as HDF5", e)
 
             exportSessionAsJSON(session, exportFile, includeFiles = true)
         }
@@ -1025,12 +1027,12 @@ class DataManagementService(private val context: Context) {
                             }
 
                             zipOutputStream.closeEntry()
-                            Log.d(TAG, "Added file to ZIP: ${fileInfo.relativePath}")
+                            AppLogger.d(TAG, "Added file to ZIP: ${fileInfo.relativePath}")
                         } else {
-                            Log.w(TAG, "File not found for ZIP export: ${sourceFile.absolutePath}")
+                            AppLogger.w(TAG, "File not found for ZIP export: ${sourceFile.absolutePath}")
                         }
                     } catch (e: Exception) {
-                        Log.e(TAG, "Failed to add file to ZIP: ${fileInfo.relativePath}", e)
+                        AppLogger.e(TAG, "Failed to add file to ZIP: ${fileInfo.relativePath}", e)
                     }
                 }
             }
@@ -1070,14 +1072,14 @@ class DataManagementService(private val context: Context) {
 
             zipOutputStream.close()
 
-            Log.i(TAG, "Session exported as ZIP archive: ${exportFile.absolutePath}")
+            AppLogger.i(TAG, "Session exported as ZIP archive: ${exportFile.absolutePath}")
             Log.i(
                 TAG,
                 "ZIP contains ${session.files.size} files (${if (includeFiles) "with" else "without"} data)"
             )
 
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to create ZIP export", e)
+            AppLogger.e(TAG, "Failed to create ZIP export", e)
 
             exportSessionAsJSON(session, exportFile, includeFiles)
         }

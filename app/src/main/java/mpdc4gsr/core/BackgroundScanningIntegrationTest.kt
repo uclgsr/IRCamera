@@ -2,6 +2,8 @@ package mpdc4gsr.core
 
 import android.content.Context
 import android.util.Log
+import mpdc4gsr.core.utils.AppLogger
+import mpdc4gsr.core.utils.ErrorHandler
 
 /**
  * Integration test and example usage for the Background Device Scanning system
@@ -17,7 +19,7 @@ class BackgroundScanningIntegrationTest {
      * Example: Start background scanning when app is launched
      */
     fun startScanningOnAppLaunch(context: Context) {
-        Log.i(TAG, "Starting background scanning on app launch")
+        AppLogger.i(TAG, "Starting background scanning on app launch")
 
         // Option 1: Using the simple helper
         BackgroundScanHelper.startBackgroundScanning(context)
@@ -31,7 +33,7 @@ class BackgroundScanningIntegrationTest {
      * Example: Pause scanning when user is actively using the app
      */
     fun pauseScanningDuringActiveUse(context: Context) {
-        Log.i(TAG, "Pausing background scanning during active use")
+        AppLogger.i(TAG, "Pausing background scanning during active use")
         BackgroundScanHelper.pauseBackgroundScanning(context)
     }
 
@@ -39,7 +41,7 @@ class BackgroundScanningIntegrationTest {
      * Example: Resume scanning when app goes to background
      */
     fun resumeScanningOnBackground(context: Context) {
-        Log.i(TAG, "Resuming background scanning when app goes to background")
+        AppLogger.i(TAG, "Resuming background scanning when app goes to background")
         BackgroundScanHelper.resumeBackgroundScanning(context)
     }
 
@@ -47,7 +49,7 @@ class BackgroundScanningIntegrationTest {
      * Example: Stop scanning when user explicitly disables it
      */
     fun stopScanningOnUserRequest(context: Context) {
-        Log.i(TAG, "Stopping background scanning on user request")
+        AppLogger.i(TAG, "Stopping background scanning on user request")
         BackgroundScanHelper.stopBackgroundScanning(context)
     }
 
@@ -55,7 +57,7 @@ class BackgroundScanningIntegrationTest {
      * Example: Integration with existing BLE workflow
      */
     fun integrateWithExistingBleWorkflow(context: Context) {
-        Log.i(TAG, "Integrating background scanning with existing BLE workflow")
+        AppLogger.i(TAG, "Integrating background scanning with existing BLE workflow")
 
         // Start background scanning
         BackgroundScanHelper.startBackgroundScanning(context)
@@ -66,14 +68,14 @@ class BackgroundScanningIntegrationTest {
         // 3. Maintain device information that can be accessed later
         // 4. Provide notifications about discovered devices
 
-        Log.i(TAG, "Background scanning integrated successfully")
+        AppLogger.i(TAG, "Background scanning integrated successfully")
     }
 
     /**
      * Example: Usage in recording session workflow
      */
     fun useInRecordingSession(context: Context) {
-        Log.i(TAG, "Using background scanning in recording session")
+        AppLogger.i(TAG, "Using background scanning in recording session")
 
         // Start background scanning before recording session
         BackgroundScanHelper.startBackgroundScanning(context)
@@ -89,26 +91,26 @@ class BackgroundScanningIntegrationTest {
      * Example: Battery-aware scanning
      */
     fun batteryAwareScanning(context: Context, batteryLevel: Int) {
-        Log.i(TAG, "Implementing battery-aware scanning, battery level: $batteryLevel%")
+        AppLogger.i(TAG, "Implementing battery-aware scanning, battery level: $batteryLevel%")
 
         when {
             batteryLevel > 50 -> {
                 // High battery - normal scanning
                 BackgroundScanHelper.startBackgroundScanning(context)
-                Log.i(TAG, "Normal background scanning enabled (battery > 50%)")
+                AppLogger.i(TAG, "Normal background scanning enabled (battery > 50%)")
             }
 
             batteryLevel > 20 -> {
                 // Medium battery - start but pause frequently
                 BackgroundScanHelper.startBackgroundScanning(context)
                 // The service will automatically use longer intervals when no devices found
-                Log.i(TAG, "Conservative background scanning enabled (battery 20-50%)")
+                AppLogger.i(TAG, "Conservative background scanning enabled (battery 20-50%)")
             }
 
             else -> {
                 // Low battery - disable background scanning
                 BackgroundScanHelper.stopBackgroundScanning(context)
-                Log.i(TAG, "Background scanning disabled due to low battery (< 20%)")
+                AppLogger.i(TAG, "Background scanning disabled due to low battery (< 20%)")
             }
         }
     }

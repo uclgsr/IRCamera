@@ -1,6 +1,8 @@
 package mpdc4gsr.feature.camera.data
 
 import android.util.Log
+import mpdc4gsr.core.utils.AppLogger
+import mpdc4gsr.core.utils.ErrorHandler
 import androidx.camera.core.Camera
 import androidx.camera.core.FocusMeteringAction
 import androidx.camera.view.PreviewView
@@ -30,10 +32,10 @@ class CameraControlsManager(
                     // For manual exposure, we'd need to use Camera2 interop 
                     // This is a simplified implementation that locks exposure
                     cameraControl.enableTorch(false) // Ensure torch is off for consistent exposure
-                    Log.i(TAG, "Manual exposure mode enabled")
+                    AppLogger.i(TAG, "Manual exposure mode enabled")
                 } else {
                     // Return to auto exposure
-                    Log.i(TAG, "Auto exposure mode enabled")
+                    AppLogger.i(TAG, "Auto exposure mode enabled")
                 }
             } ?: run {
                 onError?.invoke(
@@ -42,7 +44,7 @@ class CameraControlsManager(
                 )
             }
         } catch (e: Exception) {
-            Log.w(TAG, "Failed to set exposure mode: ${e.message}")
+            AppLogger.w(TAG, "Failed to set exposure mode: ${e.message}")
             onError?.invoke(ErrorType.OPERATION_FAILED, "Failed to set exposure mode: ${e.message}")
         }
     }
@@ -69,9 +71,9 @@ class CameraControlsManager(
 
                     val index = (evValue / step).toInt().coerceIn(range.lower, range.upper)
                     cameraControl.setExposureCompensationIndex(index)
-                    Log.i(TAG, "Exposure compensation set to ${evValue}EV (index: $index)")
+                    AppLogger.i(TAG, "Exposure compensation set to ${evValue}EV (index: $index)")
                 } ?: run {
-                    Log.w(TAG, "Camera doesn't support exposure compensation")
+                    AppLogger.w(TAG, "Camera doesn't support exposure compensation")
                     onError?.invoke(
                         ErrorType.FEATURE_NOT_SUPPORTED,
                         "Exposure compensation not supported on this device"
@@ -84,7 +86,7 @@ class CameraControlsManager(
                 )
             }
         } catch (e: Exception) {
-            Log.w(TAG, "Failed to set exposure compensation: ${e.message}")
+            AppLogger.w(TAG, "Failed to set exposure compensation: ${e.message}")
             onError?.invoke(
                 ErrorType.OPERATION_FAILED,
                 "Failed to set exposure compensation: ${e.message}"
@@ -101,7 +103,7 @@ class CameraControlsManager(
         try {
             camera?.cameraControl?.let { cameraControl ->
                 // CameraX doesn't have direct AE lock, but we can implement via Camera2 interop
-                Log.i(TAG, "Auto exposure lock: $locked")
+                AppLogger.i(TAG, "Auto exposure lock: $locked")
             } ?: run {
                 onError?.invoke(
                     ErrorType.HARDWARE_UNAVAILABLE,
@@ -109,7 +111,7 @@ class CameraControlsManager(
                 )
             }
         } catch (e: Exception) {
-            Log.w(TAG, "Failed to set AE lock: ${e.message}")
+            AppLogger.w(TAG, "Failed to set AE lock: ${e.message}")
             onError?.invoke(ErrorType.OPERATION_FAILED, "Failed to set AE lock: ${e.message}")
         }
     }
@@ -125,10 +127,10 @@ class CameraControlsManager(
                 if (enabled) {
                     // Cancel any ongoing autofocus
                     cameraControl.cancelFocusAndMetering()
-                    Log.i(TAG, "Manual focus mode enabled")
+                    AppLogger.i(TAG, "Manual focus mode enabled")
                 } else {
                     // Return to continuous autofocus
-                    Log.i(TAG, "Auto focus mode enabled")
+                    AppLogger.i(TAG, "Auto focus mode enabled")
                 }
             } ?: run {
                 onError?.invoke(
@@ -137,7 +139,7 @@ class CameraControlsManager(
                 )
             }
         } catch (e: Exception) {
-            Log.w(TAG, "Failed to set focus mode: ${e.message}")
+            AppLogger.w(TAG, "Failed to set focus mode: ${e.message}")
             onError?.invoke(ErrorType.OPERATION_FAILED, "Failed to set focus mode: ${e.message}")
         }
     }
@@ -194,24 +196,24 @@ class CameraControlsManager(
                                 "Manual focus distance set to: $focusDistanceText (normalized: $clampedDistance, actual: $actualFocusDistance)"
                             )
                         } else {
-                            Log.w(TAG, "Device does not support manual focus distance control")
+                            AppLogger.w(TAG, "Device does not support manual focus distance control")
                             onError?.invoke(
                                 ErrorType.FEATURE_NOT_SUPPORTED,
                                 "Manual focus distance not supported on this device"
                             )
                         }
                     } ?: run {
-                        Log.w(TAG, "Could not retrieve minimum focus distance characteristic")
+                        AppLogger.w(TAG, "Could not retrieve minimum focus distance characteristic")
                         onError?.invoke(
                             ErrorType.FEATURE_NOT_SUPPORTED,
                             "Focus distance characteristics not available"
                         )
                     }
                 } catch (e: Exception) {
-                    Log.w(TAG, "Camera2 interop not available, using fallback focus control", e)
+                    AppLogger.w(TAG, "Camera2 interop not available, using fallback focus control", e)
                     // Fallback to basic CameraX focus control
                     cam.cameraControl.cancelFocusAndMetering()
-                    Log.i(TAG, "Focus distance set to: $clampedDistance (fallback mode)")
+                    AppLogger.i(TAG, "Focus distance set to: $clampedDistance (fallback mode)")
                 }
 
             } ?: run {
@@ -221,7 +223,7 @@ class CameraControlsManager(
                 )
             }
         } catch (e: Exception) {
-            Log.w(TAG, "Failed to set focus distance: ${e.message}")
+            AppLogger.w(TAG, "Failed to set focus distance: ${e.message}")
             onError?.invoke(
                 ErrorType.OPERATION_FAILED,
                 "Failed to set focus distance: ${e.message}"
@@ -239,10 +241,10 @@ class CameraControlsManager(
             camera?.cameraControl?.let { cameraControl ->
                 if (locked) {
                     // Lock focus at current position
-                    Log.i(TAG, "Auto focus locked")
+                    AppLogger.i(TAG, "Auto focus locked")
                 } else {
                     // Unlock and resume continuous AF
-                    Log.i(TAG, "Auto focus unlocked")
+                    AppLogger.i(TAG, "Auto focus unlocked")
                 }
             } ?: run {
                 onError?.invoke(
@@ -251,7 +253,7 @@ class CameraControlsManager(
                 )
             }
         } catch (e: Exception) {
-            Log.w(TAG, "Failed to set AF lock: ${e.message}")
+            AppLogger.w(TAG, "Failed to set AF lock: ${e.message}")
             onError?.invoke(ErrorType.OPERATION_FAILED, "Failed to set AF lock: ${e.message}")
         }
     }
@@ -275,9 +277,9 @@ class CameraControlsManager(
                         .build()
 
                     cameraControl.startFocusAndMetering(action)
-                    Log.i(TAG, "Tap-to-focus triggered at ($x, $y)")
+                    AppLogger.i(TAG, "Tap-to-focus triggered at ($x, $y)")
                 } ?: run {
-                    Log.w(TAG, "No preview available for tap-to-focus")
+                    AppLogger.w(TAG, "No preview available for tap-to-focus")
                     onError?.invoke(
                         ErrorType.FEATURE_NOT_SUPPORTED,
                         "Preview required for tap-to-focus"
@@ -290,7 +292,7 @@ class CameraControlsManager(
                 )
             }
         } catch (e: Exception) {
-            Log.w(TAG, "Failed to trigger tap-to-focus: ${e.message}")
+            AppLogger.w(TAG, "Failed to trigger tap-to-focus: ${e.message}")
             onError?.invoke(
                 ErrorType.OPERATION_FAILED,
                 "Failed to trigger tap-to-focus: ${e.message}"

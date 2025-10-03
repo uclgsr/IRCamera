@@ -1,6 +1,8 @@
 package mpdc4gsr.core.data.utils
 
 import android.util.Log
+import mpdc4gsr.core.utils.AppLogger
+import mpdc4gsr.core.utils.ErrorHandler
 import java.io.File
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -29,7 +31,7 @@ class CSVBufferedWriter(
         if (headerWritten.compareAndSet(false, true)) {
             val headerLine = headers.joinToString(",")
             writeLine(headerLine)
-            Log.d(TAG, "CSV headers written: $headerLine")
+            AppLogger.d(TAG, "CSV headers written: $headerLine")
         }
     }
 

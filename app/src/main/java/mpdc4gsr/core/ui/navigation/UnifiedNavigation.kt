@@ -2,6 +2,8 @@ package mpdc4gsr.core.ui.navigation
 
 import android.content.Intent
 import android.util.Log
+import mpdc4gsr.core.utils.AppLogger
+import mpdc4gsr.core.utils.ErrorHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
@@ -216,7 +218,7 @@ fun UnifiedNavHost(
                     try {
                         mpdc4gsr.core.ui.PermissionRequestComposeActivity.startActivity(context)
                     } catch (e: Exception) {
-                        Log.e("UnifiedNavigation", "Failed to start permission request activity", e)
+                        AppLogger.e("UnifiedNavigation", "Failed to start permission request activity", e)
                     }
                 } catch (e: Exception) {
                     // Final fallback - just show loading screen
