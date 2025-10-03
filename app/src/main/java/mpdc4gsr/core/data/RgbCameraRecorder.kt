@@ -139,7 +139,7 @@ class RgbCameraRecorder(
     private var camera: Camera? = null
     private var activeRecording: Recording? = null
 
-    private val cameraExecutor: ExecutorService = Executors.newSingleThreadExecutor()
+    private var cameraExecutor: ExecutorService = Executors.newSingleThreadExecutor()
 
     private val statusFlow = MutableStateFlow(createInitialStatus())
     private val errorFlow = MutableSharedFlow<SensorError>()
@@ -1867,7 +1867,6 @@ class RgbCameraRecorder(
             videoCapture = null
             imageCapture = null
             rawImageCapture = null
-            cameraProvider = null
 
             try {
                 cameraExecutor.shutdown()
@@ -1875,6 +1874,8 @@ class RgbCameraRecorder(
                     AppLogger.w(TAG, "Camera executor did not terminate gracefully, forcing shutdown")
                     cameraExecutor.shutdownNow()
                 }
+                cameraExecutor = Executors.newSingleThreadExecutor()
+                AppLogger.d(TAG, "Camera executor recreated for potential reuse")
             } catch (e: Exception) {
                 AppLogger.w(TAG, "Error shutting down camera executor", e)
             }
