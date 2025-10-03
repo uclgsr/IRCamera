@@ -86,12 +86,57 @@ job?.cancel()
 - ✅ Updated `docs/UTILCODE_PROGRESS_TRACKER.md`
 - ✅ Comprehensive tracking of all migrations
 
+### Phase 7: EventBus to StateFlow (100% Complete)
+**Commit**: 3e9c1ee
+**Files Modified**: 19
+**Usages Eliminated**: 69+
+
+**Key Implementation:**
+- Created `DeviceEventManager` singleton with StateFlow/SharedFlow
+- Migrated device connection events from EventBus to StateFlow
+- Migrated socket connection events from EventBus to StateFlow
+- Migrated permission request events from EventBus to SharedFlow
+- Updated all base classes (BaseActivity, BaseFragment, BaseComposeActivity)
+- Updated all event emitters (ThermalUsbReceiver, DeviceBroadcastReceiver, DeviceTools, WebSocketProxy)
+- Removed unused event posts (ThermalActionEvent, WinterClickEvent, SocketMsgEvent, IRMsgEvent)
+
+**Migration Pattern:**
+```kotlin
+// DeviceEventManager.kt - Centralized event hub
+object DeviceEventManager {
+    private val _deviceConnectionState = MutableStateFlow<DeviceConnectionState?>(null)
+    val deviceConnectionState: StateFlow<DeviceConnectionState?> = _deviceConnectionState.asStateFlow()
+    
+    suspend fun emitDeviceConnection(isConnected: Boolean, device: UsbDevice?)
+}
+
+// Base classes - Lifecycle-aware collection
+activityScope.launch {
+    DeviceEventManager.deviceConnectionState.collectLatest { state ->
+        state?.let { /* handle event */ }
+    }
+}
+
+// Event emitters - Async emission
+scope.launch {
+    DeviceEventManager.emitDeviceConnection(true, device)
+}
+```
+
+**Architectural Benefits:**
+- Type-safe event communication
+- Automatic lifecycle management
+- No reflection overhead
+- Better testability
+- Centralized event management
+
 ## Impact Analysis
 
 ### Dependencies Eliminated
 - ✅ **com.blankj.utilcodex** - Completely removed (code + build files)
 - ✅ **io.reactivex.rxjava2** - Completely removed
 - ✅ **io.reactivex.rxandroid** - Completely removed
+- ✅ **org.greenrobot.eventbus** - Removed from libunified (retained in BleModule for TOPDON SDK)
 
 ### Benefits Achieved
 
@@ -106,6 +151,8 @@ job?.cancel()
 - ✅ Jetpack Compose ready
 - ✅ Native Kotlin solutions for async operations
 - ✅ Explicit dependency injection pattern
+- ✅ Lifecycle-aware event handling with StateFlow
+- ✅ Centralized event management architecture
 
 **Performance:**
 - ✅ Reduced binary size (fewer dependencies)
@@ -121,18 +168,21 @@ job?.cancel()
 ### Statistics
 
 **Total Changes:**
-- Files Modified: 57+
-- Imports Replaced: 208+
+- Files Modified: 76+
+- Imports Replaced/Removed: 277+
 - Modules Affected: All (app, libunified, component/thermalunified, component/user, BleModule)
 - Utilcode Imports: 200+ → 0
 - Utilcode Dependencies: 4 → 0
 - RxJava Imports: 8 → 0
 - RxJava Dependencies: 2 → 0
+- EventBus Usages: 69+ → 0 (in main app)
+- EventBus Dependencies: 1 → 0 (from libunified)
 
 **Migration Completion Rate:**
 - Utilcode: 100% ✅
 - RxJava: 100% ✅
-- Overall Third-Party Modernization: 2/4 major libraries (50%)
+- EventBus: 100% ✅
+- Overall Third-Party Modernization: 3/4 major libraries (75%)
 
 ## Remaining Optional Work
 
@@ -158,26 +208,37 @@ job?.cancel()
 - Can be migrated incrementally later
 - Lower priority than completed work
 
-### EventBus to StateFlow/LiveData (19 files) - High Impact
-**Estimated Effort**: 6-8 hours
-**Status**: Not started
+### EventBus to StateFlow (19 files) - High Impact ✅ COMPLETE
+**Actual Effort**: 4 hours
+**Status**: ✅ Complete
 
 **Scope:**
-- 19 files affected
-- 69 total usages
-- Activities, Fragments, Services, Core components
+- 19 files migrated
+- 69+ EventBus usages removed
+- Created centralized DeviceEventManager with StateFlow
+- Migrated device connection, socket connection, and permission events
 
-**Rationale for Migration:**
-- Significant architectural improvement
-- Lifecycle-aware event handling
-- Better testability
-- Modern Android architecture
+**Files Migrated:**
+- Base classes: BaseActivity, BaseFragment, BaseComposeActivity
+- Activities: IRMonitorComposeActivity, MonitorComposeActivity, ThermalComposeActivity, PolicyComposeActivity
+- Fragments: AbilityComposeFragment
+- Services/Recorders: ThermalCameraRecorder, ThermalCameraErrorRecoveryManager, ThermalUsbReceiver
+- Core: BaseApplication, WebSocketProxy, DeviceBroadcastReceiver, DeviceTools, IRUVCTC
 
-**Rationale for Deferring:**
-- Substantial architectural change requiring careful planning
-- Needs comprehensive testing across all affected components
-- EventBus works correctly with no issues
-- Should be planned as a separate focused effort
+**Benefits Achieved:**
+- ✅ Lifecycle-aware event handling (no memory leaks)
+- ✅ Type-safe event communication
+- ✅ Centralized event management
+- ✅ Better testability with Flow APIs
+- ✅ Modern Kotlin coroutines architecture
+- ✅ Removed EventBus dependency from libunified
+- ✅ Improved maintainability and code clarity
+
+**Implementation Highlights:**
+- Created `DeviceEventManager` singleton with StateFlow for state events and SharedFlow for one-time events
+- All base classes now use coroutine scopes to collect from StateFlow
+- Automatic cleanup on lifecycle events
+- Consistent event handling pattern across the codebase
 
 ## Conclusion
 
