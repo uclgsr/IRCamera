@@ -56,29 +56,88 @@ frameProcessingExecutor.execute {
 
 ### 2. Ripple Animation on Detached Views
 
-**Problem**: Material Design ripple animations were trying to start on views that had been detached from the window, causing crashes after ANR recovery.
+**Problem**: Material Design ripple animations were trying to start on views that had been detached from the window, causing crashes after ANR recovery. The crash occurs when a hardware animator starts after the host view has already detached, typically during navigation or dialog dismissal.
 
-**Solution**: Created safe composable modifiers that properly manage interaction sources and ripple lifecycle:
+**Solution**: Implemented comprehensive fixes including press interaction cancellation on dispose and deferred navigation:
 
 ```kotlin
 @Composable
 fun Modifier.safeClickable(
     enabled: Boolean = true,
+    onClickLabel: String? = null,
+    role: Role? = null,
     onClick: () -> Unit
 ): Modifier = composed {
     val interactionSource = remember { MutableInteractionSource() }
+    var press: PressInteraction.Press? by remember { mutableStateOf(null) }
+    
+    LaunchedEffect(interactionSource) {
+        interactionSource.interactions.collect { interaction ->
+            when (interaction) {
+                is PressInteraction.Press -> press = interaction
+                is PressInteraction.Release, is PressInteraction.Cancel -> press = null
+            }
+        }
+    }
+    
+    DisposableEffect(Unit) {
+        onDispose {
+            press?.let { interactionSource.tryEmit(PressInteraction.Cancel(it)) }
+        }
+    }
     
     this.clickable(
         enabled = enabled,
+        onClickLabel = onClickLabel,
+        role = role,
         interactionSource = interactionSource,
-        indication = ripple(),
+        indication = LocalIndication.current,
         onClick = onClick
     )
 }
+
+// For immediate navigation (activity finish, dialog dismiss)
+@Composable
+fun deferAction(action: () -> Unit): () -> Unit {
+    val scope = rememberCoroutineScope()
+    return {
+        scope.launch {
+            withFrameNanos { }  // Wait one frame
+            action()
+        }
+    }
+}
 ```
 
-**Files Added**:
-- `app/src/main/java/mpdc4gsr/core/ui/SafeRippleModifier.kt`
+**Usage Examples**:
+
+1. **Navigation IconButton** (activity finish):
+```kotlin
+IconButton(onClick = deferAction { finish() }) {
+    Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+}
+```
+
+2. **Dialog Buttons** (dismissing dialog):
+```kotlin
+Button(onClick = deferAction { onDismiss() }) {
+    Text("OK")
+}
+```
+
+3. **Navigation Cards**:
+```kotlin
+Card(onClick = deferAction { startActivity(...) }) {
+    // Content
+}
+```
+
+**Files Modified**:
+- `app/src/main/java/mpdc4gsr/core/ui/SafeRippleModifier.kt` - Added press tracking and cancellation
+- `component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/compose/HomeGuideDialogCompose.kt` - Applied deferred actions to dialog buttons
+- `app/src/main/java/mpdc4gsr/feature/camera/ui/CameraDashboardScreen.kt` - Applied deferred actions to navigation buttons
+- `app/src/main/java/mpdc4gsr/feature/network/ui/DevicePairingComposeActivity.kt` - Applied deferred actions to back button
+- `app/src/main/java/mpdc4gsr/feature/testing/ui/ComposeMigrationLauncherActivity.kt` - Applied deferred actions to launcher cards
 
 ## Best Practices
 

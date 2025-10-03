@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
+import mpdc4gsr.core.ui.deferAction
 
 /**
  * Camera Dashboard Screen - Modern Compose Implementation
@@ -42,12 +43,12 @@ fun CameraDashboardScreen(
                         )
                     },
                     navigationIcon = {
-                        IconButton(onClick = onBackClick) {
+                        IconButton(onClick = deferAction { onBackClick() }) {
                             Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                         }
                     },
                     actions = {
-                        IconButton(onClick = onNavigateToSettings) {
+                        IconButton(onClick = deferAction { onNavigateToSettings() }) {
                             Icon(Icons.Default.Settings, contentDescription = "Settings")
                         }
                     }
@@ -251,7 +252,7 @@ private fun CameraModeItem(
     onClick: () -> Unit
 ) {
     Card(
-        onClick = onClick,
+        onClick = deferAction { onClick() },
         modifier = Modifier.fillMaxWidth(),
         colors = if (isActive) {
             CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
