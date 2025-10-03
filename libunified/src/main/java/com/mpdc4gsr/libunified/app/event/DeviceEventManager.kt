@@ -41,10 +41,22 @@ object DeviceEventManager {
         _devicePermissionRequested.emit(device)
     }
 
+    /**
+     * Synchronously updates the device connection state.
+     *
+     * Use this function when you need to emit a device connection event from a non-coroutine context,
+     * where calling suspend functions is not possible. Prefer [emitDeviceConnection] in coroutine contexts.
+     */
     fun emitDeviceConnectionSync(isConnected: Boolean, device: UsbDevice?) {
         _deviceConnectionState.value = DeviceConnectionState(isConnected, device)
     }
 
+    /**
+     * Synchronously updates the socket connection state.
+     *
+     * Use this function when you need to emit a socket connection event from a non-coroutine context,
+     * where calling suspend functions is not possible. Prefer [emitSocketConnection] in coroutine contexts.
+     */
     fun emitSocketConnectionSync(isConnected: Boolean, isTS004: Boolean = false) {
         _socketConnectionState.value = SocketConnectionState(isConnected, isTS004)
     }
