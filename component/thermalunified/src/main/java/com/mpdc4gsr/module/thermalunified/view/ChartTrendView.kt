@@ -4,7 +4,7 @@ import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
 import androidx.core.content.ContextCompat
-import com.blankj.utilcode.util.SizeUtils
+import com.mpdc4gsr.module.thermalunified.compat.dpToPx
 import com.mpdc4gsr.libunified.app.tools.UnitTools
 import com.mpdc4gsr.libunified.ui.charts.LineChart
 import com.mpdc4gsr.libunified.ui.components.Legend
@@ -41,8 +41,8 @@ class ChartTrendView : LineChart {
         this.setExtraOffsets(
             0f,
             0f,
-            SizeUtils.dp2px(8f).toFloat(),
-            SizeUtils.dp2px(4f).toFloat(),
+            8.dpToPx(context).toFloat(),
+            4.dpToPx(context).toFloat(),
         )
 
         setNoDataText(context.getString(ThermalR.string.lms_http_code998))

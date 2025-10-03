@@ -74,11 +74,23 @@
    - ✅ `component/thermalunified/video/VideoRecordFFmpeg.kt`
      - Migrated 1 `Utils.getApp()` call to `ContextProvider.getContext()`
 
+6. **Additional Migrations Completed** - **BATCH 4**
+   - ✅ `component/thermalunified/view/TargetBarPickView.kt`
+     - Migrated 11 `SizeUtils` calls to context-aware `dpToPx(context)`, `spToPx(context)`
+     - Major view with extensive dimension conversions
+   
+   - ✅ `component/thermalunified/view/ChartTrendView.kt`
+     - Migrated 2 `SizeUtils` calls to context-aware `dpToPx(context)`
+   
+   - ✅ `component/thermalunified/view/compass/LinearCompassView.kt`
+     - Migrated 5 `SizeUtils` calls to context-aware `spToPx(context)`
+     - Updated initialization to use context-aware conversions
+
 ### Migration Statistics
 
 | Utility | Total Usage | Migrated | Remaining | Progress |
 |---------|-------------|----------|-----------|----------|
-| SizeUtils | 32 | 13 | 19 | 41% |
+| SizeUtils | 32 | 18 | 14 | 56% |
 | Utils.getApp() | 26 | 11 | 15 | 42% |
 | GsonUtils | 5 | 0 | 5 | 0% |
 | SPUtils | 4 | 0 | 4 | 0% |
@@ -86,7 +98,9 @@
 | ScreenUtils | 3 | 0 | 3 | 0% |
 | Others | <2 each | 0 | ~10 | 0% |
 
-**Overall Migration Progress**: ~33% (24 out of ~87 occurrences)
+**Overall Migration Progress**: ~41% (29 out of ~87 occurrences)
+
+**Files Migrated**: 15 total across 4 batches
 
 ## Next Steps (Phase 1 Completion)
 
