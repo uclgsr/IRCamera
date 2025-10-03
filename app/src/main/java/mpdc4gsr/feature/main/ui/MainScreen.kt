@@ -383,7 +383,7 @@ private fun SystemStatusOverview(
     modifier: Modifier = Modifier
 ) {
     // Memoize colors to prevent recomposition when theme changes
-    val connectedColor = remember { Color.Green }
+    val connectedColor = Color.Green
     val primaryColor = MaterialTheme.colorScheme.primary
     
     Card(
