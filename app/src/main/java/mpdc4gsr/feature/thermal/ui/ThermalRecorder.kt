@@ -28,7 +28,7 @@ class ThermalRecorder(private val context: Context) {
     private var isRecording = AtomicBoolean(false)
     private var frameSequence = AtomicLong(0)
     private var sessionDirectory: File? = null
-    private var csvFile: File? = null
+    private var csvWriter: FileWriter? = null
     private var saveImages = false
     private var sessionMetadata: SessionMetadata? = null
 
@@ -86,22 +86,25 @@ class ThermalRecorder(private val context: Context) {
                 this@ThermalRecorder.sessionMetadata = sessionMetadata
                 sessionDirectory = File(sessionDir)
 
-                if (!sessionDirectory!!.exists()) {
-                    sessionDirectory!!.mkdirs()
+                sessionDirectory?.let { dir ->
+                    if (!dir.exists()) {
+                        dir.mkdirs()
+                    }
                 }
 
-                csvFile = File(sessionDirectory, "thermal_stats_${sessionMetadata.sessionId}.csv")
+                val csvFile = File(sessionDirectory, "thermal_stats_${sessionMetadata.sessionId}.csv")
                 
-                FileWriter(csvFile!!, false).use { writer ->
-                    writer.write(sessionMetadata.createTimingHeader())
-                    writer.write("# THERMAL FRAME DATA - Temperatures in Celsius\n")
-                    writer.write("# Frame timestamps include:\n")
-                    writer.write("#   timestamp_wall_ms: Wall clock time (UTC)\n")
-                    writer.write("#   timestamp_relative_ms: Milliseconds since session start (monotonic)\n")
-                    writer.write("#   timestamp_monotonic_ns: Raw monotonic nanoseconds for precise intervals\n")
-                    writer.write("#\n")
-                    writer.write("timestamp_wall_ms,timestamp_relative_ms,timestamp_monotonic_ns,frame_sequence,min_temp_c,avg_temp_c,max_temp_c,pixel_count\n")
-                    writer.flush()
+                // Open writer for the entire recording session
+                csvWriter = FileWriter(csvFile, false).apply {
+                    write(sessionMetadata.createTimingHeader())
+                    write("# THERMAL FRAME DATA - Temperatures in Celsius\n")
+                    write("# Frame timestamps include:\n")
+                    write("#   timestamp_wall_ms: Wall clock time (UTC)\n")
+                    write("#   timestamp_relative_ms: Milliseconds since session start (monotonic)\n")
+                    write("#   timestamp_monotonic_ns: Raw monotonic nanoseconds for precise intervals\n")
+                    write("#\n")
+                    write("timestamp_wall_ms,timestamp_relative_ms,timestamp_monotonic_ns,frame_sequence,min_temp_c,avg_temp_c,max_temp_c,pixel_count\n")
+                    flush()
                 }
 
                 frameSequence.set(0)
@@ -116,15 +119,17 @@ class ThermalRecorder(private val context: Context) {
                 )
 
                 isRecording.set(true)
-                Log.i(TAG, "Thermal recording started with session timing: ${csvFile?.absolutePath ?: "unknown"}")
+                Log.i(TAG, "Thermal recording started with session timing: ${csvFile.absolutePath}")
                 Log.i(TAG, "Session start: ${sessionMetadata.sessionStartIso}")
                 Log.i(TAG, "Thermal recording SessionSync event logged for alignment verification")
 
                 if (saveImages) {
-                    Log.i(
-                        TAG,
-                        "Thermal frame images will be saved to: ${sessionDirectory!!.absolutePath}"
-                    )
+                    sessionDirectory?.let { dir ->
+                        Log.i(
+                            TAG,
+                            "Thermal frame images will be saved to: ${dir.absolutePath}"
+                        )
+                    }
                 }
 
                 return@withContext true
@@ -147,31 +152,36 @@ class ThermalRecorder(private val context: Context) {
                 this@ThermalRecorder.saveImages = saveImages
                 sessionDirectory = File(sessionDir)
 
-                if (!sessionDirectory!!.exists()) {
-                    sessionDirectory!!.mkdirs()
+                sessionDirectory?.let { dir ->
+                    if (!dir.exists()) {
+                        dir.mkdirs()
+                    }
                 }
 
                 val timestamp =
                     SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.getDefault()).format(Date())
-                csvFile = File(sessionDirectory, "thermal_stats_$timestamp.csv")
+                val csvFile = File(sessionDirectory, "thermal_stats_$timestamp.csv")
                 
-                FileWriter(csvFile!!, false).use { writer ->
-                    writer.write("# Legacy thermal recording - no session synchronization metadata\n")
-                    writer.write(CSV_HEADER)
-                    writer.write("\n")
-                    writer.flush()
+                // Open writer for the entire recording session
+                csvWriter = FileWriter(csvFile, false).apply {
+                    write("# Legacy thermal recording - no session synchronization metadata\n")
+                    write(CSV_HEADER)
+                    write("\n")
+                    flush()
                 }
 
                 frameSequence.set(0)
 
                 isRecording.set(true)
-                Log.i(TAG, "Thermal recording started (legacy mode): ${csvFile?.absolutePath ?: "unknown"}")
+                Log.i(TAG, "Thermal recording started (legacy mode): ${csvFile.absolutePath}")
 
                 if (saveImages) {
-                    Log.i(
-                        TAG,
-                        "Thermal frame images will be saved to: ${sessionDirectory!!.absolutePath}"
-                    )
+                    sessionDirectory?.let { dir ->
+                        Log.i(
+                            TAG,
+                            "Thermal frame images will be saved to: ${dir.absolutePath}"
+                        )
+                    }
                 }
 
                 return@withContext true
@@ -191,7 +201,11 @@ class ThermalRecorder(private val context: Context) {
 
         try {
             isRecording.set(false)
-            csvFile = null
+            
+            // Close the writer properly
+            csvWriter?.flush()
+            csvWriter?.close()
+            csvWriter = null
 
             Log.i(TAG, "Thermal recording stopped. Processed ${frameSequence.get()} frames")
             return@withContext true
@@ -349,10 +363,8 @@ class ThermalRecorder(private val context: Context) {
 
     private suspend fun logFrameStats(stats: ThermalFrameStats) = withContext(Dispatchers.IO) {
         try {
-            csvFile?.let { file ->
-                val csvLine = if (sessionMetadata != null) {
-
-                    val sm = sessionMetadata
+            csvWriter?.let { writer ->
+                val csvLine = sessionMetadata?.let { sm ->
                     val wallClockMs = sm.monotonicToWallClock(stats.timestampNs)
                     val relativeMs = (stats.timestampNs - sm.sessionStartMonotonicNs) / 1_000_000L
 
@@ -373,28 +385,23 @@ class ThermalRecorder(private val context: Context) {
                         append(',')
                         append(stats.pixelCount)
                     }.toString()
-                } else {
+                } ?: StringBuilder().apply {
+                    append(stats.timestampNs)
+                    append(',')
+                    append(stats.frameSequence)
+                    append(',')
+                    append("%.3f".format(Locale.US, stats.minTemp))
+                    append(',')
+                    append("%.3f".format(Locale.US, stats.avgTemp))
+                    append(',')
+                    append("%.3f".format(Locale.US, stats.maxTemp))
+                    append(',')
+                    append(stats.pixelCount)
+                }.toString()
 
-                    StringBuilder().apply {
-                        append(stats.timestampNs)
-                        append(',')
-                        append(stats.frameSequence)
-                        append(',')
-                        append("%.3f".format(Locale.US, stats.minTemp))
-                        append(',')
-                        append("%.3f".format(Locale.US, stats.avgTemp))
-                        append(',')
-                        append("%.3f".format(Locale.US, stats.maxTemp))
-                        append(',')
-                        append(stats.pixelCount)
-                    }.toString()
-                }
-
-                FileWriter(file, true).use { writer ->
-                    writer.write(csvLine)
-                    writer.write("\n")
-                    writer.flush()
-                }
+                writer.write(csvLine)
+                writer.write("\n")
+                writer.flush()
 
                 Log.d(
                     TAG,
