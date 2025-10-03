@@ -3,7 +3,6 @@ package com.mpdc4gsr.module.thermalunified.report.viewmodel
 import android.text.TextUtils
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.blankj.utilcode.util.Utils
 import com.google.gson.Gson
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import com.mpdc4gsr.libunified.app.lms.LMS
@@ -13,6 +12,7 @@ import com.mpdc4gsr.libunified.app.lms.utils.StringUtils
 import com.mpdc4gsr.libunified.app.lms.utils.TLog
 import com.mpdc4gsr.libunified.app.lms.weiget.TToast
 import com.mpdc4gsr.libunified.app.utils.HttpHelp
+import com.mpdc4gsr.module.thermalunified.compat.ContextProvider
 import com.mpdc4gsr.module.thermalunified.report.bean.ReportData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -27,8 +27,8 @@ class PdfViewModel : BaseViewModel() {
         isTC007: Boolean,
         page: Int,
     ) {
-        if (!NetworkUtils.isConnected(Utils.getApp())) {
-            TToast.shortToast(Utils.getApp(), LibR.string.http_code_z5004)
+        if (!NetworkUtils.isConnected(ContextProvider.getContext())) {
+            TToast.shortToast(ContextProvider.getContext(), LibR.string.http_code_z5004)
             listData.postValue(null)
             return
         }

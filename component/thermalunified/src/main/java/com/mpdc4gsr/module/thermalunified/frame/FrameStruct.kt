@@ -1,8 +1,9 @@
 package com.mpdc4gsr.module.thermalunified.frame
 
 import com.blankj.utilcode.util.AppUtils
-import com.blankj.utilcode.util.SizeUtils
 import com.mpdc4gsr.libunified.app.bean.AlarmBean
+import com.mpdc4gsr.module.thermalunified.compat.ContextProvider
+import com.mpdc4gsr.module.thermalunified.compat.spToPx
 import com.mpdc4gsr.libunified.app.bean.CustomPseudoBean
 import com.mpdc4gsr.libunified.app.bean.WatermarkBean
 import com.mpdc4gsr.libunified.app.common.ProductType.PRODUCT_NAME_TC007
@@ -111,7 +112,7 @@ class FrameStruct() {
     var watermarkBean = WatermarkBean()
     var alarmBean = AlarmBean()
     var gainStatus: Int = 1
-    var textSize: Int = SizeUtils.sp2px(14f)
+    var textSize: Int = 14f.spToPx(ContextProvider.getContext())
     var environment: Float = 0f
     var distance: Float = 0f
     var radiation: Float = 0f
@@ -162,7 +163,7 @@ class FrameStruct() {
         alarmBean = AlarmBean.loadFromArray(alarmArray)
         gainStatus = data[657].toInt()
         val tmpTextSize = (data[658].toInt() and 0xff shl 8) or (data[659].toInt() and 0xff)
-        if (tmpTextSize >= SizeUtils.sp2px(14f)) {
+        if (tmpTextSize >= 14f.spToPx(ContextProvider.getContext())) {
             textSize = tmpTextSize
         }
 

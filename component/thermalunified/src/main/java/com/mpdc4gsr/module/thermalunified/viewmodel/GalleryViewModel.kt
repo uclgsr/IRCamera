@@ -2,10 +2,10 @@ package com.mpdc4gsr.module.thermalunified.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.viewModelScope
-import com.blankj.utilcode.util.Utils
 import com.mpdc4gsr.libunified.app.config.FileConfig
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import com.mpdc4gsr.libunified.app.utils.SingleLiveEvent
+import com.mpdc4gsr.module.thermalunified.compat.ContextProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -189,7 +189,7 @@ class GalleryViewModel : BaseViewModel() {
         val items = mutableListOf<MediaItem>()
 
         // Load pictures
-        val picturePath = Utils.getApp()
+        val picturePath = ContextProvider.getContext()
             .getExternalFilesDir("Pictures")!!.absolutePath + File.separator + "thermal"
         val pictureDir = File(picturePath)
         if (pictureDir.isDirectory) {
@@ -238,7 +238,7 @@ class GalleryViewModel : BaseViewModel() {
         val flow =
             flow {
                 val path =
-                    Utils.getApp()
+                    ContextProvider.getContext()
                         .getExternalFilesDir("Pictures")!!.absolutePath + File.separator + "thermal"
                 val file = File(path)
                 if (file.isDirectory) {

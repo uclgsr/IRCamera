@@ -1,7 +1,7 @@
 package com.mpdc4gsr.module.thermalunified.report.bean
 
 import android.os.Parcelable
-import com.blankj.utilcode.util.GsonUtils
+import com.google.gson.Gson
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 
@@ -19,7 +19,7 @@ data class ReportItemBean(
     var reportBean: ReportBean? = null
         get() {
             if (field == null) {
-                field = GsonUtils.fromJson(testInfo, ReportBean::class.java)
+                field = Gson().fromJson(testInfo, ReportBean::class.java)
             }
             return field
         }

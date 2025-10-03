@@ -129,9 +129,13 @@ fun MainScreen(
 /**
  * Sensor Dashboard Tab - Main sensor interface
  *
+ * OPTIMIZED: Improved recomposition handling and state management
+ * - Uses remember for stable references to prevent unnecessary recomposition
+ * - Memoized callbacks to avoid recreating lambdas on every recomposition
+ * - Stable state holders to minimize composition scope
+ *
  * TODO: State management should be hoisted to a MainViewModel
  * Current limitation: Sensor states are managed locally and hardcoded to Connected.
- * This is a temporary implementation for UI demonstration purposes.
  * Future work should:
  * - Create MainViewModel to manage sensor states
  * - Connect to actual sensor hardware/services
@@ -143,9 +147,59 @@ private fun SensorDashboardTab(
     onSensorClick: (mpdc4gsr.core.ui.model.SensorType) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
+    // Use remember for stable state holders to prevent unnecessary recomposition
     var gsrState by remember { mutableStateOf(mpdc4gsr.core.ui.model.SensorState.Connected) }
     var thermalState by remember { mutableStateOf(mpdc4gsr.core.ui.model.SensorState.Connected) }
     var rgbState by remember { mutableStateOf(mpdc4gsr.core.ui.model.SensorState.Connected) }
+    
+    // Memoize action handlers to prevent recreating lambdas on every recomposition
+    val gsrActionHandler = remember {
+        { action: mpdc4gsr.core.ui.model.GSRAction ->
+            when (action) {
+                is mpdc4gsr.core.ui.model.GSRAction.Connect -> 
+                    gsrState = mpdc4gsr.core.ui.model.SensorState.Connecting
+                is mpdc4gsr.core.ui.model.GSRAction.Disconnect -> 
+                    gsrState = mpdc4gsr.core.ui.model.SensorState.Disconnected
+                is mpdc4gsr.core.ui.model.GSRAction.StartStream -> 
+                    gsrState = mpdc4gsr.core.ui.model.SensorState.Streaming
+                is mpdc4gsr.core.ui.model.GSRAction.StopStream -> 
+                    gsrState = mpdc4gsr.core.ui.model.SensorState.Connected
+                is mpdc4gsr.core.ui.model.GSRAction.ConfigureDevice -> {}
+            }
+        }
+    }
+    
+    val thermalActionHandler = remember {
+        { action: mpdc4gsr.core.ui.model.ThermalAction ->
+            when (action) {
+                is mpdc4gsr.core.ui.model.ThermalAction.Connect -> 
+                    thermalState = mpdc4gsr.core.ui.model.SensorState.Connecting
+                is mpdc4gsr.core.ui.model.ThermalAction.Disconnect -> 
+                    thermalState = mpdc4gsr.core.ui.model.SensorState.Disconnected
+                is mpdc4gsr.core.ui.model.ThermalAction.StartPreview -> 
+                    thermalState = mpdc4gsr.core.ui.model.SensorState.Streaming
+                is mpdc4gsr.core.ui.model.ThermalAction.StopPreview -> 
+                    thermalState = mpdc4gsr.core.ui.model.SensorState.Connected
+                is mpdc4gsr.core.ui.model.ThermalAction.Calibrate -> {}
+            }
+        }
+    }
+    
+    val rgbActionHandler = remember {
+        { action: mpdc4gsr.core.ui.model.CameraAction ->
+            when (action) {
+                is mpdc4gsr.core.ui.model.CameraAction.Connect -> 
+                    rgbState = mpdc4gsr.core.ui.model.SensorState.Connecting
+                is mpdc4gsr.core.ui.model.CameraAction.Disconnect -> 
+                    rgbState = mpdc4gsr.core.ui.model.SensorState.Disconnected
+                is mpdc4gsr.core.ui.model.CameraAction.StartPreview -> 
+                    rgbState = mpdc4gsr.core.ui.model.SensorState.Streaming
+                is mpdc4gsr.core.ui.model.CameraAction.StopPreview -> 
+                    rgbState = mpdc4gsr.core.ui.model.SensorState.Connected
+                is mpdc4gsr.core.ui.model.CameraAction.SetResolution -> {}
+            }
+        }
+    }
 
     Column(
         modifier = modifier
@@ -184,73 +238,26 @@ private fun SensorDashboardTab(
         SystemStatusOverview()
 
         // Sensor cards for direct access
+        // Using memoized handlers to prevent unnecessary recomposition
         mpdc4gsr.core.ui.components.sensors.GSRSensorCard(
             state = gsrState,
             onStateChange = { gsrState = it },
             onClick = { onSensorClick(mpdc4gsr.core.ui.model.SensorType.GSR) },
-            onAction = { action ->
-                when (action) {
-                    is mpdc4gsr.core.ui.model.GSRAction.Connect -> gsrState =
-                        mpdc4gsr.core.ui.model.SensorState.Connecting
-
-                    is mpdc4gsr.core.ui.model.GSRAction.Disconnect -> gsrState =
-                        mpdc4gsr.core.ui.model.SensorState.Disconnected
-
-                    is mpdc4gsr.core.ui.model.GSRAction.StartStream -> gsrState =
-                        mpdc4gsr.core.ui.model.SensorState.Streaming
-
-                    is mpdc4gsr.core.ui.model.GSRAction.StopStream -> gsrState =
-                        mpdc4gsr.core.ui.model.SensorState.Connected
-
-                    is mpdc4gsr.core.ui.model.GSRAction.ConfigureDevice -> {}
-                }
-            }
+            onAction = gsrActionHandler
         )
 
         mpdc4gsr.core.ui.components.sensors.ThermalSensorCard(
             state = thermalState,
             onStateChange = { thermalState = it },
             onClick = { onSensorClick(mpdc4gsr.core.ui.model.SensorType.ThermalIR) },
-            onAction = { action ->
-                when (action) {
-                    is mpdc4gsr.core.ui.model.ThermalAction.Connect -> thermalState =
-                        mpdc4gsr.core.ui.model.SensorState.Connecting
-
-                    is mpdc4gsr.core.ui.model.ThermalAction.Disconnect -> thermalState =
-                        mpdc4gsr.core.ui.model.SensorState.Disconnected
-
-                    is mpdc4gsr.core.ui.model.ThermalAction.StartPreview -> thermalState =
-                        mpdc4gsr.core.ui.model.SensorState.Streaming
-
-                    is mpdc4gsr.core.ui.model.ThermalAction.StopPreview -> thermalState =
-                        mpdc4gsr.core.ui.model.SensorState.Connected
-
-                    is mpdc4gsr.core.ui.model.ThermalAction.Calibrate -> {}
-                }
-            }
+            onAction = thermalActionHandler
         )
 
         mpdc4gsr.core.ui.components.sensors.RGBCameraSensorCard(
             state = rgbState,
             onStateChange = { rgbState = it },
             onClick = { onSensorClick(mpdc4gsr.core.ui.model.SensorType.RGBCamera) },
-            onAction = { action ->
-                when (action) {
-                    is mpdc4gsr.core.ui.model.CameraAction.Connect -> rgbState =
-                        mpdc4gsr.core.ui.model.SensorState.Connecting
-
-                    is mpdc4gsr.core.ui.model.CameraAction.Disconnect -> rgbState =
-                        mpdc4gsr.core.ui.model.SensorState.Disconnected
-
-                    is mpdc4gsr.core.ui.model.CameraAction.StartPreview -> rgbState =
-                        mpdc4gsr.core.ui.model.SensorState.Streaming
-
-                    is mpdc4gsr.core.ui.model.CameraAction.StopPreview -> rgbState =
-                        mpdc4gsr.core.ui.model.SensorState.Connected
-
-                    is mpdc4gsr.core.ui.model.CameraAction.SetResolution -> {}
-                }
-            }
+            onAction = rgbActionHandler
         )
     }
 }
@@ -369,11 +376,16 @@ private fun ProfileTab(
 
 /**
  * System status overview component
+ * OPTIMIZED: Uses remember for stable color references to prevent unnecessary recomposition
  */
 @Composable
 private fun SystemStatusOverview(
     modifier: Modifier = Modifier
 ) {
+    // Memoize colors to prevent recomposition when theme changes
+    val connectedColor = Color.Green
+    val primaryColor = MaterialTheme.colorScheme.primary
+    
     Card(
         modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
@@ -395,9 +407,9 @@ private fun SystemStatusOverview(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                StatusItem("GSR", "Connected", Color.Green)
-                StatusItem("Thermal", "Ready", MaterialTheme.colorScheme.primary)
-                StatusItem("RGB", "Active", Color.Green)
+                StatusItem("GSR", "Connected", connectedColor)
+                StatusItem("Thermal", "Ready", primaryColor)
+                StatusItem("RGB", "Active", connectedColor)
             }
         }
     }

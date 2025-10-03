@@ -1,7 +1,6 @@
 package com.mpdc4gsr.module.thermalunified.utils
 
 import android.util.Log
-import com.blankj.utilcode.util.Utils
 import com.elvishew.xlog.XLog
 import com.energy.iruvc.dual.DualUVCCamera
 import com.energy.iruvc.ircmd.IRCMD
@@ -11,6 +10,7 @@ import com.energy.iruvc.utils.SynchronizedBitmap
 import com.mpdc4gsr.libunified.app.common.SharedManager
 import com.mpdc4gsr.libunified.ir.usbdual.camera.BaseDualView
 import com.mpdc4gsr.libunified.ir.utils.HexDump
+import com.mpdc4gsr.module.thermalunified.compat.ContextProvider
 import java.io.IOException
 import java.io.InputStream
 import kotlin.math.ceil
@@ -69,7 +69,7 @@ object IRCmdTools {
             val alignByte = SharedManager.getManualData(snStr)
             System.arraycopy(alignByte, 0, parameters, calibrationDataSize + 1, alignByte.size)
         } else {
-            val am = Utils.getApp().assets
+            val am = ContextProvider.getContext().assets
             var `is`: InputStream? = null
             val length: Int
             try {

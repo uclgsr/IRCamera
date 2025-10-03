@@ -10,23 +10,24 @@ import android.view.MotionEvent
 import android.view.View
 import androidx.annotation.CallSuper
 import androidx.annotation.ColorInt
-import com.blankj.utilcode.util.SizeUtils
 import com.energy.iruvc.utils.Line
 import com.mpdc4gsr.libunified.app.tools.UnitTools
 import com.mpdc4gsr.libunified.ir.utils.TempDrawHelper
 import com.mpdc4gsr.libunified.ir.utils.TempDrawHelper.Companion.correct
 import com.mpdc4gsr.libunified.ir.utils.TempDrawHelper.Companion.correctPoint
 import com.mpdc4gsr.module.thermalunified.R
+import com.mpdc4gsr.module.thermalunified.compat.dpToPx
 import kotlin.math.*
 
 abstract class TemperatureBaseView : View {
     companion object {
 
         private const val DEFAULT_MAX_COUNT = 3
+    }
 
-        private val TOUCH_TOLERANCE = SizeUtils.dp2px(8f)
+    private val TOUCH_TOLERANCE by lazy { 8f.dpToPx(context) }
 
-        private val DELETE_TOLERANCE = SizeUtils.dp2px(2f)
+    private val DELETE_TOLERANCE by lazy { 2f.dpToPx(context)
     }
 
     enum class Mode {

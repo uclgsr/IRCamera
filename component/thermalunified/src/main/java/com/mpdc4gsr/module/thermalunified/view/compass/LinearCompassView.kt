@@ -8,7 +8,7 @@ import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
 import androidx.core.view.drawToBitmap
-import com.blankj.utilcode.util.SizeUtils
+import com.mpdc4gsr.module.thermalunified.compat.spToPx
 import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.module.thermalunified.utils.getPixelLinear
 import com.mpdc4gsr.module.thermalunified.utils.getValuesBetween
@@ -35,11 +35,12 @@ class LinearCompassView : View {
     private var longLineColor: Int = Color.WHITE
     private var positionColor: Int = Color.WHITE
     private var centerAzimuthColor = Color.WHITE
-    private var textSize: Float = SizeUtils.sp2px(13f).toFloat()
-    private var shortLineSize = SizeUtils.sp2px(0.5f).toFloat()
-    private var longLineSize = SizeUtils.sp2px(0.5f).toFloat()
-    private var positionSize = SizeUtils.sp2px(11f).toFloat()
-    private var markerSize = SizeUtils.sp2px(2f).toFloat()
+    private lateinit var context: Context
+    private var textSize: Float = 0f
+    private var shortLineSize = 0f
+    private var longLineSize = 0f
+    private var positionSize = 0f
+    private var markerSize = 0f
     private var backgroundColor = Color.BLACK
 
     private var lastDrawTime = 0L
@@ -55,11 +56,18 @@ class LinearCompassView : View {
         initView()
     }
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
-        context,
+    constructor(ctx: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
+        ctx,
         attrs,
         defStyleAttr,
     ) {
+        this.context = ctx
+        textSize = 13f.spToPx(context).toFloat()
+        shortLineSize = 0.5f.spToPx(context).toFloat()
+        longLineSize = 0.5f.spToPx(context).toFloat()
+        positionSize = 11f.spToPx(context).toFloat()
+        markerSize = 2f.spToPx(context).toFloat()
+        
         val attributes =
             context.obtainStyledAttributes(attrs, R.styleable.LinearCompassView, 0, 0)
         lineColor = attributes.getColor(R.styleable.LinearCompassView_lineColor, Color.WHITE)
@@ -77,22 +85,22 @@ class LinearCompassView : View {
         shortLineSize =
             attributes.getDimension(
                 R.styleable.LinearCompassView_shortLineSize,
-                SizeUtils.sp2px(0.5f).toFloat(),
+                shortLineSize,
             )
         longLineSize =
             attributes.getDimension(
                 R.styleable.LinearCompassView_longLineSize,
-                SizeUtils.sp2px(0.5f).toFloat(),
+                longLineSize,
             )
         positionSize =
             attributes.getDimension(
                 R.styleable.LinearCompassView_positionSize,
-                SizeUtils.sp2px(11f).toFloat(),
+                positionSize,
             )
         markerSize =
             attributes.getDimension(
                 R.styleable.LinearCompassView_markerSize,
-                SizeUtils.sp2px(2f).toFloat(),
+                markerSize,
             )
         attributes.recycle()
         initView()

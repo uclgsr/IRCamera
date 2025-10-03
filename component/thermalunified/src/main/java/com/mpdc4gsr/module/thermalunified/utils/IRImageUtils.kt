@@ -42,7 +42,7 @@ object IRImageUtils {
             Log.w("123", "lookUpTableData: ${lookUpTableData[1].toUByte()}")
             lookUpTable.put(0, 0, lookUpTableData)
             val srcMat = Utils.loadResource(
-                com.blankj.utilcode.util.Utils.getApp(),
+                com.mpdc4gsr.module.thermalunified.compat.ContextProvider.getContext(),
                 UiR.drawable.ic_main_menu_battery
             )
             val dstMat = Mat()
@@ -88,7 +88,7 @@ object IRImageUtils {
         val kernelSize = 3
 
         val srcMat = Utils.loadResource(
-            com.blankj.utilcode.util.Utils.getApp(),
+            com.mpdc4gsr.module.thermalunified.compat.ContextProvider.getContext(),
             UiR.drawable.ic_main_menu_battery
         )
         val dstMat = Mat(srcMat.rows(), srcMat.cols(), srcMat.type())

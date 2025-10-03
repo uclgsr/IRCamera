@@ -1,9 +1,8 @@
 package com.mpdc4gsr.module.thermalunified.report.viewmodel
 
 import androidx.lifecycle.viewModelScope
-import com.blankj.utilcode.util.GsonUtils
-import com.blankj.utilcode.util.TimeUtils
 import com.elvishew.xlog.XLog
+import com.google.gson.Gson
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import com.mpdc4gsr.libunified.app.lms.LMS
 import com.mpdc4gsr.libunified.app.lms.UrlConstants
@@ -19,12 +18,18 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.io.File
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import java.util.concurrent.CountDownLatch
 
 class UpReportViewModel : BaseViewModel() {
     val commonBeanLD = SingleLiveEvent<CommonBean>()
 
     val exceptionLD = SingleLiveEvent<Exception?>()
+
+    private val gson = Gson()
+    private val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
 
     fun upload(
         isTC007: Boolean,
@@ -87,8 +92,8 @@ class UpReportViewModel : BaseViewModel() {
                 "modelId",
                 if (isTC007) 1783 else 950
             )
-            params.addBodyParameter("testTime", TimeUtils.getNowString())
-            params.addBodyParameter("testInfo", GsonUtils.toJson(reportBean))
+            params.addBodyParameter("testTime", dateFormat.format(Date()))
+            params.addBodyParameter("testInfo", gson.toJson(reportBean))
             params.addBodyParameter("sn", "")
             HttpProxy.getInstant().post(
                 url,

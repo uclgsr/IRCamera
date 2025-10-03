@@ -7,8 +7,8 @@ import android.view.View
 import android.view.View.MeasureSpec
 import android.widget.PopupWindow
 import android.widget.TextView
-import com.blankj.utilcode.util.SizeUtils
 import com.mpdc4gsr.module.thermalunified.R
+import com.mpdc4gsr.module.thermalunified.compat.dpToPx
 import com.mpdc4gsr.libunified.R as LibR
 
 class GalleryChangePopup(private val context: Context) : PopupWindow() {
@@ -56,7 +56,7 @@ class GalleryChangePopup(private val context: Context) : PopupWindow() {
         anchor.getLocationInWindow(locationArray)
 
         val x = locationArray[0] + anchor.width / 2 - width / 2
-        val y = locationArray[1] + anchor.height - SizeUtils.dp2px(5f)
+        val y = locationArray[1] + anchor.height - 5f.dpToPx(context)
         showAtLocation(anchor, Gravity.NO_GRAVITY, x, y)
     }
 }

@@ -8,8 +8,8 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.MotionEvent
 import androidx.core.content.ContextCompat
-import com.blankj.utilcode.util.SizeUtils
 import com.mpdc4gsr.libunified.app.db.entity.ThermalEntity
+import com.mpdc4gsr.module.thermalunified.compat.dpToPx
 import com.mpdc4gsr.libunified.ui.charts.LineChart
 import com.mpdc4gsr.libunified.ui.components.Legend
 import com.mpdc4gsr.libunified.ui.components.XAxis
@@ -64,8 +64,8 @@ class ChartMonitorView : LineChart, OnChartGestureListener {
             this.setExtraOffsets(
                 0f,
                 0f,
-                SizeUtils.dp2px(8f).toFloat(),
-                SizeUtils.dp2px(4f).toFloat(),
+                8f.dpToPx(context).toFloat(),
+                4f.dpToPx(context).toFloat(),
             )
             setNoDataText(context.getString(ThermalR.string.lms_http_code998))
             setNoDataTextColor(ContextCompat.getColor(context, LibR.color.chart_text))
