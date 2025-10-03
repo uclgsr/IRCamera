@@ -15,8 +15,8 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Magnifier
 import androidx.core.content.ContextCompat
-import com.blankj.utilcode.util.SizeUtils
 import com.mpdc4gsr.libunified.R
+import com.mpdc4gsr.libunified.compat.dpToPx
 import com.mpdc4gsr.libunified.app.bean.ObserveBean
 import com.mpdc4gsr.libunified.app.utils.TargetUtils
 
@@ -219,10 +219,10 @@ class ZoomCaliperView : LinearLayout, ScaleGestureDetector.OnScaleGestureListene
                 isScale = false
                 val startX = viewX
                 val startY = viewY
-                if ((viewX < 0 && startX < -mTextureView.width * scale + SizeUtils.dp2px(10f)) ||
-                    (startX > 0 && startX > parentViewW - SizeUtils.dp2px(10f)) ||
-                    (startY < 0 && startY < -mTextureView.height * scale + SizeUtils.dp2px(10f)) ||
-                    (startY > 0 && startY > parentViewH - SizeUtils.dp2px(10f))
+                if ((viewX < 0 && startX < -mTextureView.width * scale + 10f.dpToPx(context)) ||
+                    (startX > 0 && startX > parentViewW - 10f.dpToPx(context)) ||
+                    (startY < 0 && startY < -mTextureView.height * scale + 10f.dpToPx(context)) ||
+                    (startY > 0 && startY > parentViewH - 10f.dpToPx(context))
                 ) {
                     zoomViewCloseListener?.invoke()
                 }
@@ -368,12 +368,12 @@ class ZoomCaliperView : LinearLayout, ScaleGestureDetector.OnScaleGestureListene
                     setCaliperM(def_caliper / 2)
                     mTextureView.visibility = View.INVISIBLE
                     builder.setInitialZoom(4f)
-                    builder.setCornerRadius(SizeUtils.dp2px(282f).toFloat())
+                    builder.setCornerRadius(282f.dpToPx(context))
                     builder.setClippingEnabled(false)
                     builder.setOverlay(ContextCompat.getDrawable(context, targetIcon))
                     builder.setSize(
-                        SizeUtils.dp2px(282f),
-                        SizeUtils.dp2px(282f),
+                        282f.dpToPx(context).toInt(),
+                        282f.dpToPx(context).toInt(),
                     )
                     magnifier = builder.build()
                 } else if (m >= 50f && m < 100f) {
@@ -382,11 +382,11 @@ class ZoomCaliperView : LinearLayout, ScaleGestureDetector.OnScaleGestureListene
 
                     builder.setInitialZoom(2f)
 
-                    builder.setCornerRadius(SizeUtils.dp2px(282f).toFloat())
+                    builder.setCornerRadius(282f.dpToPx(context))
                     builder.setClippingEnabled(false)
                     builder.setSize(
-                        SizeUtils.dp2px(282f),
-                        SizeUtils.dp2px(282f),
+                        282f.dpToPx(context).toInt(),
+                        282f.dpToPx(context).toInt(),
                     )
                     magnifier = builder.build()
                 }

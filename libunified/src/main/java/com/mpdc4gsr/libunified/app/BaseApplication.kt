@@ -29,6 +29,7 @@ import com.mpdc4gsr.libunified.app.tools.ConstantLanguages
 import com.mpdc4gsr.libunified.app.utils.NetWorkUtils
 import com.mpdc4gsr.libunified.app.utils.WifiUtils
 import com.mpdc4gsr.libunified.app.utils.WsCmdConstants
+import com.mpdc4gsr.libunified.compat.ContextProvider
 import com.mpdc4gsr.libunified.model.IRTempConfig
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -62,6 +63,7 @@ abstract class BaseApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         instance = this
+        ContextProvider.init(this)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             webviewSetPath(this)
         }
