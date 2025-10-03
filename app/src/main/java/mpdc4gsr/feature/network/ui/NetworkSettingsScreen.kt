@@ -46,7 +46,7 @@ fun NetworkSettingsScreen(
     val pairedDevices by viewModel.pairedDevices.collectAsState()
 
     LaunchedEffect(Unit) {
-        viewModel.initialize(context)
+        viewModel.initialize()
     }
 
     Column(

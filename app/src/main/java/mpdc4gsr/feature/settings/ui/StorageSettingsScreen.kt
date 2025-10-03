@@ -41,7 +41,7 @@ fun StorageSettingsScreen(
     val storageInfo by viewModel.storageInfo.collectAsState()
 
     LaunchedEffect(Unit) {
-        viewModel.initialize(context)
+        viewModel.initialize()
     }
 
     Column(
