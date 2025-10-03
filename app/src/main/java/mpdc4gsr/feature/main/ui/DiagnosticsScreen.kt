@@ -38,7 +38,7 @@ fun DiagnosticsScreen(
     val sensorStatus by viewModel.sensorStatus.collectAsState()
 
     LaunchedEffect(Unit) {
-        viewModel.initialize(context)
+        viewModel.initialize()
     }
 
     Column(

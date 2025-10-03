@@ -2,7 +2,6 @@ package mpdc4gsr.feature.gsr.presentation
 
 import android.app.Application
 import android.content.Context
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -13,6 +12,7 @@ import com.mpdc4gsr.gsr.network.NetworkClient
 import com.mpdc4gsr.gsr.service.GSRRecorder
 import com.mpdc4gsr.gsr.service.SessionManager
 import com.mpdc4gsr.gsr.util.TimeUtils
+import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import com.shimmerresearch.android.Shimmer
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -25,7 +25,7 @@ import mpdc4gsr.feature.gsr.data.RealShimmerDeviceFactory
  * MultiModalRecordingViewModel - Advanced MVVM Implementation
  * Coordinates multiple recording modalities (GSR, RGB Camera, Network) with proper state management
  */
-class MultiModalRecordingViewModel(application: Application) : AndroidViewModel(application) {
+class MultiModalRecordingViewModel(application: Application) : BaseViewModel() {
 
     private val context: Context = application.applicationContext
     private lateinit var gsrRecorder: GSRRecorder
