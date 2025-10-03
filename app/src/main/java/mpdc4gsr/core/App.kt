@@ -169,7 +169,7 @@ class App : BaseApplication() {
             )
             AppLogger.i("App", "AppLogger initialized successfully")
         } catch (e: Exception) {
-            XLog.e("App: Failed to initialize AppLogger: ${e.message}", e)
+            android.util.Log.e("App", "Failed to initialize AppLogger: ${e.message}", e)
         }
     }
 
