@@ -13,10 +13,8 @@ import android.util.Log
 import android.view.View
 import android.widget.ScrollView
 import androidx.core.content.ContextCompat
-import com.blankj.utilcode.util.UriUtils
 import com.mpdc4gsr.libunified.compat.ContextProvider
 import androidx.documentfile.provider.DocumentFile
-import com.blankj.utilcode.util.Utils
 import com.mpdc4gsr.libunified.R
 import com.mpdc4gsr.libunified.app.config.FileConfig
 import java.io.BufferedOutputStream
@@ -106,7 +104,7 @@ object PDFHelp {
                     bos.flush()
                     bos.close()
                 }
-                val documentFile = DocumentFile.fromSingleUri(Utils.getApp(), uri)
+                val documentFile = DocumentFile.fromSingleUri(ContextProvider.getContext(), uri)
                 val filePath = uri.toString()
                 Log.w("[ph][ph]", filePath)
                 filePath

@@ -10,10 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.documentfile.provider.DocumentFile;
 
-import com.blankj.utilcode.util.TimeUtils;
-import com.blankj.utilcode.util.UriUtils;
 import com.mpdc4gsr.libunified.compat.ContextProvider;
-import com.blankj.utilcode.util.Utils;
 import com.mpdc4gsr.libunified.R;
 import com.mpdc4gsr.libunified.app.common.SharedManager;
 import com.mpdc4gsr.libunified.app.config.FileConfig;
@@ -85,7 +82,7 @@ public class ExcelUtils {
                         bos.flush();
                         bos.close();
                     }
-                    DocumentFile documentFile = DocumentFile.fromSingleUri(Utils.getApp(), uri);
+                    DocumentFile documentFile = DocumentFile.fromSingleUri(ContextProvider.INSTANCE.getContext(), uri);
                     String filePath = uri.toString();
                     Log.w("", filePath);
                     return filePath;
@@ -210,7 +207,7 @@ public class ExcelUtils {
                         bos.flush();
                         bos.close();
                     }
-                    DocumentFile documentFile = DocumentFile.fromSingleUri(Utils.getApp(), uri);
+                    DocumentFile documentFile = DocumentFile.fromSingleUri(ContextProvider.INSTANCE.getContext(), uri);
                     String filePath = documentFile != null ? documentFile.getName() : uri.toString();
                     Log.w("", filePath);
                     return filePath;

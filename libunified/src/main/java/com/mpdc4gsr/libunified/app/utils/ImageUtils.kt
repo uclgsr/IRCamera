@@ -7,9 +7,9 @@ import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
-import com.blankj.utilcode.util.Utils
 import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.config.FileConfig.lineIrGalleryDir
+import com.mpdc4gsr.libunified.compat.ContextProvider
 import java.io.BufferedOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -37,9 +37,9 @@ object ImageUtils {
                     put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
                     put(MediaStore.Images.Media.RELATIVE_PATH, "${Environment.DIRECTORY_PICTURES}/$dicName")
                 }
-                val uri = Utils.getApp().contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+                val uri = ContextProvider.getContext().contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
                 uri?.let {
-                    Utils.getApp().contentResolver.openOutputStream(it)?.use { outputStream ->
+                    ContextProvider.getContext().contentResolver.openOutputStream(it)?.use { outputStream ->
                         BufferedOutputStream(outputStream).use { bos ->
                             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos)
                             bos.flush()
@@ -66,7 +66,7 @@ object ImageUtils {
     }
 
     fun saveImageToApp(bitmap: Bitmap): String {
-        val saveFile = File(Utils.getApp().cacheDir, "PinP_${System.currentTimeMillis()}.jpg")
+        val saveFile = File(ContextProvider.getContext().cacheDir, "PinP_${System.currentTimeMillis()}.jpg")
         FileOutputStream(saveFile).use { fos ->
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos)
             fos.flush()
