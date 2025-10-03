@@ -103,11 +103,20 @@ object TimestampManager {
         return sessionDuration
     }
 
+    /**
+     * Set clock offset for PC time synchronization.
+     * This offset is applied to all synchronized timestamps.
+     * Called by TimeSyncManager when sync completes.
+     */
     fun setClockOffset(offsetMs: Long) {
         clockOffset.set(offsetMs)
         AppLogger.i(TAG, "Clock offset set to: $offsetMs ms")
     }
 
+    /**
+     * Get timestamp synchronized with PC clock.
+     * This applies the offset calculated from time sync protocol.
+     */
     fun getSynchronizedTimestampMs(): Long {
         return getDeviceTimestampMs() + clockOffset.get()
     }
