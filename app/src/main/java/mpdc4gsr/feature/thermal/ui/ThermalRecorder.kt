@@ -352,7 +352,7 @@ class ThermalRecorder(private val context: Context) {
             csvFile?.let { file ->
                 val csvLine = if (sessionMetadata != null) {
 
-                    val sm = sessionMetadata!!
+                    val sm = sessionMetadata
                     val wallClockMs = sm.monotonicToWallClock(stats.timestampNs)
                     val relativeMs = (stats.timestampNs - sm.sessionStartMonotonicNs) / 1_000_000L
 
