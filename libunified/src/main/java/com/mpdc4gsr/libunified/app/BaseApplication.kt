@@ -242,18 +242,22 @@ abstract class BaseApplication : Application() {
         }
     }
 
+    @Suppress("DEPRECATION")
     open fun onLanguageChange() {
+        // Note: For runtime configuration changes at the Application level, updateConfiguration()
+        // must be used even on API 24+. The createConfigurationContext() approach only works
+        // when wrapping contexts during initialization (see attachBaseContext).
+        // While updateConfiguration() is deprecated, it remains the only way to change
+        // app-wide configuration at runtime for the Application context.
         val locale = AppLanguageUtils.getLocaleByLanguage(ConstantLanguages.ENGLISH)
         val config = resources.configuration
         config.setLocale(locale)
         
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            createConfigurationContext(config)
-        } else {
-            @Suppress("DEPRECATION")
-            resources.updateConfiguration(config, resources.displayMetrics)
+            config.setLocales(android.os.LocaleList(locale))
         }
         
+        resources.updateConfiguration(config, resources.displayMetrics)
         SharedManager.setLanguage(baseContext, ConstantLanguages.ENGLISH)
         WebView(this).destroy()
     }

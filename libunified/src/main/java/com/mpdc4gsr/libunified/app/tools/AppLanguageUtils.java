@@ -16,20 +16,23 @@ public class AppLanguageUtils {
         return ConstantLanguages.ENGLISH;
     }
 
+    @SuppressWarnings("deprecation")
     public static void changeAppLanguage(Context context, String newLanguage) {
+        // Note: For runtime configuration changes, updateConfiguration() must be used
+        // even on API 24+. The createConfigurationContext() approach only works when
+        // wrapping contexts during Activity/Application initialization (see attachBaseContext).
+        // While updateConfiguration() is deprecated, it remains the only way to change
+        // app-wide configuration at runtime. Activities should be recreated after calling
+        // this method to fully apply the configuration change.
         Locale locale = Locale.ENGLISH;
-        Configuration configuration = context.getResources().getConfiguration();
+        Resources resources = context.getResources();
+        Configuration configuration = resources.getConfiguration();
         configuration.setLocale(locale);
         
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            context.createConfigurationContext(configuration);
-        } else {
-            updateConfigurationLegacy(context.getResources(), configuration);
+            configuration.setLocales(new LocaleList(locale));
         }
-    }
-    
-    @SuppressWarnings("deprecation")
-    private static void updateConfigurationLegacy(Resources resources, Configuration configuration) {
+        
         resources.updateConfiguration(configuration, resources.getDisplayMetrics());
     }
 
