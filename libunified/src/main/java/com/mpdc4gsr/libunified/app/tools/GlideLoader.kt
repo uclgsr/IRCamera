@@ -4,7 +4,7 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.widget.ImageView
-import com.blankj.utilcode.util.SizeUtils
+import com.mpdc4gsr.libunified.compat.dpToPx
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.MultiTransformation
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
@@ -17,8 +17,8 @@ import kotlinx.coroutines.withContext
 
 object GlideLoader {
 
-    private fun getPhotoOptions(): RequestOptions {
-        val multi = MultiTransformation(CenterCrop(), RoundedCorners(SizeUtils.dp2px(6f)))
+    private fun getPhotoOptions(context: Context): RequestOptions {
+        val multi = MultiTransformation(CenterCrop(), RoundedCorners(6f.dpToPx(context).toInt()))
         return RequestOptions
             .bitmapTransform(multi)
             .error(R.mipmap.ic_default_head)

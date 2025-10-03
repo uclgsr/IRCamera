@@ -23,15 +23,14 @@ import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
 import androidx.core.view.drawToBitmap
 import androidx.core.view.isVisible
-import com.blankj.utilcode.util.SDCardUtils
-import com.blankj.utilcode.util.StringUtils.getString
-import com.blankj.utilcode.util.ThreadUtils
 import com.mpdc4gsr.module.thermalunified.compat.ContextProvider
 import com.mpdc4gsr.module.thermalunified.compat.dpToPx
 import com.mpdc4gsr.module.thermalunified.compat.spToPx
 import com.elvishew.xlog.XLog
 import com.infisense.usbir.view.CameraView
 import com.mpdc4gsr.libunified.app.comm.view.TempLayout
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.isActive
 import com.mpdc4gsr.libunified.app.common.SharedManager
 import com.mpdc4gsr.libunified.app.compose.dialogs.TipDialogState
 import com.mpdc4gsr.libunified.app.config.FileConfig
@@ -45,13 +44,11 @@ import com.mpdc4gsr.libunified.ui.widget.LiteSurfaceView
 import com.mpdc4gsr.module.thermalunified.view.HikSurfaceView
 import com.mpdc4gsr.module.thermalunified.view.TemperatureHikView
 import com.mpdc4gsr.module.thermalunified.view.compass.LinearCompassView
-import io.reactivex.Observable
-import io.reactivex.disposables.Disposable
-import io.reactivex.functions.Consumer
-import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import org.bytedeco.ffmpeg.global.avcodec
 import org.bytedeco.javacv.FFmpegFrameRecorder
@@ -95,21 +92,16 @@ class VideoRecordFFmpeg(
             context: Context,
             videoFile: File? = null,
         ): Boolean {
-            val canStart =
-                (
-                        SDCardUtils.getExternalAvailableSize() - (
-                                videoFile?.length()
-                                    ?: 0
-                                )
-                        ) > (500L * 1000 * 1000)
+            val availableSpace = context.getExternalFilesDir(null)?.usableSpace ?: 0L
+            val canStart = (availableSpace - (videoFile?.length() ?: 0)) > (500L * 1000 * 1000)
             if (!canStart) {
-                ThreadUtils.runOnUiThread {
+                android.os.Handler(android.os.Looper.getMainLooper()).post {
                     val tipDialogState = TipDialogState(context)
                     tipDialogState.show(
-                        title = getString(LibcoreR.string.app_tip),
-                        message = getString(LibcoreR.string.album_report_aleart),
+                        title = context.getString(LibcoreR.string.app_tip),
+                        message = context.getString(LibcoreR.string.album_report_aleart),
                         showCancel = false,
-                        positiveText = getString(LibcoreR.string.app_confirm),
+                        positiveText = context.getString(LibcoreR.string.app_confirm),
                         cancelable = true,
                         onPositive = { }
                     )
@@ -123,10 +115,11 @@ class VideoRecordFFmpeg(
 
     @Volatile
     private var isBitmapChangeTime: Long = 0L
-    private var audioDisposable: Disposable? = null
-    private var bitmapDisposable: Disposable? = null
+    private var audioJob: Job? = null
+    private var bitmapJob: Job? = null
     private var recorder: FFmpegFrameRecorder? = null
-    private var exportDisposable: Disposable? = null
+    private var exportJob: Job? = null
+    private val recordScope = CoroutineScope(Dispatchers.IO)
 
     @Volatile
     private var isRunning = false
@@ -265,24 +258,21 @@ class VideoRecordFFmpeg(
             if (tmpAudioData == null) {
                 tmpAudioData = ShortBuffer.allocate((bufferSize / 2))
             }
-            val recordSchedulers = Schedulers.from(recordExecutor)
-            val bitmapSchedulers = Schedulers.from(bitmapExecutor)
             setBitmap(createBitmapFromView())
             val fTime = 1000L / RATE
-            bitmapDisposable =
-                Observable.interval(fTime, TimeUnit.MILLISECONDS)
-                    .observeOn(bitmapSchedulers)
-                    .subscribe(
-                        Consumer {
-                            val tmp = createBitmapFromView()
-                            tmp?.let {
-                                setBitmap(it)
-                            }
-                        },
-                        Consumer {
-                            Log.e("[ph][ph][ph][ph][ph][ph][ph][ph]", "${it.message}")
-                        },
-                    )
+            bitmapJob = recordScope.launch(Dispatchers.IO) {
+                while (isActive && isRunning) {
+                    try {
+                        val tmp = createBitmapFromView()
+                        tmp?.let {
+                            setBitmap(it)
+                        }
+                    } catch (e: Exception) {
+                        Log.e("[ph][ph][ph][ph][ph][ph][ph][ph]", "${e.message}")
+                    }
+                    delay(fTime)
+                }
+            }
             if (audioRecord == null) {
                 audioRecord =
                     AudioRecord(
@@ -291,88 +281,78 @@ class VideoRecordFFmpeg(
                     )
             }
             startTime = System.currentTimeMillis()
-            val i = 0
-            exportDisposable =
-                Observable.interval(fTime, TimeUnit.MILLISECONDS)
-                    .observeOn(recordSchedulers)
-                    .subscribe(
-                        Consumer {
-                            try {
-                                val currentTimestamp =
-                                    1000L * (System.currentTimeMillis() - startTime)
-                                val frame = Frame(width, height, Frame.DEPTH_BYTE, 4)
-                                frame.image[0] = readByteBuffer()
-                                val t = 1000L * (System.currentTimeMillis() - startTime)
-                                if (t > (recorder?.timestamp ?: 0)) {
-                                    recorder!!.timestamp = t
-                                }
-                                recorder!!.record(frame)
-                                frame.close()
-                                if (System.currentTimeMillis() - queTime > 60 * 1000) {
+            exportJob = recordScope.launch(Dispatchers.IO) {
+                while (isActive && isRunning) {
+                    try {
+                        val currentTimestamp =
+                            1000L * (System.currentTimeMillis() - startTime)
+                        val frame = Frame(width, height, Frame.DEPTH_BYTE, 4)
+                        frame.image[0] = readByteBuffer()
+                        val t = 1000L * (System.currentTimeMillis() - startTime)
+                        if (t > (recorder?.timestamp ?: 0)) {
+                            recorder!!.timestamp = t
+                        }
+                        recorder!!.record(frame)
+                        frame.close()
+                        if (System.currentTimeMillis() - queTime > 60 * 1000) {
 
-                                    if (!canStartVideoRecord(cameraView.context, exportedFile)) {
-                                        exportDisposable?.dispose()
-                                        stopVideoRecordListener?.invoke(false)
-
-                                        return@Consumer
-                                    }
-                                    queTime = System.currentTimeMillis()
-                                }
-                                recorder?.timestamp?.let {
-                                    if (it / 1000 > 60 * 60 * 1000) {
-
-                                        exportDisposable?.dispose()
-                                        stopVideoRecordListener?.invoke(true)
-                                        return@Consumer
-                                    }
-                                }
-                                if (audioRecord == null) {
-                                    return@Consumer
-                                }
-                                val audioTime = System.currentTimeMillis()
-                                if (openAudioRecord) {
-                                    bufferReadResult =
-                                        audioRecord?.read(
-                                            audioData!!.array(),
-                                            0,
-                                            audioData!!.capacity()
-                                        )
-                                            ?: 0
-                                    if (bufferReadResult > 0) {
-                                        audioData?.limit(bufferReadResult)
-                                        if (currentTimestamp > (recorder?.timestamp ?: 0)) {
-                                            recorder!!.timestamp = currentTimestamp
-                                        }
-                                        recorder?.recordSamples(
-                                            SAMPLE_AUDIO_RETE_INHZ,
-                                            AUDIO_CHANNELS, audioData,
-                                        )
-                                    }
-                                } else {
-                                    for (i in 0 until tmpAudioData!!.capacity()) {
-                                        tmpAudioData!!.put(i, 1.toShort())
-                                    }
-
+                            if (!canStartVideoRecord(cameraView.context, exportedFile)) {
+                                exportJob?.cancel()
+                                stopVideoRecordListener?.invoke(false)
+                                break
+                            }
+                            queTime = System.currentTimeMillis()
+                        }
+                        recorder?.timestamp?.let {
+                            if (it / 1000 > 60 * 60 * 1000) {
+                                exportJob?.cancel()
+                                stopVideoRecordListener?.invoke(true)
+                                break
+                            }
+                        }
+                        if (audioRecord != null) {
+                            val audioTime = System.currentTimeMillis()
+                            if (openAudioRecord) {
+                                bufferReadResult =
+                                    audioRecord?.read(
+                                        audioData!!.array(),
+                                        0,
+                                        audioData!!.capacity()
+                                    )
+                                        ?: 0
+                                if (bufferReadResult > 0) {
+                                    audioData?.limit(bufferReadResult)
                                     if (currentTimestamp > (recorder?.timestamp ?: 0)) {
                                         recorder!!.timestamp = currentTimestamp
                                     }
                                     recorder?.recordSamples(
                                         SAMPLE_AUDIO_RETE_INHZ,
-                                        AUDIO_CHANNELS, tmpAudioData,
+                                        AUDIO_CHANNELS, audioData,
                                     )
                                 }
+                            } else {
+                                for (i in 0 until tmpAudioData!!.capacity()) {
+                                    tmpAudioData!!.put(i, 1.toShort())
+                                }
 
-                            } catch (e: Exception) {
-                                Log.e("[ph][ph][ph][ph]", "Caught an exception: " + e.message)
+                                if (currentTimestamp > (recorder?.timestamp ?: 0)) {
+                                    recorder!!.timestamp = currentTimestamp
+                                }
+                                recorder?.recordSamples(
+                                    SAMPLE_AUDIO_RETE_INHZ,
+                                    AUDIO_CHANNELS, tmpAudioData,
+                                )
                             }
-                        },
-                        Consumer {
-                            Log.e("[ph][ph][ph][ph][ph][ph][ph][ph]", "${it.message}")
-                        },
-                    )
+                        }
+                    } catch (e: Exception) {
+                        Log.e("[ph][ph][ph][ph]", "Caught an exception: " + e.message)
+                    }
+                    delay(fTime)
+                }
+            }
         } catch (e: Exception) {
 
-            exportDisposable?.dispose()
+            exportJob?.cancel()
             stopVideoRecordListener?.invoke(false)
             XLog.e("[ph][ph][ph][ph]")
             e.printStackTrace()
@@ -442,22 +422,17 @@ class VideoRecordFFmpeg(
     }
 
     fun canStartVideoRecord(videoFile: File?): Boolean {
-        val canStart =
-            (
-                    SDCardUtils.getExternalAvailableSize() - (
-                            videoFile?.length()
-                                ?: 0
-                            )
-                    ) > (500L * 1000 * 1000)
+        val availableSpace = cameraView.context.getExternalFilesDir(null)?.usableSpace ?: 0L
+        val canStart = (availableSpace - (videoFile?.length() ?: 0)) > (500L * 1000 * 1000)
 
         if (!canStart) {
-            ThreadUtils.runOnUiThread {
+            android.os.Handler(android.os.Looper.getMainLooper()).post {
                 val tipDialogState = TipDialogState(cameraView.context)
                 tipDialogState.show(
-                    title = getString(LibcoreR.string.app_tip),
-                    message = getString(LibcoreR.string.album_report_aleart),
+                    title = cameraView.context.getString(LibcoreR.string.app_tip),
+                    message = cameraView.context.getString(LibcoreR.string.album_report_aleart),
                     showCancel = false,
-                    positiveText = getString(LibcoreR.string.app_confirm),
+                    positiveText = cameraView.context.getString(LibcoreR.string.app_confirm),
                     cancelable = true,
                     onPositive = { }
                 )
@@ -473,27 +448,16 @@ class VideoRecordFFmpeg(
             if (isRunning) {
                 try {
                     launch(Dispatchers.Main) {
-                        exportDisposable?.let {
-                            if (!it.isDisposed) {
-                                it.dispose()
-                            }
-                        }
-                        bitmapDisposable?.let {
-                            if (!it.isDisposed) {
-                                it.dispose()
-                            }
-                        }
+                        exportJob?.cancel()
+                        bitmapJob?.cancel()
+                        
                         if (RECORDSTATE_RECORDING == audioRecord?.recordingState) {
                             audioRecord?.stop()
                             audioRecord?.release()
                             audioRecord = null
                         }
                         bitmapRecycle()
-                        audioDisposable?.let {
-                            if (!it.isDisposed) {
-                                it.dispose()
-                            }
-                        }
+                        audioJob?.cancel()
 
                     }
                     bitmapExecutor.shutdown()

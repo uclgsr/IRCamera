@@ -5,18 +5,19 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
 import androidx.annotation.ColorInt
-import com.blankj.utilcode.util.SizeUtils
+import com.mpdc4gsr.libunified.compat.ContextProvider
+import com.mpdc4gsr.libunified.compat.dpToPx
 import kotlin.math.max
 import kotlin.math.min
 
 class TempDrawHelper {
     companion object {
 
-        private val POINT_SIZE: Int = SizeUtils.dp2px(16f)
+        private val POINT_SIZE: Int by lazy { 16f.dpToPx(ContextProvider.getContext()).toInt() }
 
-        private val CIRCLE_RADIUS: Int = SizeUtils.dp2px(3f)
+        private val CIRCLE_RADIUS: Int by lazy { 3f.dpToPx(ContextProvider.getContext()).toInt() }
 
-        private val TEMP_TEXT_OFFSET = SizeUtils.dp2px(6f)
+        private val TEMP_TEXT_OFFSET: Int by lazy { 6f.dpToPx(ContextProvider.getContext()).toInt() }
 
         fun Float.correctPoint(max: Int): Int = this.toInt()
             .coerceAtLeast(POINT_SIZE / 2)
@@ -51,14 +52,14 @@ class TempDrawHelper {
     private val textPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
     init {
-        linePaint.strokeWidth = SizeUtils.dp2px(1f).toFloat()
+        linePaint.strokeWidth = 1f.dpToPx(ContextProvider.getContext())
         linePaint.color = Color.WHITE
 
         bluePaint.color = Color.BLUE
 
         redPaint.color = Color.RED
 
-        textPaint.textSize = SizeUtils.sp2px(14f).toFloat()
+        textPaint.textSize = 14f * ContextProvider.getContext().resources.displayMetrics.scaledDensity
         textPaint.color = Color.WHITE
 
     }

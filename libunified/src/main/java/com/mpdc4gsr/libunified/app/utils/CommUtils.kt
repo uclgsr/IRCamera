@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.os.Environment
-import com.blankj.utilcode.util.Utils
+import com.mpdc4gsr.libunified.compat.ContextProvider
 import com.elvishew.xlog.XLog
 import java.io.File
 import java.text.SimpleDateFormat
@@ -15,9 +15,9 @@ object CommUtils {
     fun getAppName(): String {
         var msg = ""
         var appInfo: ApplicationInfo? = null
-        appInfo = Utils.getApp().packageManager
+        appInfo = ContextProvider.INSTANCE.getContext().packageManager
             .getApplicationInfo(
-                Utils.getApp().packageName,
+                ContextProvider.INSTANCE.getContext().packageName,
                 PackageManager.GET_META_DATA
             )
         try {

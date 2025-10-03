@@ -13,7 +13,6 @@ import com.mpdc4gsr.libunified.app.lms.Config
 import com.mpdc4gsr.libunified.app.lms.UrlConstants
 import com.mpdc4gsr.libunified.app.lms.utils.SPUtils
 import com.mpdc4gsr.module.thermalunified.compat.ContextProvider
-import io.reactivex.plugins.RxJavaPlugins
 import mpdc4gsr.core.ui.InitUtils.initJPush
 import mpdc4gsr.core.ui.InitUtils.initLms
 import mpdc4gsr.core.ui.InitUtils.initLog
@@ -63,11 +62,7 @@ class App : BaseApplication() {
                 delayInit()
             }
 
-            RxJavaPlugins.setErrorHandler {
-                if (SharedManager.getHasShowClause()) {
-                    XLog.w("[ph][ph][ph][ph]： ${it.message}")
-                }
-            }
+            // RxJava error handling removed - using Kotlin Coroutines exception handling
             if (!isDomestic()) {
 
                 UrlConstants.setBaseUrl("${HttpConfig.HOST}/", false)

@@ -1,9 +1,9 @@
 package com.mpdc4gsr.libunified.app.repository
 
 import android.net.Network
-import com.blankj.utilcode.util.EncryptUtils
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
+import java.security.MessageDigest
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -22,6 +22,19 @@ import java.util.concurrent.TimeUnit
 
 object TS004Repository {
     private fun Any.toBody(): RequestBody = Gson().toJson(this).toRequestBody()
+
+    private fun calculateMD5(file: File): String {
+        val md = MessageDigest.getInstance("MD5")
+        FileInputStream(file).use { fis ->
+            val buffer = ByteArray(8192)
+            var read: Int
+            while (fis.read(buffer).also { read = it } != -1) {
+                md.update(buffer, 0, read)
+            }
+        }
+        val digest = md.digest()
+        return digest.joinToString("") { "%02x".format(it) }
+    }
 
     var netWork: Network? = null
     private fun getOKHttpClient(): OkHttpClient {
@@ -244,7 +257,7 @@ object TS004Repository {
         try {
             val paramMap: HashMap<String, Any> = HashMap()
             paramMap["saveAsFile"] = true
-            paramMap["MD5"] = EncryptUtils.encryptMD5File2String(file).lowercase(Locale.ROOT)
+            paramMap["MD5"] = calculateMD5(file).lowercase(Locale.ROOT)
             paramMap["length"] = file.length()
             getTS004Service().sendUpgradeFileStart(paramMap.toBody()).isSuccess()
         } catch (_: Exception) {
@@ -289,7 +302,7 @@ object TS004Repository {
     private suspend fun sendUpgradeFileEnd(file: File): Boolean = withContext(Dispatchers.IO) {
         try {
             val paramMap: HashMap<String, Any> = HashMap()
-            paramMap["MD5"] = EncryptUtils.encryptMD5File2String(file).lowercase(Locale.ROOT)
+            paramMap["MD5"] = calculateMD5(file).lowercase(Locale.ROOT)
             getTS004Service().sendUpgradeFileEnd(paramMap.toBody()).isSuccess()
         } catch (_: Exception) {
             false

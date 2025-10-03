@@ -16,7 +16,7 @@ import android.graphics.drawable.LayerDrawable
 import android.view.View
 import androidx.annotation.ColorInt
 import androidx.databinding.BindingAdapter
-import com.blankj.utilcode.util.SizeUtils
+import com.mpdc4gsr.libunified.compat.dpToPx
 
 object ViewBindingAdapter {
 
@@ -114,10 +114,10 @@ object ViewBindingAdapter {
         bgCornersLB: Int?,
         bgCornersRB: Int?,
     ) {
-        val lt: Int = SizeUtils.dp2px(bgCornersLT?.toFloat() ?: bgCorners.toFloat())
-        val rt: Int = SizeUtils.dp2px(bgCornersRT?.toFloat() ?: bgCorners.toFloat())
-        val lb: Int = SizeUtils.dp2px(bgCornersLB?.toFloat() ?: bgCorners.toFloat())
-        val rb: Int = SizeUtils.dp2px(bgCornersRB?.toFloat() ?: bgCorners.toFloat())
+        val lt: Int = (bgCornersLT?.toFloat() ?: bgCorners.toFloat()).dpToPx(view.context).toInt()
+        val rt: Int = (bgCornersRT?.toFloat() ?: bgCorners.toFloat()).dpToPx(view.context).toInt()
+        val lb: Int = (bgCornersLB?.toFloat() ?: bgCorners.toFloat()).dpToPx(view.context).toInt()
+        val rb: Int = (bgCornersRB?.toFloat() ?: bgCorners.toFloat()).dpToPx(view.context).toInt()
         val radii =
             floatArrayOf(
                 lt.toFloat(),
@@ -143,7 +143,7 @@ object ViewBindingAdapter {
         @ColorInt color: Int,
     ) {
         val gradientDrawable: GradientDrawable = buildGradientDrawable(view)
-        gradientDrawable.setStroke(SizeUtils.dp2px(width.toFloat()), color)
+        gradientDrawable.setStroke(width.toFloat().dpToPx(view.context).toInt(), color)
         view.background = buildEffectDrawable(view, gradientDrawable)
     }
 

@@ -11,8 +11,8 @@ import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.blankj.utilcode.util.Utils;
 import com.energy.iruvc.utils.CommonParams;
+import com.mpdc4gsr.libunified.compat.ContextProvider;
 
 import java.io.*;
 import java.nio.ByteBuffer;
@@ -85,7 +85,7 @@ public enum FileUtils {
     }
 
     public static String getTableDirPath() {
-        return Utils.getApp().getCacheDir().getAbsolutePath() + "/table";
+        return ContextProvider.INSTANCE.getContext().getCacheDir().getAbsolutePath() + "/table";
     }
 
     public static void saveShortFileForDeviceData(short[] bytes, String fileTitle) {
@@ -436,11 +436,11 @@ public enum FileUtils {
     }
 
     static String INFISENSE_SAVE_DIR() {
-        return Utils.getApp().getExternalFilesDir(Environment.DIRECTORY_PICTURES).getAbsolutePath();
+        return ContextProvider.INSTANCE.getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES).getAbsolutePath();
     }
 
     static String DEVICE_DATA_SAVE_DIR() {
-        return Utils.getApp().getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath();
+        return ContextProvider.INSTANCE.getContext().getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath();
     }
 
     public static String getISPConfigWithEncryptBase64ByGainStatus(CommonParams.GainStatus gainStatus) {

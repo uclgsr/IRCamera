@@ -16,7 +16,6 @@ import android.text.TextUtils
 import android.util.Log
 import android.webkit.WebView
 import androidx.annotation.RequiresApi
-import com.blankj.utilcode.util.LanguageUtils
 import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.bean.event.SocketMsgEvent
 import com.mpdc4gsr.libunified.app.broadcast.DeviceBroadcastReceiver
@@ -29,6 +28,7 @@ import com.mpdc4gsr.libunified.app.tools.ConstantLanguages
 import com.mpdc4gsr.libunified.app.utils.NetWorkUtils
 import com.mpdc4gsr.libunified.app.utils.WifiUtils
 import com.mpdc4gsr.libunified.app.utils.WsCmdConstants
+import com.mpdc4gsr.libunified.compat.ContextProvider
 import com.mpdc4gsr.libunified.model.IRTempConfig
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -62,6 +62,7 @@ abstract class BaseApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         instance = this
+        ContextProvider.init(this)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             webviewSetPath(this)
         }
@@ -247,7 +248,10 @@ abstract class BaseApplication : Application() {
     open fun onLanguageChange() {
 
         val locale = AppLanguageUtils.getLocaleByLanguage(ConstantLanguages.ENGLISH)
-        LanguageUtils.applyLanguage(locale)
+        // Apply language using standard Android Configuration API
+        val config = resources.configuration
+        config.setLocale(locale)
+        resources.updateConfiguration(config, resources.displayMetrics)
         SharedManager.setLanguage(baseContext, ConstantLanguages.ENGLISH)
         WebView(this).destroy()
     }

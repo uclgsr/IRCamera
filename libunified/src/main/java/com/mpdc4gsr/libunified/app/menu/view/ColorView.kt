@@ -10,7 +10,8 @@ import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.View
 import androidx.core.content.ContextCompat
-import com.blankj.utilcode.util.SizeUtils
+import com.mpdc4gsr.libunified.compat.dpToPx
+import com.mpdc4gsr.libunified.compat.spToPx
 import com.mpdc4gsr.libunified.R
 
 class ColorView : View {
@@ -70,7 +71,7 @@ class ColorView : View {
             (width * 73f / 62).toInt() // 62 and 73 from UI design - selected state with border color block aspect ratio 62:73
         val triangleSize: Int =
             (width * 12f / 62).toInt() // 62 and 12 from UI design - triangle width 12, total width 62
-        val margin: Int = SizeUtils.dp2px(4f) // 4dp spacing between color block and triangle
+        val margin: Int = 4f.dpToPx(context) // 4dp spacing between color block and triangle
         val wantHeight: Int = barHeight + margin + triangleSize
         val height =
             when (heightMode) {
@@ -91,12 +92,12 @@ class ColorView : View {
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        val radius: Float = SizeUtils.dp2px(10f).toFloat()
+        val radius: Float = 10f.dpToPx(context).toFloat()
         val barHeight: Int =
             (width * 73f / 62).toInt() // 62 and 73 from UI design - selected state with border color block aspect ratio 62:73
 
         if (isSelected) {
-            val strokeSize: Float = SizeUtils.dp2px(2f).toFloat() // Border width 2dp
+            val strokeSize: Float = 2f.dpToPx(context).toFloat() // Border width 2dp
             val selectBarHeight: Int = (barHeight - strokeSize * 2).toInt()
             paint.shader = null
             canvas.drawRoundRect(
@@ -149,7 +150,7 @@ class ColorView : View {
     }
 
     private fun refreshShader() {
-        val strokeSize: Float = SizeUtils.dp2px(2f).toFloat() // Border width 2dp
+        val strokeSize: Float = 2f.dpToPx(context).toFloat() // Border width 2dp
         val barHeight: Int =
             (measuredWidth * 73f / 62).toInt() // 62 and 73 from UI design - selected state with border color block aspect ratio 62:73
         val selectBarHeight: Int = (barHeight - strokeSize * 2).toInt()

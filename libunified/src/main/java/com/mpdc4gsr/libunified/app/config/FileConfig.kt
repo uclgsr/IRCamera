@@ -3,7 +3,7 @@ package com.mpdc4gsr.libunified.app.config
 import android.content.Context
 import android.os.Build
 import android.os.Environment
-import com.blankj.utilcode.util.Utils
+import com.mpdc4gsr.libunified.compat.ContextProvider
 import com.mpdc4gsr.libunified.app.repository.GalleryRepository.DirType
 import com.mpdc4gsr.libunified.app.utils.CommUtils
 import java.io.File
@@ -43,7 +43,7 @@ object FileConfig {
     }
 
     fun getFirmwareFile(filename: String): File =
-        File(Utils.getApp().getExternalFilesDir("firmware"), filename)
+        File(ContextProvider.INSTANCE.getContext().getExternalFilesDir("firmware"), filename)
 
     @JvmStatic
     fun getPdfDir(): String {
@@ -81,7 +81,7 @@ object FileConfig {
     @JvmStatic
     val gallerySourDir: String
         get() {
-            val result = Utils.getApp()
+            val result = ContextProvider.INSTANCE.getContext()
                 .getExternalFilesDir(Environment.DIRECTORY_PICTURES)!!.absolutePath + File.separator + "MPDC4GSR"
             val file = File(result)
             if (!file.exists()) {
@@ -152,7 +152,7 @@ object FileConfig {
     @JvmStatic
     val lineIrGalleryDir: String
         get() {
-            val dir = Utils.getApp().getExternalFilesDir(Environment.DIRECTORY_DCIM)!!.absolutePath
+            val dir = ContextProvider.INSTANCE.getContext().getExternalFilesDir(Environment.DIRECTORY_DCIM)!!.absolutePath
             val path = dir + File.separator + "${CommUtils.getAppName()}-ir"
             val file = File(path)
             if (!file.exists()) {
@@ -164,7 +164,7 @@ object FileConfig {
     @JvmStatic
     val tc007IrGalleryDir: String
         get() {
-            val dir = Utils.getApp().getExternalFilesDir(Environment.DIRECTORY_DCIM)!!.absolutePath
+            val dir = ContextProvider.INSTANCE.getContext().getExternalFilesDir(Environment.DIRECTORY_DCIM)!!.absolutePath
             val path = dir + File.separator + "TC007-ir"
             val file = File(path)
             if (!file.exists()) {

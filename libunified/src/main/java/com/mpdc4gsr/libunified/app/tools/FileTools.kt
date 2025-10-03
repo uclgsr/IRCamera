@@ -5,7 +5,7 @@ import android.database.Cursor
 import android.net.Uri
 import android.provider.MediaStore
 import androidx.core.content.FileProvider
-import com.blankj.utilcode.util.Utils
+import com.mpdc4gsr.libunified.compat.ContextProvider
 import java.io.File
 
 object FileTools {
@@ -29,12 +29,12 @@ object FileTools {
     }
 
     fun getUri(file: File): Uri {
-        val authority = "${Utils.getApp().packageName}.fileprovider"
-        return FileProvider.getUriForFile(Utils.getApp(), authority, file)
+        val authority = "${ContextProvider.INSTANCE.getContext().packageName}.fileprovider"
+        return FileProvider.getUriForFile(ContextProvider.INSTANCE.getContext(), authority, file)
     }
 
     fun getImagePathFromURI(path: String): Uri? {
-        val cr: ContentResolver = Utils.getApp().contentResolver
+        val cr: ContentResolver = ContextProvider.INSTANCE.getContext().contentResolver
         val buffer = StringBuffer()
         buffer.append("(").append(MediaStore.Images.ImageColumns.DATA)
             .append("=").append("'").append(path).append("'")

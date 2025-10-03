@@ -16,7 +16,7 @@ import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.blankj.utilcode.util.SizeUtils;
+
 import com.energy.iruvc.dual.DualUVCCamera;
 import com.energy.iruvc.sdkisp.LibIRTemp;
 import com.energy.iruvc.utils.DualCameraParams;
@@ -48,7 +48,7 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
     public static final int REGION_NODE_TREND = 4;
     public static final int REGION_MODE_CLEAN = 5;
     private static final String TAG = "TemperatureView";
-    private static final int TOUCH_TOLERANCE = SizeUtils.sp2px(7f);
+    private final int TOUCH_TOLERANCE;
     private final int POINT_MAX_COUNT;
     private final int LINE_MAX_COUNT;
     private final int RECTANGLE_MAX_COUNT;
@@ -127,6 +127,8 @@ public class TemperatureView extends SurfaceView implements SurfaceHolder.Callba
 
     public TemperatureView(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
+
+        TOUCH_TOLERANCE = (int) (7f * context.getResources().getDisplayMetrics().scaledDensity);
 
         setZOrderOnTop(true);
 

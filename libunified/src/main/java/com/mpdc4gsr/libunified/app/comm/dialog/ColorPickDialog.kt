@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.core.content.ContextCompat
-import com.blankj.utilcode.util.SizeUtils
+import com.mpdc4gsr.libunified.compat.dpToPx
 import com.mpdc4gsr.libunified.R
 import com.mpdc4gsr.libunified.app.utils.ColorUtils
 import com.mpdc4gsr.libunified.app.utils.ScreenUtils

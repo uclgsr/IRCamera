@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.StringRes
-import com.blankj.utilcode.util.Utils
+import com.mpdc4gsr.libunified.compat.ContextProvider
 import com.mpdc4gsr.libunified.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -19,7 +19,7 @@ object ToastTools {
     fun showShort(
         @StringRes textStr: Int,
     ) {
-        showShort(Utils.getApp().getString(textStr))
+        showShort(ContextProvider.INSTANCE.getContext().getString(textStr))
     }
 
     fun showShort(textStr: String) {
@@ -33,19 +33,19 @@ object ToastTools {
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             val inflater =
-                Utils.getApp().getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+                ContextProvider.INSTANCE.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             val view = inflater.inflate(R.layout.toast_tip, null)
             val text = view.findViewById(R.id.toast_tip_text) as TextView
             text.text = textStr
-            val screenHeight = Utils.getApp().resources.displayMetrics.heightPixels
+            val screenHeight = ContextProvider.getContext().resources.displayMetrics.heightPixels
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
 
-                mPublicToast = Toast.makeText(Utils.getApp(), textStr, duration)
+                mPublicToast = Toast.makeText(ContextProvider.getContext(), textStr, duration)
                 mPublicToast?.setGravity(Gravity.BOTTOM, 0, screenHeight / 8)
             } else {
 
                 if (mPublicToast == null) {
-                    mPublicToast = Toast(Utils.getApp())
+                    mPublicToast = Toast(ContextProvider.INSTANCE.getContext())
                 }
                 mPublicToast?.duration = duration
                 mPublicToast?.setGravity(Gravity.BOTTOM, 0, screenHeight / 8)

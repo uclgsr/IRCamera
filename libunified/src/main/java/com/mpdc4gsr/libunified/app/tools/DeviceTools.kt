@@ -8,7 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.hardware.usb.UsbDevice
 import android.hardware.usb.UsbManager
-import com.blankj.utilcode.util.Utils
+import com.mpdc4gsr.libunified.compat.ContextProvider
 import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.bean.event.device.DeviceConnectEvent
 import com.mpdc4gsr.libunified.app.bean.event.device.DevicePermissionEvent
@@ -25,7 +25,7 @@ object DeviceTools {
         isSendConnectEvent: Boolean = false,
         isAutoRequest: Boolean = true,
     ): Boolean {
-        val usbManager = Utils.getApp().getSystemService(Context.USB_SERVICE) as UsbManager
+        val usbManager = ContextProvider.INSTANCE.getContext().getSystemService(Context.USB_SERVICE) as UsbManager
         val deviceList: HashMap<String, UsbDevice> = usbManager.deviceList
         for (usbDevice in deviceList.values) {
             if (usbDevice.isTcTsDevice()) {
@@ -48,7 +48,7 @@ object DeviceTools {
     }
 
     fun findUsbDevice(): UsbDevice? {
-        val usbManager = Utils.getApp().getSystemService(Context.USB_SERVICE) as UsbManager
+        val usbManager = ContextProvider.INSTANCE.getContext().getSystemService(Context.USB_SERVICE) as UsbManager
         val deviceList: HashMap<String, UsbDevice> = usbManager.deviceList
         for (usbDevice in deviceList.values) {
             if (usbDevice.isTcTsDevice()) {
@@ -75,7 +75,7 @@ object DeviceTools {
     }
 
     fun isTC001PlusConnect(): Boolean {
-        val usbManager = Utils.getApp().getSystemService(Context.USB_SERVICE) as UsbManager
+        val usbManager = ContextProvider.INSTANCE.getContext().getSystemService(Context.USB_SERVICE) as UsbManager
         val deviceList: HashMap<String, UsbDevice> = usbManager.deviceList
         var usbCameraNumber = 0
         var isTcTsDev = false
@@ -91,7 +91,7 @@ object DeviceTools {
     }
 
     fun isTC001LiteConnect(): Boolean {
-        val usbManager = Utils.getApp().getSystemService(Context.USB_SERVICE) as UsbManager
+        val usbManager = ContextProvider.INSTANCE.getContext().getSystemService(Context.USB_SERVICE) as UsbManager
         val deviceList: HashMap<String, UsbDevice> = usbManager.deviceList
         for (usbDevice in deviceList.values) {
             if (usbDevice.isTcLiteDevice()) {
@@ -103,7 +103,7 @@ object DeviceTools {
 
     fun isHikConnect(): Boolean {
         val usbManager: UsbManager =
-            Utils.getApp().getSystemService(Context.USB_SERVICE) as UsbManager
+            ContextProvider.INSTANCE.getContext().getSystemService(Context.USB_SERVICE) as UsbManager
         for (usbDevice in usbManager.deviceList.values) {
             if (usbDevice.isHik256()) {
                 return true
@@ -117,7 +117,7 @@ object DeviceTools {
         requestCode: Int,
         device: UsbDevice,
     ) {
-        val usbManager = Utils.getApp().getSystemService(Context.USB_SERVICE) as UsbManager
+        val usbManager = ContextProvider.INSTANCE.getContext().getSystemService(Context.USB_SERVICE) as UsbManager
         val intent = Intent(DeviceBroadcastReceiver.ACTION_USB_PERMISSION)
         val flag = PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         val pendingIntent = PendingIntent.getBroadcast(activity, requestCode, intent, flag)

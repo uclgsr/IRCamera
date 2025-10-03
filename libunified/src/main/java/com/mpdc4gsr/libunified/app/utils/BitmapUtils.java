@@ -9,7 +9,7 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.blankj.utilcode.util.SizeUtils;
+import com.mpdc4gsr.libunified.compat.ContextProvider;
 import com.mpdc4gsr.libunified.app.listener.BitmapViewListener;
 
 import java.io.*;
@@ -250,19 +250,19 @@ public enum BitmapUtils {
         canvas.save();
         TextPaint paint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
         paint.setColor(Color.WHITE); //
-        paint.setTextSize(SizeUtils.sp2px(12));
+        paint.setTextSize(((int) (12 * ContextProvider.INSTANCE.getContext().getResources().getDisplayMetrics().scaledDensity)));
         paint.setDither(true);
         paint.setFilterBitmap(true);
         Rect rectText = new Rect();  //text， ：
         paint.getTextBounds("", 0, "".length(), rectText);
-        double beginX = SizeUtils.dp2px(10);  //451.414
-        double beginY = bmp.getHeight() - SizeUtils.dp2px(10);
+        double beginX = ((int) (10 * ContextProvider.INSTANCE.getContext().getResources().getDisplayMetrics().density));  //451.414
+        double beginY = bmp.getHeight() - ((int) (10 * ContextProvider.INSTANCE.getContext().getResources().getDisplayMetrics().density));
         if (!TextUtils.isEmpty(time)) {
             beginY = beginY - (rectText.bottom - rectText.top);
             canvas.drawText(time, (int) beginX, (int) beginY, paint);
-            beginY -= SizeUtils.dp2px(6);
+            beginY -= ((int) (6 * ContextProvider.INSTANCE.getContext().getResources().getDisplayMetrics().density));
         }
-        int lineWidth = bmp.getWidth() - SizeUtils.dp2px(20) - seekBarWidth;//
+        int lineWidth = bmp.getWidth() - ((int) (20 * ContextProvider.INSTANCE.getContext().getResources().getDisplayMetrics().density)) - seekBarWidth;//
         if (!TextUtils.isEmpty(address)) {
             int textHeight = (rectText.bottom - rectText.top);
             paint.getTextBounds(address, 0, address.length(), rectText);
@@ -271,7 +271,7 @@ public enum BitmapUtils {
                 StaticLayout staticLayout = new StaticLayout(address,
                         paint, lineWidth,
                         Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
-                beginY = beginY - (textHeight + SizeUtils.dp2px(1.0f)) * staticLayout.getLineCount();
+                beginY = beginY - (textHeight + ((int) (1.0f * ContextProvider.INSTANCE.getContext().getResources().getDisplayMetrics().density))) * staticLayout.getLineCount();
                 canvas.save();
                 canvas.translate((int) beginX, (int) beginY - textHeight);
                 staticLayout.draw(canvas);
@@ -280,7 +280,7 @@ public enum BitmapUtils {
                 beginY = beginY - textHeight;
                 canvas.drawText(address, (int) beginX, (int) beginY, paint);
             }
-            beginY -= SizeUtils.dp2px(6);
+            beginY -= ((int) (6 * ContextProvider.INSTANCE.getContext().getResources().getDisplayMetrics().density));
         }
         if (!TextUtils.isEmpty(title)) {
             int textHeight = (rectText.bottom - rectText.top);
@@ -299,7 +299,7 @@ public enum BitmapUtils {
                 beginY = beginY - textHeight;
                 canvas.drawText(title, (int) beginX, (int) beginY, paint);
             }
-            beginY -= SizeUtils.dp2px(6);
+            beginY -= ((int) (6 * ContextProvider.INSTANCE.getContext().getResources().getDisplayMetrics().density));
         }
         canvas.restore();
         return newBmp;

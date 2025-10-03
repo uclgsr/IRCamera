@@ -7,18 +7,21 @@ import com.mpdc4gsr.libunified.app.utils.BitmapUtils
 import com.mpdc4gsr.libunified.ir.view.TemperatureView
 import com.mpdc4gsr.module.thermalunified.video.media.Encoder
 import com.mpdc4gsr.module.thermalunified.video.media.MP4Encoder
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
 import java.io.File
 import java.util.*
-import java.util.concurrent.TimeUnit
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 
 class VideoRecordMedia(
     private var cameraView: CameraView,
     private var temperatureView: TemperatureView,
 ) : VideoRecord() {
-    private lateinit var exportDisposable: Disposable
+    private var exportJob: Job? = null
+    private val coroutineScope = CoroutineScope(Dispatchers.Default)
     private var encoder: Encoder = MP4Encoder()
     private var isRunning = false
 
@@ -47,15 +50,13 @@ class VideoRecordMedia(
         encoder.startEncode()
         isRunning = true
 
-        exportDisposable =
-            Observable.interval(50, TimeUnit.MILLISECONDS)
-                .map {
-                    createBitmapFromView()
-                }
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    encoder.addFrame(it)
-                }
+        exportJob = coroutineScope.launch {
+            while (isActive && isRunning) {
+                val bitmap = createBitmapFromView()
+                encoder.addFrame(bitmap)
+                delay(50)
+            }
+        }
     }
 
     override fun startRecord(fileDir: String) {
@@ -64,7 +65,7 @@ class VideoRecordMedia(
     override fun stopRecord() {
         if (isRunning) {
             encoder.stopEncode()
-            exportDisposable.dispose()
+            exportJob?.cancel()
         }
         isRunning = false
     }

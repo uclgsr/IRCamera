@@ -1,6 +1,5 @@
 package com.mpdc4gsr.module.thermalunified.frame
 
-import com.blankj.utilcode.util.AppUtils
 import com.mpdc4gsr.libunified.app.bean.AlarmBean
 import com.mpdc4gsr.module.thermalunified.compat.ContextProvider
 import com.mpdc4gsr.module.thermalunified.compat.spToPx
@@ -43,7 +42,15 @@ class FrameStruct() {
             val nameBytes = name.toBytes(16)
             System.arraycopy(nameBytes, 0, resultArray, 2, nameBytes.size)
 
-            val verBytes = AppUtils.getAppVersionName().toBytes(8)
+            val versionName = try {
+                val packageInfo = ContextProvider.getContext().packageManager.getPackageInfo(
+                    ContextProvider.getContext().packageName, 0
+                )
+                packageInfo.versionName ?: ""
+            } catch (e: Exception) {
+                ""
+            }
+            val verBytes = versionName.toBytes(8)
             System.arraycopy(verBytes, 0, resultArray, 18, verBytes.size)
 
             resultArray[26] = (width ushr 8).toByte()
