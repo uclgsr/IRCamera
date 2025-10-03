@@ -19,9 +19,37 @@ import mpdc4gsr.core.ui.InitUtils.initLog
 import mpdc4gsr.core.ui.InitUtils.initReceiver
 import mpdc4gsr.core.ui.InitUtils.initUM
 
+/**
+ * Application class for IRCamera.
+ * 
+ * ANTI-PATTERN WARNING: Static Application instance
+ * This class uses a static `instance` reference which is an anti-pattern that:
+ * - Creates tight coupling between components
+ * - Makes testing difficult
+ * - Hides dependencies
+ * - Can lead to memory leaks if misused
+ * 
+ * TODO: Migrate to Hilt Dependency Injection (Estimated: 16-24 hours)
+ * 
+ * Migration Plan:
+ * 1. Add Hilt dependencies to build.gradle.kts
+ * 2. Annotate this class with @HiltAndroidApp
+ * 3. Create @Module classes for dependencies
+ * 4. Replace getInstance() calls with constructor injection
+ * 5. Update Activities/Fragments to use @AndroidEntryPoint
+ * 6. Remove static instance reference
+ * 
+ * For now, ContextProvider is available as a safer alternative for accessing
+ * application context in most cases.
+ */
 class App : BaseApplication() {
 
     companion object {
+        @Deprecated(
+            message = "Use dependency injection instead of static instance",
+            replaceWith = ReplaceWith("Use Hilt @Inject or ContextProvider.getContext()"),
+            level = DeprecationLevel.WARNING
+        )
         lateinit var instance: App
 
         fun delayInit() {

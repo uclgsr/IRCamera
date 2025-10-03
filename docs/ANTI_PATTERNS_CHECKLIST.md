@@ -303,8 +303,47 @@ interface UserDao {
 }
 ```
 
+## Static Analysis Tools
+
+### Detekt (Recommended)
+
+A configuration file has been created at `detekt-config.yml` to help catch anti-patterns automatically.
+
+To add Detekt to the project:
+
+```kotlin
+// In build.gradle.kts (root level)
+plugins {
+    id("io.gitlab.arturbosch.detekt") version "1.23.4" apply false
+}
+
+// In app/build.gradle.kts
+plugins {
+    id("io.gitlab.arturbosch.detekt")
+}
+
+detekt {
+    config = files("../detekt-config.yml")
+    buildUponDefaultConfig = true
+    allRules = false
+}
+```
+
+Run analysis:
+```bash
+./gradlew detekt
+```
+
+### Lint
+
+Improved lint configuration has been applied:
+- `abortOnError = true` - Fails build on errors
+- `checkReleaseBuilds = true` - Checks release builds
+- Only essential rules disabled with justification
+
 ## Resources
 
 - Full analysis: `docs/ANTI_PATTERNS_ANALYSIS.md`
 - ANR prevention: `docs/ANR_PREVENTION_GUIDE.md`
 - Migration history: `MIGRATION_COMPLETE_SUMMARY.md`
+- Detekt config: `detekt-config.yml`
