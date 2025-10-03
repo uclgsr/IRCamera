@@ -56,7 +56,7 @@ public class USBMonitorDualManager {
                      int vlPid, int vlFPS, int vlWidth, int vlHeight, float vlBandWith, IFrameCallback frameCallback) {
         this.mVlIFrameCallback = frameCallback;
         if (mUSBMonitor == null) {
-            mUSBMonitor = new USBMonitor(ContextProvider.INSTANCE.getContext(),
+            mUSBMonitor = new USBMonitor(ContextProvider.getContext(),
                     new USBMonitor.OnDeviceConnectListener() {
 
                         @Override

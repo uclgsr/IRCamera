@@ -71,7 +71,7 @@ class ColorView : View {
             (width * 73f / 62).toInt() // 62 and 73 from UI design - selected state with border color block aspect ratio 62:73
         val triangleSize: Int =
             (width * 12f / 62).toInt() // 62 and 12 from UI design - triangle width 12, total width 62
-        val margin: Int = 4f.dpToPx(context) // 4dp spacing between color block and triangle
+        val margin: Int = 4f.dpToPx(context).toInt() // 4dp spacing between color block and triangle
         val wantHeight: Int = barHeight + margin + triangleSize
         val height =
             when (heightMode) {

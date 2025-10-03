@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.core.content.ContextCompat
 import com.mpdc4gsr.libunified.compat.dpToPx
+import com.mpdc4gsr.libunified.compat.spToPx
 import com.mpdc4gsr.libunified.R
 import com.mpdc4gsr.libunified.app.utils.ColorUtils
 import com.mpdc4gsr.libunified.app.utils.ScreenUtils
@@ -135,8 +136,8 @@ class ColorPickDialog(
     ): Float {
         // Always use default behavior, TC007 functionality removed
         return when (size) {
-            SizeUtils.sp2px(14f) -> 0f
-            SizeUtils.sp2px(16f) -> 50f
+            14f.spToPx(context).toInt() -> 0f
+            16f.spToPx(context).toInt() -> 50f
             else -> 100f
         }
     }

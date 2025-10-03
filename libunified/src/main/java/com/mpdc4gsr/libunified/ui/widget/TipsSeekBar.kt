@@ -152,7 +152,7 @@ class TipsSeekBar : ViewGroup, SeekBar.OnSeekBarChangeListener {
         }
 
         val height =
-            tvTips.measuredHeight + 5f.dpToPx(context) + (seekBar.thumb?.intrinsicHeight
+            tvTips.measuredHeight + 5f.dpToPx(context).toInt() + (seekBar.thumb?.intrinsicHeight
                 ?: seekBar.measuredHeight)
         setMeasuredDimension(width, if (heightMode == MeasureSpec.EXACTLY) heightSize else height)
     }
@@ -164,7 +164,7 @@ class TipsSeekBar : ViewGroup, SeekBar.OnSeekBarChangeListener {
             val childHeight = child.measuredHeight
             when (child) {
                 seekBar -> {
-                    val top = paddingTop + tvTips.measuredHeight + 5f.dpToPx(context)
+                    val top = paddingTop + tvTips.measuredHeight + 5f.dpToPx(context).toInt()
                     val left = (measuredWidth - childWidth) / 2
                     child.layout(left, top, left + childWidth, top + childHeight)
                 }
@@ -180,13 +180,13 @@ class TipsSeekBar : ViewGroup, SeekBar.OnSeekBarChangeListener {
                 }
 
                 tvMin -> {
-                    val baseTop = paddingTop + tvTips.measuredHeight + 5f.dpToPx(context)
+                    val baseTop = paddingTop + tvTips.measuredHeight + 5f.dpToPx(context).toInt()
                     val top = baseTop + (seekBar.measuredHeight - childHeight) / 2
                     child.layout(paddingStart, top, paddingStart + childWidth, top + childHeight)
                 }
 
                 tvMax -> {
-                    val baseTop = paddingTop + tvTips.measuredHeight + 5f.dpToPx(context)
+                    val baseTop = paddingTop + tvTips.measuredHeight + 5f.dpToPx(context).toInt()
                     val top = baseTop + (seekBar.measuredHeight - childHeight) / 2
                     val left = measuredWidth - paddingEnd - childWidth
                     child.layout(left, top, left + childWidth, top + childHeight)

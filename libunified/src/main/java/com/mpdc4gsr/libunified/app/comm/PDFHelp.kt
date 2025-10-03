@@ -95,14 +95,13 @@ object PDFHelp {
                 FileConfig.getPdfDir(),
             )
             val contentUri = MediaStore.Files.getContentUri("external")
-            val uri = ContextProvider.INSTANCE.getContext().contentResolver.insert(contentUri, values)
+            val uri = ContextProvider.getContext().contentResolver.insert(contentUri, values)
             return if (uri != null) {
-                val outputStream = ContextProvider.INSTANCE.getContext().contentResolver.openOutputStream(uri)
+                val outputStream = ContextProvider.getContext().contentResolver.openOutputStream(uri)
                 if (outputStream != null) {
-                    val bos = BufferedOutputStream(outputStream)
-                    pdfDocument.writeTo(bos)
-                    bos.flush()
-                    bos.close()
+                    pdfDocument.writeTo(outputStream)
+                    outputStream.flush()
+                    outputStream.close()
                 }
                 val documentFile = DocumentFile.fromSingleUri(ContextProvider.getContext(), uri)
                 val filePath = uri.toString()
