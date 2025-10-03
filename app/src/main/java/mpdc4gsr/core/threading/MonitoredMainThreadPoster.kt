@@ -40,16 +40,16 @@ object MonitoredMainThreadPoster {
     
     fun getStatistics(): PostStatistics {
         return PostStatistics(
-            totalPosts = totalPosts,
-            slowPosts = slowPosts,
-            criticalPosts = criticalPosts
+            totalPosts = totalPosts.get(),
+            slowPosts = slowPosts.get(),
+            criticalPosts = criticalPosts.get()
         )
     }
     
     fun resetStatistics() {
-        totalPosts = 0
-        slowPosts = 0
-        criticalPosts = 0
+        totalPosts.set(0)
+        slowPosts.set(0)
+        criticalPosts.set(0)
     }
     
     private class MonitoredRunnable(
@@ -58,7 +58,7 @@ object MonitoredMainThreadPoster {
     ) : Runnable {
         override fun run() {
             val startTime = System.nanoTime()
-            totalPosts++
+            totalPosts.incrementAndGet()
             
             try {
                 wrapped.run()
@@ -70,7 +70,7 @@ object MonitoredMainThreadPoster {
                 
                 when {
                     executionTime > CRITICAL_THRESHOLD_MS -> {
-                        criticalPosts++
+                        criticalPosts.incrementAndGet()
                         Log.e(
                             TAG,
                             "[$componentName] CRITICAL ANR RISK: Main thread blocked for ${executionTime}ms! " +
@@ -78,7 +78,7 @@ object MonitoredMainThreadPoster {
                         )
                     }
                     executionTime > WARNING_THRESHOLD_MS -> {
-                        slowPosts++
+                        slowPosts.incrementAndGet()
                         Log.w(
                             TAG,
                             "[$componentName] WARNING: Main thread operation took ${executionTime}ms. " +
