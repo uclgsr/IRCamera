@@ -44,12 +44,12 @@ class ConfigEmAdapter(val context: Context) : RecyclerView.Adapter<ConfigEmAdapt
         val tvEmNum: TextView = rootView.findViewById(R.id.tv_em_num)
     }
 
-    private class EmBgDrawable(val drawRight: Boolean, val drawBottom: Boolean) : Drawable() {
+    private inner class EmBgDrawable(val drawRight: Boolean, val drawBottom: Boolean) : Drawable() {
         private val paint = Paint()
 
         init {
             paint.color = 0xff5b5961.toInt()
-            paint.strokeWidth = 1f.dpToPx(context).coerceAtLeast(1).toFloat()
+            paint.strokeWidth = 1f.dpToPx(context).coerceAtLeast(1f).toFloat()
         }
 
         override fun draw(canvas: Canvas) {
