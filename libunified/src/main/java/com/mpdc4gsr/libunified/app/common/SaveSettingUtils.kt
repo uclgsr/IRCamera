@@ -1,5 +1,6 @@
 package com.mpdc4gsr.libunified.app.common
 
+import android.util.TypedValue
 import com.mpdc4gsr.libunified.compat.SPUtils
 import com.google.gson.Gson
 import com.mpdc4gsr.libunified.compat.ContextProvider
@@ -283,10 +284,13 @@ object SaveSettingUtils {
         }
 
     var tempTextSize: Int
-        @Suppress("DEPRECATION")
         get() {
             val context = ContextProvider.getContext()
-            val defaultSize = (14f * context.resources.displayMetrics.scaledDensity).toInt()
+            val defaultSize = TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_SP,
+                14f,
+                context.resources.displayMetrics
+            ).toInt()
             return if (isSaveSetting) {
                 SPUtils.getInstance(SP_NAME)
                     .getInt("tempTextSize", defaultSize)

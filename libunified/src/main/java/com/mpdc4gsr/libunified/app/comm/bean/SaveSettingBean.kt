@@ -1,5 +1,6 @@
 package com.mpdc4gsr.libunified.app.comm.bean
 
+import android.util.TypedValue
 import com.mpdc4gsr.libunified.compat.ContextProvider
 import com.mpdc4gsr.libunified.compat.SPUtils
 import com.google.gson.Gson
@@ -202,9 +203,13 @@ class SaveSettingBean(private val isWifi: Boolean = false) {
             }
         }
 
-    @Suppress("DEPRECATION")
     var tempTextSize: Int = run {
-        val defaultSize = (14f * ContextProvider.getContext().resources.displayMetrics.scaledDensity).toInt()
+        val context = ContextProvider.getContext()
+        val defaultSize = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_SP,
+            14f,
+            context.resources.displayMetrics
+        ).toInt()
         if (isSaveSetting) getSPUtils().getInt("tempTextSize", defaultSize) else defaultSize
     }
         set(value) {
@@ -214,9 +219,13 @@ class SaveSettingBean(private val isWifi: Boolean = false) {
             }
         }
 
-    @Suppress("DEPRECATION")
     fun isTempTextDefault(): Boolean {
-        val defaultSize = (14f * ContextProvider.getContext().resources.displayMetrics.scaledDensity).toInt()
+        val context = ContextProvider.getContext()
+        val defaultSize = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_SP,
+            14f,
+            context.resources.displayMetrics
+        ).toInt()
         return tempTextColor == 0xffffffff.toInt() && tempTextSize == defaultSize
     }
 
