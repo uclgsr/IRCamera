@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
+import coil.load
 
 import com.mpdc4gsr.libunified.app.bean.HouseRepPreviewAlbumItemBean
 import com.mpdc4gsr.module.thermalunified.R
@@ -40,7 +40,7 @@ class ReportPreviewAlbumAdapter(
     ) {
         val bean = dataList[position]
         if (holder is ItemView) {
-            Glide.with(cxt).load(bean.photoPath).into(holder.rivPhoto)
+            holder.rivPhoto.load(bean.photoPath)
             holder.tvName.text = bean.title
             holder.rivPhoto.setOnClickListener {
                 jumpListener?.invoke(bean, position)

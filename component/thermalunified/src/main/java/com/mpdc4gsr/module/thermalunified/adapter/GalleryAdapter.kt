@@ -9,7 +9,7 @@ import android.widget.ImageView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.mpdc4gsr.libunified.app.bean.GalleryBean
-import com.mpdc4gsr.libunified.app.tools.GlideLoader
+import com.mpdc4gsr.libunified.app.tools.CoilLoader
 import com.mpdc4gsr.module.thermalunified.R
 
 class GalleryAdapter(val context: Context) :
@@ -77,7 +77,7 @@ class GalleryAdapter(val context: Context) :
         position: Int,
     ) {
         if (holder is ItemView) {
-            GlideLoader.load(holder.img, datas[position])
+            CoilLoader.load(holder.img, datas[position])
             holder.lay.setOnClickListener {
                 Log.w("123", ": ${datas[position]}")
                 listener?.onClick(position, datas[position])
