@@ -13,7 +13,7 @@ import android.util.Log
 import android.view.View
 import android.widget.ScrollView
 import androidx.core.content.ContextCompat
-import com.blankj.utilcode.util.UriUtils
+import androidx.documentfile.provider.DocumentFile
 import com.blankj.utilcode.util.Utils
 import com.mpdc4gsr.libunified.R
 import com.mpdc4gsr.libunified.app.config.FileConfig
@@ -104,8 +104,10 @@ object PDFHelp {
                     bos.flush()
                     bos.close()
                 }
-                Log.w("[ph][ph]", UriUtils.uri2File(uri).absolutePath)
-                UriUtils.uri2File(uri).absolutePath
+                val documentFile = DocumentFile.fromSingleUri(Utils.getApp(), uri)
+                val filePath = uri.toString()
+                Log.w("[ph][ph]", filePath)
+                filePath
             } else {
                 ""
             }

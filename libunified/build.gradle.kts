@@ -166,6 +166,7 @@ dependencies {
     api(files("../app/libs/libcommon_1.2.0_24052117.aar"))
 
     api(libs.androidx.appcompat)
+    api(libs.androidx.documentfile)
     api(libs.androidx.preference)
     api(libs.fragment.ktx)
     api(libs.androidx.activity.ktx)
