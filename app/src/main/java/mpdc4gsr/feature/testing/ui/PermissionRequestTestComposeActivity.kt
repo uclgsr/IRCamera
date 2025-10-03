@@ -4,6 +4,8 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
+import mpdc4gsr.core.utils.AppLogger
+import mpdc4gsr.core.utils.ErrorHandler
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
@@ -574,11 +576,11 @@ class PermissionRequestTestComposeActivity : BaseComposeActivity<PermissionReque
         val timestamp = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date())
         val log = PermissionLog(timestamp, action, permission, result)
         // In a real implementation, this would update the state properly
-        Log.d(TAG, "Permission log: $log")
+        AppLogger.d(TAG, "Permission log: $log")
     }
 
     private suspend fun runAllPermissionTests() {
-        Log.i(TAG, "Running all permission tests")
+        AppLogger.i(TAG, "Running all permission tests")
 
         try {
             testCameraPermissions()
@@ -599,69 +601,69 @@ class PermissionRequestTestComposeActivity : BaseComposeActivity<PermissionReque
             testPermissionPersistence()
 
         } catch (e: Exception) {
-            Log.e(TAG, "Permission tests failed: ${e.message}")
+            AppLogger.e(TAG, "Permission tests failed: ${e.message}")
         } finally {
             isTestRunning = false
         }
     }
 
     private suspend fun testCameraPermissions() {
-        Log.d(TAG, "Testing camera permissions")
+        AppLogger.d(TAG, "Testing camera permissions")
         try {
             delay(2000)
-            Log.d(TAG, "Camera permissions test completed")
+            AppLogger.d(TAG, "Camera permissions test completed")
         } catch (e: Exception) {
-            Log.e(TAG, "Camera permissions test failed: ${e.message}")
+            AppLogger.e(TAG, "Camera permissions test failed: ${e.message}")
         }
     }
 
     private suspend fun testBluetoothPermissions() {
-        Log.d(TAG, "Testing Bluetooth permissions")
+        AppLogger.d(TAG, "Testing Bluetooth permissions")
         try {
             delay(2000)
-            Log.d(TAG, "Bluetooth permissions test completed")
+            AppLogger.d(TAG, "Bluetooth permissions test completed")
         } catch (e: Exception) {
-            Log.e(TAG, "Bluetooth permissions test failed: ${e.message}")
+            AppLogger.e(TAG, "Bluetooth permissions test failed: ${e.message}")
         }
     }
 
     private suspend fun testStoragePermissions() {
-        Log.d(TAG, "Testing storage permissions")
+        AppLogger.d(TAG, "Testing storage permissions")
         try {
             delay(2000)
-            Log.d(TAG, "Storage permissions test completed")
+            AppLogger.d(TAG, "Storage permissions test completed")
         } catch (e: Exception) {
-            Log.e(TAG, "Storage permissions test failed: ${e.message}")
+            AppLogger.e(TAG, "Storage permissions test failed: ${e.message}")
         }
     }
 
     private suspend fun testMicrophonePermissions() {
-        Log.d(TAG, "Testing microphone permissions")
+        AppLogger.d(TAG, "Testing microphone permissions")
         try {
             delay(2000)
-            Log.d(TAG, "Microphone permissions test completed")
+            AppLogger.d(TAG, "Microphone permissions test completed")
         } catch (e: Exception) {
-            Log.e(TAG, "Microphone permissions test failed: ${e.message}")
+            AppLogger.e(TAG, "Microphone permissions test failed: ${e.message}")
         }
     }
 
     private suspend fun testPermissionFlow() {
-        Log.d(TAG, "Testing permission flow")
+        AppLogger.d(TAG, "Testing permission flow")
         try {
             delay(3000)
-            Log.d(TAG, "Permission flow test completed")
+            AppLogger.d(TAG, "Permission flow test completed")
         } catch (e: Exception) {
-            Log.e(TAG, "Permission flow test failed: ${e.message}")
+            AppLogger.e(TAG, "Permission flow test failed: ${e.message}")
         }
     }
 
     private suspend fun testPermissionPersistence() {
-        Log.d(TAG, "Testing permission persistence")
+        AppLogger.d(TAG, "Testing permission persistence")
         try {
             delay(2000)
-            Log.d(TAG, "Permission persistence test completed")
+            AppLogger.d(TAG, "Permission persistence test completed")
         } catch (e: Exception) {
-            Log.e(TAG, "Permission persistence test failed: ${e.message}")
+            AppLogger.e(TAG, "Permission persistence test failed: ${e.message}")
         }
     }
 

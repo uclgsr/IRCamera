@@ -1,6 +1,8 @@
 package mpdc4gsr.core.ui
 
 import android.util.Log
+import mpdc4gsr.core.utils.AppLogger
+import mpdc4gsr.core.utils.ErrorHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -52,7 +54,7 @@ object ComposePerformanceMonitor {
         LaunchedEffect(Unit) {
             recompositionCount.intValue++
             _recompositionCount.value = _recompositionCount.value + 1
-            Log.d(TAG, "$name recomposed ${recompositionCount.intValue} times")
+            AppLogger.d(TAG, "$name recomposed ${recompositionCount.intValue} times")
         }
 
         content()
@@ -75,7 +77,7 @@ object ComposePerformanceMonitor {
             _frameTimeMs.value = duration
 
             recordMetric(name, duration)
-            Log.d(TAG, "$name composition took ${duration}ms")
+            AppLogger.d(TAG, "$name composition took ${duration}ms")
         }
 
         return result
@@ -89,7 +91,7 @@ object ComposePerformanceMonitor {
         val usedMemory = (runtime.totalMemory() - runtime.freeMemory()) / 1024 / 1024
         _memoryUsageMb.value = usedMemory.toFloat()
 
-        Log.d(TAG, "$operationName memory usage: ${usedMemory}MB")
+        AppLogger.d(TAG, "$operationName memory usage: ${usedMemory}MB")
     }
 
     /**
@@ -100,7 +102,7 @@ object ComposePerformanceMonitor {
         _navigationLatencyMs.value = latency
 
         recordMetric("navigation_$route", latency)
-        Log.d(TAG, "Navigation to $route took ${latency}ms")
+        AppLogger.d(TAG, "Navigation to $route took ${latency}ms")
     }
 
     /**
@@ -127,7 +129,7 @@ object ComposePerformanceMonitor {
         }
 
         if (drawTime > 16) { // Frame budget is 16ms for 60fps
-            Log.w(TAG, "$name draw took ${drawTime}ms (potential jank)")
+            AppLogger.w(TAG, "$name draw took ${drawTime}ms (potential jank)")
         }
     }
 }
@@ -245,7 +247,7 @@ object SensorDataPerformanceTracker {
     }
 
     fun trackThermalImageProcessing(imageSize: String, processingTimeMs: Long) {
-        Log.d("SensorPerformance", "Thermal image processing: $imageSize in ${processingTimeMs}ms")
+        AppLogger.d("SensorPerformance", "Thermal image processing: $imageSize in ${processingTimeMs}ms")
 
         if (processingTimeMs > 200) {
             Log.w(
@@ -256,10 +258,10 @@ object SensorDataPerformanceTracker {
     }
 
     fun trackNavigationPerformance(fromRoute: String, toRoute: String, transitionTimeMs: Long) {
-        Log.d("SensorPerformance", "Navigation from $fromRoute to $toRoute: ${transitionTimeMs}ms")
+        AppLogger.d("SensorPerformance", "Navigation from $fromRoute to $toRoute: ${transitionTimeMs}ms")
 
         if (transitionTimeMs > 300) {
-            Log.w("SensorPerformance", "Navigation slower than expected: ${transitionTimeMs}ms")
+            AppLogger.w("SensorPerformance", "Navigation slower than expected: ${transitionTimeMs}ms")
         }
     }
 }

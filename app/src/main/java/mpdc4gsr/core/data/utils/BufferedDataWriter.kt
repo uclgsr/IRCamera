@@ -1,6 +1,8 @@
 package mpdc4gsr.core.data.utils
 
 import android.util.Log
+import mpdc4gsr.core.utils.AppLogger
+import mpdc4gsr.core.utils.ErrorHandler
 import kotlinx.coroutines.*
 import java.io.BufferedWriter
 import java.io.File
@@ -32,7 +34,7 @@ open class BufferedDataWriter(
 
     suspend fun start(): Boolean = withContext(Dispatchers.IO) {
         if (isRunning.get()) {
-            Log.w(TAG, "Writer already running for ${outputFile.name}")
+            AppLogger.w(TAG, "Writer already running for ${outputFile.name}")
             return@withContext true
         }
 
@@ -50,11 +52,11 @@ open class BufferedDataWriter(
                 runFlushLoop()
             }
 
-            Log.i(TAG, "Started buffered writer for ${outputFile.absolutePath}")
+            AppLogger.i(TAG, "Started buffered writer for ${outputFile.absolutePath}")
             true
 
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to start writer for ${outputFile.name}", e)
+            AppLogger.e(TAG, "Failed to start writer for ${outputFile.name}", e)
             cleanup()
             false
         }
@@ -62,13 +64,13 @@ open class BufferedDataWriter(
 
     fun writeLine(line: String): Boolean {
         if (!isRunning.get()) {
-            Log.w(TAG, "Writer not running, cannot write line")
+            AppLogger.w(TAG, "Writer not running, cannot write line")
             return false
         }
 
         val success = writeQueue.offer(line)
         if (!success) {
-            Log.w(TAG, "Write queue full, dropping line for ${outputFile.name}")
+            AppLogger.w(TAG, "Write queue full, dropping line for ${outputFile.name}")
         }
 
         return success
@@ -84,7 +86,7 @@ open class BufferedDataWriter(
             if (writeQueue.offer(line)) {
                 written++
             } else {
-                Log.w(TAG, "Write queue full, stopping batch write")
+                AppLogger.w(TAG, "Write queue full, stopping batch write")
                 break
             }
         }
@@ -96,7 +98,7 @@ open class BufferedDataWriter(
         try {
             writer?.flush()
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to flush writer for ${outputFile.name}", e)
+            AppLogger.e(TAG, "Failed to flush writer for ${outputFile.name}", e)
         }
     }
 
@@ -105,7 +107,7 @@ open class BufferedDataWriter(
             return@withContext
         }
 
-        Log.i(TAG, "Stopping buffered writer for ${outputFile.name}")
+        AppLogger.i(TAG, "Stopping buffered writer for ${outputFile.name}")
         isRunning.set(false)
 
         try {
@@ -127,7 +129,7 @@ open class BufferedDataWriter(
             )
 
         } catch (e: Exception) {
-            Log.e(TAG, "Error stopping writer for ${outputFile.name}", e)
+            AppLogger.e(TAG, "Error stopping writer for ${outputFile.name}", e)
         }
     }
 
@@ -142,7 +144,7 @@ open class BufferedDataWriter(
     }
 
     private suspend fun runWriterLoop() {
-        Log.d(TAG, "Starting writer loop for ${outputFile.name}")
+        AppLogger.d(TAG, "Starting writer loop for ${outputFile.name}")
 
         while (isRunning.get()) {
             try {
@@ -163,17 +165,17 @@ open class BufferedDataWriter(
                 }
 
             } catch (e: InterruptedException) {
-                Log.d(TAG, "Writer loop interrupted for ${outputFile.name}")
+                AppLogger.d(TAG, "Writer loop interrupted for ${outputFile.name}")
                 break
             } catch (e: Exception) {
-                Log.e(TAG, "Error in writer loop for ${outputFile.name}", e)
+                AppLogger.e(TAG, "Error in writer loop for ${outputFile.name}", e)
                 if (e is IOException) {
                     break
                 }
             }
         }
 
-        Log.d(TAG, "Writer loop ended for ${outputFile.name}")
+        AppLogger.d(TAG, "Writer loop ended for ${outputFile.name}")
     }
 
     private suspend fun runFlushLoop() {
@@ -187,7 +189,7 @@ open class BufferedDataWriter(
 
             } catch (e: Exception) {
                 if (e !is CancellationException) {
-                    Log.e(TAG, "Error in flush loop for ${outputFile.name}", e)
+                    AppLogger.e(TAG, "Error in flush loop for ${outputFile.name}", e)
                 }
             }
         }
@@ -199,7 +201,7 @@ open class BufferedDataWriter(
             writeQueue.drainTo(remainingLines)
 
             if (remainingLines.isNotEmpty()) {
-                Log.i(TAG, "Writing ${remainingLines.size} remaining lines for ${outputFile.name}")
+                AppLogger.i(TAG, "Writing ${remainingLines.size} remaining lines for ${outputFile.name}")
 
                 writer?.let { w ->
                     for (line in remainingLines) {
@@ -211,7 +213,7 @@ open class BufferedDataWriter(
                 }
             }
         } catch (e: Exception) {
-            Log.e(TAG, "Error draining queue for ${outputFile.name}", e)
+            AppLogger.e(TAG, "Error draining queue for ${outputFile.name}", e)
         }
     }
 
@@ -223,7 +225,7 @@ open class BufferedDataWriter(
             writer?.close()
             writer = null
         } catch (e: Exception) {
-            Log.e(TAG, "Error during cleanup for ${outputFile.name}", e)
+            AppLogger.e(TAG, "Error during cleanup for ${outputFile.name}", e)
         }
     }
 }

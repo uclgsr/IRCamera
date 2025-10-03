@@ -1,6 +1,8 @@
 package mpdc4gsr.core.data
 
 import android.util.Log
+import mpdc4gsr.core.utils.AppLogger
+import mpdc4gsr.core.utils.ErrorHandler
 import kotlinx.coroutines.*
 import mpdc4gsr.core.data.model.GSRSample
 import org.json.JSONArray
@@ -78,10 +80,10 @@ class LSLGSROutlet(
                     acceptConnections()
                 }
 
-                Log.i(TAG, "LSL outlet opened: ${streamInfo.name} on port $serverPort")
+                AppLogger.i(TAG, "LSL outlet opened: ${streamInfo.name} on port $serverPort")
                 true
             } catch (e: Exception) {
-                Log.e(TAG, "Failed to open LSL outlet: ${e.message}")
+                AppLogger.e(TAG, "Failed to open LSL outlet: ${e.message}")
                 false
             }
         }
@@ -101,7 +103,7 @@ class LSLGSROutlet(
                         // Send stream info to new client
                         sendStreamInfo(socket)
 
-                        Log.i(TAG, "LSL client connected: ${socket.remoteSocketAddress}")
+                        AppLogger.i(TAG, "LSL client connected: ${socket.remoteSocketAddress}")
 
                         // Handle client disconnection monitoring
                         networkScope.launch {
@@ -114,13 +116,13 @@ class LSLGSROutlet(
                                     connectedClients.remove(socket)
                                 }
                                 socket.close()
-                                Log.i(TAG, "LSL client disconnected")
+                                AppLogger.i(TAG, "LSL client disconnected")
                             }
                         }
                     }
                 } catch (e: Exception) {
                     if (isActive.get()) {
-                        Log.e(TAG, "Error accepting LSL connections", e)
+                        AppLogger.e(TAG, "Error accepting LSL connections", e)
                         delay(1000) // Brief pause before retrying
                     }
                 }
@@ -149,7 +151,7 @@ class LSLGSROutlet(
                 }
                 writer.println(streamInfoJson.toString())
             } catch (e: Exception) {
-                Log.e(TAG, "Failed to send stream info to client", e)
+                AppLogger.e(TAG, "Failed to send stream info to client", e)
             }
         }
 
@@ -187,7 +189,7 @@ class LSLGSROutlet(
 
                 true
             } catch (e: Exception) {
-                Log.e(TAG, "Failed to push LSL sample", e)
+                AppLogger.e(TAG, "Failed to push LSL sample", e)
                 false
             }
         }
@@ -231,7 +233,7 @@ class LSLGSROutlet(
                 sampleCount.addAndGet(samples.size.toLong())
                 true
             } catch (e: Exception) {
-                Log.e(TAG, "Failed to push LSL chunk", e)
+                AppLogger.e(TAG, "Failed to push LSL chunk", e)
                 false
             }
         }
@@ -249,7 +251,7 @@ class LSLGSROutlet(
             serverSocket?.close()
             serverJob?.cancel()
 
-            Log.i(TAG, "LSL outlet closed")
+            AppLogger.i(TAG, "LSL outlet closed")
         }
 
         fun getSampleCount(): Long = sampleCount.get()
@@ -288,13 +290,13 @@ class LSLGSROutlet(
                     streamingLoop()
                 }
 
-                Log.i(TAG, "LSL GSR streaming started")
+                AppLogger.i(TAG, "LSL GSR streaming started")
                 true
             } else {
                 false
             }
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to start LSL streaming", e)
+            AppLogger.e(TAG, "Failed to start LSL streaming", e)
             false
         }
     }
@@ -330,7 +332,7 @@ class LSLGSROutlet(
 
                 delay(50) // 20 Hz streaming rate
             } catch (e: Exception) {
-                Log.e(TAG, "Error in LSL streaming loop", e)
+                AppLogger.e(TAG, "Error in LSL streaming loop", e)
                 delay(1000)
             }
         }
@@ -369,7 +371,7 @@ class LSLGSROutlet(
         sampleBuffer.clear()
         qualityHistory.clear()
 
-        Log.i(TAG, "LSL GSR streaming stopped")
+        AppLogger.i(TAG, "LSL GSR streaming stopped")
     }
 
     fun getStreamingStatistics(): Map<String, Any> {

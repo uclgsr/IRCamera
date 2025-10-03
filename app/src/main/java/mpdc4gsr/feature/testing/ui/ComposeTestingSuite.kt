@@ -1,6 +1,8 @@
 package mpdc4gsr.feature.testing.ui
 
 import android.util.Log
+import mpdc4gsr.core.utils.AppLogger
+import mpdc4gsr.core.utils.ErrorHandler
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -57,7 +59,7 @@ class ComposeTestingSuite {
     suspend fun runAllTests(): List<TestResult> {
         testResults.clear()
 
-        Log.i(TAG, "Starting comprehensive testing suite...")
+        AppLogger.i(TAG, "Starting comprehensive testing suite...")
 
         // Performance Tests
         runPerformanceTests()
@@ -74,12 +76,12 @@ class ComposeTestingSuite {
         // User Flow Tests
         runUserFlowTests()
 
-        Log.i(TAG, "Testing suite completed with ${testResults.size} tests")
+        AppLogger.i(TAG, "Testing suite completed with ${testResults.size} tests")
         return testResults.toList()
     }
 
     private suspend fun runPerformanceTests() {
-        Log.d(TAG, "Running performance tests...")
+        AppLogger.d(TAG, "Running performance tests...")
 
         // Test navigation performance
         val navigationTime = measureTimeMillis {
@@ -132,7 +134,7 @@ class ComposeTestingSuite {
     }
 
     private suspend fun runNavigationTests() {
-        Log.d(TAG, "Running navigation tests...")
+        AppLogger.d(TAG, "Running navigation tests...")
 
         val routes = listOf(
             "gsr_settings",
@@ -162,7 +164,7 @@ class ComposeTestingSuite {
     }
 
     private suspend fun runMemoryTests() {
-        Log.d(TAG, "Running memory tests...")
+        AppLogger.d(TAG, "Running memory tests...")
 
         val runtime = Runtime.getRuntime()
         val initialMemory = runtime.totalMemory() - runtime.freeMemory()
@@ -203,7 +205,7 @@ class ComposeTestingSuite {
     }
 
     private suspend fun runIntegrationTests() {
-        Log.d(TAG, "Running integration tests...")
+        AppLogger.d(TAG, "Running integration tests...")
 
         // Test BaseComposeActivity integration
         testResults.add(
@@ -240,7 +242,7 @@ class ComposeTestingSuite {
     }
 
     private suspend fun runUserFlowTests() {
-        Log.d(TAG, "Running user flow tests...")
+        AppLogger.d(TAG, "Running user flow tests...")
 
         // Test complete GSR analysis workflow
         val gsrWorkflowTime = measureTimeMillis {

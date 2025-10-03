@@ -2,6 +2,8 @@ package mpdc4gsr.core.data
 
 import android.content.Context
 import android.util.Log
+import mpdc4gsr.core.utils.AppLogger
+import mpdc4gsr.core.utils.ErrorHandler
 import kotlinx.coroutines.*
 import mpdc4gsr.core.StructuredLogger
 import org.json.JSONObject
@@ -104,7 +106,7 @@ class SecurityMonitor(
 
     fun initialize(): Boolean {
         return try {
-            Log.i(TAG, "Initializing security monitoring system")
+            AppLogger.i(TAG, "Initializing security monitoring system")
 
             logger.log(
                 StructuredLogger.LogLevel.INFO,
@@ -119,7 +121,7 @@ class SecurityMonitor(
 
             true
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to initialize security monitor", e)
+            AppLogger.e(TAG, "Failed to initialize security monitor", e)
             logger.log(
                 StructuredLogger.LogLevel.ERROR,
                 TAG,
@@ -138,7 +140,7 @@ class SecurityMonitor(
 
     fun startMonitoring() {
         if (isMonitoring.get()) {
-            Log.w(TAG, "Security monitoring already started")
+            AppLogger.w(TAG, "Security monitoring already started")
             return
         }
 
@@ -150,7 +152,7 @@ class SecurityMonitor(
                     performSecurityCheck()
                     delay(MONITORING_INTERVAL_MS)
                 } catch (e: Exception) {
-                    Log.e(TAG, "Error in security monitoring loop", e)
+                    AppLogger.e(TAG, "Error in security monitoring loop", e)
                 }
             }
         }
@@ -161,12 +163,12 @@ class SecurityMonitor(
                     performCleanup()
                     delay(CLEANUP_INTERVAL_MS)
                 } catch (e: Exception) {
-                    Log.e(TAG, "Error in cleanup task", e)
+                    AppLogger.e(TAG, "Error in cleanup task", e)
                 }
             }
         }
 
-        Log.i(TAG, "Security monitoring started")
+        AppLogger.i(TAG, "Security monitoring started")
 
         logger.log(
             StructuredLogger.LogLevel.INFO,
@@ -182,7 +184,7 @@ class SecurityMonitor(
         isMonitoring.set(false)
         scope.cancel()
 
-        Log.i(TAG, "Security monitoring stopped")
+        AppLogger.i(TAG, "Security monitoring stopped")
 
         logger.log(
             StructuredLogger.LogLevel.INFO,

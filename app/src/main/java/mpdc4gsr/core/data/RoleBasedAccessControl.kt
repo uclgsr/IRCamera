@@ -2,6 +2,8 @@ package mpdc4gsr.core.data
 
 import android.content.Context
 import android.util.Log
+import mpdc4gsr.core.utils.AppLogger
+import mpdc4gsr.core.utils.ErrorHandler
 import mpdc4gsr.core.StructuredLogger
 import org.json.JSONObject
 import java.util.concurrent.ConcurrentHashMap
@@ -135,7 +137,7 @@ class RoleBasedAccessControl(
 
     fun initialize(): Boolean {
         return try {
-            Log.i(TAG, "Initializing Role-Based Access Control")
+            AppLogger.i(TAG, "Initializing Role-Based Access Control")
 
             loadRoleAssignments()
 
@@ -154,7 +156,7 @@ class RoleBasedAccessControl(
 
             true
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to initialize RBAC", e)
+            AppLogger.e(TAG, "Failed to initialize RBAC", e)
             logger.log(
                 StructuredLogger.LogLevel.ERROR,
                 TAG,
@@ -192,7 +194,7 @@ class RoleBasedAccessControl(
 
             true
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to assign role to device $deviceId", e)
+            AppLogger.e(TAG, "Failed to assign role to device $deviceId", e)
             false
         }
     }
@@ -429,17 +431,17 @@ class RoleBasedAccessControl(
 
     private fun loadRoleAssignments() {
 
-        Log.i(TAG, "Role assignments loaded (placeholder implementation)")
+        AppLogger.i(TAG, "Role assignments loaded (placeholder implementation)")
     }
 
     private fun saveRoleAssignments() {
 
-        Log.d(TAG, "Role assignments saved (placeholder implementation)")
+        AppLogger.d(TAG, "Role assignments saved (placeholder implementation)")
     }
 
     private fun initializeDefaultMappings() {
 
-        Log.i(TAG, "Default device type mappings initialized")
+        AppLogger.i(TAG, "Default device type mappings initialized")
     }
 
     fun getRole(deviceId: String): Role {
@@ -472,7 +474,7 @@ class RoleBasedAccessControl(
         return if (hasPermission(deviceId, permission)) {
             action()
         } else {
-            Log.w(TAG, "Permission denied for device $deviceId: $permission")
+            AppLogger.w(TAG, "Permission denied for device $deviceId: $permission")
             null
         }
     }

@@ -1,6 +1,8 @@
 package mpdc4gsr.core.data
 
 import android.util.Log
+import mpdc4gsr.core.utils.AppLogger
+import mpdc4gsr.core.utils.ErrorHandler
 import org.json.JSONObject
 
 object ProtocolVersion {
@@ -89,7 +91,7 @@ object ProtocolVersion {
                 commonCapabilities = commonCapabilities,
             )
         } catch (e: Exception) {
-            Log.e(TAG, "Error validating handshake response", e)
+            AppLogger.e(TAG, "Error validating handshake response", e)
             return HandshakeResult(
                 success = false,
                 error = "Invalid handshake response: ${e.message}",
@@ -117,7 +119,7 @@ object ProtocolVersion {
         val isValid = isVersionSupported(version)
 
         if (!isValid) {
-            Log.w(TAG, "Received message with unsupported protocol version: $version")
+            AppLogger.w(TAG, "Received message with unsupported protocol version: $version")
         }
 
         return isValid

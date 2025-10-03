@@ -1,6 +1,8 @@
 package mpdc4gsr.core.ui
 
 import android.util.Log
+import mpdc4gsr.core.utils.AppLogger
+import mpdc4gsr.core.utils.ErrorHandler
 import androidx.activity.ComponentActivity
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
@@ -18,7 +20,7 @@ class PermissionManager(
      * This function suspends until the user responds and returns true if all were granted.
      */
     suspend fun requestAllCriticalPermissions(): Boolean {
-        Log.i(TAG, "Requesting all critical permissions")
+        AppLogger.i(TAG, "Requesting all critical permissions")
         return requestPermissionsWithController()
     }
 
@@ -27,10 +29,10 @@ class PermissionManager(
      */
     suspend fun requestCameraPermissions(): Boolean {
         if (permissionController.hasCameraPermissions()) {
-            Log.i(TAG, "Camera permissions already granted")
+            AppLogger.i(TAG, "Camera permissions already granted")
             return true
         }
-        Log.i(TAG, "Requesting camera permissions")
+        AppLogger.i(TAG, "Requesting camera permissions")
         return requestPermissionsWithController()
     }
 
@@ -39,10 +41,10 @@ class PermissionManager(
      */
     suspend fun requestBluetoothPermissions(): Boolean {
         if (permissionController.canConnectToShimmer()) {
-            Log.i(TAG, "Bluetooth permissions already granted")
+            AppLogger.i(TAG, "Bluetooth permissions already granted")
             return true
         }
-        Log.i(TAG, "Requesting bluetooth permissions for GSR sensor access")
+        AppLogger.i(TAG, "Requesting bluetooth permissions for GSR sensor access")
         return requestPermissionsWithController()
     }
 
@@ -55,7 +57,7 @@ class PermissionManager(
             permissionController.ensureAll { isGranted, denied ->
                 if (continuation.isActive) {
                     if (!isGranted) {
-                        Log.w(TAG, "Permissions denied: ${denied.joinToString()}")
+                        AppLogger.w(TAG, "Permissions denied: ${denied.joinToString()}")
                     }
                     continuation.resume(isGranted)
                 }

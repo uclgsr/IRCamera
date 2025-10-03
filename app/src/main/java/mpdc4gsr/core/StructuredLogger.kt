@@ -2,6 +2,8 @@ package mpdc4gsr.core
 
 import android.content.Context
 import android.util.Log
+import mpdc4gsr.core.utils.AppLogger
+import mpdc4gsr.core.utils.ErrorHandler
 import kotlinx.coroutines.*
 import org.json.JSONObject
 import java.io.*
@@ -119,7 +121,7 @@ class StructuredLogger private constructor(private val context: Context) {
                 ),
             )
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to initialize structured logging", e)
+            AppLogger.e(TAG, "Failed to initialize structured logging", e)
         }
     }
 
@@ -131,13 +133,13 @@ class StructuredLogger private constructor(private val context: Context) {
             try {
                 currentLogWriter?.close()
             } catch (e: Exception) {
-                Log.w(TAG, "Error closing previous log writer", e)
+                AppLogger.w(TAG, "Error closing previous log writer", e)
             }
 
             currentLogWriter = BufferedWriter(FileWriter(currentLogFile, true))
             currentLogSize = currentLogFile?.length() ?: 0L
 
-            Log.i(TAG, "Created new log file: ${currentLogFile?.name}")
+            AppLogger.i(TAG, "Created new log file: ${currentLogFile?.name}")
         }
     }
 
@@ -151,12 +153,12 @@ class StructuredLogger private constructor(private val context: Context) {
             if (logFiles != null && logFiles.size > MAX_LOG_FILES) {
                 logFiles.drop(MAX_LOG_FILES).forEach { file ->
                     if (file.delete()) {
-                        Log.i(TAG, "Deleted old log file: ${file.name}")
+                        AppLogger.i(TAG, "Deleted old log file: ${file.name}")
                     }
                 }
             }
         } catch (e: Exception) {
-            Log.w(TAG, "Error cleaning up old logs", e)
+            AppLogger.w(TAG, "Error cleaning up old logs", e)
         }
     }
 
@@ -191,13 +193,13 @@ class StructuredLogger private constructor(private val context: Context) {
 
             val logMessage = "$component: $event ${if (details.isNotEmpty()) details else ""}"
             when (level) {
-                LogLevel.DEBUG -> Log.d(TAG, logMessage)
-                LogLevel.INFO -> Log.i(TAG, logMessage)
-                LogLevel.WARNING -> Log.w(TAG, logMessage)
-                LogLevel.ERROR -> Log.e(TAG, logMessage)
+                LogLevel.DEBUG -> AppLogger.d(TAG, logMessage)
+                LogLevel.INFO -> AppLogger.i(TAG, logMessage)
+                LogLevel.WARNING -> AppLogger.w(TAG, logMessage)
+                LogLevel.ERROR -> AppLogger.e(TAG, logMessage)
             }
         } catch (e: Exception) {
-            Log.e(TAG, "Error creating log entry", e)
+            AppLogger.e(TAG, "Error creating log entry", e)
         }
     }
 
@@ -266,7 +268,7 @@ class StructuredLogger private constructor(private val context: Context) {
                     Thread.currentThread().interrupt()
                     break
                 } catch (e: Exception) {
-                    Log.e(TAG, "Error processing log queue", e)
+                    AppLogger.e(TAG, "Error processing log queue", e)
                 }
             }
         }
@@ -279,7 +281,7 @@ class StructuredLogger private constructor(private val context: Context) {
             synchronized(writerLock) {
                 val writer = currentLogWriter
                 if (writer == null) {
-                    Log.w(TAG, "Log writer is null, skipping log entry")
+                    AppLogger.w(TAG, "Log writer is null, skipping log entry")
                     return@synchronized
                 }
 
@@ -292,13 +294,13 @@ class StructuredLogger private constructor(private val context: Context) {
                         rotateLogFile()
                     }
                 } catch (e: Exception) {
-                    Log.e(TAG, "Error writing log entry", e)
+                    AppLogger.e(TAG, "Error writing log entry", e)
                     // If write fails, try to recreate the writer
                     if (e.message?.contains("Stream closed") == true) {
                         try {
                             recreateLogWriter()
                         } catch (recreateException: Exception) {
-                            Log.e(TAG, "Failed to recreate log writer", recreateException)
+                            AppLogger.e(TAG, "Failed to recreate log writer", recreateException)
                         }
                     }
                 }
@@ -311,13 +313,13 @@ class StructuredLogger private constructor(private val context: Context) {
             try {
                 currentLogWriter?.close()
             } catch (e: Exception) {
-                Log.w(TAG, "Error closing corrupted log writer", e)
+                AppLogger.w(TAG, "Error closing corrupted log writer", e)
             }
 
             val logFile = currentLogFile
             if (logFile != null) {
                 currentLogWriter = BufferedWriter(FileWriter(logFile, true))
-                Log.i(TAG, "Recreated log writer for: ${logFile.name}")
+                AppLogger.i(TAG, "Recreated log writer for: ${logFile.name}")
             } else {
                 val logDir = File(context.getExternalFilesDir(null), LOG_DIRECTORY)
                 createNewLogFile(logDir)
@@ -330,7 +332,7 @@ class StructuredLogger private constructor(private val context: Context) {
             try {
                 currentLogWriter?.flush()
             } catch (e: Exception) {
-                Log.e(TAG, "Error flushing logs", e)
+                AppLogger.e(TAG, "Error flushing logs", e)
             }
         }
     }
@@ -354,7 +356,7 @@ class StructuredLogger private constructor(private val context: Context) {
                     ),
                 )
             } catch (e: Exception) {
-                Log.e(TAG, "Error rotating log file", e)
+                AppLogger.e(TAG, "Error rotating log file", e)
             }
         }
     }
@@ -368,7 +370,7 @@ class StructuredLogger private constructor(private val context: Context) {
             val logDir = File(context.getExternalFilesDir(null), LOG_DIRECTORY)
             logDir.listFiles()?.map { it.name }?.sorted() ?: emptyList()
         } catch (e: Exception) {
-            Log.e(TAG, "Error getting log files", e)
+            AppLogger.e(TAG, "Error getting log files", e)
             emptyList()
         }
     }
@@ -387,7 +389,7 @@ class StructuredLogger private constructor(private val context: Context) {
 
             lines.takeLast(maxLines).joinToString("\n")
         } catch (e: Exception) {
-            Log.e(TAG, "Error exporting logs", e)
+            AppLogger.e(TAG, "Error exporting logs", e)
             "Error exporting logs: ${e.message}"
         }
     }
@@ -405,9 +407,9 @@ class StructuredLogger private constructor(private val context: Context) {
             logExecutor.shutdown()
             logExecutor.awaitTermination(5, TimeUnit.SECONDS)
 
-            Log.i(TAG, "Structured logging cleanup completed")
+            AppLogger.i(TAG, "Structured logging cleanup completed")
         } catch (e: Exception) {
-            Log.e(TAG, "Error during logging cleanup", e)
+            AppLogger.e(TAG, "Error during logging cleanup", e)
         }
     }
 }

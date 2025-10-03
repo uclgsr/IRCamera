@@ -2,6 +2,8 @@ package mpdc4gsr.core.data
 
 import android.os.SystemClock
 import android.util.Log
+import mpdc4gsr.core.utils.AppLogger
+import mpdc4gsr.core.utils.ErrorHandler
 import java.util.concurrent.atomic.AtomicLong
 import kotlin.system.measureNanoTime
 
@@ -21,7 +23,7 @@ object TimestampManager {
 
     private fun initializeTimestampSystem() {
         bootTimeReference.set(System.currentTimeMillis() - SystemClock.elapsedRealtime())
-        Log.i(TAG, "Timestamp system initialized with boot reference: ${bootTimeReference.get()}")
+        AppLogger.i(TAG, "Timestamp system initialized with boot reference: ${bootTimeReference.get()}")
     }
 
     fun nowNanos(): Long {
@@ -62,7 +64,7 @@ object TimestampManager {
     fun getSessionRelativeTimestampMs(): Long {
         val sessionStart = sessionStartTime.get()
         if (sessionStart == 0L) {
-            Log.w(TAG, "Session not started, returning absolute timestamp")
+            AppLogger.w(TAG, "Session not started, returning absolute timestamp")
             return getCurrentElapsedRealtimeMs()
         }
         return getCurrentElapsedRealtimeMs() - sessionStart
@@ -97,13 +99,13 @@ object TimestampManager {
         sessionStartTime.set(0L)
         sessionStartSystemMs.set(0L)
         sessionStartMonotonicNs.set(0L)
-        Log.i(TAG, "Session ended. Duration: $sessionDuration ms")
+        AppLogger.i(TAG, "Session ended. Duration: $sessionDuration ms")
         return sessionDuration
     }
 
     fun setClockOffset(offsetMs: Long) {
         clockOffset.set(offsetMs)
-        Log.i(TAG, "Clock offset set to: $offsetMs ms")
+        AppLogger.i(TAG, "Clock offset set to: $offsetMs ms")
     }
 
     fun getSynchronizedTimestampMs(): Long {
@@ -133,7 +135,7 @@ object TimestampManager {
         val sessionStartSys = sessionStartSystemMs.get()
 
         if (sessionStartMono == 0L) {
-            Log.w(TAG, "No session reference available for monotonic to wall-clock conversion")
+            AppLogger.w(TAG, "No session reference available for monotonic to wall-clock conversion")
             return getCurrentSystemTimeMs()
         }
 
@@ -145,7 +147,7 @@ object TimestampManager {
     fun getSessionRelativeNanos(currentMonotonicNs: Long = getCurrentTimestampNanos()): Long {
         val sessionStartMono = sessionStartMonotonicNs.get()
         if (sessionStartMono == 0L) {
-            Log.w(TAG, "No session started for relative timestamp")
+            AppLogger.w(TAG, "No session started for relative timestamp")
             return currentMonotonicNs
         }
         return currentMonotonicNs - sessionStartMono

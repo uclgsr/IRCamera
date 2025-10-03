@@ -2,6 +2,8 @@ package mpdc4gsr.feature.testing.ui
 
 import android.os.Bundle
 import android.util.Log
+import mpdc4gsr.core.utils.AppLogger
+import mpdc4gsr.core.utils.ErrorHandler
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
@@ -460,14 +462,14 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
     private fun initializeCamera() {
         try {
             rgbCameraRecorder = RgbCameraRecorder(this, this)
-            Log.d(TAG, "RAW capture camera initialized successfully")
+            AppLogger.d(TAG, "RAW capture camera initialized successfully")
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to initialize camera: ${e.message}")
+            AppLogger.e(TAG, "Failed to initialize camera: ${e.message}")
         }
     }
 
     private suspend fun runAllCaptureTests() {
-        Log.i(TAG, "Running all RAW capture tests")
+        AppLogger.i(TAG, "Running all RAW capture tests")
 
         val results = mutableListOf<CaptureResult>()
 
@@ -493,14 +495,14 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
             captureResults = results
 
         } catch (e: Exception) {
-            Log.e(TAG, "All capture tests failed: ${e.message}")
+            AppLogger.e(TAG, "All capture tests failed: ${e.message}")
         } finally {
             isTestRunning = false
         }
     }
 
     private suspend fun captureRawImage(format: String): CaptureResult? {
-        Log.d(TAG, "Capturing RAW image in $format format")
+        AppLogger.d(TAG, "Capturing RAW image in $format format")
 
         return try {
             val captureDuration = measureTimeMillis {
@@ -531,7 +533,7 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
             )
 
         } catch (e: Exception) {
-            Log.e(TAG, "$format capture failed: ${e.message}")
+            AppLogger.e(TAG, "$format capture failed: ${e.message}")
             CaptureResult(
                 format = format,
                 success = false,
@@ -556,52 +558,52 @@ class RawCaptureTestComposeActivity : ComponentActivity() {
     }
 
     private suspend fun testDeviceCompatibility() {
-        Log.d(TAG, "Testing device compatibility")
+        AppLogger.d(TAG, "Testing device compatibility")
         try {
             delay(2000)
-            Log.d(TAG, "Device compatibility test completed")
+            AppLogger.d(TAG, "Device compatibility test completed")
         } catch (e: Exception) {
-            Log.e(TAG, "Device compatibility test failed: ${e.message}")
+            AppLogger.e(TAG, "Device compatibility test failed: ${e.message}")
         }
     }
 
     private suspend fun testStage3Support() {
-        Log.d(TAG, "Testing Stage 3/Level 3 support")
+        AppLogger.d(TAG, "Testing Stage 3/Level 3 support")
         try {
             delay(3000)
-            Log.d(TAG, "Stage 3 support test completed")
+            AppLogger.d(TAG, "Stage 3 support test completed")
         } catch (e: Exception) {
-            Log.e(TAG, "Stage 3 support test failed: ${e.message}")
+            AppLogger.e(TAG, "Stage 3 support test failed: ${e.message}")
         }
     }
 
     private suspend fun testCaptureQuality() {
-        Log.d(TAG, "Testing capture quality")
+        AppLogger.d(TAG, "Testing capture quality")
         try {
             delay(4000)
-            Log.d(TAG, "Capture quality test completed")
+            AppLogger.d(TAG, "Capture quality test completed")
         } catch (e: Exception) {
-            Log.e(TAG, "Capture quality test failed: ${e.message}")
+            AppLogger.e(TAG, "Capture quality test failed: ${e.message}")
         }
     }
 
     private suspend fun testFileFormats() {
-        Log.d(TAG, "Testing file formats")
+        AppLogger.d(TAG, "Testing file formats")
         try {
             delay(5000)
-            Log.d(TAG, "File formats test completed")
+            AppLogger.d(TAG, "File formats test completed")
         } catch (e: Exception) {
-            Log.e(TAG, "File formats test failed: ${e.message}")
+            AppLogger.e(TAG, "File formats test failed: ${e.message}")
         }
     }
 
     private suspend fun testCapturePerformance() {
-        Log.d(TAG, "Testing capture performance")
+        AppLogger.d(TAG, "Testing capture performance")
         try {
             delay(6000)
-            Log.d(TAG, "Capture performance test completed")
+            AppLogger.d(TAG, "Capture performance test completed")
         } catch (e: Exception) {
-            Log.e(TAG, "Capture performance test failed: ${e.message}")
+            AppLogger.e(TAG, "Capture performance test failed: ${e.message}")
         }
     }
 }

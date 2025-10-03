@@ -1,6 +1,8 @@
 package mpdc4gsr.feature.testing.ui
 
 import android.util.Log
+import mpdc4gsr.core.utils.AppLogger
+import mpdc4gsr.core.utils.ErrorHandler
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -209,14 +211,14 @@ class BLEIntegrationTestComposeActivity : BaseComposeActivity<BLEIntegrationTest
             // Initialize GSR recorder and device manager
             gsrRecorder = UnifiedGSRRecorder(this, this)
             deviceManager = ShimmerDeviceManager(this, this)
-            Log.d(TAG, "BLE components initialized successfully")
+            AppLogger.d(TAG, "BLE components initialized successfully")
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to initialize BLE components: ${e.message}")
+            AppLogger.e(TAG, "Failed to initialize BLE components: ${e.message}")
         }
     }
 
     private suspend fun runAllTests() {
-        Log.i(TAG, "Starting comprehensive BLE integration tests")
+        AppLogger.i(TAG, "Starting comprehensive BLE integration tests")
 
         // Run each test sequentially
         runPermissionsTest()
@@ -229,52 +231,52 @@ class BLEIntegrationTestComposeActivity : BaseComposeActivity<BLEIntegrationTest
         delay(1000)
         runReconnectionTest()
 
-        Log.i(TAG, "BLE integration tests completed")
+        AppLogger.i(TAG, "BLE integration tests completed")
     }
 
     private suspend fun runPermissionsTest() {
-        Log.d(TAG, "Running BLE permissions test")
+        AppLogger.d(TAG, "Running BLE permissions test")
         // Test BLE and location permissions
         try {
             val hasPermissions = permissionController.hasBluetoothPermissions()
             // Update test result based on permissions check
-            Log.d(TAG, "BLE permissions check: $hasPermissions")
+            AppLogger.d(TAG, "BLE permissions check: $hasPermissions")
         } catch (e: Exception) {
-            Log.e(TAG, "Permissions test failed: ${e.message}")
+            AppLogger.e(TAG, "Permissions test failed: ${e.message}")
         }
     }
 
     private suspend fun runDiscoveryTest() {
-        Log.d(TAG, "Running device discovery test")
+        AppLogger.d(TAG, "Running device discovery test")
         try {
             deviceManager?.let { manager ->
                 // Start device scanning
                 val success = manager.startDeviceScanning()
-                Log.d(TAG, "Device scanning started: $success")
+                AppLogger.d(TAG, "Device scanning started: $success")
                 delay(5000) // Let it scan for 5 seconds
                 manager.stopDeviceScanning()
-                Log.d(TAG, "Device discovery test completed")
+                AppLogger.d(TAG, "Device discovery test completed")
             }
         } catch (e: Exception) {
-            Log.e(TAG, "Discovery test failed: ${e.message}")
+            AppLogger.e(TAG, "Discovery test failed: ${e.message}")
         }
     }
 
     private suspend fun runConnectionTest() {
-        Log.d(TAG, "Running connection test")
+        AppLogger.d(TAG, "Running connection test")
         try {
             gsrRecorder?.let { recorder ->
                 // Test connection by initializing the recorder
                 val result = recorder.initialize()
-                Log.d(TAG, "Connection test result: $result")
+                AppLogger.d(TAG, "Connection test result: $result")
             }
         } catch (e: Exception) {
-            Log.e(TAG, "Connection test failed: ${e.message}")
+            AppLogger.e(TAG, "Connection test failed: ${e.message}")
         }
     }
 
     private suspend fun runStreamingTest() {
-        Log.d(TAG, "Running data streaming test")
+        AppLogger.d(TAG, "Running data streaming test")
         try {
             gsrRecorder?.let { recorder ->
                 // Test data streaming by starting a temporary recording
@@ -283,15 +285,15 @@ class BLEIntegrationTestComposeActivity : BaseComposeActivity<BLEIntegrationTest
                 delay(5000) // Record for 5 seconds
                 recorder.stopRecording()
                 tempDir.deleteRecursively()
-                Log.d(TAG, "Streaming test completed: $streamingResult")
+                AppLogger.d(TAG, "Streaming test completed: $streamingResult")
             }
         } catch (e: Exception) {
-            Log.e(TAG, "Streaming test failed: ${e.message}")
+            AppLogger.e(TAG, "Streaming test failed: ${e.message}")
         }
     }
 
     private suspend fun runReconnectionTest() {
-        Log.d(TAG, "Running reconnection test")
+        AppLogger.d(TAG, "Running reconnection test")
         try {
             gsrRecorder?.let { recorder ->
                 // Test reconnection by stopping and restarting recording
@@ -310,7 +312,7 @@ class BLEIntegrationTestComposeActivity : BaseComposeActivity<BLEIntegrationTest
                 )
             }
         } catch (e: Exception) {
-            Log.e(TAG, "Reconnection test failed: ${e.message}")
+            AppLogger.e(TAG, "Reconnection test failed: ${e.message}")
         }
     }
 
