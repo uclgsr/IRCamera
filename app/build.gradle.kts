@@ -75,7 +75,8 @@ android {
     buildTypes {
         getByName("release") {
             signingConfig = signingConfigs.getByName("release")
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
@@ -84,13 +85,20 @@ android {
     }
 
     lint {
-        abortOnError = false
-        checkReleaseBuilds = false
+        abortOnError = true
+        checkReleaseBuilds = true
+        warningsAsErrors = false  // Enable gradually
+        
+        // Only disable with justification
         disable += listOf(
+            "MissingTranslation"  // Internationalization not required yet
+        )
+        
+        // Monitor these warnings
+        warning += listOf(
             "StringFormatInvalid",
             "StringFormatMatches",
             "StringFormatCount",
-            "MissingTranslation",
             "ResourceType"
         )
     }

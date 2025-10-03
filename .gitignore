@@ -159,6 +159,7 @@ docs/*_old_*/
 !README.md
 !docs/README.md
 !docs/*/README.md
+!docs/ANTI_PATTERNS_README.md
 *_ANALYSIS_*.md
 *_REPORT_*.md
 *_STATUS_*.md
