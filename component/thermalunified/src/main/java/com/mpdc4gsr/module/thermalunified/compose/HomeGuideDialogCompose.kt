@@ -3,7 +3,6 @@ package com.mpdc4gsr.module.thermalunified.compose
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -17,8 +16,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import kotlinx.coroutines.launch
-import androidx.compose.runtime.withFrameNanos
+import mpdc4gsr.core.ui.deferAction
 
 @Composable
 fun HomeGuideDialogCompose(
@@ -116,8 +114,6 @@ private fun GuideStepContent(
 
 @Composable
 private fun GuideStep1Content(onNext: () -> Unit, onSkinClick: () -> Unit) {
-    val scope = rememberCoroutineScope()
-    
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -140,22 +136,15 @@ private fun GuideStep1Content(onNext: () -> Unit, onSkinClick: () -> Unit) {
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             OutlinedButton(
-                onClick = {
-                    scope.launch {
-                        withFrameNanos { }
-                        onSkinClick()
-                    }
-                },
-                modifier = Modifier.weight(1f),
-                interactionSource = remember { MutableInteractionSource() }
+                onClick = deferAction { onSkinClick() },
+                modifier = Modifier.weight(1f)
             ) {
                 Text("Skin Detection")
             }
 
             Button(
                 onClick = onNext,
-                modifier = Modifier.weight(1f),
-                interactionSource = remember { MutableInteractionSource() }
+                modifier = Modifier.weight(1f)
             ) {
                 Text("Next")
             }
@@ -165,8 +154,6 @@ private fun GuideStep1Content(onNext: () -> Unit, onSkinClick: () -> Unit) {
 
 @Composable
 private fun GuideStep2Content(onNext: () -> Unit, onSkinClick: () -> Unit) {
-    val scope = rememberCoroutineScope()
-    
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -189,22 +176,15 @@ private fun GuideStep2Content(onNext: () -> Unit, onSkinClick: () -> Unit) {
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             OutlinedButton(
-                onClick = {
-                    scope.launch {
-                        withFrameNanos { }
-                        onSkinClick()
-                    }
-                },
-                modifier = Modifier.weight(1f),
-                interactionSource = remember { MutableInteractionSource() }
+                onClick = deferAction { onSkinClick() },
+                modifier = Modifier.weight(1f)
             ) {
                 Text("Skin Detection")
             }
 
             Button(
                 onClick = onNext,
-                modifier = Modifier.weight(1f),
-                interactionSource = remember { MutableInteractionSource() }
+                modifier = Modifier.weight(1f)
             ) {
                 Text("Next")
             }
@@ -214,8 +194,6 @@ private fun GuideStep2Content(onNext: () -> Unit, onSkinClick: () -> Unit) {
 
 @Composable
 private fun GuideStep3Content(onNext: () -> Unit) {
-    val scope = rememberCoroutineScope()
-    
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -234,14 +212,8 @@ private fun GuideStep3Content(onNext: () -> Unit) {
         )
 
         Button(
-            onClick = {
-                scope.launch {
-                    withFrameNanos { }
-                    onNext()
-                }
-            },
-            modifier = Modifier.fillMaxWidth(),
-            interactionSource = remember { MutableInteractionSource() }
+            onClick = deferAction { onNext() },
+            modifier = Modifier.fillMaxWidth()
         ) {
             Text("I Know")
         }

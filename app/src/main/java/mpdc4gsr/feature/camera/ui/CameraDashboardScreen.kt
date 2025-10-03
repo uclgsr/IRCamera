@@ -13,8 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-import kotlinx.coroutines.launch
-import androidx.compose.runtime.withFrameNanos
+import mpdc4gsr.core.ui.deferAction
 
 /**
  * Camera Dashboard Screen - Modern Compose Implementation
@@ -44,28 +43,12 @@ fun CameraDashboardScreen(
                         )
                     },
                     navigationIcon = {
-                        val scope = rememberCoroutineScope()
-                        IconButton(
-                            onClick = {
-                                scope.launch {
-                                    withFrameNanos { }
-                                    onBackClick()
-                                }
-                            }
-                        ) {
+                        IconButton(onClick = deferAction { onBackClick() }) {
                             Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                         }
                     },
                     actions = {
-                        val scope = rememberCoroutineScope()
-                        IconButton(
-                            onClick = {
-                                scope.launch {
-                                    withFrameNanos { }
-                                    onNavigateToSettings()
-                                }
-                            }
-                        ) {
+                        IconButton(onClick = deferAction { onNavigateToSettings() }) {
                             Icon(Icons.Default.Settings, contentDescription = "Settings")
                         }
                     }
@@ -268,15 +251,8 @@ private fun CameraModeItem(
     isActive: Boolean,
     onClick: () -> Unit
 ) {
-    val scope = rememberCoroutineScope()
-    
     Card(
-        onClick = {
-            scope.launch {
-                withFrameNanos { }
-                onClick()
-            }
-        },
+        onClick = deferAction { onClick() },
         modifier = Modifier.fillMaxWidth(),
         colors = if (isActive) {
             CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)

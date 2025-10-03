@@ -23,6 +23,36 @@ import kotlinx.coroutines.launch
 import androidx.compose.runtime.withFrameNanos
 
 /**
+ * Helper composable that creates and manages a MutableInteractionSource
+ * with automatic press interaction cancellation on dispose.
+ * 
+ * This centralizes the logic for tracking and canceling press interactions,
+ * preventing ripple animations from starting on detached views.
+ */
+@Composable
+private fun rememberCancellableInteractionSource(): MutableInteractionSource {
+    val interactionSource = remember { MutableInteractionSource() }
+    var press: PressInteraction.Press? by remember { mutableStateOf(null) }
+    
+    LaunchedEffect(interactionSource) {
+        interactionSource.interactions.collect { interaction ->
+            when (interaction) {
+                is PressInteraction.Press -> press = interaction
+                is PressInteraction.Release, is PressInteraction.Cancel -> press = null
+            }
+        }
+    }
+    
+    DisposableEffect(Unit) {
+        onDispose {
+            press?.let { interactionSource.tryEmit(PressInteraction.Cancel(it)) }
+        }
+    }
+    
+    return interactionSource
+}
+
+/**
  * Safe clickable modifier that prevents ANR issues with ripple animations.
  * 
  * This modifier wraps the standard clickable modifier with additional safety checks
@@ -48,23 +78,7 @@ fun Modifier.safeClickable(
     role: Role? = null,
     onClick: () -> Unit
 ): Modifier = composed {
-    val interactionSource = remember { MutableInteractionSource() }
-    var press: PressInteraction.Press? by remember { mutableStateOf(null) }
-    
-    LaunchedEffect(interactionSource) {
-        interactionSource.interactions.collect { interaction ->
-            when (interaction) {
-                is PressInteraction.Press -> press = interaction
-                is PressInteraction.Release, is PressInteraction.Cancel -> press = null
-            }
-        }
-    }
-    
-    DisposableEffect(Unit) {
-        onDispose {
-            press?.let { interactionSource.tryEmit(PressInteraction.Cancel(it)) }
-        }
-    }
+    val interactionSource = rememberCancellableInteractionSource()
     
     this.clickable(
         enabled = enabled,
@@ -88,23 +102,7 @@ fun Modifier.safeClickableWithRipple(
     role: Role? = null,
     onClick: () -> Unit
 ): Modifier = composed {
-    val interactionSource = remember { MutableInteractionSource() }
-    var press: PressInteraction.Press? by remember { mutableStateOf(null) }
-    
-    LaunchedEffect(interactionSource) {
-        interactionSource.interactions.collect { interaction ->
-            when (interaction) {
-                is PressInteraction.Press -> press = interaction
-                is PressInteraction.Release, is PressInteraction.Cancel -> press = null
-            }
-        }
-    }
-    
-    DisposableEffect(Unit) {
-        onDispose {
-            press?.let { interactionSource.tryEmit(PressInteraction.Cancel(it)) }
-        }
-    }
+    val interactionSource = rememberCancellableInteractionSource()
     
     this.clickable(
         enabled = enabled,
@@ -153,23 +151,7 @@ fun Modifier.safeClickableDeferred(
     onClick: () -> Unit
 ): Modifier = composed {
     val scope = rememberCoroutineScope()
-    val interactionSource = remember { MutableInteractionSource() }
-    var press: PressInteraction.Press? by remember { mutableStateOf(null) }
-    
-    LaunchedEffect(interactionSource) {
-        interactionSource.interactions.collect { interaction ->
-            when (interaction) {
-                is PressInteraction.Press -> press = interaction
-                is PressInteraction.Release, is PressInteraction.Cancel -> press = null
-            }
-        }
-    }
-    
-    DisposableEffect(Unit) {
-        onDispose {
-            press?.let { interactionSource.tryEmit(PressInteraction.Cancel(it)) }
-        }
-    }
+    val interactionSource = rememberCancellableInteractionSource()
     
     this.clickable(
         enabled = enabled,
