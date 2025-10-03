@@ -29,8 +29,6 @@ import com.mpdc4gsr.module.thermalunified.compat.spToPx
 import com.elvishew.xlog.XLog
 import com.infisense.usbir.view.CameraView
 import com.mpdc4gsr.libunified.app.comm.view.TempLayout
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.isActive
 import com.mpdc4gsr.libunified.app.common.SharedManager
 import com.mpdc4gsr.libunified.app.compose.dialogs.TipDialogState
 import com.mpdc4gsr.libunified.app.config.FileConfig
@@ -303,12 +301,11 @@ class VideoRecordFFmpeg(
                             }
                             queTime = System.currentTimeMillis()
                         }
-                        recorder?.timestamp?.let {
-                            if (it / 1000 > 60 * 60 * 1000) {
-                                exportJob?.cancel()
-                                stopVideoRecordListener?.invoke(true)
-                                break
-                            }
+                        val timestamp = recorder?.timestamp
+                        if (timestamp != null && timestamp / 1000 > 60 * 60 * 1000) {
+                            exportJob?.cancel()
+                            stopVideoRecordListener?.invoke(true)
+                            break
                         }
                         if (audioRecord != null) {
                             val audioTime = System.currentTimeMillis()
