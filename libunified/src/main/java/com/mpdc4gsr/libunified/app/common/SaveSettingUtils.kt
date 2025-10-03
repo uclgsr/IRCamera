@@ -283,6 +283,7 @@ object SaveSettingUtils {
         }
 
     var tempTextSize: Int
+        @Suppress("DEPRECATION")
         get() {
             val context = ContextProvider.getContext()
             val defaultSize = (14f * context.resources.displayMetrics.scaledDensity).toInt()

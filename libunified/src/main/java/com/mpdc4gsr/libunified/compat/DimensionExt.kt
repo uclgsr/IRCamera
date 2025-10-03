@@ -23,6 +23,7 @@ fun Int.pxToDp(context: Context): Int {
     return (this / context.resources.displayMetrics.density).toInt()
 }
 
+@Suppress("DEPRECATION")
 fun Int.spToPx(context: Context): Int {
     return (this * context.resources.displayMetrics.scaledDensity).toInt()
 }
@@ -35,6 +36,7 @@ fun Float.pxToDp(context: Context): Float {
     return this / context.resources.displayMetrics.density
 }
 
+@Suppress("DEPRECATION")
 fun Float.spToPx(context: Context): Float {
     return this * context.resources.displayMetrics.scaledDensity
 }
@@ -62,6 +64,7 @@ val Int.pxLegacy: Int
     message = "Use spToPx(context) for context-aware conversion",
     replaceWith = ReplaceWith("this.spToPx(context)")
 )
+@Suppress("DEPRECATION")
 val Int.spLegacy: Int
     get() = (this * Resources.getSystem().displayMetrics.scaledDensity).toInt()
 

@@ -10,6 +10,7 @@ import com.mpdc4gsr.libunified.compat.dpToPx
 import kotlin.math.max
 import kotlin.math.min
 
+@Suppress("DEPRECATION")
 class TempDrawHelper {
     companion object {
 

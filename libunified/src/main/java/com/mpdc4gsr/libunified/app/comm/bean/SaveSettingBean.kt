@@ -202,6 +202,7 @@ class SaveSettingBean(private val isWifi: Boolean = false) {
             }
         }
 
+    @Suppress("DEPRECATION")
     var tempTextSize: Int = run {
         val defaultSize = (14f * ContextProvider.getContext().resources.displayMetrics.scaledDensity).toInt()
         if (isSaveSetting) getSPUtils().getInt("tempTextSize", defaultSize) else defaultSize
@@ -213,6 +214,7 @@ class SaveSettingBean(private val isWifi: Boolean = false) {
             }
         }
 
+    @Suppress("DEPRECATION")
     fun isTempTextDefault(): Boolean {
         val defaultSize = (14f * ContextProvider.getContext().resources.displayMetrics.scaledDensity).toInt()
         return tempTextColor == 0xffffffff.toInt() && tempTextSize == defaultSize
