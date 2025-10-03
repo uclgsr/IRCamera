@@ -1,5 +1,6 @@
 package mpdc4gsr.feature.network.ui
 
+import android.app.Application
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -29,6 +30,7 @@ import mpdc4gsr.core.ui.components.settings.SettingsRow
 import mpdc4gsr.core.ui.components.settings.SettingsToggle
 import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.feature.settings.presentation.NetworkSettingsViewModel
+import mpdc4gsr.feature.settings.presentation.NetworkSettingsViewModelFactory
 
 /**
  * Network Settings Screen - Device pairing and network configuration
@@ -37,7 +39,11 @@ import mpdc4gsr.feature.settings.presentation.NetworkSettingsViewModel
 @Composable
 fun NetworkSettingsScreen(
     onBackClick: (() -> Unit)? = null,
-    viewModel: NetworkSettingsViewModel = viewModel(),
+    viewModel: NetworkSettingsViewModel = viewModel(
+        factory = NetworkSettingsViewModelFactory(
+            LocalContext.current.applicationContext as Application
+        )
+    ),
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
