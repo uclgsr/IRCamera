@@ -101,7 +101,7 @@ class VideoRecordFFmpeg(
                         title = context.getString(LibcoreR.string.app_tip),
                         message = context.getString(LibcoreR.string.album_report_aleart),
                         showCancel = false,
-                        positiveText = getString(LibcoreR.string.app_confirm),
+                        positiveText = context.getString(LibcoreR.string.app_confirm),
                         cancelable = true,
                         onPositive = { }
                     )
