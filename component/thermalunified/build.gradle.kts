@@ -66,7 +66,6 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.bundles.camerax)
     implementation(libs.material)
-    implementation(libs.glide)
     implementation(libs.lottie)
     implementation(libs.easyswipemenulayout)
     implementation(libs.mn.image.browser)
