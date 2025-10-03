@@ -1,6 +1,6 @@
 package com.mpdc4gsr.module.thermalunified.report.bean
 
-import com.blankj.utilcode.util.GsonUtils
+import com.google.gson.Gson
 
 class ReportData {
 
@@ -32,7 +32,7 @@ class ReportData {
         var reportContent: ReportBean? = null
             get() {
                 if (field == null) {
-                    field = GsonUtils.fromJson(testInfo, ReportBean::class.java)
+                    field = Gson().fromJson(testInfo, ReportBean::class.java)
                 }
                 return field
             }
