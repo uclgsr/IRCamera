@@ -491,7 +491,18 @@ class RgbCameraRecorder(
     }
 
     fun bindPreview(previewView: PreviewView) {
-        this.preview?.setSurfaceProvider(previewView.surfaceProvider)
+        try {
+            this.preview?.let { preview ->
+                preview.setSurfaceProvider(previewView.surfaceProvider)
+                previewView.implementationMode = PreviewView.ImplementationMode.PERFORMANCE
+                previewView.scaleType = PreviewView.ScaleType.FILL_CENTER
+                AppLogger.i(TAG, "Preview bound to PreviewView - live camera feed active")
+            } ?: run {
+                AppLogger.w(TAG, "Cannot bind preview - Preview use case not initialized. Call initialize() first.")
+            }
+        } catch (e: Exception) {
+            AppLogger.e(TAG, "Failed to bind preview to PreviewView", e)
+        }
     }
 
     interface CameraDisplayInfo {
@@ -691,10 +702,12 @@ class RgbCameraRecorder(
             }
 
             preview?.let { preview ->
+                useCases.add(preview)
+                AppLogger.i(TAG, " Preview use case added to camera lifecycle")
+                
                 previewView?.let { previewView ->
                     try {
                         preview.setSurfaceProvider(previewView.surfaceProvider)
-                        useCases.add(preview)
                         Log.i(
                             TAG,
                             " Preview bound to PreviewView successfully - live camera feed enabled"
@@ -704,14 +717,14 @@ class RgbCameraRecorder(
                         previewView.scaleType = PreviewView.ScaleType.FILL_CENTER
 
                     } catch (e: Exception) {
-                        AppLogger.w(TAG, "Preview binding failed, continuing without preview", e)
+                        AppLogger.w(TAG, "Preview binding failed, but preview use case is still active", e)
                         emitError(
                             ErrorType.INITIALIZATION_FAILED,
                             "Camera preview unavailable but recording will continue"
                         )
                     }
                 } ?: run {
-                    AppLogger.w(TAG, "No PreviewView provided - recording without live preview")
+                    AppLogger.i(TAG, "Preview use case ready - waiting for bindPreview() call from UI")
                 }
             }
 
