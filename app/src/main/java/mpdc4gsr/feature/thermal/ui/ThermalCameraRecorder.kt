@@ -3120,7 +3120,7 @@ class ThermalCameraRecorder(
 
     private fun onDevicePermissionRequested(device: android.hardware.usb.UsbDevice) {
         try {
-            Log.d(TAG, "USB permission event for device: ${device?.productName}")
+            Log.d(TAG, "USB permission event for device: ${device.productName}")
 
             if (device.isTcTsDevice()) {
                 Log.i(TAG, "Processing USB permission event for thermal camera device")
