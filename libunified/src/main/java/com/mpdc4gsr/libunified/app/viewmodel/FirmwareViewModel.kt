@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.blankj.utilcode.util.FileUtils
-import com.blankj.utilcode.util.Utils
+import com.mpdc4gsr.libunified.compat.ContextProvider
 import com.elvishew.xlog.XLog
 import com.google.gson.Gson
 import com.mpdc4gsr.libunified.R
@@ -212,7 +212,7 @@ class FirmwareViewModel(application: Application) : AndroidViewModel(application
             params.addBodyParameter("softCode", softCode)
             params.addBodyParameter(
                 "downloadLanguageId",
-                LanguageUtils.getLanguageId(Utils.getApp())
+                LanguageUtils.getLanguageId(ContextProvider.INSTANCE.getContext())
             )
             params.addBodyParameter("downloadPlatformId", 2)
             params.addBodyParameter(

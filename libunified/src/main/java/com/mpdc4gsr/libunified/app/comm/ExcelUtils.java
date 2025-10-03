@@ -11,7 +11,7 @@ import androidx.annotation.Nullable;
 
 import com.blankj.utilcode.util.TimeUtils;
 import com.blankj.utilcode.util.UriUtils;
-import com.blankj.utilcode.util.Utils;
+import com.mpdc4gsr.libunified.compat.ContextProvider;
 import com.mpdc4gsr.libunified.R;
 import com.mpdc4gsr.libunified.app.common.SharedManager;
 import com.mpdc4gsr.libunified.app.config.FileConfig;
@@ -71,9 +71,9 @@ public class ExcelUtils {
                 values.put(MediaStore.MediaColumns.DISPLAY_NAME, fileName);
                 values.put(MediaStore.MediaColumns.RELATIVE_PATH, FileConfig.getExcelDir());
                 Uri contentUri = MediaStore.Files.getContentUri("external");
-                Uri uri = Utils.getApp().getContentResolver().insert(contentUri, values);
+                Uri uri = ContextProvider.INSTANCE.getContext().getContentResolver().insert(contentUri, values);
                 if (uri != null) {
-                    OutputStream outputStream = Utils.getApp().getContentResolver().openOutputStream(uri);
+                    OutputStream outputStream = ContextProvider.INSTANCE.getContext().getContentResolver().openOutputStream(uri);
                     if (outputStream != null) {
                         BufferedOutputStream bos = new BufferedOutputStream(outputStream);
                         workbook.write(bos);
@@ -98,9 +98,9 @@ public class ExcelUtils {
             Workbook wb = new XSSFWorkbook();
             // 
             Sheet sheet = wb.createSheet();
-            String[] title = {Utils.getApp().getString(R.string.detail_date), Utils.getApp().getString(R.string.chart_temperature_low), Utils.getApp().getString(R.string.chart_temperature_high)};
+            String[] title = {ContextProvider.INSTANCE.getContext().getString(R.string.detail_date), ContextProvider.INSTANCE.getContext().getString(R.string.chart_temperature_low), ContextProvider.INSTANCE.getContext().getString(R.string.chart_temperature_high)};
             if (isPoint) {
-                title = new String[]{Utils.getApp().getString(R.string.detail_date), Utils.getApp().getString(R.string.chart_temperature)};
+                title = new String[]{ContextProvider.INSTANCE.getContext().getString(R.string.detail_date), ContextProvider.INSTANCE.getContext().getString(R.string.chart_temperature)};
             }
             //
             Row row = sheet.createRow(0);
@@ -186,9 +186,9 @@ public class ExcelUtils {
 //                values.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DCIM);
                 values.put(MediaStore.MediaColumns.RELATIVE_PATH, FileConfig.getExcelDir());
                 Uri contentUri = MediaStore.Files.getContentUri("external");
-                Uri uri = Utils.getApp().getContentResolver().insert(contentUri, values);
+                Uri uri = ContextProvider.INSTANCE.getContext().getContentResolver().insert(contentUri, values);
                 if (uri != null) {
-                    OutputStream outputStream = Utils.getApp().getContentResolver().openOutputStream(uri);
+                    OutputStream outputStream = ContextProvider.INSTANCE.getContext().getContentResolver().openOutputStream(uri);
                     if (outputStream != null) {
                         BufferedOutputStream bos = new BufferedOutputStream(outputStream);
                         wb.write(bos);

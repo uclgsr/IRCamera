@@ -12,7 +12,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.core.view.isVisible
 import androidx.core.view.setPadding
-import com.blankj.utilcode.util.SizeUtils
+import com.mpdc4gsr.libunified.compat.dpToPx
 import com.mpdc4gsr.libunified.R
 
 open class TitleView : ViewGroup {
@@ -125,8 +125,8 @@ open class TitleView : ViewGroup {
         textView.gravity = Gravity.CENTER_VERTICAL
         textView.textSize = 16f
         textView.setTextColor(0xffffffff.toInt())
-        textView.setPadding(SizeUtils.dp2px(padding))
-        textView.setDrawableHeightPx(SizeUtils.dp2px(imgHeight))
+        textView.setPadding(padding.dpToPx(context))
+        textView.setDrawableHeightPx(imgHeight.dpToPx(context))
         addView(textView)
         return textView
     }
@@ -140,7 +140,7 @@ open class TitleView : ViewGroup {
         heightMeasureSpec: Int,
     ) {
 
-        var maxHeight = actionBarSize.coerceAtLeast(SizeUtils.dp2px(ICON_SIZE))
+        var maxHeight = actionBarSize.coerceAtLeast(ICON_SIZE.dpToPx(context))
         for (i in 0 until childCount) {
             val childView: View = getChildAt(i)
             if (childView != tvTitle && childView.visibility != View.GONE) {
@@ -165,7 +165,7 @@ open class TitleView : ViewGroup {
 
         if (isTitleCenter) {
             val leftSize =
-                if (tvLeft!!.isVisible) tvLeft?.measuredWidth else SizeUtils.dp2px(ICON_SIZE)
+                if (tvLeft!!.isVisible) tvLeft?.measuredWidth else ICON_SIZE.dpToPx(context)
             var rightSize = 0
             if (tvRight1!!.isVisible) {
                 rightSize += tvRight1!!.measuredWidth
@@ -177,7 +177,7 @@ open class TitleView : ViewGroup {
                 rightSize += tvRight3!!.measuredWidth
             }
             if (rightSize == 0) {
-                rightSize = SizeUtils.dp2px(ICON_SIZE)
+                rightSize = ICON_SIZE.dpToPx(context)
             }
             val titleWidth = measuredWidth - leftSize!!.coerceAtLeast(rightSize) * 2
             val widthSpec =

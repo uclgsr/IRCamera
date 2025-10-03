@@ -4,7 +4,7 @@ import android.content.ContentResolver
 import android.media.MediaScannerConnection
 import android.provider.MediaStore
 import com.blankj.utilcode.util.FileUtils
-import com.blankj.utilcode.util.Utils
+import com.mpdc4gsr.libunified.compat.ContextProvider
 import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.bean.GalleryBean
 import com.mpdc4gsr.libunified.app.config.FileConfig
@@ -160,7 +160,7 @@ object GalleryRepository {
                 if (isSuccess) {
                     FileUtils.delete(sourFile)
                     MediaScannerConnection.scanFile(
-                        Utils.getApp(),
+                        ContextProvider.INSTANCE.getContext(),
                         arrayOf(FileConfig.lineGalleryDir),
                         null,
                         null
@@ -209,7 +209,7 @@ object GalleryRepository {
             }
         val selectionArgs = arrayOf(path)
 
-        val contentResolver: ContentResolver = Utils.getApp().contentResolver
+        val contentResolver: ContentResolver = ContextProvider.INSTANCE.getContext().contentResolver
 
         val queryUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
         val cursor =

@@ -4,7 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.util.Log
 import com.blankj.utilcode.util.ImageUtils
-import com.blankj.utilcode.util.Utils
+import com.mpdc4gsr.libunified.compat.ContextProvider
 import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.config.FileConfig.lineIrGalleryDir
 import java.io.File
@@ -30,7 +30,7 @@ object ImageUtils {
     }
 
     fun saveImageToApp(bitmap: Bitmap): String {
-        val saveFile = File(Utils.getApp().cacheDir, "PinP_${System.currentTimeMillis()}.jpg")
+        val saveFile = File(ContextProvider.INSTANCE.getContext().cacheDir, "PinP_${System.currentTimeMillis()}.jpg")
         ImageUtils.save(bitmap, saveFile, Bitmap.CompressFormat.JPEG)
         return saveFile.absolutePath
     }

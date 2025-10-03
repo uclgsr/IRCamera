@@ -1,7 +1,7 @@
 package com.mpdc4gsr.libunified.app.comm.bean
 
 import com.blankj.utilcode.util.SPUtils
-import com.blankj.utilcode.util.SizeUtils
+import com.mpdc4gsr.libunified.compat.ContextProvider
 import com.google.gson.Gson
 import com.mpdc4gsr.libunified.app.bean.AlarmBean
 import com.mpdc4gsr.libunified.app.bean.CameraItemBean
@@ -202,10 +202,10 @@ class SaveSettingBean(private val isWifi: Boolean = false) {
             }
         }
 
-    var tempTextSize: Int = if (isSaveSetting) getSPUtils().getInt(
-        "tempTextSize",
-        SizeUtils.sp2px(14f)
-    ) else SizeUtils.sp2px(14f)
+    var tempTextSize: Int = run {
+        val defaultSize = (14f * ContextProvider.getContext().resources.displayMetrics.scaledDensity).toInt()
+        if (isSaveSetting) getSPUtils().getInt("tempTextSize", defaultSize) else defaultSize
+    }
         set(value) {
             field = value
             if (isSaveSetting) {
@@ -213,8 +213,10 @@ class SaveSettingBean(private val isWifi: Boolean = false) {
             }
         }
 
-    fun isTempTextDefault(): Boolean =
-        tempTextColor == 0xffffffff.toInt() && tempTextSize == SizeUtils.sp2px(14f)
+    fun isTempTextDefault(): Boolean {
+        val defaultSize = (14f * ContextProvider.getContext().resources.displayMetrics.scaledDensity).toInt()
+        return tempTextColor == 0xffffffff.toInt() && tempTextSize == defaultSize
+    }
 
     var temperatureMode: Int =
         if (isSaveSetting) {

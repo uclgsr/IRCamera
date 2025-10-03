@@ -4,7 +4,7 @@ import android.hardware.usb.UsbDevice;
 import android.os.SystemClock;
 import android.util.Log;
 
-import com.blankj.utilcode.util.Utils;
+import com.mpdc4gsr.libunified.compat.ContextProvider;
 import com.energy.iruvc.ircmd.ConcreteIRCMDBuilder;
 import com.energy.iruvc.ircmd.IRCMD;
 import com.energy.iruvc.ircmd.IRCMDType;
@@ -92,7 +92,7 @@ public class USBMonitorManager {
             cameraHeight = 192;
         }
         if (mUSBMonitor == null) {
-            mUSBMonitor = new USBMonitor(Utils.getApp(),
+            mUSBMonitor = new USBMonitor(ContextProvider.INSTANCE.getContext(),
                     new USBMonitor.OnDeviceConnectListener() {
 
                         @Override

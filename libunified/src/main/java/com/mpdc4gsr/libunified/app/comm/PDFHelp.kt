@@ -14,7 +14,7 @@ import android.view.View
 import android.widget.ScrollView
 import androidx.core.content.ContextCompat
 import com.blankj.utilcode.util.UriUtils
-import com.blankj.utilcode.util.Utils
+import com.mpdc4gsr.libunified.compat.ContextProvider
 import com.mpdc4gsr.libunified.R
 import com.mpdc4gsr.libunified.app.config.FileConfig
 import java.io.BufferedOutputStream
@@ -95,9 +95,9 @@ object PDFHelp {
                 FileConfig.getPdfDir(),
             )
             val contentUri = MediaStore.Files.getContentUri("external")
-            val uri = Utils.getApp().contentResolver.insert(contentUri, values)
+            val uri = ContextProvider.INSTANCE.getContext().contentResolver.insert(contentUri, values)
             return if (uri != null) {
-                val outputStream = Utils.getApp().contentResolver.openOutputStream(uri)
+                val outputStream = ContextProvider.INSTANCE.getContext().contentResolver.openOutputStream(uri)
                 if (outputStream != null) {
                     val bos = BufferedOutputStream(outputStream)
                     pdfDocument.writeTo(bos)

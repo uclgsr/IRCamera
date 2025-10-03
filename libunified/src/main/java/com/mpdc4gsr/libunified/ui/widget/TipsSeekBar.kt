@@ -7,7 +7,8 @@ import android.view.ViewGroup
 import android.widget.SeekBar
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import com.blankj.utilcode.util.SizeUtils
+import com.mpdc4gsr.libunified.compat.dpToPx
+import com.mpdc4gsr.libunified.compat.spToPx
 import com.mpdc4gsr.libunified.R
 
 class TipsSeekBar : ViewGroup, SeekBar.OnSeekBarChangeListener {
@@ -151,7 +152,7 @@ class TipsSeekBar : ViewGroup, SeekBar.OnSeekBarChangeListener {
         }
 
         val height =
-            tvTips.measuredHeight + SizeUtils.dp2px(5f) + (seekBar.thumb?.intrinsicHeight
+            tvTips.measuredHeight + 5f.dpToPx(context) + (seekBar.thumb?.intrinsicHeight
                 ?: seekBar.measuredHeight)
         setMeasuredDimension(width, if (heightMode == MeasureSpec.EXACTLY) heightSize else height)
     }
@@ -163,7 +164,7 @@ class TipsSeekBar : ViewGroup, SeekBar.OnSeekBarChangeListener {
             val childHeight = child.measuredHeight
             when (child) {
                 seekBar -> {
-                    val top = paddingTop + tvTips.measuredHeight + SizeUtils.dp2px(5f)
+                    val top = paddingTop + tvTips.measuredHeight + 5f.dpToPx(context)
                     val left = (measuredWidth - childWidth) / 2
                     child.layout(left, top, left + childWidth, top + childHeight)
                 }
@@ -179,13 +180,13 @@ class TipsSeekBar : ViewGroup, SeekBar.OnSeekBarChangeListener {
                 }
 
                 tvMin -> {
-                    val baseTop = paddingTop + tvTips.measuredHeight + SizeUtils.dp2px(5f)
+                    val baseTop = paddingTop + tvTips.measuredHeight + 5f.dpToPx(context)
                     val top = baseTop + (seekBar.measuredHeight - childHeight) / 2
                     child.layout(paddingStart, top, paddingStart + childWidth, top + childHeight)
                 }
 
                 tvMax -> {
-                    val baseTop = paddingTop + tvTips.measuredHeight + SizeUtils.dp2px(5f)
+                    val baseTop = paddingTop + tvTips.measuredHeight + 5f.dpToPx(context)
                     val top = baseTop + (seekBar.measuredHeight - childHeight) / 2
                     val left = measuredWidth - paddingEnd - childWidth
                     child.layout(left, top, left + childWidth, top + childHeight)

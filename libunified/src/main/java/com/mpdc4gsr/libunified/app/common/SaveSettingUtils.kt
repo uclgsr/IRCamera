@@ -1,8 +1,8 @@
 package com.mpdc4gsr.libunified.app.common
 
 import com.blankj.utilcode.util.SPUtils
-import com.blankj.utilcode.util.SizeUtils
 import com.google.gson.Gson
+import com.mpdc4gsr.libunified.compat.ContextProvider
 import com.mpdc4gsr.libunified.app.bean.AlarmBean
 import com.mpdc4gsr.libunified.app.bean.CameraItemBean
 import com.mpdc4gsr.libunified.app.bean.ObserveBean
@@ -283,13 +283,16 @@ object SaveSettingUtils {
         }
 
     var tempTextSize: Int
-        get() =
-            if (isSaveSetting) {
+        get() {
+            val context = ContextProvider.getContext()
+            val defaultSize = (14f * context.resources.displayMetrics.scaledDensity).toInt()
+            return if (isSaveSetting) {
                 SPUtils.getInstance(SP_NAME)
-                    .getInt("tempTextSize", SizeUtils.sp2px(14f))
+                    .getInt("tempTextSize", defaultSize)
             } else {
-                SizeUtils.sp2px(14f)
+                defaultSize
             }
+        }
         set(value) {
             if (isSaveSetting) {
                 SPUtils.getInstance(SP_NAME).put("tempTextSize", value)

@@ -1,6 +1,6 @@
 package com.mpdc4gsr.libunified.app.utils
 
-import com.blankj.utilcode.util.Utils
+import com.mpdc4gsr.libunified.compat.ContextProvider
 import com.mpdc4gsr.libunified.app.lms.UrlConstants
 import com.mpdc4gsr.libunified.app.lms.network.HttpProxy.Companion.instant
 import com.mpdc4gsr.libunified.app.lms.network.IResponseCallback
@@ -22,7 +22,7 @@ object HttpHelp {
         )//TC001-950, TC002-951, TC003-952 TC007-1783
         params.addBodyParameter("status", 1)
         params.addBodyParameter("reportType", 2)
-        params.addBodyParameter("languageId", LanguageUtils.getLanguageId(Utils.getApp()))
+        params.addBodyParameter("languageId", LanguageUtils.getLanguageId(ContextProvider.INSTANCE.getContext()))
         params.addBodyParameter("current", pageNumber)
         params.addBodyParameter("size", 20)
         instant.post(url, true, params, iResponseCallback)

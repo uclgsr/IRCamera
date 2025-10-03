@@ -8,7 +8,8 @@ import android.text.TextPaint
 import android.util.AttributeSet
 import android.view.MotionEvent
 import androidx.appcompat.widget.AppCompatSeekBar
-import com.blankj.utilcode.util.SizeUtils
+import com.mpdc4gsr.libunified.compat.dpToPx
+import com.mpdc4gsr.libunified.compat.spToPx
 import com.mpdc4gsr.libunified.R
 import kotlin.math.roundToInt
 
@@ -27,10 +28,10 @@ class Comm3DSeekBar : AppCompatSeekBar {
     private val mProgressTextRect: Rect = Rect()
 
     // 
-    private val mThumbWidth: Int = SizeUtils.dp2px(50f)
+    private val mThumbWidth: Int = 50f.dpToPx(context)
 
     // 
-    private val mIndicatorWidth: Int = SizeUtils.dp2px(50f)
+    private val mIndicatorWidth: Int = 50f.dpToPx(context)
     private var onSeekBarChangeListener: OnSeekBarChangeListener? = null
 
     constructor(context: Context) : this(context, null)
@@ -56,7 +57,7 @@ class Comm3DSeekBar : AppCompatSeekBar {
         mPaint = TextPaint()
         mPaint.setAntiAlias(true)
         mPaint.setColor(Color.parseColor("#00574B"))
-        mPaint.setTextSize(SizeUtils.sp2px(16f).toFloat())
+        mPaint.setTextSize(16f.spToPx(context).toFloat())
         typedArray.recycle()
     }
 
