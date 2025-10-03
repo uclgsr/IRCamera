@@ -14,8 +14,10 @@ import kotlinx.coroutines.withContext
 
 object CoilLoader {
 
+    private const val CORNER_RADIUS_DP = 6f
+
     private fun getPhotoOptions(context: Context): RoundedCornersTransformation {
-        return RoundedCornersTransformation(6f.dpToPx(context))
+        return RoundedCornersTransformation(CORNER_RADIUS_DP.dpToPx(context))
     }
 
     fun loadCircle(
