@@ -38,13 +38,12 @@ object TS004Repository {
             HttpClient.network = value
         }
     
-    private val okHttpClient: OkHttpClient by lazy {
-        val builder = OkHttpClient.Builder()
-            .retryOnConnectionFailure(false)
-            .addInterceptor(OKLogInterceptor(false))
-        
-        builder.build()
-    }
+    private val okHttpClient: OkHttpClient
+        get() {
+            return HttpClient.createClient().newBuilder()
+                .addInterceptor(OKLogInterceptor(false))
+                .build()
+        }
     
     private suspend inline fun <reified T> post(
         endpoint: String,

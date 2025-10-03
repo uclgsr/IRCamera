@@ -75,23 +75,20 @@ object HttpClient {
                 }
                 
                 override fun onResponse(call: Call, response: Response) {
-                    try {
-                        if (!response.isSuccessful) {
-                            continuation.resumeWithException(
-                                IOException("HTTP ${response.code}: ${response.message}")
-                            )
-                            return
+                    response.use {
+                        try {
+                            if (!response.isSuccessful) {
+                                throw IOException("HTTP ${response.code}: ${response.message}")
+                            }
+                            
+                            val responseBody = response.body?.string()
+                                ?: throw IOException("Empty response body")
+                            
+                            val result = gson.fromJson(responseBody, responseType)
+                            continuation.resume(result)
+                        } catch (e: Exception) {
+                            continuation.resumeWithException(e)
                         }
-                        
-                        val responseBody = response.body?.string()
-                            ?: throw IOException("Empty response body")
-                        
-                        val result = gson.fromJson(responseBody, responseType)
-                        continuation.resume(result)
-                    } catch (e: Exception) {
-                        continuation.resumeWithException(e)
-                    } finally {
-                        response.close()
                     }
                 }
             })
@@ -109,7 +106,6 @@ object HttpClient {
         val requestBuilder = Request.Builder()
             .url(url)
             .post(requestBody)
-            .addHeader("Content-Type", "application/octet-stream")
         
         headers.forEach { (key, value) ->
             requestBuilder.addHeader(key, value)
@@ -130,21 +126,19 @@ object HttpClient {
                 }
                 
                 override fun onResponse(call: Call, response: Response) {
-                    try {
-                        if (!response.isSuccessful) {
-                            continuation.resumeWithException(
-                                IOException("HTTP ${response.code}: ${response.message}")
-                            )
-                            return
+                    response.use {
+                        try {
+                            if (!response.isSuccessful) {
+                                throw IOException("HTTP ${response.code}: ${response.message}")
+                            }
+                            
+                            val body = response.body
+                                ?: throw IOException("Empty response body")
+                            
+                            continuation.resume(body)
+                        } catch (e: Exception) {
+                            continuation.resumeWithException(e)
                         }
-                        
-                        val body = response.body
-                            ?: throw IOException("Empty response body")
-                        
-                        continuation.resume(body)
-                    } catch (e: Exception) {
-                        response.close()
-                        continuation.resumeWithException(e)
                     }
                 }
             })
@@ -179,21 +173,19 @@ object HttpClient {
                 }
                 
                 override fun onResponse(call: Call, response: Response) {
-                    try {
-                        if (!response.isSuccessful) {
-                            continuation.resumeWithException(
-                                IOException("HTTP ${response.code}: ${response.message}")
-                            )
-                            return
+                    response.use {
+                        try {
+                            if (!response.isSuccessful) {
+                                throw IOException("HTTP ${response.code}: ${response.message}")
+                            }
+                            
+                            val body = response.body
+                                ?: throw IOException("Empty response body")
+                            
+                            continuation.resume(body)
+                        } catch (e: Exception) {
+                            continuation.resumeWithException(e)
                         }
-                        
-                        val body = response.body
-                            ?: throw IOException("Empty response body")
-                        
-                        continuation.resume(body)
-                    } catch (e: Exception) {
-                        response.close()
-                        continuation.resumeWithException(e)
                     }
                 }
             })
