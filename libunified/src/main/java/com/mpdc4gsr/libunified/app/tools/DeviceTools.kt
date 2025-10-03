@@ -16,14 +16,8 @@ import com.mpdc4gsr.libunified.app.config.DeviceConfig.isTcLiteDevice
 import com.mpdc4gsr.libunified.app.config.DeviceConfig.isTcTsDevice
 import com.mpdc4gsr.libunified.app.event.DeviceEventManager
 import com.mpdc4gsr.libunified.app.utils.ByteUtils
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
 
 object DeviceTools {
-
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
     fun isConnect(
         isSendConnectEvent: Boolean = false,
@@ -36,17 +30,13 @@ object DeviceTools {
                 return if (usbManager.hasPermission(usbDevice)) {
                     XLog.i("[ph][ph][ph][ph][ph][ph][ph][ph][ph]")
                     if (isSendConnectEvent) {
-                        scope.launch {
-                            DeviceEventManager.emitDeviceConnection(true, usbDevice)
-                        }
+                        DeviceEventManager.emitDeviceConnectionSync(true, usbDevice)
                     }
                     true
                 } else {
                     XLog.w("[ph][ph][ph][ph][ph][ph][ph][ph][ph]")
                     if (isAutoRequest) {
-                        scope.launch {
-                            DeviceEventManager.emitDevicePermissionRequest(usbDevice)
-                        }
+                        DeviceEventManager.emitDevicePermissionRequestSync(usbDevice)
                     }
                     false
                 }

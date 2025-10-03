@@ -60,4 +60,17 @@ object DeviceEventManager {
     fun emitSocketConnectionSync(isConnected: Boolean, isTS004: Boolean = false) {
         _socketConnectionState.value = SocketConnectionState(isConnected, isTS004)
     }
+
+    /**
+     * Synchronously emits a device permission request.
+     *
+     * Use this function when you need to emit a permission request from a non-coroutine context,
+     * where calling suspend functions is not possible. Uses tryEmit which may drop the event if
+     * there are no active collectors. Prefer [emitDevicePermissionRequest] in coroutine contexts.
+     *
+     * @return true if the event was emitted successfully, false otherwise
+     */
+    fun emitDevicePermissionRequestSync(device: UsbDevice): Boolean {
+        return _devicePermissionRequested.tryEmit(device)
+    }
 }

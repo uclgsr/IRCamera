@@ -17,16 +17,10 @@ import com.mpdc4gsr.libunified.app.event.DeviceEventManager
 import com.mpdc4gsr.libunified.app.security.CertificateManager
 import com.mpdc4gsr.libunified.app.utils.WifiUtils
 import com.mpdc4gsr.libunified.app.utils.WsCmdConstants
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
 import okhttp3.*
 import okio.ByteString
 
 class WebSocketProxy {
-
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
     companion object {
 
@@ -159,9 +153,7 @@ class WebSocketProxy {
             XLog.tag("WebSocket")
                 .d("[ph][ph][ph] $currentSSID [ph][ph][ph] $ssid，[ph][ph][ph][ph][ph]")
             if (reconnectHandler.isReconnecting) {
-                scope.launch {
-                    DeviceEventManager.emitSocketConnection(false, false)
-                }
+                DeviceEventManager.emitSocketConnectionSync(false, false)
             }
             this.network = network
             currentSSID = ssid
@@ -232,9 +224,7 @@ class WebSocketProxy {
             XLog.tag("WebSocket").d("$ssid Socket [ph][ph][ph][ph]")
             isNeedReconnect = true
             handler.reset()
-            mWebSocketProxy?.scope?.launch {
-                DeviceEventManager.emitSocketConnection(true, false)
-            }
+            DeviceEventManager.emitSocketConnectionSync(true, false)
         }
 
         override fun onMessage(
@@ -281,9 +271,7 @@ class WebSocketProxy {
             } else {
                 XLog.tag("WebSocket").d("$ssid [ph][ph][ph][ph][ph]，[ph][ph]：$reason")
                 handler.reset()
-                mWebSocketProxy?.scope?.launch {
-                    DeviceEventManager.emitSocketConnection(false, false)
-                }
+                DeviceEventManager.emitSocketConnectionSync(false, false)
             }
             mWebSocketProxy?.currentSSID = ""
         }
@@ -300,17 +288,13 @@ class WebSocketProxy {
             if (checkNeedReconnect()) {
                 handler.handleFail(ssid)
                 if (!handler.isReconnecting) {
-                    mWebSocketProxy?.scope?.launch {
-                        DeviceEventManager.emitSocketConnection(false, false)
-                    }
+                    DeviceEventManager.emitSocketConnectionSync(false, false)
                 }
             } else {
                 XLog.tag("WebSocket").w("[ph][ph][ph][ph][ph][ph]")
                 handler.reset()
                 getInstance().stopWebSocket()
-                mWebSocketProxy?.scope?.launch {
-                    DeviceEventManager.emitSocketConnection(false, false)
-                }
+                DeviceEventManager.emitSocketConnectionSync(false, false)
             }
             mWebSocketProxy?.currentSSID = ""
         }

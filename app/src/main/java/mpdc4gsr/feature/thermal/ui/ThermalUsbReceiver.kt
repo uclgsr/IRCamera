@@ -8,10 +8,6 @@ import android.hardware.usb.UsbManager
 import android.util.Log
 import com.mpdc4gsr.libunified.app.config.DeviceConfig.isTcTsDevice
 import com.mpdc4gsr.libunified.app.event.DeviceEventManager
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
 
 class ThermalUsbReceiver : BroadcastReceiver() {
 
@@ -19,8 +15,6 @@ class ThermalUsbReceiver : BroadcastReceiver() {
         private const val TAG = "ThermalUsbReceiver"
         private const val USB_PERMISSION_ACTION = "mpdc4gsr.USB_PERMISSION"
     }
-
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
     override fun onReceive(context: Context?, intent: Intent?) {
         if (context == null || intent == null) return
@@ -70,15 +64,11 @@ class ThermalUsbReceiver : BroadcastReceiver() {
                 if (hasPermission) {
 
                     Log.i(TAG, "Thermal camera attached with existing permission")
-                    scope.launch {
-                        DeviceEventManager.emitDeviceConnection(true, device)
-                    }
+                    DeviceEventManager.emitDeviceConnectionSync(true, device)
                 } else {
 
                     Log.i(TAG, "Thermal camera attached, requesting USB permission")
-                    scope.launch {
-                        DeviceEventManager.emitDevicePermissionRequest(device)
-                    }
+                    DeviceEventManager.emitDevicePermissionRequestSync(device)
                 }
             } else {
                 Log.d(TAG, "Non-thermal USB device attached, ignoring")
@@ -106,9 +96,7 @@ class ThermalUsbReceiver : BroadcastReceiver() {
             if (device.isTcTsDevice()) {
                 Log.w(TAG, "Topdon thermal camera disconnected: ${device.productName}")
 
-                scope.launch {
-                    DeviceEventManager.emitDeviceConnection(false, device)
-                }
+                DeviceEventManager.emitDeviceConnectionSync(false, device)
             }
         }
     }
@@ -131,15 +119,11 @@ class ThermalUsbReceiver : BroadcastReceiver() {
                 if (granted) {
                     Log.i(TAG, "USB permission granted for thermal camera")
 
-                    scope.launch {
-                        DeviceEventManager.emitDeviceConnection(true, device)
-                    }
+                    DeviceEventManager.emitDeviceConnectionSync(true, device)
                 } else {
                     Log.w(TAG, "USB permission denied for thermal camera")
 
-                    scope.launch {
-                        DeviceEventManager.emitDevicePermissionRequest(device)
-                    }
+                    DeviceEventManager.emitDevicePermissionRequestSync(device)
                 }
             }
         }

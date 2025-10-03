@@ -127,6 +127,26 @@ class DeviceEventManagerTest {
     }
 
     @Test
+    fun `emitDevicePermissionRequestSync emits to SharedFlow synchronously`() = runTest {
+        val testDispatcher = UnconfinedTestDispatcher(testScheduler)
+        
+        val collectedDevices = mutableListOf<UsbDevice>()
+        val job = launch(testDispatcher) {
+            DeviceEventManager.devicePermissionRequested.collect { device ->
+                collectedDevices.add(device)
+            }
+        }
+
+        val result = DeviceEventManager.emitDevicePermissionRequestSync(mockDevice)
+        
+        assertTrue("tryEmit should succeed with active collector", result)
+        assertEquals("Should have collected one device", 1, collectedDevices.size)
+        assertEquals("Collected device should match mock", mockDevice, collectedDevices[0])
+
+        job.cancel()
+    }
+
+    @Test
     fun `multiple emissions update state correctly`() = runTest {
         val device1 = mockk<UsbDevice>(relaxed = true)
         val device2 = mockk<UsbDevice>(relaxed = true)

@@ -9,14 +9,9 @@ import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.config.DeviceConfig.isTcTsDevice
 import com.mpdc4gsr.libunified.app.event.DeviceEventManager
 import com.mpdc4gsr.libunified.app.tools.DeviceTools
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
 
 class DeviceBroadcastReceiver : BroadcastReceiver() {
     private val TAG = this.javaClass.simpleName
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
     companion object {
 
@@ -64,9 +59,7 @@ class DeviceBroadcastReceiver : BroadcastReceiver() {
                 DeviceTools.isConnect(isSendConnectEvent = true, isAutoRequest = true)
             }
             if (UsbManager.ACTION_USB_DEVICE_DETACHED == intent.action) {
-                scope.launch {
-                    DeviceEventManager.emitDeviceConnection(false, null)
-                }
+                DeviceEventManager.emitDeviceConnectionSync(false, null)
             }
         }
     }
