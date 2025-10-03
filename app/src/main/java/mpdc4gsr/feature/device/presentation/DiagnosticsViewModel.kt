@@ -1,17 +1,18 @@
 package mpdc4gsr.feature.device.presentation
 
+import android.app.Application
 import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.BatteryManager
 import android.os.Build
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import mpdc4gsr.core.ui.AppBaseViewModel
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -20,9 +21,9 @@ import java.util.*
  * Diagnostics ViewModel - MVVM Integration
  * Provides real-time system diagnostics and sensor status monitoring
  */
-class DiagnosticsViewModel : AppBaseViewModel() {
+class DiagnosticsViewModel(application: Application) : AndroidViewModel(application) {
 
-    private lateinit var context: Context
+    private val context: Context = application.applicationContext
 
     private val _systemStatus = MutableStateFlow(SystemStatus())
     val systemStatus: StateFlow<SystemStatus> = _systemStatus.asStateFlow()
@@ -49,8 +50,7 @@ class DiagnosticsViewModel : AppBaseViewModel() {
         private const val TIMESTAMP_FORMAT = "yyyy-MM-dd HH:mm:ss"
     }
 
-    fun initialize(ctx: Context) {
-        context = ctx
+    fun initialize() {
         updateSystemStatus()
         updateSensorStatus()
     }

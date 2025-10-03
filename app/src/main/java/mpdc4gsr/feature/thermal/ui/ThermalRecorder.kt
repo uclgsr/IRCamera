@@ -28,7 +28,7 @@ class ThermalRecorder(private val context: Context) {
     private var isRecording = AtomicBoolean(false)
     private var frameSequence = AtomicLong(0)
     private var sessionDirectory: File? = null
-    private var csvWriter: FileWriter? = null
+    private var csvFile: File? = null
     private var saveImages = false
     private var sessionMetadata: SessionMetadata? = null
 
@@ -90,20 +90,19 @@ class ThermalRecorder(private val context: Context) {
                     sessionDirectory!!.mkdirs()
                 }
 
-                val csvFile =
-                    File(sessionDirectory, "thermal_stats_${sessionMetadata.sessionId}.csv")
-                csvWriter = FileWriter(csvFile, false)
-
-                csvWriter?.write(sessionMetadata.createTimingHeader())
-                csvWriter?.write("# THERMAL FRAME DATA - Temperatures in Celsius\n")
-                csvWriter?.write("# Frame timestamps include:\n")
-                csvWriter?.write("#   timestamp_wall_ms: Wall clock time (UTC)\n")
-                csvWriter?.write("#   timestamp_relative_ms: Milliseconds since session start (monotonic)\n")
-                csvWriter?.write("#   timestamp_monotonic_ns: Raw monotonic nanoseconds for precise intervals\n")
-                csvWriter?.write("#\n")
-
-                csvWriter?.write("timestamp_wall_ms,timestamp_relative_ms,timestamp_monotonic_ns,frame_sequence,min_temp_c,avg_temp_c,max_temp_c,pixel_count\n")
-                csvWriter?.flush()
+                csvFile = File(sessionDirectory, "thermal_stats_${sessionMetadata.sessionId}.csv")
+                
+                FileWriter(csvFile!!, false).use { writer ->
+                    writer.write(sessionMetadata.createTimingHeader())
+                    writer.write("# THERMAL FRAME DATA - Temperatures in Celsius\n")
+                    writer.write("# Frame timestamps include:\n")
+                    writer.write("#   timestamp_wall_ms: Wall clock time (UTC)\n")
+                    writer.write("#   timestamp_relative_ms: Milliseconds since session start (monotonic)\n")
+                    writer.write("#   timestamp_monotonic_ns: Raw monotonic nanoseconds for precise intervals\n")
+                    writer.write("#\n")
+                    writer.write("timestamp_wall_ms,timestamp_relative_ms,timestamp_monotonic_ns,frame_sequence,min_temp_c,avg_temp_c,max_temp_c,pixel_count\n")
+                    writer.flush()
+                }
 
                 frameSequence.set(0)
 
@@ -117,7 +116,7 @@ class ThermalRecorder(private val context: Context) {
                 )
 
                 isRecording.set(true)
-                Log.i(TAG, "Thermal recording started with session timing: ${csvFile.absolutePath}")
+                Log.i(TAG, "Thermal recording started with session timing: ${csvFile!!.absolutePath}")
                 Log.i(TAG, "Session start: ${sessionMetadata.sessionStartIso}")
                 Log.i(TAG, "Thermal recording SessionSync event logged for alignment verification")
 
@@ -154,18 +153,19 @@ class ThermalRecorder(private val context: Context) {
 
                 val timestamp =
                     SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.getDefault()).format(Date())
-                val csvFile = File(sessionDirectory, "thermal_stats_$timestamp.csv")
-                csvWriter = FileWriter(csvFile, false)
-
-                csvWriter?.write("# Legacy thermal recording - no session synchronization metadata\n")
-                csvWriter?.write(CSV_HEADER)
-                csvWriter?.write("\n")
-                csvWriter?.flush()
+                csvFile = File(sessionDirectory, "thermal_stats_$timestamp.csv")
+                
+                FileWriter(csvFile!!, false).use { writer ->
+                    writer.write("# Legacy thermal recording - no session synchronization metadata\n")
+                    writer.write(CSV_HEADER)
+                    writer.write("\n")
+                    writer.flush()
+                }
 
                 frameSequence.set(0)
 
                 isRecording.set(true)
-                Log.i(TAG, "Thermal recording started (legacy mode): ${csvFile.absolutePath}")
+                Log.i(TAG, "Thermal recording started (legacy mode): ${csvFile!!.absolutePath}")
 
                 if (saveImages) {
                     Log.i(
@@ -191,10 +191,7 @@ class ThermalRecorder(private val context: Context) {
 
         try {
             isRecording.set(false)
-
-            csvWriter?.flush()
-            csvWriter?.close()
-            csvWriter = null
+            csvFile = null
 
             Log.i(TAG, "Thermal recording stopped. Processed ${frameSequence.get()} frames")
             return@withContext true
@@ -352,7 +349,7 @@ class ThermalRecorder(private val context: Context) {
 
     private suspend fun logFrameStats(stats: ThermalFrameStats) = withContext(Dispatchers.IO) {
         try {
-            csvWriter?.let { writer ->
+            csvFile?.let { file ->
                 val csvLine = if (sessionMetadata != null) {
 
                     val sm = sessionMetadata!!
@@ -393,9 +390,11 @@ class ThermalRecorder(private val context: Context) {
                     }.toString()
                 }
 
-                writer.write(csvLine)
-                writer.write("\n")
-                writer.flush()
+                FileWriter(file, true).use { writer ->
+                    writer.write(csvLine)
+                    writer.write("\n")
+                    writer.flush()
+                }
 
                 Log.d(
                     TAG,

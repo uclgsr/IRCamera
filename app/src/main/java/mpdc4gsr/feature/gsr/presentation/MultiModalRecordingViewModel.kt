@@ -1,6 +1,8 @@
 package mpdc4gsr.feature.gsr.presentation
 
+import android.app.Application
 import android.content.Context
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -17,20 +19,19 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import mpdc4gsr.core.data.RgbCameraRecorder
-import mpdc4gsr.core.ui.AppBaseViewModel
 import mpdc4gsr.feature.gsr.data.RealShimmerDeviceFactory
 
 /**
  * MultiModalRecordingViewModel - Advanced MVVM Implementation
  * Coordinates multiple recording modalities (GSR, RGB Camera, Network) with proper state management
  */
-class MultiModalRecordingViewModel : AppBaseViewModel() {
+class MultiModalRecordingViewModel(application: Application) : AndroidViewModel(application) {
 
+    private val context: Context = application.applicationContext
     private lateinit var gsrRecorder: GSRRecorder
     private lateinit var sessionManager: SessionManager
     private var rgbCameraRecorder: RgbCameraRecorder? = null
     private var networkClient: NetworkClient? = null
-    private lateinit var context: Context
 
     // Recording State Management
     private val _recordingState = MutableLiveData<RecordingState>()
@@ -166,14 +167,20 @@ class MultiModalRecordingViewModel : AppBaseViewModel() {
         PERMISSION_REQUIRED
     }
 
-    fun initialize(context: Context) {
-        this.context = context
-        initializeRecorders(context)
+    init {
+        initializeRecorders()
         generateDefaultSessionId()
         updateSystemReadiness()
     }
 
-    private fun initializeRecorders(context: Context) {
+    fun initialize() {
+        // Kept for compatibility, but initialization now happens in init block
+        initializeRecorders()
+        generateDefaultSessionId()
+        updateSystemReadiness()
+    }
+
+    private fun initializeRecorders() {
         viewModelScope.launch {
             try {
                 // Initialize GSR Recorder

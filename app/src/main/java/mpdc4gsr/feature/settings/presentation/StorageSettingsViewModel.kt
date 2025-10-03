@@ -1,25 +1,26 @@
 package mpdc4gsr.feature.settings.presentation
 
+import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Environment
 import android.os.StatFs
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.preference.PreferenceManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import mpdc4gsr.core.ui.AppBaseViewModel
 
 /**
  * Storage Settings ViewModel - MVVM Integration
  * Manages storage configuration and monitors available space
  */
-class StorageSettingsViewModel : AppBaseViewModel() {
+class StorageSettingsViewModel(application: Application) : AndroidViewModel(application) {
 
-    private lateinit var prefs: SharedPreferences
-    private lateinit var context: Context
+    private val context: Context = application.applicationContext
+    private val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
 
     private val _storageSettings = MutableStateFlow(StorageSettings())
     val storageSettings: StateFlow<StorageSettings> = _storageSettings.asStateFlow()
@@ -51,9 +52,13 @@ class StorageSettingsViewModel : AppBaseViewModel() {
         private const val KEY_DELETE_AFTER_EXPORT = "storage_delete_after_export"
     }
 
-    fun initialize(ctx: Context) {
-        context = ctx
-        prefs = PreferenceManager.getDefaultSharedPreferences(ctx)
+    init {
+        loadSettings()
+        updateStorageInfo()
+    }
+
+    fun initialize() {
+        // Kept for compatibility, but initialization now happens in init block
         loadSettings()
         updateStorageInfo()
     }
