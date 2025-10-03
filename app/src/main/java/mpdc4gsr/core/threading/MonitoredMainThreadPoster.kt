@@ -57,7 +57,7 @@ object MonitoredMainThreadPoster {
         private val wrapped: Runnable
     ) : Runnable {
         override fun run() {
-            val startTime = System.currentTimeMillis()
+            val startTime = System.nanoTime()
             totalPosts++
             
             try {
@@ -66,7 +66,7 @@ object MonitoredMainThreadPoster {
                 Log.e(TAG, "[$componentName] Exception in main thread runnable", e)
                 throw e
             } finally {
-                val executionTime = System.currentTimeMillis() - startTime
+                val executionTime = (System.nanoTime() - startTime) / 1_000_000
                 
                 when {
                     executionTime > CRITICAL_THRESHOLD_MS -> {
