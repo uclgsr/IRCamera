@@ -43,7 +43,7 @@ object TS004Repository {
             .retryOnConnectionFailure(false)
             .addInterceptor(OKLogInterceptor(false))
         
-        HttpClient.createClient()
+        builder.build()
     }
     
     private suspend inline fun <reified T> post(
