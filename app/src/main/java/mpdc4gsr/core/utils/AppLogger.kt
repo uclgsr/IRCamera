@@ -31,94 +31,45 @@ object AppLogger {
         minLogLevel = level
     }
 
-    fun v(
-        tag: String,
-        message: String,
-        throwable: Throwable? = null,
-    ) {
-        if (shouldLog(LogLevel.VERBOSE)) {
-            if (throwable != null) {
-                Log.v(tag, message, throwable)
-            } else {
-                Log.v(tag, message)
-            }
-        }
+    fun v(tag: String, message: String, throwable: Throwable? = null) {
+        log(LogLevel.VERBOSE, tag, message, throwable)
     }
 
-    fun d(
-        tag: String,
-        message: String,
-        throwable: Throwable? = null,
-    ) {
-        if (shouldLog(LogLevel.DEBUG)) {
-            if (throwable != null) {
-                Log.d(tag, message, throwable)
-            } else {
-                Log.d(tag, message)
-            }
-        }
+    fun d(tag: String, message: String, throwable: Throwable? = null) {
+        log(LogLevel.DEBUG, tag, message, throwable)
     }
 
-    fun i(
+    fun i(tag: String, message: String, throwable: Throwable? = null, component: String? = null) {
+        log(LogLevel.INFO, tag, message, throwable, component)
+    }
+
+    fun w(tag: String, message: String, throwable: Throwable? = null, component: String? = null) {
+        log(LogLevel.WARN, tag, message, throwable, component)
+    }
+
+    fun e(tag: String, message: String, throwable: Throwable? = null, component: String? = null) {
+        log(LogLevel.ERROR, tag, message, throwable, component)
+    }
+
+    private fun log(
+        level: LogLevel,
         tag: String,
         message: String,
         throwable: Throwable? = null,
         component: String? = null,
     ) {
-        if (shouldLog(LogLevel.INFO)) {
-            if (throwable != null) {
-                Log.i(tag, message, throwable)
-            } else {
-                Log.i(tag, message)
-            }
-            logToStructured(
-                LogLevel.INFO,
-                component ?: tag,
-                message,
-                throwable,
-            )
-        }
-    }
+        if (!shouldLog(level)) return
 
-    fun w(
-        tag: String,
-        message: String,
-        throwable: Throwable? = null,
-        component: String? = null,
-    ) {
-        if (shouldLog(LogLevel.WARN)) {
-            if (throwable != null) {
-                Log.w(tag, message, throwable)
-            } else {
-                Log.w(tag, message)
-            }
-            logToStructured(
-                LogLevel.WARN,
-                component ?: tag,
-                message,
-                throwable,
-            )
+        when (level) {
+            LogLevel.VERBOSE -> Log.v(tag, message, throwable)
+            LogLevel.DEBUG -> Log.d(tag, message, throwable)
+            LogLevel.INFO -> Log.i(tag, message, throwable)
+            LogLevel.WARN -> Log.w(tag, message, throwable)
+            LogLevel.ERROR -> Log.e(tag, message, throwable)
         }
-    }
 
-    fun e(
-        tag: String,
-        message: String,
-        throwable: Throwable? = null,
-        component: String? = null,
-    ) {
-        if (shouldLog(LogLevel.ERROR)) {
-            if (throwable != null) {
-                Log.e(tag, message, throwable)
-            } else {
-                Log.e(tag, message)
-            }
-            logToStructured(
-                LogLevel.ERROR,
-                component ?: tag,
-                message,
-                throwable,
-            )
+        if (level.ordinal >= LogLevel.INFO.ordinal) {
+            logToStructured(level, component ?: tag, message, throwable)
         }
     }
 
@@ -132,31 +83,22 @@ object AppLogger {
         message: String,
         throwable: Throwable?,
     ) {
-        if (!enableStructuredLogging || structuredLogger == null) {
-            return
-        }
+        if (!enableStructuredLogging || structuredLogger == null) return
 
-        val details =
-            mutableMapOf<String, Any>("message" to message)
+        val details = mutableMapOf<String, Any>("message" to message)
         throwable?.let {
             details["error"] = it.javaClass.simpleName
             details["error_message"] = it.message ?: "Unknown error"
             details["stack_trace"] = it.stackTraceToString()
         }
 
-        val structuredLevel =
-            when (level) {
-                LogLevel.VERBOSE, LogLevel.DEBUG -> StructuredLogger.LogLevel.DEBUG
-                LogLevel.INFO -> StructuredLogger.LogLevel.INFO
-                LogLevel.WARN -> StructuredLogger.LogLevel.WARNING
-                LogLevel.ERROR -> StructuredLogger.LogLevel.ERROR
-            }
+        val structuredLevel = when (level) {
+            LogLevel.VERBOSE, LogLevel.DEBUG -> StructuredLogger.LogLevel.DEBUG
+            LogLevel.INFO -> StructuredLogger.LogLevel.INFO
+            LogLevel.WARN -> StructuredLogger.LogLevel.WARNING
+            LogLevel.ERROR -> StructuredLogger.LogLevel.ERROR
+        }
 
-        structuredLogger?.log(
-            structuredLevel,
-            component,
-            "log_message",
-            details,
-        )
+        structuredLogger?.log(structuredLevel, component, "log_message", details)
     }
 }
