@@ -124,7 +124,7 @@ class ComposeComponentsShowcaseActivity :
                         title = "Sensor Dashboard",
                         description = "Demo component - sensors shown are disconnected. Use actual sensor dashboard for real connections."
                     ) {
-                        AnimatedSensorDashboard(
+                        SensorDashboardDemo(
                             onSensorClick = { sensor ->
                                 // Handle sensor click - could show details dialog
                             },

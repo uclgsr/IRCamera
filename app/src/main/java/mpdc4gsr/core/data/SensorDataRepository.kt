@@ -139,8 +139,6 @@ class SensorDataRepository(
 
 
     private suspend fun fetchDeviceStatus(deviceId: String): DeviceStatus {
-        delay(200) // Simulate network request
-
         return DeviceStatus(
             deviceId = deviceId,
             deviceType = when {
@@ -152,7 +150,7 @@ class SensorDataRepository(
             isConnected = false,
             batteryLevel = null,
             signalStrength = null,
-            lastSeen = System.currentTimeMillis() - (Math.random() * 60000).toLong(),
+            lastSeen = 0L,
             firmwareVersion = null
         )
     }

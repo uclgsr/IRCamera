@@ -326,7 +326,7 @@ fun getSampleSensorData(): List<SensorInfo> {
 // Static sensor dashboard for demo purposes - shows disconnected sensors
 // For actual sensor connections, use SensorDashboardCompose with real sensor data
 @Composable
-fun AnimatedSensorDashboard(
+fun SensorDashboardDemo(
     modifier: Modifier = Modifier,
     onSensorClick: (SensorInfo) -> Unit = {},
     onRefresh: () -> Unit = {}
@@ -339,4 +339,17 @@ fun AnimatedSensorDashboard(
         onSensorClick = onSensorClick,
         onRefresh = onRefresh
     )
+}
+
+@Deprecated(
+    message = "Function renamed to SensorDashboardDemo to reflect its static demo nature",
+    replaceWith = ReplaceWith("SensorDashboardDemo(modifier, onSensorClick, onRefresh)")
+)
+@Composable
+fun AnimatedSensorDashboard(
+    modifier: Modifier = Modifier,
+    onSensorClick: (SensorInfo) -> Unit = {},
+    onRefresh: () -> Unit = {}
+) {
+    SensorDashboardDemo(modifier, onSensorClick, onRefresh)
 }
