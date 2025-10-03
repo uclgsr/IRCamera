@@ -350,13 +350,6 @@ class PolicyViewModel : AppBaseViewModel() {
             </div>
 
             <div class="component">
-                <div class="component-name">Retrofit</div>
-                <div class="component-version">Version: 2.11.0</div>
-                <div class="component-license">License: Apache License 2.0</div>
-                <div class="component-description">HTTP client for Android and Java applications.</div>
-            </div>
-
-            <div class="component">
                 <div class="component-name">OkHttp</div>
                 <div class="component-version">Version: 4.12.0</div>
                 <div class="component-license">License: Apache License 2.0</div>
