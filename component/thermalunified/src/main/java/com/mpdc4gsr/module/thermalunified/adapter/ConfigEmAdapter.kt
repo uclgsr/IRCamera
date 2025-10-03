@@ -11,8 +11,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.blankj.utilcode.util.SizeUtils
 import com.mpdc4gsr.module.thermalunified.R
+import com.mpdc4gsr.module.thermalunified.compat.dpToPx
 import com.mpdc4gsr.module.thermalunified.utils.IRConfigData
 
 class ConfigEmAdapter(val context: Context) : RecyclerView.Adapter<ConfigEmAdapter.ViewHolder>() {
@@ -49,7 +49,7 @@ class ConfigEmAdapter(val context: Context) : RecyclerView.Adapter<ConfigEmAdapt
 
         init {
             paint.color = 0xff5b5961.toInt()
-            paint.strokeWidth = SizeUtils.dp2px(1f).coerceAtLeast(1).toFloat()
+            paint.strokeWidth = 1f.dpToPx(context).coerceAtLeast(1).toFloat()
         }
 
         override fun draw(canvas: Canvas) {

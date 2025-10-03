@@ -24,10 +24,11 @@ import androidx.core.app.ActivityCompat
 import androidx.core.view.drawToBitmap
 import androidx.core.view.isVisible
 import com.blankj.utilcode.util.SDCardUtils
-import com.blankj.utilcode.util.SizeUtils
 import com.blankj.utilcode.util.StringUtils.getString
 import com.blankj.utilcode.util.ThreadUtils
 import com.mpdc4gsr.module.thermalunified.compat.ContextProvider
+import com.mpdc4gsr.module.thermalunified.compat.dpToPx
+import com.mpdc4gsr.module.thermalunified.compat.spToPx
 import com.elvishew.xlog.XLog
 import com.infisense.usbir.view.CameraView
 import com.mpdc4gsr.libunified.app.comm.view.TempLayout
@@ -148,9 +149,9 @@ class VideoRecordFFmpeg(
     val audioExecutor = Executors.newScheduledThreadPool(1)
     val paint = TextPaint(Paint.ANTI_ALIAS_FLAG)
     private var rectText = Rect()
-    private val pix20 = SizeUtils.dp2px(20f)
-    private val pix10 = SizeUtils.dp2px(10f)
-    private val pix6 = SizeUtils.dp2px(6f)
+    private val pix20 by lazy { 20f.dpToPx(ContextProvider.getContext()) }
+    private val pix10 by lazy { 10f.dpToPx(ContextProvider.getContext()) }
+    private val pix6 by lazy { 6f.dpToPx(ContextProvider.getContext()) }
     private val pixArray = ByteArray(width * height * 4)
     private val bufferRef: AtomicReference<ByteBuffer> =
         AtomicReference(ByteBuffer.allocate(pixArray.size))
@@ -207,7 +208,7 @@ class VideoRecordFFmpeg(
                 AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, bufferSize,
             )
         paint.color = Color.WHITE
-        paint.textSize = SizeUtils.sp2px(6f).toFloat()
+        paint.textSize = 6f.spToPx(ContextProvider.getContext()).toFloat()
         paint.isDither = true
         paint.isFilterBitmap = true
         paint.getTextBounds(
@@ -648,7 +649,7 @@ class VideoRecordFFmpeg(
                             cameraViewBitmap,
                             bitmap,
                             ((cameraView.parent as ViewGroup).width - it.width) / 2,
-                            SizeUtils.dp2px(20f),
+                            20f.dpToPx(ContextProvider.getContext()),
                         )
                 } catch (e: Exception) {
                     Log.e(TAG, "[ph][ph][ph][ph][ph][ph][ph][ph] exception:${e.message}")
@@ -748,7 +749,7 @@ class VideoRecordFFmpeg(
                         false,
                     )
                 }
-                beginY = beginY - (textHeight + SizeUtils.dp2px(1f)) * staticLayout.lineCount
+                beginY = beginY - (textHeight + 1f.dpToPx(ContextProvider.getContext())) * staticLayout.lineCount
                 canvas.save()
                 canvas.translate(beginX.toInt().toFloat(), (beginY.toInt() - textHeight).toFloat())
                 staticLayout.draw(canvas)
