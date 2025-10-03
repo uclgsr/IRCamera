@@ -3,8 +3,9 @@ package com.mpdc4gsr.libunified.app.tools
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.net.Uri
+import android.util.Log
 import android.widget.ImageView
-import coil.ImageLoader
+import coil.imageLoader
 import coil.request.ImageRequest
 import coil.transform.RoundedCornersTransformation
 import com.mpdc4gsr.libunified.compat.dpToPx
@@ -14,63 +15,49 @@ import kotlinx.coroutines.withContext
 
 object CoilLoader {
 
+    private const val TAG = "CoilLoader"
     private const val CORNER_RADIUS_DP = 6f
 
     private fun getPhotoOptions(context: Context): RoundedCornersTransformation {
         return RoundedCornersTransformation(CORNER_RADIUS_DP.dpToPx(context))
     }
 
-    fun loadCircle(
+    private fun loadCircleWithData(
         img: ImageView,
-        resourceId: Int,
+        data: Any,
         options: ((ImageRequest.Builder) -> Unit)? = null,
     ) {
         val request = ImageRequest.Builder(img.context)
-            .data(resourceId)
+            .data(data)
             .target(img)
             .apply { options?.invoke(this) }
             .build()
         img.context.imageLoader.enqueue(request)
     }
+
+    fun loadCircle(
+        img: ImageView,
+        resourceId: Int,
+        options: ((ImageRequest.Builder) -> Unit)? = null,
+    ) = loadCircleWithData(img, resourceId, options)
 
     fun loadCircle(
         img: ImageView,
         url: String,
         options: ((ImageRequest.Builder) -> Unit)? = null,
-    ) {
-        val request = ImageRequest.Builder(img.context)
-            .data(url)
-            .target(img)
-            .apply { options?.invoke(this) }
-            .build()
-        img.context.imageLoader.enqueue(request)
-    }
+    ) = loadCircleWithData(img, url, options)
 
     fun loadCircle(
         img: ImageView,
         drawable: Drawable,
         options: ((ImageRequest.Builder) -> Unit)? = null,
-    ) {
-        val request = ImageRequest.Builder(img.context)
-            .data(drawable)
-            .target(img)
-            .apply { options?.invoke(this) }
-            .build()
-        img.context.imageLoader.enqueue(request)
-    }
+    ) = loadCircleWithData(img, drawable, options)
 
     fun loadCircle(
         img: ImageView,
         uri: Uri,
         options: ((ImageRequest.Builder) -> Unit)? = null,
-    ) {
-        val request = ImageRequest.Builder(img.context)
-            .data(uri)
-            .target(img)
-            .apply { options?.invoke(this) }
-            .build()
-        img.context.imageLoader.enqueue(request)
-    }
+    ) = loadCircleWithData(img, uri, options)
 
     fun loadCircle(
         img: ImageView,
@@ -88,57 +75,38 @@ object CoilLoader {
         img.context.imageLoader.enqueue(request)
     }
 
-    fun loadRounded(
+    private fun loadRoundedWithData(
         img: ImageView,
-        resourceId: Int,
+        data: Any,
     ) {
         val request = ImageRequest.Builder(img.context)
-            .data(resourceId)
+            .data(data)
             .transformations(getPhotoOptions(img.context))
             .error(R.mipmap.ic_default_head)
             .target(img)
             .build()
         img.context.imageLoader.enqueue(request)
     }
+
+    fun loadRounded(
+        img: ImageView,
+        resourceId: Int,
+    ) = loadRoundedWithData(img, resourceId)
 
     fun loadRounded(
         img: ImageView,
         url: String,
-    ) {
-        val request = ImageRequest.Builder(img.context)
-            .data(url)
-            .transformations(getPhotoOptions(img.context))
-            .error(R.mipmap.ic_default_head)
-            .target(img)
-            .build()
-        img.context.imageLoader.enqueue(request)
-    }
+    ) = loadRoundedWithData(img, url)
 
     fun loadRounded(
         img: ImageView,
         drawable: Drawable,
-    ) {
-        val request = ImageRequest.Builder(img.context)
-            .data(drawable)
-            .transformations(getPhotoOptions(img.context))
-            .error(R.mipmap.ic_default_head)
-            .target(img)
-            .build()
-        img.context.imageLoader.enqueue(request)
-    }
+    ) = loadRoundedWithData(img, drawable)
 
     fun loadRounded(
         img: ImageView,
         uri: Uri,
-    ) {
-        val request = ImageRequest.Builder(img.context)
-            .data(uri)
-            .transformations(getPhotoOptions(img.context))
-            .error(R.mipmap.ic_default_head)
-            .target(img)
-            .build()
-        img.context.imageLoader.enqueue(request)
-    }
+    ) = loadRoundedWithData(img, uri)
 
     fun load(
         img: ImageView,
@@ -217,13 +185,9 @@ object CoilLoader {
                 val result = context.imageLoader.execute(request)
                 result.drawable
             } catch (e: Exception) {
+                Log.e(TAG, "Failed to load drawable from URL: $url", e)
                 null
             }
         }
     }
-
-    private val Context.imageLoader: ImageLoader
-        get() = ImageLoader.Builder(this)
-            .crossfade(true)
-            .build()
 }
