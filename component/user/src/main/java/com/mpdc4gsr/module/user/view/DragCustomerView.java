@@ -4,8 +4,8 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
-import com.blankj.utilcode.util.BarUtils;
-import com.blankj.utilcode.util.SizeUtils;
+import android.view.WindowMetrics;
+import androidx.core.view.WindowInsetsCompat;
 import com.mpdc4gsr.libunified.app.utils.ScreenUtils;
 
 public class DragCustomerView extends androidx.appcompat.widget.AppCompatImageView {
@@ -40,7 +40,10 @@ public class DragCustomerView extends androidx.appcompat.widget.AppCompatImageVi
             mWidth = getMeasuredWidth();
             mHeight = getMeasuredHeight();
             mScreenWidth = ScreenUtils.getScreenWidth(getContext());
-            mScreenHeight = ScreenUtils.getScreenHeight(getContext()) - BarUtils.getStatusBarHeight() - BarUtils.getNavBarHeight() - SizeUtils.dp2px(62f);
+            int statusBarHeight = getStatusBarHeight();
+            int navBarHeight = getNavigationBarHeight();
+            int offsetDp = (int) (62f * getContext().getResources().getDisplayMetrics().density);
+            mScreenHeight = ScreenUtils.getScreenHeight(getContext()) - statusBarHeight - navBarHeight - offsetDp;
         }
     }
 
@@ -87,5 +90,21 @@ public class DragCustomerView extends androidx.appcompat.widget.AppCompatImageVi
                 break;
         }
         return super.onTouchEvent(event);
+    }
+
+    private int getStatusBarHeight() {
+        int resourceId = getContext().getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            return getContext().getResources().getDimensionPixelSize(resourceId);
+        }
+        return 0;
+    }
+
+    private int getNavigationBarHeight() {
+        int resourceId = getContext().getResources().getIdentifier("navigation_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            return getContext().getResources().getDimensionPixelSize(resourceId);
+        }
+        return 0;
     }
 }
