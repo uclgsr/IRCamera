@@ -10,7 +10,7 @@ import kotlin.math.sqrt
 object ScreenTools {
 
     fun isLandPhone(): Boolean {
-        val displayMetrics: DisplayMetrics = ContextProvider.INSTANCE.getContext().resources.displayMetrics
+        val displayMetrics: DisplayMetrics = ContextProvider.getContext().resources.displayMetrics
         val width = displayMetrics.widthPixels.toFloat()
         val height = displayMetrics.heightPixels.toFloat()
         return (width / height) < 0.75f

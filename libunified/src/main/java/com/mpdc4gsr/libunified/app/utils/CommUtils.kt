@@ -14,14 +14,14 @@ object CommUtils {
 
     fun getAppName(): String {
         var msg = ""
-        var appInfo: ApplicationInfo? = null
-        appInfo = ContextProvider.INSTANCE.getContext().packageManager
+        val context = ContextProvider.getContext()
+        val appInfo: ApplicationInfo? = context.packageManager
             .getApplicationInfo(
-                ContextProvider.INSTANCE.getContext().packageName,
+                context.packageName,
                 PackageManager.GET_META_DATA
             )
         try {
-            msg = appInfo.metaData.getString("app_name")?.toString() ?: ""
+            msg = appInfo?.metaData?.getString("app_name")?.toString() ?: ""
         } catch (e: Exception) {
             XLog.w("app： ${e.message}")
         }

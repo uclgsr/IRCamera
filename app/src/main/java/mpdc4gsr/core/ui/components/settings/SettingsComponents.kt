@@ -402,7 +402,7 @@ fun SettingsDropdown(
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .menuAnchor(),
+                    .menuAnchor(MenuAnchorType.PrimaryNotEditable, enabled = true),
                 colors = OutlinedTextFieldDefaults.colors()
             )
 

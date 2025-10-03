@@ -92,7 +92,7 @@ public class USBMonitorManager {
             cameraHeight = 192;
         }
         if (mUSBMonitor == null) {
-            mUSBMonitor = new USBMonitor(ContextProvider.INSTANCE.getContext(),
+            mUSBMonitor = new USBMonitor(ContextProvider.getContext(),
                     new USBMonitor.OnDeviceConnectListener() {
 
                         @Override
