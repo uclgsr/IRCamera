@@ -62,7 +62,7 @@ object ImageUtils {
             XLog.e("Failed to save image: ${e.message}")
         }
         
-        return fileName.replace(".JPG", "")
+        return fileName.removeSuffix(".jpg")
     }
 
     fun saveImageToApp(bitmap: Bitmap): String {
