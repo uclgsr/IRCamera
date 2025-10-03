@@ -16,7 +16,6 @@ import android.text.TextUtils
 import android.util.Log
 import android.webkit.WebView
 import androidx.annotation.RequiresApi
-import com.blankj.utilcode.util.LanguageUtils
 import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.bean.event.SocketMsgEvent
 import com.mpdc4gsr.libunified.app.broadcast.DeviceBroadcastReceiver
@@ -249,7 +248,10 @@ abstract class BaseApplication : Application() {
     open fun onLanguageChange() {
 
         val locale = AppLanguageUtils.getLocaleByLanguage(ConstantLanguages.ENGLISH)
-        LanguageUtils.applyLanguage(locale)
+        // Apply language using standard Android Configuration API
+        val config = resources.configuration
+        config.setLocale(locale)
+        resources.updateConfiguration(config, resources.displayMetrics)
         SharedManager.setLanguage(baseContext, ConstantLanguages.ENGLISH)
         WebView(this).destroy()
     }
