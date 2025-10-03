@@ -5,9 +5,9 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Environment
 import android.os.StatFs
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.preference.PreferenceManager
+import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
  * Storage Settings ViewModel - MVVM Integration
  * Manages storage configuration and monitors available space
  */
-class StorageSettingsViewModel(application: Application) : AndroidViewModel(application) {
+class StorageSettingsViewModel(application: Application) : BaseViewModel() {
 
     private val context: Context = application.applicationContext
     private val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)

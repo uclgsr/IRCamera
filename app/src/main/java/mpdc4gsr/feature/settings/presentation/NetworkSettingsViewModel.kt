@@ -9,9 +9,9 @@ import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.net.wifi.WifiManager
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.preference.PreferenceManager
+import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -22,7 +22,7 @@ import mpdc4gsr.core.data.ShimmerDeviceManager
  * Network Settings ViewModel - MVVM Integration
  * Manages WiFi, Bluetooth, and device pairing with existing ShimmerDeviceManager
  */
-class NetworkSettingsViewModel(application: Application) : AndroidViewModel(application) {
+class NetworkSettingsViewModel(application: Application) : BaseViewModel() {
 
     private val context: Context = application.applicationContext
     private val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
