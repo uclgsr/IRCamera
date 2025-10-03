@@ -1,33 +1,23 @@
 package com.mpdc4gsr.libunified.app.http.tool
 
-import com.mpdc4gsr.libunified.app.http.api.DownloadApiService
+import com.mpdc4gsr.libunified.app.http.HttpClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
-import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
-import java.util.concurrent.TimeUnit
 
 object DownloadTools {
-    private fun getOKHttpClient(): OkHttpClient =
-        OkHttpClient.Builder()
-            .retryOnConnectionFailure(false)
-            .connectTimeout(10, TimeUnit.SECONDS)
-            .readTimeout(10, TimeUnit.SECONDS)
-            .writeTimeout(10, TimeUnit.SECONDS)
-            .build()
-
-    private fun getService(): DownloadApiService =
-        Retrofit.Builder()
-            .baseUrl("http://192.168.40.1:8080")
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .client(getOKHttpClient())
-            .build()
-            .create(DownloadApiService::class.java)
+    private val okHttpClient: OkHttpClient by lazy {
+        HttpClient.createClient(
+            connectTimeout = 10,
+            readTimeout = 10,
+            writeTimeout = 10,
+            retryOnConnectionFailure = false
+        )
+    }
 
     suspend fun download(
         url: String,
@@ -37,7 +27,7 @@ object DownloadTools {
         withContext(Dispatchers.IO) {
             val responseBody =
                 try {
-                    getService().download(url)
+                    HttpClient.executeGet(okHttpClient, url)
                 } catch (_: Exception) {
                     return@withContext false
                 }
