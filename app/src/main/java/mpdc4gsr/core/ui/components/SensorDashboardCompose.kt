@@ -257,125 +257,81 @@ private fun StatusBadge(status: SensorStatus) {
     }
 }
 
-// Sample data generator for testing
+// Sample data generator for testing - returns disconnected sensors by default
 fun getSampleSensorData(): List<SensorInfo> {
     return listOf(
         SensorInfo(
             id = "thermal_camera",
             name = "Thermal Camera",
-            status = SensorStatus.STREAMING,
-            message = "TC001 - Capturing thermal data",
+            status = SensorStatus.DISCONNECTED,
+            message = "Not connected - tap to connect",
             icon = Icons.Default.Thermostat,
-            dataRate = "125 KB/s",
-            lastUpdate = "Just now",
-            signalStrength = 85
+            dataRate = "0 KB/s",
+            lastUpdate = "Never",
+            signalStrength = 0
         ),
         SensorInfo(
             id = "rgb_camera",
             name = "RGB Camera",
-            status = SensorStatus.CONNECTED,
-            message = "Camera ready for recording",
+            status = SensorStatus.DISCONNECTED,
+            message = "Not connected - tap to connect",
             icon = Icons.Default.Camera,
-            dataRate = "1.2 MB/s",
-            lastUpdate = "2 sec ago",
-            signalStrength = 92
+            dataRate = "0 KB/s",
+            lastUpdate = "Never",
+            signalStrength = 0
         ),
         SensorInfo(
             id = "shimmer_gsr",
             name = "Shimmer GSR",
-            status = SensorStatus.CONNECTING,
-            message = "Establishing connection to Shimmer3...",
+            status = SensorStatus.DISCONNECTED,
+            message = "Not connected - tap to connect",
             icon = Icons.Default.Sensors,
             dataRate = "0 KB/s",
-            lastUpdate = "Connecting",
+            lastUpdate = "Never",
             signalStrength = 0
         ),
         SensorInfo(
             id = "bluetooth_device",
             name = "Bluetooth Device",
-            status = SensorStatus.ERROR,
-            message = "Connection timeout - please retry",
+            status = SensorStatus.DISCONNECTED,
+            message = "Not connected - tap to connect",
             icon = Icons.Default.Bluetooth,
             dataRate = "0 KB/s",
-            lastUpdate = "1 min ago",
+            lastUpdate = "Never",
             signalStrength = 0
         ),
         SensorInfo(
             id = "network_device",
             name = "Network Sync",
-            status = SensorStatus.CONNECTED,
-            message = "Connected to research network",
+            status = SensorStatus.DISCONNECTED,
+            message = "Not connected - tap to connect",
             icon = Icons.Default.NetworkCheck,
-            dataRate = "50 KB/s",
-            lastUpdate = "5 sec ago",
-            signalStrength = 78
+            dataRate = "0 KB/s",
+            lastUpdate = "Never",
+            signalStrength = 0
         ),
         SensorInfo(
             id = "storage_device",
             name = "Storage System",
-            status = SensorStatus.CONNECTED,
-            message = "Local storage available: 45.2 GB",
+            status = SensorStatus.DISCONNECTED,
+            message = "Not connected - tap to connect",
             icon = Icons.Default.Storage,
-            dataRate = "2.5 MB/s",
-            lastUpdate = "Just now",
-            signalStrength = 100
+            dataRate = "0 KB/s",
+            lastUpdate = "Never",
+            signalStrength = 0
         )
     )
 }
 
-// Animated sensor status updater for demo purposes
+// Static sensor dashboard for demo purposes - shows disconnected sensors
+// For actual sensor connections, use SensorDashboardCompose with real sensor data
 @Composable
-fun AnimatedSensorDashboard(
+fun SensorDashboardDemo(
     modifier: Modifier = Modifier,
     onSensorClick: (SensorInfo) -> Unit = {},
     onRefresh: () -> Unit = {}
 ) {
-    var sensors by remember { mutableStateOf(getSampleSensorData()) }
-
-    // Simulate real-time updates
-    LaunchedEffect(Unit) {
-        while (true) {
-            delay(3000) // Update every 3 seconds
-            sensors = sensors.map { sensor ->
-                when (sensor.status) {
-                    SensorStatus.CONNECTING -> {
-                        // Sometimes connect, sometimes fail
-                        if (kotlin.random.Random.nextFloat() > 0.3f) {
-                            sensor.copy(
-                                status = SensorStatus.CONNECTED,
-                                message = "Connection established",
-                                dataRate = when (sensor.id) {
-                                    "shimmer_gsr" -> "2 KB/s"
-                                    "bluetooth_device" -> "64 KB/s"
-                                    else -> sensor.dataRate
-                                },
-                                lastUpdate = "Just connected"
-                            )
-                        } else {
-                            sensor.copy(
-                                status = SensorStatus.ERROR,
-                                message = "Connection failed",
-                                lastUpdate = "Connection error"
-                            )
-                        }
-                    }
-
-                    SensorStatus.ERROR -> {
-                        // Retry connection after error
-                        sensor.copy(
-                            status = SensorStatus.CONNECTING,
-                            message = "Retrying connection...",
-                            lastUpdate = "Retrying"
-                        )
-                    }
-
-                    else -> sensor.copy(
-                        lastUpdate = "Just now"
-                    )
-                }
-            }
-        }
-    }
+    val sensors = remember { getSampleSensorData() }
 
     SensorDashboardCompose(
         sensors = sensors,
@@ -383,4 +339,17 @@ fun AnimatedSensorDashboard(
         onSensorClick = onSensorClick,
         onRefresh = onRefresh
     )
+}
+
+@Deprecated(
+    message = "Function renamed to SensorDashboardDemo to reflect its static demo nature",
+    replaceWith = ReplaceWith("SensorDashboardDemo(modifier, onSensorClick, onRefresh)")
+)
+@Composable
+fun AnimatedSensorDashboard(
+    modifier: Modifier = Modifier,
+    onSensorClick: (SensorInfo) -> Unit = {},
+    onRefresh: () -> Unit = {}
+) {
+    SensorDashboardDemo(modifier, onSensorClick, onRefresh)
 }

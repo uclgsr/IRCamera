@@ -76,17 +76,19 @@ class SensorDataRepository(
 
     /**
      * Get real-time GSR sensor data stream
+     * Note: This method needs to be connected to actual GSR hardware
      */
     fun getGSRDataStream(deviceId: String): Flow<BaseRepository.Result<GSRSensorData>> = safeFlow {
-        simulateGSRDataStream(deviceId)
+        throw NotImplementedError("GSR data stream requires actual sensor connection. Simulation removed.")
     }
 
     /**
      * Get thermal sensor data stream
+     * Note: This method needs to be connected to actual thermal camera hardware
      */
     fun getThermalDataStream(deviceId: String): Flow<BaseRepository.Result<ThermalSensorData>> =
         safeFlow {
-            simulateThermalDataStream(deviceId)
+            throw NotImplementedError("Thermal data stream requires actual sensor connection. Simulation removed.")
         }
 
     /**
@@ -134,47 +136,9 @@ class SensorDataRepository(
         val hasData: Boolean = gsrData.isNotEmpty() || thermalData.isNotEmpty()
     }
 
-    // Private helper methods for simulation
-    private suspend fun simulateGSRDataStream(deviceId: String): GSRSensorData {
-        delay(100) // Simulate network delay
 
-        val gsrValue = 5.0 + (Math.random() * 10.0) // 5-15 µS
-        val resistance = 1_000_000 / gsrValue // Ohm's law approximation
-        val conductance = 1.0 / resistance * 1_000_000 // µS
-
-        return GSRSensorData(
-            timestamp = System.currentTimeMillis(),
-            gsrValue = gsrValue,
-            resistance = resistance,
-            conductance = conductance,
-            quality = DataQuality.GOOD,
-            deviceId = deviceId,
-            batteryLevel = (70..100).random()
-        )
-    }
-
-    private suspend fun simulateThermalDataStream(deviceId: String): ThermalSensorData {
-        delay(50) // Simulate faster thermal data
-
-        val width = 640
-        val height = 480
-        val frameData = ByteArray(width * height * 2) // Simulated 16-bit thermal data
-
-        return ThermalSensorData(
-            timestamp = System.currentTimeMillis(),
-            frameData = frameData,
-            width = width,
-            height = height,
-            minTemp = 20.0f + (Math.random() * 5).toFloat(),
-            maxTemp = 35.0f + (Math.random() * 10).toFloat(),
-            avgTemp = 25.0f + (Math.random() * 8).toFloat(),
-            deviceId = deviceId
-        )
-    }
 
     private suspend fun fetchDeviceStatus(deviceId: String): DeviceStatus {
-        delay(200) // Simulate network request
-
         return DeviceStatus(
             deviceId = deviceId,
             deviceType = when {
@@ -183,11 +147,11 @@ class SensorDataRepository(
                 deviceId.contains("SHIMMER") -> DeviceType.SHIMMER_GSR
                 else -> DeviceType.UNKNOWN
             },
-            isConnected = Math.random() > 0.2, // 80% chance of being connected
-            batteryLevel = (30..100).random(),
-            signalStrength = (60..100).random(),
-            lastSeen = System.currentTimeMillis() - (Math.random() * 60000).toLong(),
-            firmwareVersion = "1.${(0..9).random()}.${(0..9).random()}"
+            isConnected = false,
+            batteryLevel = null,
+            signalStrength = null,
+            lastSeen = 0L,
+            firmwareVersion = null
         )
     }
 }

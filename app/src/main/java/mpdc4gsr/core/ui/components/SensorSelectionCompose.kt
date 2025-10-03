@@ -360,56 +360,63 @@ private fun BatteryImpactWarning(
     }
 }
 
-// Sample data generator
+// Sample data generator - returns unavailable sensors by default
 fun getSampleSensorAvailability(): List<SensorAvailability> {
     return listOf(
         SensorAvailability(
             sensorType = SensorType.THERMAL,
-            isAvailable = true,
+            isAvailable = false,
             isSelected = false,
-            dataRate = "125 KB/s",
+            availabilityReason = "Not connected",
+            dataRate = "Unknown",
             batteryImpact = "Medium"
         ),
         SensorAvailability(
             sensorType = SensorType.RGB,
-            isAvailable = true,
+            isAvailable = false,
             isSelected = false,
-            dataRate = "1.2 MB/s",
+            availabilityReason = "Not connected",
+            dataRate = "Unknown",
             batteryImpact = "High"
         ),
         SensorAvailability(
             sensorType = SensorType.GSR,
-            isAvailable = true,
+            isAvailable = false,
             isSelected = false,
-            dataRate = "2 KB/s",
+            availabilityReason = "Not connected",
+            dataRate = "Unknown",
             batteryImpact = "Low"
         ),
         SensorAvailability(
             sensorType = SensorType.AUDIO,
-            isAvailable = true,
+            isAvailable = false,
             isSelected = false,
-            dataRate = "64 KB/s",
+            availabilityReason = "Not connected",
+            dataRate = "Unknown",
             batteryImpact = "Medium"
         ),
         SensorAvailability(
             sensorType = SensorType.ACCELEROMETER,
-            isAvailable = true,
+            isAvailable = false,
             isSelected = false,
-            dataRate = "0.5 KB/s",
+            availabilityReason = "Not connected",
+            dataRate = "Unknown",
             batteryImpact = "Low"
         ),
         SensorAvailability(
             sensorType = SensorType.GYROSCOPE,
-            isAvailable = true,
+            isAvailable = false,
             isSelected = false,
-            dataRate = "0.5 KB/s",
+            availabilityReason = "Not connected",
+            dataRate = "Unknown",
             batteryImpact = "Low"
         ),
         SensorAvailability(
             sensorType = SensorType.MAGNETOMETER,
-            isAvailable = true,
+            isAvailable = false,
             isSelected = false,
-            dataRate = "0.3 KB/s",
+            availabilityReason = "Not connected",
+            dataRate = "Unknown",
             batteryImpact = "Low"
         ),
         SensorAvailability(
@@ -417,13 +424,15 @@ fun getSampleSensorAvailability(): List<SensorAvailability> {
             isAvailable = false,
             isSelected = false,
             availabilityReason = "Hardware not available",
+            dataRate = "Unknown",
             batteryImpact = "Medium"
         ),
         SensorAvailability(
             sensorType = SensorType.TEMPERATURE,
-            isAvailable = true,
+            isAvailable = false,
             isSelected = false,
-            dataRate = "0.1 KB/s",
+            availabilityReason = "Not connected",
+            dataRate = "Unknown",
             batteryImpact = "Low"
         ),
         SensorAvailability(
@@ -431,6 +440,7 @@ fun getSampleSensorAvailability(): List<SensorAvailability> {
             isAvailable = false,
             isSelected = false,
             availabilityReason = "Sensor not supported",
+            dataRate = "Unknown",
             batteryImpact = "Low"
         )
     )
