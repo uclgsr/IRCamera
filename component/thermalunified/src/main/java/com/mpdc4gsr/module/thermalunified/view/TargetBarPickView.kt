@@ -342,7 +342,7 @@ class TargetBarPickView : View {
             }
         } else {
             val thumbHeight =
-                paint.fontMetricsInt.bottom - paint.fontMetricsInt.top + SizeUtils.dp2px(4f)
+                paint.fontMetricsInt.bottom - paint.fontMetricsInt.top + 4f.dpToPx(context)
             val bgHeight = (barRect.height() * (max - progress) / (max - min).toFloat()).toInt()
             if (bgHeight == 0) {
                 return
@@ -399,7 +399,7 @@ class TargetBarPickView : View {
             }
         } else {
             val thumbHeight =
-                paint.fontMetricsInt.bottom - paint.fontMetricsInt.top + SizeUtils.dp2px(4f)
+                paint.fontMetricsInt.bottom - paint.fontMetricsInt.top + 4f.dpToPx(context)
             val progressHeight =
                 (barRect.height() * (progress - min) / (max - min).toFloat()).toInt()
             if (progressHeight == 0) {
@@ -427,7 +427,7 @@ class TargetBarPickView : View {
 
     private fun drawThumb(canvas: Canvas) {
         paint.style = Paint.Style.FILL
-        val radius = SizeUtils.dp2px(THUMB_CORNERS).toFloat()
+        val radius = THUMB_CORNERS.dpToPx(context).toFloat()
         canvas.drawRoundRect(thumbRect, radius, radius, paint)
     }
 }
