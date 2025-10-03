@@ -58,6 +58,7 @@ fun ThermalMonitorScreen(
         modifier = modifier
             .fillMaxSize()
             .background(Color.Black)
+            .windowInsetsPadding(WindowInsets.systemBars)
     ) {
         // Full-screen thermal camera preview
         ThermalCameraPreview(
@@ -238,7 +239,7 @@ private fun ThermalBottomControls(
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly,
+                horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 // Advanced settings button
@@ -273,8 +274,8 @@ private fun ThermalBottomControls(
                     )
                 }
 
-                // Placeholder for symmetry
-                Spacer(modifier = Modifier.size(56.dp).height(56.dp))
+                // Spacer for symmetry with settings button width
+                Spacer(modifier = Modifier.width(120.dp))
             }
         }
     }
