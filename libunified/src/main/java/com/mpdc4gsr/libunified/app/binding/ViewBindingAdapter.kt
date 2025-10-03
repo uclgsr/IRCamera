@@ -143,7 +143,7 @@ object ViewBindingAdapter {
         @ColorInt color: Int,
     ) {
         val gradientDrawable: GradientDrawable = buildGradientDrawable(view)
-        gradientDrawable.setStroke(width.toFloat(.dpToPx(view.context)), color)
+        gradientDrawable.setStroke(dpToPx(view.context, width).toFloat(), color)
         view.background = buildEffectDrawable(view, gradientDrawable)
     }
 
