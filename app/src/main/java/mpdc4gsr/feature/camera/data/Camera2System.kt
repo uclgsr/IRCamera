@@ -7,6 +7,8 @@ import android.hardware.camera2.CaptureRequest
 import android.hardware.camera2.TotalCaptureResult
 import android.os.Build
 import android.util.Log
+import mpdc4gsr.core.utils.AppLogger
+import mpdc4gsr.core.utils.ErrorHandler
 import android.util.Size
 import android.view.TextureView
 import kotlinx.coroutines.*
@@ -43,7 +45,7 @@ class Camera2System(
     fun configureStage3Processing(enabled: Boolean) {
         rawEngine.setStage3ProcessingEnabled(enabled)
         val mode = if (enabled) "Stage3/Level3" else "Standard"
-        Log.i(TAG, "Samsung RAW processing mode set to: $mode")
+        AppLogger.i(TAG, "Samsung RAW processing mode set to: $mode")
         onProgress?.invoke("RAW processing: $mode")
     }
 
@@ -59,7 +61,7 @@ class Camera2System(
     suspend fun initialize(cameraId: String = "0"): Boolean =
         withContext(Dispatchers.Main) {
             try {
-                Log.i(TAG, "Initializing Camera2System")
+                AppLogger.i(TAG, "Initializing Camera2System")
 
                 while (!uiBridge.isTextureReady()) {
                     delay(50)
@@ -69,7 +71,7 @@ class Camera2System(
 
                 return@withContext true
             } catch (e: Exception) {
-                Log.e(TAG, "Failed to initialize camera system", e)
+                AppLogger.e(TAG, "Failed to initialize camera system", e)
                 onError?.invoke("Initialization failed: ${e.message}")
                 return@withContext false
             }
@@ -79,7 +81,7 @@ class Camera2System(
         withContext(Dispatchers.IO) {
             try {
                 if (!modeManager.canSwitchMode()) {
-                    Log.w(TAG, "Cannot switch mode - switching already in progress")
+                    AppLogger.w(TAG, "Cannot switch mode - switching already in progress")
                     return@withContext false
                 }
 
@@ -100,14 +102,14 @@ class Camera2System(
                     modeManager.confirmModeSwitch()
                     uiBridge.updateMode(mode.name)
                     onModeChanged?.invoke(mode)
-                    Log.i(TAG, "Successfully switched to ${mode.name}")
+                    AppLogger.i(TAG, "Successfully switched to ${mode.name}")
                 } else {
                     modeManager.reportModeSwitchFailed("Session setup failed")
                 }
 
                 return@withContext success
             } catch (e: Exception) {
-                Log.e(TAG, "Mode switch failed", e)
+                AppLogger.e(TAG, "Mode switch failed", e)
                 modeManager.reportModeSwitchFailed(e.message ?: "Unknown error")
                 return@withContext false
             }
@@ -116,7 +118,7 @@ class Camera2System(
     suspend fun startRecording(sessionId: String): Boolean =
         withContext(Dispatchers.IO) {
             if (isRecording) {
-                Log.w(TAG, "Already recording")
+                AppLogger.w(TAG, "Already recording")
                 return@withContext false
             }
 
@@ -138,12 +140,12 @@ class Camera2System(
                     isRecording = true
                     onRecordingStarted?.invoke()
                     uiBridge.updateRecordingState(true, modeManager.getCurrentMode().name)
-                    Log.i(TAG, "Recording started in ${modeManager.getCurrentMode()}")
+                    AppLogger.i(TAG, "Recording started in ${modeManager.getCurrentMode()}")
                 }
 
                 return@withContext success
             } catch (e: Exception) {
-                Log.e(TAG, "Failed to start recording", e)
+                AppLogger.e(TAG, "Failed to start recording", e)
                 onError?.invoke("Recording failed: ${e.message}")
                 return@withContext false
             }
@@ -152,7 +154,7 @@ class Camera2System(
     suspend fun stopRecording(): Boolean =
         withContext(Dispatchers.IO) {
             if (!isRecording) {
-                Log.w(TAG, "Not recording")
+                AppLogger.w(TAG, "Not recording")
                 return@withContext false
             }
 
@@ -167,11 +169,11 @@ class Camera2System(
                 isRecording = false
                 onRecordingStopped?.invoke()
                 uiBridge.updateRecordingState(false)
-                Log.i(TAG, "Recording stopped")
+                AppLogger.i(TAG, "Recording stopped")
 
                 return@withContext true
             } catch (e: Exception) {
-                Log.e(TAG, "Failed to stop recording", e)
+                AppLogger.e(TAG, "Failed to stop recording", e)
                 onError?.invoke("Stop recording failed: ${e.message}")
                 return@withContext false
             }
@@ -195,7 +197,7 @@ class Camera2System(
         cameraController.close()
         uiBridge.release()
 
-        Log.i(TAG, "Camera2System released")
+        AppLogger.i(TAG, "Camera2System released")
     }
 
     private fun setupCallbacks() {
@@ -260,20 +262,20 @@ class Camera2System(
                                     )
                                     continuation.resume(true, null)
                                 } catch (e: Exception) {
-                                    Log.e(TAG, "Failed to start preview request", e)
+                                    AppLogger.e(TAG, "Failed to start preview request", e)
                                     continuation.resume(false, null)
                                 }
                             }
 
                             override fun onConfigureFailed(session: CameraCaptureSession) {
-                                Log.e(TAG, "RAW mode session configuration failed")
+                                AppLogger.e(TAG, "RAW mode session configuration failed")
                                 continuation.resume(false, null)
                             }
                         },
                     )
                 }
             } catch (e: Exception) {
-                Log.e(TAG, "Failed to setup RAW mode", e)
+                AppLogger.e(TAG, "Failed to setup RAW mode", e)
                 return@withContext false
             }
         }
@@ -309,20 +311,20 @@ class Camera2System(
                                     )
                                     continuation.resume(true, null)
                                 } catch (e: Exception) {
-                                    Log.e(TAG, "Failed to start video preview request", e)
+                                    AppLogger.e(TAG, "Failed to start video preview request", e)
                                     continuation.resume(false, null)
                                 }
                             }
 
                             override fun onConfigureFailed(session: CameraCaptureSession) {
-                                Log.e(TAG, "Video mode session configuration failed")
+                                AppLogger.e(TAG, "Video mode session configuration failed")
                                 continuation.resume(false, null)
                             }
                         },
                     )
                 }
             } catch (e: Exception) {
-                Log.e(TAG, "Failed to setup video mode", e)
+                AppLogger.e(TAG, "Failed to setup video mode", e)
                 return@withContext false
             }
         }
@@ -354,20 +356,20 @@ class Camera2System(
                                     )
                                     continuation.resume(true, null)
                                 } catch (e: Exception) {
-                                    Log.e(TAG, "Failed to start preview request", e)
+                                    AppLogger.e(TAG, "Failed to start preview request", e)
                                     continuation.resume(false, null)
                                 }
                             }
 
                             override fun onConfigureFailed(session: CameraCaptureSession) {
-                                Log.e(TAG, "Preview mode session configuration failed")
+                                AppLogger.e(TAG, "Preview mode session configuration failed")
                                 continuation.resume(false, null)
                             }
                         },
                     )
                 }
             } catch (e: Exception) {
-                Log.e(TAG, "Failed to setup preview mode", e)
+                AppLogger.e(TAG, "Failed to setup preview mode", e)
                 return@withContext false
             }
         }
@@ -382,7 +384,7 @@ class Camera2System(
 
                 return@withContext true
             } catch (e: Exception) {
-                Log.e(TAG, "Failed to start RAW recording", e)
+                AppLogger.e(TAG, "Failed to start RAW recording", e)
                 return@withContext false
             }
         }
@@ -437,20 +439,20 @@ class Camera2System(
                                         continuation.resume(false, null)
                                     }
                                 } catch (e: Exception) {
-                                    Log.e(TAG, "Failed to start recording request", e)
+                                    AppLogger.e(TAG, "Failed to start recording request", e)
                                     continuation.resume(false, null)
                                 }
                             }
 
                             override fun onConfigureFailed(session: CameraCaptureSession) {
-                                Log.e(TAG, "Recording session configuration failed")
+                                AppLogger.e(TAG, "Recording session configuration failed")
                                 continuation.resume(false, null)
                             }
                         },
                     )
                 }
             } catch (e: Exception) {
-                Log.e(TAG, "Failed to start video recording", e)
+                AppLogger.e(TAG, "Failed to start video recording", e)
                 return@withContext false
             }
         }
@@ -509,7 +511,7 @@ class Camera2System(
                             android.hardware.camera2.CameraMetadata.HOT_PIXEL_MODE_OFF
                         )
                     }
-                    Log.d(TAG, "Applied Samsung Stage3/Level3 processing settings")
+                    AppLogger.d(TAG, "Applied Samsung Stage3/Level3 processing settings")
                 } catch (e: Exception) {
                     Log.w(
                         TAG,
@@ -533,7 +535,7 @@ class Camera2System(
                 null,
             )
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to capture RAW image", e)
+            AppLogger.e(TAG, "Failed to capture RAW image", e)
         }
     }
 
@@ -585,7 +587,7 @@ class Camera2System(
             )
             orientationHint
         } catch (e: Exception) {
-            Log.w(TAG, "Failed to calculate orientation hint", e)
+            AppLogger.w(TAG, "Failed to calculate orientation hint", e)
             90
         }
     }

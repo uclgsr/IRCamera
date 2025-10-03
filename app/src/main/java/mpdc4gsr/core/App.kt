@@ -18,6 +18,7 @@ import mpdc4gsr.core.ui.InitUtils.initLms
 import mpdc4gsr.core.ui.InitUtils.initLog
 import mpdc4gsr.core.ui.InitUtils.initReceiver
 import mpdc4gsr.core.ui.InitUtils.initUM
+import mpdc4gsr.core.utils.AppLogger
 
 /**
  * Application class for IRCamera.
@@ -59,9 +60,9 @@ class App : BaseApplication() {
                 initLms()
                 initUM()
                 initJPush()
-                XLog.i("App: delayInit completed successfully")
+                AppLogger.i("App", "delayInit completed successfully")
             } catch (e: Exception) {
-                XLog.e("App: Error during delayInit: ${e.message}")
+                AppLogger.e("App", "Error during delayInit", e)
                 // Continue even if some initialization fails
             }
         }
@@ -80,6 +81,9 @@ class App : BaseApplication() {
         
         // Initialize ContextProvider for AndroidX migration
         ContextProvider.init(this)
+        
+        // Initialize centralized logging
+        initializeAppLogger()
 
         setupGlobalExceptionHandler()
 
@@ -99,7 +103,7 @@ class App : BaseApplication() {
 
 
         } catch (e: Exception) {
-            XLog.e("App: Critical error during onCreate: ${e.message}")
+            AppLogger.e("App", "Critical error during onCreate", e)
         }
 
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
@@ -140,15 +144,32 @@ class App : BaseApplication() {
 
     override fun initWebSocket() {
         try {
-            XLog.i("App: initWebSocket() - Initializing WebSocket connection")
+            AppLogger.i("App", "initWebSocket() - Initializing WebSocket connection")
 
             // Call parent implementation to set up network monitoring and WebSocket infrastructure
             super.initWebSocket()
 
-            XLog.i("App: WebSocket initialization completed successfully")
+            AppLogger.i("App", "WebSocket initialization completed successfully")
         } catch (e: Exception) {
-            XLog.e("App: Error during WebSocket initialization: ${e.message}")
+            AppLogger.e("App", "Error during WebSocket initialization", e)
             // Continue even if WebSocket initialization fails to avoid breaking app startup
+        }
+    }
+
+    private fun initializeAppLogger() {
+        try {
+            AppLogger.initialize(
+                minLevel = if (BuildConfig.DEBUG) {
+                    AppLogger.LogLevel.DEBUG
+                } else {
+                    AppLogger.LogLevel.WARN
+                },
+                enableStructured = true,
+                structuredLoggerInstance = StructuredLogger.getInstance(this)
+            )
+            AppLogger.i("App", "AppLogger initialized successfully")
+        } catch (e: Exception) {
+            XLog.e("App: Failed to initialize AppLogger: ${e.message}", e)
         }
     }
 
@@ -158,7 +179,7 @@ class App : BaseApplication() {
             if (throwable is IllegalStateException &&
                 throwable.message?.contains("Cannot start this animator on a detached view") == true
             ) {
-                XLog.w("App: Caught detached view animator exception: ${throwable.message}")
+                AppLogger.w("App", "Caught detached view animator exception", throwable)
                 return@setDefaultUncaughtExceptionHandler
             }
             defaultHandler?.uncaughtException(thread, throwable)

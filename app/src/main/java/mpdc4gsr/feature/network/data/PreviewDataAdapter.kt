@@ -2,6 +2,8 @@ package mpdc4gsr.feature.network.data
 
 import android.graphics.Bitmap
 import android.util.Log
+import mpdc4gsr.core.utils.AppLogger
+import mpdc4gsr.core.utils.ErrorHandler
 import com.mpdc4gsr.module.thermalunified.tools.CameraPreviewManager
 import kotlinx.coroutines.*
 import mpdc4gsr.core.RecordingService
@@ -26,11 +28,11 @@ class PreviewDataAdapter(
 
     fun startDataPolling() {
         if (isRunning) {
-            Log.w(TAG, "Data polling already running")
+            AppLogger.w(TAG, "Data polling already running")
             return
         }
 
-        Log.i(TAG, "Starting sensor data polling for preview streaming")
+        AppLogger.i(TAG, "Starting sensor data polling for preview streaming")
         isRunning = true
 
         pollingJob = scope.launch {
@@ -39,7 +41,7 @@ class PreviewDataAdapter(
                     pollSensorData()
                     delay(POLLING_INTERVAL_MS)
                 } catch (e: Exception) {
-                    Log.e(TAG, "Error in sensor data polling", e)
+                    AppLogger.e(TAG, "Error in sensor data polling", e)
                     delay(1000)
                 }
             }
@@ -51,7 +53,7 @@ class PreviewDataAdapter(
             return
         }
 
-        Log.i(TAG, "Stopping sensor data polling")
+        AppLogger.i(TAG, "Stopping sensor data polling")
         isRunning = false
         pollingJob?.cancel()
         pollingJob = null
@@ -59,12 +61,12 @@ class PreviewDataAdapter(
 
     fun setThermalCameraManager(manager: CameraPreviewManager?) {
         thermalCameraManager.set(manager)
-        Log.d(TAG, "Thermal camera manager ${if (manager != null) "set" else "cleared"}")
+        AppLogger.d(TAG, "Thermal camera manager ${if (manager != null) "set" else "cleared"}")
     }
 
     fun setGsrRecorder(recorder: GSRSensorRecorder?) {
         gsrRecorder.set(recorder)
-        Log.d(TAG, "GSR recorder ${if (recorder != null) "set" else "cleared"}")
+        AppLogger.d(TAG, "GSR recorder ${if (recorder != null) "set" else "cleared"}")
     }
 
     private suspend fun pollSensorData() {
@@ -91,7 +93,7 @@ class PreviewDataAdapter(
                 }
             }
         } catch (e: Exception) {
-            Log.w(TAG, "Error polling thermal frame", e)
+            AppLogger.w(TAG, "Error polling thermal frame", e)
         }
     }
 
@@ -114,10 +116,10 @@ class PreviewDataAdapter(
                 }
 
                 previewStreamer.updateGsrValue(gsrValue)
-                Log.v(TAG, "Updated GSR value: $gsrValue µS")
+                AppLogger.v(TAG, "Updated GSR value: $gsrValue µS")
             }
         } catch (e: Exception) {
-            Log.w(TAG, "Error polling GSR data", e)
+            AppLogger.w(TAG, "Error polling GSR data", e)
         }
     }
 
@@ -131,9 +133,9 @@ class PreviewDataAdapter(
             }
 
             previewStreamer.updateRecordingStatus(status)
-            Log.v(TAG, "Updated recording status: $status")
+            AppLogger.v(TAG, "Updated recording status: $status")
         } catch (e: Exception) {
-            Log.w(TAG, "Error updating recording status", e)
+            AppLogger.w(TAG, "Error updating recording status", e)
         }
     }
 
@@ -152,6 +154,6 @@ class PreviewDataAdapter(
     fun cleanup() {
         stopDataPolling()
         scope.cancel()
-        Log.i(TAG, "PreviewDataAdapter cleaned up")
+        AppLogger.i(TAG, "PreviewDataAdapter cleaned up")
     }
 }

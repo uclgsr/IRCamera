@@ -5,6 +5,8 @@ import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import mpdc4gsr.core.utils.AppLogger
+import mpdc4gsr.core.utils.ErrorHandler
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicInteger
@@ -84,7 +86,7 @@ class CameraPerformanceManager(private val context: Context) {
         resetMetrics()
         startMemoryMonitoring()
 
-        Log.i(TAG, "Performance monitoring started")
+        AppLogger.i(TAG, "Performance monitoring started")
     }
 
     /**
@@ -96,7 +98,7 @@ class CameraPerformanceManager(private val context: Context) {
         frameProcessingQueue.clear()
         frameProcessingExecutor.shutdownNow()
 
-        Log.i(TAG, "Performance monitoring stopped")
+        AppLogger.i(TAG, "Performance monitoring stopped")
     }
 
     /**
@@ -119,7 +121,7 @@ class CameraPerformanceManager(private val context: Context) {
         if (memoryPressure == MemoryPressureLevel.CRITICAL) {
             framesDropped.incrementAndGet()
             onComplete(false)
-            Log.w(TAG, "Frame dropped due to critical memory pressure")
+            AppLogger.w(TAG, "Frame dropped due to critical memory pressure")
             return false
         }
 
@@ -128,7 +130,7 @@ class CameraPerformanceManager(private val context: Context) {
         if (currentPending >= MAX_PENDING_FRAMES) {
             framesDropped.incrementAndGet()
             onComplete(false)
-            Log.w(TAG, "Frame dropped due to backpressure (pending: $currentPending)")
+            AppLogger.w(TAG, "Frame dropped due to backpressure (pending: $currentPending)")
             return false
         }
 
@@ -269,10 +271,10 @@ class CameraPerformanceManager(private val context: Context) {
             Thread.sleep(10)
             task.onComplete(true)
         } catch (e: InterruptedException) {
-            Log.d(TAG, "Frame processing interrupted")
+            AppLogger.d(TAG, "Frame processing interrupted")
             task.onComplete(false)
         } catch (e: Exception) {
-            Log.e(TAG, "Frame processing failed", e)
+            AppLogger.e(TAG, "Frame processing failed", e)
             task.onComplete(false)
         }
     }

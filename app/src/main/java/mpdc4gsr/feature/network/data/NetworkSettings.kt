@@ -4,6 +4,8 @@ import android.bluetooth.BluetoothDevice
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
+import mpdc4gsr.core.utils.AppLogger
+import mpdc4gsr.core.utils.ErrorHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -130,15 +132,15 @@ class NetworkSettings(private val context: Context) {
                 val deviceName = device.name
                 editor.putString(KEY_BLUETOOTH_DEVICE_NAME, deviceName)
             } catch (e: SecurityException) {
-                Log.w(TAG, "Security exception accessing device name", e)
+                AppLogger.w(TAG, "Security exception accessing device name", e)
                 // Save address only
             }
             editor.apply()
-            Log.i(TAG, "Saved Bluetooth device: ${device.address}")
+            AppLogger.i(TAG, "Saved Bluetooth device: ${device.address}")
         } catch (e: SecurityException) {
-            Log.e(TAG, "Security exception saving Bluetooth device", e)
+            AppLogger.e(TAG, "Security exception saving Bluetooth device", e)
         } catch (e: Exception) {
-            Log.e(TAG, "Error saving Bluetooth device", e)
+            AppLogger.e(TAG, "Error saving Bluetooth device", e)
         }
     }
 
@@ -152,7 +154,7 @@ class NetworkSettings(private val context: Context) {
                 val name = prefs.getString(KEY_BLUETOOTH_DEVICE_NAME, null)
                 Pair(address, name)
             } catch (e: Exception) {
-                Log.e(TAG, "Error getting Bluetooth device info", e)
+                AppLogger.e(TAG, "Error getting Bluetooth device info", e)
                 Pair(null, null)
             }
         }
@@ -163,9 +165,9 @@ class NetworkSettings(private val context: Context) {
     suspend fun clearSettings() = withContext(Dispatchers.IO) {
         try {
             prefs.edit().clear().apply()
-            Log.i(TAG, "Network settings cleared")
+            AppLogger.i(TAG, "Network settings cleared")
         } catch (e: Exception) {
-            Log.e(TAG, "Error clearing settings", e)
+            AppLogger.e(TAG, "Error clearing settings", e)
         }
     }
 

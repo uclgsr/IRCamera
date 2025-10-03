@@ -2,6 +2,8 @@ package mpdc4gsr.feature.gsr.data
 
 import android.content.Context
 import android.util.Log
+import mpdc4gsr.core.utils.AppLogger
+import mpdc4gsr.core.utils.ErrorHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -55,14 +57,14 @@ class GSRDataPersistence(
 
             csvBufferedWriter?.startWithHeaders()
 
-            Log.i(TAG, "GSR data persistence initialized for session: $sessionId")
-            Log.i(TAG, "CSV file: ${csvFile!!.absolutePath}")
+            AppLogger.i(TAG, "GSR data persistence initialized for session: $sessionId")
+            AppLogger.i(TAG, "CSV file: ${csvFile!!.absolutePath}")
 
             startBatchWriter()
 
             true
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to initialize GSR data persistence", e)
+            AppLogger.e(TAG, "Failed to initialize GSR data persistence", e)
             false
         }
     }
@@ -133,7 +135,7 @@ class GSRDataPersistence(
                     writeBatch()
                     kotlinx.coroutines.delay(FLUSH_INTERVAL_MS)
                 } catch (e: Exception) {
-                    Log.e(TAG, "Error in batch writer", e)
+                    AppLogger.e(TAG, "Error in batch writer", e)
                 }
             }
         }
@@ -164,7 +166,7 @@ class GSRDataPersistence(
                     "Wrote batch of ${batch.size} GSR samples. Total: ${samplesWritten.get()}"
                 )
             } catch (e: Exception) {
-                Log.e(TAG, "Failed to write GSR data batch", e)
+                AppLogger.e(TAG, "Failed to write GSR data batch", e)
             }
         }
     }
@@ -172,7 +174,7 @@ class GSRDataPersistence(
     fun startPersistence() {
         isWriting.set(true)
         TimestampManager.startSession()
-        Log.i(TAG, "GSR data persistence started")
+        AppLogger.i(TAG, "GSR data persistence started")
     }
 
     suspend fun stopPersistence() {
@@ -184,7 +186,7 @@ class GSRDataPersistence(
 
         TimestampManager.endSession()
 
-        Log.i(TAG, "GSR data persistence stopped. Total samples written: ${samplesWritten.get()}")
+        AppLogger.i(TAG, "GSR data persistence stopped. Total samples written: ${samplesWritten.get()}")
     }
 
     suspend fun cleanup() {
@@ -195,9 +197,9 @@ class GSRDataPersistence(
 
                 csvBufferedWriter?.stop()
                 csvBufferedWriter = null
-                Log.i(TAG, "GSR data persistence cleanup completed")
+                AppLogger.i(TAG, "GSR data persistence cleanup completed")
             } catch (e: Exception) {
-                Log.e(TAG, "Error during cleanup", e)
+                AppLogger.e(TAG, "Error during cleanup", e)
             }
         }
     }
