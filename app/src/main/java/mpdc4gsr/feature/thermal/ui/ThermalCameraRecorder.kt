@@ -66,8 +66,11 @@ class ThermalCameraRecorder(
         private const val PREVIEW_THROTTLE_MODULO = 100
 
         private fun detectOptimalFrameRate(): Double {
-            return try {
-
+            return ErrorHandler.runSafelyWithDefault(
+                TAG,
+                "detect thermal hardware capabilities",
+                IR_FRAME_RATE_STANDARD
+            ) {
                 val hasEnhancedCapabilities = checkForEnhancedThermalCapabilities()
 
                 if (hasEnhancedCapabilities) {
@@ -77,12 +80,6 @@ class ThermalCameraRecorder(
                     AppLogger.i(TAG, "Standard TC001 detected - using 9Hz frame rate")
                     IR_FRAME_RATE_STANDARD
                 }
-            } catch (e: Exception) {
-                Log.w(
-                    TAG,
-                    "Error detecting thermal hardware capabilities, using standard 9Hz: ${e.message}"
-                )
-                IR_FRAME_RATE_STANDARD
             }
         }
 
