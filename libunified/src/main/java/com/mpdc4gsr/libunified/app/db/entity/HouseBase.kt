@@ -4,7 +4,9 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
-import com.blankj.utilcode.util.TimeUtils
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 open class HouseBase {
     @PrimaryKey(autoGenerate = true)
@@ -70,8 +72,13 @@ open class HouseBase {
             else -> "USD"
         }
 
-    fun getPdfFileName(): String =
-        "TC_${TimeUtils.millis2String(createTime, "yyyyMMdd_HHmmss")}.pdf"
+    fun getPdfFileName(): String {
+        val formatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss")
+        val formatted = Instant.ofEpochMilli(createTime)
+            .atZone(ZoneId.systemDefault())
+            .format(formatter)
+        return "TC_${formatted}.pdf"
+    }
 }
 
 @Entity

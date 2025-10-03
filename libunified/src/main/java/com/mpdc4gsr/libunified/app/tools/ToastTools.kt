@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.annotation.StringRes
 import com.blankj.utilcode.util.ScreenUtils
 import com.mpdc4gsr.libunified.compat.ContextProvider
+import com.blankj.utilcode.util.Utils
 import com.mpdc4gsr.libunified.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -38,17 +39,18 @@ object ToastTools {
             val view = inflater.inflate(R.layout.toast_tip, null)
             val text = view.findViewById(R.id.toast_tip_text) as TextView
             text.text = textStr
+            val screenHeight = Utils.getApp().resources.displayMetrics.heightPixels
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
 
-                mPublicToast = Toast.makeText(ContextProvider.INSTANCE.getContext(), textStr, duration)
-                mPublicToast?.setGravity(Gravity.BOTTOM, 0, ScreenUtils.getScreenHeight() / 8)
+                mPublicToast = Toast.makeText(Utils.getApp(), textStr, duration)
+                mPublicToast?.setGravity(Gravity.BOTTOM, 0, screenHeight / 8)
             } else {
 
                 if (mPublicToast == null) {
                     mPublicToast = Toast(ContextProvider.INSTANCE.getContext())
                 }
                 mPublicToast?.duration = duration
-                mPublicToast?.setGravity(Gravity.BOTTOM, 0, ScreenUtils.getScreenHeight() / 8)
+                mPublicToast?.setGravity(Gravity.BOTTOM, 0, screenHeight / 8)
                 @Suppress("DEPRECATION")
                 mPublicToast?.view = view
             }

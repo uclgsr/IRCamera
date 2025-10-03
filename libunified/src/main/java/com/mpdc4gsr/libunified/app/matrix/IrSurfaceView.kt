@@ -5,7 +5,6 @@ import android.graphics.*
 import android.util.AttributeSet
 import android.view.SurfaceHolder
 import android.view.SurfaceView
-import com.blankj.utilcode.util.ScreenUtils
 
 class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
 
@@ -59,17 +58,18 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
 //    }
 
     fun setMatrix(rotate: Float, w: Float, h: Float) {
+        val screenWidth = resources.displayMetrics.widthPixels.toFloat()
         mMatrix.reset()
         when (rotate) {
             90f -> {
-                val sca = ScreenUtils.getScreenWidth() / h
+                val sca = screenWidth / h
                 mMatrix.setRotate(rotate, 0f, 0f)
                 mMatrix.postTranslate(h, 0f)
                 mMatrix.postScale(sca, sca)
             }
 
             180f -> {
-                val sca = ScreenUtils.getScreenWidth() / w
+                val sca = screenWidth / w
                 mMatrix.setRotate(rotate, 0f, 0f)
                 mMatrix.postTranslate(w, h)
                 mMatrix.postScale(sca, sca)
@@ -77,14 +77,14 @@ class IrSurfaceView : SurfaceView, SurfaceHolder.Callback {
 
             270f -> {
 
-                val sca = ScreenUtils.getScreenWidth() / h
+                val sca = screenWidth / h
                 mMatrix.setRotate(rotate, 0f, 0f)
                 mMatrix.postTranslate(0f, w)
                 mMatrix.postScale(sca, sca)
             }
 
             else -> {
-                val sca = ScreenUtils.getScreenWidth() / w
+                val sca = screenWidth / w
                 mMatrix.postScale(sca, sca)
             }
         }

@@ -1,37 +1,76 @@
 package com.mpdc4gsr.libunified.app.utils
 
+import android.content.ContentValues
 import android.content.Context
 import android.graphics.Bitmap
+import android.os.Build
+import android.os.Environment
+import android.provider.MediaStore
 import android.util.Log
-import com.blankj.utilcode.util.ImageUtils
-import com.mpdc4gsr.libunified.compat.ContextProvider
+import com.blankj.utilcode.util.Utils
 import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.config.FileConfig.lineIrGalleryDir
+import java.io.BufferedOutputStream
 import java.io.File
+import java.io.FileOutputStream
 
 object ImageUtils {
 
     fun saveToCache(context: Context, bitmap: Bitmap): String {
         val cacheFile = context.externalCacheDir ?: context.cacheDir
         val file = File(cacheFile, "Report_${System.currentTimeMillis()}.jpg")
-        ImageUtils.save(bitmap, file, Bitmap.CompressFormat.JPEG)
+        FileOutputStream(file).use { fos ->
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos)
+            fos.flush()
+        }
         return file.absolutePath
     }
 
     fun save(bitmap: Bitmap, isTC007: Boolean = false): String {
         val dicName = if (isTC007) "TC007" else CommUtils.getAppName()
         val fileName = "${dicName}_${System.currentTimeMillis()}.jpg"
-        val saveFile = ImageUtils.save2Album(bitmap, dicName, Bitmap.CompressFormat.JPEG)
-        return if (saveFile != null) {
-            saveFile.name.replace(".JPG", "")
-        } else {
-            fileName.replace(".JPG", "")
+        
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                val values = ContentValues().apply {
+                    put(MediaStore.Images.Media.DISPLAY_NAME, fileName)
+                    put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
+                    put(MediaStore.Images.Media.RELATIVE_PATH, "${Environment.DIRECTORY_PICTURES}/$dicName")
+                }
+                val uri = Utils.getApp().contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+                uri?.let {
+                    Utils.getApp().contentResolver.openOutputStream(it)?.use { outputStream ->
+                        BufferedOutputStream(outputStream).use { bos ->
+                            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos)
+                            bos.flush()
+                        }
+                    }
+                }
+            } else {
+                val picturesDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+                val albumDir = File(picturesDir, dicName)
+                if (!albumDir.exists()) {
+                    albumDir.mkdirs()
+                }
+                val file = File(albumDir, fileName)
+                FileOutputStream(file).use { fos ->
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos)
+                    fos.flush()
+                }
+            }
+        } catch (e: Exception) {
+            XLog.e("Failed to save image: ${e.message}")
         }
+        
+        return fileName.removeSuffix(".jpg")
     }
 
     fun saveImageToApp(bitmap: Bitmap): String {
-        val saveFile = File(ContextProvider.INSTANCE.getContext().cacheDir, "PinP_${System.currentTimeMillis()}.jpg")
-        ImageUtils.save(bitmap, saveFile, Bitmap.CompressFormat.JPEG)
+        val saveFile = File(Utils.getApp().cacheDir, "PinP_${System.currentTimeMillis()}.jpg")
+        FileOutputStream(saveFile).use { fos ->
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos)
+            fos.flush()
+        }
         return saveFile.absolutePath
     }
 
