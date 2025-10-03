@@ -6,7 +6,6 @@ import android.util.Log
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.*
-import org.greenrobot.eventbus.EventBus
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicLong
@@ -323,8 +322,6 @@ class ThermalCameraErrorRecoveryManager(
 
             Log.i(TAG, "Thermal error state changed: $previousState -> $newState")
             errorEventListener?.onErrorStateChanged(newState)
-
-            EventBus.getDefault().post(ThermalErrorStateChangedEvent(previousState, newState))
         }
     }
 

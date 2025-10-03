@@ -6,10 +6,8 @@ import android.content.Intent
 import android.hardware.usb.UsbDevice
 import android.hardware.usb.UsbManager
 import android.util.Log
-import com.mpdc4gsr.libunified.app.bean.event.device.DeviceConnectEvent
-import com.mpdc4gsr.libunified.app.bean.event.device.DevicePermissionEvent
 import com.mpdc4gsr.libunified.app.config.DeviceConfig.isTcTsDevice
-import org.greenrobot.eventbus.EventBus
+import com.mpdc4gsr.libunified.app.event.DeviceEventManager
 
 class ThermalUsbReceiver : BroadcastReceiver() {
 
@@ -66,11 +64,11 @@ class ThermalUsbReceiver : BroadcastReceiver() {
                 if (hasPermission) {
 
                     Log.i(TAG, "Thermal camera attached with existing permission")
-                    EventBus.getDefault().post(DeviceConnectEvent(true, device))
+                    DeviceEventManager.emitDeviceConnectionSync(true, device)
                 } else {
 
                     Log.i(TAG, "Thermal camera attached, requesting USB permission")
-                    EventBus.getDefault().post(DevicePermissionEvent(device))
+                    DeviceEventManager.emitDevicePermissionRequestSync(device)
                 }
             } else {
                 Log.d(TAG, "Non-thermal USB device attached, ignoring")
@@ -98,7 +96,7 @@ class ThermalUsbReceiver : BroadcastReceiver() {
             if (device.isTcTsDevice()) {
                 Log.w(TAG, "Topdon thermal camera disconnected: ${device.productName}")
 
-                EventBus.getDefault().post(DeviceConnectEvent(false, device))
+                DeviceEventManager.emitDeviceConnectionSync(false, device)
             }
         }
     }
@@ -121,11 +119,11 @@ class ThermalUsbReceiver : BroadcastReceiver() {
                 if (granted) {
                     Log.i(TAG, "USB permission granted for thermal camera")
 
-                    EventBus.getDefault().post(DeviceConnectEvent(true, device))
+                    DeviceEventManager.emitDeviceConnectionSync(true, device)
                 } else {
                     Log.w(TAG, "USB permission denied for thermal camera")
 
-                    EventBus.getDefault().post(DevicePermissionEvent(device))
+                    DeviceEventManager.emitDevicePermissionRequestSync(device)
                 }
             }
         }

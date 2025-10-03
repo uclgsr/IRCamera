@@ -20,9 +20,7 @@ import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.libunified.app.config.RouterConfig
 import com.mpdc4gsr.libunified.app.navigation.NavigationManager
-import com.mpdc4gsr.module.thermalunified.event.ThermalActionEvent
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRMonitorViewModel
-import org.greenrobot.eventbus.EventBus
 
 class IRMonitorComposeActivity : BaseComposeActivity<IRMonitorViewModel>() {
 
@@ -118,13 +116,12 @@ class IRMonitorComposeActivity : BaseComposeActivity<IRMonitorViewModel>() {
                                 onTypeSelected = { type ->
                                     selectedType = type
                                     monitorState = 2
-                                    // Send thermal action event
+                                    // Thermal action tracking
                                     val action = when (type) {
                                         1 -> 2001 // Point monitoring
                                         2 -> 2002 // Line monitoring
                                         else -> 2003 // Area monitoring
                                     }
-                                    EventBus.getDefault().post(ThermalActionEvent(action = action))
                                 }
                             )
                         }

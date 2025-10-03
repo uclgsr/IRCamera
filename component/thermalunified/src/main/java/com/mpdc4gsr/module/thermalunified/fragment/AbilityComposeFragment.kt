@@ -244,9 +244,7 @@ class AbilityComposeFragment : Fragment() {
     ) {
         when (ability.id) {
             "winter" -> {
-                // Handle winter mode - trigger winter click event
-                org.greenrobot.eventbus.EventBus.getDefault()
-                    .post(com.mpdc4gsr.libunified.app.bean.event.WinterClickEvent())
+                // Handle winter mode - winter mode tracking
             }
 
             "monitoring" -> {
