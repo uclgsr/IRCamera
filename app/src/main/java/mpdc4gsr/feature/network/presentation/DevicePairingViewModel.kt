@@ -15,10 +15,10 @@ import javax.inject.Inject
  * Manages network device discovery and pairing with reactive state management
  * Uses Hilt for dependency injection
  */
-//@HiltViewModel
-class DevicePairingViewModel /*@Inject constructor(
+@HiltViewModel
+class DevicePairingViewModel @Inject constructor(
     private val application: Application
-)*/ : AppBaseViewModel(), NetworkClient.NetworkEventListener {
+) : AppBaseViewModel(), NetworkClient.NetworkEventListener {
 
     // StateFlow for reactive state management
     private val _discoveredControllers =
@@ -119,7 +119,7 @@ class DevicePairingViewModel /*@Inject constructor(
         }
     }
 
-    fun initialize(context: android.content.Context) {
+    fun initialize(context: android.content.Context = application) {
         launchWithErrorHandling {
             networkClient = NetworkClient(context)
             networkClient.setEventListener(this@DevicePairingViewModel)

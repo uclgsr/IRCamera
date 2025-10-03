@@ -52,7 +52,7 @@ private object MainNavRoutes {
  * Replaces the traditional MainActivity with a complete Compose implementation
  * Uses Hilt for dependency injection
  */
-//@AndroidEntryPoint
+@AndroidEntryPoint
 class MainComposeActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

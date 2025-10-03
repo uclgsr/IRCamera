@@ -39,7 +39,7 @@ import mpdc4gsr.core.ui.deferAction
  * - Secure pairing with authentication validation
  * Uses Hilt for dependency injection
  */
-//@AndroidEntryPoint
+@AndroidEntryPoint
 class DevicePairingComposeActivity : BaseComposeActivity<DevicePairingViewModel>() {
 
     companion object {
