@@ -10,16 +10,20 @@ import android.hardware.usb.UsbDevice
 import android.hardware.usb.UsbManager
 import com.mpdc4gsr.libunified.compat.ContextProvider
 import com.elvishew.xlog.XLog
-import com.mpdc4gsr.libunified.app.bean.event.device.DeviceConnectEvent
-import com.mpdc4gsr.libunified.app.bean.event.device.DevicePermissionEvent
 import com.mpdc4gsr.libunified.app.broadcast.DeviceBroadcastReceiver
 import com.mpdc4gsr.libunified.app.config.DeviceConfig.isHik256
 import com.mpdc4gsr.libunified.app.config.DeviceConfig.isTcLiteDevice
 import com.mpdc4gsr.libunified.app.config.DeviceConfig.isTcTsDevice
+import com.mpdc4gsr.libunified.app.event.DeviceEventManager
 import com.mpdc4gsr.libunified.app.utils.ByteUtils
-import org.greenrobot.eventbus.EventBus
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 
 object DeviceTools {
+
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
     fun isConnect(
         isSendConnectEvent: Boolean = false,
@@ -32,13 +36,17 @@ object DeviceTools {
                 return if (usbManager.hasPermission(usbDevice)) {
                     XLog.i("[ph][ph][ph][ph][ph][ph][ph][ph][ph]")
                     if (isSendConnectEvent) {
-                        EventBus.getDefault().post(DeviceConnectEvent(true, usbDevice))
+                        scope.launch {
+                            DeviceEventManager.emitDeviceConnection(true, usbDevice)
+                        }
                     }
                     true
                 } else {
                     XLog.w("[ph][ph][ph][ph][ph][ph][ph][ph][ph]")
                     if (isAutoRequest) {
-                        EventBus.getDefault().post(DevicePermissionEvent(usbDevice))
+                        scope.launch {
+                            DeviceEventManager.emitDevicePermissionRequest(usbDevice)
+                        }
                     }
                     false
                 }

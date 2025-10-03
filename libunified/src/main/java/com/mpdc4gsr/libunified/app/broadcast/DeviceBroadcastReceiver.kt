@@ -6,13 +6,17 @@ import android.content.Intent
 import android.hardware.usb.UsbDevice
 import android.hardware.usb.UsbManager
 import com.elvishew.xlog.XLog
-import com.mpdc4gsr.libunified.app.bean.event.device.DeviceConnectEvent
 import com.mpdc4gsr.libunified.app.config.DeviceConfig.isTcTsDevice
+import com.mpdc4gsr.libunified.app.event.DeviceEventManager
 import com.mpdc4gsr.libunified.app.tools.DeviceTools
-import org.greenrobot.eventbus.EventBus
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 
 class DeviceBroadcastReceiver : BroadcastReceiver() {
     private val TAG = this.javaClass.simpleName
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
     companion object {
 
@@ -60,7 +64,9 @@ class DeviceBroadcastReceiver : BroadcastReceiver() {
                 DeviceTools.isConnect(isSendConnectEvent = true, isAutoRequest = true)
             }
             if (UsbManager.ACTION_USB_DEVICE_DETACHED == intent.action) {
-                EventBus.getDefault().post(DeviceConnectEvent(false, null))
+                scope.launch {
+                    DeviceEventManager.emitDeviceConnection(false, null)
+                }
             }
         }
     }

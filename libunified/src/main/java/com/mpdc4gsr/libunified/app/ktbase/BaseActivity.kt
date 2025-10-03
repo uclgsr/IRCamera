@@ -15,20 +15,22 @@ import com.elvishew.xlog.XLog
 import com.google.gson.Gson
 import com.mpdc4gsr.libunified.R
 import com.mpdc4gsr.libunified.app.BaseApplication
-import com.mpdc4gsr.libunified.app.bean.event.SocketStateEvent
-import com.mpdc4gsr.libunified.app.bean.event.device.DeviceConnectEvent
 import com.mpdc4gsr.libunified.app.bean.response.ResponseUserInfo
 import com.mpdc4gsr.libunified.app.common.SharedManager
 import com.mpdc4gsr.libunified.app.common.UserInfoManager
 import com.mpdc4gsr.libunified.app.compose.dialogs.LoadingDialogState
 import com.mpdc4gsr.libunified.app.compose.dialogs.ProgressDialogState
+import com.mpdc4gsr.libunified.app.event.DeviceEventManager
 import com.mpdc4gsr.libunified.app.lms.LMS
 import com.mpdc4gsr.libunified.app.lms.bean.CommonBean
 import com.mpdc4gsr.libunified.app.tools.AppLanguageUtils
 import com.mpdc4gsr.libunified.app.tools.ConstantLanguages
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import java.io.File
 
 abstract class BaseActivity : AppCompatActivity() {
@@ -44,13 +46,14 @@ abstract class BaseActivity : AppCompatActivity() {
 
     protected open fun isLockPortrait(): Boolean = true
 
+    private val activityScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         BaseApplication.instance.activitys.add(this)
         this.savedInstanceState = savedInstanceState
-        if (!EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().register(this)
-        }
+
+        observeDeviceEvents()
 
         if (isLockPortrait()) {
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
@@ -74,9 +77,6 @@ abstract class BaseActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        if (!EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().register(this)
-        }
     }
 
     override fun onResume() {
@@ -90,18 +90,34 @@ abstract class BaseActivity : AppCompatActivity() {
     override fun onDestroy() {
         cameraDialogState.dismiss()
         super.onDestroy()
-        if (EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().unregister(this)
-        }
+        activityScope.cancel()
         BaseApplication.instance.activitys.remove(this)
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun getConnectState(event: DeviceConnectEvent) {
-        if (event.isConnect) {
-            connected()
-        } else {
-            disConnected()
+    private fun observeDeviceEvents() {
+        activityScope.launch {
+            DeviceEventManager.deviceConnectionState.collectLatest { state ->
+                state?.let {
+                    if (it.isConnected) {
+                        connected()
+                    } else {
+                        disConnected()
+                    }
+                }
+            }
+        }
+
+        activityScope.launch {
+            DeviceEventManager.socketConnectionState.collectLatest { state ->
+                state?.let {
+                    Log.d("onSocketConnectState", "${it.isConnected}")
+                    if (it.isConnected) {
+                        onSocketConnected(it.isTS004)
+                    } else {
+                        onSocketDisConnected(it.isTS004)
+                    }
+                }
+            }
         }
     }
 
@@ -109,16 +125,6 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     protected open fun disConnected() {
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onSocketConnectState(event: SocketStateEvent) {
-        Log.d("onSocketConnectState", "${event.isConnect}")
-        if (event.isConnect) {
-            onSocketConnected(event.isTS004)
-        } else {
-            onSocketDisConnected(event.isTS004)
-        }
     }
 
     protected open fun onSocketConnected(isTS004: Boolean) {

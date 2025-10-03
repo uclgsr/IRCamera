@@ -5,15 +5,15 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
-import com.mpdc4gsr.libunified.app.bean.event.SocketStateEvent
-import com.mpdc4gsr.libunified.app.bean.event.device.DeviceConnectEvent
+import androidx.compose.runtime.LaunchedEffect
+import androidx.lifecycle.lifecycleScope
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
+import com.mpdc4gsr.libunified.app.event.DeviceEventManager
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import com.mpdc4gsr.libunified.app.tools.AppLanguageUtils
 import com.mpdc4gsr.libunified.app.tools.ConstantLanguages
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 abstract class BaseComposeActivity<VM : BaseViewModel> : ComponentActivity() {
 
@@ -28,8 +28,6 @@ abstract class BaseComposeActivity<VM : BaseViewModel> : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        EventBus.getDefault().register(this)
-
         setContent {
             LibUnifiedTheme {
                 val viewModel = createViewModel()
@@ -38,11 +36,6 @@ abstract class BaseComposeActivity<VM : BaseViewModel> : ComponentActivity() {
                 HandleConnectionEvents(viewModel)
             }
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        EventBus.getDefault().unregister(this)
     }
 
     override fun attachBaseContext(newBase: Context?) {
@@ -56,21 +49,18 @@ abstract class BaseComposeActivity<VM : BaseViewModel> : ComponentActivity() {
 
     @Composable
     private fun HandleConnectionEvents(viewModel: VM) {
-        // Generic connection event handling can be added here
-        // Subclasses can override onDeviceConnected/onDeviceDisconnected for specific behavior
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    open fun onUSBLineStateChange(event: DeviceConnectEvent) {
-        if (event.isConnect) {
-            onDeviceConnected()
-        } else {
-            onDeviceDisconnected()
+        LaunchedEffect(Unit) {
+            lifecycleScope.launch {
+                DeviceEventManager.deviceConnectionState.collectLatest { state ->
+                    state?.let {
+                        if (it.isConnected) {
+                            onDeviceConnected()
+                        } else {
+                            onDeviceDisconnected()
+                        }
+                    }
+                }
+            }
         }
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    open fun onSocketStateChange(event: SocketStateEvent) {
-        // Handle socket state changes - can be overridden by subclasses
     }
 }

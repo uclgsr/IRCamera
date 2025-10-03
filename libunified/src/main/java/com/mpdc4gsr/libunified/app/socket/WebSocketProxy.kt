@@ -13,15 +13,21 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.mpdc4gsr.libunified.compat.ContextProvider
 import com.elvishew.xlog.XLog
-import com.mpdc4gsr.libunified.app.bean.event.SocketStateEvent
+import com.mpdc4gsr.libunified.app.event.DeviceEventManager
 import com.mpdc4gsr.libunified.app.security.CertificateManager
 import com.mpdc4gsr.libunified.app.utils.WifiUtils
 import com.mpdc4gsr.libunified.app.utils.WsCmdConstants
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import okhttp3.*
 import okio.ByteString
-import org.greenrobot.eventbus.EventBus
 
 class WebSocketProxy {
+
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+
     companion object {
 
         private const val TS004_URL = "wss://192.168.40.1:888"
@@ -153,8 +159,9 @@ class WebSocketProxy {
             XLog.tag("WebSocket")
                 .d("[ph][ph][ph] $currentSSID [ph][ph][ph] $ssid，[ph][ph][ph][ph][ph]")
             if (reconnectHandler.isReconnecting) {
-                EventBus.getDefault()
-                    .post(SocketStateEvent(false, false)) // TS004 functionality removed
+                scope.launch {
+                    DeviceEventManager.emitSocketConnection(false, false)
+                }
             }
             this.network = network
             currentSSID = ssid
@@ -225,8 +232,9 @@ class WebSocketProxy {
             XLog.tag("WebSocket").d("$ssid Socket [ph][ph][ph][ph]")
             isNeedReconnect = true
             handler.reset()
-            EventBus.getDefault()
-                .post(SocketStateEvent(true, false)) // TS004 functionality removed
+            mWebSocketProxy?.scope?.launch {
+                DeviceEventManager.emitSocketConnection(true, false)
+            }
         }
 
         override fun onMessage(
@@ -273,8 +281,9 @@ class WebSocketProxy {
             } else {
                 XLog.tag("WebSocket").d("$ssid [ph][ph][ph][ph][ph]，[ph][ph]：$reason")
                 handler.reset()
-                EventBus.getDefault()
-                    .post(SocketStateEvent(false, false)) // TS004 functionality removed
+                mWebSocketProxy?.scope?.launch {
+                    DeviceEventManager.emitSocketConnection(false, false)
+                }
             }
             mWebSocketProxy?.currentSSID = ""
         }
@@ -291,19 +300,17 @@ class WebSocketProxy {
             if (checkNeedReconnect()) {
                 handler.handleFail(ssid)
                 if (!handler.isReconnecting) {
-                    EventBus.getDefault().post(
-                        SocketStateEvent(
-                            false,
-                            false // TS004 functionality removed
-                        )
-                    )
+                    mWebSocketProxy?.scope?.launch {
+                        DeviceEventManager.emitSocketConnection(false, false)
+                    }
                 }
             } else {
                 XLog.tag("WebSocket").w("[ph][ph][ph][ph][ph][ph]")
                 handler.reset()
                 getInstance().stopWebSocket()
-                EventBus.getDefault()
-                    .post(SocketStateEvent(false, false)) // TS004 functionality removed
+                mWebSocketProxy?.scope?.launch {
+                    DeviceEventManager.emitSocketConnection(false, false)
+                }
             }
             mWebSocketProxy?.currentSSID = ""
         }

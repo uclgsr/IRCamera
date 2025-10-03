@@ -179,7 +179,6 @@ dependencies {
     api(libs.work.runtime.ktx)
     api(libs.retrofit2)
     api(libs.converter.gson)
-    api(libs.eventbus)
     api(libs.glide)
     ksp(libs.glide.compiler)
     api(libs.xlog)

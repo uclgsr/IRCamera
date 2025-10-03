@@ -6,13 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.mpdc4gsr.libunified.R
-import com.mpdc4gsr.libunified.app.bean.event.SocketStateEvent
-import com.mpdc4gsr.libunified.app.bean.event.device.DeviceConnectEvent
 import com.mpdc4gsr.libunified.app.compose.dialogs.LoadingDialogState
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
+import com.mpdc4gsr.libunified.app.event.DeviceEventManager
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 abstract class BaseFragment : Fragment() {
     val TAG = BaseFragment::class.java.simpleName
@@ -36,7 +35,7 @@ abstract class BaseFragment : Fragment() {
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
-        EventBus.getDefault().register(this)
+        observeDeviceEvents()
         initView()
     }
 
@@ -52,7 +51,6 @@ abstract class BaseFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        EventBus.getDefault().unregister(this)
     }
 
     private val loadingDialogState by lazy { LoadingDialogState(requireContext()) }
@@ -72,12 +70,29 @@ abstract class BaseFragment : Fragment() {
         loadingDialogState.dismiss()
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun getConnectState(event: DeviceConnectEvent) {
-        if (event.isConnect) {
-            connected()
-        } else {
-            disConnected()
+    private fun observeDeviceEvents() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            DeviceEventManager.deviceConnectionState.collectLatest { state ->
+                state?.let {
+                    if (it.isConnected) {
+                        connected()
+                    } else {
+                        disConnected()
+                    }
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            DeviceEventManager.socketConnectionState.collectLatest { state ->
+                state?.let {
+                    if (it.isConnected) {
+                        onSocketConnected(it.isTS004)
+                    } else {
+                        onSocketDisConnected(it.isTS004)
+                    }
+                }
+            }
         }
     }
 
@@ -85,15 +100,6 @@ abstract class BaseFragment : Fragment() {
     }
 
     protected open fun disConnected() {
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onSocketConnectState(event: SocketStateEvent) {
-        if (event.isConnect) {
-            onSocketConnected(event.isTS004)
-        } else {
-            onSocketDisConnected(event.isTS004)
-        }
     }
 
     protected open fun onSocketConnected(isTS004: Boolean) {
