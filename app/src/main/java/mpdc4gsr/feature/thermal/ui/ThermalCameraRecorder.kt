@@ -957,63 +957,13 @@ class ThermalCameraRecorder(
                 iruvctc?.setIFrameCallBackListener(object :
                     IFrameCallBackListener {
                     override fun updateData() {
-
+                        // The IRUVCTC frame callback indicates new data is available
+                        // The actual frame processing is done by IrcamEngine callback
+                        // This callback primarily used for synchronization and health monitoring
                         if (_isRecording.get()) {
-                            recordingScope.launch {
-                                val bitmap = currentBitmap
-                                if (bitmap != null && !bitmap.isRecycled) {
-                                    val frameNumber = frameCount.incrementAndGet()
-                                    val timestampRecord = TimestampManager.createTimestampRecord()
-
-                                    val thermalData =
-                                        if (ircamEngine != null && isTopdonSdkInitialized) {
-                                            extractRealThermalDataFromEngine(
-                                                timestampRecord.systemNanos,
-                                                frameNumber
-                                            )
-                                        } else {
-                                            extractThermalDataFromBitmap(
-                                                bitmap,
-                                                timestampRecord.systemNanos,
-                                                frameNumber
-                                            )
-                                        }
-                                    processRealThermalFrameData(
-                                        thermalData,
-                                        frameNumber,
-                                        timestampRecord
-                                    )
-                                }
-                            }
-
-                            if (previewCallback != null) {
-                                recordingScope.launch {
-                                    val bitmap = currentBitmap
-                                    if (bitmap != null && !bitmap.isRecycled) {
-
-                                        val bitmapCopy = if (bitmap.config != null) {
-                                            bitmap.copy(bitmap.config!!, false)
-                                        } else {
-                                            // If config is null, use ARGB_8888 as default
-                                            bitmap.copy(Bitmap.Config.ARGB_8888, false)
-                                        }
-                                        val thermalData =
-                                            if (ircamEngine != null && isTopdonSdkInitialized) {
-                                                extractRealThermalDataFromEngine(
-                                                    System.nanoTime(),
-                                                    frameCount.get()
-                                                )
-                                            } else {
-                                                extractThermalDataFromBitmap(
-                                                    bitmapCopy,
-                                                    System.nanoTime(),
-                                                    frameCount.get()
-                                                )
-                                            }
-                                        previewCallback?.onThermalFrame(bitmapCopy, thermalData)
-                                    }
-                                }
-                            }
+                            // Frame data is processed via IrcamEngine.setIrFrameCallback
+                            // Just log that IRUVCTC is alive and providing frames
+                            AppLogger.v(TAG, "IRUVCTC frame callback triggered - camera is active")
                         }
                     }
                 })
