@@ -12,6 +12,7 @@ import com.mpdc4gsr.libunified.app.config.HttpConfig
 import com.mpdc4gsr.libunified.app.lms.Config
 import com.mpdc4gsr.libunified.app.lms.UrlConstants
 import com.mpdc4gsr.libunified.app.lms.utils.SPUtils
+import com.mpdc4gsr.module.thermalunified.compat.ContextProvider
 import io.reactivex.plugins.RxJavaPlugins
 import mpdc4gsr.core.ui.InitUtils.initJPush
 import mpdc4gsr.core.ui.InitUtils.initLms
@@ -49,6 +50,9 @@ class App : BaseApplication() {
     override fun onCreate() {
         super.onCreate()
         instance = this
+        
+        // Initialize ContextProvider for AndroidX migration
+        ContextProvider.init(this)
 
         setupGlobalExceptionHandler()
 

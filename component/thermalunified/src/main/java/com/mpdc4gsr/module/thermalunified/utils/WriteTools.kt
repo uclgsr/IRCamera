@@ -3,9 +3,9 @@ package com.mpdc4gsr.module.thermalunified.utils
 import android.database.Cursor
 import android.net.Uri
 import android.provider.MediaStore
-import com.blankj.utilcode.util.Utils
 import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.tools.FileTools
+import com.mpdc4gsr.module.thermalunified.compat.ContextProvider
 import java.io.File
 
 object WriteTools {
@@ -13,7 +13,7 @@ object WriteTools {
         val uri: Uri = FileTools.getUri(file)
         XLog.w("[ph][ph][ph][ph] uri:$uri")
         val mediaId = queryId(uri)
-        val resolver = Utils.getApp().applicationContext.contentResolver
+        val resolver = ContextProvider.getContext().contentResolver
         val selection = "${MediaStore.Images.Media._ID} = ?"
 
         val selectionArgs = arrayOf(mediaId.toString())
@@ -27,7 +27,7 @@ object WriteTools {
         var result = 0L
         var cursor: Cursor? = null
         try {
-            val resolver = Utils.getApp().applicationContext.contentResolver
+            val resolver = ContextProvider.getContext().contentResolver
             cursor =
                 resolver.query(
                     MediaStore.Images.Media.EXTERNAL_CONTENT_URI,

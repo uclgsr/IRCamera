@@ -8,7 +8,8 @@ import android.text.StaticLayout
 import android.text.TextPaint
 import android.util.AttributeSet
 import android.view.View
-import com.blankj.utilcode.util.SizeUtils
+import com.mpdc4gsr.module.thermalunified.compat.dp
+import com.mpdc4gsr.module.thermalunified.compat.sp
 
 class EmissivityView : View {
     companion object {
@@ -24,7 +25,7 @@ class EmissivityView : View {
 
     private val layoutList: ArrayList<StaticLayout> = ArrayList(3)
 
-    private val strokeWidth = SizeUtils.dp2px(DEFAULT_STROKE_WIDTH).coerceAtLeast(1).toFloat()
+    private val strokeWidth = DEFAULT_STROKE_WIDTH.dp.coerceAtLeast(1f)
     private val linePaint = Paint()
     private val textPaint = TextPaint(Paint.ANTI_ALIAS_FLAG)
 
@@ -60,7 +61,7 @@ class EmissivityView : View {
         textList.addAll(newList)
 
         textPaint.color = if (textList.size == 1) 0xffffffff.toInt() else 0xccffffff.toInt()
-        textPaint.textSize = SizeUtils.sp2px(if (textList.size == 1) 12f else 11f).toFloat()
+        textPaint.textSize = (if (textList.size == 1) 12f else 11f).sp.toFloat()
 
         requestLayout()
     }
@@ -78,9 +79,9 @@ class EmissivityView : View {
         for (i in textList.indices) {
             val textWidth: Int =
                 if (textList.size == 1) {
-                    contentWidth - SizeUtils.dp2px(24f)
+                    contentWidth - 24.dp
                 } else {
-                    (if (i == 0) firstWidth else elseWidth) - SizeUtils.dp2px(24f)
+                    (if (i == 0) firstWidth else elseWidth) - 24.dp
                 }
             layoutList.add(
                 StaticLayout.Builder.obtain(
@@ -102,7 +103,7 @@ class EmissivityView : View {
         if (maxHeight == 0) {
             maxHeight = textPaint.fontMetricsInt.bottom - textPaint.fontMetricsInt.top
         }
-        maxHeight += SizeUtils.dp2px(12f)
+        maxHeight += 12.dp
 
         setMeasuredDimension(contentWidth + paddingStart + paddingEnd, maxHeight)
     }
@@ -124,12 +125,12 @@ class EmissivityView : View {
         )
         canvas.drawLine(strokeWidth / 2, 0f, strokeWidth / 2, height.toFloat(), linePaint)
 
-        val padding = SizeUtils.dp2px(12f).toFloat()
+        val padding = 12f.dp
         for (layout in layoutList) {
             canvas.save()
             canvas.translate(
                 padding,
-                if (isAlignTop) SizeUtils.dp2px(6f).toFloat() else (height - layout.height) / 2f
+                if (isAlignTop) 6f.dp else (height - layout.height) / 2f
             )
             layout.draw(canvas)
             canvas.restore()
