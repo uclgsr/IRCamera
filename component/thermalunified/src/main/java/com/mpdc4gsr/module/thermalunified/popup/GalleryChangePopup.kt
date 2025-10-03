@@ -56,7 +56,7 @@ class GalleryChangePopup(private val context: Context) : PopupWindow() {
         anchor.getLocationInWindow(locationArray)
 
         val x = locationArray[0] + anchor.width / 2 - width / 2
-        val y = locationArray[1] + anchor.height - 5f.dpToPx(context)
+        val y = locationArray[1] + anchor.height - 5f.dpToPx(context).toInt()
         showAtLocation(anchor, Gravity.NO_GRAVITY, x, y)
     }
 }

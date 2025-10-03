@@ -112,7 +112,7 @@ class FrameStruct() {
     var watermarkBean = WatermarkBean()
     var alarmBean = AlarmBean()
     var gainStatus: Int = 1
-    var textSize: Int = 14f.spToPx(ContextProvider.getContext())
+    var textSize: Int = 14f.spToPx(ContextProvider.getContext()).toInt()
     var environment: Float = 0f
     var distance: Float = 0f
     var radiation: Float = 0f
