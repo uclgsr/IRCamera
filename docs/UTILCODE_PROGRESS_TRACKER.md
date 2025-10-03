@@ -4,7 +4,7 @@
 
 **Start Date**: 2024-10-03  
 **Current Phase**: Phase 1 - Initial Implementation  
-**Overall Progress**: 15% Complete
+**Overall Progress**: 23% Complete
 
 ## Phase 1: Foundation & Initial Migrations ✅ In Progress
 
@@ -40,19 +40,37 @@
      - Uses context from View for configuration-aware conversions
      - 7 occurrences replaced with safe, context-aware versions
 
+5. **Additional Migrations Completed** - **BATCH 2**
+   - ✅ `component/thermalunified/report/viewmodel/PdfViewModel.kt`
+     - Migrated 2 `Utils.getApp()` calls to `ContextProvider.getContext()`
+   
+   - ✅ `component/thermalunified/report/viewmodel/ModernPdfViewModel.kt`
+     - Migrated 1 `Utils.getApp()` call to `ContextProvider.getContext()`
+   
+   - ✅ `component/thermalunified/utils/IRCmdTools.kt`
+     - Migrated 1 `Utils.getApp()` call to `ContextProvider.getContext()`
+   
+   - ✅ `component/thermalunified/view/TimeDownView.kt`
+     - Migrated 1 `SizeUtils.sp2px()` to context-aware `spToPx(context)`
+   
+   - ✅ `component/thermalunified/report/view/WatermarkView.kt`
+     - Migrated 2 `SizeUtils` calls to context-aware functions
+     - `dp2px(220f)` → `220f.dpToPx(context)`
+     - `sp2px(80f)` → `80f.spToPx(context)`
+
 ### Migration Statistics
 
 | Utility | Total Usage | Migrated | Remaining | Progress |
 |---------|-------------|----------|-----------|----------|
-| SizeUtils | 32 | 7 | 25 | 22% |
-| Utils.getApp() | 26 | 2 | 24 | 8% |
+| SizeUtils | 32 | 10 | 22 | 31% |
+| Utils.getApp() | 26 | 6 | 20 | 23% |
 | GsonUtils | 5 | 0 | 5 | 0% |
 | SPUtils | 4 | 0 | 4 | 0% |
 | TimeUtils | 3 | 0 | 3 | 0% |
 | ScreenUtils | 3 | 0 | 3 | 0% |
 | Others | <2 each | 0 | ~10 | 0% |
 
-**Overall Migration Progress**: ~15% (9 out of ~87 occurrences)
+**Overall Migration Progress**: ~23% (16 out of ~87 occurrences)
 
 ## Next Steps (Phase 1 Completion)
 

@@ -12,7 +12,7 @@ import android.view.animation.AlphaAnimation
 import android.view.animation.AnimationSet
 import android.view.animation.ScaleAnimation
 import androidx.appcompat.widget.AppCompatTextView
-import com.blankj.utilcode.util.SizeUtils
+import com.mpdc4gsr.module.thermalunified.compat.spToPx
 import java.util.*
 
 public class TimeDownView : AppCompatTextView {
@@ -33,7 +33,7 @@ public class TimeDownView : AppCompatTextView {
             downHandler = DownHandler()
         }
         gravity = Gravity.CENTER
-        textSize = SizeUtils.sp2px(30f).toFloat()
+        textSize = 30f.spToPx(context)
     }
 
     constructor(context: Context) : this(context, null)

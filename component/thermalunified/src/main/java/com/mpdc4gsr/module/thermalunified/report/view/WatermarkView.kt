@@ -5,7 +5,8 @@ import android.graphics.Canvas
 import android.text.TextPaint
 import android.util.AttributeSet
 import android.view.View
-import com.blankj.utilcode.util.SizeUtils
+import com.mpdc4gsr.module.thermalunified.compat.dpToPx
+import com.mpdc4gsr.module.thermalunified.compat.spToPx
 
 class WatermarkView : View {
 
@@ -15,7 +16,7 @@ class WatermarkView : View {
             invalidate()
         }
 
-    private val marginTop = SizeUtils.dp2px(220f).toFloat()
+    private lateinit var marginTop: Float
 
     private val textPaint: TextPaint = TextPaint()
 
@@ -28,10 +29,11 @@ class WatermarkView : View {
         attrs,
         defStyleAttr
     ) {
+        marginTop = 220f.dpToPx(context)
         textPaint.isFakeBoldText = true
         textPaint.isAntiAlias = true
         textPaint.color = 0x082b79d8
-        textPaint.textSize = SizeUtils.sp2px(80f).toFloat()
+        textPaint.textSize = 80f.spToPx(context)
     }
 
     override fun onDraw(canvas: Canvas) {
