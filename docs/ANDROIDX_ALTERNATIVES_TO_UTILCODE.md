@@ -22,7 +22,7 @@ Based on codebase analysis, the following utilcode utilities are used:
 
 ## Detailed Migration Guide
 
-### 1. SizeUtils → Resources + Extension Functions
+### 1. SizeUtils → Context-Aware Extension Functions
 
 **Current Usage:**
 ```kotlin
@@ -33,31 +33,49 @@ val pxValue = SizeUtils.px2dp(48f)
 val spValue = SizeUtils.sp2px(14f)
 ```
 
-**AndroidX Alternative:**
+**AndroidX Alternative (RECOMMENDED - Context-Aware):**
 ```kotlin
-import android.content.res.Resources
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import android.content.Context
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Dp
 
-// Create extension functions (add to a utils file)
-val Int.dp: Int get() = (this * Resources.getSystem().displayMetrics.density).toInt()
-val Int.px: Int get() = (this / Resources.getSystem().displayMetrics.density).toInt()
-val Int.sp: Int get() = (this * Resources.getSystem().displayMetrics.scaledDensity).toInt()
+// For Compose UI (PREFERRED)
+val Int.dp: Dp
+    @Composable
+    get() = with(LocalDensity.current) { this@dp.toDp() }
 
-// For Compose, use built-in units
-val size = 16.dp
-val fontSize = 14.sp
+// Usage in Composable
+@Composable
+fun MyComponent() {
+    val size = 16.dp  // Uses LocalDensity for correct configuration
+}
 
-// For traditional Views
-val dpValue = 16.dp
-val pxValue = 48.px
+// For traditional Views (context-aware)
+fun Int.dpToPx(context: Context): Int {
+    return (this * context.resources.displayMetrics.density).toInt()
+}
+
+fun Float.dpToPx(context: Context): Float {
+    return this * context.resources.displayMetrics.density
+}
+
+// Usage in Views
+class MyView(context: Context) : View(context) {
+    private val padding = 16.dpToPx(context)
+    private val strokeWidth = 0.5f.dpToPx(context)
+}
 ```
 
 **Benefits:**
-- No external dependencies
-- Type-safe with Kotlin extensions
-- Native Compose integration
-- No hidden API usage
+- ✅ Context-aware: Respects device configuration, theme, and locale
+- ✅ No external dependencies
+- ✅ Type-safe with Kotlin extensions
+- ✅ Native Compose integration with LocalDensity
+- ✅ No hidden API usage
+- ✅ Correct UI rendering across different configurations
+
+**⚠️ Warning:** Avoid `Resources.getSystem().displayMetrics` as it doesn't respect the application's current configuration and can lead to incorrect UI rendering.
 
 ### 2. Utils (Context Access) → Dependency Injection
 
