@@ -85,6 +85,7 @@ class VideoRecordFFmpeg(
         var VIDEO_CODEC = avcodec.AV_CODEC_ID_MPEG4
         const val SAMPLE_AUDIO_RETE_INHZ = 44100
         const val AUDIO_CHANNELS = 1
+        private const val MAX_RECORDING_DURATION_MS = 60L * 60 * 1000 // One hour in milliseconds
 
         fun canStartVideoRecord(
             context: Context,
@@ -302,7 +303,7 @@ class VideoRecordFFmpeg(
                             queTime = System.currentTimeMillis()
                         }
                         val timestamp = recorder?.timestamp
-                        if (timestamp != null && timestamp / 1000 > 60 * 60 * 1000) {
+                        if (timestamp != null && timestamp / 1000 > MAX_RECORDING_DURATION_MS) {
                             exportJob?.cancel()
                             stopVideoRecordListener?.invoke(true)
                             break

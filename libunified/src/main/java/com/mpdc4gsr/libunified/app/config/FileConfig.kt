@@ -82,7 +82,8 @@ object FileConfig {
     val gallerySourDir: String
         get() {
             val dir = ContextProvider.getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-            val result = dir!!.absolutePath + File.separator + "MPDC4GSR"
+                ?: return ""
+            val result = dir.absolutePath + File.separator + "MPDC4GSR"
             val file = File(result)
             if (!file.exists()) {
                 file.mkdirs()
@@ -153,7 +154,8 @@ object FileConfig {
     val lineIrGalleryDir: String
         get() {
             val dcimDir = ContextProvider.getContext().getExternalFilesDir(Environment.DIRECTORY_DCIM)
-            val dir = dcimDir!!.absolutePath
+                ?: return ""
+            val dir = dcimDir.absolutePath
             val path = dir + File.separator + "${CommUtils.getAppName()}-ir"
             val file = File(path)
             if (!file.exists()) {
@@ -166,7 +168,8 @@ object FileConfig {
     val tc007IrGalleryDir: String
         get() {
             val dcimDir = ContextProvider.getContext().getExternalFilesDir(Environment.DIRECTORY_DCIM)
-            val dir = dcimDir!!.absolutePath
+                ?: return ""
+            val dir = dcimDir.absolutePath
             val path = dir + File.separator + "TC007-ir"
             val file = File(path)
             if (!file.exists()) {
