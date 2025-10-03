@@ -11,7 +11,6 @@ import okhttp3.OkHttpClient
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
 import java.io.FileInputStream
@@ -54,7 +53,6 @@ object TS004Repository {
     private fun getTS004Service(): TS004Service = Retrofit.Builder()
         .baseUrl("http://192.168.40.1:8080")
         .addConverterFactory(GsonConverterFactory.create())
-        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
         .client(getOKHttpClient())
         .build()
         .create(TS004Service::class.java)

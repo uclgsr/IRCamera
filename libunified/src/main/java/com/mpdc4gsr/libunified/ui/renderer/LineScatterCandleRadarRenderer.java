@@ -45,11 +45,11 @@ public abstract class LineScatterCandleRadarRenderer extends BarLineScatterCandl
 
         mHighlightDotPaint.setColor(Color.rgb(243, 129, 47));
         mHighlightDotPaint.setStyle(Paint.Style.FILL);
-        c.drawCircle(x, y, ((int) (4f * ContextProvider.INSTANCE.getContext().getResources().getDisplayMetrics().density)), mHighlightDotPaint);
+        c.drawCircle(x, y, ((int) (4f * ContextProvider.getContext().getResources().getDisplayMetrics().density)), mHighlightDotPaint);
 
         mHighlightDotPaint.setColor(Color.argb(80, 255, 255, 255));
         mHighlightDotPaint.setStyle(Paint.Style.STROKE);
-        c.drawCircle(x, y, ((int) (5f * ContextProvider.INSTANCE.getContext().getResources().getDisplayMetrics().density)), mHighlightDotPaint);
+        c.drawCircle(x, y, ((int) (5f * ContextProvider.getContext().getResources().getDisplayMetrics().density)), mHighlightDotPaint);
 
     }
 }

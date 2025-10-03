@@ -125,8 +125,8 @@ open class TitleView : ViewGroup {
         textView.gravity = Gravity.CENTER_VERTICAL
         textView.textSize = 16f
         textView.setTextColor(0xffffffff.toInt())
-        textView.setPadding(padding.dpToPx(context))
-        textView.setDrawableHeightPx(imgHeight.dpToPx(context))
+        textView.setPadding(padding.dpToPx(context).toInt())
+        textView.setDrawableHeightPx(imgHeight.dpToPx(context).toInt())
         addView(textView)
         return textView
     }
@@ -140,7 +140,7 @@ open class TitleView : ViewGroup {
         heightMeasureSpec: Int,
     ) {
 
-        var maxHeight = actionBarSize.coerceAtLeast(ICON_SIZE.dpToPx(context))
+        var maxHeight = actionBarSize.coerceAtLeast(ICON_SIZE.dpToPx(context).toInt())
         for (i in 0 until childCount) {
             val childView: View = getChildAt(i)
             if (childView != tvTitle && childView.visibility != View.GONE) {
@@ -164,38 +164,34 @@ open class TitleView : ViewGroup {
         }
 
         if (isTitleCenter) {
-            val leftSize =
-                if (tvLeft!!.isVisible) tvLeft?.measuredWidth else ICON_SIZE.dpToPx(context)
+            val leftSize: Int =
+                if (tvLeft?.isVisible == true) tvLeft?.measuredWidth ?: 0 else ICON_SIZE.dpToPx(context).toInt()
             var rightSize = 0
-            if (tvRight1!!.isVisible) {
-                rightSize += tvRight1!!.measuredWidth
+            if (tvRight1?.isVisible == true) {
+                rightSize += tvRight1?.measuredWidth ?: 0
             }
-            if (tvRight2!!.isVisible) {
-                rightSize += tvRight2!!.measuredWidth
+            if (tvRight2?.isVisible == true) {
+                rightSize += tvRight2?.measuredWidth ?: 0
             }
-            if (tvRight3!!.isVisible) {
-                rightSize += tvRight3!!.measuredWidth
+            if (tvRight3?.isVisible == true) {
+                rightSize += tvRight3?.measuredWidth ?: 0
             }
             if (rightSize == 0) {
-                rightSize = ICON_SIZE.dpToPx(context)
+                rightSize = ICON_SIZE.dpToPx(context).toInt()
             }
-            val titleWidth = measuredWidth - leftSize!!.coerceAtLeast(rightSize) * 2
+            val titleWidth = measuredWidth - leftSize.coerceAtLeast(rightSize) * 2
             val widthSpec =
                 MeasureSpec.makeMeasureSpec(titleWidth.coerceAtLeast(0), MeasureSpec.EXACTLY)
             tvTitle?.measure(widthSpec, MeasureSpec.makeMeasureSpec(maxHeight, MeasureSpec.EXACTLY))
         } else {
             var titleWidth = measuredWidth
-            titleWidth -= if (tvLeft!!.isVisible) tvLeft!!.measuredWidth else SizeUtils.dp2px(
-                ICON_SIZE
-            )
-            titleWidth -= if (tvRight1!!.isVisible) tvRight1!!.measuredWidth else SizeUtils.dp2px(
-                ICON_SIZE
-            )
-            if (tvRight2!!.isVisible) {
-                titleWidth -= tvRight2!!.measuredWidth
+            titleWidth -= if (tvLeft?.isVisible == true) tvLeft?.measuredWidth ?: 0 else ICON_SIZE.dpToPx(context).toInt()
+            titleWidth -= if (tvRight1?.isVisible == true) tvRight1?.measuredWidth ?: 0 else ICON_SIZE.dpToPx(context).toInt()
+            if (tvRight2?.isVisible == true) {
+                titleWidth -= tvRight2?.measuredWidth ?: 0
             }
-            if (tvRight3!!.isVisible) {
-                titleWidth -= tvRight3!!.measuredWidth
+            if (tvRight3?.isVisible == true) {
+                titleWidth -= tvRight3?.measuredWidth ?: 0
             }
             val widthSpec =
                 MeasureSpec.makeMeasureSpec(titleWidth.coerceAtLeast(0), MeasureSpec.EXACTLY)
@@ -241,9 +237,7 @@ open class TitleView : ViewGroup {
                         child.layout(margin, 0, margin + childWidth, measuredHeight)
                     } else {
                         val left =
-                            if (tvLeft!!.isVisible) tvLeft!!.measuredWidth else SizeUtils.dp2px(
-                                ICON_SIZE
-                            )
+                            if (tvLeft?.isVisible == true) tvLeft?.measuredWidth ?: 0 else ICON_SIZE.dpToPx(context).toInt()
                         child.layout(left, 0, left + childWidth, measuredHeight)
                     }
                 }

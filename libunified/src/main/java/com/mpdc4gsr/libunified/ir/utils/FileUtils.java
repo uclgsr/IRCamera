@@ -85,7 +85,7 @@ public enum FileUtils {
     }
 
     public static String getTableDirPath() {
-        return ContextProvider.INSTANCE.getContext().getCacheDir().getAbsolutePath() + "/table";
+        return ContextProvider.getContext().getCacheDir().getAbsolutePath() + "/table";
     }
 
     public static void saveShortFileForDeviceData(short[] bytes, String fileTitle) {
@@ -436,11 +436,11 @@ public enum FileUtils {
     }
 
     static String INFISENSE_SAVE_DIR() {
-        return ContextProvider.INSTANCE.getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES).getAbsolutePath();
+        return ContextProvider.getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES).getAbsolutePath();
     }
 
     static String DEVICE_DATA_SAVE_DIR() {
-        return ContextProvider.INSTANCE.getContext().getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath();
+        return ContextProvider.getContext().getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath();
     }
 
     public static String getISPConfigWithEncryptBase64ByGainStatus(CommonParams.GainStatus gainStatus) {

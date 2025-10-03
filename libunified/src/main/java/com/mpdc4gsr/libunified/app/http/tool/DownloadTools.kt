@@ -6,7 +6,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
@@ -24,7 +23,6 @@ object DownloadTools {
     private fun getService(): DownloadApiService =
         Retrofit.Builder()
             .baseUrl("http://192.168.40.1:8080")
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .client(getOKHttpClient())
             .build()
             .create(DownloadApiService::class.java)

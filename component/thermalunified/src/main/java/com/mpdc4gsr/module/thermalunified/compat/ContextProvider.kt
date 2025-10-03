@@ -15,10 +15,12 @@ import android.content.Context
 object ContextProvider {
     private lateinit var applicationContext: Context
     
+    @JvmStatic
     fun init(application: Application) {
         applicationContext = application.applicationContext
     }
     
+    @JvmStatic
     fun getContext(): Context {
         if (!::applicationContext.isInitialized) {
             throw IllegalStateException(
@@ -28,6 +30,7 @@ object ContextProvider {
         return applicationContext
     }
     
+    @JvmStatic
     fun getApplication(): Application {
         return getContext() as Application
     }

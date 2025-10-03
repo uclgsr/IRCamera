@@ -242,6 +242,7 @@ abstract class BaseApplication : Application() {
         }
     }
 
+    @Suppress("DEPRECATION")
     open fun onLanguageChange() {
 
         val locale = AppLanguageUtils.getLocaleByLanguage(ConstantLanguages.ENGLISH)
