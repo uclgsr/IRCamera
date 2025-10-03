@@ -11,8 +11,8 @@ class CoilImageEngine : ImageEngine {
         context: Context,
         url: String,
         imageView: ImageView,
-        progressView: View,
-        customImageView: View,
+        _progressView: View,
+        _customImageView: View,
     ) {
         imageView.load(url) {
             crossfade(true)
