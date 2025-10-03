@@ -49,7 +49,7 @@ object RecordingSettingsValidator {
 
         AppLogger.i(TAG, "========== Settings Application Verification ==========")
         AppLogger.i(TAG, "Audio Setting Match: $audioMatch (Expected: ${settings.audioEnabled}, Actual: $actualAudioEnabled)")
-        Log.i(
+        AppLogger.i(
             TAG,
             "Resolution Match: $resolutionMatch (Expected: ${qualityConfig.videoWidth}x${qualityConfig.videoHeight}, Actual: ${actualVideoWidth}x${actualVideoHeight})"
         )
