@@ -15,7 +15,7 @@ import android.widget.TextView
 import androidx.appcompat.widget.SwitchCompat
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
-import com.bumptech.glide.Glide
+import coil.load
 import com.mpdc4gsr.libunified.R
 import com.mpdc4gsr.libunified.app.bean.AlarmBean
 import com.mpdc4gsr.libunified.app.tools.ToastTools
@@ -164,8 +164,8 @@ class TempAlarmSetDialog(
         }
         ivCheckStoke.isSelected = alarmBean.markType == AlarmBean.TYPE_ALARM_MARK_STROKE
         ivCheckMatrix.isSelected = alarmBean.markType == AlarmBean.TYPE_ALARM_MARK_MATRIX
-        Glide.with(context).load(ColorDrawable(alarmBean.highColor)).into(imgCAlarmHigh)
-        Glide.with(context).load(ColorDrawable(alarmBean.lowColor)).into(imgCAlarmLow)
+        imgCAlarmHigh.load(ColorDrawable(alarmBean.highColor))
+        imgCAlarmLow.load(ColorDrawable(alarmBean.lowColor))
 
         etAlarmHigh.isEnabled = switchAlarmHigh.isChecked
         etAlarmLow.isEnabled = switchAlarmLow.isChecked
@@ -258,10 +258,10 @@ class TempAlarmSetDialog(
         colorPickDialog.onPickListener = { it: Int, i1: Int ->
             if (isHigh) {
                 alarmBean.highColor = it
-                Glide.with(context).load(ColorDrawable(it)).into(imgCAlarmHigh)
+                imgCAlarmHigh.load(ColorDrawable(it))
             } else {
                 alarmBean.lowColor = it
-                Glide.with(context).load(ColorDrawable(it)).into(imgCAlarmLow)
+                imgCAlarmLow.load(ColorDrawable(it))
             }
         }
         colorPickDialog.show()

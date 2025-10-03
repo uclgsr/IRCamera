@@ -4,7 +4,7 @@ import android.view.View
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.module.LoadMoreModule
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
-import com.mpdc4gsr.libunified.app.tools.GlideLoader
+import com.mpdc4gsr.libunified.app.tools.CoilLoader
 import com.mpdc4gsr.module.thermalunified.R
 import com.mpdc4gsr.module.thermalunified.report.bean.ReportData
 
@@ -33,7 +33,7 @@ class PDFAdapter : BaseQuickAdapter<ReportData.Records?, BaseViewHolder>, LoadMo
                 holder.setGone(R.id.tv_time, true)
             }
             item?.reportContent?.infrared_data?.get(0)?.picture_url?.let { url ->
-                GlideLoader.loadP(holder.getView(R.id.img_content), url)
+                CoilLoader.loadP(holder.getView(R.id.img_content), url)
             }
             holder.setText(
                 R.id.item_pdf_title,
