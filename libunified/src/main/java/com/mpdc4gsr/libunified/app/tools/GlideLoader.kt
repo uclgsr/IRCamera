@@ -18,7 +18,7 @@ import kotlinx.coroutines.withContext
 object GlideLoader {
 
     private fun getPhotoOptions(context: Context): RequestOptions {
-        val multi = MultiTransformation(CenterCrop(), RoundedCorners(6f.dpToPx(context)))
+        val multi = MultiTransformation(CenterCrop(), RoundedCorners(6f.dpToPx(context).toInt()))
         return RequestOptions
             .bitmapTransform(multi)
             .error(R.mipmap.ic_default_head)
