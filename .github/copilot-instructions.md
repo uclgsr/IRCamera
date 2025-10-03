@@ -32,6 +32,13 @@ definitive source:
     * `https://github.com/ShimmerEngineering/Shimmer-Java-Android-API.git`
     * `https://github.com/ShimmerEngineering/ShimmerAndroidAPI`
 
+### **File Exclusions**
+
+* Exclude all Markdown (`.md`) files from agent analysis and processing
+* Exclude all LaTeX (`.tex`, `.latex`) files from agent analysis and processing
+* Exclude `docs/` directory from agent processing
+* See `.copilotignore` for the complete exclusion list
+
 ### **Prohibitions**
 
 * Do not use emojis in any context (code, comments, documentation, or commit messages).

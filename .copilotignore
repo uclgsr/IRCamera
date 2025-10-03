@@ -1,0 +1,12 @@
+# Copilot Agent Exclusions
+# Exclude markdown and LaTeX documentation files from Copilot agent processing
+
+# Markdown files
+**/*.md
+
+# LaTeX files
+**/*.tex
+**/*.latex
+
+# Documentation directories
+docs/
