@@ -2,26 +2,23 @@ package com.mpdc4gsr.libunified.app.repository
 
 import android.net.Network
 import com.google.gson.Gson
+import com.mpdc4gsr.libunified.app.http.HttpClient
 import kotlinx.coroutines.Dispatchers
 import java.security.MessageDigest
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
-import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.InputStream
 import java.util.*
-import java.util.concurrent.TimeUnit
 
 object TS004Repository {
-    private fun Any.toBody(): RequestBody = Gson().toJson(this).toRequestBody()
-
+    private const val BASE_URL = "http://192.168.40.1:8080"
+    
     private fun calculateMD5(file: File): String {
         val md = MessageDigest.getInstance("MD5")
         FileInputStream(file).use { fis ->
@@ -36,26 +33,40 @@ object TS004Repository {
     }
 
     var netWork: Network? = null
-    private fun getOKHttpClient(): OkHttpClient {
-        val build = OkHttpClient.Builder()
-            .retryOnConnectionFailure(false)
-            .connectTimeout(15, TimeUnit.SECONDS)
-            .readTimeout(15, TimeUnit.SECONDS)
-            .writeTimeout(15, TimeUnit.SECONDS)
-            .addInterceptor(OKLogInterceptor(false))
-        netWork?.socketFactory?.let {
-            build.socketFactory(it)
+        set(value) {
+            field = value
+            HttpClient.network = value
         }
-
-        return build.build()
+    
+    private val okHttpClient: OkHttpClient
+        get() {
+            return HttpClient.createClient().newBuilder()
+                .addInterceptor(OKLogInterceptor(false))
+                .build()
+        }
+    
+    private suspend inline fun <reified T> post(
+        endpoint: String,
+        body: Any
+    ): T {
+        return HttpClient.executeJsonPost(
+            okHttpClient,
+            "$BASE_URL$endpoint",
+            body,
+            T::class.java
+        )
     }
-
-    private fun getTS004Service(): TS004Service = Retrofit.Builder()
-        .baseUrl("http://192.168.40.1:8080")
-        .addConverterFactory(GsonConverterFactory.create())
-        .client(getOKHttpClient())
-        .build()
-        .create(TS004Service::class.java)
+    
+    private suspend fun postOctet(
+        endpoint: String,
+        data: ByteArray
+    ) {
+        HttpClient.executeOctetPost(
+            okHttpClient,
+            "$BASE_URL$endpoint",
+            data
+        ).close()
+    }
 
     suspend fun downloadList(
         dataMap: Map<String, File>,
@@ -78,7 +89,7 @@ object TS004Repository {
 
     suspend fun download(url: String, file: File): Boolean = withContext(Dispatchers.IO) {
         val responseBody = try {
-            getTS004Service().download(url)
+            HttpClient.executeGet(okHttpClient, url)
         } catch (_: Exception) {
             return@withContext false
         }
@@ -116,7 +127,7 @@ object TS004Repository {
             paramMap["min"] = calendar.get(Calendar.MINUTE)
             paramMap["sec"] = calendar.get(Calendar.SECOND)
             paramMap["usec"] = calendar.get(Calendar.MILLISECOND)
-            getTS004Service().syncTime(paramMap.toBody()).isSuccess()
+            post<TS004Response<Boolean>>("/api/v1/system/setDateTime", paramMap).isSuccess()
         } catch (_: Exception) {
             false
         }
@@ -126,7 +137,7 @@ object TS004Repository {
         try {
             val paramMap: HashMap<String, Any> = HashMap()
             paramMap["timezone"] = TimeZone.getDefault().rawOffset / 1000 / 60 / 60
-            getTS004Service().syncTimeZone(paramMap.toBody()).isSuccess()
+            post<TS004Response<Boolean>>("/api/v1/system/setTimeZone", paramMap).isSuccess()
         } catch (_: Exception) {
             false
         }
@@ -134,7 +145,7 @@ object TS004Repository {
 
     suspend fun getVersion(): TS004Response<VersionBean>? = withContext(Dispatchers.IO) {
         try {
-            getTS004Service().getVersion()
+            post<TS004Response<VersionBean>>("/api/v1/system/getVersion", emptyMap<String, Any>())
         } catch (_: Exception) {
             null
         }
@@ -142,7 +153,7 @@ object TS004Repository {
 
     suspend fun getDeviceInfo(): TS004Response<DeviceInfo>? = withContext(Dispatchers.IO) {
         try {
-            getTS004Service().getDeviceInfo()
+            post<TS004Response<DeviceInfo>>("/api/v1/system/getDeviceInfo", emptyMap<String, Any>())
         } catch (_: Exception) {
             null
         }
@@ -152,7 +163,7 @@ object TS004Repository {
         try {
             val paramMap: HashMap<String, Any> = HashMap()
             paramMap["fileType"] = fileType
-            getTS004Service().getFileCount(paramMap.toBody()).data?.fileCount ?: 0
+            post<TS004Response<FileCountBean>>("/api/v1/system/getFileCount", paramMap).data?.fileCount ?: 0
         } catch (e: Exception) {
             null
         }
@@ -164,7 +175,7 @@ object TS004Repository {
             paramMap["pageNum"] = 1
             paramMap["pageCount"] = 1
             paramMap["fileType"] = fileType
-            getTS004Service().getFileList(paramMap.toBody()).data?.filelist
+            post<TS004Response<FilePageBean>>("/api/v1/system/getFileList", paramMap).data?.filelist
                 ?: return@withContext ArrayList()
         } catch (_: Exception) {
             null
@@ -182,7 +193,7 @@ object TS004Repository {
             paramMap["pageNum"] = 1
             paramMap["pageCount"] = fileCount
             paramMap["fileType"] = fileType
-            getTS004Service().getFileList(paramMap.toBody()).data?.filelist ?: ArrayList()
+            post<TS004Response<FilePageBean>>("/api/v1/system/getFileList", paramMap).data?.filelist ?: ArrayList()
         } catch (_: Exception) {
             ArrayList()
         }
@@ -195,7 +206,7 @@ object TS004Repository {
                 paramMap["pageNum"] = pageNum
                 paramMap["pageCount"] = pageCount
                 paramMap["fileType"] = fileType
-                getTS004Service().getFileList(paramMap.toBody()).data?.filelist ?: ArrayList()
+                post<TS004Response<FilePageBean>>("/api/v1/system/getFileList", paramMap).data?.filelist ?: ArrayList()
             } catch (_: Exception) {
                 null
             }
@@ -211,7 +222,7 @@ object TS004Repository {
 
             val paramMap: HashMap<String, Any> = HashMap()
             paramMap["filelist"] = idArray
-            getTS004Service().deleteFile(paramMap.toBody()).isSuccess()
+            post<TS004Response<Boolean>>("/api/v1/system/deleteFile", paramMap).isSuccess()
         } catch (_: Exception) {
             false
         }
@@ -219,7 +230,7 @@ object TS004Repository {
 
     suspend fun updateFirmware(file: File): Boolean = withContext(Dispatchers.IO) {
         try {
-            val isStartSuccess = getTS004Service().firmwareUpdateStart().isSuccess()
+            val isStartSuccess = post<TS004Response<Boolean>>("/api/v1/system/remoteUpgrade", emptyMap<String, Any>()).isSuccess()
             if (!isStartSuccess) {
                 return@withContext false
             }
@@ -239,10 +250,10 @@ object TS004Repository {
                 return@withContext false
             }
 
-            var status = getTS004Service().getUpgradeStatus().data?.status
+            var status = post<TS004Response<UpgradeStatus>>("/api/v1/system/getUpgradeStatus", emptyMap<String, Any>()).data?.status
             while (status == 0 || status == 1 || status == 2) {
                 delay(1000)
-                status = getTS004Service().getUpgradeStatus().data?.status
+                status = post<TS004Response<UpgradeStatus>>("/api/v1/system/getUpgradeStatus", emptyMap<String, Any>()).data?.status
             }
 
             status == 4
@@ -257,7 +268,7 @@ object TS004Repository {
             paramMap["saveAsFile"] = true
             paramMap["MD5"] = calculateMD5(file).lowercase(Locale.ROOT)
             paramMap["length"] = file.length()
-            getTS004Service().sendUpgradeFileStart(paramMap.toBody()).isSuccess()
+            post<TS004Response<Boolean>>("/api/v1/system/sendUpgradeFileStart", paramMap).isSuccess()
         } catch (_: Exception) {
             false
         }
@@ -275,7 +286,7 @@ object TS004Repository {
             while (readCount != -1) {
                 hasReadCount += readCount
                 if (hasReadCount == 1024 * 1024 * 5) {
-                    getTS004Service().sendUpgradeFile(byteArray.toRequestBody())
+                    postOctet("/api/v1/system/sendUpgradeFileData", byteArray)
                     hasReadCount = 0
                     byteArray = ByteArray(1024 * 1024 * 5)
                 }
@@ -286,7 +297,7 @@ object TS004Repository {
             if (hasReadCount > 0) {
                 val lastArray = ByteArray(hasReadCount)
                 System.arraycopy(byteArray, 0, lastArray, 0, hasReadCount)
-                getTS004Service().sendUpgradeFile(lastArray.toRequestBody())
+                postOctet("/api/v1/system/sendUpgradeFileData", lastArray)
             }
 
             true
@@ -301,7 +312,7 @@ object TS004Repository {
         try {
             val paramMap: HashMap<String, Any> = HashMap()
             paramMap["MD5"] = calculateMD5(file).lowercase(Locale.ROOT)
-            getTS004Service().sendUpgradeFileEnd(paramMap.toBody()).isSuccess()
+            post<TS004Response<Boolean>>("/api/v1/system/sendUpgradeFileEnd", paramMap).isSuccess()
         } catch (_: Exception) {
             false
         }
@@ -312,7 +323,7 @@ object TS004Repository {
             val paramMap: HashMap<String, Any> = HashMap()
             paramMap["enable"] = false
             paramMap["mode"] = mode
-            getTS004Service().setPseudoColor(paramMap.toBody()).isSuccess()
+            post<TS004Response<Boolean>>("/api/v1/system/setPseudoColor", paramMap).isSuccess()
         } catch (e: Exception) {
             false
         }
@@ -320,7 +331,7 @@ object TS004Repository {
 
     suspend fun getPseudoColor(): TS004Response<PseudoColorBean>? = withContext(Dispatchers.IO) {
         try {
-            getTS004Service().getPseudoColor()
+            post<TS004Response<PseudoColorBean>>("/api/v1/system/getPseudoColor", emptyMap<String, Any>())
         } catch (_: Exception) {
             null
         }
@@ -330,7 +341,7 @@ object TS004Repository {
         try {
             val paramMap: HashMap<String, Any> = HashMap()
             paramMap["state"] = state
-            getTS004Service().setRangeFind(paramMap.toBody()).isSuccess()
+            post<TS004Response<Boolean>>("/api/v1/system/setRangeFind", paramMap).isSuccess()
         } catch (e: Exception) {
             false
         }
@@ -338,7 +349,7 @@ object TS004Repository {
 
     suspend fun getRangeFind(): TS004Response<RangeBean>? = withContext(Dispatchers.IO) {
         try {
-            getTS004Service().getRangeFind()
+            post<TS004Response<RangeBean>>("/api/v1/system/getRangeFind", emptyMap<String, Any>())
         } catch (_: Exception) {
             null
         }
@@ -348,7 +359,7 @@ object TS004Repository {
         try {
             val paramMap: HashMap<String, Any> = HashMap()
             paramMap["brightness"] = brightness
-            getTS004Service().setPanelParam(paramMap.toBody()).isSuccess()
+            post<TS004Response<Boolean>>("/api/v1/system/setPanelParam", paramMap).isSuccess()
         } catch (e: Exception) {
             false
         }
@@ -356,7 +367,7 @@ object TS004Repository {
 
     suspend fun getPanelParam(): TS004Response<BrightnessBean>? = withContext(Dispatchers.IO) {
         try {
-            getTS004Service().getPanelParam()
+            post<TS004Response<BrightnessBean>>("/api/v1/system/getPanelParam", emptyMap<String, Any>())
         } catch (_: Exception) {
             null
         }
@@ -366,7 +377,7 @@ object TS004Repository {
         try {
             val paramMap: HashMap<String, Any> = HashMap()
             paramMap["enable"] = enable
-            getTS004Service().setPip(paramMap.toBody()).isSuccess()
+            post<TS004Response<Boolean>>("/api/v1/system/setPip", paramMap).isSuccess()
         } catch (e: Exception) {
             false
         }
@@ -374,7 +385,7 @@ object TS004Repository {
 
     suspend fun getPip(): TS004Response<PipBean>? = withContext(Dispatchers.IO) {
         try {
-            getTS004Service().getPip()
+            post<TS004Response<PipBean>>("/api/v1/system/getPip", emptyMap<String, Any>())
         } catch (_: Exception) {
             null
         }
@@ -385,7 +396,7 @@ object TS004Repository {
             val paramMap: HashMap<String, Any> = HashMap()
             paramMap["enable"] = true
             paramMap["factor"] = factor
-            getTS004Service().setZoom(paramMap.toBody()).isSuccess()
+            post<TS004Response<Boolean>>("/api/v1/system/setZoom", paramMap).isSuccess()
         } catch (e: Exception) {
             false
         }
@@ -393,7 +404,7 @@ object TS004Repository {
 
     suspend fun getZoom(): TS004Response<ZoomBean>? = withContext(Dispatchers.IO) {
         try {
-            getTS004Service().getZoom()
+            post<TS004Response<ZoomBean>>("/api/v1/system/getZoom", emptyMap<String, Any>())
         } catch (_: Exception) {
             null
         }
@@ -401,7 +412,7 @@ object TS004Repository {
 
     suspend fun setSnapshot(): Boolean = withContext(Dispatchers.IO) {
         try {
-            getTS004Service().setSnapshot().isSuccess()
+            post<TS004Response<Boolean>>("/api/v1/system/snapshot", emptyMap<String, Any>()).isSuccess()
         } catch (e: Exception) {
             false
         }
@@ -411,7 +422,7 @@ object TS004Repository {
         try {
             val paramMap: HashMap<String, Any> = HashMap()
             paramMap["enable"] = enable
-            getTS004Service().setVRecord(paramMap.toBody()).isSuccess()
+            post<TS004Response<Boolean>>("/api/v1/system/vrecord", paramMap).isSuccess()
         } catch (e: Exception) {
             false
         }
@@ -419,7 +430,7 @@ object TS004Repository {
 
     suspend fun getRecordStatus(): TS004Response<RecordStatusBean>? = withContext(Dispatchers.IO) {
         try {
-            getTS004Service().getVRecord()
+            post<TS004Response<RecordStatusBean>>("/api/v1/system/getRecordStatus", emptyMap<String, Any>())
         } catch (_: Exception) {
             null
         }
@@ -427,7 +438,7 @@ object TS004Repository {
 
     suspend fun getFreeSpace(): FreeSpaceBean? = withContext(Dispatchers.IO) {
         try {
-            getTS004Service().freeSpace().data
+            post<TS004Response<FreeSpaceBean>>("/api/v1/system/getFreeSpace", emptyMap<String, Any>()).data
         } catch (_: Exception) {
             null
         }
@@ -435,7 +446,7 @@ object TS004Repository {
 
     suspend fun getFormatStorage(): Boolean = withContext(Dispatchers.IO) {
         try {
-            getTS004Service().formatStorage().isSuccess()
+            post<TS004Response<Boolean>>("/api/v1/system/formatStorage", emptyMap<String, Any>()).isSuccess()
         } catch (_: Exception) {
             false
         }
@@ -443,8 +454,7 @@ object TS004Repository {
 
     suspend fun getResetAll(): Boolean = withContext(Dispatchers.IO) {
         try {
-
-            getTS004Service().resetAll().status == 100
+            post<TS004Response<Boolean>>("/api/v1/system/resetAll", emptyMap<String, Any>()).status == 100
         } catch (_: Exception) {
             false
         }
@@ -454,7 +464,7 @@ object TS004Repository {
         try {
             val paramMap: HashMap<String, Any> = HashMap()
             paramMap["state"] = state
-            getTS004Service().setTISR(paramMap.toBody()).isSuccess()
+            post<TS004Response<Boolean>>("/api/v1/system/setTISR", paramMap).isSuccess()
         } catch (e: Exception) {
             false
         }
@@ -462,7 +472,7 @@ object TS004Repository {
 
     suspend fun getTISR(): TS004Response<TISRBean>? = withContext(Dispatchers.IO) {
         try {
-            getTS004Service().getTISR()
+            post<TS004Response<TISRBean>>("/api/v1/system/getTISR", emptyMap<String, Any>())
         } catch (_: Exception) {
             null
         }
