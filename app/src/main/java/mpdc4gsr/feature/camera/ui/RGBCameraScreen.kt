@@ -1,5 +1,6 @@
 package mpdc4gsr.feature.camera.ui
 
+import android.app.Application
 import androidx.camera.view.PreviewView
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -37,6 +38,7 @@ import mpdc4gsr.core.ui.theme.IRCameraTheme
 import mpdc4gsr.core.ui.theme.Orange
 import mpdc4gsr.core.ui.theme.Purple
 import mpdc4gsr.feature.camera.presentation.RGBCameraViewModel
+import mpdc4gsr.feature.camera.presentation.RGBCameraViewModelFactory
 
 /**
  * RGB Camera Screen - Dedicated interface for RGB camera control and recording
@@ -44,7 +46,11 @@ import mpdc4gsr.feature.camera.presentation.RGBCameraViewModel
  */
 @Composable
 fun RGBCameraScreen(
-    viewModel: RGBCameraViewModel = viewModel(),
+    viewModel: RGBCameraViewModel = viewModel(
+        factory = RGBCameraViewModelFactory(
+            LocalContext.current.applicationContext as Application
+        )
+    ),
     onBackClick: (() -> Unit)? = null,
     onSettingsClick: () -> Unit = {},
     onCapturePhoto: () -> Unit = {},
