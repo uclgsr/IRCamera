@@ -16,6 +16,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import mpdc4gsr.core.ui.deferAction
 
 @Composable
 fun HomeGuideDialogCompose(
@@ -135,7 +136,7 @@ private fun GuideStep1Content(onNext: () -> Unit, onSkinClick: () -> Unit) {
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             OutlinedButton(
-                onClick = onSkinClick,
+                onClick = deferAction { onSkinClick() },
                 modifier = Modifier.weight(1f)
             ) {
                 Text("Skin Detection")
@@ -175,7 +176,7 @@ private fun GuideStep2Content(onNext: () -> Unit, onSkinClick: () -> Unit) {
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             OutlinedButton(
-                onClick = onSkinClick,
+                onClick = deferAction { onSkinClick() },
                 modifier = Modifier.weight(1f)
             ) {
                 Text("Skin Detection")
@@ -211,7 +212,7 @@ private fun GuideStep3Content(onNext: () -> Unit) {
         )
 
         Button(
-            onClick = onNext,
+            onClick = deferAction { onNext() },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("I Know")

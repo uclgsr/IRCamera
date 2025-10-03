@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import mpdc4gsr.feature.network.presentation.DevicePairingViewModel
+import mpdc4gsr.core.ui.deferAction
 
 /**
  * DevicePairingComposeActivity - Modern Device Discovery & Pairing with Compose
@@ -67,7 +68,7 @@ class DevicePairingComposeActivity : BaseComposeActivity<DevicePairingViewModel>
                             )
                         },
                         navigationIcon = {
-                            IconButton(onClick = { finish() }) {
+                            IconButton(onClick = deferAction { finish() }) {
                                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                             }
                         },
