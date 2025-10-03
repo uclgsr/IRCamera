@@ -76,13 +76,13 @@ class SafeMainThreadHandler(private val componentName: String = "Unknown") {
         private val componentName: String
     ) : Runnable {
         override fun run() {
-            val startTime = System.currentTimeMillis()
+            val startTime = System.nanoTime()
             totalOperations.incrementAndGet()
             
             try {
                 wrapped.run()
             } finally {
-                val executionTime = System.currentTimeMillis() - startTime
+                val executionTime = (System.nanoTime() - startTime) / 1_000_000
                 
                 when {
                     executionTime > ERROR_THRESHOLD_MS -> {
