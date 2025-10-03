@@ -1,6 +1,7 @@
 package mpdc4gsr.feature.camera.presentation
 
 import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -8,7 +9,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import mpdc4gsr.core.data.RgbCameraRecorder
-import mpdc4gsr.core.ui.AppBaseViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -53,8 +53,8 @@ enum class WhiteBalance(val displayName: String) {
  * Manages RgbCameraRecorder lifecycle and camera controls
  */
 class RGBCameraViewModel(
-    private val application: Application
-) : AppBaseViewModel() {
+    application: Application
+) : AndroidViewModel(application) {
 
     companion object {
         // Reuse SimpleDateFormat instance for better performance
@@ -89,7 +89,7 @@ class RGBCameraViewModel(
         viewModelScope.launch {
             try {
                 cameraRecorder = RgbCameraRecorder(
-                    context = application,
+                    context = getApplication(),
                     lifecycleOwner = lifecycleOwner
                 )
 
@@ -123,8 +123,9 @@ class RGBCameraViewModel(
     fun startRecording() {
         viewModelScope.launch {
             try {
-                val sessionDir = application.getExternalFilesDir("camera_recordings")?.absolutePath
-                    ?: application.filesDir.absolutePath
+                val app = getApplication<Application>()
+                val sessionDir = app.getExternalFilesDir("camera_recordings")?.absolutePath
+                    ?: app.filesDir.absolutePath
 
                 val currentTimeMs = System.currentTimeMillis()
                 val currentMonotonicNs = System.nanoTime()
