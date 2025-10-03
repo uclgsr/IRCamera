@@ -105,7 +105,7 @@ object PDFHelp {
                     bos.close()
                 }
                 val documentFile = DocumentFile.fromSingleUri(Utils.getApp(), uri)
-                val filePath = documentFile?.name ?: uri.toString()
+                val filePath = uri.toString()
                 Log.w("[ph][ph]", filePath)
                 filePath
             } else {
