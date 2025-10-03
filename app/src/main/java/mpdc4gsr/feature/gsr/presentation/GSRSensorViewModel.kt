@@ -36,7 +36,10 @@ class GSRSensorViewModel(
         val deviceBattery: Int = 0,
         val samplingRate: Int = 128,
         val gsrHistory: List<Float> = emptyList(),
-        val error: String? = null
+        val error: String? = null,
+        val connectionStatus: String = "Disconnected",
+        val isReconnecting: Boolean = false,
+        val reconnectionAttempt: Int = 0
     )
 
     private val _sensorState = MutableStateFlow(GSRSensorState())
@@ -61,13 +64,30 @@ class GSRSensorViewModel(
 
                 val initialized = gsrRecorder?.initialize() ?: false
                 if (initialized) {
-                    _sensorState.update { it.copy(isConnected = true, error = null) }
+                    _sensorState.update { 
+                        it.copy(
+                            isConnected = false,
+                            connectionStatus = "Initialized",
+                            error = null
+                        ) 
+                    }
                     startDataCollection()
+                    startConnectionMonitoring()
                 } else {
-                    _sensorState.update { it.copy(error = "Failed to initialize GSR recorder") }
+                    _sensorState.update { 
+                        it.copy(
+                            connectionStatus = "Initialization Failed",
+                            error = "Failed to initialize GSR recorder"
+                        ) 
+                    }
                 }
             } catch (e: Exception) {
-                _sensorState.update { it.copy(error = "Error initializing: ${e.message}") }
+                _sensorState.update { 
+                    it.copy(
+                        connectionStatus = "Error",
+                        error = "Error initializing: ${e.message}"
+                    ) 
+                }
             }
         }
     }
@@ -192,6 +212,86 @@ class GSRSensorViewModel(
                     )
                 }
             }
+        }
+    }
+
+    /**
+     * Start monitoring connection status and handle reconnection
+     */
+    private fun startConnectionMonitoring() {
+        viewModelScope.launch {
+            gsrRecorder?.deviceStatus?.collect { status ->
+                val isConnectedNow = status.contains("Connected", ignoreCase = true)
+                val isDisconnected = status.contains("Disconnected", ignoreCase = true)
+                
+                _sensorState.update { currentState ->
+                    val wasConnected = currentState.isConnected
+                    
+                    // Detect disconnection and trigger reconnection
+                    if (wasConnected && isDisconnected && !currentState.isReconnecting) {
+                        viewModelScope.launch {
+                            attemptReconnection()
+                        }
+                    }
+                    
+                    currentState.copy(
+                        isConnected = isConnectedNow,
+                        connectionStatus = status
+                    )
+                }
+            }
+        }
+    }
+
+    /**
+     * Attempt automatic reconnection with exponential backoff
+     */
+    private suspend fun attemptReconnection() {
+        val maxAttempts = 3
+        
+        for (attempt in 1..maxAttempts) {
+            _sensorState.update { 
+                it.copy(
+                    isReconnecting = true,
+                    reconnectionAttempt = attempt,
+                    connectionStatus = "Reconnecting (attempt $attempt/$maxAttempts)..."
+                )
+            }
+            
+            kotlinx.coroutines.delay(2000L * attempt) // Exponential backoff
+            
+            try {
+                val devices = gsrRecorder?.getDiscoveredDevices() ?: emptyList()
+                val device = devices.firstOrNull()
+                
+                if (device != null) {
+                    val connected = gsrRecorder?.connectToDevice(device) ?: false
+                    if (connected) {
+                        _sensorState.update { 
+                            it.copy(
+                                isConnected = true,
+                                isReconnecting = false,
+                                reconnectionAttempt = 0,
+                                connectionStatus = "Reconnected",
+                                error = null
+                            )
+                        }
+                        return
+                    }
+                }
+            } catch (e: Exception) {
+                android.util.Log.w("GSRSensorViewModel", "Reconnection attempt $attempt failed: ${e.message}")
+            }
+        }
+        
+        // All attempts failed
+        _sensorState.update { 
+            it.copy(
+                isReconnecting = false,
+                reconnectionAttempt = 0,
+                connectionStatus = "Connection Lost",
+                error = "Failed to reconnect after $maxAttempts attempts"
+            )
         }
     }
 

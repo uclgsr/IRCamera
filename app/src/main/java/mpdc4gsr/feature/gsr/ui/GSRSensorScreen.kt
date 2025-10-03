@@ -131,6 +131,10 @@ fun GSRSensorScreen(
                 isConnected = isConnected,
                 deviceBattery = deviceBattery,
                 samplingRate = samplingRate,
+                connectionStatus = sensorState.connectionStatus,
+                isReconnecting = sensorState.isReconnecting,
+                reconnectionAttempt = sensorState.reconnectionAttempt,
+                error = sensorState.error,
                 onConnectionToggle = {
                     if (isConnected) {
                         viewModel.disconnectDevice()
@@ -190,13 +194,22 @@ private fun GSRConnectionCard(
     isConnected: Boolean,
     deviceBattery: Int,
     samplingRate: Int,
+    connectionStatus: String = "Disconnected",
+    isReconnecting: Boolean = false,
+    reconnectionAttempt: Int = 0,
+    error: String? = null,
     onConnectionToggle: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
         modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
-            containerColor = if (isConnected) Color(0xFF1A2A1A) else Color(0xFF2A1A1A)
+            containerColor = when {
+                isReconnecting -> Color(0xFF8B4513)
+                isConnected -> Color(0xFF1A2A1A)
+                error != null -> Color(0xFF4A1A1A)
+                else -> Color(0xFF2A1A1A)
+            }
         )
     ) {
         Column(
@@ -210,7 +223,7 @@ private fun GSRConnectionCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Column {
+                Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = "Shimmer3 GSR Device",
                         color = Color.White,
@@ -218,23 +231,49 @@ private fun GSRConnectionCard(
                         fontWeight = FontWeight.Bold
                     )
                     Text(
-                        text = if (isConnected) "Connected via Bluetooth" else "Disconnected",
-                        color = if (isConnected) Color.Green else Color.Red,
+                        text = connectionStatus,
+                        color = when {
+                            isReconnecting -> Color.Yellow
+                            isConnected -> Color.Green
+                            error != null -> Color.Red
+                            else -> Color.Gray
+                        },
                         fontSize = 14.sp
                     )
+                    
+                    if (isReconnecting && reconnectionAttempt > 0) {
+                        Text(
+                            text = "Reconnecting: attempt $reconnectionAttempt/3",
+                            color = Color.Yellow,
+                            fontSize = 12.sp,
+                            modifier = Modifier.padding(top = 4.dp)
+                        )
+                    }
+                    
+                    if (error != null && !isReconnecting) {
+                        Text(
+                            text = error,
+                            color = Color.Red,
+                            fontSize = 12.sp,
+                            modifier = Modifier.padding(top = 4.dp)
+                        )
+                    }
                 }
 
                 Switch(
                     checked = isConnected,
                     onCheckedChange = { onConnectionToggle() },
+                    enabled = !isReconnecting,
                     colors = SwitchDefaults.colors(
                         checkedThumbColor = Color.Green,
-                        uncheckedThumbColor = Color.Gray
+                        uncheckedThumbColor = Color.Gray,
+                        disabledCheckedThumbColor = Color.Yellow,
+                        disabledUncheckedThumbColor = Color.DarkGray
                     )
                 )
             }
 
-            if (isConnected) {
+            if (isConnected && !isReconnecting) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly
