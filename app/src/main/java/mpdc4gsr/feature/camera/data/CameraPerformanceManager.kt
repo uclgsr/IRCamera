@@ -44,12 +44,12 @@ class CameraPerformanceManager(private val context: Context) {
     // Frame processing queue with backpressure handling
     private val frameProcessingQueue = ConcurrentLinkedQueue<FrameProcessingTask>()
     
-    // Background scope for frame processing to avoid blocking main thread
-    private val frameProcessingScope = CoroutineScope(Executors.newSingleThreadExecutor { r ->
+    // Background executor for frame processing to avoid blocking main thread
+    private val frameProcessingExecutor = Executors.newSingleThreadExecutor { r ->
         Thread(r, "CameraFrameProcessor").apply {
             priority = Thread.NORM_PRIORITY
         }
-    }.asCoroutineDispatcher())
+    }
 
     data class FrameProcessingTask(
         val frameData: ByteArray,
