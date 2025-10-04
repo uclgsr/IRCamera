@@ -69,12 +69,14 @@ class GSRSensorViewModelReconnectionTest {
     @Test
     fun `should calculate exponential backoff correctly`() = runTest {
         val maxAttempts = 3
-        val expectedDelays = listOf(2000L, 4000L, 6000L)
+        val baseDelay = 2000L
+        // True exponential backoff: baseDelay * 2^(attempt-1)
+        val expectedDelays = listOf(2000L, 4000L, 8000L)
 
         for (attempt in 1..maxAttempts) {
-            val calculatedDelay = 2000L * attempt
+            val calculatedDelay = baseDelay * (1L shl (attempt - 1))
             assertEquals(
-                "Delay for attempt $attempt should match",
+                "Delay for attempt $attempt should match exponential backoff",
                 expectedDelays[attempt - 1],
                 calculatedDelay
             )
@@ -154,5 +156,18 @@ class GSRSensorViewModelReconnectionTest {
             val state = GSRSensorViewModel.GSRSensorState(connectionStatus = status)
             assertEquals("Status should match", status, state.connectionStatus)
         }
+    }
+    
+    @Test
+    fun `maxReconnectionAttempts should be tracked in state`() {
+        val state = GSRSensorViewModel.GSRSensorState(
+            isReconnecting = true,
+            reconnectionAttempt = 2,
+            maxReconnectionAttempts = 5
+        )
+        
+        assertTrue("Should be reconnecting", state.isReconnecting)
+        assertEquals("Current attempt should be 2", 2, state.reconnectionAttempt)
+        assertEquals("Max attempts should be 5", 5, state.maxReconnectionAttempts)
     }
 }

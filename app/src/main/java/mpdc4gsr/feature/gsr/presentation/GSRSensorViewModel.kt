@@ -39,6 +39,9 @@ class GSRSensorViewModel(
         // Reconnection configuration (can be made user-configurable)
         const val DEFAULT_MAX_RECONNECTION_ATTEMPTS = 3
         const val DEFAULT_BASE_RECONNECTION_DELAY_MS = 2000L
+        
+        // Device scanning delay
+        private const val DEVICE_SCAN_DELAY_MS = 3000L
     }
 
     data class GSRSensorState(
@@ -52,7 +55,8 @@ class GSRSensorViewModel(
         val error: String? = null,
         val connectionStatus: String = "Disconnected",
         val isReconnecting: Boolean = false,
-        val reconnectionAttempt: Int = 0
+        val reconnectionAttempt: Int = 0,
+        val maxReconnectionAttempts: Int = 0
     )
     
     data class ReconnectionConfig(
@@ -148,7 +152,7 @@ class GSRSensorViewModel(
                     baseDelayMs = deviceSettings.reconnectionBaseDelayMs,
                     enabled = deviceSettings.autoReconnect
                 )
-                android.util.Log.d("GSRSensorViewModel", 
+                mpdc4gsr.core.utils.AppLogger.d("GSRSensorViewModel", 
                     "Reconnection config updated: attempts=${reconnectionConfig.maxAttempts}, " +
                     "delay=${reconnectionConfig.baseDelayMs}ms, enabled=${reconnectionConfig.enabled}")
             }
@@ -193,7 +197,7 @@ class GSRSensorViewModel(
      */
     fun updateReconnectionConfig(config: ReconnectionConfig) {
         reconnectionConfig = config
-        android.util.Log.d("GSRSensorViewModel", 
+        mpdc4gsr.core.utils.AppLogger.d("GSRSensorViewModel", 
             "Reconnection config manually updated: attempts=${config.maxAttempts}, " +
             "delay=${config.baseDelayMs}ms, enabled=${config.enabled}")
     }
@@ -344,11 +348,14 @@ class GSRSensorViewModel(
                 it.copy(
                     isReconnecting = true,
                     reconnectionAttempt = attempt,
+                    maxReconnectionAttempts = maxAttempts,
                     connectionStatus = "Reconnecting (attempt $attempt/$maxAttempts)..."
                 )
             }
             
-            kotlinx.coroutines.delay(baseDelay * attempt) // Exponential backoff
+            // True exponential backoff: baseDelay * 2^(attempt-1)
+            val delay = baseDelay * (1L shl (attempt - 1))
+            kotlinx.coroutines.delay(delay)
             
             try {
                 // Try to get cached devices first
@@ -359,7 +366,7 @@ class GSRSensorViewModel(
                 
                 // If still no device found, trigger a quick scan
                 if (targetDevice == null && devices.isEmpty()) {
-                    android.util.Log.i("GSRSensorViewModel", "No cached devices, triggering scan...")
+                    mpdc4gsr.core.utils.AppLogger.i("GSRSensorViewModel", "No cached devices, triggering scan...")
                     _sensorState.update { 
                         it.copy(
                             connectionStatus = "Scanning for device (attempt $attempt/$maxAttempts)..."
@@ -368,7 +375,7 @@ class GSRSensorViewModel(
                     
                     val scanSuccess = gsrRecorder?.startDeviceDiscovery() ?: false
                     if (scanSuccess) {
-                        kotlinx.coroutines.delay(3000) // Wait for scan to complete
+                        kotlinx.coroutines.delay(DEVICE_SCAN_DELAY_MS)
                         devices = gsrRecorder?.getDiscoveredDevices() ?: emptyList()
                         targetDevice = devices.find { it.address == lastConnectedDeviceAddress }
                             ?: devices.firstOrNull()
@@ -379,7 +386,7 @@ class GSRSensorViewModel(
                 }
                 
                 if (targetDevice != null) {
-                    android.util.Log.i("GSRSensorViewModel", "Attempting to connect to ${targetDevice.address}")
+                    mpdc4gsr.core.utils.AppLogger.i("GSRSensorViewModel", "Attempting to connect to ${targetDevice.address}")
                     val connected = gsrRecorder?.connectToDevice(targetDevice) ?: false
                     if (connected) {
                         _sensorState.update { 
@@ -387,6 +394,7 @@ class GSRSensorViewModel(
                                 isConnected = true,
                                 isReconnecting = false,
                                 reconnectionAttempt = 0,
+                                maxReconnectionAttempts = 0,
                                 connectionStatus = "Reconnected",
                                 error = null
                             )
@@ -394,7 +402,7 @@ class GSRSensorViewModel(
                         
                         // Resume recording if it was active before disconnection
                         if (wasRecordingBeforeDisconnect) {
-                            android.util.Log.i("GSRSensorViewModel", "Resuming recording after reconnection")
+                            mpdc4gsr.core.utils.AppLogger.i("GSRSensorViewModel", "Resuming recording after reconnection")
                             kotlinx.coroutines.delay(1000) // Brief delay to ensure stable connection
                             startRecording()
                             wasRecordingBeforeDisconnect = false
@@ -403,10 +411,10 @@ class GSRSensorViewModel(
                         return
                     }
                 } else {
-                    android.util.Log.w("GSRSensorViewModel", "No device found for reconnection")
+                    mpdc4gsr.core.utils.AppLogger.w("GSRSensorViewModel", "No device found for reconnection")
                 }
             } catch (e: Exception) {
-                android.util.Log.w("GSRSensorViewModel", "Reconnection attempt $attempt failed: ${e.message}")
+                mpdc4gsr.core.utils.AppLogger.w("GSRSensorViewModel", "Reconnection attempt $attempt failed: ${e.message}")
             }
         }
         
@@ -415,6 +423,7 @@ class GSRSensorViewModel(
             it.copy(
                 isReconnecting = false,
                 reconnectionAttempt = 0,
+                maxReconnectionAttempts = 0,
                 connectionStatus = "Connection Lost",
                 error = "Failed to reconnect after $maxAttempts attempts"
             )
@@ -430,7 +439,7 @@ class GSRSensorViewModel(
             try {
                 // Export functionality would be implemented here
                 // For now, just log the action
-                android.util.Log.d("GSRSensorViewModel", "Export data requested")
+                mpdc4gsr.core.utils.AppLogger.d("GSRSensorViewModel", "Export data requested")
             } catch (e: Exception) {
                 _sensorState.update { it.copy(error = "Export failed: ${e.message}") }
             }
@@ -444,7 +453,7 @@ class GSRSensorViewModel(
                 gsrRecorder?.stopRecording()
                 gsrRecorder?.cleanup()
             } catch (e: Exception) {
-                android.util.Log.e("GSRSensorViewModel", "Error during cleanup", e)
+                mpdc4gsr.core.utils.AppLogger.e("GSRSensorViewModel", "Error during cleanup", e)
             }
         }
     }

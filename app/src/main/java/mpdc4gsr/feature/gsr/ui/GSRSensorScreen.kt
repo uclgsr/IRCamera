@@ -186,6 +186,7 @@ fun GSRSensorScreen(
                 connectionStatus = sensorState.connectionStatus,
                 isReconnecting = sensorState.isReconnecting,
                 reconnectionAttempt = sensorState.reconnectionAttempt,
+                maxReconnectionAttempts = sensorState.maxReconnectionAttempts,
                 error = sensorState.error,
                 onConnectionToggle = {
                     if (isConnected) {
@@ -250,6 +251,7 @@ private fun GSRConnectionCard(
     connectionStatus: String = "Disconnected",
     isReconnecting: Boolean = false,
     reconnectionAttempt: Int = 0,
+    maxReconnectionAttempts: Int = 0,
     error: String? = null,
     onConnectionToggle: () -> Unit,
     modifier: Modifier = Modifier
@@ -296,7 +298,7 @@ private fun GSRConnectionCard(
                     
                     if (isReconnecting && reconnectionAttempt > 0) {
                         Text(
-                            text = "Reconnecting: attempt $reconnectionAttempt/3",
+                            text = "Reconnecting: attempt $reconnectionAttempt/$maxReconnectionAttempts",
                             color = Color.Yellow,
                             fontSize = 12.sp,
                             modifier = Modifier.padding(top = 4.dp)
