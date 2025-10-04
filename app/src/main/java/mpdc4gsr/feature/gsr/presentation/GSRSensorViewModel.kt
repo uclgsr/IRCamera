@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import mpdc4gsr.core.data.UnifiedGSRRecorder
 import mpdc4gsr.core.ui.AppBaseViewModel
+import mpdc4gsr.feature.gsr.data.GSRSettingsRepository
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -66,6 +67,7 @@ class GSRSensorViewModel(
     private var reconnectionConfig = ReconnectionConfig()
     private var lastConnectedDeviceAddress: String? = null
     private var wasRecordingBeforeDisconnect = false
+    private var settingsRepository: GSRSettingsRepository? = null
 
     // Expose recorder for lifecycle management from UI layer
     var gsrRecorder: UnifiedGSRRecorder? = null
@@ -82,8 +84,21 @@ class GSRSensorViewModel(
     ) {
         viewModelScope.launch {
             try {
-                // Update reconnection config if provided
-                reconnectionConfig?.let { this@GSRSensorViewModel.reconnectionConfig = it }
+                // Initialize settings repository and load reconnection config
+                if (settingsRepository == null) {
+                    settingsRepository = GSRSettingsRepository(context)
+                }
+                
+                // Load reconnection config from settings if not provided
+                val configToUse = reconnectionConfig ?: settingsRepository?.deviceSettings?.value?.let { deviceSettings ->
+                    ReconnectionConfig(
+                        maxAttempts = deviceSettings.reconnectionAttempts,
+                        baseDelayMs = deviceSettings.reconnectionBaseDelayMs,
+                        enabled = deviceSettings.autoReconnect
+                    )
+                } ?: ReconnectionConfig()
+                
+                this@GSRSensorViewModel.reconnectionConfig = configToUse
                 
                 gsrRecorder = UnifiedGSRRecorder(
                     context = context,
@@ -102,6 +117,7 @@ class GSRSensorViewModel(
                     }
                     startDataCollection()
                     startConnectionMonitoring()
+                    observeSettingsChanges()
                 } else {
                     _sensorState.update { 
                         it.copy(
@@ -117,6 +133,24 @@ class GSRSensorViewModel(
                         error = "Error initializing: ${e.message}"
                     ) 
                 }
+            }
+        }
+    }
+    
+    /**
+     * Observe settings changes and update reconnection config dynamically
+     */
+    private fun observeSettingsChanges() {
+        viewModelScope.launch {
+            settingsRepository?.deviceSettings?.collect { deviceSettings ->
+                reconnectionConfig = ReconnectionConfig(
+                    maxAttempts = deviceSettings.reconnectionAttempts,
+                    baseDelayMs = deviceSettings.reconnectionBaseDelayMs,
+                    enabled = deviceSettings.autoReconnect
+                )
+                android.util.Log.d("GSRSensorViewModel", 
+                    "Reconnection config updated: attempts=${reconnectionConfig.maxAttempts}, " +
+                    "delay=${reconnectionConfig.baseDelayMs}ms, enabled=${reconnectionConfig.enabled}")
             }
         }
     }
@@ -159,12 +193,20 @@ class GSRSensorViewModel(
      */
     fun updateReconnectionConfig(config: ReconnectionConfig) {
         reconnectionConfig = config
+        android.util.Log.d("GSRSensorViewModel", 
+            "Reconnection config manually updated: attempts=${config.maxAttempts}, " +
+            "delay=${config.baseDelayMs}ms, enabled=${config.enabled}")
     }
     
     /**
      * Get current reconnection configuration
      */
     fun getReconnectionConfig(): ReconnectionConfig = reconnectionConfig
+    
+    /**
+     * Get settings repository for UI integration
+     */
+    fun getSettingsRepository() = settingsRepository
 
     /**
      * Disconnect from GSR device
