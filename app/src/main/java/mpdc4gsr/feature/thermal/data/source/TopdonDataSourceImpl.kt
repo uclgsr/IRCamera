@@ -23,6 +23,7 @@ import com.mpdc4gsr.libunified.ir.extension.setContrast
 import com.mpdc4gsr.libunified.ir.extension.setMirror
 import com.mpdc4gsr.libunified.ir.extension.setPropDdeLevel
 import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -56,6 +57,7 @@ class TopdonDataSourceImpl(
         private const val MIN_TEMP_RANGE = -20.0f
         private const val MAX_TEMP_RANGE = 400.0f
         private const val FRAME_BUFFER_SIZE = 256 * 192 * 2
+        private const val FRAME_RECEIVE_TIMEOUT_MS = 1000L
     }
 
     private var isConnected = false
@@ -239,6 +241,8 @@ class TopdonDataSourceImpl(
 
             AppLogger.d(TAG, "Starting thermal frame streaming with SDK")
 
+            val frameChannel = Channel<ThermalFrameData>(Channel.BUFFERED)
+
             frameCallback = IFrameCallback { frame ->
                 try {
                     if (frame != null && frame.size >= FRAME_BUFFER_SIZE) {
@@ -247,6 +251,10 @@ class TopdonDataSourceImpl(
                         val processedData = processFrame(frame)
                         if (processedData != null) {
                             val thermalFrame = createThermalFrameData(processedData)
+                            val sendResult = frameChannel.trySend(thermalFrame)
+                            if (sendResult.isFailure) {
+                                AppLogger.w(TAG, "Frame dropped - channel buffer full")
+                            }
                         }
                     }
                 } catch (e: Exception) {
@@ -259,8 +267,17 @@ class TopdonDataSourceImpl(
             isStreaming = true
             AppLogger.i(TAG, "Thermal streaming started with LibIRProcess frame processing")
 
-            while (isStreaming) {
-                delay(100)
+            try {
+                while (isStreaming) {
+                    val frame = withTimeoutOrNull(FRAME_RECEIVE_TIMEOUT_MS) {
+                        frameChannel.receive()
+                    }
+                    if (frame != null) {
+                        emit(frame)
+                    }
+                }
+            } finally {
+                frameChannel.close()
             }
         }
     }

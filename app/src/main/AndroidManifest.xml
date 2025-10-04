@@ -75,7 +75,7 @@
 
         <!-- USB Receiver -->
         <receiver
-            android:name="mpdc4gsr.sensors.thermal.ThermalUsbReceiver"
+            android:name="mpdc4gsr.feature.thermal.ui.ThermalUsbReceiver"
             android:exported="true">
             <intent-filter android:priority="1000">
                 <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
