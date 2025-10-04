@@ -65,7 +65,7 @@ import mpdc4gsr.feature.thermal.presentation.ThermalCameraViewModelFactory
 fun ThermalMonitorScreen(
     viewModel: ThermalCameraViewModel = viewModel(
         factory = ThermalCameraViewModelFactory(
-            LocalContext.current as Application
+            LocalContext.current.applicationContext as Application
         )
     ),
     onBackClick: (() -> Unit)? = null,
