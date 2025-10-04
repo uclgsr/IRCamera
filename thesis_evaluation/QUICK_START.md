@@ -9,7 +9,10 @@
 ## Installation
 ```bash
 # Install dependencies
-pip install -r ../requirements_thesis.txt
+pip install -r requirements.txt
+
+# Validate setup
+python3 validate_setup.py
 ```
 
 ## Running Tests

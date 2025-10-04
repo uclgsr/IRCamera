@@ -1,0 +1,116 @@
+{
+  "test_name": "Remote Start/Stop Command Test",
+  "test_id": "test_1",
+  "timestamp": "2024-01-15T14:30:00.123456",
+  "success": true,
+  "event_log": [
+    {
+      "timestamp_iso": "2024-01-15T14:30:00.100000",
+      "timestamp_ms": 1705329000100,
+      "event_type": "Test Started",
+      "details": {
+        "device_ip": "192.168.1.100",
+        "port": 8080,
+        "session_duration": 10
+      }
+    },
+    {
+      "timestamp_iso": "2024-01-15T14:30:00.250000",
+      "timestamp_ms": 1705329000250,
+      "event_type": "Connected to Device",
+      "details": {
+        "device_id": "192.168.1.100:8080",
+        "connection_latency_ms": 45.5
+      }
+    },
+    {
+      "timestamp_iso": "2024-01-15T14:30:00.300000",
+      "timestamp_ms": 1705329000300,
+      "event_type": "START Command Sent",
+      "details": {
+        "session_id": "test_session_1705329000",
+        "pc_send_time": "2024-01-15T14:30:00.300000",
+        "pc_send_time_ns": 1705329000300000000,
+        "response": "START-ACK session_id=test_session_1705329000",
+        "pc_receive_time": "2024-01-15T14:30:00.325000",
+        "pc_receive_time_ns": 1705329000325000000,
+        "command_latency_ms": 25.0
+      }
+    },
+    {
+      "timestamp_iso": "2024-01-15T14:30:00.325000",
+      "timestamp_ms": 1705329000325,
+      "event_type": "Recording Started",
+      "details": {
+        "session_id": "test_session_1705329000",
+        "latency_ms": 25.0,
+        "response": "START-ACK session_id=test_session_1705329000"
+      }
+    },
+    {
+      "timestamp_iso": "2024-01-15T14:30:00.350000",
+      "timestamp_ms": 1705329000350,
+      "event_type": "Recording in Progress",
+      "details": {
+        "duration_seconds": 10
+      }
+    },
+    {
+      "timestamp_iso": "2024-01-15T14:30:10.350000",
+      "timestamp_ms": 1705329010350,
+      "event_type": "STOP Command Sent",
+      "details": {
+        "session_id": "test_session_1705329000",
+        "pc_send_time": "2024-01-15T14:30:10.350000",
+        "pc_send_time_ns": 1705329010350000000,
+        "response": "STOP-ACK",
+        "pc_receive_time": "2024-01-15T14:30:10.372000",
+        "pc_receive_time_ns": 1705329010372000000,
+        "command_latency_ms": 22.0
+      }
+    },
+    {
+      "timestamp_iso": "2024-01-15T14:30:10.372000",
+      "timestamp_ms": 1705329010372,
+      "event_type": "Recording Stopped",
+      "details": {
+        "session_id": "test_session_1705329000",
+        "latency_ms": 22.0,
+        "response": "STOP-ACK"
+      }
+    },
+    {
+      "timestamp_iso": "2024-01-15T14:30:10.400000",
+      "timestamp_ms": 1705329010400,
+      "event_type": "Disconnected",
+      "details": {
+        "device_id": "192.168.1.100:8080"
+      }
+    },
+    {
+      "timestamp_iso": "2024-01-15T14:30:10.420000",
+      "timestamp_ms": 1705329010420,
+      "event_type": "Test Completed",
+      "details": {
+        "total_duration_seconds": 10.32,
+        "success": true
+      }
+    }
+  ],
+  "summary": {
+    "total_events": 9,
+    "events_by_type": {
+      "Test Started": 1,
+      "Connected to Device": 1,
+      "START Command Sent": 1,
+      "Recording Started": 1,
+      "Recording in Progress": 1,
+      "STOP Command Sent": 1,
+      "Recording Stopped": 1,
+      "Disconnected": 1,
+      "Test Completed": 1
+    },
+    "start_command_latency_ms": 25.0,
+    "stop_command_latency_ms": 22.0
+  }
+}

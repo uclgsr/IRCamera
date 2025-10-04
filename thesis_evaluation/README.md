@@ -141,8 +141,25 @@ python test_4_multi_command_sequence.py --device-ip 192.168.1.100 --scenario 3
 - Network connectivity to Android device
 - Android device running IRCamera app with network server enabled
 
+### Setup Validation
+Before running tests, validate your environment:
+```bash
+python3 validate_setup.py
+```
+
+This checks:
+- Python version
+- CommandClient availability
+- Test file presence
+- Dependencies
+
 ### Python Dependencies
 Install required packages:
+```bash
+pip install -r requirements.txt
+```
+
+Or use the parent directory requirements:
 ```bash
 pip install -r ../requirements_thesis.txt
 ```
@@ -204,6 +221,8 @@ Each test generates two types of output files:
 - `test_3_edge_cases_report_<timestamp>.json`
 - `test_4_multi_sequence_report_<timestamp>.json`
 
+**Example:** See `example_output_test1.json` for a sample of what Test 1 produces.
+
 ### Text Logs
 - Human-readable format
 - Event logs, tables, and summaries
@@ -214,6 +233,8 @@ Each test generates two types of output files:
 - `test_2_latency_throughput_report_<timestamp>.txt`
 - `test_3_edge_cases_report_<timestamp>.txt`
 - `test_4_multi_sequence_report_<timestamp>_timeline.txt`
+
+**Example:** See `example_output_test1.txt` for a sample of what Test 1 produces.
 
 ---
 
