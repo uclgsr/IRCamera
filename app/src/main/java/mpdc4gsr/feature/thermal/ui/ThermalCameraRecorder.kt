@@ -841,11 +841,8 @@ class ThermalCameraRecorder(
 
                 // IrcamEngine will be initialized in onCameraOpened callback
                 // after UVCCamera provides the native handle
-                // Keep SDK initialization for potential fallback
-                val success = initializeTopdonSdk()
-                if (!success) {
-                    AppLogger.w(TAG, "Failed to pre-initialize Topdon SDK (will retry with handle)")
-                }
+                // Pre-initialize SDK for potential fallback paths
+                initializeTopdonSdk()
 
                 val connectCallback = object : com.energy.iruvc.uvc.ConnectCallback {
                     override fun onCameraOpened(p0: UVCCamera?) {

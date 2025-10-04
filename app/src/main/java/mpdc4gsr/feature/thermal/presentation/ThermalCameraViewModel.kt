@@ -4,15 +4,18 @@ import android.content.Context
 import android.graphics.Bitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import mpdc4gsr.core.data.SessionMetadata
 import mpdc4gsr.core.utils.AppLogger
 import mpdc4gsr.feature.thermal.ui.ThermalCameraRecorder
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 
 /**
  * ViewModel for Thermal Camera functionality with full ThermalCameraRecorder integration
@@ -165,16 +168,33 @@ class ThermalCameraViewModel(private val context: Context) : ViewModel() {
 
     override fun onCleared() {
         super.onCleared()
-        // Use runBlocking to ensure cleanup completes before the ViewModel is destroyed.
-        // Launching a coroutine in viewModelScope from onCleared is unsafe as the scope is
-        // cancelled immediately, which can interrupt critical cleanup tasks like saving data.
-        runBlocking {
+        // Use a background thread with timeout to avoid blocking the main thread
+        // and prevent ANR while ensuring cleanup completes.
+        val latch = CountDownLatch(1)
+        Thread {
             try {
-                // Call the comprehensive cleanup method to ensure all resources are released.
-                thermalRecorder?.cleanup()
-            } catch (e: Exception) {
-                AppLogger.e(TAG, "Error cleaning up thermal recorder", e)
+                // Use withContext to run cleanup on IO dispatcher
+                kotlinx.coroutines.runBlocking(Dispatchers.IO) {
+                    try {
+                        thermalRecorder?.cleanup()
+                        AppLogger.i(TAG, "Thermal recorder cleanup completed")
+                    } catch (e: Exception) {
+                        AppLogger.e(TAG, "Error cleaning up thermal recorder", e)
+                    }
+                }
+            } finally {
+                latch.countDown()
             }
+        }.start()
+        
+        // Wait for cleanup to complete with a timeout to prevent indefinite blocking
+        try {
+            if (!latch.await(3, TimeUnit.SECONDS)) {
+                AppLogger.w(TAG, "Thermal recorder cleanup timed out after 3 seconds")
+            }
+        } catch (e: InterruptedException) {
+            AppLogger.e(TAG, "Thermal recorder cleanup interrupted", e)
+            Thread.currentThread().interrupt()
         }
     }
 }
