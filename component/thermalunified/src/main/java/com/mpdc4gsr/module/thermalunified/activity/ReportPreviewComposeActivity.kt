@@ -54,10 +54,24 @@ class ReportPreviewComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             }
                         },
                         actions = {
-                            IconButton(onClick = { /* Print */ }) {
+                            IconButton(onClick = {
+                                // TODO: Implement print functionality
+                                android.widget.Toast.makeText(
+                                    this@ReportPreviewComposeActivity,
+                                    "Print report feature coming soon",
+                                    android.widget.Toast.LENGTH_SHORT
+                                ).show()
+                            }) {
                                 Icon(Icons.Default.Print, contentDescription = "Print", tint = Color.White)
                             }
-                            IconButton(onClick = { /* Share */ }) {
+                            IconButton(onClick = {
+                                // TODO: Implement share functionality
+                                android.widget.Toast.makeText(
+                                    this@ReportPreviewComposeActivity,
+                                    "Share report feature coming soon",
+                                    android.widget.Toast.LENGTH_SHORT
+                                ).show()
+                            }) {
                                 Icon(Icons.Default.Share, contentDescription = "Share", tint = Color.White)
                             }
                         },

@@ -51,10 +51,24 @@ class ReportPreviewSecondComposeActivity : BaseComposeActivity<ReportPreviewSeco
                             }
                         },
                         actions = {
-                            IconButton(onClick = { /* Share */ }) {
+                            IconButton(onClick = {
+                                // TODO: Implement share functionality
+                                android.widget.Toast.makeText(
+                                    this@ReportPreviewSecondComposeActivity,
+                                    "Share report feature coming soon",
+                                    android.widget.Toast.LENGTH_SHORT
+                                ).show()
+                            }) {
                                 Icon(Icons.Default.Share, contentDescription = "Share", tint = Color.White)
                             }
-                            IconButton(onClick = { /* Export */ }) {
+                            IconButton(onClick = {
+                                // TODO: Implement export functionality
+                                android.widget.Toast.makeText(
+                                    this@ReportPreviewSecondComposeActivity,
+                                    "Export report feature coming soon",
+                                    android.widget.Toast.LENGTH_SHORT
+                                ).show()
+                            }) {
                                 Icon(Icons.Default.FileDownload, contentDescription = "Export", tint = Color.White)
                             }
                         },
@@ -226,7 +240,14 @@ class ReportPreviewSecondComposeActivity : BaseComposeActivity<ReportPreviewSeco
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 OutlinedButton(
-                    onClick = { /* Edit report */ },
+                    onClick = {
+                        // TODO: Navigate back to edit report
+                        android.widget.Toast.makeText(
+                            this@ReportPreviewSecondComposeActivity,
+                            "Edit report feature coming soon",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.outlinedButtonColors(
                         contentColor = Color(0xFF1976D2)
@@ -238,7 +259,14 @@ class ReportPreviewSecondComposeActivity : BaseComposeActivity<ReportPreviewSeco
                 }
 
                 Button(
-                    onClick = { /* Export report */ },
+                    onClick = {
+                        // TODO: Finalize and export report
+                        android.widget.Toast.makeText(
+                            this@ReportPreviewSecondComposeActivity,
+                            "Finalize report feature coming soon",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color(0xFF1976D2)
