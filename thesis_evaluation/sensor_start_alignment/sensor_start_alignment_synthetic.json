@@ -1,0 +1,488 @@
+{
+  "test_type": "sensor_start_alignment",
+  "timestamp": "2025-10-04T12:18:19.611216",
+  "num_sessions": 20,
+  "num_events": 60,
+  "results": [
+    {
+      "session_id": "session_001",
+      "sensor_name": "GSR_Shimmer",
+      "sensor_type": "physiological",
+      "start_trigger_time_ms": 1759580294603,
+      "first_sample_time_ms": 1759580294653,
+      "startup_latency_ms": 50
+    },
+    {
+      "session_id": "session_001",
+      "sensor_name": "Thermal_TOPDON",
+      "sensor_type": "thermal",
+      "start_trigger_time_ms": 1759580294603,
+      "first_sample_time_ms": 1759580294774,
+      "startup_latency_ms": 171
+    },
+    {
+      "session_id": "session_001",
+      "sensor_name": "RGB_Camera",
+      "sensor_type": "camera",
+      "start_trigger_time_ms": 1759580294603,
+      "first_sample_time_ms": 1759580294854,
+      "startup_latency_ms": 251
+    },
+    {
+      "session_id": "session_002",
+      "sensor_name": "GSR_Shimmer",
+      "sensor_type": "physiological",
+      "start_trigger_time_ms": 1759580294854,
+      "first_sample_time_ms": 1759580294904,
+      "startup_latency_ms": 50
+    },
+    {
+      "session_id": "session_002",
+      "sensor_name": "Thermal_TOPDON",
+      "sensor_type": "thermal",
+      "start_trigger_time_ms": 1759580294854,
+      "first_sample_time_ms": 1759580295024,
+      "startup_latency_ms": 170
+    },
+    {
+      "session_id": "session_002",
+      "sensor_name": "RGB_Camera",
+      "sensor_type": "camera",
+      "start_trigger_time_ms": 1759580294854,
+      "first_sample_time_ms": 1759580295104,
+      "startup_latency_ms": 250
+    },
+    {
+      "session_id": "session_003",
+      "sensor_name": "GSR_Shimmer",
+      "sensor_type": "physiological",
+      "start_trigger_time_ms": 1759580295104,
+      "first_sample_time_ms": 1759580295154,
+      "startup_latency_ms": 50
+    },
+    {
+      "session_id": "session_003",
+      "sensor_name": "Thermal_TOPDON",
+      "sensor_type": "thermal",
+      "start_trigger_time_ms": 1759580295104,
+      "first_sample_time_ms": 1759580295274,
+      "startup_latency_ms": 170
+    },
+    {
+      "session_id": "session_003",
+      "sensor_name": "RGB_Camera",
+      "sensor_type": "camera",
+      "start_trigger_time_ms": 1759580295104,
+      "first_sample_time_ms": 1759580295354,
+      "startup_latency_ms": 250
+    },
+    {
+      "session_id": "session_004",
+      "sensor_name": "GSR_Shimmer",
+      "sensor_type": "physiological",
+      "start_trigger_time_ms": 1759580295354,
+      "first_sample_time_ms": 1759580295405,
+      "startup_latency_ms": 51
+    },
+    {
+      "session_id": "session_004",
+      "sensor_name": "Thermal_TOPDON",
+      "sensor_type": "thermal",
+      "start_trigger_time_ms": 1759580295354,
+      "first_sample_time_ms": 1759580295525,
+      "startup_latency_ms": 171
+    },
+    {
+      "session_id": "session_004",
+      "sensor_name": "RGB_Camera",
+      "sensor_type": "camera",
+      "start_trigger_time_ms": 1759580295354,
+      "first_sample_time_ms": 1759580295605,
+      "startup_latency_ms": 251
+    },
+    {
+      "session_id": "session_005",
+      "sensor_name": "GSR_Shimmer",
+      "sensor_type": "physiological",
+      "start_trigger_time_ms": 1759580295605,
+      "first_sample_time_ms": 1759580295655,
+      "startup_latency_ms": 50
+    },
+    {
+      "session_id": "session_005",
+      "sensor_name": "Thermal_TOPDON",
+      "sensor_type": "thermal",
+      "start_trigger_time_ms": 1759580295605,
+      "first_sample_time_ms": 1759580295775,
+      "startup_latency_ms": 170
+    },
+    {
+      "session_id": "session_005",
+      "sensor_name": "RGB_Camera",
+      "sensor_type": "camera",
+      "start_trigger_time_ms": 1759580295605,
+      "first_sample_time_ms": 1759580295855,
+      "startup_latency_ms": 250
+    },
+    {
+      "session_id": "session_006",
+      "sensor_name": "GSR_Shimmer",
+      "sensor_type": "physiological",
+      "start_trigger_time_ms": 1759580295855,
+      "first_sample_time_ms": 1759580295905,
+      "startup_latency_ms": 50
+    },
+    {
+      "session_id": "session_006",
+      "sensor_name": "Thermal_TOPDON",
+      "sensor_type": "thermal",
+      "start_trigger_time_ms": 1759580295855,
+      "first_sample_time_ms": 1759580296025,
+      "startup_latency_ms": 170
+    },
+    {
+      "session_id": "session_006",
+      "sensor_name": "RGB_Camera",
+      "sensor_type": "camera",
+      "start_trigger_time_ms": 1759580295855,
+      "first_sample_time_ms": 1759580296105,
+      "startup_latency_ms": 250
+    },
+    {
+      "session_id": "session_007",
+      "sensor_name": "GSR_Shimmer",
+      "sensor_type": "physiological",
+      "start_trigger_time_ms": 1759580296105,
+      "first_sample_time_ms": 1759580296156,
+      "startup_latency_ms": 51
+    },
+    {
+      "session_id": "session_007",
+      "sensor_name": "Thermal_TOPDON",
+      "sensor_type": "thermal",
+      "start_trigger_time_ms": 1759580296105,
+      "first_sample_time_ms": 1759580296276,
+      "startup_latency_ms": 171
+    },
+    {
+      "session_id": "session_007",
+      "sensor_name": "RGB_Camera",
+      "sensor_type": "camera",
+      "start_trigger_time_ms": 1759580296105,
+      "first_sample_time_ms": 1759580296356,
+      "startup_latency_ms": 251
+    },
+    {
+      "session_id": "session_008",
+      "sensor_name": "GSR_Shimmer",
+      "sensor_type": "physiological",
+      "start_trigger_time_ms": 1759580296356,
+      "first_sample_time_ms": 1759580296406,
+      "startup_latency_ms": 50
+    },
+    {
+      "session_id": "session_008",
+      "sensor_name": "Thermal_TOPDON",
+      "sensor_type": "thermal",
+      "start_trigger_time_ms": 1759580296356,
+      "first_sample_time_ms": 1759580296526,
+      "startup_latency_ms": 170
+    },
+    {
+      "session_id": "session_008",
+      "sensor_name": "RGB_Camera",
+      "sensor_type": "camera",
+      "start_trigger_time_ms": 1759580296356,
+      "first_sample_time_ms": 1759580296606,
+      "startup_latency_ms": 250
+    },
+    {
+      "session_id": "session_009",
+      "sensor_name": "GSR_Shimmer",
+      "sensor_type": "physiological",
+      "start_trigger_time_ms": 1759580296606,
+      "first_sample_time_ms": 1759580296656,
+      "startup_latency_ms": 50
+    },
+    {
+      "session_id": "session_009",
+      "sensor_name": "Thermal_TOPDON",
+      "sensor_type": "thermal",
+      "start_trigger_time_ms": 1759580296606,
+      "first_sample_time_ms": 1759580296776,
+      "startup_latency_ms": 170
+    },
+    {
+      "session_id": "session_009",
+      "sensor_name": "RGB_Camera",
+      "sensor_type": "camera",
+      "start_trigger_time_ms": 1759580296606,
+      "first_sample_time_ms": 1759580296856,
+      "startup_latency_ms": 250
+    },
+    {
+      "session_id": "session_010",
+      "sensor_name": "GSR_Shimmer",
+      "sensor_type": "physiological",
+      "start_trigger_time_ms": 1759580296857,
+      "first_sample_time_ms": 1759580296907,
+      "startup_latency_ms": 50
+    },
+    {
+      "session_id": "session_010",
+      "sensor_name": "Thermal_TOPDON",
+      "sensor_type": "thermal",
+      "start_trigger_time_ms": 1759580296857,
+      "first_sample_time_ms": 1759580297027,
+      "startup_latency_ms": 170
+    },
+    {
+      "session_id": "session_010",
+      "sensor_name": "RGB_Camera",
+      "sensor_type": "camera",
+      "start_trigger_time_ms": 1759580296857,
+      "first_sample_time_ms": 1759580297107,
+      "startup_latency_ms": 250
+    },
+    {
+      "session_id": "session_011",
+      "sensor_name": "GSR_Shimmer",
+      "sensor_type": "physiological",
+      "start_trigger_time_ms": 1759580297107,
+      "first_sample_time_ms": 1759580297157,
+      "startup_latency_ms": 50
+    },
+    {
+      "session_id": "session_011",
+      "sensor_name": "Thermal_TOPDON",
+      "sensor_type": "thermal",
+      "start_trigger_time_ms": 1759580297107,
+      "first_sample_time_ms": 1759580297277,
+      "startup_latency_ms": 170
+    },
+    {
+      "session_id": "session_011",
+      "sensor_name": "RGB_Camera",
+      "sensor_type": "camera",
+      "start_trigger_time_ms": 1759580297107,
+      "first_sample_time_ms": 1759580297357,
+      "startup_latency_ms": 250
+    },
+    {
+      "session_id": "session_012",
+      "sensor_name": "GSR_Shimmer",
+      "sensor_type": "physiological",
+      "start_trigger_time_ms": 1759580297357,
+      "first_sample_time_ms": 1759580297407,
+      "startup_latency_ms": 50
+    },
+    {
+      "session_id": "session_012",
+      "sensor_name": "Thermal_TOPDON",
+      "sensor_type": "thermal",
+      "start_trigger_time_ms": 1759580297357,
+      "first_sample_time_ms": 1759580297527,
+      "startup_latency_ms": 170
+    },
+    {
+      "session_id": "session_012",
+      "sensor_name": "RGB_Camera",
+      "sensor_type": "camera",
+      "start_trigger_time_ms": 1759580297357,
+      "first_sample_time_ms": 1759580297607,
+      "startup_latency_ms": 250
+    },
+    {
+      "session_id": "session_013",
+      "sensor_name": "GSR_Shimmer",
+      "sensor_type": "physiological",
+      "start_trigger_time_ms": 1759580297608,
+      "first_sample_time_ms": 1759580297658,
+      "startup_latency_ms": 50
+    },
+    {
+      "session_id": "session_013",
+      "sensor_name": "Thermal_TOPDON",
+      "sensor_type": "thermal",
+      "start_trigger_time_ms": 1759580297608,
+      "first_sample_time_ms": 1759580297778,
+      "startup_latency_ms": 170
+    },
+    {
+      "session_id": "session_013",
+      "sensor_name": "RGB_Camera",
+      "sensor_type": "camera",
+      "start_trigger_time_ms": 1759580297608,
+      "first_sample_time_ms": 1759580297858,
+      "startup_latency_ms": 250
+    },
+    {
+      "session_id": "session_014",
+      "sensor_name": "GSR_Shimmer",
+      "sensor_type": "physiological",
+      "start_trigger_time_ms": 1759580297858,
+      "first_sample_time_ms": 1759580297908,
+      "startup_latency_ms": 50
+    },
+    {
+      "session_id": "session_014",
+      "sensor_name": "Thermal_TOPDON",
+      "sensor_type": "thermal",
+      "start_trigger_time_ms": 1759580297858,
+      "first_sample_time_ms": 1759580298028,
+      "startup_latency_ms": 170
+    },
+    {
+      "session_id": "session_014",
+      "sensor_name": "RGB_Camera",
+      "sensor_type": "camera",
+      "start_trigger_time_ms": 1759580297858,
+      "first_sample_time_ms": 1759580298108,
+      "startup_latency_ms": 250
+    },
+    {
+      "session_id": "session_015",
+      "sensor_name": "GSR_Shimmer",
+      "sensor_type": "physiological",
+      "start_trigger_time_ms": 1759580298108,
+      "first_sample_time_ms": 1759580298158,
+      "startup_latency_ms": 50
+    },
+    {
+      "session_id": "session_015",
+      "sensor_name": "Thermal_TOPDON",
+      "sensor_type": "thermal",
+      "start_trigger_time_ms": 1759580298108,
+      "first_sample_time_ms": 1759580298278,
+      "startup_latency_ms": 170
+    },
+    {
+      "session_id": "session_015",
+      "sensor_name": "RGB_Camera",
+      "sensor_type": "camera",
+      "start_trigger_time_ms": 1759580298108,
+      "first_sample_time_ms": 1759580298359,
+      "startup_latency_ms": 251
+    },
+    {
+      "session_id": "session_016",
+      "sensor_name": "GSR_Shimmer",
+      "sensor_type": "physiological",
+      "start_trigger_time_ms": 1759580298359,
+      "first_sample_time_ms": 1759580298409,
+      "startup_latency_ms": 50
+    },
+    {
+      "session_id": "session_016",
+      "sensor_name": "Thermal_TOPDON",
+      "sensor_type": "thermal",
+      "start_trigger_time_ms": 1759580298359,
+      "first_sample_time_ms": 1759580298529,
+      "startup_latency_ms": 170
+    },
+    {
+      "session_id": "session_016",
+      "sensor_name": "RGB_Camera",
+      "sensor_type": "camera",
+      "start_trigger_time_ms": 1759580298359,
+      "first_sample_time_ms": 1759580298609,
+      "startup_latency_ms": 250
+    },
+    {
+      "session_id": "session_017",
+      "sensor_name": "GSR_Shimmer",
+      "sensor_type": "physiological",
+      "start_trigger_time_ms": 1759580298609,
+      "first_sample_time_ms": 1759580298659,
+      "startup_latency_ms": 50
+    },
+    {
+      "session_id": "session_017",
+      "sensor_name": "Thermal_TOPDON",
+      "sensor_type": "thermal",
+      "start_trigger_time_ms": 1759580298609,
+      "first_sample_time_ms": 1759580298779,
+      "startup_latency_ms": 170
+    },
+    {
+      "session_id": "session_017",
+      "sensor_name": "RGB_Camera",
+      "sensor_type": "camera",
+      "start_trigger_time_ms": 1759580298609,
+      "first_sample_time_ms": 1759580298859,
+      "startup_latency_ms": 250
+    },
+    {
+      "session_id": "session_018",
+      "sensor_name": "GSR_Shimmer",
+      "sensor_type": "physiological",
+      "start_trigger_time_ms": 1759580298859,
+      "first_sample_time_ms": 1759580298909,
+      "startup_latency_ms": 50
+    },
+    {
+      "session_id": "session_018",
+      "sensor_name": "Thermal_TOPDON",
+      "sensor_type": "thermal",
+      "start_trigger_time_ms": 1759580298859,
+      "first_sample_time_ms": 1759580299029,
+      "startup_latency_ms": 170
+    },
+    {
+      "session_id": "session_018",
+      "sensor_name": "RGB_Camera",
+      "sensor_type": "camera",
+      "start_trigger_time_ms": 1759580298859,
+      "first_sample_time_ms": 1759580299110,
+      "startup_latency_ms": 251
+    },
+    {
+      "session_id": "session_019",
+      "sensor_name": "GSR_Shimmer",
+      "sensor_type": "physiological",
+      "start_trigger_time_ms": 1759580299110,
+      "first_sample_time_ms": 1759580299160,
+      "startup_latency_ms": 50
+    },
+    {
+      "session_id": "session_019",
+      "sensor_name": "Thermal_TOPDON",
+      "sensor_type": "thermal",
+      "start_trigger_time_ms": 1759580299110,
+      "first_sample_time_ms": 1759580299280,
+      "startup_latency_ms": 170
+    },
+    {
+      "session_id": "session_019",
+      "sensor_name": "RGB_Camera",
+      "sensor_type": "camera",
+      "start_trigger_time_ms": 1759580299110,
+      "first_sample_time_ms": 1759580299360,
+      "startup_latency_ms": 250
+    },
+    {
+      "session_id": "session_020",
+      "sensor_name": "GSR_Shimmer",
+      "sensor_type": "physiological",
+      "start_trigger_time_ms": 1759580299360,
+      "first_sample_time_ms": 1759580299410,
+      "startup_latency_ms": 50
+    },
+    {
+      "session_id": "session_020",
+      "sensor_name": "Thermal_TOPDON",
+      "sensor_type": "thermal",
+      "start_trigger_time_ms": 1759580299360,
+      "first_sample_time_ms": 1759580299530,
+      "startup_latency_ms": 170
+    },
+    {
+      "session_id": "session_020",
+      "sensor_name": "RGB_Camera",
+      "sensor_type": "camera",
+      "start_trigger_time_ms": 1759580299360,
+      "first_sample_time_ms": 1759580299610,
+      "startup_latency_ms": 250
+    }
+  ]
+}
