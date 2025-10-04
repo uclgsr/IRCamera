@@ -221,7 +221,7 @@ private fun VideoControlsCard(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                IconButton(onClick = { /* Previous */ }) {
+                IconButton(onClick = { }) {
                     Icon(
                         Icons.Default.SkipPrevious,
                         contentDescription = "Previous",
@@ -237,11 +237,11 @@ private fun VideoControlsCard(
                     )
                 }
 
-                IconButton(onClick = { /* Next */ }) {
+                IconButton(onClick = { }) {
                     Icon(Icons.Default.SkipNext, contentDescription = "Next", tint = Color.White)
                 }
 
-                IconButton(onClick = { /* Fullscreen */ }) {
+                IconButton(onClick = { }) {
                     Icon(
                         Icons.Default.Fullscreen,
                         contentDescription = "Fullscreen",

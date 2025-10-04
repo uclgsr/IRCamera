@@ -51,10 +51,10 @@ class ReportPreviewSecondComposeActivity : BaseComposeActivity<ReportPreviewSeco
                             }
                         },
                         actions = {
-                            IconButton(onClick = { /* Share */ }) {
+                            IconButton(onClick = { }) {
                                 Icon(Icons.Default.Share, contentDescription = "Share", tint = Color.White)
                             }
-                            IconButton(onClick = { /* Export */ }) {
+                            IconButton(onClick = { }) {
                                 Icon(Icons.Default.FileDownload, contentDescription = "Export", tint = Color.White)
                             }
                         },
@@ -190,7 +190,7 @@ class ReportPreviewSecondComposeActivity : BaseComposeActivity<ReportPreviewSeco
 
                         if (selectedSection != null) {
                             IconButton(
-                                onClick = { /* Edit section */ }
+                                onClick = { }
                             ) {
                                 Icon(
                                     Icons.Default.Edit,
@@ -226,7 +226,7 @@ class ReportPreviewSecondComposeActivity : BaseComposeActivity<ReportPreviewSeco
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 OutlinedButton(
-                    onClick = { /* Edit report */ },
+                    onClick = { },
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.outlinedButtonColors(
                         contentColor = Color(0xFF1976D2)
@@ -238,7 +238,7 @@ class ReportPreviewSecondComposeActivity : BaseComposeActivity<ReportPreviewSeco
                 }
 
                 Button(
-                    onClick = { /* Export report */ },
+                    onClick = { },
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color(0xFF1976D2)

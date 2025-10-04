@@ -20,7 +20,7 @@ fun FirmwareInstallDialog(
 ) {
     if (isVisible) {
         Dialog(
-            onDismissRequest = { /* Non-cancellable */ },
+            onDismissRequest = { },
             properties = DialogProperties(
                 dismissOnBackPress = false,
                 dismissOnClickOutside = false

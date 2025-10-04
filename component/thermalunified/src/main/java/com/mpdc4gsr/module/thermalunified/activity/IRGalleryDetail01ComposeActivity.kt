@@ -66,7 +66,7 @@ class IRGalleryDetail01ComposeActivity : BaseComposeActivity<IRGalleryEditViewMo
                                     tint = Color.White
                                 )
                             }
-                            IconButton(onClick = { /* Share image */ }) {
+                            IconButton(onClick = { }) {
                                 Icon(
                                     Icons.Default.Share,
                                     contentDescription = "Share",
@@ -128,9 +128,9 @@ class IRGalleryDetail01ComposeActivity : BaseComposeActivity<IRGalleryEditViewMo
 
                         // Action buttons
                         ImageActionButtons(
-                            onExport = { /* Export image */ },
-                            onReport = { /* Generate report */ },
-                            onDelete = { /* Delete image */ }
+                            onExport = { },
+                            onReport = { },
+                            onDelete = { }
                         )
                     }
                 }

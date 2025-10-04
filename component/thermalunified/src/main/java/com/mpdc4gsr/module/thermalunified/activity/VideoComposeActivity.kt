@@ -306,14 +306,14 @@ private fun VideoControlsOverlay(
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    IconButton(onClick = { /* Fullscreen toggle */ }) {
+                    IconButton(onClick = { }) {
                         Icon(
                             Icons.Default.Fullscreen,
                             contentDescription = "Fullscreen",
                             tint = Color.White
                         )
                     }
-                    IconButton(onClick = { /* Export frame */ }) {
+                    IconButton(onClick = { }) {
                         Icon(
                             Icons.Default.CameraAlt,
                             contentDescription = "Capture Frame",
@@ -357,7 +357,7 @@ private fun ThermalAnalysisOverlay(
 
             // Analysis tools
             IconButton(
-                onClick = { /* Point analysis */ },
+                onClick = { },
                 modifier = Modifier.size(32.dp)
             ) {
                 Icon(

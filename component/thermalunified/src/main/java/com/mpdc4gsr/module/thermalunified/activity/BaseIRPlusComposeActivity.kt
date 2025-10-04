@@ -312,19 +312,19 @@ private fun PlusFeatureOverlay(
             PlusFeatureButton(
                 icon = Icons.Default.AutoFixHigh,
                 text = "Auto Enhance",
-                onClick = { /* Auto enhance */ }
+                onClick = { }
             )
 
             PlusFeatureButton(
                 icon = Icons.Default.Tune,
                 text = "Manual Tune",
-                onClick = { /* Manual tune */ }
+                onClick = { }
             )
 
             PlusFeatureButton(
                 icon = Icons.Default.Analytics,
                 text = "AI Analysis",
-                onClick = { /* AI analysis */ }
+                onClick = { }
             )
         }
     }
@@ -522,7 +522,7 @@ private fun PlusQuickActions() {
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         OutlinedButton(
-            onClick = { /* Plus capture */ },
+            onClick = { },
             modifier = Modifier.weight(1f),
             colors = ButtonDefaults.outlinedButtonColors(
                 contentColor = Color(0xFFFFD700)
@@ -539,7 +539,7 @@ private fun PlusQuickActions() {
         }
 
         OutlinedButton(
-            onClick = { /* Plus record */ },
+            onClick = { },
             modifier = Modifier.weight(1f),
             colors = ButtonDefaults.outlinedButtonColors(
                 contentColor = Color(0xFFFFD700)
@@ -556,7 +556,7 @@ private fun PlusQuickActions() {
         }
 
         OutlinedButton(
-            onClick = { /* Plus process */ },
+            onClick = { },
             modifier = Modifier.weight(1f),
             colors = ButtonDefaults.outlinedButtonColors(
                 contentColor = Color(0xFFFFD700)

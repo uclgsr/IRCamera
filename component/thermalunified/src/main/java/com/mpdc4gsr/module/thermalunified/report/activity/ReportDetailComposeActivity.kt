@@ -58,7 +58,7 @@ class ReportDetailComposeActivity : BaseComposeActivity<ReportDetailViewModel>()
                             IconButton(onClick = { showShareDialog = true }) {
                                 Icon(Icons.Default.Share, contentDescription = "Share", tint = Color.White)
                             }
-                            IconButton(onClick = { /* Edit */ }) {
+                            IconButton(onClick = { }) {
                                 Icon(Icons.Default.Edit, contentDescription = "Edit", tint = Color.White)
                             }
                         },

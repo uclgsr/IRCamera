@@ -320,7 +320,7 @@ private fun RecordingControls(
             }
 
             Button(
-                onClick = { /* Save chart */ },
+                onClick = { },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color(0xFF6B7280)
                 ),
@@ -426,7 +426,7 @@ private fun ChartControlsCard() {
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 OutlinedButton(
-                    onClick = { /* Export data */ },
+                    onClick = { },
                     colors = ButtonDefaults.outlinedButtonColors(
                         contentColor = Color.White
                     ),
@@ -436,7 +436,7 @@ private fun ChartControlsCard() {
                 }
 
                 OutlinedButton(
-                    onClick = { /* Clear data */ },
+                    onClick = { },
                     colors = ButtonDefaults.outlinedButtonColors(
                         contentColor = Color.White
                     ),
@@ -446,7 +446,7 @@ private fun ChartControlsCard() {
                 }
 
                 OutlinedButton(
-                    onClick = { /* Settings */ },
+                    onClick = { },
                     colors = ButtonDefaults.outlinedButtonColors(
                         contentColor = Color.White
                     ),

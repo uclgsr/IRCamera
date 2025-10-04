@@ -78,10 +78,10 @@ class ThermalVideoComposeActivity : BaseComposeActivity<BaseViewModel>() {
                                     contentDescription = "Toggle thermal data"
                                 )
                             }
-                            IconButton(onClick = { /* Share video */ }) {
+                            IconButton(onClick = { }) {
                                 Icon(Icons.Default.Share, contentDescription = "Share")
                             }
-                            IconButton(onClick = { /* More options */ }) {
+                            IconButton(onClick = { }) {
                                 Icon(Icons.Default.MoreVert, contentDescription = "More")
                             }
                         }
@@ -339,7 +339,7 @@ private fun ThermalVideoControls(
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                IconButton(onClick = { /* Previous frame */ }) {
+                IconButton(onClick = { }) {
                     Icon(
                         Icons.Default.SkipPrevious,
                         contentDescription = "Previous",
@@ -365,7 +365,7 @@ private fun ThermalVideoControls(
                     )
                 }
 
-                IconButton(onClick = { /* Next frame */ }) {
+                IconButton(onClick = { }) {
                     Icon(
                         Icons.Default.SkipNext,
                         contentDescription = "Next",
@@ -382,7 +382,7 @@ private fun ThermalVideoControls(
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 OutlinedButton(
-                    onClick = { /* Export frame */ },
+                    onClick = { },
                     colors = ButtonDefaults.outlinedButtonColors(
                         contentColor = Color.White
                     )
@@ -397,7 +397,7 @@ private fun ThermalVideoControls(
                 }
 
                 OutlinedButton(
-                    onClick = { /* Analyze */ },
+                    onClick = { },
                     colors = ButtonDefaults.outlinedButtonColors(
                         contentColor = Color.White
                     )
@@ -412,7 +412,7 @@ private fun ThermalVideoControls(
                 }
 
                 OutlinedButton(
-                    onClick = { /* Settings */ },
+                    onClick = { },
                     colors = ButtonDefaults.outlinedButtonColors(
                         contentColor = Color.White
                     )

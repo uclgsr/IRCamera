@@ -65,7 +65,7 @@ class ImagePickIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() 
                 },
                 floatingActionButton = {
                     FloatingActionButton(
-                        onClick = { /* Capture with AI enhancement */ },
+                        onClick = { },
                         containerColor = Color(0xFFFFD700),
                         contentColor = Color.Black
                     ) {
@@ -293,7 +293,7 @@ class ImagePickIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() 
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 OutlinedButton(
-                    onClick = { /* Recent images */ },
+                    onClick = { },
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.outlinedButtonColors(
                         contentColor = Color(0xFF7D8590)
@@ -305,7 +305,7 @@ class ImagePickIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() 
                 }
 
                 Button(
-                    onClick = { /* AI batch process */ },
+                    onClick = { },
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color(0xFFFFD700),

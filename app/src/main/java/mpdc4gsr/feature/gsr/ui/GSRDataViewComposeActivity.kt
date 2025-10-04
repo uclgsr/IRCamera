@@ -80,16 +80,16 @@ class GSRDataViewComposeActivity : BaseComposeActivity<GSRDataViewViewModel>() {
                             }
                         },
                         actions = {
-                            IconButton(onClick = { /* Search data */ }) {
+                            IconButton(onClick = { }) {
                                 Icon(Icons.Default.Search, contentDescription = "Search")
                             }
-                            IconButton(onClick = { /* Filter data */ }) {
+                            IconButton(onClick = { }) {
                                 Icon(Icons.Default.FilterList, contentDescription = "Filter")
                             }
-                            IconButton(onClick = { /* Export data */ }) {
+                            IconButton(onClick = { }) {
                                 Icon(Icons.Default.FileDownload, contentDescription = "Export")
                             }
-                            IconButton(onClick = { /* More options */ }) {
+                            IconButton(onClick = { }) {
                                 Icon(Icons.Default.MoreVert, contentDescription = "More")
                             }
                         }
@@ -267,10 +267,10 @@ private fun RawDataView() {
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    IconButton(onClick = { /* Go to top */ }) {
+                    IconButton(onClick = { }) {
                         Icon(Icons.Default.KeyboardArrowUp, contentDescription = "Go to top")
                     }
-                    IconButton(onClick = { /* Go to bottom */ }) {
+                    IconButton(onClick = { }) {
                         Icon(Icons.Default.KeyboardArrowDown, contentDescription = "Go to bottom")
                     }
                 }
@@ -458,7 +458,7 @@ private fun ProcessingOptionsCard() {
             }
 
             Button(
-                onClick = { /* Apply processing */ },
+                onClick = { },
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Icon(Icons.Default.PlayArrow, contentDescription = null)
@@ -550,7 +550,7 @@ private fun ProcessingResultsCard() {
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 OutlinedButton(
-                    onClick = { /* View processed data */ },
+                    onClick = { },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Visibility, contentDescription = null)
@@ -559,7 +559,7 @@ private fun ProcessingResultsCard() {
                 }
 
                 OutlinedButton(
-                    onClick = { /* Export processed */ },
+                    onClick = { },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.FileDownload, contentDescription = null)

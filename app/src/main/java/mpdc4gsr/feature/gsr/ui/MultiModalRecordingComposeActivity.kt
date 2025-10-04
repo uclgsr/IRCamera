@@ -86,10 +86,10 @@ class MultiModalRecordingComposeActivity : BaseComposeActivity<MultiModalRecordi
                             }
                         },
                         actions = {
-                            IconButton(onClick = { /* Recording templates */ }) {
+                            IconButton(onClick = { }) {
                                 Icon(Icons.AutoMirrored.Filled.LibraryBooks, contentDescription = "Templates")
                             }
-                            IconButton(onClick = { /* Recording settings */ }) {
+                            IconButton(onClick = { }) {
                                 Icon(Icons.Default.Settings, contentDescription = "Settings")
                             }
                         }
@@ -361,7 +361,7 @@ private fun RecordingControls(
         // Pause button (only show when recording)
         if (isRecording) {
             OutlinedButton(
-                onClick = { /* Pause logic */ },
+                onClick = { },
                 modifier = Modifier.size(56.dp)
             ) {
                 Icon(

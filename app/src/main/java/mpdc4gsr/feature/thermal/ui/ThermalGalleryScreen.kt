@@ -60,7 +60,7 @@ fun ThermalGalleryScreen(
             TitleBarAction(
                 icon = Icons.Default.Search,
                 contentDescription = "Search",
-                onClick = { /* Search functionality */ }
+                onClick = { }
             )
         }
 
@@ -293,7 +293,7 @@ private fun ThermalImageListItem(item: ThermalMediaItem) {
             }
 
             // Actions
-            IconButton(onClick = { /* Share */ }) {
+            IconButton(onClick = { }) {
                 Icon(Icons.Default.Share, contentDescription = "Share", tint = Color.Gray)
             }
         }
@@ -429,7 +429,7 @@ private fun ThermalVideoListItem(item: ThermalMediaItem) {
             }
 
             // Actions
-            IconButton(onClick = { /* Play */ }) {
+            IconButton(onClick = { }) {
                 Icon(Icons.Default.PlayArrow, contentDescription = "Play", tint = MaterialTheme.colorScheme.primary)
             }
         }
@@ -477,14 +477,14 @@ private fun ThermalReportItem(item: ThermalMediaItem) {
             }
 
             Row {
-                IconButton(onClick = { /* View */ }) {
+                IconButton(onClick = { }) {
                     Icon(
                         Icons.Default.Visibility,
                         contentDescription = "View",
                         tint = MaterialTheme.colorScheme.primary
                     )
                 }
-                IconButton(onClick = { /* Share */ }) {
+                IconButton(onClick = { }) {
                     Icon(Icons.Default.Share, contentDescription = "Share", tint = Color.Gray)
                 }
             }

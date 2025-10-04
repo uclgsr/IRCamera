@@ -80,10 +80,10 @@ class ResearchTemplateComposeActivity : BaseComposeActivity<AppBaseViewModel>() 
                             IconButton(onClick = { showCreateDialog = true }) {
                                 Icon(Icons.Default.Add, contentDescription = "Create Template")
                             }
-                            IconButton(onClick = { /* Import template */ }) {
+                            IconButton(onClick = { }) {
                                 Icon(Icons.Default.FileOpen, contentDescription = "Import")
                             }
-                            IconButton(onClick = { /* More options */ }) {
+                            IconButton(onClick = { }) {
                                 Icon(Icons.Default.MoreVert, contentDescription = "More")
                             }
                         }

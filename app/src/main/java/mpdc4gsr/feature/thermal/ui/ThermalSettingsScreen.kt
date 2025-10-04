@@ -144,7 +144,7 @@ fun ThermalSettingsScreen(
                 icon = Icons.Default.Tune
             ) {
                 Button(
-                    onClick = { /* Start flat field calibration */ },
+                    onClick = { },
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Icon(Icons.Default.Adjust, contentDescription = null)
@@ -152,7 +152,7 @@ fun ThermalSettingsScreen(
                     Text("Flat Field Calibration")
                 }
                 Button(
-                    onClick = { /* Start temperature calibration */ },
+                    onClick = { },
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Icon(Icons.Default.Thermostat, contentDescription = null)

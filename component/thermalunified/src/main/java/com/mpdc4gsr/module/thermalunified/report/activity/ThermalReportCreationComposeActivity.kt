@@ -70,7 +70,7 @@ class ThermalReportCreationComposeActivity : BaseComposeActivity<BaseViewModel>(
                             IconButton(onClick = { showPreview = true }) {
                                 Icon(Icons.Default.Preview, contentDescription = "Preview")
                             }
-                            IconButton(onClick = { /* Save draft */ }) {
+                            IconButton(onClick = { }) {
                                 Icon(Icons.Default.Save, contentDescription = "Save Draft")
                             }
                         }
@@ -404,7 +404,7 @@ private fun ThermalDataStep(
                 )
 
                 Button(
-                    onClick = { /* Select thermal images */ },
+                    onClick = { },
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Icon(
@@ -527,7 +527,7 @@ private fun ReviewStep(
                 val exportFormats = listOf("PDF", "Word", "HTML")
                 exportFormats.forEach { format ->
                     TextButton(
-                        onClick = { /* Generate report in format */ },
+                        onClick = { },
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Icon(
@@ -616,7 +616,7 @@ private fun ReportNavigationButtons(
             }
         } else {
             Button(
-                onClick = { /* Generate final report */ },
+                onClick = { },
                 enabled = canProceed
             ) {
                 Text("Generate Report")

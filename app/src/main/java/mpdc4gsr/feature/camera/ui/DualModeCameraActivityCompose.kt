@@ -446,7 +446,7 @@ class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewMode
                 icon = { Icon(Icons.Default.CameraAlt, contentDescription = null) },
                 label = { Text("Camera") },
                 selected = true,
-                onClick = { /* Current page */ }
+                onClick = { }
             )
             NavigationBarItem(
                 icon = { Icon(Icons.Default.Person, contentDescription = null) },

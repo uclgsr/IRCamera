@@ -79,10 +79,10 @@ class SessionManagerComposeActivity : BaseComposeActivity<SessionManagerViewMode
                             IconButton(onClick = { showFilterDialog = true }) {
                                 Icon(Icons.Default.FilterList, contentDescription = "Filter")
                             }
-                            IconButton(onClick = { /* Export all sessions */ }) {
+                            IconButton(onClick = { }) {
                                 Icon(Icons.Default.FileDownload, contentDescription = "Export")
                             }
-                            IconButton(onClick = { /* More options */ }) {
+                            IconButton(onClick = { }) {
                                 Icon(Icons.Default.MoreVert, contentDescription = "More")
                             }
                         }
@@ -115,7 +115,7 @@ class SessionManagerComposeActivity : BaseComposeActivity<SessionManagerViewMode
         if (showFilterDialog) {
             SessionFilterDialog(
                 onDismiss = { showFilterDialog = false },
-                onApplyFilter = { /* Apply filter logic */ }
+                onApplyFilter = { }
             )
         }
     }
@@ -339,7 +339,7 @@ private fun SessionCard(
                 }
             }
 
-            IconButton(onClick = { /* More options for this session */ }) {
+            IconButton(onClick = { }) {
                 Icon(Icons.Default.MoreVert, contentDescription = "Session options")
             }
         }

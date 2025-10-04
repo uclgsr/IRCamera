@@ -153,10 +153,10 @@ class IRGalleryTabComposeFragment : BaseComposeFragment<IRGalleryTabViewModel>()
                 }
             },
             actions = {
-                IconButton(onClick = { /* Handle search */ }) {
+                IconButton(onClick = { }) {
                     Icon(Icons.Default.Search, contentDescription = "Search")
                 }
-                IconButton(onClick = { /* Handle more options */ }) {
+                IconButton(onClick = { }) {
                     Icon(Icons.Default.MoreVert, contentDescription = "More")
                 }
             }

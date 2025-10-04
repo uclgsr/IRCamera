@@ -61,14 +61,14 @@ class MonitoryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             }
                         },
                         actions = {
-                            IconButton(onClick = { /* Export data */ }) {
+                            IconButton(onClick = { }) {
                                 Icon(
                                     Icons.Default.FileDownload,
                                     contentDescription = "Export",
                                     tint = Color.White
                                 )
                             }
-                            IconButton(onClick = { /* Settings */ }) {
+                            IconButton(onClick = { }) {
                                 Icon(
                                     Icons.Default.MoreVert,
                                     contentDescription = "Settings",
@@ -437,7 +437,7 @@ private fun QuickControlsOverlay(
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         FloatingActionButton(
-            onClick = { /* Snapshot */ },
+            onClick = { },
             modifier = Modifier.size(40.dp),
             containerColor = Color(0xFF6B7280)
         ) {
@@ -450,7 +450,7 @@ private fun QuickControlsOverlay(
         }
 
         FloatingActionButton(
-            onClick = { /* Zoom */ },
+            onClick = { },
             modifier = Modifier.size(40.dp),
             containerColor = Color(0xFF6B7280)
         ) {
@@ -463,7 +463,7 @@ private fun QuickControlsOverlay(
         }
 
         FloatingActionButton(
-            onClick = { /* Adjust */ },
+            onClick = { },
             modifier = Modifier.size(40.dp),
             containerColor = Color(0xFF6B7280)
         ) {

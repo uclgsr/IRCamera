@@ -185,7 +185,7 @@ private fun RecordingControls(
 
             RecordingState.STARTING -> {
                 Button(
-                    onClick = { /* Disabled during starting */ },
+                    onClick = { },
                     modifier = Modifier.weight(1f),
                     enabled = false
                 ) {
@@ -235,7 +235,7 @@ private fun RecordingControls(
 
             RecordingState.STOPPING -> {
                 Button(
-                    onClick = { /* Disabled during stopping */ },
+                    onClick = { },
                     modifier = Modifier.weight(1f),
                     enabled = false
                 ) {

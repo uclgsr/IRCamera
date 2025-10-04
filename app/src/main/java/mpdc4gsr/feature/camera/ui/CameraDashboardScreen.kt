@@ -219,7 +219,7 @@ private fun CameraModesCard(
                 description = "Standard RGB camera capture",
                 icon = Icons.Default.Camera,
                 isActive = false,
-                onClick = { /* Navigate to single camera */ }
+                onClick = { }
             )
 
             // Dual Camera Mode
@@ -237,7 +237,7 @@ private fun CameraModesCard(
                 description = "Automated interval capture",
                 icon = Icons.Default.Timer,
                 isActive = false,
-                onClick = { /* Navigate to time-lapse */ }
+                onClick = { }
             )
         }
     }
@@ -375,7 +375,7 @@ private fun RecordingControlsCard() {
                 }
 
                 OutlinedButton(
-                    onClick = { /* Take photo */ },
+                    onClick = { },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.CameraAlt, contentDescription = null)
@@ -484,7 +484,7 @@ private fun PreviewGalleryCard() {
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 OutlinedButton(
-                    onClick = { /* Open preview */ },
+                    onClick = { },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Preview, contentDescription = null)
@@ -493,7 +493,7 @@ private fun PreviewGalleryCard() {
                 }
 
                 OutlinedButton(
-                    onClick = { /* Open gallery */ },
+                    onClick = { },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.PhotoLibrary, contentDescription = null)

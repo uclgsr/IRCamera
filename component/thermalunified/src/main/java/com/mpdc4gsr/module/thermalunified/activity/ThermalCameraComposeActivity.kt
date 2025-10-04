@@ -84,7 +84,7 @@ class ThermalCameraComposeActivity : BaseComposeActivity<ThermalFragmentViewMode
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Button(
-                    onClick = { /* Handle capture */ },
+                    onClick = { },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.CameraAlt, contentDescription = "Capture")
@@ -93,7 +93,7 @@ class ThermalCameraComposeActivity : BaseComposeActivity<ThermalFragmentViewMode
                 }
 
                 Button(
-                    onClick = { /* Handle record */ },
+                    onClick = { },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.VideoCall, contentDescription = "Record")

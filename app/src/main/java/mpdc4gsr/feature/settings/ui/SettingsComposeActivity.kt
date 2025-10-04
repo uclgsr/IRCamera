@@ -92,7 +92,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "Device Calibration",
                         subtitle = "Calibrate thermal camera and sensors",
-                        onClick = { /* Open calibration screen */ }
+                        onClick = { }
                     )
                 }
 
@@ -149,7 +149,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "Thermal Color Palette",
                         subtitle = "Choose thermal imaging color scheme",
-                        onClick = { /* Open color palette selection */ }
+                        onClick = { }
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -157,7 +157,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "Temperature Units",
                         subtitle = "Celsius, Fahrenheit, or Kelvin",
-                        onClick = { /* Open temperature unit selection */ }
+                        onClick = { }
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -165,7 +165,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "Display Resolution",
                         subtitle = "Adjust thermal image display resolution",
-                        onClick = { /* Open resolution settings */ }
+                        onClick = { }
                     )
                 }
 
@@ -183,7 +183,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "Export Location",
                         subtitle = "Choose where to save exported data",
-                        onClick = { /* Open export location selection */ }
+                        onClick = { }
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -192,7 +192,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                         title = "Export All Data",
                         subtitle = "Export all recorded sensor data",
                         actionText = "Export",
-                        onAction = { /* Export all data */ }
+                        onAction = { }
                     )
                 }
 
@@ -201,7 +201,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "PC Controller Connection",
                         subtitle = "Configure connection to PC controller",
-                        onClick = { /* Open network configuration */ }
+                        onClick = { }
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -209,7 +209,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "Network Discovery",
                         subtitle = "Enable automatic PC discovery",
-                        onClick = { /* Toggle network discovery */ }
+                        onClick = { }
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -218,7 +218,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                         title = "Test Connection",
                         subtitle = "Test connection to PC controller",
                         actionText = "Test",
-                        onAction = { /* Test network connection */ }
+                        onAction = { }
                     )
                 }
 
@@ -227,7 +227,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "Developer Options",
                         subtitle = "Advanced configuration options",
-                        onClick = { /* Open developer options */ }
+                        onClick = { }
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -235,7 +235,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "Logging Settings",
                         subtitle = "Configure application logging",
-                        onClick = { /* Open logging settings */ }
+                        onClick = { }
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -244,7 +244,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                         title = "Reset All Settings",
                         subtitle = "Reset all settings to default values",
                         actionText = "Reset",
-                        onAction = { /* Reset all settings */ },
+                        onAction = { },
                         isDestructive = true
                     )
 
@@ -254,7 +254,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                         title = "Clear All Data",
                         subtitle = "Delete all recorded sensor data",
                         actionText = "Clear",
-                        onAction = { /* Clear all data */ },
+                        onAction = { },
                         isDestructive = true
                     )
                 }
@@ -264,7 +264,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "App Version",
                         subtitle = "IRCamera v1.10.000",
-                        onClick = { /* Show version details */ }
+                        onClick = { }
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -272,7 +272,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "Privacy Policy",
                         subtitle = "View privacy policy and terms",
-                        onClick = { /* Open privacy policy */ }
+                        onClick = { }
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -280,7 +280,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "Help & Support",
                         subtitle = "Get help and contact support",
-                        onClick = { /* Open help screen */ }
+                        onClick = { }
                     )
                 }
             }

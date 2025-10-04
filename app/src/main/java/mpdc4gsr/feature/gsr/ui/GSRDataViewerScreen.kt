@@ -51,7 +51,7 @@ fun GSRDataViewerScreen(
             TitleBarAction(
                 icon = Icons.Default.Share,
                 contentDescription = "Export Data",
-                onClick = { /* Export data */ }
+                onClick = { }
             )
         }
 

@@ -89,7 +89,7 @@ class ThermalIrNightComposeActivity : BaseComposeActivity<ThermalIrNightViewMode
                             }
                         },
                         actions = {
-                            IconButton(onClick = { /* Show info */ }) {
+                            IconButton(onClick = { }) {
                                 Icon(Icons.Default.Info, contentDescription = "Info", tint = Color.White)
                             }
                             IconButton(onClick = { viewModel.toggleNightMode() }) {
@@ -191,7 +191,7 @@ class ThermalIrNightComposeActivity : BaseComposeActivity<ThermalIrNightViewMode
                                     modifier = Modifier.padding(8.dp),
                                     verticalArrangement = Arrangement.spacedBy(4.dp)
                                 ) {
-                                    IconButton(onClick = { /* Lock/unlock */ }) {
+                                    IconButton(onClick = { }) {
                                         Icon(
                                             Icons.Default.Lock,
                                             contentDescription = "Lock",
@@ -199,7 +199,7 @@ class ThermalIrNightComposeActivity : BaseComposeActivity<ThermalIrNightViewMode
                                             modifier = Modifier.size(24.dp)
                                         )
                                     }
-                                    IconButton(onClick = { /* Edit */ }) {
+                                    IconButton(onClick = { }) {
                                         Icon(
                                             Icons.Default.Edit,
                                             contentDescription = "Edit",
@@ -262,10 +262,10 @@ class ThermalIrNightComposeActivity : BaseComposeActivity<ThermalIrNightViewMode
                                         tint = Color.White
                                     )
                                 }
-                                IconButton(onClick = { /* Color palette */ }) {
+                                IconButton(onClick = { }) {
                                     Icon(Icons.Default.Palette, "Palette", tint = Color.White)
                                 }
-                                IconButton(onClick = { /* Settings */ }) {
+                                IconButton(onClick = { }) {
                                     Icon(Icons.Default.Settings, "Settings", tint = Color.White)
                                 }
                             }
@@ -279,7 +279,7 @@ class ThermalIrNightComposeActivity : BaseComposeActivity<ThermalIrNightViewMode
                                     .padding(vertical = 8.dp),
                                 horizontalArrangement = Arrangement.SpaceEvenly
                             ) {
-                                IconButton(onClick = { /* Gallery */ }) {
+                                IconButton(onClick = { }) {
                                     Icon(Icons.Default.PhotoLibrary, "Gallery", tint = Color.White)
                                 }
                                 FloatingActionButton(
@@ -292,7 +292,7 @@ class ThermalIrNightComposeActivity : BaseComposeActivity<ThermalIrNightViewMode
                                         tint = Color.White
                                     )
                                 }
-                                IconButton(onClick = { /* More */ }) {
+                                IconButton(onClick = { }) {
                                     Icon(Icons.Default.MoreVert, "More", tint = Color.White)
                                 }
                             }

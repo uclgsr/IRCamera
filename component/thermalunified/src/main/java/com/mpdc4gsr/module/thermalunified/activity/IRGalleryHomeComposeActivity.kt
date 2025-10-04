@@ -60,7 +60,7 @@ class IRGalleryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             }
                         },
                         actions = {
-                            IconButton(onClick = { /* Search */ }) {
+                            IconButton(onClick = { }) {
                                 Icon(
                                     Icons.Default.Search,
                                     contentDescription = "Search",
@@ -84,7 +84,7 @@ class IRGalleryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                 },
                 floatingActionButton = {
                     FloatingActionButton(
-                        onClick = { /* Add new capture */ },
+                        onClick = { },
                         containerColor = Color(0xFFFF6B35)
                     ) {
                         Icon(
@@ -226,7 +226,7 @@ private fun GalleryGrid(
         items(items) { item ->
             GalleryGridItem(
                 item = item,
-                onClick = { /* Open detail */ }
+                onClick = { }
             )
         }
     }
@@ -327,7 +327,7 @@ private fun GalleryList(
         items(items) { item ->
             GalleryListItem(
                 item = item,
-                onClick = { /* Open detail */ }
+                onClick = { }
             )
         }
     }
@@ -405,7 +405,7 @@ private fun GalleryListItem(
 
             // Actions
             IconButton(
-                onClick = { /* More options */ }
+                onClick = { }
             ) {
                 Icon(
                     Icons.Default.MoreVert,

@@ -60,7 +60,7 @@ fun ReportCreationScreen(
             TitleBarAction(
                 icon = Icons.Default.Save,
                 contentDescription = "Save Draft",
-                onClick = { /* Save draft */ }
+                onClick = { }
             )
         }
 
@@ -117,7 +117,7 @@ fun ReportCreationScreen(
                 totalSteps = steps.size,
                 onPrevious = { if (currentStep > 0) currentStep-- },
                 onNext = { if (currentStep < steps.size - 1) currentStep++ },
-                onFinish = { /* Generate report */ }
+                onFinish = { }
             )
         }
     }

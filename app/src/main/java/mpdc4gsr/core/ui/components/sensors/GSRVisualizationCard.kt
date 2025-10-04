@@ -68,8 +68,8 @@ fun GSRVisualizationCard(
 
             // Data export controls
             GSRDataControls(
-                onExportData = { /* Export data */ },
-                onResetStatistics = { /* Reset stats */ }
+                onExportData = { },
+                onResetStatistics = { }
             )
         }
     }

@@ -78,13 +78,13 @@ class DualModeCameraComposeActivity : BaseComposeActivity<DualModeCameraViewMode
                             }
                         },
                         actions = {
-                            IconButton(onClick = { /* Switch camera */ }) {
+                            IconButton(onClick = { }) {
                                 Icon(Icons.Default.FlipCameraAndroid, contentDescription = "Switch")
                             }
                             IconButton(onClick = { showSettingsDialog = true }) {
                                 Icon(Icons.Default.Settings, contentDescription = "Settings")
                             }
-                            IconButton(onClick = { /* More options */ }) {
+                            IconButton(onClick = { }) {
                                 Icon(Icons.Default.MoreVert, contentDescription = "More")
                             }
                         }
@@ -282,7 +282,7 @@ private fun CameraControlsSection(
         ) {
             // Gallery button
             OutlinedButton(
-                onClick = { /* Open gallery */ },
+                onClick = { },
                 modifier = Modifier.size(56.dp)
             ) {
                 Icon(
@@ -315,7 +315,7 @@ private fun CameraControlsSection(
 
             // Capture button
             OutlinedButton(
-                onClick = { /* Take photo */ },
+                onClick = { },
                 modifier = Modifier.size(56.dp)
             ) {
                 Icon(

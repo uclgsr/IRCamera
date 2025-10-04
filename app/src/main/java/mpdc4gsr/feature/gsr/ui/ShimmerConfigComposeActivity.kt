@@ -87,7 +87,7 @@ class ShimmerConfigComposeActivity : ComponentActivity() {
                                     contentDescription = if (isScanning) "Stop Scan" else "Scan"
                                 )
                             }
-                            IconButton(onClick = { /* Help */ }) {
+                            IconButton(onClick = { }) {
                                 Icon(Icons.AutoMirrored.Filled.Help, contentDescription = "Help")
                             }
                         }
@@ -161,7 +161,7 @@ private fun ShimmerConfigContent(
                     device = device,
                     isSelected = selectedDevice?.address == device.address,
                     onSelect = { onDeviceSelect(device) },
-                    onConnect = { /* Connect to device */ },
+                    onConnect = { },
                     onConfigure = {
                         onDeviceSelect(device)
                         onConfigureDevice()

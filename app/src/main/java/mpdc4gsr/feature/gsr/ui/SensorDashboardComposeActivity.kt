@@ -140,9 +140,9 @@ class SensorDashboardComposeActivity : ComponentActivity() {
 
                 // Data export and management section
                 DataManagementSection(
-                    onExportAllData = { /* Export all sensor data */ },
-                    onClearData = { /* Clear sensor data */ },
-                    onOpenSettings = { /* Open sensor settings */ }
+                    onExportAllData = { },
+                    onClearData = { },
+                    onOpenSettings = { }
                 )
             }
         }

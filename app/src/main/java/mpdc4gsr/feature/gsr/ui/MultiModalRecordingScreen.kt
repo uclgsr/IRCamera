@@ -63,7 +63,7 @@ fun MultiModalRecordingScreen(
             TitleBarAction(
                 icon = Icons.Default.Settings,
                 contentDescription = "Recording Settings",
-                onClick = { /* Open settings */ }
+                onClick = { }
             )
         }
 
@@ -466,7 +466,7 @@ private fun RecordingControlsSection(
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 OutlinedButton(
-                    onClick = { /* Pause */ },
+                    onClick = { },
                     enabled = isRecording
                 ) {
                     Icon(Icons.Default.Pause, contentDescription = null)
@@ -475,7 +475,7 @@ private fun RecordingControlsSection(
                 }
 
                 OutlinedButton(
-                    onClick = { /* Add marker */ },
+                    onClick = { },
                     enabled = isRecording
                 ) {
                     Icon(Icons.Default.Flag, contentDescription = null)

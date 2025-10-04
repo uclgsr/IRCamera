@@ -98,13 +98,13 @@ fun ThermalNavigationDrawer(
                     .padding(16.dp),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                IconButton(onClick = { /* Settings */ }) {
+                IconButton(onClick = { }) {
                     Icon(Icons.Default.Settings, contentDescription = "Settings")
                 }
-                IconButton(onClick = { /* Help */ }) {
+                IconButton(onClick = { }) {
                     Icon(Icons.AutoMirrored.Filled.Help, contentDescription = "Help")
                 }
-                IconButton(onClick = { /* Info */ }) {
+                IconButton(onClick = { }) {
                     Icon(Icons.Default.Info, contentDescription = "About")
                 }
             }

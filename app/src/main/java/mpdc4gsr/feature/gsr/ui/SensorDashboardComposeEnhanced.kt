@@ -93,10 +93,10 @@ class SensorDashboardComposeEnhanced : ComponentActivity() {
                     },
                     actions = {
                         // Enhanced actions leveraging consolidated patterns
-                        IconButton(onClick = { /* Export all sensor data */ }) {
+                        IconButton(onClick = { }) {
                             Icon(Icons.Default.Download, contentDescription = "Export Data")
                         }
-                        IconButton(onClick = { /* Open sensor settings */ }) {
+                        IconButton(onClick = { }) {
                             Icon(Icons.Default.Settings, contentDescription = "Settings")
                         }
                     }
@@ -139,17 +139,17 @@ class SensorDashboardComposeEnhanced : ComponentActivity() {
                 // Enhanced data export section
                 DataExportSection(
                     sessionState = sessionState,
-                    onExportSession = { /* Export current session */ },
-                    onExportAllData = { /* Export all sensor data */ },
-                    onManageSessions = { /* Launch session manager */ }
+                    onExportSession = { },
+                    onExportAllData = { },
+                    onManageSessions = { }
                 )
 
                 // System status and diagnostics
                 SystemDiagnosticsSection(
                     thermalCameraState = thermalCameraState,
                     gsrSensorState = gsrSensorState,
-                    onRunDiagnostics = { /* Run system diagnostics */ },
-                    onViewLogs = { /* View system logs */ }
+                    onRunDiagnostics = { },
+                    onViewLogs = { }
                 )
             }
         }

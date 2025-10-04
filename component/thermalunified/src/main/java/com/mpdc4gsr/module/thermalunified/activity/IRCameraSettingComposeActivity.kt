@@ -152,19 +152,19 @@ class IRCameraSettingComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             AdvancedSettingItem(
                                 title = "Calibration",
                                 description = "Manual camera calibration",
-                                onClick = { /* Navigate to calibration */ }
+                                onClick = { }
                             )
 
                             AdvancedSettingItem(
                                 title = "Firmware Update",
                                 description = "Check for camera firmware updates",
-                                onClick = { /* Check firmware */ }
+                                onClick = { }
                             )
 
                             AdvancedSettingItem(
                                 title = "Factory Reset",
                                 description = "Reset camera to default settings",
-                                onClick = { /* Factory reset dialog */ }
+                                onClick = { }
                             )
                         }
                     }
@@ -172,8 +172,8 @@ class IRCameraSettingComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                     // Save/Reset buttons
                     item {
                         SaveResetButtons(
-                            onSave = { /* Save settings */ },
-                            onReset = { /* Reset to defaults */ }
+                            onSave = { },
+                            onReset = { }
                         )
                     }
                 }

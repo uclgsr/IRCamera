@@ -72,7 +72,7 @@ class MonitorLogComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             IconButton(onClick = { showFilterDialog = true }) {
                                 Icon(Icons.Default.FilterList, contentDescription = "Filter", tint = Color.White)
                             }
-                            IconButton(onClick = { /* Export */ }) {
+                            IconButton(onClick = { }) {
                                 Icon(Icons.Default.Download, contentDescription = "Export", tint = Color.White)
                             }
                         },
@@ -83,7 +83,7 @@ class MonitorLogComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                 },
                 floatingActionButton = {
                     FloatingActionButton(
-                        onClick = { /* Add new log */ },
+                        onClick = { },
                         containerColor = MaterialTheme.colorScheme.primary
                     ) {
                         Icon(Icons.Default.Add, contentDescription = "Add Log")

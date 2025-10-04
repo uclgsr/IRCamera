@@ -94,7 +94,7 @@ fun GSRSensorScreen(navController: NavController) {
     mpdc4gsr.feature.gsr.ui.GSRSensorScreen(
         onBackClick = { navController.popBackStack() },
         onSettingsClick = { navController.navigate("gsr_settings") },
-        onSaveData = { /* Navigate to export if needed */ }
+        onSaveData = { }
     )
 }
 
@@ -298,7 +298,7 @@ fun QuickActionsCard(navController: NavController) {
                 }
 
                 OutlinedButton(
-                    onClick = { /* Start recording */ },
+                    onClick = { },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.PlayArrow, contentDescription = null)
@@ -344,7 +344,7 @@ fun RecentSessionsCard() {
                         text = session,
                         style = MaterialTheme.typography.bodyMedium
                     )
-                    IconButton(onClick = { /* Open session */ }) {
+                    IconButton(onClick = { }) {
                         Icon(
                             Icons.Default.PlayArrow,
                             contentDescription = "Open session"
@@ -425,7 +425,7 @@ fun ThermalControlsPanel() {
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Button(
-                    onClick = { /* Capture */ },
+                    onClick = { },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.PhotoCamera, contentDescription = null)
@@ -434,7 +434,7 @@ fun ThermalControlsPanel() {
                 }
 
                 Button(
-                    onClick = { /* Record */ },
+                    onClick = { },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Videocam, contentDescription = null)
@@ -443,7 +443,7 @@ fun ThermalControlsPanel() {
                 }
 
                 OutlinedButton(
-                    onClick = { /* Settings */ },
+                    onClick = { },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Settings, contentDescription = null)
@@ -569,7 +569,7 @@ fun GSRRecordingControlsCard() {
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Button(
-                    onClick = { /* Start recording */ },
+                    onClick = { },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.PlayArrow, contentDescription = null)
@@ -578,7 +578,7 @@ fun GSRRecordingControlsCard() {
                 }
 
                 OutlinedButton(
-                    onClick = { /* Stop recording */ },
+                    onClick = { },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Stop, contentDescription = null)
@@ -587,7 +587,7 @@ fun GSRRecordingControlsCard() {
                 }
 
                 OutlinedButton(
-                    onClick = { /* Pause recording */ },
+                    onClick = { },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Pause, contentDescription = null)
@@ -626,7 +626,7 @@ fun GSRCalibrationCard() {
                 )
 
                 Button(
-                    onClick = { /* Start calibration */ }
+                    onClick = { }
                 ) {
                     Text("Calibrate")
                 }

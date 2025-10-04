@@ -52,7 +52,7 @@ fun DualModeCameraScreen(
                         IconButton(onClick = onNavigateToSettings) {
                             Icon(Icons.Default.Tune, contentDescription = "Camera Settings")
                         }
-                        IconButton(onClick = { /* Toggle view mode */ }) {
+                        IconButton(onClick = { }) {
                             Icon(Icons.Default.SwapHoriz, contentDescription = "Swap View")
                         }
                     }
@@ -611,7 +611,7 @@ private fun CameraControlsCard(
                 }
 
                 OutlinedButton(
-                    onClick = { /* Take snapshot */ },
+                    onClick = { },
                     modifier = Modifier.weight(1f),
                     enabled = rgbActive || thermalActive
                 ) {
@@ -693,7 +693,7 @@ private fun CalibrationToolsCard() {
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 OutlinedButton(
-                    onClick = { /* Start alignment */ },
+                    onClick = { },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.CenterFocusStrong, contentDescription = null)
@@ -702,7 +702,7 @@ private fun CalibrationToolsCard() {
                 }
 
                 OutlinedButton(
-                    onClick = { /* Calibrate colors */ },
+                    onClick = { },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Palette, contentDescription = null)

@@ -81,7 +81,7 @@ class GSRDeviceManagementComposeActivity : BaseComposeActivity<AppBaseViewModel>
                             IconButton(onClick = { showBulkActions = true }) {
                                 Icon(Icons.Default.SelectAll, contentDescription = "Bulk Actions")
                             }
-                            IconButton(onClick = { /* Device help */ }) {
+                            IconButton(onClick = { }) {
                                 Icon(Icons.AutoMirrored.Filled.Help, contentDescription = "Help")
                             }
                         }
@@ -164,8 +164,8 @@ private fun GSRDeviceManagementContent(
                 GSRDeviceCard(
                     device = device,
                     onSelect = { onDeviceSelect(device) },
-                    onConnect = { /* Connect device */ },
-                    onDisconnect = { /* Disconnect device */ }
+                    onConnect = { },
+                    onDisconnect = { }
                 )
             }
 
@@ -183,8 +183,8 @@ private fun GSRDeviceManagementContent(
                     GSRDeviceCard(
                         device = device,
                         onSelect = { onDeviceSelect(device) },
-                        onConnect = { /* Connect device */ },
-                        onDisconnect = { /* Disconnect device */ }
+                        onConnect = { },
+                        onDisconnect = { }
                     )
                 }
             }

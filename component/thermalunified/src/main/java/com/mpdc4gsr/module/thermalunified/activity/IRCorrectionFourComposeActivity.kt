@@ -256,7 +256,7 @@ class IRCorrectionFourComposeActivity : BaseComposeActivity<ThermalViewModel>() 
         selected: Boolean
     ) {
         FilterChip(
-            onClick = { /* Handle selection */ },
+            onClick = { },
             label = { Text(label) },
             selected = selected,
             colors = FilterChipDefaults.filterChipColors(

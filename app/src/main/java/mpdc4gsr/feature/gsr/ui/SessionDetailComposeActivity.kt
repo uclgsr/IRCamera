@@ -70,10 +70,10 @@ class SessionDetailComposeActivity : BaseComposeActivity<AppBaseViewModel>() {
                             }
                         },
                         actions = {
-                            IconButton(onClick = { /* Share session */ }) {
+                            IconButton(onClick = { }) {
                                 Icon(Icons.Default.Share, contentDescription = "Share")
                             }
-                            IconButton(onClick = { /* Export session */ }) {
+                            IconButton(onClick = { }) {
                                 Icon(Icons.Default.FileDownload, contentDescription = "Export")
                             }
                         }
@@ -115,9 +115,9 @@ private fun SessionDetailContent(
 
         // Actions Card
         SessionActionsCard(
-            onViewData = { /* Navigate to data view */ },
-            onExportData = { /* Export session data */ },
-            onDeleteSession = { /* Delete session with confirmation */ }
+            onViewData = { },
+            onExportData = { },
+            onDeleteSession = { }
         )
     }
 }

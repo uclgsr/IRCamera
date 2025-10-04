@@ -122,7 +122,7 @@ private fun UserProfileCard(
 
             // Edit profile button
             Button(
-                onClick = { /* Edit profile */ },
+                onClick = { },
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
             ) {
                 Icon(Icons.Default.Edit, contentDescription = null)
@@ -282,17 +282,17 @@ private fun QuickActionsCard(
                 QuickActionButton(
                     icon = Icons.Default.Science,
                     label = "Research Templates",
-                    onClick = { /* Open templates */ }
+                    onClick = { }
                 )
                 QuickActionButton(
                     icon = Icons.Default.CloudUpload,
                     label = "Export Data",
-                    onClick = { /* Export data */ }
+                    onClick = { }
                 )
                 QuickActionButton(
                     icon = Icons.Default.Settings,
                     label = "Preferences",
-                    onClick = { /* Open preferences */ }
+                    onClick = { }
                 )
             }
         }

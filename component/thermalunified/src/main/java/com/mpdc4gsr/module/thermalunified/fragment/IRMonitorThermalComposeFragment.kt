@@ -50,7 +50,7 @@ class IRMonitorThermalComposeFragment : BaseComposeFragment<ThermalFragmentViewM
                             )
                         },
                         actions = {
-                            IconButton(onClick = { /* Handle settings */ }) {
+                            IconButton(onClick = { }) {
                                 Icon(Icons.Default.Settings, contentDescription = "Settings")
                             }
                         }

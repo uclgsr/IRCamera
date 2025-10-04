@@ -57,14 +57,14 @@ class LogMPChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             }
                         },
                         actions = {
-                            IconButton(onClick = { /* Export chart */ }) {
+                            IconButton(onClick = { }) {
                                 Icon(
                                     Icons.Default.FileDownload,
                                     contentDescription = "Export",
                                     tint = Color.White
                                 )
                             }
-                            IconButton(onClick = { /* Chart settings */ }) {
+                            IconButton(onClick = { }) {
                                 Icon(
                                     Icons.Default.MoreVert,
                                     contentDescription = "Settings",
@@ -124,8 +124,8 @@ class LogMPChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                     // Export and management
                     item {
                         DataManagementCard(
-                            onExportCsv = { /* Export CSV */ },
-                            onExportPdf = { /* Export PDF */ },
+                            onExportCsv = { },
+                            onExportPdf = { },
                             onClearData = {
                                 logEntries = 0
                                 dataPoints = 0

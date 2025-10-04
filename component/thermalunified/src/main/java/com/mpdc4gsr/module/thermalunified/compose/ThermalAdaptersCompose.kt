@@ -91,7 +91,7 @@ private fun CameraItemCard(
                         // Countdown timer
                         TimeDownCompose(
                             initialSeconds = item.delayTime,
-                            onFinish = { /* Handle countdown finish */ },
+                            onFinish = { },
                             modifier = Modifier.size(48.dp)
                         )
                     }

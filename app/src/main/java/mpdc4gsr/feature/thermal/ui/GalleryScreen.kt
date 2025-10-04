@@ -52,7 +52,7 @@ fun GalleryScreen(
             TitleBarAction(
                 icon = Icons.Default.Search,
                 contentDescription = "Search",
-                onClick = { /* Search functionality */ }
+                onClick = { }
             )
         }
 
@@ -197,7 +197,7 @@ private fun ThermalImageCard(
     val primaryColor = MaterialTheme.colorScheme.primary
 
     Card(
-        onClick = { /* Open image detail */ },
+        onClick = { },
         modifier = modifier.aspectRatio(1f),
         colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
     ) {
@@ -295,7 +295,7 @@ private fun RecordingCard(
     modifier: Modifier = Modifier
 ) {
     Card(
-        onClick = { /* Play recording */ },
+        onClick = { },
         modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
     ) {
@@ -348,7 +348,7 @@ private fun DataExportCard(
     modifier: Modifier = Modifier
 ) {
     Card(
-        onClick = { /* Open/Share export */ },
+        onClick = { },
         modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
     ) {

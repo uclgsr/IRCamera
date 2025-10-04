@@ -170,7 +170,7 @@ class ImageColorComposeActivity : BaseComposeActivity<ImageColorViewModel>() {
                         }
 
                         Button(
-                            onClick = { /* Process U4 data */ },
+                            onClick = { },
                             modifier = Modifier.width(120.dp),
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = MaterialTheme.colorScheme.secondary

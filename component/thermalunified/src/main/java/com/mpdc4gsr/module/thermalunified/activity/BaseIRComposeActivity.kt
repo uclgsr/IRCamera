@@ -53,7 +53,7 @@ class BaseIRComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             }
                         },
                         actions = {
-                            IconButton(onClick = { /* Settings */ }) {
+                            IconButton(onClick = { }) {
                                 Icon(
                                     Icons.Default.Settings,
                                     contentDescription = "Settings",
@@ -307,28 +307,28 @@ private fun QuickActionButtons() {
         QuickActionButton(
             icon = Icons.Default.CameraAlt,
             text = "Capture",
-            onClick = { /* Capture */ },
+            onClick = { },
             modifier = Modifier.weight(1f)
         )
 
         QuickActionButton(
             icon = Icons.Default.Videocam,
             text = "Record",
-            onClick = { /* Record */ },
+            onClick = { },
             modifier = Modifier.weight(1f)
         )
 
         QuickActionButton(
             icon = Icons.Default.Palette,
             text = "Palette",
-            onClick = { /* Change palette */ },
+            onClick = { },
             modifier = Modifier.weight(1f)
         )
 
         QuickActionButton(
             icon = Icons.Default.Tune,
             text = "Adjust",
-            onClick = { /* Adjustments */ },
+            onClick = { },
             modifier = Modifier.weight(1f)
         )
     }

@@ -51,7 +51,7 @@ class MonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             }
                         },
                         actions = {
-                            IconButton(onClick = { /* Settings */ }) {
+                            IconButton(onClick = { }) {
                                 Icon(Icons.Default.Settings, contentDescription = "Settings", tint = Color.White)
                             }
                         },
@@ -254,7 +254,7 @@ class MonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 OutlinedButton(
-                    onClick = { /* Export chart */ },
+                    onClick = { },
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.outlinedButtonColors(
                         contentColor = Color(0xFF7D8590)
@@ -266,7 +266,7 @@ class MonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                 }
 
                 OutlinedButton(
-                    onClick = { /* Clear data */ },
+                    onClick = { },
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.outlinedButtonColors(
                         contentColor = Color(0xFF7D8590)
@@ -278,7 +278,7 @@ class MonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                 }
 
                 Button(
-                    onClick = { /* Zoom to fit */ },
+                    onClick = { },
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color(0xFFFF6B35)

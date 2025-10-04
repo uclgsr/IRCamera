@@ -121,13 +121,13 @@ private fun GSRSettingsContent(
         // Recording Settings Card
         RecordingSettingsCard(
             onSampleRateChange = { viewModel.updateSamplingRate(it) },
-            onSessionTimeoutChange = { /* Can be added to ViewModel if needed */ }
+            onSessionTimeoutChange = { }
         )
 
         // Export Settings Card
         ExportSettingsCard(
-            onExportFormatChange = { /* Can be added to ViewModel if needed */ },
-            onExportLocationChange = { /* Can be added to ViewModel if needed */ }
+            onExportFormatChange = { },
+            onExportLocationChange = { }
         )
     }
 }
