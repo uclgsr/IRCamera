@@ -294,11 +294,10 @@ sensing capabilities.
 
 For detailed technical documentation, see:
 
-- **docs/summaries/pc-networking-implementation-summary.md** - Complete implementation overview
-- **docs/INTEGRATION_READY.md** - PC-Android integration status
-- **docs/protocol-bridge-guide.md** - Communication protocol details
-- **docs/GAP_ANALYSIS.md** - Protocol compatibility analysis
-- **docs/CODE_REVIEW.md** - Code quality assessment
+- **docs/implementation.md** - Complete implementation guide (features, status, integration)
+- **docs/protocol.md** - Protocol documentation (bridge, verification, gap analysis)
+- **docs/verification.md** - Testing and verification reports
+- **docs/code_review.md** - Code quality assessment
 - **docs/README.md** - Technical documentation index
 
-For quick start, see **QUICK_START.md** in this directory.
+For quick start, see **docs/quick_start.md**.
