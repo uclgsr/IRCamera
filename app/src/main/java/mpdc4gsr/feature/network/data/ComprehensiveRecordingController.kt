@@ -796,17 +796,20 @@ class ComprehensiveRecordingController(
     /**
      * Creates a managed lifecycle owner that properly transitions through lifecycle states.
      * This is used when no lifecycle owner is provided to ensure proper camera operations.
+     * Must be called from a coroutine context as it switches to main thread for lifecycle operations.
      */
-    private fun createManagedLifecycleOwner(): LifecycleOwner {
-        return object : LifecycleOwner {
-            private val lifecycleRegistry = LifecycleRegistry(this).apply {
-                // Properly initialize the lifecycle state for camera operations
-                currentState = Lifecycle.State.INITIALIZED
-                currentState = Lifecycle.State.CREATED
-                currentState = Lifecycle.State.STARTED
-                currentState = Lifecycle.State.RESUMED
+    private suspend fun createManagedLifecycleOwner(): LifecycleOwner {
+        return withContext(Dispatchers.Main) {
+            object : LifecycleOwner {
+                private val lifecycleRegistry = LifecycleRegistry(this).apply {
+                    // Properly initialize the lifecycle state for camera operations
+                    currentState = Lifecycle.State.INITIALIZED
+                    currentState = Lifecycle.State.CREATED
+                    currentState = Lifecycle.State.STARTED
+                    currentState = Lifecycle.State.RESUMED
+                }
+                override val lifecycle: Lifecycle get() = lifecycleRegistry
             }
-            override val lifecycle: Lifecycle get() = lifecycleRegistry
         }
     }
 

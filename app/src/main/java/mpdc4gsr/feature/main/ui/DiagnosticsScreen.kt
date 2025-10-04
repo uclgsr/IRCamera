@@ -1,6 +1,5 @@
 package mpdc4gsr.feature.main.ui
 
-import android.app.Application
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -34,7 +33,7 @@ fun DiagnosticsScreen(
     onBackClick: (() -> Unit)? = null,
     viewModel: DiagnosticsViewModel = viewModel(
         factory = DiagnosticsViewModelFactory(
-            LocalContext.current.applicationContext as Application
+            LocalContext.current.applicationContext
         )
     ),
     modifier: Modifier = Modifier
