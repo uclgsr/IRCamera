@@ -11,9 +11,11 @@ Fast reference for finding documentation in the IRCamera repository.
 ## By Role
 
 ### Android Developer
-1. [android/pc-networking-guide.md](android/pc-networking-guide.md) - PC-Android communication
-2. [anti-patterns-checklist.md](anti-patterns-checklist.md) - Code quality checklist
-3. [anr-prevention-guide.md](anr-prevention-guide.md) - Performance guidelines
+1. [developer-guides/ui-components-guide.md](developer-guides/ui-components-guide.md) - Permissions system
+2. [developer-guides/logging-utilities-guide.md](developer-guides/logging-utilities-guide.md) - Logging and error handling
+3. [android/pc-networking-guide.md](android/pc-networking-guide.md) - PC-Android communication
+4. [anti-patterns-checklist.md](anti-patterns-checklist.md) - Code quality checklist
+5. [anr-prevention-guide.md](anr-prevention-guide.md) - Performance guidelines
 
 ### PC Controller Developer
 1. [../pc-controller/docs/quick-start.md](../pc-controller/docs/quick-start.md) - Getting started
@@ -32,7 +34,7 @@ Fast reference for finding documentation in the IRCamera repository.
 
 ### Project Manager
 1. [summaries/next-steps.md](summaries/next-steps.md) - Planned work
-2. [REORGANIZATION_SUMMARY.md](REORGANIZATION_SUMMARY.md) - Recent reorganization
+2. [reorganization-summary.md](reorganization-summary.md) - Recent reorganization
 3. [maintenance/](maintenance/) - Maintenance history
 
 ## By Topic
@@ -47,6 +49,11 @@ Fast reference for finding documentation in the IRCamera repository.
 - [android/time-sync-flow-diagram.txt](android/time-sync-flow-diagram.txt)
 - [maintenance/time-sync-implementation-summary.md](maintenance/time-sync-implementation-summary.md)
 - [summaries/testing-time-sync.md](summaries/testing-time-sync.md)
+
+### Developer Guides
+- [developer-guides/ui-components-guide.md](developer-guides/ui-components-guide.md) - Permissions handling system
+- [developer-guides/logging-utilities-guide.md](developer-guides/logging-utilities-guide.md) - Logging and error handling
+- [developer-guides/permission-handling-guide.md](developer-guides/permission-handling-guide.md) - Permission tools API
 
 ### Code Quality
 - [anti-patterns-readme.md](anti-patterns-readme.md) - Overview
@@ -134,7 +141,7 @@ Fast reference for finding documentation in the IRCamera repository.
 ## Recent Changes
 
 - **2024-10-04**: Complete documentation reorganization
-  - See [REORGANIZATION_SUMMARY.md](REORGANIZATION_SUMMARY.md) for details
+  - See [reorganization-summary.md](reorganization-summary.md) for details
   - All files now use lowercase-with-hyphens naming
   - Structured hierarchy with comprehensive indices
 
@@ -142,7 +149,7 @@ Fast reference for finding documentation in the IRCamera repository.
 
 - **Can't find something?** → Check [INDEX.md](INDEX.md)
 - **Want an overview of a section?** → Look for README.md in that directory
-- **Need to understand the structure?** → See [REORGANIZATION_SUMMARY.md](REORGANIZATION_SUMMARY.md)
+- **Need to understand the structure?** → See [reorganization-summary.md](reorganization-summary.md)
 
 ---
 

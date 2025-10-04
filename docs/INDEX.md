@@ -14,13 +14,19 @@ Documentation for the Android application component.
 - Time synchronization
 - Implementation details
 
-### 2. PC Controller ([../pc-controller/docs/](../pc-controller/docs/))
+### 2. Developer Guides ([developer-guides/](developer-guides/))
+Technical guides for developers working on the codebase.
+- Permissions handling system
+- Logging and error handling utilities
+- Core system documentation
+
+### 3. PC Controller ([../pc-controller/docs/](../pc-controller/docs/))
 Documentation for the PC controller application.
 - Protocol bridge implementation
 - Integration guides
 - Code reviews and verification
 
-### 3. Thesis Content ([thesis/](thesis/))
+### 4. Thesis Content ([thesis/](thesis/))
 All thesis-related content including chapters, diagrams, and evaluation tests.
 - Chapter 3: System Design and Architecture
 - Chapter 4: Implementation
@@ -29,21 +35,21 @@ All thesis-related content including chapters, diagrams, and evaluation tests.
 - Thesis diagrams and figures
 - Evaluation test suite
 
-### 4. Implementation Summaries ([summaries/](summaries/))
+### 5. Implementation Summaries ([summaries/](summaries/))
 High-level summaries of major implementations and analyses.
 - PC networking implementation
 - Android system analysis
 - Testing procedures
 - Planning documents
 
-### 5. Maintenance Records ([maintenance/](maintenance/))
+### 6. Maintenance Records ([maintenance/](maintenance/))
 Documentation of migrations, fixes, and maintenance activities.
 - AndroidX migration
 - Bug fix summaries
 - Feature implementations
 - Code pattern analyses
 
-### 6. Code Quality (Root Level)
+### 7. Code Quality (Root Level)
 Anti-patterns analysis and code quality guidelines.
 - Anti-patterns analysis and checklist
 - ANR prevention guide
@@ -88,6 +94,12 @@ docs/
 │   ├── pc-networking-changes.md
 │   ├── pc-networking-verification.md
 │   └── time-sync-flow-diagram.txt
+│
+├── developer-guides/             # Developer technical guides
+│   ├── README.md
+│   ├── ui-components-guide.md
+│   ├── logging-utilities-guide.md
+│   └── permission-handling-guide.md
 │
 ├── summaries/                    # Implementation summaries
 │   ├── README.md
@@ -148,8 +160,9 @@ docs/
 
 ## File Count
 
-- Total directories: 13
+- Total directories: 14
 - Android docs: 4 files
+- Developer guides: 3 files
 - Summaries: 5 files  
 - Maintenance: 6 files
 - Thesis chapters: 4 chapter directories

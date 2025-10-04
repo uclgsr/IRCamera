@@ -7,6 +7,7 @@ Comprehensive documentation for the IRCamera multi-sensor recording system.
 ```
 docs/
 ├── android/              # Android application documentation
+├── developer-guides/     # Developer technical guides and utilities
 ├── maintenance/          # Migration, fixes, and maintenance reports
 ├── summaries/            # Implementation and analysis summaries
 ├── thesis/               # Thesis-related content (chapters, diagrams, evaluation)
@@ -21,6 +22,11 @@ docs/
 - [PC Networking Changes](android/pc-networking-changes.md) - Recent networking changes
 - [PC Networking Verification](android/pc-networking-verification.md) - Verification procedures
 - [Time Sync Flow Diagram](android/time-sync-flow-diagram.txt) - Time synchronization flow
+
+### Developer Guides
+- [UI Components Guide](developer-guides/ui-components-guide.md) - Permissions handling system
+- [Logging Utilities Guide](developer-guides/logging-utilities-guide.md) - Centralized logging and error handling
+- [Permission Handling Guide](developer-guides/permission-handling-guide.md) - Permission tools and utilities
 
 ### Implementation Summaries
 - [PC Networking Implementation](summaries/pc-networking-implementation-summary.md) - PC networking feature
