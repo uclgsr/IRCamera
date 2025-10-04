@@ -23,9 +23,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
-import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
+import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalVideoViewModel
 
-class ThermalVideoComposeActivity : BaseComposeActivity<BaseViewModel>() {
+class ThermalVideoComposeActivity : BaseComposeActivity<ThermalVideoViewModel>() {
 
     companion object {
         private const val KEY_PATH = "video_path"
@@ -40,13 +40,13 @@ class ThermalVideoComposeActivity : BaseComposeActivity<BaseViewModel>() {
         }
     }
 
-    override fun createViewModel(): BaseViewModel {
-        return viewModels<BaseViewModel>().value
+    override fun createViewModel(): ThermalVideoViewModel {
+        return viewModels<ThermalVideoViewModel>().value
     }
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    override fun Content(viewModel: BaseViewModel) {
+    override fun Content(viewModel: ThermalVideoViewModel) {
         val videoPath = intent.getStringExtra(KEY_PATH) ?: ""
         val videoTitle = intent.getStringExtra(KEY_TITLE) ?: "Thermal Video"
 
@@ -78,18 +78,10 @@ class ThermalVideoComposeActivity : BaseComposeActivity<BaseViewModel>() {
                                     contentDescription = "Toggle thermal data"
                                 )
                             }
-                            IconButton(onClick = { /* TODO: Implement share video
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                            IconButton(onClick = { viewModel.shareVideo() }) {
                                 Icon(Icons.Default.Share, contentDescription = "Share")
                             }
-                            IconButton(onClick = { /* TODO: Implement more options
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                            IconButton(onClick = { viewModel.showMoreOptions() }) {
                                 Icon(Icons.Default.MoreVert, contentDescription = "More")
                             }
                         }
@@ -106,6 +98,7 @@ class ThermalVideoComposeActivity : BaseComposeActivity<BaseViewModel>() {
                     showControls = showControls,
                     onControlsToggle = { showControls = !showControls },
                     showThermalData = showThermalData,
+                    viewModel = viewModel,
                     modifier = Modifier.padding(paddingValues)
                 )
             }
@@ -124,6 +117,7 @@ private fun ThermalVideoContent(
     showControls: Boolean,
     onControlsToggle: () -> Unit,
     showThermalData: Boolean,
+    viewModel: ThermalVideoViewModel,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -161,6 +155,7 @@ private fun ThermalVideoContent(
                 currentPosition = currentPosition,
                 videoDuration = videoDuration,
                 onPositionChange = onPositionChange,
+                viewModel = viewModel,
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .fillMaxWidth()
@@ -296,6 +291,7 @@ private fun ThermalVideoControls(
     currentPosition: Long,
     videoDuration: Long,
     onPositionChange: (Long) -> Unit,
+    viewModel: ThermalVideoViewModel,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -347,11 +343,7 @@ private fun ThermalVideoControls(
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                IconButton(onClick = { /* TODO: Implement previous frame
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                IconButton(onClick = { viewModel.previousFrame() }) {
                     Icon(
                         Icons.Default.SkipPrevious,
                         contentDescription = "Previous",
@@ -377,11 +369,7 @@ private fun ThermalVideoControls(
                     )
                 }
 
-                IconButton(onClick = { /* TODO: Implement next frame
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                IconButton(onClick = { viewModel.nextFrame() }) {
                     Icon(
                         Icons.Default.SkipNext,
                         contentDescription = "Next",
@@ -398,11 +386,7 @@ private fun ThermalVideoControls(
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 OutlinedButton(
-                    onClick = { /* TODO: Implement export frame
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+                    onClick = { viewModel.exportFrame() },
                     colors = ButtonDefaults.outlinedButtonColors(
                         contentColor = Color.White
                     )
@@ -417,11 +401,7 @@ private fun ThermalVideoControls(
                 }
 
                 OutlinedButton(
-                    onClick = { /* TODO: Implement analyze
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+                    onClick = { viewModel.analyzeVideo() },
                     colors = ButtonDefaults.outlinedButtonColors(
                         contentColor = Color.White
                     )
@@ -436,11 +416,7 @@ private fun ThermalVideoControls(
                 }
 
                 OutlinedButton(
-                    onClick = { /* TODO: Implement settings
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+                    onClick = { viewModel.openSettings() },
                     colors = ButtonDefaults.outlinedButtonColors(
                         contentColor = Color.White
                     )

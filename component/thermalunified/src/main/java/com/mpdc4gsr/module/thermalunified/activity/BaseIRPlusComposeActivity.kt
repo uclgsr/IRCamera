@@ -97,6 +97,7 @@ class BaseIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         // Plus feature overlay
                         if (isPlushActive) {
                             PlusFeatureOverlay(
+                                viewModel = viewModel,
                                 modifier = Modifier
                                     .align(Alignment.TopEnd)
                                     .padding(16.dp)
@@ -108,6 +109,7 @@ class BaseIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             plusMode = plusMode,
                             onModeChange = { plusMode = it },
                             advancedVisible = advancedSettings,
+                            viewModel = viewModel,
                             modifier = Modifier
                                 .align(Alignment.BottomCenter)
                                 .fillMaxWidth()
@@ -289,6 +291,7 @@ private fun PlusIndicatorItem(
 
 @Composable
 private fun PlusFeatureOverlay(
+    viewModel: ThermalViewModel,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -312,31 +315,19 @@ private fun PlusFeatureOverlay(
             PlusFeatureButton(
                 icon = Icons.Default.AutoFixHigh,
                 text = "Auto Enhance",
-                onClick = { /* TODO: Implement auto enhance
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }
+                onClick = { viewModel.autoEnhance() }
             )
 
             PlusFeatureButton(
                 icon = Icons.Default.Tune,
                 text = "Manual Tune",
-                onClick = { /* TODO: Implement manual tune
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }
+                onClick = { viewModel.manualTune() }
             )
 
             PlusFeatureButton(
                 icon = Icons.Default.Analytics,
                 text = "AI Analysis",
-                onClick = { /* TODO: Implement ai analysis
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }
+                onClick = { viewModel.aiAnalysis() }
             )
         }
     }
@@ -380,6 +371,7 @@ private fun PlusControlsOverlay(
     plusMode: String,
     onModeChange: (String) -> Unit,
     advancedVisible: Boolean,
+    viewModel: ThermalViewModel,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -407,7 +399,7 @@ private fun PlusControlsOverlay(
             }
 
             // Quick actions
-            PlusQuickActions()
+            PlusQuickActions(viewModel)
         }
     }
 }
@@ -528,17 +520,13 @@ private fun AdvancedPlusControls() {
 }
 
 @Composable
-private fun PlusQuickActions() {
+private fun PlusQuickActions(viewModel: ThermalViewModel) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         OutlinedButton(
-            onClick = { /* TODO: Implement plus capture
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+            onClick = { viewModel.plusCapture() },
             modifier = Modifier.weight(1f),
             colors = ButtonDefaults.outlinedButtonColors(
                 contentColor = Color(0xFFFFD700)
@@ -555,11 +543,7 @@ private fun PlusQuickActions() {
         }
 
         OutlinedButton(
-            onClick = { /* TODO: Implement plus record
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+            onClick = { viewModel.plusRecord() },
             modifier = Modifier.weight(1f),
             colors = ButtonDefaults.outlinedButtonColors(
                 contentColor = Color(0xFFFFD700)
@@ -576,11 +560,7 @@ private fun PlusQuickActions() {
         }
 
         OutlinedButton(
-            onClick = { /* TODO: Implement plus process
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+            onClick = { viewModel.plusProcess() },
             modifier = Modifier.weight(1f),
             colors = ButtonDefaults.outlinedButtonColors(
                 contentColor = Color(0xFFFFD700)

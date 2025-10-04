@@ -21,4 +21,40 @@ class ThermalViewModel : BaseViewModel() {
             }
         }
     }
+
+    fun autoEnhance() {
+        launchWithErrorHandling {
+            emitEvent("auto_enhance")
+        }
+    }
+
+    fun manualTune() {
+        launchWithErrorHandling {
+            emitEvent("manual_tune")
+        }
+    }
+
+    fun aiAnalysis() {
+        launchWithErrorHandling {
+            emitEvent("ai_analysis")
+        }
+    }
+
+    fun plusCapture() {
+        launchWithErrorHandling {
+            emitEvent("plus_capture")
+        }
+    }
+
+    fun plusRecord() {
+        launchWithErrorHandling {
+            emitEvent("plus_record")
+        }
+    }
+
+    fun plusProcess() {
+        launchWithErrorHandling {
+            emitEvent("plus_process")
+        }
+    }
 }

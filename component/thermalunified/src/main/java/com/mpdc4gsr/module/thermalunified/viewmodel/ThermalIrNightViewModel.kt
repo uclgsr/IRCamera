@@ -42,4 +42,46 @@ class ThermalIrNightViewModel : BaseViewModel() {
             _isRecording.value = !_isRecording.value
         }
     }
+
+    fun showInfo() {
+        launchWithErrorHandling {
+            emitEvent("show_info")
+        }
+    }
+
+    fun lockTemperatureRange() {
+        launchWithErrorHandling {
+            emitEvent("lock_temperature_range")
+        }
+    }
+
+    fun editTemperatureSettings() {
+        launchWithErrorHandling {
+            emitEvent("edit_temperature_settings")
+        }
+    }
+
+    fun openColorPalette() {
+        launchWithErrorHandling {
+            emitEvent("open_color_palette")
+        }
+    }
+
+    fun openSettings() {
+        launchWithErrorHandling {
+            emitEvent("open_settings")
+        }
+    }
+
+    fun openGallery() {
+        launchWithErrorHandling {
+            emitEvent("open_gallery")
+        }
+    }
+
+    fun showMoreOptions() {
+        launchWithErrorHandling {
+            emitEvent("show_more_options")
+        }
+    }
 }

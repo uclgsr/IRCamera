@@ -51,4 +51,46 @@ class IRThermalDoubleViewModel : BaseViewModel() {
             _isRecording.value = !_isRecording.value
         }
     }
+
+    fun showInfo() {
+        launchWithErrorHandling {
+            emitEvent("show_info")
+        }
+    }
+
+    fun toggleTISR() {
+        launchWithErrorHandling {
+            emitEvent("toggle_tisr")
+        }
+    }
+
+    fun lockTemperatureRange() {
+        launchWithErrorHandling {
+            emitEvent("lock_temperature_range")
+        }
+    }
+
+    fun editTemperatureSettings() {
+        launchWithErrorHandling {
+            emitEvent("edit_temperature_settings")
+        }
+    }
+
+    fun openGallery() {
+        launchWithErrorHandling {
+            emitEvent("open_gallery")
+        }
+    }
+
+    fun captureCamera() {
+        launchWithErrorHandling {
+            emitEvent("capture_camera")
+        }
+    }
+
+    fun showMoreOptions() {
+        launchWithErrorHandling {
+            emitEvent("show_more_options")
+        }
+    }
 }
