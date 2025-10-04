@@ -151,10 +151,10 @@ private fun ThermalPreviewCard(
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    IconButton(onClick = { /* Toggle crosshair */ }) {
+                    IconButton(onClick = { }) {
                         Icon(Icons.Default.CenterFocusStrong, contentDescription = "Crosshair")
                     }
-                    IconButton(onClick = { /* Full screen */ }) {
+                    IconButton(onClick = { }) {
                         Icon(Icons.Default.Fullscreen, contentDescription = "Fullscreen")
                     }
                 }
@@ -297,7 +297,7 @@ private fun TemperatureMeasurementsCard(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 OutlinedButton(
-                    onClick = { /* Add measurement */ },
+                    onClick = { },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Add, contentDescription = null)
@@ -306,7 +306,7 @@ private fun TemperatureMeasurementsCard(
                 }
 
                 OutlinedButton(
-                    onClick = { /* Clear measurements */ },
+                    onClick = { },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Clear, contentDescription = null)
@@ -508,7 +508,7 @@ private fun ThermalCameraControlsCard(
                 }
 
                 OutlinedButton(
-                    onClick = { /* Take snapshot */ },
+                    onClick = { },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.CameraAlt, contentDescription = null)
@@ -543,7 +543,7 @@ private fun ThermalAnalysisToolsCard() {
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 OutlinedButton(
-                    onClick = { /* Temperature profile */ },
+                    onClick = { },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.AutoMirrored.Filled.ShowChart, contentDescription = null)
@@ -552,7 +552,7 @@ private fun ThermalAnalysisToolsCard() {
                 }
 
                 OutlinedButton(
-                    onClick = { /* Histogram analysis */ },
+                    onClick = { },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.BarChart, contentDescription = null)
@@ -566,7 +566,7 @@ private fun ThermalAnalysisToolsCard() {
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 OutlinedButton(
-                    onClick = { /* Thermal comparison */ },
+                    onClick = { },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Compare, contentDescription = null)
@@ -575,7 +575,7 @@ private fun ThermalAnalysisToolsCard() {
                 }
 
                 OutlinedButton(
-                    onClick = { /* Generate report */ },
+                    onClick = { },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Assessment, contentDescription = null)
@@ -618,7 +618,7 @@ private fun ThermalCameraStatusCard() {
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 OutlinedButton(
-                    onClick = { /* Calibrate camera */ },
+                    onClick = { },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Tune, contentDescription = null)
@@ -627,7 +627,7 @@ private fun ThermalCameraStatusCard() {
                 }
 
                 OutlinedButton(
-                    onClick = { /* Diagnostic test */ },
+                    onClick = { },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.BugReport, contentDescription = null)

@@ -48,6 +48,7 @@ sealed class ThermalAction {
     object StartPreview : ThermalAction()
     object StopPreview : ThermalAction()
     object Calibrate : ThermalAction()
+    object OpenSettings : ThermalAction()
 }
 
 sealed class CameraAction {
@@ -55,5 +56,6 @@ sealed class CameraAction {
     object Disconnect : CameraAction()
     object StartPreview : CameraAction()
     object StopPreview : CameraAction()
+    object CapturePhoto : CameraAction()
     data class SetResolution(val width: Int, val height: Int) : CameraAction()
 }

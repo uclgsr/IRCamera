@@ -189,6 +189,7 @@ private fun SensorDashboardTab(
                     thermalState = mpdc4gsr.core.ui.model.SensorState.Connected
 
                 is mpdc4gsr.core.ui.model.ThermalAction.Calibrate -> {}
+                is mpdc4gsr.core.ui.model.ThermalAction.OpenSettings -> {}
             }
         }
     }
@@ -209,6 +210,7 @@ private fun SensorDashboardTab(
                     rgbState = mpdc4gsr.core.ui.model.SensorState.Connected
 
                 is mpdc4gsr.core.ui.model.CameraAction.SetResolution -> {}
+                is mpdc4gsr.core.ui.model.CameraAction.CapturePhoto -> {}
             }
         }
     }

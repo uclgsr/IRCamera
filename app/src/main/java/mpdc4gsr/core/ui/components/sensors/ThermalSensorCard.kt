@@ -188,7 +188,7 @@ fun ThermalSensorCard(
                             Text("Stop")
                         }
                         IconButton(
-                            onClick = { /* Open thermal settings */ }
+                            onClick = { onAction(ThermalAction.OpenSettings) }
                         ) {
                             Icon(
                                 Icons.Default.Tune,

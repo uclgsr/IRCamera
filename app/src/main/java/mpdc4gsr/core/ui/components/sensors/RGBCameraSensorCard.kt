@@ -178,7 +178,7 @@ fun RGBCameraSensorCard(
                             Text("Stop")
                         }
                         IconButton(
-                            onClick = { /* Capture photo */ }
+                            onClick = { onAction(CameraAction.CapturePhoto) }
                         ) {
                             Icon(
                                 Icons.Default.CameraAlt,
