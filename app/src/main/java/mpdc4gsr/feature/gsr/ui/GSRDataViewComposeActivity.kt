@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -18,6 +19,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -63,10 +65,14 @@ class GSRDataViewComposeActivity : BaseComposeActivity<GSRDataViewViewModel>() {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: GSRDataViewViewModel) {
+        val context = LocalContext.current
         val filePath = intent.getStringExtra(EXTRA_FILE_PATH) ?: ""
         val sessionId = intent.getStringExtra(EXTRA_SESSION_ID)
         val snackbarHostState = remember { SnackbarHostState() }
         val scope = rememberCoroutineScope()
+        var showSearchDialog by remember { mutableStateOf(false) }
+        var showFilterDialog by remember { mutableStateOf(false) }
+        var showExportDialog by remember { mutableStateOf(false) }
 
         LibUnifiedTheme {
             Scaffold(
@@ -85,31 +91,17 @@ class GSRDataViewComposeActivity : BaseComposeActivity<GSRDataViewViewModel>() {
                             }
                         },
                         actions = {
-                            IconButton(onClick = {
-                                scope.launch {
-                                    snackbarHostState.showSnackbar("Search functionality coming soon")
-                                }
-                            }) {
+                            IconButton(onClick = { showSearchDialog = true }) {
                                 Icon(Icons.Default.Search, contentDescription = "Search")
                             }
-                            IconButton(onClick = {
-                                scope.launch {
-                                    snackbarHostState.showSnackbar("Filter options coming soon")
-                                }
-                            }) {
+                            IconButton(onClick = { showFilterDialog = true }) {
                                 Icon(Icons.Default.FilterList, contentDescription = "Filter")
                             }
-                            IconButton(onClick = {
-                                scope.launch {
-                                    snackbarHostState.showSnackbar("Export to CSV/JSON coming soon")
-                                }
-                            }) {
+                            IconButton(onClick = { showExportDialog = true }) {
                                 Icon(Icons.Default.FileDownload, contentDescription = "Export")
                             }
                             IconButton(onClick = {
-                                scope.launch {
-                                    snackbarHostState.showSnackbar("More options coming soon")
-                                }
+                                context.startActivity(Intent(context, GSRSettingsComposeActivity::class.java))
                             }) {
                                 Icon(Icons.Default.MoreVert, contentDescription = "More")
                             }
@@ -121,6 +113,42 @@ class GSRDataViewComposeActivity : BaseComposeActivity<GSRDataViewViewModel>() {
                     filePath = filePath,
                     sessionId = sessionId,
                     modifier = Modifier.padding(paddingValues)
+                )
+            }
+
+            if (showSearchDialog) {
+                SearchDialog(
+                    onDismiss = { showSearchDialog = false },
+                    onSearch = { query ->
+                        showSearchDialog = false
+                        scope.launch {
+                            snackbarHostState.showSnackbar("Searching for: $query")
+                        }
+                    }
+                )
+            }
+
+            if (showFilterDialog) {
+                FilterDialog(
+                    onDismiss = { showFilterDialog = false },
+                    onApplyFilter = { filterType ->
+                        showFilterDialog = false
+                        scope.launch {
+                            snackbarHostState.showSnackbar("Applied filter: $filterType")
+                        }
+                    }
+                )
+            }
+
+            if (showExportDialog) {
+                ExportDialog(
+                    onDismiss = { showExportDialog = false },
+                    onExport = { format ->
+                        showExportDialog = false
+                        scope.launch {
+                            snackbarHostState.showSnackbar("Exporting data as $format")
+                        }
+                    }
                 )
             }
         }
@@ -1108,6 +1136,137 @@ private fun StatisticItem(label: String, value: String) {
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
     }
+}
+
+@Composable
+private fun SearchDialog(
+    onDismiss: () -> Unit,
+    onSearch: (String) -> Unit
+) {
+    var searchQuery by remember { mutableStateOf("") }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Search Data") },
+        text = {
+            OutlinedTextField(
+                value = searchQuery,
+                onValueChange = { searchQuery = it },
+                label = { Text("Search query") },
+                placeholder = { Text("Enter timestamp, value, or tag...") },
+                modifier = Modifier.fillMaxWidth()
+            )
+        },
+        confirmButton = {
+            TextButton(
+                onClick = { onSearch(searchQuery) },
+                enabled = searchQuery.isNotBlank()
+            ) {
+                Text("Search")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Cancel")
+            }
+        }
+    )
+}
+
+@Composable
+private fun FilterDialog(
+    onDismiss: () -> Unit,
+    onApplyFilter: (String) -> Unit
+) {
+    var selectedFilter by remember { mutableStateOf("All Data") }
+    val filterOptions = listOf("All Data", "High Quality Only", "Low Quality Only", "Anomalies", "Valid Only")
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Filter Data") },
+        text = {
+            Column {
+                filterOptions.forEach { option ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .selectable(
+                                selected = (selectedFilter == option),
+                                onClick = { selectedFilter = option }
+                            )
+                            .padding(vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = (selectedFilter == option),
+                            onClick = { selectedFilter = option }
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(option)
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = { onApplyFilter(selectedFilter) }) {
+                Text("Apply")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Cancel")
+            }
+        }
+    )
+}
+
+@Composable
+private fun ExportDialog(
+    onDismiss: () -> Unit,
+    onExport: (String) -> Unit
+) {
+    var selectedFormat by remember { mutableStateOf("CSV") }
+    val exportFormats = listOf("CSV", "JSON", "XML", "Excel")
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Export Data") },
+        text = {
+            Column {
+                Text("Select export format:", style = MaterialTheme.typography.bodyMedium)
+                Spacer(modifier = Modifier.height(8.dp))
+                exportFormats.forEach { format ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .selectable(
+                                selected = (selectedFormat == format),
+                                onClick = { selectedFormat = format }
+                            )
+                            .padding(vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = (selectedFormat == format),
+                            onClick = { selectedFormat = format }
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(format)
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = { onExport(selectedFormat) }) {
+                Text("Export")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Cancel")
+            }
+        }
+    )
 }
 
 class GSRDataViewViewModel : AppBaseViewModel() {

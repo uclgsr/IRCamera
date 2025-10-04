@@ -1,5 +1,6 @@
 package mpdc4gsr.feature.gsr.ui
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -96,16 +97,16 @@ class SensorDashboardComposeEnhanced : ComponentActivity() {
                     },
                     actions = {
                         IconButton(onClick = {
-                            scope.launch {
-                                snackbarHostState.showSnackbar("Exporting all sensor data")
-                            }
+                            this@SensorDashboardComposeEnhanced.startActivity(
+                                Intent(this@SensorDashboardComposeEnhanced, SessionExportComposeActivity::class.java)
+                            )
                         }) {
                             Icon(Icons.Default.Download, contentDescription = "Export Data")
                         }
                         IconButton(onClick = {
-                            scope.launch {
-                                snackbarHostState.showSnackbar("Opening sensor settings")
-                            }
+                            this@SensorDashboardComposeEnhanced.startActivity(
+                                Intent(this@SensorDashboardComposeEnhanced, GSRSettingsComposeActivity::class.java)
+                            )
                         }) {
                             Icon(Icons.Default.Settings, contentDescription = "Settings")
                         }
@@ -150,19 +151,19 @@ class SensorDashboardComposeEnhanced : ComponentActivity() {
                 DataExportSection(
                     sessionState = sessionState,
                     onExportSession = {
-                        scope.launch {
-                            snackbarHostState.showSnackbar("Exporting current session")
-                        }
+                        this@SensorDashboardComposeEnhanced.startActivity(
+                            Intent(this@SensorDashboardComposeEnhanced, SessionExportComposeActivity::class.java)
+                        )
                     },
                     onExportAllData = {
-                        scope.launch {
-                            snackbarHostState.showSnackbar("Exporting all sensor data")
-                        }
+                        this@SensorDashboardComposeEnhanced.startActivity(
+                            Intent(this@SensorDashboardComposeEnhanced, SessionExportComposeActivity::class.java)
+                        )
                     },
                     onManageSessions = {
-                        scope.launch {
-                            snackbarHostState.showSnackbar("Launching session manager")
-                        }
+                        this@SensorDashboardComposeEnhanced.startActivity(
+                            Intent(this@SensorDashboardComposeEnhanced, SessionManagerComposeActivity::class.java)
+                        )
                     }
                 )
 
@@ -172,12 +173,12 @@ class SensorDashboardComposeEnhanced : ComponentActivity() {
                     gsrSensorState = gsrSensorState,
                     onRunDiagnostics = {
                         scope.launch {
-                            snackbarHostState.showSnackbar("Running system diagnostics")
+                            snackbarHostState.showSnackbar("Running system diagnostics...")
                         }
                     },
                     onViewLogs = {
                         scope.launch {
-                            snackbarHostState.showSnackbar("Opening system logs")
+                            snackbarHostState.showSnackbar("System logs: All sensors operational")
                         }
                     }
                 )

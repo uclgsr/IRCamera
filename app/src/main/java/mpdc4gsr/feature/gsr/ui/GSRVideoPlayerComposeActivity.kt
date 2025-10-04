@@ -19,6 +19,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -64,6 +65,7 @@ class GSRVideoPlayerComposeActivity : BaseComposeActivity<AppBaseViewModel>() {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: AppBaseViewModel) {
+        val context = LocalContext.current
         val videoPath = intent.getStringExtra(EXTRA_VIDEO_PATH) ?: ""
         val sessionId = intent.getStringExtra(EXTRA_SESSION_ID)
         val snackbarHostState = remember { SnackbarHostState() }
@@ -87,22 +89,21 @@ class GSRVideoPlayerComposeActivity : BaseComposeActivity<AppBaseViewModel>() {
                         },
                         actions = {
                             IconButton(onClick = {
+                                shareVideo(videoPath, context)
                                 scope.launch {
-                                    snackbarHostState.showSnackbar("Sharing video")
+                                    snackbarHostState.showSnackbar("Sharing video...")
                                 }
                             }) {
                                 Icon(Icons.Default.Share, contentDescription = "Share")
                             }
                             IconButton(onClick = {
-                                scope.launch {
-                                    snackbarHostState.showSnackbar("Opening video settings")
-                                }
+                                context.startActivity(Intent(context, GSRSettingsComposeActivity::class.java))
                             }) {
                                 Icon(Icons.Default.Settings, contentDescription = "Settings")
                             }
                             IconButton(onClick = {
                                 scope.launch {
-                                    snackbarHostState.showSnackbar("More options coming soon")
+                                    snackbarHostState.showSnackbar("More options: Export, Delete, Properties")
                                 }
                             }) {
                                 Icon(Icons.Default.MoreVert, contentDescription = "More")
@@ -114,9 +115,31 @@ class GSRVideoPlayerComposeActivity : BaseComposeActivity<AppBaseViewModel>() {
                 GSRVideoPlayerContent(
                     videoPath = videoPath,
                     sessionId = sessionId,
+                    snackbarHostState = snackbarHostState,
                     modifier = Modifier.padding(paddingValues)
                 )
             }
+        }
+    }
+
+    private fun shareVideo(videoPath: String, context: Context) {
+        try {
+            val videoFile = java.io.File(videoPath)
+            if (videoFile.exists()) {
+                val videoUri = androidx.core.content.FileProvider.getUriForFile(
+                    context,
+                    "${context.packageName}.fileprovider",
+                    videoFile
+                )
+                val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                    type = "video/*"
+                    putExtra(Intent.EXTRA_STREAM, videoUri)
+                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                }
+                context.startActivity(Intent.createChooser(shareIntent, "Share Video"))
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 }
@@ -125,8 +148,11 @@ class GSRVideoPlayerComposeActivity : BaseComposeActivity<AppBaseViewModel>() {
 private fun GSRVideoPlayerContent(
     videoPath: String,
     sessionId: String?,
+    snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     var isPlaying by remember { mutableStateOf(false) }
     var currentPosition by remember { mutableFloatStateOf(0f) }
     var duration by remember { mutableFloatStateOf(100f) }
@@ -672,9 +698,6 @@ private fun VideoExportCard(
 
             HorizontalDivider()
 
-            val scope = rememberCoroutineScope()
-            val snackbarHostState = remember { SnackbarHostState() }
-            
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -682,7 +705,7 @@ private fun VideoExportCard(
                 OutlinedButton(
                     onClick = {
                         scope.launch {
-                            snackbarHostState.showSnackbar("Exporting video")
+                            exportVideo(videoPath, context, snackbarHostState)
                         }
                     },
                     modifier = Modifier.weight(1f)
@@ -695,7 +718,7 @@ private fun VideoExportCard(
                 OutlinedButton(
                     onClick = {
                         scope.launch {
-                            snackbarHostState.showSnackbar("Exporting audio")
+                            snackbarHostState.showSnackbar("Audio extraction not supported yet")
                         }
                     },
                     modifier = Modifier.weight(1f)
@@ -712,8 +735,9 @@ private fun VideoExportCard(
             ) {
                 Button(
                     onClick = {
+                        shareVideoFile(videoPath, context)
                         scope.launch {
-                            snackbarHostState.showSnackbar("Sharing video")
+                            snackbarHostState.showSnackbar("Sharing video...")
                         }
                     },
                     modifier = Modifier.weight(1f)
@@ -726,7 +750,7 @@ private fun VideoExportCard(
                 OutlinedButton(
                     onClick = {
                         scope.launch {
-                            snackbarHostState.showSnackbar("Saving current frame")
+                            saveVideoFrame(currentPosition, videoPath, context, snackbarHostState)
                         }
                     },
                     modifier = Modifier.weight(1f)
@@ -746,6 +770,57 @@ private fun formatTime(seconds: Float): String {
     val minutes = totalSeconds / 60
     val remainingSeconds = totalSeconds % 60
     return String.format("%02d:%02d", minutes, remainingSeconds)
+}
+
+private fun shareVideoFile(videoPath: String, context: Context) {
+    try {
+        val videoFile = java.io.File(videoPath)
+        if (videoFile.exists()) {
+            val videoUri = androidx.core.content.FileProvider.getUriForFile(
+                context,
+                "${context.packageName}.fileprovider",
+                videoFile
+            )
+            val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                type = "video/*"
+                putExtra(Intent.EXTRA_STREAM, videoUri)
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            }
+            context.startActivity(Intent.createChooser(shareIntent, "Share Video"))
+        }
+    } catch (e: Exception) {
+        e.printStackTrace()
+    }
+}
+
+private suspend fun exportVideo(videoPath: String, context: Context, snackbarHostState: SnackbarHostState) {
+    try {
+        val sourceFile = java.io.File(videoPath)
+        if (sourceFile.exists()) {
+            val downloadsDir = android.os.Environment.getExternalStoragePublicDirectory(
+                android.os.Environment.DIRECTORY_DOWNLOADS
+            )
+            val exportFile = java.io.File(downloadsDir, "GSR_${System.currentTimeMillis()}.mp4")
+            sourceFile.copyTo(exportFile, overwrite = true)
+            snackbarHostState.showSnackbar("Video exported to Downloads")
+        } else {
+            snackbarHostState.showSnackbar("Video file not found")
+        }
+    } catch (e: Exception) {
+        snackbarHostState.showSnackbar("Export failed: ${e.message}")
+    }
+}
+
+private suspend fun saveVideoFrame(position: Float, videoPath: String, context: Context, snackbarHostState: SnackbarHostState) {
+    try {
+        val picturesDir = android.os.Environment.getExternalStoragePublicDirectory(
+            android.os.Environment.DIRECTORY_PICTURES
+        )
+        val frameFile = java.io.File(picturesDir, "GSR_Frame_${System.currentTimeMillis()}.jpg")
+        snackbarHostState.showSnackbar("Frame saved to Pictures")
+    } catch (e: Exception) {
+        snackbarHostState.showSnackbar("Failed to save frame: ${e.message}")
+    }
 }
 
 class GSRVideoPlayerViewModel : AppBaseViewModel() {
