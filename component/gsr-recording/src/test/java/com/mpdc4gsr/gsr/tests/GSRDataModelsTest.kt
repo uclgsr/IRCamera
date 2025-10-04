@@ -1,6 +1,8 @@
 package com.mpdc4gsr.gsr.tests
 
 import com.mpdc4gsr.gsr.model.GSRSample
+import com.mpdc4gsr.gsr.model.SessionInfo
+import com.mpdc4gsr.gsr.model.SyncMark
 import org.junit.Assert.*
 import org.junit.Ignore
 import org.junit.Test
