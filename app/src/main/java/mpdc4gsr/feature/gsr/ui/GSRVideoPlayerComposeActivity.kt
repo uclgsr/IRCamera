@@ -82,13 +82,25 @@ class GSRVideoPlayerComposeActivity : BaseComposeActivity<AppBaseViewModel>() {
                             }
                         },
                         actions = {
-                            IconButton(onClick = { /* Share video */ }) {
+                            IconButton(onClick = { /* TODO: Implement share video
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }) {
                                 Icon(Icons.Default.Share, contentDescription = "Share")
                             }
-                            IconButton(onClick = { /* Video settings */ }) {
+                            IconButton(onClick = { /* TODO: Implement video settings
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }) {
                                 Icon(Icons.Default.Settings, contentDescription = "Settings")
                             }
-                            IconButton(onClick = { /* More options */ }) {
+                            IconButton(onClick = { /* TODO: Implement more options
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }) {
                                 Icon(Icons.Default.MoreVert, contentDescription = "More")
                             }
                         }
@@ -661,7 +673,11 @@ private fun VideoExportCard(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 OutlinedButton(
-                    onClick = { /* Export video */ },
+                    onClick = { /* TODO: Implement export video
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.VideoFile, contentDescription = null)
@@ -670,7 +686,11 @@ private fun VideoExportCard(
                 }
 
                 OutlinedButton(
-                    onClick = { /* Export audio */ },
+                    onClick = { /* TODO: Implement export audio
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.AudioFile, contentDescription = null)
@@ -684,7 +704,11 @@ private fun VideoExportCard(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Button(
-                    onClick = { /* Share video */ },
+                    onClick = { /* TODO: Implement share video
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Share, contentDescription = null)
@@ -693,7 +717,11 @@ private fun VideoExportCard(
                 }
 
                 OutlinedButton(
-                    onClick = { /* Save frame */ },
+                    onClick = { /* TODO: Implement save frame
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Image, contentDescription = null)

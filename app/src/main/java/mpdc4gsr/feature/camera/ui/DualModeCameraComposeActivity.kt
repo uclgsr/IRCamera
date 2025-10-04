@@ -78,13 +78,21 @@ class DualModeCameraComposeActivity : BaseComposeActivity<DualModeCameraViewMode
                             }
                         },
                         actions = {
-                            IconButton(onClick = { /* Switch camera */ }) {
+                            IconButton(onClick = { /* TODO: Implement switch camera
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }) {
                                 Icon(Icons.Default.FlipCameraAndroid, contentDescription = "Switch")
                             }
                             IconButton(onClick = { showSettingsDialog = true }) {
                                 Icon(Icons.Default.Settings, contentDescription = "Settings")
                             }
-                            IconButton(onClick = { /* More options */ }) {
+                            IconButton(onClick = { /* TODO: Implement more options
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }) {
                                 Icon(Icons.Default.MoreVert, contentDescription = "More")
                             }
                         }
@@ -282,7 +290,10 @@ private fun CameraControlsSection(
         ) {
             // Gallery button
             OutlinedButton(
-                onClick = { /* Open gallery */ },
+                onClick = { /* TODO: Implement gallery navigation
+                     *   - Navigate to gallery screen
+                     *   - Load recent captures
+                     */ },
                 modifier = Modifier.size(56.dp)
             ) {
                 Icon(
@@ -315,7 +326,11 @@ private fun CameraControlsSection(
 
             // Capture button
             OutlinedButton(
-                onClick = { /* Take photo */ },
+                onClick = { /* TODO: Implement photo capture
+                     *   - Trigger camera capture
+                     *   - Save photo to storage
+                     *   - Show capture confirmation
+                     */ },
                 modifier = Modifier.size(56.dp)
             ) {
                 Icon(

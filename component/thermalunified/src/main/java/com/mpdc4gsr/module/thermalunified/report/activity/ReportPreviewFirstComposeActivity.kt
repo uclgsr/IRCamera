@@ -56,7 +56,11 @@ class ReportPreviewFirstComposeActivity : BaseComposeActivity<ReportPreviewViewM
                         },
                         actions = {
                             TextButton(
-                                onClick = { /* Continue to next step */ }
+                                onClick = { /* TODO: Implement continue to next step
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }
                             ) {
                                 Text("Next", color = Color.White)
                                 Icon(

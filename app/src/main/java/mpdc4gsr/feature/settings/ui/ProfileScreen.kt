@@ -122,7 +122,11 @@ private fun UserProfileCard(
 
             // Edit profile button
             Button(
-                onClick = { /* Edit profile */ },
+                onClick = { /* TODO: Implement edit profile
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ },
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
             ) {
                 Icon(Icons.Default.Edit, contentDescription = null)
@@ -282,17 +286,29 @@ private fun QuickActionsCard(
                 QuickActionButton(
                     icon = Icons.Default.Science,
                     label = "Research Templates",
-                    onClick = { /* Open templates */ }
+                    onClick = { /* TODO: Implement open templates
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }
                 )
                 QuickActionButton(
                     icon = Icons.Default.CloudUpload,
                     label = "Export Data",
-                    onClick = { /* Export data */ }
+                    onClick = { /* TODO: Implement data export
+                     *   - Call viewModel.exportData()
+                     *   - Show format selection (CSV/JSON/etc)
+                     *   - Use file picker for save location
+                     */ }
                 )
                 QuickActionButton(
                     icon = Icons.Default.Settings,
                     label = "Preferences",
-                    onClick = { /* Open preferences */ }
+                    onClick = { /* TODO: Implement open preferences
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }
                 )
             }
         }

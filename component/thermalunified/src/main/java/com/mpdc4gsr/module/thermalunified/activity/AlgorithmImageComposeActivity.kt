@@ -58,7 +58,11 @@ class AlgorithmImageComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             }
                         },
                         actions = {
-                            IconButton(onClick = { /* Save result */ }) {
+                            IconButton(onClick = { /* TODO: Implement save result
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }) {
                                 Icon(
                                     Icons.Default.Save,
                                     contentDescription = "Save",
@@ -381,7 +385,11 @@ private fun ProcessingControls(
             }
 
             OutlinedButton(
-                onClick = { /* Reset image */ },
+                onClick = { /* TODO: Implement reset image
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ },
                 colors = ButtonDefaults.outlinedButtonColors(
                     contentColor = Color.White
                 ),

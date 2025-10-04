@@ -70,10 +70,18 @@ class SessionDetailComposeActivity : BaseComposeActivity<AppBaseViewModel>() {
                             }
                         },
                         actions = {
-                            IconButton(onClick = { /* Share session */ }) {
+                            IconButton(onClick = { /* TODO: Implement share session
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }) {
                                 Icon(Icons.Default.Share, contentDescription = "Share")
                             }
-                            IconButton(onClick = { /* Export session */ }) {
+                            IconButton(onClick = { /* TODO: Implement export session
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }) {
                                 Icon(Icons.Default.FileDownload, contentDescription = "Export")
                             }
                         }
@@ -115,9 +123,21 @@ private fun SessionDetailContent(
 
         // Actions Card
         SessionActionsCard(
-            onViewData = { /* Navigate to data view */ },
-            onExportData = { /* Export session data */ },
-            onDeleteSession = { /* Delete session with confirmation */ }
+            onViewData = { /* TODO: Implement navigate to data view
+                     *   - Implement callback logic for onViewData
+                     *   - Handle data/state updates
+                     *   - Provide user feedback
+                     */ },
+            onExportData = { /* TODO: Implement export session data
+                     *   - Implement callback logic for onExportData
+                     *   - Handle data/state updates
+                     *   - Provide user feedback
+                     */ },
+            onDeleteSession = { /* TODO: Implement delete session with confirmation
+                     *   - Implement callback logic for onDeleteSession
+                     *   - Handle data/state updates
+                     *   - Provide user feedback
+                     */ }
         )
     }
 }

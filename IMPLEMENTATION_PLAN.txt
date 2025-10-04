@@ -1,0 +1,388 @@
+IMPLEMENTATION PLAN FOR PLACEHOLDER HANDLERS
+=============================================
+
+Total Placeholders: ~249 across 88 files
+Strategy: Break into parallel chunks by functionality category
+
+CHUNK 1: UI STATE TOGGLES (20-30 handlers)
+------------------------------------------
+Priority: HIGH
+Estimated Effort: 2-4 hours
+Files: ThermalCameraScreen.kt, DualModeCameraScreen.kt, GSRPlotComposeActivity.kt
+
+Implementations:
+- Toggle crosshair visibility (local state boolean)
+- Toggle fullscreen mode (local state boolean)
+- Toggle view mode (grid/list)
+- Lock/unlock controls (local state boolean)
+- Play/pause controls (local state boolean)
+
+Pattern:
+```kotlin
+var showCrosshair by remember { mutableStateOf(false) }
+IconButton(onClick = { showCrosshair = !showCrosshair }) {
+    Icon(if (showCrosshair) Icons.Default.Visibility else Icons.Default.VisibilityOff)
+}
+```
+
+Dependencies: None (pure UI state)
+Risk: Low
+
+
+CHUNK 2: NAVIGATION ACTIONS (30-40 handlers)
+---------------------------------------------
+Priority: HIGH
+Estimated Effort: 3-5 hours
+Files: ComposeScreens.kt, SettingsComposeActivity.kt, Navigation components
+
+Implementations:
+- Navigate to settings screens
+- Navigate to gallery
+- Open sensor settings
+- Navigate to help/info screens
+- Go to previous/next pages
+
+Pattern:
+```kotlin
+IconButton(onClick = { 
+    navController.navigate("settings_route")
+}) {
+    Icon(Icons.Default.Settings)
+}
+```
+
+Dependencies: NavController, existing routes
+Risk: Medium (need to verify routes exist)
+
+
+CHUNK 3: DATA EXPORT/IMPORT (40-50 handlers)
+--------------------------------------------
+Priority: MEDIUM
+Estimated Effort: 6-8 hours
+Files: GSRDataViewComposeActivity.kt, SessionManagerComposeActivity.kt, Report activities
+
+Implementations:
+- Export CSV data
+- Export JSON data
+- Export session data
+- Save plots/charts
+- Import templates
+- Share functionality
+
+Pattern:
+```kotlin
+IconButton(onClick = { 
+    viewModel.exportData(format = ExportFormat.CSV)
+    // or call existing export functions
+}) {
+    Icon(Icons.Default.FileDownload)
+}
+```
+
+Dependencies: ViewModels, File I/O, Permissions
+Risk: High (need file system access, share intents)
+
+
+CHUNK 4: CHART/PLOT CONTROLS (20-30 handlers)
+---------------------------------------------
+Priority: MEDIUM
+Estimated Effort: 4-6 hours
+Files: GSRPlotComposeActivity.kt, LogMPChartComposeActivity.kt, Chart components
+
+Implementations:
+- Zoom in/out controls
+- Reset zoom
+- Pan controls
+- Go to top/bottom
+- Filter data points
+- Change chart settings
+
+Pattern:
+```kotlin
+var zoomLevel by remember { mutableFloatStateOf(1f) }
+IconButton(onClick = { 
+    zoomLevel = (zoomLevel * 1.2f).coerceAtMost(5f)
+}) {
+    Icon(Icons.Default.ZoomIn)
+}
+```
+
+Dependencies: Chart library state
+Risk: Medium (need chart library APIs)
+
+
+CHUNK 5: SENSOR CALIBRATION/CONFIG (15-25 handlers)
+---------------------------------------------------
+Priority: MEDIUM
+Estimated Effort: 5-7 hours
+Files: ThermalSettingsScreen.kt, GSRSettingsScreen.kt, ShimmerConfigComposeActivity.kt
+
+Implementations:
+- Start calibration processes
+- Reset to defaults
+- Save configuration
+- Connect/disconnect devices
+- Run diagnostics
+
+Pattern:
+```kotlin
+IconButton(onClick = { 
+    viewModel.startCalibration(type = CalibrationType.FLAT_FIELD)
+}) {
+    Icon(Icons.Default.Tune)
+}
+```
+
+Dependencies: ViewModels, Sensor APIs
+Risk: High (hardware interaction)
+
+
+CHUNK 6: RECORDING CONTROLS (15-20 handlers)
+--------------------------------------------
+Priority: HIGH
+Estimated Effort: 3-4 hours
+Files: MultiModalRecordingScreen.kt, RecordingControlsCompose.kt
+
+Implementations:
+- Start/stop recording
+- Pause/resume recording
+- Add markers
+- Take snapshots
+- Capture photos
+
+Pattern:
+```kotlin
+IconButton(onClick = { 
+    if (isRecording) {
+        viewModel.stopRecording()
+    } else {
+        viewModel.startRecording()
+    }
+    isRecording = !isRecording
+}) {
+    Icon(if (isRecording) Icons.Default.Stop else Icons.Default.FiberManualRecord)
+}
+```
+
+Dependencies: Recording ViewModels
+Risk: Medium (state synchronization)
+
+
+CHUNK 7: THERMAL ANALYSIS TOOLS (20-25 handlers)
+------------------------------------------------
+Priority: LOW
+Estimated Effort: 6-8 hours
+Files: ThermalCameraScreen.kt, IRGalleryDetail activities, Analysis components
+
+Implementations:
+- Temperature profile analysis
+- Histogram generation
+- Thermal comparison
+- Generate reports
+- Add/clear measurements
+
+Pattern:
+```kotlin
+IconButton(onClick = { 
+    viewModel.analyzeTemperatureProfile()
+    showAnalysisDialog = true
+}) {
+    Icon(Icons.AutoMirrored.Filled.ShowChart)
+}
+```
+
+Dependencies: Analysis algorithms, ViewModels
+Risk: High (complex calculations)
+
+
+CHUNK 8: SESSION MANAGEMENT (15-20 handlers)
+--------------------------------------------
+Priority: MEDIUM
+Estimated Effort: 4-5 hours
+Files: SessionManagerComposeActivity.kt, SessionDetailComposeActivity.kt
+
+Implementations:
+- View session details
+- Delete sessions
+- Export session data
+- Apply filters
+- Manage sessions
+
+Pattern:
+```kotlin
+IconButton(onClick = { 
+    viewModel.deleteSession(sessionId)
+    showDeleteConfirmation = true
+}) {
+    Icon(Icons.Default.Delete)
+}
+```
+
+Dependencies: Session Repository, ViewModels
+Risk: Medium (data persistence)
+
+
+CHUNK 9: PERMISSIONS & SYSTEM (10-15 handlers)
+----------------------------------------------
+Priority: MEDIUM
+Estimated Effort: 3-4 hours
+Files: PermissionRequestComposeActivity.kt, Settings activities
+
+Implementations:
+- Request permissions
+- Open system settings
+- Grant all permissions
+- Test network connection
+
+Pattern:
+```kotlin
+IconButton(onClick = { 
+    context.startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS))
+}) {
+    Icon(Icons.Default.Settings)
+}
+```
+
+Dependencies: Android system APIs
+Risk: Low (standard Android patterns)
+
+
+CHUNK 10: MISC UI ACTIONS (20-30 handlers)
+------------------------------------------
+Priority: LOW
+Estimated Effort: 3-5 hours
+Files: Various UI components
+
+Implementations:
+- Show/hide dialogs
+- Apply processing
+- Reset statistics
+- Clear logs/data
+- Handle more options menus
+
+Pattern:
+```kotlin
+var showDialog by remember { mutableStateOf(false) }
+IconButton(onClick = { showDialog = true }) {
+    Icon(Icons.Default.MoreVert)
+}
+```
+
+Dependencies: Local state
+Risk: Low
+
+
+IMPLEMENTATION SEQUENCE
+=======================
+
+Phase 1 (Week 1): High Priority - Foundation
+- Chunk 1: UI State Toggles
+- Chunk 6: Recording Controls
+- Chunk 2: Navigation Actions
+
+Phase 2 (Week 2): Medium Priority - Data Operations
+- Chunk 3: Data Export/Import
+- Chunk 8: Session Management
+- Chunk 9: Permissions & System
+
+Phase 3 (Week 3): Complex Features
+- Chunk 4: Chart/Plot Controls
+- Chunk 5: Sensor Calibration/Config
+
+Phase 4 (Week 4): Advanced Features
+- Chunk 7: Thermal Analysis Tools
+- Chunk 10: Misc UI Actions
+
+
+PARALLEL WORK STRATEGY
+=======================
+
+These chunks can be worked on in parallel:
+- Chunk 1 + Chunk 9 (no dependencies)
+- Chunk 2 + Chunk 10 (minimal overlap)
+- Chunk 4 + Chunk 6 (different domains)
+- Chunk 3 + Chunk 8 (different data flows)
+
+Serial dependencies:
+- Chunk 2 must be completed before full testing of Chunk 3
+- Chunk 5 requires Chunk 1 state patterns
+- Chunk 7 requires Chunk 4 chart infrastructure
+
+
+TESTING STRATEGY
+================
+
+Per Chunk:
+1. Compile check after each file
+2. Manual UI testing for visible changes
+3. State management verification
+4. Navigation flow testing
+
+Integration Testing:
+- Test cross-chunk interactions (e.g., export from chart view)
+- Test state persistence across navigation
+- Test permission flows
+
+Final Validation:
+- Full regression test
+- All 249 handlers functional
+- No compilation errors
+- UI/UX consistency
+
+
+ESTIMATED TOTAL EFFORT
+======================
+
+Development: 40-60 hours
+Testing: 15-20 hours
+Documentation: 5-8 hours
+Total: 60-88 hours (8-12 working days)
+
+
+RISK MITIGATION
+================
+
+High Risk Items:
+- Hardware sensor interactions (Chunk 5)
+- Complex analysis algorithms (Chunk 7)
+- File system operations (Chunk 3)
+
+Mitigation:
+- Implement stub/mock versions first
+- Use existing patterns from codebase
+- Add proper error handling
+- Incremental testing
+
+
+TECHNICAL DEPENDENCIES
+======================
+
+ViewModels Needed:
+- RecordingViewModel
+- ThermalAnalysisViewModel
+- SessionManagerViewModel
+- ExportViewModel
+- ChartViewModel
+
+Repositories Needed:
+- SessionRepository (likely exists)
+- ExportRepository
+- CalibrationRepository
+
+Android Components:
+- NavController/Navigation
+- File I/O APIs
+- Share Intent
+- Permission APIs
+- System Settings
+
+
+NOTES
+=====
+
+- Many handlers may already have partial implementations in ViewModels
+- Some features may require backend/server support
+- UI state toggles are safest to implement first
+- Complex features may need architectural decisions
+- Consider creating feature flags for gradual rollout
+

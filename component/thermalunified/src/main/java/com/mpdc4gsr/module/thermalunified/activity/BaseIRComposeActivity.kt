@@ -53,7 +53,11 @@ class BaseIRComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             }
                         },
                         actions = {
-                            IconButton(onClick = { /* Settings */ }) {
+                            IconButton(onClick = { /* TODO: Implement settings
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }) {
                                 Icon(
                                     Icons.Default.Settings,
                                     contentDescription = "Settings",
@@ -307,28 +311,44 @@ private fun QuickActionButtons() {
         QuickActionButton(
             icon = Icons.Default.CameraAlt,
             text = "Capture",
-            onClick = { /* Capture */ },
+            onClick = { /* TODO: Implement capture
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ },
             modifier = Modifier.weight(1f)
         )
 
         QuickActionButton(
             icon = Icons.Default.Videocam,
             text = "Record",
-            onClick = { /* Record */ },
+            onClick = { /* TODO: Implement record
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ },
             modifier = Modifier.weight(1f)
         )
 
         QuickActionButton(
             icon = Icons.Default.Palette,
             text = "Palette",
-            onClick = { /* Change palette */ },
+            onClick = { /* TODO: Implement change palette
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ },
             modifier = Modifier.weight(1f)
         )
 
         QuickActionButton(
             icon = Icons.Default.Tune,
             text = "Adjust",
-            onClick = { /* Adjustments */ },
+            onClick = { /* TODO: Implement adjustments
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ },
             modifier = Modifier.weight(1f)
         )
     }

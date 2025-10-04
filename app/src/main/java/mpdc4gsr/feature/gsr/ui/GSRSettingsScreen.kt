@@ -170,7 +170,11 @@ fun GSRSettingsScreen(
                 icon = Icons.Default.Tune
             ) {
                 Button(
-                    onClick = { /* Start calibration */ },
+                    onClick = { /* TODO: Implement calibration start
+                     *   - Call viewModel.startCalibration()
+                     *   - Show calibration wizard/guide
+                     *   - Track calibration progress
+                     */ },
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Icon(Icons.Default.Settings, contentDescription = null)
@@ -178,7 +182,11 @@ fun GSRSettingsScreen(
                     Text("Start Calibration")
                 }
                 Button(
-                    onClick = { /* Reset to defaults */ },
+                    onClick = { /* TODO: Implement reset to defaults
+                     *   - Show confirmation dialog
+                     *   - Call viewModel.resetToDefaults()
+                     *   - Reload UI with default settings
+                     */ },
                     modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
                 ) {
