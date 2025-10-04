@@ -84,13 +84,34 @@ class GSRPlotComposeActivity : BaseComposeActivity<GSRPlotViewModel>() {
                             }
                         },
                         actions = {
-                            IconButton(onClick = { /* Export data */ }) {
+                            IconButton(onClick = {
+                                // TODO: Implement data export
+                                android.widget.Toast.makeText(
+                                    this@GSRPlotComposeActivity,
+                                    "Export data feature coming soon",
+                                    android.widget.Toast.LENGTH_SHORT
+                                ).show()
+                            }) {
                                 Icon(Icons.Default.FileDownload, contentDescription = "Export")
                             }
-                            IconButton(onClick = { /* Share plot */ }) {
+                            IconButton(onClick = {
+                                // TODO: Implement plot sharing
+                                android.widget.Toast.makeText(
+                                    this@GSRPlotComposeActivity,
+                                    "Share plot feature coming soon",
+                                    android.widget.Toast.LENGTH_SHORT
+                                ).show()
+                            }) {
                                 Icon(Icons.Default.Share, contentDescription = "Share")
                             }
-                            IconButton(onClick = { /* Plot settings */ }) {
+                            IconButton(onClick = {
+                                // TODO: Open plot settings
+                                android.widget.Toast.makeText(
+                                    this@GSRPlotComposeActivity,
+                                    "Plot settings feature coming soon",
+                                    android.widget.Toast.LENGTH_SHORT
+                                ).show()
+                            }) {
                                 Icon(Icons.Default.Tune, contentDescription = "Settings")
                             }
                         }
@@ -305,13 +326,34 @@ private fun MainPlotCard(
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    IconButton(onClick = { /* Zoom in */ }) {
+                    IconButton(onClick = {
+                        // TODO: Implement zoom in functionality
+                        android.widget.Toast.makeText(
+                            this@GSRPlotComposeActivity,
+                            "Zoom in feature coming soon",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    }) {
                         Icon(Icons.Default.ZoomIn, contentDescription = "Zoom In")
                     }
-                    IconButton(onClick = { /* Zoom out */ }) {
+                    IconButton(onClick = {
+                        // TODO: Implement zoom out functionality
+                        android.widget.Toast.makeText(
+                            this@GSRPlotComposeActivity,
+                            "Zoom out feature coming soon",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    }) {
                         Icon(Icons.Default.ZoomOut, contentDescription = "Zoom Out")
                     }
-                    IconButton(onClick = { /* Reset zoom */ }) {
+                    IconButton(onClick = {
+                        // TODO: Implement reset zoom functionality
+                        android.widget.Toast.makeText(
+                            this@GSRPlotComposeActivity,
+                            "Reset zoom feature coming soon",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    }) {
                         Icon(Icons.Default.CenterFocusStrong, contentDescription = "Reset")
                     }
                 }
@@ -718,7 +760,14 @@ private fun DataAnalysisToolsCard() {
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 OutlinedButton(
-                    onClick = { /* Detect peaks */ },
+                    onClick = {
+                        // TODO: Implement peak detection algorithm
+                        android.widget.Toast.makeText(
+                            this@GSRPlotComposeActivity,
+                            "Peak detection feature coming soon",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.AutoMirrored.Filled.TrendingUp, contentDescription = null)
@@ -727,7 +776,14 @@ private fun DataAnalysisToolsCard() {
                 }
 
                 OutlinedButton(
-                    onClick = { /* Analyze trends */ },
+                    onClick = {
+                        // TODO: Implement trend analysis
+                        android.widget.Toast.makeText(
+                            this@GSRPlotComposeActivity,
+                            "Trend analysis feature coming soon",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Analytics, contentDescription = null)

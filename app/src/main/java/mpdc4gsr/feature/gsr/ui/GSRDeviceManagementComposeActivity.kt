@@ -164,8 +164,22 @@ private fun GSRDeviceManagementContent(
                 GSRDeviceCard(
                     device = device,
                     onSelect = { onDeviceSelect(device) },
-                    onConnect = { /* Connect device */ },
-                    onDisconnect = { /* Disconnect device */ }
+                    onConnect = {
+                        // TODO: Implement device connection logic
+                        android.widget.Toast.makeText(
+                            this@GSRDeviceManagementComposeActivity,
+                            "Connecting to ${device.name}...",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
+                    onDisconnect = {
+                        // TODO: Implement device disconnection logic
+                        android.widget.Toast.makeText(
+                            this@GSRDeviceManagementComposeActivity,
+                            "Disconnecting from ${device.name}...",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 )
             }
 
@@ -183,8 +197,22 @@ private fun GSRDeviceManagementContent(
                     GSRDeviceCard(
                         device = device,
                         onSelect = { onDeviceSelect(device) },
-                        onConnect = { /* Connect device */ },
-                        onDisconnect = { /* Disconnect device */ }
+                        onConnect = {
+                            // TODO: Implement device connection logic
+                            android.widget.Toast.makeText(
+                                this@GSRDeviceManagementComposeActivity,
+                                "Connecting to ${device.name}...",
+                                android.widget.Toast.LENGTH_SHORT
+                            ).show()
+                        },
+                        onDisconnect = {
+                            // TODO: Implement device disconnection logic
+                            android.widget.Toast.makeText(
+                                this@GSRDeviceManagementComposeActivity,
+                                "Disconnecting from ${device.name}...",
+                                android.widget.Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     )
                 }
             }

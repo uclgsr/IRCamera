@@ -121,13 +121,34 @@ private fun GSRSettingsContent(
         // Recording Settings Card
         RecordingSettingsCard(
             onSampleRateChange = { viewModel.updateSamplingRate(it) },
-            onSessionTimeoutChange = { /* Can be added to ViewModel if needed */ }
+            onSessionTimeoutChange = {
+                // TODO: Add session timeout to ViewModel if needed
+                android.widget.Toast.makeText(
+                    this@GSRSettingsComposeActivity,
+                    "Session timeout: $it minutes",
+                    android.widget.Toast.LENGTH_SHORT
+                ).show()
+            }
         )
 
         // Export Settings Card
         ExportSettingsCard(
-            onExportFormatChange = { /* Can be added to ViewModel if needed */ },
-            onExportLocationChange = { /* Can be added to ViewModel if needed */ }
+            onExportFormatChange = {
+                // TODO: Add export format to ViewModel if needed
+                android.widget.Toast.makeText(
+                    this@GSRSettingsComposeActivity,
+                    "Export format: $it",
+                    android.widget.Toast.LENGTH_SHORT
+                ).show()
+            },
+            onExportLocationChange = {
+                // TODO: Add export location to ViewModel if needed
+                android.widget.Toast.makeText(
+                    this@GSRSettingsComposeActivity,
+                    "Export location: $it",
+                    android.widget.Toast.LENGTH_SHORT
+                ).show()
+            }
         )
     }
 }
