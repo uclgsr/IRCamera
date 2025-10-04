@@ -3,7 +3,7 @@
 Time Synchronization Handler for PC Controller
 
 This module implements the SYNC_INIT -> SYNC_REQUEST -> SYNC_RESPONSE -> SYNC_RESULT
-protocol flow as specified in TIME_SYNC_IMPLEMENTATION.md
+protocol flow as specified in docs/time_sync_implementation.md
 """
 
 import time

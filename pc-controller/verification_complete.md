@@ -182,10 +182,10 @@ ACK cmd=START_RECORD session_id=session_123
 
 ## Documentation
 
-- **VERIFICATION_REPORT.md** - Comprehensive verification report
-- **IMPLEMENTATION_SUMMARY.md** - Complete implementation details
-- **QUICK_START.md** - Getting started guide
-- **PC_CONTROLLER_IMPLEMENTATION.md** - Technical documentation
+- **docs/verification_report.md** - Comprehensive verification report
+- **docs/implementation_summary.md** - Complete implementation details
+- **docs/quick_start.md** - Getting started guide
+- **docs/pc_controller_implementation.md** - Technical documentation
 
 ## What Was Accomplished in This PR
 

@@ -43,9 +43,9 @@ This document summarizes the reorganization and cleanup of the PC Controller Pyt
 
 **Moved to `docs/` directory:**
 
-- Protocol documentation (PROTOCOL_*.md, PROTOCOL_*.txt)
-- Code review documentation (CODE_REVIEW*.*)
-- QUICK_START.md
+- Protocol documentation (protocol_*.md, protocol_*.txt)
+- Code review documentation (code_review*.*)
+- quick_start.md
 - Protocol bridge summary
 
 **Result:** Clean root directory, organized technical documentation
@@ -91,9 +91,9 @@ pc-controller/
 ├── Documentation
 │   └── docs/                     # All technical documentation
 │       ├── README.md             # Documentation index
-│       ├── QUICK_START.md        # Quick start guide
-│       ├── CODE_REVIEW*.md       # Code review findings
-│       └── PROTOCOL_*.md         # Protocol documentation
+│       ├── quick_start.md        # Quick start guide
+│       ├── code_review*.md       # Code review findings
+│       └── protocol_*.md         # Protocol documentation
 │
 ├── Tests
 │   └── tests/                    # Test suite
@@ -145,7 +145,7 @@ For users:
 
 1. Use `python run_unified_controller.py` to start the application
 2. See README.md for usage instructions
-3. See docs/QUICK_START.md for detailed installation guide
+3. See docs/quick_start.md for detailed installation guide
 
 For developers:
 
