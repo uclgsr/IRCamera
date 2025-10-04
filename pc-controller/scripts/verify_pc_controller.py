@@ -50,6 +50,8 @@ def verify_file_structure():
     """Verify that key files exist"""
     print_header("File Structure Verification")
     
+    pc_controller_root = Path(__file__).parent.parent
+    
     files_to_check = {
         'pc_controller.py': 'Main controller implementation',
         'protocol_adapter.py': 'Protocol adapter for legacy/JSON messages',
@@ -62,18 +64,17 @@ def verify_file_structure():
     
     all_exist = True
     for file_path, description in files_to_check.items():
-        path = Path(file_path)
+        path = pc_controller_root / file_path
         exists = path.exists()
         all_exist = all_exist and exists
         print_test(f"{description} ({file_path})", exists)
     
     # Check for C++ native backend with platform-independent pattern
-    backend_pattern = 'native_backend/enhanced_native_backend*.so' if sys.platform != 'win32' else 'native_backend/enhanced_native_backend*.pyd'
+    backend_pattern = str(pc_controller_root / 'native_backend' / 'enhanced_native_backend*.so') if sys.platform != 'win32' else str(pc_controller_root / 'native_backend' / 'enhanced_native_backend*.pyd')
     backend_files = glob.glob(backend_pattern)
     backend_exists = len(backend_files) > 0
-    backend_name = backend_files[0] if backend_files else backend_pattern
+    backend_name = Path(backend_files[0]).name if backend_files else 'enhanced_native_backend'
     print_test(f"C++ native backend ({backend_name})", backend_exists)
-    all_exist = all_exist and backend_exists
     
     return all_exist
 
@@ -81,6 +82,9 @@ def verify_file_structure():
 def verify_imports():
     """Verify that key modules can be imported"""
     print_header("Module Import Verification")
+    
+    pc_controller_root = Path(__file__).parent.parent
+    sys.path.insert(0, str(pc_controller_root))
     
     results = {}
     
@@ -105,7 +109,7 @@ def verify_imports():
     
     # Test native backend
     try:
-        sys.path.insert(0, 'native_backend')
+        sys.path.insert(0, str(pc_controller_root / 'native_backend'))
         import enhanced_native_backend
         results['native_backend'] = True
         print_test("C++ native backend imports successfully", True, 

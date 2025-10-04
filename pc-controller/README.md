@@ -72,9 +72,9 @@ The PC Controller implements a **Hub-and-Spoke Model** where:
 
 ### Additional Tools
 
-**Component Demonstration**: `demo_features.py` - Validates framework functionality
-
 **Command Client**: `command_client.py` - CLI tool for sending commands to running controller
+
+**Utility Scripts**: `scripts/` - Testing, validation and demonstration utilities
 
 **Legacy Implementations**: `legacy_implementation/` - Archived MVP versions for reference
 
@@ -115,7 +115,13 @@ python pc_controller.py --help
 
 ```bash
 # Component demonstration
-python demo_features.py
+python scripts/demo_features.py
+
+# Verify installation
+python scripts/verify_installation.py
+
+# Comprehensive verification
+python scripts/verify_pc_controller.py
 
 # Run tests (note: most tests are currently disabled)
 python -m unittest tests.test_protocol_compatibility
@@ -133,16 +139,22 @@ pc-controller/
     +-- pc_controller.py           # Single unified PC controller application
     +-- run_unified_controller.py  # Launcher script (recommended entry point)
     +-- protocol_adapter.py        # Protocol parsing and compatibility layer
+    +-- sync_handler.py            # Time synchronization handler
     
 +-- Utilities
-    +-- command_client.py          # CLI command tool
-    +-- demo_features.py           # Feature demonstration
-    +-- verify_installation.py     # Installation validator
+    +-- command_client.py          # CLI command tool for remote control
+    +-- scripts/                   # Testing and validation utilities
+        +-- demo_features.py       # Feature demonstration
+        +-- verify_installation.py # Installation validator
+        +-- verify_pc_controller.py # Comprehensive verification
+        +-- test_android_connection.py # Android connectivity test
+        +-- example_sync_server.py # Time sync example server
     
 +-- Configuration
     +-- requirements.txt           # Python dependencies
-    +-- setup.py                   # Package setup
+    +-- setup.py                   # Package setup and native backend build
     +-- config.yaml                # Application configuration
+    +-- config/                    # Legacy configuration files
     
 +-- Testing
     +-- tests/                     # Test suite directory
@@ -150,21 +162,30 @@ pc-controller/
         +-- test_pc_controller_features.py
         +-- test_comprehensive_integration.py
         +-- test_protocol_verification.py
+        +-- test_sync_handler.py
         +-- README.md              # Test documentation
 
 +-- Data and Output
-    +-- data/                      # Session data storage
-    +-- exports/                   # Data exports
-    +-- certificates/              # SSL/TLS certificates
+    +-- data/                      # Session data storage (gitignored)
+    +-- exports/                   # Data exports (gitignored)
+    +-- certificates/              # SSL/TLS certificates (gitignored)
     
 +-- Documentation
-    +-- docs/                      # Documentation files
-    +-- CODE_REVIEW_SUMMARY.txt    # Code review findings
-    +-- PROTOCOL_FLOW.txt          # Protocol documentation
+    +-- docs/                      # Technical documentation
+        +-- README.md              # Documentation index
+        +-- quick_start.md         # Quick start guide
+        +-- implementation.md      # Implementation details
+        +-- protocol.md            # Protocol specification
+    
++-- Native Backend
+    +-- native_backend/            # C++ performance extensions
+        +-- src/                   # C++ source files
+        +-- include/               # Header files
+        +-- CMakeLists.txt         # Build configuration
     
 +-- Legacy
     +-- legacy_implementation/     # Archived MVP implementations
-        +-- README.md             # Legacy documentation
+        +-- README.md              # Legacy documentation
 ```
 
 ## Device Communication Protocol
