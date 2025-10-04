@@ -17,7 +17,7 @@ import org.robolectric.annotation.Config
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [Build.VERSION_CODES.O])
 @OptIn(ExperimentalCoroutinesApi::class)
-class MockitoVsRobolectricComparisonTest {
+class RobolectricFrameworkTest {
     private lateinit var context: Context
 
     @Before
@@ -144,5 +144,45 @@ class MockitoVsRobolectricComparisonTest {
         assertTrue("Display density should be realistic", displayMetrics.density > 0)
         assertTrue("Screen width should be realistic", displayMetrics.widthPixels > 0)
         assertTrue("Screen height should be realistic", displayMetrics.heightPixels > 0)
+    }
+
+    @Test
+    fun testContextAccess() {
+        assertNotNull("Context should be available", context)
+        assertNotNull("Package name should be available", context.packageName)
+        assertFalse("Package name should not be empty", context.packageName.isEmpty())
+    }
+
+    @Test
+    fun testResourceAccess() {
+        val resources = context.resources
+        assertNotNull("Resources should be available", resources)
+
+        val displayMetrics = resources.displayMetrics
+        assertNotNull("Display metrics should be available", displayMetrics)
+        assertTrue("Display density should be positive", displayMetrics.density > 0)
+    }
+
+    @Test
+    fun testPackageManagerAccess() {
+        val packageManager = context.packageManager
+        assertNotNull("Package manager should be available", packageManager)
+
+        try {
+            val packageInfo = packageManager.getPackageInfo(context.packageName, 0)
+            assertNotNull("Package info should be available", packageInfo)
+            assertEquals("Package name should match", context.packageName, packageInfo.packageName)
+        } catch (e: Exception) {
+            // Expected in test environment
+        }
+    }
+
+    @Test
+    fun testMultipleContextInstances() {
+        val context1 = ApplicationProvider.getApplicationContext<Context>()
+        val context2 = ApplicationProvider.getApplicationContext<Context>()
+
+        assertSame("Application contexts should be the same instance", context1, context2)
+        assertEquals("Package names should match", context1.packageName, context2.packageName)
     }
 }
