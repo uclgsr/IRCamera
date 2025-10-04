@@ -19,6 +19,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CameraAlt
+import androidx.compose.material.icons.filled.Cameraswitch
 import androidx.compose.material.icons.filled.FiberManualRecord
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Stop
@@ -69,10 +70,16 @@ fun RGBCameraScreen(
     val lifecycleOwner = LocalLifecycleOwner.current
     val cameraState by viewModel.cameraState.collectAsState()
     var showControls by remember { mutableStateOf(true) }
+    var showError by remember { mutableStateOf(false) }
 
     // Initialize camera on first composition
     LaunchedEffect(Unit) {
         viewModel.initializeCamera(lifecycleOwner)
+    }
+
+    // Show error if present
+    LaunchedEffect(cameraState.error) {
+        showError = cameraState.error != null
     }
 
     // Use real data from ViewModel
@@ -141,6 +148,9 @@ fun RGBCameraScreen(
                 onCapturePhoto = {
                     viewModel.capturePhoto()
                     onCapturePhoto()
+                },
+                onSwitchCamera = {
+                    viewModel.switchCamera()
                 }
             )
         }
@@ -156,6 +166,41 @@ fun RGBCameraScreen(
                     showControls = !showControls
                 }
         )
+
+        // Error message display
+        if (showError && cameraState.error != null) {
+            Surface(
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .padding(32.dp),
+                color = MaterialTheme.colorScheme.errorContainer,
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Column(
+                    modifier = Modifier.padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "Camera Error",
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.onErrorContainer,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = cameraState.error ?: "",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onErrorContainer
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Button(
+                        onClick = { viewModel.dismissError() }
+                    ) {
+                        Text("Dismiss")
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -259,6 +304,7 @@ private fun CameraBottomControls(
     capturedFrames: Int,
     onToggleRecording: () -> Unit,
     onCapturePhoto: () -> Unit,
+    onSwitchCamera: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     Surface(
@@ -321,8 +367,22 @@ private fun CameraBottomControls(
                     )
                 }
 
-                // Placeholder for symmetry (could be gallery access)
-                Spacer(modifier = Modifier.size(56.dp))
+                // Camera switch button
+                FilledIconButton(
+                    onClick = onSwitchCamera,
+                    enabled = isPreviewActive && !isRecording,
+                    modifier = Modifier.size(56.dp),
+                    colors = IconButtonDefaults.filledIconButtonColors(
+                        containerColor = MaterialTheme.colorScheme.secondary,
+                        disabledContainerColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.3f)
+                    )
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Cameraswitch,
+                        contentDescription = "Switch Camera",
+                        tint = Color.White
+                    )
+                }
             }
         }
     }

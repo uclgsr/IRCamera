@@ -183,6 +183,47 @@ class RGBCameraViewModel(
     }
 
     /**
+     * Switch between front and back camera
+     */
+    fun switchCamera() {
+        viewModelScope.launch {
+            try {
+                val cameraInfo = cameraRecorder?.getCurrentCameraInfo()
+                if (cameraInfo == null) {
+                    _cameraState.update { it.copy(error = "Camera not initialized") }
+                    return@launch
+                }
+
+                if (!cameraInfo.canSwitch) {
+                    val reason = when {
+                        _cameraState.value.isRecording -> "Cannot switch camera during recording"
+                        !cameraInfo.frontAvailable && !cameraInfo.backAvailable -> "No cameras available"
+                        cameraInfo.isUsingFrontCamera && !cameraInfo.backAvailable -> "Back camera not available"
+                        !cameraInfo.isUsingFrontCamera && !cameraInfo.frontAvailable -> "Front camera not available"
+                        else -> "Camera switch not available"
+                    }
+                    _cameraState.update { it.copy(error = reason) }
+                    return@launch
+                }
+
+                val success = if (cameraInfo.isUsingFrontCamera) {
+                    cameraRecorder?.switchToBackCamera() ?: false
+                } else {
+                    cameraRecorder?.switchToFrontCamera() ?: false
+                }
+
+                if (success) {
+                    _cameraState.update { it.copy(error = null) }
+                } else {
+                    _cameraState.update { it.copy(error = "Failed to switch camera") }
+                }
+            } catch (e: Exception) {
+                _cameraState.update { it.copy(error = "An unexpected error occurred while switching cameras.") }
+            }
+        }
+    }
+
+    /**
      * Update camera settings
      */
     fun updateResolution(resolution: String) {
