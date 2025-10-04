@@ -18,6 +18,7 @@ import os
 import time
 import csv
 import json
+import random
 import statistics
 from datetime import datetime
 from typing import List, Dict, Optional
@@ -111,7 +112,6 @@ class SensorStartAlignmentTest:
         use_realistic_delays: bool
     ) -> List[SensorStartEvent]:
         """Run a single trial with all sensors"""
-        import random
         
         # Create simulated sensors with realistic or random delays
         if use_realistic_delays:
@@ -265,9 +265,13 @@ class SensorStartAlignmentTest:
                 
                 for col in timestamp_columns:
                     if col in first_row:
-                        return int(float(first_row[col]))
+                        try:
+                            return int(float(first_row[col]))
+                        except ValueError:
+                            print(f"Warning: Invalid timestamp value '{first_row[col]}' in column '{col}' of {filepath}")
+                            continue
                 
-                print(f"Warning: No timestamp column found in {filepath}")
+                print(f"Warning: No valid timestamp column found in {filepath}")
                 print(f"Available columns: {list(first_row.keys())}")
                 return None
                 

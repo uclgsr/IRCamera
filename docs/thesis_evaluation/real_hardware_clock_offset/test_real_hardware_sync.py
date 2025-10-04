@@ -18,11 +18,13 @@ import time
 import csv
 import json
 import socket
+import statistics
 import threading
 from datetime import datetime
 from typing import List, Dict, Optional
+from pathlib import Path
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', '..', 'pc-controller'))
+sys.path.insert(0, str(Path(__file__).resolve().parents[3] / 'pc-controller'))
 
 from sync_handler import SyncHandler
 from protocol_adapter import ProtocolAdapter
@@ -74,13 +76,13 @@ class RealHardwareSyncTest:
         if self.client_socket:
             try:
                 self.client_socket.close()
-            except:
+            except OSError:
                 pass
         
         if self.server_socket:
             try:
                 self.server_socket.close()
-            except:
+            except OSError:
                 pass
         
         print("\nServer stopped")
@@ -279,8 +281,6 @@ class RealHardwareSyncTest:
         if not self.results:
             print("No results to analyze")
             return
-        
-        import statistics
         
         offsets = [r['offset_ms'] for r in self.results]
         rtts = [r['rtt_ms'] for r in self.results]
