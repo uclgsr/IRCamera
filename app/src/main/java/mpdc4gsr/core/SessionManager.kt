@@ -24,6 +24,7 @@ class SessionManager(
         private const val SESSION_TIMEOUT_MS = 60000L
         private const val MAX_DEVICES_PER_SESSION = 10
         private const val STATE_SYNC_INTERVAL_MS = 5000L
+        private const val SYNC_TO_RECORDING_DELAY_MS = 2000L
     }
 
     private val currentSession = AtomicReference<SessionInfo?>(null)
@@ -303,7 +304,7 @@ class SessionManager(
         onSyncRequired?.invoke(recordingCapableDevices)
 
         sessionScope.launch {
-            delay(2000)
+            delay(SYNC_TO_RECORDING_DELAY_MS)
 
             if (currentSession.get()?.state == SessionState.SYNCING) {
                 updateSessionState(SessionState.RECORDING)

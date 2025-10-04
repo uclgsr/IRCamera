@@ -45,6 +45,8 @@ class FileUploadService(private val context: Context) {
         private const val MAX_CONCURRENT_UPLOADS = 3
         private const val RETRY_LIMIT = 3
         private const val TRANSFER_TIMEOUT_MS = 30000L
+        private const val QUEUE_RETRY_DELAY_MS = 1000L
+        private const val ERROR_RETRY_DELAY_MS = 5000L
     }
 
     private val logger = StructuredLogger.getInstance(context)
@@ -288,7 +290,7 @@ class FileUploadService(private val context: Context) {
                     if (concurrentUploads.get() >= maxConcurrent) {
 
                         uploadQueue.send(jobId)
-                        delay(1000)
+                        delay(QUEUE_RETRY_DELAY_MS)
                         continue
                     }
 
@@ -307,7 +309,7 @@ class FileUploadService(private val context: Context) {
                         "upload_processor_error",
                         details = mapOf("error" to (e.message ?: "Unknown error")),
                     )
-                    delay(5000)
+                    delay(ERROR_RETRY_DELAY_MS)
                 }
             }
         }
