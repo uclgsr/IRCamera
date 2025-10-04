@@ -216,7 +216,7 @@ public class EasyBLE {
         releaseAllConnections();
         if (internalObservable) {
             observable.unregisterAll();
-            posterDispatcher.clearTasks();
+            posterDispatcher.shutdown();
         }
     }
 

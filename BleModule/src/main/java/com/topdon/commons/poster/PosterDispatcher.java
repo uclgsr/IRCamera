@@ -36,6 +36,21 @@ public class PosterDispatcher {
         asyncPoster.clear();
     }
 
+    public void shutdown() {
+        clearTasks();
+        if (executorService != null && !executorService.isShutdown()) {
+            executorService.shutdown();
+            try {
+                if (!executorService.awaitTermination(5, java.util.concurrent.TimeUnit.SECONDS)) {
+                    executorService.shutdownNow();
+                }
+            } catch (InterruptedException e) {
+                executorService.shutdownNow();
+                Thread.currentThread().interrupt();
+            }
+        }
+    }
+
     public void post(@Nullable Method method, @NonNull Runnable runnable) {
         if (method != null) {
             RunOn annotation = method.getAnnotation(RunOn.class);
