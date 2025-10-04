@@ -221,7 +221,14 @@ private fun VideoControlsCard(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                IconButton(onClick = { /* Previous */ }) {
+                IconButton(onClick = {
+                    // TODO: Skip to previous video
+                    android.widget.Toast.makeText(
+                        context,
+                        "Previous video",
+                        android.widget.Toast.LENGTH_SHORT
+                    ).show()
+                }) {
                     Icon(
                         Icons.Default.SkipPrevious,
                         contentDescription = "Previous",
@@ -237,11 +244,25 @@ private fun VideoControlsCard(
                     )
                 }
 
-                IconButton(onClick = { /* Next */ }) {
+                IconButton(onClick = {
+                    // TODO: Skip to next video
+                    android.widget.Toast.makeText(
+                        context,
+                        "Next video",
+                        android.widget.Toast.LENGTH_SHORT
+                    ).show()
+                }) {
                     Icon(Icons.Default.SkipNext, contentDescription = "Next", tint = Color.White)
                 }
 
-                IconButton(onClick = { /* Fullscreen */ }) {
+                IconButton(onClick = {
+                    // TODO: Toggle fullscreen mode
+                    android.widget.Toast.makeText(
+                        context,
+                        "Fullscreen mode",
+                        android.widget.Toast.LENGTH_SHORT
+                    ).show()
+                }) {
                     Icon(
                         Icons.Default.Fullscreen,
                         contentDescription = "Fullscreen",
