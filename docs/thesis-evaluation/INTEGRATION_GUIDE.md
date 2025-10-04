@@ -4,7 +4,7 @@ This guide explains how to integrate the robustness tests into the main IRCamera
 
 ## Overview
 
-The thesis evaluation tests are currently standalone Kotlin files in the `thesis_evaluation/robustness_tests/` directory. They follow the same patterns as existing test activities in the app but are not yet compiled or integrated into the app's build system.
+The thesis evaluation tests are currently standalone Kotlin files in the `docs/thesis-evaluation/robustness_tests/` directory. They follow the same patterns as existing test activities in the app but are not yet compiled or integrated into the app's build system.
 
 ## Integration Options
 
@@ -14,7 +14,7 @@ Copy the test files to the main app's test activity directory:
 
 ```bash
 # Copy files to the main test activity location
-cp thesis_evaluation/robustness_tests/*.kt app/src/main/java/mpdc4gsr/feature/testing/ui/
+cp docs/thesis-evaluation/robustness_tests/*.kt app/src/main/java/mpdc4gsr/feature/testing/ui/
 
 # Update package declaration in each file
 # Change: package thesis_evaluation.robustness_tests
@@ -91,7 +91,7 @@ TestingModule(
 
 ### Option 3: Keep Separate (Current State)
 
-The tests can remain in the `thesis_evaluation/` directory as reference implementations and documentation. This is useful for:
+The tests can remain in the `docs/thesis-evaluation/` directory as reference implementations and documentation. This is useful for:
 
 - Including in thesis appendices
 - Reference for understanding robustness testing approach
@@ -255,5 +255,5 @@ Potential improvements:
 For questions or issues:
 - Review existing test implementations in `app/src/main/java/mpdc4gsr/feature/testing/ui/`
 - Check Android logcat for runtime errors
-- Refer to README.md in thesis_evaluation directory
+- Refer to README.md in docs/thesis-evaluation directory
 - Consult thesis requirements document

@@ -110,7 +110,7 @@ Each test generates:
 
 ### Standalone Usage
 
-Tests are in `thesis_evaluation/robustness_tests/` and can be:
+Tests are in `docs/thesis-evaluation/robustness_tests/` and can be:
 - Used as reference implementations
 - Copied to app for execution
 - Documented in thesis appendices
@@ -260,7 +260,7 @@ When executed, tests create logs in:
 ## File Structure
 
 ```
-thesis_evaluation/
+docs/thesis-evaluation/
 ├── README.md                          # Main documentation
 ├── INTEGRATION_GUIDE.md              # How to integrate tests
 ├── TEST_MANIFEST.md                  # Quick reference
@@ -276,7 +276,7 @@ thesis_evaluation/
 ## Success Criteria
 
 All requirements met:
-- ✓ Tests in separate thesis_evaluation folder
+- ✓ Tests in separate docs/thesis-evaluation folder
 - ✓ 5 robustness test scenarios implemented
 - ✓ Simulated and real hardware variants
 - ✓ Comprehensive logging and metrics
