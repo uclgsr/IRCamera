@@ -16,11 +16,13 @@ import sys
 import os
 import time
 import csv
+import random
 import statistics
 from typing import List, Dict
 from datetime import datetime
+from pathlib import Path
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', '..', 'pc-controller'))
+sys.path.insert(0, str(Path(__file__).resolve().parents[3] / 'pc-controller'))
 
 from sync_handler import SyncHandler
 
@@ -115,7 +117,6 @@ class SyntheticSyncTest:
         jitter_ms: float
     ) -> Dict:
         """Perform a single sync handshake and measure metrics"""
-        import random
         
         device_id = "simulated_device"
         mock_socket = MockSocket()
@@ -126,7 +127,14 @@ class SyntheticSyncTest:
         
         # Extract T1 from SYNC_REQUEST message
         sync_request = mock_socket.get_last_message()
-        t1 = int(sync_request.split('t_pc=')[1].strip())
+        split_parts = sync_request.split('t_pc=')
+        if len(split_parts) < 2 or not split_parts[1].strip().isdigit():
+            return {
+                'sync_index': sync_index,
+                'success': False,
+                'error': f"Invalid SYNC_REQUEST format: {sync_request}"
+            }
+        t1 = int(split_parts[1].strip())
         
         # Step 2: Simulate network delay with jitter
         actual_latency = device.network_latency_ms + random.uniform(-jitter_ms, jitter_ms)
