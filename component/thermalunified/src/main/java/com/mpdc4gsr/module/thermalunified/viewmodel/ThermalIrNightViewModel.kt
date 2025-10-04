@@ -45,43 +45,43 @@ class ThermalIrNightViewModel : BaseViewModel() {
 
     fun showInfo() {
         launchWithErrorHandling {
-            emitEvent("show_info")
+            _uiEvents.emit(UiEvent.ShowMessage("Show Info"))
         }
     }
 
     fun lockTemperatureRange() {
         launchWithErrorHandling {
-            emitEvent("lock_temperature_range")
+            _uiEvents.emit(UiEvent.ShowMessage("Lock Temperature Range"))
         }
     }
 
     fun editTemperatureSettings() {
         launchWithErrorHandling {
-            emitEvent("edit_temperature_settings")
+            _uiEvents.emit(UiEvent.ShowMessage("Edit Temperature Settings"))
         }
     }
 
     fun openColorPalette() {
         launchWithErrorHandling {
-            emitEvent("open_color_palette")
+            _uiEvents.emit(UiEvent.ShowMessage("Open Color Palette"))
         }
     }
 
     fun openSettings() {
         launchWithErrorHandling {
-            emitEvent("open_settings")
+            _uiEvents.emit(UiEvent.ShowMessage("Open Settings"))
         }
     }
 
     fun openGallery() {
         launchWithErrorHandling {
-            emitEvent("open_gallery")
+            _uiEvents.emit(UiEvent.ShowMessage("Open Gallery"))
         }
     }
 
     fun showMoreOptions() {
         launchWithErrorHandling {
-            emitEvent("show_more_options")
+            _uiEvents.emit(UiEvent.ShowMessage("Show More Options"))
         }
     }
 }

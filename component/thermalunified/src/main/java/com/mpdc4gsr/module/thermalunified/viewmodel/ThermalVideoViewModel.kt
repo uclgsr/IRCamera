@@ -6,43 +6,43 @@ class ThermalVideoViewModel : BaseViewModel() {
 
     fun shareVideo() {
         launchWithErrorHandling {
-            emitEvent("share_video")
+            _uiEvents.emit(UiEvent.ShowMessage("Share Video"))
         }
     }
 
     fun showMoreOptions() {
         launchWithErrorHandling {
-            emitEvent("show_more_options")
+            _uiEvents.emit(UiEvent.ShowMessage("Show More Options"))
         }
     }
 
     fun previousFrame() {
         launchWithErrorHandling {
-            emitEvent("previous_frame")
+            _uiEvents.emit(UiEvent.ShowMessage("Previous Frame"))
         }
     }
 
     fun nextFrame() {
         launchWithErrorHandling {
-            emitEvent("next_frame")
+            _uiEvents.emit(UiEvent.ShowMessage("Next Frame"))
         }
     }
 
     fun exportFrame() {
         launchWithErrorHandling {
-            emitEvent("export_frame")
+            _uiEvents.emit(UiEvent.ShowMessage("Export Frame"))
         }
     }
 
     fun analyzeVideo() {
         launchWithErrorHandling {
-            emitEvent("analyze_video")
+            _uiEvents.emit(UiEvent.ShowMessage("Analyze Video"))
         }
     }
 
     fun openSettings() {
         launchWithErrorHandling {
-            emitEvent("open_settings")
+            _uiEvents.emit(UiEvent.ShowMessage("Open Settings"))
         }
     }
 }

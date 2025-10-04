@@ -54,43 +54,43 @@ class IRThermalDoubleViewModel : BaseViewModel() {
 
     fun showInfo() {
         launchWithErrorHandling {
-            emitEvent("show_info")
+            _uiEvents.emit(UiEvent.ShowMessage("Show Info"))
         }
     }
 
     fun toggleTISR() {
         launchWithErrorHandling {
-            emitEvent("toggle_tisr")
+            _uiEvents.emit(UiEvent.ShowMessage("Toggle TISR"))
         }
     }
 
     fun lockTemperatureRange() {
         launchWithErrorHandling {
-            emitEvent("lock_temperature_range")
+            _uiEvents.emit(UiEvent.ShowMessage("Lock Temperature Range"))
         }
     }
 
     fun editTemperatureSettings() {
         launchWithErrorHandling {
-            emitEvent("edit_temperature_settings")
+            _uiEvents.emit(UiEvent.ShowMessage("Edit Temperature Settings"))
         }
     }
 
     fun openGallery() {
         launchWithErrorHandling {
-            emitEvent("open_gallery")
+            _uiEvents.emit(UiEvent.ShowMessage("Open Gallery"))
         }
     }
 
     fun captureCamera() {
         launchWithErrorHandling {
-            emitEvent("capture_camera")
+            _uiEvents.emit(UiEvent.ShowMessage("Capture Camera"))
         }
     }
 
     fun showMoreOptions() {
         launchWithErrorHandling {
-            emitEvent("show_more_options")
+            _uiEvents.emit(UiEvent.ShowMessage("Show More Options"))
         }
     }
 }

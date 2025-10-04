@@ -24,37 +24,37 @@ class ThermalViewModel : BaseViewModel() {
 
     fun autoEnhance() {
         launchWithErrorHandling {
-            emitEvent("auto_enhance")
+            _uiEvents.emit(UiEvent.ShowMessage("Auto Enhance"))
         }
     }
 
     fun manualTune() {
         launchWithErrorHandling {
-            emitEvent("manual_tune")
+            _uiEvents.emit(UiEvent.ShowMessage("Manual Tune"))
         }
     }
 
     fun aiAnalysis() {
         launchWithErrorHandling {
-            emitEvent("ai_analysis")
+            _uiEvents.emit(UiEvent.ShowMessage("AI Analysis"))
         }
     }
 
     fun plusCapture() {
         launchWithErrorHandling {
-            emitEvent("plus_capture")
+            _uiEvents.emit(UiEvent.ShowMessage("Plus Capture"))
         }
     }
 
     fun plusRecord() {
         launchWithErrorHandling {
-            emitEvent("plus_record")
+            _uiEvents.emit(UiEvent.ShowMessage("Plus Record"))
         }
     }
 
     fun plusProcess() {
         launchWithErrorHandling {
-            emitEvent("plus_process")
+            _uiEvents.emit(UiEvent.ShowMessage("Plus Process"))
         }
     }
 }
