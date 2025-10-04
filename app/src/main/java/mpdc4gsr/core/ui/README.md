@@ -1,5 +1,10 @@
 # Phase 1: Permissions Handling Implementation
 
+**Note:** This documentation has been consolidated into the main docs directory.  
+Please refer to: [docs/developer-guides/ui-components-guide.md](/docs/developer-guides/ui-components-guide.md)
+
+---
+
 This directory contains the comprehensive permissions handling system for the Multi-Modal
 Physiological Sensing Platform, specifically designed for Samsung S22 (Android 12+) multi-sensor
 recording.
