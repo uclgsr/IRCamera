@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.nsd.NsdManager
 import android.os.Build
 import androidx.test.core.app.ApplicationProvider
+import com.mpdc4gsr.gsr.network.NetworkClient
 import com.mpdc4gsr.gsr.network.ZeroconfDiscoveryService
 import org.junit.Assert.*
 import org.junit.Before
