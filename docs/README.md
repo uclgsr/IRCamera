@@ -1,33 +1,73 @@
 # IRCamera Documentation
 
-Comprehensive documentation for the IRCamera Android application.
+Comprehensive documentation for the IRCamera multi-sensor recording system.
 
-## Table of Contents
+## Directory Structure
 
-### 🔒 Anti-Patterns and Code Quality (NEW)
-- [**ANTI_PATTERNS_README.md**](ANTI_PATTERNS_README.md) - Start here for anti-patterns documentation
-- [**ANTI_PATTERNS_ANALYSIS.md**](ANTI_PATTERNS_ANALYSIS.md) - Detailed analysis of 16 anti-patterns
-- [**ANTI_PATTERNS_CHECKLIST.md**](ANTI_PATTERNS_CHECKLIST.md) - Developer quick reference
-- [**ANTI_PATTERNS_ACTION_PLAN.md**](ANTI_PATTERNS_ACTION_PLAN.md) - Prioritized remediation plan
+```
+docs/
+├── android/              # Android application documentation
+├── maintenance/          # Migration, fixes, and maintenance reports
+├── summaries/            # Implementation and analysis summaries
+├── thesis/               # Thesis-related content (chapters, diagrams, evaluation)
+├── navigation/           # Navigation component documentation
+└── [legacy files]        # Anti-patterns, UI guides, migration docs
+```
 
-### 🚀 Performance and ANR Prevention
-- [**ANR_PREVENTION_GUIDE.md**](ANR_PREVENTION_GUIDE.md) - Guidelines for preventing ANR errors
-- [**ANR_FIX_SUMMARY.md**](ANR_FIX_SUMMARY.md) - Summary of previous ANR fixes
+## Quick Navigation
 
-### 🔄 Migration Documentation
-- [**MIGRATION_COMPLETE_SUMMARY.md**](../MIGRATION_COMPLETE_SUMMARY.md) - Complete AndroidX migration summary
-- [**THIRD_PARTY_MIGRATION_STATUS.md**](THIRD_PARTY_MIGRATION_STATUS.md) - Third-party library migration status
-- [**ANDROIDX_ALTERNATIVES_TO_UTILCODE.md**](ANDROIDX_ALTERNATIVES_TO_UTILCODE.md) - AndroidX alternatives guide
-- [**UTILCODE_LIBRARY_ANALYSIS.md**](UTILCODE_LIBRARY_ANALYSIS.md) - Utilcode library analysis
-- [**UTILCODE_NEXT_STEPS.md**](UTILCODE_NEXT_STEPS.md) - Next steps for Utilcode migration
-- [**UTILCODE_PROGRESS_TRACKER.md**](UTILCODE_PROGRESS_TRACKER.md) - Migration progress tracking
+### Android Application
+- [PC Networking Guide](android/pc-networking-guide.md) - PC-Android communication setup
+- [PC Networking Changes](android/pc-networking-changes.md) - Recent networking changes
+- [PC Networking Verification](android/pc-networking-verification.md) - Verification procedures
+- [Time Sync Flow Diagram](android/time-sync-flow-diagram.txt) - Time synchronization flow
 
-### 🎨 UI and Design
-- [**UIConsistencyReview.md**](UIConsistencyReview.md) - UI consistency review
-- [**MaterialIconsGuide.md**](MaterialIconsGuide.md) - Material Icons usage guide
-- [**MaterialIconsExamples.md**](MaterialIconsExamples.md) - Material Icons examples
-- [**IconMigrationSummary.md**](IconMigrationSummary.md) - Icon migration summary
-- [**IconConversionComplete.md**](IconConversionComplete.md) - Icon conversion completion
+### Implementation Summaries
+- [PC Networking Implementation](summaries/pc-networking-implementation-summary.md) - PC networking feature
+- [Android Analysis Summary](summaries/android-analysis-summary.md) - System analysis
+- [Testing Time Sync](summaries/testing-time-sync.md) - Time sync testing
+- [Resolution Summary](summaries/resolution-summary.md) - Issue resolutions
+- [Next Steps](summaries/next-steps.md) - Planned improvements
+
+### Maintenance and Fixes
+- [Code Review Fixes](maintenance/code-review-fixes.md) - Code review resolutions
+- [Migration Complete Summary](maintenance/migration-complete-summary.md) - AndroidX migration
+- [RGB Camera Fixes](maintenance/rgb-camera-fixes-summary.md) - RGB camera issues
+- [Ripple Fix Summary](maintenance/ripple-fix-summary.md) - Ripple effect fixes
+- [Time Sync Implementation](maintenance/time-sync-implementation-summary.md) - Time sync details
+- [Deprecated Java Patterns](maintenance/deprecated-java-patterns-analysis.md) - Legacy code analysis
+
+### Thesis Content
+- [Chapter 3: System Design](thesis/chapter3/) - Architecture and design decisions
+- [Chapter 4 Documentation](thesis/chapter4-documentation-summary.md) - Implementation details
+- [Chapter 5: Experimental Evaluation](thesis/chapter5/) - Performance testing
+- [Chapter 6: Evaluation](thesis/chapter6/) - Requirements evaluation
+- [Thesis Diagrams](thesis/diagrams/) - Visual content for thesis
+- [Thesis Evaluation Tests](thesis/evaluation/) - Test suite for thesis
+
+### Code Quality
+- [ANTI_PATTERNS_README.md](ANTI_PATTERNS_README.md) - Anti-patterns overview
+- [ANTI_PATTERNS_ANALYSIS.md](ANTI_PATTERNS_ANALYSIS.md) - Detailed analysis
+- [ANTI_PATTERNS_CHECKLIST.md](ANTI_PATTERNS_CHECKLIST.md) - Developer checklist
+- [ANTI_PATTERNS_ACTION_PLAN.md](ANTI_PATTERNS_ACTION_PLAN.md) - Remediation plan
+
+### Performance
+- [ANR_PREVENTION_GUIDE.md](ANR_PREVENTION_GUIDE.md) - ANR prevention guidelines
+- [ANR_FIX_SUMMARY.md](ANR_FIX_SUMMARY.md) - ANR fixes
+
+### Migration Documentation
+- [THIRD_PARTY_MIGRATION_STATUS.md](THIRD_PARTY_MIGRATION_STATUS.md) - Third-party library status
+- [ANDROIDX_ALTERNATIVES_TO_UTILCODE.md](ANDROIDX_ALTERNATIVES_TO_UTILCODE.md) - AndroidX alternatives
+- [UTILCODE_LIBRARY_ANALYSIS.md](UTILCODE_LIBRARY_ANALYSIS.md) - Utilcode analysis
+- [UTILCODE_NEXT_STEPS.md](UTILCODE_NEXT_STEPS.md) - Utilcode migration steps
+- [UTILCODE_PROGRESS_TRACKER.md](UTILCODE_PROGRESS_TRACKER.md) - Migration tracking
+
+### UI and Design
+- [UIConsistencyReview.md](UIConsistencyReview.md) - UI consistency review
+- [MaterialIconsGuide.md](MaterialIconsGuide.md) - Material Icons guide
+- [MaterialIconsExamples.md](MaterialIconsExamples.md) - Material Icons examples
+- [IconMigrationSummary.md](IconMigrationSummary.md) - Icon migration summary
+- [IconConversionComplete.md](IconConversionComplete.md) - Icon conversion completion
 
 ## Quick Start Guides
 
@@ -36,7 +76,7 @@ Comprehensive documentation for the IRCamera Android application.
 1. **Start Here**: [ANTI_PATTERNS_README.md](ANTI_PATTERNS_README.md)
 2. **Code Standards**: [ANTI_PATTERNS_CHECKLIST.md](ANTI_PATTERNS_CHECKLIST.md)
 3. **Performance**: [ANR_PREVENTION_GUIDE.md](ANR_PREVENTION_GUIDE.md)
-4. **Architecture**: [MIGRATION_COMPLETE_SUMMARY.md](../MIGRATION_COMPLETE_SUMMARY.md)
+4. **Architecture**: [MIGRATION_COMPLETE_SUMMARY.md](maintenance/migration-complete-summary.md)
 
 ### For Code Reviews
 
@@ -48,7 +88,7 @@ Comprehensive documentation for the IRCamera Android application.
 
 1. [ANTI_PATTERNS_ACTION_PLAN.md](ANTI_PATTERNS_ACTION_PLAN.md) - Remediation roadmap
 2. [THIRD_PARTY_MIGRATION_STATUS.md](THIRD_PARTY_MIGRATION_STATUS.md) - Migration status
-3. [MIGRATION_COMPLETE_SUMMARY.md](../MIGRATION_COMPLETE_SUMMARY.md) - Completed work
+3. [MIGRATION_COMPLETE_SUMMARY.md](maintenance/migration-complete-summary.md) - Completed work
 
 ## Documentation by Category
 
@@ -87,7 +127,7 @@ Comprehensive documentation for the IRCamera Android application.
 **Focus**: Modernization from legacy libraries to AndroidX and Kotlin standards.
 
 **Key Documents**:
-- [MIGRATION_COMPLETE_SUMMARY.md](../MIGRATION_COMPLETE_SUMMARY.md) - Complete migration overview
+- [MIGRATION_COMPLETE_SUMMARY.md](maintenance/migration-complete-summary.md) - Complete migration overview
 - [ANDROIDX_ALTERNATIVES_TO_UTILCODE.md](ANDROIDX_ALTERNATIVES_TO_UTILCODE.md) - AndroidX patterns
 - [THIRD_PARTY_MIGRATION_STATUS.md](THIRD_PARTY_MIGRATION_STATUS.md) - Current status
 
@@ -117,7 +157,7 @@ Comprehensive documentation for the IRCamera Android application.
 
 3. [ANR_PREVENTION_GUIDE.md](ANR_PREVENTION_GUIDE.md) - Performance guidelines
 4. [ANTI_PATTERNS_ACTION_PLAN.md](ANTI_PATTERNS_ACTION_PLAN.md) - Remediation roadmap
-5. [MIGRATION_COMPLETE_SUMMARY.md](../MIGRATION_COMPLETE_SUMMARY.md) - Architecture overview
+5. [MIGRATION_COMPLETE_SUMMARY.md](maintenance/migration-complete-summary.md) - Architecture overview
 
 ### 🟢 Reference (As Needed)
 

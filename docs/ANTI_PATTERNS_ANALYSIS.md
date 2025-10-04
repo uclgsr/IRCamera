@@ -4,7 +4,7 @@
 
 This document provides a comprehensive analysis of anti-patterns and common Android development errors identified in the IRCamera application. The analysis covers security vulnerabilities, memory leaks, threading issues, resource management, and architectural concerns.
 
-**Overall Assessment**: The application has undergone significant modernization (as documented in MIGRATION_COMPLETE_SUMMARY.md), but several critical anti-patterns remain that should be addressed.
+**Overall Assessment**: The application has undergone significant modernization (as documented in maintenance/migration-complete-summary.md), but several critical anti-patterns remain that should be addressed.
 
 ## Critical Issues (High Priority)
 
@@ -487,7 +487,7 @@ private const val TAG = "MyClass"
 
 ### ✅ Recent Improvements
 
-1. **Migration from Utilcode**: Completed (MIGRATION_COMPLETE_SUMMARY.md)
+1. **Migration from Utilcode**: Completed (maintenance/migration-complete-summary.md)
    - Removed 200+ uses of legacy utility library
    - Replaced with AndroidX and Kotlin standard library
 
@@ -589,4 +589,4 @@ The IRCamera application has undergone significant modernization, with most crit
 - [Kotlin Coding Conventions](https://kotlinlang.org/docs/coding-conventions.html)
 - [OWASP Mobile Security Testing Guide](https://owasp.org/www-project-mobile-security-testing-guide/)
 - Internal: `docs/ANR_PREVENTION_GUIDE.md`
-- Internal: `MIGRATION_COMPLETE_SUMMARY.md`
+- Internal: `maintenance/migration-complete-summary.md`

@@ -268,7 +268,7 @@ class SessionDurationAnalyzer:
 class OutputGenerator:
     """Generate test output artifacts"""
 
-    def __init__(self, output_dir: str = "docs/thesis_evaluation/outputs"):
+    def __init__(self, output_dir: str = "docs/thesis/evaluation/outputs"):
         self.output_dir = Path(output_dir)
         self.output_dir.mkdir(parents=True, exist_ok=True)
 

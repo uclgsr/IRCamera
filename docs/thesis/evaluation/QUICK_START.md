@@ -45,7 +45,7 @@ python3 tests/run_all_tests.py --device-ip 192.168.1.100
 ## Output Files
 - `*.json` - Machine-readable data
 - `*.txt` - Human-readable reports
-- Generated in the `thesis_evaluation/` directory
+- Generated in the `docs/thesis/evaluation/` directory
 
 ## Common Issues
 

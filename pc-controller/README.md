@@ -294,7 +294,7 @@ sensing capabilities.
 
 For detailed technical documentation, see:
 
-- **docs/IMPLEMENTATION_SUMMARY.md** - Complete implementation overview
+- **docs/summaries/pc-networking-implementation-summary.md** - Complete implementation overview
 - **docs/INTEGRATION_READY.md** - PC-Android integration status
 - **docs/PROTOCOL_BRIDGE_GUIDE.md** - Communication protocol details
 - **docs/GAP_ANALYSIS.md** - Protocol compatibility analysis

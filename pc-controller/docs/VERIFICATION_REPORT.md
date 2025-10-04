@@ -315,7 +315,7 @@ $ python3 verify_pc_controller.py
 
 ### Files Updated
 
-1. `docs/IMPLEMENTATION_SUMMARY.md`
+1. `docs/summaries/pc-networking-implementation-summary.md`
    - Fixed file references
    - Updated test coverage statistics
    - Added comprehensive test breakdown

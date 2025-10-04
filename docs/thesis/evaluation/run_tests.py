@@ -28,7 +28,7 @@ def main():
     print()
     
     args = [
-        "docs/thesis_evaluation/",
+        "docs/thesis/evaluation/",
         "-v",
         "--tb=short",
         "-s",
@@ -37,14 +37,14 @@ def main():
     
     if "--html" in sys.argv or "-html" in sys.argv:
         args.extend([
-            "--html=docs/thesis_evaluation/reports/test_report.html",
+            "--html=docs/thesis/evaluation/reports/test_report.html",
             "--self-contained-html"
         ])
     
     if "--cov" in sys.argv:
         args.extend([
             "--cov=docs/thesis_evaluation",
-            "--cov-report=html:docs/thesis_evaluation/reports/coverage",
+            "--cov-report=html:docs/thesis/evaluation/reports/coverage",
             "--cov-report=term"
         ])
     
@@ -64,8 +64,8 @@ def main():
         print(f"Tests completed with exit code: {exit_code}")
     print("=" * 70)
     print()
-    print("Test outputs saved to: docs/thesis_evaluation/outputs/")
-    print("Test reports saved to: docs/thesis_evaluation/reports/")
+    print("Test outputs saved to: docs/thesis/evaluation/outputs/")
+    print("Test reports saved to: docs/thesis/evaluation/reports/")
     
     return exit_code
 

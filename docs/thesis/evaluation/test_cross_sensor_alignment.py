@@ -26,7 +26,7 @@ class TestCrossSensorAlignment:
     @pytest.fixture
     def output_generator(self):
         """Create output generator for test artifacts"""
-        return OutputGenerator("docs/thesis_evaluation/outputs/cross_sensor_alignment")
+        return OutputGenerator("docs/thesis/evaluation/outputs/cross_sensor_alignment")
 
     @pytest.fixture
     def sensor_data_generator(self):

@@ -32,7 +32,7 @@ The issue description listed requirements for implementing the PC Controller Des
 - ✅ `pc_controller.py` (actual implementation)
 
 **Files updated:**
-- `docs/IMPLEMENTATION_SUMMARY.md` - Corrected file paths, updated test stats
+- `docs/summaries/pc-networking-implementation-summary.md` - Corrected file paths, updated test stats
 - `docs/QUICK_START.md` - Fixed all command examples
 - `docs/PC_CONTROLLER_IMPLEMENTATION.md` - Accurate file references
 
@@ -86,7 +86,7 @@ python3 setup.py build_ext --inplace
 ## Files Changed
 
 ### Modified (5 files)
-- `pc-controller/docs/IMPLEMENTATION_SUMMARY.md`
+- `pc-controller/docs/summaries/pc-networking-implementation-summary.md`
 - `pc-controller/docs/PC_CONTROLLER_IMPLEMENTATION.md`
 - `pc-controller/docs/QUICK_START.md`
 - `pc-controller/tests/test_protocol_compatibility.py`

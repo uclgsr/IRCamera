@@ -124,7 +124,7 @@ These are already present in the app, so no additional dependencies are needed.
 
 When integrated and run, tests will output log files to:
 ```
-/storage/emulated/0/Android/data/com.csl.irCamera/files/thesis_evaluation/
+/storage/emulated/0/Android/data/com.csl.irCamera/files/docs/thesis/evaluation/
 ```
 
 File naming:

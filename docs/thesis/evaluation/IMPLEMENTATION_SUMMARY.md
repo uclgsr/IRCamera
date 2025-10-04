@@ -9,7 +9,7 @@ This implementation provides a comprehensive test suite for evaluating the netwo
 ### Test Suite Structure
 
 ```
-thesis_evaluation/
+docs/thesis/evaluation/
 ├── README.md                              # Comprehensive documentation
 ├── QUICK_START.md                         # Quick reference guide
 ├── IMPLEMENTATION_SUMMARY.md              # This file

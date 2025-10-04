@@ -34,7 +34,7 @@ class TestSessionDurationConsistency:
     @pytest.fixture
     def output_generator(self):
         """Create output generator for test artifacts"""
-        return OutputGenerator("docs/thesis_evaluation/outputs/session_duration")
+        return OutputGenerator("docs/thesis/evaluation/outputs/session_duration")
 
     @pytest.fixture
     def sensor_data_generator(self):

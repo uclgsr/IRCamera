@@ -193,7 +193,7 @@ Week 9+:   P3 Architecture (25 hours)
 ### Internal Documents
 - [ANR_PREVENTION_GUIDE.md](ANR_PREVENTION_GUIDE.md) - ANR prevention strategies
 - [ANR_FIX_SUMMARY.md](ANR_FIX_SUMMARY.md) - Previous ANR fixes
-- [MIGRATION_COMPLETE_SUMMARY.md](../MIGRATION_COMPLETE_SUMMARY.md) - AndroidX migration
+- [MIGRATION_COMPLETE_SUMMARY.md](maintenance/migration-complete-summary.md) - AndroidX migration
 - [UTILCODE_LIBRARY_ANALYSIS.md](UTILCODE_LIBRARY_ANALYSIS.md) - Utilcode migration
 
 ### External Resources
