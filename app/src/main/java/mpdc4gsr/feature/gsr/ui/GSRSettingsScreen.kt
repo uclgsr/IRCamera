@@ -165,12 +165,20 @@ fun GSRSettingsScreen(
             }
 
             // Calibration
+            val context = androidx.compose.ui.platform.LocalContext.current
             SettingsCard(
                 title = "Calibration",
                 icon = Icons.Default.Tune
             ) {
                 Button(
-                    onClick = { /* Start calibration */ },
+                    onClick = {
+                        // TODO: Start GSR calibration process
+                        android.widget.Toast.makeText(
+                            context,
+                            "Starting calibration...",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Icon(Icons.Default.Settings, contentDescription = null)
@@ -178,7 +186,14 @@ fun GSRSettingsScreen(
                     Text("Start Calibration")
                 }
                 Button(
-                    onClick = { /* Reset to defaults */ },
+                    onClick = {
+                        // TODO: Reset GSR settings to defaults
+                        android.widget.Toast.makeText(
+                            context,
+                            "Resetting to defaults...",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
                 ) {

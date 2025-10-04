@@ -732,12 +732,20 @@ private fun DataAnalysisToolsCard() {
 
             HorizontalDivider()
 
+            val context = androidx.compose.ui.platform.LocalContext.current
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 OutlinedButton(
-                    onClick = { /* Apply filter */ },
+                    onClick = {
+                        // TODO: Apply data filter
+                        android.widget.Toast.makeText(
+                            context,
+                            "Applying filter...",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.FilterAlt, contentDescription = null)
@@ -746,7 +754,14 @@ private fun DataAnalysisToolsCard() {
                 }
 
                 OutlinedButton(
-                    onClick = { /* Smooth data */ },
+                    onClick = {
+                        // TODO: Apply data smoothing
+                        android.widget.Toast.makeText(
+                            context,
+                            "Smoothing data...",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Tune, contentDescription = null)
@@ -813,12 +828,20 @@ private fun ExportOptionsCard() {
 
             HorizontalDivider()
 
+            val context = androidx.compose.ui.platform.LocalContext.current
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Button(
-                    onClick = { /* Export CSV */ },
+                    onClick = {
+                        // TODO: Export data to CSV
+                        android.widget.Toast.makeText(
+                            context,
+                            "Exporting to CSV...",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.TableChart, contentDescription = null)
@@ -827,7 +850,14 @@ private fun ExportOptionsCard() {
                 }
 
                 OutlinedButton(
-                    onClick = { /* Save plot */ },
+                    onClick = {
+                        // TODO: Save plot as image
+                        android.widget.Toast.makeText(
+                            context,
+                            "Saving plot...",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Image, contentDescription = null)

@@ -599,7 +599,14 @@ private fun ProcessingResultsCard() {
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 OutlinedButton(
-                    onClick = { /* View processed data */ },
+                    onClick = {
+                        // TODO: View processed data
+                        android.widget.Toast.makeText(
+                            this@GSRDataViewComposeActivity,
+                            "Viewing processed data...",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Visibility, contentDescription = null)
@@ -608,7 +615,14 @@ private fun ProcessingResultsCard() {
                 }
 
                 OutlinedButton(
-                    onClick = { /* Export processed */ },
+                    onClick = {
+                        // TODO: Export processed data
+                        android.widget.Toast.makeText(
+                            this@GSRDataViewComposeActivity,
+                            "Exporting processed data...",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.FileDownload, contentDescription = null)

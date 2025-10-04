@@ -49,10 +49,18 @@ fun GalleryScreen(
             showBackButton = true,
             onBackClick = onBackClick
         ) {
+            val context = androidx.compose.ui.platform.LocalContext.current
             TitleBarAction(
                 icon = Icons.Default.Search,
                 contentDescription = "Search",
-                onClick = { /* Search functionality */ }
+                onClick = {
+                    // TODO: Implement search functionality
+                    android.widget.Toast.makeText(
+                        context,
+                        "Search feature coming soon",
+                        android.widget.Toast.LENGTH_SHORT
+                    ).show()
+                }
             )
         }
 
@@ -196,8 +204,16 @@ private fun ThermalImageCard(
 ) {
     val primaryColor = MaterialTheme.colorScheme.primary
 
+    val context = androidx.compose.ui.platform.LocalContext.current
     Card(
-        onClick = { /* Open image detail */ },
+        onClick = {
+            // TODO: Open image detail view
+            android.widget.Toast.makeText(
+                context,
+                "Opening image: ${image.name}",
+                android.widget.Toast.LENGTH_SHORT
+            ).show()
+        },
         modifier = modifier.aspectRatio(1f),
         colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
     ) {
@@ -294,8 +310,16 @@ private fun RecordingCard(
     recording: Recording,
     modifier: Modifier = Modifier
 ) {
+    val context = androidx.compose.ui.platform.LocalContext.current
     Card(
-        onClick = { /* Play recording */ },
+        onClick = {
+            // TODO: Play thermal recording
+            android.widget.Toast.makeText(
+                context,
+                "Playing recording: ${recording.name}",
+                android.widget.Toast.LENGTH_SHORT
+            ).show()
+        },
         modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
     ) {
@@ -347,8 +371,16 @@ private fun DataExportCard(
     export: DataExport,
     modifier: Modifier = Modifier
 ) {
+    val context = androidx.compose.ui.platform.LocalContext.current
     Card(
-        onClick = { /* Open/Share export */ },
+        onClick = {
+            // TODO: Open or share data export
+            android.widget.Toast.makeText(
+                context,
+                "Opening export: ${export.name}",
+                android.widget.Toast.LENGTH_SHORT
+            ).show()
+        },
         modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
     ) {

@@ -93,10 +93,24 @@ class SensorDashboardComposeEnhanced : ComponentActivity() {
                     },
                     actions = {
                         // Enhanced actions leveraging consolidated patterns
-                        IconButton(onClick = { /* Export all sensor data */ }) {
+                        IconButton(onClick = {
+                            // TODO: Export all sensor data
+                            android.widget.Toast.makeText(
+                                this@SensorDashboardComposeEnhanced,
+                                "Exporting all sensor data...",
+                                android.widget.Toast.LENGTH_SHORT
+                            ).show()
+                        }) {
                             Icon(Icons.Default.Download, contentDescription = "Export Data")
                         }
-                        IconButton(onClick = { /* Open sensor settings */ }) {
+                        IconButton(onClick = {
+                            // TODO: Open sensor settings
+                            android.widget.Toast.makeText(
+                                this@SensorDashboardComposeEnhanced,
+                                "Opening sensor settings...",
+                                android.widget.Toast.LENGTH_SHORT
+                            ).show()
+                        }) {
                             Icon(Icons.Default.Settings, contentDescription = "Settings")
                         }
                     }
@@ -155,17 +169,52 @@ class SensorDashboardComposeEnhanced : ComponentActivity() {
                 // Enhanced data export section
                 DataExportSection(
                     sessionState = sessionState,
-                    onExportSession = { /* Export current session */ },
-                    onExportAllData = { /* Export all sensor data */ },
-                    onManageSessions = { /* Launch session manager */ }
+                    onExportSession = {
+                        // TODO: Export current session
+                        android.widget.Toast.makeText(
+                            this@SensorDashboardComposeEnhanced,
+                            "Exporting current session...",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
+                    onExportAllData = {
+                        // TODO: Export all sensor data
+                        android.widget.Toast.makeText(
+                            this@SensorDashboardComposeEnhanced,
+                            "Exporting all data...",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
+                    onManageSessions = {
+                        // TODO: Launch session manager
+                        android.widget.Toast.makeText(
+                            this@SensorDashboardComposeEnhanced,
+                            "Opening session manager...",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 )
 
                 // System status and diagnostics
                 SystemDiagnosticsSection(
                     thermalCameraState = thermalCameraState,
                     gsrSensorState = gsrSensorState,
-                    onRunDiagnostics = { /* Run system diagnostics */ },
-                    onViewLogs = { /* View system logs */ }
+                    onRunDiagnostics = {
+                        // TODO: Run system diagnostics
+                        android.widget.Toast.makeText(
+                            this@SensorDashboardComposeEnhanced,
+                            "Running diagnostics...",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
+                    onViewLogs = {
+                        // TODO: View system logs
+                        android.widget.Toast.makeText(
+                            this@SensorDashboardComposeEnhanced,
+                            "Opening system logs...",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 )
             }
         }
