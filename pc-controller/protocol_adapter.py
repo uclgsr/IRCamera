@@ -34,6 +34,7 @@ class ProtocolAdapter:
     # Message type mappings: Android -> PC internal names
     ANDROID_TO_PC_TYPES = {
         'HELLO': 'HELLO',
+        'SYNC_INIT': 'SYNC_INIT',
         'SYNC_REQUEST': 'SYNC_REQUEST',
         'SYNC_RESPONSE': 'SYNC_RESPONSE',
         'SYNC_RESULT': 'SYNC_RESULT',

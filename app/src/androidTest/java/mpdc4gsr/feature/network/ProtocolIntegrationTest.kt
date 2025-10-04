@@ -61,6 +61,7 @@ class ProtocolIntegrationTest {
             "HELLO device_name=test sensors=[GSR,RGB,THERMAL]",
             "START_RECORD session_id=test_session",
             "STOP_RECORD session_id=test_session",
+            "SYNC_INIT",
             "SYNC_REQUEST t_pc=1234567890",
             "ACK cmd=START_RECORD",
             "ERROR cmd=START_RECORD code=FAIL msg=\"Test error\""
@@ -84,6 +85,9 @@ class ProtocolIntegrationTest {
 
         val stopRecord = Protocol.createStopRecordMessage("session_001")
         assertTrue("STOP_RECORD should contain session_id", stopRecord.contains("session_id=session_001"))
+
+        val syncInit = Protocol.createSyncInitMessage()
+        assertEquals("SYNC_INIT message should match", "SYNC_INIT", syncInit)
 
         val syncRequest = Protocol.createSyncRequestMessage(1234567890L)
         assertTrue("SYNC_REQUEST should contain t_pc", syncRequest.contains("t_pc=1234567890"))
