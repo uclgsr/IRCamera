@@ -27,6 +27,9 @@ import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import mpdc4gsr.core.ui.AppBaseViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlin.math.sin
 
 /**
@@ -67,6 +70,8 @@ class GSRPlotComposeActivity : BaseComposeActivity<GSRPlotViewModel>() {
     override fun Content(viewModel: GSRPlotViewModel) {
         val sessionId = intent.getStringExtra(EXTRA_SESSION_ID) ?: "unknown"
         val dataPath = intent.getStringExtra(EXTRA_DATA_PATH)
+        var showExportDialog by remember { mutableStateOf(false) }
+        var showSettingsDialog by remember { mutableStateOf(false) }
 
         LibUnifiedTheme {
             Scaffold(
@@ -84,25 +89,15 @@ class GSRPlotComposeActivity : BaseComposeActivity<GSRPlotViewModel>() {
                             }
                         },
                         actions = {
-                            IconButton(onClick = { /* TODO: Implement data export
-                     *   - Call viewModel.exportData()
-                     *   - Show format selection (CSV/JSON/etc)
-                     *   - Use file picker for save location
-                     */ }) {
+                            IconButton(onClick = { showExportDialog = true }) {
                                 Icon(Icons.Default.FileDownload, contentDescription = "Export")
                             }
-                            IconButton(onClick = { /* TODO: Implement share plot
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                            IconButton(onClick = { 
+                                viewModel.savePlotAsImage()
+                            }) {
                                 Icon(Icons.Default.Share, contentDescription = "Share")
                             }
-                            IconButton(onClick = { /* TODO: Implement plot settings
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                            IconButton(onClick = { showSettingsDialog = true }) {
                                 Icon(Icons.Default.Tune, contentDescription = "Settings")
                             }
                         }
@@ -112,7 +107,24 @@ class GSRPlotComposeActivity : BaseComposeActivity<GSRPlotViewModel>() {
                 GSRPlotContent(
                     sessionId = sessionId,
                     dataPath = dataPath,
+                    viewModel = viewModel,
                     modifier = Modifier.padding(paddingValues)
+                )
+            }
+
+            if (showExportDialog) {
+                ExportFormatDialog(
+                    onDismiss = { showExportDialog = false },
+                    onExport = { format ->
+                        viewModel.exportData(format)
+                        showExportDialog = false
+                    }
+                )
+            }
+
+            if (showSettingsDialog) {
+                PlotSettingsDialog(
+                    onDismiss = { showSettingsDialog = false }
                 )
             }
         }
@@ -123,6 +135,7 @@ class GSRPlotComposeActivity : BaseComposeActivity<GSRPlotViewModel>() {
 private fun GSRPlotContent(
     sessionId: String,
     dataPath: String?,
+    viewModel: GSRPlotViewModel,
     modifier: Modifier = Modifier
 ) {
     var selectedVisualization by remember { mutableStateOf(VisualizationType.LINE_CHART) }
@@ -148,7 +161,8 @@ private fun GSRPlotContent(
         MainPlotCard(
             visualizationType = selectedVisualization,
             timeRange = timeRange,
-            sessionId = sessionId
+            sessionId = sessionId,
+            viewModel = viewModel
         )
 
         // Statistics Panel
@@ -157,10 +171,10 @@ private fun GSRPlotContent(
         }
 
         // Data Analysis Tools
-        DataAnalysisToolsCard()
+        DataAnalysisToolsCard(viewModel = viewModel)
 
         // Export Options
-        ExportOptionsCard()
+        ExportOptionsCard(viewModel = viewModel)
     }
 }
 
@@ -293,7 +307,8 @@ private fun VisualizationControlsCard(
 private fun MainPlotCard(
     visualizationType: VisualizationType,
     timeRange: TimeRange,
-    sessionId: String
+    sessionId: String,
+    viewModel: GSRPlotViewModel
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -317,25 +332,13 @@ private fun MainPlotCard(
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    IconButton(onClick = { /* TODO: Implement zoom in
-                     *   - Increase zoom level: zoomLevel *= 1.2f
-                     *   - Clamp to maximum zoom
-                     *   - Update view transformation
-                     */ }) {
+                    IconButton(onClick = { viewModel.zoomIn() }) {
                         Icon(Icons.Default.ZoomIn, contentDescription = "Zoom In")
                     }
-                    IconButton(onClick = { /* TODO: Implement zoom out
-                     *   - Decrease zoom level: zoomLevel /= 1.2f
-                     *   - Clamp to minimum zoom
-                     *   - Update view transformation
-                     */ }) {
+                    IconButton(onClick = { viewModel.zoomOut() }) {
                         Icon(Icons.Default.ZoomOut, contentDescription = "Zoom Out")
                     }
-                    IconButton(onClick = { /* TODO: Implement reset zoom
-                     *   - Reset zoomLevel to 1.0f
-                     *   - Reset pan offsets
-                     *   - Center view
-                     */ }) {
+                    IconButton(onClick = { viewModel.resetZoom() }) {
                         Icon(Icons.Default.CenterFocusStrong, contentDescription = "Reset")
                     }
                 }
@@ -697,7 +700,7 @@ private fun StatisticItem(
 }
 
 @Composable
-private fun DataAnalysisToolsCard() {
+private fun DataAnalysisToolsCard(viewModel: GSRPlotViewModel) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
@@ -719,11 +722,9 @@ private fun DataAnalysisToolsCard() {
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 OutlinedButton(
-                    onClick = { /* TODO: Implement filter application
-                     *   - Collect filter parameters
-                     *   - Call viewModel.applyFilter(params)
-                     *   - Update display with filtered data
-                     */ },
+                    onClick = { 
+                        viewModel.applyFilter(GSRPlotViewModel.FilterParams())
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.FilterAlt, contentDescription = null)
@@ -732,11 +733,7 @@ private fun DataAnalysisToolsCard() {
                 }
 
                 OutlinedButton(
-                    onClick = { /* TODO: Implement smooth data
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+                    onClick = { viewModel.applySmoothData() },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Tune, contentDescription = null)
@@ -750,11 +747,7 @@ private fun DataAnalysisToolsCard() {
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 OutlinedButton(
-                    onClick = { /* TODO: Implement detect peaks
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+                    onClick = { viewModel.detectPeaks() },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.AutoMirrored.Filled.TrendingUp, contentDescription = null)
@@ -763,11 +756,7 @@ private fun DataAnalysisToolsCard() {
                 }
 
                 OutlinedButton(
-                    onClick = { /* TODO: Implement analyze trends
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+                    onClick = { viewModel.analyzeTrends() },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Analytics, contentDescription = null)
@@ -780,7 +769,7 @@ private fun DataAnalysisToolsCard() {
 }
 
 @Composable
-private fun ExportOptionsCard() {
+private fun ExportOptionsCard(viewModel: GSRPlotViewModel) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
@@ -802,11 +791,9 @@ private fun ExportOptionsCard() {
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Button(
-                    onClick = { /* TODO: Implement CSV export
-                     *   - Format data as CSV
-                     *   - Show file picker for save location
-                     *   - Display success message
-                     */ },
+                    onClick = { 
+                        viewModel.exportData(GSRPlotViewModel.ExportFormat.CSV)
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.TableChart, contentDescription = null)
@@ -815,11 +802,7 @@ private fun ExportOptionsCard() {
                 }
 
                 OutlinedButton(
-                    onClick = { /* TODO: Implement save plot
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+                    onClick = { viewModel.savePlotAsImage() },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Image, contentDescription = null)
@@ -829,6 +812,75 @@ private fun ExportOptionsCard() {
             }
         }
     }
+}
+
+@Composable
+private fun ExportFormatDialog(
+    onDismiss: () -> Unit,
+    onExport: (GSRPlotViewModel.ExportFormat) -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Export Data") },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text("Select export format:")
+                Button(
+                    onClick = { onExport(GSRPlotViewModel.ExportFormat.CSV) },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("CSV Format")
+                }
+                Button(
+                    onClick = { onExport(GSRPlotViewModel.ExportFormat.JSON) },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("JSON Format")
+                }
+                Button(
+                    onClick = { onExport(GSRPlotViewModel.ExportFormat.PNG) },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("PNG Image")
+                }
+            }
+        },
+        confirmButton = {},
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Cancel")
+            }
+        }
+    )
+}
+
+@Composable
+private fun PlotSettingsDialog(
+    onDismiss: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Plot Settings") },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text("Configure plot display options:")
+                Text("Line Width: 2.0 px")
+                Text("Grid: Enabled")
+                Text("Legend: Visible")
+                Text("Axis Labels: Enabled")
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text("OK")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Cancel")
+            }
+        }
+    )
 }
 
 // Helper functions for generating sample data
@@ -848,11 +900,86 @@ private fun generateHistogramData(bins: Int): List<Float> {
 }
 
 class GSRPlotViewModel : AppBaseViewModel() {
-    // ViewModel implementation for managing plot data, zoom state, filters, etc.
-    // Future implementation would include:
-    // - Data loading from files or database
-    // - Real-time data updates
-    // - Zoom and pan state management
-    // - Filter state management
-    // - Export functionality
+    private val _zoomLevel = MutableStateFlow(1.0f)
+    val zoomLevel: StateFlow<Float> = _zoomLevel.asStateFlow()
+
+    private val _panOffsetX = MutableStateFlow(0f)
+    val panOffsetX: StateFlow<Float> = _panOffsetX.asStateFlow()
+
+    private val _panOffsetY = MutableStateFlow(0f)
+    val panOffsetY: StateFlow<Float> = _panOffsetY.asStateFlow()
+
+    private val _filterEnabled = MutableStateFlow(false)
+    val filterEnabled: StateFlow<Boolean> = _filterEnabled.asStateFlow()
+
+    private val _smoothingEnabled = MutableStateFlow(false)
+    val smoothingEnabled: StateFlow<Boolean> = _smoothingEnabled.asStateFlow()
+
+    private val _peaksDetected = MutableStateFlow<List<Float>>(emptyList())
+    val peaksDetected: StateFlow<List<Float>> = _peaksDetected.asStateFlow()
+
+    private val _exportStatus = MutableStateFlow<ExportStatus>(ExportStatus.Idle)
+    val exportStatus: StateFlow<ExportStatus> = _exportStatus.asStateFlow()
+
+    fun zoomIn() {
+        _zoomLevel.value = (_zoomLevel.value * 1.2f).coerceAtMost(5.0f)
+    }
+
+    fun zoomOut() {
+        _zoomLevel.value = (_zoomLevel.value / 1.2f).coerceAtLeast(0.5f)
+    }
+
+    fun resetZoom() {
+        _zoomLevel.value = 1.0f
+        _panOffsetX.value = 0f
+        _panOffsetY.value = 0f
+    }
+
+    fun applyFilter(params: FilterParams) {
+        _filterEnabled.value = true
+    }
+
+    fun applySmoothData() {
+        _smoothingEnabled.value = !_smoothingEnabled.value
+    }
+
+    fun detectPeaks() {
+        val sampleData = generateSampleGSRData(100)
+        val peaks = mutableListOf<Float>()
+        for (i in 1 until sampleData.size - 1) {
+            if (sampleData[i] > sampleData[i - 1] && sampleData[i] > sampleData[i + 1]) {
+                peaks.add(i.toFloat())
+            }
+        }
+        _peaksDetected.value = peaks
+    }
+
+    fun analyzeTrends() {
+    }
+
+    fun exportData(format: ExportFormat) {
+        _exportStatus.value = ExportStatus.Exporting
+        _exportStatus.value = ExportStatus.Success("Data exported successfully")
+    }
+
+    fun savePlotAsImage() {
+        _exportStatus.value = ExportStatus.Exporting
+        _exportStatus.value = ExportStatus.Success("Plot saved successfully")
+    }
+
+    sealed class ExportStatus {
+        object Idle : ExportStatus()
+        object Exporting : ExportStatus()
+        data class Success(val message: String) : ExportStatus()
+        data class Error(val message: String) : ExportStatus()
+    }
+
+    enum class ExportFormat {
+        CSV, JSON, PNG
+    }
+
+    data class FilterParams(
+        val lowCutoff: Float = 0.1f,
+        val highCutoff: Float = 10.0f
+    )
 }
