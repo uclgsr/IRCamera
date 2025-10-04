@@ -139,7 +139,7 @@ class RgbCameraRecorder(
     private var camera: Camera? = null
     private var activeRecording: Recording? = null
 
-    private val cameraExecutor: ExecutorService = Executors.newSingleThreadExecutor()
+    private var cameraExecutor: ExecutorService = Executors.newSingleThreadExecutor()
 
     private val statusFlow = MutableStateFlow(createInitialStatus())
     private val errorFlow = MutableSharedFlow<SensorError>()
@@ -389,10 +389,22 @@ class RgbCameraRecorder(
         }
     }
 
+    /**
+     * Switch to the front-facing camera.
+     * Cannot be called while recording is active.
+     * 
+     * @return true if switch was successful, false otherwise
+     */
     suspend fun switchToFrontCamera(): Boolean {
         return switchCamera(useFrontCamera = true)
     }
 
+    /**
+     * Switch to the back-facing camera.
+     * Cannot be called while recording is active.
+     * 
+     * @return true if switch was successful, false otherwise
+     */
     suspend fun switchToBackCamera(): Boolean {
         return switchCamera(useFrontCamera = false)
     }
@@ -490,8 +502,27 @@ class RgbCameraRecorder(
         }
     }
 
+    /**
+     * Bind camera preview to a PreviewView for live display.
+     * This can be called after initialize() to enable live preview.
+     * The Preview use case is always part of the camera lifecycle, 
+     * so binding can occur at any time after initialization.
+     *
+     * @param previewView The PreviewView to display the camera feed
+     */
     fun bindPreview(previewView: PreviewView) {
-        this.preview?.setSurfaceProvider(previewView.surfaceProvider)
+        try {
+            this.preview?.let { preview ->
+                preview.setSurfaceProvider(previewView.surfaceProvider)
+                previewView.implementationMode = PreviewView.ImplementationMode.PERFORMANCE
+                previewView.scaleType = PreviewView.ScaleType.FILL_CENTER
+                AppLogger.i(TAG, "Preview bound to PreviewView - live camera feed active")
+            } ?: run {
+                AppLogger.w(TAG, "Cannot bind preview - Preview use case not initialized. Call initialize() first.")
+            }
+        } catch (e: Exception) {
+            AppLogger.e(TAG, "Failed to bind preview to PreviewView", e)
+        }
     }
 
     interface CameraDisplayInfo {
@@ -691,10 +722,12 @@ class RgbCameraRecorder(
             }
 
             preview?.let { preview ->
+                useCases.add(preview)
+                AppLogger.i(TAG, " Preview use case added to camera lifecycle")
+                
                 previewView?.let { previewView ->
                     try {
                         preview.setSurfaceProvider(previewView.surfaceProvider)
-                        useCases.add(preview)
                         Log.i(
                             TAG,
                             " Preview bound to PreviewView successfully - live camera feed enabled"
@@ -704,14 +737,14 @@ class RgbCameraRecorder(
                         previewView.scaleType = PreviewView.ScaleType.FILL_CENTER
 
                     } catch (e: Exception) {
-                        AppLogger.w(TAG, "Preview binding failed, continuing without preview", e)
+                        AppLogger.w(TAG, "Preview binding failed, but preview use case is still active", e)
                         emitError(
                             ErrorType.INITIALIZATION_FAILED,
                             "Camera preview unavailable but recording will continue"
                         )
                     }
                 } ?: run {
-                    AppLogger.w(TAG, "No PreviewView provided - recording without live preview")
+                    AppLogger.i(TAG, "Preview use case ready - waiting for bindPreview() call from UI")
                 }
             }
 
@@ -1867,7 +1900,6 @@ class RgbCameraRecorder(
             videoCapture = null
             imageCapture = null
             rawImageCapture = null
-            cameraProvider = null
 
             try {
                 cameraExecutor.shutdown()
@@ -1875,6 +1907,9 @@ class RgbCameraRecorder(
                     AppLogger.w(TAG, "Camera executor did not terminate gracefully, forcing shutdown")
                     cameraExecutor.shutdownNow()
                 }
+                // Recreate executor to allow re-initialization for multiple recording sessions
+                cameraExecutor = Executors.newSingleThreadExecutor()
+                AppLogger.d(TAG, "Camera executor recreated for potential reuse")
             } catch (e: Exception) {
                 AppLogger.w(TAG, "Error shutting down camera executor", e)
             }
