@@ -1,7 +1,8 @@
-package mpdc4gsr.feature.settings.data
+package mpdc4gsr.tests
 
 import android.content.Context
 import android.content.SharedPreferences
+import mpdc4gsr.feature.settings.data.RecordingSettingsRepository
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Ignore
@@ -13,7 +14,7 @@ import org.mockito.junit.MockitoJUnitRunner
 
 @Ignore("All tests disabled")
 @RunWith(MockitoJUnitRunner::class)
-class RecordingSettingsRepositoryTest {
+class RecordingSettingsTest {
 
     @Mock
     private lateinit var mockContext: Context

@@ -1,13 +1,14 @@
-package mpdc4gsr.core.utils
+package mpdc4gsr.tests
 
 import android.util.Log
 import io.mockk.*
 import mpdc4gsr.core.StructuredLogger
+import mpdc4gsr.core.utils.AppLogger
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
-class AppLoggerTest {
+class LoggingFunctionalityTest {
 
     private lateinit var structuredLogger: StructuredLogger
 

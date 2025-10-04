@@ -1,8 +1,10 @@
-package mpdc4gsr.core.utils
+package mpdc4gsr.tests
 
 import android.util.Log
 import io.mockk.*
 import kotlinx.coroutines.runBlocking
+import mpdc4gsr.core.utils.AppLogger
+import mpdc4gsr.core.utils.ErrorHandler
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -10,7 +12,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
-class ErrorHandlerTest {
+class ErrorHandlingTest {
 
     @Before
     fun setup() {

@@ -1,4 +1,4 @@
-package mpdc4gsr.sensors.gsr
+package mpdc4gsr.tests
 
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
@@ -13,12 +13,11 @@ import org.junit.Ignore
 import org.junit.Test
 
 /**
- * MVP-focused unit tests for GSR device discovery functionality
- * Tests real Shimmer3 GSR+ device discovery and connection validation
- * NO STUB IMPLEMENTATIONS - validates actual BLE integration
+ * GSR Bluetooth device discovery tests
+ * Tests Shimmer3 GSR+ device discovery and connection validation
  */
 @Ignore("All tests disabled")
-class GSRDeviceDiscoveryTest {
+class GSRBluetoothDiscoveryTest {
 
     private lateinit var mockContext: Context
     private lateinit var mockBluetoothManager: BluetoothManager

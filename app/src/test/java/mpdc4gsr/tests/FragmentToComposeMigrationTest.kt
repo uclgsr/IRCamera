@@ -1,4 +1,4 @@
-package mpdc4gsr.compose.fragment
+package mpdc4gsr.tests
 
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
@@ -6,7 +6,9 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runTest
-import mpdc4gsr.ui_components.*
+import mpdc4gsr.tests.MainFragmentViewModel
+import mpdc4gsr.tests.MainFragmentCompose
+import mpdc4gsr.tests.SensorDashboardFragmentCompose
 import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
@@ -27,7 +29,7 @@ import org.mockito.kotlin.whenever
  */
 @Ignore("All tests disabled")
 @RunWith(AndroidJUnit4::class)
-class FragmentMigrationTestSuite {
+class FragmentToComposeMigrationTest {
 
     @get:Rule
     val composeTestRule = createComposeRule()

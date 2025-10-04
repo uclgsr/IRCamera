@@ -1,4 +1,4 @@
-package mpdc4gsr.integration
+package mpdc4gsr.tests
 
 import io.mockk.MockKAnnotations
 import io.mockk.mockk
@@ -10,12 +10,11 @@ import org.junit.Ignore
 import org.junit.Test
 
 /**
- * MVP-focused integration tests for multi-modal sensor coordination
+ * Multi-sensor coordination integration tests
  * Tests GSR + Camera + Thermal simultaneous operation and synchronization
- * NO STUB IMPLEMENTATIONS - validates actual cross-sensor coordination
  */
 @Ignore("All tests disabled")
-class MultiModalCoordinationTest {
+class MultiSensorCoordinationTest {
 
     private data class SensorState(
         val isConnected: Boolean = false,

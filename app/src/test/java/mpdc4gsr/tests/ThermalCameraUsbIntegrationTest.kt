@@ -1,4 +1,4 @@
-package mpdc4gsr.sensors.thermal
+package mpdc4gsr.tests
 
 import android.content.Context
 import android.hardware.usb.UsbDevice
@@ -13,12 +13,11 @@ import org.junit.Ignore
 import org.junit.Test
 
 /**
- * MVP-focused unit tests for Topdon TC001 thermal camera integration
- * Tests real USB thermal camera connection and data capture
- * NO STUB IMPLEMENTATIONS - validates actual hardware integration
+ * Thermal camera USB integration tests for Topdon TC001
+ * Tests USB thermal camera connection and data capture
  */
 @Ignore("All tests disabled")
-class ThermalCameraIntegrationTest {
+class ThermalCameraUsbIntegrationTest {
 
     private lateinit var mockContext: Context
     private lateinit var mockUsbManager: UsbManager

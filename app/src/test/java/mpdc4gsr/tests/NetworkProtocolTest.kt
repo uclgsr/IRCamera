@@ -1,10 +1,10 @@
-package mpdc4gsr.feature.network
+package mpdc4gsr.tests
 
 import mpdc4gsr.feature.network.data.Protocol
 import org.junit.Assert.*
 import org.junit.Test
 
-class ProtocolTest {
+class NetworkProtocolTest {
 
     @Test
     fun testCreateSyncInitMessage() {

@@ -1,4 +1,4 @@
-package mpdc4gsr.sensors.rgb
+package mpdc4gsr.tests
 
 import android.content.Context
 import android.util.Log
@@ -11,14 +11,13 @@ import org.junit.runner.RunWith
 import java.io.File
 
 /**
- * Automated RGB Camera Testing Framework
- * Implements TODO requirement: "Develop instrumentation tests (e.g. using Espresso or CameraX test lab)
- * for the RGB video recorder. Specifically test 4K video recording and burst still capture on compatible devices"
+ * RGB Camera 4K recording instrumentation tests
+ * Tests 4K video recording and burst still capture on compatible devices
  */
 @Ignore("All tests disabled")
 @RunWith(AndroidJUnit4::class)
 @LargeTest
-class RgbCameraInstrumentationTest {
+class RgbCamera4KRecordingInstrumentationTest {
 
     companion object {
         private const val TAG = "RgbCameraTest"

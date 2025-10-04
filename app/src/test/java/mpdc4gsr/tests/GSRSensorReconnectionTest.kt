@@ -1,10 +1,11 @@
-package mpdc4gsr.feature.gsr.presentation
+package mpdc4gsr.tests
 
 import android.app.Application
 import io.mockk.MockKAnnotations
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
+import mpdc4gsr.feature.gsr.presentation.GSRSensorViewModel
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -16,7 +17,7 @@ import org.junit.Test
  * Validates automatic reconnection behavior when device disconnects
  */
 @OptIn(ExperimentalCoroutinesApi::class)
-class GSRSensorViewModelReconnectionTest {
+class GSRSensorReconnectionTest {
 
     private lateinit var mockApplication: Application
 

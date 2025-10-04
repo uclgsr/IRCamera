@@ -1,4 +1,4 @@
-package mpdc4gsr.feature.network
+package mpdc4gsr.tests
 
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
@@ -16,17 +16,13 @@ import org.junit.runner.RunWith
 import java.net.Socket
 
 /**
- * Comprehensive integration test for the PC-Android protocol communication.
+ * Network protocol integration test for PC-Android communication
  *
- * This test verifies:
- * 1. Android correctly parses PC commands
- * 2. ProtocolHandler processes commands and triggers actual recording actions
- * 3. Android sends appropriate responses (ACK, ERROR)
- * 4. Time synchronization works correctly
+ * Verifies protocol parsing, command handling, and time synchronization
  */
 @Ignore("All tests disabled")
 @RunWith(AndroidJUnit4::class)
-class ProtocolIntegrationTest {
+class NetworkProtocolIntegrationTest {
 
     private lateinit var context: Context
     private lateinit var networkServer: NetworkServer

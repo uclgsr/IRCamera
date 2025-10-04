@@ -1,4 +1,4 @@
-package mpdc4gsr.sensors.camera
+package mpdc4gsr.tests
 
 import android.content.Context
 import android.hardware.camera2.CameraCharacteristics
@@ -14,12 +14,11 @@ import org.junit.Ignore
 import org.junit.Test
 
 /**
- * MVP-focused unit tests for camera performance on Samsung Galaxy S22
+ * RGB camera performance tests for Samsung Galaxy S22
  * Tests 4K recording, frame rate validation, and thermal management
- * NO STUB IMPLEMENTATIONS - validates actual camera capabilities
  */
 @Ignore("All tests disabled")
-class CameraPerformanceTest {
+class RgbCameraPerformanceTest {
 
     private lateinit var mockContext: Context
     private lateinit var mockCameraManager: CameraManager

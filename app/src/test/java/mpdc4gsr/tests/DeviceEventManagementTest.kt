@@ -1,4 +1,4 @@
-package mpdc4gsr.core.event
+package mpdc4gsr.tests
 
 import android.hardware.usb.UsbDevice
 import com.mpdc4gsr.libunified.app.event.DeviceEventManager
@@ -13,7 +13,7 @@ import org.junit.Before
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class DeviceEventManagerTest {
+class DeviceEventManagementTest {
 
     private lateinit var mockDevice: UsbDevice
 

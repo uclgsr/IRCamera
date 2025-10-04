@@ -1,4 +1,4 @@
-package mpdc4gsr.ui_components
+package mpdc4gsr.tests
 
 import androidx.compose.runtime.Composable
 import kotlinx.coroutines.flow.MutableSharedFlow

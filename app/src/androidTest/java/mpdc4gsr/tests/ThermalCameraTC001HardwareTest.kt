@@ -1,4 +1,4 @@
-package mpdc4gsr.sensors.thermal
+package mpdc4gsr.tests
 
 import android.content.Context
 import android.hardware.usb.UsbDevice
@@ -19,14 +19,12 @@ import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
 /**
- * TC001 Hardware Integration Tests - Android Instrumentation Tests
- *
- * These tests are designed to run on actual Android devices with TC001 hardware
- * to validate real-world integration scenarios.
+ * Thermal camera TC001 hardware integration tests
+ * Tests TC001 hardware integration on actual Android devices
  */
 @Ignore("All tests disabled")
 @RunWith(AndroidJUnit4::class)
-class TC001HardwareIntegrationTest {
+class ThermalCameraTC001HardwareTest {
 
     private lateinit var context: Context
     private lateinit var thermalRecorder: ThermalCameraRecorder
