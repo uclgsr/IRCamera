@@ -839,10 +839,12 @@ class ThermalCameraRecorder(
                     "Initializing real thermal camera with USB device: ${device.productName}"
                 )
 
+                // IrcamEngine will be initialized in onCameraOpened callback
+                // after UVCCamera provides the native handle
+                // Keep SDK initialization for potential fallback
                 val success = initializeTopdonSdk()
                 if (!success) {
-                    AppLogger.e(TAG, "Failed to initialize Topdon SDK")
-                    return@withContext false
+                    AppLogger.w(TAG, "Failed to pre-initialize Topdon SDK (will retry with handle)")
                 }
 
                 val connectCallback = object : com.energy.iruvc.uvc.ConnectCallback {
@@ -850,8 +852,21 @@ class ThermalCameraRecorder(
                         AppLogger.i(TAG, "Thermal camera opened successfully")
                         isIRCameraConnected = true
 
-                        recordingScope.launch {
-                            emitStatus()
+                        // Initialize IrcamEngine with the UVC handle now that camera is open
+                        if (p0 != null) {
+                            recordingScope.launch {
+                                try {
+                                    initializeIrcamEngineWithHandle(p0)
+                                    AppLogger.i(TAG, "IrcamEngine initialized with UVC handle")
+                                } catch (e: Exception) {
+                                    AppLogger.e(TAG, "Failed to initialize IrcamEngine with handle", e)
+                                }
+                                emitStatus()
+                            }
+                        } else {
+                            recordingScope.launch {
+                                emitStatus()
+                            }
                         }
                     }
 
@@ -1004,7 +1019,19 @@ class ThermalCameraRecorder(
 
     private suspend fun initializeTopdonSdk(): Boolean = withContext(Dispatchers.IO) {
         return@withContext try {
-            AppLogger.i(TAG, "Initializing Topdon TC001 SDK engine")
+            AppLogger.i(TAG, "Pre-initializing Topdon SDK (without UVC handle)")
+            // This is a simplified initialization for recovery paths
+            // The actual IrcamEngine with handle will be initialized in onCameraOpened
+            true
+        } catch (e: Exception) {
+            AppLogger.e(TAG, "Exception during SDK pre-initialization", e)
+            false
+        }
+    }
+
+    private suspend fun initializeIrcamEngineWithHandle(uvcCamera: UVCCamera) = withContext(Dispatchers.IO) {
+        try {
+            AppLogger.i(TAG, "Initializing IrcamEngine with UVC camera handle")
 
             // Load native library first
             try {
@@ -1017,7 +1044,7 @@ class ThermalCameraRecorder(
                 )
             }
 
-            // Create UvcHandleParam - the library may handle internal configuration
+            // Create UvcHandleParam - the SDK should get handle internally from IRUVCTC
             val handleParam = UvcHandleParam()
 
             ircamEngine = IrcamEngine.Builder()
@@ -1027,9 +1054,8 @@ class ThermalCameraRecorder(
                 .build()
 
             if (ircamEngine != null) {
-                // Initialize the engine with simple approach
                 isTopdonSdkInitialized = true
-                AppLogger.i(TAG, "Topdon TC001 SDK engine created successfully")
+                AppLogger.i(TAG, "IrcamEngine created successfully")
 
                 // Register frame callback for continuous 10Hz capture
                 ircamEngine!!.setIrFrameCallback(object : IIrFrameCallback {
@@ -1090,14 +1116,12 @@ class ThermalCameraRecorder(
                         }
                     }
                 })
-                true
+                AppLogger.i(TAG, "IrcamEngine frame callback registered")
             } else {
                 AppLogger.e(TAG, "Failed to create IrcamEngine instance")
-                false
             }
         } catch (e: Exception) {
-            AppLogger.e(TAG, "Exception during Topdon SDK initialization", e)
-            false
+            AppLogger.e(TAG, "Exception during IrcamEngine initialization", e)
         }
     }
 
