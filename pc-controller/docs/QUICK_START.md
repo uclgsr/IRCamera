@@ -79,7 +79,7 @@ Expected output: 5/5 features demonstrated successfully
 ### GUI Mode (Recommended)
 
 ```bash
-python3 advanced_pc_controller.py
+python3 pc_controller.py
 ```
 
 This launches the full PyQt6 GUI with:
@@ -105,16 +105,23 @@ Options:
 
 ### TLS Server Mode
 
-For secure connections with Android devices:
+For secure connections with Android devices, enable SSL/TLS in the GUI:
+
+1. Start the PC Controller GUI: `python3 pc_controller.py`
+2. Check the "Enable SSL/TLS" checkbox
+3. Set port to 8443 (or desired secure port)
+4. Click "Start Server"
+
+Alternatively, use CLI mode with SSL:
 
 ```bash
-python3 tls_server.py --port 8443 --use-tls
+python3 pc_controller.py --port 8443 --ssl
 ```
 
 This will:
 
-1. Generate self-signed certificates (if not present)
-2. Start secure TLS server on port 8443
+1. Generate self-signed certificates (if not present in `certificates/` directory)
+2. Start secure TLS server on specified port
 3. Accept encrypted connections from Android devices
 
 ## Configuration
@@ -156,10 +163,10 @@ Or adjust in GUI:
 ### 1. Start the PC Controller
 
 ```bash
-python3 advanced_pc_controller.py
+python3 pc_controller.py
 ```
 
-The server starts automatically on port 8080.
+The GUI will launch. Click "Start Server" to begin listening for device connections on port 8080.
 
 ### 2. Connect Android Devices
 
@@ -261,7 +268,9 @@ sudo apt-get install libegl1 libgl1 libxkbcommon-x11-0 libxcb-cursor0
 For headless servers:
 
 ```bash
-xvfb-run python3 advanced_pc_controller.py
+xvfb-run python3 pc_controller.py
+# Or use CLI mode
+python3 pc_controller.py --no-gui
 ```
 
 ### No Devices Connecting
@@ -361,13 +370,13 @@ Run multiple PC controllers for redundancy:
 **PC 1 (Primary)**:
 
 ```bash
-python3 advanced_pc_controller.py --port 8080
+python3 pc_controller.py --port 8080
 ```
 
 **PC 2 (Backup)**:
 
 ```bash
-python3 advanced_pc_controller.py --port 8081
+python3 pc_controller.py --port 8081
 ```
 
 Configure Android devices to connect to both PCs.
@@ -475,7 +484,7 @@ Minimum setup:
 
 ```bash
 pip install -r requirements.txt
-python3 advanced_pc_controller.py
+python3 pc_controller.py
 ```
 
 Full setup (recommended):
@@ -483,6 +492,6 @@ Full setup (recommended):
 ```bash
 pip install -r requirements.txt
 cd native_backend && python3 setup.py build_ext --inplace && cd ..
-python3 test_pc_controller_features.py
-python3 advanced_pc_controller.py
+python3 tests/test_pc_controller_features.py
+python3 pc_controller.py
 ```
