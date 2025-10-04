@@ -1,7 +1,8 @@
-package com.mpdc4gsr.gsr.service
+package com.mpdc4gsr.gsr.tests
 
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
+import com.mpdc4gsr.gsr.service.ShimmerFactoryResolver
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Before

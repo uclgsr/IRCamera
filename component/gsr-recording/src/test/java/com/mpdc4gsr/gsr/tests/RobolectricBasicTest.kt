@@ -1,4 +1,4 @@
-package com.mpdc4gsr.gsr.service
+package com.mpdc4gsr.gsr.tests
 
 import android.content.Context
 import android.os.Build
@@ -17,7 +17,7 @@ import org.robolectric.annotation.Config
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [Build.VERSION_CODES.O])
 @OptIn(ExperimentalCoroutinesApi::class)
-class BasicRobolectricTest {
+class RobolectricBasicTest {
     private lateinit var context: Context
 
     @Before

@@ -1,9 +1,10 @@
-package com.mpdc4gsr.gsr.network
+package com.mpdc4gsr.gsr.tests
 
 import android.content.Context
 import android.net.nsd.NsdManager
 import android.os.Build
 import androidx.test.core.app.ApplicationProvider
+import com.mpdc4gsr.gsr.network.ZeroconfDiscoveryService
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Ignore
@@ -17,7 +18,7 @@ import org.robolectric.shadows.ShadowNsdManager
 @Ignore("All tests disabled")
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [Build.VERSION_CODES.O])
-class ZeroconfDiscoveryServiceTest {
+class ZeroconfServiceDiscoveryTest {
     private lateinit var context: Context
     private lateinit var discoveryService: ZeroconfDiscoveryService
     private lateinit var nsdManager: NsdManager

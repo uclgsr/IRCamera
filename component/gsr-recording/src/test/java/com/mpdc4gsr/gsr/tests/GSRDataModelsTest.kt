@@ -1,11 +1,12 @@
-package com.mpdc4gsr.gsr.model
+package com.mpdc4gsr.gsr.tests
 
+import com.mpdc4gsr.gsr.model.GSRSample
 import org.junit.Assert.*
 import org.junit.Ignore
 import org.junit.Test
 
 @Ignore("All tests disabled")
-class GSRModelsTest {
+class GSRDataModelsTest {
     @Test
     fun testGSRSampleCreation() {
         val timestamp = System.currentTimeMillis()

@@ -1,8 +1,9 @@
-package com.mpdc4gsr.gsr.service
+package com.mpdc4gsr.gsr.tests
 
 import android.content.Context
 import android.os.Build
 import androidx.test.core.app.ApplicationProvider
+import com.mpdc4gsr.gsr.service.SessionManager
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Assert.*
 import org.junit.Before
@@ -16,7 +17,7 @@ import org.robolectric.annotation.Config
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [Build.VERSION_CODES.O])
 @OptIn(ExperimentalCoroutinesApi::class)
-class MockitoVsRobolectricTest {
+class MockitoVsRobolectricComparisonTest {
     private lateinit var context: Context
 
     @Before

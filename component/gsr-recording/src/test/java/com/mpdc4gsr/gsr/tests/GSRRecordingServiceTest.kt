@@ -1,9 +1,10 @@
-package com.mpdc4gsr.gsr.service
+package com.mpdc4gsr.gsr.tests
 
 import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.test.core.app.ApplicationProvider
+import com.mpdc4gsr.gsr.service.EnhancedRecordingService
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Ignore
@@ -15,7 +16,7 @@ import org.robolectric.annotation.Config
 @Ignore("All tests disabled")
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [Build.VERSION_CODES.O])
-class EnhancedRecordingServiceTest {
+class GSRRecordingServiceTest {
     private lateinit var context: Context
 
     @Before

@@ -1,11 +1,12 @@
-package com.mpdc4gsr.gsr.util
+package com.mpdc4gsr.gsr.tests
 
+import com.mpdc4gsr.gsr.util.TimeUtils
 import org.junit.Assert.*
 import org.junit.Ignore
 import org.junit.Test
 
 @Ignore("All tests disabled")
-class TimeUtilsTest {
+class TimeUtilitiesTest {
     @Test
     fun testPcTimeOffset() {
 
