@@ -1,7 +1,7 @@
 # on[Something] Action Placeholder Analysis
 
-**Repository:** uclgsr/IRCamera  
-**Analysis Date:** 2025-01-22  
+**Repository:** uclgsr/IRCamera
+**Analysis Date:** 2025-10-04
 **Branch:** dev
 
 ---
@@ -16,8 +16,8 @@ This document presents a comprehensive analysis of all `on[Something]` actions i
 
 ```
 onClick placeholders:          249 (78.1%) ██████████████████████████████
-Other on* callbacks:            41 (12.9%) ████
-Empty lifecycle callbacks:      29 (9.1%)  ███
+Other on* callbacks:            41 (12.9%) ███
+Empty lifecycle callbacks:      29 (9.1%)  ██
 ```
 
 ---
@@ -34,18 +34,18 @@ These are Jetpack Compose UI event handlers where onClick actions have been defi
 ```kotlin
 onClick = { /* Configuration editing would be implemented here */ }
 onClick = { /* Open settings */ }
+onClick = { /* Connect */ }
+onClick = { /* viewModel.showSensorSelection() */ }
 onClick = { /* Search functionality */ }
-onClick = { /* Take snapshot */ }
-onClick = { /* Export data */ }
-onClick = { /* Navigate to single camera */ }
-onClick = { /* Calibrate camera */ }
+onClick = { /* Share */ }
+onClick = { /* Play */ }
 ```
 
 **Top Files with onClick Placeholders:**
-- `app/src/main/java/mpdc4gsr/feature/settings/ui/SettingsComposeActivity.kt`: 16 instances
 - `app/src/main/java/mpdc4gsr/feature/gsr/ui/GSRPlotComposeActivity.kt`: 12 instances
+- `app/src/main/java/mpdc4gsr/feature/settings/ui/SettingsComposeActivity.kt`: 12 instances
 - `app/src/main/java/mpdc4gsr/feature/thermal/ui/ThermalCameraScreen.kt`: 11 instances
-- `app/src/main/java/mpdc4gsr/feature/main/ui/ComposeScreens.kt`: 10 instances
+- `app/src/main/java/mpdc4gsr/feature/gsr/ui/GSRDataViewComposeActivity.kt`: 9 instances
 
 **Feature Areas:**
 - Settings and preferences (export, network, reset)
@@ -64,22 +64,24 @@ Event callbacks beyond onClick that have placeholder implementations.
 | Callback Name | Count | Purpose |
 |---------------|------:|---------|
 | `onAction` | 4 | Generic action handlers |
-| `onConnect` | 3 | Device connection |
+| `onConnect` | 3 | Device connection management |
 | `onFinish` | 2 | Completion handlers |
 | `onExportAllData` | 2 | Data export operations |
-| `onDisconnect` | 2 | Device disconnection |
-| `onExportData` | 2 | Single export operations |
-| `onDismissRequest` | 2 | Dialog dismissal |
-| Others | 24 | Various callbacks (1 each) |
+| `onDisconnect` | 2 | Device connection management |
+| `onExportData` | 2 | Data export operations |
+| `onDismissRequest` | 2 | Various operations |
+| `onClearLogs` | 1 | Various operations |
+| `onSessionTimeoutChange` | 1 | Various operations |
+| `onExportFormatChange` | 1 | Data export operations |
 
 **Examples:**
 ```kotlin
 onClearLogs = { /* Clear logs */ }
 onFinish = { /* Generate report */ }
 onSessionTimeoutChange = { /* Can be added to ViewModel if needed */ }
-onExportAllData = { /* Export all sensor data */ }
-onConnect = { /* Connect device */ }
-onSaveData = { /* Navigate to export if needed */ }
+onExportFormatChange = { /* Can be added to ViewModel if needed */ },
+onExportLocationChange = { /* Can be added to ViewModel if needed */ }
+onExportAllData = { /* Export all sensor data */ },
 ```
 
 ### 3. Empty Lifecycle Callbacks: 29 instances
@@ -90,45 +92,29 @@ These are lifecycle and listener callbacks with intentionally empty implementati
 
 **Categories:**
 
-#### Activity Lifecycle (11 instances)
+#### Activity Lifecycle (9 instances)
 ```java
 @Override
 public void onActivityStarted(Activity activity) {
     // Intentionally empty - subclasses override if needed
 }
-
-@Override
-public void onActivityResumed(Activity activity) {}
 ```
 
-**Files:**
-- `BleModule/src/main/java/com/topdon/commons/base/AppHolder.java`: 5 callbacks
-- `app/src/main/java/mpdc4gsr/core/App.kt`: 6 callbacks
+- `onActivityStarted`: 2 instance(s)
+- `onActivityResumed`: 2 instance(s)
+- `onActivityPaused`: 2 instance(s)
+- `onActivityStopped`: 2 instance(s)
+- `onActivitySaveInstanceState`: 1 instance(s)
 
-#### Recording State Callbacks (4 instances)
-```kotlin
-override fun onRecordingStarted(session: SessionInfo) {}
-override fun onRecordingStopped(session: SessionInfo) {}
-```
-
-**File:** `app/src/main/java/mpdc4gsr/feature/gsr/data/GSRSensorRecorder.kt`
-
-#### Device State Callbacks (2 instances)
-```kotlin
-override fun onDeviceConnected() {}
-override fun onDeviceDisconnected() {}
-```
-
-#### Error Handling (2 instances)
-```kotlin
-override fun onError(error: String) {}
-```
-
-#### Other Callbacks (10 instances)
-- Animation listeners: `onAnimationCancel`, `onAnimationRepeat`
-- Service registration: `onServiceRegistered`, `onRegistrationFailed`
-- Permission handling: `onAttach`, `onGranted`, `onDettach`
-- Connection management: `onConnect`, `onDisconnect`, `onCancel`
+#### Other Callbacks (20 instances)
+- `onRecordingStarted`: 2 instance(s)
+- `onRecordingStopped`: 2 instance(s)
+- `onError`: 2 instance(s)
+- `onSyncMarkRecorded`: 1 instance(s)
+- `onDeviceConnected`: 1 instance(s)
+- `onDeviceDisconnected`: 1 instance(s)
+- `onSyncMarkAdded`: 1 instance(s)
+- `onServiceRegistered`: 1 instance(s)
 
 ---
 
@@ -146,25 +132,26 @@ override fun onError(error: String) {}
 | 9 | `app/src/main/java/mpdc4gsr/feature/gsr/ui/GSRDataViewComposeActivity.kt` |
 | 7 | `app/src/main/java/mpdc4gsr/feature/gsr/ui/SensorDashboardComposeEnhanced.kt` |
 | 7 | `app/src/main/java/mpdc4gsr/feature/gsr/ui/GSRVideoPlayerComposeActivity.kt` |
-| 7 | `component/thermalunified/.../activity/IRThermalDoubleComposeActivity.kt` |
-| 7 | `component/thermalunified/.../activity/ThermalVideoComposeActivity.kt` |
-| 7 | `component/thermalunified/.../activity/ThermalIrNightComposeActivity.kt` |
-| 6 | `component/thermalunified/.../activity/BaseIRPlusComposeActivity.kt` |
-| 6 | `component/thermalunified/.../viewmodel/ThermalFragmentViewModel.kt` |
+| 7 | `component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/activity/IRThermalDoubleComposeActivity.kt` |
+| 7 | `component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/activity/ThermalVideoComposeActivity.kt` |
+| 7 | `component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/activity/ThermalIrNightComposeActivity.kt` |
+| 6 | `component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/activity/BaseIRPlusComposeActivity.kt` |
+| 6 | `component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/viewmodel/ThermalFragmentViewModel.kt` |
 | 5 | `app/src/main/java/mpdc4gsr/feature/thermal/ui/ThermalGalleryScreen.kt` |
 | 5 | `app/src/main/java/mpdc4gsr/feature/camera/ui/CameraDashboardScreen.kt` |
 | 5 | `app/src/main/java/mpdc4gsr/feature/gsr/ui/GSRDeviceManagementComposeActivity.kt` |
 | 5 | `app/src/main/java/mpdc4gsr/feature/gsr/ui/SessionDetailComposeActivity.kt` |
-| 5 | `component/thermalunified/.../activity/IRCameraSettingComposeActivity.kt` |
-| 5 | `component/thermalunified/.../activity/ReportPreviewSecondComposeActivity.kt` |
-| 5 | `component/thermalunified/.../activity/IRGalleryDetail04ComposeActivity.kt` |
+| 5 | `component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/activity/IRCameraSettingComposeActivity.kt` |
+| 5 | `component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/activity/ReportPreviewSecondComposeActivity.kt` |
+| 5 | `component/thermalunified/src/main/java/com/mpdc4gsr/module/thermalunified/activity/IRGalleryDetail04ComposeActivity.kt` |
 
 ### Distribution by Module
 
-- **Main App (`app/`)**: ~180 placeholders (56%)
-- **Thermal Component (`component/thermalunified/`)**: ~120 placeholders (38%)
-- **BLE Module (`BleModule/`)**: ~10 placeholders (3%)
-- **Shared Library (`libunified/`)**: ~9 placeholders (3%)
+- **Main App (`app/`)**: 168 placeholders (52.7%)
+- **Thermal Component (`component/thermalunified/`)**: 142 placeholders (44.5%)
+- **BLE Module (`BleModule/`)**: 5 placeholders (1.6%)
+- **Other**: 2 placeholders (0.6%)
+- **Shared Library (`libunified/`)**: 2 placeholders (0.6%)
 
 ---
 
@@ -194,13 +181,13 @@ override fun onError(error: String) {}
   - Data export operations
   - Camera calibration
   - Recording controls
-  
+
 - **Medium Priority** (enhancement features):
   - Search functionality
   - Share operations
   - Gallery playback
   - Report generation
-  
+
 - **Low Priority** (convenience features):
   - UI preferences
   - Advanced settings
@@ -275,17 +262,10 @@ override fun onError(error: String) {}
 
 ### Analysis Tools
 
-1. **Bash/grep** for pattern matching:
-   ```bash
-   grep -rn "onClick.*{.*\/\*.*\*\/.*}" --include="*.kt" --include="*.java"
-   grep -rn "on[A-Z][a-zA-Z]*.*=.*{.*\/\*" --include="*.kt" --include="*.java"
-   ```
-
-2. **Python script** for detailed analysis:
-   - Regular expression pattern matching
-   - Multi-line method body detection
+1. **Python script** for pattern matching:
+   - Regular expression pattern detection
+   - Multi-line method body analysis
    - Statistical aggregation
-   - JSON export for further processing
 
 ### Patterns Detected
 
@@ -314,43 +294,11 @@ override fun onError(error: String) {}
 ### Scope
 
 - **Included:** All `.kt` and `.java` files in repository
-- **Excluded:** 
+- **Excluded:**
   - Build directories (`build/`, `.gradle/`)
   - Dependencies (`node_modules/`)
   - Hidden directories (`.git/`, `.idea/`)
   - Documentation files (`.md`, `.tex`)
-
----
-
-## Appendix: Detailed Data
-
-Complete analysis data can be regenerated by running the analysis script provided in the repository:
-
-- **Regenerate Data:** Run `python3 scripts/placeholder_analysis.py` from the repository root.
-- The script will output text, JSON, and summary files in the current working directory.
-### Data Structure (JSON)
-
-```json
-{
-  "onClick_placeholders": [
-    {
-      "file": "path/to/file.kt",
-      "line": 123,
-      "code": "onClick = { /* description */ }",
-      "placeholder": "onClick = { /* description */ }"
-    }
-  ],
-  "other_on_placeholders": [...],
-  "empty_lifecycle_callbacks": [...],
-  "statistics": {
-    "onClick_total": 249,
-    "other_on_total": 41,
-    "empty_lifecycle_total": 29,
-    "callback_onAction": 4,
-    ...
-  }
-}
-```
 
 ---
 
@@ -372,7 +320,7 @@ The placeholders serve as **clear markers for future development** and represent
 
 ---
 
-**Report Generated By:** Copilot Agent  
-**Analysis Script:** Python 3 + Bash utilities  
-**Total Files Analyzed:** 1,200+ Kotlin/Java files  
-**Repository State:** Clean (no uncommitted changes)
+**Report Generated:** 2025-10-04 19:54:04
+**Analysis Script:** Python 3
+**Total Files Analyzed:** 91 Kotlin/Java files
+**Repository State:** Clean
