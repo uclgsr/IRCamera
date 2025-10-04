@@ -37,7 +37,7 @@ fun StorageSettingsScreen(
     onBackClick: (() -> Unit)? = null,
     viewModel: StorageSettingsViewModel = viewModel(
         factory = StorageSettingsViewModelFactory(
-            LocalContext.current as Application
+            LocalContext.current.applicationContext as Application
         )
     ),
     modifier: Modifier = Modifier
