@@ -41,16 +41,16 @@ Tests recording duration consistency across all sensor streams.
 
 ```bash
 # Run all thesis evaluation tests
-python -m pytest thesis_evaluation/
+python -m pytest docs/thesis_evaluation/
 
 # Run specific test module
-python -m pytest thesis_evaluation/test_cross_sensor_alignment.py -v
+python -m pytest docs/thesis_evaluation/test_cross_sensor_alignment.py -v
 
 # Run with detailed output
-python -m pytest thesis_evaluation/ -v --tb=short
+python -m pytest docs/thesis_evaluation/ -v --tb=short
 
 # Generate test report
-python -m pytest thesis_evaluation/ --html=thesis_evaluation/report.html
+python -m pytest docs/thesis_evaluation/ --html=docs/thesis_evaluation/report.html
 ```
 
 ## Test Requirements
@@ -74,6 +74,6 @@ Tests use both simulated and real session data:
 ## Test Outputs
 
 Test outputs are saved to:
-- `thesis_evaluation/outputs/` - Generated test artifacts
-- `thesis_evaluation/reports/` - Test result reports
-- `thesis_evaluation/charts/` - Visualization outputs (if matplotlib available)
+- `docs/thesis_evaluation/outputs/` - Generated test artifacts
+- `docs/thesis_evaluation/reports/` - Test result reports
+- `docs/thesis_evaluation/charts/` - Visualization outputs (if matplotlib available)

@@ -20,7 +20,7 @@ def main():
     """Run thesis evaluation tests"""
     
     thesis_eval_dir = Path(__file__).parent
-    os.chdir(thesis_eval_dir.parent)
+    os.chdir(thesis_eval_dir.parent.parent)
     
     print("=" * 70)
     print("Thesis Evaluation Tests - Multi-Sensor Data Consistency")
@@ -28,7 +28,7 @@ def main():
     print()
     
     args = [
-        "thesis_evaluation/",
+        "docs/thesis_evaluation/",
         "-v",
         "--tb=short",
         "-s",
@@ -37,14 +37,14 @@ def main():
     
     if "--html" in sys.argv or "-html" in sys.argv:
         args.extend([
-            "--html=thesis_evaluation/reports/test_report.html",
+            "--html=docs/thesis_evaluation/reports/test_report.html",
             "--self-contained-html"
         ])
     
     if "--cov" in sys.argv:
         args.extend([
-            "--cov=thesis_evaluation",
-            "--cov-report=html:thesis_evaluation/reports/coverage",
+            "--cov=docs/thesis_evaluation",
+            "--cov-report=html:docs/thesis_evaluation/reports/coverage",
             "--cov-report=term"
         ])
     
@@ -64,8 +64,8 @@ def main():
         print(f"Tests completed with exit code: {exit_code}")
     print("=" * 70)
     print()
-    print("Test outputs saved to: thesis_evaluation/outputs/")
-    print("Test reports saved to: thesis_evaluation/reports/")
+    print("Test outputs saved to: docs/thesis_evaluation/outputs/")
+    print("Test reports saved to: docs/thesis_evaluation/reports/")
     
     return exit_code
 

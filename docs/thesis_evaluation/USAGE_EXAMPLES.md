@@ -16,10 +16,10 @@ pip install pytest-html pytest-cov
 
 ```bash
 # Using the test runner script
-python3 thesis_evaluation/run_tests.py
+python3 docs/thesis_evaluation/run_tests.py
 
 # Or using pytest directly
-python3 -m pytest thesis_evaluation/ -v
+python3 -m pytest docs/thesis_evaluation/ -v
 ```
 
 ## Running Specific Test Categories
@@ -28,13 +28,13 @@ python3 -m pytest thesis_evaluation/ -v
 
 ```bash
 # Run all alignment tests
-python3 -m pytest thesis_evaluation/test_cross_sensor_alignment.py -v
+python3 -m pytest docs/thesis_evaluation/test_cross_sensor_alignment.py -v
 
 # Run specific test
-python3 -m pytest thesis_evaluation/test_cross_sensor_alignment.py::TestCrossSensorAlignment::test_inject_synthetic_event_at_10_seconds -v
+python3 -m pytest docs/thesis_evaluation/test_cross_sensor_alignment.py::TestCrossSensorAlignment::test_inject_synthetic_event_at_10_seconds -v
 ```
 
-**Output:** Check `thesis_evaluation/outputs/cross_sensor_alignment/`
+**Output:** Check `docs/thesis_evaluation/outputs/cross_sensor_alignment/`
 - `synthetic_event_10s_*.csv` - Event logs with timestamps
 - `synthetic_event_timeline_*.json` - Combined sensor timelines
 
@@ -42,13 +42,13 @@ python3 -m pytest thesis_evaluation/test_cross_sensor_alignment.py::TestCrossSen
 
 ```bash
 # Run all sync marker tests
-python3 -m pytest thesis_evaluation/test_multistream_sync_marker.py -v
+python3 -m pytest docs/thesis_evaluation/test_multistream_sync_marker.py -v
 
 # Run specific test
-python3 -m pytest thesis_evaluation/test_multistream_sync_marker.py::TestMultiStreamSyncMarker::test_sync_command_mid_session -v
+python3 -m pytest docs/thesis_evaluation/test_multistream_sync_marker.py::TestMultiStreamSyncMarker::test_sync_command_mid_session -v
 ```
 
-**Output:** Check `thesis_evaluation/outputs/multistream_sync/`
+**Output:** Check `docs/thesis_evaluation/outputs/multistream_sync/`
 - `sync_command_mid_session_*.csv` - SYNC event logs
 - `multiple_sync_markers_*.csv` - Multiple SYNC command logs
 
@@ -56,13 +56,13 @@ python3 -m pytest thesis_evaluation/test_multistream_sync_marker.py::TestMultiSt
 
 ```bash
 # Run all duration tests
-python3 -m pytest thesis_evaluation/test_session_duration_consistency.py -v
+python3 -m pytest docs/thesis_evaluation/test_session_duration_consistency.py -v
 
 # Run specific test
-python3 -m pytest thesis_evaluation/test_session_duration_consistency.py::TestSessionDurationConsistency::test_complete_session_report -v
+python3 -m pytest docs/thesis_evaluation/test_session_duration_consistency.py::TestSessionDurationConsistency::test_complete_session_report -v
 ```
 
-**Output:** Check `thesis_evaluation/outputs/session_duration/`
+**Output:** Check `docs/thesis_evaluation/outputs/session_duration/`
 - `complete_session_report_*.csv` - Full session analysis
 - `start_time_consistency_*.csv` - Start time analysis
 - `end_time_consistency_*.csv` - End time analysis
@@ -115,29 +115,29 @@ duration_variance_ms,92
 ### Generate HTML Report
 
 ```bash
-python3 thesis_evaluation/run_tests.py --html
+python3 docs/thesis_evaluation/run_tests.py --html
 
-# View report at: thesis_evaluation/reports/test_report.html
+# View report at: docs/thesis_evaluation/reports/test_report.html
 ```
 
 ### Run with Coverage
 
 ```bash
-python3 thesis_evaluation/run_tests.py --cov
+python3 docs/thesis_evaluation/run_tests.py --cov
 
-# View coverage report at: thesis_evaluation/reports/coverage/index.html
+# View coverage report at: docs/thesis_evaluation/reports/coverage/index.html
 ```
 
 ### Run Tests Quietly
 
 ```bash
-python3 -m pytest thesis_evaluation/ -q
+python3 -m pytest docs/thesis_evaluation/ -q
 ```
 
 ### Run Single Test with Detailed Output
 
 ```bash
-python3 -m pytest thesis_evaluation/test_cross_sensor_alignment.py::TestCrossSensorAlignment::test_inject_synthetic_event_at_10_seconds -vv -s
+python3 -m pytest docs/thesis_evaluation/test_cross_sensor_alignment.py::TestCrossSensorAlignment::test_inject_synthetic_event_at_10_seconds -vv -s
 ```
 
 ## Using Test Outputs for Thesis
@@ -148,10 +148,10 @@ python3 -m pytest thesis_evaluation/test_cross_sensor_alignment.py::TestCrossSen
 
 1. Run alignment tests:
    ```bash
-   python3 -m pytest thesis_evaluation/test_cross_sensor_alignment.py -v
+   python3 -m pytest docs/thesis_evaluation/test_cross_sensor_alignment.py -v
    ```
 
-2. Collect outputs from `thesis_evaluation/outputs/cross_sensor_alignment/`
+2. Collect outputs from `docs/thesis_evaluation/outputs/cross_sensor_alignment/`
 
 3. In thesis, present:
    - Sync event logs showing all sensors detecting events within 100ms
@@ -167,10 +167,10 @@ python3 -m pytest thesis_evaluation/test_cross_sensor_alignment.py::TestCrossSen
 
 1. Run multi-stream sync tests:
    ```bash
-   python3 -m pytest thesis_evaluation/test_multistream_sync_marker.py -v
+   python3 -m pytest docs/thesis_evaluation/test_multistream_sync_marker.py -v
    ```
 
-2. Collect SYNC command logs from `thesis_evaluation/outputs/multistream_sync/`
+2. Collect SYNC command logs from `docs/thesis_evaluation/outputs/multistream_sync/`
 
 3. In thesis, discuss:
    - Effectiveness of SYNC commands during live recording
@@ -181,10 +181,10 @@ python3 -m pytest thesis_evaluation/test_cross_sensor_alignment.py::TestCrossSen
 
 1. Run duration consistency tests:
    ```bash
-   python3 -m pytest thesis_evaluation/test_session_duration_consistency.py -v
+   python3 -m pytest docs/thesis_evaluation/test_session_duration_consistency.py -v
    ```
 
-2. Collect duration reports from `thesis_evaluation/outputs/session_duration/`
+2. Collect duration reports from `docs/thesis_evaluation/outputs/session_duration/`
 
 3. In thesis, analyze:
    - Start/end time alignment across sensors
@@ -200,7 +200,7 @@ python3 -m pytest thesis_evaluation/test_cross_sensor_alignment.py::TestCrossSen
 cd /path/to/IRCamera
 
 # Run from root
-python3 -m pytest thesis_evaluation/
+python3 -m pytest docs/thesis_evaluation/
 ```
 
 ### Import Errors
@@ -217,21 +217,21 @@ python3 -m pytest --version
 
 ```bash
 # Check that output directories exist
-ls thesis_evaluation/outputs/
+ls docs/thesis_evaluation/outputs/
 
 # If missing, pytest will create them automatically
 # Run tests again
-python3 -m pytest thesis_evaluation/ -v
+python3 -m pytest docs/thesis_evaluation/ -v
 ```
 
 ### Permission Errors
 
 ```bash
 # Make run_tests.py executable
-chmod +x thesis_evaluation/run_tests.py
+chmod +x docs/thesis_evaluation/run_tests.py
 
 # Run with python3 directly
-python3 thesis_evaluation/run_tests.py
+python3 docs/thesis_evaluation/run_tests.py
 ```
 
 ## Expected Test Results

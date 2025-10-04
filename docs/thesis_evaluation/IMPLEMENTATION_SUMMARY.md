@@ -9,7 +9,7 @@ This implementation provides comprehensive multi-sensor data consistency tests f
 ### Test Structure
 
 ```
-thesis_evaluation/
+docs/thesis_evaluation/
 ├── README.md                            # Documentation
 ├── __init__.py                          # Package initialization
 ├── conftest.py                          # Pytest configuration
@@ -141,26 +141,26 @@ Generates test output artifacts:
 
 ```bash
 # Run all tests
-python3 thesis_evaluation/run_tests.py
+python3 docs/thesis_evaluation/run_tests.py
 
 # Run specific test module
-python3 -m pytest thesis_evaluation/test_cross_sensor_alignment.py -v
+python3 -m pytest docs/thesis_evaluation/test_cross_sensor_alignment.py -v
 
 # Run specific test
-python3 -m pytest thesis_evaluation/test_cross_sensor_alignment.py::TestCrossSensorAlignment::test_inject_synthetic_event_at_10_seconds -v
+python3 -m pytest docs/thesis_evaluation/test_cross_sensor_alignment.py::TestCrossSensorAlignment::test_inject_synthetic_event_at_10_seconds -v
 ```
 
 ### Advanced Usage
 
 ```bash
 # Run with HTML report
-python3 thesis_evaluation/run_tests.py --html
+python3 docs/thesis_evaluation/run_tests.py --html
 
 # Run with coverage
-python3 thesis_evaluation/run_tests.py --cov
+python3 docs/thesis_evaluation/run_tests.py --cov
 
 # Run specific test category
-python3 -m pytest thesis_evaluation/test_multistream_sync_marker.py -v
+python3 -m pytest docs/thesis_evaluation/test_multistream_sync_marker.py -v
 ```
 
 ## Test Results
