@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import mpdc4gsr.core.utils.AppLogger
 import mpdc4gsr.core.utils.ErrorHandler
+import mpdc4gsr.core.data.utils.TimeManager
 import kotlinx.coroutines.*
 import java.io.File
 import java.io.FileWriter
@@ -22,8 +23,18 @@ import java.util.concurrent.atomic.AtomicLong
  * - Dedicated sync logging to CSV files
  * - Integration with recording lifecycle
  * - Non-blocking execution
+ *
+ * Time Synchronization Flow:
+ * 1. PC sends SYNC_REQUEST with t1 (PC send time)
+ * 2. Phone captures t2 (phone receive time) via performSyncResponse()
+ * 3. Phone sends SYNC_RESPONSE with t1 and t2 back to PC
+ * 4. PC calculates offset and RTT, sends SYNC_RESULT with t1, t2, t3, offset, rtt
+ * 5. completeSyncCalculation() applies offset to TimeManager and TimestampManager
+ * 6. All subsequent sensor timestamps are adjusted by the offset
  */
 class TimeSyncManager(private val context: Context) {
+
+    private val timeManager = TimeManager.getInstance(context)
 
     companion object {
         private const val TAG = "TimeSyncManager"
@@ -426,6 +437,12 @@ class TimeSyncManager(private val context: Context) {
                     quality = quality,
                     retryCount = retryCount
                 )
+
+                // Apply clock offset to both TimeManager and TimestampManager
+                // Don't catch exceptions here - let them propagate to trigger retry
+                timeManager.setClockOffsetFromProtocolSync(offsetMs * 1_000_000, rttMs)
+                TimestampManager.setClockOffset(offsetMs)
+                AppLogger.i(TAG, "Clock offset applied: ${offsetMs}ms (RTT: ${rttMs}ms)")
 
                 // Attempt to log with retry logic
                 val logged = withTimeoutOrNull(syncConfig.syncTimeoutMs) {

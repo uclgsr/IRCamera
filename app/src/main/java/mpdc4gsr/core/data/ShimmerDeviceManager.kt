@@ -64,6 +64,7 @@ class ShimmerDeviceManager(
     private val isScanning = AtomicBoolean(false)
     private var scanJob: Job? = null
     private var currentScanCallback: android.bluetooth.le.ScanCallback? = null
+    private var connectionMonitorJob: Job? = null
 
     private val _scanResults = MutableSharedFlow<List<DeviceInfo>>()
     val scanResults: SharedFlow<List<DeviceInfo>> = _scanResults.asSharedFlow()
@@ -100,10 +101,38 @@ class ShimmerDeviceManager(
             }
 
             shimmerManager = ShimmerBluetoothManagerAndroid(context, mainHandler)
+            
+            startConnectionMonitoring()
+            
             return@withContext true
         } catch (e: Exception) {
             AppLogger.e(TAG, "Shimmer initialization failed", e)
             return@withContext false
+        }
+    }
+
+    private fun startConnectionMonitoring() {
+        connectionMonitorJob?.cancel()
+        connectionMonitorJob = lifecycleOwner.lifecycleScope.launch {
+            while (isActive) {
+                delay(5000)
+                
+                val disconnectedDevices = connectedDevices.filter { (address, shimmer) ->
+                    try {
+                        shimmer.bluetoothRadioState == BT_STATE.DISCONNECTED
+                    } catch (e: Exception) {
+                        AppLogger.w(TAG, "Error checking connection state for $address: ${e.message}")
+                        false
+                    }
+                }
+                
+                disconnectedDevices.forEach { (address, shimmer) ->
+                    Log.w(TAG, "Device disconnected: $address")
+                    launch {
+                        handleDeviceDisconnection(address, shouldAttemptReconnection = true)
+                    }
+                }
+            }
         }
     }
 
@@ -914,6 +943,9 @@ class ShimmerDeviceManager(
     suspend fun release() = withContext(Dispatchers.IO) {
         AppLogger.i(TAG, "Releasing Shimmer Device Manager")
 
+        connectionMonitorJob?.cancel()
+        connectionMonitorJob = null
+        
         stopDeviceScanning()
         disconnectAllDevices()
 
