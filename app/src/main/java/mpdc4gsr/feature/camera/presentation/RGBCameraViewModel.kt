@@ -119,9 +119,15 @@ class RGBCameraViewModel(
 
     /**
      * Get camera recorder instance for preview binding
-     * @deprecated Use cameraRecorder StateFlow instead for reactive updates
+     * 
+     * @return The current RgbCameraRecorder instance, or null if not initialized
+     * @deprecated Use cameraRecorder StateFlow instead for reactive updates.
+     *             Replace `viewModel.getCameraRecorder()` with `viewModel.cameraRecorder.collectAsState()` in Compose.
      */
-    @Deprecated("Use cameraRecorder StateFlow for reactive updates")
+    @Deprecated(
+        message = "Use cameraRecorder StateFlow for reactive updates",
+        replaceWith = ReplaceWith("cameraRecorder.value")
+    )
     fun getCameraRecorder(): RgbCameraRecorder? = _cameraRecorder.value
 
     /**
@@ -285,13 +291,13 @@ class RGBCameraViewModel(
         viewModelScope.launch {
             try {
                 // Clean up existing camera first
-                _cameraRecorder.value?.cleanup()
-                _cameraRecorder.value = null
+                val recorder = _cameraRecorder.value
+                if (recorder != null) {
+                    recorder.cleanup()
+                    _cameraRecorder.value = null
+                }
                 
-                // Wait a bit for cleanup to complete
-                kotlinx.coroutines.delay(500)
-                
-                // Reinitialize
+                // Reinitialize - cleanup() is a suspend function that completes before continuing
                 initializeCamera(lifecycleOwner)
                 
                 // Increment counter to trigger UI updates

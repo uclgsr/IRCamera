@@ -30,7 +30,7 @@ This document summarizes the fixes and improvements made to address the RGB came
 
 **Code References:**
 - `RgbCameraRecorder.createOptimizedRecorder()` (line 842)
-- `RgbCameraRecorder.optimizeVideoConfiguration()` (line 540)
+- `RgbCameraRecorder.optimizeVideoConfiguration()` (line 552)
 - `CameraConfigurationManager.detectDeviceCapabilities()`
 
 ### 3. Front Camera Toggle ✅ ALREADY IMPLEMENTED + IMPROVED
@@ -58,14 +58,14 @@ This document summarizes the fixes and improvements made to address the RGB came
 - Errors are now displayed as modal dialogs with actionable feedback
 
 **Code References:**
-- `RGBCameraViewModel.reinitializeCamera()` (line 277)
+- `RGBCameraViewModel.reinitializeCamera()` (line 290)
 - Error dialog in `RGBCameraScreen.kt` (line 171)
 
 ### 5. Camera Lifecycle and Reuse ✅ ALREADY IMPLEMENTED
 **Problem:** "After stopping a recording, the camera might not be fully released."
 
 **Finding:** Comprehensive cleanup already implemented:
-- `RgbCameraRecorder.cleanup()` method (line 1869):
+- `RgbCameraRecorder.cleanup()` method (line 1881):
   - Stops active recordings
   - Cancels coroutine jobs
   - Unbinds all camera use cases
