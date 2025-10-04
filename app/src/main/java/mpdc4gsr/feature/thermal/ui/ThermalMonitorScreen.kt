@@ -6,6 +6,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -25,6 +26,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.FiberManualRecord
@@ -50,22 +53,32 @@ import mpdc4gsr.core.ui.theme.IRCameraTheme
  * ThermalMonitorScreen composable - replaces MonitorThermalFragment layout
  * Main screen for thermal camera preview with overlays and controls
  * Full-screen design following Material Design 3 and Jetpack Compose best practices
+ * 
+ * Now fully integrated with ThermalCameraViewModel for live thermal preview
  */
 @Composable
 fun ThermalMonitorScreen(
+    viewModel: mpdc4gsr.feature.thermal.presentation.ThermalCameraViewModel,
     onBackClick: (() -> Unit)? = null,
     onSettingsClick: () -> Unit = {},
     onRecordClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
-    // Sample state for demonstration - will be connected to actual ViewModels
-    var isRecording by remember { mutableStateOf(false) }
-    var currentTemp by remember { mutableStateOf(25.6f) }
-    var maxTemp by remember { mutableStateOf(45.2f) }
-    var minTemp by remember { mutableStateOf(18.9f) }
-    var isConnected by remember { mutableStateOf(true) }
+    // Collect UI state from ViewModel
+    val uiState by viewModel.uiState.collectAsState()
+    
     var showControls by remember { mutableStateOf(true) }
     var showAdvancedControls by remember { mutableStateOf(false) }
+    
+    // Update recording duration periodically
+    LaunchedEffect(uiState.isRecording) {
+        if (uiState.isRecording) {
+            while (uiState.isRecording) {
+                kotlinx.coroutines.delay(1000)
+                viewModel.updateRecordingDuration()
+            }
+        }
+    }
 
     Box(
         modifier = modifier
@@ -73,16 +86,18 @@ fun ThermalMonitorScreen(
             .background(Color.Black)
             .windowInsetsPadding(WindowInsets.systemBars)
     ) {
-        // Full-screen thermal camera preview
+        // Full-screen thermal camera preview with actual bitmap from ThermalCameraRecorder
         ThermalCameraPreview(
+            bitmap = uiState.previewBitmap,
             modifier = Modifier.fillMaxSize()
         )
 
         // Temperature overlay always visible on preview
         TemperatureOverlay(
-            currentTemp = currentTemp,
-            maxTemp = maxTemp,
-            minTemp = minTemp,
+            currentTemp = uiState.currentTemperature ?: uiState.centerTemperature,
+            maxTemp = uiState.maxTemperature,
+            minTemp = uiState.minTemperature,
+            avgTemp = uiState.avgTemperature,
             modifier = Modifier.fillMaxSize()
         )
 
@@ -94,8 +109,9 @@ fun ThermalMonitorScreen(
             modifier = Modifier.align(Alignment.TopCenter)
         ) {
             ThermalTopBar(
-                isConnected = isConnected,
-                isRecording = isRecording,
+                isConnected = uiState.isConnected,
+                isRecording = uiState.isRecording,
+                isSimulationMode = uiState.isSimulationMode,
                 onBackClick = onBackClick,
                 onSettingsClick = onSettingsClick
             )
@@ -109,10 +125,10 @@ fun ThermalMonitorScreen(
             modifier = Modifier.align(Alignment.BottomCenter)
         ) {
             ThermalBottomControls(
-                isRecording = isRecording,
-                isConnected = isConnected,
+                isRecording = uiState.isRecording,
+                isConnected = uiState.isConnected,
+                recordingDuration = uiState.recordingDuration,
                 onRecordClick = {
-                    isRecording = !isRecording
                     onRecordClick()
                 },
                 onAdvancedClick = { showAdvancedControls = !showAdvancedControls }
@@ -147,6 +163,7 @@ fun ThermalMonitorScreen(
 private fun ThermalTopBar(
     isConnected: Boolean,
     isRecording: Boolean,
+    isSimulationMode: Boolean = false,
     onBackClick: (() -> Unit)?,
     onSettingsClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -207,7 +224,11 @@ private fun ThermalTopBar(
                     shape = RoundedCornerShape(4.dp)
                 ) {
                     Text(
-                        text = if (isConnected) "Connected" else "Disconnected",
+                        text = when {
+                            !isConnected -> "Disconnected"
+                            isSimulationMode -> "Simulation"
+                            else -> "Connected"
+                        },
                         color = Color.White,
                         fontSize = 12.sp,
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
@@ -235,6 +256,7 @@ private fun ThermalTopBar(
 private fun ThermalBottomControls(
     isRecording: Boolean,
     isConnected: Boolean,
+    recordingDuration: Long = 0L,
     onRecordClick: () -> Unit,
     onAdvancedClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -295,38 +317,31 @@ private fun ThermalBottomControls(
 }
 
 /**
- * Thermal camera preview component
- * In actual implementation, this would host the IR camera view
+ * Thermal camera preview component - displays actual thermal bitmap from ThermalCameraRecorder
  */
 @Composable
 private fun ThermalCameraPreview(
+    bitmap: android.graphics.Bitmap?,
     modifier: Modifier = Modifier
 ) {
-    // Placeholder for actual thermal camera preview
-    // In production, this would use AndroidView to host the IrSurfaceView
     Box(
         modifier = modifier.background(Color.Black),
         contentAlignment = Alignment.Center
     ) {
-        // Sample thermal visualization
-        Canvas(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            // Draw sample thermal patterns
-            drawCircle(
-                color = Color.Red,
-                radius = 30f,
-                center = Offset(size.width * 0.3f, size.height * 0.4f)
+        if (bitmap != null) {
+            // Display actual thermal bitmap from camera
+            androidx.compose.foundation.Image(
+                bitmap = bitmap.asImageBitmap(),
+                contentDescription = "Thermal Camera Preview",
+                modifier = Modifier.fillMaxSize(),
+                contentScale = androidx.compose.ui.layout.ContentScale.Fit
             )
-            drawCircle(
-                color = Color.Yellow,
-                radius = 20f,
-                center = Offset(size.width * 0.7f, size.height * 0.6f)
-            )
-            drawCircle(
-                color = Color.Blue,
-                radius = 15f,
-                center = Offset(size.width * 0.5f, size.height * 0.5f)
+        } else {
+            // Placeholder when no bitmap available
+            Text(
+                text = "Waiting for thermal camera...",
+                color = Color.White.copy(alpha = 0.5f),
+                fontSize = 16.sp
             )
         }
     }
@@ -341,6 +356,7 @@ private fun TemperatureOverlay(
     currentTemp: Float,
     maxTemp: Float,
     minTemp: Float,
+    avgTemp: Float = 0f,
     modifier: Modifier = Modifier
 ) {
     Box(modifier = modifier) {
