@@ -1,6 +1,6 @@
 package mpdc4gsr.feature.gsr.presentation
 
-import android.app.Application
+import android.content.Context
 import android.content.Intent
 import android.os.Environment
 import androidx.core.content.FileProvider
@@ -50,8 +50,10 @@ data class GSRSession(
  * Manages session export functionality and state
  */
 class SessionExportViewModel(
-    private val application: Application
+    context: Context
 ) : AppBaseViewModel() {
+
+    private val application: Context = context.applicationContext
 
     data class SessionExportState(
         val isLoading: Boolean = false,
