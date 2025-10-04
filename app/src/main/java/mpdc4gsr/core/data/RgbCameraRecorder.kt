@@ -1835,7 +1835,11 @@ class RgbCameraRecorder(
             csvBufferedWriter?.let { writer ->
                 val sessionTimeMs = sessionRelativeMs(timestampNs)
                 val wallMs = wallClockMs(timestampNs)
-                val synchronizedTimestampMs = TimestampManager.getSynchronizedTimestampMs()
+                
+                // Calculate synchronized timestamp based on the event's wall clock time and current offset
+                val clockOffsetMs = TimestampManager.getSynchronizedTimestampMs() - TimestampManager.getDeviceTimestampMs()
+                val synchronizedTimestampMs = (wallMs ?: TimestampManager.getCurrentSystemTimeMs()) + clockOffsetMs
+                
                 val metadataMap = metadata.toMutableMap()
                 wallMs?.let { metadataMap["wall_ms"] = it.toString() }
                 sessionMetadata?.let {

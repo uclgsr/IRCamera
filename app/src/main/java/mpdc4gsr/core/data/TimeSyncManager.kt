@@ -439,13 +439,10 @@ class TimeSyncManager(private val context: Context) {
                 )
 
                 // Apply clock offset to both TimeManager and TimestampManager
-                try {
-                    timeManager.setClockOffsetFromProtocolSync(offsetMs * 1_000_000, rttMs)
-                    TimestampManager.setClockOffset(offsetMs)
-                    AppLogger.i(TAG, "Clock offset applied: ${offsetMs}ms (RTT: ${rttMs}ms)")
-                } catch (e: Exception) {
-                    AppLogger.w(TAG, "Failed to apply clock offset", e)
-                }
+                // Don't catch exceptions here - let them propagate to trigger retry
+                timeManager.setClockOffsetFromProtocolSync(offsetMs * 1_000_000, rttMs)
+                TimestampManager.setClockOffset(offsetMs)
+                AppLogger.i(TAG, "Clock offset applied: ${offsetMs}ms (RTT: ${rttMs}ms)")
 
                 // Attempt to log with retry logic
                 val logged = withTimeoutOrNull(syncConfig.syncTimeoutMs) {

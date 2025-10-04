@@ -370,7 +370,10 @@ class ThermalRecorder(private val context: Context) {
                 val csvLine = sessionMetadata?.let { sm ->
                     val wallClockMs = sm.monotonicToWallClock(stats.timestampNs)
                     val relativeMs = (stats.timestampNs - sm.sessionStartMonotonicNs) / 1_000_000L
-                    val synchronizedTimestampMs = TimestampManager.getSynchronizedTimestampMs()
+                    
+                    // Calculate synchronized timestamp based on the frame's wall clock time and current offset
+                    val clockOffsetMs = TimestampManager.getSynchronizedTimestampMs() - TimestampManager.getDeviceTimestampMs()
+                    val synchronizedTimestampMs = wallClockMs + clockOffsetMs
 
                     StringBuilder().apply {
                         append(wallClockMs)
