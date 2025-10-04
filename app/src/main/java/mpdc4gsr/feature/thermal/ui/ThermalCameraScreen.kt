@@ -151,10 +151,18 @@ private fun ThermalPreviewCard(
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    IconButton(onClick = { /* Toggle crosshair */ }) {
+                    var showCrosshair by remember { mutableStateOf(false) }
+                    IconButton(onClick = {
+                        showCrosshair = !showCrosshair
+                        // TODO: Toggle crosshair overlay on thermal image
+                    }) {
                         Icon(Icons.Default.CenterFocusStrong, contentDescription = "Crosshair")
                     }
-                    IconButton(onClick = { /* Full screen */ }) {
+                    var isFullscreen by remember { mutableStateOf(false) }
+                    IconButton(onClick = {
+                        isFullscreen = !isFullscreen
+                        // TODO: Toggle fullscreen mode
+                    }) {
                         Icon(Icons.Default.Fullscreen, contentDescription = "Fullscreen")
                     }
                 }
@@ -296,8 +304,16 @@ private fun TemperatureMeasurementsCard(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
+                val context = androidx.compose.ui.platform.LocalContext.current
                 OutlinedButton(
-                    onClick = { /* Add measurement */ },
+                    onClick = {
+                        // TODO: Add measurement point on thermal image
+                        android.widget.Toast.makeText(
+                            context,
+                            "Add measurement feature coming soon",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Add, contentDescription = null)
@@ -306,7 +322,14 @@ private fun TemperatureMeasurementsCard(
                 }
 
                 OutlinedButton(
-                    onClick = { /* Clear measurements */ },
+                    onClick = {
+                        // TODO: Clear all measurements
+                        android.widget.Toast.makeText(
+                            context,
+                            "Clear measurements feature coming soon",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Clear, contentDescription = null)
@@ -507,8 +530,16 @@ private fun ThermalCameraControlsCard(
                     }
                 }
 
+                val context = androidx.compose.ui.platform.LocalContext.current
                 OutlinedButton(
-                    onClick = { /* Take snapshot */ },
+                    onClick = {
+                        // TODO: Capture thermal snapshot
+                        android.widget.Toast.makeText(
+                            context,
+                            "Snapshot captured",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.CameraAlt, contentDescription = null)
@@ -538,12 +569,20 @@ private fun ThermalAnalysisToolsCard() {
 
             HorizontalDivider()
 
+            val context = androidx.compose.ui.platform.LocalContext.current
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 OutlinedButton(
-                    onClick = { /* Temperature profile */ },
+                    onClick = {
+                        // TODO: Show temperature profile analysis
+                        android.widget.Toast.makeText(
+                            context,
+                            "Temperature profile feature coming soon",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.AutoMirrored.Filled.ShowChart, contentDescription = null)
@@ -552,7 +591,14 @@ private fun ThermalAnalysisToolsCard() {
                 }
 
                 OutlinedButton(
-                    onClick = { /* Histogram analysis */ },
+                    onClick = {
+                        // TODO: Show histogram analysis
+                        android.widget.Toast.makeText(
+                            context,
+                            "Histogram analysis feature coming soon",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.BarChart, contentDescription = null)
@@ -566,7 +612,14 @@ private fun ThermalAnalysisToolsCard() {
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 OutlinedButton(
-                    onClick = { /* Thermal comparison */ },
+                    onClick = {
+                        // TODO: Compare thermal images
+                        android.widget.Toast.makeText(
+                            context,
+                            "Thermal comparison feature coming soon",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Compare, contentDescription = null)
@@ -575,7 +628,14 @@ private fun ThermalAnalysisToolsCard() {
                 }
 
                 OutlinedButton(
-                    onClick = { /* Generate report */ },
+                    onClick = {
+                        // TODO: Generate thermal report
+                        android.widget.Toast.makeText(
+                            context,
+                            "Generate report feature coming soon",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Assessment, contentDescription = null)
@@ -613,12 +673,20 @@ private fun ThermalCameraStatusCard() {
 
             HorizontalDivider()
 
+            val context = androidx.compose.ui.platform.LocalContext.current
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 OutlinedButton(
-                    onClick = { /* Calibrate camera */ },
+                    onClick = {
+                        // TODO: Start camera calibration
+                        android.widget.Toast.makeText(
+                            context,
+                            "Camera calibration feature coming soon",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Tune, contentDescription = null)
@@ -627,7 +695,14 @@ private fun ThermalCameraStatusCard() {
                 }
 
                 OutlinedButton(
-                    onClick = { /* Diagnostic test */ },
+                    onClick = {
+                        // TODO: Run diagnostic test
+                        android.widget.Toast.makeText(
+                            context,
+                            "Diagnostic test feature coming soon",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.BugReport, contentDescription = null)

@@ -78,13 +78,27 @@ class DualModeCameraComposeActivity : BaseComposeActivity<DualModeCameraViewMode
                             }
                         },
                         actions = {
-                            IconButton(onClick = { /* Switch camera */ }) {
+                            IconButton(onClick = {
+                                // TODO: Switch between front/back camera
+                                android.widget.Toast.makeText(
+                                    this@DualModeCameraComposeActivity,
+                                    "Switch camera feature coming soon",
+                                    android.widget.Toast.LENGTH_SHORT
+                                ).show()
+                            }) {
                                 Icon(Icons.Default.FlipCameraAndroid, contentDescription = "Switch")
                             }
                             IconButton(onClick = { showSettingsDialog = true }) {
                                 Icon(Icons.Default.Settings, contentDescription = "Settings")
                             }
-                            IconButton(onClick = { /* More options */ }) {
+                            IconButton(onClick = {
+                                // TODO: Show more options menu
+                                android.widget.Toast.makeText(
+                                    this@DualModeCameraComposeActivity,
+                                    "More options coming soon",
+                                    android.widget.Toast.LENGTH_SHORT
+                                ).show()
+                            }) {
                                 Icon(Icons.Default.MoreVert, contentDescription = "More")
                             }
                         }
@@ -282,7 +296,14 @@ private fun CameraControlsSection(
         ) {
             // Gallery button
             OutlinedButton(
-                onClick = { /* Open gallery */ },
+                onClick = {
+                    // TODO: Open gallery to view captured photos/videos
+                    android.widget.Toast.makeText(
+                        this@DualModeCameraComposeActivity,
+                        "Gallery feature coming soon",
+                        android.widget.Toast.LENGTH_SHORT
+                    ).show()
+                },
                 modifier = Modifier.size(56.dp)
             ) {
                 Icon(
