@@ -97,7 +97,7 @@ class MasterTestRunner:
             
             return test_result
             
-        except subprocess.TimeoutExpired:
+        except subprocess.TimeoutExpired as e:
             test_end = time.time()
             duration = test_end - test_start
             
@@ -109,6 +109,8 @@ class MasterTestRunner:
                 'success': False,
                 'error': 'Test timed out',
                 'duration_seconds': duration,
+                'stdout': e.stdout,
+                'stderr': e.stderr,
                 'timestamp': datetime.now().isoformat()
             }
             
