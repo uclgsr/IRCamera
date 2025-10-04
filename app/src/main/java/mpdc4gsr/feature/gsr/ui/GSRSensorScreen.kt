@@ -50,10 +50,58 @@ fun GSRSensorScreen(
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val sensorState by viewModel.sensorState.collectAsState()
+    val snackbarHostState = remember { SnackbarHostState() }
 
     // Initialize recorder on first composition and manage lifecycle properly
     LaunchedEffect(Unit) {
         viewModel.initializeRecorder(context, lifecycleOwner)
+    }
+
+    // Track critical errors that need a dialog
+    var showCriticalErrorDialog by remember { mutableStateOf(false) }
+    var criticalErrorMessage by remember { mutableStateOf("") }
+
+    // Show error notifications as Snackbar for non-critical errors
+    LaunchedEffect(sensorState.error) {
+        sensorState.error?.let { error ->
+            // Check if this is a critical error (Bluetooth/permission)
+            if (error.contains("Bluetooth", ignoreCase = true) || 
+                error.contains("permission", ignoreCase = true) ||
+                error.contains("initialization failed", ignoreCase = true)) {
+                criticalErrorMessage = error
+                showCriticalErrorDialog = true
+            } else {
+                snackbarHostState.showSnackbar(
+                    message = error,
+                    duration = SnackbarDuration.Long
+                )
+            }
+        }
+    }
+
+    // Critical error dialog
+    if (showCriticalErrorDialog) {
+        AlertDialog(
+            onDismissRequest = { showCriticalErrorDialog = false },
+            title = { Text("GSR Sensor Error") },
+            text = { Text(criticalErrorMessage) },
+            confirmButton = {
+                TextButton(onClick = { showCriticalErrorDialog = false }) {
+                    Text("OK")
+                }
+            },
+            dismissButton = {
+                if (criticalErrorMessage.contains("Bluetooth", ignoreCase = true)) {
+                    TextButton(onClick = {
+                        showCriticalErrorDialog = false
+                        // Try to re-initialize
+                        viewModel.initializeRecorder(context, lifecycleOwner)
+                    }) {
+                        Text("Retry")
+                    }
+                }
+            }
+        )
     }
 
     // Manage lifecycle using DisposableEffect to avoid memory leaks
@@ -95,42 +143,51 @@ fun GSRSensorScreen(
         }
     }
 
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(Color(0xFF16131e))
-    ) {
-        // Title bar with GSR-specific actions
-        TitleBar(
-            title = "GSR Sensor Monitor",
-            showBackButton = true,
-            onBackClick = onBackClick
-        ) {
-            TitleBarAction(
-                icon = Icons.Default.Save,
-                contentDescription = "Save GSR Data",
-                onClick = onSaveData
-            )
-            TitleBarAction(
-                icon = Icons.Default.Settings,
-                contentDescription = "GSR Settings",
-                onClick = onSettingsClick
-            )
-        }
-
-        // Scrollable content
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+        containerColor = Color(0xFF16131e)
+    ) { paddingValues ->
         Column(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+                .padding(paddingValues)
         ) {
+            // Title bar with GSR-specific actions
+            TitleBar(
+                title = "GSR Sensor Monitor",
+                showBackButton = true,
+                onBackClick = onBackClick
+            ) {
+                TitleBarAction(
+                    icon = Icons.Default.Save,
+                    contentDescription = "Save GSR Data",
+                    onClick = onSaveData
+                )
+                TitleBarAction(
+                    icon = Icons.Default.Settings,
+                    contentDescription = "GSR Settings",
+                    onClick = onSettingsClick
+                )
+            }
+
+            // Scrollable content
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
             // Connection status card
             GSRConnectionCard(
                 isConnected = isConnected,
                 deviceBattery = deviceBattery,
                 samplingRate = samplingRate,
+                connectionStatus = sensorState.connectionStatus,
+                isReconnecting = sensorState.isReconnecting,
+                reconnectionAttempt = sensorState.reconnectionAttempt,
+                maxReconnectionAttempts = sensorState.maxReconnectionAttempts,
+                error = sensorState.error,
                 onConnectionToggle = {
                     if (isConnected) {
                         viewModel.disconnectDevice()
@@ -180,6 +237,7 @@ fun GSRSensorScreen(
             }
         }
     }
+    }
 }
 
 /**
@@ -190,13 +248,23 @@ private fun GSRConnectionCard(
     isConnected: Boolean,
     deviceBattery: Int,
     samplingRate: Int,
+    connectionStatus: String = "Disconnected",
+    isReconnecting: Boolean = false,
+    reconnectionAttempt: Int = 0,
+    maxReconnectionAttempts: Int = 0,
+    error: String? = null,
     onConnectionToggle: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
         modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
-            containerColor = if (isConnected) Color(0xFF1A2A1A) else Color(0xFF2A1A1A)
+            containerColor = when {
+                isReconnecting -> Color(0xFF8B4513)
+                isConnected -> Color(0xFF1A2A1A)
+                error != null -> Color(0xFF4A1A1A)
+                else -> Color(0xFF2A1A1A)
+            }
         )
     ) {
         Column(
@@ -210,7 +278,7 @@ private fun GSRConnectionCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Column {
+                Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = "Shimmer3 GSR Device",
                         color = Color.White,
@@ -218,23 +286,49 @@ private fun GSRConnectionCard(
                         fontWeight = FontWeight.Bold
                     )
                     Text(
-                        text = if (isConnected) "Connected via Bluetooth" else "Disconnected",
-                        color = if (isConnected) Color.Green else Color.Red,
+                        text = connectionStatus,
+                        color = when {
+                            isReconnecting -> Color.Yellow
+                            isConnected -> Color.Green
+                            error != null -> Color.Red
+                            else -> Color.Gray
+                        },
                         fontSize = 14.sp
                     )
+                    
+                    if (isReconnecting && reconnectionAttempt > 0) {
+                        Text(
+                            text = "Reconnecting: attempt $reconnectionAttempt/$maxReconnectionAttempts",
+                            color = Color.Yellow,
+                            fontSize = 12.sp,
+                            modifier = Modifier.padding(top = 4.dp)
+                        )
+                    }
+                    
+                    if (error != null && !isReconnecting) {
+                        Text(
+                            text = error,
+                            color = Color.Red,
+                            fontSize = 12.sp,
+                            modifier = Modifier.padding(top = 4.dp)
+                        )
+                    }
                 }
 
                 Switch(
                     checked = isConnected,
                     onCheckedChange = { onConnectionToggle() },
+                    enabled = !isReconnecting,
                     colors = SwitchDefaults.colors(
                         checkedThumbColor = Color.Green,
-                        uncheckedThumbColor = Color.Gray
+                        uncheckedThumbColor = Color.Gray,
+                        disabledCheckedThumbColor = Color.Yellow,
+                        disabledUncheckedThumbColor = Color.DarkGray
                     )
                 )
             }
 
-            if (isConnected) {
+            if (isConnected && !isReconnecting) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly
