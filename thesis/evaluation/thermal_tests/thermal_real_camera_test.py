@@ -194,7 +194,7 @@ class ThermalRealCameraTest:
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         result_file = self.output_dir / f"thermal_real_result_{timestamp}.json"
         
-        with open(result_file, 'w') as f:
+        with open(result_file, 'w', encoding='utf-8') as f:
             json.dump(asdict(result), f, indent=2)
         
         print(f"\nSaved result: {result_file}")
