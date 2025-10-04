@@ -251,7 +251,12 @@ class RecordingService : Service(), CoroutineScope {
         // This must be called within 5-10 seconds of startForegroundService()
         startForeground(
             NOTIFICATION_ID,
-            createServerNotification("Initializing service...")
+            NotificationCompat.Builder(this, CHANNEL_ID)
+                .setContentTitle("IRCamera Service")
+                .setContentText("Initializing service...")
+                .setSmallIcon(R.drawable.ic_info)
+                .setOngoing(true)
+                .build()
         )
 
         nsdManager = getSystemService(Context.NSD_SERVICE) as NsdManager
