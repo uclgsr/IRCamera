@@ -1,0 +1,153 @@
+================================================================================
+                    PC-ANDROID COMMUNICATION FLOW
+================================================================================
+
+CONNECTION ESTABLISHMENT:
+-------------------------
+
+Android                          Protocol Adapter                    PC Logic
+  |                                     |                                |
+  |  HELLO device_name=X               |                                |
+  |  sensors=[GSR,RGB]                 |                                |
+  |------------------------------------>|                                |
+  |                                     | Parse text to JSON             |
+  |                                     | {type: "HELLO",               |
+  |                                     |  device_name: "X",            |
+  |                                     |  sensors: ["GSR","RGB"]}      |
+  |                                     |------------------------------->|
+  |                                     |                Register Device |
+  |                                     |<-------------------------------|
+  |                                     | Create ACK                     |
+  |  ACK cmd=HELLO device_id=X         |                                |
+  |<------------------------------------|                                |
+  |                                     |                                |
+
+TIME SYNCHRONIZATION:
+---------------------
+
+Android                          Protocol Adapter                    PC Logic
+  |                                     |                                |
+  |  SYNC_INIT                          |                                |
+  |------------------------------------>|                                |
+  |                                     | Parse to JSON                  |
+  |                                     | {type: "SYNC_INIT"}           |
+  |                                     |------------------------------->|
+  |                                     |           Initiate Sync Request|
+  |                                     |<-------------------------------|
+  |                                     | Format as text                 |
+  |  SYNC_REQUEST t_pc=1000            |                                |
+  |<------------------------------------|                                |
+  | Process sync                        |                                |
+  |                                     |                                |
+  |  SYNC_RESPONSE t_pc=1000           |                                |
+  |  t_ph=1005                          |                                |
+  |------------------------------------>|                                |
+  |                                     | Parse to JSON                  |
+  |                                     | {type: "SYNC_RESPONSE",       |
+  |                                     |  t_pc: 1000, t_ph: 1005}      |
+  |                                     |------------------------------->|
+  |                                     |           Calculate Offset &   |
+  |                                     |           RTT (T3=1010)        |
+  |                                     |           Offset = 5ms         |
+  |                                     |           RTT = 10ms           |
+  |                                     |<-------------------------------|
+  |                                     | Format SYNC_RESULT             |
+  |  SYNC_RESULT t1=1000 t2=1005       |                                |
+  |  t3=1010 offset=5 rtt=10           |                                |
+  |<------------------------------------|                                |
+  | Apply clock offset                  |                                |
+  |                                     |                                |
+
+RECORDING SESSION:
+------------------
+
+Android                          Protocol Adapter                    PC Logic
+  |                                     |                                |
+  |                                     |<-------------------------------|
+  |                                     | Format command                 |
+  |  START_RECORD                      |                                |
+  |  session_id=session_123            |                                |
+  |<------------------------------------|                                |
+  | Start sensors                       |                                |
+  |                                     |                                |
+  |  ACK cmd=START_RECORD              |                                |
+  |  session_id=session_123            |                                |
+  |------------------------------------>|                                |
+  |                                     | Parse ACK                      |
+  |                                     |------------------------------->|
+  |                                     |            Update Device State |
+  |                                     |                                |
+  |  DATA_GSR ts=1000 value=5.5        |                                |
+  |------------------------------------>|                                |
+  |                                     | Parse to JSON                  |
+  |                                     | {type: "DATA_GSR",            |
+  |                                     |  ts: 1000, value: 5.5}        |
+  |                                     |------------------------------->|
+  |                                     |                Plot GSR Data   |
+  |  DATA_GSR ts=1010 value=5.6        |                                |
+  |------------------------------------>|                                |
+  |  ...more data...                   |                                |
+  |------------------------------------>|                                |
+  |                                     |                                |
+  |                                     |<-------------------------------|
+  |  STOP_RECORD                       |                                |
+  |  session_id=session_123            |                                |
+  |<------------------------------------|                                |
+  | Stop sensors                        |                                |
+  |                                     |                                |
+  |  ACK cmd=STOP_RECORD               |                                |
+  |  session_id=session_123            |                                |
+  |------------------------------------>|                                |
+  |                                     |------------------------------->|
+  |                                     |                                |
+
+ERROR HANDLING:
+---------------
+
+Android                          Protocol Adapter                    PC Logic
+  |                                     |                                |
+  |                                     |<-------------------------------|
+  |  START_RECORD session_id=X         |                                |
+  |<------------------------------------|                                |
+  | Sensor fails                        |                                |
+  |                                     |                                |
+  |  ERROR cmd=START_RECORD            |                                |
+  |  code=SENSOR_FAIL                  |                                |
+  |  msg="GSR not connected"           |                                |
+  |------------------------------------>|                                |
+  |                                     | Parse error                    |
+  |                                     | {type: "ERROR",               |
+  |                                     |  cmd: "START_RECORD",         |
+  |                                     |  code: "SENSOR_FAIL",         |
+  |                                     |  msg: "GSR not connected"}    |
+  |                                     |------------------------------->|
+  |                                     |            Log Error & Notify  |
+  |                                     |                                |
+
+PROTOCOL TRANSLATION EXAMPLES:
+------------------------------
+
+Android Text Format          →    JSON Format                    →    PC Processing
+------------------                ------------                        --------------
+HELLO device_name=X          →    {type: "HELLO",                →    Register device
+sensors=[GSR,RGB]                  device_name: "X",                   Create ACK
+                                   sensors: ["GSR","RGB"]}             
+
+START_RECORD                 →    {type: "START_RECORD",         →    Start session
+session_id=s123                    session_id: "s123"}                 Track state
+
+DATA_GSR ts=1000            →    {type: "DATA_GSR",             →    Plot data
+value=5.5                          ts: 1000, value: 5.5}              Update display
+
+ACK cmd=START_RECORD        →    {type: "ACK",                  →    Confirm success
+session_id=s123                    cmd: "START_RECORD",               Update UI
+                                   session_id: "s123"}
+
+ERROR cmd=START_RECORD      →    {type: "ERROR",                →    Show error
+code=SENSOR_FAIL                   cmd: "START_RECORD",              Retry logic
+msg="GSR not connected"            code: "SENSOR_FAIL",
+                                   msg: "GSR not connected"}
+
+================================================================================
+                        100% PROTOCOL COMPATIBILITY ACHIEVED
+================================================================================

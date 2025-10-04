@@ -62,7 +62,7 @@ class ThermalCameraViewModel(application: Application) : ViewModel() {
         viewModelScope.launch {
             try {
                 thermalRecorder = ThermalCameraRecorder(context, "thermal_preview_1")
-                
+
                 // Set preview callback to receive thermal frames
                 thermalRecorder?.setThermalPreviewCallback(object : ThermalCameraRecorder.ThermalPreviewCallback {
                     override fun onThermalFrame(
@@ -78,8 +78,10 @@ class ThermalCameraViewModel(application: Application) : ViewModel() {
                                 minTemperature = temperatureData?.minTemperature ?: currentState.minTemperature,
                                 maxTemperature = temperatureData?.maxTemperature ?: currentState.maxTemperature,
                                 avgTemperature = temperatureData?.avgTemperature ?: currentState.avgTemperature,
-                                centerTemperature = temperatureData?.centerTemperature ?: currentState.centerTemperature,
-                                currentTemperature = temperatureData?.centerTemperature ?: currentState.currentTemperature
+                                centerTemperature = temperatureData?.centerTemperature
+                                    ?: currentState.centerTemperature,
+                                currentTemperature = temperatureData?.centerTemperature
+                                    ?: currentState.currentTemperature
                             )
                         }
                     }
@@ -87,14 +89,14 @@ class ThermalCameraViewModel(application: Application) : ViewModel() {
 
                 // Initialize the thermal camera
                 val success = thermalRecorder?.initialize() ?: false
-                
+
                 // Update connection status after initialization
                 val status = thermalRecorder?.getThermalSystemStatus()
                 _uiState.value = _uiState.value.copy(
                     isConnected = status?.isConnected ?: false,
                     isSimulationMode = status?.isSimulationMode ?: false
                 )
-                
+
                 if (success) {
                     AppLogger.i(TAG, "Thermal camera initialized successfully")
                 } else {
@@ -189,7 +191,7 @@ class ThermalCameraViewModel(application: Application) : ViewModel() {
                 latch.countDown()
             }
         }.start()
-        
+
         // Wait for cleanup to complete with a timeout to prevent indefinite blocking
         try {
             if (!latch.await(3, TimeUnit.SECONDS)) {

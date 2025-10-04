@@ -392,7 +392,7 @@ class RgbCameraRecorder(
     /**
      * Switch to the front-facing camera.
      * Cannot be called while recording is active.
-     * 
+     *
      * @return true if switch was successful, false otherwise
      */
     suspend fun switchToFrontCamera(): Boolean {
@@ -402,7 +402,7 @@ class RgbCameraRecorder(
     /**
      * Switch to the back-facing camera.
      * Cannot be called while recording is active.
-     * 
+     *
      * @return true if switch was successful, false otherwise
      */
     suspend fun switchToBackCamera(): Boolean {
@@ -561,7 +561,10 @@ class RgbCameraRecorder(
             val preferredFps = recordingSettings?.videoFrameRate ?: VIDEO_FPS_TARGET
 
             if (qualityConfig != null) {
-                AppLogger.i(TAG, "Applying user settings: quality=${recordingSettings?.recordingQuality}, fps=$preferredFps")
+                AppLogger.i(
+                    TAG,
+                    "Applying user settings: quality=${recordingSettings?.recordingQuality}, fps=$preferredFps"
+                )
                 selectedVideoWidth = qualityConfig.videoWidth
                 selectedVideoHeight = qualityConfig.videoHeight
                 selectedVideoBitrate = qualityConfig.videoBitrate
@@ -736,7 +739,7 @@ class RgbCameraRecorder(
             preview?.let { preview ->
                 useCases.add(preview)
                 AppLogger.i(TAG, " Preview use case added to camera lifecycle")
-                
+
                 previewView?.let { previewView ->
                     try {
                         preview.setSurfaceProvider(previewView.surfaceProvider)
@@ -1847,11 +1850,11 @@ class RgbCameraRecorder(
             csvBufferedWriter?.let { writer ->
                 val sessionTimeMs = sessionRelativeMs(timestampNs)
                 val wallMs = wallClockMs(timestampNs)
-                
+
                 // Calculate synchronized timestamp based on the event's wall clock time and current offset
                 val clockOffsetMs = TimestampManager.getClockOffsetMs()
                 val synchronizedTimestampMs = (wallMs ?: TimestampManager.getCurrentSystemTimeMs()) + clockOffsetMs
-                
+
                 val metadataMap = metadata.toMutableMap()
                 wallMs?.let { metadataMap["wall_ms"] = it.toString() }
                 sessionMetadata?.let {

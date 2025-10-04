@@ -137,7 +137,6 @@ class SensorDataRepository(
     }
 
 
-
     private suspend fun fetchDeviceStatus(deviceId: String): DeviceStatus {
         return DeviceStatus(
             deviceId = deviceId,

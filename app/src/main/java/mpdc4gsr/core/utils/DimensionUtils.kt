@@ -9,11 +9,11 @@ import androidx.compose.ui.unit.Dp
 
 /**
  * Modern AndroidX replacement for utilcode SizeUtils
- * 
+ *
  * Provides context-aware, type-safe dimension conversions without external dependencies.
  * This eliminates the need for the utilcode library's SizeUtils, which has
  * hidden API warnings and is no longer maintained.
- * 
+ *
  * IMPORTANT: These utilities use context-aware patterns to ensure correct UI rendering
  * across different device configurations and themes.
  */
