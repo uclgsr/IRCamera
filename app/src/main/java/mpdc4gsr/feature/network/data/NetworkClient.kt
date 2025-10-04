@@ -804,49 +804,48 @@ class NetworkClient(private val context: Context) {
     private suspend fun queryController(host: String): ControllerInfo? =
         withContext(Dispatchers.IO) {
             try {
-                val socket = Socket()
-                socket.connect(InetSocketAddress(host, PC_CONTROLLER_PORT), 2000)
+                Socket().use { socket ->
+                    socket.connect(InetSocketAddress(host, PC_CONTROLLER_PORT), 2000)
 
-                val output = DataOutputStream(socket.getOutputStream())
-                val input = DataInputStream(socket.getInputStream())
+                    DataOutputStream(socket.getOutputStream()).use { output ->
+                        DataInputStream(socket.getInputStream()).use { input ->
+                            val query =
+                                JSONObject().apply {
+                                    put("message_type", "info_query")
+                                    put("device_id", deviceId)
+                                }
 
-                val query =
-                    JSONObject().apply {
-                        put("message_type", "info_query")
-                        put("device_id", deviceId)
+                            val queryData = query.toString().toByteArray(Charsets.UTF_8)
+                            output.writeInt(queryData.size)
+                            output.write(queryData)
+                            output.flush()
+
+                            val responseLength = input.readInt()
+                            if (responseLength < 0 || responseLength > 1024 * 1024) { // Max 1MB response
+                                AppLogger.w(TAG, "Invalid response length: $responseLength bytes from $host")
+                                return@withContext null
+                            }
+
+                            val responseData = ByteArray(responseLength)
+                            input.readFully(responseData)
+
+                            val response = JSONObject(String(responseData, Charsets.UTF_8))
+
+                            if (response.optString("message_type") == "info_response") {
+                                ControllerInfo(
+                                    ipAddress = host,
+                                    port = PC_CONTROLLER_PORT,
+                                    deviceName = response.optString("device_name", "PC Controller"),
+                                    capabilities =
+                                        response.optJSONArray("capabilities")?.let { jsonArray ->
+                                            (0 until jsonArray.length()).map { jsonArray.getString(it) }
+                                        } ?: emptyList(),
+                                )
+                            } else {
+                                null
+                            }
+                        }
                     }
-
-                val queryData = query.toString().toByteArray(Charsets.UTF_8)
-                output.writeInt(queryData.size)
-                output.write(queryData)
-                output.flush()
-
-                val responseLength = input.readInt()
-                if (responseLength < 0 || responseLength > 1024 * 1024) { // Max 1MB response
-                    AppLogger.w(TAG, "Invalid response length: $responseLength bytes from $host")
-                    socket.close()
-                    return@withContext null
-                }
-
-                val responseData = ByteArray(responseLength)
-                input.readFully(responseData)
-
-                val response = JSONObject(String(responseData, Charsets.UTF_8))
-
-                socket.close()
-
-                if (response.optString("message_type") == "info_response") {
-                    ControllerInfo(
-                        ipAddress = host,
-                        port = PC_CONTROLLER_PORT,
-                        deviceName = response.optString("device_name", "PC Controller"),
-                        capabilities =
-                            response.optJSONArray("capabilities")?.let { jsonArray ->
-                                (0 until jsonArray.length()).map { jsonArray.getString(it) }
-                            } ?: emptyList(),
-                    )
-                } else {
-                    null
                 }
             } catch (e: Exception) {
                 AppLogger.d(TAG, "Controller query failed for $host: ${e.message}")
