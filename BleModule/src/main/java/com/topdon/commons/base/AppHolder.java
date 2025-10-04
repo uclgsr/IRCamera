@@ -80,29 +80,35 @@ public class AppHolder implements Application.ActivityLifecycleCallbacks {
         topActivity = a;
     }
 
+    private void updateTopActivity(Activity activity) {
+        for (RunningActivity runningActivity : runningActivities) {
+            if (runningActivity.name.equals(activity.getClass().getName())) {
+                topActivity = runningActivity;
+                break;
+            }
+        }
+    }
+
     @Override
     public void onActivityStarted(Activity activity) {
-
+        updateTopActivity(activity);
     }
 
     @Override
     public void onActivityResumed(Activity activity) {
-
+        updateTopActivity(activity);
     }
 
     @Override
     public void onActivityPaused(Activity activity) {
-
     }
 
     @Override
     public void onActivityStopped(Activity activity) {
-
     }
 
     @Override
     public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
-
     }
 
     @CallSuper

@@ -2256,8 +2256,10 @@ class RecordingService : Service(), CoroutineScope {
         }
         try {
             nsdManager?.unregisterService(object : NsdManager.RegistrationListener {
-                override fun onServiceRegistered(serviceInfo: NsdServiceInfo?) {}
-                override fun onRegistrationFailed(serviceInfo: NsdServiceInfo?, errorCode: Int) {}
+                override fun onServiceRegistered(serviceInfo: NsdServiceInfo?) {
+                }
+                override fun onRegistrationFailed(serviceInfo: NsdServiceInfo?, errorCode: Int) {
+                }
                 override fun onServiceUnregistered(serviceInfo: NsdServiceInfo?) {
                     AppLogger.i(TAG, "NSD service unregistered successfully")
                     isServiceRegistered = false

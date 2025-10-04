@@ -1036,12 +1036,43 @@ class GSRSensorRecorder(
                     onGSRSampleReceived(sample)
                 }
 
-                override fun onRecordingStarted(session: SessionInfo) {}
-                override fun onRecordingStopped(session: SessionInfo) {}
-                override fun onSyncMarkRecorded(syncMark: SyncMark) {}
-                override fun onError(error: String) {}
-                override fun onDeviceConnected() {}
-                override fun onDeviceDisconnected() {}
+                override fun onRecordingStarted(session: SessionInfo) {
+                    AppLogger.i(TAG, "Real Shimmer recording started: ${session.sessionId}")
+                    currentSessionId = session.sessionId
+                    recordingScope.launch {
+                        emitStatus()
+                    }
+                }
+
+                override fun onRecordingStopped(session: SessionInfo) {
+                    AppLogger.i(TAG, "Real Shimmer recording stopped: ${session.sessionId}")
+                    recordingScope.launch {
+                        emitStatus()
+                    }
+                }
+
+                override fun onSyncMarkRecorded(syncMark: SyncMark) {
+                    AppLogger.d(TAG, "Sync mark recorded: ${syncMark.timestamp}")
+                    syncMarkerCount.incrementAndGet()
+                }
+
+                override fun onError(error: String) {
+                    AppLogger.e(TAG, "Real Shimmer error: $error")
+                    emitError(ErrorType.DEVICE_ERROR, error)
+                }
+
+                override fun onDeviceConnected() {
+                    AppLogger.i(TAG, "Real Shimmer device connected")
+                    isShimmerConnected = true
+                    connectionHealthScore = 100.0
+                    reconnectionAttempts = 0
+                }
+
+                override fun onDeviceDisconnected() {
+                    AppLogger.w(TAG, "Real Shimmer device disconnected")
+                    isShimmerConnected = false
+                    connectionHealthScore = 0.0
+                }
             })
 
             legacyGSRRecorder?.addListener(object : LegacyGSRRecorder.GSRRecordingListener {
@@ -1049,10 +1080,30 @@ class GSRSensorRecorder(
                     onGSRSampleReceived(sample)
                 }
 
-                override fun onRecordingStarted(sessionInfo: SessionInfo) {}
-                override fun onRecordingStopped(sessionInfo: SessionInfo) {}
-                override fun onSyncMarkAdded(syncMark: SyncMark) {}
-                override fun onError(error: String) {}
+                override fun onRecordingStarted(sessionInfo: SessionInfo) {
+                    AppLogger.i(TAG, "Legacy GSR recording started: ${sessionInfo.sessionId}")
+                    currentSessionId = sessionInfo.sessionId
+                    recordingScope.launch {
+                        emitStatus()
+                    }
+                }
+
+                override fun onRecordingStopped(sessionInfo: SessionInfo) {
+                    AppLogger.i(TAG, "Legacy GSR recording stopped: ${sessionInfo.sessionId}")
+                    recordingScope.launch {
+                        emitStatus()
+                    }
+                }
+
+                override fun onSyncMarkAdded(syncMark: SyncMark) {
+                    AppLogger.d(TAG, "Sync mark added: ${syncMark.timestamp}")
+                    syncMarkerCount.incrementAndGet()
+                }
+
+                override fun onError(error: String) {
+                    AppLogger.e(TAG, "Legacy GSR error: $error")
+                    emitError(ErrorType.DEVICE_ERROR, error)
+                }
             })
 
             Log.i(
