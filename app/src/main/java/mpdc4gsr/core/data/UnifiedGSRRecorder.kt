@@ -88,6 +88,10 @@ class UnifiedGSRRecorder(
 
     private val discoveredDevices = mutableListOf<DeviceInfo>()
     private var selectedDevice: DeviceInfo? = null
+    
+    // Expose last connected device for reconnection
+    val lastConnectedDeviceAddress: String?
+        get() = selectedDevice?.address
 
     private val gsrDataFlow = MutableSharedFlow<GSRSample>(
         replay = 1000,

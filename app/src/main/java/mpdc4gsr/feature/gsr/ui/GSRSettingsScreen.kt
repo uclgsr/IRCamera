@@ -95,6 +95,34 @@ fun GSRSettingsScreen(
                         )
                     }
                 )
+                
+                if (deviceSettings.autoReconnect) {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    SettingsSlider(
+                        label = "Reconnection Attempts",
+                        value = deviceSettings.reconnectionAttempts.toFloat(),
+                        valueRange = 1f..10f,
+                        onValueChange = { 
+                            viewModel.updateDeviceSettings(
+                                deviceSettings.copy(reconnectionAttempts = it.toInt())
+                            )
+                        },
+                        unit = " attempts"
+                    )
+                    
+                    Spacer(modifier = Modifier.height(8.dp))
+                    SettingsSlider(
+                        label = "Reconnection Delay",
+                        value = (deviceSettings.reconnectionBaseDelayMs / 1000f),
+                        valueRange = 1f..10f,
+                        onValueChange = { 
+                            viewModel.updateDeviceSettings(
+                                deviceSettings.copy(reconnectionBaseDelayMs = (it * 1000).toLong())
+                            )
+                        },
+                        unit = " seconds"
+                    )
+                }
             }
 
             // Data Collection

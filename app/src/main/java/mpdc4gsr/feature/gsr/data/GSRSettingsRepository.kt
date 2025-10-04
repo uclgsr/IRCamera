@@ -37,6 +37,8 @@ class GSRSettingsRepository(private val context: Context) {
         val deviceName: String? = null,
         val connectionTimeout: Int = 30,
         val autoReconnect: Boolean = true,
+        val reconnectionAttempts: Int = 3,
+        val reconnectionBaseDelayMs: Long = 2000L,
         val keepDeviceConnected: Boolean = false,
         val deviceCalibrationEnabled: Boolean = true
     )
@@ -60,6 +62,8 @@ class GSRSettingsRepository(private val context: Context) {
         private const val KEY_DEVICE_NAME = "gsr_device_name"
         private const val KEY_CONNECTION_TIMEOUT = "gsr_connection_timeout"
         private const val KEY_AUTO_RECONNECT = "gsr_auto_reconnect"
+        private const val KEY_RECONNECTION_ATTEMPTS = "gsr_reconnection_attempts"
+        private const val KEY_RECONNECTION_BASE_DELAY = "gsr_reconnection_base_delay"
         private const val KEY_KEEP_DEVICE_CONNECTED = "gsr_keep_device_connected"
         private const val KEY_DEVICE_CALIBRATION = "gsr_device_calibration"
 
@@ -90,6 +94,8 @@ class GSRSettingsRepository(private val context: Context) {
             deviceName = prefs.getString(KEY_DEVICE_NAME, null),
             connectionTimeout = prefs.getInt(KEY_CONNECTION_TIMEOUT, DEFAULT_CONNECTION_TIMEOUT),
             autoReconnect = prefs.getBoolean(KEY_AUTO_RECONNECT, true),
+            reconnectionAttempts = prefs.getInt(KEY_RECONNECTION_ATTEMPTS, 3),
+            reconnectionBaseDelayMs = prefs.getLong(KEY_RECONNECTION_BASE_DELAY, 2000L),
             keepDeviceConnected = prefs.getBoolean(KEY_KEEP_DEVICE_CONNECTED, false),
             deviceCalibrationEnabled = prefs.getBoolean(KEY_DEVICE_CALIBRATION, true)
         )
@@ -116,6 +122,8 @@ class GSRSettingsRepository(private val context: Context) {
             putString(KEY_DEVICE_NAME, settings.deviceName)
             putInt(KEY_CONNECTION_TIMEOUT, settings.connectionTimeout)
             putBoolean(KEY_AUTO_RECONNECT, settings.autoReconnect)
+            putInt(KEY_RECONNECTION_ATTEMPTS, settings.reconnectionAttempts)
+            putLong(KEY_RECONNECTION_BASE_DELAY, settings.reconnectionBaseDelayMs)
             putBoolean(KEY_KEEP_DEVICE_CONNECTED, settings.keepDeviceConnected)
             putBoolean(KEY_DEVICE_CALIBRATION, settings.deviceCalibrationEnabled)
             apply()
