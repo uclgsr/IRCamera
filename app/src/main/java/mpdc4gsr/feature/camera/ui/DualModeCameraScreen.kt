@@ -52,7 +52,11 @@ fun DualModeCameraScreen(
                         IconButton(onClick = onNavigateToSettings) {
                             Icon(Icons.Default.Tune, contentDescription = "Camera Settings")
                         }
-                        IconButton(onClick = { /* Toggle view mode */ }) {
+                        var viewMode by remember { mutableStateOf("split") }
+                        IconButton(onClick = {
+                            viewMode = if (viewMode == "split") "overlay" else "split"
+                            // TODO: Toggle between split and overlay view modes
+                        }) {
                             Icon(Icons.Default.SwapHoriz, contentDescription = "Swap View")
                         }
                     }
@@ -610,8 +614,16 @@ private fun CameraControlsCard(
                     }
                 }
 
+                val context = androidx.compose.ui.platform.LocalContext.current
                 OutlinedButton(
-                    onClick = { /* Take snapshot */ },
+                    onClick = {
+                        // TODO: Capture snapshot from both cameras
+                        android.widget.Toast.makeText(
+                            context,
+                            "Snapshot captured",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f),
                     enabled = rgbActive || thermalActive
                 ) {
@@ -688,12 +700,20 @@ private fun CalibrationToolsCard() {
 
             HorizontalDivider()
 
+            val context = androidx.compose.ui.platform.LocalContext.current
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 OutlinedButton(
-                    onClick = { /* Start alignment */ },
+                    onClick = {
+                        // TODO: Start camera alignment process
+                        android.widget.Toast.makeText(
+                            context,
+                            "Starting alignment...",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.CenterFocusStrong, contentDescription = null)
@@ -702,7 +722,14 @@ private fun CalibrationToolsCard() {
                 }
 
                 OutlinedButton(
-                    onClick = { /* Calibrate colors */ },
+                    onClick = {
+                        // TODO: Start color calibration
+                        android.widget.Toast.makeText(
+                            context,
+                            "Starting color calibration...",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Palette, contentDescription = null)

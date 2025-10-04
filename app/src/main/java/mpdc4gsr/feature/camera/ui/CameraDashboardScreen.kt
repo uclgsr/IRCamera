@@ -235,12 +235,20 @@ private fun CameraModesCard(
             )
 
             // Time-lapse Mode
+            val context = androidx.compose.ui.platform.LocalContext.current
             CameraModeItem(
                 title = "Time-lapse Mode",
                 description = "Automated interval capture",
                 icon = Icons.Default.Timer,
                 isActive = false,
-                onClick = { /* Navigate to time-lapse */ }
+                onClick = {
+                    // TODO: Navigate to time-lapse camera activity
+                    android.widget.Toast.makeText(
+                        context,
+                        "Time-lapse mode coming soon",
+                        android.widget.Toast.LENGTH_SHORT
+                    ).show()
+                }
             )
         }
     }
@@ -377,8 +385,16 @@ private fun RecordingControlsCard() {
                     }
                 }
 
+                val context = androidx.compose.ui.platform.LocalContext.current
                 OutlinedButton(
-                    onClick = { /* Take photo */ },
+                    onClick = {
+                        // TODO: Take photo
+                        android.widget.Toast.makeText(
+                            context,
+                            "Photo captured",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.CameraAlt, contentDescription = null)
@@ -482,12 +498,20 @@ private fun PreviewGalleryCard() {
 
             HorizontalDivider()
 
+            val context = androidx.compose.ui.platform.LocalContext.current
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 OutlinedButton(
-                    onClick = { /* Open preview */ },
+                    onClick = {
+                        // TODO: Open camera preview
+                        android.widget.Toast.makeText(
+                            context,
+                            "Preview feature coming soon",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Preview, contentDescription = null)
@@ -496,7 +520,14 @@ private fun PreviewGalleryCard() {
                 }
 
                 OutlinedButton(
-                    onClick = { /* Open gallery */ },
+                    onClick = {
+                        // TODO: Open gallery
+                        android.widget.Toast.makeText(
+                            context,
+                            "Gallery feature coming soon",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.PhotoLibrary, contentDescription = null)

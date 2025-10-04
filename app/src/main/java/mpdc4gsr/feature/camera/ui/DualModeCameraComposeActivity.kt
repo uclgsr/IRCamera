@@ -336,7 +336,14 @@ private fun CameraControlsSection(
 
             // Capture button
             OutlinedButton(
-                onClick = { /* Take photo */ },
+                onClick = {
+                    // TODO: Capture photo from dual camera
+                    android.widget.Toast.makeText(
+                        this@DualModeCameraComposeActivity,
+                        "Photo captured",
+                        android.widget.Toast.LENGTH_SHORT
+                    ).show()
+                },
                 modifier = Modifier.size(56.dp)
             ) {
                 Icon(

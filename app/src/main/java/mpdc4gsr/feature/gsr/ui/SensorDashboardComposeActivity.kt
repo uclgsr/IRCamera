@@ -156,9 +156,30 @@ class SensorDashboardComposeActivity : ComponentActivity() {
 
                 // Data export and management section
                 DataManagementSection(
-                    onExportAllData = { /* Export all sensor data */ },
-                    onClearData = { /* Clear sensor data */ },
-                    onOpenSettings = { /* Open sensor settings */ }
+                    onExportAllData = {
+                        // TODO: Export all sensor data
+                        android.widget.Toast.makeText(
+                            this@SensorDashboardComposeActivity,
+                            "Exporting all sensor data...",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
+                    onClearData = {
+                        // TODO: Clear sensor data
+                        android.widget.Toast.makeText(
+                            this@SensorDashboardComposeActivity,
+                            "Clear data feature coming soon",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
+                    onOpenSettings = {
+                        // TODO: Open sensor settings
+                        android.widget.Toast.makeText(
+                            this@SensorDashboardComposeActivity,
+                            "Opening settings...",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 )
             }
         }

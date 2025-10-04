@@ -295,10 +295,24 @@ private fun RawDataView() {
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    IconButton(onClick = { /* Go to top */ }) {
+                    IconButton(onClick = {
+                        // TODO: Scroll to top of data
+                        android.widget.Toast.makeText(
+                            this@GSRDataViewComposeActivity,
+                            "Scroll to top",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    }) {
                         Icon(Icons.Default.KeyboardArrowUp, contentDescription = "Go to top")
                     }
-                    IconButton(onClick = { /* Go to bottom */ }) {
+                    IconButton(onClick = {
+                        // TODO: Scroll to bottom of data
+                        android.widget.Toast.makeText(
+                            this@GSRDataViewComposeActivity,
+                            "Scroll to bottom",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    }) {
                         Icon(Icons.Default.KeyboardArrowDown, contentDescription = "Go to bottom")
                     }
                 }
@@ -486,7 +500,14 @@ private fun ProcessingOptionsCard() {
             }
 
             Button(
-                onClick = { /* Apply processing */ },
+                onClick = {
+                    // TODO: Apply data processing
+                    android.widget.Toast.makeText(
+                        this@GSRDataViewComposeActivity,
+                        "Applying processing...",
+                        android.widget.Toast.LENGTH_SHORT
+                    ).show()
+                },
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Icon(Icons.Default.PlayArrow, contentDescription = null)

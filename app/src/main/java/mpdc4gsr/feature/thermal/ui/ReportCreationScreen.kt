@@ -57,10 +57,18 @@ fun ReportCreationScreen(
             showBackButton = true,
             onBackClick = onBackClick
         ) {
+            val context = androidx.compose.ui.platform.LocalContext.current
             TitleBarAction(
                 icon = Icons.Default.Save,
                 contentDescription = "Save Draft",
-                onClick = { /* Save draft */ }
+                onClick = {
+                    // TODO: Save report draft
+                    android.widget.Toast.makeText(
+                        context,
+                        "Report draft saved",
+                        android.widget.Toast.LENGTH_SHORT
+                    ).show()
+                }
             )
         }
 
@@ -112,12 +120,20 @@ fun ReportCreationScreen(
             Spacer(modifier = Modifier.weight(1f))
 
             // Navigation Buttons
+            val context = androidx.compose.ui.platform.LocalContext.current
             ReportNavigationButtons(
                 currentStep = currentStep,
                 totalSteps = steps.size,
                 onPrevious = { if (currentStep > 0) currentStep-- },
                 onNext = { if (currentStep < steps.size - 1) currentStep++ },
-                onFinish = { /* Generate report */ }
+                onFinish = {
+                    // TODO: Generate and export report
+                    android.widget.Toast.makeText(
+                        context,
+                        "Generating report...",
+                        android.widget.Toast.LENGTH_SHORT
+                    ).show()
+                }
             )
         }
     }
