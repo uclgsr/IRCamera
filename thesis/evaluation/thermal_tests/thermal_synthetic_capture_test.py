@@ -211,7 +211,7 @@ class ThermalSyntheticCaptureTest:
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         csv_file = self.output_dir / f"thermal_synthetic_{timestamp}.csv"
         
-        with open(csv_file, 'w') as f:
+        with open(csv_file, 'w', encoding='utf-8') as f:
             # Write header
             f.write("frame_number,timestamp_ms,interval_from_previous_ms\n")
             
