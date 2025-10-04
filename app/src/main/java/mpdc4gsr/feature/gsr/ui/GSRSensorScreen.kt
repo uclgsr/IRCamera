@@ -1,6 +1,5 @@
 package mpdc4gsr.feature.gsr.ui
 
-import android.app.Application
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -39,7 +38,7 @@ import mpdc4gsr.feature.gsr.presentation.GSRSensorViewModelFactory
 fun GSRSensorScreen(
     viewModel: GSRSensorViewModel = viewModel(
         factory = GSRSensorViewModelFactory(
-            LocalContext.current.applicationContext as Application
+            LocalContext.current.applicationContext
         )
     ),
     onBackClick: (() -> Unit)? = null,
