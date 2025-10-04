@@ -225,6 +225,6 @@ All changes have been implemented without breaking existing functionality:
 
 ## Related Documentation
 
-- [ANTI_PATTERNS_ANALYSIS.md](ANTI_PATTERNS_ANALYSIS.md) - Full analysis
+- [anti-patterns-analysis.md](anti-patterns-analysis.md) - Full analysis
 - [ANTI_PATTERNS_ACTION_PLAN.md](ANTI_PATTERNS_ACTION_PLAN.md) - Complete roadmap
 - [ANTI_PATTERNS_CHECKLIST.md](ANTI_PATTERNS_CHECKLIST.md) - Developer guidelines

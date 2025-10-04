@@ -21,7 +21,7 @@ Documentation of migrations, fixes, and maintenance activities.
 ### Code Quality
 See parent directory for:
 - [../ANTI_PATTERNS_README.md](../ANTI_PATTERNS_README.md) - Anti-patterns overview
-- [../ANTI_PATTERNS_ANALYSIS.md](../ANTI_PATTERNS_ANALYSIS.md) - Detailed analysis
+- [../anti-patterns-analysis.md](../anti-patterns-analysis.md) - Detailed analysis
 
 ### Migration Status
 See parent directory for:
