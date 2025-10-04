@@ -201,3 +201,8 @@ pc_recordings/
 testing-suite/.pytest_cache/
 testing-suite/results/
 testing-suite/temp/
+
+# Thesis Evaluation Test Outputs
+thesis_evaluation/**/*.csv
+thesis_evaluation/**/*.json
+thesis_evaluation/real_session_data/
