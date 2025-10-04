@@ -83,13 +83,7 @@ setup(
             "pytest-cov>=4.0.0",
         ],
     },
-    package_dir={"": "src"},
-    packages=find_packages("src"),
-    entry_points={
-        "console_scripts": [
-            "ircamera-pc=ircamera_pc.main:main",
-        ],
-    },
+    py_modules=["pc_controller", "protocol_adapter", "sync_handler", "command_client"],
     classifiers=[
         "Development Status :: 4 - Beta",
         "Intended Audience :: Science/Research",
@@ -102,9 +96,6 @@ setup(
         "Topic :: System :: Hardware",
         "Topic :: Multimedia :: Video :: Capture",
     ],
-    package_data={
-        "ircamera_pc": ["*.yaml", "*.json"],
-    },
     include_package_data=True,
     zip_safe=False,
 )

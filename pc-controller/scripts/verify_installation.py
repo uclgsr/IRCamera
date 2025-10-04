@@ -71,7 +71,7 @@ def check_native_backend():
     """Check if native backend is built"""
     print("\n[3/8] Checking C++ native backend...")
 
-    sys.path.insert(0, str(Path(__file__).parent / 'native_backend'))
+    sys.path.insert(0, str(Path(__file__).parent.parent / 'native_backend'))
 
     try:
         import enhanced_native_backend
@@ -91,14 +91,16 @@ def check_controllers():
     print("\n[4/8] Checking controller modules...")
 
     files = {
-        'advanced_pc_controller.py': 'PyQt6 GUI controller',
         'pc_controller.py': 'Unified controller',
-        'tls_server.py': 'Secure TLS server'
+        'protocol_adapter.py': 'Protocol compatibility layer',
+        'sync_handler.py': 'Time synchronization handler',
+        'command_client.py': 'CLI command tool',
+        'run_unified_controller.py': 'Launcher script'
     }
 
     all_ok = True
     for filename, description in files.items():
-        filepath = Path(__file__).parent / filename
+        filepath = Path(__file__).parent.parent / filename
         if filepath.exists():
             print(f"   {filename:30s} - {description}")
         else:
@@ -112,10 +114,10 @@ def check_config_files():
     """Check for configuration files"""
     print("\n[5/8] Checking configuration files...")
 
-    files = ['config.yaml', 'config_mvp.yaml']
+    files = ['config.yaml']
 
     for filename in files:
-        filepath = Path(__file__).parent / filename
+        filepath = Path(__file__).parent.parent / filename
         if filepath.exists():
             print(f"   {filename}")
         else:
@@ -128,7 +130,7 @@ def check_certificates():
     """Check SSL certificates"""
     print("\n[6/8] Checking SSL certificates...")
 
-    cert_dir = Path(__file__).parent / 'certificates'
+    cert_dir = Path(__file__).parent.parent / 'certificates'
 
     if cert_dir.exists():
         cert_files = list(cert_dir.glob('*.crt')) + list(cert_dir.glob('*.key'))
@@ -146,13 +148,20 @@ def check_tests():
     """Check if test files exist"""
     print("\n[7/8] Checking test suite...")
 
-    test_file = Path(__file__).parent / 'test_pc_controller_features.py'
+    tests_dir = Path(__file__).parent.parent / 'tests'
     demo_file = Path(__file__).parent / 'demo_features.py'
 
-    if test_file.exists():
-        print(f"   test_pc_controller_features.py")
+    if tests_dir.exists():
+        test_files = list(tests_dir.glob('test_*.py'))
+        if test_files:
+            print(f"   Test directory found with {len(test_files)} test files")
+            for test_file in sorted(test_files)[:5]:
+                print(f"     - {test_file.name}")
+        else:
+            print(f"   Test directory empty (MISSING)")
+            return False
     else:
-        print(f"   test_pc_controller_features.py (MISSING)")
+        print(f"   tests/ directory (MISSING)")
         return False
 
     if demo_file.exists():
@@ -175,7 +184,7 @@ def check_documentation():
     }
 
     for filename, description in docs.items():
-        filepath = Path(__file__).parent / filename
+        filepath = Path(__file__).parent.parent / filename
         if filepath.exists():
             size_kb = filepath.stat().st_size / 1024
             print(f"   {filename:40s} ({size_kb:.1f} KB)")
