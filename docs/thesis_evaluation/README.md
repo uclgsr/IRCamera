@@ -13,7 +13,7 @@ Three test suites are provided to evaluate different aspects of time synchroniza
 ## Test Structure
 
 ```
-thesis_evaluation/
+docs/thesis_evaluation/
 ├── README.md                              # This file
 ├── synthetic_clock_offset/                # Simulated sync tests
 │   └── test_synthetic_sync.py
@@ -51,7 +51,7 @@ pip install -r requirements.txt
 ### Running the Test
 
 ```bash
-cd thesis_evaluation/synthetic_clock_offset
+cd docs/thesis_evaluation/synthetic_clock_offset
 python test_synthetic_sync.py
 ```
 
@@ -90,7 +90,7 @@ python test_synthetic_sync.py
 1. **Start the test server on PC:**
 
 ```bash
-cd thesis_evaluation/real_hardware_clock_offset
+cd docs/thesis_evaluation/real_hardware_clock_offset
 python test_real_hardware_sync.py [port]
 ```
 
@@ -139,7 +139,7 @@ Default port: 8080
 ### Running Synthetic Test
 
 ```bash
-cd thesis_evaluation/sensor_start_alignment
+cd docs/thesis_evaluation/sensor_start_alignment
 python test_sensor_start_alignment.py
 ```
 
@@ -156,6 +156,7 @@ adb pull /sdcard/Android/data/com.uclgsr.ircamera/files/<session_id>/ ./real_ses
 3. **Analyze the logs:**
 
 ```bash
+cd docs/thesis_evaluation/sensor_start_alignment
 python test_sensor_start_alignment.py ./real_session_data <session_id>
 ```
 
@@ -255,7 +256,7 @@ For a complete evaluation run:
 
 ```bash
 # 1. Synthetic tests (no hardware needed)
-cd thesis_evaluation/synthetic_clock_offset
+cd docs/thesis_evaluation/synthetic_clock_offset
 python test_synthetic_sync.py
 
 cd ../sensor_start_alignment

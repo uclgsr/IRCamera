@@ -22,7 +22,7 @@ import threading
 from datetime import datetime
 from typing import List, Dict, Optional
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', 'pc-controller'))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', '..', 'pc-controller'))
 
 from sync_handler import SyncHandler
 from protocol_adapter import ProtocolAdapter

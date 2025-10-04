@@ -20,7 +20,7 @@ import statistics
 from typing import List, Dict
 from datetime import datetime
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', 'pc-controller'))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', '..', 'pc-controller'))
 
 from sync_handler import SyncHandler
 

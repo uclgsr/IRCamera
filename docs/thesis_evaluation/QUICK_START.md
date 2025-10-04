@@ -12,7 +12,7 @@ pip install -r pc-controller/requirements.txt
 ## 1. Synthetic Clock Offset Test (No Hardware Required)
 
 ```bash
-cd thesis_evaluation/synthetic_clock_offset
+cd docs/thesis_evaluation/synthetic_clock_offset
 python3 test_synthetic_sync.py
 ```
 
@@ -29,7 +29,7 @@ python3 test_synthetic_sync.py
 ## 2. Sensor Start Alignment Test (Synthetic)
 
 ```bash
-cd thesis_evaluation/sensor_start_alignment
+cd docs/thesis_evaluation/sensor_start_alignment
 python3 test_sensor_start_alignment.py
 ```
 
@@ -48,7 +48,7 @@ python3 test_sensor_start_alignment.py
 ### Real Hardware Clock Offset Test
 
 ```bash
-cd thesis_evaluation/real_hardware_clock_offset
+cd docs/thesis_evaluation/real_hardware_clock_offset
 python3 test_real_hardware_sync.py 8080
 ```
 
@@ -67,7 +67,7 @@ adb pull /sdcard/Android/data/com.uclgsr.ircamera/files/<session_id>/ ./real_ses
 ```
 3. Analyze:
 ```bash
-cd thesis_evaluation/sensor_start_alignment
+cd docs/thesis_evaluation/sensor_start_alignment
 python3 test_sensor_start_alignment.py ./real_session_data <session_id>
 ```
 
@@ -78,9 +78,9 @@ python3 test_sensor_start_alignment.py ./real_session_data <session_id>
 ## Results Location
 
 All test results are saved in the respective test directories:
-- `thesis_evaluation/synthetic_clock_offset/*.csv`
-- `thesis_evaluation/sensor_start_alignment/*.csv`
-- `thesis_evaluation/real_hardware_clock_offset/*.csv`
+- `docs/thesis_evaluation/synthetic_clock_offset/*.csv`
+- `docs/thesis_evaluation/sensor_start_alignment/*.csv`
+- `docs/thesis_evaluation/real_hardware_clock_offset/*.csv`
 
 ## For Thesis Chapter 5 & 6
 

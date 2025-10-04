@@ -203,6 +203,6 @@ testing-suite/results/
 testing-suite/temp/
 
 # Thesis Evaluation Test Outputs
-thesis_evaluation/**/*.csv
-thesis_evaluation/**/*.json
-thesis_evaluation/real_session_data/
+docs/thesis_evaluation/**/*.csv
+docs/thesis_evaluation/**/*.json
+docs/thesis_evaluation/real_session_data/
