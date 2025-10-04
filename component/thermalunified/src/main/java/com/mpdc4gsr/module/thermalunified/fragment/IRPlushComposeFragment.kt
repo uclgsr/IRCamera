@@ -427,7 +427,11 @@ class IRPlushComposeFragment : BaseComposeFragment<IRPlushViewModel>() {
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Button(
-                        onClick = { /* Handle advanced settings */ },
+                        onClick = { /* TODO: Implement handle advanced settings
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ },
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Icon(Icons.Default.Settings, contentDescription = null)

@@ -121,13 +121,25 @@ private fun GSRSettingsContent(
         // Recording Settings Card
         RecordingSettingsCard(
             onSampleRateChange = { viewModel.updateSamplingRate(it) },
-            onSessionTimeoutChange = { /* Can be added to ViewModel if needed */ }
+            onSessionTimeoutChange = { /* TODO: Implement can be added to viewmodel if needed
+                     *   - Implement callback logic for onSessionTimeoutChange
+                     *   - Handle data/state updates
+                     *   - Provide user feedback
+                     */ }
         )
 
         // Export Settings Card
         ExportSettingsCard(
-            onExportFormatChange = { /* Can be added to ViewModel if needed */ },
-            onExportLocationChange = { /* Can be added to ViewModel if needed */ }
+            onExportFormatChange = { /* TODO: Implement can be added to viewmodel if needed
+                     *   - Implement callback logic for onExportFormatChange
+                     *   - Handle data/state updates
+                     *   - Provide user feedback
+                     */ },
+            onExportLocationChange = { /* TODO: Implement can be added to viewmodel if needed
+                     *   - Implement callback logic for onExportLocationChange
+                     *   - Handle data/state updates
+                     *   - Provide user feedback
+                     */ }
         )
     }
 }

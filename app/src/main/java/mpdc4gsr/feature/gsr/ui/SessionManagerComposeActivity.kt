@@ -79,10 +79,18 @@ class SessionManagerComposeActivity : BaseComposeActivity<SessionManagerViewMode
                             IconButton(onClick = { showFilterDialog = true }) {
                                 Icon(Icons.Default.FilterList, contentDescription = "Filter")
                             }
-                            IconButton(onClick = { /* Export all sessions */ }) {
+                            IconButton(onClick = { /* TODO: Implement export all sessions
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }) {
                                 Icon(Icons.Default.FileDownload, contentDescription = "Export")
                             }
-                            IconButton(onClick = { /* More options */ }) {
+                            IconButton(onClick = { /* TODO: Implement more options
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }) {
                                 Icon(Icons.Default.MoreVert, contentDescription = "More")
                             }
                         }
@@ -115,7 +123,11 @@ class SessionManagerComposeActivity : BaseComposeActivity<SessionManagerViewMode
         if (showFilterDialog) {
             SessionFilterDialog(
                 onDismiss = { showFilterDialog = false },
-                onApplyFilter = { /* Apply filter logic */ }
+                onApplyFilter = { /* TODO: Implement apply filter logic
+                     *   - Implement callback logic for onApplyFilter
+                     *   - Handle data/state updates
+                     *   - Provide user feedback
+                     */ }
             )
         }
     }
@@ -339,7 +351,11 @@ private fun SessionCard(
                 }
             }
 
-            IconButton(onClick = { /* More options for this session */ }) {
+            IconButton(onClick = { /* TODO: Implement more options for this session
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }) {
                 Icon(Icons.Default.MoreVert, contentDescription = "Session options")
             }
         }

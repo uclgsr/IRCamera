@@ -79,7 +79,10 @@ class DevicePairingComposeActivity : BaseComposeActivity<DevicePairingViewModel>
                                     contentDescription = if (isScanning) "Stop Scan" else "Start Scan"
                                 )
                             }
-                            IconButton(onClick = { /* Open settings */ }) {
+                            IconButton(onClick = { /* TODO: Implement settings navigation
+                     *   - Navigate to settings screen
+                     *   - Pass current configuration
+                     */ }) {
                                 Icon(Icons.Default.Settings, contentDescription = "Settings")
                             }
                         }
@@ -357,7 +360,11 @@ private fun DeviceCard(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     OutlinedButton(
-                        onClick = { /* Connect */ },
+                        onClick = { /* TODO: Implement device connection
+                     *   - Call viewModel.connectDevice()
+                     *   - Show connection progress
+                     *   - Handle connection errors
+                     */ },
                         modifier = Modifier.weight(1f)
                     ) {
                         Icon(

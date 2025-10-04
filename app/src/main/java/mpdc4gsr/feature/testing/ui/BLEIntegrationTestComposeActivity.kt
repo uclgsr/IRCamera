@@ -60,7 +60,11 @@ class BLEIntegrationTestComposeActivity : BaseComposeActivity<BLEIntegrationTest
         LibUnifiedTheme {
             BLEIntegrationTestScreen(
                 onRunTest = { testType -> runTest(testType) },
-                onClearLogs = { /* Clear logs */ }
+                onClearLogs = { /* TODO: Implement clear logs
+                     *   - Implement callback logic for onClearLogs
+                     *   - Handle data/state updates
+                     *   - Provide user feedback
+                     */ }
             )
         }
     }

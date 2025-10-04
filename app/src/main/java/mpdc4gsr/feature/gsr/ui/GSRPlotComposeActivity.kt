@@ -84,13 +84,25 @@ class GSRPlotComposeActivity : BaseComposeActivity<GSRPlotViewModel>() {
                             }
                         },
                         actions = {
-                            IconButton(onClick = { /* Export data */ }) {
+                            IconButton(onClick = { /* TODO: Implement data export
+                     *   - Call viewModel.exportData()
+                     *   - Show format selection (CSV/JSON/etc)
+                     *   - Use file picker for save location
+                     */ }) {
                                 Icon(Icons.Default.FileDownload, contentDescription = "Export")
                             }
-                            IconButton(onClick = { /* Share plot */ }) {
+                            IconButton(onClick = { /* TODO: Implement share plot
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }) {
                                 Icon(Icons.Default.Share, contentDescription = "Share")
                             }
-                            IconButton(onClick = { /* Plot settings */ }) {
+                            IconButton(onClick = { /* TODO: Implement plot settings
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }) {
                                 Icon(Icons.Default.Tune, contentDescription = "Settings")
                             }
                         }
@@ -305,13 +317,25 @@ private fun MainPlotCard(
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    IconButton(onClick = { /* Zoom in */ }) {
+                    IconButton(onClick = { /* TODO: Implement zoom in
+                     *   - Increase zoom level: zoomLevel *= 1.2f
+                     *   - Clamp to maximum zoom
+                     *   - Update view transformation
+                     */ }) {
                         Icon(Icons.Default.ZoomIn, contentDescription = "Zoom In")
                     }
-                    IconButton(onClick = { /* Zoom out */ }) {
+                    IconButton(onClick = { /* TODO: Implement zoom out
+                     *   - Decrease zoom level: zoomLevel /= 1.2f
+                     *   - Clamp to minimum zoom
+                     *   - Update view transformation
+                     */ }) {
                         Icon(Icons.Default.ZoomOut, contentDescription = "Zoom Out")
                     }
-                    IconButton(onClick = { /* Reset zoom */ }) {
+                    IconButton(onClick = { /* TODO: Implement reset zoom
+                     *   - Reset zoomLevel to 1.0f
+                     *   - Reset pan offsets
+                     *   - Center view
+                     */ }) {
                         Icon(Icons.Default.CenterFocusStrong, contentDescription = "Reset")
                     }
                 }
@@ -695,7 +719,11 @@ private fun DataAnalysisToolsCard() {
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 OutlinedButton(
-                    onClick = { /* Apply filter */ },
+                    onClick = { /* TODO: Implement filter application
+                     *   - Collect filter parameters
+                     *   - Call viewModel.applyFilter(params)
+                     *   - Update display with filtered data
+                     */ },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.FilterAlt, contentDescription = null)
@@ -704,7 +732,11 @@ private fun DataAnalysisToolsCard() {
                 }
 
                 OutlinedButton(
-                    onClick = { /* Smooth data */ },
+                    onClick = { /* TODO: Implement smooth data
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Tune, contentDescription = null)
@@ -718,7 +750,11 @@ private fun DataAnalysisToolsCard() {
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 OutlinedButton(
-                    onClick = { /* Detect peaks */ },
+                    onClick = { /* TODO: Implement detect peaks
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.AutoMirrored.Filled.TrendingUp, contentDescription = null)
@@ -727,7 +763,11 @@ private fun DataAnalysisToolsCard() {
                 }
 
                 OutlinedButton(
-                    onClick = { /* Analyze trends */ },
+                    onClick = { /* TODO: Implement analyze trends
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Analytics, contentDescription = null)
@@ -762,7 +802,11 @@ private fun ExportOptionsCard() {
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Button(
-                    onClick = { /* Export CSV */ },
+                    onClick = { /* TODO: Implement CSV export
+                     *   - Format data as CSV
+                     *   - Show file picker for save location
+                     *   - Display success message
+                     */ },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.TableChart, contentDescription = null)
@@ -771,7 +815,11 @@ private fun ExportOptionsCard() {
                 }
 
                 OutlinedButton(
-                    onClick = { /* Save plot */ },
+                    onClick = { /* TODO: Implement save plot
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Image, contentDescription = null)

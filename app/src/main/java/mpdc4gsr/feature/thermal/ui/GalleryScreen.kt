@@ -52,7 +52,11 @@ fun GalleryScreen(
             TitleBarAction(
                 icon = Icons.Default.Search,
                 contentDescription = "Search",
-                onClick = { /* Search functionality */ }
+                onClick = { /* TODO: Implement search
+                     *   - Show search input dialog
+                     *   - Filter displayed items based on query
+                     *   - Update UI with filtered results
+                     */ }
             )
         }
 
@@ -197,7 +201,11 @@ private fun ThermalImageCard(
     val primaryColor = MaterialTheme.colorScheme.primary
 
     Card(
-        onClick = { /* Open image detail */ },
+        onClick = { /* TODO: Implement open image detail
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ },
         modifier = modifier.aspectRatio(1f),
         colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
     ) {
@@ -295,7 +303,11 @@ private fun RecordingCard(
     modifier: Modifier = Modifier
 ) {
     Card(
-        onClick = { /* Play recording */ },
+        onClick = { /* TODO: Implement play recording
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ },
         modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
     ) {
@@ -348,7 +360,11 @@ private fun DataExportCard(
     modifier: Modifier = Modifier
 ) {
     Card(
-        onClick = { /* Open/Share export */ },
+        onClick = { /* TODO: Implement open/share export
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ },
         modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
     ) {

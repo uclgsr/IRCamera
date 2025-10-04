@@ -620,7 +620,11 @@ private fun NetworkConfigurationCard(
                 Spacer(modifier = Modifier.height(12.dp))
 
                 Button(
-                    onClick = { /* Configuration editing would be implemented here */ },
+                    onClick = { /* TODO: Implement configuration editing would be implemented here
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ },
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Icon(

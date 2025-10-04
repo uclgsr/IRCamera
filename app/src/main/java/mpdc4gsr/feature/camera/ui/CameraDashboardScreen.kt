@@ -219,7 +219,10 @@ private fun CameraModesCard(
                 description = "Standard RGB camera capture",
                 icon = Icons.Default.Camera,
                 isActive = false,
-                onClick = { /* Navigate to single camera */ }
+                onClick = { /* TODO: Implement navigation
+                     *   - Navigate to single camera screen
+                     *   - Pass necessary parameters
+                     */ }
             )
 
             // Dual Camera Mode
@@ -237,7 +240,10 @@ private fun CameraModesCard(
                 description = "Automated interval capture",
                 icon = Icons.Default.Timer,
                 isActive = false,
-                onClick = { /* Navigate to time-lapse */ }
+                onClick = { /* TODO: Implement navigation
+                     *   - Navigate to time-lapse screen
+                     *   - Initialize time-lapse settings
+                     */ }
             )
         }
     }
@@ -375,7 +381,11 @@ private fun RecordingControlsCard() {
                 }
 
                 OutlinedButton(
-                    onClick = { /* Take photo */ },
+                    onClick = { /* TODO: Implement photo capture
+                     *   - Trigger camera capture
+                     *   - Save photo to storage
+                     *   - Show capture confirmation
+                     */ },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.CameraAlt, contentDescription = null)
@@ -484,7 +494,11 @@ private fun PreviewGalleryCard() {
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 OutlinedButton(
-                    onClick = { /* Open preview */ },
+                    onClick = { /* TODO: Implement open preview
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Preview, contentDescription = null)
@@ -493,7 +507,10 @@ private fun PreviewGalleryCard() {
                 }
 
                 OutlinedButton(
-                    onClick = { /* Open gallery */ },
+                    onClick = { /* TODO: Implement gallery navigation
+                     *   - Navigate to gallery screen
+                     *   - Load recent captures
+                     */ },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.PhotoLibrary, contentDescription = null)
