@@ -11,8 +11,8 @@ import com.mpdc4gsr.module.thermalunified.R
 
 class SettingTimeAdapter(val context: Context) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private var datas = arrayOf("[ph]", "[ph]", "[ph]", "[ph]")
-    private var dataTimes = arrayOf(1, 2, 3, 4)
+    private var datas = arrayOf("1min", "5min", "10min", "30min")
+    private var dataTimes = arrayOf(60, 300, 600, 1800)
 
     var listener: OnItemClickListener? = null
     var select = 0
