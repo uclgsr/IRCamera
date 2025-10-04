@@ -372,7 +372,7 @@ class ThermalRecorder(private val context: Context) {
                     val relativeMs = (stats.timestampNs - sm.sessionStartMonotonicNs) / 1_000_000L
                     
                     // Calculate synchronized timestamp based on the frame's wall clock time and current offset
-                    val clockOffsetMs = TimestampManager.getSynchronizedTimestampMs() - TimestampManager.getDeviceTimestampMs()
+                    val clockOffsetMs = TimestampManager.getClockOffsetMs()
                     val synchronizedTimestampMs = wallClockMs + clockOffsetMs
 
                     StringBuilder().apply {

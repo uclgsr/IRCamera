@@ -114,6 +114,14 @@ object TimestampManager {
     }
 
     /**
+     * Get the current clock offset in milliseconds.
+     * This is the offset calculated from time sync protocol.
+     */
+    fun getClockOffsetMs(): Long {
+        return clockOffset.get()
+    }
+
+    /**
      * Get timestamp synchronized with PC clock.
      * This applies the offset calculated from time sync protocol.
      */
