@@ -150,7 +150,7 @@ class RGBVideoPerformanceTest:
         timestamps = []
         
         # Read CSV file
-        with open(self.frames_csv, 'r') as f:
+        with open(self.frames_csv, 'r', encoding='utf-8') as f:
             lines = f.readlines()
             
             if len(lines) < 2:
