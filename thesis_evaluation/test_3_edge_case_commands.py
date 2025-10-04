@@ -244,7 +244,7 @@ class EdgeCaseCommandTest:
             'command': '',
             'description': 'Empty command',
             'response': response,
-            'handled_correctly': response is not None
+            'handled_correctly': response is not None and response.startswith('ERROR')
         })
         
         # Test 3: Command with special characters
