@@ -308,6 +308,13 @@
                 android:resource="@xml/ir_device_filter" />
         </activity>
 
+        <!-- Recording Service - Handles PC networking and sensor recording -->
+        <service
+            android:name="mpdc4gsr.core.RecordingService"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="dataSync|camera|microphone" />
+
         <!-- File Provider -->
         <provider
             android:name="androidx.core.content.FileProvider"
