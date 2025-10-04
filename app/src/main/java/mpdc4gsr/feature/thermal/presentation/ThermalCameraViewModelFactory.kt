@@ -10,7 +10,7 @@ class ThermalCameraViewModelFactory(
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(ThermalCameraViewModel::class.java)) {
-            return ThermalCameraViewModel(context.applicationContext) as T
+            return ThermalCameraViewModel(context) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
     }
