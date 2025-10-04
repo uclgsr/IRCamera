@@ -90,10 +90,18 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
                             }
                         },
                         actions = {
-                            IconButton(onClick = { }) {
+                            IconButton(onClick = { /* TODO: Implement show info
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }) {
                                 Icon(Icons.Default.Info, contentDescription = "Info", tint = Color.White)
                             }
-                            IconButton(onClick = { }) {
+                            IconButton(onClick = { /* TODO: Implement toggle tisr
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }) {
                                 Icon(Icons.Default.Settings, contentDescription = "TISR", tint = Color.White)
                             }
                         },
@@ -146,7 +154,11 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
                                         modifier = Modifier.padding(8.dp),
                                         verticalArrangement = Arrangement.spacedBy(4.dp)
                                     ) {
-                                        IconButton(onClick = { }) {
+                                        IconButton(onClick = { /* TODO: Implement lock/unlock
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }) {
                                             Icon(
                                                 Icons.Default.Lock,
                                                 contentDescription = "Lock",
@@ -158,7 +170,11 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
                                             color = Color.White,
                                             fontSize = 12.sp
                                         )
-                                        IconButton(onClick = { }) {
+                                        IconButton(onClick = { /* TODO: Implement edit
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }) {
                                             Icon(
                                                 Icons.Default.Edit,
                                                 contentDescription = "Edit",
@@ -279,7 +295,11 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
                                     .padding(vertical = 8.dp),
                                 horizontalArrangement = Arrangement.SpaceEvenly
                             ) {
-                                IconButton(onClick = { }) {
+                                IconButton(onClick = { /* TODO: Implement gallery
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }) {
                                     Icon(Icons.Default.PhotoLibrary, "Gallery", tint = Color.White)
                                 }
                                 IconButton(onClick = { viewModel.toggleRecording() }) {
@@ -289,10 +309,18 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
                                         tint = if (isRecording) Color.Red else Color.White
                                     )
                                 }
-                                IconButton(onClick = { }) {
+                                IconButton(onClick = { /* TODO: Implement camera
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }) {
                                     Icon(Icons.Default.CameraAlt, "Camera", tint = Color.White)
                                 }
-                                IconButton(onClick = { }) {
+                                IconButton(onClick = { /* TODO: Implement more
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }) {
                                     Icon(Icons.Default.MoreVert, "More", tint = Color.White)
                                 }
                             }

@@ -91,7 +91,11 @@ private fun ThermalGalleryScreen(
                         tint = Color(0xFFFF6B35)
                     )
                 }
-                IconButton(onClick = { }) {
+                IconButton(onClick = { /* TODO: Implement search
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }) {
                     Icon(
                         Icons.Default.Search,
                         contentDescription = "Search",
@@ -298,7 +302,11 @@ private fun ThermalImageListItem(image: GalleryThermalImage) {
             }
 
             // Actions
-            IconButton(onClick = { }) {
+            IconButton(onClick = { /* TODO: Implement more options
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }) {
                 Icon(
                     Icons.Default.MoreVert,
                     contentDescription = "More",

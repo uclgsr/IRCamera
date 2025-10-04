@@ -140,9 +140,21 @@ class SensorDashboardComposeActivity : ComponentActivity() {
 
                 // Data export and management section
                 DataManagementSection(
-                    onExportAllData = { },
-                    onClearData = { },
-                    onOpenSettings = { }
+                    onExportAllData = { /* TODO: Implement export all sensor data
+                     *   - Implement callback logic for onExportAllData
+                     *   - Handle data/state updates
+                     *   - Provide user feedback
+                     */ },
+                    onClearData = { /* TODO: Implement clear sensor data
+                     *   - Implement callback logic for onClearData
+                     *   - Handle data/state updates
+                     *   - Provide user feedback
+                     */ },
+                    onOpenSettings = { /* TODO: Implement open sensor settings
+                     *   - Implement callback logic for onOpenSettings
+                     *   - Handle data/state updates
+                     *   - Provide user feedback
+                     */ }
                 )
             }
         }

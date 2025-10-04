@@ -51,7 +51,11 @@ fun GSRDataViewerScreen(
             TitleBarAction(
                 icon = Icons.Default.Share,
                 contentDescription = "Export Data",
-                onClick = { }
+                onClick = { /* TODO: Implement data export
+                     *   - Call viewModel.exportData()
+                     *   - Show format selection (CSV/JSON/etc)
+                     *   - Use file picker for save location
+                     */ }
             )
         }
 

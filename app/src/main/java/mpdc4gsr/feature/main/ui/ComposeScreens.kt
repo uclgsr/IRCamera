@@ -94,7 +94,11 @@ fun GSRSensorScreen(navController: NavController) {
     mpdc4gsr.feature.gsr.ui.GSRSensorScreen(
         onBackClick = { navController.popBackStack() },
         onSettingsClick = { navController.navigate("gsr_settings") },
-        onSaveData = { }
+        onSaveData = { /* TODO: Implement navigate to export if needed
+                     *   - Implement callback logic for onSaveData
+                     *   - Handle data/state updates
+                     *   - Provide user feedback
+                     */ }
     )
 }
 
@@ -298,7 +302,11 @@ fun QuickActionsCard(navController: NavController) {
                 }
 
                 OutlinedButton(
-                    onClick = { },
+                    onClick = { /* TODO: Implement start recording
+                     *   - Call viewModel.startRecording()
+                     *   - Update UI to show recording state
+                     *   - Start recording timer
+                     */ },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.PlayArrow, contentDescription = null)
@@ -344,7 +352,11 @@ fun RecentSessionsCard() {
                         text = session,
                         style = MaterialTheme.typography.bodyMedium
                     )
-                    IconButton(onClick = { }) {
+                    IconButton(onClick = { /* TODO: Implement open session
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }) {
                         Icon(
                             Icons.Default.PlayArrow,
                             contentDescription = "Open session"
@@ -425,7 +437,11 @@ fun ThermalControlsPanel() {
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Button(
-                    onClick = { },
+                    onClick = { /* TODO: Implement capture
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.PhotoCamera, contentDescription = null)
@@ -434,7 +450,11 @@ fun ThermalControlsPanel() {
                 }
 
                 Button(
-                    onClick = { },
+                    onClick = { /* TODO: Implement record
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Videocam, contentDescription = null)
@@ -443,7 +463,11 @@ fun ThermalControlsPanel() {
                 }
 
                 OutlinedButton(
-                    onClick = { },
+                    onClick = { /* TODO: Implement settings
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Settings, contentDescription = null)
@@ -569,7 +593,11 @@ fun GSRRecordingControlsCard() {
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Button(
-                    onClick = { },
+                    onClick = { /* TODO: Implement start recording
+                     *   - Call viewModel.startRecording()
+                     *   - Update UI to show recording state
+                     *   - Start recording timer
+                     */ },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.PlayArrow, contentDescription = null)
@@ -578,7 +606,11 @@ fun GSRRecordingControlsCard() {
                 }
 
                 OutlinedButton(
-                    onClick = { },
+                    onClick = { /* TODO: Implement stop recording
+                     *   - Call viewModel.stopRecording()
+                     *   - Save recording data
+                     *   - Show save confirmation
+                     */ },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Stop, contentDescription = null)
@@ -587,7 +619,10 @@ fun GSRRecordingControlsCard() {
                 }
 
                 OutlinedButton(
-                    onClick = { },
+                    onClick = { /* TODO: Implement pause recording
+                     *   - Call viewModel.pauseRecording()
+                     *   - Update UI to show paused state
+                     */ },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Pause, contentDescription = null)
@@ -626,7 +661,11 @@ fun GSRCalibrationCard() {
                 )
 
                 Button(
-                    onClick = { }
+                    onClick = { /* TODO: Implement calibration start
+                     *   - Call viewModel.startCalibration()
+                     *   - Show calibration wizard/guide
+                     *   - Track calibration progress
+                     */ }
                 ) {
                     Text("Calibrate")
                 }

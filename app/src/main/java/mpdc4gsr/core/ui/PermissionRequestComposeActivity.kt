@@ -72,7 +72,11 @@ class PermissionRequestComposeActivity : BaseComposeActivity<BaseViewModel>() {
                             IconButton(onClick = { showEducationalDialog = true }) {
                                 Icon(Icons.AutoMirrored.Filled.Help, contentDescription = "Help")
                             }
-                            IconButton(onClick = { }) {
+                            IconButton(onClick = { /* TODO: Implement open system settings
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }) {
                                 Icon(Icons.Default.Settings, contentDescription = "System Settings")
                             }
                         }
@@ -327,7 +331,11 @@ private fun GrantAllPermissionsButton(
     modifier: Modifier = Modifier
 ) {
     Button(
-        onClick = { },
+        onClick = { /* TODO: Implement grant all permissions
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ },
         modifier = modifier.fillMaxWidth()
     ) {
         Icon(

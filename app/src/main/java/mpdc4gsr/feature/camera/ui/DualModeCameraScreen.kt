@@ -52,7 +52,11 @@ fun DualModeCameraScreen(
                         IconButton(onClick = onNavigateToSettings) {
                             Icon(Icons.Default.Tune, contentDescription = "Camera Settings")
                         }
-                        IconButton(onClick = { }) {
+                        IconButton(onClick = { /* TODO: Implement toggle view mode
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }) {
                             Icon(Icons.Default.SwapHoriz, contentDescription = "Swap View")
                         }
                     }
@@ -611,7 +615,11 @@ private fun CameraControlsCard(
                 }
 
                 OutlinedButton(
-                    onClick = { },
+                    onClick = { /* TODO: Implement snapshot capture
+                     *   - Capture current frame/view state
+                     *   - Save snapshot to file system
+                     *   - Show save confirmation with location
+                     */ },
                     modifier = Modifier.weight(1f),
                     enabled = rgbActive || thermalActive
                 ) {
@@ -693,7 +701,11 @@ private fun CalibrationToolsCard() {
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 OutlinedButton(
-                    onClick = { },
+                    onClick = { /* TODO: Implement start alignment
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.CenterFocusStrong, contentDescription = null)
@@ -702,7 +714,11 @@ private fun CalibrationToolsCard() {
                 }
 
                 OutlinedButton(
-                    onClick = { },
+                    onClick = { /* TODO: Implement calibrate colors
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Palette, contentDescription = null)

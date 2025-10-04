@@ -68,7 +68,11 @@ class IRMonitorChartLiteComposeActivity : BaseComposeActivity<IRMonitorChartLite
                                 )
                             }
                             TextButton(
-                                onClick = { }
+                                onClick = { /* TODO: Implement finish monitoring
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }
                             ) {
                                 Text("Finish", color = Color.White)
                             }

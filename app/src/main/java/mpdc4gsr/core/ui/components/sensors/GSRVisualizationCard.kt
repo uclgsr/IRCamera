@@ -68,8 +68,16 @@ fun GSRVisualizationCard(
 
             // Data export controls
             GSRDataControls(
-                onExportData = { },
-                onResetStatistics = { }
+                onExportData = { /* TODO: Implement data export
+                     *   - Call viewModel.exportData()
+                     *   - Show format selection (CSV/JSON/etc)
+                     *   - Use file picker for save location
+                     */ },
+                onResetStatistics = { /* TODO: Implement reset stats
+                     *   - Implement callback logic for onResetStatistics
+                     *   - Handle data/state updates
+                     *   - Provide user feedback
+                     */ }
             )
         }
     }

@@ -86,10 +86,18 @@ class MultiModalRecordingComposeActivity : BaseComposeActivity<MultiModalRecordi
                             }
                         },
                         actions = {
-                            IconButton(onClick = { }) {
+                            IconButton(onClick = { /* TODO: Implement recording templates
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }) {
                                 Icon(Icons.AutoMirrored.Filled.LibraryBooks, contentDescription = "Templates")
                             }
-                            IconButton(onClick = { }) {
+                            IconButton(onClick = { /* TODO: Implement recording settings
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }) {
                                 Icon(Icons.Default.Settings, contentDescription = "Settings")
                             }
                         }
@@ -361,7 +369,11 @@ private fun RecordingControls(
         // Pause button (only show when recording)
         if (isRecording) {
             OutlinedButton(
-                onClick = { },
+                onClick = { /* TODO: Implement pause logic
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ },
                 modifier = Modifier.size(56.dp)
             ) {
                 Icon(

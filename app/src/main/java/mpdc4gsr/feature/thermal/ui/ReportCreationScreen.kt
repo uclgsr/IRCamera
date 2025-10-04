@@ -60,7 +60,11 @@ fun ReportCreationScreen(
             TitleBarAction(
                 icon = Icons.Default.Save,
                 contentDescription = "Save Draft",
-                onClick = { }
+                onClick = { /* TODO: Implement save draft
+                     *   - Save current state to local storage
+                     *   - Show save confirmation
+                     *   - Enable resume later
+                     */ }
             )
         }
 
@@ -117,7 +121,11 @@ fun ReportCreationScreen(
                 totalSteps = steps.size,
                 onPrevious = { if (currentStep > 0) currentStep-- },
                 onNext = { if (currentStep < steps.size - 1) currentStep++ },
-                onFinish = { }
+                onFinish = { /* TODO: Implement report generation
+                     *   - Collect session data and measurements
+                     *   - Generate PDF report with charts and images
+                     *   - Allow user to save/share report
+                     */ }
             )
         }
     }

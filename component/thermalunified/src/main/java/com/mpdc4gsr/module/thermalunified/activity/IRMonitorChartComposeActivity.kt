@@ -320,7 +320,11 @@ private fun RecordingControls(
             }
 
             Button(
-                onClick = { },
+                onClick = { /* TODO: Implement save chart
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color(0xFF6B7280)
                 ),
@@ -426,7 +430,11 @@ private fun ChartControlsCard() {
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 OutlinedButton(
-                    onClick = { },
+                    onClick = { /* TODO: Implement data export
+                     *   - Call viewModel.exportData()
+                     *   - Show format selection (CSV/JSON/etc)
+                     *   - Use file picker for save location
+                     */ },
                     colors = ButtonDefaults.outlinedButtonColors(
                         contentColor = Color.White
                     ),
@@ -436,7 +444,11 @@ private fun ChartControlsCard() {
                 }
 
                 OutlinedButton(
-                    onClick = { },
+                    onClick = { /* TODO: Implement clear data
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ },
                     colors = ButtonDefaults.outlinedButtonColors(
                         contentColor = Color.White
                     ),
@@ -446,7 +458,11 @@ private fun ChartControlsCard() {
                 }
 
                 OutlinedButton(
-                    onClick = { },
+                    onClick = { /* TODO: Implement settings
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ },
                     colors = ButtonDefaults.outlinedButtonColors(
                         contentColor = Color.White
                     ),

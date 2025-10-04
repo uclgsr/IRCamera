@@ -128,8 +128,6 @@ fun UnifiedSensorDashboard(
                         is ThermalAction.StopPreview -> thermalState = SensorState.Connected
                         is ThermalAction.Calibrate -> { /* Handle calibration */
                         }
-                        is ThermalAction.OpenSettings -> { /* Handle open settings */
-                        }
                     }
                 }
             )
@@ -145,8 +143,6 @@ fun UnifiedSensorDashboard(
                         is CameraAction.StartPreview -> rgbState = SensorState.Streaming
                         is CameraAction.StopPreview -> rgbState = SensorState.Connected
                         is CameraAction.SetResolution -> { /* Handle resolution change */
-                        }
-                        is CameraAction.CapturePhoto -> { /* Handle photo capture */
                         }
                     }
                 }

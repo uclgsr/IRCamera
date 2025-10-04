@@ -156,7 +156,11 @@ class ComposeComponentsShowcaseActivity :
                                 modifier = Modifier.padding(16.dp)
                             ) {
                                 Button(
-                                    onClick = { },
+                                    onClick = { /* TODO: Implement viewmodel.showsensorselection()
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ },
                                     modifier = Modifier.fillMaxWidth()
                                 ) {
                                     Icon(

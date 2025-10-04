@@ -93,10 +93,18 @@ class SensorDashboardComposeEnhanced : ComponentActivity() {
                     },
                     actions = {
                         // Enhanced actions leveraging consolidated patterns
-                        IconButton(onClick = { }) {
+                        IconButton(onClick = { /* TODO: Implement export all sensor data
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }) {
                             Icon(Icons.Default.Download, contentDescription = "Export Data")
                         }
-                        IconButton(onClick = { }) {
+                        IconButton(onClick = { /* TODO: Implement open sensor settings
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }) {
                             Icon(Icons.Default.Settings, contentDescription = "Settings")
                         }
                     }
@@ -139,17 +147,37 @@ class SensorDashboardComposeEnhanced : ComponentActivity() {
                 // Enhanced data export section
                 DataExportSection(
                     sessionState = sessionState,
-                    onExportSession = { },
-                    onExportAllData = { },
-                    onManageSessions = { }
+                    onExportSession = { /* TODO: Implement export current session
+                     *   - Implement callback logic for onExportSession
+                     *   - Handle data/state updates
+                     *   - Provide user feedback
+                     */ },
+                    onExportAllData = { /* TODO: Implement export all sensor data
+                     *   - Implement callback logic for onExportAllData
+                     *   - Handle data/state updates
+                     *   - Provide user feedback
+                     */ },
+                    onManageSessions = { /* TODO: Implement launch session manager
+                     *   - Implement callback logic for onManageSessions
+                     *   - Handle data/state updates
+                     *   - Provide user feedback
+                     */ }
                 )
 
                 // System status and diagnostics
                 SystemDiagnosticsSection(
                     thermalCameraState = thermalCameraState,
                     gsrSensorState = gsrSensorState,
-                    onRunDiagnostics = { },
-                    onViewLogs = { }
+                    onRunDiagnostics = { /* TODO: Implement run system diagnostics
+                     *   - Implement callback logic for onRunDiagnostics
+                     *   - Handle data/state updates
+                     *   - Provide user feedback
+                     */ },
+                    onViewLogs = { /* TODO: Implement view system logs
+                     *   - Implement callback logic for onViewLogs
+                     *   - Handle data/state updates
+                     *   - Provide user feedback
+                     */ }
                 )
             }
         }

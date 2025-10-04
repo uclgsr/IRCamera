@@ -92,7 +92,11 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "Device Calibration",
                         subtitle = "Calibrate thermal camera and sensors",
-                        onClick = { }
+                        onClick = { /* TODO: Implement open calibration screen
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }
                     )
                 }
 
@@ -149,7 +153,11 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "Thermal Color Palette",
                         subtitle = "Choose thermal imaging color scheme",
-                        onClick = { }
+                        onClick = { /* TODO: Implement open color palette selection
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -157,7 +165,11 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "Temperature Units",
                         subtitle = "Celsius, Fahrenheit, or Kelvin",
-                        onClick = { }
+                        onClick = { /* TODO: Implement open temperature unit selection
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -165,7 +177,11 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "Display Resolution",
                         subtitle = "Adjust thermal image display resolution",
-                        onClick = { }
+                        onClick = { /* TODO: Implement open resolution settings
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }
                     )
                 }
 
@@ -183,7 +199,11 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "Export Location",
                         subtitle = "Choose where to save exported data",
-                        onClick = { }
+                        onClick = { /* TODO: Implement open export location selection
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -192,7 +212,11 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                         title = "Export All Data",
                         subtitle = "Export all recorded sensor data",
                         actionText = "Export",
-                        onAction = { }
+                        onAction = { /* TODO: Implement export all data
+                     *   - Implement callback logic for onAction
+                     *   - Handle data/state updates
+                     *   - Provide user feedback
+                     */ }
                     )
                 }
 
@@ -201,7 +225,11 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "PC Controller Connection",
                         subtitle = "Configure connection to PC controller",
-                        onClick = { }
+                        onClick = { /* TODO: Implement open network configuration
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -209,7 +237,11 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "Network Discovery",
                         subtitle = "Enable automatic PC discovery",
-                        onClick = { }
+                        onClick = { /* TODO: Implement toggle network discovery
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -218,7 +250,11 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                         title = "Test Connection",
                         subtitle = "Test connection to PC controller",
                         actionText = "Test",
-                        onAction = { }
+                        onAction = { /* TODO: Implement test network connection
+                     *   - Implement callback logic for onAction
+                     *   - Handle data/state updates
+                     *   - Provide user feedback
+                     */ }
                     )
                 }
 
@@ -227,7 +263,11 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "Developer Options",
                         subtitle = "Advanced configuration options",
-                        onClick = { }
+                        onClick = { /* TODO: Implement open developer options
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -235,7 +275,11 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "Logging Settings",
                         subtitle = "Configure application logging",
-                        onClick = { }
+                        onClick = { /* TODO: Implement open logging settings
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -244,7 +288,11 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                         title = "Reset All Settings",
                         subtitle = "Reset all settings to default values",
                         actionText = "Reset",
-                        onAction = { },
+                        onAction = { /* TODO: Implement reset all settings
+                     *   - Implement callback logic for onAction
+                     *   - Handle data/state updates
+                     *   - Provide user feedback
+                     */ },
                         isDestructive = true
                     )
 
@@ -254,7 +302,11 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                         title = "Clear All Data",
                         subtitle = "Delete all recorded sensor data",
                         actionText = "Clear",
-                        onAction = { },
+                        onAction = { /* TODO: Implement clear all data
+                     *   - Implement callback logic for onAction
+                     *   - Handle data/state updates
+                     *   - Provide user feedback
+                     */ },
                         isDestructive = true
                     )
                 }
@@ -264,7 +316,11 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "App Version",
                         subtitle = "IRCamera v1.10.000",
-                        onClick = { }
+                        onClick = { /* TODO: Implement show version details
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -272,7 +328,11 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "Privacy Policy",
                         subtitle = "View privacy policy and terms",
-                        onClick = { }
+                        onClick = { /* TODO: Implement open privacy policy
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -280,7 +340,11 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "Help & Support",
                         subtitle = "Get help and contact support",
-                        onClick = { }
+                        onClick = { /* TODO: Implement open help screen
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }
                     )
                 }
             }

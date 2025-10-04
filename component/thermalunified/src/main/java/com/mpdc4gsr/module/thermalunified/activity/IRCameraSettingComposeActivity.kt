@@ -152,19 +152,31 @@ class IRCameraSettingComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             AdvancedSettingItem(
                                 title = "Calibration",
                                 description = "Manual camera calibration",
-                                onClick = { }
+                                onClick = { /* TODO: Implement navigate to calibration
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }
                             )
 
                             AdvancedSettingItem(
                                 title = "Firmware Update",
                                 description = "Check for camera firmware updates",
-                                onClick = { }
+                                onClick = { /* TODO: Implement check firmware
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }
                             )
 
                             AdvancedSettingItem(
                                 title = "Factory Reset",
                                 description = "Reset camera to default settings",
-                                onClick = { }
+                                onClick = { /* TODO: Implement factory reset dialog
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }
                             )
                         }
                     }
@@ -172,8 +184,16 @@ class IRCameraSettingComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                     // Save/Reset buttons
                     item {
                         SaveResetButtons(
-                            onSave = { },
-                            onReset = { }
+                            onSave = { /* TODO: Implement save settings
+                     *   - Implement callback logic for onSave
+                     *   - Handle data/state updates
+                     *   - Provide user feedback
+                     */ },
+                            onReset = { /* TODO: Implement reset to defaults
+                     *   - Show confirmation dialog
+                     *   - Call viewModel.resetToDefaults()
+                     *   - Reload UI with default settings
+                     */ }
                         )
                     }
                 }

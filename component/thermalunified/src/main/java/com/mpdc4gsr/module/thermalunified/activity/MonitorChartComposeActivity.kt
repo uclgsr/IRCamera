@@ -51,7 +51,11 @@ class MonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             }
                         },
                         actions = {
-                            IconButton(onClick = { }) {
+                            IconButton(onClick = { /* TODO: Implement settings
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }) {
                                 Icon(Icons.Default.Settings, contentDescription = "Settings", tint = Color.White)
                             }
                         },
@@ -254,7 +258,11 @@ class MonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 OutlinedButton(
-                    onClick = { },
+                    onClick = { /* TODO: Implement export chart
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ },
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.outlinedButtonColors(
                         contentColor = Color(0xFF7D8590)
@@ -266,7 +274,11 @@ class MonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                 }
 
                 OutlinedButton(
-                    onClick = { },
+                    onClick = { /* TODO: Implement clear data
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ },
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.outlinedButtonColors(
                         contentColor = Color(0xFF7D8590)
@@ -278,7 +290,11 @@ class MonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                 }
 
                 Button(
-                    onClick = { },
+                    onClick = { /* TODO: Implement zoom to fit
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ },
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color(0xFFFF6B35)
