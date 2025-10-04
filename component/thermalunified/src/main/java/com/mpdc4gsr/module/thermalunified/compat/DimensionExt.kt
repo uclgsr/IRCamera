@@ -2,6 +2,7 @@ package com.mpdc4gsr.module.thermalunified.compat
 
 import android.content.Context
 import android.content.res.Resources
+import android.util.TypedValue
 
 /**
  * Context-aware dimension conversions for thermalunified component
@@ -21,7 +22,11 @@ fun Int.pxToDp(context: Context): Int {
 }
 
 fun Int.spToPx(context: Context): Int {
-    return (this * context.resources.displayMetrics.scaledDensity).toInt()
+    return TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_SP,
+        this.toFloat(),
+        context.resources.displayMetrics
+    ).toInt()
 }
 
 fun Float.dpToPx(context: Context): Float {
@@ -33,7 +38,11 @@ fun Float.pxToDp(context: Context): Float {
 }
 
 fun Float.spToPx(context: Context): Float {
-    return this * context.resources.displayMetrics.scaledDensity
+    return TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_SP,
+        this,
+        context.resources.displayMetrics
+    )
 }
 
 /**
@@ -61,7 +70,11 @@ val Int.px: Int
     replaceWith = ReplaceWith("this.spToPx(context)")
 )
 val Int.sp: Int
-    get() = (this * Resources.getSystem().displayMetrics.scaledDensity).toInt()
+    get() = TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_SP,
+        this.toFloat(),
+        Resources.getSystem().displayMetrics
+    ).toInt()
 
 @Deprecated(
     message = "Use dpToPx(context) for context-aware conversion",
@@ -82,4 +95,8 @@ val Float.px: Float
     replaceWith = ReplaceWith("this.spToPx(context)")
 )
 val Float.sp: Float
-    get() = this * Resources.getSystem().displayMetrics.scaledDensity
+    get() = TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_SP,
+        this,
+        Resources.getSystem().displayMetrics
+    )
