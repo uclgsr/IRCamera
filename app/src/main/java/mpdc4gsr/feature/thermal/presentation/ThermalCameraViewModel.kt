@@ -7,7 +7,9 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import mpdc4gsr.core.data.SessionMetadata
 import mpdc4gsr.core.utils.AppLogger
 import mpdc4gsr.feature.thermal.ui.ThermalCameraRecorder
@@ -62,26 +64,32 @@ class ThermalCameraViewModel(private val context: Context) : ViewModel() {
                         temperatureData: ThermalCameraRecorder.ThermalFrameData?
                     ) {
                         // Update UI state with new thermal frame and temperature data
-                        _uiState.value = _uiState.value.copy(
-                            previewBitmap = bitmap,
-                            minTemperature = temperatureData?.minTemperature ?: 0f,
-                            maxTemperature = temperatureData?.maxTemperature ?: 0f,
-                            avgTemperature = temperatureData?.avgTemperature ?: 0f,
-                            centerTemperature = temperatureData?.centerTemperature ?: 0f,
-                            currentTemperature = temperatureData?.centerTemperature
-                        )
+                        // Use update() for thread-safe state updates from background thread
+                        _uiState.update { currentState ->
+                            currentState.copy(
+                                previewBitmap = bitmap,
+                                // Retain previous values if temperatureData is null
+                                minTemperature = temperatureData?.minTemperature ?: currentState.minTemperature,
+                                maxTemperature = temperatureData?.maxTemperature ?: currentState.maxTemperature,
+                                avgTemperature = temperatureData?.avgTemperature ?: currentState.avgTemperature,
+                                centerTemperature = temperatureData?.centerTemperature ?: currentState.centerTemperature,
+                                currentTemperature = temperatureData?.centerTemperature ?: currentState.currentTemperature
+                            )
+                        }
                     }
                 })
 
                 // Initialize the thermal camera
                 val success = thermalRecorder?.initialize() ?: false
                 
+                // Update connection status after initialization
+                val status = thermalRecorder?.getThermalSystemStatus()
+                _uiState.value = _uiState.value.copy(
+                    isConnected = status?.isConnected ?: false,
+                    isSimulationMode = status?.isSimulationMode ?: false
+                )
+                
                 if (success) {
-                    val status = thermalRecorder?.getThermalSystemStatus()
-                    _uiState.value = _uiState.value.copy(
-                        isConnected = status?.isConnected ?: false,
-                        isSimulationMode = status?.isSimulationMode ?: false
-                    )
                     AppLogger.i(TAG, "Thermal camera initialized successfully")
                 } else {
                     _uiState.value = _uiState.value.copy(
@@ -157,12 +165,13 @@ class ThermalCameraViewModel(private val context: Context) : ViewModel() {
 
     override fun onCleared() {
         super.onCleared()
-        viewModelScope.launch {
+        // Use runBlocking to ensure cleanup completes before the ViewModel is destroyed.
+        // Launching a coroutine in viewModelScope from onCleared is unsafe as the scope is
+        // cancelled immediately, which can interrupt critical cleanup tasks like saving data.
+        runBlocking {
             try {
-                if (_uiState.value.isRecording) {
-                    thermalRecorder?.stopRecording()
-                }
-                thermalRecorder?.setThermalPreviewCallback(null)
+                // Call the comprehensive cleanup method to ensure all resources are released.
+                thermalRecorder?.cleanup()
             } catch (e: Exception) {
                 AppLogger.e(TAG, "Error cleaning up thermal recorder", e)
             }
