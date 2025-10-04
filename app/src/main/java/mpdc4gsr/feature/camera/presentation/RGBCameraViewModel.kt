@@ -251,6 +251,13 @@ class RGBCameraViewModel(
     }
 
     /**
+     * Dismiss error message
+     */
+    fun dismissError() {
+        _cameraState.update { it.copy(error = null) }
+    }
+
+    /**
      * Track recording duration
      */
     private fun trackRecordingDuration() {
