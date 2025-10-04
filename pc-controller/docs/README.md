@@ -6,14 +6,14 @@ This directory contains detailed technical documentation for the PC Controller i
 
 ### Implementation Documentation
 
-**IMPLEMENTATION_SUMMARY.md** - Complete implementation overview
+**implementation_summary.md** - Complete implementation overview
 
 - Feature completion status
 - Architecture overview
 - Technical specifications
 - All requirements fulfilled
 
-**PC_CONTROLLER_IMPLEMENTATION.md** - Detailed implementation status
+**pc_controller_implementation.md** - Detailed implementation status
 
 - Feature-by-feature breakdown
 - Development progress
@@ -38,7 +38,7 @@ This directory contains detailed technical documentation for the PC Controller i
 - Verification approach
 - Test methodology
 
-**PROTOCOL_VERIFICATION_REPORT.md** - Protocol verification results
+**protocol_verification_report.md** - Protocol verification results
 
 - Test results
 - Compatibility confirmation
@@ -53,7 +53,7 @@ This directory contains detailed technical documentation for the PC Controller i
 - Integration testing results
 - Protocol alignment confirmation
 
-**GAP_ANALYSIS.md** - Protocol gap analysis
+**gap_analysis.md** - Protocol gap analysis
 
 - Original protocol incompatibilities
 - Resolution strategies
@@ -61,7 +61,7 @@ This directory contains detailed technical documentation for the PC Controller i
 
 ### Code Quality Documentation
 
-**CODE_REVIEW.md** - Detailed code review findings
+**code_review.md** - Detailed code review findings
 
 - Architecture assessment
 - Code quality analysis
@@ -85,7 +85,7 @@ This directory contains detailed technical documentation for the PC Controller i
 For quick start and general usage, see:
 
 - **../README.md** - Main PC Controller guide
-- **QUICK_START.md** - Detailed quick start guide with installation
+- **quick_start.md** - Detailed quick start guide with installation
 
 ## Organization
 

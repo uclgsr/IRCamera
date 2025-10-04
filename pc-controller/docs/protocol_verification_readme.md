@@ -35,7 +35,7 @@ correctly. The verification confirms that:
 
 ### Documentation
 
-1. **`PROTOCOL_VERIFICATION_REPORT.md`** - Complete verification report
+1. **`protocol_verification_report.md`** - Complete verification report
     - Test results and findings
     - Protocol flow diagrams
     - Integration verification
@@ -289,7 +289,7 @@ Real-world network performance will vary based on:
 
 For issues or questions:
 
-1. Check the `PROTOCOL_VERIFICATION_REPORT.md` for detailed information
+1. Check the `protocol_verification_report.md` for detailed information
 2. Review the test code for examples
 3. Check Android logcat for error messages
 4. Refer to `PROTOCOL_FLOW.txt` for protocol details

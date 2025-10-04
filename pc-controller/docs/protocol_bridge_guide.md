@@ -8,7 +8,7 @@ Multi-Modal Thermal Sensing Platform.
 ## Problem Summary
 
 The original PC Controller used JSON protocol while Android used text-based protocol, resulting in 0% compatibility. See
-`GAP_ANALYSIS.md` for full details.
+`gap_analysis.md` for full details.
 
 ## Solution: Protocol Adapter
 
@@ -343,7 +343,7 @@ HELLO device_name=test_device sensors=[GSR]
 ## References
 
 - **Android Protocol**: `app/src/main/java/mpdc4gsr/network/Protocol.kt`
-- **Gap Analysis**: `pc-controller/GAP_ANALYSIS.md`
+- **Gap Analysis**: `pc-controller/gap_analysis.md`
 - **Protocol Adapter**: `pc-controller/protocol_adapter.py`
 - **Unified Controller**: `pc-controller/unified_pc_controller.py`
 - **Test Suite**: `pc-controller/test_protocol_compatibility.py`

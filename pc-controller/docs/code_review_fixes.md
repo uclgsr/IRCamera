@@ -147,7 +147,7 @@ handshake, and message loop.
 - `_message_loop()` - Handle ongoing message processing
 - `_process_message()` - Process individual messages
 
-This is documented in `CODE_REVIEW.md` as a medium-priority improvement.
+This is documented in `code_review.md` as a medium-priority improvement.
 
 ### 5. MEDIUM: Global Protocol Adapter
 

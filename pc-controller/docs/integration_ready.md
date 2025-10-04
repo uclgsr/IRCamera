@@ -228,15 +228,15 @@ Debug:
 
 ### For Developers
 
-- `GAP_ANALYSIS.md` - Original problem identification
+- `gap_analysis.md` - Original problem identification
 - `PROTOCOL_BRIDGE_GUIDE.md` - Implementation details
 - `PROTOCOL_FLOW.txt` - Communication flow diagrams
 - Code comments in `protocol_adapter.py`
 
 ### For Users
 
-- `QUICK_START.md` - Installation and basic usage
-- `PC_CONTROLLER_IMPLEMENTATION.md` - Feature documentation
+- `quick_start.md` - Installation and basic usage
+- `pc_controller_implementation.md` - Feature documentation
 - `README.md` - Project overview
 
 ### For Testing

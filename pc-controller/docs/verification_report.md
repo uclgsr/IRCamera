@@ -315,17 +315,17 @@ $ python3 verify_pc_controller.py
 
 ### Files Updated
 
-1. `docs/IMPLEMENTATION_SUMMARY.md`
+1. `docs/implementation_summary.md`
    - Fixed file references
    - Updated test coverage statistics
    - Added comprehensive test breakdown
 
-2. `docs/QUICK_START.md`
+2. `docs/quick_start.md`
    - Corrected command examples
    - Updated file references
    - Fixed SSL/TLS instructions
 
-3. `docs/PC_CONTROLLER_IMPLEMENTATION.md`
+3. `docs/pc_controller_implementation.md`
    - Updated implementation file paths
    - Corrected SSL/TLS documentation
 
