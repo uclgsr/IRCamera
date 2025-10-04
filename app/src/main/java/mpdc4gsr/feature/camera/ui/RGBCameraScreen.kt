@@ -68,6 +68,7 @@ fun RGBCameraScreen(
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val cameraState by viewModel.cameraState.collectAsState()
+    val cameraRecorder by viewModel.cameraRecorder.collectAsState()
     var showControls by remember { mutableStateOf(true) }
     var showError by remember { mutableStateOf(false) }
 
@@ -88,17 +89,19 @@ fun RGBCameraScreen(
     val frameRate = cameraState.frameRate
     val recordingDuration = cameraState.recordingDuration
     val capturedFrames = cameraState.capturedFrames
+    val cameraChangeCounter = cameraState.cameraChangeCounter
 
     Box(
         modifier = modifier
             .fillMaxSize()
             .background(Color.Black)
     ) {
-        // Full-screen camera preview
-        if (viewModel.getCameraRecorder() != null) {
+        // Full-screen camera preview - now properly reactive to cameraRecorder StateFlow
+        if (cameraRecorder != null) {
             FullScreenCameraPreview(
-                cameraRecorder = viewModel.getCameraRecorder()!!,
+                cameraRecorder = cameraRecorder!!,
                 isRecording = isRecording,
+                cameraChangeCounter = cameraChangeCounter,
                 modifier = Modifier.fillMaxSize()
             )
         } else {
@@ -166,7 +169,7 @@ fun RGBCameraScreen(
                 }
         )
 
-        // Error message display
+        // Error message display with retry option
         if (showError && cameraState.error != null) {
             Surface(
                 modifier = Modifier
@@ -191,11 +194,23 @@ fun RGBCameraScreen(
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onErrorContainer
                     )
-                    Spacer(modifier = Modifier.height(12.dp))
-                    Button(
-                        onClick = { viewModel.dismissError() }
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        Text("Dismiss")
+                        OutlinedButton(
+                            onClick = { viewModel.dismissError() }
+                        ) {
+                            Text("Dismiss")
+                        }
+                        Button(
+                            onClick = {
+                                viewModel.dismissError()
+                                viewModel.reinitializeCamera(lifecycleOwner)
+                            }
+                        ) {
+                            Text("Retry")
+                        }
                     }
                 }
             }
@@ -389,22 +404,31 @@ private fun CameraBottomControls(
 
 /**
  * Full-screen real camera preview
+ * Now properly binds preview after camera initialization and camera switches
  */
 @Composable
 private fun FullScreenCameraPreview(
     cameraRecorder: mpdc4gsr.core.data.RgbCameraRecorder,
     isRecording: Boolean,
+    cameraChangeCounter: Int,
     modifier: Modifier = Modifier
 ) {
-    AndroidView(
-        factory = { ctx ->
-            PreviewView(ctx).apply {
-                scaleType = PreviewView.ScaleType.FILL_CENTER
-                cameraRecorder.bindPreview(this)
-            }
-        },
-        modifier = modifier
-    )
+    // Use key to force recreation when camera switches
+    key(cameraChangeCounter) {
+        AndroidView(
+            factory = { ctx ->
+                PreviewView(ctx).apply {
+                    scaleType = PreviewView.ScaleType.FILL_CENTER
+                    implementationMode = PreviewView.ImplementationMode.PERFORMANCE
+                }
+            },
+            update = { previewView ->
+                // Bind preview when the view updates - ensures preview is connected
+                cameraRecorder.bindPreview(previewView)
+            },
+            modifier = modifier
+        )
+    }
 }
 
 /**

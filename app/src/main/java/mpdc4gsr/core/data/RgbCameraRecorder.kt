@@ -505,7 +505,7 @@ class RgbCameraRecorder(
     /**
      * Bind camera preview to a PreviewView for live display.
      * This can be called after initialize() to enable live preview.
-     * The Preview use case is always part of the camera lifecycle, 
+     * The Preview use case is always part of the camera lifecycle,
      * so binding can occur at any time after initialization.
      *
      * @param previewView The PreviewView to display the camera feed
@@ -519,9 +519,21 @@ class RgbCameraRecorder(
                 AppLogger.i(TAG, "Preview bound to PreviewView - live camera feed active")
             } ?: run {
                 AppLogger.w(TAG, "Cannot bind preview - Preview use case not initialized. Call initialize() first.")
+                recordingScope.launch {
+                    emitError(
+                        ErrorType.INITIALIZATION_FAILED,
+                        "Camera preview not available - please restart camera"
+                    )
+                }
             }
         } catch (e: Exception) {
             AppLogger.e(TAG, "Failed to bind preview to PreviewView", e)
+            recordingScope.launch {
+                emitError(
+                    ErrorType.INITIALIZATION_FAILED,
+                    "Failed to bind camera preview: ${e.message}"
+                )
+            }
         }
     }
 
