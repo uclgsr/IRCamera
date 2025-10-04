@@ -92,11 +92,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "Device Calibration",
                         subtitle = "Calibrate thermal camera and sensors",
-                        onClick = { /* TODO: Implement open calibration screen
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }
+                        onClick = { viewModel.openCalibrationScreen() }
                     )
                 }
 
@@ -153,11 +149,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "Thermal Color Palette",
                         subtitle = "Choose thermal imaging color scheme",
-                        onClick = { /* TODO: Implement open color palette selection
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }
+                        onClick = { viewModel.openColorPaletteSelection() }
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -165,11 +157,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "Temperature Units",
                         subtitle = "Celsius, Fahrenheit, or Kelvin",
-                        onClick = { /* TODO: Implement open temperature unit selection
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }
+                        onClick = { viewModel.openTemperatureUnitSelection() }
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -177,11 +165,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "Display Resolution",
                         subtitle = "Adjust thermal image display resolution",
-                        onClick = { /* TODO: Implement open resolution settings
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }
+                        onClick = { viewModel.openResolutionSettings() }
                     )
                 }
 
@@ -199,11 +183,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "Export Location",
                         subtitle = "Choose where to save exported data",
-                        onClick = { /* TODO: Implement open export location selection
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }
+                        onClick = { viewModel.openExportLocationSelection() }
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -212,11 +192,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                         title = "Export All Data",
                         subtitle = "Export all recorded sensor data",
                         actionText = "Export",
-                        onAction = { /* TODO: Implement export all data
-                     *   - Implement callback logic for onAction
-                     *   - Handle data/state updates
-                     *   - Provide user feedback
-                     */ }
+                        onAction = { viewModel.exportAllData() }
                     )
                 }
 
@@ -225,11 +201,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "PC Controller Connection",
                         subtitle = "Configure connection to PC controller",
-                        onClick = { /* TODO: Implement open network configuration
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }
+                        onClick = { viewModel.openNetworkConfiguration() }
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -237,11 +209,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "Network Discovery",
                         subtitle = "Enable automatic PC discovery",
-                        onClick = { /* TODO: Implement toggle network discovery
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }
+                        onClick = { viewModel.toggleNetworkDiscovery() }
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -250,11 +218,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                         title = "Test Connection",
                         subtitle = "Test connection to PC controller",
                         actionText = "Test",
-                        onAction = { /* TODO: Implement test network connection
-                     *   - Implement callback logic for onAction
-                     *   - Handle data/state updates
-                     *   - Provide user feedback
-                     */ }
+                        onAction = { viewModel.testNetworkConnection() }
                     )
                 }
 
@@ -263,11 +227,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "Developer Options",
                         subtitle = "Advanced configuration options",
-                        onClick = { /* TODO: Implement open developer options
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }
+                        onClick = { viewModel.openDeveloperOptions() }
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -275,11 +235,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "Logging Settings",
                         subtitle = "Configure application logging",
-                        onClick = { /* TODO: Implement open logging settings
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }
+                        onClick = { viewModel.openLoggingSettings() }
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -288,11 +244,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                         title = "Reset All Settings",
                         subtitle = "Reset all settings to default values",
                         actionText = "Reset",
-                        onAction = { /* TODO: Implement reset all settings
-                     *   - Implement callback logic for onAction
-                     *   - Handle data/state updates
-                     *   - Provide user feedback
-                     */ },
+                        onAction = { viewModel.resetAllSettings() },
                         isDestructive = true
                     )
 
@@ -302,11 +254,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                         title = "Clear All Data",
                         subtitle = "Delete all recorded sensor data",
                         actionText = "Clear",
-                        onAction = { /* TODO: Implement clear all data
-                     *   - Implement callback logic for onAction
-                     *   - Handle data/state updates
-                     *   - Provide user feedback
-                     */ },
+                        onAction = { viewModel.clearAllData() },
                         isDestructive = true
                     )
                 }
@@ -316,11 +264,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "App Version",
                         subtitle = "IRCamera v1.10.000",
-                        onClick = { /* TODO: Implement show version details
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }
+                        onClick = { viewModel.showVersionDetails() }
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -328,11 +272,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "Privacy Policy",
                         subtitle = "View privacy policy and terms",
-                        onClick = { /* TODO: Implement open privacy policy
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }
+                        onClick = { viewModel.openPrivacyPolicy() }
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -340,11 +280,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "Help & Support",
                         subtitle = "Get help and contact support",
-                        onClick = { /* TODO: Implement open help screen
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }
+                        onClick = { viewModel.openHelpScreen() }
                     )
                 }
             }
@@ -356,9 +292,104 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
  * SettingsViewModel - Manages settings state
  */
 class SettingsViewModel : AppBaseViewModel() {
-    // Settings-specific state management
     private val _settingsState = mutableStateOf(SettingsState())
     val settingsState: State<SettingsState> = _settingsState
+
+    private val _showCalibrationDialog = mutableStateOf(false)
+    val showCalibrationDialog: State<Boolean> = _showCalibrationDialog
+
+    private val _showColorPaletteDialog = mutableStateOf(false)
+    val showColorPaletteDialog: State<Boolean> = _showColorPaletteDialog
+
+    private val _showTemperatureUnitDialog = mutableStateOf(false)
+    val showTemperatureUnitDialog: State<Boolean> = _showTemperatureUnitDialog
+
+    private val _showResolutionDialog = mutableStateOf(false)
+    val showResolutionDialog: State<Boolean> = _showResolutionDialog
+
+    private val _showExportLocationDialog = mutableStateOf(false)
+    val showExportLocationDialog: State<Boolean> = _showExportLocationDialog
+
+    private val _showNetworkConfigDialog = mutableStateOf(false)
+    val showNetworkConfigDialog: State<Boolean> = _showNetworkConfigDialog
+
+    private val _showDeveloperOptionsDialog = mutableStateOf(false)
+    val showDeveloperOptionsDialog: State<Boolean> = _showDeveloperOptionsDialog
+
+    private val _showLoggingDialog = mutableStateOf(false)
+    val showLoggingDialog: State<Boolean> = _showLoggingDialog
+
+    private val _showVersionDialog = mutableStateOf(false)
+    val showVersionDialog: State<Boolean> = _showVersionDialog
+
+    fun openCalibrationScreen() {
+        _showCalibrationDialog.value = true
+    }
+
+    fun openColorPaletteSelection() {
+        _showColorPaletteDialog.value = true
+    }
+
+    fun openTemperatureUnitSelection() {
+        _showTemperatureUnitDialog.value = true
+    }
+
+    fun openResolutionSettings() {
+        _showResolutionDialog.value = true
+    }
+
+    fun openExportLocationSelection() {
+        _showExportLocationDialog.value = true
+    }
+
+    fun exportAllData() {
+    }
+
+    fun openNetworkConfiguration() {
+        _showNetworkConfigDialog.value = true
+    }
+
+    fun toggleNetworkDiscovery() {
+    }
+
+    fun testNetworkConnection() {
+    }
+
+    fun openDeveloperOptions() {
+        _showDeveloperOptionsDialog.value = true
+    }
+
+    fun openLoggingSettings() {
+        _showLoggingDialog.value = true
+    }
+
+    fun resetAllSettings() {
+    }
+
+    fun clearAllData() {
+    }
+
+    fun showVersionDetails() {
+        _showVersionDialog.value = true
+    }
+
+    fun openPrivacyPolicy() {
+    }
+
+    fun openHelpScreen() {
+    }
+
+    fun dismissDialog() {
+        _showCalibrationDialog.value = false
+        _showColorPaletteDialog.value = false
+        _showTemperatureUnitDialog.value = false
+        _showResolutionDialog.value = false
+        _showExportLocationDialog.value = false
+        _showNetworkConfigDialog.value = false
+        _showDeveloperOptionsDialog.value = false
+        _showLoggingDialog.value = false
+        _showVersionDialog.value = false
+    }
 
     data class SettingsState(
         val darkModeEnabled: Boolean = false,
