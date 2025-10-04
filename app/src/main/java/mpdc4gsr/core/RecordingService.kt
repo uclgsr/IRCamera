@@ -22,6 +22,7 @@ import mpdc4gsr.core.ui.PermissionManager
 import mpdc4gsr.core.utils.AppLogger
 import mpdc4gsr.core.utils.ErrorHandler
 import mpdc4gsr.feature.network.data.*
+import mpdc4gsr.feature.network.data.Protocol
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.DataInputStream
@@ -258,7 +259,7 @@ class RecordingService : Service(), CoroutineScope {
 
         networkClient = NetworkClient(this)
         networkServer =
-            NetworkServer(this, 8081)  // Use port 8081 to avoid conflict with NetworkController
+            NetworkServer(this, Protocol.DEFAULT_PORT)  // Use Protocol.DEFAULT_PORT (8080)
         networkManager = NetworkManager(this, recordingController)
         protocolHandler = ProtocolHandler(this, networkServer)
         protocolHandler.setTimeSyncManager(timeSyncManager)

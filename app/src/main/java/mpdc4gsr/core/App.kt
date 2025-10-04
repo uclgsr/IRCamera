@@ -140,6 +140,9 @@ class App : BaseApplication() {
 
         // Initialize WebSocket connection
         initWebSocket()
+        
+        // Start RecordingService to enable PC networking and control interface
+        startRecordingService()
     }
 
     override fun initWebSocket() {
@@ -183,6 +186,16 @@ class App : BaseApplication() {
                 return@setDefaultUncaughtExceptionHandler
             }
             defaultHandler?.uncaughtException(thread, throwable)
+        }
+    }
+    
+    private fun startRecordingService() {
+        try {
+            AppLogger.i("App", "Starting RecordingService for PC networking and control interface")
+            RecordingService.startServer(this)
+            AppLogger.i("App", "RecordingService started successfully")
+        } catch (e: Exception) {
+            AppLogger.e("App", "Failed to start RecordingService - PC networking will not be available", e)
         }
     }
 }
