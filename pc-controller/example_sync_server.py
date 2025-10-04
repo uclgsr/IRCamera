@@ -20,7 +20,11 @@ logger = logging.getLogger(__name__)
 
 
 class PCServer:
-    """Simple PC server that handles Android connections and time sync"""
+    """Simple PC server that handles Android connections and time sync
+    
+    Note: This is a simple example implementation that handles clients sequentially.
+    For production use, consider using threading or asyncio for concurrent client handling.
+    """
     
     def __init__(self, port=8080):
         self.port = port
@@ -45,6 +49,7 @@ class PCServer:
                 logger.info(f"Android device connected from {address}")
                 
                 # Handle this client in a blocking way for simplicity
+                # For production, use threading or async/await for concurrent handling
                 self.handle_client(client_socket, address)
                 
         except KeyboardInterrupt:
@@ -110,8 +115,18 @@ class PCServer:
         elif msg_type == 'SYNC_RESPONSE':
             # Android is responding to our SYNC_REQUEST
             try:
-                t_pc = int(params.get('t_pc', 0))
-                t_ph = int(params.get('t_ph', 0))
+                # Validate required parameters are present
+                if 't_pc' not in params or 't_ph' not in params:
+                    logger.error(f"SYNC_RESPONSE missing required parameters from {device_id}")
+                    return f"ERROR cmd=SYNC_RESPONSE code=FAIL msg=\"Missing t_pc or t_ph parameter\"\n"
+                
+                t_pc = int(params['t_pc'])
+                t_ph = int(params['t_ph'])
+                
+                # Validate timestamps are not zero
+                if t_pc == 0 or t_ph == 0:
+                    logger.error(f"SYNC_RESPONSE has invalid zero timestamp from {device_id}")
+                    return f"ERROR cmd=SYNC_RESPONSE code=FAIL msg=\"Invalid zero timestamp\"\n"
                 
                 sync_result = self.sync_handler.handle_sync_response(
                     device_id, t_pc, t_ph, socket
@@ -125,6 +140,9 @@ class PCServer:
                 
                 return None  # Response already sent by handler
                 
+            except ValueError as e:
+                logger.error(f"Invalid timestamp format in SYNC_RESPONSE from {device_id}: {e}")
+                return f"ERROR cmd=SYNC_RESPONSE code=FAIL msg=\"Invalid timestamp format\"\n"
             except Exception as e:
                 logger.error(f"Error processing SYNC_RESPONSE: {e}")
                 return None

@@ -202,6 +202,8 @@ class TimeSyncManager(private val context: Context) {
 
     /**
      * Set callback for manual sync triggers (typically called by PC or user action)
+     * Note: This should be set once during initialization. The callback is accessed
+     * from coroutine contexts which provide thread-safety for the read operations.
      */
     fun setSyncTriggerCallback(callback: SyncTriggerCallback) {
         syncTriggerCallback = callback

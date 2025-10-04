@@ -11,10 +11,14 @@ from unittest.mock import Mock, MagicMock
 import sys
 import os
 
-# Add parent directory to path for imports
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-from sync_handler import SyncHandler
+# Import from parent package - run tests from pc-controller directory:
+# python3 -m tests.test_sync_handler
+try:
+    from sync_handler import SyncHandler
+except ImportError:
+    # Fallback for direct execution
+    sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    from sync_handler import SyncHandler
 
 
 class TestSyncHandler(unittest.TestCase):

@@ -20,7 +20,7 @@ class SyncHandler:
         self.pending_syncs = {}
         self.sync_history = {}
         
-    def handle_sync_init(self, device_id: str, socket) -> bool:
+    def handle_sync_init(self, device_id: str, socket: 'socket.socket') -> bool:
         """
         Handle SYNC_INIT message from Android device.
         
@@ -57,7 +57,7 @@ class SyncHandler:
             logger.error(f"Failed to handle SYNC_INIT from {device_id}: {e}")
             return False
     
-    def handle_sync_response(self, device_id: str, t_pc: int, t_ph: int, socket) -> Optional[Dict[str, Any]]:
+    def handle_sync_response(self, device_id: str, t_pc: int, t_ph: int, socket: 'socket.socket') -> Optional[Dict[str, Any]]:
         """
         Handle SYNC_RESPONSE message from Android device.
         
@@ -95,7 +95,7 @@ class SyncHandler:
             # Calculate offset and RTT
             # offset = T2 - ((T1 + T3) / 2)
             # Positive offset means phone is ahead of PC
-            offset = t2 - ((t1 + t3) // 2)
+            offset = int(t2 - ((t1 + t3) / 2))
             
             # rtt = T3 - T1
             rtt = t3 - t1

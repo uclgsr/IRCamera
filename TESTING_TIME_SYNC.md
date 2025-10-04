@@ -136,7 +136,7 @@ Look for the `synchronizedTimestampMs` column with adjusted timestamps.
 **Fix:** 
 - Improve network conditions
 - Use wired connection if possible
-- Sync PC with NTP: `sudo ntpdate pool.ntp.org`
+- Sync PC with NTP: `sudo systemctl start systemd-timesyncd` (systemd-based) or `sudo chronyc makestep` (chrony) or `timedatectl set-ntp true` (enable automatic time sync)
 
 ### Periodic sync not working
 
