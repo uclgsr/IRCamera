@@ -1,6 +1,11 @@
 """
-Utility functions for thesis evaluation tests
-Provides data generation, validation, and reporting utilities
+Test utilities for multi-sensor consistency evaluation in thesis experiments.
+
+This module provides functions and classes for generating simulated data streams,
+injecting synchronized events, validating time alignment, and analyzing session
+duration consistency across multiple sensor modalities, including GSR, thermal,
+and RGB cameras. These utilities support automated testing and validation of
+sensor synchronization and consistency within the multi-sensor framework.
 """
 
 import csv
