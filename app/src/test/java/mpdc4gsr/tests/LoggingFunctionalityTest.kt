@@ -16,16 +16,16 @@ class LoggingFunctionalityTest {
     fun setup() {
         MockKAnnotations.init(this, relaxUnitFun = true)
         mockkStatic(Log::class)
-        every { Log.v(any(), any()) } returns 0
-        every { Log.d(any(), any()) } returns 0
-        every { Log.i(any(), any()) } returns 0
-        every { Log.w(any(), any()) } returns 0
-        every { Log.e(any(), any()) } returns 0
-        every { Log.v(any(), any(), any()) } returns 0
-        every { Log.d(any(), any(), any()) } returns 0
-        every { Log.i(any(), any(), any()) } returns 0
-        every { Log.w(any(), any(), any()) } returns 0
-        every { Log.e(any(), any(), any()) } returns 0
+        every { Log.v(any<String>(), any<String>()) } returns 0
+        every { Log.d(any<String>(), any<String>()) } returns 0
+        every { Log.i(any<String>(), any<String>()) } returns 0
+        every { Log.w(any<String>(), any<String>()) } returns 0
+        every { Log.e(any<String>(), any<String>()) } returns 0
+        every { Log.v(any<String>(), any<String>(), any<Throwable>()) } returns 0
+        every { Log.d(any<String>(), any<String>(), any<Throwable>()) } returns 0
+        every { Log.i(any<String>(), any<String>(), any<Throwable>()) } returns 0
+        every { Log.w(any<String>(), any<String>(), any<Throwable>()) } returns 0
+        every { Log.e(any<String>(), any<String>(), any<Throwable>()) } returns 0
 
         structuredLogger = mockk(relaxed = true)
         AppLogger.initialize(
