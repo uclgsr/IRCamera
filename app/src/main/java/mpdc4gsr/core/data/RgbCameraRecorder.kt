@@ -1838,6 +1838,7 @@ class RgbCameraRecorder(
                 
                 // Calculate synchronized timestamp based on the event's wall clock time and current offset
                 val clockOffsetMs = TimestampManager.getSynchronizedTimestampMs() - TimestampManager.getDeviceTimestampMs()
+                // Use cached clockOffsetMs to avoid redundant calculations
                 val synchronizedTimestampMs = (wallMs ?: TimestampManager.getCurrentSystemTimeMs()) + clockOffsetMs
                 
                 val metadataMap = metadata.toMutableMap()
