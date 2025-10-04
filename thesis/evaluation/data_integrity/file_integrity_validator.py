@@ -113,7 +113,7 @@ class FileIntegrityValidator:
                     else:
                         errors.append("File has no content")
             
-            except Exception as e:
+            except (IOError, UnicodeDecodeError) as e:
                 errors.append(f"Failed to read file: {e}")
         
         is_valid = len(errors) == 0 and row_count > 0
