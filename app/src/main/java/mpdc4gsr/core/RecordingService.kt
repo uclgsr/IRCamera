@@ -246,7 +246,7 @@ class RecordingService : Service(), CoroutineScope {
 
         notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         createNotificationChannel()
-        
+
         // Call startForeground immediately to satisfy Android's foreground service requirements
         // This must be called within 5-10 seconds of startForegroundService()
         startForeground(

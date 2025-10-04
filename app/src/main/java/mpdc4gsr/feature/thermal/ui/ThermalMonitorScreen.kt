@@ -58,7 +58,7 @@ import mpdc4gsr.feature.thermal.presentation.ThermalCameraViewModelFactory
  * ThermalMonitorScreen composable - replaces MonitorThermalFragment layout
  * Main screen for thermal camera preview with overlays and controls
  * Full-screen design following Material Design 3 and Jetpack Compose best practices
- * 
+ *
  * Now fully integrated with ThermalCameraViewModel for live thermal preview
  */
 @Composable
@@ -75,10 +75,10 @@ fun ThermalMonitorScreen(
 ) {
     // Collect UI state from ViewModel
     val uiState by viewModel.uiState.collectAsState()
-    
+
     var showControls by remember { mutableStateOf(true) }
     var showAdvancedControls by remember { mutableStateOf(false) }
-    
+
     // Update recording duration periodically
     LaunchedEffect(uiState.isRecording) {
         if (uiState.isRecording) {
@@ -227,7 +227,7 @@ private fun ThermalTopBar(
                         }
                     }
                 }
-                
+
                 Surface(
                     color = if (isConnected) Color(0xFF2E7D32) else Color(0xFFD32F2F),
                     shape = RoundedCornerShape(4.dp)

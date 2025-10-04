@@ -15,11 +15,11 @@ import java.util.concurrent.atomic.AtomicLong
 /**
  * Manages camera performance optimization including memory usage,
  * frame capture pipeline efficiency, and resource monitoring.
- * 
+ *
  * CRITICAL ANR FIX: All frame processing is now done on a background thread
  * to prevent blocking the main UI thread. This resolves the ANR issue where
  * the main thread was blocked for 10+ seconds due to synchronous processing.
- * 
+ *
  * The frame processing queue uses a dedicated single-thread executor to ensure
  * sequential processing without blocking the main thread or causing race conditions.
  */
@@ -45,7 +45,7 @@ class CameraPerformanceManager(private val context: Context) {
 
     // Frame processing queue with backpressure handling
     private val frameProcessingQueue = ConcurrentLinkedQueue<FrameProcessingTask>()
-    
+
     // Background executor for frame processing to avoid blocking main thread
     private val frameProcessingExecutor = Executors.newSingleThreadExecutor { r ->
         Thread(r, "CameraFrameProcessor").apply {

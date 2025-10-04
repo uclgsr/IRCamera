@@ -280,7 +280,7 @@ private fun CameraTopBar(
                         }
                     }
                 }
-                
+
                 Surface(
                     color = Color.Black.copy(alpha = 0.6f),
                     shape = RoundedCornerShape(4.dp)
@@ -448,7 +448,7 @@ private fun FullScreenCameraPreviewSimulated(
             Canvas(modifier = Modifier.fillMaxSize()) {
                 val width = size.width
                 val height = size.height
-                
+
                 drawRect(color = Color(0xFF2E2E2E), size = size)
                 drawRect(
                     color = Color(0xFF4A4A4A),
@@ -989,7 +989,7 @@ private fun CameraSettingsCard(
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 Button(
-                    onClick = { 
+                    onClick = {
                         onFocusModeChange(currentFocusMode.getNext())
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = Orange),
@@ -1001,7 +1001,7 @@ private fun CameraSettingsCard(
                 Spacer(modifier = Modifier.width(4.dp))
 
                 Button(
-                    onClick = { 
+                    onClick = {
                         onWhiteBalanceChange(currentWhiteBalance.getNext())
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = Purple),

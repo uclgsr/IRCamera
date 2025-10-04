@@ -64,9 +64,10 @@ fun GSRSensorScreen(
     LaunchedEffect(sensorState.error) {
         sensorState.error?.let { error ->
             // Check if this is a critical error (Bluetooth/permission)
-            if (error.contains("Bluetooth", ignoreCase = true) || 
+            if (error.contains("Bluetooth", ignoreCase = true) ||
                 error.contains("permission", ignoreCase = true) ||
-                error.contains("initialization failed", ignoreCase = true)) {
+                error.contains("initialization failed", ignoreCase = true)
+            ) {
                 criticalErrorMessage = error
                 showCriticalErrorDialog = true
             } else {
@@ -177,65 +178,65 @@ fun GSRSensorScreen(
                     .padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-            // Connection status card
-            GSRConnectionCard(
-                isConnected = isConnected,
-                deviceBattery = deviceBattery,
-                samplingRate = samplingRate,
-                connectionStatus = sensorState.connectionStatus,
-                isReconnecting = sensorState.isReconnecting,
-                reconnectionAttempt = sensorState.reconnectionAttempt,
-                maxReconnectionAttempts = sensorState.maxReconnectionAttempts,
-                error = sensorState.error,
-                onConnectionToggle = {
-                    if (isConnected) {
-                        viewModel.disconnectDevice()
-                    } else {
-                        viewModel.connectDevice()
+                // Connection status card
+                GSRConnectionCard(
+                    isConnected = isConnected,
+                    deviceBattery = deviceBattery,
+                    samplingRate = samplingRate,
+                    connectionStatus = sensorState.connectionStatus,
+                    isReconnecting = sensorState.isReconnecting,
+                    reconnectionAttempt = sensorState.reconnectionAttempt,
+                    maxReconnectionAttempts = sensorState.maxReconnectionAttempts,
+                    error = sensorState.error,
+                    onConnectionToggle = {
+                        if (isConnected) {
+                            viewModel.disconnectDevice()
+                        } else {
+                            viewModel.connectDevice()
+                        }
                     }
-                }
-            )
+                )
 
-            // Real-time GSR metrics
-            GSRMetricsCard(
-                currentGSR = currentGSR,
-                skinConductance = skinConductance,
-                isRecording = isRecording
-            )
-
-            // GSR waveform visualization
-            GSRWaveformCard(
-                gsrHistory = gsrHistory,
-                isStreaming = isConnected,
-                currentValue = currentGSR
-            )
-
-            // Recording controls
-            GSRRecordingControls(
-                isRecording = isRecording,
-                isConnected = isConnected,
-                onRecordingToggle = {
-                    if (isRecording) {
-                        viewModel.stopRecording()
-                    } else {
-                        viewModel.startRecording()
-                    }
-                },
-                onExportData = {
-                    viewModel.exportData()
-                    onSaveData()
-                }
-            )
-
-            // GSR analysis summary
-            if (isRecording || gsrHistory.isNotEmpty()) {
-                GSRAnalysisCard(
-                    gsrData = gsrHistory,
+                // Real-time GSR metrics
+                GSRMetricsCard(
+                    currentGSR = currentGSR,
+                    skinConductance = skinConductance,
                     isRecording = isRecording
                 )
+
+                // GSR waveform visualization
+                GSRWaveformCard(
+                    gsrHistory = gsrHistory,
+                    isStreaming = isConnected,
+                    currentValue = currentGSR
+                )
+
+                // Recording controls
+                GSRRecordingControls(
+                    isRecording = isRecording,
+                    isConnected = isConnected,
+                    onRecordingToggle = {
+                        if (isRecording) {
+                            viewModel.stopRecording()
+                        } else {
+                            viewModel.startRecording()
+                        }
+                    },
+                    onExportData = {
+                        viewModel.exportData()
+                        onSaveData()
+                    }
+                )
+
+                // GSR analysis summary
+                if (isRecording || gsrHistory.isNotEmpty()) {
+                    GSRAnalysisCard(
+                        gsrData = gsrHistory,
+                        isRecording = isRecording
+                    )
+                }
             }
         }
-    }
     }
 }
 
@@ -294,7 +295,7 @@ private fun GSRConnectionCard(
                         },
                         fontSize = 14.sp
                     )
-                    
+
                     if (isReconnecting && reconnectionAttempt > 0) {
                         Text(
                             text = "Reconnecting: attempt $reconnectionAttempt/$maxReconnectionAttempts",
@@ -303,7 +304,7 @@ private fun GSRConnectionCard(
                             modifier = Modifier.padding(top = 4.dp)
                         )
                     }
-                    
+
                     if (error != null && !isReconnecting) {
                         Text(
                             text = error,
