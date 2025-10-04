@@ -65,7 +65,7 @@ class ResultsAnalyzer:
         try:
             with open(file_path, 'r', encoding='utf-8') as f:
                 return json.load(f)
-        except Exception as e:
+        except (IOError, json.JSONDecodeError) as e:
             print(f"Error loading {file_path}: {e}")
             return {}
     
