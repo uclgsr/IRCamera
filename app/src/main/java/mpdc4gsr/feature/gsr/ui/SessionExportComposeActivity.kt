@@ -51,7 +51,7 @@ class SessionExportComposeActivity : BaseComposeActivity<SessionExportViewModel>
 fun SessionExportScreen(
     viewModel: SessionExportViewModel = viewModel(
         factory = SessionExportViewModelFactory(
-            androidx.compose.ui.platform.LocalContext.current as android.app.Application
+            androidx.compose.ui.platform.LocalContext.current.applicationContext as android.app.Application
         )
     ),
     onNavigateBack: () -> Unit = {}
