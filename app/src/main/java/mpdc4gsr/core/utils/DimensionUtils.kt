@@ -2,6 +2,7 @@ package mpdc4gsr.core.utils
 
 import android.content.Context
 import android.content.res.Resources
+import android.util.TypedValue
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -31,7 +32,11 @@ fun Int.pxToDp(context: Context): Int {
 }
 
 fun Int.spToPx(context: Context): Int {
-    return (this * context.resources.displayMetrics.scaledDensity).toInt()
+    return TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_SP,
+        this.toFloat(),
+        context.resources.displayMetrics
+    ).toInt()
 }
 
 fun Float.dpToPx(context: Context): Float {
@@ -43,7 +48,11 @@ fun Float.pxToDp(context: Context): Float {
 }
 
 fun Float.spToPx(context: Context): Float {
-    return this * context.resources.displayMetrics.scaledDensity
+    return TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_SP,
+        this,
+        context.resources.displayMetrics
+    )
 }
 
 /**

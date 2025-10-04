@@ -364,6 +364,7 @@ dependencies {
 
     // Testing dependencies  
     testImplementation(libs.junit)
+    testImplementation(libs.kotlin.test)
     testImplementation(libs.robolectric)
     testImplementation(libs.test.core)
     testImplementation(libs.test.ext.junit)

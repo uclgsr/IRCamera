@@ -77,6 +77,7 @@ class App : BaseApplication() {
 
     override fun onCreate() {
         super.onCreate()
+        @Suppress("DEPRECATION")
         instance = this
 
         // Initialize ContextProvider for AndroidX migration
