@@ -8,6 +8,15 @@ Output: CSV/table with start/end timestamps from each sensor log.
 
 Subsystem: Session controller (start/stop coordination)
 Chapters: Chapter 5 (concurrent sensor operation) and Chapter 6 (sensor lag/lead analysis)
+
+Tolerance Specifications:
+    - Start time tolerance: ±100ms
+    - End time tolerance: ±1000ms
+
+Expected Sampling Rates:
+    - GSR: 128 Hz
+    - Thermal: 10 Hz
+    - RGB: 30 Hz
 """
 
 import pytest
