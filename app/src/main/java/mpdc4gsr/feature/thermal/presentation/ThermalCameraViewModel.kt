@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit
  */
 class ThermalCameraViewModel(application: Application) : ViewModel() {
 
-    private val context: Context = application.applicationContext
+    private val context: Context = application
 
     companion object {
         private const val TAG = "ThermalCameraViewModel"
