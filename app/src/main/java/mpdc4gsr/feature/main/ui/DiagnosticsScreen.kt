@@ -34,7 +34,7 @@ fun DiagnosticsScreen(
     onBackClick: (() -> Unit)? = null,
     viewModel: DiagnosticsViewModel = viewModel(
         factory = DiagnosticsViewModelFactory(
-            LocalContext.current as Application
+            LocalContext.current.applicationContext as Application
         )
     ),
     modifier: Modifier = Modifier
