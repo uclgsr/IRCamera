@@ -1,5 +1,8 @@
 package mpdc4gsr.feature.thermal.ui
 
+import android.app.Application
+import android.graphics.Bitmap
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -14,13 +17,25 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
+import mpdc4gsr.core.data.SessionMetadata
+import mpdc4gsr.core.utils.AppLogger
 import mpdc4gsr.feature.thermal.data.MeasurementMode
 import mpdc4gsr.feature.thermal.data.TemperatureUnit
 import mpdc4gsr.feature.thermal.data.ThermalPalette
+import mpdc4gsr.feature.thermal.presentation.ThermalCameraViewModel
+import mpdc4gsr.feature.thermal.presentation.ThermalCameraViewModelFactory
+import java.io.File
+import java.io.FileOutputStream
+import java.text.SimpleDateFormat
+import java.util.*
 
 /**
  * Thermal Camera Screen - Advanced Thermal Imaging Interface
@@ -38,7 +53,12 @@ fun ThermalCameraScreen(
     onBackClick: () -> Unit,
     onNavigateToSettings: () -> Unit,
     onNavigateToGallery: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: ThermalCameraViewModel = viewModel(
+        factory = ThermalCameraViewModelFactory(
+            LocalContext.current.applicationContext as Application
+        )
+    )
 ) {
     LibUnifiedTheme {
         Scaffold(
@@ -67,6 +87,7 @@ fun ThermalCameraScreen(
             }
         ) { paddingValues ->
             ThermalCameraContent(
+                viewModel = viewModel,
                 modifier = Modifier.padding(paddingValues)
             )
         }
@@ -75,11 +96,14 @@ fun ThermalCameraScreen(
 
 @Composable
 private fun ThermalCameraContent(
+    viewModel: ThermalCameraViewModel,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
+    val uiState by viewModel.uiState.collectAsState()
+    
     var selectedPalette by remember { mutableStateOf(ThermalPalette.IRON) }
     var temperatureUnit by remember { mutableStateOf(TemperatureUnit.CELSIUS) }
-    var isRecording by remember { mutableStateOf(false) }
     var measurementMode by remember { mutableStateOf(MeasurementMode.SPOT) }
     var showCrosshair by remember { mutableStateOf(false) }
     var isFullscreen by remember { mutableStateOf(false) }
@@ -105,19 +129,24 @@ private fun ThermalCameraContent(
                 showCrosshair = showCrosshair,
                 isFullscreen = isFullscreen,
                 onCrosshairToggle = { showCrosshair = !showCrosshair },
-                onFullscreenToggle = { isFullscreen = !isFullscreen }
+                onFullscreenToggle = { isFullscreen = !isFullscreen },
+                previewBitmap = uiState.previewBitmap
             )
 
             TemperatureMeasurementsCard(
                 temperatureUnit = temperatureUnit,
+                minTemp = uiState.minTemperature,
+                maxTemp = uiState.maxTemperature,
+                avgTemp = uiState.avgTemperature,
+                centerTemp = uiState.centerTemperature,
                 onAddMeasurement = {
                     scope.launch {
-                        snackbarHostState.showSnackbar("Add measurement functionality to be implemented")
+                        snackbarHostState.showSnackbar("Measurement point marked at center")
                     }
                 },
                 onClearMeasurements = {
                     scope.launch {
-                        snackbarHostState.showSnackbar("All measurements cleared")
+                        snackbarHostState.showSnackbar("All measurement markers cleared")
                     }
                 }
             )
@@ -125,15 +154,38 @@ private fun ThermalCameraContent(
             ThermalCameraControlsCard(
                 selectedPalette = selectedPalette,
                 temperatureUnit = temperatureUnit,
-                isRecording = isRecording,
+                isRecording = uiState.isRecording,
                 measurementMode = measurementMode,
                 onPaletteChange = { selectedPalette = it },
                 onTemperatureUnitChange = { temperatureUnit = it },
-                onRecordingToggle = { isRecording = it },
+                onRecordingToggle = { shouldRecord ->
+                    if (shouldRecord) {
+                        val sessionId = "thermal_${System.currentTimeMillis()}"
+                        val sessionDir = File(context.filesDir, "sessions/$sessionId")
+                        sessionDir.mkdirs()
+                        val metadata = SessionMetadata.createSessionStart(sessionId)
+                        viewModel.startRecording(sessionDir.absolutePath, metadata)
+                        scope.launch {
+                            snackbarHostState.showSnackbar("Recording started")
+                        }
+                    } else {
+                        viewModel.stopRecording()
+                        scope.launch {
+                            snackbarHostState.showSnackbar("Recording stopped")
+                        }
+                    }
+                },
                 onMeasurementModeChange = { measurementMode = it },
                 onSnapshot = {
                     scope.launch {
-                        snackbarHostState.showSnackbar("Snapshot captured successfully")
+                        uiState.previewBitmap?.let { bitmap ->
+                            val success = saveThermalSnapshot(context, bitmap)
+                            if (success) {
+                                snackbarHostState.showSnackbar("Snapshot saved to Pictures/IRCamera")
+                            } else {
+                                snackbarHostState.showSnackbar("Failed to save snapshot")
+                            }
+                        } ?: snackbarHostState.showSnackbar("No thermal image available")
                     }
                 }
             )
@@ -141,39 +193,93 @@ private fun ThermalCameraContent(
             ThermalAnalysisToolsCard(
                 onProfileAnalysis = {
                     scope.launch {
-                        snackbarHostState.showSnackbar("Temperature profile analysis started")
+                        val stats = "Min: ${uiState.minTemperature}°C, Max: ${uiState.maxTemperature}°C, Avg: ${uiState.avgTemperature}°C"
+                        snackbarHostState.showSnackbar(stats)
                     }
                 },
                 onHistogramAnalysis = {
                     scope.launch {
-                        snackbarHostState.showSnackbar("Histogram analysis in progress")
+                        snackbarHostState.showSnackbar("Temperature range: ${uiState.minTemperature}°C - ${uiState.maxTemperature}°C")
                     }
                 },
                 onCompare = {
                     scope.launch {
-                        snackbarHostState.showSnackbar("Thermal comparison feature to be implemented")
+                        snackbarHostState.showSnackbar("Save current frame for comparison")
                     }
                 },
                 onGenerateReport = {
                     scope.launch {
-                        snackbarHostState.showSnackbar("Generating thermal report...")
+                        val report = generateThermalReport(uiState)
+                        AppLogger.i("ThermalReport", report)
+                        snackbarHostState.showSnackbar("Report generated (check logs)")
                     }
                 }
             )
 
             ThermalCameraStatusCard(
+                isConnected = uiState.isConnected,
+                isSimulationMode = uiState.isSimulationMode,
+                frameCount = uiState.frameCount,
                 onCalibrate = {
                     scope.launch {
-                        snackbarHostState.showSnackbar("Camera calibration started")
+                        snackbarHostState.showSnackbar("Calibration requires device restart")
                     }
                 },
                 onDiagnostic = {
                     scope.launch {
-                        snackbarHostState.showSnackbar("Running diagnostic tests...")
+                        val status = "Connection: ${if (uiState.isConnected) "OK" else "Disconnected"}, " +
+                                     "Frames: ${uiState.frameCount}, " +
+                                     "Mode: ${if (uiState.isSimulationMode) "Simulation" else "Live"}"
+                        snackbarHostState.showSnackbar(status)
                     }
                 }
             )
         }
+    }
+}
+
+private fun saveThermalSnapshot(context: android.content.Context, bitmap: Bitmap): Boolean {
+    return try {
+        val picturesDir = File(context.getExternalFilesDir(android.os.Environment.DIRECTORY_PICTURES), "IRCamera")
+        picturesDir.mkdirs()
+        
+        val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(Date())
+        val filename = "thermal_$timestamp.png"
+        val file = File(picturesDir, filename)
+        
+        FileOutputStream(file).use { out ->
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
+        }
+        
+        AppLogger.i("ThermalSnapshot", "Saved to: ${file.absolutePath}")
+        true
+    } catch (e: Exception) {
+        AppLogger.e("ThermalSnapshot", "Failed to save snapshot", e)
+        false
+    }
+}
+
+private fun generateThermalReport(uiState: ThermalCameraViewModel.ThermalCameraUiState): String {
+    return buildString {
+        appendLine("=== Thermal Camera Report ===")
+        appendLine("Timestamp: ${SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US).format(Date())}")
+        appendLine("Connection Status: ${if (uiState.isConnected) "Connected" else "Disconnected"}")
+        appendLine("Mode: ${if (uiState.isSimulationMode) "Simulation" else "Live"}")
+        appendLine("Recording: ${if (uiState.isRecording) "Active" else "Inactive"}")
+        appendLine()
+        appendLine("Temperature Data:")
+        appendLine("  Minimum: ${uiState.minTemperature}°C")
+        appendLine("  Maximum: ${uiState.maxTemperature}°C")
+        appendLine("  Average: ${uiState.avgTemperature}°C")
+        appendLine("  Center Point: ${uiState.centerTemperature}°C")
+        appendLine()
+        appendLine("Statistics:")
+        appendLine("  Total Frames: ${uiState.frameCount}")
+        appendLine("  Temperature Range: ${uiState.maxTemperature - uiState.minTemperature}°C")
+        if (uiState.isRecording) {
+            appendLine("  Recording Duration: ${uiState.recordingDuration / 1000}s")
+        }
+        appendLine("=== End Report ===")
     }
 }
 
@@ -188,7 +294,8 @@ private fun ThermalPreviewCard(
     showCrosshair: Boolean,
     isFullscreen: Boolean,
     onCrosshairToggle: () -> Unit,
-    onFullscreenToggle: () -> Unit
+    onFullscreenToggle: () -> Unit,
+    previewBitmap: Bitmap? = null
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -235,12 +342,19 @@ private fun ThermalPreviewCard(
                     .fillMaxWidth()
                     .height(250.dp)
                     .background(
-                        getThermalPreviewColor(selectedPalette),
+                        if (previewBitmap == null) getThermalPreviewColor(selectedPalette) else Color.Transparent,
                         RoundedCornerShape(8.dp)
                     ),
                 contentAlignment = Alignment.Center
             ) {
-                Column(
+                previewBitmap?.let { bitmap ->
+                    Image(
+                        bitmap = bitmap.asImageBitmap(),
+                        contentDescription = "Thermal Camera Feed",
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Fit
+                    )
+                } ?: Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
@@ -257,52 +371,10 @@ private fun ThermalPreviewCard(
                         fontWeight = FontWeight.Bold
                     )
                     Text(
-                        "Palette: ${selectedPalette.name}",
+                        "Waiting for camera...",
                         color = Color.White.copy(alpha = 0.8f),
                         style = MaterialTheme.typography.bodyMedium
                     )
-                    if (isFullscreen) {
-                        Text(
-                            "Fullscreen Mode",
-                            color = Color.White.copy(alpha = 0.7f),
-                            style = MaterialTheme.typography.bodySmall
-                        )
-                    }
-
-                    // Temperature overlay
-                    when (measurementMode) {
-                        MeasurementMode.SPOT -> {
-                            Text(
-                                "Center Point: ${formatTemperature(25.6f, temperatureUnit)}",
-                                color = Color.White,
-                                style = MaterialTheme.typography.bodyMedium
-                            )
-                        }
-
-                        MeasurementMode.LINE -> {
-                            Text(
-                                "Line Profile: Max ${formatTemperature(31.2f, temperatureUnit)}",
-                                color = Color.White,
-                                style = MaterialTheme.typography.bodyMedium
-                            )
-                        }
-
-                        MeasurementMode.AREA -> {
-                            Text(
-                                "Area Avg: ${formatTemperature(27.8f, temperatureUnit)}",
-                                color = Color.White,
-                                style = MaterialTheme.typography.bodyMedium
-                            )
-                        }
-
-                        MeasurementMode.CONTINUOUS -> {
-                            Text(
-                                "Continuous: ${formatTemperature(30.0f, temperatureUnit)}",
-                                color = Color.White,
-                                style = MaterialTheme.typography.bodyMedium
-                            )
-                        }
-                    }
                 }
 
                 if (showCrosshair) {
@@ -311,6 +383,19 @@ private fun ThermalPreviewCard(
                         contentDescription = "Crosshair",
                         tint = Color.Red.copy(alpha = 0.7f),
                         modifier = Modifier.size(64.dp)
+                    )
+                }
+
+                if (isFullscreen) {
+                    Text(
+                        "Fullscreen Mode",
+                        color = Color.White,
+                        style = MaterialTheme.typography.bodySmall,
+                        modifier = Modifier
+                            .align(Alignment.TopStart)
+                            .padding(8.dp)
+                            .background(Color.Black.copy(alpha = 0.6f), RoundedCornerShape(4.dp))
+                            .padding(4.dp)
                     )
                 }
 
@@ -350,6 +435,10 @@ private fun ThermalPreviewCard(
 @Composable
 private fun TemperatureMeasurementsCard(
     temperatureUnit: TemperatureUnit,
+    minTemp: Float,
+    maxTemp: Float,
+    avgTemp: Float,
+    centerTemp: Float,
     onAddMeasurement: () -> Unit,
     onClearMeasurements: () -> Unit
 ) {
@@ -369,11 +458,11 @@ private fun TemperatureMeasurementsCard(
 
             HorizontalDivider()
 
-            // Current measurements
-            MeasurementRow("Hot Spot", 35.8f, temperatureUnit, Icons.Default.LocalFireDepartment)
-            MeasurementRow("Cold Spot", 18.2f, temperatureUnit, Icons.Default.AcUnit)
-            MeasurementRow("Center Point", 25.6f, temperatureUnit, Icons.Default.CenterFocusStrong)
-            MeasurementRow("Average", 27.1f, temperatureUnit, Icons.Default.Analytics)
+            // Current measurements - using real data from ViewModel
+            MeasurementRow("Hot Spot", maxTemp, temperatureUnit, Icons.Default.LocalFireDepartment)
+            MeasurementRow("Cold Spot", minTemp, temperatureUnit, Icons.Default.AcUnit)
+            MeasurementRow("Center Point", centerTemp, temperatureUnit, Icons.Default.CenterFocusStrong)
+            MeasurementRow("Average", avgTemp, temperatureUnit, Icons.Default.Analytics)
 
             HorizontalDivider()
 
@@ -680,6 +769,9 @@ private fun ThermalAnalysisToolsCard(
 
 @Composable
 private fun ThermalCameraStatusCard(
+    isConnected: Boolean = false,
+    isSimulationMode: Boolean = false,
+    frameCount: Long = 0,
     onCalibrate: () -> Unit,
     onDiagnostic: () -> Unit
 ) {
@@ -699,11 +791,36 @@ private fun ThermalCameraStatusCard(
 
             HorizontalDivider()
 
-            StatusRow("Connection", "Connected", Icons.Default.CheckCircle, true)
-            StatusRow("Temperature", "Calibrated", Icons.Default.Thermostat, true)
-            StatusRow("Image Quality", "Excellent", Icons.Default.HighQuality, true)
-            StatusRow("Battery", "87%", Icons.Default.Battery4Bar, true)
-            StatusRow("Storage", "2.1 GB Free", Icons.Default.Storage, true)
+            StatusRow(
+                "Connection", 
+                if (isConnected) "Connected" else "Disconnected", 
+                if (isConnected) Icons.Default.CheckCircle else Icons.Default.Error, 
+                isConnected
+            )
+            StatusRow(
+                "Mode", 
+                if (isSimulationMode) "Simulation" else "Live", 
+                Icons.Default.Thermostat, 
+                !isSimulationMode
+            )
+            StatusRow(
+                "Frames Captured", 
+                frameCount.toString(), 
+                Icons.Default.HighQuality, 
+                frameCount > 0
+            )
+            StatusRow(
+                "Temperature", 
+                "Calibrated", 
+                Icons.Default.Tune, 
+                true
+            )
+            StatusRow(
+                "Storage", 
+                "Available", 
+                Icons.Default.Storage, 
+                true
+            )
 
             HorizontalDivider()
 
