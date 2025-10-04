@@ -1,0 +1,8 @@
+Test_ID,Test_Name,Purpose,Conditions,Expected_Result,Actual_Result,Status,Notes
+TC-001,Latency Test,Measure delay from command to sensor start,"3 sensors, WiFi 5GHz",<100ms max delay,73ms max delay,PASS,Consistently below threshold
+TC-002,Time Sync Accuracy Test,Verify timestamp synchronization accuracy,LED flash test stimulus,±10ms accuracy,±8.5ms typical,PASS,Exceeds target accuracy
+TC-003,Continuous Recording Stress Test,Verify 1-hour recording stability,All sensors active,"No data loss, stable operation",60+ minutes stable,PASS,No crashes or data corruption
+TC-004,Multi-Sensor Synchronization,Verify all sensors start within window,3 sensors simultaneous start,<100ms start spread,~13ms spread,PASS,Excellent coordination
+TC-005,Network Interruption Recovery,Test graceful handling of network failures,WiFi disconnect during recording,"Data preserved, auto-reconnect","Data saved locally, reconnect in 3s",PASS,Robust error handling
+TC-006,Battery Consumption Test,Measure power usage during recording,60-minute recording session,<30% battery drain,18% battery drain,PASS,Better than expected
+TC-007,Frame Rate Stability Test,Verify sensor sampling rates,10-minute recording,Target rates maintained,"Thermal: 24.5fps, RGB: 29.8fps, GSR: 127.2Hz",PASS,All within acceptable range

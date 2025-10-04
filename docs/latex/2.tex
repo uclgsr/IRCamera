@@ -19,6 +19,15 @@
 
     The current platform integrates a Shimmer3 GSR+ sensor (128~Hz, 16-bit resolution) with a Topdon TC-series thermal camera ($256 \times 192$~pixels, 25~Hz) and RGB video (30~fps) to capture synchronised physiological and thermal responses. Hardware timestamps align data streams within 21~ms median offset using Network Time Protocol synchronisation. This configuration targets real-time stress assessment during controlled laboratory tasks, specifically Stroop colour-word conflict tests and Trier Social Stress Test (TSST) protocols, where ground-truth GSR can be collected simultaneously with contactless thermal and visual data for supervised learning.
 
+For readers unfamiliar with GSR signals or thermal imagery, Figure~\ref{fig:gsr-thermal-examples} illustrates typical data characteristics from these modalities. The figure shows a sample GSR signal with both tonic (baseline) and phasic (response) components, alongside thermal image characteristics including region-of-interest temperature distributions and stress-induced patterns such as nasal cooling and forehead warming.
+
+\begin{figure}[htbp]
+    \centering
+    \fbox{\textit{[See docs/thesis-diagrams/chapter2-gsr-thermal-examples.md for Mermaid visualizations]}}
+    \caption{Basic GSR and Thermal Data Examples: (A) Sample GSR signal showing tonic SCL baseline and phasic SCR events during a 2-minute stress task. (B) Thermal image characteristics with facial ROI temperatures. (C) Synchronized multi-modal response timeline showing correlations between GSR peaks and thermal changes.}
+    \label{fig:gsr-thermal-examples}
+\end{figure}
+
     \section{Rationale for Contactless Physiological Measurement}
     \label{sec:rationale_contactless}
 
@@ -100,12 +109,34 @@
         \item \textbf{LabStreamingLayer (LSL):} A framework for unified, time-synchronized collection of multimodal data streams \cite{lsl}. LSL's architecture (with networked ``outlets'' and a shared clock) influenced our design of timestamped data channels. We emulate LSL's approach by treating each sensor (GSR, thermal, RGB) as a timestamped stream. However, we did not use LSL libraries directly in our Android-based system (building LSL for Android requires complex \texttt{NDK} compilation \cite{lsl}). Instead, our architecture uses standard network time protocol (NTP) to align clocks across devices and merges streams on a central host, effectively achieving LSL-like synchronization without its full middleware stack. In summary, we maintain LSL's emphasis on common timestamps and synchronized collection, even though we rely on simpler Android-compatible methods for implementation.
     \end{itemize}
 
-    Collectively, these tools guided our architecture: emphasizing modular sensor integration (PhysioKit), structured multimodal dataset planning (iBVP), precise stimulus-timing (PsychoPy), and unified synchronization principles (LSL). In the next section, we examine our chosen sensors and devices -- the Shimmer3 GSR+ and Topdon TC thermal camera -- and explain how their characteristics align with these design principles.
+    Collectively, these tools guided our architecture: emphasizing modular sensor integration (PhysioKit), structured multimodal dataset planning (iBVP), precise stimulus-timing (PsychoPy), and unified synchronization principles (LSL). Table~\ref{tab:related-systems} provides a comprehensive comparison of these and other related systems, highlighting the novelty and advantages of the current work. In the next section, we examine our chosen sensors and devices -- the Shimmer3 GSR+ and Topdon TC thermal camera -- and explain how their characteristics align with these design principles.
+
+\begin{table}[htbp]
+    \centering
+    \small
+    \caption{Related Systems and Methods Comparison}
+    \label{tab:related-systems}
+    \fbox{\textit{[See docs/thesis-diagrams/chapter2-related-systems-comparison.md for detailed comparison table]}}
+    
+    \vspace{0.3cm}
+    \textbf{Key Insights:} This work addresses gaps by integrating research-grade GSR with thermal imaging in a synchronized, portable, and affordable setup ($\sim$\$1,500) compared to high-end systems ($\sim$\$18,000). Real-time synchronization (<5ms) enables live coordination unlike post-hoc alignment approaches. The platform is open-source and mobile-based, contrasting with proprietary or PC-only solutions.
+\end{table}
 
     \section{Sensor Device Selection Rationale (Shimmer GSR Sensor and Topdon Thermal Camera)}
     \label{sec:sensor_selection}
 
-    To implement the multi-modal platform described, hardware components were carefully selected that balance signal quality, integration capability, and practical considerations. In particular, the design chose the Shimmer3 GSR+ wearable sensor for electrodermal activity measurement and the Topdon TC-series thermal camera for infrared imaging, alongside a standard smartphone camera for RGB video. This section explains why these devices were chosen over alternatives, and how their characteristics support the system's goals.
+    To implement the multi-modal platform described, hardware components were carefully selected that balance signal quality, integration capability, and practical considerations. In particular, the design chose the Shimmer3 GSR+ wearable sensor for electrodermal activity measurement and the Topdon TC-series thermal camera for infrared imaging, alongside a standard smartphone camera for RGB video. This section explains why these devices were chosen over alternatives, and how their characteristics support the system's goals. Table~\ref{tab:hardware-specs} summarizes the key specifications of all hardware components.
+
+\begin{table}[htbp]
+    \centering
+    \small
+    \caption{Summary of Hardware Components and Specifications}
+    \label{tab:hardware-specs}
+    \fbox{\textit{[See docs/thesis-diagrams/chapter2-hardware-specs-table.md for detailed specifications table]}}
+    
+    \vspace{0.3cm}
+    \textbf{Summary:} Shimmer3 GSR+ (128 Hz, 16-bit), Topdon TC001 (256×192, 25fps), Phone RGB (1080p, 30fps), Android device (flagship specs), PC controller (Python-based), Wi-Fi network (<5ms latency). Total hardware cost $\sim$\$1,500.
+\end{table}
 
     \subsection*{Shimmer3 GSR+ Sensor}
     The Shimmer3 GSR+ is a research-grade wireless sensor designed specifically for capturing GSR (EDA) along with other signals like photoplethysmography (PPG) and motion. Several key factors motivated this choice:
