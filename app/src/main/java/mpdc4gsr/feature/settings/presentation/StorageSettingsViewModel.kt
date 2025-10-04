@@ -17,9 +17,9 @@ import kotlinx.coroutines.launch
  * Storage Settings ViewModel - MVVM Integration
  * Manages storage configuration and monitors available space
  */
-class StorageSettingsViewModel(application: Application) : BaseViewModel() {
+class StorageSettingsViewModel(context: Context) : BaseViewModel() {
 
-    private val context: Context = application.applicationContext
+    private val context: Context = context.applicationContext
     private val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
 
     private val _storageSettings = MutableStateFlow(StorageSettings())

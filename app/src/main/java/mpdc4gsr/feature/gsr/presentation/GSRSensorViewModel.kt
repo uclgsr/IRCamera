@@ -1,6 +1,6 @@
 package mpdc4gsr.feature.gsr.presentation
 
-import android.app.Application
+import android.content.Context
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -26,8 +26,10 @@ import java.util.*
  * - Recording resumption after successful reconnection
  */
 class GSRSensorViewModel(
-    private val application: Application
+    context: Context
 ) : AppBaseViewModel() {
+
+    private val application: Context = context.applicationContext
 
     companion object {
         // Reuse SimpleDateFormat instance for better performance

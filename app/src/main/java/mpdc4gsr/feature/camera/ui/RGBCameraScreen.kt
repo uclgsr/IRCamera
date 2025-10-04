@@ -1,6 +1,5 @@
 package mpdc4gsr.feature.camera.ui
 
-import android.app.Application
 import androidx.camera.view.PreviewView
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -58,7 +57,7 @@ import mpdc4gsr.feature.camera.presentation.RGBCameraViewModelFactory
 fun RGBCameraScreen(
     viewModel: RGBCameraViewModel = viewModel(
         factory = RGBCameraViewModelFactory(
-            LocalContext.current.applicationContext as Application
+            LocalContext.current.applicationContext
         )
     ),
     onBackClick: (() -> Unit)? = null,

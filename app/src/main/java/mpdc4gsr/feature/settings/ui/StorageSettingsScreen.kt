@@ -1,6 +1,5 @@
 package mpdc4gsr.feature.settings.ui
 
-import android.app.Application
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -37,7 +36,7 @@ fun StorageSettingsScreen(
     onBackClick: (() -> Unit)? = null,
     viewModel: StorageSettingsViewModel = viewModel(
         factory = StorageSettingsViewModelFactory(
-            LocalContext.current.applicationContext as Application
+            LocalContext.current.applicationContext
         )
     ),
     modifier: Modifier = Modifier
