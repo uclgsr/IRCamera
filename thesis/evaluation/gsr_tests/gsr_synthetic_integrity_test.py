@@ -132,9 +132,9 @@ class GSRSyntheticIntegrityTest:
         
         # Analyze results
         errors = [s.error for s in self.samples]
-        mean_error = sum(errors) / len(errors)
-        max_error = max(errors)
-        rmse = math.sqrt(sum(e**2 for e in errors) / len(errors))
+        mean_error = sum(errors) / len(errors) if errors else 0.0
+        max_error = max(errors) if errors else 0.0
+        rmse = math.sqrt(sum(e**2 for e in errors) / len(errors)) if errors else 0.0
         
         # Test passes if errors are within tolerance (should be ~0 for synthetic)
         passed = max_error < 0.001  # Very tight tolerance for synthetic data
