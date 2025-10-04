@@ -111,7 +111,7 @@ class MultiCommandSequenceTest:
             'session_id': session_id
         })
         
-        if not response or 'ACK' not in response:
+        if not response or not response.startswith('START-ACK'):
             return {'success': False, 'error': 'Failed to start recording'}
         
         # Periodic sync during recording
