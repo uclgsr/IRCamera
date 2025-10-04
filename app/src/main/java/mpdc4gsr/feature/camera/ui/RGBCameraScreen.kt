@@ -90,6 +90,7 @@ fun RGBCameraScreen(
     val frameRate = cameraState.frameRate
     val recordingDuration = cameraState.recordingDuration
     val capturedFrames = cameraState.capturedFrames
+    val cameraChangeCounter = cameraState.cameraChangeCounter
 
     Box(
         modifier = modifier
@@ -101,6 +102,7 @@ fun RGBCameraScreen(
             FullScreenCameraPreview(
                 cameraRecorder = cameraRecorder!!,
                 isRecording = isRecording,
+                cameraChangeCounter = cameraChangeCounter,
                 modifier = Modifier.fillMaxSize()
             )
         } else {
@@ -403,27 +405,31 @@ private fun CameraBottomControls(
 
 /**
  * Full-screen real camera preview
- * Now properly binds preview after camera initialization
+ * Now properly binds preview after camera initialization and camera switches
  */
 @Composable
 private fun FullScreenCameraPreview(
     cameraRecorder: mpdc4gsr.core.data.RgbCameraRecorder,
     isRecording: Boolean,
+    cameraChangeCounter: Int,
     modifier: Modifier = Modifier
 ) {
-    AndroidView(
-        factory = { ctx ->
-            PreviewView(ctx).apply {
-                scaleType = PreviewView.ScaleType.FILL_CENTER
-                implementationMode = PreviewView.ImplementationMode.PERFORMANCE
-            }
-        },
-        update = { previewView ->
-            // Bind preview when the view updates - ensures preview is connected
-            cameraRecorder.bindPreview(previewView)
-        },
-        modifier = modifier
-    )
+    // Use key to force recreation when camera switches
+    key(cameraChangeCounter) {
+        AndroidView(
+            factory = { ctx ->
+                PreviewView(ctx).apply {
+                    scaleType = PreviewView.ScaleType.FILL_CENTER
+                    implementationMode = PreviewView.ImplementationMode.PERFORMANCE
+                }
+            },
+            update = { previewView ->
+                // Bind preview when the view updates - ensures preview is connected
+                cameraRecorder.bindPreview(previewView)
+            },
+            modifier = modifier
+        )
+    }
 }
 
 /**

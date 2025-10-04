@@ -74,7 +74,8 @@ class RGBCameraViewModel(
         val whiteBalance: WhiteBalance = WhiteBalance.AUTO,
         val recordingDuration: Int = 0,
         val capturedFrames: Int = 0,
-        val error: String? = null
+        val error: String? = null,
+        val cameraChangeCounter: Int = 0
     )
 
     private val _cameraState = MutableStateFlow(CameraState())
@@ -225,7 +226,13 @@ class RGBCameraViewModel(
                 }
 
                 if (success) {
-                    _cameraState.update { it.copy(error = null) }
+                    // Increment counter to trigger preview rebind in UI
+                    _cameraState.update { 
+                        it.copy(
+                            error = null,
+                            cameraChangeCounter = it.cameraChangeCounter + 1
+                        ) 
+                    }
                 } else {
                     _cameraState.update { it.copy(error = "Failed to switch camera") }
                 }
@@ -284,6 +291,11 @@ class RGBCameraViewModel(
                 
                 // Reinitialize
                 initializeCamera(lifecycleOwner)
+                
+                // Increment counter to trigger UI updates
+                _cameraState.update { 
+                    it.copy(cameraChangeCounter = it.cameraChangeCounter + 1) 
+                }
             } catch (e: Exception) {
                 _cameraState.update { it.copy(error = "Failed to reinitialize camera: ${e.message}") }
             }
