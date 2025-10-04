@@ -6,9 +6,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runTest
-import mpdc4gsr.tests.MainFragmentViewModel
-import mpdc4gsr.tests.MainFragmentCompose
-import mpdc4gsr.tests.SensorDashboardFragmentCompose
 import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
