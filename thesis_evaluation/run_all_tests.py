@@ -48,7 +48,8 @@ class MasterTestRunner:
                 'test_name': test_name,
                 'test_script': test_script,
                 'success': False,
-                'error': 'Test script not found'
+                'error': 'Test script not found',
+                'timestamp': datetime.now().isoformat()
             }
         
         # Build command
