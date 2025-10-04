@@ -267,7 +267,7 @@ class ResultsAnalyzer:
         
         # Save report
         report_file = self.analysis_output / "chapter6_performance_evaluation.txt"
-        with open(report_file, 'w') as f:
+        with open(report_file, 'w', encoding='utf-8') as f:
             f.write('\n'.join(report_lines))
         
         print(f"Chapter 6 report saved: {report_file}")
