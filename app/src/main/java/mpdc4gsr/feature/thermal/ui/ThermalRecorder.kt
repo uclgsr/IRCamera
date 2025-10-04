@@ -104,8 +104,9 @@ class ThermalRecorder(private val context: Context) {
                     write("#   timestamp_wall_ms: Wall clock time (UTC)\n")
                     write("#   timestamp_relative_ms: Milliseconds since session start (monotonic)\n")
                     write("#   timestamp_monotonic_ns: Raw monotonic nanoseconds for precise intervals\n")
+                    write("#   synchronized_timestamp_ms: PC-synchronized timestamp (includes clock offset from time sync)\n")
                     write("#\n")
-                    write("timestamp_wall_ms,timestamp_relative_ms,timestamp_monotonic_ns,frame_sequence,min_temp_c,avg_temp_c,max_temp_c,pixel_count\n")
+                    write("timestamp_wall_ms,timestamp_relative_ms,timestamp_monotonic_ns,synchronized_timestamp_ms,frame_sequence,min_temp_c,avg_temp_c,max_temp_c,pixel_count\n")
                     flush()
                 }
 
@@ -369,6 +370,7 @@ class ThermalRecorder(private val context: Context) {
                 val csvLine = sessionMetadata?.let { sm ->
                     val wallClockMs = sm.monotonicToWallClock(stats.timestampNs)
                     val relativeMs = (stats.timestampNs - sm.sessionStartMonotonicNs) / 1_000_000L
+                    val synchronizedTimestampMs = TimestampManager.getSynchronizedTimestampMs()
 
                     StringBuilder().apply {
                         append(wallClockMs)
@@ -376,6 +378,8 @@ class ThermalRecorder(private val context: Context) {
                         append(relativeMs)
                         append(',')
                         append(stats.timestampNs)
+                        append(',')
+                        append(synchronizedTimestampMs)
                         append(',')
                         append(stats.frameSequence)
                         append(',')
