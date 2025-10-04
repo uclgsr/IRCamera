@@ -41,7 +41,7 @@ fun NetworkSettingsScreen(
     onBackClick: (() -> Unit)? = null,
     viewModel: NetworkSettingsViewModel = viewModel(
         factory = NetworkSettingsViewModelFactory(
-            LocalContext.current.applicationContext as Application
+            LocalContext.current as Application
         )
     ),
     modifier: Modifier = Modifier

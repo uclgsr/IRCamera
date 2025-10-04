@@ -39,7 +39,7 @@ import mpdc4gsr.feature.gsr.presentation.GSRSensorViewModelFactory
 fun GSRSensorScreen(
     viewModel: GSRSensorViewModel = viewModel(
         factory = GSRSensorViewModelFactory(
-            LocalContext.current.applicationContext as Application
+            LocalContext.current as Application
         )
     ),
     onBackClick: (() -> Unit)? = null,

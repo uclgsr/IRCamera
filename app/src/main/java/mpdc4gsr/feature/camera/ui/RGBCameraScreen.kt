@@ -58,7 +58,7 @@ import mpdc4gsr.feature.camera.presentation.RGBCameraViewModelFactory
 fun RGBCameraScreen(
     viewModel: RGBCameraViewModel = viewModel(
         factory = RGBCameraViewModelFactory(
-            LocalContext.current.applicationContext as Application
+            LocalContext.current as Application
         )
     ),
     onBackClick: (() -> Unit)? = null,
