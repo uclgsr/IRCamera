@@ -104,19 +104,6 @@ fun GSRSensorScreen(
         )
     }
 
-    // Manage lifecycle using DisposableEffect to avoid memory leaks
-    DisposableEffect(lifecycleOwner, viewModel.gsrRecorder) {
-        val recorder = viewModel.gsrRecorder
-        if (recorder != null && recorder is androidx.lifecycle.DefaultLifecycleObserver) {
-            lifecycleOwner.lifecycle.addObserver(recorder)
-        }
-        onDispose {
-            if (recorder != null && recorder is androidx.lifecycle.DefaultLifecycleObserver) {
-                lifecycleOwner.lifecycle.removeObserver(recorder)
-            }
-        }
-    }
-
     // Use real data from ViewModel or fallback to simulated data for preview
     val isConnected = sensorState.isConnected
     val isRecording = sensorState.isRecording
