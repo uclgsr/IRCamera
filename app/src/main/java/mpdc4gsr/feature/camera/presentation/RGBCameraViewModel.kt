@@ -218,7 +218,7 @@ class RGBCameraViewModel(
                     _cameraState.update { it.copy(error = "Failed to switch camera") }
                 }
             } catch (e: Exception) {
-                _cameraState.update { it.copy(error = "Camera switch error: ${e.message}") }
+                _cameraState.update { it.copy(error = "An unexpected error occurred while switching cameras.") }
             }
         }
     }
