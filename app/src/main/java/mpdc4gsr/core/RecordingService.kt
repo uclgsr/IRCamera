@@ -246,6 +246,18 @@ class RecordingService : Service(), CoroutineScope {
 
         notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         createNotificationChannel()
+        
+        // Call startForeground immediately to satisfy Android's foreground service requirements
+        // This must be called within 5-10 seconds of startForegroundService()
+        startForeground(
+            NOTIFICATION_ID,
+            NotificationCompat.Builder(this, CHANNEL_ID)
+                .setContentTitle("IRCamera Service")
+                .setContentText("Initializing service...")
+                .setSmallIcon(R.drawable.ic_info)
+                .setOngoing(true)
+                .build()
+        )
 
         nsdManager = getSystemService(Context.NSD_SERVICE) as NsdManager
 
