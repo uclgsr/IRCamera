@@ -22,3 +22,24 @@ ENV/
 # OS
 .DS_Store
 Thumbs.db
+
+# Test output files (actual test runs)
+test_1_*.json
+test_1_*.txt
+test_2_*.json
+test_2_*.txt
+test_3_*.json
+test_3_*.txt
+test_4_*.json
+test_4_*.txt
+master_report_*.json
+master_report_*.txt
+
+# Temporary files
+*.tmp
+*.log
+.DS_Store
+
+# Keep example outputs for documentation
+!example_output_*.json
+!example_output_*.txt
