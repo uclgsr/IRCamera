@@ -92,7 +92,7 @@ class FileIntegrityValidator:
             errors.append("File is empty")
         else:
             try:
-                with open(file_path, 'r') as f:
+                with open(file_path, 'r', encoding='utf-8') as f:
                     lines = f.readlines()
                     
                     if len(lines) > 0:
