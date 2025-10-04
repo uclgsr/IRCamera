@@ -294,10 +294,9 @@ sensing capabilities.
 
 For detailed technical documentation, see:
 
-- **docs/implementation_summary.md** - Complete implementation overview
-- **docs/integration_ready.md** - PC-Android integration status
-- **docs/protocol_bridge_guide.md** - Communication protocol details
-- **docs/gap_analysis.md** - Protocol compatibility analysis
+- **docs/implementation.md** - Complete implementation guide (features, status, integration)
+- **docs/protocol.md** - Protocol documentation (bridge, verification, gap analysis)
+- **docs/verification.md** - Testing and verification reports
 - **docs/code_review.md** - Code quality assessment
 - **docs/README.md** - Technical documentation index
 

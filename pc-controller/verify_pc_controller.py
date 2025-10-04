@@ -56,7 +56,7 @@ def verify_file_structure():
         'certificates/': 'SSL certificate directory',
         'tests/test_protocol_compatibility.py': 'Protocol compatibility tests',
         'tests/test_protocol_verification.py': 'Protocol verification tests',
-        'docs/implementation_summary.md': 'Implementation documentation',
+        'docs/implementation.md': 'Implementation documentation',
         'docs/quick_start.md': 'Quick start guide'
     }
     
