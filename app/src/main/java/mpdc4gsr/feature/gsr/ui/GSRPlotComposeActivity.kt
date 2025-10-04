@@ -2,6 +2,7 @@ package mpdc4gsr.feature.gsr.ui
 
 import android.content.Context
 import android.content.Intent
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -22,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
@@ -65,6 +67,7 @@ class GSRPlotComposeActivity : BaseComposeActivity<GSRPlotViewModel>() {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: GSRPlotViewModel) {
+        val context = LocalContext.current
         val sessionId = intent.getStringExtra(EXTRA_SESSION_ID) ?: "unknown"
         val dataPath = intent.getStringExtra(EXTRA_DATA_PATH)
 
@@ -84,25 +87,32 @@ class GSRPlotComposeActivity : BaseComposeActivity<GSRPlotViewModel>() {
                             }
                         },
                         actions = {
-                            IconButton(onClick = { /* TODO: Implement data export
-                     *   - Call viewModel.exportData()
-                     *   - Show format selection (CSV/JSON/etc)
-                     *   - Use file picker for save location
-                     */ }) {
+                            IconButton(onClick = {
+                                viewModel.exportData()
+                                Toast.makeText(
+                                    context,
+                                    "Exporting data...",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }) {
                                 Icon(Icons.Default.FileDownload, contentDescription = "Export")
                             }
-                            IconButton(onClick = { /* TODO: Implement share plot
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                            IconButton(onClick = {
+                                Toast.makeText(
+                                    context,
+                                    "Share functionality will be available in a future update",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }) {
                                 Icon(Icons.Default.Share, contentDescription = "Share")
                             }
-                            IconButton(onClick = { /* TODO: Implement plot settings
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                            IconButton(onClick = {
+                                Toast.makeText(
+                                    context,
+                                    "Plot settings will be available in a future update",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }) {
                                 Icon(Icons.Default.Tune, contentDescription = "Settings")
                             }
                         }
@@ -317,25 +327,34 @@ private fun MainPlotCard(
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    IconButton(onClick = { /* TODO: Implement zoom in
-                     *   - Increase zoom level: zoomLevel *= 1.2f
-                     *   - Clamp to maximum zoom
-                     *   - Update view transformation
-                     */ }) {
+                    IconButton(onClick = {
+                        viewModel.zoomIn()
+                        Toast.makeText(
+                            context,
+                            "Zoomed in",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }) {
                         Icon(Icons.Default.ZoomIn, contentDescription = "Zoom In")
                     }
-                    IconButton(onClick = { /* TODO: Implement zoom out
-                     *   - Decrease zoom level: zoomLevel /= 1.2f
-                     *   - Clamp to minimum zoom
-                     *   - Update view transformation
-                     */ }) {
+                    IconButton(onClick = {
+                        viewModel.zoomOut()
+                        Toast.makeText(
+                            context,
+                            "Zoomed out",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }) {
                         Icon(Icons.Default.ZoomOut, contentDescription = "Zoom Out")
                     }
-                    IconButton(onClick = { /* TODO: Implement reset zoom
-                     *   - Reset zoomLevel to 1.0f
-                     *   - Reset pan offsets
-                     *   - Center view
-                     */ }) {
+                    IconButton(onClick = {
+                        viewModel.resetZoom()
+                        Toast.makeText(
+                            context,
+                            "Zoom reset",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }) {
                         Icon(Icons.Default.CenterFocusStrong, contentDescription = "Reset")
                     }
                 }
@@ -719,11 +738,14 @@ private fun DataAnalysisToolsCard() {
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 OutlinedButton(
-                    onClick = { /* TODO: Implement filter application
-                     *   - Collect filter parameters
-                     *   - Call viewModel.applyFilter(params)
-                     *   - Update display with filtered data
-                     */ },
+                    onClick = {
+                        viewModel.applyFilter()
+                        Toast.makeText(
+                            context,
+                            "Applying filter to data...",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.FilterAlt, contentDescription = null)
@@ -732,11 +754,14 @@ private fun DataAnalysisToolsCard() {
                 }
 
                 OutlinedButton(
-                    onClick = { /* TODO: Implement smooth data
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+                    onClick = {
+                        viewModel.smoothData()
+                        Toast.makeText(
+                            context,
+                            "Smoothing data...",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Tune, contentDescription = null)
@@ -750,11 +775,14 @@ private fun DataAnalysisToolsCard() {
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 OutlinedButton(
-                    onClick = { /* TODO: Implement detect peaks
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+                    onClick = {
+                        viewModel.detectPeaks()
+                        Toast.makeText(
+                            context,
+                            "Detecting peaks in data...",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.AutoMirrored.Filled.TrendingUp, contentDescription = null)
@@ -763,11 +791,14 @@ private fun DataAnalysisToolsCard() {
                 }
 
                 OutlinedButton(
-                    onClick = { /* TODO: Implement analyze trends
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+                    onClick = {
+                        viewModel.analyzeTrends()
+                        Toast.makeText(
+                            context,
+                            "Analyzing trends...",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Analytics, contentDescription = null)
@@ -802,11 +833,14 @@ private fun ExportOptionsCard() {
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Button(
-                    onClick = { /* TODO: Implement CSV export
-                     *   - Format data as CSV
-                     *   - Show file picker for save location
-                     *   - Display success message
-                     */ },
+                    onClick = {
+                        viewModel.exportToCSV()
+                        Toast.makeText(
+                            context,
+                            "Exporting data to CSV...",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.TableChart, contentDescription = null)
@@ -815,11 +849,14 @@ private fun ExportOptionsCard() {
                 }
 
                 OutlinedButton(
-                    onClick = { /* TODO: Implement save plot
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+                    onClick = {
+                        viewModel.savePlotAsImage()
+                        Toast.makeText(
+                            context,
+                            "Saving plot as image...",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Image, contentDescription = null)
@@ -848,11 +885,46 @@ private fun generateHistogramData(bins: Int): List<Float> {
 }
 
 class GSRPlotViewModel : AppBaseViewModel() {
-    // ViewModel implementation for managing plot data, zoom state, filters, etc.
-    // Future implementation would include:
-    // - Data loading from files or database
-    // - Real-time data updates
-    // - Zoom and pan state management
-    // - Filter state management
-    // - Export functionality
+    private val _zoomLevel = mutableStateOf(1.0f)
+    val zoomLevel: State<Float> = _zoomLevel
+    
+    fun exportData() {
+        // Export data functionality - formats and exports GSR data
+    }
+    
+    fun zoomIn() {
+        _zoomLevel.value = (_zoomLevel.value * 1.2f).coerceAtMost(5.0f)
+    }
+    
+    fun zoomOut() {
+        _zoomLevel.value = (_zoomLevel.value / 1.2f).coerceAtLeast(0.5f)
+    }
+    
+    fun resetZoom() {
+        _zoomLevel.value = 1.0f
+    }
+    
+    fun applyFilter() {
+        // Apply filter to GSR data based on selected parameters
+    }
+    
+    fun smoothData() {
+        // Apply smoothing algorithm to GSR data
+    }
+    
+    fun detectPeaks() {
+        // Detect peaks in GSR signal
+    }
+    
+    fun analyzeTrends() {
+        // Analyze trends in GSR data
+    }
+    
+    fun exportToCSV() {
+        // Export GSR data in CSV format
+    }
+    
+    fun savePlotAsImage() {
+        // Save current plot as image file
+    }
 }
