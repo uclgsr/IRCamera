@@ -97,8 +97,17 @@ class RGBVideoPerformanceTest:
                         break
                 
                 if video_stream:
-                    fps_parts = video_stream.get('r_frame_rate', '0/1').split('/')
-                    fps = float(fps_parts[0]) / float(fps_parts[1]) if len(fps_parts) == 2 else 0
+                    # Parse r_frame_rate - handle both fractional (30/1) and integer (30) formats
+                    r_frame_rate = video_stream.get('r_frame_rate', '0/1')
+                    if '/' in r_frame_rate:
+                        fps_parts = r_frame_rate.split('/')
+                        fps = float(fps_parts[0]) / float(fps_parts[1]) if len(fps_parts) == 2 and float(fps_parts[1]) != 0 else 0
+                    else:
+                        # Handle integer string format
+                        try:
+                            fps = float(r_frame_rate)
+                        except ValueError:
+                            fps = 0
                     
                     duration = float(data.get('format', {}).get('duration', 0))
                     frame_count = int(video_stream.get('nb_frames', 0))

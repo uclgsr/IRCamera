@@ -6,16 +6,24 @@ This script demonstrates how to use the test suite programmatically
 and customize test parameters for specific scenarios.
 """
 
-import sys
 from pathlib import Path
 
-# Add parent directory to path for imports
-sys.path.insert(0, str(Path(__file__).parent.parent))
-
-from gsr_tests.gsr_synthetic_integrity_test import GSRSyntheticIntegrityTest, MockGSRSensor
-from thermal_tests.thermal_synthetic_capture_test import ThermalSyntheticCaptureTest
-from gsr_tests.gsr_real_sensor_continuity_test import GSRRealSensorContinuityTest
-from thermal_tests.thermal_real_camera_test import ThermalRealCameraTest
+# Use relative imports to avoid sys.path manipulation
+# This assumes the script is run from the thesis_evaluation/tests directory
+# or that the package is properly installed
+try:
+    from gsr_tests.gsr_synthetic_integrity_test import GSRSyntheticIntegrityTest, MockGSRSensor
+    from thermal_tests.thermal_synthetic_capture_test import ThermalSyntheticCaptureTest
+    from gsr_tests.gsr_real_sensor_continuity_test import GSRRealSensorContinuityTest
+    from thermal_tests.thermal_real_camera_test import ThermalRealCameraTest
+except ImportError:
+    # Fallback for running directly - add parent to path only as last resort
+    import sys
+    sys.path.insert(0, str(Path(__file__).parent.parent))
+    from gsr_tests.gsr_synthetic_integrity_test import GSRSyntheticIntegrityTest, MockGSRSensor
+    from thermal_tests.thermal_synthetic_capture_test import ThermalSyntheticCaptureTest
+    from gsr_tests.gsr_real_sensor_continuity_test import GSRRealSensorContinuityTest
+    from thermal_tests.thermal_real_camera_test import ThermalRealCameraTest
 
 
 def example_1_synthetic_gsr_test():

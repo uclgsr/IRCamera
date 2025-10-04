@@ -77,15 +77,28 @@ class ThermalRealCameraTest:
             header = lines[0].strip()
             print(f"CSV Header: {header}")
             
+            # Find timestamp column dynamically
+            header_parts = header.split(',')
+            timestamp_col_idx = None
+            for idx, col_name in enumerate(header_parts):
+                col_lower = col_name.lower().strip()
+                if 'timestamp' in col_lower or col_lower in ['time', 'time_ms', 'timestamp_ms']:
+                    timestamp_col_idx = idx
+                    break
+            
+            # Fallback to second column if timestamp column not found
+            if timestamp_col_idx is None:
+                print("Warning: Could not find timestamp column by name, using second column (index 1)")
+                timestamp_col_idx = 1
+            
             # Parse timestamps
             for i, line in enumerate(lines[1:], start=1):
                 parts = line.strip().split(',')
-                if len(parts) < 2:
+                if len(parts) <= timestamp_col_idx:
                     continue
                     
                 try:
-                    # Second column is typically timestamp
-                    timestamp_ms = float(parts[1])
+                    timestamp_ms = float(parts[timestamp_col_idx])
                     timestamps.append(timestamp_ms)
                 except (ValueError, IndexError) as e:
                     print(f"Warning: Failed to parse line {i}: {e}")
