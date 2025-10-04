@@ -22,6 +22,22 @@ The objective of this research is to design and implement a multi-modal physiolo
 
 This thesis presents a multi-sensor data collection platform that addresses current gaps. It enables researchers to create multimodal datasets for GSR prediction, advancing contactless, real-time stress monitoring. The project features a flexible, extensible setup \textemdash a modular sensing system \textemdash that integrates the GSR sensor and thermal/RGB cameras, allowing future modality expansions. This work establishes a foundation for future studies to train and test machine learning algorithms to estimate GSR from camera data, resolved by acquiring synchronised ground-truth data.
 
+Figure~\ref{fig:multisensor-overview} provides a high-level overview of the system architecture, illustrating how the smartphone-based sensor node integrates the Shimmer3 GSR sensor (via Bluetooth), Topdon TC001 thermal camera (via USB), and the built-in RGB camera, all coordinated by the remote PC controller over Wi-Fi. Figure~\ref{fig:usecase-timeline} demonstrates a typical recording session workflow, showing how the PC orchestrates session start and stop commands, with all sensors recording synchronously under a unified timestamp system.
+
+\begin{figure}[htbp]
+    \centering
+    \fbox{\textit{[See Appendix Z or docs/thesis-diagrams/chapter1-multisensor-overview.md for Mermaid diagram]}}
+    \caption{Multi-Sensor System Overview: High-level architecture showing PC controller, Android sensor node with integrated thermal camera (TC001), GSR sensor (Shimmer3), RGB camera, and Wi-Fi communication infrastructure.}
+    \label{fig:multisensor-overview}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \fbox{\textit{[See Appendix Z or docs/thesis-diagrams/chapter1-usecase-timeline.md for Mermaid sequence diagram]}}
+    \caption{Example Use-Case Scenario Timeline: Typical recording session showing session initialization, time synchronization, parallel sensor startup, continuous data recording, and graceful shutdown sequence.}
+    \label{fig:usecase-timeline}
+\end{figure}
+
 \section{Thesis Outline}
 This thesis comprises six chapters, progressing logically from background concepts to system development and evaluation:
 

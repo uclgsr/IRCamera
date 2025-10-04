@@ -35,7 +35,136 @@
 \begin{verbatim}
 This appendix provides a unified repository of all visual content for the Multi-Sensor Recording System thesis, organised by category and chapter origin for easy navigation and reference.
 
-\subsection{Z.1 Chapter 2 Figures: Background and Literature Review}
+\subsection{Z.0 Chapter 1 Figures: Introduction}
+
+\subsubsection{Z.0.1 Multi-Sensor System Overview}
+
+Figure 1.1: Multi-Sensor System Overview
+
+Location: docs/thesis-diagrams/chapter1-multisensor-overview.md
+
+This high-level diagram illustrates the smartphone-based system architecture with:
+- PC Controller Hub (Python application, session management, data aggregation)
+- Android Sensor Node (TCP server, recording controller, sensor managers)
+- Hardware Sensors (Topdon TC001 thermal via USB, Shimmer3 GSR via BLE, RGB camera via CameraX)
+- Network Communication (Wi-Fi TCP/IP on port 8080)
+- Time Synchronization (NTP-style clock alignment)
+
+Key system characteristics:
+- Modular architecture with dedicated software components per sensor
+- Distributed computing: PC coordinates multiple Android devices
+- Unified timestamp system achieving sub-5ms precision
+- Research-grade hardware specifications
+- Real-time data streaming with minimal latency
+
+\subsubsection{Z.0.2 Example Use-Case Scenario Timeline}
+
+Figure 1.2: Example Use-Case Scenario Timeline
+
+Location: docs/thesis-diagrams/chapter1-usecase-timeline.md
+
+This sequence diagram shows a typical recording session workflow:
+- Pre-Session Setup: Application launch and device discovery
+- Time Synchronization: NTP-style clock alignment (±2.3ms offset)
+- Session Initialization: Parallel sensor startup (TC001, Shimmer3, RGB)
+- Active Recording: Continuous data flow to local storage
+- Session Termination: Graceful shutdown with data integrity
+- Post-Session: File transfer and metadata generation
+
+Typical session characteristics:
+- Setup time: 10-15 seconds
+- Recording duration: 1-30 minutes typical
+- Data volume: ~360MB per 5 minutes
+- Synchronization accuracy: <5ms
+- Heartbeat interval: 2 seconds
+
+This timeline demonstrates the system's simple operation, automatic synchronization,
+and clean data management workflow.
+
+\subsection{Z.1 Chapter 2 Figures and Tables: Background and Literature Review}
+
+\subsubsection{Z.1.0 Hardware Components Specification}
+
+Table 2.1: Summary of Hardware Components and Specifications
+
+Location: docs/thesis-diagrams/chapter2-hardware-specs-table.md
+
+Comprehensive hardware specifications including:
+- Shimmer3 GSR+: 128 Hz, 16-bit, 10kOhm-4.7MOhm range, BLE 4.0
+- Topdon TC001: 256x192 pixels, 25 fps, -20C to +550C, USB-C
+- Phone RGB Camera: 1920x1080, 30 fps, H.264 encoding, CameraX API
+- Android Device: Flagship specs (Snapdragon 8/Tensor G2, 8GB RAM)
+- PC Controller: Python 3.8+, TCP/IP server, multi-device coordination
+- Network: Wi-Fi 802.11ac/ax, <5ms latency, local only
+
+Selection rationale for each component addresses:
+- Research-grade accuracy vs. cost trade-offs
+- Integration capabilities (SDK availability, wireless connectivity)
+- Portability and real-world applicability
+- Synchronization requirements
+Total system cost: ~$1,500
+
+\subsubsection{Z.1.1 Related Systems Comparison}
+
+Table 2.2: Related Systems and Methods Comparison
+
+Location: docs/thesis-diagrams/chapter2-related-systems-comparison.md
+
+Comparative analysis of existing multi-sensor systems:
+- PhysioKit (2023): Open-source, contact sensors, no thermal
+- iBVP Dataset (2024): High-end FLIR, no GSR ground truth
+- PsychoPy + LSL: Precise timing, complex setup, no Android
+- FLIR Studies (2021): Expensive equipment ($15k+), post-hoc sync
+- Empatica E4: Low GSR sampling (4 Hz), cloud-only
+- Smartphone rPPG: No hardware, lighting-sensitive
+- This Work: Integrated 3-modality, real-time sync, affordable
+
+Key insights:
+- Synchronization: Hardware triggers vs. LSL vs. NTP-style vs. post-hoc
+- Coverage: Contact-only vs. thermal-only vs. RGB-only vs. multi-modal
+- Cost vs. capability: $400-$18,000 range, this work at $1,500
+- Novelty: Integration gap, affordability gap, real-time sync gap addressed
+
+\subsubsection{Z.1.2 GSR and Thermal Data Characteristics}
+
+Figure 2.1: Basic GSR and Thermal Data Examples
+
+Location: docs/thesis-diagrams/chapter2-gsr-thermal-examples.md
+
+Three-part visualization of raw sensor data:
+
+Part A: Sample GSR Signal
+- Tonic component (SCL): Slow baseline drift (3.8-5.0 microS range)
+- Phasic component (SCR): Rapid events with 1-3s rise time, 5-15s recovery
+- Typical response: 0.1-0.8 microS amplitude during stress
+- Latency: 1-3 seconds after stimulus onset
+
+Part B: Thermal Image Characteristics
+- Temperature distribution across facial ROIs
+- Forehead: 34.8C mean, 0.4C std dev
+- Nose tip: 32.3C mean, 0.6C std dev (stress indicator)
+- Stress patterns: Nose cooling (-0.8C), forehead warming (+0.6C)
+- Breathing signature: 14-18 cycles/min, ±0.5C oscillation
+
+Part C: Multi-Modal Timeline Correlation
+- Stimulus onset at t=0
+- GSR SCR onset at t=1.5s (1-2s latency)
+- GSR peak at t=3.5s (7.1 microS)
+- Thermal vasoconstriction at t=2s
+- Minimum nose temperature at t=6s (32.3C)
+- Recovery phases: 12s for GSR, 15s for thermal
+
+Data format specifications:
+- GSR: 128 Hz CSV, ~0.1 MB/min
+- Thermal: 25 fps temperature matrix, ~30 MB/min
+- RGB: 30 fps H.264 MP4, ~10 MB/min (compressed)
+
+Expected correlations for ML training:
+- GSR SCR peak -> Nose cooling (3-4s lag)
+- GSR amplitude -> Cooling magnitude correlation
+- Combined RGB+Thermal -> Improved prediction over single modality
+
+\subsubsection{Z.1.3 Physiological Computing Context
 
 \subsubsection{Z.1.1 Physiological Computing Context}
 
