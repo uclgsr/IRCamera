@@ -13,7 +13,6 @@ import unittest
 from protocol_adapter import ProtocolAdapter
 
 
-@unittest.skip("All tests disabled")
 class TestProtocolAdapter(unittest.TestCase):
     """Test protocol adapter functionality"""
 
@@ -190,7 +189,6 @@ class TestProtocolAdapter(unittest.TestCase):
         self.assertEqual(json_msg['type'], 'HEARTBEAT')
 
 
-@unittest.skip("All tests disabled")
 class TestProtocolCompatibility(unittest.TestCase):
     """Test compatibility with Android Protocol.kt specification"""
 
@@ -245,7 +243,6 @@ class TestProtocolCompatibility(unittest.TestCase):
         self.assertIsInstance(msg['name'], str)
 
 
-@unittest.skip("All tests disabled")
 class TestNetworkProtocol(unittest.TestCase):
     """Test network protocol implementation"""
 
