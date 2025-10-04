@@ -26,6 +26,7 @@ def test_connection(android_ip, port=8080, timeout=10):
     print(f"Testing connection to {android_ip}:{port}")
     print("-" * 60)
     
+    sock = None
     try:
         # Create socket
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -139,10 +140,11 @@ def test_connection(android_ip, port=8080, timeout=10):
         return False
     
     finally:
-        try:
-            sock.close()
-        except:
-            pass
+        if sock is not None:
+            try:
+                sock.close()
+            except (OSError, socket.error) as e:
+                print(f"Error closing socket: {e}")
 
 
 def main():
