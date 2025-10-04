@@ -1020,8 +1020,7 @@ class WebSocketClient(private val context: Context) {
     }
 
     private fun performCrossDeviceSync(devices: List<SessionManager.DeviceInfo>) {
-        @OptIn(kotlinx.coroutines.DelicateCoroutinesApi::class)
-        GlobalScope.launch {
+        scope.launch {
             try {
                 logger.log(
                     StructuredLogger.LogLevel.INFO,

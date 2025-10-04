@@ -1,7 +1,10 @@
 package mpdc4gsr.feature.network.data
 
 import android.content.Context
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -49,6 +52,7 @@ class FileUploadService(private val context: Context) {
     private val uploadQueue = Channel<String>(Channel.UNLIMITED)
     private val concurrentUploads = AtomicLong(0)
     private val isActive = AtomicBoolean(false)
+    private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     private val chunkSize = DEFAULT_CHUNK_SIZE
     private val maxConcurrent = MAX_CONCURRENT_UPLOADS
@@ -275,8 +279,7 @@ class FileUploadService(private val context: Context) {
     }
 
     private fun startUploadProcessor() {
-        @OptIn(kotlinx.coroutines.DelicateCoroutinesApi::class)
-        GlobalScope.launch {
+        serviceScope.launch {
             while (this@FileUploadService.isActive.get()) {
                 try {
 
@@ -567,6 +570,8 @@ class FileUploadService(private val context: Context) {
                 job.status = UploadStatus.CANCELLED
             }
         }
+
+        serviceScope.cancel()
 
         logger.log(
             StructuredLogger.LogLevel.INFO,
