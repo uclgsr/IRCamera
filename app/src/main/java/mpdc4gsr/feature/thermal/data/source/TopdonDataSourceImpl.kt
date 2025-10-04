@@ -239,6 +239,8 @@ class TopdonDataSourceImpl(
 
             AppLogger.d(TAG, "Starting thermal frame streaming with SDK")
 
+            val frameChannel = kotlinx.coroutines.channels.Channel<ThermalFrameData>(kotlinx.coroutines.channels.Channel.BUFFERED)
+
             frameCallback = IFrameCallback { frame ->
                 try {
                     if (frame != null && frame.size >= FRAME_BUFFER_SIZE) {
@@ -247,6 +249,7 @@ class TopdonDataSourceImpl(
                         val processedData = processFrame(frame)
                         if (processedData != null) {
                             val thermalFrame = createThermalFrameData(processedData)
+                            frameChannel.trySend(thermalFrame)
                         }
                     }
                 } catch (e: Exception) {
@@ -259,8 +262,17 @@ class TopdonDataSourceImpl(
             isStreaming = true
             AppLogger.i(TAG, "Thermal streaming started with LibIRProcess frame processing")
 
-            while (isStreaming) {
-                delay(100)
+            try {
+                while (isStreaming) {
+                    val frame = kotlinx.coroutines.withTimeoutOrNull(1000) {
+                        frameChannel.receive()
+                    }
+                    if (frame != null) {
+                        emit(frame)
+                    }
+                }
+            } finally {
+                frameChannel.close()
             }
         }
     }
