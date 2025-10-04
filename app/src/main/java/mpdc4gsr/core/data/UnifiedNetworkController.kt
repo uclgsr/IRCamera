@@ -452,6 +452,8 @@ class UnifiedNetworkController(
             networkCallback?.let { callback ->
                 connectivityManager.unregisterNetworkCallback(callback)
             }
+            networkCallback = null
+            serviceListener = null
 
             isInitialized.set(false)
             _networkStatus.value = NetworkStatus.DISCONNECTED
