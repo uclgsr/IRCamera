@@ -430,7 +430,7 @@ Demonstrates all implemented features with sample data.
 
 ## Documentation
 
-- **Implementation Guide**: `PC_CONTROLLER_IMPLEMENTATION.md` - Complete feature documentation
+- **Implementation Guide**: `pc_controller_implementation.md` - Complete feature documentation
 - **README**: `README.md` - Project overview and architecture
 - **API Reference**: See Python docstrings in source files
 - **Network Protocol**: See `legacy_implementation/src/ircamera_pc/network/protocol.py`
@@ -458,13 +458,13 @@ Check logs for detailed error information:
 ### Getting Help
 
 1. Check this Quick Start Guide
-2. Review `PC_CONTROLLER_IMPLEMENTATION.md`
+2. Review `pc_controller_implementation.md`
 3. Run diagnostics: `python3 demo_features.py`
 4. Check test results: `python3 test_pc_controller_features.py`
 
 ## Next Steps
 
-1. **For Thesis**: See `PC_CONTROLLER_IMPLEMENTATION.md` for complete feature documentation
+1. **For Thesis**: See `pc_controller_implementation.md` for complete feature documentation
 2. **For Development**: See `README.md` for architecture and design decisions
 3. **For Testing**: Run `test_pc_controller_features.py` and `demo_features.py`
 4. **For Deployment**: Configure `config.yaml` for production settings

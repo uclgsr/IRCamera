@@ -1,93 +1,57 @@
-# PC Controller Technical Documentation
+# PC Controller Documentation
 
-This directory contains detailed technical documentation for the PC Controller implementation.
+Consolidated documentation for the IRCamera PC Controller application.
 
-## Documentation Files
+## Quick Start
 
-### Implementation Documentation
+- **[quick_start.md](quick_start.md)** - Installation and usage guide
+- **[pc_controller_implementation.md](pc_controller_implementation.md)** - Main implementation documentation
 
-**IMPLEMENTATION_SUMMARY.md** - Complete implementation overview
+## Core Documentation
 
-- Feature completion status
-- Architecture overview
-- Technical specifications
-- All requirements fulfilled
+### Implementation
+- **[implementation.md](implementation.md)** - Complete implementation guide
+  - Feature implementation matrix
+  - Implementation summary
+  - Integration status
 
-**PC_CONTROLLER_IMPLEMENTATION.md** - Detailed implementation status
+### Protocol
+- **[protocol.md](protocol.md)** - Protocol documentation
+  - Protocol bridge guide
+  - Gap analysis
+  - Verification guide and report
+  - Protocol flow diagrams
 
-- Feature-by-feature breakdown
-- Development progress
-- Component details
+### Verification
+- **[verification.md](verification.md)** - Testing and verification
+  - Verification status
+  - Detailed verification report
+  - Pull request summary
 
-### Protocol Documentation
+### Code Quality
+- **[code_review.md](code_review.md)** - Code review findings
+  - Review findings
+  - Fixes implemented
+  - Summary
 
-**PROTOCOL_BRIDGE_GUIDE.md** - Protocol bridge implementation
+## Feature-Specific Documentation
 
-- Communication protocol details
-- PC-Android harmonization
-- Message format specifications
+- **[time_sync_implementation.md](time_sync_implementation.md)** - Time synchronization implementation
 
-**PROTOCOL_FLOW.txt** - Protocol message flow documentation
+## Document Structure
 
-- Message sequence diagrams
-- Communication patterns
-- Protocol states
+```
+docs/
+├── README.md (this file)
+├── quick_start.md              # Getting started guide
+├── pc_controller_implementation.md  # Main implementation doc
+├── implementation.md           # Consolidated implementation details
+├── protocol.md                 # Consolidated protocol documentation
+├── verification.md             # Consolidated verification & testing
+├── code_review.md              # Consolidated code review
+└── time_sync_implementation.md # Time sync feature docs
+```
 
-**PROTOCOL_VERIFICATION_README.md** - Protocol verification overview
+## Historical Reference
 
-- Verification approach
-- Test methodology
-
-**PROTOCOL_VERIFICATION_REPORT.md** - Protocol verification results
-
-- Test results
-- Compatibility confirmation
-
-**protocol_bridge_summary.txt** - Quick protocol reference
-
-### Integration Documentation
-
-**INTEGRATION_READY.md** - PC-Android integration status
-
-- Compatibility verification
-- Integration testing results
-- Protocol alignment confirmation
-
-**GAP_ANALYSIS.md** - Protocol gap analysis
-
-- Original protocol incompatibilities
-- Resolution strategies
-- Bridge implementation details
-
-### Code Quality Documentation
-
-**CODE_REVIEW.md** - Detailed code review findings
-
-- Architecture assessment
-- Code quality analysis
-- Improvement recommendations
-- Anti-pattern analysis
-
-**CODE_REVIEW_SUMMARY.txt** - Code review summary
-
-- Key findings overview
-- Issue priorities
-- Resolution status
-
-**CODE_REVIEW_FIXES.md** - Code review resolution
-
-- Implemented fixes
-- Improvements made
-- Final verification
-
-## Quick Reference
-
-For quick start and general usage, see:
-
-- **../README.md** - Main PC Controller guide
-- **QUICK_START.md** - Detailed quick start guide with installation
-
-## Organization
-
-These technical documents are separated from the main README to keep the primary documentation concise and user-focused,
-while providing detailed technical information for developers and researchers who need deeper implementation details.
+See `../reorganization_summary.md` for information about the project reorganization.
