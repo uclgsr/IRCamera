@@ -61,7 +61,7 @@ class TestResult:
     files_failed: int
     validations: List[Dict[str, any]]
     passed: bool
-    summary: Dict[str, int]
+    summary: Dict[str, Dict[str, int]]
 
 
 class FileIntegrityValidator:
