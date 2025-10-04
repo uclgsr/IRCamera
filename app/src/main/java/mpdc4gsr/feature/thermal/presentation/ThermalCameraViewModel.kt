@@ -1,5 +1,6 @@
 package mpdc4gsr.feature.thermal.presentation
 
+import android.app.Application
 import android.content.Context
 import android.graphics.Bitmap
 import androidx.lifecycle.ViewModel
@@ -23,7 +24,9 @@ import java.util.concurrent.TimeUnit
  * Manages thermal camera state following MVVM architecture and connects
  * ThermalCameraRecorder to the UI for live preview and recording.
  */
-class ThermalCameraViewModel(private val context: Context) : ViewModel() {
+class ThermalCameraViewModel(application: Application) : ViewModel() {
+
+    private val context: Context = application.applicationContext
 
     companion object {
         private const val TAG = "ThermalCameraViewModel"
