@@ -104,7 +104,7 @@ class EdgeCaseCommandTest:
         
         logger.info(f"Response: {response}")
         
-        if response and ('ERROR' in response or 'not active' in response.lower()):
+        if response and response.startswith('ERROR'):
             result['handled_correctly'] = True
             logger.info("System correctly rejected STOP without active session")
         elif response and 'STOP-ACK' in response:
