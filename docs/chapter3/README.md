@@ -44,12 +44,19 @@ This directory contains figures, tables, and diagrams for Chapter 3 of the thesi
 
 ## Mermaid Diagram Support
 
-All diagrams in this chapter are created using **Mermaid**, a markdown-based diagramming tool that can be rendered in:
+All diagrams in this chapter are created using **Mermaid** with advanced features:
 
-- GitHub (native support)
-- VS Code (with Mermaid extension)
+**Enhanced Features Used:**
+- **Flowchart**: Decision nodes, buffers, queues, icons (🖥️ 📱 🌡️ ⚡ 📹)
+- **State Diagram**: Composite states, parallel states (fork/join), nested substates
+- **Sequence Diagram**: autonumber, alt/opt/critical/par blocks, rect colored sections, activation boxes
+
+**Rendering Support:**
+- GitHub (native support with all advanced features)
+- VS Code (with Mermaid extension v1.16+)
 - Obsidian
 - GitLab
+- Mermaid Live Editor (https://mermaid.live/)
 - Many other markdown viewers
 
 ### Rendering Diagrams

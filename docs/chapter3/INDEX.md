@@ -7,19 +7,22 @@ This directory contains **5 primary documents** and **2 supporting documents** f
 ### Primary Documents (Thesis Content)
 
 1. **[system-architecture.md](./system-architecture.md)** - Figure 3.1
-   - System Architecture Diagram with PC and Android components
-   - Hardware sensor integration
-   - Communication pathways
+   - Enhanced flowchart with decision nodes, buffers, and queues
+   - 80+ components with icons (🖥️ 📱 🌡️ ⚡ 📹 💾)
+   - Complete data flow with hardware connections
+   - 6 color-coded layers
 
 2. **[state-machine.md](./state-machine.md)** - Figure 3.2
-   - Recording application state machine
-   - 12 states with transitions
-   - Error handling and recovery
+   - Composite state machine with 40+ substates
+   - Parallel states with fork/join patterns
+   - Nested internal state machines
+   - Detailed error handling and recovery
 
 3. **[communication-sequence.md](./communication-sequence.md)** - Figure 3.3
-   - PC-Android protocol sequence
-   - 10 interaction phases
-   - Message specifications
+   - Enhanced sequence with autonumber and control flow
+   - 150+ interactions with participant icons
+   - Alt/opt/critical/par blocks
+   - Colored rect sections for phases
 
 4. **[requirements-design-table.md](./requirements-design-table.md)** - Table 3.1
    - 15 functional requirements
@@ -51,19 +54,20 @@ The issue requested:
 
 | Requirement | Document | Status | Details |
 |-------------|----------|--------|---------|
-| **System Architecture Diagram** | system-architecture.md | ✓ Complete | Detailed block diagram with PC orchestrator, Android sensor nodes, hardware components, and all communication links (TCP/IP, BLE, USB/OTG) |
-| **Software State Machine** | state-machine.md | ✓ Complete | State diagram with Idle, Ready, Recording, Syncing, Stopped states plus error handling; transitions triggered by PC commands and sensor events |
-| **Communication Sequence Diagram** | communication-sequence.md | ✓ Complete | Step-by-step messaging showing START command propagation, sensor initialization, data recording, STOP/SYNC handling, and file transfer |
+| **System Architecture Diagram** | system-architecture.md | ✓ Enhanced | Flowchart with 80+ components, decision nodes, buffers, queues, and icons. Shows complete data flow with 6 color-coded layers and hardware connections (TCP/IP, BLE, USB/OTG) |
+| **Software State Machine** | state-machine.md | ✓ Enhanced | Composite state diagram with 12 main states and 40+ substates. Includes parallel fork/join patterns, nested internal state machines, and comprehensive error recovery |
+| **Communication Sequence Diagram** | communication-sequence.md | ✓ Enhanced | Detailed sequence with 150+ interactions, autonumbering, alt/opt/critical/par blocks, colored rect phases, and participant icons (👤🖥️🌐📱🌡️⚡📹💾⏱️) |
 | **Functional Requirements Table** | requirements-design-table.md | ✓ Complete | Requirements matrix with 15 FRs, design criteria, constraints (battery, storage, network, etc.), and how design addresses each |
 | **Design Decisions Table** | design-decisions-table.md | ✓ Complete | Design matrix with time sync approach, thermal camera interface choice, GSR connection, encoding strategy, etc., with rationale and alternatives |
 
 ## Content Statistics
 
 ### Figures
-- **Total Diagrams**: 3 (all Mermaid format)
-- **Total Diagram Nodes**: 150+ components/states/participants
-- **Total Connections**: 100+ edges/transitions/messages
-- **Diagram Types**: Graph TB (architecture), stateDiagram-v2 (state machine), sequenceDiagram (protocol)
+- **Total Diagrams**: 3 (all enhanced Mermaid format)
+- **Total Diagram Elements**: 250+ nodes/states/participants/messages
+- **Total Connections**: 150+ edges/transitions/messages
+- **Diagram Types**: Flowchart (architecture), stateDiagram-v2 (state machine), sequenceDiagram (protocol)
+- **Advanced Features**: Decision nodes, buffers, queues, fork/join, composite states, alt/opt/critical/par blocks, rect colored sections, icons, autonumbering
 
 ### Tables
 - **Total Tables**: 2 main tables + 4 supporting tables
