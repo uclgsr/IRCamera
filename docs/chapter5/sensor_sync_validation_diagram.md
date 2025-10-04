@@ -27,5 +27,5 @@ graph TB
 
 - **Total Samples Analyzed**: 50
 - **Within Tolerance**: 50 (100.0%)
-- **Average Max Offset**: 2.71ms
+- **Average Max Offset**: 2.56ms
 - **Conclusion**: System achieves sub-10ms synchronization accuracy
