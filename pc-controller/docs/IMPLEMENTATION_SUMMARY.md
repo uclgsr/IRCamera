@@ -26,10 +26,8 @@ specification. This document provides a comprehensive summary of what was accomp
 
 **Files**:
 
-- `advanced_pc_controller.py` - NetworkThread class
-- `pc_controller.py` - NetworkThread with GUI/CLI modes
-- `tls_server.py` - SecureTCPServer class
-- `legacy_implementation/src/ircamera_pc/network/server.py` - Advanced protocol
+- `pc_controller.py` - Unified NetworkThread implementation with GUI/CLI modes (primary implementation)
+- `legacy_implementation/src/ircamera_pc/network/server.py` - Advanced protocol (legacy reference)
 
 **Test Coverage**: 2/13 tests (protocol message handling)
 
@@ -47,9 +45,8 @@ specification. This document provides a comprehensive summary of what was accomp
 
 **Files**:
 
-- `tls_server.py` - TLSSecurityManager class
-- `advanced_pc_controller.py` - _setup_ssl() and _generate_self_signed_cert()
-- `certificates/` - Auto-generated certificates
+- `pc_controller.py` - NetworkThread._setup_ssl() and _generate_self_signed_cert() methods
+- `certificates/` - Auto-generated certificates directory
 
 **Test Coverage**: 2/13 tests (SSL context creation, certificate generation)
 

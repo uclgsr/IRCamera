@@ -12,12 +12,10 @@ Application.
 
 #### TCP Server/Protocol
 
-- **Status**: Fully implemented across multiple controller versions
+- **Status**: Fully implemented in unified controller
 - **Implementation Files**:
-    - `advanced_pc_controller.py`: PyQt6 GUI with NetworkThread
-    - `pc_controller.py`: Unified controller with both GUI and CLI modes
-    - `tls_server.py`: Standalone secure TLS server
-    - `legacy_implementation/src/ircamera_pc/network/server.py`: Advanced protocol handling
+    - `pc_controller.py`: Unified controller with NetworkThread, GUI/CLI modes, and SSL/TLS support
+    - `legacy_implementation/src/ircamera_pc/network/server.py`: Advanced protocol handling (reference implementation)
 
 **Features**:
 
@@ -45,9 +43,7 @@ Application.
 
 - **Status**: Fully implemented with self-signed certificate generation
 - **Implementation Files**:
-    - `tls_server.py`: TLSSecurityManager and SecureTCPServer classes
-    - `advanced_pc_controller.py`: SSL/TLS support in NetworkThread
-    - `pc_controller.py`: SSL checkbox and configuration
+    - `pc_controller.py`: NetworkThread with _setup_ssl() and _generate_self_signed_cert() methods
 
 **Security Features**:
 
