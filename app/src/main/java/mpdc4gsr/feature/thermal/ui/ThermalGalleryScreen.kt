@@ -60,7 +60,11 @@ fun ThermalGalleryScreen(
             TitleBarAction(
                 icon = Icons.Default.Search,
                 contentDescription = "Search",
-                onClick = { }
+                onClick = { /* TODO: Implement search
+                     *   - Show search input dialog
+                     *   - Filter displayed items based on query
+                     *   - Update UI with filtered results
+                     */ }
             )
         }
 
@@ -293,7 +297,11 @@ private fun ThermalImageListItem(item: ThermalMediaItem) {
             }
 
             // Actions
-            IconButton(onClick = { }) {
+            IconButton(onClick = { /* TODO: Implement share functionality
+                     *   - Create share intent with data
+                     *   - Show system share sheet
+                     *   - Handle share completion
+                     */ }) {
                 Icon(Icons.Default.Share, contentDescription = "Share", tint = Color.Gray)
             }
         }
@@ -429,7 +437,11 @@ private fun ThermalVideoListItem(item: ThermalMediaItem) {
             }
 
             // Actions
-            IconButton(onClick = { }) {
+            IconButton(onClick = { /* TODO: Implement play
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }) {
                 Icon(Icons.Default.PlayArrow, contentDescription = "Play", tint = MaterialTheme.colorScheme.primary)
             }
         }
@@ -477,14 +489,22 @@ private fun ThermalReportItem(item: ThermalMediaItem) {
             }
 
             Row {
-                IconButton(onClick = { }) {
+                IconButton(onClick = { /* TODO: Implement view
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }) {
                     Icon(
                         Icons.Default.Visibility,
                         contentDescription = "View",
                         tint = MaterialTheme.colorScheme.primary
                     )
                 }
-                IconButton(onClick = { }) {
+                IconButton(onClick = { /* TODO: Implement share functionality
+                     *   - Create share intent with data
+                     *   - Show system share sheet
+                     *   - Handle share completion
+                     */ }) {
                     Icon(Icons.Default.Share, contentDescription = "Share", tint = Color.Gray)
                 }
             }
