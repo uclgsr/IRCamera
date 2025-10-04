@@ -1,0 +1,195 @@
+================================================================================
+                    TIME SYNCHRONIZATION FLOW (IMPLEMENTED)
+================================================================================
+
+COMPONENTS INVOLVED:
+-------------------
+1. RecordingService - Manages recording lifecycle and network connections
+2. TimeSyncManager - Handles sync protocol and timestamp offset management
+3. NetworkServer - Sends/receives messages to/from PC
+4. ProtocolHandler - Processes incoming protocol messages
+5. TimestampManager - Applies offset to all sensor timestamps
+6. PC Controller - Master clock that coordinates all devices
+
+================================================================================
+
+SESSION START SYNC (Automatic):
+-------------------------------
+
+User/App                RecordingService         TimeSyncManager         NetworkServer         PC Controller
+   |                           |                        |                       |                     |
+   |-- Start Recording ------->|                        |                       |                     |
+   |                           |                        |                       |                     |
+   |                           |-- initializeSession -->|                       |                     |
+   |                           |                        |                       |                     |
+   |                           |-- performSessionStart->|                       |                     |
+   |                           |    Sync()              |                       |                     |
+   |                           |                        |                       |                     |
+   |                           |                        |-- Log session --------|                     |
+   |                           |                        |   start marker        |                     |
+   |                           |                        |                       |                     |
+   |                           |                        |-- triggerManualSync-->|                     |
+   |                           |                        |   (via callback)      |                     |
+   |                           |                        |                       |                     |
+   |                           |<- onManualSync --------|                       |                     |
+   |                           |   Requested()          |                       |                     |
+   |                           |                        |                       |                     |
+   |                           |-- createSyncInit------>|                       |                     |
+   |                           |   Message()            |                       |                     |
+   |                           |                        |                       |                     |
+   |                           |-- sendMessage ---------|---------------------->|                     |
+   |                           |   ("SYNC_INIT")        |                       |                     |
+   |                           |                        |                       |-- SYNC_INIT ------->|
+   |                           |                        |                       |                     |
+   |                           |                        |                       |                     | Capture T1
+   |                           |                        |                       |                     | (PC time)
+   |                           |                        |                       |                     |
+   |                           |                        |                       |<- SYNC_REQUEST -----|
+   |                           |                        |                       |   t_pc=T1          |
+   |                           |                        |                       |                     |
+   |                           |                        |<- processMessage ------|                     |
+   |                           |                        |   (SYNC_REQUEST)      |                     |
+   |                           |                        |                       |                     |
+   |                           |                        | Capture T2            |                     |
+   |                           |                        | (Phone time)          |                     |
+   |                           |                        |                       |                     |
+   |                           |                        |-- performSync --------|                     |
+   |                           |                        |   Response(T1)        |                     |
+   |                           |                        |                       |                     |
+   |                           |                        |-- createSyncResponse->|                     |
+   |                           |                        |   Message(T1, T2)     |                     |
+   |                           |                        |                       |                     |
+   |                           |                        |-- sendMessage --------|---------------------> 
+   |                           |                        |   ("SYNC_RESPONSE     |                     |
+   |                           |                        |    t_pc=T1 t_ph=T2")  |                     |
+   |                           |                        |                       | SYNC_RESPONSE ----->|
+   |                           |                        |                       |                     |
+   |                           |                        |                       |                     | Capture T3
+   |                           |                        |                       |                     | (PC time)
+   |                           |                        |                       |                     |
+   |                           |                        |                       |                     | Calculate:
+   |                           |                        |                       |                     | offset = T2-((T1+T3)/2)
+   |                           |                        |                       |                     | rtt = T3 - T1
+   |                           |                        |                       |                     |
+   |                           |                        |                       |<- SYNC_RESULT ------|
+   |                           |                        |                       |   t1=T1 t2=T2 t3=T3|
+   |                           |                        |                       |   offset=X rtt=Y   |
+   |                           |                        |                       |                     |
+   |                           |                        |<- processMessage ------|                     |
+   |                           |                        |   (SYNC_RESULT)       |                     |
+   |                           |                        |                       |                     |
+   |                           |                        |-- completeSyncCalc -->|                     |
+   |                           |                        |   (T1,T2,T3,offset,rtt)                    |
+   |                           |                        |                       |                     |
+   |                           |                        |-- setClockOffset ---->|                     |
+   |                           |                        |   (TimeManager)       |                     |
+   |                           |                        |                       |                     |
+   |                           |                        |-- setClockOffset ---->|                     |
+   |                           |                        |   (TimestampManager)  |                     |
+   |                           |                        |                       |                     |
+   |                           |                        |-- logSyncResult ----->|                     |
+   |                           |                        |   (to CSV file)       |                     |
+   |                           |                        |                       |                     |
+   |<- Recording Started -----|                        |                       |                     |
+   |   (Synced Timestamps)    |                        |                       |                     |
+   |                           |                        |                       |                     |
+
+================================================================================
+
+PERIODIC SYNC (Automatic during long sessions):
+-----------------------------------------------
+
+TimeSyncManager                                                                 PC Controller
+   |                                                                                  |
+   |-- Periodic monitoring (every 5 min)                                             |
+   |                                                                                  |
+   |-- Check session duration > 10 min?                                              |
+   |   YES                                                                            |
+   |                                                                                  |
+   |-- triggerManualSync()                                                           |
+   |                                                                                  |
+   |   [Same flow as above: SYNC_INIT -> SYNC_REQUEST -> SYNC_RESPONSE -> SYNC_RESULT]
+   |                                                                                  |
+   |-- Apply new offset (updates for drift correction)                               |
+   |                                                                                  |
+
+================================================================================
+
+DATA FLOW AFTER SYNC:
+--------------------
+
+Sensor Data                 TimestampManager                    Output File
+   |                               |                                  |
+   |-- Capture sensor reading     |                                  |
+   |                               |                                  |
+   |-- Get timestamp ------------->|                                  |
+   |                               |                                  |
+   |                               |-- getDeviceTimestampMs()         |
+   |                               |   (raw phone time)               |
+   |                               |                                  |
+   |                               |-- getSynchronizedTimestampMs()   |
+   |                               |   = deviceTime + clockOffset     |
+   |                               |                                  |
+   |<- Return synchronized time ---|                                  |
+   |   (aligned with PC)           |                                  |
+   |                               |                                  |
+   |-- Write to file ------------------------------------------------>|
+   |   timestamp: <synchronized_time>                                |
+   |   value: <sensor_value>                                         |
+   |                                                                  |
+
+================================================================================
+
+KEY IMPLEMENTATION POINTS:
+-------------------------
+
+1. SYNC_INIT Message:
+   - New protocol message (MSG_SYNC_INIT = "SYNC_INIT")
+   - Sent by phone to request PC to initiate sync
+   - No parameters needed
+
+2. RecordingService Integration:
+   - Sets up syncTriggerCallback in onCreate()
+   - Callback sends SYNC_INIT via networkServer.sendMessage()
+   - Called automatically at session start
+
+3. TimeSyncManager:
+   - performSessionStartSync() now triggers actual sync (not just logs marker)
+   - Calls syncTriggerCallback.onManualSyncRequested()
+   - Applies offset to TimeManager and TimestampManager
+
+4. Automatic Triggers:
+   - Session start: Always attempts sync
+   - Periodic: Every 5 min if session > 10 min
+   - Manual: Via TimeSyncManager.triggerManualSync() API
+
+5. Offset Application:
+   - timeManager.setClockOffsetFromProtocolSync(offsetNs, rtt)
+   - TimestampManager.setClockOffset(offsetMs)
+   - All subsequent timestamps use synchronized time
+
+6. Logging:
+   - Sync events logged to timesync_log.csv
+   - Includes: t1, t2, t3, offset, rtt, quality, retry count
+   - Quality based on RTT (EXCELLENT/GOOD/ACCEPTABLE/POOR)
+
+================================================================================
+
+WHAT PC CONTROLLER MUST IMPLEMENT:
+----------------------------------
+
+1. Handle SYNC_INIT:
+   - When receiving "SYNC_INIT" message
+   - Immediately send "SYNC_REQUEST t_pc=<current_time_ms>"
+
+2. Handle SYNC_RESPONSE:
+   - Parse "SYNC_RESPONSE t_pc=<T1> t_ph=<T2>"
+   - Capture T3 = current_time_ms
+   - Calculate: offset = T2 - ((T1+T3)/2), rtt = T3-T1
+   - Send "SYNC_RESULT t1=<T1> t2=<T2> t3=<T3> offset=<offset> rtt=<rtt>"
+
+See pc-controller/docs/TIME_SYNC_IMPLEMENTATION.md for detailed guide.
+
+================================================================================
+                              END OF FLOW
+================================================================================

@@ -27,6 +27,12 @@ TIME SYNCHRONIZATION:
 
 Android                          Protocol Adapter                    PC Logic
   |                                     |                                |
+  |  SYNC_INIT                          |                                |
+  |------------------------------------>|                                |
+  |                                     | Parse to JSON                  |
+  |                                     | {type: "SYNC_INIT"}           |
+  |                                     |------------------------------->|
+  |                                     |           Initiate Sync Request|
   |                                     |<-------------------------------|
   |                                     | Format as text                 |
   |  SYNC_REQUEST t_pc=1000            |                                |
