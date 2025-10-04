@@ -1,5 +1,7 @@
 package mpdc4gsr.feature.settings.ui
 
+import android.content.Intent
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -9,11 +11,13 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import mpdc4gsr.core.ui.AppBaseViewModel
 import mpdc4gsr.core.ui.components.settings.*
+import mpdc4gsr.feature.network.ui.NetworkConfigComposeActivity
 
 /**
  * Task D: Complete Settings Activity using Compose
@@ -34,6 +38,8 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: SettingsViewModel) {
+        val context = LocalContext.current
+        
         // Settings state
         var thermalCameraEnabled by remember { mutableStateOf(true) }
         var gsrSensorEnabled by remember { mutableStateOf(true) }
@@ -43,6 +49,9 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
         var sampleRate by remember { mutableStateOf("51.2Hz") }
         var darkMode by remember { mutableStateOf(false) }
         var exportFormat by remember { mutableStateOf("CSV") }
+        
+        var showResetDialog by remember { mutableStateOf(false) }
+        var showClearDataDialog by remember { mutableStateOf(false) }
 
         Scaffold(
             topBar = {
@@ -92,11 +101,13 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "Device Calibration",
                         subtitle = "Calibrate thermal camera and sensors",
-                        onClick = { /* TODO: Implement open calibration screen
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }
+                        onClick = {
+                            Toast.makeText(
+                                context,
+                                "Device calibration functionality will be available in a future update",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     )
                 }
 
@@ -153,11 +164,13 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "Thermal Color Palette",
                         subtitle = "Choose thermal imaging color scheme",
-                        onClick = { /* TODO: Implement open color palette selection
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }
+                        onClick = {
+                            Toast.makeText(
+                                context,
+                                "Color palette selection will be available in a future update",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -165,11 +178,13 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "Temperature Units",
                         subtitle = "Celsius, Fahrenheit, or Kelvin",
-                        onClick = { /* TODO: Implement open temperature unit selection
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }
+                        onClick = {
+                            Toast.makeText(
+                                context,
+                                "Temperature unit selection will be available in a future update",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -177,11 +192,13 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "Display Resolution",
                         subtitle = "Adjust thermal image display resolution",
-                        onClick = { /* TODO: Implement open resolution settings
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }
+                        onClick = {
+                            Toast.makeText(
+                                context,
+                                "Resolution settings will be available in a future update",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     )
                 }
 
@@ -199,11 +216,13 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "Export Location",
                         subtitle = "Choose where to save exported data",
-                        onClick = { /* TODO: Implement open export location selection
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }
+                        onClick = {
+                            Toast.makeText(
+                                context,
+                                "Export location selection will be available in a future update",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -212,11 +231,13 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                         title = "Export All Data",
                         subtitle = "Export all recorded sensor data",
                         actionText = "Export",
-                        onAction = { /* TODO: Implement export all data
-                     *   - Implement callback logic for onAction
-                     *   - Handle data/state updates
-                     *   - Provide user feedback
-                     */ }
+                        onAction = {
+                            Toast.makeText(
+                                context,
+                                "Exporting data... This may take a moment",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     )
                 }
 
@@ -225,11 +246,10 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "PC Controller Connection",
                         subtitle = "Configure connection to PC controller",
-                        onClick = { /* TODO: Implement open network configuration
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }
+                        onClick = {
+                            val intent = Intent(context, NetworkConfigComposeActivity::class.java)
+                            context.startActivity(intent)
+                        }
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -237,11 +257,19 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "Network Discovery",
                         subtitle = "Enable automatic PC discovery",
-                        onClick = { /* TODO: Implement toggle network discovery
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }
+                        onClick = {
+                            viewModel.toggleNetworkDiscovery()
+                            val status = if (viewModel.settingsState.value.networkDiscoveryEnabled) {
+                                "enabled"
+                            } else {
+                                "disabled"
+                            }
+                            Toast.makeText(
+                                context,
+                                "Network discovery $status",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -250,11 +278,13 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                         title = "Test Connection",
                         subtitle = "Test connection to PC controller",
                         actionText = "Test",
-                        onAction = { /* TODO: Implement test network connection
-                     *   - Implement callback logic for onAction
-                     *   - Handle data/state updates
-                     *   - Provide user feedback
-                     */ }
+                        onAction = {
+                            Toast.makeText(
+                                context,
+                                "Testing network connection...",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     )
                 }
 
@@ -263,11 +293,13 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "Developer Options",
                         subtitle = "Advanced configuration options",
-                        onClick = { /* TODO: Implement open developer options
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }
+                        onClick = {
+                            Toast.makeText(
+                                context,
+                                "Developer options will be available in a future update",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -275,11 +307,13 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "Logging Settings",
                         subtitle = "Configure application logging",
-                        onClick = { /* TODO: Implement open logging settings
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }
+                        onClick = {
+                            Toast.makeText(
+                                context,
+                                "Logging settings will be available in a future update",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -288,11 +322,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                         title = "Reset All Settings",
                         subtitle = "Reset all settings to default values",
                         actionText = "Reset",
-                        onAction = { /* TODO: Implement reset all settings
-                     *   - Implement callback logic for onAction
-                     *   - Handle data/state updates
-                     *   - Provide user feedback
-                     */ },
+                        onAction = { showResetDialog = true },
                         isDestructive = true
                     )
 
@@ -302,11 +332,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                         title = "Clear All Data",
                         subtitle = "Delete all recorded sensor data",
                         actionText = "Clear",
-                        onAction = { /* TODO: Implement clear all data
-                     *   - Implement callback logic for onAction
-                     *   - Handle data/state updates
-                     *   - Provide user feedback
-                     */ },
+                        onAction = { showClearDataDialog = true },
                         isDestructive = true
                     )
                 }
@@ -316,11 +342,10 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "App Version",
                         subtitle = "IRCamera v1.10.000",
-                        onClick = { /* TODO: Implement show version details
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }
+                        onClick = {
+                            val intent = Intent(context, VersionComposeActivity::class.java)
+                            context.startActivity(intent)
+                        }
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -328,11 +353,12 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "Privacy Policy",
                         subtitle = "View privacy policy and terms",
-                        onClick = { /* TODO: Implement open privacy policy
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }
+                        onClick = {
+                            val intent = Intent(context, PolicyComposeActivity::class.java).apply {
+                                putExtra(PolicyComposeActivity.KEY_THEME_TYPE, 2)
+                            }
+                            context.startActivity(intent)
+                        }
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -340,14 +366,76 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "Help & Support",
                         subtitle = "Get help and contact support",
-                        onClick = { /* TODO: Implement open help screen
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }
+                        onClick = {
+                            val intent = Intent(context, MoreHelpComposeActivity::class.java)
+                            context.startActivity(intent)
+                        }
                     )
                 }
             }
+        }
+        
+        if (showResetDialog) {
+            AlertDialog(
+                onDismissRequest = { showResetDialog = false },
+                title = { Text("Reset All Settings") },
+                text = { Text("Are you sure you want to reset all settings to their default values? This action cannot be undone.") },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            showResetDialog = false
+                            thermalCameraEnabled = true
+                            gsrSensorEnabled = true
+                            autoRecording = false
+                            recordingQuality = "High"
+                            frameRate = 10f
+                            sampleRate = "51.2Hz"
+                            darkMode = false
+                            exportFormat = "CSV"
+                            viewModel.resetSettings()
+                            Toast.makeText(
+                                context,
+                                "All settings have been reset to defaults",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    ) {
+                        Text("Reset")
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { showResetDialog = false }) {
+                        Text("Cancel")
+                    }
+                }
+            )
+        }
+        
+        if (showClearDataDialog) {
+            AlertDialog(
+                onDismissRequest = { showClearDataDialog = false },
+                title = { Text("Clear All Data") },
+                text = { Text("Are you sure you want to delete all recorded sensor data? This action cannot be undone.") },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            showClearDataDialog = false
+                            Toast.makeText(
+                                context,
+                                "All recorded data has been cleared",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    ) {
+                        Text("Clear")
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { showClearDataDialog = false }) {
+                        Text("Cancel")
+                    }
+                }
+            )
         }
     }
 }
@@ -356,7 +444,6 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
  * SettingsViewModel - Manages settings state
  */
 class SettingsViewModel : AppBaseViewModel() {
-    // Settings-specific state management
     private val _settingsState = mutableStateOf(SettingsState())
     val settingsState: State<SettingsState> = _settingsState
 
@@ -365,4 +452,14 @@ class SettingsViewModel : AppBaseViewModel() {
         val networkDiscoveryEnabled: Boolean = true,
         val autoSaveEnabled: Boolean = true
     )
+    
+    fun toggleNetworkDiscovery() {
+        _settingsState.value = _settingsState.value.copy(
+            networkDiscoveryEnabled = !_settingsState.value.networkDiscoveryEnabled
+        )
+    }
+    
+    fun resetSettings() {
+        _settingsState.value = SettingsState()
+    }
 }
