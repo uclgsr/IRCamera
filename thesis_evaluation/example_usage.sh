@@ -13,7 +13,7 @@ echo ""
 
 # Check if device IP is provided as argument
 if [ $# -eq 1 ]; then
-    DEVICE_IP=$1
+    DEVICE_IP="$1"
     echo "Using device IP from argument: $DEVICE_IP"
 fi
 
