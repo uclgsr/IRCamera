@@ -25,21 +25,21 @@ python3 validate_setup.py
 ### Option 2: Individual Tests
 ```bash
 # Test 1: Start/Stop (10 second session)
-python3 test_1_remote_start_stop.py --device-ip 192.168.1.100 --duration 10
+python3 tests/test_1_remote_start_stop.py --device-ip 192.168.1.100 --duration 10
 
 # Test 2: Latency (10 iterations per command)
-python3 test_2_command_latency_throughput.py --device-ip 192.168.1.100 --iterations 10
+python3 tests/test_2_command_latency_throughput.py --device-ip 192.168.1.100 --iterations 10
 
 # Test 3: Edge cases
-python3 test_3_edge_case_commands.py --device-ip 192.168.1.100
+python3 tests/test_3_edge_case_commands.py --device-ip 192.168.1.100
 
 # Test 4: Multi-command sequences
-python3 test_4_multi_command_sequence.py --device-ip 192.168.1.100 --scenario all
+python3 tests/test_4_multi_command_sequence.py --device-ip 192.168.1.100 --scenario all
 ```
 
 ### Option 3: Run All Tests
 ```bash
-python3 run_all_tests.py --device-ip 192.168.1.100
+python3 tests/run_all_tests.py --device-ip 192.168.1.100
 ```
 
 ## Output Files
@@ -68,6 +68,6 @@ python3 run_all_tests.py --device-ip 192.168.1.100
 
 ## Help
 ```bash
-python3 test_1_remote_start_stop.py --help
-python3 run_all_tests.py --help
+python3 tests/test_1_remote_start_stop.py --help
+python3 tests/run_all_tests.py --help
 ```

@@ -37,7 +37,7 @@ def check_command_client():
 def check_test_files():
     """Check if all test files are present"""
     print("\nChecking test files...")
-    test_dir = Path(__file__).parent
+    test_dir = Path(__file__).parent / 'tests'
     
     required_files = [
         'test_1_remote_start_stop.py',
@@ -51,9 +51,9 @@ def check_test_files():
     for filename in required_files:
         filepath = test_dir / filename
         if filepath.exists():
-            print(f"  ✓ {filename}")
+            print(f"  ✓ tests/{filename}")
         else:
-            print(f"  ✗ {filename} (missing)")
+            print(f"  ✗ tests/{filename} (missing)")
             all_present = False
     
     return all_present
@@ -61,7 +61,7 @@ def check_test_files():
 def check_permissions():
     """Check if test files are executable"""
     print("\nChecking file permissions...")
-    test_dir = Path(__file__).parent
+    test_dir = Path(__file__).parent / 'tests'
     
     test_files = [
         'test_1_remote_start_stop.py',
@@ -76,9 +76,9 @@ def check_permissions():
         filepath = test_dir / filename
         if filepath.exists():
             if os.access(filepath, os.X_OK):
-                print(f"  ✓ {filename} (executable)")
+                print(f"  ✓ tests/{filename} (executable)")
             else:
-                print(f"  ⚠ {filename} (not executable, but can still run with python3)")
+                print(f"  ⚠ tests/{filename} (not executable, but can still run with python3)")
     
     return True  # Not critical, just informational
 
@@ -118,10 +118,7 @@ def check_dependencies():
             __import__(module_name)
             print(f"  ✓ {package_name} (installed)")
         except ImportError:
-            if module_name == 'typing_extensions':
-                print(f"  ⚠ {package_name} (recommended)")
-            else:
-                print(f"  - {package_name} (optional, not installed)")
+            print(f"  - {package_name} (optional, not installed)")
     
     return True  # Optional dependencies
 
@@ -153,8 +150,8 @@ def main():
     if all(critical_checks):
         print("✓ All critical checks passed!")
         print("\nYou can now run the tests:")
-        print("  python3 test_1_remote_start_stop.py --device-ip <ANDROID_IP>")
-        print("  python3 run_all_tests.py --device-ip <ANDROID_IP>")
+        print("  python3 tests/test_1_remote_start_stop.py --device-ip <ANDROID_IP>")
+        print("  python3 tests/run_all_tests.py --device-ip <ANDROID_IP>")
         print("\nOr use the interactive menu:")
         print("  ./example_usage.sh <ANDROID_IP>")
         return 0

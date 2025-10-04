@@ -33,31 +33,31 @@ case $choice in
         echo ""
         echo "Running Test 1: Remote Start/Stop Command Test"
         echo "----------------------------------------------"
-        python3 test_1_remote_start_stop.py --device-ip $DEVICE_IP --duration 10
+        python3 tests/test_1_remote_start_stop.py --device-ip $DEVICE_IP --duration 10
         ;;
     2)
         echo ""
         echo "Running Test 2: Command Latency and Throughput Test"
         echo "---------------------------------------------------"
-        python3 test_2_command_latency_throughput.py --device-ip $DEVICE_IP --iterations 10
+        python3 tests/test_2_command_latency_throughput.py --device-ip $DEVICE_IP --iterations 10
         ;;
     3)
         echo ""
         echo "Running Test 3: Edge-case Command Handling Test"
         echo "-----------------------------------------------"
-        python3 test_3_edge_case_commands.py --device-ip $DEVICE_IP
+        python3 tests/test_3_edge_case_commands.py --device-ip $DEVICE_IP
         ;;
     4)
         echo ""
         echo "Running Test 4: Multi-command Sequence Automation Test"
         echo "------------------------------------------------------"
-        python3 test_4_multi_command_sequence.py --device-ip $DEVICE_IP --scenario all
+        python3 tests/test_4_multi_command_sequence.py --device-ip $DEVICE_IP --scenario all
         ;;
     5)
         echo ""
         echo "Running All Tests"
         echo "-----------------"
-        python3 run_all_tests.py --device-ip $DEVICE_IP
+        python3 tests/run_all_tests.py --device-ip $DEVICE_IP
         ;;
     q|Q)
         echo "Exiting..."

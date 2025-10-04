@@ -26,12 +26,12 @@ The tests implement the requirements specified in the thesis evaluation issue fo
 
 **Usage:**
 ```bash
-python test_1_remote_start_stop.py --device-ip <ANDROID_IP> [--port 8080] [--duration 10]
+python tests/test_1_remote_start_stop.py --device-ip <ANDROID_IP> [--port 8080] [--duration 10]
 ```
 
 **Example:**
 ```bash
-python test_1_remote_start_stop.py --device-ip 192.168.1.100 --duration 15
+python tests/test_1_remote_start_stop.py --device-ip 192.168.1.100 --duration 15
 ```
 
 ---
@@ -53,12 +53,12 @@ python test_1_remote_start_stop.py --device-ip 192.168.1.100 --duration 15
 
 **Usage:**
 ```bash
-python test_2_command_latency_throughput.py --device-ip <ANDROID_IP> [--port 8080] [--iterations 10]
+python tests/test_2_command_latency_throughput.py --device-ip <ANDROID_IP> [--port 8080] [--iterations 10]
 ```
 
 **Example:**
 ```bash
-python test_2_command_latency_throughput.py --device-ip 192.168.1.100 --iterations 20
+python tests/test_2_command_latency_throughput.py --device-ip 192.168.1.100 --iterations 20
 ```
 
 ---
@@ -87,12 +87,12 @@ python test_2_command_latency_throughput.py --device-ip 192.168.1.100 --iteratio
 
 **Usage:**
 ```bash
-python test_3_edge_case_commands.py --device-ip <ANDROID_IP> [--port 8080]
+python tests/test_3_edge_case_commands.py --device-ip <ANDROID_IP> [--port 8080]
 ```
 
 **Example:**
 ```bash
-python test_3_edge_case_commands.py --device-ip 192.168.1.100
+python tests/test_3_edge_case_commands.py --device-ip 192.168.1.100
 ```
 
 ---
@@ -120,16 +120,16 @@ python test_3_edge_case_commands.py --device-ip 192.168.1.100
 
 **Usage:**
 ```bash
-python test_4_multi_command_sequence.py --device-ip <ANDROID_IP> [--port 8080] [--scenario all|1|2|3|4]
+python tests/test_4_multi_command_sequence.py --device-ip <ANDROID_IP> [--port 8080] [--scenario all|1|2|3|4]
 ```
 
 **Examples:**
 ```bash
 # Run all scenarios
-python test_4_multi_command_sequence.py --device-ip 192.168.1.100 --scenario all
+python tests/test_4_multi_command_sequence.py --device-ip 192.168.1.100 --scenario all
 
 # Run specific scenario
-python test_4_multi_command_sequence.py --device-ip 192.168.1.100 --scenario 3
+python tests/test_4_multi_command_sequence.py --device-ip 192.168.1.100 --scenario 3
 ```
 
 ---
@@ -186,22 +186,22 @@ pip install typing-extensions
 
 ```bash
 # Test 1: Basic start/stop
-python test_1_remote_start_stop.py --device-ip 192.168.1.100
+python tests/test_1_remote_start_stop.py --device-ip 192.168.1.100
 
 # Test 2: Latency measurement
-python test_2_command_latency_throughput.py --device-ip 192.168.1.100
+python tests/test_2_command_latency_throughput.py --device-ip 192.168.1.100
 
 # Test 3: Edge cases
-python test_3_edge_case_commands.py --device-ip 192.168.1.100
+python tests/test_3_edge_case_commands.py --device-ip 192.168.1.100
 
 # Test 4: Full workflow
-python test_4_multi_command_sequence.py --device-ip 192.168.1.100
+python tests/test_4_multi_command_sequence.py --device-ip 192.168.1.100
 ```
 
 ### Run All Tests
 Use the master test runner:
 ```bash
-python run_all_tests.py --device-ip 192.168.1.100
+python tests/run_all_tests.py --device-ip 192.168.1.100
 ```
 
 ---

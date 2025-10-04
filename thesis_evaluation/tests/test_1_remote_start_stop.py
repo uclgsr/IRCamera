@@ -17,7 +17,6 @@ Chapters: Chapter 5 (remote session control and responsiveness)
 
 import json
 import logging
-import socket
 import sys
 import time
 from datetime import datetime
@@ -25,7 +24,7 @@ from pathlib import Path
 from typing import Dict, List, Optional
 
 # Add parent directory to path for imports
-sys.path.insert(0, str(Path(__file__).parent.parent / 'pc-controller'))
+sys.path.insert(0, str(Path(__file__).parent.parent.parent / 'pc-controller'))
 
 from command_client import CommandClient
 

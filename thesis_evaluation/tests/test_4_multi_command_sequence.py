@@ -22,7 +22,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Dict, List
 
-sys.path.insert(0, str(Path(__file__).parent.parent / 'pc-controller'))
+sys.path.insert(0, str(Path(__file__).parent.parent.parent / 'pc-controller'))
 
 from command_client import CommandClient
 

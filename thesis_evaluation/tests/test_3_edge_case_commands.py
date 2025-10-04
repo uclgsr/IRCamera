@@ -28,7 +28,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Dict, List
 
-sys.path.insert(0, str(Path(__file__).parent.parent / 'pc-controller'))
+sys.path.insert(0, str(Path(__file__).parent.parent.parent / 'pc-controller'))
 
 from command_client import CommandClient
 
@@ -275,14 +275,25 @@ class EdgeCaseCommandTest:
         logger.info("Testing commands in wrong sequence")
         
         sequence_log = []
+        validation_results = []
         
         # Try to STOP before START
         logger.info("1. Sending STOP before any START")
         response = self.client.send_command(device_id, 'STOP')
+        
+        # Validate: Should get error or indicate no active session
+        stop_before_start_valid = response and ('ERROR' in response or 'not active' in response.lower() or 'no session' in response.lower())
+        validation_results.append({
+            'test': 'STOP before START',
+            'expected': 'Error response or indication of no active session',
+            'passed': stop_before_start_valid
+        })
+        
         sequence_log.append({
             'step': 1,
             'action': 'STOP before START',
             'response': response,
+            'validation_passed': stop_before_start_valid,
             'timestamp': datetime.now().isoformat()
         })
         
@@ -294,10 +305,20 @@ class EdgeCaseCommandTest:
         response = self.client.send_command(device_id, 'START', {
             'session_id': session_id
         })
+        
+        # Validate: Should get acknowledgment
+        start_valid = response and ('ACK' in response or 'START' in response)
+        validation_results.append({
+            'test': 'START session',
+            'expected': 'Acknowledgment of session start',
+            'passed': start_valid
+        })
+        
         sequence_log.append({
             'step': 2,
             'action': 'START session',
             'response': response,
+            'validation_passed': start_valid,
             'timestamp': datetime.now().isoformat()
         })
         
@@ -308,10 +329,20 @@ class EdgeCaseCommandTest:
         response = self.client.send_command(device_id, 'START', {
             'session_id': f"another_session_{int(time.time())}"
         })
+        
+        # Validate: Should get error indicating already recording
+        duplicate_start_valid = response and ('ERROR' in response or 'already' in response.lower() or 'active' in response.lower())
+        validation_results.append({
+            'test': 'Duplicate START',
+            'expected': 'Error response indicating session already active',
+            'passed': duplicate_start_valid
+        })
+        
         sequence_log.append({
             'step': 3,
             'action': 'START while already recording',
             'response': response,
+            'validation_passed': duplicate_start_valid,
             'timestamp': datetime.now().isoformat()
         })
         
@@ -322,10 +353,20 @@ class EdgeCaseCommandTest:
         response = self.client.send_command(device_id, 'STOP', {
             'session_id': session_id
         })
+        
+        # Validate: Should get acknowledgment
+        stop_valid = response and ('ACK' in response or 'STOP' in response)
+        validation_results.append({
+            'test': 'STOP session',
+            'expected': 'Acknowledgment of session stop',
+            'passed': stop_valid
+        })
+        
         sequence_log.append({
             'step': 4,
             'action': 'STOP session',
             'response': response,
+            'validation_passed': stop_valid,
             'timestamp': datetime.now().isoformat()
         })
         
@@ -336,20 +377,42 @@ class EdgeCaseCommandTest:
         response = self.client.send_command(device_id, 'STOP', {
             'session_id': session_id
         })
+        
+        # Validate: Should get error or indicate no active session
+        duplicate_stop_valid = response and ('ERROR' in response or 'not active' in response.lower() or 'no session' in response.lower())
+        validation_results.append({
+            'test': 'STOP after session ended',
+            'expected': 'Error response or indication of no active session',
+            'passed': duplicate_stop_valid
+        })
+        
         sequence_log.append({
             'step': 5,
             'action': 'STOP after session ended',
             'response': response,
+            'validation_passed': duplicate_stop_valid,
             'timestamp': datetime.now().isoformat()
         })
+        
+        # Calculate validation summary
+        total_validations = len(validation_results)
+        passed_validations = sum(1 for v in validation_results if v['passed'])
         
         result = {
             'command': 'Sequence test',
             'scenario': 'Commands in wrong sequence',
             'sequence_log': sequence_log,
-            'expected_behavior': 'System should handle out-of-sequence commands gracefully',
-            'actual_behavior': 'All commands received responses'
+            'validation_results': validation_results,
+            'validation_summary': {
+                'total': total_validations,
+                'passed': passed_validations,
+                'failed': total_validations - passed_validations
+            },
+            'expected_behavior': 'System should handle out-of-sequence commands gracefully with appropriate error responses',
+            'actual_behavior': f'{passed_validations}/{total_validations} validations passed'
         }
+        
+        logger.info(f"Sequence validation: {passed_validations}/{total_validations} tests passed")
         
         return result
     
