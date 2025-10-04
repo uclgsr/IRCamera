@@ -67,7 +67,7 @@ class GSRRealSensorContinuityTest:
         timestamps = []
         
         # Read CSV file
-        with open(self.data_file, 'r') as f:
+        with open(self.data_file, 'r', encoding='utf-8') as f:
             lines = f.readlines()
             
             # Skip header
