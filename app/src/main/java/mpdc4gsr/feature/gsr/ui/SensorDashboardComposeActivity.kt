@@ -129,7 +129,23 @@ class SensorDashboardComposeActivity : ComponentActivity() {
                         isConnected = gsrConnectionState == MainActivityViewModel.GSRConnectionState.CONNECTED,
                         deviceName = "Shimmer3-GSR",
                         connectionStrength = if (gsrConnectionState == MainActivityViewModel.GSRConnectionState.CONNECTED) 85 else 0
-                    )
+                    ),
+                    onExportData = {
+                        // TODO: Implement GSR data export functionality
+                        android.widget.Toast.makeText(
+                            this@SensorDashboardComposeActivity,
+                            "Export GSR data feature coming soon",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
+                    onResetStatistics = {
+                        // TODO: Implement statistics reset functionality
+                        android.widget.Toast.makeText(
+                            this@SensorDashboardComposeActivity,
+                            "Reset statistics feature coming soon",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 )
 
                 // Additional sensor information cards

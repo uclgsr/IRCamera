@@ -21,7 +21,9 @@ import androidx.compose.ui.unit.dp
 fun GSRVisualizationCard(
     gsrData: GSRData,
     connectionState: GSRConnectionState,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onExportData: () -> Unit = {},
+    onResetStatistics: () -> Unit = {}
 ) {
     Card(
         modifier = modifier.fillMaxWidth(),
@@ -68,8 +70,8 @@ fun GSRVisualizationCard(
 
             // Data export controls
             GSRDataControls(
-                onExportData = { /* Export data */ },
-                onResetStatistics = { /* Reset stats */ }
+                onExportData = onExportData,
+                onResetStatistics = onResetStatistics
             )
         }
     }
