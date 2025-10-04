@@ -212,6 +212,7 @@ class WebSocketClient(private val context: Context) {
         stopPhase4Services()
 
         eventListener?.onDisconnected("Client stopped")
+        eventListener = null
     }
 
     private fun startServerDiscovery() {
