@@ -206,7 +206,7 @@ class TestRunner:
         }
         
         # Save report
-        with open(report_file, 'w') as f:
+        with open(report_file, 'w', encoding='utf-8') as f:
             json.dump(summary, f, indent=2)
         
         print(f"\nSummary Report saved to: {report_file}")
