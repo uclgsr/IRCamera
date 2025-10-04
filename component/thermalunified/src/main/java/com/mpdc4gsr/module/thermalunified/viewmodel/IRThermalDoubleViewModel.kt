@@ -1,5 +1,7 @@
 package com.mpdc4gsr.module.thermalunified.viewmodel
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,6 +23,15 @@ class IRThermalDoubleViewModel : BaseViewModel() {
 
     private val _isRecording = MutableStateFlow(false)
     val isRecording: StateFlow<Boolean> = _isRecording.asStateFlow()
+
+    private val _showInfoDialog = MutableStateFlow(false)
+    val showInfoDialog: StateFlow<Boolean> = _showInfoDialog.asStateFlow()
+
+    private val _temperatureLocked = MutableStateFlow(false)
+    val temperatureLocked: StateFlow<Boolean> = _temperatureLocked.asStateFlow()
+
+    private val _action = MutableLiveData<ThermalAction>()
+    val action: LiveData<ThermalAction> = _action
 
     fun selectMode(mode: Int) {
         launchWithErrorHandling {
@@ -54,43 +65,64 @@ class IRThermalDoubleViewModel : BaseViewModel() {
 
     fun showInfo() {
         launchWithErrorHandling {
-            _uiEvents.emit(UiEvent.ShowMessage("Show Info"))
+            _showInfoDialog.value = true
         }
+    }
+
+    fun dismissInfoDialog() {
+        _showInfoDialog.value = false
     }
 
     fun toggleTISR() {
         launchWithErrorHandling {
-            _uiEvents.emit(UiEvent.ShowMessage("Toggle TISR"))
+            _action.postValue(ThermalAction.NavigateToTISRSettings)
         }
     }
 
     fun lockTemperatureRange() {
         launchWithErrorHandling {
-            _uiEvents.emit(UiEvent.ShowMessage("Lock Temperature Range"))
+            _temperatureLocked.value = !_temperatureLocked.value
+            _uiEvents.emit(
+                UiEvent.ShowMessage(
+                    if (_temperatureLocked.value) "Temperature range locked" 
+                    else "Temperature range unlocked"
+                )
+            )
         }
     }
 
     fun editTemperatureSettings() {
         launchWithErrorHandling {
-            _uiEvents.emit(UiEvent.ShowMessage("Edit Temperature Settings"))
+            _action.postValue(ThermalAction.ShowTemperatureEditor)
         }
     }
 
     fun openGallery() {
         launchWithErrorHandling {
-            _uiEvents.emit(UiEvent.ShowMessage("Open Gallery"))
+            _action.postValue(ThermalAction.NavigateToGallery)
         }
     }
 
     fun captureCamera() {
         launchWithErrorHandling {
-            _uiEvents.emit(UiEvent.ShowMessage("Capture Camera"))
+            val timestamp = System.currentTimeMillis()
+            val fileName = "thermal_capture_$timestamp.jpg"
+            _action.postValue(ThermalAction.CapturePhoto(fileName))
+            _uiEvents.emit(UiEvent.ShowMessage("Photo captured: $fileName"))
         }
     }
 
     fun showMoreOptions() {
         launchWithErrorHandling {
-            _uiEvents.emit(UiEvent.ShowMessage("Show More Options"))
+            _action.postValue(ThermalAction.ShowMoreOptions)
         }
+    }
+
+    sealed class ThermalAction {
+        object NavigateToGallery : ThermalAction()
+        object NavigateToTISRSettings : ThermalAction()
+        object ShowTemperatureEditor : ThermalAction()
+        object ShowMoreOptions : ThermalAction()
+        data class CapturePhoto(val fileName: String) : ThermalAction()
     }
 }

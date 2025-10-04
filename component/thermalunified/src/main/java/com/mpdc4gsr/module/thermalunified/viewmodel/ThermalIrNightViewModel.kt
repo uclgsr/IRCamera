@@ -1,5 +1,7 @@
 package com.mpdc4gsr.module.thermalunified.viewmodel
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.mpdc4gsr.libunified.app.ktbase.BaseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,6 +20,15 @@ class ThermalIrNightViewModel : BaseViewModel() {
 
     private val _isRecording = MutableStateFlow(false)
     val isRecording: StateFlow<Boolean> = _isRecording.asStateFlow()
+
+    private val _showInfoDialog = MutableStateFlow(false)
+    val showInfoDialog: StateFlow<Boolean> = _showInfoDialog.asStateFlow()
+
+    private val _temperatureLocked = MutableStateFlow(false)
+    val temperatureLocked: StateFlow<Boolean> = _temperatureLocked.asStateFlow()
+
+    private val _action = MutableLiveData<NightThermalAction>()
+    val action: LiveData<NightThermalAction> = _action
 
     fun selectMode(mode: Int) {
         launchWithErrorHandling {
@@ -45,43 +56,61 @@ class ThermalIrNightViewModel : BaseViewModel() {
 
     fun showInfo() {
         launchWithErrorHandling {
-            _uiEvents.emit(UiEvent.ShowMessage("Show Info"))
+            _showInfoDialog.value = true
         }
+    }
+
+    fun dismissInfoDialog() {
+        _showInfoDialog.value = false
     }
 
     fun lockTemperatureRange() {
         launchWithErrorHandling {
-            _uiEvents.emit(UiEvent.ShowMessage("Lock Temperature Range"))
+            _temperatureLocked.value = !_temperatureLocked.value
+            _uiEvents.emit(
+                UiEvent.ShowMessage(
+                    if (_temperatureLocked.value) "Temperature range locked" 
+                    else "Temperature range unlocked"
+                )
+            )
         }
     }
 
     fun editTemperatureSettings() {
         launchWithErrorHandling {
-            _uiEvents.emit(UiEvent.ShowMessage("Edit Temperature Settings"))
+            _action.postValue(NightThermalAction.ShowTemperatureEditor)
         }
     }
 
     fun openColorPalette() {
         launchWithErrorHandling {
-            _uiEvents.emit(UiEvent.ShowMessage("Open Color Palette"))
+            _action.postValue(NightThermalAction.ShowColorPalette)
         }
     }
 
     fun openSettings() {
         launchWithErrorHandling {
-            _uiEvents.emit(UiEvent.ShowMessage("Open Settings"))
+            _action.postValue(NightThermalAction.NavigateToSettings)
         }
     }
 
     fun openGallery() {
         launchWithErrorHandling {
-            _uiEvents.emit(UiEvent.ShowMessage("Open Gallery"))
+            _action.postValue(NightThermalAction.NavigateToGallery)
         }
     }
 
     fun showMoreOptions() {
         launchWithErrorHandling {
-            _uiEvents.emit(UiEvent.ShowMessage("Show More Options"))
+            _action.postValue(NightThermalAction.ShowMoreOptions)
         }
+    }
+
+    sealed class NightThermalAction {
+        object NavigateToGallery : NightThermalAction()
+        object NavigateToSettings : NightThermalAction()
+        object ShowTemperatureEditor : NightThermalAction()
+        object ShowColorPalette : NightThermalAction()
+        object ShowMoreOptions : NightThermalAction()
     }
 }
