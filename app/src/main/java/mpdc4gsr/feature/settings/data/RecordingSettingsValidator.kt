@@ -48,7 +48,10 @@ object RecordingSettingsValidator {
                 actualVideoFps <= (settings.videoFrameRate + 5)
 
         AppLogger.i(TAG, "========== Settings Application Verification ==========")
-        AppLogger.i(TAG, "Audio Setting Match: $audioMatch (Expected: ${settings.audioEnabled}, Actual: $actualAudioEnabled)")
+        AppLogger.i(
+            TAG,
+            "Audio Setting Match: $audioMatch (Expected: ${settings.audioEnabled}, Actual: $actualAudioEnabled)"
+        )
         AppLogger.i(
             TAG,
             "Resolution Match: $resolutionMatch (Expected: ${qualityConfig.videoWidth}x${qualityConfig.videoHeight}, Actual: ${actualVideoWidth}x${actualVideoHeight})"

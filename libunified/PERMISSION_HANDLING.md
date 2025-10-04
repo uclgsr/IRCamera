@@ -1,5 +1,10 @@
 # Permission Handling Guide
 
+**Note:** This documentation has been consolidated into the main docs directory.  
+Please refer to: [docs/developer-guides/permission-handling-guide.md](/docs/developer-guides/permission-handling-guide.md)
+
+---
+
 ## Overview
 
 The `PermissionTools` utility class provides a centralized way to request runtime permissions in the app. It uses the

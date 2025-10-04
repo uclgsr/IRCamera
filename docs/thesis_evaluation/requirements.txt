@@ -1,8 +1,0 @@
-# Requirements for thesis evaluation tests
-# These tests depend on the pc-controller modules
-
-# All dependencies are inherited from pc-controller/requirements.txt
-# Install with: pip install -r ../pc-controller/requirements.txt
-
-# Python 3.7+ is required
-# No additional packages needed beyond standard library for the test scripts

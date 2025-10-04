@@ -11,14 +11,14 @@ import mpdc4gsr.feature.gsr.domain.usecase.*
 
 /**
  * Factory for ShimmerConfigViewModel that constructs the entire dependency graph.
- * 
+ *
  * This factory creates:
  * - ShimmerDeviceManager (requires Application context and LifecycleOwner)
  * - ShimmerDataSource (wraps ShimmerDeviceManager)
  * - ShimmerRepository (uses ShimmerDataSource)
  * - All use cases (each requires ShimmerRepository)
  * - ShimmerConfigViewModel (uses all use cases)
- * 
+ *
  * Note: Since ShimmerDeviceManager requires LifecycleOwner, we use a simplified approach
  * by creating instances without lifecycle binding. For full lifecycle management,
  * consider migrating to Hilt dependency injection.
@@ -27,7 +27,7 @@ class ShimmerConfigViewModelFactory(
     private val application: Application,
     private val lifecycleOwner: androidx.lifecycle.LifecycleOwner
 ) : ViewModelProvider.Factory {
-    
+
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(ShimmerConfigViewModel::class.java)) {
@@ -35,14 +35,14 @@ class ShimmerConfigViewModelFactory(
             val shimmerDeviceManager = ShimmerDeviceManager(application, lifecycleOwner)
             val shimmerDataSource = ShimmerDataSourceImpl(shimmerDeviceManager)
             val shimmerRepository: ShimmerRepository = ShimmerRepositoryImpl(shimmerDataSource)
-            
+
             // Create all use cases with the repository
             val scanDevicesUseCase = ScanShimmerDevicesUseCase(shimmerRepository)
             val connectDeviceUseCase = ConnectShimmerDeviceUseCase(shimmerRepository)
             val disconnectDeviceUseCase = DisconnectShimmerDeviceUseCase(shimmerRepository)
             val getBatteryLevelUseCase = GetDeviceBatteryUseCase(shimmerRepository)
             val checkConnectionUseCase = CheckDeviceConnectionUseCase(shimmerRepository)
-            
+
             // Create the ViewModel with all use cases
             return ShimmerConfigViewModel(
                 scanDevicesUseCase = scanDevicesUseCase,

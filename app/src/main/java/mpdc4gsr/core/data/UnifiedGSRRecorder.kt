@@ -88,7 +88,7 @@ class UnifiedGSRRecorder(
 
     private val discoveredDevices = mutableListOf<DeviceInfo>()
     private var selectedDevice: DeviceInfo? = null
-    
+
     // Expose last connected device for reconnection
     val lastConnectedDeviceAddress: String?
         get() = selectedDevice?.address
@@ -158,7 +158,7 @@ class UnifiedGSRRecorder(
                 AppLogger.w(TAG, "Enhanced device manager initialization failed, using basic mode")
             } else {
                 AppLogger.i(TAG, "Enhanced BLE device manager initialized successfully")
-                
+
                 lifecycleOwner.lifecycleScope.launch {
                     shimmerDeviceManager?.connectionEvents?.collect { event ->
                         when (event.state) {
@@ -166,10 +166,12 @@ class UnifiedGSRRecorder(
                                 _deviceStatus.value = "Connected"
                                 connectedShimmer = shimmerDeviceManager?.getConnectedShimmer(event.deviceAddress)
                             }
+
                             ShimmerDeviceManager.ConnectionState.DISCONNECTED -> {
                                 _deviceStatus.value = "Disconnected"
                                 connectedShimmer = null
                             }
+
                             ShimmerDeviceManager.ConnectionState.FAILED -> {
                                 _deviceStatus.value = "Connection Failed"
                                 _errorFlow.emit(
@@ -183,9 +185,11 @@ class UnifiedGSRRecorder(
                                     )
                                 )
                             }
+
                             ShimmerDeviceManager.ConnectionState.CONNECTING -> {
                                 _deviceStatus.value = "Connecting..."
                             }
+
                             ShimmerDeviceManager.ConnectionState.TIMEOUT -> {
                                 _deviceStatus.value = "Connection Timeout"
                             }

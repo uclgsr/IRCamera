@@ -1,5 +1,10 @@
 CENTRALIZED LOGGING AND ERROR HANDLING
 
+Note: This documentation has been consolidated into the main docs directory.
+Please refer to: docs/developer-guides/logging-utilities-guide.md
+
+---
+
 This package provides centralized logging and error handling utilities for the application.
 
 APPLOGGER
