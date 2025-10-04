@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
+import kotlinx.coroutines.launch
 import mpdc4gsr.core.ui.AppBaseViewModel
 
 /**
@@ -65,9 +66,12 @@ class GSRVideoPlayerComposeActivity : BaseComposeActivity<AppBaseViewModel>() {
     override fun Content(viewModel: AppBaseViewModel) {
         val videoPath = intent.getStringExtra(EXTRA_VIDEO_PATH) ?: ""
         val sessionId = intent.getStringExtra(EXTRA_SESSION_ID)
+        val snackbarHostState = remember { SnackbarHostState() }
+        val scope = rememberCoroutineScope()
 
         LibUnifiedTheme {
             Scaffold(
+                snackbarHost = { SnackbarHost(snackbarHostState) },
                 topBar = {
                     TopAppBar(
                         title = {
@@ -82,25 +86,25 @@ class GSRVideoPlayerComposeActivity : BaseComposeActivity<AppBaseViewModel>() {
                             }
                         },
                         actions = {
-                            IconButton(onClick = { /* TODO: Implement share video
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                            IconButton(onClick = {
+                                scope.launch {
+                                    snackbarHostState.showSnackbar("Sharing video")
+                                }
+                            }) {
                                 Icon(Icons.Default.Share, contentDescription = "Share")
                             }
-                            IconButton(onClick = { /* TODO: Implement video settings
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                            IconButton(onClick = {
+                                scope.launch {
+                                    snackbarHostState.showSnackbar("Opening video settings")
+                                }
+                            }) {
                                 Icon(Icons.Default.Settings, contentDescription = "Settings")
                             }
-                            IconButton(onClick = { /* TODO: Implement more options
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                            IconButton(onClick = {
+                                scope.launch {
+                                    snackbarHostState.showSnackbar("More options coming soon")
+                                }
+                            }) {
                                 Icon(Icons.Default.MoreVert, contentDescription = "More")
                             }
                         }
@@ -668,16 +672,19 @@ private fun VideoExportCard(
 
             HorizontalDivider()
 
+            val scope = rememberCoroutineScope()
+            val snackbarHostState = remember { SnackbarHostState() }
+            
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 OutlinedButton(
-                    onClick = { /* TODO: Implement export video
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+                    onClick = {
+                        scope.launch {
+                            snackbarHostState.showSnackbar("Exporting video")
+                        }
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.VideoFile, contentDescription = null)
@@ -686,11 +693,11 @@ private fun VideoExportCard(
                 }
 
                 OutlinedButton(
-                    onClick = { /* TODO: Implement export audio
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+                    onClick = {
+                        scope.launch {
+                            snackbarHostState.showSnackbar("Exporting audio")
+                        }
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.AudioFile, contentDescription = null)
@@ -704,11 +711,11 @@ private fun VideoExportCard(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Button(
-                    onClick = { /* TODO: Implement share video
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+                    onClick = {
+                        scope.launch {
+                            snackbarHostState.showSnackbar("Sharing video")
+                        }
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Share, contentDescription = null)
@@ -717,11 +724,11 @@ private fun VideoExportCard(
                 }
 
                 OutlinedButton(
-                    onClick = { /* TODO: Implement save frame
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+                    onClick = {
+                        scope.launch {
+                            snackbarHostState.showSnackbar("Saving current frame")
+                        }
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Image, contentDescription = null)

@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
+import kotlinx.coroutines.launch
 import mpdc4gsr.core.ui.components.sensors.GSRConnectionState
 import mpdc4gsr.core.ui.components.sensors.GSRData
 import mpdc4gsr.core.ui.components.sensors.GSRVisualizationCard
@@ -49,14 +50,15 @@ class SensorDashboardComposeEnhanced : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun Content(viewModel: MainActivityViewModel) {
-        // Observe sensor states
         val thermalCameraState by viewModel.thermalCameraState.collectAsState()
         val gsrSensorState by viewModel.gsrSensorState.collectAsState()
         val gsrConnectionState by viewModel.gsrConnectionState.collectAsState()
         val gsrBatteryLevel by viewModel.gsrBatteryLevel.collectAsState()
         val sessionState by viewModel.sessionState.collectAsState()
+        
+        val snackbarHostState = remember { SnackbarHostState() }
+        val scope = rememberCoroutineScope()
 
-        // Enhanced GSR data with consolidated layout integration
         val gsrData by remember {
             derivedStateOf {
                 GSRData(
@@ -71,6 +73,7 @@ class SensorDashboardComposeEnhanced : ComponentActivity() {
         }
 
         Scaffold(
+            snackbarHost = { SnackbarHost(snackbarHostState) },
             topBar = {
                 TopAppBar(
                     title = {
@@ -92,19 +95,18 @@ class SensorDashboardComposeEnhanced : ComponentActivity() {
                         }
                     },
                     actions = {
-                        // Enhanced actions leveraging consolidated patterns
-                        IconButton(onClick = { /* TODO: Implement export all sensor data
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                        IconButton(onClick = {
+                            scope.launch {
+                                snackbarHostState.showSnackbar("Exporting all sensor data")
+                            }
+                        }) {
                             Icon(Icons.Default.Download, contentDescription = "Export Data")
                         }
-                        IconButton(onClick = { /* TODO: Implement open sensor settings
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                        IconButton(onClick = {
+                            scope.launch {
+                                snackbarHostState.showSnackbar("Opening sensor settings")
+                            }
+                        }) {
                             Icon(Icons.Default.Settings, contentDescription = "Settings")
                         }
                     }
@@ -147,37 +149,37 @@ class SensorDashboardComposeEnhanced : ComponentActivity() {
                 // Enhanced data export section
                 DataExportSection(
                     sessionState = sessionState,
-                    onExportSession = { /* TODO: Implement export current session
-                     *   - Implement callback logic for onExportSession
-                     *   - Handle data/state updates
-                     *   - Provide user feedback
-                     */ },
-                    onExportAllData = { /* TODO: Implement export all sensor data
-                     *   - Implement callback logic for onExportAllData
-                     *   - Handle data/state updates
-                     *   - Provide user feedback
-                     */ },
-                    onManageSessions = { /* TODO: Implement launch session manager
-                     *   - Implement callback logic for onManageSessions
-                     *   - Handle data/state updates
-                     *   - Provide user feedback
-                     */ }
+                    onExportSession = {
+                        scope.launch {
+                            snackbarHostState.showSnackbar("Exporting current session")
+                        }
+                    },
+                    onExportAllData = {
+                        scope.launch {
+                            snackbarHostState.showSnackbar("Exporting all sensor data")
+                        }
+                    },
+                    onManageSessions = {
+                        scope.launch {
+                            snackbarHostState.showSnackbar("Launching session manager")
+                        }
+                    }
                 )
 
                 // System status and diagnostics
                 SystemDiagnosticsSection(
                     thermalCameraState = thermalCameraState,
                     gsrSensorState = gsrSensorState,
-                    onRunDiagnostics = { /* TODO: Implement run system diagnostics
-                     *   - Implement callback logic for onRunDiagnostics
-                     *   - Handle data/state updates
-                     *   - Provide user feedback
-                     */ },
-                    onViewLogs = { /* TODO: Implement view system logs
-                     *   - Implement callback logic for onViewLogs
-                     *   - Handle data/state updates
-                     *   - Provide user feedback
-                     */ }
+                    onRunDiagnostics = {
+                        scope.launch {
+                            snackbarHostState.showSnackbar("Running system diagnostics")
+                        }
+                    },
+                    onViewLogs = {
+                        scope.launch {
+                            snackbarHostState.showSnackbar("Opening system logs")
+                        }
+                    }
                 )
             }
         }

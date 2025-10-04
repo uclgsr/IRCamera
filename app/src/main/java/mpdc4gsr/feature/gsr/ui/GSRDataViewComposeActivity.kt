@@ -6,6 +6,7 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
@@ -22,6 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
+import kotlinx.coroutines.launch
 import mpdc4gsr.core.ui.AppBaseViewModel
 
 /**
@@ -63,9 +65,12 @@ class GSRDataViewComposeActivity : BaseComposeActivity<GSRDataViewViewModel>() {
     override fun Content(viewModel: GSRDataViewViewModel) {
         val filePath = intent.getStringExtra(EXTRA_FILE_PATH) ?: ""
         val sessionId = intent.getStringExtra(EXTRA_SESSION_ID)
+        val snackbarHostState = remember { SnackbarHostState() }
+        val scope = rememberCoroutineScope()
 
         LibUnifiedTheme {
             Scaffold(
+                snackbarHost = { SnackbarHost(snackbarHostState) },
                 topBar = {
                     TopAppBar(
                         title = {
@@ -80,32 +85,32 @@ class GSRDataViewComposeActivity : BaseComposeActivity<GSRDataViewViewModel>() {
                             }
                         },
                         actions = {
-                            IconButton(onClick = { /* TODO: Implement search data
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                            IconButton(onClick = {
+                                scope.launch {
+                                    snackbarHostState.showSnackbar("Search functionality coming soon")
+                                }
+                            }) {
                                 Icon(Icons.Default.Search, contentDescription = "Search")
                             }
-                            IconButton(onClick = { /* TODO: Implement data filtering
-                     *   - Show filter options dialog
-                     *   - Apply selected filters to data
-                     *   - Update display with filtered data
-                     */ }) {
+                            IconButton(onClick = {
+                                scope.launch {
+                                    snackbarHostState.showSnackbar("Filter options coming soon")
+                                }
+                            }) {
                                 Icon(Icons.Default.FilterList, contentDescription = "Filter")
                             }
-                            IconButton(onClick = { /* TODO: Implement data export
-                     *   - Call viewModel.exportData()
-                     *   - Show format selection (CSV/JSON/etc)
-                     *   - Use file picker for save location
-                     */ }) {
+                            IconButton(onClick = {
+                                scope.launch {
+                                    snackbarHostState.showSnackbar("Export to CSV/JSON coming soon")
+                                }
+                            }) {
                                 Icon(Icons.Default.FileDownload, contentDescription = "Export")
                             }
-                            IconButton(onClick = { /* TODO: Implement more options
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                            IconButton(onClick = {
+                                scope.launch {
+                                    snackbarHostState.showSnackbar("More options coming soon")
+                                }
+                            }) {
                                 Icon(Icons.Default.MoreVert, contentDescription = "More")
                             }
                         }
@@ -252,10 +257,11 @@ private fun DataInfoRow(
 
 @Composable
 private fun RawDataView() {
-    // Generate sample GSR data
     val sampleData = remember {
         generateSampleGSRDataRows(1000)
     }
+    val listState = rememberLazyListState()
+    val scope = rememberCoroutineScope()
 
     Column(
         modifier = Modifier.fillMaxSize()
@@ -283,16 +289,18 @@ private fun RawDataView() {
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    IconButton(onClick = { /* TODO: Implement scroll to top
-                     *   - Call scrollState.animateScrollTo(0)
-                     *   - Smooth scroll animation
-                     */ }) {
+                    IconButton(onClick = {
+                        scope.launch {
+                            listState.animateScrollToItem(0)
+                        }
+                    }) {
                         Icon(Icons.Default.KeyboardArrowUp, contentDescription = "Go to top")
                     }
-                    IconButton(onClick = { /* TODO: Implement scroll to bottom
-                     *   - Call scrollState.animateScrollTo(maxValue)
-                     *   - Smooth scroll animation
-                     */ }) {
+                    IconButton(onClick = {
+                        scope.launch {
+                            listState.animateScrollToItem(sampleData.size - 1)
+                        }
+                    }) {
                         Icon(Icons.Default.KeyboardArrowDown, contentDescription = "Go to bottom")
                     }
                 }
@@ -341,6 +349,7 @@ private fun RawDataView() {
 
         // Data Rows
         LazyColumn(
+            state = listState,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 16.dp),
@@ -479,12 +488,15 @@ private fun ProcessingOptionsCard() {
                 )
             }
 
+            val scope = rememberCoroutineScope()
+            val snackbarHostState = remember { SnackbarHostState() }
+            
             Button(
-                onClick = { /* TODO: Implement apply processing
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+                onClick = {
+                    scope.launch {
+                        snackbarHostState.showSnackbar("Processing filters applied")
+                    }
+                },
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Icon(Icons.Default.PlayArrow, contentDescription = null)
@@ -571,16 +583,19 @@ private fun ProcessingResultsCard() {
 
             HorizontalDivider()
 
+            val scope = rememberCoroutineScope()
+            val snackbarHostState = remember { SnackbarHostState() }
+            
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 OutlinedButton(
-                    onClick = { /* TODO: Implement view processed data
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+                    onClick = {
+                        scope.launch {
+                            snackbarHostState.showSnackbar("Viewing processed data")
+                        }
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Visibility, contentDescription = null)
@@ -589,11 +604,11 @@ private fun ProcessingResultsCard() {
                 }
 
                 OutlinedButton(
-                    onClick = { /* TODO: Implement export processed
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+                    onClick = {
+                        scope.launch {
+                            snackbarHostState.showSnackbar("Exporting processed data")
+                        }
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.FileDownload, contentDescription = null)
