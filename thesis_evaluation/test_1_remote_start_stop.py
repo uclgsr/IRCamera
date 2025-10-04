@@ -130,7 +130,7 @@ class StartStopCommandTest:
                 'command_latency_ms': start_cmd_latency_ms
             })
             
-            if 'ACK' in response or 'START-ACK' in response:
+            if response and response.startswith('START-ACK'):
                 self.log_event("Recording Started", {
                     'session_id': session_id,
                     'latency_ms': start_cmd_latency_ms,
