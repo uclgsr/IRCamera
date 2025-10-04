@@ -1,6 +1,6 @@
 package mpdc4gsr.feature.camera.presentation
 
-import android.app.Application
+import android.content.Context
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -53,8 +53,10 @@ enum class WhiteBalance(val displayName: String) {
  * Manages RgbCameraRecorder lifecycle and camera controls
  */
 class RGBCameraViewModel(
-    private val application: Application
+    context: Context
 ) : AppBaseViewModel() {
+
+    private val application: Context = context.applicationContext
 
     companion object {
         // Reuse SimpleDateFormat instance for better performance

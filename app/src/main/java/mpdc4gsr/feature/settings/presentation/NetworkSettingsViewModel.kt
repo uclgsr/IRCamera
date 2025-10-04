@@ -22,9 +22,9 @@ import mpdc4gsr.core.data.ShimmerDeviceManager
  * Network Settings ViewModel - MVVM Integration
  * Manages WiFi, Bluetooth, and device pairing with existing ShimmerDeviceManager
  */
-class NetworkSettingsViewModel(application: Application) : BaseViewModel() {
+class NetworkSettingsViewModel(context: Context) : BaseViewModel() {
 
-    private val context: Context = application.applicationContext
+    private val context: Context = context.applicationContext
     private val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
     private var bluetoothAdapter: BluetoothAdapter? = null
     private var wifiManager: WifiManager? = null
