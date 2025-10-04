@@ -52,7 +52,7 @@ class GSRRawImageViewComposeActivity : BaseComposeActivity<GSRRawImageViewViewMo
 fun GSRRawImageViewScreen(
     viewModel: GSRRawImageViewViewModel = viewModel(
         factory = GSRRawImageViewViewModelFactory(
-            LocalContext.current.applicationContext as android.app.Application
+            LocalContext.current.applicationContext
         )
     ),
     onNavigateBack: () -> Unit = {}
