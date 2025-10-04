@@ -270,6 +270,27 @@ class RGBCameraViewModel(
     }
 
     /**
+     * Reinitialize camera after error or cleanup
+     */
+    fun reinitializeCamera(lifecycleOwner: androidx.lifecycle.LifecycleOwner) {
+        viewModelScope.launch {
+            try {
+                // Clean up existing camera first
+                _cameraRecorder.value?.cleanup()
+                _cameraRecorder.value = null
+                
+                // Wait a bit for cleanup to complete
+                kotlinx.coroutines.delay(500)
+                
+                // Reinitialize
+                initializeCamera(lifecycleOwner)
+            } catch (e: Exception) {
+                _cameraState.update { it.copy(error = "Failed to reinitialize camera: ${e.message}") }
+            }
+        }
+    }
+
+    /**
      * Track recording duration
      */
     private fun trackRecordingDuration() {

@@ -168,7 +168,7 @@ fun RGBCameraScreen(
                 }
         )
 
-        // Error message display
+        // Error message display with retry option
         if (showError && cameraState.error != null) {
             Surface(
                 modifier = Modifier
@@ -193,11 +193,23 @@ fun RGBCameraScreen(
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onErrorContainer
                     )
-                    Spacer(modifier = Modifier.height(12.dp))
-                    Button(
-                        onClick = { viewModel.dismissError() }
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        Text("Dismiss")
+                        OutlinedButton(
+                            onClick = { viewModel.dismissError() }
+                        ) {
+                            Text("Dismiss")
+                        }
+                        Button(
+                            onClick = {
+                                viewModel.dismissError()
+                                viewModel.reinitializeCamera(lifecycleOwner)
+                            }
+                        ) {
+                            Text("Retry")
+                        }
                     }
                 }
             }
