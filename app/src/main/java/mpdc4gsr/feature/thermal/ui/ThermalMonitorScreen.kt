@@ -42,12 +42,16 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.components.TitleBarAction
 import mpdc4gsr.core.ui.theme.IRCameraTheme
+import mpdc4gsr.feature.thermal.presentation.ThermalCameraViewModel
+import mpdc4gsr.feature.thermal.presentation.ThermalCameraViewModelFactory
 
 /**
  * ThermalMonitorScreen composable - replaces MonitorThermalFragment layout
@@ -58,7 +62,11 @@ import mpdc4gsr.core.ui.theme.IRCameraTheme
  */
 @Composable
 fun ThermalMonitorScreen(
-    viewModel: mpdc4gsr.feature.thermal.presentation.ThermalCameraViewModel,
+    viewModel: ThermalCameraViewModel = viewModel(
+        factory = ThermalCameraViewModelFactory(
+            LocalContext.current.applicationContext
+        )
+    ),
     onBackClick: (() -> Unit)? = null,
     onSettingsClick: () -> Unit = {},
     onRecordClick: () -> Unit = {},
