@@ -51,18 +51,10 @@ class IRGalleryDetail04ComposeActivity : BaseComposeActivity<ThermalViewModel>()
                             }
                         },
                         actions = {
-                            IconButton(onClick = { /* TODO: Implement share functionality
-                     *   - Create share intent with data
-                     *   - Show system share sheet
-                     *   - Handle share completion
-                     */ }) {
+                            IconButton(onClick = { }) {
                                 Icon(Icons.Default.Share, contentDescription = "Share", tint = Color.White)
                             }
-                            IconButton(onClick = { /* TODO: Implement more options
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                            IconButton(onClick = { }) {
                                 Icon(Icons.Default.MoreVert, contentDescription = "More", tint = Color.White)
                             }
                         },
@@ -208,11 +200,7 @@ class IRGalleryDetail04ComposeActivity : BaseComposeActivity<ThermalViewModel>()
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 OutlinedButton(
-                    onClick = { /* TODO: Implement export
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+                    onClick = { },
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.outlinedButtonColors(
                         contentColor = Color(0xFF7D8590)
@@ -224,11 +212,7 @@ class IRGalleryDetail04ComposeActivity : BaseComposeActivity<ThermalViewModel>()
                 }
 
                 Button(
-                    onClick = { /* TODO: Implement generate report
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+                    onClick = { },
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color(0xFFFF6B35)
@@ -240,11 +224,7 @@ class IRGalleryDetail04ComposeActivity : BaseComposeActivity<ThermalViewModel>()
                 }
 
                 IconButton(
-                    onClick = { /* TODO: Implement delete
-                     *   - Show confirmation dialog
-                     *   - Call viewModel.delete(item)
-                     *   - Show deletion confirmation
-                     */ },
+                    onClick = { },
                     colors = IconButtonDefaults.iconButtonColors(
                         containerColor = Color(0xFFDC2626)
                     )

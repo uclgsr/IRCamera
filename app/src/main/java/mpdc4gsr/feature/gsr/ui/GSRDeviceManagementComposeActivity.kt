@@ -81,11 +81,7 @@ class GSRDeviceManagementComposeActivity : BaseComposeActivity<AppBaseViewModel>
                             IconButton(onClick = { showBulkActions = true }) {
                                 Icon(Icons.Default.SelectAll, contentDescription = "Bulk Actions")
                             }
-                            IconButton(onClick = { /* TODO: Implement device help
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                            IconButton(onClick = { }) {
                                 Icon(Icons.AutoMirrored.Filled.Help, contentDescription = "Help")
                             }
                         }
@@ -168,16 +164,8 @@ private fun GSRDeviceManagementContent(
                 GSRDeviceCard(
                     device = device,
                     onSelect = { onDeviceSelect(device) },
-                    onConnect = { /* TODO: Implement connect device
-                     *   - Implement callback logic for onConnect
-                     *   - Handle data/state updates
-                     *   - Provide user feedback
-                     */ },
-                    onDisconnect = { /* TODO: Implement disconnect device
-                     *   - Implement callback logic for onDisconnect
-                     *   - Handle data/state updates
-                     *   - Provide user feedback
-                     */ }
+                    onConnect = { },
+                    onDisconnect = { }
                 )
             }
 
@@ -195,16 +183,8 @@ private fun GSRDeviceManagementContent(
                     GSRDeviceCard(
                         device = device,
                         onSelect = { onDeviceSelect(device) },
-                        onConnect = { /* TODO: Implement connect device
-                     *   - Implement callback logic for onConnect
-                     *   - Handle data/state updates
-                     *   - Provide user feedback
-                     */ },
-                        onDisconnect = { /* TODO: Implement disconnect device
-                     *   - Implement callback logic for onDisconnect
-                     *   - Handle data/state updates
-                     *   - Provide user feedback
-                     */ }
+                        onConnect = { },
+                        onDisconnect = { }
                     )
                 }
             }
