@@ -80,16 +80,44 @@ class GSRDataViewComposeActivity : BaseComposeActivity<GSRDataViewViewModel>() {
                             }
                         },
                         actions = {
-                            IconButton(onClick = { /* Search data */ }) {
+                            IconButton(onClick = {
+                                // TODO: Implement search functionality
+                                android.widget.Toast.makeText(
+                                    this@GSRDataViewComposeActivity,
+                                    "Search data feature coming soon",
+                                    android.widget.Toast.LENGTH_SHORT
+                                ).show()
+                            }) {
                                 Icon(Icons.Default.Search, contentDescription = "Search")
                             }
-                            IconButton(onClick = { /* Filter data */ }) {
+                            IconButton(onClick = {
+                                // TODO: Implement filter functionality
+                                android.widget.Toast.makeText(
+                                    this@GSRDataViewComposeActivity,
+                                    "Filter data feature coming soon",
+                                    android.widget.Toast.LENGTH_SHORT
+                                ).show()
+                            }) {
                                 Icon(Icons.Default.FilterList, contentDescription = "Filter")
                             }
-                            IconButton(onClick = { /* Export data */ }) {
+                            IconButton(onClick = {
+                                // TODO: Implement export functionality
+                                android.widget.Toast.makeText(
+                                    this@GSRDataViewComposeActivity,
+                                    "Export data feature coming soon",
+                                    android.widget.Toast.LENGTH_SHORT
+                                ).show()
+                            }) {
                                 Icon(Icons.Default.FileDownload, contentDescription = "Export")
                             }
-                            IconButton(onClick = { /* More options */ }) {
+                            IconButton(onClick = {
+                                // TODO: Show more options menu
+                                android.widget.Toast.makeText(
+                                    this@GSRDataViewComposeActivity,
+                                    "More options coming soon",
+                                    android.widget.Toast.LENGTH_SHORT
+                                ).show()
+                            }) {
                                 Icon(Icons.Default.MoreVert, contentDescription = "More")
                             }
                         }

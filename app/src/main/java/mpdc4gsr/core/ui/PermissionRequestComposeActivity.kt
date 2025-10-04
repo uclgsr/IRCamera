@@ -81,6 +81,14 @@ class PermissionRequestComposeActivity : BaseComposeActivity<BaseViewModel>() {
             ) { paddingValues ->
                 PermissionRequestContent(
                     onPermissionSelect = { selectedPermission = it },
+                    onGrantAll = {
+                        // TODO: Request all required permissions
+                        android.widget.Toast.makeText(
+                            this@PermissionRequestComposeActivity,
+                            "Requesting all permissions...",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.padding(paddingValues)
                 )
             }
@@ -108,6 +116,7 @@ class PermissionRequestComposeActivity : BaseComposeActivity<BaseViewModel>() {
 @Composable
 private fun PermissionRequestContent(
     onPermissionSelect: (PermissionInfo) -> Unit,
+    onGrantAll: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -157,6 +166,7 @@ private fun PermissionRequestContent(
 
         // Grant All Button
         GrantAllPermissionsButton(
+            onClick = onGrantAll,
             modifier = Modifier.padding(top = 24.dp)
         )
     }
@@ -324,10 +334,11 @@ private fun PermissionCard(
 
 @Composable
 private fun GrantAllPermissionsButton(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit = {}
 ) {
     Button(
-        onClick = { /* Grant all permissions */ },
+        onClick = onClick,
         modifier = modifier.fillMaxWidth()
     ) {
         Icon(

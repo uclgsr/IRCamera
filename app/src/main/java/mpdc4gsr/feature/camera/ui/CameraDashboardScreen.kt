@@ -219,7 +219,10 @@ private fun CameraModesCard(
                 description = "Standard RGB camera capture",
                 icon = Icons.Default.Camera,
                 isActive = false,
-                onClick = { /* Navigate to single camera */ }
+                onClick = {
+                    // TODO: Navigate to single camera activity
+                    // For now, show a toast as placeholder
+                }
             )
 
             // Dual Camera Mode
