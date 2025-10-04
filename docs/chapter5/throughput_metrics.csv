@@ -1,0 +1,4 @@
+Sensor,Target_Rate,Measured_Rate,Data_Rate_KBps,Performance
+Thermal Camera,25 fps,24.5 fps,195,98%
+RGB Camera,30 fps,29.8 fps,2400,99%
+GSR Sensor,128 Hz,127.2 Hz,2.5,99%
