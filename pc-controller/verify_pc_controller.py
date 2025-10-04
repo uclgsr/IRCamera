@@ -16,6 +16,8 @@ import sys
 import time
 import socket
 import json
+import glob
+import re
 from pathlib import Path
 
 # Color codes for output
@@ -51,7 +53,6 @@ def verify_file_structure():
     files_to_check = {
         'pc_controller.py': 'Main controller implementation',
         'protocol_adapter.py': 'Protocol adapter for legacy/JSON messages',
-        'native_backend/enhanced_native_backend.cpython-312-x86_64-linux-gnu.so': 'C++ native backend',
         'certificates/': 'SSL certificate directory',
         'tests/test_protocol_compatibility.py': 'Protocol compatibility tests',
         'tests/test_protocol_verification.py': 'Protocol verification tests',
@@ -65,6 +66,14 @@ def verify_file_structure():
         exists = path.exists()
         all_exist = all_exist and exists
         print_test(f"{description} ({file_path})", exists)
+    
+    # Check for C++ native backend with platform-independent pattern
+    backend_pattern = 'native_backend/enhanced_native_backend*.so' if sys.platform != 'win32' else 'native_backend/enhanced_native_backend*.pyd'
+    backend_files = glob.glob(backend_pattern)
+    backend_exists = len(backend_files) > 0
+    backend_name = backend_files[0] if backend_files else backend_pattern
+    print_test(f"C++ native backend ({backend_name})", backend_exists)
+    all_exist = all_exist and backend_exists
     
     return all_exist
 
@@ -303,13 +312,17 @@ def run_test_suite():
     # Run protocol compatibility tests
     try:
         result = subprocess.run(
-            ['python3', '-m', 'unittest', 'tests.test_protocol_compatibility', '-v'],
+            [sys.executable, '-m', 'unittest', 'tests.test_protocol_compatibility', '-v'],
             capture_output=True,
             text=True,
             timeout=30
         )
         test1 = result.returncode == 0
-        count = result.stdout.count(' ... ok')
+        # Parse test count from summary line instead of counting ' ... ok'
+        count = 0
+        match = re.search(r'Ran (\d+) tests?', result.stderr)
+        if match:
+            count = int(match.group(1))
         print_test(f"Protocol compatibility tests ({count} tests)", test1)
     except Exception as e:
         print_test("Protocol compatibility tests", False, str(e))
@@ -318,13 +331,17 @@ def run_test_suite():
     # Run protocol verification tests
     try:
         result = subprocess.run(
-            ['python3', '-m', 'unittest', 'tests.test_protocol_verification', '-v'],
+            [sys.executable, '-m', 'unittest', 'tests.test_protocol_verification', '-v'],
             capture_output=True,
             text=True,
             timeout=30
         )
         test2 = result.returncode == 0
-        count = result.stdout.count(' ... ok')
+        # Parse test count from summary line instead of counting ' ... ok'
+        count = 0
+        match = re.search(r'Ran (\d+) tests?', result.stderr)
+        if match:
+            count = int(match.group(1))
         print_test(f"Protocol verification tests ({count} tests)", test2)
     except Exception as e:
         print_test("Protocol verification tests", False, str(e))
