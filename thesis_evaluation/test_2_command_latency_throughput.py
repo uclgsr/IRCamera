@@ -154,7 +154,7 @@ class CommandLatencyThroughputTest:
             # No delay - test throughput
         burst_end = time.time_ns()
         burst_duration_ms = (burst_end - burst_start) / 1e6
-        commands_per_second = 10 / (burst_duration_ms / 1000)
+        commands_per_second = 10 / (burst_duration_ms / 1000) if burst_duration_ms > 0 else float('inf')
         
         logger.info(f"Burst completed in {burst_duration_ms:.2f} ms")
         logger.info(f"Throughput: {commands_per_second:.2f} commands/second")
