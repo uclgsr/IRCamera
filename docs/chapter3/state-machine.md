@@ -6,111 +6,367 @@ This state diagram depicts the states of the Android recording app (Idle, Ready,
 
 ```mermaid
 stateDiagram-v2
-    [*] --> Disconnected: Application Start
+    [*] --> Disconnected: App Launch
     
-    Disconnected --> Connecting: TCP Connect Initiated<br/>(User action or auto-discovery)
-    Connecting --> Disconnected: Connection Failed<br/>(Timeout or network error)
-    Connecting --> Idle: TCP Established +<br/>HELLO Handshake Complete
-    
-    Idle --> Initializing: START_RECORD Command<br/>from PC
-    Idle --> Disconnected: Connection Lost<br/>or User Disconnect
-    
-    Initializing --> InitializingThermal: Initialize Sensors<br/>(Parallel)
-    Initializing --> InitializingGSR: Initialize Sensors<br/>(Parallel)
-    Initializing --> InitializingRGB: Initialize Sensors<br/>(Parallel)
-    
-    state "Initializing Thermal" as InitializingThermal {
-        [*] --> CheckUSB: Detect TC001
-        CheckUSB --> InitSDK: USB Device Found<br/>VID/PID Match
-        InitSDK --> ThermalReady: SDK Init Success
-        CheckUSB --> ThermalFailed: No Device or<br/>Init Failed
+    state "Disconnected State" as Disconnected {
+        [*] --> NoConnection: Entry
+        NoConnection --> ScanningNetwork: Auto-discovery enabled
+        ScanningNetwork --> NoConnection: No PC found (30s timeout)
+        NoConnection --> [*]: User initiates manual connect
     }
     
-    state "Initializing GSR" as InitializingGSR {
-        [*] --> ScanBLE: Discover Shimmer3
-        ScanBLE --> ConnectBLE: Device Found
-        ConnectBLE --> GSRReady: BLE Connected +<br/>Streaming Started
-        ScanBLE --> GSRFailed: No Device or<br/>Connection Failed
+    Disconnected --> Connecting: TCP Connect Initiated<br/>User action / mDNS discovery
+    
+    state "Connecting State" as Connecting {
+        [*] --> SocketOpening: Open TCP socket
+        SocketOpening --> Handshaking: Socket connected
+        Handshaking --> SendingHello: Send HELLO message
+        SendingHello --> AwaitingHelloAck: Waiting for PC ACK
+        AwaitingHelloAck --> [*]: ACK received
+        
+        SocketOpening --> ConnectFailed: Timeout (30s)
+        Handshaking --> ConnectFailed: Protocol error
+        SendingHello --> ConnectFailed: Network error
+        AwaitingHelloAck --> ConnectFailed: Timeout (5s)
     }
     
-    state "Initializing RGB" as InitializingRGB {
-        [*] --> CheckCamera: Request Camera
-        CheckCamera --> ConfigCamera: Permission Granted
-        ConfigCamera --> RGBReady: CameraX Initialized<br/>1920x1080@30fps
-        CheckCamera --> RGBFailed: Permission Denied or<br/>Camera Error
+    Connecting --> Disconnected: Connection Failed<br/>Timeout / Network error
+    Connecting --> Idle: Connection Established<br/>HELLO + ACK complete
+    
+    state "Idle State" as Idle {
+        [*] --> WaitingCommands: Entry
+        WaitingCommands --> SendingHeartbeat: Every 2 seconds
+        SendingHeartbeat --> WaitingCommands: Heartbeat sent
+        WaitingCommands --> ProcessingCommand: Command received
+        ProcessingCommand --> WaitingCommands: Command processed
     }
     
-    InitializingThermal --> Ready: All Sensors Ready<br/>(Sync Join Point)
-    InitializingGSR --> Ready: All Sensors Ready<br/>(Sync Join Point)
-    InitializingRGB --> Ready: All Sensors Ready<br/>(Sync Join Point)
+    Idle --> Initializing: START_RECORD<br/>from PC
+    Idle --> Disconnected: DISCONNECT<br/>Network lost
     
-    InitializingThermal --> Error: Critical Sensor Failed<br/>(Thermal required)
-    InitializingGSR --> Error: Critical Sensor Failed<br/>(GSR optional)
-    InitializingRGB --> Error: Critical Sensor Failed<br/>(RGB required)
+    state "Initializing Sensors" as Initializing {
+        [*] --> CheckingPrerequisites
+        CheckingPrerequisites --> CheckingStorage: Storage available
+        CheckingStorage --> CheckingBattery: Storage OK (>1GB)
+        CheckingBattery --> CheckingPermissions: Battery OK (>15%)
+        CheckingPermissions --> StartingSensors: Permissions granted
+        
+        CheckingStorage --> InitFailed: Storage full
+        CheckingBattery --> InitFailed: Battery critical
+        CheckingPermissions --> InitFailed: Permission denied
+        
+        state StartingSensors {
+            [*] --> fork_sensors
+            fork_sensors --> InitThermal
+            fork_sensors --> InitGSR  
+            fork_sensors --> InitRGB
+            
+            state "Thermal Init" as InitThermal {
+                [*] --> DetectUSB: Check USB device
+                DetectUSB --> VerifyVID: Device found
+                VerifyVID --> InitSDK: VID/PID match<br/>0x0525/0xa4a2
+                InitSDK --> ConfigParams: SDK loaded
+                ConfigParams --> StartStream: Set emissivity,<br/>temp range
+                StartStream --> ThermalOK: First frame received
+                
+                DetectUSB --> ThermalError: No device
+                VerifyVID --> ThermalError: Wrong device
+                InitSDK --> ThermalError: SDK init failed
+                StartStream --> ThermalError: Stream timeout
+            }
+            
+            state "GSR Init" as InitGSR {
+                [*] --> ScanBLE: BLE scan
+                ScanBLE --> FilterDevices: Devices found
+                FilterDevices --> ConnectGATT: Shimmer3 detected
+                ConnectGATT --> DiscoverServices: Connection OK
+                DiscoverServices --> EnableNotifications: GSR service found
+                EnableNotifications --> StartSampling: Notifications enabled
+                StartSampling --> GSRReady: First sample<br/>received @128Hz
+                
+                ScanBLE --> GSRError: Scan timeout (10s)
+                FilterDevices --> GSRError: No Shimmer3
+                ConnectGATT --> GSRError: Connection failed
+                DiscoverServices --> GSRError: Service not found
+                StartSampling --> GSRError: Sampling failed
+            }
+            
+            state "RGB Init" as InitRGB {
+                [*] --> RequestPermission: Camera permission
+                RequestPermission --> OpenCamera: Permission OK
+                OpenCamera --> ConfigSession: Camera opened
+                ConfigSession --> SetupEncoder: Session configured<br/>1920x1080@30fps
+                SetupEncoder --> StartPreview: H.264 encoder ready
+                StartPreview --> RGBReady: Preview active
+                
+                RequestPermission --> RGBError: Permission denied
+                OpenCamera --> RGBError: Camera unavailable
+                ConfigSession --> RGBError: Config failed
+                SetupEncoder --> RGBError: Encoder error
+            }
+            
+            InitThermal --> join_sensors
+            InitGSR --> join_sensors
+            InitRGB --> join_sensors
+            join_sensors --> [*]: All sensors ready
+            
+            ThermalError --> [*]: Error
+            GSRError --> [*]: Error (optional sensor)
+            RGBError --> [*]: Error
+        }
+        
+        StartingSensors --> AllReady: Success
+        StartingSensors --> InitFailed: Critical error
+    }
     
-    Ready --> Recording: All ACKs Sent +<br/>Final Sync Complete
-    Ready --> Error: Timeout Waiting<br/>for Sensor Ready
+    Initializing --> Ready: All Sensors<br/>Initialized
+    Initializing --> Error: Init Failed<br/>Critical sensor
     
-    Recording --> Recording: Continuous Data Capture<br/>- Thermal: 25 Hz CSV<br/>- GSR: 128 Hz CSV<br/>- RGB: 30 fps MP4
-    Recording --> Recording: Heartbeat to PC<br/>(Every 2 seconds)
-    Recording --> Syncing: SYNC_REQUEST from PC
-    Recording --> Stopping: STOP_RECORD Command<br/>from PC
-    Recording --> Error: Critical Failure<br/>(Sensor disconnect,<br/>storage full, crash)
+    state "Ready State" as Ready {
+        [*] --> PreviewMode: Show sensor previews
+        PreviewMode --> BuffersAllocated: Allocate write buffers
+        BuffersAllocated --> WaitingStart: Send READY to PC
+        WaitingStart --> FinalSync: BEGIN_RECORDING received
+        FinalSync --> [*]: Sync complete
+    }
     
-    Syncing --> Syncing: Exchange Timestamps<br/>Calculate Clock Offset
-    Syncing --> Recording: SYNC_RESPONSE Sent<br/>Clock Adjusted
-    Syncing --> Error: Sync Failed<br/>(Drift > threshold)
+    Ready --> Recording: BEGIN_RECORDING<br/>Final sync done
+    Ready --> Error: Timeout (10s)<br/>No start command
     
-    Stopping --> Finalizing: All Sensors Stopped<br/>Buffers Flushed
-    Stopping --> Error: Graceful Stop Failed<br/>(Sensor hang)
+    state "Active Recording" as Recording {
+        [*] --> fork_recording
+        
+        fork_recording --> ThermalCapture
+        fork_recording --> GSRCapture
+        fork_recording --> RGBCapture
+        fork_recording --> HeartbeatTask
+        fork_recording --> QualityMonitor
+        
+        state "Thermal Capture Loop" as ThermalCapture {
+            [*] --> WaitFrame: 40ms interval
+            WaitFrame --> ProcessFrame: Frame callback
+            ProcessFrame --> Calibrate: Apply temp calibration
+            Calibrate --> Timestamp: getCurrentTimestampNanos
+            Timestamp --> WriteCSV: Format: ts,w,h,t0...t49151
+            WriteCSV --> WaitFrame: Buffer flush
+        }
+        
+        state "GSR Capture Loop" as GSRCapture {
+            [*] --> WaitSample: 7.8ms interval
+            WaitSample --> ConvertADC: 12-bit sample
+            ConvertADC --> CalcMicrosiemens: ADC to μS
+            CalcMicrosiemens --> TimestampGSR: getCurrentTimestampNanos
+            TimestampGSR --> WriteGSRCSV: Format: ts,gsr,ppg
+            WriteGSRCSV --> WaitSample: Buffer flush
+        }
+        
+        state "RGB Capture Loop" as RGBCapture {
+            [*] --> WaitVideoFrame: 33ms interval
+            WaitVideoFrame --> EncodeH264: Frame to encoder
+            EncodeH264 --> WriteMP4: Write to file
+            WriteMP4 --> TimestampMeta: Store frame timestamp
+            TimestampMeta --> WaitVideoFrame: Next frame
+        }
+        
+        state "Heartbeat Task" as HeartbeatTask {
+            [*] --> Wait2s: 2 second timer
+            Wait2s --> GatherStats: Collect metrics
+            GatherStats --> SendHeartbeat: HEARTBEAT to PC
+            SendHeartbeat --> Wait2s: Loop
+        }
+        
+        state "Quality Monitor" as QualityMonitor {
+            [*] --> CheckThermal: Every 1s
+            CheckThermal --> CheckGSR: Validate thermal frames
+            CheckGSR --> CheckRGB: Validate GSR samples
+            CheckRGB --> CheckStorage: Validate RGB frames
+            CheckStorage --> CheckThermal: Check free space
+        }
+        
+        ThermalCapture --> join_recording
+        GSRCapture --> join_recording
+        RGBCapture --> join_recording
+        HeartbeatTask --> join_recording
+        QualityMonitor --> join_recording
+        join_recording --> [*]
+    }
     
-    Finalizing --> Finalizing: Close CSV Files<br/>Finalize Video<br/>Generate metadata.json
-    Finalizing --> Transferring: Files Ready<br/>Transfer Initiated
+    Recording --> Syncing: SYNC_REQUEST<br/>from PC
+    Recording --> Stopping: STOP_RECORD<br/>from PC
+    Recording --> Pausing: PAUSE_RECORD<br/>from PC
+    Recording --> Error: Critical Failure<br/>Sensor / Storage
     
-    Transferring --> Transferring: Send Files to PC<br/>(Chunked Transfer)<br/>Progress Updates
-    Transferring --> Idle: Transfer Complete<br/>PC ACK Received
-    Transferring --> Error: Transfer Failed<br/>(Network lost,<br/>PC unavailable)
+    state "Pausing State" as Pausing {
+        [*] --> SuspendCapture: Stop sensor reads
+        SuspendCapture --> FlushBuffers: Write pending data
+        FlushBuffers --> WaitResume: PAUSED status to PC
+        WaitResume --> [*]: RESUME received
+    }
     
-    Error --> Recovering: Auto-Recovery Attempt<br/>(Exponential Backoff)<br/>500ms → 8s max
-    Error --> Idle: Manual Recovery<br/>(User Reset or<br/>PC Command)
-    Error --> Disconnected: Fatal Error<br/>(Force Disconnect)
+    Pausing --> Recording: RESUME_RECORD
+    Pausing --> Stopping: STOP_RECORD
     
-    Recovering --> Idle: Recovery Successful<br/>(Connection Restored)
-    Recovering --> Recording: Recovery Successful<br/>(Session Resumed)
-    Recovering --> Error: Recovery Failed<br/>(Max Retries Exceeded)
+    state "Time Sync State" as Syncing {
+        [*] --> RecordT2: Receive SYNC_REQUEST
+        RecordT2 --> CalculateOffset: Record t2, prepare t3
+        CalculateOffset --> SendResponse: SYNC_RESPONSE
+        SendResponse --> ApplyCorrection: Apply drift correction
+        ApplyCorrection --> [*]: Resume recording
+    }
+    
+    Syncing --> Recording: Sync Complete<br/>Drift < 5ms
+    Syncing --> Error: Sync Failed<br/>Drift > 5ms
+    
+    state "Stopping State" as Stopping {
+        [*] --> SignalStop: Broadcast stop to sensors
+        SignalStop --> WaitSensorStop: Wait for sensor ACKs
+        WaitSensorStop --> FlushAll: All stopped (timeout 5s)
+        FlushAll --> CloseStreams: Flush write buffers
+        CloseStreams --> [*]: Streams closed
+        
+        WaitSensorStop --> ForceStop: Timeout exceeded
+        ForceStop --> [*]: Force close
+    }
+    
+    Stopping --> Finalizing: Graceful Stop<br/>Complete
+    Stopping --> Error: Force Stop<br/>Sensor hang
+    
+    state "Finalizing State" as Finalizing {
+        [*] --> CloseCSV: Close thermal CSV
+        CloseCSV --> CloseGSRCSV: Close GSR CSV
+        CloseGSRCSV --> FinalizeVideo: Close MP4 file
+        FinalizeVideo --> GenerateMeta: Create metadata.json
+        GenerateMeta --> CalculateChecksums: File integrity check
+        CalculateChecksums --> [*]: Finalization complete
+    }
+    
+    Finalizing --> Transferring: Files Ready<br/>Start transfer
+    
+    state "File Transfer State" as Transferring {
+        [*] --> SendManifest: File list + sizes
+        SendManifest --> WaitRequest: PC requests files
+        
+        state WaitRequest {
+            [*] --> ReceiveFileReq
+            ReceiveFileReq --> ReadChunk: Read 1MB chunk
+            ReadChunk --> SendChunk: Send to PC
+            SendChunk --> ReceiveFileReq: Wait next request
+            SendChunk --> FileComplete: All chunks sent
+            FileComplete --> [*]: PC ACK received
+        }
+        
+        WaitRequest --> AllTransferred: All files done
+        AllTransferred --> [*]: Transfer complete
+    }
+    
+    Transferring --> Idle: Transfer<br/>Complete
+    Transferring --> Error: Transfer Failed<br/>Network lost
+    
+    state "Error State" as Error {
+        [*] --> ClassifyError: Determine error type
+        ClassifyError --> LogError: Log to file
+        LogError --> EmergencySave: Save buffered data
+        EmergencySave --> NotifyPC: Send ERROR message
+        NotifyPC --> WaitAction: Await recovery
+        
+        state "Error Classification" as WaitAction {
+            NetworkError
+            SensorError
+            StorageError
+            SyncError
+            CriticalError
+        }
+    }
+    
+    Error --> Recovering: Auto Recovery<br/>Attempt
+    Error --> Idle: Manual Reset<br/>USER_RESET
+    Error --> Disconnected: Fatal Error<br/>Force disconnect
+    
+    state "Recovery State" as Recovering {
+        [*] --> DetermineStrategy: Error type analysis
+        DetermineStrategy --> ReconnectNetwork: Network error
+        DetermineStrategy --> ReinitSensor: Sensor error
+        DetermineStrategy --> ClearStorage: Storage error
+        DetermineStrategy --> Resync: Sync error
+        
+        ReconnectNetwork --> TestConnection: Exponential backoff
+        ReinitSensor --> TestSensor: Retry sensor init
+        ClearStorage --> TestStorage: Free space
+        Resync --> TestSync: Re-synchronize
+        
+        TestConnection --> RecoverySuccess: Connected
+        TestSensor --> RecoverySuccess: Sensor OK
+        TestStorage --> RecoverySuccess: Space OK
+        TestSync --> RecoverySuccess: Synced
+        
+        TestConnection --> RecoveryFailed: Max retries (3)
+        TestSensor --> RecoveryFailed: Init failed
+        TestStorage --> RecoveryFailed: Cannot free space
+        TestSync --> RecoveryFailed: Sync failed
+        
+        RecoverySuccess --> [*]: Recovery complete
+        RecoveryFailed --> [*]: Recovery failed
+    }
+    
+    Recovering --> Idle: Recovery Success<br/>No session active
+    Recovering --> Recording: Recovery Success<br/>Session resumed
+    Recovering --> Error: Recovery Failed<br/>Max retries
     
     note right of Disconnected
-        No active connection
-        UI shows "Connect" button
-        Network scanner inactive
+        Entry: Clear all state
+        No TCP connection
+        UI: "Connect" button enabled
+        Network scanner: inactive
+        Exit: None
     end note
     
     note right of Idle
-        TCP connected to PC
-        HELLO exchanged
-        Waiting for commands
-        Heartbeat active (2s)
+        Entry: Start heartbeat timer
+        TCP: Connected to PC
+        Protocol: HELLO exchanged
+        Status: Waiting for commands
+        Heartbeat: Every 2 seconds
+        Exit: Stop heartbeat
     end note
     
     note right of Ready
-        All sensors initialized
-        Storage allocated
-        Waiting for final START
-        Preview streams active
+        Entry: Send READY message
+        Sensors: All initialized
+        Storage: Buffers allocated
+        Preview: Streams active
+        Waiting: BEGIN_RECORDING
+        Timeout: 10 seconds
+        Exit: None
     end note
     
     note right of Recording
-        Active data capture
-        All sensors streaming
-        Files being written
-        Quality monitoring ON
+        Entry: Broadcast START
+        Thermal: 25 Hz → CSV
+        GSR: 128 Hz → CSV
+        RGB: 30 fps → MP4
+        Quality: Monitored
+        Heartbeat: Active
+        Exit: Stop all captures
     end note
     
     note right of Error
-        Critical failure detected
-        Emergency data save
-        Error logging active
-        Recovery procedures
+        Entry: Classify error
+        Action: Emergency data save
+        Logging: Error details
+        Notification: PC + User
+        Recovery: Automatic attempt
+        Manual: Reset available
+        Exit: Clear error state
+    end note
+    
+    note right of Recovering
+        Strategy: Exponential backoff
+        Delays: 500ms, 1s, 2s, 4s, 8s
+        Max retries: 3 attempts
+        Types: Network, Sensor,
+               Storage, Sync
+        Success: Resume operation
+        Failure: Return to Error
     end note
 ```
 

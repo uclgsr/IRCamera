@@ -6,98 +6,361 @@ This sequence diagram shows the step-by-step messaging between the PC orchestrat
 
 ```mermaid
 sequenceDiagram
-    participant User as Researcher
-    participant PC as PC Orchestrator<br/>(Python/PyQt6)
-    participant NetServer as Network Server<br/>(TCP :8080)
-    participant Android as Android Device<br/>(Recording App)
-    participant Thermal as TC001 Thermal<br/>(USB/OTG)
-    participant GSR as Shimmer3 GSR<br/>(Bluetooth LE)
-    participant Camera as RGB Camera<br/>(CameraX)
-    participant Storage as Local Storage<br/>(Session Directory)
+    autonumber
+    participant User as 👤 Researcher
+    participant PC as 🖥️ PC Orchestrator<br/>(Python/PyQt6)
+    participant NetServer as 🌐 Network Server<br/>(TCP :8080)
+    participant Android as 📱 Android Device<br/>(Recording App)
+    participant Thermal as 🌡️ TC001 Thermal<br/>(USB/OTG)
+    participant GSR as ⚡ Shimmer3 GSR<br/>(Bluetooth LE)
+    participant Camera as 📹 RGB Camera<br/>(CameraX)
+    participant Storage as 💾 Local Storage<br/>(Session Directory)
+    participant TimeSync as ⏱️ Time Manager<br/>(Sync Service)
 
-    Note over User,Storage: Phase 1: Connection and Discovery
+    rect rgb(230, 245, 255)
+        Note over User,TimeSync: ═══ Phase 1: Connection and Discovery ═══
+        
+        User->>PC: Launch Application
+        activate PC
+        PC->>PC: Initialize SessionManager<br/>Load configuration
+        PC->>NetServer: Start TCP Server (Port 8080)
+        activate NetServer
+        NetServer->>NetServer: bind(0.0.0.0:8080)<br/>listen(backlog=5)<br/>Set SO_REUSEADDR
+        NetServer-->>PC: Server ready
+        PC->>User: Display "Waiting for devices..."
+        deactivate PC
+        
+        User->>Android: Launch Recording App
+        activate Android
+        Android->>Android: Check prerequisites:<br/>- Permissions<br/>- Storage space<br/>- Battery level
+        
+        alt mDNS Auto-Discovery
+            Android->>Android: Start mDNS scan<br/>Service: _ircamera._tcp
+            Android->>NetServer: mDNS query
+            NetServer-->>Android: mDNS response<br/>IP: 192.168.1.100
+            Android->>Android: Parse PC IP address
+        else Manual Connection
+            User->>Android: Enter PC IP manually
+            Android->>Android: Validate IP format
+        end
+        
+        critical Establish TCP Connection
+            Android->>NetServer: SYN (TCP handshake)
+            NetServer->>Android: SYN-ACK
+            Android->>NetServer: ACK
+            Note right of Android: Connection timeout: 30s
+        option Connection Failed
+            Android->>User: Display "Connection Failed"
+            Android->>Android: Retry with backoff
+        end
+        
+        Android->>NetServer: HELLO {<br/>  device_name: "Samsung_S22_001",<br/>  device_id: "uuid-abc123",<br/>  app_version: "1.2.3",<br/>  capabilities: ["thermal","gsr","rgb"],<br/>  timestamp: 1703441234567<br/>}
+        
+        NetServer->>PC: Forward HELLO
+        activate PC
+        PC->>PC: Validate protocol version<br/>Create DeviceManager entry<br/>Allocate device slot
+        
+        opt Device Already Connected
+            PC->>PC: Check existing connections<br/>Handle reconnection
+            PC->>NetServer: Send RECONNECT notification
+        end
+        
+        PC->>NetServer: ACK_HELLO {<br/>  pc_timestamp: 1703441234568,<br/>  session_ready: true,<br/>  server_version: "2.0.1",<br/>  supported_features: ["sync","transfer"]<br/>}
+        deactivate PC
+        
+        NetServer->>Android: Forward ACK_HELLO
+        Android->>Android: Store PC info<br/>Transition to IDLE state
+        deactivate Android
+        
+        NetServer->>PC: Connection registered
+        PC->>User: 🟢 Display "Samsung_S22_001 Connected"
+        deactivate NetServer
+    end
     
-    User->>PC: Launch Application
-    PC->>NetServer: Start TCP Server (Port 8080)
-    NetServer->>NetServer: Listen for connections
+    rect rgb(232, 245, 233)
+        Note over User,TimeSync: ═══ Phase 2: Time Synchronization (NTP-like Protocol) ═══
+        
+        activate PC
+        PC->>TimeSync: Initiate sync protocol
+        activate TimeSync
+        TimeSync->>TimeSync: Record t1 = time.time_ns()<br/>t1 = 1703441234567000000
+        TimeSync->>NetServer: SYNC_REQUEST {<br/>  t1: 1703441234567000000,<br/>  sequence: 1<br/>}
+        deactivate TimeSync
+        deactivate PC
+        
+        activate NetServer
+        NetServer->>Android: Forward SYNC_REQUEST
+        Note right of NetServer: Network latency ~1-2ms
+        deactivate NetServer
+        
+        activate Android
+        Android->>TimeSync: Process sync request
+        activate TimeSync
+        TimeSync->>TimeSync: Record t2 = System.nanoTime()<br/>t2 = 1703441234569000000<br/>(Receive time)
+        TimeSync->>TimeSync: Prepare t3 = System.nanoTime()<br/>t3 = 1703441234570000000<br/>(Send time)
+        TimeSync->>Android: Sync data ready
+        deactivate TimeSync
+        
+        Android->>NetServer: SYNC_RESPONSE {<br/>  t2: 1703441234569000000,<br/>  t3: 1703441234570000000,<br/>  sequence: 1<br/>}
+        deactivate Android
+        
+        activate NetServer
+        NetServer->>PC: Forward SYNC_RESPONSE
+        deactivate NetServer
+        
+        activate PC
+        PC->>TimeSync: Process sync response
+        activate TimeSync
+        TimeSync->>TimeSync: Record t4 = time.time_ns()<br/>t4 = 1703441234572000000<br/>(Receive time)
+        
+        critical Calculate Clock Offset
+            TimeSync->>TimeSync: Calculate RTT:<br/>rtt = (t4 - t1) - (t3 - t2)<br/>rtt = 5000000000 - 1000000000<br/>rtt = 4ms
+            
+            TimeSync->>TimeSync: Calculate offset:<br/>offset = ((t2 - t1) + (t3 - t4)) / 2<br/>offset = (2ms + (-2ms)) / 2<br/>offset = +2ms
+            
+            TimeSync->>TimeSync: Store offset and RTT<br/>Drift monitoring enabled
+        end
+        
+        TimeSync->>PC: Sync complete<br/>Offset: +2ms, RTT: 4ms
+        deactivate TimeSync
+        
+        PC->>NetServer: ACK_SYNC {<br/>  offset_ms: 2.0,<br/>  rtt_ms: 4.0,<br/>  status: "synced"<br/>}
+        deactivate PC
+        
+        activate NetServer
+        NetServer->>Android: Forward ACK_SYNC
+        deactivate NetServer
+        
+        activate Android
+        Android->>TimeSync: Apply offset
+        activate TimeSync
+        TimeSync->>TimeSync: clock_offset = +2ms<br/>Update timestamp function<br/>Enable periodic sync (30s)
+        deactivate TimeSync
+        Android->>Android: Sync status: ✓ Synchronized
+        deactivate Android
+        
+        Note over PC,Android: Time sync accuracy: ±2ms<br/>Periodic re-sync: Every 30 seconds
+    end
     
-    User->>Android: Launch Recording App
-    Android->>Android: Auto-discover PC (mDNS)
-    Android->>NetServer: TCP Connect (IP:8080)
-    NetServer->>PC: Connection Established
+    rect rgb(255, 243, 224)
+        Note over User,TimeSync: ═══ Phase 3: Capability Exchange & Hardware Detection ═══
+        
+        User->>PC: Click "Refresh Devices"
+        activate PC
+        PC->>NetServer: GET_CAPABILITIES {<br/>  device_id: "uuid-abc123"<br/>}
+        deactivate PC
+        
+        activate NetServer
+        NetServer->>Android: Forward GET_CAPABILITIES
+        deactivate NetServer
+        
+        activate Android
+        Android->>Android: Start hardware scan
+        
+        par Parallel Hardware Detection
+            Android->>Thermal: Query USB devices
+            activate Thermal
+            Thermal->>Thermal: Enumerate USB<br/>Check VID:PID = 0x0525:0xa4a2
+            
+            alt TC001 Device Found
+                Thermal->>Thermal: Initialize TC001 SDK<br/>Query capabilities
+                Thermal->>Android: {<br/>  available: true,<br/>  model: "TC001",<br/>  resolution: "256x192",<br/>  fps: 25,<br/>  temp_range: "-20 to 550°C",<br/>  interface: "USB-C/OTG"<br/>}
+            else No Device
+                Thermal->>Android: {<br/>  available: false,<br/>  error: "Device not found"<br/>}
+            end
+            deactivate Thermal
+        and
+            Android->>GSR: Scan BLE devices
+            activate GSR
+            GSR->>GSR: Start BLE scan<br/>Filter: Shimmer3 signature
+            
+            opt Shimmer3 Found
+                GSR->>GSR: Read device characteristics<br/>Query sampling rates
+                GSR->>Android: {<br/>  available: true,<br/>  model: "Shimmer3 GSR+",<br/>  sampling_rates: [51.2,128,256,512],<br/>  sensors: ["GSR","PPG"],<br/>  connection: "BLE 4.0",<br/>  battery: "87%"<br/>}
+            end
+            
+            opt No Device Found
+                GSR->>Android: {<br/>  available: false,<br/>  error: "No Shimmer3 detected"<br/>}
+            end
+            deactivate GSR
+        and
+            Android->>Camera: Query camera system
+            activate Camera
+            Camera->>Camera: Enumerate cameras<br/>Check permissions
+            
+            alt Permission Granted
+                Camera->>Camera: Query supported formats<br/>Query supported resolutions
+                Camera->>Android: {<br/>  available: true,<br/>  cameras: [{<br/>    id: "0",<br/>    facing: "BACK",<br/>    resolutions: ["1920x1080","3840x2160"],<br/>    fps_ranges: ["15-30","30-30"],<br/>    formats: ["YUV_420_888","JPEG"]<br/>  }]<br/>}
+            else Permission Denied
+                Camera->>Android: {<br/>  available: false,<br/>  error: "Camera permission required"<br/>}
+            end
+            deactivate Camera
+        end
+        
+        Android->>Android: Aggregate capabilities<br/>Check storage space<br/>Check battery level
+        
+        Android->>NetServer: CAPABILITIES {<br/>  device_info: {<br/>    manufacturer: "Samsung",<br/>    model: "Galaxy S22",<br/>    android_version: "13",<br/>    storage_free_gb: 45.2,<br/>    battery_level: 87<br/>  },<br/>  sensors: {<br/>    thermal: {...},<br/>    gsr: {...},<br/>    rgb: {...}<br/>  },<br/>  status: "ready"<br/>}
+        deactivate Android
+        
+        activate NetServer
+        NetServer->>PC: Forward CAPABILITIES
+        deactivate NetServer
+        
+        activate PC
+        PC->>PC: Validate capabilities<br/>Check compatibility<br/>Update device registry
+        PC->>User: 📊 Display:<br/>━━━━━━━━━━━━━━<br/>🌡️ Thermal: ✓ TC001 (256x192@25Hz)<br/>⚡ GSR: ✓ Shimmer3 (128Hz)<br/>📹 RGB: ✓ Camera (1920x1080@30fps)<br/>💾 Storage: 45GB free<br/>🔋 Battery: 87%
+        deactivate PC
+    end
     
-    Android->>NetServer: HELLO {device_name, device_id, capabilities}
-    activate NetServer
-    NetServer->>PC: Process HELLO message
-    PC->>PC: Register device<br/>Create DeviceManager entry
-    PC->>NetServer: Response: ACK HELLO {pc_time, session_ready}
-    deactivate NetServer
-    NetServer->>Android: ACK HELLO
+    rect rgb(252, 228, 236)
+        Note over User,TimeSync: ═══ Phase 4: Session Initiation & Validation ═══
+        
+        User->>PC: Click "Start Recording"<br/>Enter session name
+        activate PC
+        PC->>PC: Generate session_id:<br/>session_20241215_1430
+        
+        critical Validate Session Start
+            PC->>PC: Check preconditions:<br/>✓ Device connected<br/>✓ Sensors available<br/>✓ No active session<br/>✓ Storage space sufficient
+        option Validation Failed
+            PC->>User: ❌ Display error<br/>Cannot start recording
+        end
+        
+        PC->>PC: Create session directory:<br/>/data/sessions/session_20241215_1430/
+        
+        PC->>PC: Initialize metadata.json:<br/>{<br/>  session_id: "session_20241215_1430",<br/>  created_at: ISO8601_timestamp,<br/>  devices: [...],<br/>  status: "initializing"<br/>}
+        
+        PC->>NetServer: START_RECORD {<br/>  session_id: "session_20241215_1430",<br/>  pc_timestamp: 1703441234567,<br/>  config: {<br/>    thermal_enabled: true,<br/>    gsr_enabled: true,<br/>    rgb_enabled: true,<br/>    thermal_fps: 25,<br/>    gsr_rate: 128,<br/>    rgb_resolution: "1920x1080",<br/>    rgb_fps: 30<br/>  }<br/>}
+        deactivate PC
+        
+        activate NetServer
+        NetServer->>Android: Forward START_RECORD
+        Note right of NetServer: Command timeout: 30s
+        deactivate NetServer
+        
+        activate Android
+        Android->>Android: State validation:<br/>Current: IDLE<br/>Expected: IDLE<br/>✓ Valid transition
+        
+        alt State Check Failed
+            Android->>NetServer: ERROR {<br/>  code: "INVALID_STATE",<br/>  message: "Already recording"<br/>}
+            NetServer->>PC: Forward ERROR
+            PC->>User: ❌ Cannot start: Device busy
+        end
+        
+        Android->>Storage: Create session directory:<br/>/sdcard/IRCamera/sessions/<br/>session_20241215_1430/
+        activate Storage
+        Storage->>Storage: mkdir -p<br/>Check write permissions<br/>Verify space (>1GB required)
+        Storage-->>Android: Directory created
+        deactivate Storage
+        
+        Android->>Android: Transition to INITIALIZING state
+        deactivate Android
+    end
     
-    PC->>User: Display "Samsung_S22_001 Connected"
-    
-    Note over User,Storage: Phase 2: Time Synchronization
-    
-    PC->>NetServer: SYNC_REQUEST {t1=pc_send_time}
-    NetServer->>Android: SYNC_REQUEST t1=1703441234567
-    activate Android
-    Android->>Android: Record t2=receive_time<br/>1703441234569
-    Android->>Android: Prepare response t3=send_time<br/>1703441234570
-    Android->>NetServer: SYNC_RESPONSE {t2, t3}
-    deactivate Android
-    NetServer->>PC: SYNC_RESPONSE received
-    
-    activate PC
-    PC->>PC: Calculate offset:<br/>t4=receive_time<br/>rtt = (t4-t1) - (t3-t2)<br/>offset = ((t2-t1) + (t3-t4))/2<br/>Result: +2ms offset
-    deactivate PC
-    
-    PC->>NetServer: ACK SYNC {offset=+2ms}
-    NetServer->>Android: ACK SYNC
-    Android->>Android: Adjust local clock offset
-    
-    Note over User,Storage: Phase 3: Capability Exchange
-    
-    User->>PC: Check device capabilities
-    PC->>NetServer: GET_CAPABILITIES
-    NetServer->>Android: GET_CAPABILITIES
-    
-    activate Android
-    Android->>Thermal: Query TC001 (via USB)
-    activate Thermal
-    Thermal->>Android: Device info: 256x192, 25Hz
-    deactivate Thermal
-    
-    Android->>GSR: Query Shimmer3 (via BLE)
-    activate GSR
-    GSR->>Android: Device info: 128Hz, GSR+PPG
-    deactivate GSR
-    
-    Android->>Camera: Query Camera capabilities
-    activate Camera
-    Camera->>Android: Resolution: 1920x1080, 30fps
-    deactivate Camera
-    
-    Android->>NetServer: CAPABILITIES {thermal, gsr, rgb}<br/>thermal=256x192@25Hz<br/>gsr=128Hz GSR+PPG<br/>rgb=1920x1080@30fps
-    deactivate Android
-    
-    NetServer->>PC: Device capabilities received
-    PC->>User: Display sensor capabilities
-    
-    Note over User,Storage: Phase 4: Session Initiation
-    
-    User->>PC: Click "Start Recording"<br/>Session ID: session_20241215_1430
-    activate PC
-    PC->>PC: Create session directory<br/>Initialize metadata.json
-    PC->>NetServer: START_RECORD {session_id, pc_timestamp}
-    deactivate PC
-    NetServer->>Android: START_RECORD session_id=session_20241215_1430
-    
-    activate Android
-    Android->>Android: Validate command<br/>Check state = IDLE
-    Android->>Storage: Create session directory<br/>/IRCamera/sessions/session_20241215_1430/
-    deactivate Android
-    
-    par Parallel Sensor Initialization
+    rect rgb(255, 248, 225)
+        Note over User,TimeSync: ═══ Phase 5: Parallel Sensor Initialization ═══
+        
+        critical Initialize All Sensors (Timeout: 10s)
+            par Thermal Camera Init
+                activate Android
+                Android->>Thermal: Initialize TC001
+                activate Thermal
+                
+                Thermal->>Thermal: 1. Request USB permission
+                opt Permission Required
+                    Thermal->>User: Show permission dialog
+                    User-->>Thermal: Grant permission
+                end
+                
+                Thermal->>Thermal: 2. Open USB device<br/>VID:PID = 0x0525:0xa4a2
+                Thermal->>Thermal: 3. Initialize SDK:<br/>IRCMD.init()<br/>Set emissivity: 0.95<br/>Set temp range: 0-100°C
+                Thermal->>Thermal: 4. Register frame callback:<br/>IFrameCallback.onFrame()
+                Thermal->>Thermal: 5. Configure output:<br/>Format: 16-bit temperature<br/>Resolution: 256x192
+                
+                alt Init Success
+                    Thermal->>Android: ✓ Init complete<br/>First frame received
+                    Android->>NetServer: ACK {<br/>  sensor: "thermal",<br/>  status: "ready",<br/>  config: {resolution: "256x192", fps: 25}<br/>}
+                else Init Failed
+                    Thermal->>Android: ❌ Init failed<br/>Error details
+                    Android->>NetServer: ERROR {<br/>  sensor: "thermal",<br/>  error: "USB device not found"<br/>}
+                end
+                deactivate Thermal
+                deactivate Android
+            and GSR Sensor Init
+                activate Android
+                Android->>GSR: Initialize Shimmer3
+                activate GSR
+                
+                GSR->>GSR: 1. Start BLE scan<br/>Scan duration: 10s
+                GSR->>GSR: 2. Filter devices:<br/>Name matches "Shimmer*"
+                GSR->>GSR: 3. Connect to GATT:<br/>MAC: AA:BB:CC:DD:EE:FF
+                GSR->>GSR: 4. Discover services:<br/>Find GSR service UUID
+                GSR->>GSR: 5. Enable notifications:<br/>GSR characteristic
+                GSR->>GSR: 6. Configure sampling:<br/>Send command 0x07<br/>Rate: 128 Hz
+                GSR->>GSR: 7. Wait first sample:<br/>Timeout: 3s
+                
+                opt First Sample Received
+                    GSR->>Android: ✓ Streaming active<br/>Sample rate: 128Hz
+                    Android->>NetServer: ACK {<br/>  sensor: "gsr",<br/>  status: "ready",<br/>  config: {rate: 128, units: "microsiemens"}<br/>}
+                end
+                
+                opt Connection Failed
+                    GSR->>Android: ❌ Cannot connect<br/>Device not found
+                    Android->>NetServer: WARNING {<br/>  sensor: "gsr",<br/>  warning: "Optional sensor unavailable"<br/>}
+                end
+                deactivate GSR
+                deactivate Android
+            and RGB Camera Init
+                activate Android
+                Android->>Camera: Initialize CameraX
+                activate Camera
+                
+                Camera->>Camera: 1. Request CAMERA permission
+                opt Permission Required
+                    Camera->>User: Show permission dialog
+                    User-->>Camera: Grant permission
+                end
+                
+                Camera->>Camera: 2. Select camera:<br/>cameraSelector = BACK
+                Camera->>Camera: 3. Create use cases:<br/>- Preview<br/>- VideoCapture
+                Camera->>Camera: 4. Configure video:<br/>Quality: HD (1920x1080)<br/>Frame rate: 30 fps<br/>Codec: H.264<br/>Container: MP4
+                Camera->>Camera: 5. Setup MediaRecorder:<br/>Bitrate: 15 Mbps<br/>Audio: AAC @ 128kbps
+                Camera->>Camera: 6. Bind to lifecycle:<br/>ProcessCameraProvider
+                Camera->>Camera: 7. Start preview
+                
+                alt Camera Ready
+                    Camera->>Android: ✓ Camera configured<br/>Preview active
+                    Android->>NetServer: ACK {<br/>  sensor: "rgb",<br/>  status: "ready",<br/>  config: {<br/>    resolution: "1920x1080",<br/>    fps: 30,<br/>    codec: "H.264"<br/>  }<br/>}
+                else Camera Error
+                    Camera->>Android: ❌ Camera error<br/>Details
+                    Android->>NetServer: ERROR {<br/>  sensor: "rgb",<br/>  error: "Camera unavailable"<br/>}
+                end
+                deactivate Camera
+                deactivate Android
+            end
+        option Initialization Timeout
+            Android->>NetServer: ERROR {<br/>  code: "INIT_TIMEOUT",<br/>  message: "Sensor init exceeded 10s"<br/>}
+        end
+        
+        activate NetServer
+        NetServer->>PC: Collect all sensor ACKs
+        deactivate NetServer
+        
+        activate PC
+        PC->>PC: Validate sensor status:<br/>✓ Thermal: Ready<br/>✓ GSR: Ready<br/>✓ RGB: Ready
+        PC->>User: 🟢 Display "All Sensors Ready"
+        deactivate PC
+        
+        activate Android
+        Android->>Android: Join point reached<br/>All sensors initialized<br/>Transition to READY state
+        
+        Android->>NetServer: READY_TO_RECORD {<br/>  session_id: "session_20241215_1430",<br/>  sensors_ready: ["thermal","gsr","rgb"],<br/>  timestamp: 1703441235000<br/>}
+        deactivate Android
+        
+        NetServer->>PC: Device READY
+        activate PC
+        PC->>User: Display "Device Ready - Click to begin"
+        deactivate PC
+    end
         Android->>Thermal: Initialize TC001 SDK
         activate Thermal
         Thermal->>Thermal: IRCMD.init()<br/>Set emissivity, temp range<br/>Register frame callback
