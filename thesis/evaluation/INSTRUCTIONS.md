@@ -11,7 +11,7 @@ This test suite evaluates the data recording correctness and performance of the 
 These tests generate synthetic data and validate the recording pipeline:
 
 ```bash
-cd thesis_evaluation
+cd thesis/evaluation
 python3 scripts/run_all_tests.py
 ```
 
@@ -26,7 +26,7 @@ This will:
 After recording sessions with actual hardware, analyze the data:
 
 ```bash
-cd thesis_evaluation
+cd thesis/evaluation
 python3 scripts/run_all_tests.py \
   --gsr-csv /path/to/gsr_session.csv \
   --thermal-csv /path/to/thermal_frames.csv \
@@ -206,7 +206,7 @@ Key metrics reported for thesis:
 
 ```bash
 # Run synthetic tests to validate pipeline
-cd thesis_evaluation
+cd thesis/evaluation
 python3 scripts/run_all_tests.py
 
 # Generate initial reports
@@ -220,7 +220,7 @@ python3 scripts/analyze_results.py
 # 2. Copy recorded files to test machine
 # 3. Run complete test suite
 
-cd thesis_evaluation
+cd thesis/evaluation
 python3 scripts/run_all_tests.py \
   --gsr-csv ~/recordings/session_20241004/gsr_data.csv \
   --thermal-csv ~/recordings/session_20241004/thermal_frames.csv \

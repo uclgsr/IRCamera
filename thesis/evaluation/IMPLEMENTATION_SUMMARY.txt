@@ -8,7 +8,7 @@ Purpose: Data Recording Correctness and Performance Evaluation (Thesis Chapters 
 
 DIRECTORY STRUCTURE
 -------------------
-thesis_evaluation/
+thesis/evaluation/
 ├── README.md                              - Overview and quick start guide
 ├── INSTRUCTIONS.md                        - Detailed usage instructions
 ├── TEST_SUITE_SUMMARY.md                  - Comprehensive test suite documentation
