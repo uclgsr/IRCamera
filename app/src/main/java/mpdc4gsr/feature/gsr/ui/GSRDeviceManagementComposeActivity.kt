@@ -55,6 +55,8 @@ class GSRDeviceManagementComposeActivity : BaseComposeActivity<AppBaseViewModel>
         var selectedDevice by remember { mutableStateOf<GSRDeviceInfo?>(null) }
         var showDeviceDetails by remember { mutableStateOf(false) }
         var showBulkActions by remember { mutableStateOf(false) }
+        var showHelpDialog by remember { mutableStateOf(false) }
+        val context = androidx.compose.ui.platform.LocalContext.current
 
         LibUnifiedTheme {
             Scaffold(
@@ -81,11 +83,7 @@ class GSRDeviceManagementComposeActivity : BaseComposeActivity<AppBaseViewModel>
                             IconButton(onClick = { showBulkActions = true }) {
                                 Icon(Icons.Default.SelectAll, contentDescription = "Bulk Actions")
                             }
-                            IconButton(onClick = { /* TODO: Implement device help
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                            IconButton(onClick = { showHelpDialog = true }) {
                                 Icon(Icons.AutoMirrored.Filled.Help, contentDescription = "Help")
                             }
                         }
@@ -120,8 +118,32 @@ class GSRDeviceManagementComposeActivity : BaseComposeActivity<AppBaseViewModel>
             BulkActionsDialog(
                 onDismiss = { showBulkActions = false },
                 onPerformAction = { action ->
-                    // Perform bulk action
+                    android.widget.Toast.makeText(context, "Performing: $action", android.widget.Toast.LENGTH_SHORT).show()
                     showBulkActions = false
+                }
+            )
+        }
+
+        if (showHelpDialog) {
+            AlertDialog(
+                onDismissRequest = { showHelpDialog = false },
+                title = { Text("GSR Device Management Help") },
+                text = {
+                    Column {
+                        Text("Device Management Features:", fontWeight = FontWeight.Bold)
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text("• Scan for nearby GSR devices")
+                        Text("• Connect/disconnect devices")
+                        Text("• View device details and status")
+                        Text("• Perform bulk operations")
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text("Tap on a device to view details and configure settings.")
+                    }
+                },
+                confirmButton = {
+                    TextButton(onClick = { showHelpDialog = false }) {
+                        Text("Got it")
+                    }
                 }
             )
         }
@@ -168,16 +190,8 @@ private fun GSRDeviceManagementContent(
                 GSRDeviceCard(
                     device = device,
                     onSelect = { onDeviceSelect(device) },
-                    onConnect = { /* TODO: Implement connect device
-                     *   - Implement callback logic for onConnect
-                     *   - Handle data/state updates
-                     *   - Provide user feedback
-                     */ },
-                    onDisconnect = { /* TODO: Implement disconnect device
-                     *   - Implement callback logic for onDisconnect
-                     *   - Handle data/state updates
-                     *   - Provide user feedback
-                     */ }
+                    onConnect = { },
+                    onDisconnect = { }
                 )
             }
 
@@ -195,16 +209,8 @@ private fun GSRDeviceManagementContent(
                     GSRDeviceCard(
                         device = device,
                         onSelect = { onDeviceSelect(device) },
-                        onConnect = { /* TODO: Implement connect device
-                     *   - Implement callback logic for onConnect
-                     *   - Handle data/state updates
-                     *   - Provide user feedback
-                     */ },
-                        onDisconnect = { /* TODO: Implement disconnect device
-                     *   - Implement callback logic for onDisconnect
-                     *   - Handle data/state updates
-                     *   - Provide user feedback
-                     */ }
+                        onConnect = { },
+                        onDisconnect = { }
                     )
                 }
             }

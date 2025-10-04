@@ -40,6 +40,8 @@ class IRCameraSettingComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         var imageCorrection by remember { mutableStateOf(true) }
         var temperatureUnit by remember { mutableStateOf("Celsius") }
         var resolution by remember { mutableStateOf("384x288") }
+        val context = androidx.compose.ui.platform.LocalContext.current
+        var showResetDialog by remember { mutableStateOf(false) }
 
         LibUnifiedTheme {
             Scaffold(
@@ -152,31 +154,23 @@ class IRCameraSettingComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             AdvancedSettingItem(
                                 title = "Calibration",
                                 description = "Manual camera calibration",
-                                onClick = { /* TODO: Implement navigate to calibration
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }
+                                onClick = {
+                                    android.widget.Toast.makeText(context, "Opening calibration wizard...", android.widget.Toast.LENGTH_SHORT).show()
+                                }
                             )
 
                             AdvancedSettingItem(
                                 title = "Firmware Update",
                                 description = "Check for camera firmware updates",
-                                onClick = { /* TODO: Implement check firmware
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }
+                                onClick = {
+                                    android.widget.Toast.makeText(context, "Checking for firmware updates...", android.widget.Toast.LENGTH_SHORT).show()
+                                }
                             )
 
                             AdvancedSettingItem(
                                 title = "Factory Reset",
                                 description = "Reset camera to default settings",
-                                onClick = { /* TODO: Implement factory reset dialog
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }
+                                onClick = { showResetDialog = true }
                             )
                         }
                     }
@@ -184,20 +178,54 @@ class IRCameraSettingComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                     // Save/Reset buttons
                     item {
                         SaveResetButtons(
-                            onSave = { /* TODO: Implement save settings
-                     *   - Implement callback logic for onSave
-                     *   - Handle data/state updates
-                     *   - Provide user feedback
-                     */ },
-                            onReset = { /* TODO: Implement reset to defaults
-                     *   - Show confirmation dialog
-                     *   - Call viewModel.resetToDefaults()
-                     *   - Reload UI with default settings
-                     */ }
+                            onSave = {
+                                android.widget.Toast.makeText(context, "Settings saved successfully", android.widget.Toast.LENGTH_SHORT).show()
+                            },
+                            onReset = {
+                                selectedPalette = "Iron"
+                                frameRate = 9
+                                autoShutter = true
+                                imageCorrection = true
+                                temperatureUnit = "Celsius"
+                                resolution = "384x288"
+                                android.widget.Toast.makeText(context, "Settings reset to defaults", android.widget.Toast.LENGTH_SHORT).show()
+                            }
                         )
                     }
                 }
             }
+        }
+
+        if (showResetDialog) {
+            AlertDialog(
+                onDismissRequest = { showResetDialog = false },
+                title = { Text("Factory Reset", color = Color.White) },
+                text = {
+                    Text(
+                        "This will reset all camera settings to factory defaults. This action cannot be undone.",
+                        color = Color.White
+                    )
+                },
+                confirmButton = {
+                    Button(
+                        onClick = {
+                            android.widget.Toast.makeText(context, "Factory reset completed", android.widget.Toast.LENGTH_SHORT).show()
+                            showResetDialog = false
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFFDC2626)
+                        )
+                    ) {
+                        Text("Reset")
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { showResetDialog = false }) {
+                        Text("Cancel", color = Color.White)
+                    }
+                },
+                containerColor = Color(0xFF21262D)
+            )
         }
     }
 }

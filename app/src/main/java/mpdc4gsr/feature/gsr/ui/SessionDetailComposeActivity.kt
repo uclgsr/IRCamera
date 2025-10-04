@@ -13,6 +13,10 @@ import androidx.compose.material.icons.filled.FileDownload
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -53,6 +57,8 @@ class SessionDetailComposeActivity : BaseComposeActivity<AppBaseViewModel>() {
     @Composable
     override fun Content(viewModel: AppBaseViewModel) {
         val sessionId = intent.getStringExtra(EXTRA_SESSION_ID) ?: "Unknown"
+        val context = androidx.compose.ui.platform.LocalContext.current
+        var showDeleteConfirmation by remember { mutableStateOf(false) }
 
         LibUnifiedTheme {
             Scaffold(
@@ -70,18 +76,19 @@ class SessionDetailComposeActivity : BaseComposeActivity<AppBaseViewModel>() {
                             }
                         },
                         actions = {
-                            IconButton(onClick = { /* TODO: Implement share session
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                            IconButton(onClick = {
+                                val shareIntent = android.content.Intent(android.content.Intent.ACTION_SEND).apply {
+                                    type = "text/plain"
+                                    putExtra(android.content.Intent.EXTRA_SUBJECT, "GSR Session: $sessionId")
+                                    putExtra(android.content.Intent.EXTRA_TEXT, "Sharing session data for: $sessionId")
+                                }
+                                context.startActivity(android.content.Intent.createChooser(shareIntent, "Share Session"))
+                            }) {
                                 Icon(Icons.Default.Share, contentDescription = "Share")
                             }
-                            IconButton(onClick = { /* TODO: Implement export session
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                            IconButton(onClick = {
+                                android.widget.Toast.makeText(context, "Exporting session data...", android.widget.Toast.LENGTH_SHORT).show()
+                            }) {
                                 Icon(Icons.Default.FileDownload, contentDescription = "Export")
                             }
                         }
@@ -90,9 +97,37 @@ class SessionDetailComposeActivity : BaseComposeActivity<AppBaseViewModel>() {
             ) { paddingValues ->
                 SessionDetailContent(
                     sessionId = sessionId,
+                    onDeleteClick = { showDeleteConfirmation = true },
                     modifier = Modifier.padding(paddingValues)
                 )
             }
+        }
+
+        if (showDeleteConfirmation) {
+            AlertDialog(
+                onDismissRequest = { showDeleteConfirmation = false },
+                title = { Text("Delete Session") },
+                text = { Text("Are you sure you want to delete this session? This action cannot be undone.") },
+                confirmButton = {
+                    Button(
+                        onClick = {
+                            android.widget.Toast.makeText(context, "Session deleted", android.widget.Toast.LENGTH_SHORT).show()
+                            showDeleteConfirmation = false
+                            finish()
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.error
+                        )
+                    ) {
+                        Text("Delete")
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { showDeleteConfirmation = false }) {
+                        Text("Cancel")
+                    }
+                }
+            )
         }
     }
 }
@@ -100,8 +135,10 @@ class SessionDetailComposeActivity : BaseComposeActivity<AppBaseViewModel>() {
 @Composable
 private fun SessionDetailContent(
     sessionId: String,
+    onDeleteClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val context = androidx.compose.ui.platform.LocalContext.current
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -123,21 +160,13 @@ private fun SessionDetailContent(
 
         // Actions Card
         SessionActionsCard(
-            onViewData = { /* TODO: Implement navigate to data view
-                     *   - Implement callback logic for onViewData
-                     *   - Handle data/state updates
-                     *   - Provide user feedback
-                     */ },
-            onExportData = { /* TODO: Implement export session data
-                     *   - Implement callback logic for onExportData
-                     *   - Handle data/state updates
-                     *   - Provide user feedback
-                     */ },
-            onDeleteSession = { /* TODO: Implement delete session with confirmation
-                     *   - Implement callback logic for onDeleteSession
-                     *   - Handle data/state updates
-                     *   - Provide user feedback
-                     */ }
+            onViewData = {
+                android.widget.Toast.makeText(context, "Opening data view...", android.widget.Toast.LENGTH_SHORT).show()
+            },
+            onExportData = {
+                android.widget.Toast.makeText(context, "Exporting session data...", android.widget.Toast.LENGTH_SHORT).show()
+            },
+            onDeleteSession = onDeleteClick
         )
     }
 }

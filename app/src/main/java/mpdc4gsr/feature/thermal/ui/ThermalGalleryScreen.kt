@@ -1,5 +1,7 @@
 package mpdc4gsr.feature.thermal.ui
 
+import android.content.Context
+import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -8,6 +10,8 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.*
@@ -16,14 +20,19 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.FileProvider
 import mpdc4gsr.core.ui.components.NavigationBreadcrumb
 import mpdc4gsr.core.ui.components.TitleBar
 import mpdc4gsr.core.ui.components.TitleBarAction
 import mpdc4gsr.core.ui.theme.IRCameraTheme
+import java.io.File
 
 /**
  * Thermal Gallery Screen - Browse and manage thermal images and recordings
@@ -37,6 +46,8 @@ fun ThermalGalleryScreen(
 ) {
     var selectedTab by remember { mutableIntStateOf(0) }
     var viewMode by remember { mutableStateOf(ViewMode.GRID) }
+    var showSearchDialog by remember { mutableStateOf(false) }
+    var searchQuery by remember { mutableStateOf("") }
 
     val tabs = listOf("Images", "Videos", "Reports")
 
@@ -60,11 +71,7 @@ fun ThermalGalleryScreen(
             TitleBarAction(
                 icon = Icons.Default.Search,
                 contentDescription = "Search",
-                onClick = { /* TODO: Implement search
-                     *   - Show search input dialog
-                     *   - Filter displayed items based on query
-                     *   - Update UI with filtered results
-                     */ }
+                onClick = { showSearchDialog = true }
             )
         }
 
@@ -95,16 +102,80 @@ fun ThermalGalleryScreen(
 
         // Content based on selected tab
         when (selectedTab) {
-            0 -> ThermalImagesContent(viewMode = viewMode)
-            1 -> ThermalVideosContent(viewMode = viewMode)
-            2 -> ThermalReportsContent(viewMode = viewMode)
+            0 -> ThermalImagesContent(viewMode = viewMode, searchQuery = searchQuery)
+            1 -> ThermalVideosContent(viewMode = viewMode, searchQuery = searchQuery)
+            2 -> ThermalReportsContent(viewMode = viewMode, searchQuery = searchQuery)
         }
+    }
+
+    if (showSearchDialog) {
+        SearchDialog(
+            searchQuery = searchQuery,
+            onSearchQueryChange = { searchQuery = it },
+            onDismiss = { showSearchDialog = false }
+        )
     }
 }
 
 @Composable
-private fun ThermalImagesContent(viewMode: ViewMode) {
-    val sampleImages = remember { generateSampleThermalImages() }
+private fun SearchDialog(
+    searchQuery: String,
+    onSearchQueryChange: (String) -> Unit,
+    onDismiss: () -> Unit
+) {
+    val keyboardController = LocalSoftwareKeyboardController.current
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Search Gallery") },
+        text = {
+            OutlinedTextField(
+                value = searchQuery,
+                onValueChange = onSearchQueryChange,
+                label = { Text("Search by name or date") },
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                keyboardActions = KeyboardActions(
+                    onSearch = {
+                        keyboardController?.hide()
+                        onDismiss()
+                    }
+                ),
+                modifier = Modifier.fillMaxWidth()
+            )
+        },
+        confirmButton = {
+            TextButton(onClick = {
+                keyboardController?.hide()
+                onDismiss()
+            }) {
+                Text("Search")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = {
+                onSearchQueryChange("")
+                onDismiss()
+            }) {
+                Text("Clear")
+            }
+        }
+    )
+}
+
+@Composable
+private fun ThermalImagesContent(viewMode: ViewMode, searchQuery: String = "") {
+    val allImages = remember { generateSampleThermalImages() }
+    val sampleImages = remember(searchQuery, allImages) {
+        if (searchQuery.isBlank()) {
+            allImages
+        } else {
+            allImages.filter {
+                it.name.contains(searchQuery, ignoreCase = true) ||
+                it.date.contains(searchQuery, ignoreCase = true)
+            }
+        }
+    }
 
     if (viewMode == ViewMode.GRID) {
         LazyVerticalGrid(
@@ -130,8 +201,18 @@ private fun ThermalImagesContent(viewMode: ViewMode) {
 }
 
 @Composable
-private fun ThermalVideosContent(viewMode: ViewMode) {
-    val sampleVideos = remember { generateSampleThermalVideos() }
+private fun ThermalVideosContent(viewMode: ViewMode, searchQuery: String = "") {
+    val allVideos = remember { generateSampleThermalVideos() }
+    val sampleVideos = remember(searchQuery, allVideos) {
+        if (searchQuery.isBlank()) {
+            allVideos
+        } else {
+            allVideos.filter {
+                it.name.contains(searchQuery, ignoreCase = true) ||
+                it.date.contains(searchQuery, ignoreCase = true)
+            }
+        }
+    }
 
     if (viewMode == ViewMode.GRID) {
         LazyVerticalGrid(
@@ -157,8 +238,18 @@ private fun ThermalVideosContent(viewMode: ViewMode) {
 }
 
 @Composable
-private fun ThermalReportsContent(viewMode: ViewMode) {
-    val sampleReports = remember { generateSampleThermalReports() }
+private fun ThermalReportsContent(viewMode: ViewMode, searchQuery: String = "") {
+    val allReports = remember { generateSampleThermalReports() }
+    val sampleReports = remember(searchQuery, allReports) {
+        if (searchQuery.isBlank()) {
+            allReports
+        } else {
+            allReports.filter {
+                it.name.contains(searchQuery, ignoreCase = true) ||
+                it.date.contains(searchQuery, ignoreCase = true)
+            }
+        }
+    }
 
     LazyColumn(
         contentPadding = PaddingValues(16.dp),
@@ -248,6 +339,8 @@ private fun ThermalImageGridItem(item: ThermalMediaItem) {
 
 @Composable
 private fun ThermalImageListItem(item: ThermalMediaItem) {
+    val context = LocalContext.current
+
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
@@ -297,11 +390,9 @@ private fun ThermalImageListItem(item: ThermalMediaItem) {
             }
 
             // Actions
-            IconButton(onClick = { /* TODO: Implement share functionality
-                     *   - Create share intent with data
-                     *   - Show system share sheet
-                     *   - Handle share completion
-                     */ }) {
+            IconButton(onClick = {
+                shareFile(context, item.name, "image/thermal")
+            }) {
                 Icon(Icons.Default.Share, contentDescription = "Share", tint = Color.Gray)
             }
         }
@@ -387,6 +478,9 @@ private fun ThermalVideoGridItem(item: ThermalMediaItem) {
 
 @Composable
 private fun ThermalVideoListItem(item: ThermalMediaItem) {
+    val context = LocalContext.current
+    var showPlayMessage by remember { mutableStateOf(false) }
+
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
@@ -437,19 +531,32 @@ private fun ThermalVideoListItem(item: ThermalMediaItem) {
             }
 
             // Actions
-            IconButton(onClick = { /* TODO: Implement play
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+            IconButton(onClick = {
+                playVideo(context, item.name)
+            }) {
                 Icon(Icons.Default.PlayArrow, contentDescription = "Play", tint = MaterialTheme.colorScheme.primary)
             }
         }
+    }
+
+    if (showPlayMessage) {
+        AlertDialog(
+            onDismissRequest = { showPlayMessage = false },
+            title = { Text("Playing Video") },
+            text = { Text("Opening ${item.name} in video player...") },
+            confirmButton = {
+                TextButton(onClick = { showPlayMessage = false }) {
+                    Text("OK")
+                }
+            }
+        )
     }
 }
 
 @Composable
 private fun ThermalReportItem(item: ThermalMediaItem) {
+    val context = LocalContext.current
+
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
@@ -489,22 +596,18 @@ private fun ThermalReportItem(item: ThermalMediaItem) {
             }
 
             Row {
-                IconButton(onClick = { /* TODO: Implement view
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                IconButton(onClick = {
+                    viewReport(context, item.name)
+                }) {
                     Icon(
                         Icons.Default.Visibility,
                         contentDescription = "View",
                         tint = MaterialTheme.colorScheme.primary
                     )
                 }
-                IconButton(onClick = { /* TODO: Implement share functionality
-                     *   - Create share intent with data
-                     *   - Show system share sheet
-                     *   - Handle share completion
-                     */ }) {
+                IconButton(onClick = {
+                    shareFile(context, item.name, "application/pdf")
+                }) {
                     Icon(Icons.Default.Share, contentDescription = "Share", tint = Color.Gray)
                 }
             }
@@ -551,6 +654,46 @@ private fun generateSampleThermalReports(): List<ThermalMediaItem> {
         ThermalMediaItem("Thermal_Report_003.pdf", "2024-01-13", "1.5 MB", ""),
         ThermalMediaItem("Analysis_Summary.pdf", "2024-01-12", "2.1 MB", "")
     )
+}
+
+private fun shareFile(context: Context, fileName: String, mimeType: String) {
+    val shareIntent = Intent(Intent.ACTION_SEND).apply {
+        type = mimeType
+        putExtra(Intent.EXTRA_SUBJECT, "Thermal Data: $fileName")
+        putExtra(Intent.EXTRA_TEXT, "Sharing thermal data file: $fileName")
+    }
+    
+    try {
+        context.startActivity(Intent.createChooser(shareIntent, "Share $fileName"))
+    } catch (e: Exception) {
+        e.printStackTrace()
+    }
+}
+
+private fun playVideo(context: Context, fileName: String) {
+    val intent = Intent(Intent.ACTION_VIEW).apply {
+        setDataAndType(android.net.Uri.parse("file://$fileName"), "video/*")
+        flags = Intent.FLAG_ACTIVITY_NEW_TASK
+    }
+    
+    try {
+        context.startActivity(intent)
+    } catch (e: Exception) {
+        e.printStackTrace()
+    }
+}
+
+private fun viewReport(context: Context, fileName: String) {
+    val intent = Intent(Intent.ACTION_VIEW).apply {
+        setDataAndType(android.net.Uri.parse("file://$fileName"), "application/pdf")
+        flags = Intent.FLAG_ACTIVITY_NEW_TASK
+    }
+    
+    try {
+        context.startActivity(intent)
+    } catch (e: Exception) {
+        e.printStackTrace()
+    }
 }
 
 @Preview(showBackground = true)

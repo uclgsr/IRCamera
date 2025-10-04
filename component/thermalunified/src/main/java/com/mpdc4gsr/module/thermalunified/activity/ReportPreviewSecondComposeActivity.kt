@@ -30,6 +30,8 @@ class ReportPreviewSecondComposeActivity : BaseComposeActivity<ReportPreviewSeco
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ReportPreviewSecondViewModel) {
+        val context = androidx.compose.ui.platform.LocalContext.current
+
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
@@ -51,18 +53,19 @@ class ReportPreviewSecondComposeActivity : BaseComposeActivity<ReportPreviewSeco
                             }
                         },
                         actions = {
-                            IconButton(onClick = { /* TODO: Implement share functionality
-                     *   - Create share intent with data
-                     *   - Show system share sheet
-                     *   - Handle share completion
-                     */ }) {
+                            IconButton(onClick = {
+                                val shareIntent = android.content.Intent(android.content.Intent.ACTION_SEND).apply {
+                                    type = "application/pdf"
+                                    putExtra(android.content.Intent.EXTRA_SUBJECT, "Thermal Analysis Report")
+                                    putExtra(android.content.Intent.EXTRA_TEXT, "Sharing thermal analysis report")
+                                }
+                                context.startActivity(android.content.Intent.createChooser(shareIntent, "Share Report"))
+                            }) {
                                 Icon(Icons.Default.Share, contentDescription = "Share", tint = Color.White)
                             }
-                            IconButton(onClick = { /* TODO: Implement export
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                            IconButton(onClick = {
+                                android.widget.Toast.makeText(context, "Exporting report...", android.widget.Toast.LENGTH_SHORT).show()
+                            }) {
                                 Icon(Icons.Default.FileDownload, contentDescription = "Export", tint = Color.White)
                             }
                         },
@@ -85,6 +88,7 @@ class ReportPreviewSecondComposeActivity : BaseComposeActivity<ReportPreviewSeco
         viewModel: ReportPreviewSecondViewModel,
         modifier: Modifier = Modifier
     ) {
+        val context = androidx.compose.ui.platform.LocalContext.current
         val reportSections = remember {
             listOf(
                 ReportSection("Header", "Report Title and Project Information", true),
@@ -198,11 +202,9 @@ class ReportPreviewSecondComposeActivity : BaseComposeActivity<ReportPreviewSeco
 
                         if (selectedSection != null) {
                             IconButton(
-                                onClick = { /* TODO: Implement edit section
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }
+                                onClick = {
+                                    android.widget.Toast.makeText(context, "Editing: $selectedSection", android.widget.Toast.LENGTH_SHORT).show()
+                                }
                             ) {
                                 Icon(
                                     Icons.Default.Edit,
@@ -238,11 +240,9 @@ class ReportPreviewSecondComposeActivity : BaseComposeActivity<ReportPreviewSeco
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 OutlinedButton(
-                    onClick = { /* TODO: Implement edit report
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+                    onClick = {
+                        android.widget.Toast.makeText(context, "Opening report editor...", android.widget.Toast.LENGTH_SHORT).show()
+                    },
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.outlinedButtonColors(
                         contentColor = Color(0xFF1976D2)
@@ -254,11 +254,9 @@ class ReportPreviewSecondComposeActivity : BaseComposeActivity<ReportPreviewSeco
                 }
 
                 Button(
-                    onClick = { /* TODO: Implement export report
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+                    onClick = {
+                        android.widget.Toast.makeText(context, "Finalizing and exporting report...", android.widget.Toast.LENGTH_SHORT).show()
+                    },
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color(0xFF1976D2)

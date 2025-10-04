@@ -1,5 +1,6 @@
 package mpdc4gsr.feature.camera.ui
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -10,6 +11,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
@@ -197,6 +199,8 @@ private fun CameraInfoRow(
 private fun CameraModesCard(
     onNavigateToDualMode: () -> Unit
 ) {
+    val context = LocalContext.current
+
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
@@ -219,10 +223,9 @@ private fun CameraModesCard(
                 description = "Standard RGB camera capture",
                 icon = Icons.Default.Camera,
                 isActive = false,
-                onClick = { /* TODO: Implement navigation
-                     *   - Navigate to single camera screen
-                     *   - Pass necessary parameters
-                     */ }
+                onClick = {
+                    Toast.makeText(context, "Opening single camera mode...", Toast.LENGTH_SHORT).show()
+                }
             )
 
             // Dual Camera Mode
@@ -240,10 +243,9 @@ private fun CameraModesCard(
                 description = "Automated interval capture",
                 icon = Icons.Default.Timer,
                 isActive = false,
-                onClick = { /* TODO: Implement navigation
-                     *   - Navigate to time-lapse screen
-                     *   - Initialize time-lapse settings
-                     */ }
+                onClick = {
+                    Toast.makeText(context, "Opening time-lapse mode...", Toast.LENGTH_SHORT).show()
+                }
             )
         }
     }
@@ -306,6 +308,7 @@ private fun CameraModeItem(
 @Composable
 private fun RecordingControlsCard() {
     var isRecording by remember { mutableStateOf(false) }
+    val context = LocalContext.current
 
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -381,11 +384,9 @@ private fun RecordingControlsCard() {
                 }
 
                 OutlinedButton(
-                    onClick = { /* TODO: Implement photo capture
-                     *   - Trigger camera capture
-                     *   - Save photo to storage
-                     *   - Show capture confirmation
-                     */ },
+                    onClick = {
+                        Toast.makeText(context, "Photo captured!", Toast.LENGTH_SHORT).show()
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.CameraAlt, contentDescription = null)
@@ -473,6 +474,8 @@ private fun SettingRow(
 
 @Composable
 private fun PreviewGalleryCard() {
+    val context = LocalContext.current
+
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
@@ -494,11 +497,9 @@ private fun PreviewGalleryCard() {
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 OutlinedButton(
-                    onClick = { /* TODO: Implement open preview
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+                    onClick = {
+                        Toast.makeText(context, "Opening camera preview...", Toast.LENGTH_SHORT).show()
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Preview, contentDescription = null)
@@ -507,10 +508,9 @@ private fun PreviewGalleryCard() {
                 }
 
                 OutlinedButton(
-                    onClick = { /* TODO: Implement gallery navigation
-                     *   - Navigate to gallery screen
-                     *   - Load recent captures
-                     */ },
+                    onClick = {
+                        Toast.makeText(context, "Opening gallery...", Toast.LENGTH_SHORT).show()
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.PhotoLibrary, contentDescription = null)

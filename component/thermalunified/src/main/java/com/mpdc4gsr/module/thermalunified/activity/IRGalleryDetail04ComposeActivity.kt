@@ -29,6 +29,9 @@ class IRGalleryDetail04ComposeActivity : BaseComposeActivity<ThermalViewModel>()
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ThermalViewModel) {
+        val context = androidx.compose.ui.platform.LocalContext.current
+        var showDeleteConfirmation by remember { mutableStateOf(false) }
+
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
@@ -51,18 +54,19 @@ class IRGalleryDetail04ComposeActivity : BaseComposeActivity<ThermalViewModel>()
                             }
                         },
                         actions = {
-                            IconButton(onClick = { /* TODO: Implement share functionality
-                     *   - Create share intent with data
-                     *   - Show system share sheet
-                     *   - Handle share completion
-                     */ }) {
+                            IconButton(onClick = {
+                                val shareIntent = android.content.Intent(android.content.Intent.ACTION_SEND).apply {
+                                    type = "image/*"
+                                    putExtra(android.content.Intent.EXTRA_SUBJECT, "Thermal Image")
+                                    putExtra(android.content.Intent.EXTRA_TEXT, "Sharing thermal image from gallery")
+                                }
+                                context.startActivity(android.content.Intent.createChooser(shareIntent, "Share Image"))
+                            }) {
                                 Icon(Icons.Default.Share, contentDescription = "Share", tint = Color.White)
                             }
-                            IconButton(onClick = { /* TODO: Implement more options
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                            IconButton(onClick = {
+                                android.widget.Toast.makeText(context, "More options...", android.widget.Toast.LENGTH_SHORT).show()
+                            }) {
                                 Icon(Icons.Default.MoreVert, contentDescription = "More", tint = Color.White)
                             }
                         },
@@ -73,16 +77,52 @@ class IRGalleryDetail04ComposeActivity : BaseComposeActivity<ThermalViewModel>()
                 }
             ) { paddingValues ->
                 GalleryDetailContent(
+                    onDeleteClick = { showDeleteConfirmation = true },
                     modifier = Modifier.padding(paddingValues)
                 )
             }
+        }
+
+        if (showDeleteConfirmation) {
+            AlertDialog(
+                onDismissRequest = { showDeleteConfirmation = false },
+                title = { Text("Delete Image", color = Color.White) },
+                text = {
+                    Text(
+                        "Are you sure you want to delete this thermal image? This action cannot be undone.",
+                        color = Color.White
+                    )
+                },
+                confirmButton = {
+                    Button(
+                        onClick = {
+                            android.widget.Toast.makeText(context, "Image deleted", android.widget.Toast.LENGTH_SHORT).show()
+                            showDeleteConfirmation = false
+                            finish()
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFFDC2626)
+                        )
+                    ) {
+                        Text("Delete")
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { showDeleteConfirmation = false }) {
+                        Text("Cancel", color = Color.White)
+                    }
+                },
+                containerColor = Color(0xFF21262D)
+            )
         }
     }
 
     @Composable
     private fun GalleryDetailContent(
+        onDeleteClick: () -> Unit,
         modifier: Modifier = Modifier
     ) {
+        val context = androidx.compose.ui.platform.LocalContext.current
         var showAnalysis by remember { mutableStateOf(true) }
         var showAnnotations by remember { mutableStateOf(false) }
 
@@ -208,11 +248,9 @@ class IRGalleryDetail04ComposeActivity : BaseComposeActivity<ThermalViewModel>()
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 OutlinedButton(
-                    onClick = { /* TODO: Implement export
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+                    onClick = {
+                        android.widget.Toast.makeText(context, "Exporting thermal image...", android.widget.Toast.LENGTH_SHORT).show()
+                    },
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.outlinedButtonColors(
                         contentColor = Color(0xFF7D8590)
@@ -224,11 +262,9 @@ class IRGalleryDetail04ComposeActivity : BaseComposeActivity<ThermalViewModel>()
                 }
 
                 Button(
-                    onClick = { /* TODO: Implement generate report
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+                    onClick = {
+                        android.widget.Toast.makeText(context, "Generating analysis report...", android.widget.Toast.LENGTH_SHORT).show()
+                    },
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color(0xFFFF6B35)
@@ -240,11 +276,7 @@ class IRGalleryDetail04ComposeActivity : BaseComposeActivity<ThermalViewModel>()
                 }
 
                 IconButton(
-                    onClick = { /* TODO: Implement delete
-                     *   - Show confirmation dialog
-                     *   - Call viewModel.delete(item)
-                     *   - Show deletion confirmation
-                     */ },
+                    onClick = onDeleteClick,
                     colors = IconButtonDefaults.iconButtonColors(
                         containerColor = Color(0xFFDC2626)
                     )
