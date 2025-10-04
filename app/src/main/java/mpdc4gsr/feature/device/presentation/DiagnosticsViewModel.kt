@@ -21,9 +21,9 @@ import java.util.*
  * Diagnostics ViewModel - MVVM Integration
  * Provides real-time system diagnostics and sensor status monitoring
  */
-class DiagnosticsViewModel(application: Application) : BaseViewModel() {
+class DiagnosticsViewModel(context: Context) : BaseViewModel() {
 
-    private val context: Context = application.applicationContext
+    private val context: Context = context.applicationContext
 
     private val _systemStatus = MutableStateFlow(SystemStatus())
     val systemStatus: StateFlow<SystemStatus> = _systemStatus.asStateFlow()

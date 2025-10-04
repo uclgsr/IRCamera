@@ -1,6 +1,5 @@
 package mpdc4gsr.feature.network.ui
 
-import android.app.Application
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -41,7 +40,7 @@ fun NetworkSettingsScreen(
     onBackClick: (() -> Unit)? = null,
     viewModel: NetworkSettingsViewModel = viewModel(
         factory = NetworkSettingsViewModelFactory(
-            LocalContext.current.applicationContext as Application
+            LocalContext.current.applicationContext
         )
     ),
     modifier: Modifier = Modifier

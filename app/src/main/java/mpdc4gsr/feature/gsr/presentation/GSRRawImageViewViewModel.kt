@@ -1,6 +1,6 @@
 package mpdc4gsr.feature.gsr.presentation
 
-import android.app.Application
+import android.content.Context
 import android.content.Intent
 import android.os.Environment
 import androidx.core.content.FileProvider
@@ -17,8 +17,10 @@ import java.io.File
  * Manages GSR image file loading and display state
  */
 class GSRRawImageViewViewModel(
-    private val application: Application
+    context: Context
 ) : AppBaseViewModel() {
+
+    private val application: Context = context.applicationContext
 
     data class GSRImageViewState(
         val isLoading: Boolean = false,
