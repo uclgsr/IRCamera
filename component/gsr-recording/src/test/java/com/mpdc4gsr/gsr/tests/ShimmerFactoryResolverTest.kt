@@ -2,7 +2,9 @@ package com.mpdc4gsr.gsr.tests
 
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
-import com.mpdc4gsr.gsr.service.ShimmerFactoryResolver
+import com.mpdc4gsr.gsr.service.MockShimmerDevice
+import com.mpdc4gsr.gsr.service.MockShimmerDeviceFactory
+import com.mpdc4gsr.gsr.service.ShimmerDeviceFactoryResolver
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Before

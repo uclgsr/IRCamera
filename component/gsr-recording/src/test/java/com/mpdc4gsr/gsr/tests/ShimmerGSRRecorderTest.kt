@@ -7,6 +7,8 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Environment
 import androidx.test.core.app.ApplicationProvider
+import com.mpdc4gsr.gsr.service.MockShimmerDeviceFactory
+import com.mpdc4gsr.gsr.service.ShimmerApiBridge
 import com.mpdc4gsr.gsr.service.ShimmerGSRRecorder
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
