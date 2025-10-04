@@ -189,7 +189,10 @@ class Camera2System(
 
     fun release() {
         if (isRecording) {
-            runBlocking { stopRecording() }
+            // Launch async stopRecording instead of blocking
+            CoroutineScope(Dispatchers.IO).launch {
+                stopRecording()
+            }
         }
 
         videoEngine.release()
