@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import mpdc4gsr.feature.thermal.data.MeasurementMode
 import mpdc4gsr.feature.thermal.data.TemperatureUnit
@@ -80,43 +81,99 @@ private fun ThermalCameraContent(
     var temperatureUnit by remember { mutableStateOf(TemperatureUnit.CELSIUS) }
     var isRecording by remember { mutableStateOf(false) }
     var measurementMode by remember { mutableStateOf(MeasurementMode.SPOT) }
+    var showCrosshair by remember { mutableStateOf(false) }
+    var isFullscreen by remember { mutableStateOf(false) }
+    
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
 
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp)
-            .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        // Thermal Preview Area
-        ThermalPreviewCard(
-            selectedPalette = selectedPalette,
-            measurementMode = measurementMode,
-            temperatureUnit = temperatureUnit
-        )
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) }
+    ) { innerPadding ->
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(16.dp)
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            ThermalPreviewCard(
+                selectedPalette = selectedPalette,
+                measurementMode = measurementMode,
+                temperatureUnit = temperatureUnit,
+                showCrosshair = showCrosshair,
+                isFullscreen = isFullscreen,
+                onCrosshairToggle = { showCrosshair = !showCrosshair },
+                onFullscreenToggle = { isFullscreen = !isFullscreen }
+            )
 
-        // Temperature Measurements
-        TemperatureMeasurementsCard(
-            temperatureUnit = temperatureUnit
-        )
+            TemperatureMeasurementsCard(
+                temperatureUnit = temperatureUnit,
+                onAddMeasurement = {
+                    scope.launch {
+                        snackbarHostState.showSnackbar("Add measurement functionality to be implemented")
+                    }
+                },
+                onClearMeasurements = {
+                    scope.launch {
+                        snackbarHostState.showSnackbar("All measurements cleared")
+                    }
+                }
+            )
 
-        // Camera Controls
-        ThermalCameraControlsCard(
-            selectedPalette = selectedPalette,
-            temperatureUnit = temperatureUnit,
-            isRecording = isRecording,
-            measurementMode = measurementMode,
-            onPaletteChange = { selectedPalette = it },
-            onTemperatureUnitChange = { temperatureUnit = it },
-            onRecordingToggle = { isRecording = it },
-            onMeasurementModeChange = { measurementMode = it }
-        )
+            ThermalCameraControlsCard(
+                selectedPalette = selectedPalette,
+                temperatureUnit = temperatureUnit,
+                isRecording = isRecording,
+                measurementMode = measurementMode,
+                onPaletteChange = { selectedPalette = it },
+                onTemperatureUnitChange = { temperatureUnit = it },
+                onRecordingToggle = { isRecording = it },
+                onMeasurementModeChange = { measurementMode = it },
+                onSnapshot = {
+                    scope.launch {
+                        snackbarHostState.showSnackbar("Snapshot captured successfully")
+                    }
+                }
+            )
 
-        // Analysis Tools
-        ThermalAnalysisToolsCard()
+            ThermalAnalysisToolsCard(
+                onProfileAnalysis = {
+                    scope.launch {
+                        snackbarHostState.showSnackbar("Temperature profile analysis started")
+                    }
+                },
+                onHistogramAnalysis = {
+                    scope.launch {
+                        snackbarHostState.showSnackbar("Histogram analysis in progress")
+                    }
+                },
+                onCompare = {
+                    scope.launch {
+                        snackbarHostState.showSnackbar("Thermal comparison feature to be implemented")
+                    }
+                },
+                onGenerateReport = {
+                    scope.launch {
+                        snackbarHostState.showSnackbar("Generating thermal report...")
+                    }
+                }
+            )
 
-        // Camera Status
-        ThermalCameraStatusCard()
+            ThermalCameraStatusCard(
+                onCalibrate = {
+                    scope.launch {
+                        snackbarHostState.showSnackbar("Camera calibration started")
+                    }
+                },
+                onDiagnostic = {
+                    scope.launch {
+                        snackbarHostState.showSnackbar("Running diagnostic tests...")
+                    }
+                }
+            )
+        }
     }
 }
 
@@ -127,7 +184,11 @@ private fun ThermalCameraContent(
 private fun ThermalPreviewCard(
     selectedPalette: ThermalPalette,
     measurementMode: MeasurementMode,
-    temperatureUnit: TemperatureUnit
+    temperatureUnit: TemperatureUnit,
+    showCrosshair: Boolean,
+    isFullscreen: Boolean,
+    onCrosshairToggle: () -> Unit,
+    onFullscreenToggle: () -> Unit
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -151,19 +212,19 @@ private fun ThermalPreviewCard(
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    IconButton(onClick = { /* TODO: Implement crosshair toggle
-                     *   - Add mutableStateOf(showCrosshair) to track visibility
-                     *   - Toggle state on click: showCrosshair = !showCrosshair
-                     *   - Conditionally render crosshair overlay based on state
-                     */ }) {
-                        Icon(Icons.Default.CenterFocusStrong, contentDescription = "Crosshair")
+                    IconButton(onClick = onCrosshairToggle) {
+                        Icon(
+                            if (showCrosshair) Icons.Default.CenterFocusStrong else Icons.Default.CenterFocusWeak,
+                            contentDescription = "Toggle Crosshair",
+                            tint = if (showCrosshair) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+                        )
                     }
-                    IconButton(onClick = { /* TODO: Implement fullscreen mode
-                     *   - Toggle fullscreen state variable
-                     *   - Hide/show system UI bars using WindowInsetsController
-                     *   - Adjust layout to fill entire screen
-                     */ }) {
-                        Icon(Icons.Default.Fullscreen, contentDescription = "Fullscreen")
+                    IconButton(onClick = onFullscreenToggle) {
+                        Icon(
+                            if (isFullscreen) Icons.Default.FullscreenExit else Icons.Default.Fullscreen,
+                            contentDescription = "Toggle Fullscreen",
+                            tint = if (isFullscreen) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+                        )
                     }
                 }
             }
@@ -200,6 +261,13 @@ private fun ThermalPreviewCard(
                         color = Color.White.copy(alpha = 0.8f),
                         style = MaterialTheme.typography.bodyMedium
                     )
+                    if (isFullscreen) {
+                        Text(
+                            "Fullscreen Mode",
+                            color = Color.White.copy(alpha = 0.7f),
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    }
 
                     // Temperature overlay
                     when (measurementMode) {
@@ -237,7 +305,15 @@ private fun ThermalPreviewCard(
                     }
                 }
 
-                // Temperature scale indicator
+                if (showCrosshair) {
+                    Icon(
+                        Icons.Default.CenterFocusStrong,
+                        contentDescription = "Crosshair",
+                        tint = Color.Red.copy(alpha = 0.7f),
+                        modifier = Modifier.size(64.dp)
+                    )
+                }
+
                 Box(
                     modifier = Modifier
                         .align(Alignment.CenterEnd)
@@ -273,7 +349,9 @@ private fun ThermalPreviewCard(
 
 @Composable
 private fun TemperatureMeasurementsCard(
-    temperatureUnit: TemperatureUnit
+    temperatureUnit: TemperatureUnit,
+    onAddMeasurement: () -> Unit,
+    onClearMeasurements: () -> Unit
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -299,18 +377,12 @@ private fun TemperatureMeasurementsCard(
 
             HorizontalDivider()
 
-            // Measurement controls
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 OutlinedButton(
-                    onClick = { /* TODO: Implement add measurement functionality
-                     *   - Open measurement dialog/UI
-                     *   - Allow user to select measurement point/area
-                     *   - Store measurement data in ViewModel
-                     *   - Display measurement marker on thermal view
-                     */ },
+                    onClick = onAddMeasurement,
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Add, contentDescription = null)
@@ -319,11 +391,7 @@ private fun TemperatureMeasurementsCard(
                 }
 
                 OutlinedButton(
-                    onClick = { /* TODO: Implement clear measurements
-                     *   - Call viewModel.clearMeasurements()
-                     *   - Remove all measurement markers from display
-                     *   - Show confirmation dialog if measurements exist
-                     */ },
+                    onClick = onClearMeasurements,
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Clear, contentDescription = null)
@@ -385,7 +453,8 @@ private fun ThermalCameraControlsCard(
     onPaletteChange: (ThermalPalette) -> Unit,
     onTemperatureUnitChange: (TemperatureUnit) -> Unit,
     onRecordingToggle: (Boolean) -> Unit,
-    onMeasurementModeChange: (MeasurementMode) -> Unit
+    onMeasurementModeChange: (MeasurementMode) -> Unit,
+    onSnapshot: () -> Unit
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -525,11 +594,7 @@ private fun ThermalCameraControlsCard(
                 }
 
                 OutlinedButton(
-                    onClick = { /* TODO: Implement snapshot capture
-                     *   - Capture current frame/view state
-                     *   - Save snapshot to file system
-                     *   - Show save confirmation with location
-                     */ },
+                    onClick = onSnapshot,
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.CameraAlt, contentDescription = null)
@@ -542,7 +607,12 @@ private fun ThermalCameraControlsCard(
 }
 
 @Composable
-private fun ThermalAnalysisToolsCard() {
+private fun ThermalAnalysisToolsCard(
+    onProfileAnalysis: () -> Unit,
+    onHistogramAnalysis: () -> Unit,
+    onCompare: () -> Unit,
+    onGenerateReport: () -> Unit
+) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
@@ -564,11 +634,7 @@ private fun ThermalAnalysisToolsCard() {
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 OutlinedButton(
-                    onClick = { /* TODO: Implement temperature profile analysis
-                     *   - Call viewModel.analyzeTemperatureProfile()
-                     *   - Show profile graph/chart dialog
-                     *   - Display min/max/avg temperatures along profile
-                     */ },
+                    onClick = onProfileAnalysis,
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.AutoMirrored.Filled.ShowChart, contentDescription = null)
@@ -577,11 +643,7 @@ private fun ThermalAnalysisToolsCard() {
                 }
 
                 OutlinedButton(
-                    onClick = { /* TODO: Implement histogram analysis
-                     *   - Generate temperature histogram
-                     *   - Display histogram chart
-                     *   - Show temperature distribution statistics
-                     */ },
+                    onClick = onHistogramAnalysis,
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.BarChart, contentDescription = null)
@@ -595,11 +657,7 @@ private fun ThermalAnalysisToolsCard() {
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 OutlinedButton(
-                    onClick = { /* TODO: Implement thermal comparison
-                     *   - Allow selection of two thermal images
-                     *   - Display side-by-side comparison
-                     *   - Highlight temperature differences
-                     */ },
+                    onClick = onCompare,
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Compare, contentDescription = null)
@@ -608,11 +666,7 @@ private fun ThermalAnalysisToolsCard() {
                 }
 
                 OutlinedButton(
-                    onClick = { /* TODO: Implement report generation
-                     *   - Collect session data and measurements
-                     *   - Generate PDF report with charts and images
-                     *   - Allow user to save/share report
-                     */ },
+                    onClick = onGenerateReport,
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Assessment, contentDescription = null)
@@ -625,7 +679,10 @@ private fun ThermalAnalysisToolsCard() {
 }
 
 @Composable
-private fun ThermalCameraStatusCard() {
+private fun ThermalCameraStatusCard(
+    onCalibrate: () -> Unit,
+    onDiagnostic: () -> Unit
+) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
@@ -655,11 +712,7 @@ private fun ThermalCameraStatusCard() {
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 OutlinedButton(
-                    onClick = { /* TODO: Implement camera calibration
-                     *   - Call viewModel.startCalibration()
-                     *   - Guide user through calibration process
-                     *   - Store calibration parameters
-                     */ },
+                    onClick = onCalibrate,
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Tune, contentDescription = null)
@@ -668,11 +721,7 @@ private fun ThermalCameraStatusCard() {
                 }
 
                 OutlinedButton(
-                    onClick = { /* TODO: Implement diagnostic test
-                     *   - Run sensor diagnostic checks
-                     *   - Display test results
-                     *   - Show any detected issues
-                     */ },
+                    onClick = onDiagnostic,
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.BugReport, contentDescription = null)

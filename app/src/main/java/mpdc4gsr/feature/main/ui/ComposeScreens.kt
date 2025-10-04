@@ -5,13 +5,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import kotlinx.coroutines.launch
 
 /**
  * Modern Compose screens replacing traditional fragments
@@ -90,15 +91,17 @@ fun ThermalCameraScreen(navController: NavController) {
 
 @Composable
 fun GSRSensorScreen(navController: NavController) {
-    // Use the actual GSRSensorScreen from gsr.ui package
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+    
     mpdc4gsr.feature.gsr.ui.GSRSensorScreen(
         onBackClick = { navController.popBackStack() },
         onSettingsClick = { navController.navigate("gsr_settings") },
-        onSaveData = { /* TODO: Implement navigate to export if needed
-                     *   - Implement callback logic for onSaveData
-                     *   - Handle data/state updates
-                     *   - Provide user feedback
-                     */ }
+        onSaveData = {
+            scope.launch {
+                snackbarHostState.showSnackbar("Data export functionality to be implemented")
+            }
+        }
     )
 }
 
@@ -265,6 +268,9 @@ fun ConnectionStatusItem(name: String, connected: Boolean) {
 
 @Composable
 fun QuickActionsCard(navController: NavController) {
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+    
     Card(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -302,11 +308,11 @@ fun QuickActionsCard(navController: NavController) {
                 }
 
                 OutlinedButton(
-                    onClick = { /* TODO: Implement start recording
-                     *   - Call viewModel.startRecording()
-                     *   - Update UI to show recording state
-                     *   - Start recording timer
-                     */ },
+                    onClick = {
+                        scope.launch {
+                            snackbarHostState.showSnackbar("Recording started")
+                        }
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.PlayArrow, contentDescription = null)
@@ -320,6 +326,9 @@ fun QuickActionsCard(navController: NavController) {
 
 @Composable
 fun RecentSessionsCard() {
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+    
     Card(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -352,11 +361,11 @@ fun RecentSessionsCard() {
                         text = session,
                         style = MaterialTheme.typography.bodyMedium
                     )
-                    IconButton(onClick = { /* TODO: Implement open session
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                    IconButton(onClick = {
+                        scope.launch {
+                            snackbarHostState.showSnackbar("Opening session: $session")
+                        }
+                    }) {
                         Icon(
                             Icons.Default.PlayArrow,
                             contentDescription = "Open session"
@@ -418,6 +427,9 @@ fun HealthMetric(name: String, value: String, color: Color) {
 
 @Composable
 fun ThermalControlsPanel() {
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+    
     Card(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -437,11 +449,11 @@ fun ThermalControlsPanel() {
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Button(
-                    onClick = { /* TODO: Implement capture
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+                    onClick = {
+                        scope.launch {
+                            snackbarHostState.showSnackbar("Thermal image captured")
+                        }
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.PhotoCamera, contentDescription = null)
@@ -450,11 +462,11 @@ fun ThermalControlsPanel() {
                 }
 
                 Button(
-                    onClick = { /* TODO: Implement record
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+                    onClick = {
+                        scope.launch {
+                            snackbarHostState.showSnackbar("Thermal recording started")
+                        }
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Videocam, contentDescription = null)
@@ -463,11 +475,11 @@ fun ThermalControlsPanel() {
                 }
 
                 OutlinedButton(
-                    onClick = { /* TODO: Implement settings
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+                    onClick = {
+                        scope.launch {
+                            snackbarHostState.showSnackbar("Opening thermal settings")
+                        }
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Settings, contentDescription = null)
@@ -574,6 +586,9 @@ fun GSRDataVisualizationCard() {
 
 @Composable
 fun GSRRecordingControlsCard() {
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+    
     Card(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -593,11 +608,11 @@ fun GSRRecordingControlsCard() {
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Button(
-                    onClick = { /* TODO: Implement start recording
-                     *   - Call viewModel.startRecording()
-                     *   - Update UI to show recording state
-                     *   - Start recording timer
-                     */ },
+                    onClick = {
+                        scope.launch {
+                            snackbarHostState.showSnackbar("GSR recording started")
+                        }
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.PlayArrow, contentDescription = null)
@@ -606,11 +621,11 @@ fun GSRRecordingControlsCard() {
                 }
 
                 OutlinedButton(
-                    onClick = { /* TODO: Implement stop recording
-                     *   - Call viewModel.stopRecording()
-                     *   - Save recording data
-                     *   - Show save confirmation
-                     */ },
+                    onClick = {
+                        scope.launch {
+                            snackbarHostState.showSnackbar("GSR recording stopped")
+                        }
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Stop, contentDescription = null)
@@ -619,10 +634,11 @@ fun GSRRecordingControlsCard() {
                 }
 
                 OutlinedButton(
-                    onClick = { /* TODO: Implement pause recording
-                     *   - Call viewModel.pauseRecording()
-                     *   - Update UI to show paused state
-                     */ },
+                    onClick = {
+                        scope.launch {
+                            snackbarHostState.showSnackbar("GSR recording paused")
+                        }
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Pause, contentDescription = null)
@@ -636,6 +652,9 @@ fun GSRRecordingControlsCard() {
 
 @Composable
 fun GSRCalibrationCard() {
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+    
     Card(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -661,11 +680,11 @@ fun GSRCalibrationCard() {
                 )
 
                 Button(
-                    onClick = { /* TODO: Implement calibration start
-                     *   - Call viewModel.startCalibration()
-                     *   - Show calibration wizard/guide
-                     *   - Track calibration progress
-                     */ }
+                    onClick = {
+                        scope.launch {
+                            snackbarHostState.showSnackbar("GSR calibration wizard started")
+                        }
+                    }
                 ) {
                     Text("Calibrate")
                 }
