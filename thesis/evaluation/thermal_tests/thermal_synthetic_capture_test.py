@@ -228,7 +228,7 @@ class ThermalSyntheticCaptureTest:
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         result_file = self.output_dir / f"thermal_synthetic_result_{timestamp}.json"
         
-        with open(result_file, 'w') as f:
+        with open(result_file, 'w', encoding='utf-8') as f:
             json.dump(asdict(result), f, indent=2)
         
         print(f"Saved result: {result_file}")
