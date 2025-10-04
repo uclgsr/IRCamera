@@ -1546,10 +1546,9 @@ class RgbCameraRecorder(
                 writer.writeRow(
                     listOf(
                         timestampNs,
-                        alignedNs,
                         frameNumber,
                         sessionTimeMs,
-                        wallMs?.toString() ?: "",
+                        timestampRecord.synchronizedTimestampMs,
                         "frame_capture",
                         metadataParts.joinToString(",")
                     )
@@ -1601,10 +1600,9 @@ class RgbCameraRecorder(
                 writer.writeRow(
                     listOf(
                         timestampNs,
-                        alignedNs,
                         frameNumber,
                         sessionTimeMs,
-                        wallMs?.toString() ?: "",
+                        timestampRecord.synchronizedTimestampMs,
                         eventType,
                         metadataParts.joinToString(",")
                     )
@@ -1642,6 +1640,7 @@ class RgbCameraRecorder(
                     "timestamp_ns",
                     "frame_number",
                     "session_time_ms",
+                    "synchronized_timestamp_ms",
                     "sync_marker",
                     "metadata"
                 )
@@ -1834,11 +1833,14 @@ class RgbCameraRecorder(
     ) {
         try {
             csvBufferedWriter?.let { writer ->
-                val alignedNs = alignedTimestampNs(timestampNs)
                 val sessionTimeMs = sessionRelativeMs(timestampNs)
                 val wallMs = wallClockMs(timestampNs)
+                
+                // Calculate synchronized timestamp based on the event's wall clock time and current offset
+                val clockOffsetMs = TimestampManager.getClockOffsetMs()
+                val synchronizedTimestampMs = (wallMs ?: TimestampManager.getCurrentSystemTimeMs()) + clockOffsetMs
+                
                 val metadataMap = metadata.toMutableMap()
-                metadataMap["aligned_ns"] = alignedNs.toString()
                 wallMs?.let { metadataMap["wall_ms"] = it.toString() }
                 sessionMetadata?.let {
                     metadataMap["session_reference_ns"] =
@@ -1848,10 +1850,9 @@ class RgbCameraRecorder(
 
                 val row = listOf(
                     timestampNs,
-                    alignedNs,
                     samplesRecorded.get(),
                     sessionTimeMs,
-                    wallMs?.toString() ?: "",
+                    synchronizedTimestampMs,
                     markerType,
                     metadataStr
                 )
