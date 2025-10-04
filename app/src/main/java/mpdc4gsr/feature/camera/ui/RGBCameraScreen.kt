@@ -69,6 +69,7 @@ fun RGBCameraScreen(
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val cameraState by viewModel.cameraState.collectAsState()
+    val cameraRecorder by viewModel.cameraRecorder.collectAsState()
     var showControls by remember { mutableStateOf(true) }
     var showError by remember { mutableStateOf(false) }
 
@@ -95,10 +96,10 @@ fun RGBCameraScreen(
             .fillMaxSize()
             .background(Color.Black)
     ) {
-        // Full-screen camera preview
-        if (viewModel.getCameraRecorder() != null) {
+        // Full-screen camera preview - now properly reactive to cameraRecorder StateFlow
+        if (cameraRecorder != null) {
             FullScreenCameraPreview(
-                cameraRecorder = viewModel.getCameraRecorder()!!,
+                cameraRecorder = cameraRecorder!!,
                 isRecording = isRecording,
                 modifier = Modifier.fillMaxSize()
             )
@@ -390,6 +391,7 @@ private fun CameraBottomControls(
 
 /**
  * Full-screen real camera preview
+ * Now properly binds preview after camera initialization
  */
 @Composable
 private fun FullScreenCameraPreview(
@@ -401,8 +403,12 @@ private fun FullScreenCameraPreview(
         factory = { ctx ->
             PreviewView(ctx).apply {
                 scaleType = PreviewView.ScaleType.FILL_CENTER
-                cameraRecorder.bindPreview(this)
+                implementationMode = PreviewView.ImplementationMode.PERFORMANCE
             }
+        },
+        update = { previewView ->
+            // Bind preview when the view updates - ensures preview is connected
+            cameraRecorder.bindPreview(previewView)
         },
         modifier = modifier
     )
