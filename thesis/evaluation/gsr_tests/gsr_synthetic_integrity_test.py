@@ -169,7 +169,7 @@ class GSRSyntheticIntegrityTest:
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         csv_file = self.output_dir / f"gsr_synthetic_{timestamp}.csv"
         
-        with open(csv_file, 'w') as f:
+        with open(csv_file, 'w', encoding='utf-8') as f:
             # Write header
             f.write("timestamp_ms,conductance_us,resistance_ohm,expected_conductance,error\n")
             
