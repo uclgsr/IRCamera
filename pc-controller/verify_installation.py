@@ -170,8 +170,8 @@ def check_documentation():
 
     docs = {
         'README.md': 'Project overview',
-        'PC_CONTROLLER_IMPLEMENTATION.md': 'Implementation guide',
-        'QUICK_START.md': 'Quick start guide'
+        'docs/pc_controller_implementation.md': 'Implementation guide',
+        'docs/quick_start.md': 'Quick start guide'
     }
 
     for filename, description in docs.items():
@@ -284,7 +284,7 @@ def main():
         print("  1. Run tests:       python3 test_pc_controller_features.py")
         print("  2. Run demo:        python3 demo_features.py")
         print("  3. Start GUI:       python3 advanced_pc_controller.py")
-        print("  4. Read guide:      See QUICK_START.md")
+        print("  4. Read guide:      See docs/quick_start.md")
     else:
         print("  1. Install missing dependencies:")
         print("     pip install -r requirements.txt")
