@@ -32,6 +32,7 @@ class NetworkClient(private val context: Context) {
         private const val DISCOVERY_PORT = 8081
         private const val BROADCAST_TIMEOUT = 5000L
         private const val CONNECTION_TIMEOUT = 10000L
+        private const val QUERY_TIMEOUT = 2000
         private const val HEARTBEAT_INTERVAL = 5000L
     }
 
@@ -805,7 +806,7 @@ class NetworkClient(private val context: Context) {
         withContext(Dispatchers.IO) {
             try {
                 Socket().use { socket ->
-                    socket.connect(InetSocketAddress(host, PC_CONTROLLER_PORT), 2000)
+                    socket.connect(InetSocketAddress(host, PC_CONTROLLER_PORT), QUERY_TIMEOUT)
 
                     DataOutputStream(socket.getOutputStream()).use { output ->
                         DataInputStream(socket.getInputStream()).use { input ->
