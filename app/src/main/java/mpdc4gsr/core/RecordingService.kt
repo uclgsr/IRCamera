@@ -268,11 +268,15 @@ class RecordingService : Service(), CoroutineScope {
         timeSyncManager?.setSyncTriggerCallback(object : TimeSyncManager.SyncTriggerCallback {
             override suspend fun onManualSyncRequested(): Boolean {
                 return try {
-                    // This would typically trigger a sync request to the PC
-                    // For now, we log that a manual sync was requested
-                    AppLogger.i(TAG, "Manual sync requested - would trigger PC sync")
-                    // In a full implementation, this would send a message to PC or trigger sync
-                    true
+                    AppLogger.i(TAG, "Manual sync requested - sending SYNC_INIT to PC")
+                    val syncInitMessage = Protocol.createSyncInitMessage()
+                    val sent = networkServer.sendMessage(syncInitMessage)
+                    if (sent) {
+                        AppLogger.i(TAG, "SYNC_INIT message sent to PC successfully")
+                    } else {
+                        AppLogger.w(TAG, "Failed to send SYNC_INIT message to PC (no connection?)")
+                    }
+                    sent
                 } catch (e: Exception) {
                     AppLogger.e(TAG, "Manual sync trigger failed", e)
                     false

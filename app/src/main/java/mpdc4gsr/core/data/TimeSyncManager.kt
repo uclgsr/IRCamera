@@ -552,7 +552,19 @@ class TimeSyncManager(private val context: Context) {
 
             logSyncResult(sessionStartMarker)
 
-            AppLogger.i(TAG, "Session start sync marker logged")
+            // Trigger actual sync with PC if callback is available
+            val callback = syncTriggerCallback
+            if (callback != null) {
+                val syncTriggered = callback.onManualSyncRequested()
+                if (syncTriggered) {
+                    AppLogger.i(TAG, "Session start sync initiated with PC")
+                } else {
+                    AppLogger.w(TAG, "Session start sync could not be initiated with PC")
+                }
+            } else {
+                AppLogger.w(TAG, "No sync callback available - session start sync marker logged only")
+            }
+
             true
         } catch (e: Exception) {
             AppLogger.e(TAG, "Failed to perform session start sync", e)

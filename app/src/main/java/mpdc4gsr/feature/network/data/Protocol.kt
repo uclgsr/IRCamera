@@ -9,6 +9,7 @@ package mpdc4gsr.feature.network.data
 object Protocol {
     // Message types as per the specification
     const val MSG_HELLO = "HELLO"
+    const val MSG_SYNC_INIT = "SYNC_INIT"
     const val MSG_SYNC_REQUEST = "SYNC_REQUEST"
     const val MSG_SYNC_RESPONSE = "SYNC_RESPONSE"
     const val MSG_SYNC_RESULT = "SYNC_RESULT"
@@ -39,6 +40,14 @@ object Protocol {
      */
     fun createHelloMessage(deviceId: String, sensors: List<String>): String {
         return "$MSG_HELLO device_name=$deviceId sensors=[${sensors.joinToString(",")}]"
+    }
+
+    /**
+     * Create a SYNC_INIT message sent by phone to request PC to initiate time sync
+     * Format: SYNC_INIT
+     */
+    fun createSyncInitMessage(): String {
+        return MSG_SYNC_INIT
     }
 
     /**
