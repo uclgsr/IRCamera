@@ -194,7 +194,7 @@ fun RGBCameraScreen(
                     )
                     Spacer(modifier = Modifier.height(12.dp))
                     Button(
-                        onClick = { showError = false }
+                        onClick = { viewModel.dismissError() }
                     ) {
                         Text("Dismiss")
                     }
