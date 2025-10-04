@@ -2,7 +2,8 @@
 
 ## Figure 1.2: Example Use-Case Scenario Timeline
 
-A detailed timeline diagram showing a typical recording session workflow with all system interactions, state changes, and data flow.
+A detailed timeline diagram showing a typical recording session workflow with all system interactions, state changes,
+and data flow.
 
 ### Part A: Complete Interaction Sequence
 

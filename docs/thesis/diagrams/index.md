@@ -4,10 +4,10 @@ Quick reference guide for all figures, tables, and diagrams in the Multi-Sensor 
 
 ## Chapter 1: Introduction
 
-| Figure/Table | Title | File | Type | Status |
-|--------------|-------|------|------|--------|
-| Figure 1.1 | Multi-Sensor System Overview | [chapter1-multisensor-overview.md](chapter1-multisensor-overview.md) | Mermaid Graph | ✅ Created |
-| Figure 1.2 | Example Use-Case Scenario Timeline | [chapter1-usecase-timeline.md](chapter1-usecase-timeline.md) | Mermaid Sequence | ✅ Created |
+| Figure/Table | Title                              | File                                                                 | Type             | Status    |
+|--------------|------------------------------------|----------------------------------------------------------------------|------------------|-----------|
+| Figure 1.1   | Multi-Sensor System Overview       | [chapter1-multisensor-overview.md](chapter1-multisensor-overview.md) | Mermaid Graph    | ✅ Created |
+| Figure 1.2   | Example Use-Case Scenario Timeline | [chapter1-usecase-timeline.md](chapter1-usecase-timeline.md)         | Mermaid Sequence | ✅ Created |
 
 **Purpose**: Establish project scope and demonstrate system operation from user perspective.
 
@@ -15,34 +15,36 @@ Quick reference guide for all figures, tables, and diagrams in the Multi-Sensor 
 
 ## Chapter 2: Background and Literature Review
 
-| Figure/Table | Title | File | Type | Status |
-|--------------|-------|------|------|--------|
-| Table 2.1 | Summary of Hardware Components and Specifications | [chapter2-hardware-specs-table.md](chapter2-hardware-specs-table.md) | Markdown Table | ✅ Created |
-| Table 2.2 | Related Systems and Methods Comparison | [chapter2-related-systems-comparison.md](chapter2-related-systems-comparison.md) | Markdown Table | ✅ Created |
-| Figure 2.1 | Basic GSR and Thermal Data Examples | [chapter2-gsr-thermal-examples.md](chapter2-gsr-thermal-examples.md) | Mermaid Charts | ✅ Created |
+| Figure/Table | Title                                             | File                                                                             | Type           | Status    |
+|--------------|---------------------------------------------------|----------------------------------------------------------------------------------|----------------|-----------|
+| Table 2.1    | Summary of Hardware Components and Specifications | [chapter2-hardware-specs-table.md](chapter2-hardware-specs-table.md)             | Markdown Table | ✅ Created |
+| Table 2.2    | Related Systems and Methods Comparison            | [chapter2-related-systems-comparison.md](chapter2-related-systems-comparison.md) | Markdown Table | ✅ Created |
+| Figure 2.1   | Basic GSR and Thermal Data Examples               | [chapter2-gsr-thermal-examples.md](chapter2-gsr-thermal-examples.md)             | Mermaid Charts | ✅ Created |
 
-**Purpose**: Provide technical context, justify hardware selection, situate work relative to prior art, and familiarize readers with raw data characteristics.
+**Purpose**: Provide technical context, justify hardware selection, situate work relative to prior art, and familiarize
+readers with raw data characteristics.
 
 ---
 
 ## Chapter 3: Requirements Analysis
 
-| Figure/Table | Title | File | Type | Status |
-|--------------|-------|------|------|--------|
-| (No new diagrams required for this chapter) | | | | |
+| Figure/Table                                | Title | File | Type | Status |
+|---------------------------------------------|-------|------|------|--------|
+| (No new diagrams required for this chapter) |       |      |      |        |
 
-**Note**: Chapter 3 focuses on functional and non-functional requirements. Existing diagrams from Chapters 1 and 4 provide adequate visualization.
+**Note**: Chapter 3 focuses on functional and non-functional requirements. Existing diagrams from Chapters 1 and 4
+provide adequate visualization.
 
 ---
 
 ## Chapter 4: System Design and Architecture
 
-| Figure/Table | Title | File | Type | Status |
-|--------------|-------|------|------|--------|
-| Figure 4.5 | Protocol Sequence and Session Control | [session-sequence-diagram.md](session-sequence-diagram.md) | Mermaid Sequence | ✅ Existing |
-| Figure 4.6 | Temporal Alignment and Synchronization Mechanism | [time-sync-timeline.md](time-sync-timeline.md) | Mermaid Gantt/Timeline | ✅ Existing |
-| Figure 4.x | Enhanced Data Flow Diagram | [enhanced-data-flow.md](enhanced-data-flow.md) | Mermaid Graph | ✅ Existing |
-| Figure 4.x | State Machine Diagram | [state-machine-diagram.md](state-machine-diagram.md) | Mermaid State | ✅ Existing |
+| Figure/Table | Title                                            | File                                                       | Type                   | Status     |
+|--------------|--------------------------------------------------|------------------------------------------------------------|------------------------|------------|
+| Figure 4.5   | Protocol Sequence and Session Control            | [session-sequence-diagram.md](session-sequence-diagram.md) | Mermaid Sequence       | ✅ Existing |
+| Figure 4.6   | Temporal Alignment and Synchronization Mechanism | [time-sync-timeline.md](time-sync-timeline.md)             | Mermaid Gantt/Timeline | ✅ Existing |
+| Figure 4.x   | Enhanced Data Flow Diagram                       | [enhanced-data-flow.md](enhanced-data-flow.md)             | Mermaid Graph          | ✅ Existing |
+| Figure 4.x   | State Machine Diagram                            | [state-machine-diagram.md](state-machine-diagram.md)       | Mermaid State          | ✅ Existing |
 
 **Note**: Chapter 4 already has comprehensive diagrams generated by `docs/chapter4/generate_architecture_docs.py`.
 
@@ -50,21 +52,23 @@ Quick reference guide for all figures, tables, and diagrams in the Multi-Sensor 
 
 ## Chapter 5: Evaluation and Testing
 
-| Figure/Table | Title | File | Type | Status |
-|--------------|-------|------|------|--------|
-| (No new diagrams required for this chapter) | | | | |
+| Figure/Table                                | Title | File | Type | Status |
+|---------------------------------------------|-------|------|------|--------|
+| (No new diagrams required for this chapter) |       |      |      |        |
 
-**Note**: Chapter 5 focuses on testing results and performance metrics. Tables and data visualizations may be generated from test results.
+**Note**: Chapter 5 focuses on testing results and performance metrics. Tables and data visualizations may be generated
+from test results.
 
 ---
 
 ## Chapter 6: Conclusion and Future Work
 
-| Figure/Table | Title | File | Type | Status |
-|--------------|-------|------|------|--------|
-| (No new diagrams required for this chapter) | | | | |
+| Figure/Table                                | Title | File | Type | Status |
+|---------------------------------------------|-------|------|------|--------|
+| (No new diagrams required for this chapter) |       |      |      |        |
 
-**Note**: Chapter 6 summarizes contributions. May reference earlier diagrams but typically doesn't introduce new visual content.
+**Note**: Chapter 6 summarizes contributions. May reference earlier diagrams but typically doesn't introduce new visual
+content.
 
 ---
 
@@ -77,19 +81,23 @@ All diagrams from Chapters 1-6 are referenced in [Appendix Z](../latex/appendix_
 ## Quick Links by Type
 
 ### System Architecture Diagrams
+
 - [Multi-Sensor System Overview](chapter1-multisensor-overview.md) - High-level architecture
 - [Enhanced Data Flow](enhanced-data-flow.md) - Detailed data flow paths
 - [State Machine Diagram](state-machine-diagram.md) - Recording state transitions
 
 ### Sequence/Timeline Diagrams
+
 - [Use-Case Scenario Timeline](chapter1-usecase-timeline.md) - Typical recording session
 - [Protocol Sequence](session-sequence-diagram.md) - PC-Android communication
 - [Time Synchronization Timeline](time-sync-timeline.md) - Temporal alignment mechanism
 
 ### Data Visualization
+
 - [GSR and Thermal Data Examples](chapter2-gsr-thermal-examples.md) - Raw sensor data characteristics
 
 ### Comparison Tables
+
 - [Hardware Components Specifications](chapter2-hardware-specs-table.md) - Device specs and rationale
 - [Related Systems Comparison](chapter2-related-systems-comparison.md) - Literature comparison
 
@@ -97,12 +105,12 @@ All diagrams from Chapters 1-6 are referenced in [Appendix Z](../latex/appendix_
 
 ## Rendering Status
 
-| Format | Status | Notes |
-|--------|--------|-------|
-| Markdown (GitHub) | ✅ Ready | All files render natively on GitHub |
-| Mermaid Live | ✅ Ready | Copy-paste to https://mermaid.live/ |
-| LaTeX (PDF) | ⏳ Pending | Requires mermaid-cli or manual PNG export |
-| Web Docs | ✅ Ready | Compatible with MkDocs, Docusaurus, Sphinx |
+| Format            | Status    | Notes                                      |
+|-------------------|-----------|--------------------------------------------|
+| Markdown (GitHub) | ✅ Ready   | All files render natively on GitHub        |
+| Mermaid Live      | ✅ Ready   | Copy-paste to https://mermaid.live/        |
+| LaTeX (PDF)       | ⏳ Pending | Requires mermaid-cli or manual PNG export  |
+| Web Docs          | ✅ Ready   | Compatible with MkDocs, Docusaurus, Sphinx |
 
 ---
 
@@ -144,14 +152,15 @@ All diagrams from Chapters 1-6 are referenced in [Appendix Z](../latex/appendix_
    ```
 
 4. **Generate Additional Chapter Diagrams** (if needed):
-   - Chapter 3: Use-case diagrams, requirement traceability matrices
-   - Chapter 5: Performance graphs, test result visualizations
+    - Chapter 3: Use-case diagrams, requirement traceability matrices
+    - Chapter 5: Performance graphs, test result visualizations
 
 ---
 
 ## File Integrity
 
 All diagram files use:
+
 - ✅ ASCII-only characters (no emojis per project standards)
 - ✅ Mermaid-valid syntax (tested on mermaid.live)
 - ✅ Descriptive labels and comments
@@ -164,6 +173,7 @@ All diagram files use:
 ## Maintenance
 
 When updating diagrams:
+
 1. Edit the `.md` source file
 2. Test rendering on mermaid.live
 3. Update LaTeX references if structure changes

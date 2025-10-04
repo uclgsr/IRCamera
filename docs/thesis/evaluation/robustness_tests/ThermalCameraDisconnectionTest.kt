@@ -419,11 +419,11 @@ class ThermalCameraDisconnectionTest : ComponentActivity() {
         try {
             recordingController = RecordingController(this, this)
             thermalRecorder = ThermalCameraRecorder(this, recordingController!!)
-            
+
             val outputDir = File(getExternalFilesDir(null), "thesis_evaluation")
             outputDir.mkdirs()
             testOutputFile = File(outputDir, "thermal_disconnect_${System.currentTimeMillis()}.log")
-            
+
             AppLogger.i(TAG, "Test components initialized successfully")
         } catch (e: Exception) {
             AppLogger.e(TAG, "Failed to initialize test components", e)
@@ -445,13 +445,13 @@ class ThermalCameraDisconnectionTest : ComponentActivity() {
             onEvent
         )
         AppLogger.i(TAG, "Thermal camera disconnection test recording started")
-        
+
         val startTime = System.currentTimeMillis()
         onMetrics(TestMetrics(recordingStartTime = startTime))
-        
+
         onStateChange("Recording - monitoring thermal camera")
         onThermalStateChange(true, false)
-        
+
         monitorThermalCamera(onStateChange, onThermalStateChange, onEvent, onMetrics)
     }
 
@@ -463,20 +463,20 @@ class ThermalCameraDisconnectionTest : ComponentActivity() {
     ) {
         var disconnectDetected = false
         var frameCount = 0
-        
+
         while (true) {
             delay(1000)
             frameCount++
-            
+
             val thermalState = checkThermalCameraState()
-            
+
             if (thermalState == ThermalState.DISCONNECTED && !disconnectDetected) {
                 disconnectDetected = true
                 val disconnectTime = System.currentTimeMillis()
-                
+
                 onStateChange("Thermal camera disconnected - handling gracefully")
                 onThermalStateChange(false, false)
-                
+
                 logEvent(
                     "THERMAL_DISCONNECTED",
                     "USB thermal camera physically disconnected",
@@ -485,7 +485,7 @@ class ThermalCameraDisconnectionTest : ComponentActivity() {
                     onEvent
                 )
                 AppLogger.w(TAG, "Thermal camera disconnection detected")
-                
+
                 onMetrics(
                     TestMetrics(
                         disconnectTime = disconnectTime,
@@ -495,12 +495,12 @@ class ThermalCameraDisconnectionTest : ComponentActivity() {
                         otherSensorsContinued = true
                     )
                 )
-                
+
                 delay(2000)
-                
+
                 onStateChange("Continuing in simulation mode")
                 onThermalStateChange(false, true)
-                
+
                 logEvent(
                     "SIMULATION_MODE",
                     "Switched to thermal simulation mode - other sensors continue",
@@ -509,7 +509,7 @@ class ThermalCameraDisconnectionTest : ComponentActivity() {
                     onEvent
                 )
                 AppLogger.i(TAG, "Thermal recording continues in simulation mode")
-                
+
             } else if (thermalState == ThermalState.SIMULATION && disconnectDetected) {
                 frameCount++
                 onMetrics(
@@ -537,7 +537,7 @@ class ThermalCameraDisconnectionTest : ComponentActivity() {
             onEvent
         )
         AppLogger.i(TAG, "Thermal camera disconnection test recording stopped")
-        
+
         delay(500)
         onStateChange("Test complete - system did not crash")
     }
@@ -550,8 +550,10 @@ class ThermalCameraDisconnectionTest : ComponentActivity() {
         return when {
             thermalRecorder?.isIRCameraConnected == true && thermalRecorder?.isSimulationMode == false ->
                 ThermalState.CONNECTED
+
             thermalRecorder?.isSimulationMode == true ->
                 ThermalState.SIMULATION
+
             else ->
                 ThermalState.DISCONNECTED
         }
@@ -572,7 +574,7 @@ class ThermalCameraDisconnectionTest : ComponentActivity() {
             systemState = systemState
         )
         onEvent(event)
-        
+
         testOutputFile?.appendText(
             "${formatTimestamp(event.timestamp)} | $eventType | Thermal: $thermalState | System: $systemState | $description\n"
         )

@@ -4,7 +4,9 @@ This guide explains how to integrate the robustness tests into the main IRCamera
 
 ## Overview
 
-The thesis evaluation tests are currently standalone Kotlin files in the `docs/thesis-evaluation/robustness_tests/` directory. They follow the same patterns as existing test activities in the app but are not yet compiled or integrated into the app's build system.
+The thesis evaluation tests are currently standalone Kotlin files in the `docs/thesis-evaluation/robustness_tests/`
+directory. They follow the same patterns as existing test activities in the app but are not yet compiled or integrated
+into the app's build system.
 
 ## Integration Options
 
@@ -22,10 +24,13 @@ cp docs/thesis-evaluation/robustness_tests/*.kt app/src/main/java/mpdc4gsr/featu
 ```
 
 After copying, update the package declaration at the top of each file from:
+
 ```kotlin
 package thesis_evaluation.robustness_tests
 ```
+
 to:
+
 ```kotlin
 package mpdc4gsr.feature.testing.ui
 ```
@@ -91,7 +96,8 @@ TestingModule(
 
 ### Option 3: Keep Separate (Current State)
 
-The tests can remain in the `docs/thesis-evaluation/` directory as reference implementations and documentation. This is useful for:
+The tests can remain in the `docs/thesis-evaluation/` directory as reference implementations and documentation. This is
+useful for:
 
 - Including in thesis appendices
 - Reference for understanding robustness testing approach
@@ -123,11 +129,13 @@ These are already present in the app, so no additional dependencies are needed.
 ## Test Output Locations
 
 When integrated and run, tests will output log files to:
+
 ```
 /storage/emulated/0/Android/data/com.csl.irCamera/files/docs/thesis/evaluation/
 ```
 
 File naming:
+
 - `gsr_reconnection_simulated_<timestamp>.log`
 - `gsr_reconnection_real_<timestamp>.log`
 - `thermal_disconnect_<timestamp>.log`
@@ -182,10 +190,10 @@ After integration, verify the tests:
    ```
 
 4. **Run tests through Testing Suite Hub:**
-   - Open IRCamera app
-   - Navigate to Testing Suite Hub
-   - Select robustness test category
-   - Run individual tests
+    - Open IRCamera app
+    - Navigate to Testing Suite Hub
+    - Select robustness test category
+    - Run individual tests
 
 ## Test Execution Flow
 
@@ -204,11 +212,13 @@ Each test follows this general pattern:
 These tests directly support thesis requirements:
 
 ### Chapter 5 (Implementation)
+
 - Demonstrate system behavior under failure conditions
 - Show logging and error handling implementation
 - Prove graceful degradation capabilities
 
 ### Chapter 6 (Evaluation)
+
 - Provide quantitative metrics (timings, sample counts)
 - Evidence of robustness and fault tolerance
 - Data for assessing system resilience
@@ -253,6 +263,7 @@ Potential improvements:
 ## Support
 
 For questions or issues:
+
 - Review existing test implementations in `app/src/main/java/mpdc4gsr/feature/testing/ui/`
 - Check Android logcat for runtime errors
 - Refer to README.md in docs/thesis-evaluation directory

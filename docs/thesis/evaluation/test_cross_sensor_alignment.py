@@ -39,10 +39,10 @@ class TestCrossSensorAlignment:
         return SynchronizationValidator()
 
     def test_inject_synthetic_event_at_10_seconds(
-        self,
-        sensor_data_generator,
-        sync_validator,
-        output_generator
+            self,
+            sensor_data_generator,
+            sync_validator,
+            output_generator
     ):
         """
         Test: Inject a synchronized reference event at t=10.0s across all sensors
@@ -98,10 +98,10 @@ class TestCrossSensorAlignment:
             f"Time spread should be within 100ms tolerance, got {primary_event['time_spread_ms']}ms"
 
     def test_multiple_synthetic_events(
-        self,
-        sensor_data_generator,
-        sync_validator,
-        output_generator
+            self,
+            sensor_data_generator,
+            sync_validator,
+            output_generator
     ):
         """
         Test: Inject multiple synchronized events throughout the session
@@ -155,9 +155,9 @@ class TestCrossSensorAlignment:
                 f"Event at {event['base_timestamp']} has time spread {event['time_spread_ms']}ms"
 
     def test_gsr_spike_detection_at_event(
-        self,
-        sensor_data_generator,
-        output_generator
+            self,
+            sensor_data_generator,
+            output_generator
     ):
         """
         Test: Verify GSR spike is detected at synthetic event time
@@ -192,8 +192,8 @@ class TestCrossSensorAlignment:
                 f"GSR spike should be at least 20% above baseline at event"
 
     def test_thermal_frame_marker_at_event(
-        self,
-        sensor_data_generator
+            self,
+            sensor_data_generator
     ):
         """
         Test: Verify thermal frame marker is present at synthetic event time
@@ -226,8 +226,8 @@ class TestCrossSensorAlignment:
                 f"Event frame timestamp should be within 100ms of event time, got {time_diff}ms"
 
     def test_rgb_timestamp_mark_at_event(
-        self,
-        sensor_data_generator
+            self,
+            sensor_data_generator
     ):
         """
         Test: Verify RGB frame timestamp mark at synthetic event time
@@ -260,9 +260,9 @@ class TestCrossSensorAlignment:
                 f"RGB frame timestamp should be within one frame (34ms) of event, got {time_diff}ms"
 
     def test_cross_modal_synchronization_tolerance(
-        self,
-        sensor_data_generator,
-        sync_validator
+            self,
+            sensor_data_generator,
+            sync_validator
     ):
         """
         Test: Validate synchronization tolerance across all modalities

@@ -21,10 +21,10 @@ class SensorDataGenerator:
 
     @staticmethod
     def generate_gsr_samples(
-        start_time_ms: int,
-        duration_seconds: int,
-        sampling_rate: int = 128,
-        base_value: float = 15.0
+            start_time_ms: int,
+            duration_seconds: int,
+            sampling_rate: int = 128,
+            base_value: float = 15.0
     ) -> List[Dict[str, Any]]:
         """Generate GSR samples at specified rate"""
         samples = []
@@ -45,9 +45,9 @@ class SensorDataGenerator:
 
     @staticmethod
     def generate_thermal_frames(
-        start_time_ms: int,
-        duration_seconds: int,
-        frame_rate: int = 10
+            start_time_ms: int,
+            duration_seconds: int,
+            frame_rate: int = 10
     ) -> List[Dict[str, Any]]:
         """Generate thermal camera frames at specified rate"""
         frames = []
@@ -68,9 +68,9 @@ class SensorDataGenerator:
 
     @staticmethod
     def generate_rgb_frames(
-        start_time_ms: int,
-        duration_seconds: int,
-        frame_rate: int = 30
+            start_time_ms: int,
+            duration_seconds: int,
+            frame_rate: int = 30
     ) -> List[Dict[str, Any]]:
         """Generate RGB camera frames at specified rate"""
         frames = []
@@ -89,11 +89,11 @@ class SensorDataGenerator:
 
     @staticmethod
     def inject_synthetic_event(
-        gsr_samples: List[Dict[str, Any]],
-        thermal_frames: List[Dict[str, Any]],
-        rgb_frames: List[Dict[str, Any]],
-        event_time_ms: int,
-        marker_type: str = "spike"
+            gsr_samples: List[Dict[str, Any]],
+            thermal_frames: List[Dict[str, Any]],
+            rgb_frames: List[Dict[str, Any]],
+            event_time_ms: int,
+            marker_type: str = "spike"
     ) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]], List[Dict[str, Any]]]:
         """Inject a synchronized marker event across all sensor streams"""
 
@@ -128,8 +128,8 @@ class SynchronizationValidator:
 
     @staticmethod
     def find_sync_events(
-        sensor_data: Dict[str, List[Dict[str, Any]]],
-        time_tolerance_ms: int = 100
+            sensor_data: Dict[str, List[Dict[str, Any]]],
+            time_tolerance_ms: int = 100
     ) -> List[Dict[str, Any]]:
         """Find synchronization events across all sensor streams"""
         sync_events = []
@@ -149,10 +149,10 @@ class SynchronizationValidator:
 
         for ts in all_timestamps:
             base_time = ts["timestamp"]
-            
+
             if base_time in processed_times:
                 continue
-            
+
             matching_timestamps = [ts]
             matching_sensors = [ts["sensor"]]
 
@@ -165,13 +165,13 @@ class SynchronizationValidator:
             if len(matching_sensors) >= 2:
                 timestamps_in_group = [mt["timestamp"] for mt in matching_timestamps]
                 time_spread = max(timestamps_in_group) - min(timestamps_in_group)
-                
+
                 sync_events.append({
                     "base_timestamp": base_time,
                     "sensors_in_sync": list(set(matching_sensors)),
                     "time_spread_ms": time_spread
                 })
-                
+
                 for mt in matching_timestamps:
                     processed_times.add(mt["timestamp"])
 
@@ -179,8 +179,8 @@ class SynchronizationValidator:
 
     @staticmethod
     def calculate_time_alignment(
-        timestamps: List[int],
-        tolerance_ms: int = 100
+            timestamps: List[int],
+            tolerance_ms: int = 100
     ) -> Dict[str, Any]:
         """Calculate time alignment statistics"""
         if not timestamps:
@@ -205,7 +205,7 @@ class SessionDurationAnalyzer:
 
     @staticmethod
     def extract_session_boundaries(
-        sensor_data: Dict[str, List[Dict[str, Any]]]
+            sensor_data: Dict[str, List[Dict[str, Any]]]
     ) -> Dict[str, Dict[str, int]]:
         """Extract start and end times for each sensor stream"""
         boundaries = {}
@@ -235,8 +235,8 @@ class SessionDurationAnalyzer:
 
     @staticmethod
     def validate_duration_consistency(
-        boundaries: Dict[str, Dict[str, int]],
-        tolerance_ms: int = 1000
+            boundaries: Dict[str, Dict[str, int]],
+            tolerance_ms: int = 1000
     ) -> Dict[str, Any]:
         """Validate that all sensor streams have consistent durations"""
         start_times = [b["start_time"] for b in boundaries.values() if b["start_time"]]
@@ -273,9 +273,9 @@ class OutputGenerator:
         self.output_dir.mkdir(parents=True, exist_ok=True)
 
     def save_sync_event_log(
-        self,
-        sync_events: List[Dict[str, Any]],
-        filename: str = "sync_events.csv"
+            self,
+            sync_events: List[Dict[str, Any]],
+            filename: str = "sync_events.csv"
     ):
         """Save synchronization events to CSV"""
         output_path = self.output_dir / filename
@@ -294,10 +294,10 @@ class OutputGenerator:
         return str(output_path)
 
     def save_duration_report(
-        self,
-        boundaries: Dict[str, Dict[str, int]],
-        consistency: Dict[str, Any],
-        filename: str = "session_duration_report.csv"
+            self,
+            boundaries: Dict[str, Dict[str, int]],
+            consistency: Dict[str, Any],
+            filename: str = "session_duration_report.csv"
     ):
         """Save session duration analysis to CSV"""
         output_path = self.output_dir / filename
@@ -328,9 +328,9 @@ class OutputGenerator:
         return str(output_path)
 
     def save_combined_timeline(
-        self,
-        sensor_data: Dict[str, List[Dict[str, Any]]],
-        filename: str = "combined_timeline.json"
+            self,
+            sensor_data: Dict[str, List[Dict[str, Any]]],
+            filename: str = "combined_timeline.json"
     ):
         """Save combined sensor timeline to JSON"""
         output_path = self.output_dir / filename

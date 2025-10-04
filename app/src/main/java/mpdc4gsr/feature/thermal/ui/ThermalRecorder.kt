@@ -95,7 +95,7 @@ class ThermalRecorder(private val context: Context) {
                 }
 
                 val csvFile = File(sessionDirectory, "thermal_stats_${sessionMetadata.sessionId}.csv")
-                
+
                 // Open writer for the entire recording session
                 csvWriter = FileWriter(csvFile, false).apply {
                     write(sessionMetadata.createTimingHeader())
@@ -164,7 +164,7 @@ class ThermalRecorder(private val context: Context) {
                 val timestamp =
                     SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.getDefault()).format(Date())
                 val csvFile = File(sessionDirectory, "thermal_stats_$timestamp.csv")
-                
+
                 // Open writer for the entire recording session
                 csvWriter = FileWriter(csvFile, false).apply {
                     write("# Legacy thermal recording - no session synchronization metadata\n")
@@ -204,7 +204,7 @@ class ThermalRecorder(private val context: Context) {
 
         try {
             isRecording.set(false)
-            
+
             // Close the writer properly
             csvWriter?.flush()
             csvWriter?.close()
@@ -370,7 +370,7 @@ class ThermalRecorder(private val context: Context) {
                 val csvLine = sessionMetadata?.let { sm ->
                     val wallClockMs = sm.monotonicToWallClock(stats.timestampNs)
                     val relativeMs = (stats.timestampNs - sm.sessionStartMonotonicNs) / 1_000_000L
-                    
+
                     // Calculate synchronized timestamp based on the frame's wall clock time and current offset
                     val clockOffsetMs = TimestampManager.getClockOffsetMs()
                     val synchronizedTimestampMs = wallClockMs + clockOffsetMs

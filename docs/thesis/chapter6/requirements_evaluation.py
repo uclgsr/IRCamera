@@ -175,7 +175,7 @@ class RequirementsEvaluationFramework:
     def generate_objectives_fulfillment_table(self):
         """Generate comprehensive objectives fulfillment table"""
         logger.info("Generating objectives fulfillment table")
-        
+
         objectives = [
             {
                 'id': 'OBJ-1',
@@ -210,7 +210,7 @@ class RequirementsEvaluationFramework:
                 'status': 'Not Achieved'
             }
         ]
-        
+
         # Generate CSV format
         csv_file = self.output_dir / "objectives_fulfillment_table.csv"
         with open(csv_file, 'w', newline='') as f:
@@ -218,7 +218,7 @@ class RequirementsEvaluationFramework:
             writer = csv.DictWriter(f, fieldnames=fieldnames)
             writer.writeheader()
             writer.writerows(objectives)
-        
+
         # Generate Markdown table
         md_file = self.output_dir / "objectives_fulfillment_table.md"
         with open(md_file, 'w') as f:
@@ -226,7 +226,7 @@ class RequirementsEvaluationFramework:
             f.write("This table revisits the thesis objectives against their outcomes.\n\n")
             f.write("| ID | Objective | Target | Outcome | Evidence | Status |\n")
             f.write("|----|-----------|--------|---------|----------|--------|\n")
-            
+
             for obj in objectives:
                 status_icon = {
                     'Achieved': '✅',
@@ -234,37 +234,37 @@ class RequirementsEvaluationFramework:
                     'Partial': '⚠️',
                     'Not Achieved': '❌'
                 }.get(obj['status'], '')
-                
+
                 f.write(f"| {obj['id']} | {obj['objective']} | {obj['target']} | "
-                       f"{obj['outcome']} | {obj['evidence']} | {status_icon} {obj['status']} |\n")
-            
+                        f"{obj['outcome']} | {obj['evidence']} | {status_icon} {obj['status']} |\n")
+
             f.write("\n## Status Summary\n\n")
             f.write("- **Objective 1**: ✅ Achieved - Multi-device platform integration successful\n")
             f.write("- **Objective 2**: ⭐ Exceeded - Timing precision surpassed target (2.7ms vs 5ms)\n")
             f.write("- **Objective 3**: ⚠️ Partial - Functional but usability issues remain\n")
             f.write("- **Objective 4**: ❌ Not Achieved - Pilot study could not be conducted\n\n")
             f.write("**Overall Achievement Rate: 2 of 4 objectives fully achieved (50%), "
-                   "1 exceeded expectations (25%), 1 partially achieved (25%)**\n\n")
-            
+                    "1 exceeded expectations (25%), 1 partially achieved (25%)**\n\n")
+
             f.write("## Key Achievements\n\n")
             f.write("1. **Technical Infrastructure**: Successfully demonstrated reliable multi-modal "
-                   "data capture from multiple devices simultaneously\n")
+                    "data capture from multiple devices simultaneously\n")
             f.write("2. **Synchronization Excellence**: Achieved better-than-target timing precision "
-                   "with 2.7ms median drift\n")
+                    "with 2.7ms median drift\n")
             f.write("3. **Production-Ready Hardware Integration**: Real SDK integration with Topdon TC001 "
-                   "thermal camera and Shimmer3 GSR+ sensor\n\n")
-            
+                    "thermal camera and Shimmer3 GSR+ sensor\n\n")
+
             f.write("## Areas Requiring Improvement\n\n")
             f.write("1. **Usability**: Setup time and UI responsiveness need significant improvement\n")
             f.write("2. **Reliability**: Network discovery and error recovery mechanisms require enhancement\n")
             f.write("3. **Validation**: Lack of pilot study data limits demonstration of research hypothesis\n")
-        
+
         logger.info("Objectives fulfillment table generated")
 
     def generate_objectives_fulfillment_diagram(self):
         """Generate Mermaid diagram showing objectives vs outcomes"""
         logger.info("Generating objectives fulfillment diagram")
-        
+
         mermaid_content = '''```mermaid
 graph TB
     subgraph "Chapter 6: Objectives vs Outcomes"
@@ -313,7 +313,7 @@ graph TB
     class O3_Outcome partial
     class O4_Outcome notmet
 ```'''
-        
+
         with open(self.output_dir / "objectives_fulfillment_diagram.md", 'w') as f:
             f.write("# Objectives Fulfillment Diagram\n\n")
             f.write("This diagram visualizes the four main project objectives ")
@@ -327,17 +327,20 @@ graph TB
             f.write("## Summary\n\n")
             f.write("| Objective | Status | Key Result |\n")
             f.write("|-----------|--------|------------|\n")
-            f.write("| Objective 1: Integrated Multi-Device Platform | ✅ Achieved | Successfully recorded from 3 devices simultaneously |\n")
-            f.write("| Objective 2: Sub-5ms Timing Precision | ⭐ Exceeded | 2.7ms median drift (better than ±5ms target) |\n")
-            f.write("| Objective 3: User-Friendly Research Tool | ⚠️ Partial | Functional but usability issues remain |\n")
+            f.write(
+                "| Objective 1: Integrated Multi-Device Platform | ✅ Achieved | Successfully recorded from 3 devices simultaneously |\n")
+            f.write(
+                "| Objective 2: Sub-5ms Timing Precision | ⭐ Exceeded | 2.7ms median drift (better than ±5ms target) |\n")
+            f.write(
+                "| Objective 3: User-Friendly Research Tool | ⚠️ Partial | Functional but usability issues remain |\n")
             f.write("| Objective 4: Pilot Study Validation | ❌ Not Achieved | Multiple factors prevented execution |\n")
-        
+
         logger.info("Objectives fulfillment diagram generated")
-    
+
     def generate_requirements_status_diagram(self):
         """Generate Mermaid diagram showing requirements status"""
         logger.info("Generating requirements status diagram")
-        
+
         mermaid_content = '''```mermaid
 graph LR
     subgraph "Requirements Categories"
@@ -388,7 +391,7 @@ graph LR
     class Status2 exceeded
     class Status6,Status10 partial
 ```'''
-        
+
         with open(self.output_dir / "requirements_status_diagram.md", 'w') as f:
             f.write("# Requirements Status Diagram\n\n")
             f.write("This diagram shows the status of all 10 project requirements ")
@@ -409,13 +412,13 @@ graph LR
             f.write("- **REQ-006**: Graceful failure handling - ⚠️ Partial\n")
             f.write("- **REQ-007**: Multi-device support - ✅ Achieved\n\n")
             f.write("**Overall: 7 Achieved, 1 Exceeded, 2 Partial = 80% Full Achievement Rate**\n")
-        
+
         logger.info("Requirements status diagram generated")
-    
+
     def generate_future_work_roadmap(self):
         """Generate Mermaid diagram showing future work roadmap"""
         logger.info("Generating future work roadmap")
-        
+
         mermaid_content = '''```mermaid
 timeline
     title Future Work Roadmap
@@ -450,7 +453,7 @@ timeline
                     : Distributed storage
                     : Real-time streaming to 10+ devices
 ```'''
-        
+
         with open(self.output_dir / "future_work_roadmap.md", 'w') as f:
             f.write("# Future Work Roadmap\n\n")
             f.write("This roadmap outlines planned improvements and extensions ")
@@ -497,7 +500,7 @@ timeline
             f.write("- **Immediate**: Zero UI freezes, <5s device discovery\n")
             f.write("- **Medium-term**: Real-time ML inference, 20+ user studies\n")
             f.write("- **Long-term**: 100+ active research groups, published standards\n")
-        
+
         logger.info("Future work roadmap generated")
 
     def generate_all_evaluation(self, test_results_dir: str = None):
@@ -514,7 +517,7 @@ timeline
         self.generate_discussion_points()
         self.generate_recommendations()
         self.generate_final_evaluation_report()
-        
+
         # Generate objectives and Mermaid diagrams for visualization
         self.generate_objectives_fulfillment_table()
         self.generate_objectives_fulfillment_diagram()

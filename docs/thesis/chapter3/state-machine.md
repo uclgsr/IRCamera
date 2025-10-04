@@ -2,7 +2,8 @@
 
 ## Figure 3.2: State Machine - Android Recording Application
 
-This state diagram depicts the states of the Android recording app (Idle, Ready, Recording, Syncing, Stopped) and transitions triggered by events such as START or STOP commands from the PC, or sensor connection events.
+This state diagram depicts the states of the Android recording app (Idle, Ready, Recording, Syncing, Stopped) and
+transitions triggered by events such as START or STOP commands from the PC, or sensor connection events.
 
 ```mermaid
 stateDiagram-v2
@@ -373,162 +374,176 @@ stateDiagram-v2
 ## State Definitions
 
 ### Disconnected
+
 - **Description**: No active connection to PC orchestrator
 - **Entry Actions**: Clear device state, stop all sensors
 - **Exit Actions**: None
 - **Transitions**: User initiates connection → Connecting
 
 ### Connecting
+
 - **Description**: TCP connection establishment in progress
 - **Entry Actions**: Open socket to PC:8080, send connection request
 - **Invariants**: Connection timeout = 30 seconds
 - **Exit Actions**: If successful, register device with PC
-- **Transitions**: 
-  - Success → Idle
-  - Failure/Timeout → Disconnected
+- **Transitions**:
+    - Success → Idle
+    - Failure/Timeout → Disconnected
 
 ### Idle
+
 - **Description**: Connected to PC, awaiting commands
 - **Entry Actions**: Send HELLO message with device capabilities
 - **Invariants**: Heartbeat every 2 seconds, maintain TCP connection
 - **Exit Actions**: None
 - **Transitions**:
-  - START_RECORD command → Initializing
-  - Connection lost → Disconnected
+    - START_RECORD command → Initializing
+    - Connection lost → Disconnected
 
 ### Initializing
+
 - **Description**: Sensor initialization in parallel
-- **Entry Actions**: 
-  - Request runtime permissions (CAMERA, BLUETOOTH, STORAGE)
-  - Create session directory
-  - Initialize TimeManager with PC clock offset
+- **Entry Actions**:
+    - Request runtime permissions (CAMERA, BLUETOOTH, STORAGE)
+    - Create session directory
+    - Initialize TimeManager with PC clock offset
 - **Substates**: Thermal, GSR, RGB initialization (parallel)
 - **Timeout**: 10 seconds per sensor
 - **Exit Actions**: Send ACK messages for each ready sensor
 - **Transitions**:
-  - All critical sensors ready → Ready
-  - Any critical sensor fails → Error
+    - All critical sensors ready → Ready
+    - Any critical sensor fails → Error
 
 ### Ready
+
 - **Description**: All sensors initialized, waiting for final sync
 - **Entry Actions**: Allocate storage buffers, start preview streams
 - **Invariants**: All sensors in standby mode
 - **Exit Actions**: None
 - **Transitions**:
-  - Final sync complete → Recording
-  - Timeout (10s) → Error
+    - Final sync complete → Recording
+    - Timeout (10s) → Error
 
 ### Recording
+
 - **Description**: Active multi-modal data capture
-- **Entry Actions**: 
-  - Start all sensor streams
-  - Open CSV files (thermal, GSR)
-  - Start video recording (RGB)
-  - Begin quality monitoring
-- **Invariants**: 
-  - Data logged continuously
-  - Heartbeat to PC every 2s
-  - File size monitored
-  - Battery level checked
+- **Entry Actions**:
+    - Start all sensor streams
+    - Open CSV files (thermal, GSR)
+    - Start video recording (RGB)
+    - Begin quality monitoring
+- **Invariants**:
+    - Data logged continuously
+    - Heartbeat to PC every 2s
+    - File size monitored
+    - Battery level checked
 - **Active Operations**:
-  - Thermal: 25 Hz → CSV (timestamp_ns, 256x192 matrix)
-  - GSR: 128 Hz → CSV (timestamp_ns, microsiemens)
-  - RGB: 30 fps → MP4 (H.264 encoded)
+    - Thermal: 25 Hz → CSV (timestamp_ns, 256x192 matrix)
+    - GSR: 128 Hz → CSV (timestamp_ns, microsiemens)
+    - RGB: 30 fps → MP4 (H.264 encoded)
 - **Exit Actions**: None (cleanup in next state)
 - **Transitions**:
-  - SYNC_REQUEST → Syncing (temporary)
-  - STOP_RECORD → Stopping
-  - Critical failure → Error
+    - SYNC_REQUEST → Syncing (temporary)
+    - STOP_RECORD → Stopping
+    - Critical failure → Error
 
 ### Syncing
+
 - **Description**: Time synchronization in progress (doesn't stop recording)
 - **Entry Actions**: Record t2 (receive timestamp), prepare t3 (send timestamp)
 - **Invariants**: Recording continues in background
 - **Exit Actions**: Apply clock drift correction if needed
 - **Transitions**:
-  - SYNC_RESPONSE sent → Recording
-  - Sync failed (drift > 5ms) → Error
+    - SYNC_RESPONSE sent → Recording
+    - Sync failed (drift > 5ms) → Error
 
 ### Stopping
+
 - **Description**: Graceful sensor shutdown
-- **Entry Actions**: 
-  - Send stop command to all sensors
-  - Flush data buffers
-  - Final timestamp sync
+- **Entry Actions**:
+    - Send stop command to all sensors
+    - Flush data buffers
+    - Final timestamp sync
 - **Timeout**: 5 seconds
 - **Exit Actions**: Log final statistics
 - **Transitions**:
-  - All stopped → Finalizing
-  - Timeout → Error (force cleanup)
+    - All stopped → Finalizing
+    - Timeout → Error (force cleanup)
 
 ### Finalizing
+
 - **Description**: File completion and metadata generation
 - **Entry Actions**:
-  - Close CSV files
-  - Finalize MP4 video
-  - Generate metadata.json (session_id, timestamps, file sizes)
-  - Calculate integrity checksums
+    - Close CSV files
+    - Finalize MP4 video
+    - Generate metadata.json (session_id, timestamps, file sizes)
+    - Calculate integrity checksums
 - **Invariants**: No new data written
 - **Exit Actions**: Mark files ready for transfer
 - **Transitions**:
-  - Files ready → Transferring
-  - Validation failed → Error
+    - Files ready → Transferring
+    - Validation failed → Error
 
 ### Transferring
+
 - **Description**: Bulk file transfer to PC
-- **Entry Actions**: 
-  - Open transfer socket
-  - Send file manifest
-  - Begin chunked transfer
-- **Invariants**: 
-  - Progress updates every 10%
-  - Network timeout = 60s
+- **Entry Actions**:
+    - Open transfer socket
+    - Send file manifest
+    - Begin chunked transfer
+- **Invariants**:
+    - Progress updates every 10%
+    - Network timeout = 60s
 - **Exit Actions**: Verify PC acknowledgment
 - **Transitions**:
-  - Transfer complete → Idle
-  - Network failure → Error
+    - Transfer complete → Idle
+    - Network failure → Error
 
 ### Error
+
 - **Description**: Error condition with recovery attempts
-- **Entry Actions**: 
-  - Log error details
-  - Emergency save of buffered data
-  - Notify PC of error
+- **Entry Actions**:
+    - Log error details
+    - Emergency save of buffered data
+    - Notify PC of error
 - **Error Types**:
-  - SENSOR_DISCONNECT: Shimmer3 BLE lost
-  - STORAGE_FULL: Insufficient space
-  - NETWORK_LOST: TCP connection dropped
-  - SYNC_DRIFT: Clock drift > 5ms
-  - CRITICAL_FAILURE: Unrecoverable error
+    - SENSOR_DISCONNECT: Shimmer3 BLE lost
+    - STORAGE_FULL: Insufficient space
+    - NETWORK_LOST: TCP connection dropped
+    - SYNC_DRIFT: Clock drift > 5ms
+    - CRITICAL_FAILURE: Unrecoverable error
 - **Recovery Strategy**: Exponential backoff (500ms, 1s, 2s, 4s, 8s max)
 - **Exit Actions**: Clear error state if recovered
 - **Transitions**:
-  - Auto-recovery attempt → Recovering
-  - Manual reset → Idle
-  - Fatal error → Disconnected
+    - Auto-recovery attempt → Recovering
+    - Manual reset → Idle
+    - Fatal error → Disconnected
 
 ### Recovering
+
 - **Description**: Automatic recovery procedures
 - **Entry Actions**:
-  - Attempt reconnection (if network error)
-  - Reinitialize sensors (if sensor error)
-  - Restore session state
+    - Attempt reconnection (if network error)
+    - Reinitialize sensors (if sensor error)
+    - Restore session state
 - **Max Retries**: 3 attempts
 - **Exit Actions**: Send recovery status to PC
 - **Transitions**:
-  - Success (no session) → Idle
-  - Success (session active) → Recording
-  - Failed → Error
+    - Success (no session) → Idle
+    - Success (session active) → Recording
+    - Failed → Error
 
 ## State Transition Events
 
 ### Commands (from PC)
+
 - `START_RECORD session_id=<id>`: Initiate recording session
 - `STOP_RECORD`: End current recording
 - `SYNC_REQUEST ts=<timestamp>`: Clock synchronization
 - `DISCONNECT`: Graceful disconnect
 
 ### Hardware Events
+
 - `USB_DEVICE_ATTACHED`: TC001 thermal camera connected
 - `USB_DEVICE_DETACHED`: TC001 disconnected
 - `BLE_DEVICE_DISCOVERED`: Shimmer3 found
@@ -536,6 +551,7 @@ stateDiagram-v2
 - `BLE_DISCONNECTED`: Shimmer3 connection lost
 
 ### System Events
+
 - `NETWORK_AVAILABLE`: Wi-Fi/TCP connection established
 - `NETWORK_LOST`: Connection to PC lost
 - `STORAGE_LOW`: < 10% free space
@@ -544,14 +560,18 @@ stateDiagram-v2
 ## Fault Handling
 
 ### Sensor Disconnection During Recording
+
 If a sensor disconnects (e.g., Shimmer3 BLE lost):
+
 1. Log warning to PC
 2. Continue recording with remaining sensors
 3. Mark affected data stream as incomplete
 4. Attempt auto-reconnection in background
 
 ### Network Loss During Recording
+
 If TCP connection to PC is lost:
+
 1. Transition to Error state
 2. Continue local recording
 3. Queue commands and status updates
@@ -559,11 +579,14 @@ If TCP connection to PC is lost:
 5. When reconnected, sync state and flush queue
 
 ### Storage Full
+
 If storage becomes full during recording:
+
 1. Immediate transition to Error state
 2. Gracefully stop all sensors
 3. Finalize existing files
 4. Notify PC of partial session
 5. Require manual intervention
 
-This state machine ensures robust operation with clear boundaries, comprehensive error handling, and automatic recovery suitable for long-duration research recording sessions.
+This state machine ensures robust operation with clear boundaries, comprehensive error handling, and automatic recovery
+suitable for long-duration research recording sessions.

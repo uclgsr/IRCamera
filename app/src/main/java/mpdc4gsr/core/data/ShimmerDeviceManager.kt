@@ -101,9 +101,9 @@ class ShimmerDeviceManager(
             }
 
             shimmerManager = ShimmerBluetoothManagerAndroid(context, mainHandler)
-            
+
             startConnectionMonitoring()
-            
+
             return@withContext true
         } catch (e: Exception) {
             AppLogger.e(TAG, "Shimmer initialization failed", e)
@@ -116,7 +116,7 @@ class ShimmerDeviceManager(
         connectionMonitorJob = lifecycleOwner.lifecycleScope.launch {
             while (isActive) {
                 delay(5000)
-                
+
                 val disconnectedDevices = connectedDevices.filter { (address, shimmer) ->
                     try {
                         shimmer.bluetoothRadioState == BT_STATE.DISCONNECTED
@@ -125,7 +125,7 @@ class ShimmerDeviceManager(
                         false
                     }
                 }
-                
+
                 disconnectedDevices.forEach { (address, shimmer) ->
                     Log.w(TAG, "Device disconnected: $address")
                     launch {
@@ -945,7 +945,7 @@ class ShimmerDeviceManager(
 
         connectionMonitorJob?.cancel()
         connectionMonitorJob = null
-        
+
         stopDeviceScanning()
         disconnectAllDevices()
 

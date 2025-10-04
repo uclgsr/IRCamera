@@ -411,11 +411,11 @@ class NetworkConnectionDropTest : ComponentActivity() {
         try {
             networkController = UnifiedNetworkController(this, this)
             recordingController = RecordingController(this, this)
-            
+
             val outputDir = File(getExternalFilesDir(null), "thesis_evaluation")
             outputDir.mkdirs()
             testOutputFile = File(outputDir, "network_drop_${System.currentTimeMillis()}.log")
-            
+
             AppLogger.i(TAG, "Test components initialized successfully")
         } catch (e: Exception) {
             AppLogger.e(TAG, "Failed to initialize test components", e)
@@ -438,14 +438,14 @@ class NetworkConnectionDropTest : ComponentActivity() {
             onEvent
         )
         AppLogger.i(TAG, "Network connection drop test recording started")
-        
+
         val startTime = System.currentTimeMillis()
         onMetrics(TestMetrics(recordingStartTime = startTime))
-        
+
         onStateChange("Recording - network connected")
         onNetworkStateChange(true)
         onRecordingStateChange(true)
-        
+
         monitorNetworkConnection(
             onStateChange,
             onNetworkStateChange,
@@ -467,20 +467,20 @@ class NetworkConnectionDropTest : ComponentActivity() {
         var networkDropDetected = false
         var dropTime: Long = 0
         var reconnectionAttempts = 0
-        
+
         while (true) {
             delay(2000)
-            
+
             val isConnected = checkNetworkConnection()
-            
+
             if (!isConnected && !networkDropDetected) {
                 networkDropDetected = true
                 dropTime = System.currentTimeMillis()
-                
+
                 onStateChange("Network connection lost - recording continues")
                 onNetworkStateChange(false)
                 onRecordingStateChange(true)
-                
+
                 logEvent(
                     "NETWORK_LOST",
                     "PC network connection dropped - client disconnected",
@@ -489,7 +489,7 @@ class NetworkConnectionDropTest : ComponentActivity() {
                     onEvent
                 )
                 AppLogger.w(TAG, "Network connection lost - recording continues")
-                
+
                 onMetrics(
                     TestMetrics(
                         recordingStartTime = startTime,
@@ -500,10 +500,10 @@ class NetworkConnectionDropTest : ComponentActivity() {
                         dataLossDuringDrop = false
                     )
                 )
-                
+
             } else if (!isConnected && networkDropDetected) {
                 val durationAfterDrop = (System.currentTimeMillis() - dropTime) / 1000
-                
+
                 if (durationAfterDrop % 10 == 0L) {
                     reconnectionAttempts++
                     logEvent(
@@ -515,7 +515,7 @@ class NetworkConnectionDropTest : ComponentActivity() {
                     )
                     AppLogger.i(TAG, "Reconnection attempt $reconnectionAttempts")
                 }
-                
+
                 onMetrics(
                     TestMetrics(
                         recordingStartTime = startTime,
@@ -526,11 +526,11 @@ class NetworkConnectionDropTest : ComponentActivity() {
                         dataLossDuringDrop = false
                     )
                 )
-                
+
             } else if (isConnected && networkDropDetected) {
                 onStateChange("Network reconnected - recording continues")
                 onNetworkStateChange(true)
-                
+
                 logEvent(
                     "NETWORK_RECONNECTED",
                     "PC network connection restored after ${(System.currentTimeMillis() - dropTime) / 1000}s",
@@ -539,7 +539,7 @@ class NetworkConnectionDropTest : ComponentActivity() {
                     onEvent
                 )
                 AppLogger.i(TAG, "Network connection restored")
-                
+
                 networkDropDetected = false
             }
         }
@@ -558,7 +558,7 @@ class NetworkConnectionDropTest : ComponentActivity() {
             onEvent
         )
         AppLogger.i(TAG, "Network connection drop test recording stopped")
-        
+
         delay(500)
         onStateChange("Test complete - recording continued without data loss")
     }
@@ -582,7 +582,7 @@ class NetworkConnectionDropTest : ComponentActivity() {
             recordingState = recordingState
         )
         onEvent(event)
-        
+
         testOutputFile?.appendText(
             "${formatTimestamp(event.timestamp)} | $eventType | Network: $networkState | Recording: $recordingState | $description\n"
         )

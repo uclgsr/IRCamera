@@ -12,6 +12,7 @@ python3 docs/chapter6/requirements_evaluation.py
 ```
 
 This generates all evaluation materials in `docs/chapter6/`:
+
 - 3 Mermaid diagram files (.md)
 - 4 CSV data files (.csv)
 - 7 analysis and report files (.md)
@@ -267,6 +268,7 @@ jobs:
 ### 1. Regular Regeneration
 
 Regenerate evaluation materials after significant milestones:
+
 - After completing a major objective
 - When test results change
 - Before thesis submission
@@ -275,6 +277,7 @@ Regenerate evaluation materials after significant milestones:
 ### 2. Version Control
 
 All generated files are tracked in git, allowing you to:
+
 - See historical changes in objectives status
 - Compare achievement rates over time
 - Document progress for supervisors
@@ -282,6 +285,7 @@ All generated files are tracked in git, allowing you to:
 ### 3. Presentation
 
 Use the generated materials for:
+
 - Thesis defense presentations (convert Mermaid to slides)
 - Progress reports (CSV data in spreadsheets)
 - Supervisor meetings (visual diagrams)
@@ -290,6 +294,7 @@ Use the generated materials for:
 ### 4. Validation
 
 Before finalizing:
+
 - Verify all CSV files open correctly in Excel/LibreOffice
 - Check Mermaid diagrams render in GitHub preview
 - Ensure color coding is visible in converted images
@@ -302,6 +307,7 @@ Before finalizing:
 **Problem**: Diagrams show as code blocks instead of visualizations
 
 **Solutions**:
+
 - Ensure viewing in GitHub (not raw view)
 - Use VS Code with Mermaid extension
 - Convert to images using mermaid-cli
@@ -311,6 +317,7 @@ Before finalizing:
 **Problem**: CSV files don't import correctly in Excel
 
 **Solutions**:
+
 - Use UTF-8 encoding
 - Check for special characters in data
 - Use LibreOffice for better CSV handling
@@ -320,6 +327,7 @@ Before finalizing:
 **Problem**: Tables don't format correctly in LaTeX
 
 **Solutions**:
+
 - Use `csvsimple` package for CSV import
 - Manually create LaTeX tables from CSV data
 - Convert to images if tables are too complex

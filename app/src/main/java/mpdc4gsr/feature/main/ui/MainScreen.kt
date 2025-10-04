@@ -151,51 +151,63 @@ private fun SensorDashboardTab(
     var gsrState by remember { mutableStateOf(mpdc4gsr.core.ui.model.SensorState.Connected) }
     var thermalState by remember { mutableStateOf(mpdc4gsr.core.ui.model.SensorState.Connected) }
     var rgbState by remember { mutableStateOf(mpdc4gsr.core.ui.model.SensorState.Connected) }
-    
+
     // Memoize action handlers to prevent recreating lambdas on every recomposition
     val gsrActionHandler = remember {
         { action: mpdc4gsr.core.ui.model.GSRAction ->
             when (action) {
-                is mpdc4gsr.core.ui.model.GSRAction.Connect -> 
+                is mpdc4gsr.core.ui.model.GSRAction.Connect ->
                     gsrState = mpdc4gsr.core.ui.model.SensorState.Connecting
-                is mpdc4gsr.core.ui.model.GSRAction.Disconnect -> 
+
+                is mpdc4gsr.core.ui.model.GSRAction.Disconnect ->
                     gsrState = mpdc4gsr.core.ui.model.SensorState.Disconnected
-                is mpdc4gsr.core.ui.model.GSRAction.StartStream -> 
+
+                is mpdc4gsr.core.ui.model.GSRAction.StartStream ->
                     gsrState = mpdc4gsr.core.ui.model.SensorState.Streaming
-                is mpdc4gsr.core.ui.model.GSRAction.StopStream -> 
+
+                is mpdc4gsr.core.ui.model.GSRAction.StopStream ->
                     gsrState = mpdc4gsr.core.ui.model.SensorState.Connected
+
                 is mpdc4gsr.core.ui.model.GSRAction.ConfigureDevice -> {}
             }
         }
     }
-    
+
     val thermalActionHandler = remember {
         { action: mpdc4gsr.core.ui.model.ThermalAction ->
             when (action) {
-                is mpdc4gsr.core.ui.model.ThermalAction.Connect -> 
+                is mpdc4gsr.core.ui.model.ThermalAction.Connect ->
                     thermalState = mpdc4gsr.core.ui.model.SensorState.Connecting
-                is mpdc4gsr.core.ui.model.ThermalAction.Disconnect -> 
+
+                is mpdc4gsr.core.ui.model.ThermalAction.Disconnect ->
                     thermalState = mpdc4gsr.core.ui.model.SensorState.Disconnected
-                is mpdc4gsr.core.ui.model.ThermalAction.StartPreview -> 
+
+                is mpdc4gsr.core.ui.model.ThermalAction.StartPreview ->
                     thermalState = mpdc4gsr.core.ui.model.SensorState.Streaming
-                is mpdc4gsr.core.ui.model.ThermalAction.StopPreview -> 
+
+                is mpdc4gsr.core.ui.model.ThermalAction.StopPreview ->
                     thermalState = mpdc4gsr.core.ui.model.SensorState.Connected
+
                 is mpdc4gsr.core.ui.model.ThermalAction.Calibrate -> {}
             }
         }
     }
-    
+
     val rgbActionHandler = remember {
         { action: mpdc4gsr.core.ui.model.CameraAction ->
             when (action) {
-                is mpdc4gsr.core.ui.model.CameraAction.Connect -> 
+                is mpdc4gsr.core.ui.model.CameraAction.Connect ->
                     rgbState = mpdc4gsr.core.ui.model.SensorState.Connecting
-                is mpdc4gsr.core.ui.model.CameraAction.Disconnect -> 
+
+                is mpdc4gsr.core.ui.model.CameraAction.Disconnect ->
                     rgbState = mpdc4gsr.core.ui.model.SensorState.Disconnected
-                is mpdc4gsr.core.ui.model.CameraAction.StartPreview -> 
+
+                is mpdc4gsr.core.ui.model.CameraAction.StartPreview ->
                     rgbState = mpdc4gsr.core.ui.model.SensorState.Streaming
-                is mpdc4gsr.core.ui.model.CameraAction.StopPreview -> 
+
+                is mpdc4gsr.core.ui.model.CameraAction.StopPreview ->
                     rgbState = mpdc4gsr.core.ui.model.SensorState.Connected
+
                 is mpdc4gsr.core.ui.model.CameraAction.SetResolution -> {}
             }
         }
@@ -385,7 +397,7 @@ private fun SystemStatusOverview(
     // Memoize colors to prevent recomposition when theme changes
     val connectedColor = Color.Green
     val primaryColor = MaterialTheme.colorScheme.primary
-    
+
     Card(
         modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))

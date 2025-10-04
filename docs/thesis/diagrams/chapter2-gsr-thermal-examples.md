@@ -2,7 +2,8 @@
 
 ## Figure 2.1: Basic GSR and Thermal Data Examples
 
-Illustrative examples showing sample GSR signal and thermal image data to help readers unfamiliar with these modalities understand the raw data characteristics.
+Illustrative examples showing sample GSR signal and thermal image data to help readers unfamiliar with these modalities
+understand the raw data characteristics.
 
 ### Part A: Sample GSR (Electrodermal Activity) Signal
 
@@ -78,24 +79,24 @@ flowchart TB
 **GSR Signal Characteristics:**
 
 1. **Tonic Component (SCL - Skin Conductance Level)**
-   - Slow-varying baseline: 3.8-5.0 μS range
-   - Gradual drift over time (baseline shift)
-   - Reflects overall arousal state
-   - Changes over minutes to hours
+    - Slow-varying baseline: 3.8-5.0 μS range
+    - Gradual drift over time (baseline shift)
+    - Reflects overall arousal state
+    - Changes over minutes to hours
 
 2. **Phasic Component (SCR - Skin Conductance Response)**
-   - Rapid events: spike at t=30s-50s
-   - Peak amplitude: ~3.4 μS above baseline
-   - Rise time: 1-3 seconds
-   - Recovery time: 5-15 seconds
-   - Triggered by stimulus or stress event
+    - Rapid events: spike at t=30s-50s
+    - Peak amplitude: ~3.4 μS above baseline
+    - Rise time: 1-3 seconds
+    - Recovery time: 5-15 seconds
+    - Triggered by stimulus or stress event
 
 3. **Typical Response Pattern**
-   - Latency: 1-3 seconds after stimulus
-   - Peak: 3-5 seconds after onset
-   - Amplitude: 0.1-0.8 μS typical stress response
-   - Larger responses: 2-5 μS during intense stress
-   - Non-responders: <0.05 μS (5-10% of population)
+    - Latency: 1-3 seconds after stimulus
+    - Peak: 3-5 seconds after onset
+    - Amplitude: 0.1-0.8 μS typical stress response
+    - Larger responses: 2-5 μS during intense stress
+    - Non-responders: <0.05 μS (5-10% of population)
 
 ### Part B: Thermal Image Analysis and ROI Extraction
 
@@ -350,6 +351,7 @@ flowchart TB
 ## Data Characteristics Summary
 
 ### GSR (Shimmer3 @ 128 Hz)
+
 - **Format**: CSV with timestamp, resistance (kΩ), conductance (μS)
 - **Sample Rate**: 128 samples/second
 - **Resolution**: 16-bit (76 μΩ resolution)
@@ -358,6 +360,7 @@ flowchart TB
 - **Key Features**: Tonic SCL, phasic SCRs, event markers
 
 ### Thermal Data (TC001 @ 25 Hz)
+
 - **Format**: CSV with timestamp, temperature matrix (256×192 values)
 - **Frame Rate**: 25 frames/second
 - **Temperature Range**: Typically 28-40°C for facial imaging
@@ -366,6 +369,7 @@ flowchart TB
 - **Key Features**: ROI temperatures, spatial gradients, breathing cycles
 
 ### RGB Video (Phone Camera @ 30 fps)
+
 - **Format**: MP4 (H.264 encoded)
 - **Resolution**: 1920×1080 pixels
 - **Frame Rate**: 30 frames/second
@@ -375,12 +379,14 @@ flowchart TB
 ## Why These Data Types Support GSR Prediction Research
 
 ### GSR as Ground Truth
+
 - Provides validated measure of sympathetic arousal
 - Fast response time (1-3s latency) enables precise correlation
 - Continuous signal allows regression models (not just classification)
 - Research-grade accuracy from validated Shimmer3 sensor
 
 ### Thermal as Contactless Predictor
+
 - Captures involuntary physiological responses (vasoconstriction)
 - Cannot be voluntarily controlled (unlike facial expressions)
 - Temperature changes (0.3-0.7°C) correlate with GSR peaks
@@ -388,6 +394,7 @@ flowchart TB
 - Provides spatial information (nose vs. forehead patterns)
 
 ### RGB as Complementary Context
+
 - Adds behavioral indicators (expressions, movement)
 - Remote photoplethysmography (rPPG) for heart rate
 - Facial action units for emotion classification
@@ -404,4 +411,5 @@ When synchronized properly, the platform enables training models to predict GSR 
 4. **SCR Frequency** → **Breathing Rate Changes** (thermal nostril cycles)
 5. **Combined RGB+Thermal** → **Improved GSR Prediction** over single modality
 
-This figure establishes what raw sensor data looks like, justifying the design choices for sampling rates, data formats, and expected signal characteristics needed for successful multi-modal analysis.
+This figure establishes what raw sensor data looks like, justifying the design choices for sampling rates, data formats,
+and expected signal characteristics needed for successful multi-modal analysis.

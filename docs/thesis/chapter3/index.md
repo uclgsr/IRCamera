@@ -7,32 +7,32 @@ This directory contains **5 primary documents** and **2 supporting documents** f
 ### Primary Documents (Thesis Content)
 
 1. **[system-architecture.md](./system-architecture.md)** - Figure 3.1
-   - Enhanced flowchart with decision nodes, buffers, and queues
-   - 80+ components with icons (🖥️ 📱 🌡️ ⚡ 📹 💾)
-   - Complete data flow with hardware connections
-   - 6 color-coded layers
+    - Enhanced flowchart with decision nodes, buffers, and queues
+    - 80+ components with icons (🖥️ 📱 🌡️ ⚡ 📹 💾)
+    - Complete data flow with hardware connections
+    - 6 color-coded layers
 
 2. **[state-machine.md](./state-machine.md)** - Figure 3.2
-   - Composite state machine with 40+ substates
-   - Parallel states with fork/join patterns
-   - Nested internal state machines
-   - Detailed error handling and recovery
+    - Composite state machine with 40+ substates
+    - Parallel states with fork/join patterns
+    - Nested internal state machines
+    - Detailed error handling and recovery
 
 3. **[communication-sequence.md](./communication-sequence.md)** - Figure 3.3
-   - Enhanced sequence with autonumber and control flow
-   - 150+ interactions with participant icons
-   - Alt/opt/critical/par blocks
-   - Colored rect sections for phases
+    - Enhanced sequence with autonumber and control flow
+    - 150+ interactions with participant icons
+    - Alt/opt/critical/par blocks
+    - Colored rect sections for phases
 
 4. **[requirements-design-table.md](./requirements-design-table.md)** - Table 3.1
-   - 15 functional requirements
-   - Design criteria and constraints
-   - Solutions and verification
+    - 15 functional requirements
+    - Design criteria and constraints
+    - Solutions and verification
 
 5. **[design-decisions-table.md](./design-decisions-table.md)** - Table 3.2
-   - 20 design decisions with rationale
-   - Architectural patterns
-   - Technology stack
+    - 20 design decisions with rationale
+    - Architectural patterns
+    - Technology stack
 
 ### Supporting Documents
 
@@ -52,30 +52,34 @@ The issue requested:
 
 ### Completion Status
 
-| Requirement | Document | Status | Details |
-|-------------|----------|--------|---------|
-| **System Architecture Diagram** | system-architecture.md | ✓ Enhanced | Flowchart with 80+ components, decision nodes, buffers, queues, and icons. Shows complete data flow with 6 color-coded layers and hardware connections (TCP/IP, BLE, USB/OTG) |
-| **Software State Machine** | state-machine.md | ✓ Enhanced | Composite state diagram with 12 main states and 40+ substates. Includes parallel fork/join patterns, nested internal state machines, and comprehensive error recovery |
-| **Communication Sequence Diagram** | communication-sequence.md | ✓ Enhanced | Detailed sequence with 150+ interactions, autonumbering, alt/opt/critical/par blocks, colored rect phases, and participant icons (👤🖥️🌐📱🌡️⚡📹💾⏱️) |
-| **Functional Requirements Table** | requirements-design-table.md | ✓ Complete | Requirements matrix with 15 FRs, design criteria, constraints (battery, storage, network, etc.), and how design addresses each |
-| **Design Decisions Table** | design-decisions-table.md | ✓ Complete | Design matrix with time sync approach, thermal camera interface choice, GSR connection, encoding strategy, etc., with rationale and alternatives |
+| Requirement                        | Document                     | Status     | Details                                                                                                                                                                       |
+|------------------------------------|------------------------------|------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **System Architecture Diagram**    | system-architecture.md       | ✓ Enhanced | Flowchart with 80+ components, decision nodes, buffers, queues, and icons. Shows complete data flow with 6 color-coded layers and hardware connections (TCP/IP, BLE, USB/OTG) |
+| **Software State Machine**         | state-machine.md             | ✓ Enhanced | Composite state diagram with 12 main states and 40+ substates. Includes parallel fork/join patterns, nested internal state machines, and comprehensive error recovery         |
+| **Communication Sequence Diagram** | communication-sequence.md    | ✓ Enhanced | Detailed sequence with 150+ interactions, autonumbering, alt/opt/critical/par blocks, colored rect phases, and participant icons (👤🖥️🌐📱🌡️⚡📹💾⏱️)                        |
+| **Functional Requirements Table**  | requirements-design-table.md | ✓ Complete | Requirements matrix with 15 FRs, design criteria, constraints (battery, storage, network, etc.), and how design addresses each                                                |
+| **Design Decisions Table**         | design-decisions-table.md    | ✓ Complete | Design matrix with time sync approach, thermal camera interface choice, GSR connection, encoding strategy, etc., with rationale and alternatives                              |
 
 ## Content Statistics
 
 ### Figures
+
 - **Total Diagrams**: 3 (all enhanced Mermaid format)
 - **Total Diagram Elements**: 250+ nodes/states/participants/messages
 - **Total Connections**: 150+ edges/transitions/messages
 - **Diagram Types**: Flowchart (architecture), stateDiagram-v2 (state machine), sequenceDiagram (protocol)
-- **Advanced Features**: Decision nodes, buffers, queues, fork/join, composite states, alt/opt/critical/par blocks, rect colored sections, icons, autonumbering
+- **Advanced Features**: Decision nodes, buffers, queues, fork/join, composite states, alt/opt/critical/par blocks, rect
+  colored sections, icons, autonumbering
 
 ### Tables
+
 - **Total Tables**: 2 main tables + 4 supporting tables
 - **Total Requirements**: 15 functional requirements documented
 - **Total Design Decisions**: 20 critical decisions with rationale
 - **Total Constraints**: 20 design constraints identified
 
 ### Documentation
+
 - **Total Files**: 7 markdown files
 - **Total Content**: ~70 KB
 - **Lines of Documentation**: ~1,500 lines
@@ -173,22 +177,24 @@ Simply include or link to these markdown files. Add mermaid.js to render diagram
 All diagrams and tables have been validated against:
 
 ### Code Validation
+
 - ✓ **Android App**: app/src/main/java/mpdc4gsr/
-  - MainActivity, RecordingService, RecordingController match state machine
-  - Network protocol matches communication sequence
-  - Sensor integration matches architecture
+    - MainActivity, RecordingService, RecordingController match state machine
+    - Network protocol matches communication sequence
+    - Sensor integration matches architecture
 
 - ✓ **PC Controller**: pc-controller/src/
-  - SessionManager, DeviceManager match architecture
-  - Protocol implementation matches sequence diagram
-  - Command handling matches state transitions
+    - SessionManager, DeviceManager match architecture
+    - Protocol implementation matches sequence diagram
+    - Command handling matches state transitions
 
 - ✓ **Components**: component/gsr-recording/, component/thermalunified/
-  - ShimmerRecorder matches GSR integration
-  - ThermalCameraRecorder matches TC001 integration
-  - Error recovery matches state machine
+    - ShimmerRecorder matches GSR integration
+    - ThermalCameraRecorder matches TC001 integration
+    - Error recovery matches state machine
 
 ### Documentation Validation
+
 - ✓ **Protocol Docs**: pc-controller/docs/PROTOCOL_*.md
 - ✓ **Verification Reports**: pc-controller/docs/VERIFICATION_REPORT.md
 - ✓ **Existing Diagrams**: docs/thesis-diagrams/
@@ -208,16 +214,19 @@ These documents follow:
 ## Usage Notes
 
 ### Viewing Diagrams
+
 - **GitHub**: Renders automatically
 - **VS Code**: Install "Markdown Preview Mermaid Support"
 - **Online**: https://mermaid.live/
 
 ### Editing Diagrams
+
 - Edit .md files directly
 - Mermaid syntax is human-readable
 - Test on mermaid.live before committing
 
 ### Updating Content
+
 - Maintain consistency with code
 - Update all related documents
 - Regenerate images if diagrams change
@@ -226,6 +235,7 @@ These documents follow:
 ## Quality Assurance
 
 ### Checklist
+
 - [x] All requirements from issue addressed
 - [x] Mermaid syntax validated
 - [x] Content matches implementation
@@ -236,6 +246,7 @@ These documents follow:
 - [x] README and documentation complete
 
 ### Metrics
+
 - **Completeness**: 100% (all requested items delivered)
 - **Detail Level**: High (suitable for thesis)
 - **Accuracy**: Validated against code
@@ -244,12 +255,14 @@ These documents follow:
 ## Contact and Support
 
 ### For Questions
+
 - Review code comments in relevant modules
 - Check git commit history for rationale
 - Refer to protocol verification reports
 - Consult existing thesis chapters
 
 ### For Updates
+
 - Follow naming conventions
 - Maintain Mermaid format
 - Update all related docs

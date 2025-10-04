@@ -52,10 +52,12 @@ pdflatex main.tex
 ## What's Included
 
 ### Chapter 1: Introduction
+
 - **System Architecture**: Complete overview showing PC, Android, sensors, network
 - **Use-Case Timeline**: Step-by-step recording session workflow
 
 ### Chapter 2: Background
+
 - **Hardware Specs**: Detailed specifications table for all components
 - **Systems Comparison**: How this work compares to PhysioKit, FLIR, etc.
 - **Data Examples**: Visual representation of GSR signals and thermal images
@@ -69,6 +71,7 @@ pdflatex main.tex
 ## Quality Settings
 
 For best LaTeX output:
+
 - Width: 1200-1600 pixels
 - Format: PNG or SVG (vector preferred)
 - DPI: 300 for print quality
@@ -89,16 +92,19 @@ For best LaTeX output:
 ## Troubleshooting
 
 **Mermaid syntax error?**
+
 - Test on https://mermaid.live/
 - Check for missing backticks or braces
 - Verify "mermaid" language tag
 
 **LaTeX compilation error?**
+
 - Ensure `figures/` directory exists
 - Check image file paths are correct
 - Verify `graphicx` package is loaded
 
 **Image quality issues?**
+
 - Increase export width (1600px+)
 - Use vector format (SVG) when possible
 - Set higher DPI in LaTeX (300 or 600)

@@ -421,11 +421,11 @@ class SensorFailureIsolationTest : ComponentActivity() {
             recordingController = RecordingController(this, this)
             gsrRecorder = GSRSensorRecorder(this, recordingController = recordingController!!)
             thermalRecorder = ThermalCameraRecorder(this, recordingController!!)
-            
+
             val outputDir = File(getExternalFilesDir(null), "thesis_evaluation")
             outputDir.mkdirs()
             testOutputFile = File(outputDir, "sensor_isolation_${System.currentTimeMillis()}.log")
-            
+
             AppLogger.i(TAG, "Test components initialized successfully")
         } catch (e: Exception) {
             AppLogger.e(TAG, "Failed to initialize test components", e)
@@ -441,7 +441,7 @@ class SensorFailureIsolationTest : ComponentActivity() {
         onComplete: () -> Unit
     ) {
         val testStartTime = System.currentTimeMillis()
-        
+
         onStateChange("Initializing all sensors...")
         logEvent(
             "TEST_START",
@@ -453,7 +453,7 @@ class SensorFailureIsolationTest : ComponentActivity() {
         AppLogger.i(TAG, "Starting sensor failure isolation test - will fail $failureSensor")
 
         delay(2000)
-        
+
         var states = listOf(
             SensorState(SensorType.GSR, "Recording", true, sampleCount = 0),
             SensorState(SensorType.CAMERA, "Recording", true, sampleCount = 0),
@@ -462,7 +462,7 @@ class SensorFailureIsolationTest : ComponentActivity() {
         )
         onSensorStatesChange(states)
         onStateChange("All sensors recording normally")
-        
+
         logEvent(
             "ALL_SENSORS_STARTED",
             failureSensor,
@@ -472,10 +472,10 @@ class SensorFailureIsolationTest : ComponentActivity() {
         )
 
         delay(5000)
-        
+
         var gsrSamplesBeforeFailure = 640
         var thermalFramesBeforeFailure = 50
-        
+
         states = states.map { state ->
             when (state.type) {
                 SensorType.GSR -> state.copy(sampleCount = gsrSamplesBeforeFailure)
@@ -487,7 +487,7 @@ class SensorFailureIsolationTest : ComponentActivity() {
 
         onStateChange("Inducing failure in ${failureSensor.name} sensor...")
         val failureTime = System.currentTimeMillis()
-        
+
         logEvent(
             "FAILURE_INDUCED",
             failureSensor,
@@ -498,7 +498,7 @@ class SensorFailureIsolationTest : ComponentActivity() {
         AppLogger.w(TAG, "Inducing failure in ${failureSensor.name} sensor")
 
         delay(2000)
-        
+
         states = states.map { state ->
             if (state.type == failureSensor) {
                 state.copy(
@@ -511,7 +511,7 @@ class SensorFailureIsolationTest : ComponentActivity() {
             }
         }
         onSensorStatesChange(states)
-        
+
         logEvent(
             "SENSOR_STOPPED",
             failureSensor,
@@ -522,7 +522,7 @@ class SensorFailureIsolationTest : ComponentActivity() {
         AppLogger.w(TAG, "${failureSensor.name} sensor stopped due to failure")
 
         onStateChange("Failure contained - other sensors continue recording")
-        
+
         onMetrics(
             TestMetrics(
                 testStartTime = testStartTime,
@@ -537,10 +537,10 @@ class SensorFailureIsolationTest : ComponentActivity() {
         )
 
         delay(5000)
-        
+
         val gsrSamplesAfterFailure = if (failureSensor != SensorType.GSR) 1280 else 0
         val thermalFramesAfterFailure = if (failureSensor != SensorType.THERMAL) 100 else 0
-        
+
         states = states.map { state ->
             when {
                 state.type == failureSensor -> state
@@ -550,7 +550,7 @@ class SensorFailureIsolationTest : ComponentActivity() {
             }
         }
         onSensorStatesChange(states)
-        
+
         logEvent(
             "OTHER_SENSORS_CONTINUE",
             failureSensor,
@@ -573,7 +573,7 @@ class SensorFailureIsolationTest : ComponentActivity() {
         )
 
         delay(3000)
-        
+
         states = states.map { state ->
             if (state.type != failureSensor) {
                 state.copy(status = "Stopped", isRecording = false)
@@ -582,7 +582,7 @@ class SensorFailureIsolationTest : ComponentActivity() {
             }
         }
         onSensorStatesChange(states)
-        
+
         logEvent(
             "TEST_COMPLETE",
             failureSensor,
@@ -591,7 +591,7 @@ class SensorFailureIsolationTest : ComponentActivity() {
             onEvent
         )
         AppLogger.i(TAG, "Sensor failure isolation test completed successfully")
-        
+
         onStateChange("Test complete - failure isolation verified")
         onComplete()
     }
@@ -611,7 +611,7 @@ class SensorFailureIsolationTest : ComponentActivity() {
             otherSensorsStatus = otherSensorsStatus
         )
         onEvent(event)
-        
+
         testOutputFile?.appendText(
             "${formatTimestamp(event.timestamp)} | $eventType | Affected: ${affectedSensor.name} | Others: $otherSensorsStatus | $description\n"
         )

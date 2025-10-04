@@ -294,11 +294,11 @@ class GSRReconnectionSimulatedTest : ComponentActivity() {
         try {
             recordingController = RecordingController(this, this)
             gsrRecorder = GSRSensorRecorder(this, recordingController = recordingController!!)
-            
+
             val outputDir = File(getExternalFilesDir(null), "thesis_evaluation")
             outputDir.mkdirs()
             testOutputFile = File(outputDir, "gsr_reconnection_simulated_${System.currentTimeMillis()}.log")
-            
+
             AppLogger.i(TAG, "Test components initialized successfully")
         } catch (e: Exception) {
             AppLogger.e(TAG, "Failed to initialize test components", e)
@@ -315,13 +315,13 @@ class GSRReconnectionSimulatedTest : ComponentActivity() {
         var disconnectTime = 0L
         var reconnectTime = 0L
         var reconnectionAttempts = 0
-        
+
         logTestEvent("TEST_START", "GSR reconnection test started", "INITIALIZING", onEvent)
         AppLogger.i(TAG, "Starting GSR reconnection simulated test")
 
         for (second in 0..TEST_DURATION_SECONDS) {
             delay(1000)
-            
+
             val progress = second.toFloat() / TEST_DURATION_SECONDS
             var status = "Test running: ${second}s / ${TEST_DURATION_SECONDS}s"
 
@@ -338,7 +338,7 @@ class GSRReconnectionSimulatedTest : ComponentActivity() {
                     )
                     AppLogger.w(TAG, "GSR disconnected at $second seconds")
                 }
-                
+
                 in (DISCONNECT_AT_SECONDS + 1)..RECONNECT_AT_SECONDS -> {
                     status = "GSR disconnected - attempting reconnection..."
                     if (second % 5 == 0) {
@@ -352,7 +352,7 @@ class GSRReconnectionSimulatedTest : ComponentActivity() {
                         AppLogger.i(TAG, "Reconnection attempt $reconnectionAttempts")
                     }
                 }
-                
+
                 RECONNECT_AT_SECONDS -> {
                     status = "GSR reconnected successfully"
                     reconnectTime = System.currentTimeMillis()
@@ -368,7 +368,7 @@ class GSRReconnectionSimulatedTest : ComponentActivity() {
             }
 
             onProgress(progress, second, status)
-            
+
             val dataGapDuration = if (reconnectTime > 0) reconnectTime - disconnectTime else 0
             onMetrics(
                 TestMetrics(
@@ -384,14 +384,14 @@ class GSRReconnectionSimulatedTest : ComponentActivity() {
 
         val testEndTime = System.currentTimeMillis()
         val totalDuration = (testEndTime - testStartTime) / 1000
-        
+
         logTestEvent(
             "TEST_COMPLETE",
             "Test completed successfully. Total duration: ${totalDuration}s",
             "COMPLETED",
             onEvent
         )
-        
+
         onMetrics(
             TestMetrics(
                 totalTestDuration = TEST_DURATION_SECONDS.toLong(),
@@ -428,7 +428,7 @@ class GSRReconnectionSimulatedTest : ComponentActivity() {
             connectionState = connectionState
         )
         onEvent(event)
-        
+
         testOutputFile?.appendText(
             "${formatTimestamp(event.timestamp)} | $eventType | $connectionState | $description\n"
         )
@@ -459,7 +459,7 @@ class GSRReconnectionSimulatedTest : ComponentActivity() {
             testOutputFile?.appendText("Data Gap: ${reconnectTime - disconnectTime}ms\n")
             testOutputFile?.appendText("Reconnection Attempts: $reconnectionAttempts\n")
             testOutputFile?.appendText("Result: PASSED\n")
-            
+
             AppLogger.i(TAG, "Test report written to ${testOutputFile?.absolutePath}")
         } catch (e: Exception) {
             AppLogger.e(TAG, "Failed to write test report", e)

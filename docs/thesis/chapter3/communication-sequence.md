@@ -2,7 +2,9 @@
 
 ## Figure 3.3: Protocol Sequence Diagram - PC to Android Communication
 
-This sequence diagram shows the step-by-step messaging between the PC orchestrator and the Android device, tracing how commands travel, how the device acknowledges and initializes sensors, how data recording occurs, and how STOP/SYNC commands are handled.
+This sequence diagram shows the step-by-step messaging between the PC orchestrator and the Android device, tracing how
+commands travel, how the device acknowledges and initializes sensors, how data recording occurs, and how STOP/SYNC
+commands are handled.
 
 ```mermaid
 sequenceDiagram
@@ -566,6 +568,7 @@ sequenceDiagram
 ### Connection Phase Messages
 
 **HELLO** (Android → PC)
+
 ```json
 {
   "command": "HELLO",
@@ -578,6 +581,7 @@ sequenceDiagram
 ```
 
 **ACK HELLO** (PC → Android)
+
 ```json
 {
   "command": "ACK",
@@ -591,6 +595,7 @@ sequenceDiagram
 ### Time Synchronization Messages
 
 **SYNC_REQUEST** (PC → Android)
+
 ```json
 {
   "command": "SYNC_REQUEST",
@@ -600,6 +605,7 @@ sequenceDiagram
 ```
 
 **SYNC_RESPONSE** (Android → PC)
+
 ```json
 {
   "command": "SYNC_RESPONSE",
@@ -612,6 +618,7 @@ sequenceDiagram
 ### Recording Control Messages
 
 **START_RECORD** (PC → Android)
+
 ```json
 {
   "command": "START_RECORD",
@@ -630,6 +637,7 @@ sequenceDiagram
 ```
 
 **ACK START_RECORD** (Android → PC)
+
 ```json
 {
   "command": "ACK",
@@ -641,6 +649,7 @@ sequenceDiagram
 ```
 
 **STOP_RECORD** (PC → Android)
+
 ```json
 {
   "command": "STOP_RECORD",
@@ -652,6 +661,7 @@ sequenceDiagram
 ### Status and Monitoring Messages
 
 **HEARTBEAT** (Android → PC)
+
 ```json
 {
   "command": "HEARTBEAT",
@@ -667,6 +677,7 @@ sequenceDiagram
 ```
 
 **STATUS_UPDATE** (Android → PC)
+
 ```json
 {
   "command": "STATUS_UPDATE",
@@ -683,6 +694,7 @@ sequenceDiagram
 ### File Transfer Messages
 
 **FILE_MANIFEST** (Android → PC)
+
 ```json
 {
   "command": "FILE_MANIFEST",
@@ -698,6 +710,7 @@ sequenceDiagram
 ```
 
 **FILE_CHUNK** (Android → PC)
+
 ```json
 {
   "command": "FILE_CHUNK",
@@ -711,12 +724,14 @@ sequenceDiagram
 ## Timing Characteristics
 
 ### Latency Requirements
+
 - **Command Propagation**: < 50ms (PC to Android)
 - **ACK Response**: < 100ms (Android to PC)
 - **Heartbeat Interval**: 2 seconds
 - **Sync Exchange**: < 10ms round-trip
 
 ### Timeout Values
+
 - **Connection Establishment**: 30 seconds
 - **Sensor Initialization**: 10 seconds per sensor
 - **Command Acknowledgment**: 5 seconds
@@ -724,6 +739,7 @@ sequenceDiagram
 - **Heartbeat Timeout**: 6 seconds (3 missed beats)
 
 ### Bandwidth Usage
+
 - **Control Messages**: ~1 KB/s average
 - **Heartbeat Traffic**: 0.5 KB/s
 - **File Transfer**: Up to 10 MB/s (limited by network)
@@ -731,18 +747,22 @@ sequenceDiagram
 ## Error Handling
 
 ### Network Errors
+
 - **Connection Lost During Recording**: Android continues local recording, queues status updates, attempts reconnection
 - **Packet Loss**: TCP ensures reliable delivery, retransmission handled by protocol stack
 - **Timeout**: Commands have retry logic with exponential backoff (500ms, 1s, 2s, 4s, 8s max)
 
 ### Sensor Errors
+
 - **Initialization Failure**: Send ERROR message to PC with details, mark sensor unavailable
 - **Mid-Recording Failure**: Log warning, continue with remaining sensors, notify PC via STATUS_UPDATE
 - **Recovery**: Attempt auto-reconnection, send recovery status when restored
 
 ### File Transfer Errors
+
 - **Partial Transfer**: Resume from last successful chunk using offset
 - **Checksum Mismatch**: Request file retransmission
 - **Storage Full on PC**: Abort transfer, send ERROR, require user intervention
 
-This communication protocol ensures reliable, efficient coordination between the PC orchestrator and Android sensor nodes with comprehensive error handling and recovery mechanisms.
+This communication protocol ensures reliable, efficient coordination between the PC orchestrator and Android sensor
+nodes with comprehensive error handling and recovery mechanisms.

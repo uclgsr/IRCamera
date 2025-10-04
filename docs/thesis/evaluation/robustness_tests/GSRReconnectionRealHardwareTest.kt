@@ -374,11 +374,11 @@ class GSRReconnectionRealHardwareTest : ComponentActivity() {
         try {
             recordingController = RecordingController(this, this)
             gsrRecorder = GSRSensorRecorder(this, recordingController = recordingController!!)
-            
+
             val outputDir = File(getExternalFilesDir(null), "thesis_evaluation")
             outputDir.mkdirs()
             testOutputFile = File(outputDir, "gsr_reconnection_real_${System.currentTimeMillis()}.log")
-            
+
             AppLogger.i(TAG, "Test components initialized successfully")
         } catch (e: Exception) {
             AppLogger.e(TAG, "Failed to initialize test components", e)
@@ -394,13 +394,13 @@ class GSRReconnectionRealHardwareTest : ComponentActivity() {
         onStateChange("Starting recording...")
         logEvent("RECORDING_START", "Recording started", "RECORDING", onEvent)
         AppLogger.i(TAG, "Real hardware test recording started")
-        
+
         val startTime = System.currentTimeMillis()
         onMetrics(RecordingMetrics(recordingStartTime = startTime))
-        
+
         onStateChange("Recording - GSR connected")
         onConnectionChange(true)
-        
+
         monitorGSRConnection(onStateChange, onConnectionChange, onEvent, onMetrics)
     }
 
@@ -412,12 +412,12 @@ class GSRReconnectionRealHardwareTest : ComponentActivity() {
     ) {
         var disconnectTime: Long? = null
         var reconnectTime: Long? = null
-        
+
         while (true) {
             delay(2000)
-            
+
             val isConnected = checkGSRConnectionState()
-            
+
             if (!isConnected && disconnectTime == null) {
                 disconnectTime = System.currentTimeMillis()
                 onStateChange("GSR disconnected - attempting reconnection")
@@ -441,7 +441,7 @@ class GSRReconnectionRealHardwareTest : ComponentActivity() {
                     onEvent
                 )
                 AppLogger.i(TAG, "GSR reconnection successful")
-                
+
                 onMetrics(
                     RecordingMetrics(
                         disconnectDetectedTime = disconnectTime,
@@ -460,7 +460,7 @@ class GSRReconnectionRealHardwareTest : ComponentActivity() {
         onStateChange("Stopping recording...")
         logEvent("RECORDING_STOP", "Recording stopped", "STOPPED", onEvent)
         AppLogger.i(TAG, "Real hardware test recording stopped")
-        
+
         delay(500)
         onStateChange("Recording complete")
     }
@@ -482,7 +482,7 @@ class GSRReconnectionRealHardwareTest : ComponentActivity() {
             connectionState = connectionState
         )
         onEvent(event)
-        
+
         testOutputFile?.appendText(
             "${formatTimestamp(event.timestamp)} | $eventType | $connectionState | $description\n"
         )

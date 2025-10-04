@@ -119,7 +119,7 @@ class RGBCameraViewModel(
 
     /**
      * Get camera recorder instance for preview binding
-     * 
+     *
      * @return The current RgbCameraRecorder instance, or null if not initialized
      * @deprecated Use cameraRecorder StateFlow instead for reactive updates.
      *             Replace `viewModel.getCameraRecorder()` with `viewModel.cameraRecorder.collectAsState()` in Compose.
@@ -235,11 +235,11 @@ class RGBCameraViewModel(
 
                 if (success) {
                     // Increment counter to trigger preview rebind in UI
-                    _cameraState.update { 
+                    _cameraState.update {
                         it.copy(
                             error = null,
                             cameraChangeCounter = it.cameraChangeCounter + 1
-                        ) 
+                        )
                     }
                 } else {
                     _cameraState.update { it.copy(error = "Failed to switch camera") }
@@ -296,13 +296,13 @@ class RGBCameraViewModel(
                     recorder.cleanup()
                     _cameraRecorder.value = null
                 }
-                
+
                 // Reinitialize - cleanup() is a suspend function that completes before continuing
                 initializeCamera(lifecycleOwner)
-                
+
                 // Increment counter to trigger UI updates
-                _cameraState.update { 
-                    it.copy(cameraChangeCounter = it.cameraChangeCounter + 1) 
+                _cameraState.update {
+                    it.copy(cameraChangeCounter = it.cameraChangeCounter + 1)
                 }
             } catch (e: Exception) {
                 _cameraState.update { it.copy(error = "Failed to reinitialize camera: ${e.message}") }

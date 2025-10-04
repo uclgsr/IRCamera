@@ -25,6 +25,7 @@ import random
 
 try:
     import pandas as pd
+
     HAS_PANDAS = True
 except ImportError:
     HAS_PANDAS = False
@@ -40,13 +41,13 @@ class ExperimentalEvaluationFramework:
     def __init__(self, output_dir: str = "./docs/chapter5"):
         self.output_dir = Path(output_dir)
         self.output_dir.mkdir(parents=True, exist_ok=True)
-        
+
         self.base_timestamp = 1704067200000
-        
+
     def generate_all_chapter5_content(self):
         """Generate all Chapter 5 figures, tables, and data"""
         logger.info("Generating Chapter 5 experimental evaluation content")
-        
+
         self.generate_system_event_timeline()
         self.generate_sensor_sync_validation()
         self.generate_recorded_data_samples()
@@ -54,13 +55,13 @@ class ExperimentalEvaluationFramework:
         self.generate_test_cases_table()
         self.generate_example_log_excerpt()
         self.generate_performance_summary()
-        
+
         logger.info(f"Chapter 5 content generated in {self.output_dir}")
 
     def generate_system_event_timeline(self):
         """Generate System Event Timeline and Synchronization figure data"""
         logger.info("Generating system event timeline data")
-        
+
         timeline_events = [
             {
                 'Event': 'PC NTP Sync',
@@ -126,7 +127,7 @@ class ExperimentalEvaluationFramework:
                 'Offset_ms': 150
             }
         ]
-        
+
         if HAS_PANDAS:
             df = pd.DataFrame(timeline_events)
             df.to_csv(self.output_dir / "system_event_timeline.csv", index=False)
@@ -135,7 +136,7 @@ class ExperimentalEvaluationFramework:
                 writer = csv.DictWriter(f, fieldnames=timeline_events[0].keys())
                 writer.writeheader()
                 writer.writerows(timeline_events)
-        
+
         with open(self.output_dir / "system_event_timeline_diagram.md", 'w') as f:
             f.write("# System Event Timeline and Synchronization\n\n")
             f.write("## Figure 5.1: Multi-Sensor Recording Session Timeline\n\n")
@@ -226,26 +227,26 @@ class ExperimentalEvaluationFramework:
             f.write("    PC->>PC: Verify sync window\n")
             f.write("    Note over PC: t=200ms<br/>Verification complete\n")
             f.write("```\n")
-        
+
         logger.info("System event timeline generated")
 
     def generate_sensor_sync_validation(self):
         """Generate Sensor Data Synchronization Validation data"""
         logger.info("Generating sensor synchronization validation data")
-        
+
         validation_data = []
         base_time = 1000
-        
+
         for i in range(50):
             event_time = base_time + i * 40
             thermal_ts = event_time + random.uniform(-3.2, 3.2)
             gsr_ts = event_time + random.uniform(-2.3, 2.3)
             rgb_ts = event_time + random.uniform(-1.8, 1.8)
-            
-            max_offset = max(abs(thermal_ts - gsr_ts), 
-                           abs(thermal_ts - rgb_ts),
-                           abs(gsr_ts - rgb_ts))
-            
+
+            max_offset = max(abs(thermal_ts - gsr_ts),
+                             abs(thermal_ts - rgb_ts),
+                             abs(gsr_ts - rgb_ts))
+
             validation_data.append({
                 'Sample_ID': i,
                 'Event_Type': 'Normal' if i % 10 != 5 else 'Test_Stimulus',
@@ -255,7 +256,7 @@ class ExperimentalEvaluationFramework:
                 'Max_Offset_ms': round(max_offset, 2),
                 'Within_Tolerance': 'Yes' if max_offset < 10 else 'No'
             })
-        
+
         if HAS_PANDAS:
             df = pd.DataFrame(validation_data)
             df.to_csv(self.output_dir / "sensor_sync_validation.csv", index=False)
@@ -264,7 +265,7 @@ class ExperimentalEvaluationFramework:
                 writer = csv.DictWriter(f, fieldnames=validation_data[0].keys())
                 writer.writeheader()
                 writer.writerows(validation_data)
-        
+
         with open(self.output_dir / "sensor_sync_validation_diagram.md", 'w') as f:
             f.write("# Sensor Data Synchronization Validation\n\n")
             f.write("## Figure 5.2: Time Synchronization Accuracy Analysis\n\n")
@@ -363,17 +364,17 @@ class ExperimentalEvaluationFramework:
             f.write("### Validation Results\n\n")
             within_tol = sum(1 for d in validation_data if d['Within_Tolerance'] == 'Yes')
             f.write(f"- **Total Samples Analyzed**: {len(validation_data)}\n")
-            f.write(f"- **Within Tolerance**: {within_tol} ({within_tol/len(validation_data)*100:.1f}%)\n")
+            f.write(f"- **Within Tolerance**: {within_tol} ({within_tol / len(validation_data) * 100:.1f}%)\n")
             avg_offset = sum(d['Max_Offset_ms'] for d in validation_data) / len(validation_data)
             f.write(f"- **Average Max Offset**: {avg_offset:.2f}ms\n")
             f.write(f"- **Conclusion**: System achieves sub-10ms synchronization accuracy\n")
-        
+
         logger.info("Sensor synchronization validation generated")
 
     def generate_recorded_data_samples(self):
         """Generate Recorded Data Samples table"""
         logger.info("Generating recorded data samples")
-        
+
         sample_data = [
             {
                 'Timestamp': '2024-01-01T10:00:00.000',
@@ -431,7 +432,7 @@ class ExperimentalEvaluationFramework:
                 'Sync_Quality': 'EXCELLENT'
             }
         ]
-        
+
         if HAS_PANDAS:
             df = pd.DataFrame(sample_data)
             df.to_csv(self.output_dir / "recorded_data_samples.csv", index=False)
@@ -440,13 +441,13 @@ class ExperimentalEvaluationFramework:
                 writer = csv.DictWriter(f, fieldnames=sample_data[0].keys())
                 writer.writeheader()
                 writer.writerows(sample_data)
-        
+
         logger.info("Recorded data samples generated")
 
     def generate_performance_metrics(self):
         """Generate Performance Metrics Charts data"""
         logger.info("Generating performance metrics data")
-        
+
         latency_data = [
             {'Test_Run': 1, 'Command_to_Start_ms': 68, 'Network_Latency_ms': 2.1},
             {'Test_Run': 2, 'Command_to_Start_ms': 72, 'Network_Latency_ms': 2.3},
@@ -459,16 +460,16 @@ class ExperimentalEvaluationFramework:
             {'Test_Run': 9, 'Command_to_Start_ms': 73, 'Network_Latency_ms': 2.5},
             {'Test_Run': 10, 'Command_to_Start_ms': 68, 'Network_Latency_ms': 2.0}
         ]
-        
+
         throughput_data = [
-            {'Sensor': 'Thermal Camera', 'Target_Rate': '25 fps', 'Measured_Rate': '24.5 fps', 
+            {'Sensor': 'Thermal Camera', 'Target_Rate': '25 fps', 'Measured_Rate': '24.5 fps',
              'Data_Rate_KBps': 195, 'Performance': '98%'},
             {'Sensor': 'RGB Camera', 'Target_Rate': '30 fps', 'Measured_Rate': '29.8 fps',
              'Data_Rate_KBps': 2400, 'Performance': '99%'},
             {'Sensor': 'GSR Sensor', 'Target_Rate': '128 Hz', 'Measured_Rate': '127.2 Hz',
              'Data_Rate_KBps': 2.5, 'Performance': '99%'}
         ]
-        
+
         battery_data = [
             {'Time_Minutes': 0, 'Battery_Percent': 100},
             {'Time_Minutes': 10, 'Battery_Percent': 97},
@@ -478,7 +479,7 @@ class ExperimentalEvaluationFramework:
             {'Time_Minutes': 50, 'Battery_Percent': 85},
             {'Time_Minutes': 60, 'Battery_Percent': 82}
         ]
-        
+
         if HAS_PANDAS:
             pd.DataFrame(latency_data).to_csv(self.output_dir / "latency_metrics.csv", index=False)
             pd.DataFrame(throughput_data).to_csv(self.output_dir / "throughput_metrics.csv", index=False)
@@ -488,21 +489,21 @@ class ExperimentalEvaluationFramework:
                 writer = csv.DictWriter(f, fieldnames=latency_data[0].keys())
                 writer.writeheader()
                 writer.writerows(latency_data)
-            
+
             with open(self.output_dir / "throughput_metrics.csv", 'w', newline='') as f:
                 writer = csv.DictWriter(f, fieldnames=throughput_data[0].keys())
                 writer.writeheader()
                 writer.writerows(throughput_data)
-            
+
             with open(self.output_dir / "battery_metrics.csv", 'w', newline='') as f:
                 writer = csv.DictWriter(f, fieldnames=battery_data[0].keys())
                 writer.writeheader()
                 writer.writerows(battery_data)
-        
+
         with open(self.output_dir / "performance_metrics_diagrams.md", 'w') as f:
             f.write("# Performance Metrics Charts\n\n")
             f.write("## Figure 5.3: System Performance Analysis\n\n")
-            
+
             # Architecture diagram showing data flow with performance metrics
             f.write("### Figure 5.3a: System Architecture with Performance Metrics\n\n")
             f.write("```mermaid\n")
@@ -553,7 +554,7 @@ class ExperimentalEvaluationFramework:
             f.write("    style BAT fill:#fff9c4\n")
             f.write("    style TM fill:#f0e68c\n")
             f.write("```\n\n")
-            
+
             # Latency breakdown pie chart
             f.write("### Figure 5.3b: Latency Distribution Analysis\n\n")
             f.write("```mermaid\n")
@@ -567,7 +568,7 @@ class ExperimentalEvaluationFramework:
             f.write("    \"RGB CameraX Start\" : 3.8\n")
             f.write("    \"Coordination Overhead\" : 43.5\n")
             f.write("```\n\n")
-            
+
             # Throughput comparison
             f.write("### Figure 5.3c: Sensor Throughput Performance\n\n")
             f.write("```mermaid\n")
@@ -606,7 +607,7 @@ class ExperimentalEvaluationFramework:
             f.write("    style RP fill:#90ee90\n")
             f.write("    style GP fill:#90ee90\n")
             f.write("```\n\n")
-            
+
             # Battery timeline
             f.write("### Figure 5.3d: Battery Consumption Timeline\n\n")
             f.write("```mermaid\n")
@@ -630,7 +631,7 @@ class ExperimentalEvaluationFramework:
             f.write("    Final Phase         :active, op6, 3000000, 3600000\n")
             f.write("    82% (60 min)        :milestone, b6, 3600000, 3600000\n")
             f.write("```\n\n")
-            
+
             avg_latency = sum(d['Command_to_Start_ms'] for d in latency_data) / len(latency_data)
             f.write("### Performance Summary\n\n")
             f.write(f"- **Average command-to-start latency**: {avg_latency:.1f}ms (Target: <100ms) ✓\n")
@@ -643,14 +644,15 @@ class ExperimentalEvaluationFramework:
             f.write("| Sensor | Target | Measured | Performance | Data Rate |\n")
             f.write("|--------|--------|----------|-------------|------------|\n")
             for d in throughput_data:
-                f.write(f"| {d['Sensor']} | {d['Target_Rate']} | {d['Measured_Rate']} | {d['Performance']} | {d['Data_Rate_KBps']}KB/s |\n")
-        
+                f.write(
+                    f"| {d['Sensor']} | {d['Target_Rate']} | {d['Measured_Rate']} | {d['Performance']} | {d['Data_Rate_KBps']}KB/s |\n")
+
         logger.info("Performance metrics generated")
 
     def generate_test_cases_table(self):
         """Generate Test Cases and Outcomes table"""
         logger.info("Generating test cases table")
-        
+
         test_cases = [
             {
                 'Test_ID': 'TC-001',
@@ -723,7 +725,7 @@ class ExperimentalEvaluationFramework:
                 'Notes': 'All within acceptable range'
             }
         ]
-        
+
         if HAS_PANDAS:
             df = pd.DataFrame(test_cases)
             df.to_csv(self.output_dir / "test_cases_outcomes.csv", index=False)
@@ -732,22 +734,22 @@ class ExperimentalEvaluationFramework:
                 writer = csv.DictWriter(f, fieldnames=test_cases[0].keys())
                 writer.writeheader()
                 writer.writerows(test_cases)
-        
+
         logger.info("Test cases table generated")
 
     def generate_example_log_excerpt(self):
         """Generate Example Log Excerpt table"""
         logger.info("Generating example log excerpt")
-        
+
         base_ts = datetime.fromisoformat('2024-01-01T10:00:00')
         log_entries = []
-        
+
         for i in range(10):
-            ts = base_ts + timedelta(milliseconds=i*40)
+            ts = base_ts + timedelta(milliseconds=i * 40)
             thermal_frame = i + 1
             rgb_frame = int(i * 0.75) + 1
             gsr_samples = int(i * 5.12)
-            
+
             log_entries.append({
                 'Timestamp': ts.isoformat(),
                 'Relative_Time_ms': i * 40,
@@ -759,7 +761,7 @@ class ExperimentalEvaluationFramework:
                 'Sync_Offset_ms': round(random.uniform(-2, 2), 2),
                 'Data_Quality': 'GOOD' if abs(random.uniform(-2, 2)) < 3 else 'FAIR'
             })
-        
+
         if HAS_PANDAS:
             df = pd.DataFrame(log_entries)
             df.to_csv(self.output_dir / "example_log_excerpt.csv", index=False)
@@ -768,13 +770,13 @@ class ExperimentalEvaluationFramework:
                 writer = csv.DictWriter(f, fieldnames=log_entries[0].keys())
                 writer.writeheader()
                 writer.writerows(log_entries)
-        
+
         logger.info("Example log excerpt generated")
 
     def generate_performance_summary(self):
         """Generate Performance Summary Results table"""
         logger.info("Generating performance summary")
-        
+
         summary_results = [
             {
                 'Metric': 'Time Sync Offset Error',
@@ -865,7 +867,7 @@ class ExperimentalEvaluationFramework:
                 'Notes': 'Extended sessions supported'
             }
         ]
-        
+
         if HAS_PANDAS:
             df = pd.DataFrame(summary_results)
             df.to_csv(self.output_dir / "performance_summary_results.csv", index=False)
@@ -874,7 +876,7 @@ class ExperimentalEvaluationFramework:
                 writer = csv.DictWriter(f, fieldnames=summary_results[0].keys())
                 writer.writeheader()
                 writer.writerows(summary_results)
-        
+
         with open(self.output_dir / "performance_summary_report.md", 'w') as f:
             f.write("# Performance Summary Results\n\n")
             f.write("## Table 5.7: Comprehensive Performance Metrics\n\n")
@@ -887,9 +889,9 @@ class ExperimentalEvaluationFramework:
             f.write("\n## Summary\n\n")
             meets = sum(1 for r in summary_results if 'MEETS' in r['Status'] or 'EXCEEDS' in r['Status'])
             f.write(f"- Total metrics evaluated: {len(summary_results)}\n")
-            f.write(f"- Metrics meeting or exceeding targets: {meets} ({meets/len(summary_results)*100:.0f}%)\n")
+            f.write(f"- Metrics meeting or exceeding targets: {meets} ({meets / len(summary_results) * 100:.0f}%)\n")
             f.write(f"- Overall system performance: EXCELLENT\n")
-        
+
         logger.info("Performance summary generated")
 
 
@@ -899,10 +901,10 @@ def main():
         level=logging.INFO,
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
     )
-    
+
     framework = ExperimentalEvaluationFramework()
     framework.generate_all_chapter5_content()
-    
+
     print("\nChapter 5 Experimental Evaluation content generated successfully!")
     print(f"Output directory: {framework.output_dir}")
     print("\nGenerated files:")

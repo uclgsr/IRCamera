@@ -88,12 +88,12 @@ android {
         abortOnError = true
         checkReleaseBuilds = true
         warningsAsErrors = false  // Enable gradually
-        
+
         // Only disable with justification
         disable += listOf(
             "MissingTranslation"  // Internationalization not required yet
         )
-        
+
         // Monitor these warnings
         warning += listOf(
             "StringFormatInvalid",

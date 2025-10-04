@@ -1,10 +1,12 @@
 # Chapter 4: Implementation and Development
 
-This document contains figures, tables, and code snippets for Chapter 4 of the thesis, focusing on the implementation details of the multi-sensor recording system.
+This document contains figures, tables, and code snippets for Chapter 4 of the thesis, focusing on the implementation
+details of the multi-sensor recording system.
 
 ## Figure 4.1: Mobile App UI and Data Flow
 
-This diagram illustrates the Android application's user interface structure and internal data flow, showing how user actions and PC commands trigger background services and data processing pipelines.
+This diagram illustrates the Android application's user interface structure and internal data flow, showing how user
+actions and PC commands trigger background services and data processing pipelines.
 
 ```mermaid
 graph TB
@@ -189,19 +191,27 @@ graph TB
 
 ### Data Flow Description
 
-1. **User Interaction Path**: User actions from the UI layer flow through ViewModels to the Recording Controller, which coordinates all sensor threads with proper lifecycle management.
+1. **User Interaction Path**: User actions from the UI layer flow through ViewModels to the Recording Controller, which
+   coordinates all sensor threads with proper lifecycle management.
 
-2. **PC Command Path**: Remote commands arrive via TCP server (port 8080), are queued and parsed by the Protocol Handler, then dispatched to the Recording Controller or Time Sync Manager.
+2. **PC Command Path**: Remote commands arrive via TCP server (port 8080), are queued and parsed by the Protocol
+   Handler, then dispatched to the Recording Controller or Time Sync Manager.
 
-3. **Hardware Integration Path**: USB Manager handles Topdon TC001 thermal camera via OTG, BLE Manager connects to Shimmer3 GSR sensor via Bluetooth, and CameraX API manages the phone's internal RGB camera.
+3. **Hardware Integration Path**: USB Manager handles Topdon TC001 thermal camera via OTG, BLE Manager connects to
+   Shimmer3 GSR sensor via Bluetooth, and CameraX API manages the phone's internal RGB camera.
 
-4. **Sensor Data Path**: Each sensor runs in its own dedicated thread (Thermal @25Hz with 49,152 temperature points, GSR @128Hz with 12-bit ADC sampling, RGB @30fps with H.264 encoding). Data flows through processors that apply calibration and formatting.
+4. **Sensor Data Path**: Each sensor runs in its own dedicated thread (Thermal @25Hz with 49,152 temperature points, GSR
+   @128Hz with 12-bit ADC sampling, RGB @30fps with H.264 encoding). Data flows through processors that apply
+   calibration and formatting.
 
-5. **Time Synchronization Path**: NTP-style time sync ensures all sensor data shares a common time base with nanosecond precision, coordinated with the PC orchestrator.
+5. **Time Synchronization Path**: NTP-style time sync ensures all sensor data shares a common time base with nanosecond
+   precision, coordinated with the PC orchestrator.
 
-6. **Storage Path**: Buffered writers batch data (50 samples) and flush periodically (5 seconds) to minimize I/O overhead, storing in session-specific directories with separate files for each sensor type plus metadata.
+6. **Storage Path**: Buffered writers batch data (50 samples) and flush periodically (5 seconds) to minimize I/O
+   overhead, storing in session-specific directories with separate files for each sensor type plus metadata.
 
-7. **Status Feedback Path**: Bidirectional status flows (dotted lines) provide real-time monitoring from threads back to UI components, while error conditions propagate to the Recording Controller for centralized handling.
+7. **Status Feedback Path**: Bidirectional status flows (dotted lines) provide real-time monitoring from threads back to
+   UI components, while error conditions propagate to the Recording Controller for centralized handling.
 
 ### Figure 4.1b: Recording Session State Machine
 
@@ -502,7 +512,8 @@ sequenceDiagram
 
 ## Code Snippet 4.2: Bluetooth GSR Connection and Reading
 
-This code excerpt demonstrates the core implementation of connecting to the Shimmer3 GSR sensor via Bluetooth Low Energy (BLE) and streaming 12-bit ADC data at 128Hz.
+This code excerpt demonstrates the core implementation of connecting to the Shimmer3 GSR sensor via Bluetooth Low
+Energy (BLE) and streaming 12-bit ADC data at 128Hz.
 
 ### Connection Initialization
 
@@ -819,7 +830,8 @@ stateDiagram-v2
 
 ## Code Snippet 4.3: Thermal Camera Frame Capture (USB)
 
-This code demonstrates integration with the Topdon TC001 thermal camera via USB OTG, including frame callbacks and temperature calibration.
+This code demonstrates integration with the Topdon TC001 thermal camera via USB OTG, including frame callbacks and
+temperature calibration.
 
 ### USB Device Initialization
 
@@ -1258,7 +1270,8 @@ sequenceDiagram
 
 ## Code Snippet 4.4: Timestamp Synchronization Logic
 
-This code implements the NTP-style time synchronization algorithm for aligning Android device and PC clocks without setting system time.
+This code implements the NTP-style time synchronization algorithm for aligning Android device and PC clocks without
+setting system time.
 
 ### Synchronization Protocol
 
@@ -1724,7 +1737,8 @@ pie title Sync Quality Distribution (14 Sessions, 127 Sync Events)
 
 ## Code Snippet 4.5: Remote Command Handling (TCP Server)
 
-This code implements the TCP server that receives and processes commands from the PC orchestrator for remote control of recording sessions.
+This code implements the TCP server that receives and processes commands from the PC orchestrator for remote control of
+recording sessions.
 
 ### TCP Server Initialization
 
@@ -2423,14 +2437,23 @@ graph LR
 
 This chapter has presented the core implementation details of the multi-sensor recording system:
 
-1. **Mobile App Architecture**: Illustrated the complete data flow from user interface through sensor threads to file storage, showing how PC commands and user actions are processed in parallel.
+1. **Mobile App Architecture**: Illustrated the complete data flow from user interface through sensor threads to file
+   storage, showing how PC commands and user actions are processed in parallel.
 
-2. **GSR Integration**: Demonstrated Bluetooth connectivity with Shimmer3 devices using the official SDK, including device discovery, connection management, data streaming at 128Hz, and conversion of 12-bit ADC values to calibrated microsiemens measurements.
+2. **GSR Integration**: Demonstrated Bluetooth connectivity with Shimmer3 devices using the official SDK, including
+   device discovery, connection management, data streaming at 128Hz, and conversion of 12-bit ADC values to calibrated
+   microsiemens measurements.
 
-3. **Thermal Camera Integration**: Showed USB OTG communication with the Topdon TC001 camera using the UVC protocol, including frame callback setup, real-time capture at 25Hz with 256x192 resolution, and temperature calibration with emissivity correction.
+3. **Thermal Camera Integration**: Showed USB OTG communication with the Topdon TC001 camera using the UVC protocol,
+   including frame callback setup, real-time capture at 25Hz with 256x192 resolution, and temperature calibration with
+   emissivity correction.
 
-4. **Time Synchronization**: Presented the complete NTP-style synchronization algorithm with four-timestamp exchange, clock offset calculation, quality metrics, and transparent timestamp adjustment without modifying system clocks.
+4. **Time Synchronization**: Presented the complete NTP-style synchronization algorithm with four-timestamp exchange,
+   clock offset calculation, quality metrics, and transparent timestamp adjustment without modifying system clocks.
 
-5. **Remote Command Handling**: Detailed the TCP server implementation that enables remote orchestration from the PC, including connection management, JSON message parsing, command dispatch, and structured error handling.
+5. **Remote Command Handling**: Detailed the TCP server implementation that enables remote orchestration from the PC,
+   including connection management, JSON message parsing, command dispatch, and structured error handling.
 
-These implementation details demonstrate that the system achieves its design goals of multi-sensor coordination, precise time synchronization, and reliable remote control, forming the foundation for the experimental results presented in Chapter 5.
+These implementation details demonstrate that the system achieves its design goals of multi-sensor coordination, precise
+time synchronization, and reliable remote control, forming the foundation for the experimental results presented in
+Chapter 5.

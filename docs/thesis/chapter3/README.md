@@ -1,57 +1,65 @@
 # Chapter 3: System Design and Architecture
 
-This directory contains figures, tables, and diagrams for Chapter 3 of the thesis, focusing on System Design and Architecture.
+This directory contains figures, tables, and diagrams for Chapter 3 of the thesis, focusing on System Design and
+Architecture.
 
 ## Contents
 
 ### Figures
 
 1. **[system-architecture.md](./system-architecture.md)** - Figure 3.1: System Architecture Diagram
-   - Detailed block diagram showing PC orchestrator, Android sensor nodes, and hardware components
-   - Illustrates communication links (TCP/IP, Bluetooth LE, USB/OTG)
-   - Depicts data flow from sensors through processing to storage
-   - Shows modular architecture with clear component boundaries
+    - Detailed block diagram showing PC orchestrator, Android sensor nodes, and hardware components
+    - Illustrates communication links (TCP/IP, Bluetooth LE, USB/OTG)
+    - Depicts data flow from sensors through processing to storage
+    - Shows modular architecture with clear component boundaries
 
 2. **[state-machine.md](./state-machine.md)** - Figure 3.2: Software State Machine
-   - State diagram for Android recording application lifecycle
-   - States: Disconnected, Connecting, Idle, Initializing, Ready, Recording, Syncing, Stopping, Finalizing, Transferring, Error, Recovering
-   - Transition conditions and event triggers
-   - Detailed state descriptions with entry/exit actions
-   - Fault handling and error recovery strategies
+    - State diagram for Android recording application lifecycle
+    - States: Disconnected, Connecting, Idle, Initializing, Ready, Recording, Syncing, Stopping, Finalizing,
+      Transferring, Error, Recovering
+    - Transition conditions and event triggers
+    - Detailed state descriptions with entry/exit actions
+    - Fault handling and error recovery strategies
 
 3. **[communication-sequence.md](./communication-sequence.md)** - Figure 3.3: Communication Sequence Diagram
-   - Step-by-step PC-Android interaction protocol
-   - 10 phases: Connection, Time Sync, Capabilities, Session Init, Recording Start, Active Recording, Mid-Session Sync, Termination, File Transfer, Cleanup
-   - Message specifications with JSON examples
-   - Timing characteristics and latency requirements
-   - Error handling scenarios
+    - Step-by-step PC-Android interaction protocol
+    - 10 phases: Connection, Time Sync, Capabilities, Session Init, Recording Start, Active Recording, Mid-Session Sync,
+      Termination, File Transfer, Cleanup
+    - Message specifications with JSON examples
+    - Timing characteristics and latency requirements
+    - Error handling scenarios
 
 ### Tables
 
-4. **[requirements-design-table.md](./requirements-design-table.md)** - Table 3.1: Functional Requirements and Design Criteria
-   - 15 functional requirements (FR-001 to FR-015)
-   - Design constraints matrix (hardware, network, storage, performance, security, usability, reliability, maintainability, portability)
-   - Design decisions rationale for key choices
-   - Verification methods for each requirement
-   - Priority levels (Essential, Important)
+4. **[requirements-design-table.md](./requirements-design-table.md)** - Table 3.1: Functional Requirements and Design
+   Criteria
+    - 15 functional requirements (FR-001 to FR-015)
+    - Design constraints matrix (hardware, network, storage, performance, security, usability, reliability,
+      maintainability, portability)
+    - Design decisions rationale for key choices
+    - Verification methods for each requirement
+    - Priority levels (Essential, Important)
 
 5. **[design-decisions-table.md](./design-decisions-table.md)** - Table 3.2: Sensor Integration Design Decisions
-   - 20 critical design aspects with alternatives and rationale
-   - Time synchronization, thermal camera interface, GSR connection, video encoding, network protocol, data storage, UI framework, etc.
-   - Architectural patterns applied (Repository, Observer, Command, Singleton, Factory, State Machine, Facade, Adapter)
-   - Technology stack justification
-   - Design principles and future extensibility
+    - 20 critical design aspects with alternatives and rationale
+    - Time synchronization, thermal camera interface, GSR connection, video encoding, network protocol, data storage, UI
+      framework, etc.
+    - Architectural patterns applied (Repository, Observer, Command, Singleton, Factory, State Machine, Facade, Adapter)
+    - Technology stack justification
+    - Design principles and future extensibility
 
 ## Mermaid Diagram Support
 
 All diagrams in this chapter are created using **Mermaid** with advanced features:
 
 **Enhanced Features Used:**
+
 - **Flowchart**: Decision nodes, buffers, queues, icons (🖥️ 📱 🌡️ ⚡ 📹)
 - **State Diagram**: Composite states, parallel states (fork/join), nested substates
 - **Sequence Diagram**: autonumber, alt/opt/critical/par blocks, rect colored sections, activation boxes
 
 **Rendering Support:**
+
 - GitHub (native support with all advanced features)
 - VS Code (with Mermaid extension v1.16+)
 - Obsidian
@@ -97,12 +105,13 @@ These diagrams and tables are designed to be included in the thesis LaTeX docume
    ```
 
 3. **Convert Tables to LaTeX**:
-   - Use pandoc or manually format markdown tables as LaTeX tabular environments
-   - Or reference the markdown files directly if using markdown-enabled LaTeX build
+    - Use pandoc or manually format markdown tables as LaTeX tabular environments
+    - Or reference the markdown files directly if using markdown-enabled LaTeX build
 
 ### For HTML/Web Thesis
 
 If using HTML-based thesis:
+
 - Include markdown files directly
 - Mermaid.js will render diagrams client-side
 - Style with CSS for consistency
@@ -165,6 +174,7 @@ When updating these documents:
 ## Contact
 
 For questions about these diagrams or design decisions, refer to:
+
 - Code comments in relevant modules
 - Git commit history for rationale
 - Protocol verification reports in pc-controller/docs/

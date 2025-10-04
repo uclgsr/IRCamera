@@ -35,6 +35,7 @@ python3 -m pytest docs/thesis/evaluation/test_cross_sensor_alignment.py::TestCro
 ```
 
 **Output:** Check `docs/thesis/evaluation/outputs/cross_sensor_alignment/`
+
 - `synthetic_event_10s_*.csv` - Event logs with timestamps
 - `synthetic_event_timeline_*.json` - Combined sensor timelines
 
@@ -49,6 +50,7 @@ python3 -m pytest docs/thesis/evaluation/test_multistream_sync_marker.py::TestMu
 ```
 
 **Output:** Check `docs/thesis/evaluation/outputs/multistream_sync/`
+
 - `sync_command_mid_session_*.csv` - SYNC event logs
 - `multiple_sync_markers_*.csv` - Multiple SYNC command logs
 
@@ -63,6 +65,7 @@ python3 -m pytest docs/thesis/evaluation/test_session_duration_consistency.py::T
 ```
 
 **Output:** Check `docs/thesis/evaluation/outputs/session_duration/`
+
 - `complete_session_report_*.csv` - Full session analysis
 - `start_time_consistency_*.csv` - Start time analysis
 - `end_time_consistency_*.csv` - End time analysis
@@ -77,6 +80,7 @@ base_timestamp,sensors_in_sync,time_spread_ms
 ```
 
 **Interpretation:**
+
 - `base_timestamp`: Event detection time (milliseconds)
 - `sensors_in_sync`: List of sensors that detected the event
 - `time_spread_ms`: Time difference between first and last sensor (should be ≤100ms)
@@ -98,17 +102,18 @@ duration_variance_ms,92
 ```
 
 **Interpretation:**
+
 - **Sensor rows**: Individual sensor timing information
-  - `start_time`: Session start timestamp
-  - `end_time`: Session end timestamp
-  - `duration_ms`: Total recording duration
-  - `sample_count`: Number of samples/frames recorded
-  
+    - `start_time`: Session start timestamp
+    - `end_time`: Session end timestamp
+    - `duration_ms`: Total recording duration
+    - `sample_count`: Number of samples/frames recorded
+
 - **Consistency Analysis**:
-  - `consistent`: Overall consistency verdict (True/False)
-  - `start_time_spread_ms`: Max difference in start times (should be ≤100ms)
-  - `end_time_spread_ms`: Max difference in end times (should be ≤1000ms)
-  - `duration_variance_ms`: Max variance in durations (should be ≤1000ms)
+    - `consistent`: Overall consistency verdict (True/False)
+    - `start_time_spread_ms`: Max difference in start times (should be ≤100ms)
+    - `end_time_spread_ms`: Max difference in end times (should be ≤1000ms)
+    - `duration_variance_ms`: Max variance in durations (should be ≤1000ms)
 
 ## Advanced Usage
 
@@ -154,12 +159,14 @@ python3 -m pytest docs/thesis/evaluation/test_cross_sensor_alignment.py::TestCro
 2. Collect outputs from `docs/thesis/evaluation/outputs/cross_sensor_alignment/`
 
 3. In thesis, present:
-   - Sync event logs showing all sensors detecting events within 100ms
-   - Timeline charts showing event markers across sensors
-   - GSR spike detection at synthetic event times
+    - Sync event logs showing all sensors detecting events within 100ms
+    - Timeline charts showing event markers across sensors
+    - GSR spike detection at synthetic event times
 
 **Example thesis text:**
-> "To validate cross-sensor synchronization, we injected a synthetic reference event at t=10.0s across all data streams. As shown in Table X.Y, all three sensors (GSR, thermal, and RGB) detected the event within 47ms of each other, well within the 100ms tolerance requirement."
+> "To validate cross-sensor synchronization, we injected a synthetic reference event at t=10.0s across all data streams.
+> As shown in Table X.Y, all three sensors (GSR, thermal, and RGB) detected the event within 47ms of each other, well
+> within the 100ms tolerance requirement."
 
 ### Chapter 6: Discussion & Evaluation
 
@@ -173,9 +180,9 @@ python3 -m pytest docs/thesis/evaluation/test_cross_sensor_alignment.py::TestCro
 2. Collect SYNC command logs from `docs/thesis/evaluation/outputs/multistream_sync/`
 
 3. In thesis, discuss:
-   - Effectiveness of SYNC commands during live recording
-   - Phone clock consistency across sensors
-   - Real-world synchronization performance
+    - Effectiveness of SYNC commands during live recording
+    - Phone clock consistency across sensors
+    - Real-world synchronization performance
 
 **Evaluating Session Duration Consistency:**
 
@@ -187,9 +194,9 @@ python3 -m pytest docs/thesis/evaluation/test_cross_sensor_alignment.py::TestCro
 2. Collect duration reports from `docs/thesis/evaluation/outputs/session_duration/`
 
 3. In thesis, analyze:
-   - Start/end time alignment across sensors
-   - Detection of sensor lag or lead
-   - Sample count validation against expected rates
+    - Start/end time alignment across sensors
+    - Detection of sensor lag or lead
+    - Sample count validation against expected rates
 
 ## Troubleshooting
 
@@ -237,6 +244,7 @@ python3 docs/thesis/evaluation/run_tests.py
 ## Expected Test Results
 
 All 19 tests should pass:
+
 - ✓ 6 cross-sensor alignment tests (100% pass rate)
 - ✓ 5 multi-stream sync marker tests (100% pass rate)
 - ✓ 8 session duration consistency tests (100% pass rate)
@@ -247,4 +255,6 @@ All 19 tests should pass:
 
 ## Summary
 
-These tests provide comprehensive validation of multi-sensor data consistency for thesis chapters 5 and 6. All tests generate detailed output artifacts that can be directly referenced in thesis text, tables, and figures to demonstrate system performance and validate design decisions.
+These tests provide comprehensive validation of multi-sensor data consistency for thesis chapters 5 and 6. All tests
+generate detailed output artifacts that can be directly referenced in thesis text, tables, and figures to demonstrate
+system performance and validate design decisions.

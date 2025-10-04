@@ -38,10 +38,10 @@ class TestMultiStreamSyncMarker:
         return SynchronizationValidator()
 
     def test_sync_command_mid_session(
-        self,
-        sensor_data_generator,
-        sync_validator,
-        output_generator
+            self,
+            sensor_data_generator,
+            sync_validator,
+            output_generator
     ):
         """
         Test: Trigger SYNC command during active recording session
@@ -110,9 +110,9 @@ class TestMultiStreamSyncMarker:
             f"Sync time spread {alignment['time_spread_ms']}ms exceeds 100ms tolerance"
 
     def test_sync_event_window_analysis(
-        self,
-        sensor_data_generator,
-        output_generator
+            self,
+            sensor_data_generator,
+            output_generator
     ):
         """
         Test: Analyze sensor data around sync event window
@@ -166,9 +166,9 @@ class TestMultiStreamSyncMarker:
             f"RGB frame count in window should be reasonable"
 
     def test_phone_clock_consistency(
-        self,
-        sensor_data_generator,
-        sync_validator
+            self,
+            sensor_data_generator,
+            sync_validator
     ):
         """
         Test: Verify all sensors use same phone clock for timestamps
@@ -213,10 +213,10 @@ class TestMultiStreamSyncMarker:
                     f"Sample {i} timestamps should remain aligned"
 
     def test_multiple_sync_markers_in_session(
-        self,
-        sensor_data_generator,
-        sync_validator,
-        output_generator
+            self,
+            sensor_data_generator,
+            sync_validator,
+            output_generator
     ):
         """
         Test: Multiple SYNC commands throughout recording session
@@ -278,9 +278,9 @@ class TestMultiStreamSyncMarker:
                 f"Sync marker time spread should be within 100ms"
 
     def test_sync_log_collation(
-        self,
-        sensor_data_generator,
-        output_generator
+            self,
+            sensor_data_generator,
+            output_generator
     ):
         """
         Test: Collate sync logs from all sensors

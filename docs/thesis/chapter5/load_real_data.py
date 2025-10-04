@@ -33,13 +33,13 @@ class RealDataLoader:
     def load_session(self, session_path: str) -> bool:
         """Load data from a single recording session"""
         session_dir = Path(session_path)
-        
+
         if not session_dir.exists():
             logger.error(f"Session directory not found: {session_dir}")
             return False
 
         logger.info(f"Loading session from: {session_dir}")
-        
+
         session_data = {
             'path': session_dir,
             'session_id': session_dir.name,
@@ -109,22 +109,22 @@ class RealDataLoader:
     def aggregate_sessions(self, sessions_dir: str) -> bool:
         """Load and aggregate multiple sessions"""
         sessions_path = Path(sessions_dir)
-        
+
         if not sessions_path.exists():
             logger.error(f"Sessions directory not found: {sessions_path}")
             return False
 
         session_dirs = [d for d in sessions_path.iterdir() if d.is_dir() and d.name.startswith('session_')]
-        
+
         logger.info(f"Found {len(session_dirs)} session directories")
-        
+
         for session_dir in session_dirs:
             self.load_session(str(session_dir))
 
         if self.sessions:
             self._calculate_aggregate_stats()
             return True
-        
+
         return False
 
     def _calculate_aggregate_stats(self):
@@ -134,7 +134,7 @@ class RealDataLoader:
         # Time sync statistics
         all_offsets = []
         all_rtts = []
-        
+
         for session in self.sessions:
             if session['timesync_data']:
                 for record in session['timesync_data']:
@@ -164,7 +164,7 @@ class RealDataLoader:
     def export_real_data_summary(self):
         """Export summary of real data loaded"""
         summary_file = self.output_dir / "real_data_summary.json"
-        
+
         summary = {
             'sessions_loaded': len(self.sessions),
             'aggregate_stats': self.aggregated_stats,
@@ -191,10 +191,10 @@ class RealDataLoader:
             return
 
         logger.info("Generating enhanced Chapter 5 content with real data")
-        
+
         # Use the aggregated stats to update the experimental_evaluation output
         # This would modify the ExperimentalEvaluationFramework to use real values
-        
+
         # For now, just export the summary
         self.export_real_data_summary()
 

@@ -4,17 +4,18 @@ Quick reference for all thesis evaluation robustness tests.
 
 ## Test Summary Table
 
-| Test ID | Test Name | Type | Duration | Hardware Required | Expected Result |
-|---------|-----------|------|----------|-------------------|-----------------|
-| RT-001 | GSR Reconnection (Simulated) | Automated | 60s | None | Pass - Auto reconnect after 20s gap |
-| RT-002 | GSR Reconnection (Real) | Manual | Variable | Shimmer3 GSR | Pass - Detect disconnect, auto reconnect |
-| RT-003 | Thermal Disconnect | Manual | Variable | USB Thermal Camera | Pass - Graceful handling, no crash |
-| RT-004 | Network Drop | Manual | Variable | PC Controller | Pass - Recording continues |
-| RT-005 | Sensor Isolation | Automated | 15s | None | Pass - Failure contained |
+| Test ID | Test Name                    | Type      | Duration | Hardware Required  | Expected Result                          |
+|---------|------------------------------|-----------|----------|--------------------|------------------------------------------|
+| RT-001  | GSR Reconnection (Simulated) | Automated | 60s      | None               | Pass - Auto reconnect after 20s gap      |
+| RT-002  | GSR Reconnection (Real)      | Manual    | Variable | Shimmer3 GSR       | Pass - Detect disconnect, auto reconnect |
+| RT-003  | Thermal Disconnect           | Manual    | Variable | USB Thermal Camera | Pass - Graceful handling, no crash       |
+| RT-004  | Network Drop                 | Manual    | Variable | PC Controller      | Pass - Recording continues               |
+| RT-005  | Sensor Isolation             | Automated | 15s      | None               | Pass - Failure contained                 |
 
 ## Test Execution Checklist
 
 ### Pre-Test Requirements
+
 - [ ] IRCamera app installed on device
 - [ ] Required hardware connected (for hardware tests)
 - [ ] Storage permissions granted
@@ -22,6 +23,7 @@ Quick reference for all thesis evaluation robustness tests.
 - [ ] Previous test logs backed up (if needed)
 
 ### Post-Test Verification
+
 - [ ] Log file generated
 - [ ] Metrics calculated correctly
 - [ ] Expected events logged
@@ -31,44 +33,46 @@ Quick reference for all thesis evaluation robustness tests.
 ## Test Result Classification
 
 ### Pass Criteria
+
 - **GSR Reconnection (Simulated)**
-  - [x] Disconnect detected at 20s
-  - [x] Reconnection attempts logged
-  - [x] Reconnect successful at 40s
-  - [x] Data gap measured
-  - [x] No data corruption
+    - [x] Disconnect detected at 20s
+    - [x] Reconnection attempts logged
+    - [x] Reconnect successful at 40s
+    - [x] Data gap measured
+    - [x] No data corruption
 
 - **GSR Reconnection (Real)**
-  - [x] Real disconnect detected
-  - [x] Automatic reconnection attempted
-  - [x] Reconnection successful or failure documented
-  - [x] Data gap recorded in CSV
-  - [x] Events logged with timestamps
+    - [x] Real disconnect detected
+    - [x] Automatic reconnection attempted
+    - [x] Reconnection successful or failure documented
+    - [x] Data gap recorded in CSV
+    - [x] Events logged with timestamps
 
 - **Thermal Disconnect**
-  - [x] USB disconnect detected
-  - [x] Error logged properly
-  - [x] App did not crash
-  - [x] Other sensors continued
-  - [x] Switched to simulation mode
+    - [x] USB disconnect detected
+    - [x] Error logged properly
+    - [x] App did not crash
+    - [x] Other sensors continued
+    - [x] Switched to simulation mode
 
 - **Network Drop**
-  - [x] Network loss detected
-  - [x] Recording continued
-  - [x] No data loss
-  - [x] Reconnection attempts logged
-  - [x] Duration after drop measured
+    - [x] Network loss detected
+    - [x] Recording continued
+    - [x] No data loss
+    - [x] Reconnection attempts logged
+    - [x] Duration after drop measured
 
 - **Sensor Isolation**
-  - [x] Selected sensor failed
-  - [x] Failure logged
-  - [x] Other sensors unaffected
-  - [x] Sample counts correct
-  - [x] No cascade failures
+    - [x] Selected sensor failed
+    - [x] Failure logged
+    - [x] Other sensors unaffected
+    - [x] Sample counts correct
+    - [x] No cascade failures
 
 ## Expected Metrics
 
 ### RT-001: GSR Reconnection (Simulated)
+
 ```
 Total Duration: 60s
 Disconnect Duration: 20s
@@ -78,6 +82,7 @@ Test Result: PASSED
 ```
 
 ### RT-002: GSR Reconnection (Real)
+
 ```
 Time to Disconnect: 15-30s (variable)
 Disconnect Duration: 5-60s (variable)
@@ -88,6 +93,7 @@ Test Result: PASSED if auto-reconnect works
 ```
 
 ### RT-003: Thermal Disconnect
+
 ```
 Time to Disconnect: 15-30s (manual trigger)
 Frames Before: ~150-300 (10 fps * 15-30s)
@@ -98,6 +104,7 @@ Test Result: PASSED
 ```
 
 ### RT-004: Network Drop
+
 ```
 Time to Drop: 15-30s (manual trigger)
 Recording After Drop: Continues
@@ -108,6 +115,7 @@ Test Result: PASSED
 ```
 
 ### RT-005: Sensor Isolation
+
 ```
 Failure Induced: 5s after start
 Failure Contained: true
@@ -122,6 +130,7 @@ Test Result: PASSED
 ### Expected Log Events
 
 #### GSR Tests
+
 ```
 TEST_START - Test initialization
 GSR_DISCONNECTED - Disconnect detected
@@ -131,6 +140,7 @@ TEST_COMPLETE - Test finished
 ```
 
 #### Thermal Test
+
 ```
 RECORDING_START - Recording begins
 THERMAL_DISCONNECTED - USB unplugged
@@ -139,6 +149,7 @@ RECORDING_STOP - Test complete
 ```
 
 #### Network Test
+
 ```
 RECORDING_START - With network
 NETWORK_LOST - Connection dropped
@@ -148,6 +159,7 @@ RECORDING_STOP - Manual stop
 ```
 
 #### Sensor Isolation Test
+
 ```
 TEST_START - All sensors init
 ALL_SENSORS_STARTED - Recording begins
@@ -162,52 +174,58 @@ TEST_COMPLETE - Test finished
 ### For Each Test, Document:
 
 1. **Test Setup**
-   - Hardware configuration
-   - Software version
-   - Initial conditions
+    - Hardware configuration
+    - Software version
+    - Initial conditions
 
 2. **Test Execution**
-   - Steps performed
-   - Timing of events
-   - Manual interventions
+    - Steps performed
+    - Timing of events
+    - Manual interventions
 
 3. **Test Results**
-   - All metrics collected
-   - Pass/fail status
-   - Unexpected behaviors
+    - All metrics collected
+    - Pass/fail status
+    - Unexpected behaviors
 
 4. **Log Files**
-   - Location and filename
-   - Key events and timestamps
-   - Data gaps or anomalies
+    - Location and filename
+    - Key events and timestamps
+    - Data gaps or anomalies
 
 5. **Analysis**
-   - System behavior interpretation
-   - Comparison to expected results
-   - Robustness assessment
+    - System behavior interpretation
+    - Comparison to expected results
+    - Robustness assessment
 
 ## Common Test Scenarios
 
 ### Scenario 1: Complete Success Path
+
 All tests pass with expected metrics, demonstrating full system robustness.
 
 **Documentation Focus:**
+
 - Highlight successful reconnection mechanisms
 - Emphasize graceful degradation
 - Show no data loss
 
 ### Scenario 2: Partial Failure
+
 Some tests reveal issues (e.g., no auto-reconnect for GSR real hardware).
 
 **Documentation Focus:**
+
 - Document current limitations
 - Explain manual intervention needed
 - Propose improvements
 
 ### Scenario 3: Edge Cases
+
 Tests reveal unexpected behaviors under specific conditions.
 
 **Documentation Focus:**
+
 - Describe edge case conditions
 - Document workarounds
 - Suggest future enhancements
@@ -241,6 +259,7 @@ Log File: [Filename]
 ## Quality Assurance
 
 ### Before Submitting Results:
+
 - [ ] All required tests executed
 - [ ] Multiple runs completed for consistency
 - [ ] Log files preserved and backed up
@@ -250,6 +269,7 @@ Log File: [Filename]
 - [ ] Results cross-referenced with requirements
 
 ### Data Integrity Checks:
+
 - [ ] Timestamps are sequential and reasonable
 - [ ] Sample counts match expected rates
 - [ ] No duplicate events in logs
@@ -261,12 +281,14 @@ Log File: [Filename]
 ### Chapter 5: Implementation and Testing
 
 **Include:**
+
 - Description of each test
 - Test setup and methodology
 - Implementation details
 - Code snippets from test files
 
 **Evidence:**
+
 - Test execution procedures
 - System behavior descriptions
 - Error handling demonstrations
@@ -274,12 +296,14 @@ Log File: [Filename]
 ### Chapter 6: Evaluation and Results
 
 **Include:**
+
 - Test metrics and results
 - Pass/fail analysis
 - Robustness assessment
 - Comparison with requirements
 
 **Evidence:**
+
 - Metric tables
 - Log file excerpts
 - Performance graphs
@@ -288,6 +312,7 @@ Log File: [Filename]
 ### Appendices
 
 **Include:**
+
 - Complete test code listings
 - Full log file examples
 - Test execution screenshots
@@ -295,9 +320,9 @@ Log File: [Filename]
 
 ## Revision History
 
-| Date | Version | Changes | Author |
-|------|---------|---------|--------|
-| 2024-10-04 | 1.0 | Initial test manifest | Copilot |
+| Date       | Version | Changes               | Author  |
+|------------|---------|-----------------------|---------|
+| 2024-10-04 | 1.0     | Initial test manifest | Copilot |
 
 ## Notes
 

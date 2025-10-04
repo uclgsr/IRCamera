@@ -2,7 +2,8 @@
 
 ## Figure 3.1: System Architecture - Multi-Modal Physiological Monitoring Platform
 
-This diagram shows the complete system architecture including the Android device with internal modules for GSR, thermal, and RGB data acquisition, the PC orchestrator, and communication links.
+This diagram shows the complete system architecture including the Android device with internal modules for GSR, thermal,
+and RGB data acquisition, the PC orchestrator, and communication links.
 
 ```mermaid
 flowchart TB
@@ -207,7 +208,8 @@ flowchart TB
 
 The PC acts as the central coordination hub with the following responsibilities:
 
-1. **Session Management**: Creates and manages recording sessions with unique IDs, maintains metadata, and controls session lifecycle
+1. **Session Management**: Creates and manages recording sessions with unique IDs, maintains metadata, and controls
+   session lifecycle
 2. **Device Coordination**: Tracks multiple Android devices, manages connections, monitors health status
 3. **Time Synchronization**: Provides NTP-like time service to align clocks across all devices within 5ms accuracy
 4. **Network Server**: Runs TCP server on port 8080, handles JSON-based command protocol
@@ -227,7 +229,8 @@ Each Android device operates as an autonomous sensor node:
 
 ### Communication Links
 
-1. **TCP/IP (PC to Android)**: Port 8080, JSON protocol, commands (START_RECORD, STOP_RECORD, SYNC_REQUEST), acknowledgments, status updates
+1. **TCP/IP (PC to Android)**: Port 8080, JSON protocol, commands (START_RECORD, STOP_RECORD, SYNC_REQUEST),
+   acknowledgments, status updates
 2. **Bluetooth LE (Shimmer to Android/PC)**: GATT protocol, 12-bit ADC data at 128 Hz
 3. **USB/OTG (Topdon to Android)**: UVC protocol via TC001 SDK, 256x192 thermal frames at 25 Hz
 4. **Camera2 API (Internal)**: YUV frames from phone camera, H.264 encoding at 30 fps

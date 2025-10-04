@@ -18,15 +18,15 @@ except ImportError:
 
 def main():
     """Run thesis evaluation tests"""
-    
+
     thesis_eval_dir = Path(__file__).parent
     os.chdir(thesis_eval_dir.parent.parent)
-    
+
     print("=" * 70)
     print("Thesis Evaluation Tests - Multi-Sensor Data Consistency")
     print("=" * 70)
     print()
-    
+
     args = [
         "docs/thesis/evaluation/",
         "-v",
@@ -34,28 +34,28 @@ def main():
         "-s",
         "--color=yes"
     ]
-    
+
     if "--html" in sys.argv or "-html" in sys.argv:
         args.extend([
             "--html=docs/thesis/evaluation/reports/test_report.html",
             "--self-contained-html"
         ])
-    
+
     if "--cov" in sys.argv:
         args.extend([
             "--cov=docs/thesis_evaluation",
             "--cov-report=html:docs/thesis/evaluation/reports/coverage",
             "--cov-report=term"
         ])
-    
+
     if len(sys.argv) > 1 and sys.argv[1] not in ["--html", "-html", "--cov"]:
         args = sys.argv[1:]
-    
+
     print(f"Running pytest with args: {' '.join(args)}")
     print()
-    
+
     exit_code = pytest.main(args)
-    
+
     print()
     print("=" * 70)
     if exit_code == 0:
@@ -66,7 +66,7 @@ def main():
     print()
     print("Test outputs saved to: docs/thesis/evaluation/outputs/")
     print("Test reports saved to: docs/thesis/evaluation/reports/")
-    
+
     return exit_code
 
 

@@ -47,10 +47,10 @@ class TestSessionDurationConsistency:
         return SessionDurationAnalyzer()
 
     def test_session_start_time_consistency(
-        self,
-        sensor_data_generator,
-        duration_analyzer,
-        output_generator
+            self,
+            sensor_data_generator,
+            duration_analyzer,
+            output_generator
     ):
         """
         Test: Compare session start times across all sensors
@@ -96,10 +96,10 @@ class TestSessionDurationConsistency:
             "Start time spread exceeds 100ms tolerance"
 
     def test_session_end_time_consistency(
-        self,
-        sensor_data_generator,
-        duration_analyzer,
-        output_generator
+            self,
+            sensor_data_generator,
+            duration_analyzer,
+            output_generator
     ):
         """
         Test: Compare session end times across all sensors
@@ -146,9 +146,9 @@ class TestSessionDurationConsistency:
                 f"{sensor} end time differs from STOP command by {end_time_diff}ms"
 
     def test_session_duration_matching(
-        self,
-        sensor_data_generator,
-        duration_analyzer
+            self,
+            sensor_data_generator,
+            duration_analyzer
     ):
         """
         Test: Verify all sensors recorded for the same duration
@@ -189,10 +189,10 @@ class TestSessionDurationConsistency:
             f"Duration variance {duration_variance}ms exceeds 1000ms tolerance"
 
     def test_complete_session_report(
-        self,
-        sensor_data_generator,
-        duration_analyzer,
-        output_generator
+            self,
+            sensor_data_generator,
+            duration_analyzer,
+            output_generator
     ):
         """
         Test: Generate complete session duration report
@@ -240,9 +240,9 @@ class TestSessionDurationConsistency:
                 f"{sensor} should have samples"
 
     def test_detect_sensor_lag(
-        self,
-        sensor_data_generator,
-        duration_analyzer
+            self,
+            sensor_data_generator,
+            duration_analyzer
     ):
         """
         Test: Detect if any sensor lags behind others at session start
@@ -288,9 +288,9 @@ class TestSessionDurationConsistency:
             f"Thermal lag should be 150ms, got {lagging_sensors['Thermal']}ms"
 
     def test_detect_sensor_lead(
-        self,
-        sensor_data_generator,
-        duration_analyzer
+            self,
+            sensor_data_generator,
+            duration_analyzer
     ):
         """
         Test: Detect if any sensor stops early (leads at session end)
@@ -336,9 +336,9 @@ class TestSessionDurationConsistency:
             f"Thermal should stop ~1000ms early"
 
     def test_sample_count_validation(
-        self,
-        sensor_data_generator,
-        duration_analyzer
+            self,
+            sensor_data_generator,
+            duration_analyzer
     ):
         """
         Test: Validate sample counts match expected rates
@@ -382,10 +382,10 @@ class TestSessionDurationConsistency:
             f"RGB frame count should be within 5% of expected"
 
     def test_long_session_duration_tracking(
-        self,
-        sensor_data_generator,
-        duration_analyzer,
-        output_generator
+            self,
+            sensor_data_generator,
+            duration_analyzer,
+            output_generator
     ):
         """
         Test: Track duration consistency for long recording sessions
