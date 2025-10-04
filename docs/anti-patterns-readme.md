@@ -4,7 +4,7 @@ This directory contains comprehensive documentation about Android anti-patterns 
 
 ## Document Overview
 
-### 📊 [ANTI_PATTERNS_ANALYSIS.md](ANTI_PATTERNS_ANALYSIS.md)
+### 📊 [anti-patterns-analysis.md](anti-patterns-analysis.md)
 **Purpose**: Detailed technical analysis of all identified anti-patterns
 
 **Contents**:
@@ -26,7 +26,7 @@ This directory contains comprehensive documentation about Android anti-patterns 
 
 ---
 
-### ✅ [ANTI_PATTERNS_CHECKLIST.md](ANTI_PATTERNS_CHECKLIST.md)
+### ✅ [anti-patterns-checklist.md](anti-patterns-checklist.md)
 **Purpose**: Quick reference guide for developers and code reviewers
 
 **Contents**:
@@ -47,7 +47,7 @@ This directory contains comprehensive documentation about Android anti-patterns 
 
 ---
 
-### 📋 [ANTI_PATTERNS_ACTION_PLAN.md](ANTI_PATTERNS_ACTION_PLAN.md)
+### 📋 [anti-patterns-action-plan.md](anti-patterns-action-plan.md)
 **Purpose**: Prioritized remediation plan with implementation details
 
 **Contents**:
@@ -73,21 +73,21 @@ This directory contains comprehensive documentation about Android anti-patterns 
 
 ### For Developers
 
-1. **Daily Development**: Keep [ANTI_PATTERNS_CHECKLIST.md](ANTI_PATTERNS_CHECKLIST.md) handy
+1. **Daily Development**: Keep [anti-patterns-checklist.md](anti-patterns-checklist.md) handy
 2. **Code Reviews**: Use checklist section "Code Review Red Flags"
-3. **Bug Fixes**: Reference [ANTI_PATTERNS_ANALYSIS.md](ANTI_PATTERNS_ANALYSIS.md) for context
+3. **Bug Fixes**: Reference [anti-patterns-analysis.md](anti-patterns-analysis.md) for context
 4. **Questions**: Check analysis document for detailed explanations
 
 ### For Team Leads
 
-1. **Sprint Planning**: Use [ANTI_PATTERNS_ACTION_PLAN.md](ANTI_PATTERNS_ACTION_PLAN.md)
+1. **Sprint Planning**: Use [anti-patterns-action-plan.md](anti-patterns-action-plan.md)
 2. **Prioritization**: Follow P0 → P1 → P2 → P3 order
 3. **Resource Planning**: See "Resources Needed" section
 4. **Progress Tracking**: Use checklists in action plan
 
 ### For Code Reviewers
 
-1. **Pre-Review**: Refresh with [ANTI_PATTERNS_CHECKLIST.md](ANTI_PATTERNS_CHECKLIST.md)
+1. **Pre-Review**: Refresh with [anti-patterns-checklist.md](anti-patterns-checklist.md)
 2. **During Review**: Look for patterns in "Code Review Red Flags"
 3. **Comments**: Reference specific sections in analysis document
 4. **Approval**: Ensure pre-commit checklist items are addressed
@@ -191,8 +191,8 @@ Week 9+:   P3 Architecture (25 hours)
 ## Related Documentation
 
 ### Internal Documents
-- [ANR_PREVENTION_GUIDE.md](ANR_PREVENTION_GUIDE.md) - ANR prevention strategies
-- [ANR_FIX_SUMMARY.md](ANR_FIX_SUMMARY.md) - Previous ANR fixes
+- [anr-prevention-guide.md](anr-prevention-guide.md) - ANR prevention strategies
+- [anr-fix-summary.md](anr-fix-summary.md) - Previous ANR fixes
 - [MIGRATION_COMPLETE_SUMMARY.md](maintenance/migration-complete-summary.md) - AndroidX migration
 - [UTILCODE_LIBRARY_ANALYSIS.md](UTILCODE_LIBRARY_ANALYSIS.md) - Utilcode migration
 
@@ -236,13 +236,13 @@ A: Use the progress tracking section in action plan. Update weekly in sprint rev
 ## Getting Help
 
 ### Questions About Specific Anti-Patterns
-→ Check [ANTI_PATTERNS_ANALYSIS.md](ANTI_PATTERNS_ANALYSIS.md)
+→ Check [anti-patterns-analysis.md](anti-patterns-analysis.md)
 
 ### Implementation Guidance
-→ See [ANTI_PATTERNS_ACTION_PLAN.md](ANTI_PATTERNS_ACTION_PLAN.md)
+→ See [anti-patterns-action-plan.md](anti-patterns-action-plan.md)
 
 ### Quick Reference While Coding
-→ Use [ANTI_PATTERNS_CHECKLIST.md](ANTI_PATTERNS_CHECKLIST.md)
+→ Use [anti-patterns-checklist.md](anti-patterns-checklist.md)
 
 ### Technical Discussions
 → Create issue in GitHub with "anti-pattern" label
@@ -265,7 +265,7 @@ A: Use the progress tracking section in action plan. Update weekly in sprint rev
 
 Found a new anti-pattern? Here's how to add it:
 
-1. Add detailed analysis to ANTI_PATTERNS_ANALYSIS.md
+1. Add detailed analysis to anti-patterns-analysis.md
 2. Add to checklist if it's a common pattern
 3. Add action item to ACTION_PLAN.md with priority
 4. Update metrics in this README

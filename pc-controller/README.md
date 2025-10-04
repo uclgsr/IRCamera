@@ -296,7 +296,7 @@ For detailed technical documentation, see:
 
 - **docs/summaries/pc-networking-implementation-summary.md** - Complete implementation overview
 - **docs/INTEGRATION_READY.md** - PC-Android integration status
-- **docs/PROTOCOL_BRIDGE_GUIDE.md** - Communication protocol details
+- **docs/protocol-bridge-guide.md** - Communication protocol details
 - **docs/GAP_ANALYSIS.md** - Protocol compatibility analysis
 - **docs/CODE_REVIEW.md** - Code quality assessment
 - **docs/README.md** - Technical documentation index

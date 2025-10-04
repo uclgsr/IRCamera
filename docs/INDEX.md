@@ -56,24 +56,24 @@ Anti-patterns analysis and code quality guidelines.
 1. Start with [README.md](README.md) for overview
 2. Review [android/README.md](android/README.md) for Android app
 3. Check [../pc-controller/README.md](../pc-controller/README.md) for PC controller
-4. Read [ANTI_PATTERNS_CHECKLIST.md](ANTI_PATTERNS_CHECKLIST.md) for coding standards
+4. Read [anti-patterns-checklist.md](anti-patterns-checklist.md) for coding standards
 
 ### For Thesis Writing
 1. Navigate to [thesis/](thesis/) directory
 2. Review chapter-specific content
-3. Check [thesis/diagrams/INDEX.md](thesis/diagrams/INDEX.md) for figures
+3. Check [thesis/diagrams/index.md](thesis/diagrams/index.md) for figures
 4. See [thesis/evaluation/](thesis/evaluation/) for test results
 
 ### For Code Review
-1. [ANTI_PATTERNS_CHECKLIST.md](ANTI_PATTERNS_CHECKLIST.md) - Quick checklist
-2. [ANTI_PATTERNS_ANALYSIS.md](ANTI_PATTERNS_ANALYSIS.md) - Detailed analysis
-3. [ANR_PREVENTION_GUIDE.md](ANR_PREVENTION_GUIDE.md) - Performance guidelines
+1. [anti-patterns-checklist.md](anti-patterns-checklist.md) - Quick checklist
+2. [anti-patterns-analysis.md](anti-patterns-analysis.md) - Detailed analysis
+3. [anr-prevention-guide.md](anr-prevention-guide.md) - Performance guidelines
 4. [maintenance/](maintenance/) - Previous fixes and patterns
 
 ### For System Integration
 1. [android/pc-networking-guide.md](android/pc-networking-guide.md) - Networking setup
-2. [../pc-controller/docs/PROTOCOL_BRIDGE_GUIDE.md](../pc-controller/docs/PROTOCOL_BRIDGE_GUIDE.md) - Protocol details
-3. [../pc-controller/docs/INTEGRATION_READY.md](../pc-controller/docs/INTEGRATION_READY.md) - Integration status
+2. [../pc-controller/docs/protocol-bridge-guide.md](../pc-controller/docs/protocol-bridge-guide.md) - Protocol details
+3. [../pc-controller/docs/integration-ready.md](../pc-controller/docs/integration-ready.md) - Integration status
 
 ## Directory Tree
 
@@ -128,22 +128,22 @@ docs/
 ├── latex/                        # LaTeX source files
 │   └── [thesis .tex files]
 │
-├── ANTI_PATTERNS_README.md       # Anti-patterns overview
-├── ANTI_PATTERNS_ANALYSIS.md     # Detailed analysis
-├── ANTI_PATTERNS_CHECKLIST.md    # Developer checklist
-├── ANTI_PATTERNS_ACTION_PLAN.md  # Remediation plan
-├── ANR_PREVENTION_GUIDE.md       # ANR prevention
-├── ANR_FIX_SUMMARY.md            # ANR fixes
-├── THIRD_PARTY_MIGRATION_STATUS.md
-├── ANDROIDX_ALTERNATIVES_TO_UTILCODE.md
-├── UTILCODE_LIBRARY_ANALYSIS.md
-├── UTILCODE_NEXT_STEPS.md
-├── UTILCODE_PROGRESS_TRACKER.md
-├── UIConsistencyReview.md
-├── MaterialIconsGuide.md
-├── MaterialIconsExamples.md
-├── IconMigrationSummary.md
-└── IconConversionComplete.md
+├── anti-patterns-readme.md       # Anti-patterns overview
+├── anti-patterns-analysis.md     # Detailed analysis
+├── anti-patterns-checklist.md    # Developer checklist
+├── anti-patterns-action-plan.md  # Remediation plan
+├── anr-prevention-guide.md       # ANR prevention
+├── anr-fix-summary.md            # ANR fixes
+├── third-party-migration-status.md
+├── androidx-alternatives-to-utilcode.md
+├── utilcode-library-analysis.md
+├── utilcode-next-steps.md
+├── utilcode-progress-tracker.md
+├── ui-consistency-review.md
+├── material-icons-guide.md
+├── material-icons-examples.md
+├── icon-migration-summary.md
+└── icon-conversion-complete.md
 ```
 
 ## File Count

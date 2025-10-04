@@ -491,7 +491,7 @@ private const val TAG = "MyClass"
    - Removed 200+ uses of legacy utility library
    - Replaced with AndroidX and Kotlin standard library
 
-2. **ANR Prevention**: Implemented (ANR_PREVENTION_GUIDE.md)
+2. **ANR Prevention**: Implemented (anr-prevention-guide.md)
    - SafeMainThreadHandler for monitoring
    - Background thread processing for camera frames
    - Proper coroutine usage
@@ -588,5 +588,5 @@ The IRCamera application has undergone significant modernization, with most crit
 - [Android Developers - Best Practices](https://developer.android.com/topic/performance/best-practices)
 - [Kotlin Coding Conventions](https://kotlinlang.org/docs/coding-conventions.html)
 - [OWASP Mobile Security Testing Guide](https://owasp.org/www-project-mobile-security-testing-guide/)
-- Internal: `docs/ANR_PREVENTION_GUIDE.md`
+- Internal: `docs/anr-prevention-guide.md`
 - Internal: `maintenance/migration-complete-summary.md`

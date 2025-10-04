@@ -1,6 +1,6 @@
 # Android Anti-Patterns Prevention Checklist
 
-Quick reference checklist for code reviews and development. See ANTI_PATTERNS_ANALYSIS.md for detailed explanations.
+Quick reference checklist for code reviews and development. See anti-patterns-analysis.md for detailed explanations.
 
 ## Pre-Commit Checklist
 
@@ -343,7 +343,7 @@ Improved lint configuration has been applied:
 
 ## Resources
 
-- Full analysis: `docs/ANTI_PATTERNS_ANALYSIS.md`
-- ANR prevention: `docs/ANR_PREVENTION_GUIDE.md`
+- Full analysis: `docs/anti-patterns-analysis.md`
+- ANR prevention: `docs/anr-prevention-guide.md`
 - Migration history: `MIGRATION_COMPLETE_SUMMARY.md`
 - Detekt config: `detekt-config.yml`

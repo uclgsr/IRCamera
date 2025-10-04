@@ -46,48 +46,48 @@ docs/
 - [Thesis Evaluation Tests](thesis/evaluation/) - Test suite for thesis
 
 ### Code Quality
-- [ANTI_PATTERNS_README.md](ANTI_PATTERNS_README.md) - Anti-patterns overview
-- [ANTI_PATTERNS_ANALYSIS.md](ANTI_PATTERNS_ANALYSIS.md) - Detailed analysis
-- [ANTI_PATTERNS_CHECKLIST.md](ANTI_PATTERNS_CHECKLIST.md) - Developer checklist
-- [ANTI_PATTERNS_ACTION_PLAN.md](ANTI_PATTERNS_ACTION_PLAN.md) - Remediation plan
+- [anti-patterns-readme.md](anti-patterns-readme.md) - Anti-patterns overview
+- [anti-patterns-analysis.md](anti-patterns-analysis.md) - Detailed analysis
+- [anti-patterns-checklist.md](anti-patterns-checklist.md) - Developer checklist
+- [anti-patterns-action-plan.md](anti-patterns-action-plan.md) - Remediation plan
 
 ### Performance
-- [ANR_PREVENTION_GUIDE.md](ANR_PREVENTION_GUIDE.md) - ANR prevention guidelines
-- [ANR_FIX_SUMMARY.md](ANR_FIX_SUMMARY.md) - ANR fixes
+- [anr-prevention-guide.md](anr-prevention-guide.md) - ANR prevention guidelines
+- [anr-fix-summary.md](anr-fix-summary.md) - ANR fixes
 
 ### Migration Documentation
-- [THIRD_PARTY_MIGRATION_STATUS.md](THIRD_PARTY_MIGRATION_STATUS.md) - Third-party library status
-- [ANDROIDX_ALTERNATIVES_TO_UTILCODE.md](ANDROIDX_ALTERNATIVES_TO_UTILCODE.md) - AndroidX alternatives
-- [UTILCODE_LIBRARY_ANALYSIS.md](UTILCODE_LIBRARY_ANALYSIS.md) - Utilcode analysis
-- [UTILCODE_NEXT_STEPS.md](UTILCODE_NEXT_STEPS.md) - Utilcode migration steps
-- [UTILCODE_PROGRESS_TRACKER.md](UTILCODE_PROGRESS_TRACKER.md) - Migration tracking
+- [third-party-migration-status.md](third-party-migration-status.md) - Third-party library status
+- [androidx-alternatives-to-utilcode.md](androidx-alternatives-to-utilcode.md) - AndroidX alternatives
+- [utilcode-library-analysis.md](utilcode-library-analysis.md) - Utilcode analysis
+- [utilcode-next-steps.md](utilcode-next-steps.md) - Utilcode migration steps
+- [utilcode-progress-tracker.md](utilcode-progress-tracker.md) - Migration tracking
 
 ### UI and Design
-- [UIConsistencyReview.md](UIConsistencyReview.md) - UI consistency review
-- [MaterialIconsGuide.md](MaterialIconsGuide.md) - Material Icons guide
-- [MaterialIconsExamples.md](MaterialIconsExamples.md) - Material Icons examples
-- [IconMigrationSummary.md](IconMigrationSummary.md) - Icon migration summary
-- [IconConversionComplete.md](IconConversionComplete.md) - Icon conversion completion
+- [ui-consistency-review.md](ui-consistency-review.md) - UI consistency review
+- [material-icons-guide.md](material-icons-guide.md) - Material Icons guide
+- [material-icons-examples.md](material-icons-examples.md) - Material Icons examples
+- [icon-migration-summary.md](icon-migration-summary.md) - Icon migration summary
+- [icon-conversion-complete.md](icon-conversion-complete.md) - Icon conversion completion
 
 ## Quick Start Guides
 
 ### For New Developers
 
-1. **Start Here**: [ANTI_PATTERNS_README.md](ANTI_PATTERNS_README.md)
-2. **Code Standards**: [ANTI_PATTERNS_CHECKLIST.md](ANTI_PATTERNS_CHECKLIST.md)
-3. **Performance**: [ANR_PREVENTION_GUIDE.md](ANR_PREVENTION_GUIDE.md)
+1. **Start Here**: [anti-patterns-readme.md](anti-patterns-readme.md)
+2. **Code Standards**: [anti-patterns-checklist.md](anti-patterns-checklist.md)
+3. **Performance**: [anr-prevention-guide.md](anr-prevention-guide.md)
 4. **Architecture**: [MIGRATION_COMPLETE_SUMMARY.md](maintenance/migration-complete-summary.md)
 
 ### For Code Reviews
 
-1. [ANTI_PATTERNS_CHECKLIST.md](ANTI_PATTERNS_CHECKLIST.md) - Pre-commit checklist
-2. [ANTI_PATTERNS_ANALYSIS.md](ANTI_PATTERNS_ANALYSIS.md) - Detailed anti-pattern reference
-3. [ANR_PREVENTION_GUIDE.md](ANR_PREVENTION_GUIDE.md) - ANR checklist
+1. [anti-patterns-checklist.md](anti-patterns-checklist.md) - Pre-commit checklist
+2. [anti-patterns-analysis.md](anti-patterns-analysis.md) - Detailed anti-pattern reference
+3. [anr-prevention-guide.md](anr-prevention-guide.md) - ANR checklist
 
 ### For Project Planning
 
-1. [ANTI_PATTERNS_ACTION_PLAN.md](ANTI_PATTERNS_ACTION_PLAN.md) - Remediation roadmap
-2. [THIRD_PARTY_MIGRATION_STATUS.md](THIRD_PARTY_MIGRATION_STATUS.md) - Migration status
+1. [anti-patterns-action-plan.md](anti-patterns-action-plan.md) - Remediation roadmap
+2. [third-party-migration-status.md](third-party-migration-status.md) - Migration status
 3. [MIGRATION_COMPLETE_SUMMARY.md](maintenance/migration-complete-summary.md) - Completed work
 
 ## Documentation by Category
@@ -101,20 +101,20 @@ docs/
 - Threading issues (blocking operations)
 - Code quality issues
 
-**Start with**: [ANTI_PATTERNS_README.md](ANTI_PATTERNS_README.md)
+**Start with**: [anti-patterns-readme.md](anti-patterns-readme.md)
 
 **Key Documents**:
-- [ANTI_PATTERNS_ANALYSIS.md](ANTI_PATTERNS_ANALYSIS.md) - 16 anti-patterns identified
-- [ANTI_PATTERNS_CHECKLIST.md](ANTI_PATTERNS_CHECKLIST.md) - Daily development reference
-- [ANTI_PATTERNS_ACTION_PLAN.md](ANTI_PATTERNS_ACTION_PLAN.md) - 9-week remediation plan
+- [anti-patterns-analysis.md](anti-patterns-analysis.md) - 16 anti-patterns identified
+- [anti-patterns-checklist.md](anti-patterns-checklist.md) - Daily development reference
+- [anti-patterns-action-plan.md](anti-patterns-action-plan.md) - 9-week remediation plan
 
 ### Performance
 
 **Focus**: Preventing Application Not Responding (ANR) errors and optimizing performance.
 
 **Key Documents**:
-- [ANR_PREVENTION_GUIDE.md](ANR_PREVENTION_GUIDE.md) - Best practices and monitoring
-- [ANR_FIX_SUMMARY.md](ANR_FIX_SUMMARY.md) - Fixed issues and solutions
+- [anr-prevention-guide.md](anr-prevention-guide.md) - Best practices and monitoring
+- [anr-fix-summary.md](anr-fix-summary.md) - Fixed issues and solutions
 
 **Key Topics**:
 - Main thread blocking prevention
@@ -128,8 +128,8 @@ docs/
 
 **Key Documents**:
 - [MIGRATION_COMPLETE_SUMMARY.md](maintenance/migration-complete-summary.md) - Complete migration overview
-- [ANDROIDX_ALTERNATIVES_TO_UTILCODE.md](ANDROIDX_ALTERNATIVES_TO_UTILCODE.md) - AndroidX patterns
-- [THIRD_PARTY_MIGRATION_STATUS.md](THIRD_PARTY_MIGRATION_STATUS.md) - Current status
+- [androidx-alternatives-to-utilcode.md](androidx-alternatives-to-utilcode.md) - AndroidX patterns
+- [third-party-migration-status.md](third-party-migration-status.md) - Current status
 
 **Achievements**:
 - ✅ Utilcode migration: 100% complete (200+ uses removed)
@@ -142,35 +142,35 @@ docs/
 **Focus**: Consistent Material Design implementation and icon usage.
 
 **Key Documents**:
-- [UIConsistencyReview.md](UIConsistencyReview.md) - UI consistency standards
-- [MaterialIconsGuide.md](MaterialIconsGuide.md) - Icon usage guidelines
-- [IconMigrationSummary.md](IconMigrationSummary.md) - Icon migration progress
+- [ui-consistency-review.md](ui-consistency-review.md) - UI consistency standards
+- [material-icons-guide.md](material-icons-guide.md) - Icon usage guidelines
+- [icon-migration-summary.md](icon-migration-summary.md) - Icon migration progress
 
 ## Priority Documentation
 
 ### 🔴 Critical (Read Immediately)
 
-1. [ANTI_PATTERNS_ANALYSIS.md](ANTI_PATTERNS_ANALYSIS.md) - Security and quality issues
-2. [ANTI_PATTERNS_CHECKLIST.md](ANTI_PATTERNS_CHECKLIST.md) - Development standards
+1. [anti-patterns-analysis.md](anti-patterns-analysis.md) - Security and quality issues
+2. [anti-patterns-checklist.md](anti-patterns-checklist.md) - Development standards
 
 ### 🟡 Important (Read This Week)
 
-3. [ANR_PREVENTION_GUIDE.md](ANR_PREVENTION_GUIDE.md) - Performance guidelines
-4. [ANTI_PATTERNS_ACTION_PLAN.md](ANTI_PATTERNS_ACTION_PLAN.md) - Remediation roadmap
+3. [anr-prevention-guide.md](anr-prevention-guide.md) - Performance guidelines
+4. [anti-patterns-action-plan.md](anti-patterns-action-plan.md) - Remediation roadmap
 5. [MIGRATION_COMPLETE_SUMMARY.md](maintenance/migration-complete-summary.md) - Architecture overview
 
 ### 🟢 Reference (As Needed)
 
-6. [ANDROIDX_ALTERNATIVES_TO_UTILCODE.md](ANDROIDX_ALTERNATIVES_TO_UTILCODE.md) - AndroidX patterns
-7. [MaterialIconsGuide.md](MaterialIconsGuide.md) - Icon guidelines
-8. [UTILCODE_LIBRARY_ANALYSIS.md](UTILCODE_LIBRARY_ANALYSIS.md) - Legacy analysis
+6. [androidx-alternatives-to-utilcode.md](androidx-alternatives-to-utilcode.md) - AndroidX patterns
+7. [material-icons-guide.md](material-icons-guide.md) - Icon guidelines
+8. [utilcode-library-analysis.md](utilcode-library-analysis.md) - Legacy analysis
 
 ## Development Workflows
 
 ### Daily Development Workflow
 
 ```
-1. Check ANTI_PATTERNS_CHECKLIST.md before coding
+1. Check anti-patterns-checklist.md before coding
 2. Write code following guidelines
 3. Run lint and tests
 4. Review pre-commit checklist
@@ -180,7 +180,7 @@ docs/
 ### Code Review Workflow
 
 ```
-1. Open ANTI_PATTERNS_CHECKLIST.md
+1. Open anti-patterns-checklist.md
 2. Check "Code Review Red Flags" section
 3. Verify pre-commit checklist items
 4. Reference specific anti-patterns if issues found
@@ -191,8 +191,8 @@ docs/
 
 ```
 1. Reproduce issue
-2. Check ANR_PREVENTION_GUIDE.md if performance-related
-3. Check ANTI_PATTERNS_ANALYSIS.md for similar patterns
+2. Check anr-prevention-guide.md if performance-related
+3. Check anti-patterns-analysis.md for similar patterns
 4. Implement fix following best practices
 5. Add test coverage
 6. Update documentation if needed
@@ -275,12 +275,12 @@ docs/
 - Create new issue with appropriate label
 
 ### Security Concerns
-- Review [ANTI_PATTERNS_ANALYSIS.md](ANTI_PATTERNS_ANALYSIS.md)
+- Review [anti-patterns-analysis.md](anti-patterns-analysis.md)
 - Contact security team immediately
 - Do not commit sensitive information
 
 ### Process Questions
-- Check [ANTI_PATTERNS_README.md](ANTI_PATTERNS_README.md) FAQ
+- Check [anti-patterns-readme.md](anti-patterns-readme.md) FAQ
 - Contact team lead
 - Review during sprint retrospective
 
