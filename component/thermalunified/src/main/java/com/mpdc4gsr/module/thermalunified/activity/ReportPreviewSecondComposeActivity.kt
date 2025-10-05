@@ -204,7 +204,7 @@ class ReportPreviewSecondComposeActivity : BaseComposeActivity<ReportPreviewSeco
 
                         if (selectedSection != null) {
                             IconButton(
-                                onClick = { /* Edit section */ }
+                                onClick = {}
                             ) {
                                 Icon(
                                     Icons.Default.Edit,

@@ -65,11 +65,7 @@ class ImagePickIRComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         actions = {
                             if (selectedImages.isNotEmpty()) {
                                 TextButton(
-                                    onClick = { /* TODO: Implement confirm selection
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }
+                                    onClick = {}
                                 ) {
                                     Text(
                                         "Select (${selectedImages.size})",

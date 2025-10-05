@@ -542,7 +542,7 @@ private fun ReviewStep(
                 val exportFormats = listOf("PDF", "Word", "HTML")
                 exportFormats.forEach { format ->
                     TextButton(
-                        onClick = { /* Generate report in format */ },
+                        onClick = {},
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Icon(
