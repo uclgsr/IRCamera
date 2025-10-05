@@ -278,6 +278,7 @@ class ShimmerNetworkClient(
 
         connectionJob?.cancel()
         heartbeatJob?.cancel()
+        networkScope.cancel()
 
         try {
             outputStream?.close()
@@ -290,6 +291,10 @@ class ShimmerNetworkClient(
         outputStream = null
         inputStream = null
         socket = null
+        
+        onConnected = null
+        onDisconnected = null
+        onError = null
     }
 
     fun isConnected(): Boolean = isConnected.get()
