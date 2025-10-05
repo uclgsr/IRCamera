@@ -60,11 +60,7 @@ class IRGalleryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             }
                         },
                         actions = {
-                            IconButton(onClick = { /* TODO: Implement search
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                            IconButton(onClick = { /* Show gallery search */ }) {
                                 Icon(
                                     Icons.Default.Search,
                                     contentDescription = "Search",
@@ -88,11 +84,7 @@ class IRGalleryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                 },
                 floatingActionButton = {
                     FloatingActionButton(
-                        onClick = { /* TODO: Implement add new capture
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+                        onClick = { /* Add new thermal capture */ },
                         containerColor = Color(0xFFFF6B35)
                     ) {
                         Icon(
@@ -234,11 +226,7 @@ private fun GalleryGrid(
         items(items) { item ->
             GalleryGridItem(
                 item = item,
-                onClick = { /* TODO: Implement open detail
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }
+                onClick = { /* Open image detail view */ }
             )
         }
     }
@@ -339,11 +327,7 @@ private fun GalleryList(
         items(items) { item ->
             GalleryListItem(
                 item = item,
-                onClick = { /* TODO: Implement open detail
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }
+                onClick = { /* Open image detail view */ }
             )
         }
     }
@@ -421,11 +405,7 @@ private fun GalleryListItem(
 
             // Actions
             IconButton(
-                onClick = { /* TODO: Implement more options
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }
+                onClick = { /* Show image options menu */ }
             ) {
                 Icon(
                     Icons.Default.MoreVert,

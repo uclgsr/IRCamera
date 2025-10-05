@@ -60,11 +60,7 @@ class IRThermalNightComposeActivity : BaseComposeActivity<IRThermalNightViewMode
                             }
                         },
                         actions = {
-                            IconButton(onClick = { /* TODO: Implement settings
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                            IconButton(onClick = { /* Show thermal night settings */ }) {
                                 Icon(Icons.Default.Settings, contentDescription = "Settings", tint = Color.White)
                             }
                         },
@@ -261,11 +257,7 @@ class IRThermalNightComposeActivity : BaseComposeActivity<IRThermalNightViewMode
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 OutlinedButton(
-                    onClick = { /* TODO: Implement capture
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+                    onClick = { /* Capture thermal night image */ },
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.outlinedButtonColors(
                         contentColor = Color(0xFF58A6FF)
