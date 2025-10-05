@@ -38,6 +38,7 @@ class LogMPChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         var showExportDialog by remember { mutableStateOf(false) }
         var showSettingsDialog by remember { mutableStateOf(false) }
         val snackbarHostState = remember { SnackbarHostState() }
+        val scope = rememberCoroutineScope()
 
         LibUnifiedTheme {
             Scaffold(
@@ -135,7 +136,7 @@ class LogMPChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 }
                             },
                             onExportPdf = {
-                                kotlinx.coroutines.GlobalScope.launch {
+                                scope.launch {
                                     viewModel.exportData(this@LogMPChartComposeActivity, ThermalViewModel.ExportFormat.PDF)
                                     snackbarHostState.showSnackbar("Exporting data as PDF...")
                                 }
@@ -173,7 +174,7 @@ class LogMPChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         listOf("Image (PNG)", "CSV Data", "PDF Report").forEach { format ->
                             TextButton(
                                 onClick = {
-                                    kotlinx.coroutines.GlobalScope.launch {
+                                    scope.launch {
                                         snackbarHostState.showSnackbar("Exporting as $format...")
                                     }
                                     showExportDialog = false

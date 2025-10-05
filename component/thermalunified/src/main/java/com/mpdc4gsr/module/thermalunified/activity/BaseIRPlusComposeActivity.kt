@@ -32,6 +32,7 @@ class BaseIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         var isPlushActive by remember { mutableStateOf(false) }
         var advancedSettings by remember { mutableStateOf(false) }
         val snackbarHostState = remember { SnackbarHostState() }
+        val scope = rememberCoroutineScope()
 
         LibUnifiedTheme {
             Scaffold(
@@ -325,7 +326,7 @@ private fun PlusFeatureOverlay(
                 icon = Icons.Default.Tune,
                 text = "Manual Tune",
                 onClick = {
-                    kotlinx.coroutines.GlobalScope.launch {
+                    scope.launch {
                         snackbarHostState.showSnackbar("Opening manual tune controls...")
                     }
                 }
@@ -335,7 +336,7 @@ private fun PlusFeatureOverlay(
                 icon = Icons.Default.Analytics,
                 text = "AI Analysis",
                 onClick = {
-                    kotlinx.coroutines.GlobalScope.launch {
+                    scope.launch {
                         snackbarHostState.showSnackbar("Running AI analysis...")
                     }
                 }
@@ -411,17 +412,17 @@ private fun PlusControlsOverlay(
             // Quick actions
             PlusQuickActions(
                 onCapture = {
-                    kotlinx.coroutines.GlobalScope.launch {
+                    scope.launch {
                         snackbarHostState.showSnackbar("Capturing with Plus enhancement...")
                     }
                 },
                 onRecord = {
-                    kotlinx.coroutines.GlobalScope.launch {
+                    scope.launch {
                         snackbarHostState.showSnackbar("Recording with Plus features...")
                     }
                 },
                 onProcess = {
-                    kotlinx.coroutines.GlobalScope.launch {
+                    scope.launch {
                         snackbarHostState.showSnackbar("Processing with Plus algorithms...")
                     }
                 }
