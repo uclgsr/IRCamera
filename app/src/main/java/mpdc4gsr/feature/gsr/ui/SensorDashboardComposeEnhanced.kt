@@ -264,7 +264,7 @@ class SensorDashboardComposeEnhanced : ComponentActivity() {
                             ) {
                                 Icon(
                                     Icons.Default.FiberManualRecord,
-                                    contentDescription = null,
+                                    contentDescription = "Recording",
                                     tint = Color.White,
                                     modifier = Modifier.size(16.dp)
                                 )
@@ -324,7 +324,7 @@ class SensorDashboardComposeEnhanced : ComponentActivity() {
         ) {
             Icon(
                 icon,
-                contentDescription = null,
+                contentDescription = label,
                 tint = if (isActive) Color.Green else MaterialTheme.colorScheme.onPrimaryContainer.copy(
                     alpha = 0.6f
                 ),
@@ -418,7 +418,7 @@ class SensorDashboardComposeEnhanced : ComponentActivity() {
             ) {
                 Icon(
                     icon,
-                    contentDescription = null,
+                    contentDescription = label,
                     tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(32.dp)
                 )
@@ -503,7 +503,7 @@ class SensorDashboardComposeEnhanced : ComponentActivity() {
                         enabled = sessionState != MainActivityViewModel.SessionState.RECORDING,
                         modifier = Modifier.weight(1f)
                     ) {
-                        Icon(Icons.Default.FileDownload, contentDescription = null)
+                        Icon(Icons.Default.FileDownload, contentDescription = "Export Session")
                         Spacer(modifier = Modifier.width(4.dp))
                         Text("Export Session")
                     }
@@ -512,7 +512,7 @@ class SensorDashboardComposeEnhanced : ComponentActivity() {
                         onClick = onExportAllData,
                         modifier = Modifier.weight(1f)
                     ) {
-                        Icon(Icons.Default.Archive, contentDescription = null)
+                        Icon(Icons.Default.Archive, contentDescription = "Export All Data")
                         Spacer(modifier = Modifier.width(4.dp))
                         Text("Export All")
                     }
@@ -524,7 +524,7 @@ class SensorDashboardComposeEnhanced : ComponentActivity() {
                     onClick = onManageSessions,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Icon(Icons.Default.ManageAccounts, contentDescription = null)
+                    Icon(Icons.Default.ManageAccounts, contentDescription = "Manage Sessions")
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Manage Sessions")
                 }
@@ -566,7 +566,8 @@ class SensorDashboardComposeEnhanced : ComponentActivity() {
                         Icon(
                             if (thermalCameraState.status == MainActivityViewModel.SensorStatus.CONNECTED)
                                 Icons.Default.CheckCircle else Icons.Default.Error,
-                            contentDescription = null,
+                            contentDescription = if (thermalCameraState.status == MainActivityViewModel.SensorStatus.CONNECTED)
+                                "Thermal Camera Connected" else "Thermal Camera Error",
                             tint = if (thermalCameraState.status == MainActivityViewModel.SensorStatus.CONNECTED)
                                 Color.Green else Color.Red,
                             modifier = Modifier.size(24.dp)
@@ -578,7 +579,8 @@ class SensorDashboardComposeEnhanced : ComponentActivity() {
                         Icon(
                             if (gsrSensorState.status == MainActivityViewModel.SensorStatus.CONNECTED)
                                 Icons.Default.CheckCircle else Icons.Default.Error,
-                            contentDescription = null,
+                            contentDescription = if (gsrSensorState.status == MainActivityViewModel.SensorStatus.CONNECTED)
+                                "GSR Sensor Connected" else "GSR Sensor Error",
                             tint = if (gsrSensorState.status == MainActivityViewModel.SensorStatus.CONNECTED)
                                 Color.Green else Color.Red,
                             modifier = Modifier.size(24.dp)
@@ -596,7 +598,7 @@ class SensorDashboardComposeEnhanced : ComponentActivity() {
                         onClick = onRunDiagnostics,
                         modifier = Modifier.weight(1f)
                     ) {
-                        Icon(Icons.Default.BugReport, contentDescription = null)
+                        Icon(Icons.Default.BugReport, contentDescription = "Run Diagnostics")
                         Spacer(modifier = Modifier.width(4.dp))
                         Text("Run Diagnostics")
                     }
@@ -605,7 +607,7 @@ class SensorDashboardComposeEnhanced : ComponentActivity() {
                         onClick = onViewLogs,
                         modifier = Modifier.weight(1f)
                     ) {
-                        Icon(Icons.Default.Description, contentDescription = null)
+                        Icon(Icons.Default.Description, contentDescription = "View Logs")
                         Spacer(modifier = Modifier.width(4.dp))
                         Text("View Logs")
                     }

@@ -110,7 +110,7 @@ private fun CameraStatusCard() {
             ) {
                 Icon(
                     Icons.Default.Videocam,
-                    contentDescription = null,
+                    contentDescription = "Camera Status",
                     tint = MaterialTheme.colorScheme.primary
                 )
                 Text(
@@ -157,7 +157,7 @@ private fun CameraStatusRow(
         ) {
             Icon(
                 if (isAvailable) Icons.Default.CheckCircle else Icons.Default.Cancel,
-                contentDescription = null,
+                contentDescription = if (isAvailable) "Camera Available" else "Camera Unavailable",
                 tint = if (isAvailable) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
                 modifier = Modifier.size(16.dp)
             )
@@ -280,7 +280,7 @@ private fun CameraModeItem(
         ) {
             Icon(
                 icon,
-                contentDescription = null,
+                contentDescription = cameraName,
                 tint = if (isActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
             )
 
@@ -345,7 +345,7 @@ private fun RecordingControlsCard() {
                 ) {
                     Icon(
                         if (isRecording) Icons.Default.FiberManualRecord else Icons.Default.Stop,
-                        contentDescription = null,
+                        contentDescription = if (isRecording) "Recording" else "Stopped",
                         tint = if (isRecording) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.size(16.dp)
                     )
@@ -370,7 +370,7 @@ private fun RecordingControlsCard() {
                             containerColor = MaterialTheme.colorScheme.error
                         )
                     ) {
-                        Icon(Icons.Default.Stop, contentDescription = null)
+                        Icon(Icons.Default.Stop, contentDescription = "Stop Recording")
                         Spacer(modifier = Modifier.width(4.dp))
                         Text("Stop")
                     }
@@ -379,7 +379,7 @@ private fun RecordingControlsCard() {
                         onClick = { isRecording = true },
                         modifier = Modifier.weight(1f)
                     ) {
-                        Icon(Icons.Default.FiberManualRecord, contentDescription = null)
+                        Icon(Icons.Default.FiberManualRecord, contentDescription = "Start Recording")
                         Spacer(modifier = Modifier.width(4.dp))
                         Text("Record")
                     }
@@ -397,7 +397,7 @@ private fun RecordingControlsCard() {
                     },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Icon(Icons.Default.CameraAlt, contentDescription = null)
+                    Icon(Icons.Default.CameraAlt, contentDescription = "Take Photo")
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Photo")
                 }
@@ -461,7 +461,7 @@ private fun SettingRow(
     ) {
         Icon(
             icon,
-            contentDescription = null,
+            contentDescription = title,
             tint = MaterialTheme.colorScheme.primary
         )
 
@@ -514,7 +514,7 @@ private fun PreviewGalleryCard() {
                     },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Icon(Icons.Default.Preview, contentDescription = null)
+                    Icon(Icons.Default.Preview, contentDescription = "Preview Camera")
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Preview")
                 }
@@ -530,7 +530,7 @@ private fun PreviewGalleryCard() {
                     },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Icon(Icons.Default.PhotoLibrary, contentDescription = null)
+                    Icon(Icons.Default.PhotoLibrary, contentDescription = "Open Gallery")
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Gallery")
                 }
