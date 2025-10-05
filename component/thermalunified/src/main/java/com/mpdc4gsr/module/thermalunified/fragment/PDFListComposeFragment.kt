@@ -324,6 +324,7 @@ class PDFListComposeFragment : BaseComposeFragment<PDFListViewModel>() {
         ) {
             items(pdfs) { item ->
                 PDFListItem(
+                    viewModel = viewModel,
                     item = item,
                     isSelected = selectedItems.contains(item.path),
                     isSelectionMode = isSelectionMode,
