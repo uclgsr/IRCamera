@@ -299,7 +299,7 @@ private fun ThermalImageCard(image: GalleryThermalImage, onMoreClick: () -> Unit
 }
 
 @Composable
-private fun ThermalImageListItem(image: GalleryThermalImage) {
+private fun ThermalImageListItem(image: GalleryThermalImage, onMoreClick: () -> Unit = {}) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = Color(0xFF21262D)),

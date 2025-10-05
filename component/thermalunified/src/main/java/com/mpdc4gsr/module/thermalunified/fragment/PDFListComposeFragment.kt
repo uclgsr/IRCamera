@@ -336,6 +336,7 @@ class PDFListComposeFragment : BaseComposeFragment<PDFListViewModel>() {
 
     @Composable
     private fun PDFListItem(
+        viewModel: PDFListViewModel,
         item: PDFItem,
         isSelected: Boolean,
         isSelectionMode: Boolean,
