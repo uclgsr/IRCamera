@@ -318,7 +318,7 @@ fun SessionItem(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Timer,
-                        contentDescription = null,
+                        contentDescription = "Duration",
                         tint = Color(0xFF4ECDC4),
                         modifier = Modifier.size(16.dp)
                     )
@@ -333,7 +333,7 @@ fun SessionItem(
 
                     Icon(
                         imageVector = Icons.Default.Storage,
-                        contentDescription = null,
+                        contentDescription = "Data Size",
                         tint = Color(0xFF4ECDC4),
                         modifier = Modifier.size(16.dp)
                     )
@@ -410,7 +410,7 @@ fun EmptySessionsState(
     ) {
         Icon(
             imageVector = if (searchQuery.isBlank()) Icons.AutoMirrored.Filled.Assignment else Icons.Default.SearchOff,
-            contentDescription = null,
+            contentDescription = if (searchQuery.isBlank()) "No Sessions" else "No Search Results",
             tint = Color(0xFF6B73FF),
             modifier = Modifier.size(64.dp)
         )
@@ -446,7 +446,7 @@ fun EmptySessionsState(
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
-                    contentDescription = null,
+                    contentDescription = "Create New Session",
                     modifier = Modifier.size(20.dp)
                 )
                 Spacer(modifier = Modifier.width(8.dp))

@@ -513,7 +513,7 @@ private fun ProcessingOptionsCard() {
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Icon(Icons.Default.PlayArrow, contentDescription = null)
+                Icon(Icons.Default.PlayArrow, contentDescription = "Apply Processing")
                 Spacer(modifier = Modifier.width(8.dp))
                 Text("Apply Processing")
             }
@@ -613,7 +613,7 @@ private fun ProcessingResultsCard() {
                     },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Icon(Icons.Default.Visibility, contentDescription = null)
+                    Icon(Icons.Default.Visibility, contentDescription = "View Data")
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("View Data")
                 }
@@ -629,7 +629,7 @@ private fun ProcessingResultsCard() {
                     },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Icon(Icons.Default.FileDownload, contentDescription = null)
+                    Icon(Icons.Default.FileDownload, contentDescription = "Export Data")
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Export")
                 }
@@ -956,7 +956,7 @@ private fun IntegrityCheck(
         ) {
             Icon(
                 if (hasIssues) Icons.Default.Warning else Icons.Default.CheckCircle,
-                contentDescription = null,
+                contentDescription = if (hasIssues) "Data Quality Warning" else "Data Quality Good",
                 tint = if (hasIssues) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
                 modifier = Modifier.size(20.dp)
             )
@@ -1036,7 +1036,7 @@ private fun EventItem(event: GSREventModel) {
                     "Baseline" -> Icons.Default.HorizontalRule
                     else -> Icons.Default.Event
                 },
-                contentDescription = null,
+                contentDescription = event.type,
                 tint = when (event.type) {
                     "Peak" -> MaterialTheme.colorScheme.primary
                     "Artifact" -> MaterialTheme.colorScheme.error
