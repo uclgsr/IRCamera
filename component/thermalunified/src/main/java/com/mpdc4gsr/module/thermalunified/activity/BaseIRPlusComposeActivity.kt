@@ -315,7 +315,7 @@ private fun PlusFeatureOverlay(
                 icon = Icons.Default.AutoFixHigh,
                 text = "Auto Enhance",
                 onClick = {
-                    kotlinx.coroutines.GlobalScope.launch {
+                    scope.launch {
                         snackbarHostState.showSnackbar("Auto enhance processing...")
                     }
                 }
