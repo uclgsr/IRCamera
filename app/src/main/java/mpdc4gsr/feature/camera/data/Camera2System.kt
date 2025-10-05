@@ -32,6 +32,9 @@ class Camera2System(
     private var currentSessionId: String = ""
     private var isRecording = false
     private var outputDirectory: File? = null
+    
+    // CoroutineScope for managing release cleanup
+    private val releaseScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     var onError: ((String) -> Unit)? = null
     var onProgress: ((String) -> Unit)? = null
@@ -189,8 +192,8 @@ class Camera2System(
 
     fun release() {
         if (isRecording) {
-            // Launch async stopRecording instead of blocking
-            CoroutineScope(Dispatchers.IO).launch {
+            // Launch async stopRecording in managed scope
+            releaseScope.launch {
                 stopRecording()
             }
         }
@@ -199,6 +202,9 @@ class Camera2System(
         rawEngine.release()
         cameraController.close()
         uiBridge.release()
+        
+        // Cancel the release scope to clean up any remaining coroutines
+        releaseScope.cancel()
 
         AppLogger.i(TAG, "Camera2System released")
     }

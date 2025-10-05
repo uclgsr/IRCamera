@@ -183,6 +183,9 @@ class SessionManager(
         isRunning.set(false)
         sessionJob.get()?.cancel()
         sessionJob.set(null)
+        
+        // Cancel the sessionScope to cleanup all coroutines
+        sessionScope.cancel()
 
         logger.log(StructuredLogger.LogLevel.INFO, "SessionManager", "service_stopped", emptyMap())
         AppLogger.i(TAG, "Session management service stopped")

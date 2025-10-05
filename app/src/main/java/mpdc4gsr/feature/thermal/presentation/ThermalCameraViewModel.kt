@@ -185,8 +185,5 @@ class ThermalCameraViewModel(application: Application) : ViewModel() {
         }
         
         // Note: viewModelScope will be automatically cancelled after onCleared returns
-        } catch (e: Exception) {
-            AppLogger.e(TAG, "Error during ViewModel cleanup", e)
-        }
     }
 }

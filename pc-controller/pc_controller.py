@@ -105,6 +105,9 @@ try:
 except ImportError:
     logger.info(" Using Python backend (C++ backend not available)")
 
+# Network constants
+CLIENT_SOCKET_TIMEOUT = 30.0  # Socket timeout in seconds for client connections
+
 
 class WebcamCapture:
     """Native webcam capture using OpenCV for PC-side video recording"""
@@ -516,7 +519,7 @@ class NetworkThread(QThread if GUI_AVAILABLE else threading.Thread):
                 client_socket, address = self.server_socket.accept()
 
                 # Set socket timeout to prevent hanging
-                client_socket.settimeout(self.CLIENT_SOCKET_TIMEOUT)
+                client_socket.settimeout(CLIENT_SOCKET_TIMEOUT)
                 
                 # Apply SSL wrapping if enabled
                 if self.ssl_context:
