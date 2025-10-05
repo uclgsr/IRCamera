@@ -44,6 +44,7 @@ class WebSocketClient(private val context: Context) {
 
         private const val SERVICE_TYPE = "_irhub._tcp."
         private const val DISCOVERY_TIMEOUT_MS = 10000L
+        private const val MANUAL_CONNECTION_DELAY_MS = 2000L
 
         private const val AUTH_USERNAME = "admin"
         private const val AUTH_PASSWORD = "admin"
@@ -212,6 +213,7 @@ class WebSocketClient(private val context: Context) {
         stopPhase4Services()
 
         eventListener?.onDisconnected("Client stopped")
+        eventListener = null
     }
 
     private fun startServerDiscovery() {
@@ -382,7 +384,7 @@ class WebSocketClient(private val context: Context) {
                 AppLogger.i(TAG, "Trying manual connection to $address:$DEFAULT_PC_PORT")
                 connectToServer(serverInfo)
 
-                delay(2000)
+                delay(MANUAL_CONNECTION_DELAY_MS)
             }
         }
     }
@@ -1020,8 +1022,7 @@ class WebSocketClient(private val context: Context) {
     }
 
     private fun performCrossDeviceSync(devices: List<SessionManager.DeviceInfo>) {
-        @OptIn(kotlinx.coroutines.DelicateCoroutinesApi::class)
-        GlobalScope.launch {
+        scope.launch {
             try {
                 logger.log(
                     StructuredLogger.LogLevel.INFO,

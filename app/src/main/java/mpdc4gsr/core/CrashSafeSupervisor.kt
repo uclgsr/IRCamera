@@ -425,15 +425,8 @@ class CrashSafeSupervisor private constructor(private val context: Context) {
 
         supervisorScope.cancel()
 
-        try {
-            runBlocking {
-                withTimeout(10000) {
-                    supervisorScope.coroutineContext[Job]?.join()
-                }
-            }
-        } catch (e: Exception) {
-            AppLogger.w(TAG, "Timeout waiting for supervisor shutdown", e)
-        }
+        // Note: supervisorScope is cancelled, jobs will cleanup asynchronously
+        // No blocking wait needed - this prevents ANR
 
         managedJobs.clear()
         healthChecks.clear()

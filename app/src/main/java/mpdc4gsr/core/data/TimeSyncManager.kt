@@ -626,6 +626,7 @@ class TimeSyncManager(private val context: Context) {
         stopPeriodicSync()
         syncScope.cancel()
         finalizeSession()
+        syncTriggerCallback = null
         AppLogger.i(TAG, "TimeSyncManager cleaned up")
     }
 }

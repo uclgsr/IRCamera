@@ -621,8 +621,8 @@ class WebSocketServer:
                 file_type_enum = FileType.METADATA
                 try:
                     file_type_enum = FileType(file_type.lower())
-                except:
-                    pass
+                except (ValueError, AttributeError):
+                    logger.debug(f"Unknown file type '{file_type}', using METADATA")
 
                 manifest = FileManifest(
                     file_id=job_id,

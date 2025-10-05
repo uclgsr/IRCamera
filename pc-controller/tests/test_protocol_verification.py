@@ -152,12 +152,12 @@ class MockAndroidDevice:
         if self.client_socket:
             try:
                 self.client_socket.close()
-            except:
+            except (OSError, socket.error):
                 pass
         if self.server_socket:
             try:
                 self.server_socket.close()
-            except:
+            except (OSError, socket.error):
                 pass
 
 
@@ -179,7 +179,7 @@ class TestProtocolVerification(unittest.TestCase):
         if self.pc_socket:
             try:
                 self.pc_socket.close()
-            except:
+            except (OSError, socket.error):
                 pass
         self.mock_android.stop()
         time.sleep(0.1)

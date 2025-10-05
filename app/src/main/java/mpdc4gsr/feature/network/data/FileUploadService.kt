@@ -1,7 +1,10 @@
 package mpdc4gsr.feature.network.data
 
 import android.content.Context
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -38,10 +41,13 @@ class FileUploadService(private val context: Context) {
     companion object {
         private const val TAG = "FileUploadService"
 
-        private const val DEFAULT_CHUNK_SIZE = 1024 * 1024
+        private const val BYTES_PER_MB = 1024 * 1024
+        private const val DEFAULT_CHUNK_SIZE = BYTES_PER_MB
         private const val MAX_CONCURRENT_UPLOADS = 3
         private const val RETRY_LIMIT = 3
         private const val TRANSFER_TIMEOUT_MS = 30000L
+        private const val QUEUE_RETRY_DELAY_MS = 1000L
+        private const val ERROR_RETRY_DELAY_MS = 5000L
     }
 
     private val logger = StructuredLogger.getInstance(context)
@@ -49,6 +55,7 @@ class FileUploadService(private val context: Context) {
     private val uploadQueue = Channel<String>(Channel.UNLIMITED)
     private val concurrentUploads = AtomicLong(0)
     private val isActive = AtomicBoolean(false)
+    private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     private val chunkSize = DEFAULT_CHUNK_SIZE
     private val maxConcurrent = MAX_CONCURRENT_UPLOADS
@@ -275,8 +282,7 @@ class FileUploadService(private val context: Context) {
     }
 
     private fun startUploadProcessor() {
-        @OptIn(kotlinx.coroutines.DelicateCoroutinesApi::class)
-        GlobalScope.launch {
+        serviceScope.launch {
             while (this@FileUploadService.isActive.get()) {
                 try {
 
@@ -285,7 +291,7 @@ class FileUploadService(private val context: Context) {
                     if (concurrentUploads.get() >= maxConcurrent) {
 
                         uploadQueue.send(jobId)
-                        delay(1000)
+                        delay(QUEUE_RETRY_DELAY_MS)
                         continue
                     }
 
@@ -304,7 +310,7 @@ class FileUploadService(private val context: Context) {
                         "upload_processor_error",
                         details = mapOf("error" to (e.message ?: "Unknown error")),
                     )
-                    delay(5000)
+                    delay(ERROR_RETRY_DELAY_MS)
                 }
             }
         }
@@ -358,7 +364,7 @@ class FileUploadService(private val context: Context) {
                         "duration_ms" to (job.endTime - job.startTime),
                         "transfer_rate_mbps" to String.format(
                             "%.2f",
-                            job.transferRate / (1024 * 1024)
+                            job.transferRate / BYTES_PER_MB
                         ),
                     ),
             )
@@ -567,6 +573,8 @@ class FileUploadService(private val context: Context) {
                 job.status = UploadStatus.CANCELLED
             }
         }
+
+        serviceScope.cancel()
 
         logger.log(
             StructuredLogger.LogLevel.INFO,

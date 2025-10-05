@@ -683,6 +683,7 @@ class AdvancedAuthenticationManager(private val context: Context) {
         certificateManager = null
         roleManager = null
         securityMonitor = null
+        authListener = null
 
         AppLogger.i(TAG, "Advanced authentication manager shutdown complete")
     }
