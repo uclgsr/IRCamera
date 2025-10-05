@@ -47,4 +47,12 @@ class IRGalleryTabViewModel : BaseViewModel() {
             _uiEvents.emit(UiEvent.NavigateBack)
         }
     }
+
+    fun showSearch() {
+        // Placeholder for search functionality
+    }
+
+    fun showMoreOptions() {
+        // Placeholder for more options functionality
+    }
 }

@@ -24,6 +24,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
+import kotlinx.coroutines.launch
 
 class VideoComposeActivity : BaseComposeActivity<ThermalViewModel>() {
 
@@ -317,7 +318,7 @@ private fun VideoControlsOverlay(
                     IconButton(onClick = { 
                         isFullscreen = !isFullscreen
                         // Update system UI visibility based on fullscreen state
-                        window.decorView.systemUiVisibility = if (isFullscreen) {
+                        this@VideoComposeActivity.window.decorView.systemUiVisibility = if (isFullscreen) {
                             android.view.View.SYSTEM_UI_FLAG_FULLSCREEN or
                             android.view.View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
                             android.view.View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
@@ -341,7 +342,7 @@ private fun VideoControlsOverlay(
                                     put(android.provider.MediaStore.Images.Media.RELATIVE_PATH, android.os.Environment.DIRECTORY_PICTURES)
                                 }
                                 // Insert into MediaStore (actual frame capture would happen here)
-                                contentResolver.insert(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+                                this@VideoComposeActivity.contentResolver.insert(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
                                 snackbarHostState.showSnackbar("Frame exported to gallery")
                             } catch (e: Exception) {
                                 snackbarHostState.showSnackbar("Failed to export frame: ${e.message}")

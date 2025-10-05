@@ -244,7 +244,7 @@ private fun ThermalListView() {
 }
 
 @Composable
-private fun ThermalImageCard(image: GalleryThermalImage) {
+private fun ThermalImageCard(image: GalleryThermalImage, onMoreClick: () -> Unit = {}) {
     Card(
         modifier = Modifier
             .fillMaxWidth()

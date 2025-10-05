@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.sp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
+import kotlinx.coroutines.launch
 
 class MonitorLogComposeActivity : BaseComposeActivity<ThermalViewModel>() {
 
@@ -93,9 +94,9 @@ class MonitorLogComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                             put(android.provider.MediaStore.Files.FileColumns.RELATIVE_PATH, android.os.Environment.DIRECTORY_DOWNLOADS)
                                         }
                                         
-                                        val uri = contentResolver.insert(android.provider.MediaStore.Files.getContentUri("external"), contentValues)
+                                        val uri = this@MonitorLogComposeActivity.contentResolver.insert(android.provider.MediaStore.Files.getContentUri("external"), contentValues)
                                         uri?.let {
-                                            contentResolver.openOutputStream(it)?.use { outputStream ->
+                                            this@MonitorLogComposeActivity.contentResolver.openOutputStream(it)?.use { outputStream ->
                                                 outputStream.write(csv.toByteArray())
                                             }
                                             snackbarHostState.showSnackbar("Logs exported to Downloads")

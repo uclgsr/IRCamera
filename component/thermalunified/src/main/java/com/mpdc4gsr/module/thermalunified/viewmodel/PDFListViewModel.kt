@@ -176,4 +176,8 @@ class PDFListViewModel : BaseViewModel() {
             emptyList()
         }
     }
+
+    fun showMoreActions(item: PDFItem) {
+        // Placeholder for more actions functionality
+    }
 }
