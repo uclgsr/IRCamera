@@ -17,10 +17,17 @@ docs/
 
 ## Quick Navigation
 
+### PC Controller (Desktop Application)
+- **[PC Controller Documentation](../pc-controller/docs/)** - Complete PC controller implementation
+  - [Implementation Guide](../pc-controller/docs/implementation.md) - Comprehensive feature documentation
+  - [Quick Start](../pc-controller/docs/quick_start.md) - Installation and usage
+  - [Time Sync Implementation](../pc-controller/docs/time_sync_implementation.md) - Time synchronization guide
+  - [Protocol Documentation](../pc-controller/docs/protocol.md) - Network protocol specs
+  - [Verification & Testing](../pc-controller/docs/verification.md) - Test coverage and verification
+
 ### Android Application
-- [PC Networking Guide](android/pc-networking-guide.md) - PC-Android communication setup
-- [PC Networking Changes](android/pc-networking-changes.md) - Recent networking changes
-- [PC Networking Verification](android/pc-networking-verification.md) - Verification procedures
+- [Android Code Quality Guide](android/android-code-quality-guide.md) - Complete code quality guide (consolidated)
+- [PC Networking Summary](summaries/pc-networking-summary.md) - Complete PC-Android communication implementation (consolidated)
 - [Time Sync Flow Diagram](android/time-sync-flow-diagram.txt) - Time synchronization flow
 
 ### Developer Guides
@@ -29,10 +36,8 @@ docs/
 - [Permission Handling Guide](developer-guides/permission-handling-guide.md) - Permission tools and utilities
 
 ### Implementation Summaries
-- [PC Networking Implementation](summaries/pc-networking-implementation-summary.md) - PC networking feature
-- [Android Analysis Summary](summaries/android-analysis-summary.md) - System analysis
+- [PC Networking Summary](summaries/pc-networking-summary.md) - Complete PC networking implementation (consolidated)
 - [Testing Time Sync](summaries/testing-time-sync.md) - Time sync testing
-- [Resolution Summary](summaries/resolution-summary.md) - Issue resolutions
 - [Next Steps](summaries/next-steps.md) - Planned improvements
 
 ### Maintenance and Fixes
@@ -52,9 +57,7 @@ docs/
 - [Thesis Evaluation Tests](thesis/evaluation/) - Test suite for thesis
 
 ### Code Quality
-- **[REPOSITORY_ANALYSIS.md](REPOSITORY_ANALYSIS.md) - 2024 Comprehensive Code Quality Analysis (NEW)**
-- **[QUICK_FIX_GUIDE.md](QUICK_FIX_GUIDE.md) - Quick Reference for Common Fixes (NEW)**
-- **[android/code-quality-analysis.md](android/code-quality-analysis.md) - Detailed Android Analysis (NEW)**
+- **[android/android-code-quality-guide.md](android/android-code-quality-guide.md) - Complete Android Code Quality Guide (CONSOLIDATED)**
 - [anti-patterns-readme.md](anti-patterns-readme.md) - Anti-patterns overview
 - [anti-patterns-analysis.md](anti-patterns-analysis.md) - Detailed analysis
 - [anti-patterns-checklist.md](anti-patterns-checklist.md) - Developer checklist
@@ -82,10 +85,10 @@ docs/
 
 ### For New Developers
 
-1. **Start Here**: [anti-patterns-readme.md](anti-patterns-readme.md)
+1. **Start Here**: [android/android-code-quality-guide.md](android/android-code-quality-guide.md) - Complete code quality guide
 2. **Code Standards**: [anti-patterns-checklist.md](anti-patterns-checklist.md)
 3. **Performance**: [anr-prevention-guide.md](anr-prevention-guide.md)
-4. **Architecture**: [MIGRATION_COMPLETE_SUMMARY.md](maintenance/migration-complete-summary.md)
+4. **Architecture**: [maintenance/migration-complete-summary.md](maintenance/migration-complete-summary.md)
 
 ### For Code Reviews
 
@@ -103,23 +106,14 @@ docs/
 
 ### Security & Quality (CRITICAL - READ FIRST)
 
-**🆕 2024 Comprehensive Code Quality Analysis:**
-- **[REPOSITORY_ANALYSIS.md](REPOSITORY_ANALYSIS.md)** - Complete repository analysis
-  - 3 CRITICAL issues (GlobalScope, runBlocking, ExecutorService leaks)
-  - 9 HIGH priority issues
-  - 11 MEDIUM priority issues
-  - Detailed fixes and recommendations
-  
-- **[QUICK_FIX_GUIDE.md](QUICK_FIX_GUIDE.md)** - Quick reference for developers
-  - Code examples for common fixes
-  - Before/after comparisons
-  - Testing guidelines
-  
-- **[android/code-quality-analysis.md](android/code-quality-analysis.md)** - Android deep dive
-  - Memory leak analysis
-  - Concurrency issues
-  - Performance problems
-  - Testing recommendations
+**🆕 2024 Complete Code Quality Guide (CONSOLIDATED):**
+- **[android/android-code-quality-guide.md](android/android-code-quality-guide.md)** - Complete Android code quality guide
+  - 3 CRITICAL issues with immediate fixes (GlobalScope, runBlocking, ExecutorService leaks)
+  - 7 HIGH priority issues
+  - 8 MEDIUM priority issues
+  - Quick-fix reference with before/after code examples
+  - Detailed recommendations with priority timeline
+  - Testing guidelines and checklist
 
 **Previous Anti-Patterns Analysis (Still Relevant):**
 - [anti-patterns-readme.md](anti-patterns-readme.md) - Overview
@@ -169,10 +163,9 @@ docs/
 
 ### 🔴 Critical (Read Immediately)
 
-1. **[REPOSITORY_ANALYSIS.md](REPOSITORY_ANALYSIS.md) - 2024 comprehensive analysis (START HERE)**
-2. **[QUICK_FIX_GUIDE.md](QUICK_FIX_GUIDE.md) - Quick reference for fixes**
-3. [anti-patterns-analysis.md](anti-patterns-analysis.md) - Previous anti-patterns analysis
-4. [anti-patterns-checklist.md](anti-patterns-checklist.md) - Development standards
+1. **[android/android-code-quality-guide.md](android/android-code-quality-guide.md) - Complete Android code quality guide (START HERE)**
+2. [anti-patterns-analysis.md](anti-patterns-analysis.md) - Previous anti-patterns analysis
+3. [anti-patterns-checklist.md](anti-patterns-checklist.md) - Development standards
 
 ### 🟡 Important (Read This Week)
 
@@ -191,7 +184,7 @@ docs/
 ### Daily Development Workflow
 
 ```
-1. Check QUICK_FIX_GUIDE.md for common patterns to avoid
+1. Check android/android-code-quality-guide.md for common patterns to avoid
 2. Check anti-patterns-checklist.md before coding
 3. Write code following guidelines
 4. Run lint and tests
@@ -202,8 +195,8 @@ docs/
 ### Code Review Workflow
 
 ```
-1. Check for issues listed in REPOSITORY_ANALYSIS.md
-2. Open QUICK_FIX_GUIDE.md for quick reference
+1. Check for issues in android/android-code-quality-guide.md
+2. Review fix examples and patterns in the guide
 3. Open anti-patterns-checklist.md
 4. Check "Code Review Red Flags" section
 5. Verify pre-commit checklist items
@@ -215,8 +208,7 @@ docs/
 
 ```
 1. Reproduce issue
-2. Check REPOSITORY_ANALYSIS.md for similar issues
-3. Check QUICK_FIX_GUIDE.md for fix patterns
+2. Check android/android-code-quality-guide.md for similar issues and fix patterns
 4. Check anr-prevention-guide.md if performance-related
 5. Check anti-patterns-analysis.md for similar patterns
 6. Implement fix following best practices

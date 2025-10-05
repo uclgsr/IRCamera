@@ -71,15 +71,16 @@ Anti-patterns analysis and code quality guidelines.
 4. See [thesis/evaluation/](thesis/evaluation/) for test results
 
 ### For Code Review
-1. [anti-patterns-checklist.md](anti-patterns-checklist.md) - Quick checklist
-2. [anti-patterns-analysis.md](anti-patterns-analysis.md) - Detailed analysis
-3. [anr-prevention-guide.md](anr-prevention-guide.md) - Performance guidelines
-4. [maintenance/](maintenance/) - Previous fixes and patterns
+1. [android/android-code-quality-guide.md](android/android-code-quality-guide.md) - Complete code quality guide (consolidated)
+2. [anti-patterns-checklist.md](anti-patterns-checklist.md) - Quick checklist
+3. [anti-patterns-analysis.md](anti-patterns-analysis.md) - Detailed analysis
+4. [anr-prevention-guide.md](anr-prevention-guide.md) - Performance guidelines
+5. [maintenance/](maintenance/) - Previous fixes and patterns
 
 ### For System Integration
-1. [android/pc-networking-guide.md](android/pc-networking-guide.md) - Networking setup
-2. [../pc-controller/docs/protocol-bridge-guide.md](../pc-controller/docs/protocol-bridge-guide.md) - Protocol details
-3. [../pc-controller/docs/integration-ready.md](../pc-controller/docs/integration-ready.md) - Integration status
+1. [summaries/pc-networking-summary.md](summaries/pc-networking-summary.md) - Complete PC networking implementation (consolidated)
+2. [../pc-controller/docs/protocol.md](../pc-controller/docs/protocol.md) - Protocol details
+3. [../pc-controller/docs/implementation.md](../pc-controller/docs/implementation.md) - PC controller implementation
 
 ## Directory Tree
 
@@ -90,9 +91,7 @@ docs/
 │
 ├── android/                      # Android application docs
 │   ├── README.md
-│   ├── pc-networking-guide.md
-│   ├── pc-networking-changes.md
-│   ├── pc-networking-verification.md
+│   ├── android-code-quality-guide.md (consolidated)
 │   └── time-sync-flow-diagram.txt
 │
 ├── developer-guides/             # Developer technical guides
@@ -103,10 +102,8 @@ docs/
 │
 ├── summaries/                    # Implementation summaries
 │   ├── README.md
-│   ├── pc-networking-implementation-summary.md
-│   ├── android-analysis-summary.md
+│   ├── pc-networking-summary.md (consolidated)
 │   ├── testing-time-sync.md
-│   ├── resolution-summary.md
 │   └── next-steps.md
 │
 ├── maintenance/                  # Maintenance and fixes
