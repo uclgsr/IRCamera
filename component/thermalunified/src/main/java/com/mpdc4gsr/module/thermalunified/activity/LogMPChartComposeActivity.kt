@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.sp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
+import kotlinx.coroutines.launch
 
 class LogMPChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
 
@@ -38,6 +39,7 @@ class LogMPChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         var showExportDialog by remember { mutableStateOf(false) }
         var showSettingsDialog by remember { mutableStateOf(false) }
         val snackbarHostState = remember { SnackbarHostState() }
+        val scope = rememberCoroutineScope()
 
         LibUnifiedTheme {
             Scaffold(
@@ -135,7 +137,7 @@ class LogMPChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 }
                             },
                             onExportPdf = {
-                                kotlinx.coroutines.GlobalScope.launch {
+                                scope.launch {
                                     viewModel.exportData(this@LogMPChartComposeActivity, ThermalViewModel.ExportFormat.PDF)
                                     snackbarHostState.showSnackbar("Exporting data as PDF...")
                                 }
@@ -173,7 +175,7 @@ class LogMPChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         listOf("Image (PNG)", "CSV Data", "PDF Report").forEach { format ->
                             TextButton(
                                 onClick = {
-                                    kotlinx.coroutines.GlobalScope.launch {
+                                    scope.launch {
                                         snackbarHostState.showSnackbar("Exporting as $format...")
                                     }
                                     showExportDialog = false

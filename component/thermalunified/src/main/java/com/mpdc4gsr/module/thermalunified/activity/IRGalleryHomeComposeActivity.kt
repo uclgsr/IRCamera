@@ -124,7 +124,7 @@ class IRGalleryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             items = galleryItems,
                             modifier = Modifier.fillMaxSize(),
                             onItemClick = { item ->
-                                val intent = Intent(this, IRGalleryDetail01ComposeActivity::class.java)
+                                val intent = Intent(this@IRGalleryHomeComposeActivity, IRGalleryDetail01ComposeActivity::class.java)
                                 intent.putExtra("item_id", item.id)
                                 startActivity(intent)
                             },
@@ -138,7 +138,7 @@ class IRGalleryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             items = galleryItems,
                             modifier = Modifier.fillMaxSize(),
                             onItemClick = { item ->
-                                val intent = Intent(this, IRGalleryDetail01ComposeActivity::class.java)
+                                val intent = Intent(this@IRGalleryHomeComposeActivity, IRGalleryDetail01ComposeActivity::class.java)
                                 intent.putExtra("item_id", item.id)
                                 startActivity(intent)
                             },

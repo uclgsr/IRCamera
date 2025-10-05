@@ -100,6 +100,7 @@ class PDFListComposeFragment : BaseComposeFragment<PDFListViewModel>() {
 
                         else -> {
                             PDFList(
+                                viewModel = viewModel,
                                 pdfs = pdfItems,
                                 selectedItems = selectedItems,
                                 isSelectionMode = isSelectionMode,
@@ -312,6 +313,7 @@ class PDFListComposeFragment : BaseComposeFragment<PDFListViewModel>() {
 
     @Composable
     private fun PDFList(
+        viewModel: PDFListViewModel,
         pdfs: List<PDFItem>,
         selectedItems: Set<String>,
         isSelectionMode: Boolean,
@@ -324,6 +326,7 @@ class PDFListComposeFragment : BaseComposeFragment<PDFListViewModel>() {
         ) {
             items(pdfs) { item ->
                 PDFListItem(
+                    viewModel = viewModel,
                     item = item,
                     isSelected = selectedItems.contains(item.path),
                     isSelectionMode = isSelectionMode,
@@ -336,6 +339,7 @@ class PDFListComposeFragment : BaseComposeFragment<PDFListViewModel>() {
 
     @Composable
     private fun PDFListItem(
+        viewModel: PDFListViewModel,
         item: PDFItem,
         isSelected: Boolean,
         isSelectionMode: Boolean,
