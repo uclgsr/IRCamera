@@ -338,7 +338,7 @@ class HardwareValidationController(
         return listOf(
             "android.permission.FOREGROUND_SERVICE",
             "android.permission.FOREGROUND_SERVICE_CAMERA",
-            "android.permission.FOREGROUND_SERVICE_MICROPHONE"
+            "android.permission.FOREGROUND_SERVICE_DATA_SYNC"
         )
     }
 
