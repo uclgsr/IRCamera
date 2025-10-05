@@ -79,18 +79,24 @@ class SessionManagerComposeActivity : BaseComposeActivity<SessionManagerViewMode
                             IconButton(onClick = { showFilterDialog = true }) {
                                 Icon(Icons.Default.FilterList, contentDescription = "Filter")
                             }
-                            IconButton(onClick = { /* TODO: Implement export all sessions
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                            IconButton(onClick = {
+                                // TODO: Export all sessions
+                                android.widget.Toast.makeText(
+                                    this@SessionManagerComposeActivity,
+                                    "Exporting all sessions...",
+                                    android.widget.Toast.LENGTH_SHORT
+                                ).show()
+                            }) {
                                 Icon(Icons.Default.FileDownload, contentDescription = "Export")
                             }
-                            IconButton(onClick = { /* TODO: Implement more options
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                            IconButton(onClick = {
+                                // TODO: Show more options menu
+                                android.widget.Toast.makeText(
+                                    this@SessionManagerComposeActivity,
+                                    "More options coming soon",
+                                    android.widget.Toast.LENGTH_SHORT
+                                ).show()
+                            }) {
                                 Icon(Icons.Default.MoreVert, contentDescription = "More")
                             }
                         }
@@ -123,11 +129,15 @@ class SessionManagerComposeActivity : BaseComposeActivity<SessionManagerViewMode
         if (showFilterDialog) {
             SessionFilterDialog(
                 onDismiss = { showFilterDialog = false },
-                onApplyFilter = { /* TODO: Implement apply filter logic
-                     *   - Implement callback logic for onApplyFilter
-                     *   - Handle data/state updates
-                     *   - Provide user feedback
-                     */ }
+                onApplyFilter = {
+                    // TODO: Apply filter logic to session list
+                    android.widget.Toast.makeText(
+                        this@SessionManagerComposeActivity,
+                        "Applying filters...",
+                        android.widget.Toast.LENGTH_SHORT
+                    ).show()
+                    showFilterDialog = false
+                }
             )
         }
     }
@@ -351,11 +361,15 @@ private fun SessionCard(
                 }
             }
 
-            IconButton(onClick = { /* TODO: Implement more options for this session
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+            val context = androidx.compose.ui.platform.LocalContext.current
+            IconButton(onClick = {
+                // TODO: Show session options menu
+                android.widget.Toast.makeText(
+                    context,
+                    "Session options coming soon",
+                    android.widget.Toast.LENGTH_SHORT
+                ).show()
+            }) {
                 Icon(Icons.Default.MoreVert, contentDescription = "Session options")
             }
         }

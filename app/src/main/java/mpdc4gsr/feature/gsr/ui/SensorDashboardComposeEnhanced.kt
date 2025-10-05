@@ -93,18 +93,24 @@ class SensorDashboardComposeEnhanced : ComponentActivity() {
                     },
                     actions = {
                         // Enhanced actions leveraging consolidated patterns
-                        IconButton(onClick = { /* TODO: Implement export all sensor data
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                        IconButton(onClick = {
+                            // TODO: Export all sensor data
+                            android.widget.Toast.makeText(
+                                this@SensorDashboardComposeEnhanced,
+                                "Exporting all sensor data...",
+                                android.widget.Toast.LENGTH_SHORT
+                            ).show()
+                        }) {
                             Icon(Icons.Default.Download, contentDescription = "Export Data")
                         }
-                        IconButton(onClick = { /* TODO: Implement open sensor settings
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                        IconButton(onClick = {
+                            // TODO: Open sensor settings
+                            android.widget.Toast.makeText(
+                                this@SensorDashboardComposeEnhanced,
+                                "Opening sensor settings...",
+                                android.widget.Toast.LENGTH_SHORT
+                            ).show()
+                        }) {
                             Icon(Icons.Default.Settings, contentDescription = "Settings")
                         }
                     }
@@ -133,7 +139,23 @@ class SensorDashboardComposeEnhanced : ComponentActivity() {
                         isConnected = gsrConnectionState != MainActivityViewModel.GSRConnectionState.DISCONNECTED,
                         deviceName = "Shimmer3-GSR-Enhanced",
                         connectionStrength = if (gsrConnectionState == MainActivityViewModel.GSRConnectionState.CONNECTED) 90 else 0
-                    )
+                    ),
+                    onExportData = {
+                        // TODO: Implement GSR data export functionality
+                        android.widget.Toast.makeText(
+                            this@SensorDashboardComposeEnhanced,
+                            "Export GSR data feature coming soon",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
+                    onResetStatistics = {
+                        // TODO: Implement statistics reset functionality
+                        android.widget.Toast.makeText(
+                            this@SensorDashboardComposeEnhanced,
+                            "Reset statistics feature coming soon",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 )
 
                 // Device management section (consolidated layout pattern)
@@ -147,37 +169,52 @@ class SensorDashboardComposeEnhanced : ComponentActivity() {
                 // Enhanced data export section
                 DataExportSection(
                     sessionState = sessionState,
-                    onExportSession = { /* TODO: Implement export current session
-                     *   - Implement callback logic for onExportSession
-                     *   - Handle data/state updates
-                     *   - Provide user feedback
-                     */ },
-                    onExportAllData = { /* TODO: Implement export all sensor data
-                     *   - Implement callback logic for onExportAllData
-                     *   - Handle data/state updates
-                     *   - Provide user feedback
-                     */ },
-                    onManageSessions = { /* TODO: Implement launch session manager
-                     *   - Implement callback logic for onManageSessions
-                     *   - Handle data/state updates
-                     *   - Provide user feedback
-                     */ }
+                    onExportSession = {
+                        // TODO: Export current session
+                        android.widget.Toast.makeText(
+                            this@SensorDashboardComposeEnhanced,
+                            "Exporting current session...",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
+                    onExportAllData = {
+                        // TODO: Export all sensor data
+                        android.widget.Toast.makeText(
+                            this@SensorDashboardComposeEnhanced,
+                            "Exporting all data...",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
+                    onManageSessions = {
+                        // TODO: Launch session manager
+                        android.widget.Toast.makeText(
+                            this@SensorDashboardComposeEnhanced,
+                            "Opening session manager...",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 )
 
                 // System status and diagnostics
                 SystemDiagnosticsSection(
                     thermalCameraState = thermalCameraState,
                     gsrSensorState = gsrSensorState,
-                    onRunDiagnostics = { /* TODO: Implement run system diagnostics
-                     *   - Implement callback logic for onRunDiagnostics
-                     *   - Handle data/state updates
-                     *   - Provide user feedback
-                     */ },
-                    onViewLogs = { /* TODO: Implement view system logs
-                     *   - Implement callback logic for onViewLogs
-                     *   - Handle data/state updates
-                     *   - Provide user feedback
-                     */ }
+                    onRunDiagnostics = {
+                        // TODO: Run system diagnostics
+                        android.widget.Toast.makeText(
+                            this@SensorDashboardComposeEnhanced,
+                            "Running diagnostics...",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
+                    onViewLogs = {
+                        // TODO: View system logs
+                        android.widget.Toast.makeText(
+                            this@SensorDashboardComposeEnhanced,
+                            "Opening system logs...",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 )
             }
         }

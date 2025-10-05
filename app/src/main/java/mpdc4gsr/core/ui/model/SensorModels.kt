@@ -48,6 +48,7 @@ sealed class ThermalAction {
     object StartPreview : ThermalAction()
     object StopPreview : ThermalAction()
     object Calibrate : ThermalAction()
+    object OpenSettings : ThermalAction()
 }
 
 sealed class CameraAction {

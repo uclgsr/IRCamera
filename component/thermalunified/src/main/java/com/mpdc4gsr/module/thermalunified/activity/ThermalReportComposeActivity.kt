@@ -79,11 +79,14 @@ private fun ThermalReportScreen(
                 }
             },
             actions = {
-                IconButton(onClick = { /* TODO: Implement preview
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                IconButton(onClick = {
+                    // TODO: Preview report before generation
+                    android.widget.Toast.makeText(
+                        onBackClick?.let { this } ?: return@IconButton,
+                        "Opening report preview...",
+                        android.widget.Toast.LENGTH_SHORT
+                    ).show()
+                }) {
                     Icon(
                         Icons.Default.Preview,
                         contentDescription = "Preview",
@@ -262,11 +265,7 @@ private fun DataSelectionItem(title: String, selected: Boolean) {
     ) {
         Checkbox(
             checked = selected,
-            onCheckedChange = { /* TODO: Implement handle selection
-                     *   - Implement callback logic for onCheckedChange
-                     *   - Handle data/state updates
-                     *   - Provide user feedback
-                     */ },
+            onCheckedChange = { /* Handle selection */ },
             colors = CheckboxDefaults.colors(
                 checkedColor = Color(0xFFFF6B35),
                 uncheckedColor = Color(0xFF7D8590)
@@ -354,11 +353,7 @@ private fun ExportSettingsSection() {
             ) {
                 ExportFormat.values().forEach { format ->
                     FilterChip(
-                        onClick = { /* TODO: Implement handle format selection
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+                        onClick = { /* Handle format selection */ },
                         label = {
                             Text(
                                 format.displayName,

@@ -98,25 +98,34 @@ fun ThermalNavigationDrawer(
                     .padding(16.dp),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                IconButton(onClick = { /* TODO: Implement settings
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                IconButton(onClick = {
+                    // TODO: Implement navigation drawer settings
+                    android.widget.Toast.makeText(
+                        androidx.compose.ui.platform.LocalContext.current,
+                        "Opening settings...",
+                        android.widget.Toast.LENGTH_SHORT
+                    ).show()
+                }) {
                     Icon(Icons.Default.Settings, contentDescription = "Settings")
                 }
-                IconButton(onClick = { /* TODO: Implement help
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                IconButton(onClick = {
+                    // TODO: Implement help screen or documentation
+                    android.widget.Toast.makeText(
+                        androidx.compose.ui.platform.LocalContext.current,
+                        "Opening help...",
+                        android.widget.Toast.LENGTH_SHORT
+                    ).show()
+                }) {
                     Icon(Icons.AutoMirrored.Filled.Help, contentDescription = "Help")
                 }
-                IconButton(onClick = { /* TODO: Implement info
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                IconButton(onClick = {
+                    // TODO: Implement about/info dialog
+                    android.widget.Toast.makeText(
+                        androidx.compose.ui.platform.LocalContext.current,
+                        "Showing app info...",
+                        android.widget.Toast.LENGTH_SHORT
+                    ).show()
+                }) {
                     Icon(Icons.Default.Info, contentDescription = "About")
                 }
             }

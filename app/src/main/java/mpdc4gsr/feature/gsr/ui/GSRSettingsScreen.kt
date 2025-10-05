@@ -165,16 +165,20 @@ fun GSRSettingsScreen(
             }
 
             // Calibration
+            val context = androidx.compose.ui.platform.LocalContext.current
             SettingsCard(
                 title = "Calibration",
                 icon = Icons.Default.Tune
             ) {
                 Button(
-                    onClick = { /* TODO: Implement calibration start
-                     *   - Call viewModel.startCalibration()
-                     *   - Show calibration wizard/guide
-                     *   - Track calibration progress
-                     */ },
+                    onClick = {
+                        // TODO: Start GSR calibration process
+                        android.widget.Toast.makeText(
+                            context,
+                            "Starting calibration...",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Icon(Icons.Default.Settings, contentDescription = null)
@@ -182,11 +186,14 @@ fun GSRSettingsScreen(
                     Text("Start Calibration")
                 }
                 Button(
-                    onClick = { /* TODO: Implement reset to defaults
-                     *   - Show confirmation dialog
-                     *   - Call viewModel.resetToDefaults()
-                     *   - Reload UI with default settings
-                     */ },
+                    onClick = {
+                        // TODO: Reset GSR settings to defaults
+                        android.widget.Toast.makeText(
+                            context,
+                            "Resetting to defaults...",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
                 ) {

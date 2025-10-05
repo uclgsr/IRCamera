@@ -45,11 +45,14 @@ class IRLogMPChartComposeActivity : BaseComposeActivity<IRLogMPChartViewModel>()
                             }
                         },
                         actions = {
-                            IconButton(onClick = { /* TODO: Implement export
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                            IconButton(onClick = {
+                                // TODO: Implement export functionality
+                                android.widget.Toast.makeText(
+                                    this@IRLogMPChartComposeActivity,
+                                    "Export data feature coming soon",
+                                    android.widget.Toast.LENGTH_SHORT
+                                ).show()
+                            }) {
                                 Icon(Icons.Default.FileDownload, contentDescription = "Export", tint = Color.White)
                             }
                         },
@@ -250,11 +253,14 @@ class IRLogMPChartComposeActivity : BaseComposeActivity<IRLogMPChartViewModel>()
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 OutlinedButton(
-                    onClick = { /* TODO: Implement clear data
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+                    onClick = {
+                        // TODO: Implement clear data functionality
+                        android.widget.Toast.makeText(
+                            this@IRLogMPChartComposeActivity,
+                            "Clear data feature coming soon",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.outlinedButtonColors(
                         contentColor = Color(0xFF666666)
@@ -266,11 +272,14 @@ class IRLogMPChartComposeActivity : BaseComposeActivity<IRLogMPChartViewModel>()
                 }
 
                 Button(
-                    onClick = { /* TODO: Implement CSV export
-                     *   - Format data as CSV
-                     *   - Show file picker for save location
-                     *   - Display success message
-                     */ },
+                    onClick = {
+                        // TODO: Implement CSV export
+                        android.widget.Toast.makeText(
+                            this@IRLogMPChartComposeActivity,
+                            "Export CSV feature coming soon",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color(0xFF4CAF50)
@@ -282,11 +291,14 @@ class IRLogMPChartComposeActivity : BaseComposeActivity<IRLogMPChartViewModel>()
                 }
 
                 Button(
-                    onClick = { /* TODO: Implement export pdf
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+                    onClick = {
+                        // TODO: Implement PDF export
+                        android.widget.Toast.makeText(
+                            this@IRLogMPChartComposeActivity,
+                            "Export PDF feature coming soon",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color(0xFFFF6B35)

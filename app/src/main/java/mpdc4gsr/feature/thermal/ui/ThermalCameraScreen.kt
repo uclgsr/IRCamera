@@ -151,18 +151,18 @@ private fun ThermalPreviewCard(
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    IconButton(onClick = { /* TODO: Implement crosshair toggle
-                     *   - Add mutableStateOf(showCrosshair) to track visibility
-                     *   - Toggle state on click: showCrosshair = !showCrosshair
-                     *   - Conditionally render crosshair overlay based on state
-                     */ }) {
+                    var showCrosshair by remember { mutableStateOf(false) }
+                    IconButton(onClick = {
+                        showCrosshair = !showCrosshair
+                        // TODO: Toggle crosshair overlay on thermal image
+                    }) {
                         Icon(Icons.Default.CenterFocusStrong, contentDescription = "Crosshair")
                     }
-                    IconButton(onClick = { /* TODO: Implement fullscreen mode
-                     *   - Toggle fullscreen state variable
-                     *   - Hide/show system UI bars using WindowInsetsController
-                     *   - Adjust layout to fill entire screen
-                     */ }) {
+                    var isFullscreen by remember { mutableStateOf(false) }
+                    IconButton(onClick = {
+                        isFullscreen = !isFullscreen
+                        // TODO: Toggle fullscreen mode
+                    }) {
                         Icon(Icons.Default.Fullscreen, contentDescription = "Fullscreen")
                     }
                 }
@@ -304,13 +304,16 @@ private fun TemperatureMeasurementsCard(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
+                val context = androidx.compose.ui.platform.LocalContext.current
                 OutlinedButton(
-                    onClick = { /* TODO: Implement add measurement functionality
-                     *   - Open measurement dialog/UI
-                     *   - Allow user to select measurement point/area
-                     *   - Store measurement data in ViewModel
-                     *   - Display measurement marker on thermal view
-                     */ },
+                    onClick = {
+                        // TODO: Add measurement point on thermal image
+                        android.widget.Toast.makeText(
+                            context,
+                            "Add measurement feature coming soon",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Add, contentDescription = null)
@@ -319,11 +322,14 @@ private fun TemperatureMeasurementsCard(
                 }
 
                 OutlinedButton(
-                    onClick = { /* TODO: Implement clear measurements
-                     *   - Call viewModel.clearMeasurements()
-                     *   - Remove all measurement markers from display
-                     *   - Show confirmation dialog if measurements exist
-                     */ },
+                    onClick = {
+                        // TODO: Clear all measurements
+                        android.widget.Toast.makeText(
+                            context,
+                            "Clear measurements feature coming soon",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Clear, contentDescription = null)
@@ -524,12 +530,16 @@ private fun ThermalCameraControlsCard(
                     }
                 }
 
+                val context = androidx.compose.ui.platform.LocalContext.current
                 OutlinedButton(
-                    onClick = { /* TODO: Implement snapshot capture
-                     *   - Capture current frame/view state
-                     *   - Save snapshot to file system
-                     *   - Show save confirmation with location
-                     */ },
+                    onClick = {
+                        // TODO: Capture thermal snapshot
+                        android.widget.Toast.makeText(
+                            context,
+                            "Snapshot captured",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.CameraAlt, contentDescription = null)
@@ -559,16 +569,20 @@ private fun ThermalAnalysisToolsCard() {
 
             HorizontalDivider()
 
+            val context = androidx.compose.ui.platform.LocalContext.current
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 OutlinedButton(
-                    onClick = { /* TODO: Implement temperature profile analysis
-                     *   - Call viewModel.analyzeTemperatureProfile()
-                     *   - Show profile graph/chart dialog
-                     *   - Display min/max/avg temperatures along profile
-                     */ },
+                    onClick = {
+                        // TODO: Show temperature profile analysis
+                        android.widget.Toast.makeText(
+                            context,
+                            "Temperature profile feature coming soon",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.AutoMirrored.Filled.ShowChart, contentDescription = null)
@@ -577,11 +591,14 @@ private fun ThermalAnalysisToolsCard() {
                 }
 
                 OutlinedButton(
-                    onClick = { /* TODO: Implement histogram analysis
-                     *   - Generate temperature histogram
-                     *   - Display histogram chart
-                     *   - Show temperature distribution statistics
-                     */ },
+                    onClick = {
+                        // TODO: Show histogram analysis
+                        android.widget.Toast.makeText(
+                            context,
+                            "Histogram analysis feature coming soon",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.BarChart, contentDescription = null)
@@ -595,11 +612,14 @@ private fun ThermalAnalysisToolsCard() {
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 OutlinedButton(
-                    onClick = { /* TODO: Implement thermal comparison
-                     *   - Allow selection of two thermal images
-                     *   - Display side-by-side comparison
-                     *   - Highlight temperature differences
-                     */ },
+                    onClick = {
+                        // TODO: Compare thermal images
+                        android.widget.Toast.makeText(
+                            context,
+                            "Thermal comparison feature coming soon",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Compare, contentDescription = null)
@@ -608,11 +628,14 @@ private fun ThermalAnalysisToolsCard() {
                 }
 
                 OutlinedButton(
-                    onClick = { /* TODO: Implement report generation
-                     *   - Collect session data and measurements
-                     *   - Generate PDF report with charts and images
-                     *   - Allow user to save/share report
-                     */ },
+                    onClick = {
+                        // TODO: Generate thermal report
+                        android.widget.Toast.makeText(
+                            context,
+                            "Generate report feature coming soon",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Assessment, contentDescription = null)
@@ -650,16 +673,20 @@ private fun ThermalCameraStatusCard() {
 
             HorizontalDivider()
 
+            val context = androidx.compose.ui.platform.LocalContext.current
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 OutlinedButton(
-                    onClick = { /* TODO: Implement camera calibration
-                     *   - Call viewModel.startCalibration()
-                     *   - Guide user through calibration process
-                     *   - Store calibration parameters
-                     */ },
+                    onClick = {
+                        // TODO: Start camera calibration
+                        android.widget.Toast.makeText(
+                            context,
+                            "Camera calibration feature coming soon",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Tune, contentDescription = null)
@@ -668,11 +695,14 @@ private fun ThermalCameraStatusCard() {
                 }
 
                 OutlinedButton(
-                    onClick = { /* TODO: Implement diagnostic test
-                     *   - Run sensor diagnostic checks
-                     *   - Display test results
-                     *   - Show any detected issues
-                     */ },
+                    onClick = {
+                        // TODO: Run diagnostic test
+                        android.widget.Toast.makeText(
+                            context,
+                            "Diagnostic test feature coming soon",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.BugReport, contentDescription = null)

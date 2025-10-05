@@ -57,14 +57,18 @@ fun ThermalGalleryScreen(
                     viewMode = if (viewMode == ViewMode.GRID) ViewMode.LIST else ViewMode.GRID
                 }
             )
+            val context = androidx.compose.ui.platform.LocalContext.current
             TitleBarAction(
                 icon = Icons.Default.Search,
                 contentDescription = "Search",
-                onClick = { /* TODO: Implement search
-                     *   - Show search input dialog
-                     *   - Filter displayed items based on query
-                     *   - Update UI with filtered results
-                     */ }
+                onClick = {
+                    // TODO: Implement search functionality
+                    android.widget.Toast.makeText(
+                        context,
+                        "Search feature coming soon",
+                        android.widget.Toast.LENGTH_SHORT
+                    ).show()
+                }
             )
         }
 
@@ -297,11 +301,15 @@ private fun ThermalImageListItem(item: ThermalMediaItem) {
             }
 
             // Actions
-            IconButton(onClick = { /* TODO: Implement share functionality
-                     *   - Create share intent with data
-                     *   - Show system share sheet
-                     *   - Handle share completion
-                     */ }) {
+            val context = androidx.compose.ui.platform.LocalContext.current
+            IconButton(onClick = {
+                // TODO: Share thermal image
+                android.widget.Toast.makeText(
+                    context,
+                    "Share image feature coming soon",
+                    android.widget.Toast.LENGTH_SHORT
+                ).show()
+            }) {
                 Icon(Icons.Default.Share, contentDescription = "Share", tint = Color.Gray)
             }
         }
@@ -437,11 +445,15 @@ private fun ThermalVideoListItem(item: ThermalMediaItem) {
             }
 
             // Actions
-            IconButton(onClick = { /* TODO: Implement play
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+            val context = androidx.compose.ui.platform.LocalContext.current
+            IconButton(onClick = {
+                // TODO: Play thermal video
+                android.widget.Toast.makeText(
+                    context,
+                    "Play video feature coming soon",
+                    android.widget.Toast.LENGTH_SHORT
+                ).show()
+            }) {
                 Icon(Icons.Default.PlayArrow, contentDescription = "Play", tint = MaterialTheme.colorScheme.primary)
             }
         }
@@ -488,23 +500,30 @@ private fun ThermalReportItem(item: ThermalMediaItem) {
                 )
             }
 
+            val context = androidx.compose.ui.platform.LocalContext.current
             Row {
-                IconButton(onClick = { /* TODO: Implement view
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                IconButton(onClick = {
+                    // TODO: View report details
+                    android.widget.Toast.makeText(
+                        context,
+                        "View report feature coming soon",
+                        android.widget.Toast.LENGTH_SHORT
+                    ).show()
+                }) {
                     Icon(
                         Icons.Default.Visibility,
                         contentDescription = "View",
                         tint = MaterialTheme.colorScheme.primary
                     )
                 }
-                IconButton(onClick = { /* TODO: Implement share functionality
-                     *   - Create share intent with data
-                     *   - Show system share sheet
-                     *   - Handle share completion
-                     */ }) {
+                IconButton(onClick = {
+                    // TODO: Share report
+                    android.widget.Toast.makeText(
+                        context,
+                        "Share report feature coming soon",
+                        android.widget.Toast.LENGTH_SHORT
+                    ).show()
+                }) {
                     Icon(Icons.Default.Share, contentDescription = "Share", tint = Color.Gray)
                 }
             }

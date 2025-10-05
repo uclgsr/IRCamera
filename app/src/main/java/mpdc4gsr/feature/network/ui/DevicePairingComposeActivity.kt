@@ -79,10 +79,14 @@ class DevicePairingComposeActivity : BaseComposeActivity<DevicePairingViewModel>
                                     contentDescription = if (isScanning) "Stop Scan" else "Start Scan"
                                 )
                             }
-                            IconButton(onClick = { /* TODO: Implement settings navigation
-                     *   - Navigate to settings screen
-                     *   - Pass current configuration
-                     */ }) {
+                            IconButton(onClick = {
+                                // TODO: Open pairing settings
+                                android.widget.Toast.makeText(
+                                    this@DevicePairingComposeActivity,
+                                    "Pairing settings coming soon",
+                                    android.widget.Toast.LENGTH_SHORT
+                                ).show()
+                            }) {
                                 Icon(Icons.Default.Settings, contentDescription = "Settings")
                             }
                         }
@@ -359,12 +363,16 @@ private fun DeviceCard(
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
+                    val context = androidx.compose.ui.platform.LocalContext.current
                     OutlinedButton(
-                        onClick = { /* TODO: Implement device connection
-                     *   - Call viewModel.connectDevice()
-                     *   - Show connection progress
-                     *   - Handle connection errors
-                     */ },
+                        onClick = {
+                            // TODO: Connect to selected device
+                            android.widget.Toast.makeText(
+                                context,
+                                "Connecting to device...",
+                                android.widget.Toast.LENGTH_SHORT
+                            ).show()
+                        },
                         modifier = Modifier.weight(1f)
                     ) {
                         Icon(

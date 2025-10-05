@@ -121,25 +121,34 @@ private fun GSRSettingsContent(
         // Recording Settings Card
         RecordingSettingsCard(
             onSampleRateChange = { viewModel.updateSamplingRate(it) },
-            onSessionTimeoutChange = { /* TODO: Implement can be added to viewmodel if needed
-                     *   - Implement callback logic for onSessionTimeoutChange
-                     *   - Handle data/state updates
-                     *   - Provide user feedback
-                     */ }
+            onSessionTimeoutChange = {
+                // TODO: Add session timeout to ViewModel if needed
+                android.widget.Toast.makeText(
+                    this@GSRSettingsComposeActivity,
+                    "Session timeout: $it minutes",
+                    android.widget.Toast.LENGTH_SHORT
+                ).show()
+            }
         )
 
         // Export Settings Card
         ExportSettingsCard(
-            onExportFormatChange = { /* TODO: Implement can be added to viewmodel if needed
-                     *   - Implement callback logic for onExportFormatChange
-                     *   - Handle data/state updates
-                     *   - Provide user feedback
-                     */ },
-            onExportLocationChange = { /* TODO: Implement can be added to viewmodel if needed
-                     *   - Implement callback logic for onExportLocationChange
-                     *   - Handle data/state updates
-                     *   - Provide user feedback
-                     */ }
+            onExportFormatChange = {
+                // TODO: Add export format to ViewModel if needed
+                android.widget.Toast.makeText(
+                    this@GSRSettingsComposeActivity,
+                    "Export format: $it",
+                    android.widget.Toast.LENGTH_SHORT
+                ).show()
+            },
+            onExportLocationChange = {
+                // TODO: Add export location to ViewModel if needed
+                android.widget.Toast.makeText(
+                    this@GSRSettingsComposeActivity,
+                    "Export location: $it",
+                    android.widget.Toast.LENGTH_SHORT
+                ).show()
+            }
         )
     }
 }

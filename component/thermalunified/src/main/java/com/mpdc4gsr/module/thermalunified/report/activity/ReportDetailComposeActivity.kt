@@ -58,11 +58,14 @@ class ReportDetailComposeActivity : BaseComposeActivity<ReportDetailViewModel>()
                             IconButton(onClick = { showShareDialog = true }) {
                                 Icon(Icons.Default.Share, contentDescription = "Share", tint = Color.White)
                             }
-                            IconButton(onClick = { /* TODO: Implement edit
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                            IconButton(onClick = {
+                                // TODO: Edit report details
+                                android.widget.Toast.makeText(
+                                    this@ReportDetailComposeActivity,
+                                    "Opening report editor...",
+                                    android.widget.Toast.LENGTH_SHORT
+                                ).show()
+                            }) {
                                 Icon(Icons.Default.Edit, contentDescription = "Edit", tint = Color.White)
                             }
                         },

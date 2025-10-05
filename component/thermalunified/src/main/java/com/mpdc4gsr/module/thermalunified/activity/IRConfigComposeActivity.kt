@@ -97,11 +97,14 @@ class IRConfigComposeActivity : BaseComposeActivity<IRConfigViewModel>() {
                             subtitle = "${UnitTools.showConfigC(-10, if (isTC007) 50 else 55)}",
                             value = "${environmentTemp.toInt()}°${UnitTools.showUnit()}",
                             icon = Icons.Default.Thermostat,
-                            onClick = { /* TODO: Implement show temperature dialog
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }
+                            onClick = {
+                                // TODO: Show temperature input dialog
+                                android.widget.Toast.makeText(
+                                    this@IRConfigComposeActivity,
+                                    "Opening temperature dialog...",
+                                    android.widget.Toast.LENGTH_SHORT
+                                ).show()
+                            }
                         )
                     }
 
@@ -112,11 +115,14 @@ class IRConfigComposeActivity : BaseComposeActivity<IRConfigViewModel>() {
                             subtitle = "(0.2~${if (isTC007) 4 else 5}m)",
                             value = "${distance}m",
                             icon = Icons.Default.Straighten,
-                            onClick = { /* TODO: Implement show distance dialog
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }
+                            onClick = {
+                                // TODO: Show distance input dialog
+                                android.widget.Toast.makeText(
+                                    this@IRConfigComposeActivity,
+                                    "Opening distance dialog...",
+                                    android.widget.Toast.LENGTH_SHORT
+                                ).show()
+                            }
                         )
                     }
 
@@ -127,11 +133,14 @@ class IRConfigComposeActivity : BaseComposeActivity<IRConfigViewModel>() {
                             subtitle = "(${if (isTC007) "0.1" else "0.01"}~1.00)",
                             value = String.format("%.2f", emissivity),
                             icon = Icons.Default.Tune,
-                            onClick = { /* TODO: Implement show emissivity dialog
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }
+                            onClick = {
+                                // TODO: Show emissivity input dialog
+                                android.widget.Toast.makeText(
+                                    this@IRConfigComposeActivity,
+                                    "Opening emissivity dialog...",
+                                    android.widget.Toast.LENGTH_SHORT
+                                ).show()
+                            }
                         )
                     }
 

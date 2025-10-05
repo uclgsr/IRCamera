@@ -144,11 +144,14 @@ fun ThermalSettingsScreen(
                 icon = Icons.Default.Tune
             ) {
                 Button(
-                    onClick = { /* TODO: Implement start flat field calibration
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+                    onClick = {
+                        // TODO: Start flat field calibration process
+                        android.widget.Toast.makeText(
+                            context,
+                            "Starting flat field calibration...",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Icon(Icons.Default.Adjust, contentDescription = null)
@@ -156,11 +159,14 @@ fun ThermalSettingsScreen(
                     Text("Flat Field Calibration")
                 }
                 Button(
-                    onClick = { /* TODO: Implement start temperature calibration
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+                    onClick = {
+                        // TODO: Start temperature calibration process
+                        android.widget.Toast.makeText(
+                            context,
+                            "Starting temperature calibration...",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Icon(Icons.Default.Thermostat, contentDescription = null)

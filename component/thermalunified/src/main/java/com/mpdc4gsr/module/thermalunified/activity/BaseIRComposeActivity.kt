@@ -53,11 +53,14 @@ class BaseIRComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             }
                         },
                         actions = {
-                            IconButton(onClick = { /* TODO: Implement settings
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                            IconButton(onClick = {
+                                // TODO: Open thermal camera settings
+                                android.widget.Toast.makeText(
+                                    this@BaseIRComposeActivity,
+                                    "Opening settings...",
+                                    android.widget.Toast.LENGTH_SHORT
+                                ).show()
+                            }) {
                                 Icon(
                                     Icons.Default.Settings,
                                     contentDescription = "Settings",
@@ -311,44 +314,56 @@ private fun QuickActionButtons() {
         QuickActionButton(
             icon = Icons.Default.CameraAlt,
             text = "Capture",
-            onClick = { /* TODO: Implement capture
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+            onClick = {
+                // TODO: Capture thermal image
+                android.widget.Toast.makeText(
+                    this@BaseIRComposeActivity,
+                    "Capturing thermal image...",
+                    android.widget.Toast.LENGTH_SHORT
+                ).show()
+            },
             modifier = Modifier.weight(1f)
         )
 
         QuickActionButton(
             icon = Icons.Default.Videocam,
             text = "Record",
-            onClick = { /* TODO: Implement record
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+            onClick = {
+                // TODO: Start/stop thermal video recording
+                android.widget.Toast.makeText(
+                    this@BaseIRComposeActivity,
+                    "Recording...",
+                    android.widget.Toast.LENGTH_SHORT
+                ).show()
+            },
             modifier = Modifier.weight(1f)
         )
 
         QuickActionButton(
             icon = Icons.Default.Palette,
             text = "Palette",
-            onClick = { /* TODO: Implement change palette
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+            onClick = {
+                // TODO: Change color palette
+                android.widget.Toast.makeText(
+                    this@BaseIRComposeActivity,
+                    "Changing palette...",
+                    android.widget.Toast.LENGTH_SHORT
+                ).show()
+            },
             modifier = Modifier.weight(1f)
         )
 
         QuickActionButton(
             icon = Icons.Default.Tune,
             text = "Adjust",
-            onClick = { /* TODO: Implement adjustments
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+            onClick = {
+                // TODO: Open thermal adjustments
+                android.widget.Toast.makeText(
+                    this@BaseIRComposeActivity,
+                    "Opening adjustments...",
+                    android.widget.Toast.LENGTH_SHORT
+                ).show()
+            },
             modifier = Modifier.weight(1f)
         )
     }

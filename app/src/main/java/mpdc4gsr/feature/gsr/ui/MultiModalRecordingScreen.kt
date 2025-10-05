@@ -63,10 +63,10 @@ fun MultiModalRecordingScreen(
             TitleBarAction(
                 icon = Icons.Default.Settings,
                 contentDescription = "Recording Settings",
-                onClick = { /* TODO: Implement settings navigation
-                     *   - Navigate to settings screen
-                     *   - Pass current configuration
-                     */ }
+                onClick = {
+                    // TODO: Implement recording settings screen
+                    // Open settings for multi-modal recording configuration
+                }
             )
         }
 
@@ -469,11 +469,10 @@ private fun RecordingControlsSection(
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 OutlinedButton(
-                    onClick = { /* TODO: Implement pause
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+                    onClick = {
+                        // TODO: Implement pause recording functionality
+                        // Pause the multi-modal recording
+                    },
                     enabled = isRecording
                 ) {
                     Icon(Icons.Default.Pause, contentDescription = null)
@@ -482,11 +481,10 @@ private fun RecordingControlsSection(
                 }
 
                 OutlinedButton(
-                    onClick = { /* TODO: Implement add marker
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+                    onClick = {
+                        // TODO: Implement add marker functionality
+                        // Add timestamp marker to recording
+                    },
                     enabled = isRecording
                 ) {
                     Icon(Icons.Default.Flag, contentDescription = null)

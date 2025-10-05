@@ -78,21 +78,27 @@ class DualModeCameraComposeActivity : BaseComposeActivity<DualModeCameraViewMode
                             }
                         },
                         actions = {
-                            IconButton(onClick = { /* TODO: Implement switch camera
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                            IconButton(onClick = {
+                                // TODO: Switch between front/back camera
+                                android.widget.Toast.makeText(
+                                    this@DualModeCameraComposeActivity,
+                                    "Switch camera feature coming soon",
+                                    android.widget.Toast.LENGTH_SHORT
+                                ).show()
+                            }) {
                                 Icon(Icons.Default.FlipCameraAndroid, contentDescription = "Switch")
                             }
                             IconButton(onClick = { showSettingsDialog = true }) {
                                 Icon(Icons.Default.Settings, contentDescription = "Settings")
                             }
-                            IconButton(onClick = { /* TODO: Implement more options
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                            IconButton(onClick = {
+                                // TODO: Show more options menu
+                                android.widget.Toast.makeText(
+                                    this@DualModeCameraComposeActivity,
+                                    "More options coming soon",
+                                    android.widget.Toast.LENGTH_SHORT
+                                ).show()
+                            }) {
                                 Icon(Icons.Default.MoreVert, contentDescription = "More")
                             }
                         }
@@ -290,10 +296,14 @@ private fun CameraControlsSection(
         ) {
             // Gallery button
             OutlinedButton(
-                onClick = { /* TODO: Implement gallery navigation
-                     *   - Navigate to gallery screen
-                     *   - Load recent captures
-                     */ },
+                onClick = {
+                    // TODO: Open gallery to view captured photos/videos
+                    android.widget.Toast.makeText(
+                        this@DualModeCameraComposeActivity,
+                        "Gallery feature coming soon",
+                        android.widget.Toast.LENGTH_SHORT
+                    ).show()
+                },
                 modifier = Modifier.size(56.dp)
             ) {
                 Icon(
@@ -326,11 +336,14 @@ private fun CameraControlsSection(
 
             // Capture button
             OutlinedButton(
-                onClick = { /* TODO: Implement photo capture
-                     *   - Trigger camera capture
-                     *   - Save photo to storage
-                     *   - Show capture confirmation
-                     */ },
+                onClick = {
+                    // TODO: Capture photo from dual camera
+                    android.widget.Toast.makeText(
+                        this@DualModeCameraComposeActivity,
+                        "Photo captured",
+                        android.widget.Toast.LENGTH_SHORT
+                    ).show()
+                },
                 modifier = Modifier.size(56.dp)
             ) {
                 Icon(

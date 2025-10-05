@@ -178,11 +178,15 @@ fun RGBCameraSensorCard(
                             Text("Stop")
                         }
                         IconButton(
-                            onClick = { /* TODO: Implement capture photo
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }
+                            onClick = {
+                                // TODO: Implement photo capture functionality
+                                // Should trigger camera capture and save to gallery
+                                android.widget.Toast.makeText(
+                                    androidx.compose.ui.platform.LocalContext.current,
+                                    "Capturing photo...",
+                                    android.widget.Toast.LENGTH_SHORT
+                                ).show()
+                            }
                         ) {
                             Icon(
                                 Icons.Default.CameraAlt,

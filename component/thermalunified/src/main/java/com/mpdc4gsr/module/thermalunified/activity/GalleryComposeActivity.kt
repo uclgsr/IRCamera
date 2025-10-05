@@ -60,22 +60,28 @@ class GalleryComposeActivity : BaseComposeActivity<GalleryActivityViewModel>() {
                             }
                         },
                         actions = {
-                            IconButton(onClick = { /* TODO: Implement search gallery
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                            IconButton(onClick = {
+                                // TODO: Search gallery
+                                android.widget.Toast.makeText(
+                                    this@GalleryComposeActivity,
+                                    "Searching gallery...",
+                                    android.widget.Toast.LENGTH_SHORT
+                                ).show()
+                            }) {
                                 Icon(
                                     Icons.Default.Search,
                                     contentDescription = "Search",
                                     tint = Color.White
                                 )
                             }
-                            IconButton(onClick = { /* TODO: Implement gallery settings
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                            IconButton(onClick = {
+                                // TODO: Open gallery settings
+                                android.widget.Toast.makeText(
+                                    this@GalleryComposeActivity,
+                                    "Opening gallery settings...",
+                                    android.widget.Toast.LENGTH_SHORT
+                                ).show()
+                            }) {
                                 Icon(
                                     Icons.Default.MoreVert,
                                     contentDescription = "Settings",

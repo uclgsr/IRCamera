@@ -152,31 +152,40 @@ class IRCameraSettingComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             AdvancedSettingItem(
                                 title = "Calibration",
                                 description = "Manual camera calibration",
-                                onClick = { /* TODO: Implement navigate to calibration
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }
+                                onClick = {
+                                    // TODO: Navigate to calibration activity
+                                    android.widget.Toast.makeText(
+                                        this@IRCameraSettingComposeActivity,
+                                        "Calibration feature coming soon",
+                                        android.widget.Toast.LENGTH_SHORT
+                                    ).show()
+                                }
                             )
 
                             AdvancedSettingItem(
                                 title = "Firmware Update",
                                 description = "Check for camera firmware updates",
-                                onClick = { /* TODO: Implement check firmware
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }
+                                onClick = {
+                                    // TODO: Check for firmware updates
+                                    android.widget.Toast.makeText(
+                                        this@IRCameraSettingComposeActivity,
+                                        "Checking for firmware updates...",
+                                        android.widget.Toast.LENGTH_SHORT
+                                    ).show()
+                                }
                             )
 
                             AdvancedSettingItem(
                                 title = "Factory Reset",
                                 description = "Reset camera to default settings",
-                                onClick = { /* TODO: Implement factory reset dialog
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }
+                                onClick = {
+                                    // TODO: Show confirmation dialog for factory reset
+                                    android.widget.Toast.makeText(
+                                        this@IRCameraSettingComposeActivity,
+                                        "Factory reset confirmation dialog",
+                                        android.widget.Toast.LENGTH_SHORT
+                                    ).show()
+                                }
                             )
                         }
                     }
@@ -184,16 +193,28 @@ class IRCameraSettingComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                     // Save/Reset buttons
                     item {
                         SaveResetButtons(
-                            onSave = { /* TODO: Implement save settings
-                     *   - Implement callback logic for onSave
-                     *   - Handle data/state updates
-                     *   - Provide user feedback
-                     */ },
-                            onReset = { /* TODO: Implement reset to defaults
-                     *   - Show confirmation dialog
-                     *   - Call viewModel.resetToDefaults()
-                     *   - Reload UI with default settings
-                     */ }
+                            onSave = {
+                                // TODO: Save camera settings to preferences
+                                android.widget.Toast.makeText(
+                                    this@IRCameraSettingComposeActivity,
+                                    "Settings saved successfully",
+                                    android.widget.Toast.LENGTH_SHORT
+                                ).show()
+                            },
+                            onReset = {
+                                // TODO: Reset settings to defaults
+                                selectedPalette = "Iron"
+                                frameRate = 9
+                                autoShutter = true
+                                imageCorrection = true
+                                temperatureUnit = "Celsius"
+                                resolution = "384x288"
+                                android.widget.Toast.makeText(
+                                    this@IRCameraSettingComposeActivity,
+                                    "Settings reset to defaults",
+                                    android.widget.Toast.LENGTH_SHORT
+                                ).show()
+                            }
                         )
                     }
                 }

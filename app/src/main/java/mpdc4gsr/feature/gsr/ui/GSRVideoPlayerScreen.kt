@@ -221,11 +221,14 @@ private fun VideoControlsCard(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                IconButton(onClick = { /* TODO: Implement previous
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                IconButton(onClick = {
+                    // TODO: Skip to previous video
+                    android.widget.Toast.makeText(
+                        context,
+                        "Previous video",
+                        android.widget.Toast.LENGTH_SHORT
+                    ).show()
+                }) {
                     Icon(
                         Icons.Default.SkipPrevious,
                         contentDescription = "Previous",
@@ -241,19 +244,25 @@ private fun VideoControlsCard(
                     )
                 }
 
-                IconButton(onClick = { /* TODO: Implement next
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                IconButton(onClick = {
+                    // TODO: Skip to next video
+                    android.widget.Toast.makeText(
+                        context,
+                        "Next video",
+                        android.widget.Toast.LENGTH_SHORT
+                    ).show()
+                }) {
                     Icon(Icons.Default.SkipNext, contentDescription = "Next", tint = Color.White)
                 }
 
-                IconButton(onClick = { /* TODO: Implement fullscreen mode
-                     *   - Toggle fullscreen state variable
-                     *   - Hide/show system UI bars
-                     *   - Adjust layout constraints
-                     */ }) {
+                IconButton(onClick = {
+                    // TODO: Toggle fullscreen mode
+                    android.widget.Toast.makeText(
+                        context,
+                        "Fullscreen mode",
+                        android.widget.Toast.LENGTH_SHORT
+                    ).show()
+                }) {
                     Icon(
                         Icons.Default.Fullscreen,
                         contentDescription = "Fullscreen",

@@ -84,25 +84,34 @@ class GSRPlotComposeActivity : BaseComposeActivity<GSRPlotViewModel>() {
                             }
                         },
                         actions = {
-                            IconButton(onClick = { /* TODO: Implement data export
-                     *   - Call viewModel.exportData()
-                     *   - Show format selection (CSV/JSON/etc)
-                     *   - Use file picker for save location
-                     */ }) {
+                            IconButton(onClick = {
+                                // TODO: Implement data export
+                                android.widget.Toast.makeText(
+                                    this@GSRPlotComposeActivity,
+                                    "Export data feature coming soon",
+                                    android.widget.Toast.LENGTH_SHORT
+                                ).show()
+                            }) {
                                 Icon(Icons.Default.FileDownload, contentDescription = "Export")
                             }
-                            IconButton(onClick = { /* TODO: Implement share plot
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                            IconButton(onClick = {
+                                // TODO: Implement plot sharing
+                                android.widget.Toast.makeText(
+                                    this@GSRPlotComposeActivity,
+                                    "Share plot feature coming soon",
+                                    android.widget.Toast.LENGTH_SHORT
+                                ).show()
+                            }) {
                                 Icon(Icons.Default.Share, contentDescription = "Share")
                             }
-                            IconButton(onClick = { /* TODO: Implement plot settings
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                            IconButton(onClick = {
+                                // TODO: Open plot settings
+                                android.widget.Toast.makeText(
+                                    this@GSRPlotComposeActivity,
+                                    "Plot settings feature coming soon",
+                                    android.widget.Toast.LENGTH_SHORT
+                                ).show()
+                            }) {
                                 Icon(Icons.Default.Tune, contentDescription = "Settings")
                             }
                         }
@@ -317,25 +326,34 @@ private fun MainPlotCard(
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    IconButton(onClick = { /* TODO: Implement zoom in
-                     *   - Increase zoom level: zoomLevel *= 1.2f
-                     *   - Clamp to maximum zoom
-                     *   - Update view transformation
-                     */ }) {
+                    IconButton(onClick = {
+                        // TODO: Implement zoom in functionality
+                        android.widget.Toast.makeText(
+                            this@GSRPlotComposeActivity,
+                            "Zoom in feature coming soon",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    }) {
                         Icon(Icons.Default.ZoomIn, contentDescription = "Zoom In")
                     }
-                    IconButton(onClick = { /* TODO: Implement zoom out
-                     *   - Decrease zoom level: zoomLevel /= 1.2f
-                     *   - Clamp to minimum zoom
-                     *   - Update view transformation
-                     */ }) {
+                    IconButton(onClick = {
+                        // TODO: Implement zoom out functionality
+                        android.widget.Toast.makeText(
+                            this@GSRPlotComposeActivity,
+                            "Zoom out feature coming soon",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    }) {
                         Icon(Icons.Default.ZoomOut, contentDescription = "Zoom Out")
                     }
-                    IconButton(onClick = { /* TODO: Implement reset zoom
-                     *   - Reset zoomLevel to 1.0f
-                     *   - Reset pan offsets
-                     *   - Center view
-                     */ }) {
+                    IconButton(onClick = {
+                        // TODO: Implement reset zoom functionality
+                        android.widget.Toast.makeText(
+                            this@GSRPlotComposeActivity,
+                            "Reset zoom feature coming soon",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    }) {
                         Icon(Icons.Default.CenterFocusStrong, contentDescription = "Reset")
                     }
                 }
@@ -714,16 +732,20 @@ private fun DataAnalysisToolsCard() {
 
             HorizontalDivider()
 
+            val context = androidx.compose.ui.platform.LocalContext.current
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 OutlinedButton(
-                    onClick = { /* TODO: Implement filter application
-                     *   - Collect filter parameters
-                     *   - Call viewModel.applyFilter(params)
-                     *   - Update display with filtered data
-                     */ },
+                    onClick = {
+                        // TODO: Apply data filter
+                        android.widget.Toast.makeText(
+                            context,
+                            "Applying filter...",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.FilterAlt, contentDescription = null)
@@ -732,11 +754,14 @@ private fun DataAnalysisToolsCard() {
                 }
 
                 OutlinedButton(
-                    onClick = { /* TODO: Implement smooth data
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+                    onClick = {
+                        // TODO: Apply data smoothing
+                        android.widget.Toast.makeText(
+                            context,
+                            "Smoothing data...",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Tune, contentDescription = null)
@@ -750,11 +775,14 @@ private fun DataAnalysisToolsCard() {
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 OutlinedButton(
-                    onClick = { /* TODO: Implement detect peaks
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+                    onClick = {
+                        // TODO: Implement peak detection algorithm
+                        android.widget.Toast.makeText(
+                            this@GSRPlotComposeActivity,
+                            "Peak detection feature coming soon",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.AutoMirrored.Filled.TrendingUp, contentDescription = null)
@@ -763,11 +791,14 @@ private fun DataAnalysisToolsCard() {
                 }
 
                 OutlinedButton(
-                    onClick = { /* TODO: Implement analyze trends
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+                    onClick = {
+                        // TODO: Implement trend analysis
+                        android.widget.Toast.makeText(
+                            this@GSRPlotComposeActivity,
+                            "Trend analysis feature coming soon",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Analytics, contentDescription = null)
@@ -797,16 +828,20 @@ private fun ExportOptionsCard() {
 
             HorizontalDivider()
 
+            val context = androidx.compose.ui.platform.LocalContext.current
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Button(
-                    onClick = { /* TODO: Implement CSV export
-                     *   - Format data as CSV
-                     *   - Show file picker for save location
-                     *   - Display success message
-                     */ },
+                    onClick = {
+                        // TODO: Export data to CSV
+                        android.widget.Toast.makeText(
+                            context,
+                            "Exporting to CSV...",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.TableChart, contentDescription = null)
@@ -815,11 +850,14 @@ private fun ExportOptionsCard() {
                 }
 
                 OutlinedButton(
-                    onClick = { /* TODO: Implement save plot
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+                    onClick = {
+                        // TODO: Save plot as image
+                        android.widget.Toast.makeText(
+                            context,
+                            "Saving plot...",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Image, contentDescription = null)

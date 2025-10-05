@@ -250,10 +250,46 @@ class PermissionController(private val activity: ComponentActivity) {
     private fun showUsbPermissionRationaleDialog(
         device: UsbDevice,
         callback: (Boolean) -> Unit
-    ) { /* ... implementation ... */
+    ) {
+        currentDialog?.dismiss()
+        currentDialog = AlertDialog.Builder(activity)
+            .setTitle("USB Device Permission Required")
+            .setMessage("The app needs permission to access USB device:\n${device.deviceName}\n\nThis is required for thermal camera communication.")
+            .setPositiveButton("Grant") { dialog, _ ->
+                callback(true)
+                dialog.dismiss()
+            }
+            .setNegativeButton("Deny") { dialog, _ ->
+                callback(false)
+                dialog.dismiss()
+            }
+            .setOnCancelListener {
+                callback(false)
+            }
+            .create()
+        
+        currentDialog?.show()
     }
 
-    private fun showBatteryOptimizationRationaleDialog(callback: (Boolean) -> Unit) { /* ... implementation ... */
+    private fun showBatteryOptimizationRationaleDialog(callback: (Boolean) -> Unit) {
+        currentDialog?.dismiss()
+        currentDialog = AlertDialog.Builder(activity)
+            .setTitle("Battery Optimization")
+            .setMessage("Disabling battery optimization ensures uninterrupted sensor data recording.\n\nThis prevents the system from stopping background sensor operations.")
+            .setPositiveButton("Disable Optimization") { dialog, _ ->
+                callback(true)
+                dialog.dismiss()
+            }
+            .setNegativeButton("Keep Enabled") { dialog, _ ->
+                callback(false)
+                dialog.dismiss()
+            }
+            .setOnCancelListener {
+                callback(false)
+            }
+            .create()
+        
+        currentDialog?.show()
     }
 
     private fun openAppSettings() {

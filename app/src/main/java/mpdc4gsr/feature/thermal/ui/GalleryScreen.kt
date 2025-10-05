@@ -49,14 +49,18 @@ fun GalleryScreen(
             showBackButton = true,
             onBackClick = onBackClick
         ) {
+            val context = androidx.compose.ui.platform.LocalContext.current
             TitleBarAction(
                 icon = Icons.Default.Search,
                 contentDescription = "Search",
-                onClick = { /* TODO: Implement search
-                     *   - Show search input dialog
-                     *   - Filter displayed items based on query
-                     *   - Update UI with filtered results
-                     */ }
+                onClick = {
+                    // TODO: Implement search functionality
+                    android.widget.Toast.makeText(
+                        context,
+                        "Search feature coming soon",
+                        android.widget.Toast.LENGTH_SHORT
+                    ).show()
+                }
             )
         }
 
@@ -200,12 +204,16 @@ private fun ThermalImageCard(
 ) {
     val primaryColor = MaterialTheme.colorScheme.primary
 
+    val context = androidx.compose.ui.platform.LocalContext.current
     Card(
-        onClick = { /* TODO: Implement open image detail
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+        onClick = {
+            // TODO: Open image detail view
+            android.widget.Toast.makeText(
+                context,
+                "Opening image: ${image.name}",
+                android.widget.Toast.LENGTH_SHORT
+            ).show()
+        },
         modifier = modifier.aspectRatio(1f),
         colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
     ) {
@@ -302,12 +310,16 @@ private fun RecordingCard(
     recording: Recording,
     modifier: Modifier = Modifier
 ) {
+    val context = androidx.compose.ui.platform.LocalContext.current
     Card(
-        onClick = { /* TODO: Implement play recording
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+        onClick = {
+            // TODO: Play thermal recording
+            android.widget.Toast.makeText(
+                context,
+                "Playing recording: ${recording.name}",
+                android.widget.Toast.LENGTH_SHORT
+            ).show()
+        },
         modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
     ) {
@@ -359,12 +371,16 @@ private fun DataExportCard(
     export: DataExport,
     modifier: Modifier = Modifier
 ) {
+    val context = androidx.compose.ui.platform.LocalContext.current
     Card(
-        onClick = { /* TODO: Implement open/share export
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+        onClick = {
+            // TODO: Open or share data export
+            android.widget.Toast.makeText(
+                context,
+                "Opening export: ${export.name}",
+                android.widget.Toast.LENGTH_SHORT
+            ).show()
+        },
         modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
     ) {

@@ -320,11 +320,14 @@ private fun RecordingControls(
             }
 
             Button(
-                onClick = { /* TODO: Implement save chart
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+                onClick = {
+                    // TODO: Save chart as image
+                    android.widget.Toast.makeText(
+                        this@IRMonitorChartComposeActivity,
+                        "Saving chart...",
+                        android.widget.Toast.LENGTH_SHORT
+                    ).show()
+                },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color(0xFF6B7280)
                 ),
@@ -430,11 +433,14 @@ private fun ChartControlsCard() {
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 OutlinedButton(
-                    onClick = { /* TODO: Implement data export
-                     *   - Call viewModel.exportData()
-                     *   - Show format selection (CSV/JSON/etc)
-                     *   - Use file picker for save location
-                     */ },
+                    onClick = {
+                        // TODO: Export monitoring data
+                        android.widget.Toast.makeText(
+                            this@IRMonitorChartComposeActivity,
+                            "Exporting data...",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     colors = ButtonDefaults.outlinedButtonColors(
                         contentColor = Color.White
                     ),
@@ -444,11 +450,14 @@ private fun ChartControlsCard() {
                 }
 
                 OutlinedButton(
-                    onClick = { /* TODO: Implement clear data
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+                    onClick = {
+                        // TODO: Clear monitoring data
+                        android.widget.Toast.makeText(
+                            this@IRMonitorChartComposeActivity,
+                            "Clearing data...",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     colors = ButtonDefaults.outlinedButtonColors(
                         contentColor = Color.White
                     ),
@@ -458,11 +467,14 @@ private fun ChartControlsCard() {
                 }
 
                 OutlinedButton(
-                    onClick = { /* TODO: Implement settings
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+                    onClick = {
+                        // TODO: Open monitoring settings
+                        android.widget.Toast.makeText(
+                            this@IRMonitorChartComposeActivity,
+                            "Opening settings...",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     colors = ButtonDefaults.outlinedButtonColors(
                         contentColor = Color.White
                     ),

@@ -87,11 +87,14 @@ class ShimmerConfigComposeActivity : ComponentActivity() {
                                     contentDescription = if (isScanning) "Stop Scan" else "Scan"
                                 )
                             }
-                            IconButton(onClick = { /* TODO: Implement help
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                            IconButton(onClick = {
+                                // TODO: Implement Shimmer configuration help/documentation
+                                android.widget.Toast.makeText(
+                                    this@ShimmerConfigComposeActivity,
+                                    "Opening Shimmer configuration help",
+                                    android.widget.Toast.LENGTH_SHORT
+                                ).show()
+                            }) {
                                 Icon(Icons.AutoMirrored.Filled.Help, contentDescription = "Help")
                             }
                         }
@@ -165,11 +168,14 @@ private fun ShimmerConfigContent(
                     device = device,
                     isSelected = selectedDevice?.address == device.address,
                     onSelect = { onDeviceSelect(device) },
-                    onConnect = { /* TODO: Implement connect to device
-                     *   - Implement callback logic for onConnect
-                     *   - Handle data/state updates
-                     *   - Provide user feedback
-                     */ },
+                    onConnect = {
+                        // TODO: Implement Shimmer device connection
+                        android.widget.Toast.makeText(
+                            androidx.compose.ui.platform.LocalContext.current,
+                            "Connecting to ${device.name}...",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     onConfigure = {
                         onDeviceSelect(device)
                         onConfigureDevice()

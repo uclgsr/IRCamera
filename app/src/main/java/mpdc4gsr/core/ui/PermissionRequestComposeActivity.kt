@@ -72,11 +72,14 @@ class PermissionRequestComposeActivity : BaseComposeActivity<BaseViewModel>() {
                             IconButton(onClick = { showEducationalDialog = true }) {
                                 Icon(Icons.AutoMirrored.Filled.Help, contentDescription = "Help")
                             }
-                            IconButton(onClick = { /* TODO: Implement open system settings
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                            IconButton(onClick = {
+                                // TODO: Open system settings for permissions
+                                android.widget.Toast.makeText(
+                                    this@PermissionRequestComposeActivity,
+                                    "Opening system settings...",
+                                    android.widget.Toast.LENGTH_SHORT
+                                ).show()
+                            }) {
                                 Icon(Icons.Default.Settings, contentDescription = "System Settings")
                             }
                         }
@@ -85,6 +88,14 @@ class PermissionRequestComposeActivity : BaseComposeActivity<BaseViewModel>() {
             ) { paddingValues ->
                 PermissionRequestContent(
                     onPermissionSelect = { selectedPermission = it },
+                    onGrantAll = {
+                        // TODO: Request all required permissions
+                        android.widget.Toast.makeText(
+                            this@PermissionRequestComposeActivity,
+                            "Requesting all permissions...",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.padding(paddingValues)
                 )
             }
@@ -112,6 +123,7 @@ class PermissionRequestComposeActivity : BaseComposeActivity<BaseViewModel>() {
 @Composable
 private fun PermissionRequestContent(
     onPermissionSelect: (PermissionInfo) -> Unit,
+    onGrantAll: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -161,6 +173,7 @@ private fun PermissionRequestContent(
 
         // Grant All Button
         GrantAllPermissionsButton(
+            onClick = onGrantAll,
             modifier = Modifier.padding(top = 24.dp)
         )
     }
@@ -328,14 +341,11 @@ private fun PermissionCard(
 
 @Composable
 private fun GrantAllPermissionsButton(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit = {}
 ) {
     Button(
-        onClick = { /* TODO: Implement grant all permissions
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+        onClick = onClick,
         modifier = modifier.fillMaxWidth()
     ) {
         Icon(

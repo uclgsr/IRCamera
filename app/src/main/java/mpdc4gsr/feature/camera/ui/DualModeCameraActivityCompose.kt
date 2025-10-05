@@ -446,11 +446,10 @@ class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewMode
                 icon = { Icon(Icons.Default.CameraAlt, contentDescription = null) },
                 label = { Text("Camera") },
                 selected = true,
-                onClick = { /* TODO: Implement current page
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }
+                onClick = {
+                    // Current page - already on DualModeCameraActivityCompose
+                    Toast.makeText(context, "Already viewing dual camera", Toast.LENGTH_SHORT).show()
+                }
             )
             NavigationBarItem(
                 icon = { Icon(Icons.Default.Person, contentDescription = null) },

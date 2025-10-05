@@ -84,11 +84,10 @@ class ThermalCameraComposeActivity : BaseComposeActivity<ThermalFragmentViewMode
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Button(
-                    onClick = { /* TODO: Implement handle capture
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+                    onClick = { 
+                        // TODO: Implement thermal image capture
+                        android.widget.Toast.makeText(this@ThermalCameraComposeActivity, "Capturing thermal image", android.widget.Toast.LENGTH_SHORT).show()
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.CameraAlt, contentDescription = "Capture")
@@ -97,11 +96,10 @@ class ThermalCameraComposeActivity : BaseComposeActivity<ThermalFragmentViewMode
                 }
 
                 Button(
-                    onClick = { /* TODO: Implement handle record
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+                    onClick = { 
+                        // TODO: Implement thermal video recording
+                        android.widget.Toast.makeText(this@ThermalCameraComposeActivity, "Start/stop thermal recording", android.widget.Toast.LENGTH_SHORT).show()
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.VideoCall, contentDescription = "Record")

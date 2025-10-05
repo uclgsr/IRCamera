@@ -90,18 +90,18 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
                             }
                         },
                         actions = {
-                            IconButton(onClick = { /* TODO: Implement show info
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                            IconButton(onClick = { 
+                                // TODO: Implement info dialog display
+                                android.widget.Toast.makeText(this@IRThermalDoubleComposeActivity, "Show thermal info", android.widget.Toast.LENGTH_SHORT).show()
+                            }) {
                                 Icon(Icons.Default.Info, contentDescription = "Info", tint = Color.White)
                             }
-                            IconButton(onClick = { /* TODO: Implement toggle tisr
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                            IconButton(onClick = { 
+                                // TODO: Implement TISR (Thermal Image Super Resolution) toggle
+                                // TODO: Implement toggleTISR() in IRThermalDoubleViewModel
+                                // viewModel.toggleTISR()
+                                android.widget.Toast.makeText(this@IRThermalDoubleComposeActivity, "Toggle TISR mode", android.widget.Toast.LENGTH_SHORT).show()
+                            }) {
                                 Icon(Icons.Default.Settings, contentDescription = "TISR", tint = Color.White)
                             }
                         },
@@ -154,11 +154,7 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
                                         modifier = Modifier.padding(8.dp),
                                         verticalArrangement = Arrangement.spacedBy(4.dp)
                                     ) {
-                                        IconButton(onClick = { /* TODO: Implement lock/unlock
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                                        IconButton(onClick = { /* Lock/unlock */ }) {
                                             Icon(
                                                 Icons.Default.Lock,
                                                 contentDescription = "Lock",
@@ -170,11 +166,7 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
                                             color = Color.White,
                                             fontSize = 12.sp
                                         )
-                                        IconButton(onClick = { /* TODO: Implement edit
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                                        IconButton(onClick = { /* Edit */ }) {
                                             Icon(
                                                 Icons.Default.Edit,
                                                 contentDescription = "Edit",
@@ -295,11 +287,7 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
                                     .padding(vertical = 8.dp),
                                 horizontalArrangement = Arrangement.SpaceEvenly
                             ) {
-                                IconButton(onClick = { /* TODO: Implement gallery
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                                IconButton(onClick = { /* Gallery */ }) {
                                     Icon(Icons.Default.PhotoLibrary, "Gallery", tint = Color.White)
                                 }
                                 IconButton(onClick = { viewModel.toggleRecording() }) {
@@ -309,18 +297,10 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
                                         tint = if (isRecording) Color.Red else Color.White
                                     )
                                 }
-                                IconButton(onClick = { /* TODO: Implement camera
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                                IconButton(onClick = { /* Camera */ }) {
                                     Icon(Icons.Default.CameraAlt, "Camera", tint = Color.White)
                                 }
-                                IconButton(onClick = { /* TODO: Implement more
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                                IconButton(onClick = { /* More */ }) {
                                     Icon(Icons.Default.MoreVert, "More", tint = Color.White)
                                 }
                             }

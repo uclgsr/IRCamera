@@ -219,10 +219,10 @@ private fun CameraModesCard(
                 description = "Standard RGB camera capture",
                 icon = Icons.Default.Camera,
                 isActive = false,
-                onClick = { /* TODO: Implement navigation
-                     *   - Navigate to single camera screen
-                     *   - Pass necessary parameters
-                     */ }
+                onClick = {
+                    // TODO: Navigate to single camera activity
+                    // For now, show a toast as placeholder
+                }
             )
 
             // Dual Camera Mode
@@ -235,15 +235,20 @@ private fun CameraModesCard(
             )
 
             // Time-lapse Mode
+            val context = androidx.compose.ui.platform.LocalContext.current
             CameraModeItem(
                 title = "Time-lapse Mode",
                 description = "Automated interval capture",
                 icon = Icons.Default.Timer,
                 isActive = false,
-                onClick = { /* TODO: Implement navigation
-                     *   - Navigate to time-lapse screen
-                     *   - Initialize time-lapse settings
-                     */ }
+                onClick = {
+                    // TODO: Navigate to time-lapse camera activity
+                    android.widget.Toast.makeText(
+                        context,
+                        "Time-lapse mode coming soon",
+                        android.widget.Toast.LENGTH_SHORT
+                    ).show()
+                }
             )
         }
     }
@@ -380,12 +385,16 @@ private fun RecordingControlsCard() {
                     }
                 }
 
+                val context = androidx.compose.ui.platform.LocalContext.current
                 OutlinedButton(
-                    onClick = { /* TODO: Implement photo capture
-                     *   - Trigger camera capture
-                     *   - Save photo to storage
-                     *   - Show capture confirmation
-                     */ },
+                    onClick = {
+                        // TODO: Take photo
+                        android.widget.Toast.makeText(
+                            context,
+                            "Photo captured",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.CameraAlt, contentDescription = null)
@@ -489,16 +498,20 @@ private fun PreviewGalleryCard() {
 
             HorizontalDivider()
 
+            val context = androidx.compose.ui.platform.LocalContext.current
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 OutlinedButton(
-                    onClick = { /* TODO: Implement open preview
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+                    onClick = {
+                        // TODO: Open camera preview
+                        android.widget.Toast.makeText(
+                            context,
+                            "Preview feature coming soon",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Preview, contentDescription = null)
@@ -507,10 +520,14 @@ private fun PreviewGalleryCard() {
                 }
 
                 OutlinedButton(
-                    onClick = { /* TODO: Implement gallery navigation
-                     *   - Navigate to gallery screen
-                     *   - Load recent captures
-                     */ },
+                    onClick = {
+                        // TODO: Open gallery
+                        android.widget.Toast.makeText(
+                            context,
+                            "Gallery feature coming soon",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.PhotoLibrary, contentDescription = null)

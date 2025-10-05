@@ -92,11 +92,14 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "Device Calibration",
                         subtitle = "Calibrate thermal camera and sensors",
-                        onClick = { /* TODO: Implement open calibration screen
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }
+                        onClick = {
+                            // TODO: Open calibration screen
+                            android.widget.Toast.makeText(
+                                this@SettingsComposeActivity,
+                                "Opening calibration screen...",
+                                android.widget.Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     )
                 }
 
@@ -153,11 +156,14 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "Thermal Color Palette",
                         subtitle = "Choose thermal imaging color scheme",
-                        onClick = { /* TODO: Implement open color palette selection
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }
+                        onClick = {
+                            // TODO: Open color palette selection dialog
+                            android.widget.Toast.makeText(
+                                this@SettingsComposeActivity,
+                                "Color palette selection coming soon",
+                                android.widget.Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -165,11 +171,14 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "Temperature Units",
                         subtitle = "Celsius, Fahrenheit, or Kelvin",
-                        onClick = { /* TODO: Implement open temperature unit selection
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }
+                        onClick = {
+                            // TODO: Open temperature unit selection dialog
+                            android.widget.Toast.makeText(
+                                this@SettingsComposeActivity,
+                                "Temperature unit selection coming soon",
+                                android.widget.Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -177,11 +186,14 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "Display Resolution",
                         subtitle = "Adjust thermal image display resolution",
-                        onClick = { /* TODO: Implement open resolution settings
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }
+                        onClick = {
+                            // TODO: Open resolution settings dialog
+                            android.widget.Toast.makeText(
+                                this@SettingsComposeActivity,
+                                "Resolution settings coming soon",
+                                android.widget.Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     )
                 }
 
@@ -199,11 +211,14 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "Export Location",
                         subtitle = "Choose where to save exported data",
-                        onClick = { /* TODO: Implement open export location selection
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }
+                        onClick = {
+                            // TODO: Open export location selection dialog
+                            android.widget.Toast.makeText(
+                                this@SettingsComposeActivity,
+                                "Export location selection coming soon",
+                                android.widget.Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -212,11 +227,14 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                         title = "Export All Data",
                         subtitle = "Export all recorded sensor data",
                         actionText = "Export",
-                        onAction = { /* TODO: Implement export all data
-                     *   - Implement callback logic for onAction
-                     *   - Handle data/state updates
-                     *   - Provide user feedback
-                     */ }
+                        onAction = {
+                            // TODO: Export all sensor data
+                            android.widget.Toast.makeText(
+                                this@SettingsComposeActivity,
+                                "Exporting all data...",
+                                android.widget.Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     )
                 }
 
@@ -225,11 +243,14 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "PC Controller Connection",
                         subtitle = "Configure connection to PC controller",
-                        onClick = { /* TODO: Implement open network configuration
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }
+                        onClick = {
+                            // TODO: Open network configuration screen
+                            android.widget.Toast.makeText(
+                                this@SettingsComposeActivity,
+                                "Opening network configuration...",
+                                android.widget.Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -237,11 +258,14 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "Network Discovery",
                         subtitle = "Enable automatic PC discovery",
-                        onClick = { /* TODO: Implement toggle network discovery
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }
+                        onClick = {
+                            // TODO: Toggle network discovery
+                            android.widget.Toast.makeText(
+                                this@SettingsComposeActivity,
+                                "Network discovery toggle coming soon",
+                                android.widget.Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -250,11 +274,14 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                         title = "Test Connection",
                         subtitle = "Test connection to PC controller",
                         actionText = "Test",
-                        onAction = { /* TODO: Implement test network connection
-                     *   - Implement callback logic for onAction
-                     *   - Handle data/state updates
-                     *   - Provide user feedback
-                     */ }
+                        onAction = {
+                            // TODO: Test network connection
+                            android.widget.Toast.makeText(
+                                this@SettingsComposeActivity,
+                                "Testing connection...",
+                                android.widget.Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     )
                 }
 
@@ -263,11 +290,14 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "Developer Options",
                         subtitle = "Advanced configuration options",
-                        onClick = { /* TODO: Implement open developer options
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }
+                        onClick = {
+                            // TODO: Open developer options screen
+                            android.widget.Toast.makeText(
+                                this@SettingsComposeActivity,
+                                "Opening developer options...",
+                                android.widget.Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -275,11 +305,14 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "Logging Settings",
                         subtitle = "Configure application logging",
-                        onClick = { /* TODO: Implement open logging settings
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }
+                        onClick = {
+                            // TODO: Open logging settings screen
+                            android.widget.Toast.makeText(
+                                this@SettingsComposeActivity,
+                                "Opening logging settings...",
+                                android.widget.Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -288,11 +321,14 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                         title = "Reset All Settings",
                         subtitle = "Reset all settings to default values",
                         actionText = "Reset",
-                        onAction = { /* TODO: Implement reset all settings
-                     *   - Implement callback logic for onAction
-                     *   - Handle data/state updates
-                     *   - Provide user feedback
-                     */ },
+                        onAction = {
+                            // TODO: Show confirmation dialog and reset settings
+                            android.widget.Toast.makeText(
+                                this@SettingsComposeActivity,
+                                "Reset all settings confirmation dialog",
+                                android.widget.Toast.LENGTH_SHORT
+                            ).show()
+                        },
                         isDestructive = true
                     )
 
@@ -302,11 +338,14 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                         title = "Clear All Data",
                         subtitle = "Delete all recorded sensor data",
                         actionText = "Clear",
-                        onAction = { /* TODO: Implement clear all data
-                     *   - Implement callback logic for onAction
-                     *   - Handle data/state updates
-                     *   - Provide user feedback
-                     */ },
+                        onAction = {
+                            // TODO: Show confirmation dialog and clear data
+                            android.widget.Toast.makeText(
+                                this@SettingsComposeActivity,
+                                "Clear all data confirmation dialog",
+                                android.widget.Toast.LENGTH_SHORT
+                            ).show()
+                        },
                         isDestructive = true
                     )
                 }
@@ -316,11 +355,14 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "App Version",
                         subtitle = "IRCamera v1.10.000",
-                        onClick = { /* TODO: Implement show version details
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }
+                        onClick = {
+                            // TODO: Show version details dialog
+                            android.widget.Toast.makeText(
+                                this@SettingsComposeActivity,
+                                "Version details coming soon",
+                                android.widget.Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -328,11 +370,14 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "Privacy Policy",
                         subtitle = "View privacy policy and terms",
-                        onClick = { /* TODO: Implement open privacy policy
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }
+                        onClick = {
+                            // TODO: Open privacy policy screen
+                            android.widget.Toast.makeText(
+                                this@SettingsComposeActivity,
+                                "Opening privacy policy...",
+                                android.widget.Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -340,11 +385,14 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "Help & Support",
                         subtitle = "Get help and contact support",
-                        onClick = { /* TODO: Implement open help screen
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }
+                        onClick = {
+                            // TODO: Open help and support screen
+                            android.widget.Toast.makeText(
+                                this@SettingsComposeActivity,
+                                "Opening help & support...",
+                                android.widget.Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     )
                 }
             }

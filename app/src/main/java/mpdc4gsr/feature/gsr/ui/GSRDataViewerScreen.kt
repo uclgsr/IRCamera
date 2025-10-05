@@ -51,11 +51,14 @@ fun GSRDataViewerScreen(
             TitleBarAction(
                 icon = Icons.Default.Share,
                 contentDescription = "Export Data",
-                onClick = { /* TODO: Implement data export
-                     *   - Call viewModel.exportData()
-                     *   - Show format selection (CSV/JSON/etc)
-                     *   - Use file picker for save location
-                     */ }
+                onClick = {
+                    // TODO: Implement GSR data export functionality
+                    android.widget.Toast.makeText(
+                        androidx.compose.ui.platform.LocalContext.current,
+                        "Exporting GSR data...",
+                        android.widget.Toast.LENGTH_SHORT
+                    ).show()
+                }
             )
         }
 
