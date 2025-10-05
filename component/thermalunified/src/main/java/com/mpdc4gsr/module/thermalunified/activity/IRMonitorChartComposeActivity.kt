@@ -319,11 +319,12 @@ private fun RecordingControls(
                 )
             }
 
+            val context = androidx.compose.ui.platform.LocalContext.current
             Button(
                 onClick = {
                     // TODO: Save chart as image
                     android.widget.Toast.makeText(
-                        this@IRMonitorChartComposeActivity,
+                        context,
                         "Saving chart...",
                         android.widget.Toast.LENGTH_SHORT
                     ).show()
@@ -432,11 +433,12 @@ private fun ChartControlsCard() {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
+                val context = androidx.compose.ui.platform.LocalContext.current
                 OutlinedButton(
                     onClick = {
                         // TODO: Export monitoring data
                         android.widget.Toast.makeText(
-                            this@IRMonitorChartComposeActivity,
+                            context,
                             "Exporting data...",
                             android.widget.Toast.LENGTH_SHORT
                         ).show()
@@ -453,7 +455,7 @@ private fun ChartControlsCard() {
                     onClick = {
                         // TODO: Clear monitoring data
                         android.widget.Toast.makeText(
-                            this@IRMonitorChartComposeActivity,
+                            context,
                             "Clearing data...",
                             android.widget.Toast.LENGTH_SHORT
                         ).show()
@@ -470,7 +472,7 @@ private fun ChartControlsCard() {
                     onClick = {
                         // TODO: Open monitoring settings
                         android.widget.Toast.makeText(
-                            this@IRMonitorChartComposeActivity,
+                            context,
                             "Opening settings...",
                             android.widget.Toast.LENGTH_SHORT
                         ).show()
