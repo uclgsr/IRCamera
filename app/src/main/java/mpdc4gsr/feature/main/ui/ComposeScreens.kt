@@ -298,7 +298,14 @@ fun QuickActionsCard(navController: NavController) {
                 }
 
                 OutlinedButton(
-                    onClick = { /* Start recording */ },
+                    onClick = {
+                        // TODO: Start recording functionality
+                        android.widget.Toast.makeText(
+                            navController.context,
+                            "Start recording",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.PlayArrow, contentDescription = null)
@@ -344,7 +351,14 @@ fun RecentSessionsCard() {
                         text = session,
                         style = MaterialTheme.typography.bodyMedium
                     )
-                    IconButton(onClick = { /* Open session */ }) {
+                    IconButton(onClick = {
+                        // TODO: Open session details
+                        android.widget.Toast.makeText(
+                            androidx.compose.ui.platform.LocalContext.current,
+                            "Open session: $session",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    }) {
                         Icon(
                             Icons.Default.PlayArrow,
                             contentDescription = "Open session"
@@ -425,7 +439,14 @@ fun ThermalControlsPanel() {
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Button(
-                    onClick = { /* Capture */ },
+                    onClick = {
+                        // TODO: Capture thermal image
+                        android.widget.Toast.makeText(
+                            androidx.compose.ui.platform.LocalContext.current,
+                            "Capture thermal image",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.PhotoCamera, contentDescription = null)
@@ -434,7 +455,14 @@ fun ThermalControlsPanel() {
                 }
 
                 Button(
-                    onClick = { /* Record */ },
+                    onClick = {
+                        // TODO: Start thermal recording
+                        android.widget.Toast.makeText(
+                            androidx.compose.ui.platform.LocalContext.current,
+                            "Start thermal recording",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Videocam, contentDescription = null)
@@ -443,7 +471,14 @@ fun ThermalControlsPanel() {
                 }
 
                 OutlinedButton(
-                    onClick = { /* Settings */ },
+                    onClick = {
+                        // TODO: Open thermal settings
+                        android.widget.Toast.makeText(
+                            androidx.compose.ui.platform.LocalContext.current,
+                            "Open thermal settings",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Settings, contentDescription = null)
@@ -569,7 +604,14 @@ fun GSRRecordingControlsCard() {
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Button(
-                    onClick = { /* Start recording */ },
+                    onClick = {
+                        // TODO: Start GSR recording
+                        android.widget.Toast.makeText(
+                            androidx.compose.ui.platform.LocalContext.current,
+                            "Start GSR recording",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.PlayArrow, contentDescription = null)
@@ -578,7 +620,14 @@ fun GSRRecordingControlsCard() {
                 }
 
                 OutlinedButton(
-                    onClick = { /* Stop recording */ },
+                    onClick = {
+                        // TODO: Stop GSR recording
+                        android.widget.Toast.makeText(
+                            androidx.compose.ui.platform.LocalContext.current,
+                            "Stop GSR recording",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Stop, contentDescription = null)
@@ -587,7 +636,14 @@ fun GSRRecordingControlsCard() {
                 }
 
                 OutlinedButton(
-                    onClick = { /* Pause recording */ },
+                    onClick = {
+                        // TODO: Pause GSR recording
+                        android.widget.Toast.makeText(
+                            androidx.compose.ui.platform.LocalContext.current,
+                            "Pause GSR recording",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Pause, contentDescription = null)
@@ -626,7 +682,14 @@ fun GSRCalibrationCard() {
                 )
 
                 Button(
-                    onClick = { /* Start calibration */ }
+                    onClick = {
+                        // TODO: Start GSR calibration
+                        android.widget.Toast.makeText(
+                            androidx.compose.ui.platform.LocalContext.current,
+                            "Start GSR calibration",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 ) {
                     Text("Calibrate")
                 }
