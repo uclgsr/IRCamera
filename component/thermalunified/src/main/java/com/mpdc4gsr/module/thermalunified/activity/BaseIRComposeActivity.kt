@@ -311,13 +311,14 @@ private fun QuickActionButtons() {
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
+        val context = androidx.compose.ui.platform.LocalContext.current
         QuickActionButton(
             icon = Icons.Default.CameraAlt,
             text = "Capture",
             onClick = {
                 // TODO: Capture thermal image
                 android.widget.Toast.makeText(
-                    this@BaseIRComposeActivity,
+                    context,
                     "Capturing thermal image...",
                     android.widget.Toast.LENGTH_SHORT
                 ).show()
@@ -331,7 +332,7 @@ private fun QuickActionButtons() {
             onClick = {
                 // TODO: Start/stop thermal video recording
                 android.widget.Toast.makeText(
-                    this@BaseIRComposeActivity,
+                    context,
                     "Recording...",
                     android.widget.Toast.LENGTH_SHORT
                 ).show()
@@ -345,7 +346,7 @@ private fun QuickActionButtons() {
             onClick = {
                 // TODO: Change color palette
                 android.widget.Toast.makeText(
-                    this@BaseIRComposeActivity,
+                    context,
                     "Changing palette...",
                     android.widget.Toast.LENGTH_SHORT
                 ).show()
@@ -359,7 +360,7 @@ private fun QuickActionButtons() {
             onClick = {
                 // TODO: Open thermal adjustments
                 android.widget.Toast.makeText(
-                    this@BaseIRComposeActivity,
+                    context,
                     "Opening adjustments...",
                     android.widget.Toast.LENGTH_SHORT
                 ).show()

@@ -304,6 +304,7 @@ private fun ThermalVideoControls(
     onPositionChange: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val context = androidx.compose.ui.platform.LocalContext.current
     Card(
         modifier = modifier,
         colors = CardDefaults.cardColors(
@@ -356,7 +357,7 @@ private fun ThermalVideoControls(
                 IconButton(onClick = {
                     // TODO: Go to previous frame
                     android.widget.Toast.makeText(
-                        this@ThermalVideoComposeActivity,
+                        context,
                         "Previous frame",
                         android.widget.Toast.LENGTH_SHORT
                     ).show()
@@ -389,7 +390,7 @@ private fun ThermalVideoControls(
                 IconButton(onClick = {
                     // TODO: Go to next frame
                     android.widget.Toast.makeText(
-                        this@ThermalVideoComposeActivity,
+                        context,
                         "Next frame",
                         android.widget.Toast.LENGTH_SHORT
                     ).show()
@@ -413,7 +414,7 @@ private fun ThermalVideoControls(
                     onClick = {
                         // TODO: Export current frame
                         android.widget.Toast.makeText(
-                            this@ThermalVideoComposeActivity,
+                            context,
                             "Exporting frame...",
                             android.widget.Toast.LENGTH_SHORT
                         ).show()
@@ -435,7 +436,7 @@ private fun ThermalVideoControls(
                     onClick = {
                         // TODO: Analyze thermal video
                         android.widget.Toast.makeText(
-                            this@ThermalVideoComposeActivity,
+                            context,
                             "Analyzing video...",
                             android.widget.Toast.LENGTH_SHORT
                         ).show()
@@ -457,7 +458,7 @@ private fun ThermalVideoControls(
                     onClick = {
                         // TODO: Open video settings
                         android.widget.Toast.makeText(
-                            this@ThermalVideoComposeActivity,
+                            context,
                             "Opening settings...",
                             android.widget.Toast.LENGTH_SHORT
                         ).show()

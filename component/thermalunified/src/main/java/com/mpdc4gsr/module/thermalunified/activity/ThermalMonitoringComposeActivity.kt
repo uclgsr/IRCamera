@@ -60,6 +60,7 @@ class ThermalMonitoringComposeActivity : BaseComposeActivity<BaseViewModel>() {
                             }
                         },
                         actions = {
+                            val context = androidx.compose.ui.platform.LocalContext.current
                             IconButton(onClick = { isMonitoring = !isMonitoring }) {
                                 Icon(
                                     if (isMonitoring) Icons.Default.Stop else Icons.Default.PlayArrow,
@@ -71,7 +72,7 @@ class ThermalMonitoringComposeActivity : BaseComposeActivity<BaseViewModel>() {
                             }
                             IconButton(onClick = { 
                                 // TODO: Implement monitoring options menu
-                                android.widget.Toast.makeText(this@ThermalMonitoringComposeActivity, "More monitoring options", android.widget.Toast.LENGTH_SHORT).show()
+                                android.widget.Toast.makeText(context, "More monitoring options", android.widget.Toast.LENGTH_SHORT).show()
                             }) {
                                 Icon(Icons.Default.MoreVert, contentDescription = "More")
                             }

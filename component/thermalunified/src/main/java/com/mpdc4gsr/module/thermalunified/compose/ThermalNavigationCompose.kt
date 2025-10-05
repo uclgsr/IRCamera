@@ -92,6 +92,7 @@ fun ThermalNavigationDrawer(
 
             // Footer
             HorizontalDivider()
+            val context = androidx.compose.ui.platform.LocalContext.current
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -101,7 +102,7 @@ fun ThermalNavigationDrawer(
                 IconButton(onClick = {
                     // TODO: Implement navigation drawer settings
                     android.widget.Toast.makeText(
-                        androidx.compose.ui.platform.LocalContext.current,
+                        context,
                         "Opening settings...",
                         android.widget.Toast.LENGTH_SHORT
                     ).show()
@@ -111,7 +112,7 @@ fun ThermalNavigationDrawer(
                 IconButton(onClick = {
                     // TODO: Implement help screen or documentation
                     android.widget.Toast.makeText(
-                        androidx.compose.ui.platform.LocalContext.current,
+                        context,
                         "Opening help...",
                         android.widget.Toast.LENGTH_SHORT
                     ).show()
@@ -121,7 +122,7 @@ fun ThermalNavigationDrawer(
                 IconButton(onClick = {
                     // TODO: Implement about/info dialog
                     android.widget.Toast.makeText(
-                        androidx.compose.ui.platform.LocalContext.current,
+                        context,
                         "Showing app info...",
                         android.widget.Toast.LENGTH_SHORT
                     ).show()

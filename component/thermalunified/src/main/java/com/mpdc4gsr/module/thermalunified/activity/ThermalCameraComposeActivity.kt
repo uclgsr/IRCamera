@@ -55,6 +55,7 @@ class ThermalCameraComposeActivity : BaseComposeActivity<ThermalFragmentViewMode
         viewModel: ThermalFragmentViewModel,
         modifier: Modifier = Modifier
     ) {
+        val context = androidx.compose.ui.platform.LocalContext.current
         Column(
             modifier = modifier
                 .fillMaxSize()
@@ -86,7 +87,7 @@ class ThermalCameraComposeActivity : BaseComposeActivity<ThermalFragmentViewMode
                 Button(
                     onClick = { 
                         // TODO: Implement thermal image capture
-                        android.widget.Toast.makeText(this@ThermalCameraComposeActivity, "Capturing thermal image", android.widget.Toast.LENGTH_SHORT).show()
+                        android.widget.Toast.makeText(context, "Capturing thermal image", android.widget.Toast.LENGTH_SHORT).show()
                     },
                     modifier = Modifier.weight(1f)
                 ) {
@@ -98,7 +99,7 @@ class ThermalCameraComposeActivity : BaseComposeActivity<ThermalFragmentViewMode
                 Button(
                     onClick = { 
                         // TODO: Implement thermal video recording
-                        android.widget.Toast.makeText(this@ThermalCameraComposeActivity, "Start/stop thermal recording", android.widget.Toast.LENGTH_SHORT).show()
+                        android.widget.Toast.makeText(context, "Start/stop thermal recording", android.widget.Toast.LENGTH_SHORT).show()
                     },
                     modifier = Modifier.weight(1f)
                 ) {

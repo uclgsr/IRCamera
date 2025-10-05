@@ -91,9 +91,10 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
                             }
                         },
                         actions = {
+                            val context = androidx.compose.ui.platform.LocalContext.current
                             IconButton(onClick = { 
                                 // TODO: Implement info dialog display
-                                android.widget.Toast.makeText(this@IRThermalDoubleComposeActivity, "Show thermal info", android.widget.Toast.LENGTH_SHORT).show()
+                                android.widget.Toast.makeText(context, "Show thermal info", android.widget.Toast.LENGTH_SHORT).show()
                             }) {
                                 Icon(Icons.Default.Info, contentDescription = "Info", tint = Color.White)
                             }
@@ -101,7 +102,7 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
                                 // TODO: Implement TISR (Thermal Image Super Resolution) toggle
                                 // TODO: Implement toggleTISR() in IRThermalDoubleViewModel
                                 // viewModel.toggleTISR()
-                                android.widget.Toast.makeText(this@IRThermalDoubleComposeActivity, "Toggle TISR mode", android.widget.Toast.LENGTH_SHORT).show()
+                                android.widget.Toast.makeText(context, "Toggle TISR mode", android.widget.Toast.LENGTH_SHORT).show()
                             }) {
                                 Icon(Icons.Default.Settings, contentDescription = "TISR", tint = Color.White)
                             }

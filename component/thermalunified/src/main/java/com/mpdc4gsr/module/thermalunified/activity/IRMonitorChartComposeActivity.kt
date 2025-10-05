@@ -72,6 +72,7 @@ class IRMonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                 },
                 containerColor = Color.Black
             ) { paddingValues ->
+                val context = androidx.compose.ui.platform.LocalContext.current
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -127,7 +128,8 @@ class IRMonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 onStartStop = {
                                     isRecording = !isRecording
                                     if (!isRecording) recordingTime = 0L
-                                }
+                                },
+                                context = context
                             )
                         }
 
@@ -142,7 +144,7 @@ class IRMonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
 
                         // Chart controls
                         item {
-                            ChartControlsCard()
+                            ChartControlsCard(context = context)
                         }
                     }
                 }
@@ -285,7 +287,8 @@ private fun RecordingIndicator(
 @Composable
 private fun RecordingControls(
     isRecording: Boolean,
-    onStartStop: () -> Unit
+    onStartStop: () -> Unit,
+    context: android.content.Context
 ) {
     Card(
         colors = CardDefaults.cardColors(
@@ -323,7 +326,7 @@ private fun RecordingControls(
                 onClick = {
                     // TODO: Save chart as image
                     android.widget.Toast.makeText(
-                        this@IRMonitorChartComposeActivity,
+                        context,
                         "Saving chart...",
                         android.widget.Toast.LENGTH_SHORT
                     ).show()
@@ -407,7 +410,7 @@ private fun StatItem(
 }
 
 @Composable
-private fun ChartControlsCard() {
+private fun ChartControlsCard(context: android.content.Context) {
     Card(
         colors = CardDefaults.cardColors(
             containerColor = Color(0xFF21262D)
@@ -436,7 +439,7 @@ private fun ChartControlsCard() {
                     onClick = {
                         // TODO: Export monitoring data
                         android.widget.Toast.makeText(
-                            this@IRMonitorChartComposeActivity,
+                            context,
                             "Exporting data...",
                             android.widget.Toast.LENGTH_SHORT
                         ).show()
@@ -453,7 +456,7 @@ private fun ChartControlsCard() {
                     onClick = {
                         // TODO: Clear monitoring data
                         android.widget.Toast.makeText(
-                            this@IRMonitorChartComposeActivity,
+                            context,
                             "Clearing data...",
                             android.widget.Toast.LENGTH_SHORT
                         ).show()
@@ -470,7 +473,7 @@ private fun ChartControlsCard() {
                     onClick = {
                         // TODO: Open monitoring settings
                         android.widget.Toast.makeText(
-                            this@IRMonitorChartComposeActivity,
+                            context,
                             "Opening settings...",
                             android.widget.Toast.LENGTH_SHORT
                         ).show()
