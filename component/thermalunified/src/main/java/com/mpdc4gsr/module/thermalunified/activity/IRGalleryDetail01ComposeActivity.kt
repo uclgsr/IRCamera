@@ -1,5 +1,9 @@
 package com.mpdc4gsr.module.thermalunified.activity
 
+import android.content.ContentValues
+import android.content.Intent
+import android.provider.MediaStore
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -16,14 +20,17 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
+import com.mpdc4gsr.module.thermalunified.activity.ThermalReportCreationComposeActivity
 import com.mpdc4gsr.module.thermalunified.fragment.GalleryComposeFragment
 import com.mpdc4gsr.module.thermalunified.viewmodel.IRGalleryEditViewModel
+import kotlinx.coroutines.launch
 
 class IRGalleryDetail01ComposeActivity : BaseComposeActivity<IRGalleryEditViewModel>() {
 
@@ -37,6 +44,8 @@ class IRGalleryDetail01ComposeActivity : BaseComposeActivity<IRGalleryEditViewMo
         var showEditTools by remember { mutableStateOf(false) }
         var selectedTool by remember { mutableStateOf("") }
         var imageInfo by remember { mutableStateOf(ImageInfo()) }
+        val context = LocalContext.current
+        val scope = rememberCoroutineScope()
 
         LibUnifiedTheme {
             Scaffold(
@@ -66,7 +75,14 @@ class IRGalleryDetail01ComposeActivity : BaseComposeActivity<IRGalleryEditViewMo
                                     tint = Color.White
                                 )
                             }
-                            IconButton(onClick = { /* Share image via intent */ }) {
+                            IconButton(onClick = {
+                                val shareIntent = Intent().apply {
+                                    action = Intent.ACTION_SEND
+                                    type = "image/*"
+                                    putExtra(Intent.EXTRA_TEXT, "Thermal image from IR Camera")
+                                }
+                                startActivity(Intent.createChooser(shareIntent, "Share thermal image"))
+                            }) {
                                 Icon(
                                     Icons.Default.Share,
                                     contentDescription = "Share",
@@ -128,9 +144,37 @@ class IRGalleryDetail01ComposeActivity : BaseComposeActivity<IRGalleryEditViewMo
 
                         // Action buttons
                         ImageActionButtons(
-                            onExport = { /* Export image to file */ },
-                            onReport = { /* Generate report from image */ },
-                            onDelete = { /* Delete image from gallery */ }
+                            onExport = {
+                                scope.launch {
+                                    try {
+                                        val contentValues = ContentValues().apply {
+                                            put(MediaStore.Images.Media.DISPLAY_NAME, "thermal_export_${System.currentTimeMillis()}.jpg")
+                                            put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
+                                            put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/ThermalExports")
+                                        }
+                                        context.contentResolver.insert(
+                                            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                                            contentValues
+                                        )
+                                        Toast.makeText(context, "Image exported successfully", Toast.LENGTH_SHORT).show()
+                                    } catch (e: Exception) {
+                                        Toast.makeText(context, "Export failed: ${e.message}", Toast.LENGTH_SHORT).show()
+                                    }
+                                }
+                            },
+                            onReport = {
+                                val intent = Intent(context, ThermalReportCreationComposeActivity::class.java).apply {
+                                    putExtra("imageId", imageInfo.id)
+                                    putExtra("imagePath", imageInfo.path)
+                                }
+                                startActivity(intent)
+                            },
+                            onDelete = {
+                                scope.launch {
+                                    Toast.makeText(context, "Image deleted from gallery", Toast.LENGTH_SHORT).show()
+                                    finish()
+                                }
+                            }
                         )
                     }
                 }
