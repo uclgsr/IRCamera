@@ -79,26 +79,6 @@ class SessionManagerComposeActivity : BaseComposeActivity<SessionManagerViewMode
                             IconButton(onClick = { showFilterDialog = true }) {
                                 Icon(Icons.Default.FilterList, contentDescription = "Filter")
                             }
-                            IconButton(onClick = {
-                                // TODO: Export all sessions
-                                android.widget.Toast.makeText(
-                                    this@SessionManagerComposeActivity,
-                                    "Exporting all sessions...",
-                                    android.widget.Toast.LENGTH_SHORT
-                                ).show()
-                            }) {
-                                Icon(Icons.Default.FileDownload, contentDescription = "Export")
-                            }
-                            IconButton(onClick = {
-                                // TODO: Show more options menu
-                                android.widget.Toast.makeText(
-                                    this@SessionManagerComposeActivity,
-                                    "More options coming soon",
-                                    android.widget.Toast.LENGTH_SHORT
-                                ).show()
-                            }) {
-                                Icon(Icons.Default.MoreVert, contentDescription = "More")
-                            }
                         }
                     )
                 },
@@ -361,15 +341,7 @@ private fun SessionCard(
                 }
             }
 
-            val context = androidx.compose.ui.platform.LocalContext.current
-            IconButton(onClick = {
-                // TODO: Show session options menu
-                android.widget.Toast.makeText(
-                    context,
-                    "Session options coming soon",
-                    android.widget.Toast.LENGTH_SHORT
-                ).show()
-            }) {
+            IconButton(onClick = {}, enabled = false) {
                 Icon(Icons.Default.MoreVert, contentDescription = "Session options")
             }
         }

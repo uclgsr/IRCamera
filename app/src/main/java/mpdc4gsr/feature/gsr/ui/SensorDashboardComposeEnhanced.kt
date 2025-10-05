@@ -140,22 +140,8 @@ class SensorDashboardComposeEnhanced : ComponentActivity() {
                         deviceName = "Shimmer3-GSR-Enhanced",
                         connectionStrength = if (gsrConnectionState == MainActivityViewModel.GSRConnectionState.CONNECTED) 90 else 0
                     ),
-                    onExportData = {
-                        // TODO: Implement GSR data export functionality
-                        android.widget.Toast.makeText(
-                            this@SensorDashboardComposeEnhanced,
-                            "Export GSR data feature coming soon",
-                            android.widget.Toast.LENGTH_SHORT
-                        ).show()
-                    },
-                    onResetStatistics = {
-                        // TODO: Implement statistics reset functionality
-                        android.widget.Toast.makeText(
-                            this@SensorDashboardComposeEnhanced,
-                            "Reset statistics feature coming soon",
-                            android.widget.Toast.LENGTH_SHORT
-                        ).show()
-                    }
+                    onExportData = {},
+                    onResetStatistics = {}
                 )
 
                 // Device management section (consolidated layout pattern)

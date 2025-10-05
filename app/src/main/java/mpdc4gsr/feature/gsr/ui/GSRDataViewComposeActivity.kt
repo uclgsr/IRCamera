@@ -81,46 +81,6 @@ class GSRDataViewComposeActivity : BaseComposeActivity<GSRDataViewViewModel>() {
                             }
                         },
                         actions = {
-                            IconButton(onClick = {
-                                // TODO: Implement search functionality
-                                android.widget.Toast.makeText(
-                                    localContext,
-                                    "Search data feature coming soon",
-                                    android.widget.Toast.LENGTH_SHORT
-                                ).show()
-                            }) {
-                                Icon(Icons.Default.Search, contentDescription = "Search")
-                            }
-                            IconButton(onClick = {
-                                // TODO: Implement filter functionality
-                                android.widget.Toast.makeText(
-                                    localContext,
-                                    "Filter data feature coming soon",
-                                    android.widget.Toast.LENGTH_SHORT
-                                ).show()
-                            }) {
-                                Icon(Icons.Default.FilterList, contentDescription = "Filter")
-                            }
-                            IconButton(onClick = {
-                                // TODO: Implement export functionality
-                                android.widget.Toast.makeText(
-                                    localContext,
-                                    "Export data feature coming soon",
-                                    android.widget.Toast.LENGTH_SHORT
-                                ).show()
-                            }) {
-                                Icon(Icons.Default.FileDownload, contentDescription = "Export")
-                            }
-                            IconButton(onClick = {
-                                // TODO: Show more options menu
-                                android.widget.Toast.makeText(
-                                    localContext,
-                                    "More options coming soon",
-                                    android.widget.Toast.LENGTH_SHORT
-                                ).show()
-                            }) {
-                                Icon(Icons.Default.MoreVert, contentDescription = "More")
-                            }
                         }
                     )
                 }

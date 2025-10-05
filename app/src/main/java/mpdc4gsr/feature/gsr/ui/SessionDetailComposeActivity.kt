@@ -71,17 +71,6 @@ class SessionDetailComposeActivity : BaseComposeActivity<AppBaseViewModel>() {
                         },
                         actions = {
                             IconButton(onClick = {
-                                // TODO: Share session data
-                                android.widget.Toast.makeText(
-                                    this@SessionDetailComposeActivity,
-                                    "Share session feature coming soon",
-                                    android.widget.Toast.LENGTH_SHORT
-                                ).show()
-                            }) {
-                                Icon(Icons.Default.Share, contentDescription = "Share")
-                            }
-                            IconButton(onClick = {
-                                // TODO: Export session data
                                 android.widget.Toast.makeText(
                                     this@SessionDetailComposeActivity,
                                     "Exporting session...",

@@ -120,18 +120,11 @@ private fun UserProfileCard(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Edit profile button
-            val context = androidx.compose.ui.platform.LocalContext.current
+            // Edit profile button (disabled)
             Button(
-                onClick = {
-                    // TODO: Navigate to profile edit screen
-                    android.widget.Toast.makeText(
-                        context,
-                        "Edit profile feature coming soon",
-                        android.widget.Toast.LENGTH_SHORT
-                    ).show()
-                },
-                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
+                onClick = {},
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+                enabled = false
             ) {
                 Icon(Icons.Default.Edit, contentDescription = null)
                 Spacer(Modifier.width(8.dp))

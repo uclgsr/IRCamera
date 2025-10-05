@@ -82,36 +82,6 @@ class GSRVideoPlayerComposeActivity : BaseComposeActivity<AppBaseViewModel>() {
                             }
                         },
                         actions = {
-                            IconButton(onClick = {
-                                // TODO: Share video
-                                android.widget.Toast.makeText(
-                                    this@GSRVideoPlayerComposeActivity,
-                                    "Share video feature coming soon",
-                                    android.widget.Toast.LENGTH_SHORT
-                                ).show()
-                            }) {
-                                Icon(Icons.Default.Share, contentDescription = "Share")
-                            }
-                            IconButton(onClick = {
-                                // TODO: Open video settings
-                                android.widget.Toast.makeText(
-                                    this@GSRVideoPlayerComposeActivity,
-                                    "Video settings coming soon",
-                                    android.widget.Toast.LENGTH_SHORT
-                                ).show()
-                            }) {
-                                Icon(Icons.Default.Settings, contentDescription = "Settings")
-                            }
-                            IconButton(onClick = {
-                                // TODO: Show more options menu
-                                android.widget.Toast.makeText(
-                                    this@GSRVideoPlayerComposeActivity,
-                                    "More options coming soon",
-                                    android.widget.Toast.LENGTH_SHORT
-                                ).show()
-                            }) {
-                                Icon(Icons.Default.MoreVert, contentDescription = "More")
-                            }
                         }
                     )
                 }

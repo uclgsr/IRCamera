@@ -84,37 +84,6 @@ class GSRPlotComposeActivity : BaseComposeActivity<GSRPlotViewModel>() {
                             }
                         },
                         actions = {
-                            val context = androidx.compose.ui.platform.LocalContext.current
-                            IconButton(onClick = {
-                                // TODO: Implement data export
-                                android.widget.Toast.makeText(
-                                    context,
-                                    "Export data feature coming soon",
-                                    android.widget.Toast.LENGTH_SHORT
-                                ).show()
-                            }) {
-                                Icon(Icons.Default.FileDownload, contentDescription = "Export")
-                            }
-                            IconButton(onClick = {
-                                // TODO: Implement plot sharing
-                                android.widget.Toast.makeText(
-                                    context,
-                                    "Share plot feature coming soon",
-                                    android.widget.Toast.LENGTH_SHORT
-                                ).show()
-                            }) {
-                                Icon(Icons.Default.Share, contentDescription = "Share")
-                            }
-                            IconButton(onClick = {
-                                // TODO: Open plot settings
-                                android.widget.Toast.makeText(
-                                    context,
-                                    "Plot settings feature coming soon",
-                                    android.widget.Toast.LENGTH_SHORT
-                                ).show()
-                            }) {
-                                Icon(Icons.Default.Tune, contentDescription = "Settings")
-                            }
                         }
                     )
                 }
@@ -330,34 +299,13 @@ private fun MainPlotCard(
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    IconButton(onClick = {
-                        // TODO: Implement zoom in functionality
-                        android.widget.Toast.makeText(
-                            context,
-                            "Zoom in feature coming soon",
-                            android.widget.Toast.LENGTH_SHORT
-                        ).show()
-                    }) {
+                    IconButton(onClick = {}, enabled = false) {
                         Icon(Icons.Default.ZoomIn, contentDescription = "Zoom In")
                     }
-                    IconButton(onClick = {
-                        // TODO: Implement zoom out functionality
-                        android.widget.Toast.makeText(
-                            context,
-                            "Zoom out feature coming soon",
-                            android.widget.Toast.LENGTH_SHORT
-                        ).show()
-                    }) {
+                    IconButton(onClick = {}, enabled = false) {
                         Icon(Icons.Default.ZoomOut, contentDescription = "Zoom Out")
                     }
-                    IconButton(onClick = {
-                        // TODO: Implement reset zoom functionality
-                        android.widget.Toast.makeText(
-                            context,
-                            "Reset zoom feature coming soon",
-                            android.widget.Toast.LENGTH_SHORT
-                        ).show()
-                    }) {
+                    IconButton(onClick = {}, enabled = false) {
                         Icon(Icons.Default.CenterFocusStrong, contentDescription = "Reset")
                     }
                 }
@@ -778,15 +726,9 @@ private fun DataAnalysisToolsCard(context: android.content.Context) {
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 OutlinedButton(
-                    onClick = {
-                        // TODO: Implement peak detection algorithm
-                        android.widget.Toast.makeText(
-                            context,
-                            "Peak detection feature coming soon",
-                            android.widget.Toast.LENGTH_SHORT
-                        ).show()
-                    },
-                    modifier = Modifier.weight(1f)
+                    onClick = {},
+                    modifier = Modifier.weight(1f),
+                    enabled = false
                 ) {
                     Icon(Icons.AutoMirrored.Filled.TrendingUp, contentDescription = null)
                     Spacer(modifier = Modifier.width(4.dp))
@@ -794,15 +736,9 @@ private fun DataAnalysisToolsCard(context: android.content.Context) {
                 }
 
                 OutlinedButton(
-                    onClick = {
-                        // TODO: Implement trend analysis
-                        android.widget.Toast.makeText(
-                            context,
-                            "Trend analysis feature coming soon",
-                            android.widget.Toast.LENGTH_SHORT
-                        ).show()
-                    },
-                    modifier = Modifier.weight(1f)
+                    onClick = {},
+                    modifier = Modifier.weight(1f),
+                    enabled = false
                 ) {
                     Icon(Icons.Default.Analytics, contentDescription = null)
                     Spacer(modifier = Modifier.width(4.dp))

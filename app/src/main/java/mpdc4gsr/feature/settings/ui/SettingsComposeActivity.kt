@@ -156,14 +156,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "Thermal Color Palette",
                         subtitle = "Choose thermal imaging color scheme",
-                        onClick = {
-                            // TODO: Open color palette selection dialog
-                            android.widget.Toast.makeText(
-                                this@SettingsComposeActivity,
-                                "Color palette selection coming soon",
-                                android.widget.Toast.LENGTH_SHORT
-                            ).show()
-                        }
+                        onClick = {}
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -171,14 +164,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "Temperature Units",
                         subtitle = "Celsius, Fahrenheit, or Kelvin",
-                        onClick = {
-                            // TODO: Open temperature unit selection dialog
-                            android.widget.Toast.makeText(
-                                this@SettingsComposeActivity,
-                                "Temperature unit selection coming soon",
-                                android.widget.Toast.LENGTH_SHORT
-                            ).show()
-                        }
+                        onClick = {}
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -186,14 +172,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "Display Resolution",
                         subtitle = "Adjust thermal image display resolution",
-                        onClick = {
-                            // TODO: Open resolution settings dialog
-                            android.widget.Toast.makeText(
-                                this@SettingsComposeActivity,
-                                "Resolution settings coming soon",
-                                android.widget.Toast.LENGTH_SHORT
-                            ).show()
-                        }
+                        onClick = {}
                     )
                 }
 
@@ -211,14 +190,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "Export Location",
                         subtitle = "Choose where to save exported data",
-                        onClick = {
-                            // TODO: Open export location selection dialog
-                            android.widget.Toast.makeText(
-                                this@SettingsComposeActivity,
-                                "Export location selection coming soon",
-                                android.widget.Toast.LENGTH_SHORT
-                            ).show()
-                        }
+                        onClick = {}
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -258,14 +230,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "Network Discovery",
                         subtitle = "Enable automatic PC discovery",
-                        onClick = {
-                            // TODO: Toggle network discovery
-                            android.widget.Toast.makeText(
-                                this@SettingsComposeActivity,
-                                "Network discovery toggle coming soon",
-                                android.widget.Toast.LENGTH_SHORT
-                            ).show()
-                        }
+                        onClick = {}
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -355,14 +320,7 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "App Version",
                         subtitle = "IRCamera v1.10.000",
-                        onClick = {
-                            // TODO: Show version details dialog
-                            android.widget.Toast.makeText(
-                                this@SettingsComposeActivity,
-                                "Version details coming soon",
-                                android.widget.Toast.LENGTH_SHORT
-                            ).show()
-                        }
+                        onClick = {}
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))

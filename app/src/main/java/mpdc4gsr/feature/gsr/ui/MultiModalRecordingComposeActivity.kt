@@ -87,17 +87,6 @@ class MultiModalRecordingComposeActivity : BaseComposeActivity<MultiModalRecordi
                         },
                         actions = {
                             IconButton(onClick = {
-                                // TODO: Open recording templates
-                                android.widget.Toast.makeText(
-                                    this@MultiModalRecordingComposeActivity,
-                                    "Recording templates coming soon",
-                                    android.widget.Toast.LENGTH_SHORT
-                                ).show()
-                            }) {
-                                Icon(Icons.AutoMirrored.Filled.LibraryBooks, contentDescription = "Templates")
-                            }
-                            IconButton(onClick = {
-                                // TODO: Open recording settings
                                 android.widget.Toast.makeText(
                                     this@MultiModalRecordingComposeActivity,
                                     "Opening recording settings...",
@@ -372,19 +361,12 @@ private fun RecordingControls(
             )
         }
 
-        // Pause button (only show when recording)
+        // Pause button (disabled for now)
         if (isRecording) {
-            val context = androidx.compose.ui.platform.LocalContext.current
             OutlinedButton(
-                onClick = {
-                    // TODO: Implement pause recording logic
-                    android.widget.Toast.makeText(
-                        context,
-                        "Pause recording feature coming soon",
-                        android.widget.Toast.LENGTH_SHORT
-                    ).show()
-                },
-                modifier = Modifier.size(56.dp)
+                onClick = {},
+                modifier = Modifier.size(56.dp),
+                enabled = false
             ) {
                 Icon(
                     imageVector = Icons.Default.Pause,
