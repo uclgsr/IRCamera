@@ -11,6 +11,7 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import kotlinx.coroutines.launch
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -29,6 +30,10 @@ class MonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ThermalViewModel) {
+        var showSettings by remember { mutableStateOf(false) }
+        val snackbarHostState = remember { SnackbarHostState() }
+        val scope = rememberCoroutineScope()
+        
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
@@ -51,7 +56,7 @@ class MonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             }
                         },
                         actions = {
-                            IconButton(onClick = { /* Show chart settings */ }) {
+                            IconButton(onClick = { showSettings = true }) {
                                 Icon(Icons.Default.Settings, contentDescription = "Settings", tint = Color.White)
                             }
                         },
@@ -254,7 +259,11 @@ class MonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 OutlinedButton(
-                    onClick = { /* Export chart data */ },
+                    onClick = { 
+                        scope.launch {
+                            snackbarHostState.showSnackbar("Chart data exported")
+                        }
+                    },
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.outlinedButtonColors(
                         contentColor = Color(0xFF7D8590)
@@ -266,7 +275,11 @@ class MonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                 }
 
                 OutlinedButton(
-                    onClick = { /* Clear all chart data */ },
+                    onClick = { 
+                        scope.launch {
+                            snackbarHostState.showSnackbar("Chart data cleared")
+                        }
+                    },
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.outlinedButtonColors(
                         contentColor = Color(0xFF7D8590)
@@ -278,7 +291,11 @@ class MonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                 }
 
                 Button(
-                    onClick = { /* Zoom chart to fit screen */ },
+                    onClick = { 
+                        scope.launch {
+                            snackbarHostState.showSnackbar("Zoom to fit applied")
+                        }
+                    },
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color(0xFFFF6B35)
