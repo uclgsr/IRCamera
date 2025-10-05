@@ -57,22 +57,14 @@ class LogMPChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             }
                         },
                         actions = {
-                            IconButton(onClick = { /* TODO: Implement export chart
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                            IconButton(onClick = {}) {
                                 Icon(
                                     Icons.Default.FileDownload,
                                     contentDescription = "Export",
                                     tint = Color.White
                                 )
                             }
-                            IconButton(onClick = { /* TODO: Implement chart settings
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                            IconButton(onClick = {}) {
                                 Icon(
                                     Icons.Default.MoreVert,
                                     contentDescription = "Settings",
@@ -132,16 +124,8 @@ class LogMPChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                     // Export and management
                     item {
                         DataManagementCard(
-                            onExportCsv = { /* TODO: Implement CSV export
-                     *   - Format data as CSV
-                     *   - Show file picker for save location
-                     *   - Display success message
-                     */ },
-                            onExportPdf = { /* TODO: Implement export pdf
-                     *   - Implement callback logic for onExportPdf
-                     *   - Handle data/state updates
-                     *   - Provide user feedback
-                     */ },
+                            onExportCsv = {},
+                            onExportPdf = {},
                             onClearData = {
                                 logEntries = 0
                                 dataPoints = 0

@@ -61,22 +61,14 @@ class MonitoryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             }
                         },
                         actions = {
-                            IconButton(onClick = { /* TODO: Implement data export
-                     *   - Call viewModel.exportData()
-                     *   - Show format selection (CSV/JSON/etc)
-                     *   - Use file picker for save location
-                     */ }) {
+                            IconButton(onClick = {}) {
                                 Icon(
                                     Icons.Default.FileDownload,
                                     contentDescription = "Export",
                                     tint = Color.White
                                 )
                             }
-                            IconButton(onClick = { /* TODO: Implement settings
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                            IconButton(onClick = {}) {
                                 Icon(
                                     Icons.Default.MoreVert,
                                     contentDescription = "Settings",
@@ -445,11 +437,7 @@ private fun QuickControlsOverlay(
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         FloatingActionButton(
-            onClick = { /* TODO: Implement snapshot
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+            onClick = {},
             modifier = Modifier.size(40.dp),
             containerColor = Color(0xFF6B7280)
         ) {
@@ -462,11 +450,7 @@ private fun QuickControlsOverlay(
         }
 
         FloatingActionButton(
-            onClick = { /* TODO: Implement zoom
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+            onClick = {},
             modifier = Modifier.size(40.dp),
             containerColor = Color(0xFF6B7280)
         ) {
@@ -479,11 +463,7 @@ private fun QuickControlsOverlay(
         }
 
         FloatingActionButton(
-            onClick = { /* TODO: Implement adjust
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+            onClick = {},
             modifier = Modifier.size(40.dp),
             containerColor = Color(0xFF6B7280)
         ) {

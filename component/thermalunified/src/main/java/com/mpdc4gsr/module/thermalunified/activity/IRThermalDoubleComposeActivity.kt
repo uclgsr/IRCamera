@@ -154,7 +154,7 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
                                         modifier = Modifier.padding(8.dp),
                                         verticalArrangement = Arrangement.spacedBy(4.dp)
                                     ) {
-                                        IconButton(onClick = { /* Lock/unlock */ }) {
+                                        IconButton(onClick = {}) {
                                             Icon(
                                                 Icons.Default.Lock,
                                                 contentDescription = "Lock",
@@ -166,7 +166,7 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
                                             color = Color.White,
                                             fontSize = 12.sp
                                         )
-                                        IconButton(onClick = { /* Edit */ }) {
+                                        IconButton(onClick = {}) {
                                             Icon(
                                                 Icons.Default.Edit,
                                                 contentDescription = "Edit",
@@ -287,7 +287,7 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
                                     .padding(vertical = 8.dp),
                                 horizontalArrangement = Arrangement.SpaceEvenly
                             ) {
-                                IconButton(onClick = { /* Gallery */ }) {
+                                IconButton(onClick = {}) {
                                     Icon(Icons.Default.PhotoLibrary, "Gallery", tint = Color.White)
                                 }
                                 IconButton(onClick = { viewModel.toggleRecording() }) {
@@ -297,10 +297,10 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
                                         tint = if (isRecording) Color.Red else Color.White
                                     )
                                 }
-                                IconButton(onClick = { /* Camera */ }) {
+                                IconButton(onClick = {}) {
                                     Icon(Icons.Default.CameraAlt, "Camera", tint = Color.White)
                                 }
-                                IconButton(onClick = { /* More */ }) {
+                                IconButton(onClick = {}) {
                                     Icon(Icons.Default.MoreVert, "More", tint = Color.White)
                                 }
                             }
