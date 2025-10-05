@@ -98,7 +98,8 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
                             }
                             IconButton(onClick = { 
                                 // TODO: Implement TISR (Thermal Image Super Resolution) toggle
-                                viewModel.toggleTISR()
+                                // TODO: Implement toggleTISR() in IRThermalDoubleViewModel
+                                // viewModel.toggleTISR()
                                 android.widget.Toast.makeText(this@IRThermalDoubleComposeActivity, "Toggle TISR mode", android.widget.Toast.LENGTH_SHORT).show()
                             }) {
                                 Icon(Icons.Default.Settings, contentDescription = "TISR", tint = Color.White)
