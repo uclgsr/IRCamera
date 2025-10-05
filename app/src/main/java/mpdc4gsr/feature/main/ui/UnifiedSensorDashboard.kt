@@ -34,6 +34,7 @@ fun UnifiedSensorDashboard(
     onBackClick: (() -> Unit)? = null,
     onSettingsClick: () -> Unit = {},
     onSensorClick: (SensorType) -> Unit = {},
+    onCameraSettingsClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     // Sensor states - showing disconnected until actual ViewModels are connected
@@ -147,7 +148,8 @@ fun UnifiedSensorDashboard(
                         is CameraAction.SetResolution -> { /* Handle resolution change */
                         }
                     }
-                }
+                },
+                onSettingsClick = onCameraSettingsClick
             )
         }
     }

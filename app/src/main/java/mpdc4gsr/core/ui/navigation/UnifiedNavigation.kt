@@ -124,7 +124,8 @@ fun UnifiedNavHost(
                         SensorType.ThermalIR -> navController.navigate(UnifiedRoute.ThermalCamera.route)
                         SensorType.RGBCamera -> navController.navigate(UnifiedRoute.CameraDashboard.route)
                     }
-                }
+                },
+                onCameraSettingsClick = { navController.navigate(UnifiedRoute.CameraSettings.route) }
             )
         }
 
@@ -289,7 +290,10 @@ fun UnifiedNavHost(
             NavigationPerformanceHelper.TrackNavigation("Settings")
 
             SettingsScreen(
-                onBackClick = { navController.popBackStack() }
+                onBackClick = { navController.popBackStack() },
+                onNavigateToGSRSettings = { navController.navigate(UnifiedRoute.GSRSettings.route) },
+                onNavigateToThermalSettings = { navController.navigate(UnifiedRoute.ThermalSettings.route) },
+                onNavigateToCameraSettings = { navController.navigate(UnifiedRoute.CameraSettings.route) }
             )
         }
 
