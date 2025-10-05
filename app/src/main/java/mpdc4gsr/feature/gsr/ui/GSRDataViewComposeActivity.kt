@@ -445,6 +445,7 @@ private fun ProcessedDataView() {
 
 @Composable
 private fun ProcessingOptionsCard() {
+    val localContext = androidx.compose.ui.platform.LocalContext.current
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
@@ -580,6 +581,7 @@ private fun ProcessingMetric(
 
 @Composable
 private fun ProcessingResultsCard() {
+    val localContext = androidx.compose.ui.platform.LocalContext.current
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)

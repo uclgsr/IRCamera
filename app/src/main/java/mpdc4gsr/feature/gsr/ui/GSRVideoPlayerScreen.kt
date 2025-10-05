@@ -178,6 +178,7 @@ private fun VideoControlsCard(
     onPlayPause: () -> Unit,
     onSeek: (Int) -> Unit
 ) {
+    val localContext = androidx.compose.ui.platform.LocalContext.current
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = Color(0xFF2A2A2A))
