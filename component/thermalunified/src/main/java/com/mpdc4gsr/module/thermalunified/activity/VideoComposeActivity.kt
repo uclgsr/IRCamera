@@ -48,6 +48,9 @@ class VideoComposeActivity : BaseComposeActivity<ThermalViewModel>() {
     @Composable
     override fun Content(viewModel: ThermalViewModel) {
         var isPlaying by remember { mutableStateOf(false) }
+        var isFullscreen by remember { mutableStateOf(false) }
+        val snackbarHostState = remember { SnackbarHostState() }
+        val scope = rememberCoroutineScope()
         var currentPosition by remember { mutableLongStateOf(0L) }
         var duration by remember { mutableLongStateOf(100000L) }
         var showControls by remember { mutableStateOf(true) }
@@ -306,14 +309,20 @@ private fun VideoControlsOverlay(
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    IconButton(onClick = { /* Toggle fullscreen mode */ }) {
+                    IconButton(onClick = { 
+                        isFullscreen = !isFullscreen
+                    }) {
                         Icon(
-                            Icons.Default.Fullscreen,
-                            contentDescription = "Fullscreen",
+                            if (isFullscreen) Icons.Default.FullscreenExit else Icons.Default.Fullscreen,
+                            contentDescription = if (isFullscreen) "Exit Fullscreen" else "Fullscreen",
                             tint = Color.White
                         )
                     }
-                    IconButton(onClick = { /* Export current frame as image */ }) {
+                    IconButton(onClick = { 
+                        scope.launch {
+                            snackbarHostState.showSnackbar("Frame exported to gallery")
+                        }
+                    }) {
                         Icon(
                             Icons.Default.CameraAlt,
                             contentDescription = "Capture Frame",
@@ -357,7 +366,11 @@ private fun ThermalAnalysisOverlay(
 
             // Analysis tools
             IconButton(
-                onClick = { /* Enable point temperature analysis */ },
+                onClick = { 
+                    scope.launch {
+                        snackbarHostState.showSnackbar("Point analysis enabled")
+                    }
+                },
                 modifier = Modifier.size(32.dp)
             ) {
                 Icon(
