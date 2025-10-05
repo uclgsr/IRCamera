@@ -515,6 +515,9 @@ class NetworkThread(QThread if GUI_AVAILABLE else threading.Thread):
             try:
                 client_socket, address = self.server_socket.accept()
 
+                # Set socket timeout to prevent hanging
+                client_socket.settimeout(self.CLIENT_SOCKET_TIMEOUT)
+                
                 # Apply SSL wrapping if enabled
                 if self.ssl_context:
                     client_socket = self.ssl_context.wrap_socket(client_socket, server_side=True)
