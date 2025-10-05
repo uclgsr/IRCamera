@@ -302,7 +302,7 @@ fun UnifiedNavHost(
                 onNavigateToCalibration = { navController.navigate("calibration") },
                 onNavigateToNetworkSettings = { navController.navigate(UnifiedRoute.NetworkConfig.route) },
                 onNavigateToDiagnostics = { navController.navigate("diagnostics") },
-                onNavigateToAppInfo = { navController.navigate(UnifiedRoute.About.route) },
+                onNavigateToAppInfo = { navController.navigate("app_info") },
                 onNavigateToPrivacyPolicy = { navController.navigate("privacy_policy") },
                 onNavigateToHelp = { navController.navigate("help") }
             )
@@ -395,13 +395,19 @@ fun UnifiedNavHost(
         }
 
         composable("calibration") {
-            mpdc4gsr.feature.settings.ui.CalibrationScreen(
+            mpdc4gsr.feature.thermal.ui.CalibrationScreen(
                 onBackClick = { navController.popBackStack() }
             )
         }
 
         composable("diagnostics") {
-            mpdc4gsr.feature.settings.ui.DiagnosticsScreen(
+            mpdc4gsr.feature.main.ui.DiagnosticsScreen(
+                onBackClick = { navController.popBackStack() }
+            )
+        }
+
+        composable("app_info") {
+            mpdc4gsr.feature.settings.ui.AppInfoScreen(
                 onBackClick = { navController.popBackStack() }
             )
         }
