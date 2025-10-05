@@ -53,8 +53,7 @@ class RecordingService : Service(), CoroutineScope {
         @get:androidx.annotation.RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
         private val FOREGROUND_SERVICE_TYPES
             get() = ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC or
-                    ServiceInfo.FOREGROUND_SERVICE_TYPE_CAMERA or
-                    ServiceInfo.FOREGROUND_SERVICE_TYPE_MICROPHONE
+                    ServiceInfo.FOREGROUND_SERVICE_TYPE_CAMERA
 
         const val ACTION_START_RECORDING =
             "${com.csl.irCamera.BuildConfig.APPLICATION_ID}.START_RECORDING"
