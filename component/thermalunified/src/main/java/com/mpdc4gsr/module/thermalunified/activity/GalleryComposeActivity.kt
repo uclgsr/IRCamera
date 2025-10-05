@@ -60,14 +60,22 @@ class GalleryComposeActivity : BaseComposeActivity<GalleryActivityViewModel>() {
                             }
                         },
                         actions = {
-                            IconButton(onClick = { /* Search gallery */ }) {
+                            IconButton(onClick = { /* TODO: Implement search gallery
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }) {
                                 Icon(
                                     Icons.Default.Search,
                                     contentDescription = "Search",
                                     tint = Color.White
                                 )
                             }
-                            IconButton(onClick = { /* Gallery settings */ }) {
+                            IconButton(onClick = { /* TODO: Implement gallery settings
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }) {
                                 Icon(
                                     Icons.Default.MoreVert,
                                     contentDescription = "Settings",

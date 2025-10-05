@@ -132,7 +132,10 @@ private fun ThermalCameraControls(
 
         // Settings button
         FloatingActionButton(
-            onClick = { /* Open settings */ },
+            onClick = { /* TODO: Implement settings navigation
+                     *   - Navigate to settings screen
+                     *   - Pass current configuration
+                     */ },
             containerColor = MaterialTheme.colorScheme.tertiary
         ) {
             Icon(

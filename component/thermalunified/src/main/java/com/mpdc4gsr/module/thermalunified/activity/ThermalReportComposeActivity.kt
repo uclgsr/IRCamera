@@ -79,7 +79,11 @@ private fun ThermalReportScreen(
                 }
             },
             actions = {
-                IconButton(onClick = { /* Preview */ }) {
+                IconButton(onClick = { /* TODO: Implement preview
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }) {
                     Icon(
                         Icons.Default.Preview,
                         contentDescription = "Preview",
@@ -258,7 +262,11 @@ private fun DataSelectionItem(title: String, selected: Boolean) {
     ) {
         Checkbox(
             checked = selected,
-            onCheckedChange = { /* Handle selection */ },
+            onCheckedChange = { /* TODO: Implement handle selection
+                     *   - Implement callback logic for onCheckedChange
+                     *   - Handle data/state updates
+                     *   - Provide user feedback
+                     */ },
             colors = CheckboxDefaults.colors(
                 checkedColor = Color(0xFFFF6B35),
                 uncheckedColor = Color(0xFF7D8590)
@@ -346,7 +354,11 @@ private fun ExportSettingsSection() {
             ) {
                 ExportFormat.values().forEach { format ->
                     FilterChip(
-                        onClick = { /* Handle format selection */ },
+                        onClick = { /* TODO: Implement handle format selection
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ },
                         label = {
                             Text(
                                 format.displayName,

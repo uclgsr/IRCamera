@@ -78,10 +78,18 @@ class ThermalVideoComposeActivity : BaseComposeActivity<BaseViewModel>() {
                                     contentDescription = "Toggle thermal data"
                                 )
                             }
-                            IconButton(onClick = { /* Share video */ }) {
+                            IconButton(onClick = { /* TODO: Implement share video
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }) {
                                 Icon(Icons.Default.Share, contentDescription = "Share")
                             }
-                            IconButton(onClick = { /* More options */ }) {
+                            IconButton(onClick = { /* TODO: Implement more options
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }) {
                                 Icon(Icons.Default.MoreVert, contentDescription = "More")
                             }
                         }
@@ -339,7 +347,11 @@ private fun ThermalVideoControls(
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                IconButton(onClick = { /* Previous frame */ }) {
+                IconButton(onClick = { /* TODO: Implement previous frame
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }) {
                     Icon(
                         Icons.Default.SkipPrevious,
                         contentDescription = "Previous",
@@ -365,7 +377,11 @@ private fun ThermalVideoControls(
                     )
                 }
 
-                IconButton(onClick = { /* Next frame */ }) {
+                IconButton(onClick = { /* TODO: Implement next frame
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }) {
                     Icon(
                         Icons.Default.SkipNext,
                         contentDescription = "Next",
@@ -382,7 +398,11 @@ private fun ThermalVideoControls(
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 OutlinedButton(
-                    onClick = { /* Export frame */ },
+                    onClick = { /* TODO: Implement export frame
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ },
                     colors = ButtonDefaults.outlinedButtonColors(
                         contentColor = Color.White
                     )
@@ -397,7 +417,11 @@ private fun ThermalVideoControls(
                 }
 
                 OutlinedButton(
-                    onClick = { /* Analyze */ },
+                    onClick = { /* TODO: Implement analyze
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ },
                     colors = ButtonDefaults.outlinedButtonColors(
                         contentColor = Color.White
                     )
@@ -412,7 +436,11 @@ private fun ThermalVideoControls(
                 }
 
                 OutlinedButton(
-                    onClick = { /* Settings */ },
+                    onClick = { /* TODO: Implement settings
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ },
                     colors = ButtonDefaults.outlinedButtonColors(
                         contentColor = Color.White
                     )

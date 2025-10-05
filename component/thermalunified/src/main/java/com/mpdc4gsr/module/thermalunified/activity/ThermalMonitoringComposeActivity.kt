@@ -69,7 +69,11 @@ class ThermalMonitoringComposeActivity : BaseComposeActivity<BaseViewModel>() {
                             IconButton(onClick = { showAlertDialog = true }) {
                                 Icon(Icons.Default.Notifications, contentDescription = "Alerts")
                             }
-                            IconButton(onClick = { /* More options */ }) {
+                            IconButton(onClick = { /* TODO: Implement more options
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }) {
                                 Icon(Icons.Default.MoreVert, contentDescription = "More")
                             }
                         }

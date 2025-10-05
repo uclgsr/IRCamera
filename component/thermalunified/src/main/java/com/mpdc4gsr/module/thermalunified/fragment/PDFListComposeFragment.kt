@@ -442,7 +442,11 @@ class PDFListComposeFragment : BaseComposeFragment<PDFListViewModel>() {
                     }
                 } else {
                     IconButton(
-                        onClick = { /* Handle more actions */ }
+                        onClick = { /* TODO: Implement handle more actions
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }
                     ) {
                         Icon(
                             Icons.Default.MoreVert,

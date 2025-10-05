@@ -54,10 +54,18 @@ class ReportPreviewComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             }
                         },
                         actions = {
-                            IconButton(onClick = { /* Print */ }) {
+                            IconButton(onClick = { /* TODO: Implement print
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }) {
                                 Icon(Icons.Default.Print, contentDescription = "Print", tint = Color.White)
                             }
-                            IconButton(onClick = { /* Share */ }) {
+                            IconButton(onClick = { /* TODO: Implement share functionality
+                     *   - Create share intent with data
+                     *   - Show system share sheet
+                     *   - Handle share completion
+                     */ }) {
                                 Icon(Icons.Default.Share, contentDescription = "Share", tint = Color.White)
                             }
                         },
@@ -146,7 +154,11 @@ class ReportPreviewComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             )
                         }
 
-                        IconButton(onClick = { /* Zoom to fit */ }) {
+                        IconButton(onClick = { /* TODO: Implement zoom to fit
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }) {
                             Icon(
                                 Icons.Default.FitScreen,
                                 contentDescription = "Fit to screen",
@@ -261,7 +273,11 @@ class ReportPreviewComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         selected: Boolean
     ) {
         Button(
-            onClick = { /* Handle format selection */ },
+            onClick = { /* TODO: Implement handle format selection
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ },
             modifier = Modifier.weight(1f),
             colors = ButtonDefaults.buttonColors(
                 containerColor = if (selected) Color(0xFFFF6B35) else Color(0xFF161B22),
