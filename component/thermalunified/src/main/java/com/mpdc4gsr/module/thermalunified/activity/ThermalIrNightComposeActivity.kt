@@ -1,5 +1,6 @@
 package com.mpdc4gsr.module.thermalunified.activity
 
+import android.content.Intent
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -7,9 +8,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -33,6 +32,13 @@ class ThermalIrNightComposeActivity : BaseComposeActivity<ThermalIrNightViewMode
         val nightModeEnabled by viewModel.nightModeEnabled.collectAsState()
         val showOverlay by viewModel.showOverlay.collectAsState()
         val isRecording by viewModel.isRecording.collectAsState()
+        
+        var showInfoDialog by remember { mutableStateOf(false) }
+        var showPaletteDialog by remember { mutableStateOf(false) }
+        var showSettingsDialog by remember { mutableStateOf(false) }
+        var showRangeEditDialog by remember { mutableStateOf(false) }
+        var showMoreOptions by remember { mutableStateOf(false) }
+        var rangeLocked by remember { mutableStateOf(false) }
 
         LibUnifiedTheme {
             Scaffold(
@@ -89,11 +95,7 @@ class ThermalIrNightComposeActivity : BaseComposeActivity<ThermalIrNightViewMode
                             }
                         },
                         actions = {
-                            IconButton(onClick = { /* TODO: Implement show info
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                            IconButton(onClick = { showInfoDialog = true }) {
                                 Icon(Icons.Default.Info, contentDescription = "Info", tint = Color.White)
                             }
                             IconButton(onClick = { viewModel.toggleNightMode() }) {
@@ -195,23 +197,15 @@ class ThermalIrNightComposeActivity : BaseComposeActivity<ThermalIrNightViewMode
                                     modifier = Modifier.padding(8.dp),
                                     verticalArrangement = Arrangement.spacedBy(4.dp)
                                 ) {
-                                    IconButton(onClick = { /* TODO: Implement lock/unlock
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                                    IconButton(onClick = { rangeLocked = !rangeLocked }) {
                                         Icon(
-                                            Icons.Default.Lock,
-                                            contentDescription = "Lock",
-                                            tint = Color.White,
+                                            if (rangeLocked) Icons.Default.Lock else Icons.Default.LockOpen,
+                                            contentDescription = if (rangeLocked) "Unlock" else "Lock",
+                                            tint = if (rangeLocked) Color.Yellow else Color.White,
                                             modifier = Modifier.size(24.dp)
                                         )
                                     }
-                                    IconButton(onClick = { /* TODO: Implement edit
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                                    IconButton(onClick = { showRangeEditDialog = true }) {
                                         Icon(
                                             Icons.Default.Edit,
                                             contentDescription = "Edit",
@@ -274,18 +268,10 @@ class ThermalIrNightComposeActivity : BaseComposeActivity<ThermalIrNightViewMode
                                         tint = Color.White
                                     )
                                 }
-                                IconButton(onClick = { /* TODO: Implement color palette
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                                IconButton(onClick = { showPaletteDialog = true }) {
                                     Icon(Icons.Default.Palette, "Palette", tint = Color.White)
                                 }
-                                IconButton(onClick = { /* TODO: Implement settings
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                                IconButton(onClick = { showSettingsDialog = true }) {
                                     Icon(Icons.Default.Settings, "Settings", tint = Color.White)
                                 }
                             }
@@ -299,11 +285,10 @@ class ThermalIrNightComposeActivity : BaseComposeActivity<ThermalIrNightViewMode
                                     .padding(vertical = 8.dp),
                                 horizontalArrangement = Arrangement.SpaceEvenly
                             ) {
-                                IconButton(onClick = { /* TODO: Implement gallery
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                                IconButton(onClick = {
+                                    startActivity(Intent(this@ThermalIrNightComposeActivity, 
+                                        ThermalGalleryComposeActivity::class.java))
+                                }) {
                                     Icon(Icons.Default.PhotoLibrary, "Gallery", tint = Color.White)
                                 }
                                 FloatingActionButton(
@@ -316,17 +301,143 @@ class ThermalIrNightComposeActivity : BaseComposeActivity<ThermalIrNightViewMode
                                         tint = Color.White
                                     )
                                 }
-                                IconButton(onClick = { /* TODO: Implement more
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                                IconButton(onClick = { showMoreOptions = true }) {
                                     Icon(Icons.Default.MoreVert, "More", tint = Color.White)
                                 }
                             }
                         }
                     }
                 }
+            }
+            
+            // Info Dialog
+            if (showInfoDialog) {
+                AlertDialog(
+                    onDismissRequest = { showInfoDialog = false },
+                    title = { Text("Night Vision Mode") },
+                    text = { 
+                        Column {
+                            Text("Enhanced thermal imaging optimized for low-light conditions:")
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text("• Increased sensitivity")
+                            Text("• Adjusted color palettes")
+                            Text("• Reduced noise processing")
+                            Text("• Optimized range settings")
+                        }
+                    },
+                    confirmButton = {
+                        TextButton(onClick = { showInfoDialog = false }) {
+                            Text("OK")
+                        }
+                    }
+                )
+            }
+            
+            // Palette Dialog
+            if (showPaletteDialog) {
+                AlertDialog(
+                    onDismissRequest = { showPaletteDialog = false },
+                    title = { Text("Select Color Palette") },
+                    text = {
+                        Column {
+                            listOf("Ironbow", "Rainbow", "Grayscale", "Night Vision", "Hot Metal").forEach { palette ->
+                                TextButton(onClick = { showPaletteDialog = false }) {
+                                    Text(palette, modifier = Modifier.fillMaxWidth())
+                                }
+                            }
+                        }
+                    },
+                    confirmButton = {
+                        TextButton(onClick = { showPaletteDialog = false }) {
+                            Text("Cancel")
+                        }
+                    }
+                )
+            }
+            
+            // Settings Dialog (reuse from IRThermalNightComposeActivity)
+            if (showSettingsDialog) {
+                AlertDialog(
+                    onDismissRequest = { showSettingsDialog = false },
+                    title = { Text("Night Vision Settings") },
+                    text = {
+                        Column {
+                            Text("Sensitivity: High")
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text("Mode: Enhanced")
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text("Temperature Range: Auto")
+                        }
+                    },
+                    confirmButton = {
+                        TextButton(onClick = { showSettingsDialog = false }) {
+                            Text("OK")
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { showSettingsDialog = false }) {
+                            Text("Cancel")
+                        }
+                    }
+                )
+            }
+            
+            // Range Edit Dialog
+            if (showRangeEditDialog) {
+                AlertDialog(
+                    onDismissRequest = { showRangeEditDialog = false },
+                    title = { Text("Edit Temperature Range") },
+                    text = {
+                        Column {
+                            Text("Min Temperature: 0°C")
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text("Max Temperature: 100°C")
+                            Spacer(modifier = Modifier.height(8.dp))
+                            if (rangeLocked) {
+                                Text("Range is locked", color = Color.Yellow)
+                            }
+                        }
+                    },
+                    confirmButton = {
+                        TextButton(onClick = { showRangeEditDialog = false }) {
+                            Text("Save")
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { showRangeEditDialog = false }) {
+                            Text("Cancel")
+                        }
+                    }
+                )
+            }
+            
+            // More Options Menu
+            if (showMoreOptions) {
+                AlertDialog(
+                    onDismissRequest = { showMoreOptions = false },
+                    title = { Text("More Options") },
+                    text = {
+                        Column {
+                            TextButton(onClick = { showMoreOptions = false }) {
+                                Text("Export Recording", modifier = Modifier.fillMaxWidth())
+                            }
+                            TextButton(onClick = { showMoreOptions = false }) {
+                                Text("Share", modifier = Modifier.fillMaxWidth())
+                            }
+                            TextButton(onClick = { showMoreOptions = false }) {
+                                Text("Calibrate", modifier = Modifier.fillMaxWidth())
+                            }
+                            TextButton(onClick = { showMoreOptions = false }) {
+                                Text("Advanced Settings", modifier = Modifier.fillMaxWidth())
+                            }
+                        }
+                    },
+                    confirmButton = {
+                        TextButton(onClick = { showMoreOptions = false }) {
+                            Text("Close")
+                        }
+                    }
+                )
             }
         }
     }

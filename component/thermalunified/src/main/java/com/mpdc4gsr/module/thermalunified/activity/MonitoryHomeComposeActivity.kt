@@ -39,9 +39,27 @@ class MonitoryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         val scope = rememberCoroutineScope()
         var selectedTab by remember { mutableIntStateOf(0) }
         var isRecording by remember { mutableStateOf(false) }
+        var showExportDialog by remember { mutableStateOf(false) }
+        var showSettingsDialog by remember { mutableStateOf(false) }
+        val exportStatus by viewModel.exportStatus.collectAsState()
+        val snackbarHostState = remember { SnackbarHostState() }
+
+        // Handle export status
+        LaunchedEffect(exportStatus) {
+            when (exportStatus) {
+                is ThermalViewModel.ExportStatus.Success -> {
+                    snackbarHostState.showSnackbar("Data exported successfully")
+                }
+                is ThermalViewModel.ExportStatus.Error -> {
+                    snackbarHostState.showSnackbar("Export failed: ${(exportStatus as ThermalViewModel.ExportStatus.Error).message}")
+                }
+                else -> {}
+            }
+        }
 
         LibUnifiedTheme {
             Scaffold(
+                snackbarHost = { SnackbarHost(snackbarHostState) },
                 topBar = {
                     TopAppBar(
                         title = {
@@ -61,22 +79,20 @@ class MonitoryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             }
                         },
                         actions = {
-                            IconButton(onClick = { /* TODO: Implement data export
-                     *   - Call viewModel.exportData()
-                     *   - Show format selection (CSV/JSON/etc)
-                     *   - Use file picker for save location
-                     */ }) {
+                            IconButton(onClick = { 
+                                // Show format selection dialog
+                                showExportDialog = true
+                            }) {
                                 Icon(
                                     Icons.Default.FileDownload,
                                     contentDescription = "Export",
                                     tint = Color.White
                                 )
                             }
-                            IconButton(onClick = { /* TODO: Implement settings
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                            IconButton(onClick = { 
+                                // Show settings dialog
+                                showSettingsDialog = true
+                            }) {
                                 Icon(
                                     Icons.Default.MoreVert,
                                     contentDescription = "Settings",
@@ -142,7 +158,12 @@ class MonitoryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                     ) { page ->
                         when (page) {
                             0 -> MonitorHistoryTab()
-                            1 -> MonitorRealTimeTab(isRecording = isRecording)
+                            1 -> MonitorRealTimeTab(
+                                isRecording = isRecording,
+                                onSnapshot = { viewModel.captureSnapshot() },
+                                onZoom = { /* Toggle zoom level */ },
+                                onAdjust = { /* Show adjustment dialog */ }
+                            )
                         }
                     }
                 }
@@ -152,6 +173,59 @@ class MonitoryHomeComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         // Sync pager with tabs
         LaunchedEffect(pagerState.currentPage) {
             selectedTab = pagerState.currentPage
+        }
+        
+        // Export format selection dialog
+        if (showExportDialog) {
+            AlertDialog(
+                onDismissRequest = { showExportDialog = false },
+                title = { Text("Export Data") },
+                text = {
+                    Column {
+                        Text("Select export format:")
+                        Spacer(modifier = Modifier.height(16.dp))
+                        ThermalViewModel.ExportFormat.values().forEach { format ->
+                            TextButton(
+                                onClick = {
+                                    viewModel.exportData(this@MonitoryHomeComposeActivity, format)
+                                    showExportDialog = false
+                                },
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Text(format.name)
+                            }
+                        }
+                    }
+                },
+                confirmButton = {},
+                dismissButton = {
+                    TextButton(onClick = { showExportDialog = false }) {
+                        Text("Cancel")
+                    }
+                }
+            )
+        }
+        
+        // Settings dialog
+        if (showSettingsDialog) {
+            AlertDialog(
+                onDismissRequest = { showSettingsDialog = false },
+                title = { Text("Settings") },
+                text = {
+                    Column {
+                        Text("Monitor Settings")
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text("Configure monitoring parameters here", 
+                            style = MaterialTheme.typography.bodySmall)
+                    }
+                },
+                confirmButton = {
+                    TextButton(onClick = { showSettingsDialog = false }) {
+                        Text("OK")
+                    }
+                },
+                dismissButton = {}
+            )
         }
     }
 }
@@ -333,7 +407,10 @@ private fun HistoryStatsOverlay(
 
 @Composable
 private fun MonitorRealTimeTab(
-    isRecording: Boolean
+    isRecording: Boolean,
+    onSnapshot: () -> Unit = {},
+    onZoom: () -> Unit = {},
+    onAdjust: () -> Unit = {}
 ) {
     // Embed existing real-time fragment using AndroidView
     Box(
@@ -361,6 +438,9 @@ private fun MonitorRealTimeTab(
 
         // Quick controls
         QuickControlsOverlay(
+            onSnapshot = onSnapshot,
+            onZoom = onZoom,
+            onAdjust = onAdjust,
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(16.dp)
@@ -438,6 +518,9 @@ private fun RealTimeMonitorOverlay(
 
 @Composable
 private fun QuickControlsOverlay(
+    onSnapshot: () -> Unit = {},
+    onZoom: () -> Unit = {},
+    onAdjust: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -445,11 +528,7 @@ private fun QuickControlsOverlay(
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         FloatingActionButton(
-            onClick = { /* TODO: Implement snapshot
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+            onClick = onSnapshot,
             modifier = Modifier.size(40.dp),
             containerColor = Color(0xFF6B7280)
         ) {
@@ -462,11 +541,7 @@ private fun QuickControlsOverlay(
         }
 
         FloatingActionButton(
-            onClick = { /* TODO: Implement zoom
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+            onClick = onZoom,
             modifier = Modifier.size(40.dp),
             containerColor = Color(0xFF6B7280)
         ) {
@@ -479,11 +554,7 @@ private fun QuickControlsOverlay(
         }
 
         FloatingActionButton(
-            onClick = { /* TODO: Implement adjust
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+            onClick = onAdjust,
             modifier = Modifier.size(40.dp),
             containerColor = Color(0xFF6B7280)
         ) {

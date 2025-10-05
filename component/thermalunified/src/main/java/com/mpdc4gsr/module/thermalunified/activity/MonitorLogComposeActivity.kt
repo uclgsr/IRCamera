@@ -47,6 +47,9 @@ class MonitorLogComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         }
 
         var showFilterDialog by remember { mutableStateOf(false) }
+        var showAddLogDialog by remember { mutableStateOf(false) }
+        val snackbarHostState = remember { SnackbarHostState() }
+        val scope = rememberCoroutineScope()
 
         LibUnifiedTheme {
             Scaffold(
@@ -72,11 +75,36 @@ class MonitorLogComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             IconButton(onClick = { showFilterDialog = true }) {
                                 Icon(Icons.Default.FilterList, contentDescription = "Filter", tint = Color.White)
                             }
-                            IconButton(onClick = { /* TODO: Implement export
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                            IconButton(onClick = { 
+                                scope.launch {
+                                    try {
+                                        // Export logs to CSV file
+                                        val csv = buildString {
+                                            appendLine("Timestamp,Temperature,Location,Notes")
+                                            logEntries.forEach { entry ->
+                                                appendLine("${entry.timestamp},${entry.temperature},${entry.location},${entry.notes}")
+                                            }
+                                        }
+                                        
+                                        // Create file in Downloads directory
+                                        val contentValues = android.content.ContentValues().apply {
+                                            put(android.provider.MediaStore.Files.FileColumns.DISPLAY_NAME, "monitor_log_${System.currentTimeMillis()}.csv")
+                                            put(android.provider.MediaStore.Files.FileColumns.MIME_TYPE, "text/csv")
+                                            put(android.provider.MediaStore.Files.FileColumns.RELATIVE_PATH, android.os.Environment.DIRECTORY_DOWNLOADS)
+                                        }
+                                        
+                                        val uri = contentResolver.insert(android.provider.MediaStore.Files.getContentUri("external"), contentValues)
+                                        uri?.let {
+                                            contentResolver.openOutputStream(it)?.use { outputStream ->
+                                                outputStream.write(csv.toByteArray())
+                                            }
+                                            snackbarHostState.showSnackbar("Logs exported to Downloads")
+                                        }
+                                    } catch (e: Exception) {
+                                        snackbarHostState.showSnackbar("Export failed: ${e.message}")
+                                    }
+                                }
+                            }) {
                                 Icon(Icons.Default.Download, contentDescription = "Export", tint = Color.White)
                             }
                         },
@@ -87,16 +115,13 @@ class MonitorLogComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                 },
                 floatingActionButton = {
                     FloatingActionButton(
-                        onClick = { /* TODO: Implement add new log
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+                        onClick = { showAddLogDialog = true },
                         containerColor = MaterialTheme.colorScheme.primary
                     ) {
                         Icon(Icons.Default.Add, contentDescription = "Add Log")
                     }
                 },
+                snackbarHost = { SnackbarHost(snackbarHostState) },
                 containerColor = Color(0xFF16131E)
             ) { paddingValues ->
                 if (logEntries.isEmpty()) {
@@ -143,6 +168,60 @@ class MonitorLogComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         }
                     }
                 }
+            }
+            
+            // Add Log Entry Dialog
+            if (showAddLogDialog) {
+                var newTemp by remember { mutableStateOf("25.0") }
+                var newLocation by remember { mutableStateOf("") }
+                var newNotes by remember { mutableStateOf("") }
+                
+                AlertDialog(
+                    onDismissRequest = { showAddLogDialog = false },
+                    title = { Text("Add Log Entry") },
+                    text = {
+                        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                            OutlinedTextField(
+                                value = newTemp,
+                                onValueChange = { newTemp = it },
+                                label = { Text("Temperature (°C)") },
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                            OutlinedTextField(
+                                value = newLocation,
+                                onValueChange = { newLocation = it },
+                                label = { Text("Location") },
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                            OutlinedTextField(
+                                value = newNotes,
+                                onValueChange = { newNotes = it },
+                                label = { Text("Notes (optional)") },
+                                modifier = Modifier.fillMaxWidth(),
+                                maxLines = 3
+                            )
+                        }
+                    },
+                    confirmButton = {
+                        TextButton(onClick = {
+                            val temp = newTemp.toFloatOrNull() ?: 25.0f
+                            val timestamp = java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss", java.util.Locale.getDefault())
+                                .format(java.util.Date())
+                            logEntries.add(0, LogEntry(timestamp, temp, newLocation, newNotes))
+                            showAddLogDialog = false
+                            scope.launch {
+                                snackbarHostState.showSnackbar("Log entry added")
+                            }
+                        }) {
+                            Text("Add")
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { showAddLogDialog = false }) {
+                            Text("Cancel")
+                        }
+                    }
+                )
             }
         }
     }

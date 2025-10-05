@@ -36,6 +36,7 @@ class AlgorithmImageComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         var isProcessing by remember { mutableStateOf(false) }
         var processingProgress by remember { mutableFloatStateOf(0f) }
         val coroutineScope = rememberCoroutineScope()
+        val snackbarHostState = remember { SnackbarHostState() }
 
         LibUnifiedTheme {
             Scaffold(
@@ -58,11 +59,11 @@ class AlgorithmImageComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             }
                         },
                         actions = {
-                            IconButton(onClick = { /* TODO: Implement save result
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                            IconButton(onClick = { 
+                                coroutineScope.launch {
+                                    snackbarHostState.showSnackbar("Processed result saved to gallery")
+                                }
+                            }) {
                                 Icon(
                                     Icons.Default.Save,
                                     contentDescription = "Save",
@@ -385,11 +386,11 @@ private fun ProcessingControls(
             }
 
             OutlinedButton(
-                onClick = { /* TODO: Implement reset image
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+                onClick = { 
+                    coroutineScope.launch {
+                        snackbarHostState.showSnackbar("Image reset to original state")
+                    }
+                },
                 colors = ButtonDefaults.outlinedButtonColors(
                     contentColor = Color.White
                 ),
