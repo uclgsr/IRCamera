@@ -299,7 +299,7 @@ fun MonitorCaptureFragment(
             ) {
                 Icon(
                     imageVector = if (isMonitoring) Icons.Default.Stop else Icons.Default.PlayArrow,
-                    contentDescription = null
+                    contentDescription = if (isMonitoring) "Stop Monitor" else "Start Monitor"
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(if (isMonitoring) "Stop Monitor" else "Start Monitor")
@@ -312,7 +312,7 @@ fun MonitorCaptureFragment(
             ) {
                 Icon(
                     imageVector = Icons.Default.CameraAlt,
-                    contentDescription = null
+                    contentDescription = "Capture Frame"
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text("Capture")
@@ -449,7 +449,7 @@ private fun AndroidViewPlaceholder(
         ) {
             Icon(
                 imageVector = Icons.Default.Videocam,
-                contentDescription = null,
+                contentDescription = "Video Preview",
                 modifier = Modifier.size(48.dp),
                 tint = Color.Gray
             )
