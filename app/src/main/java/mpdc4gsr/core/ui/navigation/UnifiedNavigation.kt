@@ -183,26 +183,10 @@ fun UnifiedNavHost(
         }
 
         composable(UnifiedRoute.DualModeCamera.route) {
-            LaunchedEffect(Unit) {
-                try {
-                    // Use class reference instead of hard-coded string
-                    val activityClass = try {
-                        mpdc4gsr.feature.camera.ui.DualModeCameraActivityCompose::class.java
-                    } catch (e: NoClassDefFoundError) {
-                        null
-                    }
-
-                    if (activityClass != null) {
-                        context.startActivity(Intent(context, activityClass))
-                    } else {
-                        navController.navigate("dual_mode_camera_screen")
-                    }
-                } catch (e: Exception) {
-                    // Fallback to screen
-                    navController.navigate("dual_mode_camera_screen")
-                }
-            }
-            ThermalLoadingScreen("Loading Dual Mode Camera...")
+            DualModeCameraScreen(
+                onBackClick = { navController.popBackStack() },
+                onNavigateToSettings = { navController.navigate(UnifiedRoute.CameraSettings.route) }
+            )
         }
 
         composable(UnifiedRoute.CameraSettings.route) {
@@ -212,19 +196,9 @@ fun UnifiedNavHost(
         }
 
         composable(UnifiedRoute.DevicePairing.route) {
-            LaunchedEffect(Unit) {
-                try {
-                    // Try to launch permission request activity if it exists
-                    try {
-                        mpdc4gsr.core.ui.PermissionRequestComposeActivity.startActivity(context)
-                    } catch (e: Exception) {
-                        AppLogger.e("UnifiedNavigation", "Failed to start permission request activity", e)
-                    }
-                } catch (e: Exception) {
-                    // Final fallback - just show loading screen
-                }
-            }
-            ThermalLoadingScreen("Loading Device Pairing...")
+            DevicePairingScreen(
+                onNavigateBack = { navController.popBackStack() }
+            )
         }
 
         // Thermal Camera Routes - ThermalMain removed, use ThermalCamera instead
@@ -344,20 +318,6 @@ fun UnifiedNavHost(
                 }
             }
             ThermalLoadingScreen("Loading Permission Manager...")
-        }
-
-        // Fallback routes for screens when activities fail to launch
-        composable("dual_mode_camera_screen") {
-            DualModeCameraScreen(
-                onBackClick = { navController.popBackStack() },
-                onNavigateToSettings = { navController.navigate(UnifiedRoute.CameraSettings.route) }
-            )
-        }
-
-        composable("device_pairing_screen") {
-            DevicePairingScreen(
-                onNavigateBack = { navController.popBackStack() }
-            )
         }
     }
 }
