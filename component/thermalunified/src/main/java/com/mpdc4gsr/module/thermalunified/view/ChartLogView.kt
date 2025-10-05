@@ -7,6 +7,8 @@ import android.os.Looper
 import android.util.AttributeSet
 import android.util.Log
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.findViewTreeLifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import com.elvishew.xlog.XLog
 import com.mpdc4gsr.libunified.app.db.entity.ThermalEntity
 import com.mpdc4gsr.libunified.ui.charts.LineChart
@@ -22,7 +24,6 @@ import com.mpdc4gsr.module.thermalunified.chart.YValueFormatter
 import com.mpdc4gsr.module.thermalunified.compat.dpToPx
 import com.mpdc4gsr.module.thermalunified.utils.ChartTools
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import com.mpdc4gsr.libunified.R as LibR
 import com.mpdc4gsr.libunified.R as LibcoreR
@@ -112,13 +113,17 @@ class ChartLogView : LineChart {
         }
     }
 
-    @OptIn(kotlinx.coroutines.DelicateCoroutinesApi::class)
     fun initEntry(
         data: ArrayList<ThermalEntity>,
         type: Int = 1,
     ) {
         synchronized(this) {
-            GlobalScope.launch(Dispatchers.IO) {
+            val lifecycleOwner = findViewTreeLifecycleOwner()
+            if (lifecycleOwner == null) {
+                Log.e("ChartLogView", "No lifecycle owner found, cannot initialize chart")
+                return
+            }
+            lifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
                 try {
                     clearEntity(data.size == 0)
                 } catch (e: Exception) {
