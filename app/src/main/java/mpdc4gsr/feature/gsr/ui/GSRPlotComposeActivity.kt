@@ -84,10 +84,11 @@ class GSRPlotComposeActivity : BaseComposeActivity<GSRPlotViewModel>() {
                             }
                         },
                         actions = {
+                            val context = androidx.compose.ui.platform.LocalContext.current
                             IconButton(onClick = {
                                 // TODO: Implement data export
                                 android.widget.Toast.makeText(
-                                    this@GSRPlotComposeActivity,
+                                    context,
                                     "Export data feature coming soon",
                                     android.widget.Toast.LENGTH_SHORT
                                 ).show()
@@ -97,7 +98,7 @@ class GSRPlotComposeActivity : BaseComposeActivity<GSRPlotViewModel>() {
                             IconButton(onClick = {
                                 // TODO: Implement plot sharing
                                 android.widget.Toast.makeText(
-                                    this@GSRPlotComposeActivity,
+                                    context,
                                     "Share plot feature coming soon",
                                     android.widget.Toast.LENGTH_SHORT
                                 ).show()
@@ -107,7 +108,7 @@ class GSRPlotComposeActivity : BaseComposeActivity<GSRPlotViewModel>() {
                             IconButton(onClick = {
                                 // TODO: Open plot settings
                                 android.widget.Toast.makeText(
-                                    this@GSRPlotComposeActivity,
+                                    context,
                                     "Plot settings feature coming soon",
                                     android.widget.Toast.LENGTH_SHORT
                                 ).show()
@@ -304,6 +305,7 @@ private fun MainPlotCard(
     timeRange: TimeRange,
     sessionId: String
 ) {
+    val context = androidx.compose.ui.platform.LocalContext.current
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
@@ -329,7 +331,7 @@ private fun MainPlotCard(
                     IconButton(onClick = {
                         // TODO: Implement zoom in functionality
                         android.widget.Toast.makeText(
-                            this@GSRPlotComposeActivity,
+                            context,
                             "Zoom in feature coming soon",
                             android.widget.Toast.LENGTH_SHORT
                         ).show()
@@ -339,7 +341,7 @@ private fun MainPlotCard(
                     IconButton(onClick = {
                         // TODO: Implement zoom out functionality
                         android.widget.Toast.makeText(
-                            this@GSRPlotComposeActivity,
+                            context,
                             "Zoom out feature coming soon",
                             android.widget.Toast.LENGTH_SHORT
                         ).show()
@@ -349,7 +351,7 @@ private fun MainPlotCard(
                     IconButton(onClick = {
                         // TODO: Implement reset zoom functionality
                         android.widget.Toast.makeText(
-                            this@GSRPlotComposeActivity,
+                            context,
                             "Reset zoom feature coming soon",
                             android.widget.Toast.LENGTH_SHORT
                         ).show()
@@ -778,7 +780,7 @@ private fun DataAnalysisToolsCard() {
                     onClick = {
                         // TODO: Implement peak detection algorithm
                         android.widget.Toast.makeText(
-                            this@GSRPlotComposeActivity,
+                            context,
                             "Peak detection feature coming soon",
                             android.widget.Toast.LENGTH_SHORT
                         ).show()
@@ -794,7 +796,7 @@ private fun DataAnalysisToolsCard() {
                     onClick = {
                         // TODO: Implement trend analysis
                         android.widget.Toast.makeText(
-                            this@GSRPlotComposeActivity,
+                            context,
                             "Trend analysis feature coming soon",
                             android.widget.Toast.LENGTH_SHORT
                         ).show()

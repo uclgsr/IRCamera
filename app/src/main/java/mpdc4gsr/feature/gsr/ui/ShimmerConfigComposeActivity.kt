@@ -81,6 +81,7 @@ class ShimmerConfigComposeActivity : ComponentActivity() {
                             }
                         },
                         actions = {
+                            val context = androidx.compose.ui.platform.LocalContext.current
                             IconButton(onClick = { isScanning = !isScanning }) {
                                 Icon(
                                     if (isScanning) Icons.Default.Stop else Icons.Default.Refresh,
@@ -90,7 +91,7 @@ class ShimmerConfigComposeActivity : ComponentActivity() {
                             IconButton(onClick = {
                                 // TODO: Implement Shimmer configuration help/documentation
                                 android.widget.Toast.makeText(
-                                    this@ShimmerConfigComposeActivity,
+                                    context,
                                     "Opening Shimmer configuration help",
                                     android.widget.Toast.LENGTH_SHORT
                                 ).show()

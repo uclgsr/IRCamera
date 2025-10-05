@@ -124,7 +124,7 @@ private fun GSRSettingsContent(
             onSessionTimeoutChange = {
                 // TODO: Add session timeout to ViewModel if needed
                 android.widget.Toast.makeText(
-                    this@GSRSettingsComposeActivity,
+                    context,
                     "Session timeout: $it minutes",
                     android.widget.Toast.LENGTH_SHORT
                 ).show()
@@ -136,7 +136,7 @@ private fun GSRSettingsContent(
             onExportFormatChange = {
                 // TODO: Add export format to ViewModel if needed
                 android.widget.Toast.makeText(
-                    this@GSRSettingsComposeActivity,
+                    context,
                     "Export format: $it",
                     android.widget.Toast.LENGTH_SHORT
                 ).show()
@@ -144,7 +144,7 @@ private fun GSRSettingsContent(
             onExportLocationChange = {
                 // TODO: Add export location to ViewModel if needed
                 android.widget.Toast.makeText(
-                    this@GSRSettingsComposeActivity,
+                    context,
                     "Export location: $it",
                     android.widget.Toast.LENGTH_SHORT
                 ).show()
