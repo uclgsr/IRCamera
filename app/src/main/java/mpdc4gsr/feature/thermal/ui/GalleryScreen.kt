@@ -49,19 +49,6 @@ fun GalleryScreen(
             showBackButton = true,
             onBackClick = onBackClick
         ) {
-            val context = androidx.compose.ui.platform.LocalContext.current
-            TitleBarAction(
-                icon = Icons.Default.Search,
-                contentDescription = "Search",
-                onClick = {
-                    // TODO: Implement search functionality
-                    android.widget.Toast.makeText(
-                        context,
-                        "Search feature coming soon",
-                        android.widget.Toast.LENGTH_SHORT
-                    ).show()
-                }
-            )
         }
 
         // Tab selector

@@ -304,17 +304,10 @@ private fun TemperatureMeasurementsCard(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                val context = androidx.compose.ui.platform.LocalContext.current
                 OutlinedButton(
-                    onClick = {
-                        // TODO: Add measurement point on thermal image
-                        android.widget.Toast.makeText(
-                            context,
-                            "Add measurement feature coming soon",
-                            android.widget.Toast.LENGTH_SHORT
-                        ).show()
-                    },
-                    modifier = Modifier.weight(1f)
+                    onClick = {},
+                    modifier = Modifier.weight(1f),
+                    enabled = false
                 ) {
                     Icon(Icons.Default.Add, contentDescription = null)
                     Spacer(modifier = Modifier.width(4.dp))
@@ -322,15 +315,9 @@ private fun TemperatureMeasurementsCard(
                 }
 
                 OutlinedButton(
-                    onClick = {
-                        // TODO: Clear all measurements
-                        android.widget.Toast.makeText(
-                            context,
-                            "Clear measurements feature coming soon",
-                            android.widget.Toast.LENGTH_SHORT
-                        ).show()
-                    },
-                    modifier = Modifier.weight(1f)
+                    onClick = {},
+                    modifier = Modifier.weight(1f),
+                    enabled = false
                 ) {
                     Icon(Icons.Default.Clear, contentDescription = null)
                     Spacer(modifier = Modifier.width(4.dp))
@@ -575,15 +562,9 @@ private fun ThermalAnalysisToolsCard() {
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 OutlinedButton(
-                    onClick = {
-                        // TODO: Show temperature profile analysis
-                        android.widget.Toast.makeText(
-                            context,
-                            "Temperature profile feature coming soon",
-                            android.widget.Toast.LENGTH_SHORT
-                        ).show()
-                    },
-                    modifier = Modifier.weight(1f)
+                    onClick = {},
+                    modifier = Modifier.weight(1f),
+                    enabled = false
                 ) {
                     Icon(Icons.AutoMirrored.Filled.ShowChart, contentDescription = null)
                     Spacer(modifier = Modifier.width(4.dp))
@@ -591,15 +572,9 @@ private fun ThermalAnalysisToolsCard() {
                 }
 
                 OutlinedButton(
-                    onClick = {
-                        // TODO: Show histogram analysis
-                        android.widget.Toast.makeText(
-                            context,
-                            "Histogram analysis feature coming soon",
-                            android.widget.Toast.LENGTH_SHORT
-                        ).show()
-                    },
-                    modifier = Modifier.weight(1f)
+                    onClick = {},
+                    modifier = Modifier.weight(1f),
+                    enabled = false
                 ) {
                     Icon(Icons.Default.BarChart, contentDescription = null)
                     Spacer(modifier = Modifier.width(4.dp))
@@ -612,15 +587,9 @@ private fun ThermalAnalysisToolsCard() {
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 OutlinedButton(
-                    onClick = {
-                        // TODO: Compare thermal images
-                        android.widget.Toast.makeText(
-                            context,
-                            "Thermal comparison feature coming soon",
-                            android.widget.Toast.LENGTH_SHORT
-                        ).show()
-                    },
-                    modifier = Modifier.weight(1f)
+                    onClick = {},
+                    modifier = Modifier.weight(1f),
+                    enabled = false
                 ) {
                     Icon(Icons.Default.Compare, contentDescription = null)
                     Spacer(modifier = Modifier.width(4.dp))
@@ -628,15 +597,9 @@ private fun ThermalAnalysisToolsCard() {
                 }
 
                 OutlinedButton(
-                    onClick = {
-                        // TODO: Generate thermal report
-                        android.widget.Toast.makeText(
-                            context,
-                            "Generate report feature coming soon",
-                            android.widget.Toast.LENGTH_SHORT
-                        ).show()
-                    },
-                    modifier = Modifier.weight(1f)
+                    onClick = {},
+                    modifier = Modifier.weight(1f),
+                    enabled = false
                 ) {
                     Icon(Icons.Default.Assessment, contentDescription = null)
                     Spacer(modifier = Modifier.width(4.dp))
@@ -673,21 +636,14 @@ private fun ThermalCameraStatusCard() {
 
             HorizontalDivider()
 
-            val context = androidx.compose.ui.platform.LocalContext.current
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 OutlinedButton(
-                    onClick = {
-                        // TODO: Start camera calibration
-                        android.widget.Toast.makeText(
-                            context,
-                            "Camera calibration feature coming soon",
-                            android.widget.Toast.LENGTH_SHORT
-                        ).show()
-                    },
-                    modifier = Modifier.weight(1f)
+                    onClick = {},
+                    modifier = Modifier.weight(1f),
+                    enabled = false
                 ) {
                     Icon(Icons.Default.Tune, contentDescription = null)
                     Spacer(modifier = Modifier.width(4.dp))
@@ -695,15 +651,9 @@ private fun ThermalCameraStatusCard() {
                 }
 
                 OutlinedButton(
-                    onClick = {
-                        // TODO: Run diagnostic test
-                        android.widget.Toast.makeText(
-                            context,
-                            "Diagnostic test feature coming soon",
-                            android.widget.Toast.LENGTH_SHORT
-                        ).show()
-                    },
-                    modifier = Modifier.weight(1f)
+                    onClick = {},
+                    modifier = Modifier.weight(1f),
+                    enabled = false
                 ) {
                     Icon(Icons.Default.BugReport, contentDescription = null)
                     Spacer(modifier = Modifier.width(4.dp))

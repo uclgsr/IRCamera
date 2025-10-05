@@ -57,19 +57,7 @@ fun ThermalGalleryScreen(
                     viewMode = if (viewMode == ViewMode.GRID) ViewMode.LIST else ViewMode.GRID
                 }
             )
-            val context = androidx.compose.ui.platform.LocalContext.current
-            TitleBarAction(
-                icon = Icons.Default.Search,
-                contentDescription = "Search",
-                onClick = {
-                    // TODO: Implement search functionality
-                    android.widget.Toast.makeText(
-                        context,
-                        "Search feature coming soon",
-                        android.widget.Toast.LENGTH_SHORT
-                    ).show()
-                }
-            )
+
         }
 
         NavigationBreadcrumb(
@@ -300,16 +288,8 @@ private fun ThermalImageListItem(item: ThermalMediaItem) {
                 )
             }
 
-            // Actions
-            val context = androidx.compose.ui.platform.LocalContext.current
-            IconButton(onClick = {
-                // TODO: Share thermal image
-                android.widget.Toast.makeText(
-                    context,
-                    "Share image feature coming soon",
-                    android.widget.Toast.LENGTH_SHORT
-                ).show()
-            }) {
+            // Actions - disabled for now
+            IconButton(onClick = {}, enabled = false) {
                 Icon(Icons.Default.Share, contentDescription = "Share", tint = Color.Gray)
             }
         }
@@ -444,17 +424,9 @@ private fun ThermalVideoListItem(item: ThermalMediaItem) {
                 )
             }
 
-            // Actions
-            val context = androidx.compose.ui.platform.LocalContext.current
-            IconButton(onClick = {
-                // TODO: Play thermal video
-                android.widget.Toast.makeText(
-                    context,
-                    "Play video feature coming soon",
-                    android.widget.Toast.LENGTH_SHORT
-                ).show()
-            }) {
-                Icon(Icons.Default.PlayArrow, contentDescription = "Play", tint = MaterialTheme.colorScheme.primary)
+            // Actions - disabled for now
+            IconButton(onClick = {}, enabled = false) {
+                Icon(Icons.Default.PlayArrow, contentDescription = "Play", tint = Color.Gray)
             }
         }
     }
@@ -500,30 +472,15 @@ private fun ThermalReportItem(item: ThermalMediaItem) {
                 )
             }
 
-            val context = androidx.compose.ui.platform.LocalContext.current
             Row {
-                IconButton(onClick = {
-                    // TODO: View report details
-                    android.widget.Toast.makeText(
-                        context,
-                        "View report feature coming soon",
-                        android.widget.Toast.LENGTH_SHORT
-                    ).show()
-                }) {
+                IconButton(onClick = {}, enabled = false) {
                     Icon(
                         Icons.Default.Visibility,
                         contentDescription = "View",
-                        tint = MaterialTheme.colorScheme.primary
+                        tint = Color.Gray
                     )
                 }
-                IconButton(onClick = {
-                    // TODO: Share report
-                    android.widget.Toast.makeText(
-                        context,
-                        "Share report feature coming soon",
-                        android.widget.Toast.LENGTH_SHORT
-                    ).show()
-                }) {
+                IconButton(onClick = {}, enabled = false) {
                     Icon(Icons.Default.Share, contentDescription = "Share", tint = Color.Gray)
                 }
             }

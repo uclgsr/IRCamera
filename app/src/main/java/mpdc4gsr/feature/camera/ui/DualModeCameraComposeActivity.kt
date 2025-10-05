@@ -79,28 +79,8 @@ class DualModeCameraComposeActivity : BaseComposeActivity<DualModeCameraViewMode
                             }
                         },
                         actions = {
-                            IconButton(onClick = {
-                                // TODO: Switch between front/back camera
-                                android.widget.Toast.makeText(
-                                    localContext,
-                                    "Switch camera feature coming soon",
-                                    android.widget.Toast.LENGTH_SHORT
-                                ).show()
-                            }) {
-                                Icon(Icons.Default.FlipCameraAndroid, contentDescription = "Switch")
-                            }
                             IconButton(onClick = { showSettingsDialog = true }) {
                                 Icon(Icons.Default.Settings, contentDescription = "Settings")
-                            }
-                            IconButton(onClick = {
-                                // TODO: Show more options menu
-                                android.widget.Toast.makeText(
-                                    localContext,
-                                    "More options coming soon",
-                                    android.widget.Toast.LENGTH_SHORT
-                                ).show()
-                            }) {
-                                Icon(Icons.Default.MoreVert, contentDescription = "More")
                             }
                         }
                     )
@@ -296,17 +276,11 @@ private fun CameraControlsSection(
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Gallery button
+            // Gallery button (disabled)
             OutlinedButton(
-                onClick = {
-                    // TODO: Open gallery to view captured photos/videos
-                    android.widget.Toast.makeText(
-                        localContext,
-                        "Gallery feature coming soon",
-                        android.widget.Toast.LENGTH_SHORT
-                    ).show()
-                },
-                modifier = Modifier.size(56.dp)
+                onClick = {},
+                modifier = Modifier.size(56.dp),
+                enabled = false
             ) {
                 Icon(
                     Icons.Default.PhotoLibrary,

@@ -236,20 +236,7 @@ private fun CameraModesCard(
 
             // Time-lapse Mode
             val context = androidx.compose.ui.platform.LocalContext.current
-            CameraModeItem(
-                title = "Time-lapse Mode",
-                description = "Automated interval capture",
-                icon = Icons.Default.Timer,
-                isActive = false,
-                onClick = {
-                    // TODO: Navigate to time-lapse camera activity
-                    android.widget.Toast.makeText(
-                        context,
-                        "Time-lapse mode coming soon",
-                        android.widget.Toast.LENGTH_SHORT
-                    ).show()
-                }
-            )
+
         }
     }
 }
@@ -498,21 +485,14 @@ private fun PreviewGalleryCard() {
 
             HorizontalDivider()
 
-            val context = androidx.compose.ui.platform.LocalContext.current
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 OutlinedButton(
-                    onClick = {
-                        // TODO: Open camera preview
-                        android.widget.Toast.makeText(
-                            context,
-                            "Preview feature coming soon",
-                            android.widget.Toast.LENGTH_SHORT
-                        ).show()
-                    },
-                    modifier = Modifier.weight(1f)
+                    onClick = {},
+                    modifier = Modifier.weight(1f),
+                    enabled = false
                 ) {
                     Icon(Icons.Default.Preview, contentDescription = null)
                     Spacer(modifier = Modifier.width(4.dp))
@@ -520,15 +500,9 @@ private fun PreviewGalleryCard() {
                 }
 
                 OutlinedButton(
-                    onClick = {
-                        // TODO: Open gallery
-                        android.widget.Toast.makeText(
-                            context,
-                            "Gallery feature coming soon",
-                            android.widget.Toast.LENGTH_SHORT
-                        ).show()
-                    },
-                    modifier = Modifier.weight(1f)
+                    onClick = {},
+                    modifier = Modifier.weight(1f),
+                    enabled = false
                 ) {
                     Icon(Icons.Default.PhotoLibrary, contentDescription = null)
                     Spacer(modifier = Modifier.width(4.dp))

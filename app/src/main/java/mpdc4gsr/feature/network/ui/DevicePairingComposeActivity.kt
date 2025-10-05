@@ -79,16 +79,6 @@ class DevicePairingComposeActivity : BaseComposeActivity<DevicePairingViewModel>
                                     contentDescription = if (isScanning) "Stop Scan" else "Start Scan"
                                 )
                             }
-                            IconButton(onClick = {
-                                // TODO: Open pairing settings
-                                android.widget.Toast.makeText(
-                                    this@DevicePairingComposeActivity,
-                                    "Pairing settings coming soon",
-                                    android.widget.Toast.LENGTH_SHORT
-                                ).show()
-                            }) {
-                                Icon(Icons.Default.Settings, contentDescription = "Settings")
-                            }
                         }
                     )
                 }
@@ -363,30 +353,9 @@ private fun DeviceCard(
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    val context = androidx.compose.ui.platform.LocalContext.current
-                    OutlinedButton(
-                        onClick = {
-                            // TODO: Connect to selected device
-                            android.widget.Toast.makeText(
-                                context,
-                                "Connecting to device...",
-                                android.widget.Toast.LENGTH_SHORT
-                            ).show()
-                        },
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Icon(
-                            Icons.Default.Link,
-                            contentDescription = "Connect",
-                            modifier = Modifier.size(18.dp)
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text("Connect")
-                    }
-
                     Button(
                         onClick = onPair,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.fillMaxWidth()
                     ) {
                         Icon(
                             Icons.Default.Bluetooth,
@@ -394,7 +363,7 @@ private fun DeviceCard(
                             modifier = Modifier.size(18.dp)
                         )
                         Spacer(modifier = Modifier.width(4.dp))
-                        Text("Pair")
+                        Text("Pair Device")
                     }
                 }
             }
