@@ -87,11 +87,17 @@ class App : BaseApplication() {
             enableStrictMode()
         }
 
+        // Initialize performance metrics tracking as early as possible
+        mpdc4gsr.core.monitoring.PerformanceMetrics.initialize()
+
         // Initialize ContextProvider for AndroidX migration
         ContextProvider.init(this)
 
         // Initialize centralized logging
         initializeAppLogger()
+
+        // Initialize telemetry and observability
+        mpdc4gsr.core.monitoring.TelemetryManager.initialize(this)
 
         setupGlobalExceptionHandler()
 
