@@ -37,6 +37,11 @@ class UnifiedSessionManager(
         private const val MIN_DATA_QUALITY_SCORE = 0.7
         private const val MAX_SENSOR_LAG_MS = 1000
         private const val MIN_NETWORK_QUALITY = 0.6
+        
+        // Timeout constants for sensor operations
+        private const val SENSOR_INIT_TIMEOUT_MS = 5000L
+        private const val SENSOR_START_TIMEOUT_MS = 10000L
+        private const val SENSOR_STOP_TIMEOUT_MS = 15000L
     }
 
     private val _currentSession = MutableStateFlow<SessionInfo?>(null)
@@ -519,7 +524,7 @@ class UnifiedSessionManager(
         session: SessionInfo
     ): Pair<String, Boolean> {
         return try {
-            withTimeout(5000L) {
+            withTimeout(SENSOR_INIT_TIMEOUT_MS) {
                 when (sensorType) {
                     "GSR" -> {
 
@@ -593,7 +598,7 @@ class UnifiedSessionManager(
             val actualStartTime = System.nanoTime()
             val jitterMs = Math.abs(actualStartTime - barrierTime) / 1_000_000L
 
-            val startSuccess = withTimeout(10000L) {
+            val startSuccess = withTimeout(SENSOR_START_TIMEOUT_MS) {
                 when (sensorType) {
                     "GSR" -> gsrRecorder.startRecording(session.sessionDirectory)
                     "Thermal" -> {
@@ -1009,7 +1014,7 @@ class UnifiedSessionManager(
 
     private suspend fun stopIndividualSensorWithIsolation(sensorType: String): SensorStopResult {
         return try {
-            withTimeout(15000L) {
+            withTimeout(SENSOR_STOP_TIMEOUT_MS) {
                 val stopTime = System.currentTimeMillis()
 
                 val (stopSuccess, sampleCount, fileSize) = when (sensorType) {

@@ -44,6 +44,9 @@ class ComprehensiveRecordingController(
         private const val HEALTH_CHECK_ERROR_DELAY_MS = 10000L
         private const val STATS_UPDATE_INTERVAL_MS = 2000L
         private const val STATS_UPDATE_ERROR_DELAY_MS = 5000L
+        
+        // Reconnection settings
+        private const val MAX_RECONNECTION_ATTEMPTS = 3
         private const val GSR_SENSOR_NAME = "GSR"
         private const val THERMAL_SENSOR_ID = "thermal_camera_1"
         private const val GSR_SENSOR_ID = "gsr_shimmer_1"
@@ -576,9 +579,8 @@ class ComprehensiveRecordingController(
 
     private suspend fun attemptSensorReconnection(sensorName: String) {
         val currentAttempts = reconnectionAttempts.getOrDefault(sensorName, 0)
-        val maxAttempts = 3
 
-        if (currentAttempts >= maxAttempts) {
+        if (currentAttempts >= MAX_RECONNECTION_ATTEMPTS) {
             Log.w(
                 TAG,
                 "Max reconnection attempts reached for $sensorName - marking as inactive but continuing session"

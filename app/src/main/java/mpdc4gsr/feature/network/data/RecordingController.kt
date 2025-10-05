@@ -29,6 +29,9 @@ class RecordingController(
 ) {
     companion object {
         private const val TAG = "RecordingController"
+        
+        // Reconnection settings
+        private const val MAX_RECONNECTION_ATTEMPTS = 3
 
         // Type aliases for public API compatibility
         typealias SessionManifest = mpdc4gsr.feature.network.data.SessionManifest
@@ -1764,9 +1767,8 @@ class RecordingController(
     // Sensor reconnection logic
     private suspend fun attemptSensorReconnection(sensorName: String): Boolean {
         val currentAttempts = reconnectionAttempts[sensorName] ?: 0
-        val maxAttempts = 3
 
-        if (currentAttempts >= maxAttempts) {
+        if (currentAttempts >= MAX_RECONNECTION_ATTEMPTS) {
             AppLogger.w(TAG, "Max reconnection attempts reached for $sensorName")
             activeRecorders[sensorName] = false
             addSessionEvent("SENSOR_RECONNECTION_EXHAUSTED", sensorId = sensorName, success = false)
