@@ -419,9 +419,9 @@ class RecordingService : Service(), CoroutineScope {
     private fun startForegroundWithType(id: Int, notification: Notification, forRecording: Boolean = false) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
             val serviceType = if (forRecording) {
-                // When recording, we need microphone and camera types
-                ServiceInfo.FOREGROUND_SERVICE_TYPE_MICROPHONE or
-                        ServiceInfo.FOREGROUND_SERVICE_TYPE_CAMERA or
+                // When recording, we need camera and data sync types
+                // Note: Microphone type removed - audio recording handled by RgbCameraRecorder
+                ServiceInfo.FOREGROUND_SERVICE_TYPE_CAMERA or
                         ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
             } else {
                 // For server/networking only, just use dataSync
