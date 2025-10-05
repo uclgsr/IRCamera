@@ -3,6 +3,7 @@ package mpdc4gsr.core
 import android.app.*
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ServiceInfo
 import android.net.nsd.NsdManager
 import android.net.nsd.NsdServiceInfo
 import android.os.Binder
@@ -10,6 +11,7 @@ import android.os.Build
 import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import androidx.core.app.ServiceCompat
 import com.csl.irCamera.R
 import com.mpdc4gsr.gsr.model.SessionInfo
 import kotlinx.coroutines.*
@@ -249,15 +251,15 @@ class RecordingService : Service(), CoroutineScope {
 
         // Call startForeground immediately to satisfy Android's foreground service requirements
         // This must be called within 5-10 seconds of startForegroundService()
-        startForeground(
-            NOTIFICATION_ID,
-            NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle("IRCamera Service")
-                .setContentText("Initializing service...")
-                .setSmallIcon(R.drawable.ic_info)
-                .setOngoing(true)
-                .build()
-        )
+        // Use ServiceCompat to include the FGS type for Android 14+
+        val notification = NotificationCompat.Builder(this, CHANNEL_ID)
+            .setContentTitle("IRCamera Service")
+            .setContentText("Initializing service...")
+            .setSmallIcon(R.drawable.ic_info)
+            .setOngoing(true)
+            .build()
+
+        startForegroundWithType(NOTIFICATION_ID, notification)
 
         nsdManager = getSystemService(Context.NSD_SERVICE) as NsdManager
 
@@ -401,6 +403,24 @@ class RecordingService : Service(), CoroutineScope {
             )
         } catch (e: Exception) {
             AppLogger.e(TAG, "Failed to initialize Phase 0 baseline in service", e)
+        }
+    }
+
+    /**
+     * Helper method to call startForeground with appropriate FGS type for Android 14+
+     */
+    private fun startForegroundWithType(id: Int, notification: Notification) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            ServiceCompat.startForeground(
+                this,
+                id,
+                notification,
+                ServiceInfo.FOREGROUND_SERVICE_TYPE_MICROPHONE or
+                        ServiceInfo.FOREGROUND_SERVICE_TYPE_CAMERA or
+                        ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
+            )
+        } else {
+            startForeground(id, notification)
         }
     }
 
@@ -584,7 +604,7 @@ class RecordingService : Service(), CoroutineScope {
                     )
                 )
 
-                startForeground(
+                startForegroundWithType(
                     NOTIFICATION_ID,
                     createRecordingNotification("Starting recording session...")
                 )
@@ -774,7 +794,7 @@ class RecordingService : Service(), CoroutineScope {
                 else -> "Starting recording session..."
             }
 
-            startForeground(NOTIFICATION_ID, createRecordingNotification(notificationText))
+            startForegroundWithType(NOTIFICATION_ID, createRecordingNotification(notificationText))
 
             // Start session with enhanced orchestration
             val success = recordingController.startRecording(
@@ -1243,7 +1263,7 @@ class RecordingService : Service(), CoroutineScope {
                 registerNsdService()
             }
             if (!isServiceForeground()) {
-                startForeground(
+                startForegroundWithType(
                     NOTIFICATION_ID,
                     createServerNotification("Server listening for PC connections on port $actualServerPort")
                 )
