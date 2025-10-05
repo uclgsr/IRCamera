@@ -3,6 +3,7 @@ package mpdc4gsr.core
 import android.app.*
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ServiceInfo
 import android.net.nsd.NsdManager
 import android.net.nsd.NsdServiceInfo
 import android.os.Binder
@@ -48,6 +49,12 @@ class RecordingService : Service(), CoroutineScope {
             8081  // Use different port to avoid conflicts with NetworkController
         private const val SERVICE_TYPE = "_ircamera._tcp."
         private const val SERVICE_NAME = "IRCamera-Android"
+
+        @get:androidx.annotation.RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+        private val FOREGROUND_SERVICE_TYPES
+            get() = ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC or
+                    ServiceInfo.FOREGROUND_SERVICE_TYPE_CAMERA or
+                    ServiceInfo.FOREGROUND_SERVICE_TYPE_MICROPHONE
 
         const val ACTION_START_RECORDING =
             "${com.csl.irCamera.BuildConfig.APPLICATION_ID}.START_RECORDING"
@@ -249,15 +256,17 @@ class RecordingService : Service(), CoroutineScope {
 
         // Call startForeground immediately to satisfy Android's foreground service requirements
         // This must be called within 5-10 seconds of startForegroundService()
-        startForeground(
-            NOTIFICATION_ID,
-            NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle("IRCamera Service")
-                .setContentText("Initializing service...")
-                .setSmallIcon(R.drawable.ic_info)
-                .setOngoing(true)
-                .build()
-        )
+        val notification = NotificationCompat.Builder(this, CHANNEL_ID)
+            .setContentTitle("IRCamera Service")
+            .setContentText("Initializing service...")
+            .setSmallIcon(R.drawable.ic_info)
+            .setOngoing(true)
+            .build()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            startForeground(NOTIFICATION_ID, notification, FOREGROUND_SERVICE_TYPES)
+        } else {
+            startForeground(NOTIFICATION_ID, notification)
+        }
 
         nsdManager = getSystemService(Context.NSD_SERVICE) as NsdManager
 
@@ -584,10 +593,12 @@ class RecordingService : Service(), CoroutineScope {
                     )
                 )
 
-                startForeground(
-                    NOTIFICATION_ID,
-                    createRecordingNotification("Starting recording session...")
-                )
+                val notification = createRecordingNotification("Starting recording session...")
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                    startForeground(NOTIFICATION_ID, notification, FOREGROUND_SERVICE_TYPES)
+                } else {
+                    startForeground(NOTIFICATION_ID, notification)
+                }
 
                 // Perform session start sync
                 launch {
@@ -774,7 +785,12 @@ class RecordingService : Service(), CoroutineScope {
                 else -> "Starting recording session..."
             }
 
-            startForeground(NOTIFICATION_ID, createRecordingNotification(notificationText))
+            val notification = createRecordingNotification(notificationText)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                startForeground(NOTIFICATION_ID, notification, FOREGROUND_SERVICE_TYPES)
+            } else {
+                startForeground(NOTIFICATION_ID, notification)
+            }
 
             // Start session with enhanced orchestration
             val success = recordingController.startRecording(
@@ -1243,10 +1259,12 @@ class RecordingService : Service(), CoroutineScope {
                 registerNsdService()
             }
             if (!isServiceForeground()) {
-                startForeground(
-                    NOTIFICATION_ID,
-                    createServerNotification("Server listening for PC connections on port $actualServerPort")
-                )
+                val notification = createServerNotification("Server listening for PC connections on port $actualServerPort")
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                    startForeground(NOTIFICATION_ID, notification, FOREGROUND_SERVICE_TYPES)
+                } else {
+                    startForeground(NOTIFICATION_ID, notification)
+                }
             }
             while (!stopToken.isStopRequested() && isServerRunning.get()) {
                 try {
