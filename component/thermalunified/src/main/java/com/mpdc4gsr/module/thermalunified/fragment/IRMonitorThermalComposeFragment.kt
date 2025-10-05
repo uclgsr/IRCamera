@@ -73,7 +73,7 @@ class IRMonitorThermalComposeFragment : BaseComposeFragment<ThermalFragmentViewM
     @Composable
     private fun IRMonitorThermalContent(
         viewModel: ThermalFragmentViewModel,
-        uiState: ThermalFragmentViewModel.ThermalUiState,
+        uiState: ThermalFragmentViewModel.ThermalMonitoringUiState,
         modifier: Modifier = Modifier
     ) {
         Column(

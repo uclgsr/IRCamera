@@ -15,6 +15,20 @@ import kotlinx.coroutines.launch
 
 class IRThermalFragmentViewModel : BaseViewModel() {
 
+    data class DeviceConnectionState(
+        val hasConnection: Boolean = false,
+        val isTC007Connected: Boolean = false,
+        val hasUsbDevice: Boolean = false,
+        val isTC007Device: Boolean = false
+    )
+
+    data class ThermalUIState(
+        val isConnected: Boolean = false,
+        val isTC007Connected: Boolean = false,
+        val showConnectButton: Boolean = false,
+        val isLoading: Boolean = false
+    )
+
     // Device connection state management
     private val _deviceConnectionState = MutableStateFlow(DeviceConnectionState())
     val deviceConnectionState: StateFlow<DeviceConnectionState> =
@@ -226,21 +240,6 @@ class IRThermalFragmentViewModel : BaseViewModel() {
     fun openDeviceSettings() {
         _thermalAction.value = ThermalAction.ShowConnectTip
     }
-
-    // Data classes for state management
-    data class DeviceConnectionState(
-        val hasConnection: Boolean = false,
-        val isTC007Connected: Boolean = false,
-        val hasUsbDevice: Boolean = false,
-        val isTC007Device: Boolean = false
-    )
-
-    data class ThermalUIState(
-        val isConnected: Boolean = false,
-        val isTC007Connected: Boolean = false,
-        val showConnectButton: Boolean = false,
-        val isLoading: Boolean = false
-    )
 
     sealed class NavigationEvent {
         object NavigateToTC007Thermal : NavigationEvent()
