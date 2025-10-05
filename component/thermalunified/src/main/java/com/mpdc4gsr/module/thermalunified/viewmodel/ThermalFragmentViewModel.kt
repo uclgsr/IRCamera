@@ -32,6 +32,18 @@ class ThermalFragmentViewModel(
     private val context: Context? = null
 ) : BaseViewModel() {
 
+    // ThermalUiState data class for Compose UI
+    data class ThermalUiState(
+        val isMonitoring: Boolean = false,
+        val currentTemperature: Float? = null,
+        val minTemperature: Float? = null,
+        val maxTemperature: Float? = null,
+        val averageTemperature: Float? = null,
+        val isDeviceConnected: Boolean = false,
+        val isRecording: Boolean = false,
+        val alertCount: Int = 0
+    )
+
     // Thermal image processing state
     private val _thermalImageState = MutableStateFlow(ThermalImageState())
     val thermalImageState: StateFlow<ThermalImageState> = _thermalImageState.asStateFlow()
@@ -548,18 +560,6 @@ class ThermalFragmentViewModel(
     }
 
     enum class AlertType { HOT_SPOT, COLD_SPOT, TEMPERATURE_THRESHOLD }
-
-    // ThermalUiState data class for Compose UI
-    data class ThermalUiState(
-        val isMonitoring: Boolean = false,
-        val currentTemperature: Float? = null,
-        val minTemperature: Float? = null,
-        val maxTemperature: Float? = null,
-        val averageTemperature: Float? = null,
-        val isDeviceConnected: Boolean = false,
-        val isRecording: Boolean = false,
-        val alertCount: Int = 0
-    )
 
     // Combined UI state for compose UI
     private val _thermalUiState = MutableStateFlow(ThermalUiState())
