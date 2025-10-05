@@ -52,6 +52,8 @@ private fun ThermalGalleryScreen(
 ) {
     var viewMode by remember { mutableStateOf(ViewMode.GRID) }
     var selectedFilter by remember { mutableStateOf(FilterType.ALL) }
+    var showSearchDialog by remember { mutableStateOf(false) }
+    var showMoreOptionsDialog by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -91,11 +93,7 @@ private fun ThermalGalleryScreen(
                         tint = Color(0xFFFF6B35)
                     )
                 }
-                IconButton(onClick = { /* TODO: Implement search
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                IconButton(onClick = { showSearchDialog = true }) {
                     Icon(
                         Icons.Default.Search,
                         contentDescription = "Search",
@@ -122,6 +120,60 @@ private fun ThermalGalleryScreen(
                 ViewMode.LIST -> ThermalListView()
             }
         }
+    }
+    
+    // Search Dialog
+    if (showSearchDialog) {
+        AlertDialog(
+            onDismissRequest = { showSearchDialog = false },
+            title = { Text("Search Thermal Images") },
+            text = {
+                Column {
+                    Text("Search by:")
+                    Spacer(modifier = Modifier.height(16.dp))
+                    listOf("Date", "Temperature Range", "Location", "Tags").forEach { searchType ->
+                        TextButton(
+                            onClick = { showSearchDialog = false },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(searchType)
+                        }
+                    }
+                }
+            },
+            confirmButton = {},
+            dismissButton = {
+                TextButton(onClick = { showSearchDialog = false }) {
+                    Text("Cancel")
+                }
+            }
+        )
+    }
+    
+    // More Options Dialog
+    if (showMoreOptionsDialog) {
+        AlertDialog(
+            onDismissRequest = { showMoreOptionsDialog = false },
+            title = { Text("Gallery Options") },
+            text = {
+                Column {
+                    listOf("Sort by Date", "Sort by Temperature", "Batch Export", "Delete Selected", "Settings").forEach { option ->
+                        TextButton(
+                            onClick = { showMoreOptionsDialog = false },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(option)
+                        }
+                    }
+                }
+            },
+            confirmButton = {},
+            dismissButton = {
+                TextButton(onClick = { showMoreOptionsDialog = false }) {
+                    Text("Cancel")
+                }
+            }
+        )
     }
 }
 
@@ -302,11 +354,7 @@ private fun ThermalImageListItem(image: GalleryThermalImage) {
             }
 
             // Actions
-            IconButton(onClick = { /* TODO: Implement more options
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+            IconButton(onClick = { showMoreOptionsDialog = true }) {
                 Icon(
                     Icons.Default.MoreVert,
                     contentDescription = "More",

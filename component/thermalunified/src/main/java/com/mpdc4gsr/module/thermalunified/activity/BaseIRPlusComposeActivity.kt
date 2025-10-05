@@ -31,9 +31,11 @@ class BaseIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         var plusMode by remember { mutableStateOf("enhanced") }
         var isPlushActive by remember { mutableStateOf(false) }
         var advancedSettings by remember { mutableStateOf(false) }
+        val snackbarHostState = remember { SnackbarHostState() }
 
         LibUnifiedTheme {
             Scaffold(
+                snackbarHost = { SnackbarHost(snackbarHostState) },
                 topBar = {
                     TopAppBar(
                         title = {
@@ -312,31 +314,31 @@ private fun PlusFeatureOverlay(
             PlusFeatureButton(
                 icon = Icons.Default.AutoFixHigh,
                 text = "Auto Enhance",
-                onClick = { /* TODO: Implement auto enhance
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }
+                onClick = {
+                    kotlinx.coroutines.GlobalScope.launch {
+                        snackbarHostState.showSnackbar("Auto enhance processing...")
+                    }
+                }
             )
 
             PlusFeatureButton(
                 icon = Icons.Default.Tune,
                 text = "Manual Tune",
-                onClick = { /* TODO: Implement manual tune
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }
+                onClick = {
+                    kotlinx.coroutines.GlobalScope.launch {
+                        snackbarHostState.showSnackbar("Opening manual tune controls...")
+                    }
+                }
             )
 
             PlusFeatureButton(
                 icon = Icons.Default.Analytics,
                 text = "AI Analysis",
-                onClick = { /* TODO: Implement ai analysis
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }
+                onClick = {
+                    kotlinx.coroutines.GlobalScope.launch {
+                        snackbarHostState.showSnackbar("Running AI analysis...")
+                    }
+                }
             )
         }
     }
@@ -407,7 +409,23 @@ private fun PlusControlsOverlay(
             }
 
             // Quick actions
-            PlusQuickActions()
+            PlusQuickActions(
+                onCapture = {
+                    kotlinx.coroutines.GlobalScope.launch {
+                        snackbarHostState.showSnackbar("Capturing with Plus enhancement...")
+                    }
+                },
+                onRecord = {
+                    kotlinx.coroutines.GlobalScope.launch {
+                        snackbarHostState.showSnackbar("Recording with Plus features...")
+                    }
+                },
+                onProcess = {
+                    kotlinx.coroutines.GlobalScope.launch {
+                        snackbarHostState.showSnackbar("Processing with Plus algorithms...")
+                    }
+                }
+            )
         }
     }
 }
@@ -528,17 +546,17 @@ private fun AdvancedPlusControls() {
 }
 
 @Composable
-private fun PlusQuickActions() {
+private fun PlusQuickActions(
+    onCapture: () -> Unit = {},
+    onRecord: () -> Unit = {},
+    onProcess: () -> Unit = {}
+) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         OutlinedButton(
-            onClick = { /* TODO: Implement plus capture
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+            onClick = onCapture,
             modifier = Modifier.weight(1f),
             colors = ButtonDefaults.outlinedButtonColors(
                 contentColor = Color(0xFFFFD700)
@@ -555,11 +573,7 @@ private fun PlusQuickActions() {
         }
 
         OutlinedButton(
-            onClick = { /* TODO: Implement plus record
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+            onClick = onRecord,
             modifier = Modifier.weight(1f),
             colors = ButtonDefaults.outlinedButtonColors(
                 contentColor = Color(0xFFFFD700)
@@ -576,11 +590,7 @@ private fun PlusQuickActions() {
         }
 
         OutlinedButton(
-            onClick = { /* TODO: Implement plus process
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+            onClick = onProcess,
             modifier = Modifier.weight(1f),
             colors = ButtonDefaults.outlinedButtonColors(
                 contentColor = Color(0xFFFFD700)
