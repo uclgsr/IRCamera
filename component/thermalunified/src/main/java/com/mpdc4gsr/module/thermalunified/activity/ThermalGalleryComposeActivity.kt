@@ -354,7 +354,7 @@ private fun ThermalImageListItem(image: GalleryThermalImage) {
             }
 
             // Actions
-            IconButton(onClick = { showMoreOptionsDialog = true }) {
+            IconButton(onClick = onMoreClick) {
                 Icon(
                     Icons.Default.MoreVert,
                     contentDescription = "More",
