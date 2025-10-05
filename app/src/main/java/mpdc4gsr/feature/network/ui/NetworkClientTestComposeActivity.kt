@@ -43,7 +43,7 @@ fun NetworkClientTestScreen(
     viewModel: NetworkClientTestViewModel = viewModel(),
     onNavigateBack: () -> Unit = {}
 ) {
-    val context = androidx.compose.ui.platform.LocalContext.current
+    val localContext = androidx.compose.ui.platform.LocalContext.current
     val uiState by viewModel.networkTestUiState.collectAsState()
 
     Column(
@@ -564,6 +564,7 @@ private fun NetworkConfigurationCard(
     configuration: NetworkConfiguration,
     onUpdateConfiguration: (NetworkConfiguration) -> Unit
 ) {
+    val localContext = androidx.compose.ui.platform.LocalContext.current
     var expanded by remember { mutableStateOf(false) }
 
     Card(
@@ -624,7 +625,7 @@ private fun NetworkConfigurationCard(
                     onClick = {
                         // TODO: Implement network configuration editor dialog
                         android.widget.Toast.makeText(
-                            context,
+                            localContext,
                             "Network configuration editor",
                             android.widget.Toast.LENGTH_SHORT
                         ).show()

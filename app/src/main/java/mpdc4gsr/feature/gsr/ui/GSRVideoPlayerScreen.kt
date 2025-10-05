@@ -31,7 +31,7 @@ fun GSRVideoPlayerScreen(
     onBackClick: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
-    val context = LocalContext.current
+    val localContext = LocalContext.current
     var isPlaying by remember { mutableStateOf(false) }
     var currentPosition by remember { mutableStateOf(0) }
     var duration by remember { mutableStateOf(100) }
@@ -224,7 +224,7 @@ private fun VideoControlsCard(
                 IconButton(onClick = {
                     // TODO: Skip to previous video
                     android.widget.Toast.makeText(
-                        context,
+                        localContext,
                         "Previous video",
                         android.widget.Toast.LENGTH_SHORT
                     ).show()
@@ -247,7 +247,7 @@ private fun VideoControlsCard(
                 IconButton(onClick = {
                     // TODO: Skip to next video
                     android.widget.Toast.makeText(
-                        context,
+                        localContext,
                         "Next video",
                         android.widget.Toast.LENGTH_SHORT
                     ).show()
@@ -258,7 +258,7 @@ private fun VideoControlsCard(
                 IconButton(onClick = {
                     // TODO: Toggle fullscreen mode
                     android.widget.Toast.makeText(
-                        context,
+                        localContext,
                         "Fullscreen mode",
                         android.widget.Toast.LENGTH_SHORT
                     ).show()

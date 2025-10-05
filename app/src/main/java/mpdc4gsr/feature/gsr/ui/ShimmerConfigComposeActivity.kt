@@ -61,7 +61,7 @@ class ShimmerConfigComposeActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun Content(viewModel: ShimmerConfigViewModel) {
-        val context = androidx.compose.ui.platform.LocalContext.current
+        val localContext = androidx.compose.ui.platform.LocalContext.current
         var isScanning by remember { mutableStateOf(false) }
         var selectedDevice by remember { mutableStateOf<DeviceInfo?>(null) }
         var showConfigDialog by remember { mutableStateOf(false) }
@@ -92,7 +92,7 @@ class ShimmerConfigComposeActivity : ComponentActivity() {
                             IconButton(onClick = {
                                 // TODO: Implement Shimmer configuration help/documentation
                                 android.widget.Toast.makeText(
-                                    context,
+                                    localContext,
                                     "Opening Shimmer configuration help",
                                     android.widget.Toast.LENGTH_SHORT
                                 ).show()
@@ -136,6 +136,7 @@ private fun ShimmerConfigContent(
     viewModel: ShimmerConfigViewModel,
     modifier: Modifier = Modifier
 ) {
+    val localContext = androidx.compose.ui.platform.LocalContext.current
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -173,7 +174,7 @@ private fun ShimmerConfigContent(
                     onConnect = {
                         // TODO: Implement Shimmer device connection
                         android.widget.Toast.makeText(
-                            context,
+                            localContext,
                             "Connecting to ${device.name}...",
                             android.widget.Toast.LENGTH_SHORT
                         ).show()

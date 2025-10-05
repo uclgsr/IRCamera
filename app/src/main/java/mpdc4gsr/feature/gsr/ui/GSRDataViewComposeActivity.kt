@@ -61,7 +61,7 @@ class GSRDataViewComposeActivity : BaseComposeActivity<GSRDataViewViewModel>() {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: GSRDataViewViewModel) {
-        val context = this@GSRDataViewComposeActivity
+        val localContext = this@GSRDataViewComposeActivity
         val filePath = intent.getStringExtra(EXTRA_FILE_PATH) ?: ""
         val sessionId = intent.getStringExtra(EXTRA_SESSION_ID)
 
@@ -84,7 +84,7 @@ class GSRDataViewComposeActivity : BaseComposeActivity<GSRDataViewViewModel>() {
                             IconButton(onClick = {
                                 // TODO: Implement search functionality
                                 android.widget.Toast.makeText(
-                                    context,
+                                    localContext,
                                     "Search data feature coming soon",
                                     android.widget.Toast.LENGTH_SHORT
                                 ).show()
@@ -94,7 +94,7 @@ class GSRDataViewComposeActivity : BaseComposeActivity<GSRDataViewViewModel>() {
                             IconButton(onClick = {
                                 // TODO: Implement filter functionality
                                 android.widget.Toast.makeText(
-                                    context,
+                                    localContext,
                                     "Filter data feature coming soon",
                                     android.widget.Toast.LENGTH_SHORT
                                 ).show()
@@ -104,7 +104,7 @@ class GSRDataViewComposeActivity : BaseComposeActivity<GSRDataViewViewModel>() {
                             IconButton(onClick = {
                                 // TODO: Implement export functionality
                                 android.widget.Toast.makeText(
-                                    context,
+                                    localContext,
                                     "Export data feature coming soon",
                                     android.widget.Toast.LENGTH_SHORT
                                 ).show()
@@ -114,7 +114,7 @@ class GSRDataViewComposeActivity : BaseComposeActivity<GSRDataViewViewModel>() {
                             IconButton(onClick = {
                                 // TODO: Show more options menu
                                 android.widget.Toast.makeText(
-                                    context,
+                                    localContext,
                                     "More options coming soon",
                                     android.widget.Toast.LENGTH_SHORT
                                 ).show()
@@ -265,6 +265,7 @@ private fun DataInfoRow(
 
 @Composable
 private fun RawDataView() {
+    val localContext = androidx.compose.ui.platform.LocalContext.current
     // Generate sample GSR data
     val sampleData = remember {
         generateSampleGSRDataRows(1000)
@@ -299,7 +300,7 @@ private fun RawDataView() {
                     IconButton(onClick = {
                         // TODO: Scroll to top of data
                         android.widget.Toast.makeText(
-                            context,
+                            localContext,
                             "Scroll to top",
                             android.widget.Toast.LENGTH_SHORT
                         ).show()
@@ -309,7 +310,7 @@ private fun RawDataView() {
                     IconButton(onClick = {
                         // TODO: Scroll to bottom of data
                         android.widget.Toast.makeText(
-                            context,
+                            localContext,
                             "Scroll to bottom",
                             android.widget.Toast.LENGTH_SHORT
                         ).show()
@@ -504,7 +505,7 @@ private fun ProcessingOptionsCard() {
                 onClick = {
                     // TODO: Apply data processing
                     android.widget.Toast.makeText(
-                        context,
+                        localContext,
                         "Applying processing...",
                         android.widget.Toast.LENGTH_SHORT
                     ).show()
@@ -603,7 +604,7 @@ private fun ProcessingResultsCard() {
                     onClick = {
                         // TODO: View processed data
                         android.widget.Toast.makeText(
-                            context,
+                            localContext,
                             "Viewing processed data...",
                             android.widget.Toast.LENGTH_SHORT
                         ).show()
@@ -619,7 +620,7 @@ private fun ProcessingResultsCard() {
                     onClick = {
                         // TODO: Export processed data
                         android.widget.Toast.makeText(
-                            context,
+                            localContext,
                             "Exporting processed data...",
                             android.widget.Toast.LENGTH_SHORT
                         ).show()
