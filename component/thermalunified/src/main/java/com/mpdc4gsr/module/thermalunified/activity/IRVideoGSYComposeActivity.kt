@@ -97,7 +97,7 @@ class IRVideoGSYComposeActivity : BaseComposeActivity<IRVideoGSYViewModel>() {
                     ) {
                         Icon(
                             if (isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
-                            contentDescription = null,
+                            contentDescription = if (isPlaying) "Pause" else "Play",
                             tint = Color(0xFFFF6B35),
                             modifier = Modifier.size(64.dp)
                         )

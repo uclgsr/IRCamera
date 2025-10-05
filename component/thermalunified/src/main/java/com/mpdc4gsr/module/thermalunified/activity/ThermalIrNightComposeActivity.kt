@@ -137,7 +137,7 @@ class ThermalIrNightComposeActivity : BaseComposeActivity<ThermalIrNightViewMode
                             ) {
                                 Icon(
                                     if (nightModeEnabled) Icons.Default.Brightness3 else Icons.Default.Brightness7,
-                                    contentDescription = null,
+                                    contentDescription = if (nightModeEnabled) "Night Mode" else "Day Mode",
                                     modifier = Modifier.size(48.dp),
                                     tint = Color.White.copy(alpha = 0.3f)
                                 )
@@ -168,7 +168,7 @@ class ThermalIrNightComposeActivity : BaseComposeActivity<ThermalIrNightViewMode
                                     ) {
                                         Icon(
                                             Icons.Default.NightsStay,
-                                            contentDescription = null,
+                                            contentDescription = "Night Mode",
                                             modifier = Modifier.size(20.dp),
                                             tint = Color.Yellow
                                         )

@@ -138,7 +138,7 @@ class MonitorLogComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         ) {
                             Icon(
                                 Icons.Default.Description,
-                                contentDescription = null,
+                                contentDescription = "No log entries",
                                 modifier = Modifier.size(64.dp),
                                 tint = Color.White.copy(alpha = 0.3f)
                             )
@@ -257,7 +257,7 @@ class MonitorLogComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Icon(
                                 Icons.Default.LocationOn,
-                                contentDescription = null,
+                                contentDescription = "Location",
                                 modifier = Modifier.size(16.dp),
                                 tint = Color.White.copy(alpha = 0.6f)
                             )
