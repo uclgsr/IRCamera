@@ -32,8 +32,8 @@ class ThermalFragmentViewModel(
     private val context: Context? = null
 ) : BaseViewModel() {
 
-    // ThermalUiState data class for Compose UI
-    data class ThermalUiState(
+    // ThermalMonitoringUiState data class for Compose UI - holds monitoring-related state
+    data class ThermalMonitoringUiState(
         val isMonitoring: Boolean = false,
         val currentTemperature: Float? = null,
         val minTemperature: Float? = null,
@@ -65,8 +65,8 @@ class ThermalFragmentViewModel(
     val videoRecordingState: StateFlow<VideoRecordingState> = _videoRecordingState.asStateFlow()
 
     // UI interaction state for processing
-    private val _processingUiState = MutableStateFlow(ThermalUIState())
-    val processingUiState: StateFlow<ThermalUIState> = _processingUiState.asStateFlow()
+    private val _processingUiState = MutableStateFlow(ThermalProcessingUiState())
+    val processingUiState: StateFlow<ThermalProcessingUiState> = _processingUiState.asStateFlow()
 
     // Temperature data for UI display
     private val _temperatureData = MutableStateFlow<TemperatureData?>(null)
@@ -108,7 +108,7 @@ class ThermalFragmentViewModel(
                 _temperatureAnalysis,
                 _fenceState
             ) { imageState, tempAnalysis, fenceState ->
-                ThermalUIState(
+                ThermalProcessingUiState(
                     isProcessing = imageState.isProcessing,
                     hasValidImage = imageState.bitmap != null,
                     temperatureInfo = tempAnalysis,
@@ -523,7 +523,7 @@ class ThermalFragmentViewModel(
         val recordingDuration: Long = 0L
     )
 
-    data class ThermalUIState(
+    data class ThermalProcessingUiState(
         val isProcessing: Boolean = false,
         val hasValidImage: Boolean = false,
         val temperatureInfo: TemperatureAnalysis = TemperatureAnalysis(),
@@ -562,8 +562,8 @@ class ThermalFragmentViewModel(
     enum class AlertType { HOT_SPOT, COLD_SPOT, TEMPERATURE_THRESHOLD }
 
     // Combined UI state for compose UI
-    private val _thermalUiState = MutableStateFlow(ThermalUiState())
-    val thermalUiState: StateFlow<ThermalUiState> = _thermalUiState.asStateFlow()
+    private val _thermalUiState = MutableStateFlow(ThermalMonitoringUiState())
+    val thermalUiState: StateFlow<ThermalMonitoringUiState> = _thermalUiState.asStateFlow()
 
     // Monitoring state
     private val _isMonitoring = MutableStateFlow(false)
@@ -576,7 +576,7 @@ class ThermalFragmentViewModel(
                 _connectionStatus,
                 _isRecording
             ) { isMonitoring, tempAnalysis, connectionStatus, isRecording ->
-                ThermalUiState(
+                ThermalMonitoringUiState(
                     isMonitoring = isMonitoring,
                     currentTemperature = if (tempAnalysis.isValid) tempAnalysis.averageTemperature else null,
                     minTemperature = if (tempAnalysis.isValid) tempAnalysis.minTemperature else null,
