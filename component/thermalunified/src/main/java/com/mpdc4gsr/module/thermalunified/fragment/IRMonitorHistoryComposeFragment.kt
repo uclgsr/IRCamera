@@ -439,11 +439,7 @@ class IRMonitorHistoryComposeFragment : BaseComposeFragment<IRMonitorHistoryView
                     }
                 } else {
                     IconButton(
-                        onClick = { /* TODO: Implement handle view details
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }
+                        onClick = {}
                     ) {
                         Icon(
                             Icons.Default.Visibility,
