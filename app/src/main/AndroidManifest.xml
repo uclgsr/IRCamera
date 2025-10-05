@@ -41,15 +41,9 @@
 
     <!-- Foreground service permissions for Android 14+ -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission
-        android:name="android.permission.FOREGROUND_SERVICE_CAMERA"
-        tools:targetApi="34" />
-    <uses-permission
-        android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE"
-        tools:targetApi="34" />
-    <uses-permission
-        android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC"
-        tools:targetApi="34" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CAMERA" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
 
     <!-- Hardware features -->
     <uses-feature
@@ -324,7 +318,7 @@
             android:name="mpdc4gsr.core.RecordingService"
             android:enabled="true"
             android:exported="false"
-            android:foregroundServiceType="dataSync|camera|microphone" />
+            android:foregroundServiceType="microphone|camera|dataSync" />
 
         <!-- File Provider -->
         <provider
