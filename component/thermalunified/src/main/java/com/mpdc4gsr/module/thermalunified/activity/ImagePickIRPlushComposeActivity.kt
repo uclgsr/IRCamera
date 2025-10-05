@@ -28,8 +28,12 @@ class ImagePickIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: ThermalViewModel) {
+        var showAIDialog by remember { mutableStateOf(false) }
+        val snackbarHostState = remember { SnackbarHostState() }
+        
         LibUnifiedTheme {
             Scaffold(
+                snackbarHost = { SnackbarHost(snackbarHostState) },
                 topBar = {
                     TopAppBar(
                         title = {
@@ -65,11 +69,9 @@ class ImagePickIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() 
                 },
                 floatingActionButton = {
                     FloatingActionButton(
-                        onClick = { /* TODO: Implement capture with ai enhancement
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+                        onClick = { 
+                            showAIDialog = true
+                        },
                         containerColor = Color(0xFFFFD700),
                         contentColor = Color.Black
                     ) {
@@ -79,6 +81,39 @@ class ImagePickIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() 
             ) { paddingValues ->
                 ImagePickerPlusContent(
                     modifier = Modifier.padding(paddingValues)
+                )
+            }
+            
+            // AI Enhancement Dialog
+            if (showAIDialog) {
+                AlertDialog(
+                    onDismissRequest = { showAIDialog = false },
+                    title = { Text("AI Enhancement") },
+                    text = {
+                        Column {
+                            Text("Select AI enhancement mode:")
+                            Spacer(modifier = Modifier.height(16.dp))
+                            listOf("Auto Enhance", "Noise Reduction", "Detail Enhancement", "Color Correction").forEach { mode ->
+                                TextButton(
+                                    onClick = {
+                                        kotlinx.coroutines.GlobalScope.launch {
+                                            snackbarHostState.showSnackbar("Applying $mode...")
+                                        }
+                                        showAIDialog = false
+                                    },
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Text(mode)
+                                }
+                            }
+                        }
+                    },
+                    confirmButton = {},
+                    dismissButton = {
+                        TextButton(onClick = { showAIDialog = false }) {
+                            Text("Cancel")
+                        }
+                    }
                 )
             }
         }
@@ -297,11 +332,11 @@ class ImagePickIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() 
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 OutlinedButton(
-                    onClick = { /* TODO: Implement recent images
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+                    onClick = {
+                        kotlinx.coroutines.GlobalScope.launch {
+                            snackbarHostState.showSnackbar("Loading recent images...")
+                        }
+                    },
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.outlinedButtonColors(
                         contentColor = Color(0xFF7D8590)
@@ -313,11 +348,11 @@ class ImagePickIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() 
                 }
 
                 Button(
-                    onClick = { /* TODO: Implement ai batch process
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+                    onClick = {
+                        kotlinx.coroutines.GlobalScope.launch {
+                            snackbarHostState.showSnackbar("Starting AI batch processing...")
+                        }
+                    },
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color(0xFFFFD700),

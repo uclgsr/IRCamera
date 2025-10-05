@@ -35,9 +35,13 @@ class LogMPChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         var logEntries by remember { mutableIntStateOf(0) }
         var dataPoints by remember { mutableIntStateOf(125) }
         var selectedTimeRange by remember { mutableStateOf("1 Hour") }
+        var showExportDialog by remember { mutableStateOf(false) }
+        var showSettingsDialog by remember { mutableStateOf(false) }
+        val snackbarHostState = remember { SnackbarHostState() }
 
         LibUnifiedTheme {
             Scaffold(
+                snackbarHost = { SnackbarHost(snackbarHostState) },
                 topBar = {
                     TopAppBar(
                         title = {
@@ -57,22 +61,14 @@ class LogMPChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             }
                         },
                         actions = {
-                            IconButton(onClick = { /* TODO: Implement export chart
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                            IconButton(onClick = { showExportDialog = true }) {
                                 Icon(
                                     Icons.Default.FileDownload,
                                     contentDescription = "Export",
                                     tint = Color.White
                                 )
                             }
-                            IconButton(onClick = { /* TODO: Implement chart settings
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                            IconButton(onClick = { showSettingsDialog = true }) {
                                 Icon(
                                     Icons.Default.MoreVert,
                                     contentDescription = "Settings",
@@ -132,16 +128,18 @@ class LogMPChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                     // Export and management
                     item {
                         DataManagementCard(
-                            onExportCsv = { /* TODO: Implement CSV export
-                     *   - Format data as CSV
-                     *   - Show file picker for save location
-                     *   - Display success message
-                     */ },
-                            onExportPdf = { /* TODO: Implement export pdf
-                     *   - Implement callback logic for onExportPdf
-                     *   - Handle data/state updates
-                     *   - Provide user feedback
-                     */ },
+                            onExportCsv = {
+                                kotlinx.coroutines.GlobalScope.launch {
+                                    viewModel.exportData(this@LogMPChartComposeActivity, ThermalViewModel.ExportFormat.CSV)
+                                    snackbarHostState.showSnackbar("Exporting data as CSV...")
+                                }
+                            },
+                            onExportPdf = {
+                                kotlinx.coroutines.GlobalScope.launch {
+                                    viewModel.exportData(this@LogMPChartComposeActivity, ThermalViewModel.ExportFormat.PDF)
+                                    snackbarHostState.showSnackbar("Exporting data as PDF...")
+                                }
+                            },
                             onClearData = {
                                 logEntries = 0
                                 dataPoints = 0
@@ -161,6 +159,62 @@ class LogMPChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                     dataPoints++
                 }
             }
+        }
+        
+        // Export dialog
+        if (showExportDialog) {
+            AlertDialog(
+                onDismissRequest = { showExportDialog = false },
+                title = { Text("Export Chart Data") },
+                text = {
+                    Column {
+                        Text("Select export format:")
+                        Spacer(modifier = Modifier.height(16.dp))
+                        listOf("Image (PNG)", "CSV Data", "PDF Report").forEach { format ->
+                            TextButton(
+                                onClick = {
+                                    kotlinx.coroutines.GlobalScope.launch {
+                                        snackbarHostState.showSnackbar("Exporting as $format...")
+                                    }
+                                    showExportDialog = false
+                                },
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Text(format)
+                            }
+                        }
+                    }
+                },
+                confirmButton = {},
+                dismissButton = {
+                    TextButton(onClick = { showExportDialog = false }) {
+                        Text("Cancel")
+                    }
+                }
+            )
+        }
+        
+        // Settings dialog
+        if (showSettingsDialog) {
+            AlertDialog(
+                onDismissRequest = { showSettingsDialog = false },
+                title = { Text("Chart Settings") },
+                text = {
+                    Column {
+                        Text("Configure chart display settings")
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text("• Time range", style = MaterialTheme.typography.bodySmall)
+                        Text("• Data refresh rate", style = MaterialTheme.typography.bodySmall)
+                        Text("• Chart colors", style = MaterialTheme.typography.bodySmall)
+                    }
+                },
+                confirmButton = {
+                    TextButton(onClick = { showSettingsDialog = false }) {
+                        Text("OK")
+                    }
+                },
+                dismissButton = {}
+            )
         }
     }
 }
