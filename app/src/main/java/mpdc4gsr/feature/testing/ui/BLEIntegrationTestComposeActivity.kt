@@ -59,12 +59,7 @@ class BLEIntegrationTestComposeActivity : BaseComposeActivity<BLEIntegrationTest
     override fun Content(viewModel: BLEIntegrationTestViewModel) {
         LibUnifiedTheme {
             BLEIntegrationTestScreen(
-                onRunTest = { testType -> runTest(testType) },
-                onClearLogs = { /* TODO: Implement clear logs
-                     *   - Implement callback logic for onClearLogs
-                     *   - Handle data/state updates
-                     *   - Provide user feedback
-                     */ }
+                onRunTest = { testType -> runTest(testType) }
             )
         }
     }
@@ -72,8 +67,7 @@ class BLEIntegrationTestComposeActivity : BaseComposeActivity<BLEIntegrationTest
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun BLEIntegrationTestScreen(
-        onRunTest: (String) -> Unit,
-        onClearLogs: () -> Unit
+        onRunTest: (String) -> Unit
     ) {
         var testResults by remember { mutableStateOf(listOf<TestCase>()) }
         var isTestRunning by remember { mutableStateOf(false) }
@@ -125,7 +119,7 @@ class BLEIntegrationTestComposeActivity : BaseComposeActivity<BLEIntegrationTest
                         }
                     },
                     actions = {
-                        IconButton(onClick = onClearLogs) {
+                        IconButton(onClick = { logMessages = emptyList() }) {
                             Icon(Icons.Default.Clear, contentDescription = "Clear Logs")
                         }
                     }
