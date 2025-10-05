@@ -18,6 +18,8 @@ import androidx.compose.ui.unit.sp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 class ImagePickIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() {
 
@@ -81,7 +83,9 @@ class ImagePickIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() 
                 }
             ) { paddingValues ->
                 ImagePickerPlusContent(
-                    modifier = Modifier.padding(paddingValues)
+                    modifier = Modifier.padding(paddingValues),
+                    scope = scope,
+                    snackbarHostState = snackbarHostState
                 )
             }
             
@@ -122,7 +126,9 @@ class ImagePickIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() 
 
     @Composable
     private fun ImagePickerPlusContent(
-        modifier: Modifier = Modifier
+        modifier: Modifier = Modifier,
+        scope: CoroutineScope,
+        snackbarHostState: SnackbarHostState
     ) {
         var captureMode by remember { mutableStateOf("Smart") }
         var aiEnhancement by remember { mutableStateOf(true) }

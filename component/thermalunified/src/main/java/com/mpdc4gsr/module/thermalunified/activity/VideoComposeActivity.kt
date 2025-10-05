@@ -24,6 +24,8 @@ import androidx.compose.ui.viewinterop.AndroidView
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 class VideoComposeActivity : BaseComposeActivity<ThermalViewModel>() {
 
@@ -124,9 +126,14 @@ class VideoComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             currentPosition = currentPosition,
                             duration = duration,
                             playbackSpeed = playbackSpeed,
+                            isFullscreen = isFullscreen,
                             onPlayPause = { isPlaying = !isPlaying },
                             onSeek = { position -> currentPosition = position },
                             onSpeedChange = { speed -> playbackSpeed = speed },
+                            onToggleFullscreen = { isFullscreen = !isFullscreen },
+                            scope = scope,
+                            snackbarHostState = snackbarHostState,
+                            contentResolver = contentResolver,
                             modifier = Modifier
                                 .align(Alignment.BottomCenter)
                                 .fillMaxWidth()
@@ -186,9 +193,14 @@ private fun VideoControlsOverlay(
     currentPosition: Long,
     duration: Long,
     playbackSpeed: Float,
+    isFullscreen: Boolean,
     onPlayPause: () -> Unit,
     onSeek: (Long) -> Unit,
     onSpeedChange: (Float) -> Unit,
+    onToggleFullscreen: () -> Unit,
+    scope: CoroutineScope,
+    snackbarHostState: SnackbarHostState,
+    contentResolver: android.content.ContentResolver,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -324,7 +336,7 @@ private fun VideoControlsOverlay(
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    IconButton(onClick = { isFullscreen = !isFullscreen }) {
+                    IconButton(onClick = onToggleFullscreen) {
                         Icon(
                             if (isFullscreen) Icons.Default.FullscreenExit else Icons.Default.Fullscreen,
                             contentDescription = if (isFullscreen) "Exit Fullscreen" else "Fullscreen",
