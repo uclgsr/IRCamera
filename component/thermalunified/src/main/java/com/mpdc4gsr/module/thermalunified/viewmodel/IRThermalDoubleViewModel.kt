@@ -22,6 +22,9 @@ class IRThermalDoubleViewModel : BaseViewModel() {
     private val _isRecording = MutableStateFlow(false)
     val isRecording: StateFlow<Boolean> = _isRecording.asStateFlow()
 
+    private val _isRangeLocked = MutableStateFlow(false)
+    val isRangeLocked: StateFlow<Boolean> = _isRangeLocked.asStateFlow()
+
     fun selectMode(mode: Int) {
         launchWithErrorHandling {
             _selectedMode.value = mode
@@ -49,6 +52,12 @@ class IRThermalDoubleViewModel : BaseViewModel() {
     fun toggleRecording() {
         launchWithErrorHandling {
             _isRecording.value = !_isRecording.value
+        }
+    }
+
+    fun toggleRangeLock() {
+        launchWithErrorHandling {
+            _isRangeLocked.value = !_isRangeLocked.value
         }
     }
 }

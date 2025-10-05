@@ -34,6 +34,7 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
         val showTrendChart by viewModel.showTrendChart.collectAsState()
         val showCompass by viewModel.showCompass.collectAsState()
         val isRecording by viewModel.isRecording.collectAsState()
+        val isRangeLocked by viewModel.isRangeLocked.collectAsState()
 
         LibUnifiedTheme {
             Scaffold(
@@ -154,10 +155,10 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
                                         modifier = Modifier.padding(8.dp),
                                         verticalArrangement = Arrangement.spacedBy(4.dp)
                                     ) {
-                                        IconButton(onClick = { /* Lock/unlock */ }) {
+                                        IconButton(onClick = { viewModel.toggleRangeLock() }) {
                                             Icon(
-                                                Icons.Default.Lock,
-                                                contentDescription = "Lock",
+                                                if (isRangeLocked) Icons.Default.Lock else Icons.Default.LockOpen,
+                                                contentDescription = if (isRangeLocked) "Locked" else "Unlocked",
                                                 tint = Color.White
                                             )
                                         }
@@ -166,7 +167,7 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
                                             color = Color.White,
                                             fontSize = 12.sp
                                         )
-                                        IconButton(onClick = { /* Edit */ }) {
+                                        IconButton(onClick = { /* Show temperature range edit dialog */ }) {
                                             Icon(
                                                 Icons.Default.Edit,
                                                 contentDescription = "Edit",
@@ -287,7 +288,7 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
                                     .padding(vertical = 8.dp),
                                 horizontalArrangement = Arrangement.SpaceEvenly
                             ) {
-                                IconButton(onClick = { /* Gallery */ }) {
+                                IconButton(onClick = { /* Navigate to thermal gallery */ }) {
                                     Icon(Icons.Default.PhotoLibrary, "Gallery", tint = Color.White)
                                 }
                                 IconButton(onClick = { viewModel.toggleRecording() }) {
@@ -297,10 +298,10 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
                                         tint = if (isRecording) Color.Red else Color.White
                                     )
                                 }
-                                IconButton(onClick = { /* Camera */ }) {
+                                IconButton(onClick = { /* Capture thermal snapshot */ }) {
                                     Icon(Icons.Default.CameraAlt, "Camera", tint = Color.White)
                                 }
-                                IconButton(onClick = { /* More */ }) {
+                                IconButton(onClick = { /* Show more options menu */ }) {
                                     Icon(Icons.Default.MoreVert, "More", tint = Color.White)
                                 }
                             }
