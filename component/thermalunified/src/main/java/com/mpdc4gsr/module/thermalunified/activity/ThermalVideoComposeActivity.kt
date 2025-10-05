@@ -304,6 +304,7 @@ private fun ThermalVideoControls(
     onPositionChange: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val context = androidx.compose.ui.platform.LocalContext.current
     Card(
         modifier = modifier,
         colors = CardDefaults.cardColors(
@@ -353,7 +354,6 @@ private fun ThermalVideoControls(
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                val context = androidx.compose.ui.platform.LocalContext.current
                 IconButton(onClick = {
                     // TODO: Go to previous frame
                     android.widget.Toast.makeText(
