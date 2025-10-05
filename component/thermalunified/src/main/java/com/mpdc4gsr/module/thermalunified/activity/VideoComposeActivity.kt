@@ -21,6 +21,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
@@ -58,14 +61,19 @@ class VideoComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         var playbackSpeed by remember { mutableFloatStateOf(1.0f) }
         var pointAnalysisEnabled by remember { mutableStateOf(false) }
 
-        // Handle system UI changes for fullscreen
+        // Handle system UI changes for fullscreen using modern WindowInsetsController
         LaunchedEffect(isFullscreen) {
-            window.decorView.systemUiVisibility = if (isFullscreen) {
-                android.view.View.SYSTEM_UI_FLAG_FULLSCREEN or
-                android.view.View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
-                android.view.View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-            } else {
-                android.view.View.SYSTEM_UI_FLAG_VISIBLE
+            val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
+            windowInsetsController.apply {
+                if (isFullscreen) {
+                    // Hide system bars
+                    hide(WindowInsetsCompat.Type.systemBars())
+                    // Set behavior for immersive mode
+                    systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+                } else {
+                    // Show system bars
+                    show(WindowInsetsCompat.Type.systemBars())
+                }
             }
         }
 

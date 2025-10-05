@@ -13,13 +13,16 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mpdc4gsr.libunified.app.compose.base.BaseComposeActivity
 import com.mpdc4gsr.libunified.app.compose.theme.LibUnifiedTheme
 import com.mpdc4gsr.module.thermalunified.viewmodel.ThermalViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MonitorLogComposeActivity : BaseComposeActivity<ThermalViewModel>() {
 
@@ -51,6 +54,7 @@ class MonitorLogComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         var showAddLogDialog by remember { mutableStateOf(false) }
         val snackbarHostState = remember { SnackbarHostState() }
         val scope = rememberCoroutineScope()
+        val context = LocalContext.current
 
         LibUnifiedTheme {
             Scaffold(
@@ -79,28 +83,32 @@ class MonitorLogComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             IconButton(onClick = { 
                                 scope.launch {
                                     try {
-                                        // Export logs to CSV file
-                                        val csv = buildString {
-                                            appendLine("Timestamp,Temperature,Location,Notes")
-                                            logEntries.forEach { entry ->
-                                                appendLine("${entry.timestamp},${entry.temperature},${entry.location},${entry.notes}")
+                                        // Perform heavy IO operations on background thread
+                                        withContext(Dispatchers.IO) {
+                                            // Export logs to CSV file
+                                            val csv = buildString {
+                                                appendLine("Timestamp,Temperature,Location,Notes")
+                                                logEntries.forEach { entry ->
+                                                    appendLine("${entry.timestamp},${entry.temperature},${entry.location},${entry.notes}")
+                                                }
+                                            }
+                                            
+                                            // Create file in Downloads directory
+                                            val contentValues = android.content.ContentValues().apply {
+                                                put(android.provider.MediaStore.Files.FileColumns.DISPLAY_NAME, "monitor_log_${System.currentTimeMillis()}.csv")
+                                                put(android.provider.MediaStore.Files.FileColumns.MIME_TYPE, "text/csv")
+                                                put(android.provider.MediaStore.Files.FileColumns.RELATIVE_PATH, android.os.Environment.DIRECTORY_DOWNLOADS)
+                                            }
+                                            
+                                            val uri = context.contentResolver.insert(android.provider.MediaStore.Files.getContentUri("external"), contentValues)
+                                            uri?.let {
+                                                context.contentResolver.openOutputStream(it)?.use { outputStream ->
+                                                    outputStream.write(csv.toByteArray())
+                                                }
                                             }
                                         }
-                                        
-                                        // Create file in Downloads directory
-                                        val contentValues = android.content.ContentValues().apply {
-                                            put(android.provider.MediaStore.Files.FileColumns.DISPLAY_NAME, "monitor_log_${System.currentTimeMillis()}.csv")
-                                            put(android.provider.MediaStore.Files.FileColumns.MIME_TYPE, "text/csv")
-                                            put(android.provider.MediaStore.Files.FileColumns.RELATIVE_PATH, android.os.Environment.DIRECTORY_DOWNLOADS)
-                                        }
-                                        
-                                        val uri = this@MonitorLogComposeActivity.contentResolver.insert(android.provider.MediaStore.Files.getContentUri("external"), contentValues)
-                                        uri?.let {
-                                            this@MonitorLogComposeActivity.contentResolver.openOutputStream(it)?.use { outputStream ->
-                                                outputStream.write(csv.toByteArray())
-                                            }
-                                            snackbarHostState.showSnackbar("Logs exported to Downloads")
-                                        }
+                                        // Show success message on main thread
+                                        snackbarHostState.showSnackbar("Logs exported to Downloads")
                                     } catch (e: Exception) {
                                         snackbarHostState.showSnackbar("Export failed: ${e.message}")
                                     }
