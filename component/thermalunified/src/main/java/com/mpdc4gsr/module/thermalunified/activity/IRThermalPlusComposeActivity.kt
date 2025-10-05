@@ -331,7 +331,7 @@ class IRThermalPlusComposeActivity : BaseComposeActivity<IRThermalPlusViewModel>
                         brush = androidx.compose.ui.graphics.SolidColor(Color(0xFFFFD700))
                     )
                 ) {
-                    Icon(Icons.Default.Camera, contentDescription = null)
+                    Icon(Icons.Default.Camera, contentDescription = "AI Capture")
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("AI Capture")
                 }
@@ -344,7 +344,7 @@ class IRThermalPlusComposeActivity : BaseComposeActivity<IRThermalPlusViewModel>
                         contentColor = Color.Black
                     )
                 ) {
-                    Icon(Icons.Default.AutoAwesome, contentDescription = null)
+                    Icon(Icons.Default.AutoAwesome, contentDescription = "Analyze")
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Analyze")
                 }

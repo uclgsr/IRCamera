@@ -266,7 +266,7 @@ class IRLogMPChartComposeActivity : BaseComposeActivity<IRLogMPChartViewModel>()
                         contentColor = Color(0xFF666666)
                     )
                 ) {
-                    Icon(Icons.Default.Clear, contentDescription = null)
+                    Icon(Icons.Default.Clear, contentDescription = "Clear")
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Clear")
                 }
@@ -285,7 +285,7 @@ class IRLogMPChartComposeActivity : BaseComposeActivity<IRLogMPChartViewModel>()
                         containerColor = Color(0xFF4CAF50)
                     )
                 ) {
-                    Icon(Icons.Default.FileDownload, contentDescription = null)
+                    Icon(Icons.Default.FileDownload, contentDescription = "Export CSV")
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Export CSV")
                 }
@@ -304,7 +304,7 @@ class IRLogMPChartComposeActivity : BaseComposeActivity<IRLogMPChartViewModel>()
                         containerColor = Color(0xFFFF6B35)
                     )
                 ) {
-                    Icon(Icons.Default.PictureAsPdf, contentDescription = null)
+                    Icon(Icons.Default.PictureAsPdf, contentDescription = "Export PDF")
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Export PDF")
                 }
