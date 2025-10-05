@@ -96,7 +96,7 @@ class ImagePickIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() 
                             listOf("Auto Enhance", "Noise Reduction", "Detail Enhancement", "Color Correction").forEach { mode ->
                                 TextButton(
                                     onClick = {
-                                        kotlinx.coroutines.GlobalScope.launch {
+                                        scope.launch {
                                             snackbarHostState.showSnackbar("Applying $mode...")
                                         }
                                         showAIDialog = false
