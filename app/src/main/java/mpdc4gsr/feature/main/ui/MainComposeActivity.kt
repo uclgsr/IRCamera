@@ -100,7 +100,9 @@ fun MainApp() {
                         SensorType.RGBCamera -> navController.navigate(MainNavRoutes.RGB_CAMERA)
                     }
                 },
-                onCameraSettingsClick = { navController.navigate(MainNavRoutes.CAMERA_SETTINGS) }
+                onCameraSettingsClick = { navController.navigate(MainNavRoutes.CAMERA_SETTINGS) },
+                onGSRSettingsClick = { navController.navigate(MainNavRoutes.GSR_SETTINGS) },
+                onThermalSettingsClick = { navController.navigate(MainNavRoutes.THERMAL_SETTINGS) }
             )
         }
 

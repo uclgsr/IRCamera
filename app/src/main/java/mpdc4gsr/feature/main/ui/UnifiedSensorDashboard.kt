@@ -35,6 +35,8 @@ fun UnifiedSensorDashboard(
     onSettingsClick: () -> Unit = {},
     onSensorClick: (SensorType) -> Unit = {},
     onCameraSettingsClick: () -> Unit = {},
+    onGSRSettingsClick: () -> Unit = {},
+    onThermalSettingsClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     // Sensor states - showing disconnected until actual ViewModels are connected
@@ -114,7 +116,8 @@ fun UnifiedSensorDashboard(
                         is GSRAction.ConfigureDevice -> { /* Handle device configuration */
                         }
                     }
-                }
+                },
+                onSettingsClick = onGSRSettingsClick
             )
 
             ThermalSensorCard(
@@ -132,7 +135,8 @@ fun UnifiedSensorDashboard(
                         is ThermalAction.OpenSettings -> { /* Handle settings */
                         }
                     }
-                }
+                },
+                onSettingsClick = onThermalSettingsClick
             )
 
             RGBCameraSensorCard(

@@ -125,7 +125,9 @@ fun UnifiedNavHost(
                         SensorType.RGBCamera -> navController.navigate(UnifiedRoute.CameraDashboard.route)
                     }
                 },
-                onCameraSettingsClick = { navController.navigate(UnifiedRoute.CameraSettings.route) }
+                onCameraSettingsClick = { navController.navigate(UnifiedRoute.CameraSettings.route) },
+                onGSRSettingsClick = { navController.navigate(UnifiedRoute.GSRSettings.route) },
+                onThermalSettingsClick = { navController.navigate(UnifiedRoute.ThermalSettings.route) }
             )
         }
 
@@ -293,7 +295,16 @@ fun UnifiedNavHost(
                 onBackClick = { navController.popBackStack() },
                 onNavigateToGSRSettings = { navController.navigate(UnifiedRoute.GSRSettings.route) },
                 onNavigateToThermalSettings = { navController.navigate(UnifiedRoute.ThermalSettings.route) },
-                onNavigateToCameraSettings = { navController.navigate(UnifiedRoute.CameraSettings.route) }
+                onNavigateToCameraSettings = { navController.navigate(UnifiedRoute.CameraSettings.route) },
+                onNavigateToRecordingSettings = { navController.navigate("recording_settings") },
+                onNavigateToStorageSettings = { navController.navigate("storage_settings") },
+                onNavigateToSyncSettings = { navController.navigate("sync_settings") },
+                onNavigateToCalibration = { navController.navigate("calibration") },
+                onNavigateToNetworkSettings = { navController.navigate(UnifiedRoute.NetworkConfig.route) },
+                onNavigateToDiagnostics = { navController.navigate("diagnostics") },
+                onNavigateToAppInfo = { navController.navigate(UnifiedRoute.About.route) },
+                onNavigateToPrivacyPolicy = { navController.navigate("privacy_policy") },
+                onNavigateToHelp = { navController.navigate("help") }
             )
         }
 
@@ -361,6 +372,49 @@ fun UnifiedNavHost(
         composable("device_pairing_screen") {
             DevicePairingScreen(
                 onNavigateBack = { navController.popBackStack() }
+            )
+        }
+
+        // Additional Settings Routes
+        composable("recording_settings") {
+            mpdc4gsr.feature.settings.ui.RecordingSettingsScreen(
+                onBackClick = { navController.popBackStack() }
+            )
+        }
+
+        composable("storage_settings") {
+            mpdc4gsr.feature.settings.ui.StorageSettingsScreen(
+                onBackClick = { navController.popBackStack() }
+            )
+        }
+
+        composable("sync_settings") {
+            mpdc4gsr.feature.settings.ui.SyncSettingsScreen(
+                onBackClick = { navController.popBackStack() }
+            )
+        }
+
+        composable("calibration") {
+            mpdc4gsr.feature.settings.ui.CalibrationScreen(
+                onBackClick = { navController.popBackStack() }
+            )
+        }
+
+        composable("diagnostics") {
+            mpdc4gsr.feature.settings.ui.DiagnosticsScreen(
+                onBackClick = { navController.popBackStack() }
+            )
+        }
+
+        composable("privacy_policy") {
+            mpdc4gsr.feature.settings.ui.PrivacyPolicyScreen(
+                onBackClick = { navController.popBackStack() }
+            )
+        }
+
+        composable("help") {
+            mpdc4gsr.feature.settings.ui.HelpScreen(
+                onBackClick = { navController.popBackStack() }
             )
         }
     }
