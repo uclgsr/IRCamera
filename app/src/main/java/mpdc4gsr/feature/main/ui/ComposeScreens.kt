@@ -319,6 +319,7 @@ fun QuickActionsCard(navController: NavController) {
 
 @Composable
 fun RecentSessionsCard() {
+    val context = androidx.compose.ui.platform.LocalContext.current
     Card(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -354,7 +355,7 @@ fun RecentSessionsCard() {
                     IconButton(onClick = {
                         // TODO: Open session details
                         android.widget.Toast.makeText(
-                            androidx.compose.ui.platform.LocalContext.current,
+                            context,
                             "Open session: $session",
                             android.widget.Toast.LENGTH_SHORT
                         ).show()
@@ -420,6 +421,7 @@ fun HealthMetric(name: String, value: String, color: Color) {
 
 @Composable
 fun ThermalControlsPanel() {
+    val context = androidx.compose.ui.platform.LocalContext.current
     Card(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -442,7 +444,7 @@ fun ThermalControlsPanel() {
                     onClick = {
                         // TODO: Capture thermal image
                         android.widget.Toast.makeText(
-                            androidx.compose.ui.platform.LocalContext.current,
+                            context,
                             "Capture thermal image",
                             android.widget.Toast.LENGTH_SHORT
                         ).show()
@@ -458,7 +460,7 @@ fun ThermalControlsPanel() {
                     onClick = {
                         // TODO: Start thermal recording
                         android.widget.Toast.makeText(
-                            androidx.compose.ui.platform.LocalContext.current,
+                            context,
                             "Start thermal recording",
                             android.widget.Toast.LENGTH_SHORT
                         ).show()
@@ -474,7 +476,7 @@ fun ThermalControlsPanel() {
                     onClick = {
                         // TODO: Open thermal settings
                         android.widget.Toast.makeText(
-                            androidx.compose.ui.platform.LocalContext.current,
+                            context,
                             "Open thermal settings",
                             android.widget.Toast.LENGTH_SHORT
                         ).show()
@@ -585,6 +587,7 @@ fun GSRDataVisualizationCard() {
 
 @Composable
 fun GSRRecordingControlsCard() {
+    val context = androidx.compose.ui.platform.LocalContext.current
     Card(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -607,7 +610,7 @@ fun GSRRecordingControlsCard() {
                     onClick = {
                         // TODO: Start GSR recording
                         android.widget.Toast.makeText(
-                            androidx.compose.ui.platform.LocalContext.current,
+                            context,
                             "Start GSR recording",
                             android.widget.Toast.LENGTH_SHORT
                         ).show()
@@ -623,7 +626,7 @@ fun GSRRecordingControlsCard() {
                     onClick = {
                         // TODO: Stop GSR recording
                         android.widget.Toast.makeText(
-                            androidx.compose.ui.platform.LocalContext.current,
+                            context,
                             "Stop GSR recording",
                             android.widget.Toast.LENGTH_SHORT
                         ).show()
@@ -639,7 +642,7 @@ fun GSRRecordingControlsCard() {
                     onClick = {
                         // TODO: Pause GSR recording
                         android.widget.Toast.makeText(
-                            androidx.compose.ui.platform.LocalContext.current,
+                            context,
                             "Pause GSR recording",
                             android.widget.Toast.LENGTH_SHORT
                         ).show()
@@ -657,6 +660,7 @@ fun GSRRecordingControlsCard() {
 
 @Composable
 fun GSRCalibrationCard() {
+    val context = androidx.compose.ui.platform.LocalContext.current
     Card(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -685,7 +689,7 @@ fun GSRCalibrationCard() {
                     onClick = {
                         // TODO: Start GSR calibration
                         android.widget.Toast.makeText(
-                            androidx.compose.ui.platform.LocalContext.current,
+                            context,
                             "Start GSR calibration",
                             android.widget.Toast.LENGTH_SHORT
                         ).show()

@@ -61,6 +61,7 @@ class ShimmerConfigComposeActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun Content(viewModel: ShimmerConfigViewModel) {
+        val context = androidx.compose.ui.platform.LocalContext.current
         var isScanning by remember { mutableStateOf(false) }
         var selectedDevice by remember { mutableStateOf<DeviceInfo?>(null) }
         var showConfigDialog by remember { mutableStateOf(false) }
@@ -172,7 +173,7 @@ private fun ShimmerConfigContent(
                     onConnect = {
                         // TODO: Implement Shimmer device connection
                         android.widget.Toast.makeText(
-                            androidx.compose.ui.platform.LocalContext.current,
+                            context,
                             "Connecting to ${device.name}...",
                             android.widget.Toast.LENGTH_SHORT
                         ).show()

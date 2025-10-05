@@ -43,6 +43,7 @@ fun NetworkClientTestScreen(
     viewModel: NetworkClientTestViewModel = viewModel(),
     onNavigateBack: () -> Unit = {}
 ) {
+    val context = androidx.compose.ui.platform.LocalContext.current
     val uiState by viewModel.networkTestUiState.collectAsState()
 
     Column(

@@ -57,6 +57,7 @@ class DualModeCameraComposeActivity : BaseComposeActivity<DualModeCameraViewMode
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content(viewModel: DualModeCameraViewModel) {
+        val context = this@DualModeCameraComposeActivity
         var isRecording by remember { mutableStateOf(false) }
         var recordingDuration by remember { mutableStateOf(0L) }
         var cameraMode by remember { mutableStateOf("Dual") }
@@ -81,7 +82,7 @@ class DualModeCameraComposeActivity : BaseComposeActivity<DualModeCameraViewMode
                             IconButton(onClick = {
                                 // TODO: Switch between front/back camera
                                 android.widget.Toast.makeText(
-                                    this@DualModeCameraComposeActivity,
+                                    context,
                                     "Switch camera feature coming soon",
                                     android.widget.Toast.LENGTH_SHORT
                                 ).show()
@@ -94,7 +95,7 @@ class DualModeCameraComposeActivity : BaseComposeActivity<DualModeCameraViewMode
                             IconButton(onClick = {
                                 // TODO: Show more options menu
                                 android.widget.Toast.makeText(
-                                    this@DualModeCameraComposeActivity,
+                                    context,
                                     "More options coming soon",
                                     android.widget.Toast.LENGTH_SHORT
                                 ).show()
@@ -299,7 +300,7 @@ private fun CameraControlsSection(
                 onClick = {
                     // TODO: Open gallery to view captured photos/videos
                     android.widget.Toast.makeText(
-                        this@DualModeCameraComposeActivity,
+                        context,
                         "Gallery feature coming soon",
                         android.widget.Toast.LENGTH_SHORT
                     ).show()
@@ -339,7 +340,7 @@ private fun CameraControlsSection(
                 onClick = {
                     // TODO: Capture photo from dual camera
                     android.widget.Toast.makeText(
-                        this@DualModeCameraComposeActivity,
+                        context,
                         "Photo captured",
                         android.widget.Toast.LENGTH_SHORT
                     ).show()
