@@ -34,6 +34,7 @@ fun GSRDataViewerScreen(
     onBackClick: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
+    val context = androidx.compose.ui.platform.LocalContext.current
     // Sample GSR data - in real app, this would come from ViewModel
     val gsrData = remember { generateSampleGSRData() }
     var selectedAnalysis by remember { mutableStateOf(AnalysisType.RAW_SIGNAL) }
@@ -54,7 +55,7 @@ fun GSRDataViewerScreen(
                 onClick = {
                     // TODO: Implement GSR data export functionality
                     android.widget.Toast.makeText(
-                        androidx.compose.ui.platform.LocalContext.current,
+                        context,
                         "Exporting GSR data...",
                         android.widget.Toast.LENGTH_SHORT
                     ).show()

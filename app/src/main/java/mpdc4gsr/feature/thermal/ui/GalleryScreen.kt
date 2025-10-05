@@ -377,7 +377,7 @@ private fun DataExportCard(
             // TODO: Open or share data export
             android.widget.Toast.makeText(
                 context,
-                "Opening export: ${export.name}",
+                "Opening export: ${export.filename}",
                 android.widget.Toast.LENGTH_SHORT
             ).show()
         },

@@ -592,7 +592,7 @@ class ComprehensiveRecordingController(
         try {
             Log.i(
                 TAG,
-                "Attempting to reconnect sensor $sensorName (attempt ${currentAttempts + 1}/$maxAttempts)"
+                "Attempting to reconnect sensor $sensorName (attempt ${currentAttempts + 1}/$MAX_RECONNECTION_ATTEMPTS)"
             )
             reconnectionAttempts[sensorName] = currentAttempts + 1
 
