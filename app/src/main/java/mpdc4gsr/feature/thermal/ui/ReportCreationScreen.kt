@@ -611,18 +611,7 @@ private fun ReportNavigationButtons(
             Spacer(modifier = Modifier.width(1.dp))
         }
 
-        if (currentStep < totalSteps - 1) {
-            Button(
-                onClick = onNext,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.primary
-                )
-            ) {
-                Text("Next")
-                Spacer(modifier = Modifier.width(8.dp))
-                Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null)
-            }
-        } else {
+        if (currentStep >= totalSteps - 1) {
             Button(
                 onClick = onFinish,
                 colors = ButtonDefaults.buttonColors(
@@ -632,6 +621,17 @@ private fun ReportNavigationButtons(
                 Icon(Icons.Default.Check, contentDescription = null)
                 Spacer(modifier = Modifier.width(8.dp))
                 Text("Generate Report")
+            }
+        } else {
+            Button(
+                onClick = onNext,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary
+                )
+            ) {
+                Text("Next")
+                Spacer(modifier = Modifier.width(8.dp))
+                Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null)
             }
         }
     }

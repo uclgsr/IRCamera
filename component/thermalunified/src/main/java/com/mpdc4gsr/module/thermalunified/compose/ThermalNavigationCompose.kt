@@ -27,6 +27,9 @@ fun ThermalNavigationDrawer(
     selectedDestination: ThermalDestination,
     onNavigate: (ThermalDestination) -> Unit,
     onClose: () -> Unit = {},
+    onNavigateToSettings: () -> Unit = {},
+    onNavigateToHelp: () -> Unit = {},
+    onNavigateToAbout: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     ModalDrawerSheet(
@@ -92,7 +95,6 @@ fun ThermalNavigationDrawer(
 
             // Footer
             HorizontalDivider()
-            val context = androidx.compose.ui.platform.LocalContext.current
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -100,32 +102,20 @@ fun ThermalNavigationDrawer(
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 IconButton(onClick = {
-                    // TODO: Implement navigation drawer settings
-                    android.widget.Toast.makeText(
-                        context,
-                        "Opening settings...",
-                        android.widget.Toast.LENGTH_SHORT
-                    ).show()
+                    onNavigateToSettings()
+                    onClose()
                 }) {
                     Icon(Icons.Default.Settings, contentDescription = "Settings")
                 }
                 IconButton(onClick = {
-                    // TODO: Implement help screen or documentation
-                    android.widget.Toast.makeText(
-                        context,
-                        "Opening help...",
-                        android.widget.Toast.LENGTH_SHORT
-                    ).show()
+                    onNavigateToHelp()
+                    onClose()
                 }) {
                     Icon(Icons.AutoMirrored.Filled.Help, contentDescription = "Help")
                 }
                 IconButton(onClick = {
-                    // TODO: Implement about/info dialog
-                    android.widget.Toast.makeText(
-                        context,
-                        "Showing app info...",
-                        android.widget.Toast.LENGTH_SHORT
-                    ).show()
+                    onNavigateToAbout()
+                    onClose()
                 }) {
                     Icon(Icons.Default.Info, contentDescription = "About")
                 }

@@ -83,15 +83,6 @@ fun ReportCreateScreen(
                     IconButton(onClick = onNavigateBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
-                },
-                actions = {
-                    if (uiState.currentStep > 0) {
-                        TextButton(
-                            onClick = { viewModel.previousStep() }
-                        ) {
-                            Text("Previous")
-                        }
-                    }
                 }
             )
         },
