@@ -248,10 +248,9 @@ class AdaptiveThermalStreamer {
     /**
      * Simulate network streaming (replace with actual implementation)
      */
-    private fun simulateNetworkSend(frame: ThermalFrameData) {
-
+    private suspend fun simulateNetworkSend(frame: ThermalFrameData) {
         val simulatedLatency = (50..200).random()
-        Thread.sleep(simulatedLatency.toLong())
+        delay(simulatedLatency.toLong())
 
         if (Math.random() < 0.02) {
             throw RuntimeException("Simulated packet loss")
