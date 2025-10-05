@@ -128,6 +128,8 @@ fun UnifiedSensorDashboard(
                         is ThermalAction.StopPreview -> thermalState = SensorState.Connected
                         is ThermalAction.Calibrate -> { /* Handle calibration */
                         }
+                        is ThermalAction.OpenSettings -> { /* Handle settings */
+                        }
                     }
                 }
             )

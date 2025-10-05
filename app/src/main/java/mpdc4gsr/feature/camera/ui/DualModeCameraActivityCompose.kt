@@ -435,6 +435,7 @@ class DualModeCameraActivityCompose : BaseComposeActivity<DualModeCameraViewMode
 
     @Composable
     private fun BottomNavigationBar() {
+        val context = LocalContext.current
         NavigationBar {
             NavigationBarItem(
                 icon = { Icon(Icons.Default.Home, contentDescription = null) },
