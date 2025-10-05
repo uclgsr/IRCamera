@@ -253,14 +253,11 @@ class IRCorrectionFourComposeActivity : BaseComposeActivity<ThermalViewModel>() 
     @Composable
     private fun ExportOption(
         label: String,
-        selected: Boolean
+        selected: Boolean,
+        onClick: () -> Unit = {}
     ) {
         FilterChip(
-            onClick = { /* TODO: Implement handle selection
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+            onClick = onClick,
             label = { Text(label) },
             selected = selected,
             colors = FilterChipDefaults.filterChipColors(

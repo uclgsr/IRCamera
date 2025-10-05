@@ -160,7 +160,7 @@ class ReportPreviewComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             )
                         }
 
-                        IconButton(onClick = { /* Zoom to fit */ }) {
+                        IconButton(onClick = { /* Adjust zoom to fit screen */ }) {
                             Icon(
                                 Icons.Default.FitScreen,
                                 contentDescription = "Fit to screen",
@@ -272,10 +272,11 @@ class ReportPreviewComposeActivity : BaseComposeActivity<ThermalViewModel>() {
     private fun RowScope.FormatButton(
         label: String,
         icon: androidx.compose.ui.graphics.vector.ImageVector,
-        selected: Boolean
+        selected: Boolean,
+        onClick: () -> Unit = {}
     ) {
         Button(
-            onClick = { /* Handle format selection */ },
+            onClick = onClick,
             modifier = Modifier.weight(1f),
             colors = ButtonDefaults.buttonColors(
                 containerColor = if (selected) Color(0xFFFF6B35) else Color(0xFF161B22),

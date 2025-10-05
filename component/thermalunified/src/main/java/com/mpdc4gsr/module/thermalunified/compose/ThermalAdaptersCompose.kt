@@ -32,6 +32,7 @@ import com.mpdc4gsr.module.thermalunified.model.AlbumItem
 fun CameraItemListCompose(
     items: List<CameraItem>,
     onItemClick: (Int, CameraItem) -> Unit = { _, _ -> },
+    onTimerFinish: (Int) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     LazyRow(
@@ -42,7 +43,8 @@ fun CameraItemListCompose(
         itemsIndexed(items) { index, item ->
             CameraItemCard(
                 item = item,
-                onClick = { onItemClick(index, item) }
+                onClick = { onItemClick(index, item) },
+                onTimerFinish = { onTimerFinish(index) }
             )
         }
     }
@@ -52,6 +54,7 @@ fun CameraItemListCompose(
 private fun CameraItemCard(
     item: CameraItem,
     onClick: () -> Unit,
+    onTimerFinish: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -88,14 +91,9 @@ private fun CameraItemCard(
                             }
                         )
                     } else {
-                        // Countdown timer
                         TimeDownCompose(
                             initialSeconds = item.delayTime,
-                            onFinish = { /* TODO: Implement handle countdown finish
-                     *   - Implement callback logic for onFinish
-                     *   - Handle data/state updates
-                     *   - Provide user feedback
-                     */ },
+                            onFinish = onTimerFinish,
                             modifier = Modifier.size(48.dp)
                         )
                     }

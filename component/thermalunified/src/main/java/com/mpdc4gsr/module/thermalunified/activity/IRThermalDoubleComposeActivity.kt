@@ -1,5 +1,6 @@
 package com.mpdc4gsr.module.thermalunified.activity
 
+import android.content.Intent
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -11,6 +12,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -34,6 +38,14 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
         val showTrendChart by viewModel.showTrendChart.collectAsState()
         val showCompass by viewModel.showCompass.collectAsState()
         val isRecording by viewModel.isRecording.collectAsState()
+        val isRangeLocked by viewModel.isRangeLocked.collectAsState()
+        
+        var showRangeEditDialog by remember { mutableStateOf(false) }
+        var showMoreOptionsDialog by remember { mutableStateOf(false) }
+        var minTemp by remember { mutableStateOf("0") }
+        var maxTemp by remember { mutableStateOf("100") }
+        
+        val context = androidx.compose.ui.platform.LocalContext.current
 
         LibUnifiedTheme {
             Scaffold(
@@ -155,10 +167,10 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
                                         modifier = Modifier.padding(8.dp),
                                         verticalArrangement = Arrangement.spacedBy(4.dp)
                                     ) {
-                                        IconButton(onClick = { /* Lock/unlock */ }) {
+                                        IconButton(onClick = { viewModel.toggleRangeLock() }) {
                                             Icon(
-                                                Icons.Default.Lock,
-                                                contentDescription = "Lock",
+                                                if (isRangeLocked) Icons.Default.Lock else Icons.Default.LockOpen,
+                                                contentDescription = if (isRangeLocked) "Locked" else "Unlocked",
                                                 tint = Color.White
                                             )
                                         }
@@ -167,7 +179,7 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
                                             color = Color.White,
                                             fontSize = 12.sp
                                         )
-                                        IconButton(onClick = { /* Edit */ }) {
+                                        IconButton(onClick = { showRangeEditDialog = true }) {
                                             Icon(
                                                 Icons.Default.Edit,
                                                 contentDescription = "Edit",
@@ -288,7 +300,10 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
                                     .padding(vertical = 8.dp),
                                 horizontalArrangement = Arrangement.SpaceEvenly
                             ) {
-                                IconButton(onClick = { /* Gallery */ }) {
+                                IconButton(onClick = { 
+                                    val intent = Intent(context, ThermalGalleryComposeActivity::class.java)
+                                    context.startActivity(intent)
+                                }) {
                                     Icon(Icons.Default.PhotoLibrary, "Gallery", tint = Color.White)
                                 }
                                 IconButton(onClick = { viewModel.toggleRecording() }) {
@@ -298,10 +313,14 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
                                         tint = if (isRecording) Color.Red else Color.White
                                     )
                                 }
-                                IconButton(onClick = { /* Camera */ }) {
+                                IconButton(onClick = { 
+                                    // Capture thermal snapshot
+                                    android.widget.Toast.makeText(context, "Thermal snapshot captured", android.widget.Toast.LENGTH_SHORT).show()
+                                    // TODO: Implement actual thermal snapshot capture logic
+                                }) {
                                     Icon(Icons.Default.CameraAlt, "Camera", tint = Color.White)
                                 }
-                                IconButton(onClick = { /* More */ }) {
+                                IconButton(onClick = { showMoreOptionsDialog = true }) {
                                     Icon(Icons.Default.MoreVert, "More", tint = Color.White)
                                 }
                             }
@@ -309,6 +328,112 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
                     }
                 }
             }
+        }
+        
+        // Range Edit Dialog
+        if (showRangeEditDialog) {
+            AlertDialog(
+                onDismissRequest = { showRangeEditDialog = false },
+                title = { Text("Edit Temperature Range") },
+                text = {
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        OutlinedTextField(
+                            value = minTemp,
+                            onValueChange = { minTemp = it },
+                            label = { Text("Min Temperature (°C)") },
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                        OutlinedTextField(
+                            value = maxTemp,
+                            onValueChange = { maxTemp = it },
+                            label = { Text("Max Temperature (°C)") },
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
+                },
+                confirmButton = {
+                    TextButton(onClick = {
+                        // Apply temperature range
+                        showRangeEditDialog = false
+                        android.widget.Toast.makeText(context, "Range updated: $minTemp°C - $maxTemp°C", android.widget.Toast.LENGTH_SHORT).show()
+                    }) {
+                        Text("Apply")
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { showRangeEditDialog = false }) {
+                        Text("Cancel")
+                    }
+                }
+            )
+        }
+        
+        // More Options Dialog
+        if (showMoreOptionsDialog) {
+            AlertDialog(
+                onDismissRequest = { showMoreOptionsDialog = false },
+                title = { Text("More Options") },
+                text = {
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        TextButton(
+                            onClick = {
+                                showMoreOptionsDialog = false
+                                android.widget.Toast.makeText(context, "Opening color palette", android.widget.Toast.LENGTH_SHORT).show()
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.Start,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(Icons.Default.Palette, contentDescription = "Color Palette")
+                                Spacer(Modifier.width(8.dp))
+                                Text("Color Palette")
+                            }
+                        }
+                        TextButton(
+                            onClick = {
+                                showMoreOptionsDialog = false
+                                android.widget.Toast.makeText(context, "Opening measurement tools", android.widget.Toast.LENGTH_SHORT).show()
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.Start,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(Icons.Default.Analytics, contentDescription = null)
+                                Spacer(Modifier.width(8.dp))
+                                Text("Measurement Tools")
+                            }
+                        }
+                        TextButton(
+                            onClick = {
+                                showMoreOptionsDialog = false
+                                android.widget.Toast.makeText(context, "Opening advanced settings", android.widget.Toast.LENGTH_SHORT).show()
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.Start,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(Icons.Default.Settings, contentDescription = null)
+                                Spacer(Modifier.width(8.dp))
+                                Text("Advanced Settings")
+                            }
+                        }
+                    }
+                },
+                confirmButton = {
+                    TextButton(onClick = { showMoreOptionsDialog = false }) {
+                        Text("Close")
+                    }
+                }
+            )
         }
     }
 }

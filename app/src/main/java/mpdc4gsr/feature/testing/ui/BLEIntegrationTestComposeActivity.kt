@@ -57,14 +57,17 @@ class BLEIntegrationTestComposeActivity : BaseComposeActivity<BLEIntegrationTest
 
     @Composable
     override fun Content(viewModel: BLEIntegrationTestViewModel) {
+        var logMessages by remember { mutableStateOf(listOf<String>()) }
+        
         LibUnifiedTheme {
             BLEIntegrationTestScreen(
                 onRunTest = { testType -> runTest(testType) },
-                onClearLogs = { /* TODO: Implement clear logs
-                     *   - Implement callback logic for onClearLogs
-                     *   - Handle data/state updates
-                     *   - Provide user feedback
-                     */ }
+                onClearLogs = { 
+                    // Clear log messages and provide feedback
+                    logMessages = emptyList()
+                },
+                logMessages = logMessages,
+                onLogAdded = { msg -> logMessages = logMessages + msg }
             )
         }
     }
@@ -73,11 +76,12 @@ class BLEIntegrationTestComposeActivity : BaseComposeActivity<BLEIntegrationTest
     @Composable
     fun BLEIntegrationTestScreen(
         onRunTest: (String) -> Unit,
-        onClearLogs: () -> Unit
+        onClearLogs: () -> Unit,
+        logMessages: List<String> = emptyList(),
+        onLogAdded: (String) -> Unit = {}
     ) {
         var testResults by remember { mutableStateOf(listOf<TestCase>()) }
         var isTestRunning by remember { mutableStateOf(false) }
-        var logMessages by remember { mutableStateOf(listOf<String>()) }
 
         // Initialize test cases
         LaunchedEffect(Unit) {

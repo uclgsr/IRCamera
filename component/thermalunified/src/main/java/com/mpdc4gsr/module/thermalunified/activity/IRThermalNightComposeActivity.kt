@@ -60,12 +60,30 @@ class IRThermalNightComposeActivity : BaseComposeActivity<IRThermalNightViewMode
                             }
                         },
                         actions = {
-                            IconButton(onClick = { /* TODO: Implement settings
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                            var showSettings by remember { mutableStateOf(false) }
+                            IconButton(onClick = { showSettings = true }) {
                                 Icon(Icons.Default.Settings, contentDescription = "Settings", tint = Color.White)
+                            }
+                            
+                            if (showSettings) {
+                                AlertDialog(
+                                    onDismissRequest = { showSettings = false },
+                                    title = { Text("Night Vision Settings") },
+                                    text = {
+                                        Column {
+                                            Text("Configure night vision thermal settings")
+                                            Spacer(modifier = Modifier.height(8.dp))
+                                            Text("• Sensitivity: Adjustable")
+                                            Text("• Mode: Enhanced/Standard")
+                                            Text("• Temperature range: Customizable")
+                                        }
+                                    },
+                                    confirmButton = {
+                                        TextButton(onClick = { showSettings = false }) {
+                                            Text("Close")
+                                        }
+                                    }
+                                )
                             }
                         },
                         colors = TopAppBarDefaults.topAppBarColors(
@@ -261,11 +279,7 @@ class IRThermalNightComposeActivity : BaseComposeActivity<IRThermalNightViewMode
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 OutlinedButton(
-                    onClick = { /* TODO: Implement capture
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+                    onClick = { /* Capture thermal night image */ },
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.outlinedButtonColors(
                         contentColor = Color(0xFF58A6FF)

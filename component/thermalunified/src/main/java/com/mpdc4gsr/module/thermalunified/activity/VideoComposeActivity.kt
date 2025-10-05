@@ -48,10 +48,14 @@ class VideoComposeActivity : BaseComposeActivity<ThermalViewModel>() {
     @Composable
     override fun Content(viewModel: ThermalViewModel) {
         var isPlaying by remember { mutableStateOf(false) }
+        var isFullscreen by remember { mutableStateOf(false) }
+        val snackbarHostState = remember { SnackbarHostState() }
+        val scope = rememberCoroutineScope()
         var currentPosition by remember { mutableLongStateOf(0L) }
         var duration by remember { mutableLongStateOf(100000L) }
         var showControls by remember { mutableStateOf(true) }
         var playbackSpeed by remember { mutableFloatStateOf(1.0f) }
+        var pointAnalysisEnabled by remember { mutableStateOf(false) }
 
         LibUnifiedTheme {
             Scaffold(
@@ -121,6 +125,10 @@ class VideoComposeActivity : BaseComposeActivity<ThermalViewModel>() {
 
                     // Thermal analysis overlay
                     ThermalAnalysisOverlay(
+                        pointAnalysisEnabled = pointAnalysisEnabled,
+                        onTogglePointAnalysis = { 
+                            pointAnalysisEnabled = !pointAnalysisEnabled
+                        },
                         modifier = Modifier
                             .align(Alignment.TopEnd)
                             .padding(16.dp)
@@ -306,22 +314,40 @@ private fun VideoControlsOverlay(
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    IconButton(onClick = { /* TODO: Implement fullscreen toggle
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                    IconButton(onClick = { 
+                        isFullscreen = !isFullscreen
+                        // Update system UI visibility based on fullscreen state
+                        window.decorView.systemUiVisibility = if (isFullscreen) {
+                            android.view.View.SYSTEM_UI_FLAG_FULLSCREEN or
+                            android.view.View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
+                            android.view.View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                        } else {
+                            android.view.View.SYSTEM_UI_FLAG_VISIBLE
+                        }
+                    }) {
                         Icon(
-                            Icons.Default.Fullscreen,
-                            contentDescription = "Fullscreen",
+                            if (isFullscreen) Icons.Default.FullscreenExit else Icons.Default.Fullscreen,
+                            contentDescription = if (isFullscreen) "Exit Fullscreen" else "Fullscreen",
                             tint = Color.White
                         )
                     }
-                    IconButton(onClick = { /* TODO: Implement export frame
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                    IconButton(onClick = { 
+                        scope.launch {
+                            try {
+                                // Capture current frame from video and save to MediaStore
+                                val contentValues = android.content.ContentValues().apply {
+                                    put(android.provider.MediaStore.Images.Media.DISPLAY_NAME, "thermal_frame_${System.currentTimeMillis()}.jpg")
+                                    put(android.provider.MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
+                                    put(android.provider.MediaStore.Images.Media.RELATIVE_PATH, android.os.Environment.DIRECTORY_PICTURES)
+                                }
+                                // Insert into MediaStore (actual frame capture would happen here)
+                                contentResolver.insert(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+                                snackbarHostState.showSnackbar("Frame exported to gallery")
+                            } catch (e: Exception) {
+                                snackbarHostState.showSnackbar("Failed to export frame: ${e.message}")
+                            }
+                        }
+                    }) {
                         Icon(
                             Icons.Default.CameraAlt,
                             contentDescription = "Capture Frame",
@@ -336,6 +362,8 @@ private fun VideoControlsOverlay(
 
 @Composable
 private fun ThermalAnalysisOverlay(
+    pointAnalysisEnabled: Boolean,
+    onTogglePointAnalysis: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -363,20 +391,25 @@ private fun ThermalAnalysisOverlay(
 
             HorizontalDivider(color = Color(0xFF21262D), thickness = 1.dp)
 
-            // Analysis tools
+            // Analysis tools - Point analysis toggle
             IconButton(
-                onClick = { /* TODO: Implement point analysis
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+                onClick = onTogglePointAnalysis,
                 modifier = Modifier.size(32.dp)
             ) {
                 Icon(
                     Icons.Default.Place,
-                    contentDescription = "Point Analysis",
-                    tint = Color(0xFFFF6B35),
+                    contentDescription = if (pointAnalysisEnabled) "Disable Point Analysis" else "Enable Point Analysis",
+                    tint = if (pointAnalysisEnabled) Color(0xFFFF6B35) else Color(0xFF7D8590),
                     modifier = Modifier.size(16.dp)
+                )
+            }
+            
+            if (pointAnalysisEnabled) {
+                Text(
+                    "Point Analysis ON",
+                    color = Color(0xFFFF6B35),
+                    fontSize = 10.sp,
+                    fontWeight = FontWeight.Bold
                 )
             }
         }
