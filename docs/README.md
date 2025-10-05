@@ -26,10 +26,9 @@ docs/
   - [Verification & Testing](../pc-controller/docs/verification.md) - Test coverage and verification
 
 ### Android Application
-- [PC Networking Guide](android/pc-networking-guide.md) - PC-Android communication setup
-- [PC Networking Changes](android/pc-networking-changes.md) - Recent networking changes
-- [PC Networking Verification](android/pc-networking-verification.md) - Verification procedures
+- [PC Networking Summary](summaries/pc-networking-summary.md) - Complete PC-Android communication implementation (consolidated)
 - [Time Sync Flow Diagram](android/time-sync-flow-diagram.txt) - Time synchronization flow
+- [Code Quality Analysis](android/code-quality-analysis.md) - Android code quality analysis
 
 ### Developer Guides
 - [UI Components Guide](developer-guides/ui-components-guide.md) - Permissions handling system
@@ -37,10 +36,8 @@ docs/
 - [Permission Handling Guide](developer-guides/permission-handling-guide.md) - Permission tools and utilities
 
 ### Implementation Summaries
-- [PC Networking Implementation](summaries/pc-networking-implementation-summary.md) - PC networking feature
-- [Android Analysis Summary](summaries/android-analysis-summary.md) - System analysis
+- [PC Networking Summary](summaries/pc-networking-summary.md) - Complete PC networking implementation (consolidated)
 - [Testing Time Sync](summaries/testing-time-sync.md) - Time sync testing
-- [Resolution Summary](summaries/resolution-summary.md) - Issue resolutions
 - [Next Steps](summaries/next-steps.md) - Planned improvements
 
 ### Maintenance and Fixes

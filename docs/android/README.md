@@ -12,9 +12,7 @@ Documentation specific to the Android application component of IRCamera.
   - Detailed recommendations
 
 ### Networking
-- [pc-networking-guide.md](pc-networking-guide.md) - Complete guide to PC-Android communication protocol
-- [pc-networking-changes.md](pc-networking-changes.md) - Recent changes to networking implementation
-- [pc-networking-verification.md](pc-networking-verification.md) - Verification and testing procedures
+- See [../summaries/pc-networking-summary.md](../summaries/pc-networking-summary.md) for complete PC networking implementation summary (consolidated)
 
 ### Time Synchronization
 - [time-sync-flow-diagram.txt](time-sync-flow-diagram.txt) - Detailed flow diagram for time synchronization protocol

@@ -5,12 +5,11 @@ High-level summaries of major implementations and system analyses.
 ## Contents
 
 ### Implementation Summaries
-- [pc-networking-implementation-summary.md](pc-networking-implementation-summary.md) - PC networking implementation overview
-- [android-analysis-summary.md](android-analysis-summary.md) - Android system analysis
+- [pc-networking-summary.md](pc-networking-summary.md) - Complete PC networking implementation summary (consolidated)
 
 ### Testing and Verification
 - [testing-time-sync.md](testing-time-sync.md) - Time synchronization testing summary (see [pc-controller/docs/time_sync_implementation.md](../../pc-controller/docs/time_sync_implementation.md) for complete guide)
-- [resolution-summary.md](resolution-summary.md) - Issue resolution summary
+
 
 ### Planning
 - [next-steps.md](next-steps.md) - Planned improvements and future work
