@@ -81,7 +81,14 @@ class GSRDeviceManagementComposeActivity : BaseComposeActivity<AppBaseViewModel>
                             IconButton(onClick = { showBulkActions = true }) {
                                 Icon(Icons.Default.SelectAll, contentDescription = "Bulk Actions")
                             }
-                            IconButton(onClick = { /* Device help */ }) {
+                            IconButton(onClick = {
+                                // TODO: Open device help documentation
+                                android.widget.Toast.makeText(
+                                    this@GSRDeviceManagementComposeActivity,
+                                    "Opening device help...",
+                                    android.widget.Toast.LENGTH_SHORT
+                                ).show()
+                            }) {
                                 Icon(Icons.AutoMirrored.Filled.Help, contentDescription = "Help")
                             }
                         }

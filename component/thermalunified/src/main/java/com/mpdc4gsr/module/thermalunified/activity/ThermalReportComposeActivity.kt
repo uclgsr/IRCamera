@@ -79,7 +79,14 @@ private fun ThermalReportScreen(
                 }
             },
             actions = {
-                IconButton(onClick = { /* Preview */ }) {
+                IconButton(onClick = {
+                    // TODO: Preview report before generation
+                    android.widget.Toast.makeText(
+                        onBackClick?.let { this } ?: return@IconButton,
+                        "Opening report preview...",
+                        android.widget.Toast.LENGTH_SHORT
+                    ).show()
+                }) {
                     Icon(
                         Icons.Default.Preview,
                         contentDescription = "Preview",

@@ -56,7 +56,14 @@ class ReportPreviewFirstComposeActivity : BaseComposeActivity<ReportPreviewViewM
                         },
                         actions = {
                             TextButton(
-                                onClick = { /* Continue to next step */ }
+                                onClick = {
+                                    // TODO: Proceed to next report creation step
+                                    android.widget.Toast.makeText(
+                                        this@ReportPreviewFirstComposeActivity,
+                                        "Proceeding to next step...",
+                                        android.widget.Toast.LENGTH_SHORT
+                                    ).show()
+                                }
                             ) {
                                 Text("Next", color = Color.White)
                                 Icon(

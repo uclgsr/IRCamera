@@ -72,7 +72,14 @@ class PermissionRequestComposeActivity : BaseComposeActivity<BaseViewModel>() {
                             IconButton(onClick = { showEducationalDialog = true }) {
                                 Icon(Icons.AutoMirrored.Filled.Help, contentDescription = "Help")
                             }
-                            IconButton(onClick = { /* Open system settings */ }) {
+                            IconButton(onClick = {
+                                // TODO: Open system settings for permissions
+                                android.widget.Toast.makeText(
+                                    this@PermissionRequestComposeActivity,
+                                    "Opening system settings...",
+                                    android.widget.Toast.LENGTH_SHORT
+                                ).show()
+                            }) {
                                 Icon(Icons.Default.Settings, contentDescription = "System Settings")
                             }
                         }
