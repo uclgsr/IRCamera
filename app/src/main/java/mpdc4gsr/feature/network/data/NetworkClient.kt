@@ -35,6 +35,7 @@ class NetworkClient(private val context: Context) {
         private const val QUERY_TIMEOUT = 2000
         private const val HEARTBEAT_INTERVAL = 5000L
         private const val DISCOVERY_WAIT_MS = 5000L
+        private const val MAX_MESSAGE_SIZE = 1024 * 1024
     }
 
     private var socket: Socket? = null
@@ -717,7 +718,7 @@ class NetworkClient(private val context: Context) {
                 socketToUse?.soTimeout = timeoutMs.toInt()
 
                 val messageLength = input.readInt()
-                if (messageLength > 1024 * 1024) {
+                if (messageLength > MAX_MESSAGE_SIZE) {
                     throw IOException("Message too large: $messageLength bytes")
                 }
 
@@ -823,7 +824,7 @@ class NetworkClient(private val context: Context) {
                             output.flush()
 
                             val responseLength = input.readInt()
-                            if (responseLength < 0 || responseLength > 1024 * 1024) { // Max 1MB response
+                            if (responseLength < 0 || responseLength > MAX_MESSAGE_SIZE) { // Max 1MB response
                                 AppLogger.w(TAG, "Invalid response length: $responseLength bytes from $host")
                                 return@withContext null
                             }
