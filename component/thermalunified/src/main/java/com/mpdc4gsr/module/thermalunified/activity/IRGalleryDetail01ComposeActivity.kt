@@ -66,11 +66,7 @@ class IRGalleryDetail01ComposeActivity : BaseComposeActivity<IRGalleryEditViewMo
                                     tint = Color.White
                                 )
                             }
-                            IconButton(onClick = { /* TODO: Implement share image
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                            IconButton(onClick = {  }) {
                                 Icon(
                                     Icons.Default.Share,
                                     contentDescription = "Share",
@@ -132,21 +128,9 @@ class IRGalleryDetail01ComposeActivity : BaseComposeActivity<IRGalleryEditViewMo
 
                         // Action buttons
                         ImageActionButtons(
-                            onExport = { /* TODO: Implement export image
-                     *   - Implement callback logic for onExport
-                     *   - Handle data/state updates
-                     *   - Provide user feedback
-                     */ },
-                            onReport = { /* TODO: Implement report generation
-                     *   - Collect session data and measurements
-                     *   - Generate PDF report with charts and images
-                     *   - Allow user to save/share report
-                     */ },
-                            onDelete = { /* TODO: Implement delete image
-                     *   - Implement callback logic for onDelete
-                     *   - Handle data/state updates
-                     *   - Provide user feedback
-                     */ }
+                            onExport = {  },
+                            onReport = {  },
+                            onDelete = {  }
                         )
                     }
                 }

@@ -52,18 +52,10 @@ class ReportPickImgComposeActivity : BaseComposeActivity<ReportPickImgViewModel>
                             }
                         },
                         actions = {
-                            IconButton(onClick = { /* TODO: Implement search
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                            IconButton(onClick = {  }) {
                                 Icon(Icons.Default.Search, contentDescription = "Search", tint = Color.White)
                             }
-                            IconButton(onClick = { /* TODO: Implement filter
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                            IconButton(onClick = {  }) {
                                 Icon(Icons.Default.FilterList, contentDescription = "Filter", tint = Color.White)
                             }
                         },
@@ -253,11 +245,7 @@ class ReportPickImgComposeActivity : BaseComposeActivity<ReportPickImgViewModel>
                 }
 
                 Button(
-                    onClick = { /* TODO: Implement add to report
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+                    onClick = {  },
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color(0xFF1976D2)

@@ -160,7 +160,7 @@ class ReportPreviewComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             )
                         }
 
-                        IconButton(onClick = { /* Zoom to fit */ }) {
+                        IconButton(onClick = {  }) {
                             Icon(
                                 Icons.Default.FitScreen,
                                 contentDescription = "Fit to screen",
@@ -275,7 +275,7 @@ class ReportPreviewComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         selected: Boolean
     ) {
         Button(
-            onClick = { /* Handle format selection */ },
+            onClick = {  },
             modifier = Modifier.weight(1f),
             colors = ButtonDefaults.buttonColors(
                 containerColor = if (selected) Color(0xFFFF6B35) else Color(0xFF161B22),

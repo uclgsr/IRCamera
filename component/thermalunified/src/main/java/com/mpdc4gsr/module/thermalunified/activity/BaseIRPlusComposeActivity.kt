@@ -312,31 +312,19 @@ private fun PlusFeatureOverlay(
             PlusFeatureButton(
                 icon = Icons.Default.AutoFixHigh,
                 text = "Auto Enhance",
-                onClick = { /* TODO: Implement auto enhance
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }
+                onClick = {  }
             )
 
             PlusFeatureButton(
                 icon = Icons.Default.Tune,
                 text = "Manual Tune",
-                onClick = { /* TODO: Implement manual tune
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }
+                onClick = {  }
             )
 
             PlusFeatureButton(
                 icon = Icons.Default.Analytics,
                 text = "AI Analysis",
-                onClick = { /* TODO: Implement ai analysis
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }
+                onClick = {  }
             )
         }
     }
@@ -534,11 +522,7 @@ private fun PlusQuickActions() {
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         OutlinedButton(
-            onClick = { /* TODO: Implement plus capture
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+            onClick = {  },
             modifier = Modifier.weight(1f),
             colors = ButtonDefaults.outlinedButtonColors(
                 contentColor = Color(0xFFFFD700)
@@ -555,11 +539,7 @@ private fun PlusQuickActions() {
         }
 
         OutlinedButton(
-            onClick = { /* TODO: Implement plus record
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+            onClick = {  },
             modifier = Modifier.weight(1f),
             colors = ButtonDefaults.outlinedButtonColors(
                 contentColor = Color(0xFFFFD700)
@@ -576,11 +556,7 @@ private fun PlusQuickActions() {
         }
 
         OutlinedButton(
-            onClick = { /* TODO: Implement plus process
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+            onClick = {  },
             modifier = Modifier.weight(1f),
             colors = ButtonDefaults.outlinedButtonColors(
                 contentColor = Color(0xFFFFD700)
