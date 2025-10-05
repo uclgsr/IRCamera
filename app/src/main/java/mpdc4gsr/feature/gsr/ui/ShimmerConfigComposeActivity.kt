@@ -87,7 +87,14 @@ class ShimmerConfigComposeActivity : ComponentActivity() {
                                     contentDescription = if (isScanning) "Stop Scan" else "Scan"
                                 )
                             }
-                            IconButton(onClick = { /* Help */ }) {
+                            IconButton(onClick = {
+                                // TODO: Implement Shimmer configuration help/documentation
+                                android.widget.Toast.makeText(
+                                    this@ShimmerConfigComposeActivity,
+                                    "Opening Shimmer configuration help",
+                                    android.widget.Toast.LENGTH_SHORT
+                                ).show()
+                            }) {
                                 Icon(Icons.AutoMirrored.Filled.Help, contentDescription = "Help")
                             }
                         }
@@ -161,7 +168,14 @@ private fun ShimmerConfigContent(
                     device = device,
                     isSelected = selectedDevice?.address == device.address,
                     onSelect = { onDeviceSelect(device) },
-                    onConnect = { /* Connect to device */ },
+                    onConnect = {
+                        // TODO: Implement Shimmer device connection
+                        android.widget.Toast.makeText(
+                            androidx.compose.ui.platform.LocalContext.current,
+                            "Connecting to ${device.name}...",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     onConfigure = {
                         onDeviceSelect(device)
                         onConfigureDevice()

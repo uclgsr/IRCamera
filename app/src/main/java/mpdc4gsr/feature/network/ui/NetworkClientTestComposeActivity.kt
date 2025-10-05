@@ -620,7 +620,14 @@ private fun NetworkConfigurationCard(
                 Spacer(modifier = Modifier.height(12.dp))
 
                 Button(
-                    onClick = { /* Configuration editing would be implemented here */ },
+                    onClick = {
+                        // TODO: Implement network configuration editor dialog
+                        android.widget.Toast.makeText(
+                            context,
+                            "Network configuration editor",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Icon(
