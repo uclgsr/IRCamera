@@ -70,7 +70,14 @@ class ThermalReportCreationComposeActivity : BaseComposeActivity<BaseViewModel>(
                             IconButton(onClick = { showPreview = true }) {
                                 Icon(Icons.Default.Preview, contentDescription = "Preview")
                             }
-                            IconButton(onClick = { /* Save draft */ }) {
+                            IconButton(onClick = {
+                                // TODO: Save current report as draft
+                                android.widget.Toast.makeText(
+                                    this@ThermalReportCreationComposeActivity,
+                                    "Saving draft...",
+                                    android.widget.Toast.LENGTH_SHORT
+                                ).show()
+                            }) {
                                 Icon(Icons.Default.Save, contentDescription = "Save Draft")
                             }
                         }
@@ -403,8 +410,16 @@ private fun ThermalDataStep(
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
 
+                val context = androidx.compose.ui.platform.LocalContext.current
                 Button(
-                    onClick = { /* Select thermal images */ },
+                    onClick = {
+                        // TODO: Open thermal image selector
+                        android.widget.Toast.makeText(
+                            context,
+                            "Select thermal images...",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Icon(
@@ -615,8 +630,16 @@ private fun ReportNavigationButtons(
                 )
             }
         } else {
+            val context = androidx.compose.ui.platform.LocalContext.current
             Button(
-                onClick = { /* Generate final report */ },
+                onClick = {
+                    // TODO: Generate final report
+                    android.widget.Toast.makeText(
+                        context,
+                        "Generating report...",
+                        android.widget.Toast.LENGTH_SHORT
+                    ).show()
+                },
                 enabled = canProceed
             ) {
                 Text("Generate Report")

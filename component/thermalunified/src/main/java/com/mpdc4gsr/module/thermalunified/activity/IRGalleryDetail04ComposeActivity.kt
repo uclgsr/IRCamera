@@ -51,10 +51,24 @@ class IRGalleryDetail04ComposeActivity : BaseComposeActivity<ThermalViewModel>()
                             }
                         },
                         actions = {
-                            IconButton(onClick = { /* Share */ }) {
+                            IconButton(onClick = {
+                                // TODO: Share thermal image
+                                android.widget.Toast.makeText(
+                                    this@IRGalleryDetail04ComposeActivity,
+                                    "Share image feature coming soon",
+                                    android.widget.Toast.LENGTH_SHORT
+                                ).show()
+                            }) {
                                 Icon(Icons.Default.Share, contentDescription = "Share", tint = Color.White)
                             }
-                            IconButton(onClick = { /* More options */ }) {
+                            IconButton(onClick = {
+                                // TODO: Show more options
+                                android.widget.Toast.makeText(
+                                    this@IRGalleryDetail04ComposeActivity,
+                                    "More options coming soon",
+                                    android.widget.Toast.LENGTH_SHORT
+                                ).show()
+                            }) {
                                 Icon(Icons.Default.MoreVert, contentDescription = "More", tint = Color.White)
                             }
                         },
@@ -195,12 +209,20 @@ class IRGalleryDetail04ComposeActivity : BaseComposeActivity<ThermalViewModel>()
             }
 
             // Action Buttons
+            val context = androidx.compose.ui.platform.LocalContext.current
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 OutlinedButton(
-                    onClick = { /* Export */ },
+                    onClick = {
+                        // TODO: Export thermal image
+                        android.widget.Toast.makeText(
+                            context,
+                            "Exporting image...",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.outlinedButtonColors(
                         contentColor = Color(0xFF7D8590)
@@ -212,7 +234,14 @@ class IRGalleryDetail04ComposeActivity : BaseComposeActivity<ThermalViewModel>()
                 }
 
                 Button(
-                    onClick = { /* Generate Report */ },
+                    onClick = {
+                        // TODO: Generate thermal analysis report
+                        android.widget.Toast.makeText(
+                            context,
+                            "Generating report...",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color(0xFFFF6B35)
@@ -224,7 +253,14 @@ class IRGalleryDetail04ComposeActivity : BaseComposeActivity<ThermalViewModel>()
                 }
 
                 IconButton(
-                    onClick = { /* Delete */ },
+                    onClick = {
+                        // TODO: Delete thermal image with confirmation
+                        android.widget.Toast.makeText(
+                            context,
+                            "Delete confirmation",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     colors = IconButtonDefaults.iconButtonColors(
                         containerColor = Color(0xFFDC2626)
                     )
