@@ -225,7 +225,7 @@ private fun ThermalGridView() {
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         items(generateSampleThermalImages()) { image ->
-            ThermalImageCard(image = image)
+            ThermalImageCard(image = image, onMoreClick = {})
         }
     }
 }

@@ -58,6 +58,17 @@ class VideoComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         var playbackSpeed by remember { mutableFloatStateOf(1.0f) }
         var pointAnalysisEnabled by remember { mutableStateOf(false) }
 
+        // Handle system UI changes for fullscreen
+        LaunchedEffect(isFullscreen) {
+            window.decorView.systemUiVisibility = if (isFullscreen) {
+                android.view.View.SYSTEM_UI_FLAG_FULLSCREEN or
+                android.view.View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
+                android.view.View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+            } else {
+                android.view.View.SYSTEM_UI_FLAG_VISIBLE
+            }
+        }
+
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
@@ -115,9 +126,13 @@ class VideoComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                             currentPosition = currentPosition,
                             duration = duration,
                             playbackSpeed = playbackSpeed,
+                            isFullscreen = isFullscreen,
+                            scope = scope,
+                            snackbarHostState = snackbarHostState,
                             onPlayPause = { isPlaying = !isPlaying },
                             onSeek = { position -> currentPosition = position },
                             onSpeedChange = { speed -> playbackSpeed = speed },
+                            onFullscreenToggle = { isFullscreen = !isFullscreen },
                             modifier = Modifier
                                 .align(Alignment.BottomCenter)
                                 .fillMaxWidth()
@@ -177,9 +192,13 @@ private fun VideoControlsOverlay(
     currentPosition: Long,
     duration: Long,
     playbackSpeed: Float,
+    isFullscreen: Boolean,
+    scope: kotlinx.coroutines.CoroutineScope,
+    snackbarHostState: SnackbarHostState,
     onPlayPause: () -> Unit,
     onSeek: (Long) -> Unit,
     onSpeedChange: (Float) -> Unit,
+    onFullscreenToggle: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -316,15 +335,7 @@ private fun VideoControlsOverlay(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     IconButton(onClick = { 
-                        isFullscreen = !isFullscreen
-                        // Update system UI visibility based on fullscreen state
-                        this@VideoComposeActivity.window.decorView.systemUiVisibility = if (isFullscreen) {
-                            android.view.View.SYSTEM_UI_FLAG_FULLSCREEN or
-                            android.view.View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
-                            android.view.View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                        } else {
-                            android.view.View.SYSTEM_UI_FLAG_VISIBLE
-                        }
+                        onFullscreenToggle()
                     }) {
                         Icon(
                             if (isFullscreen) Icons.Default.FullscreenExit else Icons.Default.Fullscreen,

@@ -431,6 +431,8 @@ private fun ImageActionButtons(
 
 // Data classes
 data class ImageInfo(
+    val id: Long = 0,
+    val path: String = "",
     val width: Int = 384,
     val height: Int = 288,
     val fileSize: String = "2.1 MB",

@@ -82,6 +82,8 @@ class ImagePickIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() 
                 }
             ) { paddingValues ->
                 ImagePickerPlusContent(
+                    scope = scope,
+                    snackbarHostState = snackbarHostState,
                     modifier = Modifier.padding(paddingValues)
                 )
             }
@@ -123,6 +125,8 @@ class ImagePickIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() 
 
     @Composable
     private fun ImagePickerPlusContent(
+        scope: kotlinx.coroutines.CoroutineScope,
+        snackbarHostState: SnackbarHostState,
         modifier: Modifier = Modifier
     ) {
         var captureMode by remember { mutableStateOf("Smart") }
