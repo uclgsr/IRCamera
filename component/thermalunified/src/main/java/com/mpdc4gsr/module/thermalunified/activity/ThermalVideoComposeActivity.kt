@@ -78,10 +78,24 @@ class ThermalVideoComposeActivity : BaseComposeActivity<BaseViewModel>() {
                                     contentDescription = "Toggle thermal data"
                                 )
                             }
-                            IconButton(onClick = { /* Share video */ }) {
+                            IconButton(onClick = {
+                                // TODO: Share thermal video
+                                android.widget.Toast.makeText(
+                                    this@ThermalVideoComposeActivity,
+                                    "Sharing video...",
+                                    android.widget.Toast.LENGTH_SHORT
+                                ).show()
+                            }) {
                                 Icon(Icons.Default.Share, contentDescription = "Share")
                             }
-                            IconButton(onClick = { /* More options */ }) {
+                            IconButton(onClick = {
+                                // TODO: Show more video options
+                                android.widget.Toast.makeText(
+                                    this@ThermalVideoComposeActivity,
+                                    "More options...",
+                                    android.widget.Toast.LENGTH_SHORT
+                                ).show()
+                            }) {
                                 Icon(Icons.Default.MoreVert, contentDescription = "More")
                             }
                         }
@@ -339,7 +353,14 @@ private fun ThermalVideoControls(
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                IconButton(onClick = { /* Previous frame */ }) {
+                IconButton(onClick = {
+                    // TODO: Go to previous frame
+                    android.widget.Toast.makeText(
+                        this@ThermalVideoComposeActivity,
+                        "Previous frame",
+                        android.widget.Toast.LENGTH_SHORT
+                    ).show()
+                }) {
                     Icon(
                         Icons.Default.SkipPrevious,
                         contentDescription = "Previous",
@@ -365,7 +386,14 @@ private fun ThermalVideoControls(
                     )
                 }
 
-                IconButton(onClick = { /* Next frame */ }) {
+                IconButton(onClick = {
+                    // TODO: Go to next frame
+                    android.widget.Toast.makeText(
+                        this@ThermalVideoComposeActivity,
+                        "Next frame",
+                        android.widget.Toast.LENGTH_SHORT
+                    ).show()
+                }) {
                     Icon(
                         Icons.Default.SkipNext,
                         contentDescription = "Next",
@@ -382,7 +410,14 @@ private fun ThermalVideoControls(
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 OutlinedButton(
-                    onClick = { /* Export frame */ },
+                    onClick = {
+                        // TODO: Export current frame
+                        android.widget.Toast.makeText(
+                            this@ThermalVideoComposeActivity,
+                            "Exporting frame...",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     colors = ButtonDefaults.outlinedButtonColors(
                         contentColor = Color.White
                     )
@@ -397,7 +432,14 @@ private fun ThermalVideoControls(
                 }
 
                 OutlinedButton(
-                    onClick = { /* Analyze */ },
+                    onClick = {
+                        // TODO: Analyze thermal video
+                        android.widget.Toast.makeText(
+                            this@ThermalVideoComposeActivity,
+                            "Analyzing video...",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     colors = ButtonDefaults.outlinedButtonColors(
                         contentColor = Color.White
                     )
@@ -412,7 +454,14 @@ private fun ThermalVideoControls(
                 }
 
                 OutlinedButton(
-                    onClick = { /* Settings */ },
+                    onClick = {
+                        // TODO: Open video settings
+                        android.widget.Toast.makeText(
+                            this@ThermalVideoComposeActivity,
+                            "Opening settings...",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     colors = ButtonDefaults.outlinedButtonColors(
                         contentColor = Color.White
                     )

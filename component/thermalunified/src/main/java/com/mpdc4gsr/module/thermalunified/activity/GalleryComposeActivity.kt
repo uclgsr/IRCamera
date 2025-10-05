@@ -60,14 +60,28 @@ class GalleryComposeActivity : BaseComposeActivity<GalleryActivityViewModel>() {
                             }
                         },
                         actions = {
-                            IconButton(onClick = { /* Search gallery */ }) {
+                            IconButton(onClick = {
+                                // TODO: Search gallery
+                                android.widget.Toast.makeText(
+                                    this@GalleryComposeActivity,
+                                    "Searching gallery...",
+                                    android.widget.Toast.LENGTH_SHORT
+                                ).show()
+                            }) {
                                 Icon(
                                     Icons.Default.Search,
                                     contentDescription = "Search",
                                     tint = Color.White
                                 )
                             }
-                            IconButton(onClick = { /* Gallery settings */ }) {
+                            IconButton(onClick = {
+                                // TODO: Open gallery settings
+                                android.widget.Toast.makeText(
+                                    this@GalleryComposeActivity,
+                                    "Opening gallery settings...",
+                                    android.widget.Toast.LENGTH_SHORT
+                                ).show()
+                            }) {
                                 Icon(
                                     Icons.Default.MoreVert,
                                     contentDescription = "Settings",
