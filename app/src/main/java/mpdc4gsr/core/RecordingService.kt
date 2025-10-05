@@ -3,6 +3,7 @@ package mpdc4gsr.core
 import android.app.*
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ServiceInfo
 import android.net.nsd.NsdManager
 import android.net.nsd.NsdServiceInfo
 import android.os.Binder
@@ -249,15 +250,30 @@ class RecordingService : Service(), CoroutineScope {
 
         // Call startForeground immediately to satisfy Android's foreground service requirements
         // This must be called within 5-10 seconds of startForegroundService()
-        startForeground(
-            NOTIFICATION_ID,
-            NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle("IRCamera Service")
-                .setContentText("Initializing service...")
-                .setSmallIcon(R.drawable.ic_info)
-                .setOngoing(true)
-                .build()
-        )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            startForeground(
+                NOTIFICATION_ID,
+                NotificationCompat.Builder(this, CHANNEL_ID)
+                    .setContentTitle("IRCamera Service")
+                    .setContentText("Initializing service...")
+                    .setSmallIcon(R.drawable.ic_info)
+                    .setOngoing(true)
+                    .build(),
+                ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC or
+                        ServiceInfo.FOREGROUND_SERVICE_TYPE_CAMERA or
+                        ServiceInfo.FOREGROUND_SERVICE_TYPE_MICROPHONE
+            )
+        } else {
+            startForeground(
+                NOTIFICATION_ID,
+                NotificationCompat.Builder(this, CHANNEL_ID)
+                    .setContentTitle("IRCamera Service")
+                    .setContentText("Initializing service...")
+                    .setSmallIcon(R.drawable.ic_info)
+                    .setOngoing(true)
+                    .build()
+            )
+        }
 
         nsdManager = getSystemService(Context.NSD_SERVICE) as NsdManager
 
@@ -584,10 +600,20 @@ class RecordingService : Service(), CoroutineScope {
                     )
                 )
 
-                startForeground(
-                    NOTIFICATION_ID,
-                    createRecordingNotification("Starting recording session...")
-                )
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                    startForeground(
+                        NOTIFICATION_ID,
+                        createRecordingNotification("Starting recording session..."),
+                        ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC or
+                                ServiceInfo.FOREGROUND_SERVICE_TYPE_CAMERA or
+                                ServiceInfo.FOREGROUND_SERVICE_TYPE_MICROPHONE
+                    )
+                } else {
+                    startForeground(
+                        NOTIFICATION_ID,
+                        createRecordingNotification("Starting recording session...")
+                    )
+                }
 
                 // Perform session start sync
                 launch {
@@ -774,7 +800,17 @@ class RecordingService : Service(), CoroutineScope {
                 else -> "Starting recording session..."
             }
 
-            startForeground(NOTIFICATION_ID, createRecordingNotification(notificationText))
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                startForeground(
+                    NOTIFICATION_ID,
+                    createRecordingNotification(notificationText),
+                    ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC or
+                            ServiceInfo.FOREGROUND_SERVICE_TYPE_CAMERA or
+                            ServiceInfo.FOREGROUND_SERVICE_TYPE_MICROPHONE
+                )
+            } else {
+                startForeground(NOTIFICATION_ID, createRecordingNotification(notificationText))
+            }
 
             // Start session with enhanced orchestration
             val success = recordingController.startRecording(
@@ -1243,10 +1279,20 @@ class RecordingService : Service(), CoroutineScope {
                 registerNsdService()
             }
             if (!isServiceForeground()) {
-                startForeground(
-                    NOTIFICATION_ID,
-                    createServerNotification("Server listening for PC connections on port $actualServerPort")
-                )
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                    startForeground(
+                        NOTIFICATION_ID,
+                        createServerNotification("Server listening for PC connections on port $actualServerPort"),
+                        ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC or
+                                ServiceInfo.FOREGROUND_SERVICE_TYPE_CAMERA or
+                                ServiceInfo.FOREGROUND_SERVICE_TYPE_MICROPHONE
+                    )
+                } else {
+                    startForeground(
+                        NOTIFICATION_ID,
+                        createServerNotification("Server listening for PC connections on port $actualServerPort")
+                    )
+                }
             }
             while (!stopToken.isStopRequested() && isServerRunning.get()) {
                 try {
