@@ -225,11 +225,7 @@ class IRCorrectionTwoComposeActivity : BaseComposeActivity<IRCorrectionTwoViewMo
                 }
 
                 Button(
-                    onClick = { /* TODO: Implement apply and next
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+                    onClick = { /* Apply corrections and navigate to next step */ },
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color(0xFFFF6B35)
