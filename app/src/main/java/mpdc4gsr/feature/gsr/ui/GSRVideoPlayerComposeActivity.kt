@@ -82,13 +82,34 @@ class GSRVideoPlayerComposeActivity : BaseComposeActivity<AppBaseViewModel>() {
                             }
                         },
                         actions = {
-                            IconButton(onClick = { /* Share video */ }) {
+                            IconButton(onClick = {
+                                // TODO: Share video
+                                android.widget.Toast.makeText(
+                                    this@GSRVideoPlayerComposeActivity,
+                                    "Share video feature coming soon",
+                                    android.widget.Toast.LENGTH_SHORT
+                                ).show()
+                            }) {
                                 Icon(Icons.Default.Share, contentDescription = "Share")
                             }
-                            IconButton(onClick = { /* Video settings */ }) {
+                            IconButton(onClick = {
+                                // TODO: Open video settings
+                                android.widget.Toast.makeText(
+                                    this@GSRVideoPlayerComposeActivity,
+                                    "Video settings coming soon",
+                                    android.widget.Toast.LENGTH_SHORT
+                                ).show()
+                            }) {
                                 Icon(Icons.Default.Settings, contentDescription = "Settings")
                             }
-                            IconButton(onClick = { /* More options */ }) {
+                            IconButton(onClick = {
+                                // TODO: Show more options menu
+                                android.widget.Toast.makeText(
+                                    this@GSRVideoPlayerComposeActivity,
+                                    "More options coming soon",
+                                    android.widget.Toast.LENGTH_SHORT
+                                ).show()
+                            }) {
                                 Icon(Icons.Default.MoreVert, contentDescription = "More")
                             }
                         }
@@ -656,12 +677,20 @@ private fun VideoExportCard(
 
             HorizontalDivider()
 
+            val context = androidx.compose.ui.platform.LocalContext.current
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 OutlinedButton(
-                    onClick = { /* Export video */ },
+                    onClick = {
+                        // TODO: Export video file
+                        android.widget.Toast.makeText(
+                            context,
+                            "Exporting video...",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.VideoFile, contentDescription = null)
@@ -670,7 +699,14 @@ private fun VideoExportCard(
                 }
 
                 OutlinedButton(
-                    onClick = { /* Export audio */ },
+                    onClick = {
+                        // TODO: Export audio track
+                        android.widget.Toast.makeText(
+                            context,
+                            "Exporting audio...",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.AudioFile, contentDescription = null)
@@ -684,7 +720,14 @@ private fun VideoExportCard(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Button(
-                    onClick = { /* Share video */ },
+                    onClick = {
+                        // TODO: Share video
+                        android.widget.Toast.makeText(
+                            context,
+                            "Sharing video...",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Share, contentDescription = null)
@@ -693,7 +736,14 @@ private fun VideoExportCard(
                 }
 
                 OutlinedButton(
-                    onClick = { /* Save frame */ },
+                    onClick = {
+                        // TODO: Save current frame as image
+                        android.widget.Toast.makeText(
+                            context,
+                            "Saving frame...",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Default.Image, contentDescription = null)

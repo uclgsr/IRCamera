@@ -211,7 +211,14 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "Export Location",
                         subtitle = "Choose where to save exported data",
-                        onClick = { /* Open export location selection */ }
+                        onClick = {
+                            // TODO: Open export location selection dialog
+                            android.widget.Toast.makeText(
+                                this@SettingsComposeActivity,
+                                "Export location selection coming soon",
+                                android.widget.Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -348,7 +355,14 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "App Version",
                         subtitle = "IRCamera v1.10.000",
-                        onClick = { /* Show version details */ }
+                        onClick = {
+                            // TODO: Show version details dialog
+                            android.widget.Toast.makeText(
+                                this@SettingsComposeActivity,
+                                "Version details coming soon",
+                                android.widget.Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -356,7 +370,14 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "Privacy Policy",
                         subtitle = "View privacy policy and terms",
-                        onClick = { /* Open privacy policy */ }
+                        onClick = {
+                            // TODO: Open privacy policy screen
+                            android.widget.Toast.makeText(
+                                this@SettingsComposeActivity,
+                                "Opening privacy policy...",
+                                android.widget.Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -364,7 +385,14 @@ class SettingsComposeActivity : BaseComposeActivity<SettingsViewModel>() {
                     SettingsItem(
                         title = "Help & Support",
                         subtitle = "Get help and contact support",
-                        onClick = { /* Open help screen */ }
+                        onClick = {
+                            // TODO: Open help and support screen
+                            android.widget.Toast.makeText(
+                                this@SettingsComposeActivity,
+                                "Opening help & support...",
+                                android.widget.Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     )
                 }
             }

@@ -70,10 +70,24 @@ class SessionDetailComposeActivity : BaseComposeActivity<AppBaseViewModel>() {
                             }
                         },
                         actions = {
-                            IconButton(onClick = { /* Share session */ }) {
+                            IconButton(onClick = {
+                                // TODO: Share session data
+                                android.widget.Toast.makeText(
+                                    this@SessionDetailComposeActivity,
+                                    "Share session feature coming soon",
+                                    android.widget.Toast.LENGTH_SHORT
+                                ).show()
+                            }) {
                                 Icon(Icons.Default.Share, contentDescription = "Share")
                             }
-                            IconButton(onClick = { /* Export session */ }) {
+                            IconButton(onClick = {
+                                // TODO: Export session data
+                                android.widget.Toast.makeText(
+                                    this@SessionDetailComposeActivity,
+                                    "Exporting session...",
+                                    android.widget.Toast.LENGTH_SHORT
+                                ).show()
+                            }) {
                                 Icon(Icons.Default.FileDownload, contentDescription = "Export")
                             }
                         }
@@ -114,10 +128,32 @@ private fun SessionDetailContent(
         SessionTimelineCard()
 
         // Actions Card
+        val context = androidx.compose.ui.platform.LocalContext.current
         SessionActionsCard(
-            onViewData = { /* Navigate to data view */ },
-            onExportData = { /* Export session data */ },
-            onDeleteSession = { /* Delete session with confirmation */ }
+            onViewData = {
+                // TODO: Navigate to data view activity
+                android.widget.Toast.makeText(
+                    context,
+                    "Opening data view...",
+                    android.widget.Toast.LENGTH_SHORT
+                ).show()
+            },
+            onExportData = {
+                // TODO: Export session data
+                android.widget.Toast.makeText(
+                    context,
+                    "Exporting session data...",
+                    android.widget.Toast.LENGTH_SHORT
+                ).show()
+            },
+            onDeleteSession = {
+                // TODO: Show confirmation dialog and delete session
+                android.widget.Toast.makeText(
+                    context,
+                    "Delete session confirmation dialog",
+                    android.widget.Toast.LENGTH_SHORT
+                ).show()
+            }
         )
     }
 }
