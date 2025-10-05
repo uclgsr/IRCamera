@@ -135,6 +135,7 @@ private fun GSRPlotContent(
     dataPath: String?,
     modifier: Modifier = Modifier
 ) {
+    val context = androidx.compose.ui.platform.LocalContext.current
     var selectedVisualization by remember { mutableStateOf(VisualizationType.LINE_CHART) }
     var timeRange by remember { mutableStateOf(TimeRange.ALL) }
     var showStatistics by remember { mutableStateOf(true) }
@@ -158,7 +159,8 @@ private fun GSRPlotContent(
         MainPlotCard(
             visualizationType = selectedVisualization,
             timeRange = timeRange,
-            sessionId = sessionId
+            sessionId = sessionId,
+            context = context
         )
 
         // Statistics Panel
@@ -167,10 +169,10 @@ private fun GSRPlotContent(
         }
 
         // Data Analysis Tools
-        DataAnalysisToolsCard()
+        DataAnalysisToolsCard(context = context)
 
         // Export Options
-        ExportOptionsCard()
+        ExportOptionsCard(context = context)
     }
 }
 
@@ -303,9 +305,9 @@ private fun VisualizationControlsCard(
 private fun MainPlotCard(
     visualizationType: VisualizationType,
     timeRange: TimeRange,
-    sessionId: String
+    sessionId: String,
+    context: android.content.Context
 ) {
-    val context = androidx.compose.ui.platform.LocalContext.current
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
@@ -717,7 +719,7 @@ private fun StatisticItem(
 }
 
 @Composable
-private fun DataAnalysisToolsCard() {
+private fun DataAnalysisToolsCard(context: android.content.Context) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
@@ -734,7 +736,6 @@ private fun DataAnalysisToolsCard() {
 
             HorizontalDivider()
 
-            val context = androidx.compose.ui.platform.LocalContext.current
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -813,7 +814,7 @@ private fun DataAnalysisToolsCard() {
 }
 
 @Composable
-private fun ExportOptionsCard() {
+private fun ExportOptionsCard(context: android.content.Context) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
@@ -830,7 +831,6 @@ private fun ExportOptionsCard() {
 
             HorizontalDivider()
 
-            val context = androidx.compose.ui.platform.LocalContext.current
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)

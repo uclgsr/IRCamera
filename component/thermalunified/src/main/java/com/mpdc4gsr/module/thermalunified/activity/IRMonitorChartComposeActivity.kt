@@ -72,6 +72,7 @@ class IRMonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                 },
                 containerColor = Color.Black
             ) { paddingValues ->
+                val context = androidx.compose.ui.platform.LocalContext.current
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -127,7 +128,8 @@ class IRMonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                                 onStartStop = {
                                     isRecording = !isRecording
                                     if (!isRecording) recordingTime = 0L
-                                }
+                                },
+                                context = context
                             )
                         }
 
@@ -142,7 +144,7 @@ class IRMonitorChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
 
                         // Chart controls
                         item {
-                            ChartControlsCard()
+                            ChartControlsCard(context = context)
                         }
                     }
                 }
@@ -285,7 +287,8 @@ private fun RecordingIndicator(
 @Composable
 private fun RecordingControls(
     isRecording: Boolean,
-    onStartStop: () -> Unit
+    onStartStop: () -> Unit,
+    context: android.content.Context
 ) {
     Card(
         colors = CardDefaults.cardColors(
@@ -319,7 +322,6 @@ private fun RecordingControls(
                 )
             }
 
-            val context = androidx.compose.ui.platform.LocalContext.current
             Button(
                 onClick = {
                     // TODO: Save chart as image
@@ -408,7 +410,7 @@ private fun StatItem(
 }
 
 @Composable
-private fun ChartControlsCard() {
+private fun ChartControlsCard(context: android.content.Context) {
     Card(
         colors = CardDefaults.cardColors(
             containerColor = Color(0xFF21262D)
@@ -433,7 +435,6 @@ private fun ChartControlsCard() {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                val context = androidx.compose.ui.platform.LocalContext.current
                 OutlinedButton(
                     onClick = {
                         // TODO: Export monitoring data
