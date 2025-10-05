@@ -24,11 +24,7 @@ fun DownloadProgressDialog(
 ) {
     if (isVisible) {
         Dialog(
-            onDismissRequest = { /* TODO: Implement non-cancellable
-                     *   - Implement callback logic for onDismissRequest
-                     *   - Handle data/state updates
-                     *   - Provide user feedback
-                     */ },
+            onDismissRequest = {},
             properties = DialogProperties(
                 dismissOnBackPress = false,
                 dismissOnClickOutside = false

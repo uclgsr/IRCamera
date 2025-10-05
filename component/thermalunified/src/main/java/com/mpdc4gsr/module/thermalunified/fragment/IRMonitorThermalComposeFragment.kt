@@ -50,11 +50,7 @@ class IRMonitorThermalComposeFragment : BaseComposeFragment<ThermalFragmentViewM
                             )
                         },
                         actions = {
-                            IconButton(onClick = { /* TODO: Implement handle settings
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ }) {
+                            IconButton(onClick = { viewModel.showSettings() }) {
                                 Icon(Icons.Default.Settings, contentDescription = "Settings")
                             }
                         }
