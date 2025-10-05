@@ -414,7 +414,7 @@ private fun CardLayoutsShowcase() {
                 ) {
                     Icon(
                         Icons.Default.Info,
-                        contentDescription = null,
+                        contentDescription = "Component Info",
                         tint = MaterialTheme.colorScheme.primary
                     )
 
@@ -449,7 +449,7 @@ private fun CardLayoutsShowcase() {
                 ) {
                     Icon(
                         Icons.Default.TouchApp,
-                        contentDescription = null,
+                        contentDescription = "Touch Interaction",
                         tint = MaterialTheme.colorScheme.primary
                     )
 
@@ -470,7 +470,7 @@ private fun CardLayoutsShowcase() {
 
                     Icon(
                         Icons.AutoMirrored.Filled.ArrowForward,
-                        contentDescription = null,
+                        contentDescription = "View Component",
                         tint = MaterialTheme.colorScheme.outline
                     )
                 }
@@ -530,7 +530,7 @@ private fun NavigationFeature(feature: String) {
     ) {
         Icon(
             Icons.Default.Check,
-            contentDescription = null,
+            contentDescription = "Feature Available",
             tint = MaterialTheme.colorScheme.primary,
             modifier = Modifier.size(16.dp)
         )
