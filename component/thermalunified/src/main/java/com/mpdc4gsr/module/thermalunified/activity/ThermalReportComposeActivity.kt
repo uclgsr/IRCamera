@@ -79,10 +79,11 @@ private fun ThermalReportScreen(
                 }
             },
             actions = {
+                val context = androidx.compose.ui.platform.LocalContext.current
                 IconButton(onClick = {
                     // TODO: Preview report before generation
                     android.widget.Toast.makeText(
-                        onBackClick?.let { this } ?: return@IconButton,
+                        context,
                         "Opening report preview...",
                         android.widget.Toast.LENGTH_SHORT
                     ).show()

@@ -131,12 +131,13 @@ private fun ThermalCameraControls(
         }
 
         // Settings button
+        val context = androidx.compose.ui.platform.LocalContext.current
         FloatingActionButton(
             onClick = {
                 // TODO: Implement thermal camera settings navigation
                 // Should open settings screen for temperature range, palette, etc.
                 android.widget.Toast.makeText(
-                    androidx.compose.ui.platform.LocalContext.current,
+                    context,
                     "Opening thermal camera settings...",
                     android.widget.Toast.LENGTH_SHORT
                 ).show()
