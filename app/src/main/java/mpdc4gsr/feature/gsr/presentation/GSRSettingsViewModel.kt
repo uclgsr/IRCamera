@@ -16,6 +16,41 @@ import mpdc4gsr.feature.network.data.RecordingController
  */
 class GSRSettingsViewModel : AppBaseViewModel() {
 
+    data class UIState(
+        val gsrSettings: GSRSettingsRepository.GSRSettings = GSRSettingsRepository.GSRSettings(),
+        val deviceSettings: GSRSettingsRepository.DeviceSettings = GSRSettingsRepository.DeviceSettings(),
+        val permissionState: PermissionState = PermissionState(false, emptyList(), emptyList()),
+        val connectionState: DeviceConnectionState = DeviceConnectionState(false),
+        val scanningState: ScanningState = ScanningState.IDLE,
+        val isLoading: Boolean = false
+    )
+
+    data class PermissionState(
+        val hasAllPermissions: Boolean,
+        val missingPermissions: List<String>,
+        val shouldShowRationale: List<String>
+    )
+
+    data class DeviceConnectionState(
+        val isConnected: Boolean,
+        val deviceInfo: DeviceInfo? = null,
+        val connectionStatus: String = "Disconnected",
+        val signalStrength: Int = 0
+    )
+
+    data class DeviceInfo(
+        val id: String,
+        val name: String,
+        val address: String,
+        val isConnected: Boolean = false,
+        val batteryLevel: Int? = null,
+        val signalStrength: Int = 0
+    )
+
+    enum class ScanningState {
+        IDLE, SCANNING, COMPLETED, FAILED
+    }
+
     private lateinit var repository: GSRSettingsRepository
     private var gsrSensorRecorder: GSRSensorRecorder? = null
 
@@ -67,41 +102,6 @@ class GSRSettingsViewModel : AppBaseViewModel() {
         ) { gsrSettings, deviceSettings, permissions, connection, scanning ->
             UIState(gsrSettings, deviceSettings, permissions, connection, scanning)
         }.stateIn(viewModelScope, SharingStarted.Lazily, UIState())
-    }
-
-    data class UIState(
-        val gsrSettings: GSRSettingsRepository.GSRSettings = GSRSettingsRepository.GSRSettings(),
-        val deviceSettings: GSRSettingsRepository.DeviceSettings = GSRSettingsRepository.DeviceSettings(),
-        val permissionState: PermissionState = PermissionState(false, emptyList(), emptyList()),
-        val connectionState: DeviceConnectionState = DeviceConnectionState(false),
-        val scanningState: ScanningState = ScanningState.IDLE,
-        val isLoading: Boolean = false
-    )
-
-    data class PermissionState(
-        val hasAllPermissions: Boolean,
-        val missingPermissions: List<String>,
-        val shouldShowRationale: List<String>
-    )
-
-    data class DeviceConnectionState(
-        val isConnected: Boolean,
-        val deviceInfo: DeviceInfo? = null,
-        val connectionStatus: String = "Disconnected",
-        val signalStrength: Int = 0
-    )
-
-    data class DeviceInfo(
-        val id: String,
-        val name: String,
-        val address: String,
-        val isConnected: Boolean = false,
-        val batteryLevel: Int? = null,
-        val signalStrength: Int = 0
-    )
-
-    enum class ScanningState {
-        IDLE, SCANNING, COMPLETED, FAILED
     }
 
     // Modern Event-driven architecture with SharedFlow

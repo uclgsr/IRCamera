@@ -16,31 +16,6 @@ import mpdc4gsr.feature.camera.data.SamsungDeviceCompatibility
  */
 class DualModeCameraViewModel : AppBaseViewModel() {
 
-    // StateFlow for reactive state management
-    private val _permissionState = MutableStateFlow(PermissionState.UNKNOWN)
-    val permissionState: StateFlow<PermissionState> = _permissionState.asStateFlow()
-
-    private val _cameraState = MutableStateFlow(CameraState())
-    val cameraState: StateFlow<CameraState> = _cameraState.asStateFlow()
-
-    private val _cameraMode = MutableStateFlow(CameraMode.PREVIEW)
-    val cameraMode: StateFlow<CameraMode> = _cameraMode.asStateFlow()
-
-    private val _recordingState = MutableStateFlow(RecordingState())
-    val recordingState: StateFlow<RecordingState> = _recordingState.asStateFlow()
-
-    // SharedFlow for one-time events
-    private val _events = MutableSharedFlow<CameraEvent>()
-    val events: SharedFlow<CameraEvent> = _events.asSharedFlow()
-
-    // Combined state for complex UI scenarios
-    private val _cameraScreenState = MutableStateFlow(CameraScreenState())
-    val cameraScreenState: StateFlow<CameraScreenState> = _cameraScreenState.asStateFlow()
-
-    private var rgbCameraRecorder: RgbCameraRecorder? = null
-    private var enableSamsungOptimizations: Boolean = true
-    private var appContext: Context? = null
-
     // Enhanced data classes
     data class CameraState(
         val isInitialized: Boolean = false,
@@ -66,6 +41,31 @@ class DualModeCameraViewModel : AppBaseViewModel() {
         val showProgress: Boolean = false,
         val displayMessage: String = ""
     )
+
+    // StateFlow for reactive state management
+    private val _permissionState = MutableStateFlow(PermissionState.UNKNOWN)
+    val permissionState: StateFlow<PermissionState> = _permissionState.asStateFlow()
+
+    private val _cameraState = MutableStateFlow(CameraState())
+    val cameraState: StateFlow<CameraState> = _cameraState.asStateFlow()
+
+    private val _cameraMode = MutableStateFlow(CameraMode.PREVIEW)
+    val cameraMode: StateFlow<CameraMode> = _cameraMode.asStateFlow()
+
+    private val _recordingState = MutableStateFlow(RecordingState())
+    val recordingState: StateFlow<RecordingState> = _recordingState.asStateFlow()
+
+    // SharedFlow for one-time events
+    private val _events = MutableSharedFlow<CameraEvent>()
+    val events: SharedFlow<CameraEvent> = _events.asSharedFlow()
+
+    // Combined state for complex UI scenarios
+    private val _cameraScreenState = MutableStateFlow(CameraScreenState())
+    val cameraScreenState: StateFlow<CameraScreenState> = _cameraScreenState.asStateFlow()
+
+    private var rgbCameraRecorder: RgbCameraRecorder? = null
+    private var enableSamsungOptimizations: Boolean = true
+    private var appContext: Context? = null
 
     enum class PermissionState {
         UNKNOWN,
