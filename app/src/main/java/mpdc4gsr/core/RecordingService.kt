@@ -408,17 +408,20 @@ class RecordingService : Service(), CoroutineScope {
 
     /**
      * Helper method to call startForeground with appropriate FGS type for Android 14+
+     * Uses different types based on whether we're actively recording or just running server
      */
-    private fun startForegroundWithType(id: Int, notification: Notification) {
+    private fun startForegroundWithType(id: Int, notification: Notification, forRecording: Boolean = false) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-            ServiceCompat.startForeground(
-                this,
-                id,
-                notification,
+            val serviceType = if (forRecording) {
+                // When recording, we need microphone and camera types
                 ServiceInfo.FOREGROUND_SERVICE_TYPE_MICROPHONE or
                         ServiceInfo.FOREGROUND_SERVICE_TYPE_CAMERA or
                         ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
-            )
+            } else {
+                // For server/networking only, just use dataSync
+                ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
+            }
+            ServiceCompat.startForeground(this, id, notification, serviceType)
         } else {
             startForeground(id, notification)
         }
@@ -606,7 +609,8 @@ class RecordingService : Service(), CoroutineScope {
 
                 startForegroundWithType(
                     NOTIFICATION_ID,
-                    createRecordingNotification("Starting recording session...")
+                    createRecordingNotification("Starting recording session..."),
+                    forRecording = true
                 )
 
                 // Perform session start sync
@@ -794,7 +798,7 @@ class RecordingService : Service(), CoroutineScope {
                 else -> "Starting recording session..."
             }
 
-            startForegroundWithType(NOTIFICATION_ID, createRecordingNotification(notificationText))
+            startForegroundWithType(NOTIFICATION_ID, createRecordingNotification(notificationText), forRecording = true)
 
             // Start session with enhanced orchestration
             val success = recordingController.startRecording(
