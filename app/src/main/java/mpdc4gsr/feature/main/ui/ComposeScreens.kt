@@ -90,10 +90,11 @@ fun ThermalCameraScreen(navController: NavController) {
 
 @Composable
 fun GSRSensorScreen(navController: NavController) {
+    // Use the actual GSRSensorScreen from gsr.ui package
     mpdc4gsr.feature.gsr.ui.GSRSensorScreen(
         onBackClick = { navController.popBackStack() },
         onSettingsClick = { navController.navigate("gsr_settings") },
-        onSaveData = {}
+        onSaveData = { /* Navigate to export if needed */ }
     )
 }
 

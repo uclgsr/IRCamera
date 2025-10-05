@@ -88,9 +88,14 @@ private fun CameraItemCard(
                             }
                         )
                     } else {
+                        // Countdown timer
                         TimeDownCompose(
                             initialSeconds = item.delayTime,
-                            onFinish = {},
+                            onFinish = { /* TODO: Implement handle countdown finish
+                     *   - Implement callback logic for onFinish
+                     *   - Handle data/state updates
+                     *   - Provide user feedback
+                     */ },
                             modifier = Modifier.size(48.dp)
                         )
                     }

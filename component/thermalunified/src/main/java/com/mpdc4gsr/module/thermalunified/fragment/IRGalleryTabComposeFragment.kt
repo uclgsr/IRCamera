@@ -153,10 +153,18 @@ class IRGalleryTabComposeFragment : BaseComposeFragment<IRGalleryTabViewModel>()
                 }
             },
             actions = {
-                IconButton(onClick = {}) {
+                IconButton(onClick = { /* TODO: Implement handle search
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }) {
                     Icon(Icons.Default.Search, contentDescription = "Search")
                 }
-                IconButton(onClick = {}) {
+                IconButton(onClick = { /* TODO: Implement handle more options
+                     *   - Determine required implementation
+                     *   - Add necessary state management
+                     *   - Update UI accordingly
+                     */ }) {
                     Icon(Icons.Default.MoreVert, contentDescription = "More")
                 }
             }

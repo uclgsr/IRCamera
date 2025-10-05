@@ -265,7 +265,7 @@ private fun DataSelectionItem(title: String, selected: Boolean) {
     ) {
         Checkbox(
             checked = selected,
-            onCheckedChange = {},
+            onCheckedChange = { /* Handle selection */ },
             colors = CheckboxDefaults.colors(
                 checkedColor = Color(0xFFFF6B35),
                 uncheckedColor = Color(0xFF7D8590)
@@ -353,7 +353,7 @@ private fun ExportSettingsSection() {
             ) {
                 ExportFormat.values().forEach { format ->
                     FilterChip(
-                        onClick = {},
+                        onClick = { /* Handle format selection */ },
                         label = {
                             Text(
                                 format.displayName,
