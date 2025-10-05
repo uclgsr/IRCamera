@@ -387,7 +387,7 @@ class IRThermalDoubleComposeActivity : BaseComposeActivity<IRThermalDoubleViewMo
                                 horizontalArrangement = Arrangement.Start,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Icon(Icons.Default.Palette, contentDescription = null)
+                                Icon(Icons.Default.Palette, contentDescription = "Color Palette")
                                 Spacer(Modifier.width(8.dp))
                                 Text("Color Palette")
                             }
