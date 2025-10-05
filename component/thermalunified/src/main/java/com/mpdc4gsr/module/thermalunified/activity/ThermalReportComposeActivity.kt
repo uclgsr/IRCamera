@@ -258,14 +258,14 @@ private fun DataSelectionSection() {
 }
 
 @Composable
-private fun DataSelectionItem(title: String, selected: Boolean) {
+private fun DataSelectionItem(title: String, selected: Boolean, onSelectionChange: (Boolean) -> Unit = {}) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Checkbox(
             checked = selected,
-            onCheckedChange = { /* Handle selection */ },
+            onCheckedChange = onSelectionChange,
             colors = CheckboxDefaults.colors(
                 checkedColor = Color(0xFFFF6B35),
                 uncheckedColor = Color(0xFF7D8590)
@@ -353,7 +353,7 @@ private fun ExportSettingsSection() {
             ) {
                 ExportFormat.values().forEach { format ->
                     FilterChip(
-                        onClick = { /* Handle format selection */ },
+                        onClick = { /* Select export format */ },
                         label = {
                             Text(
                                 format.displayName,

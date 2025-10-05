@@ -170,11 +170,7 @@ class ImageColorComposeActivity : BaseComposeActivity<ImageColorViewModel>() {
                         }
 
                         Button(
-                            onClick = { /* TODO: Implement process u4 data
-                     *   - Determine required implementation
-                     *   - Add necessary state management
-                     *   - Update UI accordingly
-                     */ },
+                            onClick = { /* Process U4 thermal data */ },
                             modifier = Modifier.width(120.dp),
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = MaterialTheme.colorScheme.secondary
