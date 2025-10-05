@@ -129,7 +129,7 @@ class LogMPChartComposeActivity : BaseComposeActivity<ThermalViewModel>() {
                     item {
                         DataManagementCard(
                             onExportCsv = {
-                                kotlinx.coroutines.GlobalScope.launch {
+                                scope.launch {
                                     viewModel.exportData(this@LogMPChartComposeActivity, ThermalViewModel.ExportFormat.CSV)
                                     snackbarHostState.showSnackbar("Exporting data as CSV...")
                                 }
