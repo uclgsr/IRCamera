@@ -693,7 +693,7 @@ private fun VideoExportCard(
                     },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Icon(Icons.Default.VideoFile, contentDescription = null)
+                    Icon(Icons.Default.VideoFile, contentDescription = "Export Video")
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Export Video")
                 }
@@ -709,7 +709,7 @@ private fun VideoExportCard(
                     },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Icon(Icons.Default.AudioFile, contentDescription = null)
+                    Icon(Icons.Default.AudioFile, contentDescription = "Export Audio")
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Export Audio")
                 }
@@ -730,7 +730,7 @@ private fun VideoExportCard(
                     },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Icon(Icons.Default.Share, contentDescription = null)
+                    Icon(Icons.Default.Share, contentDescription = "Share Video")
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Share Video")
                 }
@@ -746,7 +746,7 @@ private fun VideoExportCard(
                     },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Icon(Icons.Default.Image, contentDescription = null)
+                    Icon(Icons.Default.Image, contentDescription = "Save Frame")
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Save Frame")
                 }
