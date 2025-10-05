@@ -27,58 +27,6 @@ import mpdc4gsr.feature.gsr.data.RealShimmerDeviceFactory
  */
 class MultiModalRecordingViewModel(application: Application) : BaseViewModel() {
 
-    private val context: Context = application.applicationContext
-    private lateinit var gsrRecorder: GSRRecorder
-    private lateinit var sessionManager: SessionManager
-    private var rgbCameraRecorder: RgbCameraRecorder? = null
-    private var networkClient: NetworkClient? = null
-
-    // Recording State Management
-    private val _recordingState = MutableLiveData<RecordingState>()
-    val recordingState: LiveData<RecordingState> = _recordingState
-
-    private val _sessionInfo = MutableLiveData<SessionInfo?>()
-    val sessionInfo: LiveData<SessionInfo?> = _sessionInfo
-
-    // Multimodal Sensor States
-    private val _gsrState = MutableStateFlow<GSRState>(GSRState())
-    val gsrState: StateFlow<GSRState> = _gsrState
-
-    private val _cameraState = MutableStateFlow<CameraState>(CameraState())
-    val cameraState: StateFlow<CameraState> = _cameraState
-
-    private val _networkState = MutableStateFlow<NetworkState>(NetworkState())
-    val networkState: StateFlow<NetworkState> = _networkState
-
-    // Device Management
-    private val _discoveredDevices = MutableLiveData<List<ShimmerDeviceInfo>>()
-    val discoveredDevices: LiveData<List<ShimmerDeviceInfo>> = _discoveredDevices
-
-    private val _connectedDevices = MutableLiveData<List<ShimmerDeviceInfo>>()
-    val connectedDevices: LiveData<List<ShimmerDeviceInfo>> = _connectedDevices
-
-    // UI State and Actions
-    private val _error = MutableLiveData<String?>()
-    val error: LiveData<String?> = _error
-
-    private val _statusMessage = MutableLiveData<String>()
-    val statusMessage: LiveData<String> = _statusMessage
-
-    private val _recordingAction = MutableLiveData<RecordingAction?>()
-    val recordingAction: LiveData<RecordingAction?> = _recordingAction
-
-    // Configuration
-    private val _recordingConfig =
-        MutableStateFlow<RecordingConfiguration>(RecordingConfiguration())
-    val recordingConfig: StateFlow<RecordingConfiguration> = _recordingConfig
-
-    // Combined state for UI optimization
-    val combinedRecordingState = combine(
-        _gsrState, _cameraState, _networkState
-    ) { gsrState, cameraState, networkState ->
-        CombinedRecordingState(gsrState, cameraState, networkState)
-    }
-
     data class RecordingState(
         val isRecording: Boolean = false,
         val isStartingRecording: Boolean = false,
@@ -155,6 +103,58 @@ class MultiModalRecordingViewModel(application: Application) : BaseViewModel() {
         val message: String? = null,
         val data: Any? = null
     )
+
+    private val context: Context = application.applicationContext
+    private lateinit var gsrRecorder: GSRRecorder
+    private lateinit var sessionManager: SessionManager
+    private var rgbCameraRecorder: RgbCameraRecorder? = null
+    private var networkClient: NetworkClient? = null
+
+    // Recording State Management
+    private val _recordingState = MutableLiveData<RecordingState>()
+    val recordingState: LiveData<RecordingState> = _recordingState
+
+    private val _sessionInfo = MutableLiveData<SessionInfo?>()
+    val sessionInfo: LiveData<SessionInfo?> = _sessionInfo
+
+    // Multimodal Sensor States
+    private val _gsrState = MutableStateFlow<GSRState>(GSRState())
+    val gsrState: StateFlow<GSRState> = _gsrState
+
+    private val _cameraState = MutableStateFlow<CameraState>(CameraState())
+    val cameraState: StateFlow<CameraState> = _cameraState
+
+    private val _networkState = MutableStateFlow<NetworkState>(NetworkState())
+    val networkState: StateFlow<NetworkState> = _networkState
+
+    // Device Management
+    private val _discoveredDevices = MutableLiveData<List<ShimmerDeviceInfo>>()
+    val discoveredDevices: LiveData<List<ShimmerDeviceInfo>> = _discoveredDevices
+
+    private val _connectedDevices = MutableLiveData<List<ShimmerDeviceInfo>>()
+    val connectedDevices: LiveData<List<ShimmerDeviceInfo>> = _connectedDevices
+
+    // UI State and Actions
+    private val _error = MutableLiveData<String?>()
+    val error: LiveData<String?> = _error
+
+    private val _statusMessage = MutableLiveData<String>()
+    val statusMessage: LiveData<String> = _statusMessage
+
+    private val _recordingAction = MutableLiveData<RecordingAction?>()
+    val recordingAction: LiveData<RecordingAction?> = _recordingAction
+
+    // Configuration
+    private val _recordingConfig =
+        MutableStateFlow<RecordingConfiguration>(RecordingConfiguration())
+    val recordingConfig: StateFlow<RecordingConfiguration> = _recordingConfig
+
+    // Combined state for UI optimization
+    val combinedRecordingState = combine(
+        _gsrState, _cameraState, _networkState
+    ) { gsrState, cameraState, networkState ->
+        CombinedRecordingState(gsrState, cameraState, networkState)
+    }
 
     enum class ActionType {
         RECORDING_STARTED,

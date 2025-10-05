@@ -9,35 +9,6 @@ import kotlinx.coroutines.flow.*
 
 class ThermalRGBPreviewViewModel : BaseViewModel() {
 
-    // StateFlow for RGB preview state management
-    private val _rgbPreviewState = MutableStateFlow(RGBPreviewState())
-    val rgbPreviewState: StateFlow<RGBPreviewState> = _rgbPreviewState.asStateFlow()
-
-    private val _thermalOverlayState = MutableStateFlow(ThermalOverlayState())
-    val thermalOverlayState: StateFlow<ThermalOverlayState> = _thermalOverlayState.asStateFlow()
-
-    // SharedFlow for one-time events
-    private val _previewEvents = MutableSharedFlow<PreviewEvent>()
-    val previewEvents: SharedFlow<PreviewEvent> = _previewEvents.asSharedFlow()
-
-    // Combined UI State for thermal + RGB preview
-    val combinedPreviewState: StateFlow<CombinedPreviewState> = combine(
-        _rgbPreviewState,
-        _thermalOverlayState
-    ) { rgbState, thermalState ->
-        CombinedPreviewState(
-            rgbState = rgbState,
-            thermalState = thermalState,
-            isReady = rgbState.isInitialized && thermalState.isEnabled,
-            overlayMode = when {
-                thermalState.blendMode == BlendMode.SIDE_BY_SIDE -> OverlayMode.SIDE_BY_SIDE
-                thermalState.opacity > 0.8f -> OverlayMode.THERMAL_PRIMARY
-                thermalState.opacity > 0.3f -> OverlayMode.BLENDED
-                else -> OverlayMode.RGB_PRIMARY
-            }
-        )
-    }.stateIn(viewModelScope, SharingStarted.Lazily, CombinedPreviewState())
-
     data class RGBPreviewState(
         val isInitialized: Boolean = false,
         val isStreaming: Boolean = false,
@@ -70,6 +41,35 @@ class ThermalRGBPreviewViewModel : BaseViewModel() {
         val overlayMode: OverlayMode = OverlayMode.BLENDED,
         val syncedFrame: Bitmap? = null
     )
+
+    // StateFlow for RGB preview state management
+    private val _rgbPreviewState = MutableStateFlow(RGBPreviewState())
+    val rgbPreviewState: StateFlow<RGBPreviewState> = _rgbPreviewState.asStateFlow()
+
+    private val _thermalOverlayState = MutableStateFlow(ThermalOverlayState())
+    val thermalOverlayState: StateFlow<ThermalOverlayState> = _thermalOverlayState.asStateFlow()
+
+    // SharedFlow for one-time events
+    private val _previewEvents = MutableSharedFlow<PreviewEvent>()
+    val previewEvents: SharedFlow<PreviewEvent> = _previewEvents.asSharedFlow()
+
+    // Combined UI State for thermal + RGB preview
+    val combinedPreviewState: StateFlow<CombinedPreviewState> = combine(
+        _rgbPreviewState,
+        _thermalOverlayState
+    ) { rgbState, thermalState ->
+        CombinedPreviewState(
+            rgbState = rgbState,
+            thermalState = thermalState,
+            isReady = rgbState.isInitialized && thermalState.isEnabled,
+            overlayMode = when {
+                thermalState.blendMode == BlendMode.SIDE_BY_SIDE -> OverlayMode.SIDE_BY_SIDE
+                thermalState.opacity > 0.8f -> OverlayMode.THERMAL_PRIMARY
+                thermalState.opacity > 0.3f -> OverlayMode.BLENDED
+                else -> OverlayMode.RGB_PRIMARY
+            }
+        )
+    }.stateIn(viewModelScope, SharingStarted.Lazily, CombinedPreviewState())
 
     enum class BlendMode {
         OVERLAY, MULTIPLY, SCREEN, SIDE_BY_SIDE, PICTURE_IN_PICTURE
