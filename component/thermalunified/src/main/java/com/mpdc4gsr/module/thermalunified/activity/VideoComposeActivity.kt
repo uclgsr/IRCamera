@@ -57,6 +57,16 @@ class VideoComposeActivity : BaseComposeActivity<ThermalViewModel>() {
         var playbackSpeed by remember { mutableFloatStateOf(1.0f) }
         var pointAnalysisEnabled by remember { mutableStateOf(false) }
 
+        LaunchedEffect(isFullscreen) {
+            window.decorView.systemUiVisibility = if (isFullscreen) {
+                android.view.View.SYSTEM_UI_FLAG_FULLSCREEN or
+                android.view.View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
+                android.view.View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+            } else {
+                android.view.View.SYSTEM_UI_FLAG_VISIBLE
+            }
+        }
+
         LibUnifiedTheme {
             Scaffold(
                 topBar = {
@@ -314,17 +324,7 @@ private fun VideoControlsOverlay(
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    IconButton(onClick = { 
-                        isFullscreen = !isFullscreen
-                        // Update system UI visibility based on fullscreen state
-                        window.decorView.systemUiVisibility = if (isFullscreen) {
-                            android.view.View.SYSTEM_UI_FLAG_FULLSCREEN or
-                            android.view.View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
-                            android.view.View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                        } else {
-                            android.view.View.SYSTEM_UI_FLAG_VISIBLE
-                        }
-                    }) {
+                    IconButton(onClick = { isFullscreen = !isFullscreen }) {
                         Icon(
                             if (isFullscreen) Icons.Default.FullscreenExit else Icons.Default.Fullscreen,
                             contentDescription = if (isFullscreen) "Exit Fullscreen" else "Fullscreen",

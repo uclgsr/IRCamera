@@ -117,7 +117,9 @@ private fun ThermalGalleryScreen(
         ) {
             when (viewMode) {
                 ViewMode.GRID -> ThermalGridView()
-                ViewMode.LIST -> ThermalListView()
+                ViewMode.LIST -> ThermalListView(
+                    onMoreClick = { showMoreOptionsDialog = true }
+                )
             }
         }
     }
@@ -231,14 +233,19 @@ private fun ThermalGridView() {
 }
 
 @Composable
-private fun ThermalListView() {
+private fun ThermalListView(
+    onMoreClick: (GalleryThermalImage) -> Unit = {}
+) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(1),
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(generateSampleThermalImages()) { image ->
-            ThermalImageListItem(image = image)
+            ThermalImageListItem(
+                image = image,
+                onMoreClick = { onMoreClick(image) }
+            )
         }
     }
 }
@@ -299,7 +306,10 @@ private fun ThermalImageCard(image: GalleryThermalImage) {
 }
 
 @Composable
-private fun ThermalImageListItem(image: GalleryThermalImage) {
+private fun ThermalImageListItem(
+    image: GalleryThermalImage,
+    onMoreClick: () -> Unit = {}
+) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = Color(0xFF21262D)),

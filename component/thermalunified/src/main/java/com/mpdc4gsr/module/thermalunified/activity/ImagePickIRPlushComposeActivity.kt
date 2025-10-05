@@ -30,6 +30,7 @@ class ImagePickIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() 
     override fun Content(viewModel: ThermalViewModel) {
         var showAIDialog by remember { mutableStateOf(false) }
         val snackbarHostState = remember { SnackbarHostState() }
+        val scope = rememberCoroutineScope()
         
         LibUnifiedTheme {
             Scaffold(
@@ -333,7 +334,7 @@ class ImagePickIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() 
             ) {
                 OutlinedButton(
                     onClick = {
-                        kotlinx.coroutines.GlobalScope.launch {
+                        scope.launch {
                             snackbarHostState.showSnackbar("Loading recent images...")
                         }
                     },
@@ -349,7 +350,7 @@ class ImagePickIRPlushComposeActivity : BaseComposeActivity<ThermalViewModel>() 
 
                 Button(
                     onClick = {
-                        kotlinx.coroutines.GlobalScope.launch {
+                        scope.launch {
                             snackbarHostState.showSnackbar("Starting AI batch processing...")
                         }
                     },
