@@ -63,7 +63,10 @@ fun MultiModalRecordingScreen(
             TitleBarAction(
                 icon = Icons.Default.Settings,
                 contentDescription = "Recording Settings",
-                onClick = { /* Open settings */ }
+                onClick = {
+                    // TODO: Implement recording settings screen
+                    // Open settings for multi-modal recording configuration
+                }
             )
         }
 
@@ -466,7 +469,10 @@ private fun RecordingControlsSection(
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 OutlinedButton(
-                    onClick = { /* Pause */ },
+                    onClick = {
+                        // TODO: Implement pause recording functionality
+                        // Pause the multi-modal recording
+                    },
                     enabled = isRecording
                 ) {
                     Icon(Icons.Default.Pause, contentDescription = null)
@@ -475,7 +481,10 @@ private fun RecordingControlsSection(
                 }
 
                 OutlinedButton(
-                    onClick = { /* Add marker */ },
+                    onClick = {
+                        // TODO: Implement add marker functionality
+                        // Add timestamp marker to recording
+                    },
                     enabled = isRecording
                 ) {
                     Icon(Icons.Default.Flag, contentDescription = null)
